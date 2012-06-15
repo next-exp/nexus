@@ -1,0 +1,39 @@
+### ----------------------------------------------------------------------------
+###  $Id$
+###
+###  Default macro file for the interactive (visual) mode of NEXUS.
+### ----------------------------------------------------------------------------
+
+### Set some default verbosity
+/control/verbose 2
+/control/saveHistory
+/run/verbose 2
+/tracking/verbose 2
+
+
+### Create an empty scene and a scene handles (OpenGL)
+/vis/scene/create
+/vis/open OGLIX
+/vis/viewer/create ! ! 900
+
+### Draw scene (isometric view)
+/vis/viewer/set/viewpointThetaPhi
+
+### View offset: Left Up dimensions
+#/vis/viewer/panTo 700 0 mm
+
+### Adding axes x y z size dimensions
+/vis/scene/add/axes -1200 0 0 300 mm
+
+### Zoom up/down of view
+/vis/viewer/zoom 1.4
+
+### Setting drawing style to "wireframe" ( /surface)
+#/vis/viewer/set/style wireframe
+
+#/vis/viewer/flush
+
+### Drawing the tracks (if chosen in user actions)
+# (if too many tracks cause core dump => storeTrajectory 0)
+/tracking/storeTrajectory 1
+/vis/scene/endOfEventAction accumulate 100
