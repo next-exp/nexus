@@ -57,6 +57,7 @@ namespace nexus {
     // Vertex generators
     BoxPointSampler* _lead_gen;
     BoxPointSampler* _steel_gen;
+    BoxPointSampler* _external_gen;
 
     // Geometry Navigator
     G4Navigator* _geom_navigator;

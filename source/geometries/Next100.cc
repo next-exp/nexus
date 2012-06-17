@@ -123,7 +123,8 @@ namespace nexus {
     G4ThreeVector vertex(0.,0.,0.);
 
     // Shielding regions
-    if ((region == "SHIELDING_LEAD") || (region == "SHIELDING_STEEL")) {
+    if ((region == "SHIELDING_LEAD") || (region == "SHIELDING_STEEL") ||
+	(region == "EXTERNAL")       || (region == "SHIELDING_GAS") ) {
       vertex = _shielding->GenerateVertex(region);
     }
 

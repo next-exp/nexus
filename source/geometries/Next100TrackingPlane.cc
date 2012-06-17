@@ -41,7 +41,7 @@ Next100TrackingPlane::Next100TrackingPlane(G4LogicalVolume* mother_logic):
   _SiPM_columns (8),
 
   // Number of Dice Boards, DB columns
-  _num_DBs (103),
+  _num_DBs (107),
   _DB_columns (11)
 {
 
@@ -165,7 +165,7 @@ void Next100TrackingPlane::GenerateDBPositions()
 {
   /// Function that computes and stores the XY positions of Dice Boards
 
-  G4int num_rows[] = {6, 7, 10, 11, 12, 11, 12, 11, 10, 7, 6};
+  G4int num_rows[] = {6, 9, 10, 11, 12, 11, 12, 11, 10, 9, 6};
   G4int total_positions = 0;
 
   // Separation between consecutive columns / rows

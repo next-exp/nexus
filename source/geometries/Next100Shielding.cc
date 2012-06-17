@@ -125,7 +125,9 @@ namespace nexus {
     // Creating the vertex generators   //////////
     _lead_gen  = new BoxPointSampler(steel_x, steel_y, steel_z, _lead_thickness, G4ThreeVector(0.,0.,0.), 0);
     _steel_gen = new BoxPointSampler(_shield_x, _shield_y, _shield_z, _steel_thickness, G4ThreeVector(0.,0.,0.), 0);
-
+    G4double offset = 1.*cm;
+    _external_gen = new BoxPointSampler(lead_x + offset, lead_y + offset, lead_z + offset,
+					1.*mm, G4ThreeVector(0.,0.,0.), 0);
   }
 
   
@@ -134,6 +136,7 @@ namespace nexus {
   {
     delete _lead_gen;
     delete _steel_gen;
+    delete _external_gen;
   }
 
 
@@ -172,6 +175,14 @@ namespace nexus {
 	vertex = _steel_gen->GenerateVertex("WHOLE_VOL");
 	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
       } while (VertexVolume->GetName() != "STEEL_BOX");
+    }
+
+    else if (region == "SHIELDING_GAS") {
+      vertex = _steel_gen->GenerateVertex("WHOLE_SURF");
+    }
+
+    else if (region == "EXTERNAL") {
+      vertex = _external_gen->GenerateVertex("WHOLE_VOL");
     }
 
     return vertex;
