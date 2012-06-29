@@ -184,20 +184,6 @@ if not env['LIBPATH']:
         Abort('Geant4 libraries could not be found.')
 
 
-    ## ROOT configuration ----------------------------------
-
-    if env['ROOT_BINDIR'] != DEFAULT_PATH:
-        env.PrependENVPath('PATH', env['ROOT_BINDIR'])
-        
-    env.ParseConfig('root-config --cflags --libs')
-
-    if not conf.CheckCXXHeader('TObject.h'):
-        Abort('ROOT headers could not be found.')
-
-    if not conf.CheckLib(library='Cint', language='CXX', autoadd=0):
-        Abort('ROOT libraries could not be found.')
-        
-        
     ## BHEP configuration ----------------------------------
 
     if env['BHEP_BINDIR'] != DEFAULT_PATH:
@@ -210,6 +196,21 @@ if not env['LIBPATH']:
 
     if not conf.CheckLib(library='bhep', language='CXX', autoadd=0):
         Abort('BHEP library not found.')
+
+
+    ## ROOT configuration ----------------------------------
+
+    if env['ROOT_BINDIR'] != DEFAULT_PATH:
+        env.PrependENVPath('PATH', env['ROOT_BINDIR'])
+        
+    env.ParseConfig('root-config --cflags --libs')
+
+    if not conf.CheckCXXHeader('TObject.h'):
+        Abort('ROOT headers could not be found.')
+
+    if not conf.CheckLib(library='Cint', language='CXX', autoadd=0):
+        Abort('ROOT libraries could not be found.')
+
 
     ## -----------------------------------------------------
         
