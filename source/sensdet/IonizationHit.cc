@@ -70,9 +70,8 @@ namespace nexus {
 				  _position.y(),
 				  _position.z()));
 
-    bhit->add_property("Time", _time);
-
-    bhit->add_property("EnergyDep", _energy_dep);
+    bhit->set_amplitude(_energy_dep);
+    bhit->set_time(_time);
 
     // associate hit to particle
     bhep::particle& bpart = BhepUtils::GetBParticle(_track_id);
