@@ -90,6 +90,7 @@ namespace nexus {
       G4double px, py, pz;    // Momentum components in MeV
       
       _genbb >> g3code >> px >> py >> pz >> particle_time;
+      //G4cout << g3code << "  " << px << "  " <<  py << "  " <<  pz << "  " <<  particle_time << G4endl;
       
       G4ParticleDefinition* g4code = 
 	G4ParticleTable::GetParticleTable()->FindParticle(G3toPDG(g3code));
@@ -193,6 +194,7 @@ namespace nexus {
 
     // last line of header contains number of events in file
     _genbb >> foo >> num_events_file;
+    //G4cout << G4endl << "************ " << num_events_file << G4endl;
     
     // get from config service the number of events requested by user
     num_events_job = 

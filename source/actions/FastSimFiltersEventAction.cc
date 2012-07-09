@@ -87,8 +87,9 @@ namespace nexus {
       if (bhits.size() > 0) {
 	G4double Edep = 0.;
 	for (size_t i=0; i<bhits.size(); i++) 
-	  Edep += bhits[i]->fetch_dproperty("EnergyDep");
-	
+	  //Edep += bhits[i]->fetch_dproperty("EnergyDep");
+	  Edep += bhits[i]->amplitude();
+	 
 	if (Edep > _min_Edep) {
 	  //G4cout << "***********   " << Edep << G4endl;
 	  //bevt.info();
