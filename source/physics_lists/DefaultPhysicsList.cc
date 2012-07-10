@@ -49,7 +49,7 @@ namespace nexus {
       RegisterPhysics(optical);
     }
     
-    if (cfg.GetIParam("drift")) {
+    if (cfg.GetIParam("nexus")) {
       NexusPhysics* nexus = new NexusPhysics();
       nexus->ActivateDriftAndElectroluminescence(true);
       // Register nexus physics processes
