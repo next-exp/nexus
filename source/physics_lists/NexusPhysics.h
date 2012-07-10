@@ -6,7 +6,7 @@
 ///  \date     28 May 2010
 ///  \version  $Id$
 ///
-///  Copyright (c) 2010, 2011 NEXT Collaboration
+///  Copyright (c) 2010-2012 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
 #ifndef __NEXUS_PHYSICS__
@@ -23,24 +23,28 @@ namespace nexus {
   {
   public:
     /// Constructor
-    NexusPhysics(const G4String& name="Nexus");
+    NexusPhysics();
     /// Destructor
     ~NexusPhysics();
 
-    void TrackSecondariesFirst(G4bool);
-
-  private:
     /// Construct all required particles (Geant4 mandatory method)
     virtual void ConstructParticle();
     /// Construct all required physics processes (Geant4 mandatory method)
     virtual void ConstructProcess();
 
-  private:
+    void ActivateDriftAndElectroluminescence(G4bool);
 
+    void TrackSecondariesFirst(G4bool);
+    
+  private:
+    G4bool _drift_el; ///< switch on or off the drift+el processes
     G4bool _track_sec_first;
   };
 
-  // inline methods ..............................
+  // INLINE METHODS //////////////////////////////////////////////////
+
+  inline void NexusPhysics::ActivateDriftAndElectroluminescence(G4bool b)
+  { _drift_el = b; }
 
   inline void NexusPhysics::TrackSecondariesFirst(G4bool tsf) 
   { _track_sec_first = tsf; }

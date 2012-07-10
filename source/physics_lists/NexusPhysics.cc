@@ -23,7 +23,9 @@
 namespace nexus {
 
   
-  NexusPhysics::NexusPhysics(const G4String& name): G4VPhysicsConstructor(name)
+  NexusPhysics::NexusPhysics(): 
+    G4VPhysicsConstructor("NexusPhysics"),
+    _drift_el(true)
   {
   }
   
@@ -44,42 +46,57 @@ namespace nexus {
   
   void NexusPhysics::ConstructProcess()
   {
-    IonizationClustering* clustering = new IonizationClustering();
+    G4ProcessManager* pmanager = 0;
     
-    IonizationDrift* drift = new IonizationDrift();
+    // Add nexus-defined processes to the ionization electron
+    if (_drift_el) {
+      pmanager = IonizationElectron::Definition()->GetProcessManager();
+      if (!pmanager) {
+	G4Exception("[NexusPhysics]", "ConstructProcess()", FatalException,
+		    " ERROR: ionization electron without a process manager");
+	return;
+      }
+
+      // First, we remove the transportation from the ie- process table
+      G4VProcess* transp = G4ProcessTable::GetProcessTable()->
+	FindProcess("Transportation", IonizationElectron::Definition());
+      pmanager->RemoveProcess(transp);
+
+      // Second, add drift and electroluminescence
+      IonizationDrift* drift = new IonizationDrift();
+      pmanager->AddContinuousProcess(drift);
+      pmanager->AddDiscreteProcess(drift);
+
+      Electroluminescence* el = new Electroluminescence();
+      pmanager->AddDiscreteProcess(el);
+
+      //pmanager->AddProcess(new G4FastSimulationManagerProcess(), -1, 0, 0);
+    }
+    
+    IonizationClustering* clustering = 0;
+    if (_drift_el) clustering = new IonizationClustering();
     
     G4StepLimiter* steplimit = new G4StepLimiter();
-
+    
+    // Loop through all registered particles
     theParticleIterator->reset();
     while ((*theParticleIterator)()) {
 
       G4ParticleDefinition* particle = theParticleIterator->value();
-      G4ProcessManager* pmanager = particle->GetProcessManager();
+      pmanager = particle->GetProcessManager();
 
-      // if (particle->GetPDGCharge() != 0.) {
-      // 	pmanager->AddDiscreteProcess(steplimit);
-      // }
-      
-      if (particle == IonizationElectron::Definition()) {
-	
-	G4VProcess* transp = G4ProcessTable::GetProcessTable()->
-	  FindProcess("Transportation", particle);
-	pmanager->RemoveProcess(transp);
+      // In order to limit the step size of charged particles
+      // (i.e., particles capable of leaving ionization hits) 
+      // to have more better precision in a tracking volume, 
+      // the (pseudo) process G4StepLimiter must be attached to them
+      if (particle->GetPDGCharge() != 0.)
+	pmanager->AddDiscreteProcess(steplimit);
 
-	pmanager->AddProcess(drift);
-	pmanager->SetProcessOrderingToFirst(drift, idxAlongStep);
-	pmanager->SetProcessOrderingToFirst(drift, idxPostStep);
-
-	if (particle == IonizationElectron::Definition()) {
-	  Electroluminescence* el = new Electroluminescence();
-	  pmanager->AddDiscreteProcess(el);
-	  //pmanager->AddProcess(new G4FastSimulationManagerProcess(), -1, 0, 0);
+      if (clustering) {
+	if (clustering->IsApplicable(*particle)) {
+	  pmanager->AddRestProcess(clustering);
+	  pmanager->AddDiscreteProcess(clustering);
 	}
-      }
-      else if (clustering->IsApplicable(*particle)) {
-	pmanager->AddProcess(clustering);
-	pmanager->SetProcessOrderingToLast(clustering, idxAtRest);
-	pmanager->SetProcessOrderingToLast(clustering, idxPostStep);
       }
     }
   }

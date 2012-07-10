@@ -26,23 +26,21 @@ namespace nexus {
     // Get user configuration parameters for physics
     const ParamStore& cfg = ConfigService::Instance().Physics();
 
-    // Register electromagenetic processes selected by user.
-    // Default option uses low-energy em extension.
+    
+    // Register electromagnetic processes selected by user.
+    // Default: use low-energy em extension
     G4int option = 1; 
     if (cfg.PeekIParam("low_energy_em")) 
       option = cfg.GetIParam("low_energy_em");
 
-    if (option == 0) 
-      RegisterPhysics(new G4EmStandardPhysics_option3);
-    else 
-      RegisterPhysics(new G4EmLivermorePhysics);
-
+    if (option == 0) RegisterPhysics(new G4EmStandardPhysics_option3);
+    else RegisterPhysics(new G4EmLivermorePhysics);
+      
     // Register decay process
     RegisterPhysics(new G4DecayPhysics);
 
     // Register optical processes (if selected by user)
     if (cfg.GetIParam("optical")) {
-      
       G4OpticalPhysics* optical = new G4OpticalPhysics();
       optical->SetTrackSecondariesFirst(kScintillation,true);
       optical->SetScintillationYieldFactor(1.);
@@ -51,8 +49,12 @@ namespace nexus {
       RegisterPhysics(optical);
     }
     
-    // Register nexus physics processes
-    //RegisterPhysics(new NexusPhysics);
+    if (cfg.GetIParam("drift")) {
+      NexusPhysics* nexus = new NexusPhysics();
+      nexus->ActivateDriftAndElectroluminescence(true);
+      // Register nexus physics processes
+      RegisterPhysics(nexus);
+    }
   }
 
 
