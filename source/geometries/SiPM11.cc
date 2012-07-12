@@ -118,6 +118,7 @@ namespace nexus {
 
     PmtSD* sipmsd = new PmtSD("/SIPM11/PHOTODIODES", "SIPM");
     sipmsd->SetDetectorVolumeDepth(0);
+    sipmsd->SetDetectorNamingOrder(1000.);
     sipmsd->SetTimeBinning(1.*microsecond);
     sipmsd->SetMotherVolumeDepth(1);
     G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
