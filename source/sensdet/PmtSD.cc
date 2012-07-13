@@ -14,6 +14,8 @@
 #include <G4ProcessManager.hh>
 #include <G4OpBoundaryProcess.hh>
 
+#include <G4RunManager.hh>
+
 #include <bhep/bhep_svc.h>
 
 
@@ -41,20 +43,27 @@ namespace nexus {
   {
     // Create a new collection of PMT hits
     _HC = new PmtHitsCollection(this->GetName(), this->GetCollectionName(0));
-    
+
     // Register the collection in the event
-    static G4int HCID = -1;
-    if (HCID < 0) {
-      HCID = G4SDManager::GetSDMpointer()->
-	GetCollectionID(this->GetCollectionName(0)); 
-    }
+    //static G4int HCID = -1;
+    //if (HCID < 0) {
+    
+    G4int HCID = G4SDManager::GetSDMpointer()->
+      GetCollectionID(this->GetCollectionName(0)); 
+    //}
     HCE->AddHitsCollection(HCID, _HC);
+  
   }
   
   
     
   G4bool PmtSD::ProcessHits(G4Step* step, G4TouchableHistory*)
   {
+     G4int cid = G4SDManager::GetSDMpointer()->GetCollectionID(this->GetCollectionName(0));
+     G4int n_of_coll = G4RunManager::GetRunManager()->GetCurrentEvent()->GetHCofThisEvent()->GetNumberOfCollections();
+ 
+     PmtHitsCollection* _HC = static_cast<PmtHitsCollection*>(G4RunManager::GetRunManager()->GetCurrentEvent()->GetHCofThisEvent()->GetHC(cid));
+    
     // Check whether the track is an optical photon
     G4ParticleDefinition* pdef = step->GetTrack()->GetDefinition();
     if (pdef != G4OpticalPhoton::Definition()) return false;
@@ -78,7 +87,6 @@ namespace nexus {
       
       // Check whether the photon has been detected in the boundary
       if (_boundary->GetStatus() == Detection) {
-
 	const G4VTouchable* touchable =
 	  step->GetPreStepPoint()->GetTouchable();
 
@@ -106,6 +114,7 @@ namespace nexus {
  	hit->Fill(time);
       }
     }
+   
   }
   
 
