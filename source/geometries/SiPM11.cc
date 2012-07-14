@@ -116,14 +116,19 @@ namespace nexus {
     
     // SENSITIVE DETECTOR ////////////////////////////////////////////
 
-    PmtSD* sipmsd = new PmtSD("/SIPM11/PHOTODIODES", "SIPM");
-    sipmsd->SetDetectorVolumeDepth(0);
-    sipmsd->SetDetectorNamingOrder(1000.);
-    sipmsd->SetTimeBinning(1.*microsecond);
-    sipmsd->SetMotherVolumeDepth(1);
-    G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
-    sipm_logic->SetSensitiveDetector(sipmsd);
-
+    G4String sdname = "/SIPM11/PHOTODIODES";
+    G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
+    
+    if (!G4SDManager::GetSDMpointer()->FindSensitiveDetector("/SIPM11/PHOTODIODES", true)) {
+      PmtSD* sipmsd = new PmtSD("/SIPM11/PHOTODIODES", "SIPM");
+      sipmsd->SetDetectorVolumeDepth(0);
+      sipmsd->SetDetectorNamingOrder(1000.);
+      sipmsd->SetTimeBinning(1.*microsecond);
+      sipmsd->SetMotherVolumeDepth(1);
+      
+      G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
+      sipm_logic->SetSensitiveDetector(sipmsd);
+    }
 
     // Visibilities
     //active_logic->SetVisAttributes(G4VisAttributes::Invisible);
