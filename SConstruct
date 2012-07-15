@@ -191,11 +191,7 @@ if not env['LIBPATH']:
 
     env.ParseConfig("bhep-config --libs --ldflags --include")
 
-    if not conf.CheckCXXHeader('bhep/system_of_units.h'):
-        Abort('BHEP headers not found.')
 
-    if not conf.CheckLib(library='bhep', language='CXX', autoadd=0):
-        Abort('BHEP library not found.')
 
 
     ## ROOT configuration ----------------------------------
@@ -211,6 +207,11 @@ if not env['LIBPATH']:
     if not conf.CheckLib(library='Cint', language='CXX', autoadd=0):
         Abort('ROOT libraries could not be found.')
 
+    if not conf.CheckCXXHeader('bhep/system_of_units.h'):
+        Abort('BHEP headers not found.')
+
+    if not conf.CheckLib(library='bhep', language='CXX', autoadd=0):
+        Abort('BHEP library not found.')
 
     ## -----------------------------------------------------
         
