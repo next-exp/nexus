@@ -16,8 +16,7 @@
 ###  dependency.
 ### ------------------------------------------------------------------
 
-import os
-import atexit
+import subprocess
 
 ## Geant4 version required by NEXUS
 NEXUS_G4VERSION_NUMBER = [950, 951]
@@ -37,28 +36,41 @@ SRCDIR = ['actions',
 BUILDVARS_FILE = 'buildvars.scons'
 
 ## Dummy default for path-like variables
-DEFAULT_PATH = '.'
+NULL_PATH = '/dev/null'
 
 ## Some useful functions
 
 def Abort(message):
     """Outputs a message before exiting with an error."""
     print 'scons: Build aborted.'
-    print 'scons: ', message
+    print 'scons:', message
     Exit(1)
 
-def AssertG4Version(path):
-    """Checks whether the user's G4 version can be used to run nexus."""
-    command = 'geant4-config --version'
-    if path != DEFAULT_PATH:
-        command = path + '/' + command
-    version = os.popen(command).read()
-    version = int(''.join(version.split('.')))
-    if not version in NEXUS_G4VERSION_NUMBER:
-        msg = 'This version of nexus requires Geant4 version(s) ' \
-            + str(NEXUS_G4VERSION_NUMBER) \
-            + ', and you are using version %i.' % version
-        Abort(msg)
+def AssertG4Version2(path):
+
+    ## If a path was specified, add it to the cmd to be executed
+    cmd = "geant4-config --version"
+    if path != NULL_PATH:
+        cmd = path + '/' + cmd
+
+    ## Execute the command and store the stdout and stderr
+    p = subprocess.Popen(cmd, shell=True,
+                         stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
+
+    ## If the stdout is empty, the execution of the command failed
+    version = p.stdout.read()
+    if version == '':
+        Abort("Failed to establish Geant4 version.")
+    else:
+        version = int(''.join(version.split('.')))
+        msg = "Checking for Geant4 version..."
+        print msg, version
+        if not version in NEXUS_G4VERSION_NUMBER:
+            msg = 'This version of NEXUS requires Geant4 version(s) ' \
+                + str(NEXUS_G4VERSION_NUMBER) 
+            Abort(msg)
+
 
 
 ## ###################################################################
@@ -77,35 +89,35 @@ vars.AddVariables(
 
     PathVariable('GEANT4_BINDIR',                     # var name
                  'Path to Geant4 headers directory',  # var description
-                 DEFAULT_PATH),                       # var default value
+                 NULL_PATH),                       # var default value
     
     
     ## CLHEP
 
     PathVariable('CLHEP_PATH',
                  'Path to CLHEP installation',
-                 DEFAULT_PATH),
+                 NULL_PATH),
     
     PathVariable('CLHEP_INCDIR',
                  'Path to CLHEP headers directory.',
-                 DEFAULT_PATH),
+                 NULL_PATH),
     
     PathVariable('CLHEP_LIBDIR',
                  'Path to CLHEP libraries directory.',
-                 DEFAULT_PATH),
+                 NULL_PATH),
     
     
     ## BHEP 
 
     PathVariable('BHEP_BINDIR',                   
                  'Path to BHEP installation.',
-                 DEFAULT_PATH),                 
+                 NULL_PATH),                 
     
     ## ROOT
 
     PathVariable('ROOT_BINDIR',
                  'Path to ROOT installation.',
-                 DEFAULT_PATH),
+                 NULL_PATH),
 
     
     ## OpenGL and X11
@@ -170,36 +182,37 @@ if not env['LIBPATH']:
 
     ## Geant4 configuration --------------------------------
 
-    AssertG4Version(env['GEANT4_BINDIR'])
+    AssertG4Version2(env['GEANT4_BINDIR'])
     
-    if env['GEANT4_BINDIR'] != DEFAULT_PATH:
+    if env['GEANT4_BINDIR'] != NULL_PATH:
         env.PrependENVPath('PATH', env['GEANT4_BINDIR'])
 
     env.ParseConfig('geant4-config --cflags --libs')
+
+
+    ## BHEP configuration ----------------------------------
+
+    if env['BHEP_BINDIR'] != NULL_PATH:
+        env.PrependENVPath('PATH', env['BHEP_BINDIR'])
+
+    env.ParseConfig("bhep-config --libs --ldflags --include")
+
+
+    ## ROOT configuration ----------------------------------
+
+    if env['ROOT_BINDIR'] != NULL_PATH:
+        env.PrependENVPath('PATH', env['ROOT_BINDIR'])
+        
+    env.ParseConfig('root-config --cflags --libs')
+
+
+    ## Check for libraries and headers ---------------------
 
     if not conf.CheckCXXHeader('G4Event.hh'):
         Abort('Geant4 headers could not be found.')
 
     if not conf.CheckLib(library='G4global', language='CXX', autoadd=0):
         Abort('Geant4 libraries could not be found.')
-
-
-    ## BHEP configuration ----------------------------------
-
-    if env['BHEP_BINDIR'] != DEFAULT_PATH:
-        env.PrependENVPath('PATH', env['BHEP_BINDIR'])
-
-    env.ParseConfig("bhep-config --libs --ldflags --include")
-
-
-
-
-    ## ROOT configuration ----------------------------------
-
-    if env['ROOT_BINDIR'] != DEFAULT_PATH:
-        env.PrependENVPath('PATH', env['ROOT_BINDIR'])
-        
-    env.ParseConfig('root-config --cflags --libs')
 
     if not conf.CheckCXXHeader('TObject.h'):
         Abort('ROOT headers could not be found.')
@@ -213,11 +226,10 @@ if not env['LIBPATH']:
     if not conf.CheckLib(library='bhep', language='CXX', autoadd=0):
         Abort('BHEP library not found.')
 
-    ## -----------------------------------------------------
-        
     env = conf.Finish()
 
 vars.Save(BUILDVARS_FILE, env)
+
 
 ## ###################################################################
 ## BUILDING NEXUS
