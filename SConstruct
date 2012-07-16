@@ -46,7 +46,7 @@ def Abort(message):
     print 'scons:', message
     Exit(1)
 
-def AssertG4Version2(path):
+def AssertG4Version(path):
 
     ## If a path was specified, add it to the cmd to be executed
     cmd = "geant4-config --version"
@@ -182,7 +182,7 @@ if not env['LIBPATH']:
 
     ## Geant4 configuration --------------------------------
 
-    AssertG4Version2(env['GEANT4_BINDIR'])
+    AssertG4Version(env['GEANT4_BINDIR'])
     
     if env['GEANT4_BINDIR'] != NULL_PATH:
         env.PrependENVPath('PATH', env['GEANT4_BINDIR'])
