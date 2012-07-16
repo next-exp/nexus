@@ -1065,16 +1065,23 @@ void Next1EL::BuildSiPMTrackingPlane()
   G4double dbo43_ysize = dbo43_geom.GetDimensions().y();
   G4double dbo42_xsize = dbo42_geom.GetDimensions().x();
   G4double dbo42_ysize = dbo42_geom.GetDimensions().y();
+
+  // The z dimension is the same for every kind of board
+  G4double dbo_zsize = dbo44_geom.GetDimensions().z();
+  // Distance of SiPM surface from the beginning of EL region
+  G4double dist_el = 2.5*mm;
+  G4double pos_z = _elgap_position.z() + _elgap_length/2. + dist_el 
+    + dbo_zsize/2.; 
   
   G4double gap = 2.*mm;
     
-  G4int dbo_no = 0;
+  G4int dbo_no = 1;
   
   for (G4int i=0; i<4; i++) {
     G4double y = 3/2.*gap/2. + 3./2.*dbo44_ysize - i * (dbo44_ysize+gap);
     for (G4int j=0; j<3; j++) {
       G4double x = - dbo44_xsize - gap + j * (dbo44_xsize+gap);
-      new G4PVPlacement(rotdbo, G4ThreeVector(x,y,240.*mm), dbo44_logic,
+      new G4PVPlacement(rotdbo, G4ThreeVector(x,y,pos_z), dbo44_logic,
    			"DBO44", _gas_logic, false, dbo_no, true);
       dbo_no++;
     }
@@ -1082,25 +1089,25 @@ void Next1EL::BuildSiPMTrackingPlane()
 
   G4double x = - 3./2.*dbo44_xsize - 2.*gap - dbo42_xsize/2.;
   G4double y = gap + dbo44_ysize;
-  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,240.*mm), dbo42_logic,
-		    "DBO42", _gas_logic, false, 13, true);
-  x = -x;
-  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,240.*mm), dbo42_logic,
+  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,pos_z), dbo42_logic,
 		    "DBO42", _gas_logic, false, 14, true);
-  y = -y;
-  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,240.*mm), dbo42_logic,
-		    "DBO42", _gas_logic, false, 15, true);
   x = -x;
-  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,240.*mm), dbo42_logic,
+  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,pos_z), dbo42_logic,
+		    "DBO42", _gas_logic, false, 15, true);
+  y = -y;
+  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,pos_z), dbo42_logic,
 		    "DBO42", _gas_logic, false, 16, true);
+  x = -x;
+  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,pos_z), dbo42_logic,
+		    "DBO42", _gas_logic, false, 17, true);
   
   x = - 3./2.*dbo44_xsize - 2.*gap - dbo43_xsize/2.;
   y = 0;
-  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,240.*mm), dbo43_logic,
-		    "DBO43", _gas_logic, false, 17, true);
-  x = -x;
-  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,240.*mm), dbo43_logic,
+  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,pos_z), dbo43_logic,
 		    "DBO43", _gas_logic, false, 18, true);
+  x = -x;
+  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,pos_z), dbo43_logic,
+		    "DBO43", _gas_logic, false, 19, true);
 }
 
 
