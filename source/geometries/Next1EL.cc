@@ -163,6 +163,13 @@ void Next1EL::ReadParameters()
 
   // Placement of TPB coating
   _tpb_coating = cfg_geom.GetIParam("tpb_coating");
+
+  // Transparency of EL meshes
+  if (cfg_geom.PeekDParam("elgrid_transparency")) {
+    _elgrid_transparency = cfg_geom.GetDParam("elgrid_transparency");
+  } else {
+    _elgrid_transparency = .80;
+  }
   
   
   const ParamStore& cfg_gen = ConfigService::Instance().Generation();
@@ -532,10 +539,10 @@ void Next1EL::BuildFieldCage()
   // EL GRIDS
   
   G4double diel_thickn = .1*mm;
-  G4double transparency = 0.88;
+
   G4Material* fgrid = MaterialsList::CopyMaterial(_gxe, "grid_mat");
   fgrid->SetMaterialPropertiesTable
-    (OpticalMaterialProperties::FakeGrid(_pressure, 303, transparency,
+    (OpticalMaterialProperties::FakeGrid(_pressure, 303, _elgrid_transparency,
 					 diel_thickn));
   
   G4double pos1 = - _elgap_length/2. + diel_thickn/2.;
@@ -734,7 +741,7 @@ void Next1EL::BuildFieldCage()
   // CATHODE .....................................
 
   diel_thickn = 1. * mm;
-  transparency = 0.98;
+  G4double transparency = 0.98;
 
   G4Material* fcathode = MaterialsList::CopyMaterial(_gxe, "cathode_mat");
   fcathode->SetMaterialPropertiesTable

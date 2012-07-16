@@ -161,6 +161,7 @@ namespace nexus {
     G4ThreeVector _specific_vertex; /// < Position of a particular vertex inside the geometry
     G4int _tpb_coating; /// < Placement of TPB coating inside the upper light tube:
     /// < 0 if false, 1 if true
+    G4double _elgrid_transparency; /// Transparency of EL meshes
 
     G4int _PMTID;
     G4int _numb_of_events;
