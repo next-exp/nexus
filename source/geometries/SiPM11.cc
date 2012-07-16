@@ -119,7 +119,7 @@ namespace nexus {
     G4String sdname = "/SIPM11/PHOTODIODES";
     G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
     
-    if (!G4SDManager::GetSDMpointer()->FindSensitiveDetector(sdname)) {
+    if (!G4SDManager::GetSDMpointer()->FindSensitiveDetector(sdname, false)) {
       PmtSD* sipmsd = new PmtSD(sdname, "SIPM");
       sipmsd->SetDetectorVolumeDepth(0);
       sipmsd->SetDetectorNamingOrder(1000.);
