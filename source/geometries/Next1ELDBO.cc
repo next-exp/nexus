@@ -87,9 +87,7 @@ namespace nexus {
     
     // SILICON PMs ///////////////////////////////////////////////////
 
-    G4cout << "before" << G4endl;
     SiPM11 sipm_geom;
-    G4cout << "after" << G4endl;
 
     G4LogicalVolume* sipm_logic = sipm_geom.GetLogicalVolume();
 
