@@ -16,6 +16,7 @@
 ###  dependency.
 ### ------------------------------------------------------------------
 
+import os
 import subprocess
 
 ## Geant4 version required by NEXUS
