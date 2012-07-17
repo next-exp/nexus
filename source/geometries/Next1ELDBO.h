@@ -13,6 +13,7 @@
 #define __NEXT1_EL_DBO__
 
 #include "BaseGeometry.h"
+#include <vector>
 
 
 namespace nexus {
@@ -25,10 +26,13 @@ namespace nexus {
     /// Destructor
     ~Next1ELDBO();
     G4ThreeVector GetDimensions();
+    /// Method to retrieve the position of SiPM inside the daughter board
+    std::vector<std::pair<int, G4ThreeVector> > GetPositions();
     
   private:
     void DefineGeometry(G4int rows, G4int columns);
     G4ThreeVector _dimensions;
+    std::vector<std::pair<int, G4ThreeVector> > _positions;
   };
   
 } // end namespace nexus

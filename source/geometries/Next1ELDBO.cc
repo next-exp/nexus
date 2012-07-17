@@ -86,7 +86,6 @@ namespace nexus {
     
     
     // SILICON PMs ///////////////////////////////////////////////////
-
     SiPM11 sipm_geom;
 
     G4LogicalVolume* sipm_logic = sipm_geom.GetLogicalVolume();
@@ -94,15 +93,18 @@ namespace nexus {
     pos_z = dbo_z/2 - coating_thickn - (sipm_geom.GetDimensions().z())/2.;
 
     G4double offset = sipm_pitch/2. - board_side_reduction;
-    
-    G4int sipm_no = 0;
 
+    G4int sipm_no = 0;
     for (G4int i=0; i<rows; i++) {
       G4double pos_y = dbo_y/2. - offset - i*sipm_pitch;
       for (G4int j=0; j<columns; j++) {
 	G4double pos_x = -dbo_x/2 + offset + j*sipm_pitch;
 	new G4PVPlacement(0, G4ThreeVector(pos_x, pos_y, pos_z), sipm_logic,
 			  "SIPM11", board_logic, false, sipm_no);
+	std::pair<int, G4ThreeVector> mypos;
+	mypos.first = sipm_no;
+	mypos.second = G4ThreeVector(pos_x, pos_y, pos_z);
+	_positions.push_back(mypos);
 	sipm_no++;
       }
     }
@@ -111,6 +113,11 @@ namespace nexus {
   G4ThreeVector Next1ELDBO::GetDimensions()
   {
     return _dimensions;
+  }
+
+  std::vector<std::pair<int, G4ThreeVector> > Next1ELDBO::GetPositions()
+  {
+    return _positions;
   }
   
 } // end namespace nexus

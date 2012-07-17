@@ -129,6 +129,7 @@ BaseGeometry(),
     BuildSiPMTrackingPlane();
   else 
     BuildPMTTrackingPlane();
+  //PrintAbsoluteSiPMPos();
 }
 
 
@@ -1058,6 +1059,8 @@ void Next1EL::BuildSiPMTrackingPlane()
 
   G4RotationMatrix* rotdbo = new G4RotationMatrix();
   rotdbo->rotateY(pi);
+  G4ThreeVector vec = rotdbo->getAxis();
+  G4double angle = rotdbo->getDelta();
 
   G4double dbo44_xsize = dbo44_geom.GetDimensions().x();
   G4double dbo44_ysize = dbo44_geom.GetDimensions().y();
@@ -1070,9 +1073,8 @@ void Next1EL::BuildSiPMTrackingPlane()
   G4double dbo_zsize = dbo44_geom.GetDimensions().z();
   // Distance of SiPM surface from the beginning of EL region
   G4double dist_el = 2.5*mm;
-  G4double pos_z = _elgap_position.z() + _elgap_length/2. + dist_el 
+  G4double z = _elgap_position.z() + _elgap_length/2. + dist_el 
     + dbo_zsize/2.; 
-  
   G4double gap = 2.*mm;
     
   G4int dbo_no = 1;
@@ -1081,40 +1083,108 @@ void Next1EL::BuildSiPMTrackingPlane()
     G4double y = 3.*gap/2. + 3./2.*dbo44_ysize - i * (dbo44_ysize+gap);
     for (G4int j=0; j<3; j++) {
       G4double x = - dbo44_xsize - gap + j * (dbo44_xsize+gap);
-      new G4PVPlacement(rotdbo, G4ThreeVector(x,y,pos_z), dbo44_logic,
+      new G4PVPlacement(rotdbo, G4ThreeVector(x,y,z), dbo44_logic,
    			"DBO44", _gas_logic, false, dbo_no, true);
+      std::vector<std::pair<int, G4ThreeVector> > positions = dbo44_geom.GetPositions();
+      for (G4int si=0; si<positions.size(); si++) {
+	G4ThreeVector mypos = positions[si].second;
+	mypos.rotate(angle, vec);
+	std::pair<int, G4ThreeVector> abs_pos;
+	abs_pos.first = dbo_no*1000+positions[si].first ;
+	abs_pos.second = G4ThreeVector(x+mypos.getX(), y+mypos.getY(), z+mypos.getZ()); 
+	_absSiPMpos.push_back(abs_pos);
+      }
       dbo_no++;
     }
   }
 
   G4double x = - 3./2.*dbo44_xsize - 2.*gap - dbo42_xsize/2.;
   G4double y = gap + dbo44_ysize;
-  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,pos_z), dbo42_logic,
+  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,z), dbo42_logic,
 		    "DBO42", _gas_logic, false, 13, true);
- 
+  std::vector<std::pair<int, G4ThreeVector> > positions = dbo42_geom.GetPositions();
+  for (G4int si=0; si<positions.size(); si++) {
+    G4ThreeVector mypos = positions[si].second;
+    mypos.rotate(angle, vec);
+    std::pair<int, G4ThreeVector> abs_pos;
+    abs_pos.first = 13*1000+positions[si].first ;
+    abs_pos.second = G4ThreeVector(x+mypos.getX(), y+mypos.getY(), z+mypos.getZ()); 
+    _absSiPMpos.push_back(abs_pos);
+  }
   x = -x;
-  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,pos_z), dbo42_logic,
+  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,z), dbo42_logic,
 		    "DBO42", _gas_logic, false, 14, true);
- 
+  for (G4int si=0; si<positions.size(); si++) {
+    G4ThreeVector mypos = positions[si].second;
+    mypos.rotate(angle, vec);
+    std::pair<int, G4ThreeVector> abs_pos;
+    abs_pos.first = 14*1000+positions[si].first ;
+    abs_pos.second = G4ThreeVector(x+mypos.getX(), y+mypos.getY(), z+mypos.getZ()); 
+    _absSiPMpos.push_back(abs_pos);
+  }
   y = -y;
-  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,pos_z), dbo42_logic,
+  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,z), dbo42_logic,
 		    "DBO42", _gas_logic, false, 15, true);
- 
+  for (G4int si=0; si<positions.size(); si++) {
+    G4ThreeVector mypos = positions[si].second;
+    mypos.rotate(angle, vec);
+    std::pair<int, G4ThreeVector> abs_pos;
+    abs_pos.first = 15*1000+positions[si].first ;
+    abs_pos.second = G4ThreeVector(x+mypos.getX(), y+mypos.getY(), z+mypos.getZ()); 
+    _absSiPMpos.push_back(abs_pos);
+  }
   x = -x;
-  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,pos_z), dbo42_logic,
+  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,z), dbo42_logic,
 		    "DBO42", _gas_logic, false, 16, true);
+  for (G4int si=0; si<positions.size(); si++) {
+    G4ThreeVector mypos = positions[si].second;
+    mypos.rotate(angle, vec);
+    std::pair<int, G4ThreeVector> abs_pos;
+    abs_pos.first = 16*1000+positions[si].first ;
+    abs_pos.second = G4ThreeVector(x+mypos.getX(), y+mypos.getY(), z+mypos.getZ()); 
+    _absSiPMpos.push_back(abs_pos);
+  }
   
   x = - 3./2.*dbo44_xsize - 2.*gap - dbo43_xsize/2.;
   y = 0;
-  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,pos_z), dbo43_logic,
+  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,z), dbo43_logic,
 		    "DBO43", _gas_logic, false, 17, true);
- 
+  positions = dbo43_geom.GetPositions();
+  for (G4int si=0; si<positions.size(); si++) {
+    G4ThreeVector mypos = positions[si].second;
+    mypos.rotate(angle, vec);
+    std::pair<int, G4ThreeVector> abs_pos;
+    abs_pos.first = 17*1000+positions[si].first ;
+    abs_pos.second = G4ThreeVector(x+mypos.getX(), y+mypos.getY(), z+mypos.getZ()); 
+    _absSiPMpos.push_back(abs_pos);
+  }
   x = -x;
-  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,pos_z), dbo43_logic,
+  new G4PVPlacement(rotdbo, G4ThreeVector(x,y,z), dbo43_logic,
 		    "DBO43", _gas_logic, false, 18, true);
+  for (G4int si=0; si<positions.size(); si++) {
+    G4ThreeVector mypos = positions[si].second;
+    mypos.rotate(angle, vec);
+    std::pair<int, G4ThreeVector> abs_pos;
+    abs_pos.first = 18*1000+positions[si].first ;
+    abs_pos.second = G4ThreeVector(x+mypos.getX(), y+mypos.getY(), z+mypos.getZ()); 
+    _absSiPMpos.push_back(abs_pos);
+  }
 }
 
-
+void Next1EL::PrintAbsoluteSiPMPos()
+{
+  G4cout << "----- Absolute position of SiPMs in gas volume -----" << G4endl;
+  G4cout <<  G4endl;
+  for (G4int i=0; i<_absSiPMpos.size(); i++) {
+    std::pair<int, G4ThreeVector> abs_pos = _absSiPMpos[i];
+    G4cout << "ID number: " << _absSiPMpos[i].first << ", position: " 
+    	   << _absSiPMpos[i].second.getX() << ", "
+    	   << _absSiPMpos[i].second.getY() << ", "
+    	   << _absSiPMpos[i].second.getZ()  << G4endl;
+  }
+  G4cout <<  G4endl;
+  G4cout << "---------------------------------------------------" << G4endl;
+}
 
 G4ThreeVector Next1EL::GenerateVertex(const G4String& region) const
 {

@@ -37,7 +37,6 @@ namespace nexus {
 
     /// Returns a vertex in a region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
-
     
   private:
     void ReadParameters();
@@ -50,6 +49,7 @@ namespace nexus {
     void BuildPMTTrackingPlane();
 
     void CalculateELTableVertices(G4double);
+    void PrintAbsoluteSiPMPos();
     
   private:
 
@@ -167,8 +167,10 @@ namespace nexus {
     G4int _numb_of_events;
     mutable G4int _idx_table;
     std::vector<G4ThreeVector> _table_vertices;   
-
     std::vector<G4ThreeVector> _pmt_positions;
+
+    //Vector to store the ID number of each SiPM together with its absolute position in gas
+    std::vector<std::pair<int, G4ThreeVector> > _absSiPMpos;
     
     HexagonPointSampler* _hexrnd;
 
