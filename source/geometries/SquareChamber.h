@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
 ///  \file   SquareChamber.h
-///  \brief  A simple square tracking chamber.
+///  \brief  A box-shaped chamber filled with xenon.
 ///
-///  \author   J. Martin-Albo <jmalbos@ific.uv.es>    
+///  \author   <justo.martin-albo@ific.uv.es>
 ///  \date     1 August 2009
 ///  \version  $Id$
 ///
-///  Copyright (c) 2009-2011 NEXT Collaboration
+///  Copyright (c) 2009-2012 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
 #ifndef __SQUARE_CHAMBER__
@@ -20,7 +20,7 @@ namespace nexus {
   class BoxPointSampler;
   
 
-  /// Geometry of a square tracking chamber filled with gaseous xenon
+  /// Geometry of a box-shaped chamber filled with xenon
 
   class SquareChamber: public BaseGeometry
   {
@@ -45,7 +45,7 @@ namespace nexus {
     G4double _pitch; /// Distance between sensors
     G4double _gxe_pressure; ///< Xenon gas pressure
 
-    BoxPointSampler* _chamber_vertex_gen; ///< Vertices random generator
+    BoxPointSampler* _chamber_vertex_gen; ///< Random generator of vertices
   };
 
 } // end namespace nexus
