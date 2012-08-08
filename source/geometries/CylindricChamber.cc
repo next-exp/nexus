@@ -59,6 +59,9 @@ namespace nexus {
     _length = cfg.GetDParam("chamber_length");
     _thickn = cfg.GetDParam("chamber_thickness");
 
+    // electroluminescence gap length
+    _elgap_length = cfg.GetDParam("elgap_length");
+
     // xenon gas pressure
     _gxe_pressure = cfg.GetDParam("gxe_pressure");
 
@@ -141,15 +144,13 @@ namespace nexus {
 
     // ELECTROLUMINESCENCE GAP ///////////////////////////////////////
 
-    G4double elgap_length = 1. * cm;
-
     G4Box* elgap_solid = 
-      new G4Box("EL_GAP", active_side/2., active_side/2., elgap_length/2.);
+      new G4Box("EL_GAP", active_side/2., active_side/2., _elgap_length/2.);
     
     G4LogicalVolume* elgap_logic = 
       new G4LogicalVolume(elgap_solid, gxe, "EL_GAP");
 
-    G4double pos_z = active_length/2. + elgap_length/2.;
+    G4double pos_z = active_length/2. + _elgap_length/2.;
 
     G4PVPlacement* elgap_physi =
       new G4PVPlacement(0, G4ThreeVector(0.,0.,pos_z),
@@ -158,7 +159,7 @@ namespace nexus {
     // Define a drift field with EL generation for this volume
     UniformElectricDriftField* el_field = new UniformElectricDriftField();
     el_field->SetCathodePosition(active_length/2.);
-    el_field->SetAnodePosition(active_length/2.+elgap_length);
+    el_field->SetAnodePosition(active_length/2.+_elgap_length);
     el_field->SetDriftVelocity(5.*mm/microsecond);
     el_field->SetTransverseDiffusion(1.*mm/sqrt(cm));
     el_field->SetLongitudinalDiffusion(.5*mm/sqrt(cm));
@@ -173,8 +174,53 @@ namespace nexus {
   
   G4ThreeVector CylindricChamber::GenerateVertex(const G4String& region) const
   {
-    return _chamber_vertex_gen->GenerateVertex(region);
+    if (region == "EL_TABLE") {
+      if (_table_vertices.size() == 0) CalculateELTableVertices(5.*mm);
+      else ++_vtx;
+      return *_vtx;
+    }
+    else {
+      return _chamber_vertex_gen->GenerateVertex(region);
+    }
   }
   
+
+
+  void CylindricChamber::CalculateELTableVertices(G4double binning) const
+  {
+    G4ThreeVector vertex;
+
+    vertex.setZ(0.75 * _length);
+
+    G4double side = 2. * _radius * sin(pi/4.);
+    const G4int num_points = floor(side/binning);
+
+    for (G4int i=0; i<num_points; i++) {
+
+      vertex.setX(-side/2. + i*binning);
+
+      for (G4int j=0; j<num_points; j++) {
+	vertex.setY(side/2. - j*binning);
+	_table_vertices.push_back(vertex);
+      }
+    }
+
+    _vtx = _table_vertices.begin();
+    
+    // Check whether the job has enough events to fully sample the 
+    // vertices table
   
+    const ParamStore& cfgjob = ConfigService::Instance().Job();
+    G4int num_events = cfgjob.GetIParam("number_events");
+  
+    if (num_events < _table_vertices.size()) {
+      G4cout << "\n[Next1EL] ERROR.- "
+     	     << "Not enough events in job to scan completely\n the EL vertices table."
+	     << " You'd need " << _table_vertices.size() << " events to do that."
+	     << G4endl;
+    
+    }
+  }
+  
+
 } // end namespace nexus
