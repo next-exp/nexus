@@ -32,6 +32,9 @@ namespace nexus {
     // Stainless Steel (grade 304L)
     static G4Material* Steel();
 
+    // Stainless steel grade 316Ti
+    static G4Material* Steel316Ti();
+
     // Epoxy resin
     static G4Material* Epoxy();
 

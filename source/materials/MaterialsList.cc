@@ -65,6 +65,41 @@ G4Material* MaterialsList::Steel()
 
 
 
+G4Material* MaterialsList::Steel316Ti()
+{
+  G4String name = "Steel316Ti";
+
+  G4Material* mat = G4Material::GetMaterial(name, false);
+
+  if (!mat) {
+    mat = new G4Material(name, 8000*kg/m3, 6);
+    
+    G4NistManager* nist = G4NistManager::Instance();
+
+    G4Element* Fe = nist->FindOrBuildElement("Fe");
+    mat->AddElement(Fe, 0.636);
+
+    G4Element* Cr = nist->FindOrBuildElement("Cr");
+    mat->AddElement(Cr, 0.18);
+
+    G4Element* Ni = nist->FindOrBuildElement("Ni");
+    mat->AddElement(Ni, 0.14);
+
+    G4Element* Mo = nist->FindOrBuildElement("Mo");
+    mat->AddElement(Mo, 0.03);
+    
+    G4Element* Si = nist->FindOrBuildElement("Si");
+    mat->AddElement(Si, 0.007);
+    
+    G4Element* Ti = nist->FindOrBuildElement("Ti");
+    mat->AddElement(Ti, 0.007);
+  }
+  
+  return mat;
+}
+
+
+
 G4Material* MaterialsList::Epoxy()
 {
   G4String name = "Epoxy";
