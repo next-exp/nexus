@@ -68,7 +68,7 @@ Next100TrackingPlane::Next100TrackingPlane(G4LogicalVolume* mother_logic):
   }
 
   G4LogicalVolume* support_plate_logic = new G4LogicalVolume(support_plate_solid,
-							     G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
+							     MaterialsList::HDPE(),
 							     "SUPPORT_PLATE");
 
 

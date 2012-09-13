@@ -39,13 +39,20 @@ namespace nexus {
     // Body dimensions
     _body_in_rad (56.0  * cm),
     _body_length (160.0 * cm),
-    _body_thickness (12.  * cm),
+    _body_thickness (12.0 * cm),
 
-    // Tracking plane dimensions
+    // // Tracking plane dimensions  (thick version with cone substraction)
+    // _tracking_orad (65.0 * cm),        // To be checked
+    // _tracking_length (24.0 * cm),
+    // _tracking_irad (53.5 * cm),
+    // _tracking_cone_height (14. * cm),  // To be checked
+    // _tracking_hole_rad (4.5 * cm),     // To be checked
+
+    // Tracking plane dimensions  (thin version without substractions)
     _tracking_orad (65.0 * cm),        // To be checked
-    _tracking_length (24.0 * cm),
-    _tracking_irad (53.5 * cm),
-    _tracking_cone_height (14. * cm),  // To be checked
+    _tracking_length (12.0 * cm),
+    _tracking_irad (0. * cm),          // Meaningless
+    _tracking_cone_height (0. * cm),   // Meaningless
     _tracking_hole_rad (4.5 * cm),     // To be checked
 
     // Energy plane dimensions
@@ -69,7 +76,25 @@ namespace nexus {
 					_body_length/2., 0.*deg, 360.*deg);
 
 
-    // Tracking plane
+    // // Tracking plane (thick version with cone substraction)
+    // G4Tubs* ics_tracking_nh_solid = new G4Tubs("ICS_TRACKING_NH", 0.*cm, _tracking_orad,
+    // 					       _tracking_length/2., 0.*deg, 360.*deg);
+
+    // G4Tubs* ics_tracking_hole_solid = new G4Tubs("ICS_TRACKING_HOLE", 0.*cm, _tracking_hole_rad,
+    // 						 _tracking_length/2. + 5*cm, 0.*deg, 360.*deg);
+
+    // G4SubtractionSolid* ics_tracking_solid = new G4SubtractionSolid("ICS_TRACKING", ics_tracking_nh_solid,
+    // 								    ics_tracking_hole_solid, 0, G4ThreeVector(0. , 0., 0.) );
+
+    // G4Cons* ics_tracking_cone_solid = new G4Cons("ICS_TRACKING_CONE", 0.*cm, _tracking_irad, 0.*cm, 0.*cm,
+    // 						 _tracking_cone_height/2., 0.*deg, 360.*deg);
+
+    // G4double cone_zpos = -1. * (_tracking_length - _tracking_cone_height) / 2.;
+    // ics_tracking_solid = new G4SubtractionSolid("ICS_TRACKING", ics_tracking_solid, ics_tracking_cone_solid,
+    // 						0, G4ThreeVector(0. , 0., cone_zpos) );
+
+
+    // Tracking plane  (thin version without substractions)
     G4Tubs* ics_tracking_nh_solid = new G4Tubs("ICS_TRACKING_NH", 0.*cm, _tracking_orad,
 					       _tracking_length/2., 0.*deg, 360.*deg);
 
@@ -78,13 +103,6 @@ namespace nexus {
 
     G4SubtractionSolid* ics_tracking_solid = new G4SubtractionSolid("ICS_TRACKING", ics_tracking_nh_solid,
 								    ics_tracking_hole_solid, 0, G4ThreeVector(0. , 0., 0.) );
-
-    G4Cons* ics_tracking_cone_solid = new G4Cons("ICS_TRACKING_CONE", 0.*cm, _tracking_irad, 0.*cm, 0.*cm,
-						 _tracking_cone_height/2., 0.*deg, 360.*deg);
-
-    G4double cone_zpos = -1. * (_tracking_length - _tracking_cone_height) / 2.;
-    ics_tracking_solid = new G4SubtractionSolid("ICS_TRACKING", ics_tracking_solid, ics_tracking_cone_solid,
-						0, G4ThreeVector(0. , 0., cone_zpos) );
 
 
 
@@ -139,9 +157,10 @@ namespace nexus {
 
     // SETTING VISIBILITIES   //////////
     if (_visibility) {
-      G4VisAttributes copper_col(G4Colour(.72, .45, .20));
+      //G4VisAttributes copper_col(G4Colour(.72, .45, .20));
       //copper_col.SetForceSolid(true);
-      ics_logic->SetVisAttributes(copper_col);
+      G4cout << "*****************************************************************************************************";
+      //ics_logic->SetVisAttributes(copper_col);
     }
     else {
       ics_logic->SetVisAttributes(G4VisAttributes::Invisible);
@@ -210,13 +229,18 @@ namespace nexus {
       if (rand < _perc_body_vol)
 	vertex = _body_gen->GenerateVertex(TUBE_VOLUME);        // Body
 
-      else if  (rand < _perc_tracking_vol) {
-	G4VPhysicalVolume *VertexVolume;
-	do {
-	  vertex = _tracking_gen->GenerateVertex(TUBE_VOLUME);    // Tracking plane
-	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
-	} while (VertexVolume->GetName() != "ICS");
-      }
+      // (thick version with cone substraction)
+      // else if  (rand < _perc_tracking_vol) {
+      // 	G4VPhysicalVolume *VertexVolume;
+      // 	do {
+      // 	  vertex = _tracking_gen->GenerateVertex(TUBE_VOLUME);    // Tracking plane
+      // 	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+      // 	} while (VertexVolume->GetName() != "ICS");
+      // }
+
+      // (thin version without substractions)
+      else if  (rand < _perc_tracking_vol)
+	vertex = _tracking_gen->GenerateVertex(TUBE_VOLUME);    // Tracking plane
 
       else if  (rand < _perc_energy_cyl_vol)
 	vertex = _energy_cyl_gen->GenerateVertex(TUBE_VOLUME);  // Energy plane, cylindric section

@@ -175,7 +175,7 @@ namespace nexus {
 
     //// The logics
     G4LogicalVolume* vessel_logic = new G4LogicalVolume(vessel_solid,
-							G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
+							MaterialsList::Steel316Ti(),
 							"VESSEL");
     this->SetLogicalVolume(vessel_logic);
 
