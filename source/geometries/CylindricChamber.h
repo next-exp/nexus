@@ -1,18 +1,19 @@
 // ----------------------------------------------------------------------------
 ///  \file   CylindricChamber.h
-///  \brief  A simple cylindric tracking chamber.
+///  \brief  A simple cylindric tracking chamber
 ///
-///  \author   J. Martin-Albo <jmalbos@ific.uv.es>    
+///  \author   <justo.martin-albo@ific.uv.es>
 ///  \date     29 Mar 2009
 ///  \version  $Id$ 
 ///
-///  Copyright (c) 2009-2011 NEXT Collaboration
+///  Copyright (c) 2009-2012 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
 #ifndef __CYLINDRIC_CHAMBER__
 #define __CYLINDRIC_CHAMBER__
 
 #include "BaseGeometry.h"
+#include <vector>
 
 
 namespace nexus {
@@ -20,7 +21,7 @@ namespace nexus {
   class CylinderPointSampler;
 
   
-  /// Geometry of a cylindric chamber filled with liquid xenon
+  /// A cylindric gaseous tracking chamber filled with xenon
   
   class CylindricChamber: public BaseGeometry
   {
@@ -38,13 +39,20 @@ namespace nexus {
     void SetParameters();
     /// Define geometry volumes
     void BuildGeometry();
+    ///
+    void CalculateELTableVertices(double) const;
 
   private:
     G4double _radius; ///< Chamber internal radius
     G4double _length; ///< Chamber internal length
     G4double _thickn; ///< Chamber thickness
 
+    G4double _elgap_length; ///< Length of the electroluminescence gap
+
     G4double _gxe_pressure; ///< Gas pressure
+
+    mutable std::vector<G4ThreeVector> _table_vertices;
+    mutable std::vector<G4ThreeVector>::iterator _vtx;
 
     CylinderPointSampler* _chamber_vertex_gen; ///< Vertices generator
   };
