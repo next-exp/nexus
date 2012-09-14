@@ -46,14 +46,14 @@ namespace nexus {
     // _tracking_length (24.0 * cm),
     // _tracking_irad (53.5 * cm),
     // _tracking_cone_height (14. * cm),  // To be checked
-    // _tracking_hole_rad (4.5 * cm),     // To be checked
+    // _tracking_hole_rad (6.0 * cm),     // To be checked
 
     // Tracking plane dimensions  (thin version without substractions)
     _tracking_orad (65.0 * cm),        // To be checked
     _tracking_length (12.0 * cm),
     _tracking_irad (0. * cm),          // Meaningless
     _tracking_cone_height (0. * cm),   // Meaningless
-    _tracking_hole_rad (4.5 * cm),     // To be checked
+    _tracking_hole_rad (6.0 * cm),     // To be checked
 
     // Energy plane dimensions
     _energy_theta (36.5 * deg),        // This must be consistent with vessel "_endcap_theta (38.6 * deg)"
@@ -96,13 +96,13 @@ namespace nexus {
 
     // Tracking plane  (thin version without substractions)
     G4Tubs* ics_tracking_nh_solid = new G4Tubs("ICS_TRACKING_NH", 0.*cm, _tracking_orad,
-					       _tracking_length/2., 0.*deg, 360.*deg);
+    					       _tracking_length/2., 0.*deg, 360.*deg);
 
     G4Tubs* ics_tracking_hole_solid = new G4Tubs("ICS_TRACKING_HOLE", 0.*cm, _tracking_hole_rad,
-						 _tracking_length/2. + 5*cm, 0.*deg, 360.*deg);
+    						 _tracking_length/2. + 5*cm, 0.*deg, 360.*deg);
 
     G4SubtractionSolid* ics_tracking_solid = new G4SubtractionSolid("ICS_TRACKING", ics_tracking_nh_solid,
-								    ics_tracking_hole_solid, 0, G4ThreeVector(0. , 0., 0.) );
+    								    ics_tracking_hole_solid, 0, G4ThreeVector(0. , 0., 0.) );
 
 
 
@@ -136,7 +136,7 @@ namespace nexus {
 
 
     // Unions of parts
-    G4double ics_tracking_zpos = 158.*cm/2. - 10.*cm + _tracking_length/2.;
+    G4double ics_tracking_zpos = _body_length/2. + _tracking_length/2.;
     G4UnionSolid* ics_solid = new G4UnionSolid("ICS", ics_body_solid, ics_tracking_solid,
 					       0, G4ThreeVector(0., 0., ics_tracking_zpos) );
 
@@ -157,10 +157,9 @@ namespace nexus {
 
     // SETTING VISIBILITIES   //////////
     if (_visibility) {
-      //G4VisAttributes copper_col(G4Colour(.72, .45, .20));
-      //copper_col.SetForceSolid(true);
-      G4cout << "*****************************************************************************************************";
-      //ics_logic->SetVisAttributes(copper_col);
+      G4VisAttributes copper_col(G4Colour(.72, .45, .20));
+      copper_col.SetForceSolid(true);
+      ics_logic->SetVisAttributes(copper_col);
     }
     else {
       ics_logic->SetVisAttributes(G4VisAttributes::Invisible);

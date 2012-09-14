@@ -105,9 +105,9 @@ Next100TrackingPlane::Next100TrackingPlane(G4LogicalVolume* mother_logic):
 
   // SETTING VISIBILITIES   //////////
   if (_visibility) {
-    G4VisAttributes copper_col(G4Colour(.72, .45, .20));
-    copper_col.SetForceSolid(true);
-    support_plate_logic->SetVisAttributes(copper_col);
+    G4VisAttributes grey_col(G4Colour(.89, .89, .89));
+    grey_col.SetForceSolid(true);
+    support_plate_logic->SetVisAttributes(grey_col);
   }
   else {
     support_plate_logic->SetVisAttributes(G4VisAttributes::Invisible);
@@ -120,8 +120,10 @@ Next100TrackingPlane::Next100TrackingPlane(G4LogicalVolume* mother_logic):
   _support_gen  = new CylinderPointSampler(_support_diam/2., _support_thickness, 0.,
 					   0., G4ThreeVector(0., 0., support_plate_posz));
 
-  _dice_board_gen = new BoxPointSampler(db_dimensions.x(), db_dimensions.y(), db_dimensions.z(),
-					0., G4ThreeVector(0., 0., dice_board_posz));
+  // Vertexes are generated in a thin surface in the backside of the board
+  G4double z_dim = db_dimensions.z();
+  _dice_board_gen = new BoxPointSampler(db_dimensions.x(), db_dimensions.y(), z_dim * .1,
+					0., G4ThreeVector(0., 0., dice_board_posz + z_dim*.4));
 }
 
 
