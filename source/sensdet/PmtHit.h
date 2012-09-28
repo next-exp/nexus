@@ -29,7 +29,7 @@ namespace nexus {
   {
   public:
     /// Default constructor
-    PmtHit(G4double bin_size=0.1*microsecond);
+    PmtHit(G4double bin_size=0.);
     /// Constructor providing the detector ID and position
     PmtHit(G4int ID, const G4ThreeVector& position, G4double bin_size);
     /// Copy-constructor
@@ -45,7 +45,7 @@ namespace nexus {
     /// Memory allocation
     void* operator new(size_t);
     /// Memory deallocation
-    void operator delete(void*);
+     void operator delete(void*);
     
     /// Returns the detector ID code
     G4int GetPmtID() const;
@@ -89,19 +89,29 @@ namespace nexus {
     std::map<G4double, G4int> _histogram; 
   };
 
-
-  // inline definitions ..............................................
   
-  typedef G4THitsCollection<PmtHit> PmtHitsCollection;
+ 
+}  
+ 
+typedef G4THitsCollection<nexus::PmtHit> PmtHitsCollection;
+  
+extern G4Allocator<nexus::PmtHit> PmtHitAllocator;
 
-  extern G4Allocator<PmtHit> PmtHitAllocator;
+namespace nexus {
+
+  // INLINE DEFINITIONS //////////////////////////////////////////////
 
   inline void* PmtHit::operator new(size_t) 
-  { void* hit; hit = (void*) PmtHitAllocator.MallocSingle();
-    return hit; }
+  { 
+    void* hit; 
+    hit = (void*) PmtHitAllocator.MallocSingle();
+    return hit; 
+  }
 
   inline void PmtHit::operator delete(void* hit) 
-  { PmtHitAllocator.FreeSingle((PmtHit*) hit); }
+  { 
+    PmtHitAllocator.FreeSingle((PmtHit*) hit); 
+  }
 
   inline G4int PmtHit::GetPmtID() const { return _pmt_id; }
 
@@ -118,6 +128,7 @@ namespace nexus {
 
   inline G4int PmtHit::GetValue(std::pair<G4double,G4int> p)
   { return p.second; }
+
 
 
 } // end namespace nexus

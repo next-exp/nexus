@@ -2,11 +2,11 @@
 ///  \file   DefaultEventAction.h
 ///  \brief  A general-purpose user event action.
 ///
-///  \author   J. Martin-Albo <jmalbos@ific.uv.es>
+///  \author   <justo.martin-albo@ific.uv.es>
 ///  \date     15 Apr 2009
 ///  \version  $Id$ 
 ///
-///  Copyright (c) 2009-2011 NEXT Collaboration 
+///  Copyright (c) 2009-2012 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
 #ifndef __DEFAULT_EVENT_ACTION__
@@ -20,7 +20,7 @@ class G4Event;
 
 namespace nexus {
     
-  /// This class is a general-purpose event run action.
+  /// General-purpose user event action
   
   class DefaultEventAction: public G4UserEventAction
   {
@@ -36,7 +36,8 @@ namespace nexus {
     void EndOfEventAction(const G4Event*);
 
   private:
-    G4int _nevt, _nupdate;
+    G4int _nevt; /// Event number
+    G4int _nupd; /// 
   };
   
 } // namespace nexus

@@ -4,7 +4,7 @@
 //  Authors: <justo.martin-albo@ific.uv.es>, <paola.ferrario@ific.uv.es>
 //  Created: 18 Oct 2011
 //  
-//  Copyright (c) 2011 NEXT Collaboration
+//  Copyright (c) 2011, 2012 NEXT Collaboration. All rights reserved.
 // ---------------------------------------------------------------------------- 
 
 #include "ELLookupTable.h"

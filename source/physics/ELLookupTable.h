@@ -6,7 +6,7 @@
 ///  \date     22 Oct 2011
 ///  \version  $Id$
 ///
-///  Copyright (c) 2011 NEXT Collaboration
+///  Copyright (c) 2011, 2012 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
 #ifndef __EL_LOOKUP_TABLE__
@@ -34,8 +34,8 @@ namespace nexus {
     void ReadFiles(G4String);
     
     /// Returns the appropiate sensor map for a given point in the EL gap
-    virtual 
-    const std::map<int, std::vector<double> >& GetSensorsMap(const G4ThreeVector&);
+    virtual const std::map<int, std::vector<double> >& 
+    GetSensorsMap(const G4ThreeVector&);
 
 
   private:

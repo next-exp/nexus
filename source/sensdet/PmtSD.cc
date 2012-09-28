@@ -13,7 +13,7 @@
 #include <G4SDManager.hh>
 #include <G4ProcessManager.hh>
 #include <G4OpBoundaryProcess.hh>
-
+#include <G4RunManager.hh>
 #include <G4RunManager.hh>
 
 #include <bhep/bhep_svc.h>
@@ -25,7 +25,7 @@ namespace nexus {
   PmtSD::PmtSD(G4String sdname, G4String hcname): 
     G4VSensitiveDetector(sdname), 
     _naming_order(0), _sensor_depth(0), _mother_depth(0),
-    _HC(0), _boundary(0)
+    _boundary(0)
   {
     // Register the name of the collection of hits
     collectionName.insert(hcname);
@@ -44,26 +44,16 @@ namespace nexus {
     // Create a new collection of PMT hits
     _HC = new PmtHitsCollection(this->GetName(), this->GetCollectionName(0));
 
-    // Register the collection in the event
-    //static G4int HCID = -1;
-    //if (HCID < 0) {
-    
     G4int HCID = G4SDManager::GetSDMpointer()->
       GetCollectionID(this->GetCollectionName(0)); 
-    //}
+
     HCE->AddHitsCollection(HCID, _HC);
-  
   }
   
   
     
   G4bool PmtSD::ProcessHits(G4Step* step, G4TouchableHistory*)
   {
-     G4int cid = G4SDManager::GetSDMpointer()->GetCollectionID(this->GetCollectionName(0));
-     G4int n_of_coll = G4RunManager::GetRunManager()->GetCurrentEvent()->GetHCofThisEvent()->GetNumberOfCollections();
- 
-     PmtHitsCollection* _HC = static_cast<PmtHitsCollection*>(G4RunManager::GetRunManager()->GetCurrentEvent()->GetHCofThisEvent()->GetHC(cid));
-    
     // Check whether the track is an optical photon
     G4ParticleDefinition* pdef = step->GetTrack()->GetDefinition();
     if (pdef != G4OpticalPhoton::Definition()) return false;
@@ -130,13 +120,19 @@ namespace nexus {
   }
   
   
-  void PmtSD::EndOfEvent(G4HCofThisEvent* /*HCE*/)
+  void PmtSD::EndOfEvent(G4HCofThisEvent* HCE)
   {
-    bhep::event& bevt = bhep::bhep_svc::instance()->get_event();
-    for (G4int i=0; i<_HC->entries(); i++) {
-      bhep::hit* bhit = (*_HC)[i]->ToBhep();
-      bevt.add_true_hit(collectionName[0], bhit);
-    }
+    //  int HCID = G4SDManager::GetSDMpointer()->
+    //    GetCollectionID(this->GetCollectionName(0)); 
+    //  // }
+    // HCE->AddHitsCollection(HCID, _HC);
+
+
+    // bhep::event& bevt = bhep::bhep_svc::instance()->get_event();
+    // for (G4int i=0; i<_HC->entries(); i++) {
+    //   bhep::hit* bhit = (*_HC)[i]->ToBhep();
+    //   bevt.add_true_hit(collectionName[0], bhit);
+    // }
   }
   
   

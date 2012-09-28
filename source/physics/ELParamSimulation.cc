@@ -1,11 +1,11 @@
-// ----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 //  $Id$
 //
 //  Authors: <justo.martin-albo@ific.uv.es>, <paola.ferrario@ific.uv.es>
 //  Created: 18 Oct 2011
 //  
-//  Copyright (c) 2011 NEXT Collaboration
-// ---------------------------------------------------------------------------- 
+//  Copyright (c) 2011, 2012 NEXT Collaboration. All rights reserved.
+// -----------------------------------------------------------------------------
 
 #include "ELParamSimulation.h"
 
@@ -27,9 +27,11 @@ namespace nexus {
     _table(0)
   {
     // check whether the region has an EL look-up table attached
-    // _table = dynamic_cast<ELLookupTable*>(region->GetUserInformation());
+    _table = dynamic_cast<ELLookupTable*>(region->GetUserInformation());
     // if (!_table) {
-    //   G4Exception("[ELParamSimulation] ERROR: No lookup table attached to the region!");
+    //   G4String msg = "ERROR: no EL lookup table attached to the region!";
+    //   G4Exception("[ELParamSimulation]", "ELParamSimulation()",
+    // 		  FatalException, msg);
     // }
 
   }
@@ -58,6 +60,14 @@ namespace nexus {
 
   void ELParamSimulation::DoIt(const G4FastTrack& ftrack, G4FastStep& fstep)
   {
+    // Get spatial coordinates
+    G4ThreeVector position = ftrack.GetPrimaryTrack()->GetPosition();
+    
+    G4cout << "position = " << position << G4endl;
+
+
+    //_table->GetSensorsMap()
+
     //if (_HCE.size() == 0) {
 
       G4HCofThisEvent* hce = 

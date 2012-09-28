@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
-///  \file   DefaultRunAction.cc
+///  \file   DefaultRunAction.h
 ///  \brief  General-purpose user run action.
 ///
-///  \author   J. Martin-Albo <jmalbos@ific.uv.es>    
+///  \author   <justo.martin-albo@ific.uv.es>    
 ///  \date     15 Apr 2009
 ///  \version  $Id$
 ///
-///  Copyright (c) 2009, 2010 NEXT Collaboration
+///  Copyright (c) 2009-2012 NEXT Collaboration. All rights reserved.
 // ---------------------------------------------------------------------------- 
 
 #ifndef __DEFAULT_RUN_ACTION__
@@ -19,8 +19,9 @@ class G4Run;
 
 namespace nexus {
   
-  /// This class is a general-purpose user run action. It opens the output 
-  /// dst at the beginning of the run and closes it at the end.
+  /// General-purpose user run action. 
+  /// It opens the output file (dst) at the beginning of the run and 
+  /// closes it at the end.
 
   class DefaultRunAction: public G4UserRunAction
   {

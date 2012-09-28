@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 ///  \file   ELParamSimulation.h
 ///  \brief  
 ///
@@ -6,21 +6,21 @@
 ///  \date     18 October 2011
 ///  \version  $Id$
 ///
-///  Copyright (c) 2011 NEXT Collaboration
-// ----------------------------------------------------------------------------
+///  Copyright (c) 2011, 2012 NEXT Collaboration. All rights reserved.
+// -----------------------------------------------------------------------------
 
 #ifndef __EL_PARAM_SIMULATION__
 #define __EL_PARAM_SIMULATION__
 
 #include <G4VFastSimulationModel.hh>
-
+#include "PmtHit.h"
 #include <vector>
 
 
 namespace nexus {
   
   class ELLookupTable;
-  class PmtHitsCollection;
+  //class PmtHitsCollection;
 
 
   /// FIXME. Class description

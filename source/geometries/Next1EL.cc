@@ -611,9 +611,9 @@ void Next1EL::BuildFieldCage()
   active_logic->SetUserLimits(new G4UserLimits(_max_step_size));
     
   // Set the volume as an ionization sensitive detector
-  IonizationSD* ionisd = new IonizationSD("/NEXT1/ACTIVE");
-  active_logic->SetSensitiveDetector(ionisd);
-  G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
+  // IonizationSD* ionisd = new IonizationSD("/NEXT1/ACTIVE");
+  // active_logic->SetSensitiveDetector(ionisd);
+  // G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
 
   //Define a drift field for this volume
   UniformElectricDriftField* field = new UniformElectricDriftField();
@@ -1052,7 +1052,7 @@ void Next1EL::BuildSiPMTrackingPlane()
   Next1ELDBO dbo44_geom(4,4);
   Next1ELDBO dbo43_geom(4,3);
   Next1ELDBO dbo42_geom(4,2);
-
+   
   G4LogicalVolume* dbo44_logic = dbo44_geom.GetLogicalVolume();
   G4LogicalVolume* dbo43_logic = dbo43_geom.GetLogicalVolume();
   G4LogicalVolume* dbo42_logic = dbo42_geom.GetLogicalVolume();
@@ -1101,7 +1101,7 @@ void Next1EL::BuildSiPMTrackingPlane()
   G4double x = - 3./2.*dbo44_xsize - 2.*gap - dbo42_xsize/2.;
   G4double y = gap + dbo44_ysize;
   new G4PVPlacement(rotdbo, G4ThreeVector(x,y,z), dbo42_logic,
-		    "DBO42", _gas_logic, false, 13, true);
+  		    "DBO42", _gas_logic, false, 13, true);
   std::vector<std::pair<int, G4ThreeVector> > positions = dbo42_geom.GetPositions();
   for (G4int si=0; si<positions.size(); si++) {
     G4ThreeVector mypos = positions[si].second;
@@ -1113,7 +1113,7 @@ void Next1EL::BuildSiPMTrackingPlane()
   }
   x = -x;
   new G4PVPlacement(rotdbo, G4ThreeVector(x,y,z), dbo42_logic,
-		    "DBO42", _gas_logic, false, 14, true);
+  		    "DBO42", _gas_logic, false, 14, true);
   for (G4int si=0; si<positions.size(); si++) {
     G4ThreeVector mypos = positions[si].second;
     mypos.rotate(angle, vec);
@@ -1124,7 +1124,7 @@ void Next1EL::BuildSiPMTrackingPlane()
   }
   y = -y;
   new G4PVPlacement(rotdbo, G4ThreeVector(x,y,z), dbo42_logic,
-		    "DBO42", _gas_logic, false, 15, true);
+  		    "DBO42", _gas_logic, false, 15, true);
   for (G4int si=0; si<positions.size(); si++) {
     G4ThreeVector mypos = positions[si].second;
     mypos.rotate(angle, vec);
@@ -1135,7 +1135,7 @@ void Next1EL::BuildSiPMTrackingPlane()
   }
   x = -x;
   new G4PVPlacement(rotdbo, G4ThreeVector(x,y,z), dbo42_logic,
-		    "DBO42", _gas_logic, false, 16, true);
+  		    "DBO42", _gas_logic, false, 16, true);
   for (G4int si=0; si<positions.size(); si++) {
     G4ThreeVector mypos = positions[si].second;
     mypos.rotate(angle, vec);
@@ -1148,7 +1148,7 @@ void Next1EL::BuildSiPMTrackingPlane()
   x = - 3./2.*dbo44_xsize - 2.*gap - dbo43_xsize/2.;
   y = 0;
   new G4PVPlacement(rotdbo, G4ThreeVector(x,y,z), dbo43_logic,
-		    "DBO43", _gas_logic, false, 17, true);
+  		    "DBO43", _gas_logic, false, 17, true);
   positions = dbo43_geom.GetPositions();
   for (G4int si=0; si<positions.size(); si++) {
     G4ThreeVector mypos = positions[si].second;
@@ -1160,7 +1160,7 @@ void Next1EL::BuildSiPMTrackingPlane()
   }
   x = -x;
   new G4PVPlacement(rotdbo, G4ThreeVector(x,y,z), dbo43_logic,
-		    "DBO43", _gas_logic, false, 18, true);
+  		    "DBO43", _gas_logic, false, 18, true);
   for (G4int si=0; si<positions.size(); si++) {
     G4ThreeVector mypos = positions[si].second;
     mypos.rotate(angle, vec);

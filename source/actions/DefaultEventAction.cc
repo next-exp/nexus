@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author : J Martin-Albo <jmalbos@ific.uv.es>
+//  Author : <justo.martin-albo@ific.uv.es>
 //  Created: 15 Apr 2009
 //
-//  Copyright (c) 2009-2011 NEXT Collaboration
+//  Copyright (c) 2009-2012 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
 #include "DefaultEventAction.h"
@@ -23,8 +23,7 @@
 namespace nexus {
     
   
-  DefaultEventAction::DefaultEventAction(): 
-    _nevt(0), _nupdate(10)
+  DefaultEventAction::DefaultEventAction(): _nevt(0), _nupd(10)
   {
   }
   
@@ -39,10 +38,10 @@ namespace nexus {
   void DefaultEventAction::BeginOfEventAction(const G4Event* event)
   {
     // Print out event number info
-    if ((_nevt%_nupdate) == 0) {
-      //      G4cout << " >> Event no. " << _nevt << G4endl;
-      if (_nevt == (10*_nupdate))
-	_nupdate *= 10;
+    if ((_nevt%_nupd) == 0) {
+      G4cout << " >> Event no. " << _nevt << G4endl;
+      if (_nevt == (10*_nupd))
+	_nupd *= 10;
     }
 
     // get bhep transient event from singleton

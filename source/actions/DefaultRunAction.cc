@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author:  J. Martin-Albo <jmalbos@ific.uv.es>    
+//  Author:  <justo.martin-albo@ific.uv.es>
 //  Created: 15 Apr 2009
 //
-//  Copyright (c) 2009, 2010 NEXT Collaboration
+//  Copyright (c) 2009-2012 NEXT Collaboration. All rights reserved.
 // ---------------------------------------------------------------------------- 
 
 #include "DefaultRunAction.h"

@@ -16,6 +16,7 @@
 #include <G4EmLivermorePhysics.hh>
 #include <G4OpticalPhysics.hh>
 #include <G4DecayPhysics.hh>
+#include <G4StepLimiterBuilder.hh>
 
 
 namespace nexus {
@@ -39,6 +40,8 @@ namespace nexus {
     // Register decay process
     RegisterPhysics(new G4DecayPhysics);
 
+    RegisterPhysics(new G4StepLimiterBuilder);
+
     // Register optical processes (if selected by user)
     if (cfg.GetIParam("optical")) {
       G4OpticalPhysics* optical = new G4OpticalPhysics();
@@ -49,12 +52,12 @@ namespace nexus {
       RegisterPhysics(optical);
     }
     
-    if (cfg.GetIParam("nexus")) {
-      NexusPhysics* nexus = new NexusPhysics();
-      nexus->ActivateDriftAndElectroluminescence(true);
-      // Register nexus physics processes
-      RegisterPhysics(nexus);
-    }
+    // if (cfg.GetIParam("nexus")) {
+    //   NexusPhysics* nexus = new NexusPhysics();
+    //   nexus->ActivateDriftAndElectroluminescence(true);
+    //   // Register nexus physics processes
+    //   RegisterPhysics(nexus);
+    // }
   }
 
 
