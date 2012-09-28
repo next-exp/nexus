@@ -39,7 +39,7 @@ namespace nexus {
   
   void NexusPhysics::ConstructParticle()
   {
-    IonizationElectron::Definition();
+    //IonizationElectron::Definition();
   }
   
   
@@ -49,32 +49,32 @@ namespace nexus {
     G4ProcessManager* pmanager = 0;
     
     // Add nexus-defined processes to the ionization electron
-    if (_drift_el) {
-      pmanager = IonizationElectron::Definition()->GetProcessManager();
-      if (!pmanager) {
-	G4Exception("[NexusPhysics]", "ConstructProcess()", FatalException,
-		    " ERROR: ionization electron without a process manager");
-	return;
-      }
+    // if (_drift_el) {
+    //   pmanager = IonizationElectron::Definition()->GetProcessManager();
+    //   if (!pmanager) {
+    // 	G4Exception("[NexusPhysics]", "ConstructProcess()", FatalException,
+    // 		    " ERROR: ionization electron without a process manager");
+    // 	return;
+    //   }
 
       // First, we remove the transportation from the ie- process table
-      G4VProcess* transp = G4ProcessTable::GetProcessTable()->
-	FindProcess("Transportation", IonizationElectron::Definition());
-      pmanager->RemoveProcess(transp);
+    //   G4VProcess* transp = G4ProcessTable::GetProcessTable()->
+    // 	FindProcess("Transportation", IonizationElectron::Definition());
+    //   pmanager->RemoveProcess(transp);
 
-      // Second, add drift and electroluminescence
-      IonizationDrift* drift = new IonizationDrift();
-      pmanager->AddContinuousProcess(drift);
-      pmanager->AddDiscreteProcess(drift);
+    //   // Second, add drift and electroluminescence
+    //   IonizationDrift* drift = new IonizationDrift();
+    //   pmanager->AddContinuousProcess(drift);
+    //   pmanager->AddDiscreteProcess(drift);
 
-      Electroluminescence* el = new Electroluminescence();
-      pmanager->AddDiscreteProcess(el);
+    //   Electroluminescence* el = new Electroluminescence();
+    //   pmanager->AddDiscreteProcess(el);
 
-      //pmanager->AddProcess(new G4FastSimulationManagerProcess(), -1, 0, 0);
-    }
+    //   //pmanager->AddProcess(new G4FastSimulationManagerProcess(), -1, 0, 0);
+    // }
     
-    IonizationClustering* clustering = 0;
-    if (_drift_el) clustering = new IonizationClustering();
+    // IonizationClustering* clustering = 0;
+    // if (_drift_el) clustering = new IonizationClustering();
     
     G4StepLimiter* steplimit = new G4StepLimiter();
     
@@ -92,12 +92,12 @@ namespace nexus {
       if (particle->GetPDGCharge() != 0.)
 	pmanager->AddDiscreteProcess(steplimit);
 
-      if (clustering) {
-	if (clustering->IsApplicable(*particle)) {
-	  pmanager->AddRestProcess(clustering);
-	  pmanager->AddDiscreteProcess(clustering);
-	}
-      }
+      // if (clustering) {
+      // 	if (clustering->IsApplicable(*particle)) {
+      // 	  pmanager->AddRestProcess(clustering);
+      // 	  pmanager->AddDiscreteProcess(clustering);
+      // 	}
+      // }
     }
   }
   
