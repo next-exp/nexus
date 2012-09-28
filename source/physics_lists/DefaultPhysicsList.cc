@@ -27,7 +27,6 @@ namespace nexus {
     // Get user configuration parameters for physics
     const ParamStore& cfg = ConfigService::Instance().Physics();
 
-    
     // Register electromagnetic processes selected by user.
     // Default: use low-energy em extension
     G4int option = 1; 
@@ -40,6 +39,7 @@ namespace nexus {
     // Register decay process
     RegisterPhysics(new G4DecayPhysics);
 
+    // Register the step-limiting process
     RegisterPhysics(new G4StepLimiterBuilder);
 
     // Register optical processes (if selected by user)

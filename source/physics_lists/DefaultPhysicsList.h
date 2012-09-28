@@ -6,7 +6,7 @@
 ///  \date     30 June 2011
 ///  \version  $Id$
 ///
-///  Copyright (c) 2011 NEXT Collaboration
+///  Copyright (c) 2011, 2012 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
 #ifndef __DEFAULT_PHYSICS_LIST__
