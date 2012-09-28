@@ -73,7 +73,6 @@ Next100InnerElements::~Next100InnerElements()
   delete _field_cage;
   delete _energy_plane;
   delete _tracking_plane;
-
   delete _active_gen;
 }
 

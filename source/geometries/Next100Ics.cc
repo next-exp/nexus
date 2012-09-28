@@ -50,9 +50,9 @@ namespace nexus {
 
     // Tracking plane dimensions  (thin version without substractions)
     _tracking_orad (65.0 * cm),        // To be checked
-    _tracking_length (12.0 * cm),
-    _tracking_irad (0. * cm),          // Meaningless
-    _tracking_cone_height (0. * cm),   // Meaningless
+    _tracking_length (10.0 * cm),
+    //_tracking_irad (0. * cm),          // Meaningless
+    //_tracking_cone_height (0. * cm),   // Meaningless
     _tracking_hole_rad (6.0 * cm),     // To be checked
 
     // Energy plane dimensions
