@@ -86,7 +86,7 @@ namespace nexus {
 
     G4Box* gas_solid = new G4Box("GAS", _width/2., _height/2., _length/2.);
 
-    G4Material* gxe = MaterialsList::GXe(15.*bar, 303*kelvin);
+    G4Material* gxe = MaterialsList::GXe(_gxe_pressure, 303*kelvin);
     
     G4LogicalVolume* gas_logic = new G4LogicalVolume(gas_solid, gxe, "GAS");
 
