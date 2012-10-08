@@ -94,6 +94,9 @@ namespace nexus {
       new G4PVPlacement(0, G4ThreeVector(0,0,0), gas_logic, "GAS",
 			chamber_logic, false, 0);
 
+    // Limit the step size in this volume for better tracking precision
+    gas_logic->SetUserLimits(new G4UserLimits(5.*mm));
+    
     // Set the gas as an ionization sensitive detector
     IonizationSD* ionisd = new IonizationSD("/SQUARE_CHAMBER/GAS");
     gas_logic->SetSensitiveDetector(ionisd);
