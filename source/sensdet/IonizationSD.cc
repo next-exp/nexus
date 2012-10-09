@@ -30,13 +30,17 @@ namespace nexus {
   
   
   
-  void IonizationSD::Initialize(G4HCofThisEvent*)
+  void IonizationSD::Initialize(G4HCofThisEvent* hce)
   {
     // Create a collection of ionization hits (since the collection
     // won't be used outside this class object, it isn't added
     // to the G4HCofThisEvent object)
     _IHC = 
       new IonizationHitsCollection(SensitiveDetectorName, collectionName[0]);
+
+    G4int hcid =
+      G4SDManager::GetSDMpointer()->GetCollectionID(collectionName[0]);
+    hce->AddHitsCollection(hcid, _IHC);
   }
   
   
@@ -55,7 +59,7 @@ namespace nexus {
     hit->SetEnergyDeposit(edep);
     hit->SetPosition(step->GetPostStepPoint()->GetPosition());
     
-    // Add hit to collection
+    // // Add hit to collection
     _IHC->insert(hit);
 
     return true;
