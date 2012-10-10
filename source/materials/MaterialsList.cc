@@ -25,9 +25,14 @@ G4Material* MaterialsList::GXe(G4double pressure, G4double temperature)
     
   if (mat == 0) {
     G4NistManager* nist = G4NistManager::Instance();
-    mat = nist->ConstructNewGasMaterial(name,"G4_Xe",temperature,pressure);
-  }
+
+    mat = new G4Material(name, 55.587*kg/m3, 1,
+			 kStateGas, 300.*kelvin, 10.*bar);
     
+    G4Element* Xe = nist->FindOrBuildElement("Xe");
+    mat->AddElement(Xe,1);
+  }
+
   return mat;
 }
   
