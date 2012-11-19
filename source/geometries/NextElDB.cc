@@ -48,10 +48,11 @@ namespace nexus {
     const G4double sipm_pitch = 10. * mm;
     const G4double coating_thickn = 0.1 * micrometer;
     const G4double board_thickn = 5. * mm;
-    const G4double board_side_reduction = 1. * mm;
+    // const G4double board_side_reduction = 1. * mm;
+    const G4double board_side_reduction = .5 * mm;
     
-    const G4double dbo_x = columns * sipm_pitch - 2. * board_side_reduction;  
-    const G4double dbo_y =    rows * sipm_pitch - 2. * board_side_reduction;
+    const G4double dbo_x = columns * sipm_pitch - 2. * board_side_reduction ;  
+    const G4double dbo_y =    rows * sipm_pitch - 2. * board_side_reduction ;
     const G4double dbo_z = board_thickn;
     
     _dimensions.setX(dbo_x);
@@ -103,14 +104,22 @@ namespace nexus {
 	G4double pos_x = -dbo_x/2 + offset + j*sipm_pitch;
 	new G4PVPlacement(0, G4ThreeVector(pos_x, pos_y, pos_z), sipm_logic,
 			  "SIPM11", board_logic, false, sipm_no);
+	std::pair<int, G4ThreeVector> mypos;
+	mypos.first = sipm_no;
+	mypos.second = G4ThreeVector(pos_x, pos_y, pos_z);
+	_positions.push_back(mypos);
 	sipm_no++;
       }
     }
 
 
     // Visibilities
-    coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    //coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    G4VisAttributes * vis = new G4VisAttributes;
+    vis->SetColor(1., 0., 0.);
+    coating_logic->SetVisAttributes(vis);
+    vis->SetColor(0., 1., 0.);
+    sipm_logic->SetVisAttributes(vis);
 
   }
 
@@ -119,6 +128,11 @@ namespace nexus {
   G4ThreeVector NextElDB::GetDimensions()
   {
     return _dimensions;
+  }
+
+   std::vector<std::pair<int, G4ThreeVector> > NextElDB::GetPositions()
+  {
+    return _positions;
   }
   
 } // end namespace nexus
