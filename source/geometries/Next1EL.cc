@@ -826,8 +826,8 @@ void Next1EL::BuildFieldCage()
   ltubebt_opsur->SetSigmaAlpha(0.1);
   ltubebt_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
 
-  new G4LogicalSkinSurface("LIGHT_TUBE", ltube_up_logic, ltubeup_opsur);
-  new G4LogicalSkinSurface("LIGHT_TUBE", ltube_bt_logic, ltubebt_opsur);
+  new G4LogicalSkinSurface("LIGHT_TUBE_UP", ltube_up_logic, ltubeup_opsur);
+  new G4LogicalSkinSurface("LIGHT_TUBE_BOTTOM", ltube_bt_logic, ltubebt_opsur);
 
 }
   
