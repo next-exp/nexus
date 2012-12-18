@@ -25,6 +25,7 @@ using namespace nexus;
 #include "Next1EL.h"
 #include "Next1Lbnl.h"
 #include "GraXe.h"
+#include "PMT_QE_setup.h"
   
 DetectorConstruction* 
 NexusFactory::CreateDetectorConstruction(const G4String& name)
@@ -57,6 +58,9 @@ NexusFactory::CreateDetectorConstruction(const G4String& name)
   
   else if (name == "NEXT0_IFIC")
     p->SetGeometry(new Next0Ific);
+
+  else if (name == "PMT_QE_SETUP")
+    p->SetGeometry(new PMT_QE_setup);
   
   else
     G4Exception("[NexusFactory]", "CreateDetectorConstruction()", 
@@ -93,6 +97,7 @@ NexusFactory::CreatePhysicsList(const G4String& name)
 #include "GenbbInterface.h"
 #include "Na22Generation.h"
 #include "ELLookupTableGenerator.h"
+#include "SolidAngleGeneration.h"
 
 PrimaryGeneration* 
 NexusFactory::CreatePrimaryGeneration(const G4String& name)
@@ -110,6 +115,9 @@ NexusFactory::CreatePrimaryGeneration(const G4String& name)
 
   else if (name == "EL_LOOKUP_TABLE")
     p->SetGenerator(new ELLookupTableGenerator);
+
+  else if (name == "SOLIDANGLE_GENERATOR")
+    p->SetGenerator(new SolidAngleGeneration);
 
   else
     G4Exception("[NexusFactory]", "CreatePrimaryGeneration()", FatalException,
