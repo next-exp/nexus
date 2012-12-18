@@ -81,7 +81,7 @@ namespace nexus {
       new G4LogicalVolume(window_solid, quartz, "PMT_WINDOW");
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., (_pmt_length-window_length)/2.),
-		      window_logic, "PMT_WINDOW", pmt_logic, false, 0);
+		      window_logic, "PMT_WINDOW", pmt_logic, false, 0, true);
     G4VisAttributes * visattrib_blue = new G4VisAttributes;
     visattrib_blue->SetColor(0., 0., 1.);
     window_logic->SetVisAttributes(visattrib_blue);
@@ -111,36 +111,42 @@ namespace nexus {
 
     G4PVPlacement* phcath_physi =
       new G4PVPlacement(0, G4ThreeVector(0.,0.,phcath_posz), phcath_logic,
-			"PHOTOCATHODE", window_logic, false, 0);
+			"PHOTOCATHODE", window_logic, false, 0, true);
     
     // Sensitive detector
     PmtSD* pmtsd = new PmtSD("/PMT_R7378A/PHOTOCATHODE", "PMT");
     pmtsd->SetDetectorVolumeDepth(1);
-    pmtsd->SetTimeBinning(1.*microsecond);
     G4SDManager::GetSDMpointer()->AddNewDetector(pmtsd);
     window_logic->SetSensitiveDetector(pmtsd);
 
     
     // OPTICAL SURFACES //////////////////////////////////////////////
+
+    // The values for the efficiency are chosen in order to match 
+    // the curve of the quantum efficiency provided by Hamamatsu:
+    // http://sales.hamamatsu.com/en/products/electron-tube-division/detectors/photomultiplier-tubes/part-r7378a.php
+    // The source of light is point-like, isotropic and it has been placed at a 
+    // distance of 25 cm from the surface of the PMT window.
+    // The quantity to be compared with the Hamamatsu curve is:
+    // number of detected photons/ number of photons that reach the PMT window.
     
     const G4int entries = 30;
 
     G4double ENERGIES[entries] =
-      {	1.72194*eV, 1.77114*eV, 1.82324*eV, 1.87848*eV, 1.93719*eV, 
-	1.99968*eV, 2.06633*eV, 2.13759*eV, 2.21393*eV, 2.29593*eV, 
-	2.38423*eV, 2.47960*eV, 2.58292*eV, 2.69522*eV, 2.81773*eV, 
-	2.95190*eV, 3.0995*eV, 3.26263*eV, 3.44389*eV, 3.64647*eV, 
-	3.87438*eV, 4.13267*eV, 4.42786*eV, 4.76846*eV, 5.16583*eV, 
-	5.63545*eV, 6.19900*eV, 6.88778*eV, 7.74875*eV, 8.85571*eV};
-    
+      {1.72194*eV, 1.77114*eV, 1.82324*eV, 1.87848*eV, 1.93719*eV,
+       1.99968*eV,  2.06633*eV, 2.13759*eV, 2.21393*eV, 2.29593*eV,
+       2.38423*eV, 2.47960*eV, 2.58292*eV, 2.69522*eV, 2.81773*eV,
+       2.95190*eV, 3.0995*eV, 3.26263*eV, 3.44389*eV, 3.64647*eV,
+       3.87438*eV, 4.13267*eV, 4.42786*eV, 4.76846*eV, 5.16583*eV,
+       5.63545*eV, 6.19900*eV, 6.88778*eV, 7.74875*eV, 8.85571*eV};
     G4double EFFICIENCY[entries] =
-      { 0.0000104, 0.000418, 0.001135, 0.006083, 0.001028, 
-	0.021416, 0.040832, 0.061387, 0.102220, 0.143052, 
-	0.173885, 0.204440, 0.234995, 0.255550, 0.276105,
-	0.306937, 0.344292, 0.335154, 0.325674, 0.325021,
-	0.328994, 0.321807, 0.316674, 0.296140, 0.275606, 
-	0.265339, 0.234805, 0.201866, 0.48037, 1.000000};
-    
+      { 0.00000, 0.00028, 0.00100, 0.00500, 0.00100,  
+    	0.02200, 0.04500, 0.07000, 0.11500, 0.16000,
+    	0.20500, 0.23500, 0.27000, 0.29000, 0.31300,
+    	0.35200, 0.38000, 0.38000, 0.37300, 0.37300,
+    	0.37000, 0.36000, 0.35500, 0.33500, 0.31000,
+    	0.29500, 0.27500, 0.23000, 0.52000, 0.00000};
+
     G4double REFLECTIVITY[entries] =
       { 0., 0., 0., 0., 0.,
 	0., 0., 0., 0., 0.,
