@@ -321,6 +321,11 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::PTFE_with_TPB()
 
 G4MaterialPropertiesTable* OpticalMaterialProperties::TPB()
 {
+  /// This is the simulation of the optical properties of TPB (tetraphenyl butadiene)
+  /// a wavelength shifter which allows to converts VUV photons to blue photons.
+  /// A WLS material is characterized by its photon absorption and photon emission spectrum
+  /// and by a possible time delay between the absorption and re-emission of the photon.
+
   G4MaterialPropertiesTable* tpb_mpt = new G4MaterialPropertiesTable();
     
   const G4int RIN_NUMENTRIES  = 5;
@@ -330,11 +335,23 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB()
   G4double Energies[RIN_NUMENTRIES] = {0.1*eV, 1.1*eV, 5.*eV, 10.*eV, 100.*eV};
   G4double TPB_RIND[ABSL_NUMENTRIES]  = {1.3, 1.3, 1.3, 1.3, 1.3};
 
+  /// Initially, the absorption efficiency (that is, the number of shifted photons/number 
+  /// of photons impinguing on the material) was set to 90% for VUV light and 0 for 
+  /// any other wavelength, for a thickness of 1 micron of TPB (that is the thickness 
+  /// assigned to the light tube coating). 
+  /// That means I/I_0 = .1 = exp-(1/lambda) --> lambda = .43 micron. The absorption spectrum 
+  /// (WLSABSLENGTH property) is then assigned this value for the whole scintillation range of energies
+  /// and no absorption for any other wavelegngth.
+  /// The coating of the SiPMs is way thinner (100 nm), thus that efficiency was
+  /// too low to have any shifting there. Therefore we set the absorption constant to
+  /// .00000043 cm, which gives 100% shifting efficiency to a 100-nm thickness, thus to
+  /// the 1-mu one, too.
   G4double WLS_Abs_Energies[WLSABSL_NUMENTRIES] = 
     {0.1*eV, 4.*eV, 6.20625*eV, 7.2*eV, 8.20625*eV, 9.*eV, 100.*eV};
   G4double TPB_WLSABSL[WLSABSL_NUMENTRIES]  = 
-    {1000.*cm, 1000.*cm, 0.000043*cm, 0.000043*cm, 0.000043*cm, 1000*cm, 1000.*cm};
+    {1000.*cm, 1000.*cm, 0.00000043*cm, 0.00000043*cm, 0.00000043*cm, 1000*cm, 1000.*cm};
 
+  // The emission spectrum (WLSCOMPONENT property) is peaked in 2.97 eV (~ 430 nm).
   G4double WLS_Emission_Energies[ABSL_NUMENTRIES] = {0.1*eV, 2.9*eV, 2.97*eV, 3.*eV, 100.*eV};
   G4double TPB_Emission[ABSL_NUMENTRIES] = {0., 0., 1., 0., 0.};
 
