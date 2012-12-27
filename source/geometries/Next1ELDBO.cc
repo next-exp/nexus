@@ -20,6 +20,8 @@
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4SDManager.hh>
+#include <G4OpticalSurface.hh>
+#include <G4LogicalSkinSurface.hh>
 
 #include <sstream>
 
@@ -108,6 +110,17 @@ namespace nexus {
 	sipm_no++;
       }
     }
+
+    /// Optical surfaces
+    G4OpticalSurface* dboard_opsur = new G4OpticalSurface("DBO");
+    dboard_opsur->SetType(dielectric_metal);
+    dboard_opsur->SetModel(unified);
+    dboard_opsur->SetFinish(ground);
+    dboard_opsur->SetSigmaAlpha(0.1);
+    dboard_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
+
+    new G4LogicalSkinSurface("DBO", board_logic, dboard_opsur);
+
   }
 
   G4ThreeVector Next1ELDBO::GetDimensions()
