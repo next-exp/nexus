@@ -37,6 +37,24 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Vacuum()
   return mpt;
 }
 
+G4MaterialPropertiesTable* OpticalMaterialProperties::Epoxy()
+{
+  // Optical properties of Epoxy adhesives.
+  // Obtained from 
+  // http://www.epotek.com/SSCDocs/techtips/Tech%20Tip%2018%20-%20Understanding%20Optical%20Properties%20for%20Epoxy%20Apps.pdf
+
+  G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
+  
+  G4double energy[2] = 
+    {1*eV, 10.751*eV};
+  G4double rindex[2] = 
+    {1.54, 1.54*eV};
+  
+  mpt->AddProperty("RINDEX", energy, rindex, 2);
+
+  return mpt;
+}
+
 
 
 G4MaterialPropertiesTable* OpticalMaterialProperties::FusedSilica()

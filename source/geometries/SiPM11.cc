@@ -63,7 +63,7 @@ namespace nexus {
     G4Box* sipm_solid = new G4Box("SIPM11", sipm_x/2., sipm_y/2., sipm_z/2);
 
     G4Material* epoxy = MaterialsList::Epoxy();
-    epoxy->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
+    epoxy->SetMaterialPropertiesTable(OpticalMaterialProperties::Epoxy());
     
     G4LogicalVolume* sipm_logic = 
       new G4LogicalVolume(sipm_solid, epoxy, "SIPM11");

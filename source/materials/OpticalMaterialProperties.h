@@ -29,6 +29,7 @@ namespace nexus {
   public:
 
     static G4MaterialPropertiesTable* Vacuum();
+    static G4MaterialPropertiesTable* Epoxy();
 
     /// Synthetic fused silica (suprasil) with transmission in the deep
     /// ultraviolet down to 160 nm
