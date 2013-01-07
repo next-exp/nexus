@@ -1057,6 +1057,9 @@ void Next1EL::BuildSiPMTrackingPlane()
   G4double db_ysize = db.GetDimensions().y();
   G4double db_zsize = db.GetDimensions().z();
 
+  G4RotationMatrix* rotdb = new G4RotationMatrix();
+  rotdb->rotateZ(pi);
+
   /// Distance of SiPM surface from the beginning of EL region
   G4double dist_el = 2.5*mm;
   G4double z = _elgap_position.z() + _elgap_length/2. + dist_el 
@@ -1070,14 +1073,24 @@ void Next1EL::BuildSiPMTrackingPlane()
      for (G4int i=0; i<2; ++i) {
        G4double x =  - gap/2.- db_xsize/2. + i*(gap + db_xsize);
        
-       new G4PVPlacement(0, G4ThreeVector(x,y,z), db_logic,
-			 "DB", _gas_logic, false, db_no, true);
+       if (j == 0) {
+	 new G4PVPlacement(rotdb, G4ThreeVector(x,y,z), db_logic,
+			   "DB", _gas_logic, false, db_no, true);
+       } else {
+	 new G4PVPlacement(0, G4ThreeVector(x,y,z), db_logic,
+			   "DB", _gas_logic, false, db_no, true);
+       }
        std::vector<std::pair<int, G4ThreeVector> > positions = db.GetPositions();
        for (G4int si=0; si<positions.size(); si++) {
 	 G4ThreeVector mypos = positions[si].second;
+	 G4ThreeVector mypos_rot = (*rotdb)*mypos;
 	 std::pair<int, G4ThreeVector> abs_pos;
 	 abs_pos.first = db_no*1000+positions[si].first ;
-	 abs_pos.second = G4ThreeVector(x+mypos.getX(), y+mypos.getY(), z+mypos.getZ()); 
+	 if (j == 0) {
+	   abs_pos.second = G4ThreeVector(x+mypos_rot.getX(), y+mypos_rot.getY(), z+mypos.getZ());
+	 } else {
+	   abs_pos.second = G4ThreeVector(x+mypos.getX(),y+mypos.getY(),z+mypos.getZ()); 
+	 }
 	 _absSiPMpos.push_back(abs_pos);
        }
        db_no++;
