@@ -26,12 +26,25 @@ G4Material* MaterialsList::GXe(G4double pressure, G4double temperature)
   if (mat == 0) {
     G4NistManager* nist = G4NistManager::Instance();
 
-    mat = new G4Material(name, 55.587*kg/m3, 1,
-			 kStateGas, 300.*kelvin, 10.*bar);
+    G4double density = 5.5*kg/m3;
+
+    if (pressure/bar > 9.5 && pressure/bar < 10.5)
+      density = 55.587*kg/m3;
+    else if (pressure/bar > 14.5 && pressure/bar < 15.5)
+      density = 85.95 *kg/m3;
+    else if (pressure/bar > 19.5 && pressure/bar < 20.5)
+      density = 118.4*kg/m3;
+    else
+      G4cout << "[MaterialsList] Pressure not recognized!" << G4endl;
+      
+    mat = new G4Material(name, density, 1,
+			 kStateGas, 300.*kelvin, pressure);
     
     G4Element* Xe = nist->FindOrBuildElement("Xe");
     mat->AddElement(Xe,1);
   }
+
+  G4cout << mat << G4endl;
 
   return mat;
 }
