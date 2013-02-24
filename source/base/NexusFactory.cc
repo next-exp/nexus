@@ -10,9 +10,21 @@
 #include "NexusFactory.h"
 #include "DetectorConstruction.h"
 #include "PrimaryGeneration.h"
+#include "NexusFactoryMessenger.h"
 
 using namespace nexus;
 
+
+NexusFactory::NexusFactory()
+{
+  _messenger = new NexusFactoryMessenger(this);
+}
+
+
+NexusFactory::~NexusFactory()
+{
+  delete _messenger;
+}
 
 // GEOMETRIES ////////////////////////////////////////////////////////
 

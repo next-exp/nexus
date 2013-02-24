@@ -25,7 +25,8 @@ namespace nexus {
 
   class DetectorConstruction;
   class PrimaryGeneration;
-  
+  class NexusFactoryMessenger;
+
 
   /// Class factory to create instances of the Geant4 user initialization
   /// classes specified by their name. Notice that this class does not
@@ -61,10 +62,16 @@ namespace nexus {
     
     /// Create an instance of a stepping action
     G4UserSteppingAction* CreateSteppingAction(const G4String& name);
+
+    void DoSomething(G4bool) { G4cout << "YES!" << std::endl; }
+
+  private:
+    NexusFactoryMessenger* _messenger;
+
   };
 
-  inline NexusFactory::NexusFactory() {}
-  inline NexusFactory::~NexusFactory() {}
+  //  inline NexusFactory::NexusFactory() 
+  //inline NexusFactory::~NexusFactory() { delete _messenger;}
   
 } // namespace nexus
 
