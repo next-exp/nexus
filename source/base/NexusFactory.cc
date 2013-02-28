@@ -4,20 +4,45 @@
 //  Author : J Martin-Albo <jmalbos@ific.uv.es>    
 //  Created: 15 Apr 2009
 //
-//  Copyright (c) 2009-2012 NEXT Collaboration
+//  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
 // -----------------------------------------------------------------------------
 
 #include "NexusFactory.h"
 #include "DetectorConstruction.h"
 #include "PrimaryGeneration.h"
-#include "NexusFactoryMessenger.h"
+
+#include <G4GenericMessenger.hh>
 
 using namespace nexus;
 
 
+
 NexusFactory::NexusFactory()
 {
-  _messenger = new NexusFactoryMessenger(this);
+  _messenger = new G4GenericMessenger(this, "/NexusFactory/", 
+    "NexusFactory control commands.");
+
+  G4GenericMessenger::Command& cmd = 
+    _messenger->DeclareProperty("Geometry", _geometry_name,
+      "Specify a geometry for the factory to build.");
+
+  cmd = _messenger->DeclareProperty("PhysicsList", _physics_list_name,
+    "Specify a physics list for the factory to build.");
+
+  cmd = _messenger->DeclareProperty("Generator", _generator_name,
+    "Specify a generator for the factory to build.");
+
+  cmd = _messenger->DeclareProperty("RunAction", _run_action_name,
+    "Specify a run action for the factory to build.");
+
+  cmd = _messenger->DeclareProperty("EventAction", _event_action_name,
+    "Specify an event action for the factory to build.");
+
+  cmd = _messenger->DeclareProperty("TrackingAction", _tracking_action_name,
+    "Specify a tracking action for the factory to build.");
+
+  cmd = _messenger->DeclareProperty("SteppingAction", _stepping_action_name,
+    "Specify a stepping action for the factory to build.");
 }
 
 
@@ -25,6 +50,8 @@ NexusFactory::~NexusFactory()
 {
   delete _messenger;
 }
+
+
 
 // GEOMETRIES ////////////////////////////////////////////////////////
 
@@ -39,39 +66,38 @@ NexusFactory::~NexusFactory()
 #include "GraXe.h"
 #include "PMT_QE_setup.h"
   
-DetectorConstruction* 
-NexusFactory::CreateDetectorConstruction(const G4String& name)
+DetectorConstruction* NexusFactory::CreateDetectorConstruction()
 {
   DetectorConstruction* p = new DetectorConstruction();
 
-  if      (name == "NEXT100")
+  if      (_geometry_name == "NEXT100")
     p->SetGeometry(new Next100);
 
-  else if (name == "NEXT100_OPT")
+  else if (_geometry_name == "NEXT100_OPT")
     p->SetGeometry(new Next100OpticalGeometry);
 
-  else if (name == "NEXT1EL")
+  else if (_geometry_name == "NEXT1EL")
     p->SetGeometry(new Next1EL);
 
-  else if (name == "NEXT_LBNL")
+  else if (_geometry_name == "NEXT_LBNL")
     p->SetGeometry(new Next1Lbnl);
   
-  else if (name == "GRAXE")
+  else if (_geometry_name == "GRAXE")
     p->SetGeometry(new GraXe);
   
-  else if (name == "CYLINDRIC_CHAMBER")  
+  else if (_geometry_name == "CYLINDRIC_CHAMBER")  
     p->SetGeometry(new CylindricChamber);
   
-  else if (name == "SQUARE_CHAMBER")
+  else if (_geometry_name == "SQUARE_CHAMBER")
     p->SetGeometry(new SquareChamber);
   
-  else if (name == "XE_SPHERE")
+  else if (_geometry_name == "XE_SPHERE")
     p->SetGeometry(new XeSphere);
   
-  else if (name == "NEXT0_IFIC")
+  else if (_geometry_name == "NEXT0_IFIC")
     p->SetGeometry(new Next0Ific);
 
-  else if (name == "PMT_QE_SETUP")
+  else if (_geometry_name == "PMT_QE_SETUP")
     p->SetGeometry(new PMT_QE_setup);
   
   else
@@ -87,12 +113,11 @@ NexusFactory::CreateDetectorConstruction(const G4String& name)
 
 #include "DefaultPhysicsList.h"
 
-G4VUserPhysicsList* 
-NexusFactory::CreatePhysicsList(const G4String& name)
+G4VUserPhysicsList* NexusFactory::CreatePhysicsList()
 {
   G4VUserPhysicsList* p = 0;
   
-  if (name == "DEFAULT")
+  if (_physics_list_name == "DEFAULT")
     p = new DefaultPhysicsList(); 
 
   else
@@ -110,21 +135,20 @@ NexusFactory::CreatePhysicsList(const G4String& name)
 #include "Na22Generation.h"
 #include "ELLookupTableGenerator.h"
 
-PrimaryGeneration* 
-NexusFactory::CreatePrimaryGeneration(const G4String& name)
+PrimaryGeneration* NexusFactory::CreatePrimaryGeneration()
 {
   PrimaryGeneration* p = new PrimaryGeneration();
     
-  if      (name == "SINGLE_PARTICLE")
+  if      (_generator_name == "SINGLE_PARTICLE")
     p->SetGenerator(new SingleParticle); 
   
-  else if (name == "GENBB_INTERFACE")
+  else if (_generator_name == "GENBB_INTERFACE")
     p->SetGenerator(new GenbbInterface);
   
-  else if (name == "NA22_GENERATOR")
+  else if (_generator_name == "NA22_GENERATOR")
     p->SetGenerator(new Na22Generation);
 
-  else if (name == "EL_LOOKUP_TABLE")
+  else if (_generator_name == "EL_LOOKUP_TABLE")
     p->SetGenerator(new ELLookupTableGenerator);
 
   else
@@ -139,12 +163,11 @@ NexusFactory::CreatePrimaryGeneration(const G4String& name)
 
 #include "DefaultRunAction.h"
 
-G4UserRunAction* 
-NexusFactory::CreateRunAction(const G4String& name)
+G4UserRunAction* NexusFactory::CreateRunAction()
 {
   G4UserRunAction* p = 0;
     
-  if      (name == "DEFAULT")
+  if      (_run_action_name == "DEFAULT")
     p = new DefaultRunAction; 
   
   else
@@ -161,15 +184,14 @@ NexusFactory::CreateRunAction(const G4String& name)
 #include "DefaultEventAction.h"
 #include "FastSimFiltersEventAction.h"
 
-G4UserEventAction* 
-NexusFactory::CreateEventAction(const G4String& name)
+G4UserEventAction* NexusFactory::CreateEventAction()
 {
   G4UserEventAction* p = 0;
     
-  if      (name == "DEFAULT") 
+  if      (_event_action_name == "DEFAULT") 
     p = new DefaultEventAction; 
 
-  else if (name == "FAST_SIM_FILTERS")
+  else if (_event_action_name == "FAST_SIM_FILTERS")
     p = new FastSimFiltersEventAction;
   
   else 
@@ -185,15 +207,14 @@ NexusFactory::CreateEventAction(const G4String& name)
 #include "DefaultTrackingAction.h"
 #include "ELTablesTrackingAction.h"
 
-G4UserTrackingAction* 
-NexusFactory::CreateTrackingAction(const G4String& name)
+G4UserTrackingAction* NexusFactory::CreateTrackingAction()
 {
   G4UserTrackingAction* p = 0;
     
-  if      (name == "DEFAULT")
+  if      (_tracking_action_name == "DEFAULT")
     p = new DefaultTrackingAction; 
 
-  else if (name == "EL_TABLES")
+  else if (_tracking_action_name == "EL_TABLES")
     p = new ELTablesTrackingAction;
 
   else 
@@ -208,12 +229,11 @@ NexusFactory::CreateTrackingAction(const G4String& name)
 
 #include "DefaultSteppingAction.h"
 
-G4UserSteppingAction* 
-NexusFactory::CreateSteppingAction(const G4String& name)
+G4UserSteppingAction* NexusFactory::CreateSteppingAction()
 {
   G4UserSteppingAction* p = 0;
     
-  if      (name == "DEFAULT") 
+  if      (_stepping_action_name == "DEFAULT") 
     p = new DefaultSteppingAction;
 
   else

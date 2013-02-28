@@ -6,7 +6,7 @@
 ///  \date     15 Apr 2009
 ///  \version  $Id$  
 ///
-///  Copyright (c) 2009-2012 NEXT Collaboration
+///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
 #ifndef __NEXUS_FACTORY__
@@ -14,6 +14,7 @@
 
 #include <globals.hh>
 
+class G4GenericMessenger;
 class G4VUserPhysicsList;
 class G4UserRunAction;
 class G4UserEventAction;
@@ -25,7 +26,6 @@ namespace nexus {
 
   class DetectorConstruction;
   class PrimaryGeneration;
-  class NexusFactoryMessenger;
 
 
   /// Class factory to create instances of the Geant4 user initialization
@@ -43,35 +43,38 @@ namespace nexus {
 
   public:
     /// Create an instance of the detector initialization class
-    DetectorConstruction* CreateDetectorConstruction(const G4String& name);
+    DetectorConstruction* CreateDetectorConstruction();
 
     /// Create an instance of a physics list
-    G4VUserPhysicsList* CreatePhysicsList(const G4String& name);
+    G4VUserPhysicsList* CreatePhysicsList();
 
     /// Create an instance of the primary generation initialization class
-    PrimaryGeneration* CreatePrimaryGeneration(const G4String& name);
+    PrimaryGeneration* CreatePrimaryGeneration();
     
     /// Create an instance of a user action
-    G4UserRunAction* CreateRunAction(const G4String& name);
+    G4UserRunAction* CreateRunAction();
     
     /// Create an instance of a event action
-    G4UserEventAction* CreateEventAction(const G4String& name);
+    G4UserEventAction* CreateEventAction();
     
     /// Create an instance of a tracking action
-    G4UserTrackingAction* CreateTrackingAction(const G4String& name);
+    G4UserTrackingAction* CreateTrackingAction();
     
     /// Create an instance of a stepping action
-    G4UserSteppingAction* CreateSteppingAction(const G4String& name);
+    G4UserSteppingAction* CreateSteppingAction();
 
-    void DoSomething(G4bool) { G4cout << "YES!" << std::endl; }
 
   private:
-    NexusFactoryMessenger* _messenger;
+    G4GenericMessenger* _messenger;
 
+    G4String _geometry_name;
+    G4String _physics_list_name;
+    G4String _generator_name;
+    G4String _run_action_name;
+    G4String _event_action_name;
+    G4String _tracking_action_name;
+    G4String _stepping_action_name;
   };
-
-  //  inline NexusFactory::NexusFactory() 
-  //inline NexusFactory::~NexusFactory() { delete _messenger;}
   
 } // namespace nexus
 
