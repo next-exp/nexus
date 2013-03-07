@@ -12,7 +12,8 @@
 #ifndef __NEXUS_FACTORY__
 #define __NEXUS_FACTORY__
 
-#include <globals.hh>
+#include <G4RunManager.hh>
+//#include <globals.hh>
 
 class G4GenericMessenger;
 class G4VUserPhysicsList;
@@ -29,11 +30,14 @@ namespace nexus {
 
 
   /// Class factory to create instances of the Geant4 user initialization
-  /// classes specified by their name. Notice that this class does not
-  /// take responsibility for deleting the allocated object (this is done
-  /// actually by the G4RunManager).
+  /// classes specified through the G4 UI manager. 
+  /// The class is implemented as a (Meyer's) singleton, and thus a single
+  /// instance (with a lifespan equal to that of the job) is offered to the
+  /// user. 
+  /// Notice that this class does not take responsibility for deleting the
+  /// allocated object (this is done actually by the G4RunManager).
 
-  class NexusFactory
+  class NexusFactory: public G4RunManager
   {
   public:
     /// Constructor
@@ -41,7 +45,6 @@ namespace nexus {
     /// Destructor
     ~NexusFactory();
 
-  public:
     /// Create an instance of the detector initialization class
     DetectorConstruction* CreateDetectorConstruction();
 
@@ -63,9 +66,11 @@ namespace nexus {
     /// Create an instance of a stepping action
     G4UserSteppingAction* CreateSteppingAction();
 
+  private:
+
 
   private:
-    G4GenericMessenger* _messenger;
+    G4GenericMessenger* _msg;
 
     G4String _geometry_name;
     G4String _physics_list_name;

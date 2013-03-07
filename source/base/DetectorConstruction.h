@@ -2,11 +2,11 @@
 ///  \file   DetectorConstruction.h
 ///  \brief  Initialization class for detector setup.
 ///  
-///  \author   J Martin-Albo <jmalbos@ific.uv.es>    
+///  \author   <justo.martin-albo@ific.uv.es>    
 ///  \date     9 Mar 2009
 ///  \version  $Id$
 ///
-///  Copyright (c) 2009, 2010 NEXT Collaboration
+///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
 #ifndef __DETECTOR_CONSTRUCTION__
@@ -15,14 +15,11 @@
 #include <G4VUserDetectorConstruction.hh>
 #include "BaseGeometry.h"
 
+class G4GenericMessenger;
+
 
 namespace nexus {
 
-  /// Geant4 user initialization class for detector setup.
-  /// A detector geometry selected by the user and created (allocated)
-  /// by the NexusFactory is set in the world. 
-  /// This class owns the geometry instance and takes care of deleting 
-  /// it at the end of the run.
   
   class DetectorConstruction: public G4VUserDetectorConstruction
   {
@@ -42,6 +39,7 @@ namespace nexus {
     const BaseGeometry* GetGeometry() const;
 
   private:
+    //G4GenericMessenger* _msg;
     BaseGeometry* _geometry; ///< pointer to the detector geometry
   };
 

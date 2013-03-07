@@ -1,20 +1,24 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author : J Martin-Albo <jmalbos@ific.uv.es>    
+//  Author : <justo.martin-albo@ific.uv.es>    
 //  Created: 9 Mar 2009
 //
-//  Copyright (c) 2009, 2010 NEXT Collaboration
+//  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
 #include "DetectorConstruction.h"
 
+#include "BaseGeometry.h"
+
 #include <G4Box.hh>
-#include <G4LogicalVolume.hh>
-#include <G4PVPlacement.hh>
-#include <G4NistManager.hh>
 #include <G4Material.hh>
+#include <G4NistManager.hh>
+#include <G4LogicalVolume.hh>
 #include <G4VisAttributes.hh>
+#include <G4PVPlacement.hh>
+//#include <G4GenericMessenger.hh>
+
 
 
 namespace nexus {
@@ -22,6 +26,9 @@ namespace nexus {
   
   DetectorConstruction::DetectorConstruction(): _geometry(0)
   {
+    //_msg = new G4GenericMessenger(this, "/nexus/geometries/", "");
+
+
   }
 
   
@@ -37,13 +44,20 @@ namespace nexus {
   {
     // Check whether a detector geometry has been set
     if (!_geometry) {
-      G4Exception("Construct()", "[DetectorConstruction]",
-		  FatalException, "ERROR: Geometry not set!");
+      G4Exception("Construct()", "[DetectorConstruction]", 
+        FatalException, "ERROR: Geometry not set!");
     }
 
-    // Definition of WORLD volume. 
-    // WORLD is a box filled with galactic vacuum and big enough
-    // to fit the detector inside.
+    // At this point the user should have loaded the configuration
+    // parameters of the geometry or it will get built with the
+    // default values.
+    _geometry->BuildGeometry();
+
+   
+    ////////////////////////////////////////////////////////
+    // Definition of the world volume. It is an empty box
+    // (actually, it is filled with galactic vacuum) big enough
+    // to fit the user's geometry inside.
 
     G4double size = _geometry->GetSpan();
 
@@ -60,7 +74,8 @@ namespace nexus {
     G4PVPlacement* world_physi = 
       new G4PVPlacement(0, G4ThreeVector(), world_logic, "WORLD", 0, false, 0);
     
-    // Place user's geometry in the WORLD volume
+    ////////////////////////////////////////////////////////
+    // Placement of the user's geometry
     
     G4LogicalVolume* geometry_logic = _geometry->GetLogicalVolume();
     
