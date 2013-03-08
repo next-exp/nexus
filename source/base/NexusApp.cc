@@ -13,7 +13,7 @@
 #include "PrimaryGeneration.h"
 
 #include <G4GenericMessenger.hh>
-#include <G4StateManager.hh>
+#include <globals.hh>
 
 
 using namespace nexus;
@@ -55,12 +55,11 @@ void NexusApp::Initialize()
 
 void NexusApp::CreateDetectorConstruction(G4String name)
 {
-	///	Make sure that no user detector construction class 
+	/// Make sure that no user detector construction class 
 	/// has been set already
 	if (userDetector) {
-		G4String errmsg = "Detector construction already set!"
-		G4Exception("[NexusApp]", "CreateDetectorConstruction()",
-			JustWarning, "Detector construction already set!");
+		G4Exception("CreateDetectorConstruction()", "[NexusApp]",
+			JustWarning, "Detector construction already set.");
 		return;
 	}
 
@@ -72,11 +71,11 @@ void NexusApp::CreateDetectorConstruction(G4String name)
 	else {
 		G4String errmsg = "User selected an unknown geometry: ";
 		errmsg += name;
-		G4Exception("[NexusApp]", "CreateDetectorConstruction()",
+		G4Exception("CreateDetectorConstruction()", "[NexusApp]",
 			FatalException, errmsg);
 	}
 
-	this->SetUserAction(p);
+	this->SetUserInitialization(p);
 }
 
 
@@ -88,7 +87,9 @@ void NexusApp::CreateDetectorConstruction(G4String name)
 void NexusApp::CreatePhysicsList(G4String name)
 {
 	if (physicsList) {
-		G4Exception();
+		G4Exception("CreatePhysicsList()", "[NexusApp]",
+			JustWarning, "Physics list already set.");
+		return;
 	}
 
 	G4VUserPhysicsList* p = 0;
@@ -96,9 +97,12 @@ void NexusApp::CreatePhysicsList(G4String name)
 	if (name == "DEFAULT") 
 		p = new DefaultPhysicsList();
 
-	else
-		G4Exception();
-
+	else{
+		G4String errmsg = "User selected an unknown physics list: ";
+		errmsg += name;
+		G4Exception("CreateDetectorConstruction()", "[NexusApp]",
+			FatalException, errmsg);
+	}
 
 	this->SetUserInitialization(p);
 }
@@ -111,13 +115,22 @@ void NexusApp::CreatePhysicsList(G4String name)
 
 void NexusApp::CreatePrimaryGeneration(G4String name)
 {
+	if (userPrimaryGeneratorAction) {
+		G4Exception("CreatePrimaryGeneration()", "[NexusApp]",
+			JustWarning, "Primary generation already set.");
+	}
+
 	PrimaryGeneration* p = new PrimaryGeneration();
 
 	if (name == "SINGLE_PARTICLE")
 		p->SetGenerator(new SingleParticle);
 
-	else
-		G4Exception();
+	else {
+		G4String errmsg = "User selected an unknown generator: ";
+		errmsg += name;
+		G4Exception("CreatePrimaryGeneration()", "[NexusApp]", 
+			FatalException, errmsg);
+	}
 
 	this->SetUserAction(p);
 }

@@ -34,9 +34,9 @@ namespace nexus {
 
 	private:
 
-		void CreateDetectorConstruction();
-		void CreatePhysicsList();
-		void CreatePrimaryGeneration();
+		void CreateDetectorConstruction(G4String name);
+		void CreatePhysicsList(G4String name);
+		void CreatePrimaryGeneration(G4String name);
 		
 
 
