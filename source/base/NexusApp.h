@@ -30,12 +30,26 @@ namespace nexus {
 	/// Destructor
 		~NexusApp();
 
+		virtual void Initialize();
+
+	private:
+
+		void CreateDetectorConstruction();
+		void CreatePhysicsList();
+		void CreatePrimaryGeneration();
+		
+
+
 	private:
 		G4GenericMessenger* _msg;
 
 		G4String _geometry_name;
 		G4String _physics_list_name;
 		G4String _generator_name;
+		G4String _run_action_name;
+		G4String _event_action_name;
+		G4String _tracking_action_name;
+		G4String _stepping_action_name;
 	};
 
 } // namespace nexus
