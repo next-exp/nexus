@@ -9,7 +9,7 @@
 ///  Copyright (c) 2009-2011 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "NexusFactory.h"
+#include "NexusApp.h"
 #include "DetectorConstruction.h"
 #include "PrimaryGeneration.h"
 #include "BhepUtils.h"
@@ -34,138 +34,114 @@ using namespace nexus;
 
 void PrintUsage()
 {
-  G4cerr << "\nUsage: nexus [mode] [mode_options] <config_file>\n" << G4endl;
-  G4cerr << "Available modes:" << G4endl;
-  G4cerr << "   [-batch(b)]               : "
-  << "batch mode" << G4endl;
-  G4cerr << "    -visual(v) [<vis_macro>] : "
-  << "visual mode (default macro: vis.mac)" << G4endl;
-  G4cerr << G4endl;
+  G4cerr  << "\nUsage: ./nexus [-b|i] <config_macro>\n" << G4endl;
+  G4cerr  << "Available options:" << G4endl;
+  G4cerr  << "   -b, --batch           : Run in batch mode (default)\n"
+          << "   -i, --interactive     : Run in interactive mode\n"
+          << G4endl;
   exit(EXIT_FAILURE);
 }
 
 
 
-void PrintBanner()
+G4int main(int argc, char** argv) 
 {
-}
+  ////////////////////////////////////////////////////////////////////
+  // PARSE COMMAND-LINE OPTIONS
 
+  // Abort if no command-line argument is provided. The user must
+  // specify at least the name of a configuration macro.
+  if (argc < 2) PrintUsage(); 
 
+  G4bool batch = true;
+  
 
-bool ParseCmdLineOptions(int argc, char** argv)
-{ 
   static struct option long_options[] =
   {
-    {"interactive", required_argument, 0, 'i'},
-    {"batch",       required_argument, 0, 'b'}
+    {"batch",       0, 0, 'b'},
+    {"interactive", 0, 0, 'i'},
+    {0, 0, 0, 0}
   };
 
   int c;
 
   while (true) {
-    
-    int option_index = 0;
-    c = getopt_long(argc, argv, "b:i:", long_options, &option_index);
 
-    if (c == -1) break;
+    int option_index = 0;
+    opterr = 0;
+    c = getopt_long(argc, argv, "bi", long_options, 0);
+    
+    if (c==-1) break; // Exit if we are done reading options
 
     switch (c) {
 
-      case 'i':
-      //G4String macro_filename = optarg;
-      break;
-
       case 'b':
-      printf("Option -b with value %s\n", optarg);
+        batch = true;
+        break;
+
+      case 'i':
+        batch = false;
+        break;
 
       case '?':
-      std::cout << "Non-recognized option." << std::endl;
+        break;
 
       default:
-      abort();
+        abort();
     }
   }
-}
 
+  // If there is no other command-line argument to be processed, abort
+  // because the user has not provided a configuration macro.
+  // (The variable optind is set by getopt_long to the index of the next
+  // element of the argv array to be processed. Once getopt has found all 
+  // of the option arguments, this variable can be used to determine where 
+  // the remaining non-option arguments begin.)
+  if (optind == argc) PrintUsage();
 
+  // Assume that the name of the configuration macro is the first
+  // command-line parameters that is not a GNU option.
+  G4String macro_filename = argv[optind];
+  G4cout << macro_filename << G4endl;
 
+  if (macro_filename == "") PrintUsage(); 
+    
 
-G4int main(int argc, char** argv) 
-{
-  ParseCmdLineOptions(argc, argv);
-
-  G4String macro_filename = "macros/nexus_example1.macro";
 
   ////////////////////////////////////////////////////////////////////
 
-  // Create an instance of the nexus factory
-  NexusFactory factory;
   
-  // Get a pointer to the UI manager and read the macro 
+  NexusApp* app = new NexusApp(macro_filename);
+
+
   G4UImanager* UI = G4UImanager::GetUIpointer();
-  UI->ApplyCommand("/control/execute " + macro_filename);
 
-  // Create an instance of the Geant4 run manager
-  G4RunManager* runmgr = new G4RunManager();
- 
-  runmgr->SetUserInitialization(factory.CreateDetectorConstruction());
-  runmgr->SetUserInitialization(factory.CreatePhysicsList());
-  runmgr->SetUserAction(factory.CreatePrimaryGeneration());
+  // G4int seed = 1;
+  // G4String vis_macro = "";
 
-  if (UI->GetCurrentValues("/NexusFactory/RunAction"))
-    runmgr->SetUserAction(factory.CreateRunAction());
-  if (UI->GetCurrentValues("/NexusFactory/EventAction"))
-    runmgr->SetUserAction(factory.CreateEventAction());
-  if (UI->GetCurrentValues("/NexusFactory/TrackingAction"))
-    runmgr->SetUserAction(factory.CreateSteppingAction());
+  // if (seed < 0) CLHEP::HepRandom::setTheSeed(time(0));
+  // else CLHEP::HepRandom::setTheSeed(seed);
   
-  runmgr->Initialize();
-  
-  G4int seed = 1;
-  G4String vis_macro = "";
+  // CLHEP::HepRandom::showEngineStatus();
 
-  if (seed < 0) CLHEP::HepRandom::setTheSeed(time(0));
-  else CLHEP::HepRandom::setTheSeed(seed);
-  
-  CLHEP::HepRandom::showEngineStatus();
+  app->Initialize();
 
-
-
-  // G4int tracking_verbosity = 0;
-  // if (jobCfg.PeekIParam("tracking_verbosity"))
-  //   tracking_verbosity = jobCfg.GetIParam("tracking_verbosity");
-
-  // UI->ApplyCommand("/run/verbose 0");
-  // UI->ApplyCommand("/event/verbose 0");
-  // UI->ApplyCommand("/tracking/verbose " 
-  //  + bhep::to_string(tracking_verbosity));
-  
   // visual mode
-  if (false) {
+  if (!batch) {
+    G4VisManager* vismgr = new G4VisExecutive();
+    vismgr->Initialize();
 
-    // initialize visualization manager
-    G4VisManager* visMgr = new G4VisExecutive;
-    visMgr->Initialize();
-
-    // G4UIterminal is a (dumb) terminal.
-    G4UIsession *session = 0;
-    session = new G4UIterminal(new G4UItcsh);
-
-    // execute visualization macro and start session
-    UI->ApplyCommand("/control/execute " + vis_macro);    
+    G4UIsession* session = new G4UIterminal(new G4UItcsh);
+    UI->ApplyCommand("/control/execute vis.mac");
     session->SessionStart();
 
-    // job termination
     delete session;
-    delete visMgr;
+    delete vismgr;
   }
-
-  // batch mode
   else {
-    runmgr->BeamOn(0);
+    app->BeamOn(10);
   }
 
-
-  delete runmgr;
+  delete app;
   return EXIT_SUCCESS;
 } 
