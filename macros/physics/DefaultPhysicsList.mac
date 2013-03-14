@@ -1,0 +1,2 @@
+/PhysicsList/RegisterPhysics G4EmLivermorePhysics
+/PhysicsList/RegisterPhysics G4DecayPhysics

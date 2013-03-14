@@ -1,0 +1,8 @@
+/Geometry/RegisterGeometry XE_SPHERE
+/PhysicsList/RegisterPhysics G4EmLivermorePhysics
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/Generator/RegisterGenerator SINGLE_PARTICLE
+
+/nexus/ParamsMacro macros/params.macro
+
+
