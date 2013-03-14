@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
 ///  \file   nexus.cc
-///  \brief  NEXUS - Main program
+///  \brief  Main program
 ///
 ///  \author   Justo Martin-Albo <jmalbos@ific.uv.es>    
 ///  \date     2 Apr 2009
 ///  \version  $Id$
 ///
-///  Copyright (c) 2009-2011 NEXT Collaboration
+///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
 #include "NexusApp.h"
@@ -34,7 +34,7 @@ using namespace nexus;
 
 void PrintUsage()
 {
-  G4cerr  << "\nUsage: ./nexus [-b|i] <config_macro>\n" << G4endl;
+  G4cerr  << "\nUsage: ./nexus [-b|i] <init_macro>\n" << G4endl;
   G4cerr  << "Available options:" << G4endl;
   G4cerr  << "   -b, --batch           : Run in batch mode (default)\n"
           << "   -i, --interactive     : Run in interactive mode\n"
@@ -112,19 +112,14 @@ G4int main(int argc, char** argv)
 
   
   NexusApp* app = new NexusApp(macro_filename);
-
+  app->Initialize();
 
   G4UImanager* UI = G4UImanager::GetUIpointer();
-
-  // G4int seed = 1;
-  // G4String vis_macro = "";
 
   // if (seed < 0) CLHEP::HepRandom::setTheSeed(time(0));
   // else CLHEP::HepRandom::setTheSeed(seed);
   
   // CLHEP::HepRandom::showEngineStatus();
-
-  app->Initialize();
 
   // visual mode
   if (!batch) {
