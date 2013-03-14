@@ -16,20 +16,17 @@
 
 #include <G4GenericPhysicsList.hh>
 #include <G4UImanager.hh>
-#include <globals.hh>
-
 
 using namespace nexus;
 
 
 
-NexusApp::NexusApp(G4String config_macro): G4RunManager()
+NexusApp::NexusApp(G4String init_macro): G4RunManager()
 {
   // Create a configure the generic messenger for the app
-   _msg = new G4GenericMessenger(this, "/nexus/", 
-    "NexusApp control commands.");
- 
-  _msg->DeclareProperty("ParamsMacro", _params_macro, "");
+  _msg = new G4GenericMessenger(this, "/nexus/", "Nexus control commands.");
+  _msg->DeclareMethod("RegisterMacro", &NexusApp::RegisterMacro, ""); 
+
 
   // Create the necessary classes for initialization
 
@@ -39,7 +36,7 @@ NexusApp::NexusApp(G4String config_macro): G4RunManager()
 
  
   G4UImanager::GetUIpointer()->
-    ApplyCommand("/control/execute " + config_macro);
+    ApplyCommand("/control/execute " + init_macro);
 
   // Initialization classes set in the G4RunManager
 
@@ -63,7 +60,7 @@ NexusApp::~NexusApp()
 
 
 
-void NexusApp::AddMacro(G4String macro)
+void NexusApp::RegisterMacro(const G4String& macro)
 {
   _macros.push_back(macro);
 }
@@ -72,98 +69,12 @@ void NexusApp::AddMacro(G4String macro)
 
 void NexusApp::Initialize()
 {
-  if (_params_macro != "")
-    G4UImanager::GetUIpointer()->ExecuteMacroFile(_params_macro);
+  // Execute command macro file before initializing the app
+  // so that all classes get configured
+  G4UImanager* UI = G4UImanager::GetUIpointer();
+  for (unsigned int i=0; i<_macros.size(); i++)
+    UI->ExecuteMacroFile(_macros[i]);
 
+  // Initialize the run manager
   G4RunManager::Initialize();
-}
-
-
-////////////////////////////////////////////////////////////
-
-#include "XeSphere.h"
-
-
-void NexusApp::CreateDetectorConstruction(G4String name)
-{
-  /// Make sure that no user detector construction class 
-  /// has been set already
-  if (userDetector) {
-    G4Exception("CreateDetectorConstruction()", "[NexusApp]",
-      JustWarning, "Detector construction already set.");
-    return;
-  }
-
-  DetectorConstruction* p = new DetectorConstruction();
-
-  if (name == "XE_SPHERE")
-    p->SetGeometry(new XeSphere);
-
-  else {
-    G4String errmsg = "User selected an unknown geometry: ";
-    errmsg += name;
-    G4Exception("CreateDetectorConstruction()", "[NexusApp]",
-      FatalException, errmsg);
-  }
-
-  this->SetUserInitialization(p);
-}
-
-
-////////////////////////////////////////////////////////////
-
-#include "DefaultPhysicsList.h"
-
-
-void NexusApp::CreatePhysicsList(G4String name)
-{
-  // if (physicsList) {
-  //   G4Exception("CreatePhysicsList()", "[NexusApp]",
-  //     JustWarning, "Physics list already set.");
-  //   return;
-  // }
-
-  // G4VUserPhysicsList* p = 0;
-
-  // if (name == "DEFAULT") 
-  //   p = new DefaultPhysicsList();
-
-  // else{
-  //   G4String errmsg = "User selected an unknown physics list: ";
-  //   errmsg += name;
-  //   G4Exception("CreateDetectorConstruction()", "[NexusApp]",
-  //     FatalException, errmsg);
-  // }
-
-  //G4VUserPhysicsList* p = new G4GenericPhysicsList();
-
-  //this->SetUserInitialization(p);
-}
-
-
-////////////////////////////////////////////////////////////
-
-#include "SingleParticle.h"
-
-
-void NexusApp::CreatePrimaryGeneration(G4String name)
-{
-  if (userPrimaryGeneratorAction) {
-    G4Exception("CreatePrimaryGeneration()", "[NexusApp]",
-      JustWarning, "Primary generation already set.");
-  }
-
-  PrimaryGeneration* p = new PrimaryGeneration();
-
-  if (name == "SINGLE_PARTICLE")
-    p->SetGenerator(new SingleParticle);
-
-  else {
-    G4String errmsg = "User selected an unknown generator: ";
-    errmsg += name;
-    G4Exception("CreatePrimaryGeneration()", "[NexusApp]", 
-      FatalException, errmsg);
-  }
-
-  this->SetUserAction(p);
 }

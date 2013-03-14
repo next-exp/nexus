@@ -134,7 +134,7 @@ G4int main(int argc, char** argv)
     delete vismgr;
   }
   else {
-    app->BeamOn(10);
+    app->BeamOn(1);
   }
 
   delete app;

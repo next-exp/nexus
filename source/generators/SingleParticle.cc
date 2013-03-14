@@ -9,11 +9,12 @@
 
 #include "SingleParticle.h"
 
-#include "ConfigService.h"
+//#include "ConfigService.h"
 #include "DetectorConstruction.h"
 #include "BaseGeometry.h"
 #include "BhepUtils.h"
 
+#include <G4Electron.hh>
 #include <G4RunManager.hh>
 #include <G4ParticleTable.hh>
 #include <G4ParticleDefinition.hh>
@@ -31,8 +32,7 @@ namespace nexus {
     _energy_min(0.), _energy_max(0.), _direction_is_random(true),
     _geom(0)
   {
-    DetectorConstruction* detconst = (DetectorConstruction*)
-      G4RunManager::GetRunManager()->GetUserDetectorConstruction();
+    DetectorConstruction* detconst = (DetectorConstruction*)G4RunManager::GetRunManager()->GetUserDetectorConstruction();
     _geom = detconst->GetGeometry();
 
     ReadConfigParams();
@@ -43,30 +43,31 @@ namespace nexus {
   void SingleParticle::ReadConfigParams()
   {
     // Get configuration parameters for generation
-    const ParamStore& cfg = ConfigService::Instance().Generation();
+    //const ParamStore& cfg = ConfigService::Instance().Generation();
     
     // Set particle type searching in particle table by name
-    _particle_definition = G4ParticleTable::GetParticleTable()->
-      FindParticle(cfg.GetSParam("particle_name"));
+    _particle_definition = G4Electron::Definition();
+    // _particle_definition = G4ParticleTable::GetParticleTable()->
+    //   FindParticle(cfg.GetSParam("particle_name"));
 
     // Set mass and charge to PDG values
     _charge = _particle_definition->GetPDGCharge();
     _mass   = _particle_definition->GetPDGMass();
     
     // Set limits for kinetic energy
-    _energy_min = cfg.GetDParam("energy_min");
-    _energy_max = cfg.GetDParam("energy_max");
+    _energy_min = 1.*MeV; //cfg.GetDParam("energy_min");
+    _energy_max = 2.*MeV; //cfg.GetDParam("energy_max");
 
     // Set momentum direction if specified; it will be random otherwise.
-    if (cfg.PeekDVParam("momentum_direction")) {
-      _direction_is_random = false;
-      _momentum_direction = 
-	BhepUtils::DVto3Vector(cfg.GetDVParam("momentum_direction"));
-      // normalize the vector if needed
-      _momentum_direction = _momentum_direction.unit();
-    }
+ //    if (cfg.PeekDVParam("momentum_direction")) {
+ //      _direction_is_random = false;
+ //      _momentum_direction = 
+	// BhepUtils::DVto3Vector(cfg.GetDVParam("momentum_direction"));
+ //      // normalize the vector if needed
+ //      _momentum_direction = _momentum_direction.unit();
+ //    }
 
-    _region = cfg.GetSParam("region");
+    _region = "CENTER"; //cfg.GetSParam("region");
   }
   
 

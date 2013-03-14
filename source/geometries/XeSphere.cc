@@ -28,7 +28,7 @@
 namespace nexus {
   
   
-  XeSphere::XeSphere(): BaseGeometry()
+  XeSphere::XeSphere(): BaseGeometry(), _radius(2.*m)
   {
 
     // Creating the vertex generator

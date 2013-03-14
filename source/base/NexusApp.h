@@ -14,53 +14,37 @@
 
 #include <G4RunManager.hh>
 
-
 class G4GenericMessenger;
+namespace nexus { class GeometryFactory; }
+namespace nexus { class GeneratorFactory; }
 
 
 namespace nexus {
 
-	class GeometryFactory;
-	class GeneratorFactory;
-	
+  /// TODO. CLASS DESCRIPTION
 
-	/// TODO. CLASS DESCRIPTION
+  class NexusApp: public G4RunManager
+  {
+  public:
+    /// Constructor
+    NexusApp(G4String init_macro);
+    /// Destructor
+    ~NexusApp();
 
-	class NexusApp: public G4RunManager
-	{
-	public:
-	/// Constructor
-		NexusApp(G4String config_macro);
-	/// Destructor
-		~NexusApp();
+    virtual void Initialize();
 
-		virtual void Initialize();
-
-	private:
-		void AddMacro(G4String);
-		void CreateDetectorConstruction(G4String name);
-		void CreatePhysicsList(G4String name);
-		void CreatePrimaryGeneration(G4String name);
-		
+  private:
+    void RegisterMacro(const G4String&);
 
 
-	private:
-		G4GenericMessenger* _msg;
+  private:
+    G4GenericMessenger* _msg;
 
-		GeometryFactory* _geomfctr;
-		GeneratorFactory* _genfctr;
+    GeometryFactory* _geomfctr;
+    GeneratorFactory* _genfctr;
 
-		std::vector<G4String> _macros;
-
-		G4String _geometry_name;
-		G4String _physics_list_name;
-		G4String _generator_name;
-		G4String _run_action_name;
-		G4String _event_action_name;
-		G4String _tracking_action_name;
-		G4String _stepping_action_name;
-		G4String _params_macro;
-	};
+    std::vector<G4String> _macros;
+  };
 
 } // namespace nexus
 

@@ -10,7 +10,7 @@
 
 #include "HexagonPointSampler.h"
 
-#include "ConfigService.h"
+//#include "ConfigService.h"
 
 #include <Randomize.hh>
 #include <G4RunManager.hh>

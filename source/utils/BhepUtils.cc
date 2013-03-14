@@ -9,8 +9,8 @@
 
 #include "BhepUtils.h"
 
-#include "ConfigService.h"
-#include "ParamStore.h"
+//#include "ConfigService.h"
+//#include "ParamStore.h"
 
 #include <bhep/bhep_svc.h>
 #include <bhep/particle.h>
@@ -41,11 +41,11 @@ namespace nexus {
   
   void BhepUtils::CloseOutputDst()
   {
-    ConfigService::Instance().Geometry().Save();
-    ConfigService::Instance().Generation().Save();
-    ConfigService::Instance().Physics().Save();
-    ConfigService::Instance().Actions().Save();
-    ConfigService::Instance().Job().Save();
+    // ConfigService::Instance().Geometry().Save();
+    // ConfigService::Instance().Generation().Save();
+    // ConfigService::Instance().Physics().Save();
+    // ConfigService::Instance().Actions().Save();
+    // ConfigService::Instance().Job().Save();
 
     bhep::dst& ndst = bhep::bhep_svc::instance()->get_dst_info();
     bhep::run& nrun = bhep::bhep_svc::instance()->get_run_info();
