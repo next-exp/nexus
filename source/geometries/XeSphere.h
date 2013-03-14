@@ -2,7 +2,7 @@
 ///  \file   XeSphere.h
 ///  \brief  A simple sphere filled with Xe.
 ///
-///  \author   Javier Muñoz Vidal <jmunoz@ific.uv.es>    
+///  \author   Javier Mu?oz Vidal <jmunoz@ific.uv.es>    
 ///  \date     27 Nov 2009
 ///  \version  $Id$
 ///
@@ -35,16 +35,16 @@ namespace nexus {
 
   private:
     void SetParameters();
-    void BuildGeometry();
+    void Construct();
 
   private:
     // Dimensions
     G4double _radius;  ///< Internal radius of the sphere
-    G4double _thickn;  ///< Thickness of the spherical shell
+
 
     // Materials
-    G4Material* _shell_mat;   ///< Material the sphere is made of
-    G4Material* _tracking_mat; ///< Material used as tracker
+    G4Material* _xenon;   ///< Material the sphere is made of
+
 
     // Vertex Generator
     SpherePointSampler* _sphere_vertex_gen;
