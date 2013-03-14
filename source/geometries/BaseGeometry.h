@@ -38,6 +38,8 @@ namespace nexus {
     /// Destructor
     virtual ~BaseGeometry();
 
+    virtual void Construct() = 0;
+
   protected:
     /// Default constructor defined as protected so no instance of 
     /// this base class can be created.
