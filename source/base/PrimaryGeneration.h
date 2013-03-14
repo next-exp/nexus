@@ -6,14 +6,17 @@
 ///  \date     9 Mar 2009
 ///  \version  $Id$
 ///
-///  Copyright (c) 2009, 2010 NEXT Collaboration
+///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
 #ifndef __PRIMARY_GENERATION__
 #define __PRIMARY_GENERATION__
 
 #include <G4VUserPrimaryGeneratorAction.hh>
-#include <G4VPrimaryGenerator.hh>
+#include <G4String.hh>
+
+class G4VPrimaryGenerator;
+class G4GenericMessenger;
 
 
 namespace nexus {
@@ -37,22 +40,20 @@ namespace nexus {
     const G4VPrimaryGenerator* GetGenerator();
 
   private:
+//    void CreateGenerator(G4String);
+
+  private:
+    G4GenericMessenger* _msg;
     G4VPrimaryGenerator* _generator; ///< Pointer to the primary generator
   };
 
-
-  // inline methods ..................................................
-
-  inline PrimaryGeneration::PrimaryGeneration(): _generator(0) {}
-
-  inline PrimaryGeneration::~PrimaryGeneration() { delete _generator; }
+  // INLINE DEFINITIONS //////////////////////////////////////////////
 
   inline void PrimaryGeneration::SetGenerator(G4VPrimaryGenerator* pg)
   { _generator = pg; }
 
   inline const G4VPrimaryGenerator* PrimaryGeneration::GetGenerator()
   { return _generator; }
-
   
 } // end namespace nexus
 

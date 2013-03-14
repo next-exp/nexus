@@ -13,14 +13,18 @@
 #define __DETECTOR_CONSTRUCTION__
 
 #include <G4VUserDetectorConstruction.hh>
-#include "BaseGeometry.h"
 
 class G4GenericMessenger;
 
 
+
 namespace nexus {
 
-  
+  class BaseGeometry;
+
+
+  /// TODO. CLASS DESCRIPTION
+
   class DetectorConstruction: public G4VUserDetectorConstruction
   {
   public:
@@ -39,18 +43,21 @@ namespace nexus {
     const BaseGeometry* GetGeometry() const;
 
   private:
-    //G4GenericMessenger* _msg;
-    BaseGeometry* _geometry; ///< pointer to the detector geometry
+    //void CreateGeometry(G4String);
+
+  private:
+    G4GenericMessenger* _msg; 
+    BaseGeometry* _geometry; 
   };
 
-  // inline methods ..................................................
-  
+
+  // INLINE METHODS //////////////////////////////////////////////////
+ 
   inline void DetectorConstruction::SetGeometry(BaseGeometry* g)
   { _geometry = g; }
 
   inline const BaseGeometry* DetectorConstruction::GetGeometry() const
   { return _geometry; }
-
 
 } // end namespace nexus
 
