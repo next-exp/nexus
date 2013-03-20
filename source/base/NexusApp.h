@@ -15,11 +15,14 @@
 #include <G4RunManager.hh>
 
 class G4GenericMessenger;
-namespace nexus { class GeometryFactory; }
-namespace nexus { class GeneratorFactory; }
 
 
 namespace nexus {
+
+  class GeometryFactory;
+  class GeneratorFactory;
+  class ActionsFactory;
+
 
   /// TODO. CLASS DESCRIPTION
 
@@ -40,8 +43,9 @@ namespace nexus {
   private:
     G4GenericMessenger* _msg;
 
-    GeometryFactory* _geomfctr;
-    GeneratorFactory* _genfctr;
+    GeometryFactory*  _geom_fctr;
+    GeneratorFactory* _gen_fctr;
+    ActionsFactory*   _act_fctr;
 
     std::vector<G4String> _macros;
   };

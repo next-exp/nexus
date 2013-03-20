@@ -11,8 +11,10 @@
 
 #include "GeometryFactory.h"
 #include "GeneratorFactory.h"
+#include "ActionsFactory.h"
 #include "DetectorConstruction.h"
 #include "PrimaryGeneration.h"
+#include "PersistencyManager.h"
 
 #include <G4GenericPhysicsList.hh>
 #include <G4UImanager.hh>
@@ -31,24 +33,26 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
   // Create the necessary classes for initialization
 
   physicsList = new G4GenericPhysicsList();
-  _geomfctr   = new GeometryFactory();
-  _genfctr    = new GeneratorFactory();
 
+  _geom_fctr  = new GeometryFactory();
+  _gen_fctr   = new GeneratorFactory();
+  _act_fctr   = new ActionsFactory();
  
-  G4UImanager::GetUIpointer()->
-    ApplyCommand("/control/execute " + init_macro);
+  G4UImanager::GetUIpointer()->ExecuteMacroFile(init_macro);
 
   // Initialization classes set in the G4RunManager
 
   this->SetUserInitialization(physicsList);
 
   DetectorConstruction* dc = new DetectorConstruction();
-  dc->SetGeometry(_geomfctr->CreateGeometry());
+  dc->SetGeometry(_geom_fctr->CreateGeometry());
   this->SetUserInitialization(dc);
 
   PrimaryGeneration* pg = new PrimaryGeneration();
-  pg->SetGenerator(_genfctr->CreateGenerator());
+  pg->SetGenerator(_gen_fctr->CreateGenerator());
   this->SetUserAction(pg);
+
+  PersistencyManager::Initialize();
 }
 
 
