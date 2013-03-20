@@ -1,10 +1,22 @@
-/control/execute physics/DefaultPhysicsList.mac
+### --------------------------------------------------------
+###  Example initialization macro of nexus.
+###
+###  $Id$
+### --------------------------------------------------------
+
+/control/execute macros/physics/DefaultPhysicsList.mac
 
 /Geometry/RegisterGeometry XE_SPHERE
 
 /Generator/RegisterGenerator SINGLE_PARTICLE
 
+/Actions/RegisterRunAction DEFAULT
+
 /nexus/RegisterMacro macros/params.macro
-#/nexus/RegisterMacro macros/params.macro
+
+
+
+
+
 
 
