@@ -9,118 +9,115 @@
 
 #include "SingleParticle.h"
 
-//#include "ConfigService.h"
 #include "DetectorConstruction.h"
 #include "BaseGeometry.h"
-#include "BhepUtils.h"
 
-#include <G4Electron.hh>
+#include <G4GenericMessenger.hh>
+#include <G4ParticleDefinition.hh>
 #include <G4RunManager.hh>
 #include <G4ParticleTable.hh>
-#include <G4ParticleDefinition.hh>
 #include <G4PrimaryVertex.hh>
 #include <G4Event.hh>
 #include <G4RandomDirection.hh>
 #include <Randomize.hh>
 
+using namespace nexus;
 
 
-namespace nexus {
 
 
-  SingleParticle::SingleParticle():
-    _energy_min(0.), _energy_max(0.), _direction_is_random(true),
-    _geom(0)
-  {
-    DetectorConstruction* detconst = (DetectorConstruction*)G4RunManager::GetRunManager()->GetUserDetectorConstruction();
-    _geom = detconst->GetGeometry();
 
-    ReadConfigParams();
-  }
-  
-  
-  
-  void SingleParticle::ReadConfigParams()
-  {
-    // Get configuration parameters for generation
-    //const ParamStore& cfg = ConfigService::Instance().Generation();
-    
-    // Set particle type searching in particle table by name
-    _particle_definition = G4Electron::Definition();
-    // _particle_definition = G4ParticleTable::GetParticleTable()->
-    //   FindParticle(cfg.GetSParam("particle_name"));
+SingleParticle::SingleParticle():
+G4VPrimaryGenerator(), _msg(0), _particle_definition(0),
+_energy_min(0.), _energy_max(0.), _geom(0)
+{
+  _msg = new G4GenericMessenger(this, "/Generator/SingleParticle/",
+    "Control commands of single-particle generator.");
 
-    // Set mass and charge to PDG values
-    _charge = _particle_definition->GetPDGCharge();
-    _mass   = _particle_definition->GetPDGMass();
-    
-    // Set limits for kinetic energy
-    _energy_min = 1.*MeV; //cfg.GetDParam("energy_min");
-    _energy_max = 2.*MeV; //cfg.GetDParam("energy_max");
+  _msg->DeclareMethod("particle", &SingleParticle::SetParticleDefinition, 
+    "Set particle to be generated.");
 
-    // Set momentum direction if specified; it will be random otherwise.
- //    if (cfg.PeekDVParam("momentum_direction")) {
- //      _direction_is_random = false;
- //      _momentum_direction = 
-	// BhepUtils::DVto3Vector(cfg.GetDVParam("momentum_direction"));
- //      // normalize the vector if needed
- //      _momentum_direction = _momentum_direction.unit();
- //    }
+  G4GenericMessenger::Command& min_energy =
+    _msg->DeclareProperty("min_energy", _energy_min, 
+      "Set minimum kinetic energy of the particle.");
+  min_energy.SetUnitCategory("Energy");
+  min_energy.SetParameterName("min_energy", false);
+  min_energy.SetRange("min_energy>0.");
 
-    _region = "CENTER"; //cfg.GetSParam("region");
-  }
-  
+  G4GenericMessenger::Command& max_energy =
+    _msg->DeclareProperty("max_energy", _energy_max, 
+      "Set maximum kinetic energy of the particle");
+  max_energy.SetUnitCategory("Energy");
 
-  
-  void SingleParticle::GeneratePrimaryVertex(G4Event* event)
-  {
-    // Ask the geometry to generate a position for the particle
-    G4ThreeVector position = _geom->GenerateVertex(_region);
+  _msg->DeclareProperty("region", _region, 
+    "Set the region of the geometry where the vertex will be generated.");
 
-    // Particle generated at start-of-event
-    G4double time = 0.;
-    
-    // Create a new vertex
-    G4PrimaryVertex* vertex = new G4PrimaryVertex(position, time);
-    
-    // Generate uniform random energy in [E_min, E_max]
-    G4double kinetic_energy = RandomEnergy();
-    
-    // Generate random direction
-    if (_direction_is_random)
-      _momentum_direction = G4RandomDirection();
+  DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
+  _geom = detconst->GetGeometry();
+}
+
+
+
+SingleParticle::~SingleParticle()
+{
+  delete _msg;
+}
+
+
+
+void SingleParticle::SetParticleDefinition(G4String particle_name)
+{
+  _particle_definition = G4ParticleTable::GetParticleTable()->
+  FindParticle(particle_name);
+}
+
+
+
+void SingleParticle::GeneratePrimaryVertex(G4Event* event)
+{
+  if (!_particle_definition) return;
+
+  // Generate an initial position for the particle using the geometry
+  G4ThreeVector position = _geom->GenerateVertex(_region);
+
+  // Particle generated at start-of-event
+  G4double time = 0.;
+
+  // Create a new vertex
+  G4PrimaryVertex* vertex = new G4PrimaryVertex(position, time);
+
+  // Generate uniform random energy in [E_min, E_max]
+  G4double kinetic_energy = RandomEnergy();
+
+  // Generate random direction
+  G4ThreeVector _momentum_direction = G4RandomDirection();
 
     // Calculate cartesian components of momentum
-    G4double energy = kinetic_energy + _mass;
-    G4double pmod = std::sqrt(energy*energy - _mass*_mass);
-    G4double px = pmod * _momentum_direction.x();
-    G4double py = pmod * _momentum_direction.y();
-    G4double pz = pmod * _momentum_direction.z();
-    
-    // Create the new primary particle and set it some properties
-    G4PrimaryParticle* particle = 
-      new G4PrimaryParticle(_particle_definition, px, py, pz);
+  //G4double energy = kinetic_energy + _mass;
+  //G4double pmod = std::sqrt(energy*energy - _mass*_mass);
+  G4double px = _momentum_direction.x();
+  G4double py = _momentum_direction.y();
+  G4double pz = _momentum_direction.z();
 
-    particle->SetCharge(_charge);
-    particle->SetMass(_mass);
-    particle->SetPolarization(0.,0.,0.);
+    // Create the new primary particle and set it some properties
+  G4PrimaryParticle* particle = 
+    new G4PrimaryParticle(_particle_definition, px, py, pz);
+
+  //particle->SetCharge(_charge);
+  //particle->SetMass(_mass);
+  //particle->SetPolarization(0.,0.,0.);
 
     // Add particle to the vertex and this to the event
-    vertex->SetPrimary(particle);
-    event->AddPrimaryVertex(vertex);
-  }
-  
-  
-  
-  G4double SingleParticle::RandomEnergy() const
-  {
-    if (_energy_max == _energy_min)
-      return _energy_min;
-    
-    return (G4UniformRand() * (_energy_max - _energy_min) + _energy_min);
-  }
+  vertex->SetPrimary(particle);
+  event->AddPrimaryVertex(vertex);
+}
 
 
-} // end namespace nexus
 
-
+G4double SingleParticle::RandomEnergy() const
+{
+  if (_energy_max == _energy_min) 
+    return _energy_min;
+  else
+    return (G4UniformRand()*(_energy_max - _energy_min) + _energy_min);
+}
