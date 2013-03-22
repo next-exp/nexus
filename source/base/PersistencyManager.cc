@@ -9,13 +9,23 @@
 
 #include "PersistencyManager.h"
 
+#include <G4GenericMessenger.hh>
+
+#include <TTree.h>
+#include <TFile.h>
+
+#include <irene/Event.h>
+
+
 using namespace nexus;
 
 
 
 PersistencyManager::PersistencyManager(): 
-  G4VPersistencyManager()
+  G4VPersistencyManager(), _file(0), _evttree(0), _evt(0)
 {
+  _msg = new G4GenericMessenger(this, "/nexus/persistency/");
+  //_msg->DeclareProperty("output_file", _filename, "");
 }
 
 
@@ -35,8 +45,35 @@ void PersistencyManager::Initialize()
 
 
 
+void PersistencyManager::OpenFile()
+{
+  if (_file) delete _file;
+
+  G4String filename = "";
+
+  _file = new TFile(filename.c_str(), "RECREATE");
+  _evttree = new TTree("event", "event tree");
+  _evttree->Branch("EventBranch", "irene::Event", &_evt);
+}
+
+
+
+void PersistencyManager::CloseFile()
+{
+  if (!_file) return;
+  _file->Write();
+  _file->Close();
+}
+
+
 G4bool PersistencyManager::Store(const G4Event*)
 {
+  // if (_evt) delete _evt;
+
+  // _evt = new irene::Event();
+
+  // _evttree->Fill();
+
   return true;
 }
 

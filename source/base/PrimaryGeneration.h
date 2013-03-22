@@ -2,7 +2,7 @@
 ///  \file   PrimaryGeneration.h
 ///  \brief  User initialization class for event generation.
 /// 
-///  \author   J. Martin-Albo <jmalbos@ific.uv.es>    
+///  \author   <justo.martin-albo@ific.uv.es>
 ///  \date     9 Mar 2009
 ///  \version  $Id$
 ///
@@ -13,10 +13,8 @@
 #define __PRIMARY_GENERATION__
 
 #include <G4VUserPrimaryGeneratorAction.hh>
-#include <G4String.hh>
 
 class G4VPrimaryGenerator;
-class G4GenericMessenger;
 
 
 namespace nexus {
@@ -34,16 +32,12 @@ namespace nexus {
     /// 
     void GeneratePrimaries(G4Event*);
 
-    /// Sets the primary generator class object
+    /// Sets the primary generator
     void SetGenerator(G4VPrimaryGenerator*);
     /// Returns a pointer to the primary generator
-    const G4VPrimaryGenerator* GetGenerator();
+    const G4VPrimaryGenerator* GetGenerator() const;
 
   private:
-//    void CreateGenerator(G4String);
-
-  private:
-    G4GenericMessenger* _msg;
     G4VPrimaryGenerator* _generator; ///< Pointer to the primary generator
   };
 
@@ -52,7 +46,7 @@ namespace nexus {
   inline void PrimaryGeneration::SetGenerator(G4VPrimaryGenerator* pg)
   { _generator = pg; }
 
-  inline const G4VPrimaryGenerator* PrimaryGeneration::GetGenerator()
+  inline const G4VPrimaryGenerator* PrimaryGeneration::GetGenerator() const
   { return _generator; }
   
 } // end namespace nexus

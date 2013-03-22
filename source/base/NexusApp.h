@@ -39,6 +39,8 @@ namespace nexus {
   private:
     void RegisterMacro(const G4String&);
 
+    void ExecuteMacroFile(const char*);
+
 
   private:
     G4GenericMessenger* _msg;

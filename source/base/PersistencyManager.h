@@ -14,7 +14,15 @@
 
 #include <G4VPersistencyManager.hh>
 
+class G4GenericMessenger;
+class TFile;
+class TTree;
+namespace irene { class Event; }
+
+
 namespace nexus {
+
+  /// TODO. CLASS DESCRIPTION
 
   class PersistencyManager: public G4VPersistencyManager
   {
@@ -25,9 +33,13 @@ namespace nexus {
     virtual G4bool Store(const G4Run*);
     virtual G4bool Store(const G4VPhysicalVolume*);
 
-    virtual G4bool Retrieve(G4Event*&) { return false; }
-    virtual G4bool Retrieve(G4Run*&) { return false; }
-    virtual G4bool Retrieve(G4VPhysicalVolume*&) { return false; }
+    virtual G4bool Retrieve(G4Event*&);
+    virtual G4bool Retrieve(G4Run*&);
+    virtual G4bool Retrieve(G4VPhysicalVolume*&);
+
+  private:
+    void OpenFile();
+    void CloseFile();
 
 
   private:
@@ -35,7 +47,22 @@ namespace nexus {
     ~PersistencyManager();
     PersistencyManager(const PersistencyManager&);
 
+  private:
+    G4GenericMessenger* _msg;
+
+    TFile* _file; ///< Output ROOT file
+    TTree* _evttree; ///< Event tree
+    irene::Event* _evt; ///< Persistent irene event
   };
+
+  // INLINE DEFINITIONS //////////////////////////////////////////////
+
+  inline G4bool PersistencyManager::Retrieve(G4Event*&) 
+  { return false; }
+  inline G4bool PersistencyManager::Retrieve(G4Run*&) 
+  { return false; }
+  inline G4bool PersistencyManager::Retrieve(G4VPhysicalVolume*&) 
+  { return false; }
 
 }
 
