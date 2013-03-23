@@ -24,7 +24,7 @@ namespace nexus {
   {
   public:
     /// Constructor
-    BatchSession(const char* filename, G4UIsession* prevSession=0);
+    BatchSession(G4String filename, G4UIsession* previous_session=0);
     /// Destructor
     ~BatchSession();
 
@@ -40,7 +40,9 @@ namespace nexus {
     G4int ExecCommand(const G4String& command);
 
   private:
-    G4UIsession* previousSession;
+    G4bool _opened;
+    std::ifstream _macrostream;
+    G4UIsession* _prev; ///< Pointer to the previous session
 
     std::ifstream macroStream;
     G4bool isOpened;
@@ -49,7 +51,7 @@ namespace nexus {
   // INLINE DEFINITIONS //////////////////////////////////////////////
 
   inline G4UIsession* BatchSession::GetPreviousSession() const 
-  { return previousSession; }
+  { return _prev; }
 
 } // end namespace nexus
 
