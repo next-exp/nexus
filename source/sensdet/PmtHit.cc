@@ -9,8 +9,6 @@
 
 #include "PmtHit.h"
 
-#include <bhep/hit.h>
-
 #include <iterator>
 
 using namespace nexus;
@@ -106,35 +104,35 @@ std::vector<G4int> PmtHit::GetCounts() const
 
 
 
-bhep::hit* PmtHit::ToBhep() const
-{
-  bhep::hit* bhit = new bhep::hit(bhep::TRUTH, "PmtHit");
+// bhep::hit* PmtHit::ToBhep() const
+// {
+//   bhep::hit* bhit = new bhep::hit(bhep::TRUTH, "PmtHit");
     
-  std::map<G4double, G4int>::const_iterator it;
+//   std::map<G4double, G4int>::const_iterator it;
 
-  G4int total_counts = 0;
+//   G4int total_counts = 0;
 
-  for (it=_histogram.begin(); it!=_histogram.end(); ++it) {
+//   for (it=_histogram.begin(); it!=_histogram.end(); ++it) {
 
-    G4int bin_counts = (*it).second;
-    total_counts += bin_counts;
+//     G4int bin_counts = (*it).second;
+//     total_counts += bin_counts;
 
-    bhit->set_amplitude(bin_counts, (*it).first);
-    bhit->set_point(bhep::Point3D(_position.x(),
-				  _position.y(),
-				  _position.z()));
+//     bhit->set_amplitude(bin_counts, (*it).first);
+//     bhit->set_point(bhep::Point3D(_position.x(),
+// 				  _position.y(),
+// 				  _position.z()));
 
-    //      G4cout<<"position = "<<_position.x()<<" "<<_position.y()<<" "<<_position.z()<<G4endl;
+//     //      G4cout<<"position = "<<_position.x()<<" "<<_position.y()<<" "<<_position.z()<<G4endl;
 
-  }
+//   }
     
-  bhit->set_amplitude(total_counts);
+//   bhit->set_amplitude(total_counts);
     
-  int ID = this->GetPmtID();
+//   int ID = this->GetPmtID();
 
-  bhit->add_property("ID", ID);
-  return bhit;
-}
+//   bhit->add_property("ID", ID);
+//   return bhit;
+// }
 
   
 

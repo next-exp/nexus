@@ -10,21 +10,15 @@
 // ----------------------------------------------------------------------------
 
 #include "NexusApp.h"
-#include "DetectorConstruction.h"
-#include "PrimaryGeneration.h"
-#include "BhepUtils.h"
 
-#include <G4RunManager.hh>  
 #include <G4UImanager.hh>   
 #include <G4UIterminal.hh>  
 #include <G4UItcsh.hh> 
-#include <Randomize.hh>
-//#ifdef G4VIS_USE
+//#include <Randomize.hh>
 #include <G4VisExecutive.hh>
-//#endif
 
 #include <getopt.h>
-#include <time.h>
+//#include <time.h>
 
 using namespace nexus;
 
@@ -34,10 +28,11 @@ using namespace nexus;
 
 void PrintUsage()
 {
-  G4cerr  << "\nUsage: ./nexus [-b|i] <init_macro>\n" << G4endl;
+  G4cerr  << "\nUsage: ./nexus [-b|i] [-n] <init_macro>\n" << G4endl;
   G4cerr  << "Available options:" << G4endl;
   G4cerr  << "   -b, --batch           : Run in batch mode (default)\n"
           << "   -i, --interactive     : Run in interactive mode\n"
+          << "   -n, --nevents         : Number of events to simulate"
           << G4endl;
   exit(EXIT_FAILURE);
 }
@@ -54,12 +49,13 @@ G4int main(int argc, char** argv)
   if (argc < 2) PrintUsage(); 
 
   G4bool batch = true;
-  
+  G4int nevents = 0;
 
   static struct option long_options[] =
   {
-    {"batch",       0, 0, 'b'},
-    {"interactive", 0, 0, 'i'},
+    {"batch",       no_argument,       0, 'b'},
+    {"interactive", no_argument,       0, 'i'},
+    {"nevents",       required_argument, 0, 'n'},
     {0, 0, 0, 0}
   };
 
@@ -69,7 +65,7 @@ G4int main(int argc, char** argv)
 
     int option_index = 0;
     opterr = 0;
-    c = getopt_long(argc, argv, "bi", long_options, 0);
+    c = getopt_long(argc, argv, "bin:", long_options, 0);
     
     if (c==-1) break; // Exit if we are done reading options
 
@@ -81,6 +77,10 @@ G4int main(int argc, char** argv)
 
       case 'i':
         batch = false;
+        break;
+
+      case 'n':
+        nevents = atoi(optarg);
         break;
 
       case '?':
@@ -102,7 +102,6 @@ G4int main(int argc, char** argv)
   // Assume that the name of the configuration macro is the first
   // command-line parameters that is not a GNU option.
   G4String macro_filename = argv[optind];
-  G4cout << macro_filename << G4endl;
 
   if (macro_filename == "") PrintUsage(); 
     
@@ -134,7 +133,7 @@ G4int main(int argc, char** argv)
     delete vismgr;
   }
   else {
-    app->BeamOn(1);
+    app->BeamOn(nevents);
   }
 
   delete app;

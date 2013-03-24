@@ -43,14 +43,13 @@ static void Tokenize(const G4String& str, std::vector<G4String>& tokens)
 
 
 BatchSession::BatchSession(G4String filename, G4UIsession* previous_session):
-G4UIsession(), _prev(previous_session), _opened(false)
+  G4UIsession(), _prev(previous_session), _opened(false)
 {
   _macrostream.open(filename.data(), std::ios::in);
 
   if (_macrostream.fail()) {
-    G4cerr  << "***** Can not open a macro file <"
-    << filename << ">"
-    << G4endl;
+    G4String msg = "Cannot open macro file " + filename;
+    G4Exception("[BatchSession]", "BatchSession()", FatalException, msg);
   } 
   else {
     _opened = true;
@@ -111,9 +110,8 @@ G4String BatchSession::ReadCommand()
         qcontinued= true;
         // check nothing after line continuation character
         if( i != G4int(tokens.size())-1) {
-          G4Exception("BatchSession::ReadCommand","UI0003",
-            JustWarning,
-            "unexpected character after line continuation character");
+          G4Exception("[BatchSession]", "ReadCommand()", JustWarning,
+            "Unexpected character after line continuation character.");
         }
         break; // stop parsing
       }
@@ -145,21 +143,24 @@ G4int BatchSession::ExecCommand(const G4String& command)
   G4UImanager* UI = G4UImanager::GetUIpointer();
   G4int rc = UI->ApplyCommand(command);
 
+  G4String msg;
+
   switch(rc) {
     case fCommandSucceeded:
       break;
     case fCommandNotFound:
-      G4cerr << "***** COMMAND NOT FOUND <"
-      << command << "> *****" << G4endl;
+      msg = "Command not found: " + command;
+      G4Exception("[BatchSession]", "ExecCommand()", JustWarning, msg);
       break;
     case fIllegalApplicationState:
-      G4cerr << "***** Illegal application state <"
-      << command << "> *****" << G4endl;
+      msg = "Illegal application state: " + command;
+      G4Exception("[BatchSession]", "ExecCommand()", JustWarning, msg);
       break;
     default:
-      G4int pn= rc%100;
-      G4cerr << "***** Illegal parameter (" << pn << ") <"
-      << command << "> *****" << G4endl;
+      G4int pn = rc%100;
+      msg = "Illegal parameter: ";
+      G4Exception("[BatchSession]", "ExecCommand()", JustWarning, msg);
+      G4cerr << "(" << pn << ") <" << command << ">" << G4endl;
   }
 
   return rc;
@@ -179,7 +180,7 @@ G4UIsession * BatchSession::SessionStart()
 
     // just echo something if #
     if (newCommand[(size_t)0] == '#') {
-      if(G4UImanager::GetUIpointer()-> GetVerboseLevel()==2) {
+      if(G4UImanager::GetUIpointer()-> GetVerboseLevel() == 2) {
         G4cout << newCommand << G4endl;
       }
       continue;
@@ -188,7 +189,7 @@ G4UIsession * BatchSession::SessionStart()
     // execute command
     G4int rc= ExecCommand(newCommand);
     if(rc != fCommandSucceeded) {
-      G4cerr << G4endl << "***** BATCH is interrupted!! *****" << G4endl;
+      G4Exception("[BatchSession]", "SessionStart()", JustWarning, "A problem occurred with the previous command. Keep reading the macro.");
       continue;
     }
   }

@@ -1,8 +1,8 @@
-### --------------------------------------------------------
-###  Example initialization macro of nexus.
+### ------------------------------------------------------------------
+###  Example 1: Initialization macro of nexus.
 ###
 ###  $Id$
-### --------------------------------------------------------
+### ------------------------------------------------------------------
 
 /control/execute macros/physics/DefaultPhysicsList.mac
 
@@ -11,6 +11,8 @@
 /Generator/RegisterGenerator SINGLE_PARTICLE
 
 /Actions/RegisterRunAction DEFAULT
+
+/exus/RegisterMacro macros/params.macro
 
 /nexus/RegisterMacro macros/params.macro
 

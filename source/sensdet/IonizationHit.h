@@ -17,7 +17,6 @@
 #include <G4Allocator.hh>
 #include <G4ThreeVector.hh>
 
-namespace bhep { class hit; }
 
 
 namespace nexus {
@@ -39,7 +38,7 @@ namespace nexus {
     G4ThreeVector GetPosition();
     void SetPosition(G4ThreeVector);
 
-    bhep::hit* ToBhep(const G4String& det_name) const;
+//    bhep::hit* ToBhep(const G4String& det_name) const;
 
   public:
     /// Constructor

@@ -18,7 +18,7 @@
 #include <G4Allocator.hh>
 #include <G4ThreeVector.hh>
 
-namespace bhep { class hit; }
+
 
 
 namespace nexus {
@@ -71,7 +71,7 @@ namespace nexus {
 
     /// Returns a copy of the PmtHit in bhep format. The caller owns 
     /// the resulting object, thus having deletion responsability.
-    bhep::hit* ToBhep() const;
+//    bhep::hit* ToBhep() const;
     
   private:
 

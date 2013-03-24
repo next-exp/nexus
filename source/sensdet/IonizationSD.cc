@@ -10,12 +10,12 @@
 #include "IonizationSD.h"
 
 #include "IonizationHit.h"
-#include "BhepUtils.h"
+
 
 #include <G4SDManager.hh>
 #include <G4Step.hh>
 
-#include <bhep/bhep_svc.h>
+
 
 
 
@@ -69,7 +69,7 @@ namespace nexus {
 
   void IonizationSD::EndOfEvent(G4HCofThisEvent*)
   {
-    bhep::event& bevt = bhep::bhep_svc::instance()->get_event();
+//    bhep::event& bevt = bhep::bhep_svc::instance()->get_event();
 
     G4double total_energy = 0.;
 
@@ -79,8 +79,8 @@ namespace nexus {
       
       total_energy += hit->GetEnergyDeposit();
 
-      bhep::hit* bhit = hit->ToBhep(_det_name);
-      bevt.add_true_hit(_det_name, bhit);
+//      bhep::hit* bhit = hit->ToBhep(_det_name);
+//      bevt.add_true_hit(_det_name, bhit);
     }
 
     // G4String prop_name = "EnergyDep";

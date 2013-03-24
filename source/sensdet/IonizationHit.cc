@@ -9,10 +9,7 @@
 
 #include "IonizationHit.h"
 
-#include "BhepUtils.h"
 
-#include <bhep/hit.h>
-#include <bhep/point.h>
 
 
 namespace nexus {
@@ -60,26 +57,26 @@ namespace nexus {
   
   
   
-  bhep::hit* IonizationHit::ToBhep(const G4String& det_name) const
-  {
-    // create a bhep hit
-    bhep::hit* bhit = new bhep::hit(bhep::TRUTH, det_name);
+  // bhep::hit* IonizationHit::ToBhep(const G4String& det_name) const
+  // {
+  //   // create a bhep hit
+  //   bhep::hit* bhit = new bhep::hit(bhep::TRUTH, det_name);
 
-    // set properties
-    bhit->set_point(bhep::Point3D(_position.x(),
-				  _position.y(),
-				  _position.z()));
+  //   // set properties
+  //   bhit->set_point(bhep::Point3D(_position.x(),
+		// 		  _position.y(),
+		// 		  _position.z()));
 
-    bhit->set_amplitude(_energy_dep);
-    bhit->set_time(_time);
+  //   bhit->set_amplitude(_energy_dep);
+  //   bhit->set_time(_time);
 
-    // associate hit to particle
-    bhep::particle& bpart = BhepUtils::GetBParticle(_track_id);
-    bhit->set_mother_particle(bpart);
-    bpart.add_hit(det_name, bhit);
+  //   // associate hit to particle
+  //   bhep::particle& bpart = BhepUtils::GetBParticle(_track_id);
+  //   bhit->set_mother_particle(bpart);
+  //   bpart.add_hit(det_name, bhit);
     
-    return bhit;
-  }
+  //   return bhit;
+  // }
   
 
 } // end namespace nexus

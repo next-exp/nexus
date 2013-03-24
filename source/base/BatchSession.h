@@ -43,9 +43,6 @@ namespace nexus {
     G4bool _opened;
     std::ifstream _macrostream;
     G4UIsession* _prev; ///< Pointer to the previous session
-
-    std::ifstream macroStream;
-    G4bool isOpened;
   };
 
   // INLINE DEFINITIONS //////////////////////////////////////////////
