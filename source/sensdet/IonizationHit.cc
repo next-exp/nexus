@@ -52,5 +52,3 @@ G4int IonizationHit::operator==(const IonizationHit& other) const
 {
   return (this==&other) ? 1 : 0;
 }
-  
-  
