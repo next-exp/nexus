@@ -23,7 +23,7 @@ namespace nexus {
 
 
   GenbbInterface::GenbbInterface(): 
-    G4VPrimaryGenerator(), _msg(0), _opened(false), _geom(0)
+  G4VPrimaryGenerator(), _msg(0), _opened(false), _geom(0)
   {
     _msg = new G4GenericMessenger(this, "/Generator/GenbbInterface/",
       "Control commands of the GENBB interface.");
@@ -32,7 +32,7 @@ namespace nexus {
     _msg->DeclareProperty("region", _region, "");
 
     DetectorConstruction* detConst = (DetectorConstruction*)
-      G4RunManager::GetRunManager()->GetUserDetectorConstruction();
+    G4RunManager::GetRunManager()->GetUserDetectorConstruction();
     _geom = detConst->GetGeometry();
   }
 
@@ -43,7 +43,7 @@ namespace nexus {
     _genbb.close();
   }
 
-    
+
 
   void GenbbInterface::OpenInputFile(G4String filename)
   {
@@ -79,7 +79,7 @@ namespace nexus {
     // abort if end-of-file was reached in last operation
     if (_genbb.eof()) {
       G4cout << "[GenbbInterface] End-of-File reached. "
-	     << "Aborting the run..." << G4endl;
+      << "Aborting the run..." << G4endl;
       G4RunManager::GetRunManager()->AbortRun();
       return;
     }
@@ -92,25 +92,25 @@ namespace nexus {
     
     // reading info for each particle in the event
     for (G4int i=0; i<entries; i++) {
-      
+
       G4int g3code;           // GEANT3 particle code
       G4double px, py, pz;    // Momentum components in MeV
       
       _genbb >> g3code >> px >> py >> pz >> particle_time;
       
       G4ParticleDefinition* g4code = 
-	G4ParticleTable::GetParticleTable()->FindParticle(G3toPDG(g3code));
+      G4ParticleTable::GetParticleTable()->FindParticle(G3toPDG(g3code));
       
       // create a primary particle
       G4PrimaryParticle* particle =
-	new G4PrimaryParticle(g4code, px*MeV, py*MeV, pz*MeV);
+      new G4PrimaryParticle(g4code, px*MeV, py*MeV, pz*MeV);
       
       particle->SetMass(g4code->GetPDGMass());
       particle->SetCharge(g4code->GetPDGCharge());
       
       // create a primary vertex for the particle
       G4PrimaryVertex* vertex =
-	new G4PrimaryVertex(particle_position, particle_time*second);
+      new G4PrimaryVertex(particle_position, particle_time*second);
       
       vertex->SetPrimary(particle);
       
@@ -127,95 +127,90 @@ namespace nexus {
 
     // The first five lines of the file contain the filename, date
     // and time of generation, and the random seed. We skip them.
-    for (int i=0; i<5; i++) { getline(_genbb, line); }
+    for (int i=0; i<5; i++) getline(_genbb, line);
 
     // The following block in the header contains information about
     // the generation mode. The number of lines varies from mode to mode.
     // We'll process them one by one.
     //
-    do {
-      getline(_genbb, line);
-      
-      // event type
-      if (line.contains("event type")) {
-	
-	// remove characters in line till the colon (':')
-	line = line.erase(0, line.find(":")+1);
-	// remove white spaces, if any
-	// ('2' means that strips from both start and end)
-	line = line.strip(2, ' ');
-	// // add to run info properties
-	// bhep::bhep_svc::instance()->get_run_info()
-	//   .add_property("GENERATION_event_type", line);
+      do {
+        getline(_genbb, line);
 
-	// if event type is a bb mode, there are three more lines
-	// with relevant information.
-	getline(_genbb, line);
-	if (line.contains("0+ ->")) {
-	  
-	  // bb mode
-	  line = line.strip(2, ' ');
-	  // bhep::bhep_svc::instance()->get_run_info().
-	  //   add_property("GENERATION_bb_mode", line);
-	  
-	  // energy level of daughter nucleus
-	  getline(_genbb, line);
-	  
-	  // Qbb (bb energy release)
-	  G4double Qbb;
-	  _genbb.ignore(256, '=');
-	  _genbb >> Qbb;
-	  // bhep::bhep_svc::instance()->get_run_info().
-	  //   add_property("GENERATION_Qbb", Qbb*MeV);
-	}
-      }
-      
-      if (line.contains("range for sum")) {
-	
-	// range for sum of energies of emitted e- in a bb decay
-	G4double min, max;
-	_genbb >> min >> max;
-	// bhep::bhep_svc::instance()->get_run_info().
-	//   add_property("GENERATION_range_min", min*MeV);
-	// bhep::bhep_svc::instance()->get_run_info().
-	//   add_property("GENERATION_range_max", max*MeV);
+        // event type
+        if (line.contains("event type")) {
 
-	// 'toallevents' normalization
-	_genbb.ignore(256, '\n');
-	getline(_genbb, line);
-	G4cout << line << G4endl;
-	G4double toallevents;
-	_genbb >> toallevents;
-	// bhep::bhep_svc::instance()->get_run_info().
-	//   add_property("GENERATION_toallevents", toallevents);
-      }
-      
-    } while (!line.contains("Format of data"));
-    
-    for (int i=0; i<10; i++) { getline(_genbb, line); }
+          // remove characters in line till the colon (':')
+          line = line.erase(0, line.find(":")+1);
+          // remove white spaces, if any
+          // ('2' means that strips from both start and end)
+          line = line.strip(2, ' ');
+          // add to run info properties
+          // bhep::bhep_svc::instance()->get_run_info()
+          //   .add_property("GENERATION_event_type", line);
+
+          // if event type is a bb mode, there are three more lines
+          // with relevant information.
+          getline(_genbb, line);
+          if (line.contains("0+ ->")) {
+
+          // bb mode
+            line = line.strip(2, ' ');
+          // bhep::bhep_svc::instance()->get_run_info().
+          //   add_property("GENERATION_bb_mode", line);
+
+          // energy level of daughter nucleus
+            getline(_genbb, line);
+
+          // Qbb (bb energy release)
+            G4double Qbb;
+            _genbb.ignore(256, '=');
+            _genbb >> Qbb;
+          // bhep::bhep_svc::instance()->get_run_info().
+          //   add_property("GENERATION_Qbb", Qbb*MeV);
+          }
+        }
+
+        if (line.contains("range for sum")) {
+
+          // range for sum of energies of emitted e- in a bb decay
+          G4double min, max;
+          _genbb >> min >> max;
+          // bhep::bhep_svc::instance()->get_run_info().
+          //   add_property("GENERATION_range_min", min*MeV);
+          // bhep::bhep_svc::instance()->get_run_info().
+          //   add_property("GENERATION_range_max", max*MeV);
+
+          // 'toallevents' normalization
+          _genbb.ignore(256, '\n');
+          getline(_genbb, line);
+          G4cout << line << G4endl;
+          G4double toallevents;
+          _genbb >> toallevents;
+          // bhep::bhep_svc::instance()->get_run_info().
+          //   add_property("GENERATION_toallevents", toallevents);
+        }
+
+      } while (!line.contains("Format of data"));
+
+      for (int i=0; i<10; i++) getline(_genbb, line);
 
 
-    G4int foo;
-    G4long num_events_file, num_events_job;
+      //G4int foo;
+      //G4long num_events_file, num_events_job;
 
-    // last line of header contains number of events in file
-    _genbb >> foo >> num_events_file;
-    //G4cout << G4endl << "************ " << num_events_file << G4endl;
-    
-    // // get from config service the number of events requested by user
-    // num_events_job = 
-    //   ConfigService::Instance().Job().GetIParam("number_events");
-    
-    // if (num_events_job > num_events_file) {
-    //   G4cout << "[GenbbInterface] WARNING: "
-	   //   << "GENBB file contains only " << num_events_file 
-	   //   << ". Won't be possible to complete the requested job."
-	   //   << G4endl;
-    // }
-  }
-  
-  
-  
+      // last line of header contains number of events in file
+      //_genbb >> foo >> num_events_file;
+
+      // if (num_events_job > num_events_file) {
+      //   G4cout << "[GenbbInterface] WARNING: "
+      //   << "GENBB file contains only " << num_events_file 
+      //   << ". Won't be possible to complete the requested job."
+      //   << G4endl;
+      // }
+    }
+
+
+
   G4int GenbbInterface::G3toPDG(const G4int G3code)
   {
     if      (G3code == 1) return  22;         // gamma
@@ -228,7 +223,7 @@ namespace nexus {
     else if (G3code == 47) return 1000020040; // alpha
     else {
       G4cerr << "[GenbbInterface] ERROR: Particle with unknown GEANT3 code: "
-	     << G3code << G4endl;
+      << G3code << G4endl;
       //G4Exception("Aborting run...");
     }
   }
