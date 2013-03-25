@@ -10,6 +10,9 @@
 #include "PersistencyManager.h"
 
 #include <G4GenericMessenger.hh>
+#include <G4Event.hh>
+#include <G4TrajectoryContainer.hh>
+#include <G4Trajectory.hh>
 
 #include <TTree.h>
 #include <TFile.h>
@@ -66,8 +69,17 @@ void PersistencyManager::CloseFile()
 }
 
 
-G4bool PersistencyManager::Store(const G4Event*)
+G4bool PersistencyManager::Store(const G4Event* event)
 {
+  G4cout  << "Trajectories: " << event->GetTrajectoryContainer()->size()
+          << G4endl;
+
+  G4VTrajectory* traj = (*event->GetTrajectoryContainer())[0];
+
+  G4cout  << "Steps given by primary particle: " 
+          << traj->GetPointEntries()
+          << G4endl;
+
   // if (_evt) delete _evt;
 
   // _evt = new irene::Event();
