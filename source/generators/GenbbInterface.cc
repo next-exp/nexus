@@ -1,44 +1,39 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author : J. Martin-Albo <jmalbos@ific.uv.es>    
+//  Author : <justo.martin-albo@ific.uv.es>
 //  Created: 27 Mar 2009
 //
-//  Copyright (c) 2009, 2010 NEXT Collaboration
+//  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
 #include "GenbbInterface.h"
 
-#include "ConfigService.h"
 #include "DetectorConstruction.h"
+#include "BaseGeometry.h"
 
+#include <G4GenericMessenger.hh>
 #include <G4RunManager.hh>
 #include <G4ParticleTable.hh>
 #include <G4ParticleDefinition.hh>
 
-#include <bhep/bhep_svc.h>
 
 
 namespace nexus {
 
 
-  GenbbInterface::GenbbInterface(): _detConst(0)
+  GenbbInterface::GenbbInterface(): 
+    G4VPrimaryGenerator(), _msg(0), _opened(false), _geom(0)
   {
-    // get genbb filename from config service
-    G4String filename = 
-      ConfigService::Instance().Generation().GetSParam("genbb_filename");
+    _msg = new G4GenericMessenger(this, "/Generator/GenbbInterface/",
+      "Control commands of the GENBB interface.");
 
-    // open ifstream associated to the genbb file.
-    // if file is ok, start processing the header.
-    // abort otherwise.
-    _genbb.open(filename.data());
-    if (_genbb.good())
-      ProcessHeader();
-    // else
-    //   G4Exception("[GenbbInterface] ERROR: Cannot read input file!");
+    _msg->DeclareMethod("inputFile", &GenbbInterface::OpenInputFile, "");
+    _msg->DeclareProperty("region", _region, "");
 
-    // get generation region from config service
-    _region = ConfigService::Instance().Generation().GetSParam("region");
+    DetectorConstruction* detConst = (DetectorConstruction*)
+      G4RunManager::GetRunManager()->GetUserDetectorConstruction();
+    _geom = detConst->GetGeometry();
   }
 
 
@@ -48,17 +43,29 @@ namespace nexus {
     _genbb.close();
   }
 
-  
+    
+
+  void GenbbInterface::OpenInputFile(G4String filename)
+  {
+    _genbb.open(filename.data());
+
+    if (_genbb.good()) {
+      _opened = true;
+      ProcessHeader();
+    }
+    else {
+      G4Exception("[GenbbInterface]", "SetInputFile()", JustWarning,
+        "Cannot open GENBB input file.");
+    }
+  }
+
+
   
   /// Read an event from file and create primary particles and
   /// vertices accordingly
   void GenbbInterface::GeneratePrimaryVertex(G4Event* event)
   {
-    // retrieve user detector construction only once
-    if (!_detConst)
-      _detConst = (DetectorConstruction*)
-	G4RunManager::GetRunManager()->GetUserDetectorConstruction();
-    
+    if (!_opened) return;
     
     // reading event-related information    
     
@@ -80,7 +87,7 @@ namespace nexus {
     
     // generate a position in the detector 
     // (all primary particles will be generated there)
-    particle_position = _detConst->GetGeometry()->GenerateVertex(_region);
+    particle_position = _geom->GenerateVertex(_region);
     
     
     // reading info for each particle in the event
@@ -90,7 +97,6 @@ namespace nexus {
       G4double px, py, pz;    // Momentum components in MeV
       
       _genbb >> g3code >> px >> py >> pz >> particle_time;
-      //G4cout << g3code << "  " << px << "  " <<  py << "  " <<  pz << "  " <<  particle_time << G4endl;
       
       G4ParticleDefinition* g4code = 
 	G4ParticleTable::GetParticleTable()->FindParticle(G3toPDG(g3code));
@@ -138,9 +144,9 @@ namespace nexus {
 	// remove white spaces, if any
 	// ('2' means that strips from both start and end)
 	line = line.strip(2, ' ');
-	// add to run info properties
-	bhep::bhep_svc::instance()->get_run_info()
-	  .add_property("GENERATION_event_type", line);
+	// // add to run info properties
+	// bhep::bhep_svc::instance()->get_run_info()
+	//   .add_property("GENERATION_event_type", line);
 
 	// if event type is a bb mode, there are three more lines
 	// with relevant information.
@@ -149,8 +155,8 @@ namespace nexus {
 	  
 	  // bb mode
 	  line = line.strip(2, ' ');
-	  bhep::bhep_svc::instance()->get_run_info().
-	    add_property("GENERATION_bb_mode", line);
+	  // bhep::bhep_svc::instance()->get_run_info().
+	  //   add_property("GENERATION_bb_mode", line);
 	  
 	  // energy level of daughter nucleus
 	  getline(_genbb, line);
@@ -159,8 +165,8 @@ namespace nexus {
 	  G4double Qbb;
 	  _genbb.ignore(256, '=');
 	  _genbb >> Qbb;
-	  bhep::bhep_svc::instance()->get_run_info().
-	    add_property("GENERATION_Qbb", Qbb*MeV);
+	  // bhep::bhep_svc::instance()->get_run_info().
+	  //   add_property("GENERATION_Qbb", Qbb*MeV);
 	}
       }
       
@@ -169,10 +175,10 @@ namespace nexus {
 	// range for sum of energies of emitted e- in a bb decay
 	G4double min, max;
 	_genbb >> min >> max;
-	bhep::bhep_svc::instance()->get_run_info().
-	  add_property("GENERATION_range_min", min*MeV);
-	bhep::bhep_svc::instance()->get_run_info().
-	  add_property("GENERATION_range_max", max*MeV);
+	// bhep::bhep_svc::instance()->get_run_info().
+	//   add_property("GENERATION_range_min", min*MeV);
+	// bhep::bhep_svc::instance()->get_run_info().
+	//   add_property("GENERATION_range_max", max*MeV);
 
 	// 'toallevents' normalization
 	_genbb.ignore(256, '\n');
@@ -180,8 +186,8 @@ namespace nexus {
 	G4cout << line << G4endl;
 	G4double toallevents;
 	_genbb >> toallevents;
-	bhep::bhep_svc::instance()->get_run_info().
-	  add_property("GENERATION_toallevents", toallevents);
+	// bhep::bhep_svc::instance()->get_run_info().
+	//   add_property("GENERATION_toallevents", toallevents);
       }
       
     } while (!line.contains("Format of data"));
@@ -196,16 +202,16 @@ namespace nexus {
     _genbb >> foo >> num_events_file;
     //G4cout << G4endl << "************ " << num_events_file << G4endl;
     
-    // get from config service the number of events requested by user
-    num_events_job = 
-      ConfigService::Instance().Job().GetIParam("number_events");
+    // // get from config service the number of events requested by user
+    // num_events_job = 
+    //   ConfigService::Instance().Job().GetIParam("number_events");
     
-    if (num_events_job > num_events_file) {
-      G4cout << "[GenbbInterface] WARNING: "
-	     << "GENBB file contains only " << num_events_file 
-	     << ". Won't be possible to complete the requested job."
-	     << G4endl;
-    }
+    // if (num_events_job > num_events_file) {
+    //   G4cout << "[GenbbInterface] WARNING: "
+	   //   << "GENBB file contains only " << num_events_file 
+	   //   << ". Won't be possible to complete the requested job."
+	   //   << G4endl;
+    // }
   }
   
   
