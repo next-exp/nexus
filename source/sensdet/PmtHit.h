@@ -18,8 +18,6 @@
 #include <G4ThreeVector.hh>
 
 
-
-
 namespace nexus {
 
   /// TODO. CLASS DESCRIPTION

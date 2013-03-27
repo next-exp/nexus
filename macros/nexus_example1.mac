@@ -10,9 +10,8 @@
 
 /Generator/RegisterGenerator SINGLE_PARTICLE
 
-/Actions/RegisterRunAction DEFAULT
+/Actions/RegisterTrackingAction DEFAULT
 
-/exus/RegisterMacro macros/params.macro
 
 /nexus/RegisterMacro macros/params.macro
 

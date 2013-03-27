@@ -17,6 +17,7 @@
 
 class G4Track;
 class G4ParticleDefinition;
+class G4VTrajectoryPoint;
 
 
 namespace nexus {
@@ -75,6 +76,10 @@ namespace nexus {
 
     G4int _trackId;   ///< Identification number of the track
     G4int _parentId;  ///< Identification number of the parent particle
+
+    G4ThreeVector _initial_momentum;
+
+    G4bool _record_trjpoints;
 
     TrajectoryPointContainer* _trjpoints;
   };

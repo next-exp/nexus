@@ -9,11 +9,10 @@
 
 #include "Trajectory.h"
 
+#include "TrajectoryPoint.h"
+
 #include <G4Track.hh>
 #include <G4ParticleDefinition.hh>
-
-
-
 
 
 using namespace nexus;
@@ -24,7 +23,8 @@ G4Allocator<Trajectory> TrjAllocator;
 
 
 Trajectory::Trajectory():
-  G4VTrajectory(), _pdef(0), _trackId(-1), _parentId(-1)
+  G4VTrajectory(), _pdef(0), _trackId(-1), _parentId(-1),
+  _initial_momentum(), _record_trjpoints(true)
 {
 }
 
@@ -32,9 +32,10 @@ Trajectory::Trajectory():
 
 Trajectory::Trajectory(const G4Track* track)
 {
-  _pdef     = track->GetDefinition();
-  _trackId  = track->GetTrackID();
+  _pdef = track->GetDefinition();
+  _trackId = track->GetTrackID();
   _parentId = track->GetParentID();
+  _initial_momentum = track->GetMomentum();
 }
 
 
@@ -48,6 +49,10 @@ Trajectory::Trajectory(const Trajectory& other): G4VTrajectory()
 
 Trajectory::~Trajectory()
 {
+  for (unsigned int i=0; i<_trjpoints->size(); ++i) 
+    delete (*_trjpoints)[i];
+  _trjpoints->clear();
+  delete _trjpoints;
 }
 
 
@@ -96,33 +101,35 @@ G4int Trajectory::GetPDGEncoding() const
 
 G4ThreeVector Trajectory::GetInitialMomentum() const
 {
-
+  return _initial_momentum;
 }
 
 
 
 void Trajectory::AppendStep(const G4Step* aStep)
 {
-  // _trjpoints->push_back( new G4TrajectoryPoint(aStep->GetPostStepPoint()->GetPosition() ));
+  if (_record_trjpoints) {
+    TrajectoryPoint* point = new TrajectoryPoint();
+    _trjpoints->push_back(point);
+  }
 }
 
 
 
-void Trajectory::MergeTrajectory(G4VTrajectory* secondTrajectory)
+void Trajectory::MergeTrajectory(G4VTrajectory* second)
 {
-  // if(!secondTrajectory) return;
- 
-  // G4Trajectory* seco = (G4Trajectory*)secondTrajectory;
-  // G4int ent = seco->GetPointEntries();
+  if (!second) return;
 
-  // // initial point of the second trajectory should not be merged
-  // for(G4int i=1;i<ent;i++) { 
-  //   positionRecord->push_back((*(seco->positionRecord))[i]);
-  //   //    positionRecord->push_back(seco->positionRecord->removeAt(1));
-  // }
+  Trajectory* tmp = (Trajectory*) second;
+  G4int entries = tmp->GetPointEntries();
 
-  // delete (*seco->positionRecord)[0];
-  // seco->positionRecord->clear();
+  // initial point of the second trajectory should not be merged
+  for (G4int i=1; i<entries ; ++i) { 
+    _trjpoints->push_back((*(tmp->_trjpoints))[i]);
+  }
+
+  delete (*tmp->_trjpoints)[0];
+  tmp->_trjpoints->clear();
 }
 
 
