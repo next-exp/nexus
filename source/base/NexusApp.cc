@@ -70,6 +70,8 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
 
 NexusApp::~NexusApp()
 {
+  PersistencyManager* current = dynamic_cast<PersistencyManager*>(G4VPersistencyManager::GetPersistencyManager());
+  current->CloseFile();
   delete _msg;
 }
 

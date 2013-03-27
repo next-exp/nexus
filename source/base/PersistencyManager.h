@@ -27,8 +27,10 @@ namespace nexus {
   class PersistencyManager: public G4VPersistencyManager
   {
   public:
+    /// Create the singleton instance of the persistency manager
     static void Initialize();
 
+    /// 
     virtual G4bool Store(const G4Event*);
     virtual G4bool Store(const G4Run*);
     virtual G4bool Store(const G4VPhysicalVolume*);
@@ -38,7 +40,9 @@ namespace nexus {
     virtual G4bool Retrieve(G4VPhysicalVolume*&);
 
   private:
-    void OpenFile();
+    void OpenFile(const G4String&);
+
+  public:
     void CloseFile();
 
 
@@ -50,13 +54,18 @@ namespace nexus {
   private:
     G4GenericMessenger* _msg;
 
-    TFile* _file; ///< Output ROOT file
-    TTree* _evttree; ///< Event tree
+    G4bool _ready; ///< Is the PersistencyManager ready to go?
+
+    TFile* _file;       ///< Output ROOT file
+    TTree* _evttree;    ///< Event tree
     irene::Event* _evt; ///< Persistent irene event
   };
 
+
   // INLINE DEFINITIONS //////////////////////////////////////////////
 
+  inline G4bool PersistencyManager::Store(const G4VPhysicalVolume*)
+  { return false; }
   inline G4bool PersistencyManager::Retrieve(G4Event*&) 
   { return false; }
   inline G4bool PersistencyManager::Retrieve(G4Run*&) 
@@ -64,6 +73,6 @@ namespace nexus {
   inline G4bool PersistencyManager::Retrieve(G4VPhysicalVolume*&) 
   { return false; }
 
-}
+} // namespace nexus
 
 #endif
