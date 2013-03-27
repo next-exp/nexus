@@ -1,8 +1,7 @@
-### ------------------------------------------------------------------
+### --------------------------------------------------------
 ###  Example 1: Initialization macro of nexus.
-###
 ###  $Id$
-### ------------------------------------------------------------------
+### --------------------------------------------------------
 
 /control/execute macros/physics/DefaultPhysicsList.mac
 
@@ -12,8 +11,7 @@
 
 /Actions/RegisterTrackingAction DEFAULT
 
-
-/nexus/RegisterMacro macros/params.macro
+/nexus/RegisterMacro macros/nexus_example1.config.mac
 
 
 

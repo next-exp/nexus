@@ -1,0 +1,10 @@
+### --------------------------------------------------------
+###  Example 1: Configuration macro
+###  $Id$
+### --------------------------------------------------------
+
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 1
+/control/execute macros/generators/SingleParticle.mac
+/nexus/persistency/outputFile nexus.root
