@@ -9,12 +9,12 @@
 
 #include "XeSphere.h"
 
-#include "IonizationSD.h"
 #include "SpherePointSampler.h"
 #include "MaterialsList.h"
 
-#include <G4NistManager.hh>
+#include <G4GenericMessenger.hh>
 #include <G4Orb.hh>
+#include <G4NistManager.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4Material.hh>
@@ -28,8 +28,27 @@
 namespace nexus {
   
   
-  XeSphere::XeSphere(): BaseGeometry(), _radius(2.*m)
+  XeSphere::XeSphere(): 
+    BaseGeometry(), _liquid(true), _pressure(STP_Pressure), _radius(1.*m), _sphere_vertex_gen(0) 
   {
+    _msg = new G4GenericMessenger(this, "/Geometry/XeSphere/",
+      "Control commands of geometry XeSphere.");
+
+    _msg->DeclareProperty("LXe", _liquid, 
+      "Build the sphere with liquid xenon.");
+
+    G4GenericMessenger::Command& pressure_cmd =
+      _msg->DeclareProperty("pressure", _pressure,
+      "Set pressure for gaseous xenon (if selected).");
+    pressure_cmd.SetUnitCategory("Pressure");
+    pressure_cmd.SetParameterName("pressure", false);
+    pressure_cmd.SetRange("pressure>0.");
+
+    G4GenericMessenger::Command& radius_cmd =
+      _msg->DeclareProperty("radius", _radius, "Radius of the xenon sphere.");
+    radius_cmd.SetUnitCategory("Length");
+    radius_cmd.SetParameterName("radius", false);
+    radius_cmd.SetRange("radius>0.");
 
     // Creating the vertex generator
     _sphere_vertex_gen = new SpherePointSampler(_radius, 0.);
@@ -40,14 +59,9 @@ namespace nexus {
   XeSphere::~XeSphere()
   {
     delete _sphere_vertex_gen;
+    delete _msg;
   }
-  
-
-
-  // void XeSphere::SetParameters()
-  // {
-  // }
-  
+    
   
   
   void XeSphere::Construct()
@@ -55,26 +69,25 @@ namespace nexus {
     G4String name = "XE_SPHERE";
 
     G4Orb* sphere_solid = new G4Orb(name, _radius);
-    
-    _xenon = MaterialsList::GXe();
+
+    G4Material* xenon = 0;
+    if (_liquid)
+      xenon = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
+    else
+      xenon = MaterialsList::GXe(_pressure);
 
     G4LogicalVolume* sphere_logic = 
-    new G4LogicalVolume(sphere_solid, _xenon, name);
+    new G4LogicalVolume(sphere_solid, xenon, name);
 
-    SetLogicalVolume(sphere_logic);
+    BaseGeometry::SetLogicalVolume(sphere_logic);
   }
   
   
 
   G4ThreeVector XeSphere::GenerateVertex(const G4String& region) const
   {
-    //if (region == "CENTER") {
     return G4ThreeVector(0., 0., 0.); 
-    //}
-    // Generating in any part of the CHAMBER
-    //else {
     //return _sphere_vertex_gen->GenerateVertex(region);
-    //}
   }
   
 

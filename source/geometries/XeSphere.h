@@ -15,6 +15,7 @@
 #include "BaseGeometry.h"
 
 class G4Material;
+class G4GenericMessenger;
 namespace nexus { class SpherePointSampler; }
 
 
@@ -38,16 +39,15 @@ namespace nexus {
     void Construct();
 
   private:
-    // Dimensions
-    G4double _radius;  ///< Internal radius of the sphere
+    G4bool _liquid;     ///< Whether xenon is liquid or not
+    G4double _pressure; ///< Pressure (if gaseous state was selected)
+    G4double _radius;   ///< Radius of the sphere
 
-
-    // Materials
-    G4Material* _xenon;   ///< Material the sphere is made of
-
-
-    // Vertex Generator
+    /// Vertexes random generator
     SpherePointSampler* _sphere_vertex_gen;
+
+    /// Messenger for the definition of control commands
+    G4GenericMessenger* _msg; 
   };
 
 } // end namespace nexus
