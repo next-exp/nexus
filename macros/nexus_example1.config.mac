@@ -7,4 +7,5 @@
 /event/verbose 0
 /tracking/verbose 1
 /control/execute macros/generators/SingleParticle.mac
+/control/execute macros/geometries/XeSphere.mac
 /nexus/persistency/outputFile nexus.root
