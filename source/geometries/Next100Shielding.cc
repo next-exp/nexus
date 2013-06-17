@@ -9,7 +9,7 @@
 
 #include "Next100Shielding.h"
 #include "MaterialsList.h"
-#include "ConfigService.h"
+#include <G4GenericMessenger.hh>
 
 #include <G4SubtractionSolid.hh>
 #include <G4LogicalVolume.hh>
@@ -36,7 +36,7 @@ namespace nexus {
 
     // Shielding internal dimensions
     _shield_x (155.  * cm),
-    _shield_y (225.6 * cm),  // To be updated: 266.8 cm is the external dimension -> 266.8 - 2. * (lead_thick + steel_thick)
+    _shield_y (225.6 * cm),
     _shield_z (253.0 * cm),
 
     // Box thickness
@@ -45,18 +45,35 @@ namespace nexus {
 
   {
 
-    ///// Shielding is compound by two boxes, the external made of lead,
-    ///// and the internal, made of a mix of Steel & Titanium
+    /// Shielding is compound by two boxes, the external made of lead,
+    /// and the internal, made of a mix of Steel & Titanium
 
-    ReadParameters();
+
+    /// Needed External variables
+    _nozzle_ext_diam = nozzle_ext_diam;
+    _up_nozzle_ypos = up_nozzle_ypos;
+    _central_nozzle_ypos = central_nozzle_ypos;
+    _down_nozzle_ypos = down_nozzle_ypos;
+    _bottom_nozzle_ypos = bottom_nozzle_ypos;
+
+
+    /// Messenger
+    _msg = new G4GenericMessenger(this, "/Geometry/Next100/", "Control commands of geometry Next100.");
+    _msg->DeclareProperty("shielding_vis", _visibility, "Shielding Visibility");
+
 
     // Initializing the geometry navigator (used in vertex generation)
     _geom_navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
 
+  }
 
+
+  
+  void Next100Shielding::Construct()
+  {
     // Auxiliary solids
     G4Box* shielding_box_solid = new G4Box("SHIELD_BOX", _shield_x/2., _shield_y/2., _shield_z/2.);
-    G4Tubs* nozzle_hole_solid = new G4Tubs("NOZZLE_HOLE", 0.*cm, nozzle_ext_diam/2.,
+    G4Tubs* nozzle_hole_solid = new G4Tubs("NOZZLE_HOLE", 0.*cm, _nozzle_ext_diam/2.,
 					   (_shield_z + 100.*cm)/2., 0.*deg, 360.*deg);
     
 
@@ -67,13 +84,13 @@ namespace nexus {
 
     G4Box* lead_box_nh_solid = new G4Box("LEAD_BOX_NH", lead_x/2., lead_y/2., lead_z/2.);
     G4SubtractionSolid* lead_box_solid = new G4SubtractionSolid("LEAD_BOX", lead_box_nh_solid, nozzle_hole_solid,
-					    0, G4ThreeVector(0. , up_nozzle_ypos, 0.) );
+								0, G4ThreeVector(0. , _up_nozzle_ypos, 0.) );
     lead_box_solid = new G4SubtractionSolid("LEAD_BOX", lead_box_solid, nozzle_hole_solid,
-					    0, G4ThreeVector(0., central_nozzle_ypos, 0.) );
+					    0, G4ThreeVector(0., _central_nozzle_ypos, 0.) );
     lead_box_solid = new G4SubtractionSolid("LEAD_BOX", lead_box_solid, nozzle_hole_solid,
-					    0, G4ThreeVector(0., down_nozzle_ypos, 0.) );
+					    0, G4ThreeVector(0., _down_nozzle_ypos, 0.) );
     lead_box_solid = new G4SubtractionSolid("LEAD_BOX", lead_box_solid, nozzle_hole_solid,
-					    0, G4ThreeVector(0., bottom_nozzle_ypos, 0.) );
+					    0, G4ThreeVector(0., _bottom_nozzle_ypos, 0.) );
     lead_box_solid = new G4SubtractionSolid("LEAD_BOX", lead_box_solid, shielding_box_solid);
 
     G4LogicalVolume* lead_box_logic = new G4LogicalVolume(lead_box_solid,
@@ -89,18 +106,18 @@ namespace nexus {
     
     G4Box* steel_box_nh_solid = new G4Box("STEEL_BOX_NH", steel_x/2., steel_y/2., steel_z/2.);
     G4SubtractionSolid* steel_box_solid = new G4SubtractionSolid("STEEL_BOX", steel_box_nh_solid, nozzle_hole_solid,
-								 0, G4ThreeVector(0. , up_nozzle_ypos, 0.) );
+								 0, G4ThreeVector(0. , _up_nozzle_ypos, 0.) );
     steel_box_solid = new G4SubtractionSolid("STEEL_BOX", steel_box_solid, nozzle_hole_solid,
-					     0, G4ThreeVector(0. , central_nozzle_ypos, 0.) );
+					     0, G4ThreeVector(0. , _central_nozzle_ypos, 0.) );
     steel_box_solid = new G4SubtractionSolid("STEEL_BOX", steel_box_solid, nozzle_hole_solid,
-					     0, G4ThreeVector(0. , down_nozzle_ypos, 0.) );
+					     0, G4ThreeVector(0. , _down_nozzle_ypos, 0.) );
     steel_box_solid = new G4SubtractionSolid("STEEL_BOX", steel_box_solid, nozzle_hole_solid,
-					     0, G4ThreeVector(0. , bottom_nozzle_ypos, 0.) );
+					     0, G4ThreeVector(0. , _bottom_nozzle_ypos, 0.) );
     steel_box_solid = new G4SubtractionSolid("STEEL_BOX", steel_box_solid, shielding_box_solid);
 
     G4LogicalVolume* steel_box_logic = new G4LogicalVolume(steel_box_solid,
-							  MaterialsList::Steel(),
-							  "STEEL_BOX");
+							   MaterialsList::Steel(),
+							   "STEEL_BOX");
 
     G4PVPlacement* steel_box_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), steel_box_logic,
 						       "STEEL_BOX", lead_box_logic, false, 0);
@@ -128,9 +145,10 @@ namespace nexus {
     G4double offset = 1.*cm;
     _external_gen = new BoxPointSampler(lead_x + offset, lead_y + offset, lead_z + offset,
 					1.*mm, G4ThreeVector(0.,0.,0.), 0);
+
   }
 
-  
+
   
   Next100Shielding::~Next100Shielding()
   {
@@ -138,22 +156,6 @@ namespace nexus {
     delete _steel_gen;
     delete _external_gen;
   }
-
-
-
-  void Next100Shielding::ReadParameters()
-  {
-    const ParamStore& cfg_geom = ConfigService::Instance().Geometry();
-    
-    _visibility = cfg_geom.GetIParam("shielding_vis");
-  }
-
-
-  
-  // G4LogicalVolume* Next100Shielding::GetInternalLogicalVolume()
-  // {
-  //   return _internal_logic_vol;
-  // }
 
 
 
