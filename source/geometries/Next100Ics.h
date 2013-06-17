@@ -18,6 +18,8 @@
 
 #include <G4Navigator.hh>
 
+class G4GenericMessenger;
+
 
 namespace nexus {
 
@@ -38,11 +40,8 @@ namespace nexus {
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
-    /// Returns the logical volume of the inner object
-    //G4LogicalVolume* GetInternalLogicalVolume();
-
-  private:
-    void ReadParameters();
+    /// Builder
+    void Construct();
 
 
   private:
@@ -51,11 +50,12 @@ namespace nexus {
     G4double _tracking_orad, _tracking_length, _tracking_irad, _tracking_cone_height, _tracking_hole_rad;
     G4double _energy_theta, _energy_orad, _energy_thickness, _energy_sph_zpos, _energy_cyl_length;
 
-    // Visibility of the shielding
-    G4int _visibility;
+    // Dimensions coming from outside  
+    G4double _nozzle_ext_diam, _up_nozzle_ypos, _central_nozzle_ypos;
+    G4double _down_nozzle_ypos, _bottom_nozzle_ypos;
 
-    // Internal Logical Volume
-    //G4LogicalVolume* _internal_logic_vol;
+    // Visibility of the shielding
+    G4bool _visibility;
 
     // Vertex generators
     CylinderPointSampler* _body_gen;
@@ -65,9 +65,11 @@ namespace nexus {
 
     G4double _perc_body_vol, _perc_tracking_vol, _perc_energy_cyl_vol;
 
-
     // Geometry Navigator
     G4Navigator* _geom_navigator;
+
+    // Messenger for the definition of control commands
+    G4GenericMessenger* _msg; 
 
   };
 
