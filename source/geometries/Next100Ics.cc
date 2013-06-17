@@ -9,7 +9,7 @@
 
 #include "Next100Ics.h"
 #include "MaterialsList.h"
-#include "ConfigService.h"
+#include <G4GenericMessenger.hh>
 
 #include <G4SubtractionSolid.hh>
 #include <G4LogicalVolume.hh>
@@ -41,18 +41,9 @@ namespace nexus {
     _body_length (160.0 * cm),
     _body_thickness (12.0 * cm),
 
-    // // Tracking plane dimensions  (thick version with cone substraction)
-    // _tracking_orad (65.0 * cm),        // To be checked
-    // _tracking_length (24.0 * cm),
-    // _tracking_irad (53.5 * cm),
-    // _tracking_cone_height (14. * cm),  // To be checked
-    // _tracking_hole_rad (6.0 * cm),     // To be checked
-
     // Tracking plane dimensions  (thin version without substractions)
     _tracking_orad (65.0 * cm),        // To be checked
     _tracking_length (10.0 * cm),
-    //_tracking_irad (0. * cm),          // Meaningless
-    //_tracking_cone_height (0. * cm),   // Meaningless
     _tracking_hole_rad (6.0 * cm),     // To be checked
 
     // Energy plane dimensions
@@ -63,12 +54,27 @@ namespace nexus {
     _energy_cyl_length (13.0 * cm)
   {
 
-    ReadParameters();
+    /// Needed External variables
+    _nozzle_ext_diam = nozzle_ext_diam;
+    _up_nozzle_ypos = up_nozzle_ypos;
+    _central_nozzle_ypos = central_nozzle_ypos;
+    _down_nozzle_ypos = down_nozzle_ypos;
+    _bottom_nozzle_ypos = bottom_nozzle_ypos;
+
 
     // Initializing the geometry navigator (used in vertex generation)
     _geom_navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
 
+    /// Messenger
+    _msg = new G4GenericMessenger(this, "/Geometry/Next100/", "Control commands of geometry Next100.");
+    _msg->DeclareProperty("ics_vis", _visibility, "ICS Visibility");
 
+  }
+  
+
+  
+  void Next100Ics::Construct()
+  {
     // ICS SOLIDS  ///////////
 
     // Body
@@ -76,25 +82,7 @@ namespace nexus {
 					_body_length/2., 0.*deg, 360.*deg);
 
 
-    // // Tracking plane (thick version with cone substraction)
-    // G4Tubs* ics_tracking_nh_solid = new G4Tubs("ICS_TRACKING_NH", 0.*cm, _tracking_orad,
-    // 					       _tracking_length/2., 0.*deg, 360.*deg);
-
-    // G4Tubs* ics_tracking_hole_solid = new G4Tubs("ICS_TRACKING_HOLE", 0.*cm, _tracking_hole_rad,
-    // 						 _tracking_length/2. + 5*cm, 0.*deg, 360.*deg);
-
-    // G4SubtractionSolid* ics_tracking_solid = new G4SubtractionSolid("ICS_TRACKING", ics_tracking_nh_solid,
-    // 								    ics_tracking_hole_solid, 0, G4ThreeVector(0. , 0., 0.) );
-
-    // G4Cons* ics_tracking_cone_solid = new G4Cons("ICS_TRACKING_CONE", 0.*cm, _tracking_irad, 0.*cm, 0.*cm,
-    // 						 _tracking_cone_height/2., 0.*deg, 360.*deg);
-
-    // G4double cone_zpos = -1. * (_tracking_length - _tracking_cone_height) / 2.;
-    // ics_tracking_solid = new G4SubtractionSolid("ICS_TRACKING", ics_tracking_solid, ics_tracking_cone_solid,
-    // 						0, G4ThreeVector(0. , 0., cone_zpos) );
-
-
-    // Tracking plane  (thin version without substractions)
+    // Tracking plane
     G4Tubs* ics_tracking_nh_solid = new G4Tubs("ICS_TRACKING_NH", 0.*cm, _tracking_orad,
     					       _tracking_length/2., 0.*deg, 360.*deg);
 
@@ -112,23 +100,23 @@ namespace nexus {
 						     0. * deg, 360. * deg,                              // phi
 						     180. * deg - _energy_theta, _energy_theta);        // theta
     
-    G4double hole_diam = nozzle_ext_diam + 1.*cm;
+    G4double hole_diam = _nozzle_ext_diam + 1.*cm;
     G4double hole_length = _energy_thickness + 50.*cm;
     G4double hole_zpos = -1. * (_body_length/2. + hole_length/2.);
 
     G4Tubs* nozzle_hole_solid = new G4Tubs("NOZZLE_HOLE", 0.*cm, hole_diam/2., hole_length/2., 0.*deg, 360.*deg);
 
     G4SubtractionSolid* ics_energy_sph_solid = new G4SubtractionSolid("ICS_ENERGY_SPH", ics_energy_sph_nh_solid,
-								      nozzle_hole_solid, 0, G4ThreeVector(0., up_nozzle_ypos, hole_zpos) );
+								      nozzle_hole_solid, 0, G4ThreeVector(0., _up_nozzle_ypos, hole_zpos) );
 
     ics_energy_sph_solid = new G4SubtractionSolid("ICS_ENERGY_SPH", ics_energy_sph_solid,
-						  nozzle_hole_solid, 0, G4ThreeVector(0., central_nozzle_ypos, hole_zpos) );
+						  nozzle_hole_solid, 0, G4ThreeVector(0., _central_nozzle_ypos, hole_zpos) );
 
     ics_energy_sph_solid = new G4SubtractionSolid("ICS_ENERGY_SPH", ics_energy_sph_solid,
-						  nozzle_hole_solid, 0, G4ThreeVector(0., down_nozzle_ypos, hole_zpos) );
+						  nozzle_hole_solid, 0, G4ThreeVector(0., _down_nozzle_ypos, hole_zpos) );
 
     ics_energy_sph_solid = new G4SubtractionSolid("ICS_ENERGY_SPH", ics_energy_sph_solid,
-						  nozzle_hole_solid, 0, G4ThreeVector(0., bottom_nozzle_ypos, hole_zpos) );
+						  nozzle_hole_solid, 0, G4ThreeVector(0., _bottom_nozzle_ypos, hole_zpos) );
 
 
     G4Tubs* ics_energy_cyl_solid = new G4Tubs("ICS_ENERGY_CYL",  _body_in_rad, _body_in_rad + _energy_thickness,
@@ -153,8 +141,6 @@ namespace nexus {
     this->SetLogicalVolume(ics_logic);
 
 
-
-
     // SETTING VISIBILITIES   //////////
     if (_visibility) {
       G4VisAttributes copper_col(G4Colour(.72, .45, .20));
@@ -164,7 +150,6 @@ namespace nexus {
     else {
       ics_logic->SetVisAttributes(G4VisAttributes::Invisible);
   }
-
 
 
     // VERTEX GENERATORS   //////////
@@ -191,30 +176,14 @@ namespace nexus {
     _perc_tracking_vol = (body_vol + tracking_vol) / total_vol;
     _perc_energy_cyl_vol = (body_vol + tracking_vol + energy_cyl_vol) / total_vol;
   }
-  
 
-  
+
+
   Next100Ics::~Next100Ics()
   {
     delete _body_gen;
   }
   
-
-
-  void Next100Ics::ReadParameters()
-  {
-    const ParamStore& cfg_geom = ConfigService::Instance().Geometry();
-    
-    _visibility = cfg_geom.GetIParam("ics_vis");
-  }
-
-
-
-  // G4LogicalVolume* Next100Ics::GetInternalLogicalVolume()
-  // {
-  //   return _internal_logic_vol;
-  // }
-
 
 
   G4ThreeVector Next100Ics::GenerateVertex(const G4String& region) const
