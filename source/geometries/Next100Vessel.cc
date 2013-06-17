@@ -9,8 +9,8 @@
 
 #include "Next100Vessel.h"
 #include "MaterialsList.h"
-#include "ConfigService.h"
 #include "OpticalMaterialProperties.h"
+#include <G4GenericMessenger.hh>
 
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
@@ -60,14 +60,29 @@ namespace nexus {
     _temperature (303 * kelvin)
   {
 
-    ReadParameters();
+    /// Needed External variables
+    _nozzle_ext_diam = nozzle_ext_diam;
+    _up_nozzle_ypos = up_nozzle_ypos;
+    _central_nozzle_ypos = central_nozzle_ypos;
+    _down_nozzle_ypos = down_nozzle_ypos;
+    _bottom_nozzle_ypos = bottom_nozzle_ypos;
+
 
     // Initializing the geometry navigator (used in vertex generation)
     _geom_navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
 
 
-    // VESSEL   ///////////
+    /// Messenger
+    _msg = new G4GenericMessenger(this, "/Geometry/Next100/", "Control commands of geometry Next100.");
+    _msg->DeclareProperty("vessel_vis", _visibility, "Vessel Visibility");
+    _msg->DeclareProperty("pressure", _pressure, "Xenon pressure");
 
+  }
+  
+
+
+  void Next100Vessel::Construct()
+  {
     // Body solid
     G4double vessel_out_rad = _vessel_in_rad + _vessel_thickness;
 
@@ -106,16 +121,16 @@ namespace nexus {
 						      _flange_length/2., 0.*deg, 360.*deg);
 
     // Nozzle solids
-    G4Tubs* large_nozzle_solid = new G4Tubs("LARGE_NOZZLE", 0.*cm, nozzle_ext_diam/2.,
+    G4Tubs* large_nozzle_solid = new G4Tubs("LARGE_NOZZLE", 0.*cm, _nozzle_ext_diam/2.,
 					    _large_nozzle_length/2., 0.*deg, 360.*deg);
 
-    G4Tubs* small_nozzle_solid = new G4Tubs("SMALL_NOZZLE", 0.*cm, nozzle_ext_diam/2.,
+    G4Tubs* small_nozzle_solid = new G4Tubs("SMALL_NOZZLE", 0.*cm, _nozzle_ext_diam/2.,
 					    _small_nozzle_length/2., 0.*deg, 360.*deg);
 
-    G4Tubs* large_nozzle_gas_solid = new G4Tubs("LARGE_NOZZLE_GAS", 0.*cm, (nozzle_ext_diam/2. - _vessel_thickness),
+    G4Tubs* large_nozzle_gas_solid = new G4Tubs("LARGE_NOZZLE_GAS", 0.*cm, (_nozzle_ext_diam/2. - _vessel_thickness),
 						_large_nozzle_length/2., 0.*deg, 360.*deg);
 
-    G4Tubs* small_nozzle_gas_solid = new G4Tubs("SMALL_NOZZLE_GAS", 0.*cm, (nozzle_ext_diam/2. - _vessel_thickness),
+    G4Tubs* small_nozzle_gas_solid = new G4Tubs("SMALL_NOZZLE_GAS", 0.*cm, (_nozzle_ext_diam/2. - _vessel_thickness),
 						_small_nozzle_length/2., 0.*deg, 360.*deg);
 
 
@@ -144,13 +159,13 @@ namespace nexus {
 
     // Adding nozzles
     vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, small_nozzle_solid,
-				    0, G4ThreeVector(0., up_nozzle_ypos, 0.) );
+				    0, G4ThreeVector(0., _up_nozzle_ypos, 0.) );
     vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, large_nozzle_solid,
-				    0, G4ThreeVector(0., central_nozzle_ypos, 0.) );
+				    0, G4ThreeVector(0., _central_nozzle_ypos, 0.) );
     vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, large_nozzle_solid,
-				    0, G4ThreeVector(0., down_nozzle_ypos, 0.) );
+				    0, G4ThreeVector(0., _down_nozzle_ypos, 0.) );
     vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, small_nozzle_solid,
-				    0, G4ThreeVector(0., bottom_nozzle_ypos, 0.) );
+				    0, G4ThreeVector(0., _bottom_nozzle_ypos, 0.) );
 
 
 
@@ -163,13 +178,13 @@ namespace nexus {
 					vessel_gas_energy_endcap_solid, 0, energy_endcap_pos);
     // Adding nozzles
     vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, small_nozzle_gas_solid,
-					0, G4ThreeVector(0., up_nozzle_ypos, 0.) );
+					0, G4ThreeVector(0., _up_nozzle_ypos, 0.) );
     vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, large_nozzle_gas_solid,
-					0, G4ThreeVector(0., central_nozzle_ypos, 0.) );
+					0, G4ThreeVector(0., _central_nozzle_ypos, 0.) );
     vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, large_nozzle_gas_solid,
-					0, G4ThreeVector(0., down_nozzle_ypos, 0.) );
+					0, G4ThreeVector(0., _down_nozzle_ypos, 0.) );
     vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, small_nozzle_gas_solid,
-					0, G4ThreeVector(0., bottom_nozzle_ypos, 0.) );
+					0, G4ThreeVector(0., _bottom_nozzle_ypos, 0.) );
 
 
 
@@ -190,7 +205,7 @@ namespace nexus {
 
 
     //// Vacuum Manifold
-    G4double vacuum_manifold_rad = nozzle_ext_diam/2. - _vessel_thickness;
+    G4double vacuum_manifold_rad = _nozzle_ext_diam/2. - _vessel_thickness;
     G4double vacuum_manifold_length = (_large_nozzle_length - _vessel_body_length) / 2. + 9.4*cm; // 10.6 cm comes from Derek's drawings
                                                                                                   // Switched to 9.4 to be aligned with Energy Plane
     G4double vacuum_manifold_zpos = -1. * (_large_nozzle_length - vacuum_manifold_length) / 2.;
@@ -260,10 +275,11 @@ namespace nexus {
     G4double body_vol = vessel_body_solid->GetCubicVolume() - vessel_gas_body_solid->GetCubicVolume();
     G4double endcap_vol =  vessel_tracking_endcap_solid->GetCubicVolume() - vessel_gas_tracking_endcap_solid->GetCubicVolume();
     _perc_endcap_vol = endcap_vol / (body_vol + 2. * endcap_vol);
+
   }
   
 
-  
+
   Next100Vessel::~Next100Vessel()
   {
     delete _body_gen;
@@ -273,15 +289,6 @@ namespace nexus {
     delete _energy_flange_gen;
   }
   
-
-
-  void Next100Vessel::ReadParameters()
-  {
-    const ParamStore& cfg_geom = ConfigService::Instance().Geometry();
-    _visibility = cfg_geom.GetIParam("vessel_vis");
-    _pressure = cfg_geom.GetDParam("pressure");
-    
-  }
 
 
 
