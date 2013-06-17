@@ -15,13 +15,13 @@
 #include "BaseGeometry.h"
 #include "Next100Shielding.h"
 #include "Next100Vessel.h"
-#include "Next100Ics.h"
-/* #include "Next100FieldCage.h" */
-/* #include "Next100InternalVolume.h" */
-#include "Next100InnerElements.h"
+//#include "Next100Ics.h"
+//#include "Next100FieldCage.h"
+//#include "Next100InternalVolume.h"
 
-
+//#include "Next100InnerElements.h"
 class G4LogicalVolume;
+class G4GenericMessenger;
 
 
 namespace nexus {
@@ -42,6 +42,7 @@ namespace nexus {
 
   private:
     void BuildLab();
+    void Construct();
 
     
   private:
@@ -61,10 +62,14 @@ namespace nexus {
     // Detector parts
     Next100Shielding* _shielding;
     Next100Vessel*    _vessel;
-    Next100Ics*       _ics;
+    //Next100Ics*       _ics;
     /* Next100FieldCage* _field_cage; */
     /* Next100InternalVolume* _internal_volume; */
-    Next100InnerElements* _inner_elements;
+    //Next100InnerElements* _inner_elements;
+
+ 
+    /// Messenger for the definition of control commands
+    G4GenericMessenger* _msg; 
 
   };
 
