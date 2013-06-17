@@ -9,6 +9,7 @@
 
 #include "Next100.h"
 
+#include <G4GenericMessenger.hh>
 #include <G4Box.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
@@ -39,25 +40,18 @@ namespace nexus {
 
 
   // The lab
-  BuildLab();
+  //BuildLab();
 
   // Shielding
   _shielding = new Next100Shielding(_nozzle_ext_diam, _up_nozzle_ypos, _central_nozzle_ypos,
-				    _down_nozzle_ypos, _bottom_nozzle_ypos);
-  G4LogicalVolume* shielding_logic = _shielding->GetLogicalVolume();
-  G4PVPlacement*   shielding_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), shielding_logic,
-						       "LEAD_BOX", _buffer_gas_logic, false, 0);
-  //G4LogicalVolume* shielding_internal_logic = _shielding.GetInternalLogicalVolume();
+              _down_nozzle_ypos, _bottom_nozzle_ypos);
+
 
   // Vessel
   _vessel = new Next100Vessel(_nozzle_ext_diam, _up_nozzle_ypos, _central_nozzle_ypos,
 			      _down_nozzle_ypos, _bottom_nozzle_ypos);
-  G4LogicalVolume* vessel_logic = _vessel->GetLogicalVolume();
-  G4PVPlacement*   vessel_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_logic,
-						    "VESSEL", _buffer_gas_logic, false, 0);
-  G4LogicalVolume* vessel_internal_logic = _vessel->GetInternalLogicalVolume();
 
-  // Internal copper shielding
+  /*  // Internal copper shielding
   _ics = new Next100Ics(_nozzle_ext_diam, _up_nozzle_ypos, _central_nozzle_ypos,
 			_down_nozzle_ypos, _bottom_nozzle_ypos);
   G4LogicalVolume* ics_logic = _ics->GetLogicalVolume();
@@ -67,21 +61,21 @@ namespace nexus {
   // INNER ELEMENTS
   _inner_elements = new Next100InnerElements(vessel_internal_logic);
 
-
+*/
   }
   
   
   
   Next100::~Next100()
   {
-    delete _inner_elements;
-    delete _ics;
+//    delete _inner_elements;
+//    delete _ics;
     delete _vessel;
     delete _shielding;
   }
   
 
-  void Next100::BuildLab()
+  void Next100::Construct()
   {
     // LAB /////////////////////////////////////////////////////////////
     // This is just a volume of air surrounding the detector so that
@@ -112,6 +106,21 @@ namespace nexus {
     G4PVPlacement* buffer_gas_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), _buffer_gas_logic,
 						       "BUFFER_GAS", _lab_logic, false, 0);
 
+
+    // SHIELDING
+    _shielding->Construct();
+    G4LogicalVolume* shielding_logic = _shielding->GetLogicalVolume();
+    G4PVPlacement*   shielding_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), shielding_logic,
+                     "LEAD_BOX", _buffer_gas_logic, false, 0);
+
+    // VESSEL
+    _vessel->Construct();
+    G4LogicalVolume* vessel_logic = _vessel->GetLogicalVolume();
+    G4PVPlacement*   vessel_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_logic,
+						      "VESSEL", _buffer_gas_logic, false, 0);
+    G4LogicalVolume* vessel_internal_logic = _vessel->GetInternalLogicalVolume();
+
+
   }
   
 
@@ -128,7 +137,7 @@ namespace nexus {
       vertex = _shielding->GenerateVertex(region);
     }
 
-    // Vessel regions
+/*    // Vessel regions
     else if ((region == "VESSEL") || (region == "VESSEL_FLANGES") ||
 	     (region == "VESSEL_TRACKING_ENDCAP") || (region == "VESSEL_ENERGY_ENDCAP")) {
       vertex = _vessel->GenerateVertex(region);
@@ -145,7 +154,7 @@ namespace nexus {
 	     (region == "ENCLOSURE_WINDOW") || (region == "PMT_BODY") ||
 	     (region == "TRK_SUPPORT") || (region == "DICE_BOARD") ) {
       vertex = _inner_elements->GenerateVertex(region);
-    }
+    }*/
 
     return vertex;
   }
