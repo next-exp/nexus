@@ -1,0 +1,11 @@
+### --------------------------------------------------------
+###  Next100: Configuration macro
+###  $Id: Next100.config.mac 8758 2013-06-15 11:12:45Z jmunoz $
+### --------------------------------------------------------
+
+/run/verbose 1
+/event/verbose 1
+/tracking/verbose 1
+/control/execute macros/generators/SingleParticle.mac
+/control/execute macros/geometries/Next100.mac
+/nexus/persistency/outputFile Next100.root
