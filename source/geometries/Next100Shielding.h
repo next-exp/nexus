@@ -16,6 +16,9 @@
 #include "BoxPointSampler.h"
 #include <G4Navigator.hh>
 
+class G4GenericMessenger;
+
+
 
 namespace nexus {
 
@@ -38,8 +41,8 @@ namespace nexus {
     /// Returns the logical volume of the inner object
     /// G4LogicalVolume* GetInternalLogicalVolume();
 
-  private:
-    void ReadParameters();
+  public:
+    void Construct();
 
     
   private:
@@ -48,11 +51,12 @@ namespace nexus {
     G4double _shield_x, _shield_y, _shield_z;
     G4double _lead_thickness, _steel_thickness;
 
-    // Visibility of the shielding
-    G4int _visibility;
+    // Dimensions coming from outside  
+    G4double _nozzle_ext_diam, _up_nozzle_ypos, _central_nozzle_ypos;
+    G4double _down_nozzle_ypos, _bottom_nozzle_ypos;
 
-    // Internal Logical Volume
-    G4LogicalVolume* _internal_logic_vol;
+    // Visibility of the shielding
+    G4bool _visibility;
 
     // Vertex generators
     BoxPointSampler* _lead_gen;
@@ -61,6 +65,10 @@ namespace nexus {
 
     // Geometry Navigator
     G4Navigator* _geom_navigator;
+
+    // Messenger for the definition of control commands
+    G4GenericMessenger* _msg; 
+
 
   };
 
