@@ -32,6 +32,7 @@ GeometryFactory::~GeometryFactory()
 //////////////////////////////////////////////////////////////////////
 
 #include "XeSphere.h"
+#include "Next100.h"
 
 
 BaseGeometry* GeometryFactory::CreateGeometry() const
@@ -39,6 +40,8 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
   BaseGeometry* p = 0;
 
   if (_name == "XE_SPHERE") p = new XeSphere();
+
+  else if (_name == "NEXT100") p = new Next100();
 
   return p;
 }
