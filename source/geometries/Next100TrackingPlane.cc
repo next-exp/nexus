@@ -113,6 +113,12 @@ namespace nexus {
 
 
     // SETTING VISIBILITIES   //////////
+
+    // Dice boards always visible in dark green
+    G4VisAttributes dark_green_col(G4Colour(0., .6, 0.));
+    dice_board_logic->SetVisAttributes(dark_green_col);
+    
+
     if (_visibility) {
       G4VisAttributes grey_col(G4Colour(.89, .89, .89));
       grey_col.SetForceSolid(true);
@@ -120,7 +126,6 @@ namespace nexus {
     }
     else {
       support_plate_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      dice_board_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
 

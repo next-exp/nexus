@@ -31,6 +31,7 @@ GeneratorFactory::~GeneratorFactory()
 //////////////////////////////////////////////////////////////////////
 
 #include "SingleParticle.h"
+#include "GenbbInterface.h"
 
 
 G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
@@ -38,6 +39,8 @@ G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
   G4VPrimaryGenerator* p = 0;
 
   if (_name == "SINGLE_PARTICLE") p = new SingleParticle();
+
+  else if (_name == "GENBB_INTERFACE") p = new GenbbInterface();
 
   return p;
 }

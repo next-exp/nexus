@@ -71,7 +71,7 @@ namespace nexus {
 
 
     // Visibility of the tracking plane
-    G4int _visibility;
+    G4bool _visibility;
 
 
     // Vertex generators

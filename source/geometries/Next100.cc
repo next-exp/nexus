@@ -126,8 +126,6 @@ namespace nexus {
   
 
 
-
-
   G4ThreeVector Next100::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0.,0.,0.);
