@@ -18,6 +18,7 @@
 
 class G4Material;
 class G4LogicalVolume;
+class G4GenericMessenger;
 
 
 namespace nexus {
@@ -37,11 +38,11 @@ namespace nexus {
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
+    ///
     G4ThreeVector GetPosition() const;
 
-
-  private:
-    void ReadParameters();
+    /// Builder
+    void Construct();
 
 
   private:
@@ -55,11 +56,16 @@ namespace nexus {
 
    
     // Visibility of the shielding
-    G4int _visibility;
+    G4bool _visibility;
 
 
     // Vertex generators
     CylinderPointSampler* _body_gen;
+
+
+    // Messenger for the definition of control commands
+    G4GenericMessenger* _msg; 
+
 
   };
 
