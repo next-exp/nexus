@@ -31,8 +31,8 @@ namespace nexus {
     /// Return dimensions of the SiPM
     G4ThreeVector GetDimensions() const;
     
-  private:
-    void BuildGeometry();
+    // Builder
+    void Construct();
     
   private:
     G4ThreeVector _dimensions; ///< external dimensions of the SiPM11

@@ -38,10 +38,8 @@ namespace nexus {
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
-    /// Returns the logical volume of the inner object
-    /// G4LogicalVolume* GetInternalLogicalVolume();
 
-  public:
+    /// Builder
     void Construct();
 
     

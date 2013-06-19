@@ -42,7 +42,12 @@ namespace nexus {
     _photocathode_diam (64. * mm),
     _photocathode_thickness (.1 * mm)
   {
+  }
+  
 
+
+  void PmtR11410::Construct()
+  {
     // PMT BODY ///////////////////////
     G4Tubs* front_body_solid = 
       new G4Tubs("FRONT_BODY", 0., _front_body_diam/2., _front_body_length/2., 0., twopi);
@@ -162,11 +167,12 @@ namespace nexus {
     G4double total_vol       = front_body_vol + medium_body_vol + rear_body_vol + rear_cap_vol;
     _front_body_perc  = front_body_vol / total_vol;
     _fr_med_body_perc = (front_body_vol + medium_body_vol) / total_vol;
-    _fr_med_re_body_perc = (front_body_vol + medium_body_vol + rear_body_vol) / total_vol;;
-  }
+    _fr_med_re_body_perc = (front_body_vol + medium_body_vol + rear_body_vol) / total_vol;
+
+  }  
   
-  
-  
+
+
   PmtR11410::~PmtR11410()
   {
   }

@@ -22,6 +22,7 @@
 
 class G4Material;
 class G4LogicalVolume;
+class G4GenericMessenger;
 
 
 namespace nexus {
@@ -33,19 +34,28 @@ namespace nexus {
 
   public:
     /// Constructor
-    Next100EnergyPlane(G4LogicalVolume* mother_logic);
+    Next100EnergyPlane();
+
     /// Destructor
     ~Next100EnergyPlane();
+
+    /// Sets the Logical Volume where Inner Elements will be placed
+    void SetLogicalVolume(G4LogicalVolume* mother_logic);
 
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
+    // Builder
+    void Construct();
+
 
   private:
-    void ReadParameters();
     void GeneratePositions();
 
   private:
+
+    // Mother Logical Volume of the whole Energy PLane
+    G4LogicalVolume* _mother_logic;
 
     // Dimensions
     const G4double _energy_plane_posz;
@@ -74,6 +84,9 @@ namespace nexus {
     
     // Geometry Navigator
     G4Navigator* _geom_navigator;
+
+    // Messenger for the definition of control commands
+    G4GenericMessenger* _msg; 
 
   };
 

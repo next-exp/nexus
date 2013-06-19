@@ -14,7 +14,7 @@
 
 #include "Next100FieldCage.h"
 #include "Next100EnergyPlane.h"
-//#include "Next100TrackingPlane.h"
+#include "Next100TrackingPlane.h"
 #include "CylinderPointSampler.h"
 
 #include <G4ThreeVector.hh>
@@ -76,7 +76,7 @@ namespace nexus {
     // Detector parts
     Next100FieldCage*     _field_cage;
     Next100EnergyPlane*   _energy_plane;
-    //Next100TrackingPlane* _tracking_plane;
+    Next100TrackingPlane* _tracking_plane;
 
 
     // Visibilities

@@ -39,37 +39,29 @@ namespace nexus {
   // order since some of them depend on the previous ones
 
 
-  // The lab
-  //BuildLab();
-
   // Shielding
   _shielding = new Next100Shielding(_nozzle_ext_diam, _up_nozzle_ypos, _central_nozzle_ypos,
               _down_nozzle_ypos, _bottom_nozzle_ypos);
-
 
   // Vessel
   _vessel = new Next100Vessel(_nozzle_ext_diam, _up_nozzle_ypos, _central_nozzle_ypos,
 			      _down_nozzle_ypos, _bottom_nozzle_ypos);
 
-  /*  // Internal copper shielding
+  // Internal copper shielding
   _ics = new Next100Ics(_nozzle_ext_diam, _up_nozzle_ypos, _central_nozzle_ypos,
 			_down_nozzle_ypos, _bottom_nozzle_ypos);
-  G4LogicalVolume* ics_logic = _ics->GetLogicalVolume();
-  G4PVPlacement*   ics_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), ics_logic,
-						 "ICS", vessel_internal_logic, false, 0);
 
-  // INNER ELEMENTS
-  _inner_elements = new Next100InnerElements(vessel_internal_logic);
+  // Inner Elements
+  _inner_elements = new Next100InnerElements();
 
-*/
   }
   
   
   
   Next100::~Next100()
   {
-//    delete _inner_elements;
-//    delete _ics;
+    delete _inner_elements;
+    delete _ics;
     delete _vessel;
     delete _shielding;
   }
@@ -93,9 +85,8 @@ namespace nexus {
     this->SetLogicalVolume(_lab_logic);
 
 
-    // BUFFER GAS   ////////////////////////////////////////////////////////////
-    // This is a volume, initially made of air, defined to be the mother volume
-    // of Shielding and Vessel
+    // BUFFER GAS   ///////////////////////////////////////////////////////////////////////////////////
+    // This is a volume, initially made of air, defined to be the mother volume of Shielding and Vessel
 
     G4Box* buffer_gas_solid = 
       new G4Box("BUFFER_GAS", _buffer_gas_size/2., _buffer_gas_size/2., _buffer_gas_size/2.);
@@ -121,6 +112,16 @@ namespace nexus {
     G4LogicalVolume* vessel_internal_logic = _vessel->GetInternalLogicalVolume();
 
 
+    // Internal Copper Shielding
+    _ics->Construct();
+    G4LogicalVolume* ics_logic = _ics->GetLogicalVolume();
+    G4PVPlacement*   ics_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), ics_logic,
+						   "ICS", vessel_internal_logic, false, 0);
+
+    // Inner Elements
+    _inner_elements->SetLogicalVolume(_vessel->GetInternalLogicalVolume());
+    _inner_elements->Construct();
+
   }
   
 
@@ -137,7 +138,7 @@ namespace nexus {
       vertex = _shielding->GenerateVertex(region);
     }
 
-/*    // Vessel regions
+    // Vessel regions
     else if ((region == "VESSEL") || (region == "VESSEL_FLANGES") ||
 	     (region == "VESSEL_TRACKING_ENDCAP") || (region == "VESSEL_ENERGY_ENDCAP")) {
       vertex = _vessel->GenerateVertex(region);
@@ -154,7 +155,7 @@ namespace nexus {
 	     (region == "ENCLOSURE_WINDOW") || (region == "PMT_BODY") ||
 	     (region == "TRK_SUPPORT") || (region == "DICE_BOARD") ) {
       vertex = _inner_elements->GenerateVertex(region);
-    }*/
+    }
 
     return vertex;
   }

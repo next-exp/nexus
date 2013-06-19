@@ -38,6 +38,9 @@ namespace nexus {
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
+    // Builder
+    void Construct();
+
 
   private:
     G4OpticalSurface* GetPhotOptSurf();

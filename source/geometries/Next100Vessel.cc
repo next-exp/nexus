@@ -74,8 +74,13 @@ namespace nexus {
 
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/Next100/", "Control commands of geometry Next100.");
+
     _msg->DeclareProperty("vessel_vis", _visibility, "Vessel Visibility");
-    _msg->DeclareProperty("pressure", _pressure, "Xenon pressure");
+
+    G4GenericMessenger::Command& pressure_cmd = _msg->DeclareProperty("pressure", _pressure, "Xenon pressure");
+    pressure_cmd.SetUnitCategory("Pressure");
+    pressure_cmd.SetParameterName("pressure", false);
+    pressure_cmd.SetRange("pressure>0.");
 
   }
   

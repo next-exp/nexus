@@ -9,7 +9,6 @@
 
 #include "NextElDB.h"
 
-#include "SiPM11.h"
 #include "PmtSD.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
@@ -30,20 +29,25 @@
 namespace nexus {
 
 
-  NextElDB::NextElDB(G4int rows, G4int columns): BaseGeometry()
+  NextElDB::NextElDB(G4int rows, G4int columns):
+    BaseGeometry(),
+    _rows(rows),
+    _columns(columns)
   {
-    DefineGeometry(rows, columns);
+    // The SiPM
+    _siPM = new SiPM11();
   }
 
 
 
   NextElDB::~NextElDB()
   {
+    delete _siPM;
   }
 
 
 
-  void NextElDB::DefineGeometry(G4int rows, G4int columns)
+  void NextElDB::Construct()
   {
     // DAUGHTER BOARD (DBO) //////////////////////////////////////////
 
@@ -53,8 +57,8 @@ namespace nexus {
     // const G4double board_side_reduction = 1. * mm;
     const G4double board_side_reduction = .5 * mm;
     
-    const G4double dbo_x = columns * sipm_pitch - 2. * board_side_reduction ;  
-    const G4double dbo_y =    rows * sipm_pitch - 2. * board_side_reduction ;
+    const G4double dbo_x = _columns * sipm_pitch - 2. * board_side_reduction ;  
+    const G4double dbo_y =    _rows * sipm_pitch - 2. * board_side_reduction ;
     const G4double dbo_z = board_thickn;
     
     _dimensions.setX(dbo_x);
@@ -91,18 +95,18 @@ namespace nexus {
     
     // SILICON PMs ///////////////////////////////////////////////////
 
-    SiPM11 sipm;
-    G4LogicalVolume* sipm_logic = sipm.GetLogicalVolume();
+    _siPM->Construct();
+    G4LogicalVolume* sipm_logic = _siPM->GetLogicalVolume();
 
-    pos_z = -dbo_z/2 + coating_thickn + (sipm.GetDimensions().z())/2.;
+    pos_z = -dbo_z/2 + coating_thickn + (_siPM->GetDimensions().z())/2.;
 
     G4double offset = sipm_pitch/2. - board_side_reduction;
     
     G4int sipm_no = 0;
 
-    for (G4int i=0; i<rows; i++) {
+    for (G4int i=0; i<_rows; i++) {
       G4double pos_y = dbo_y/2. - offset - i*sipm_pitch;
-      for (G4int j=0; j<columns; j++) {
+      for (G4int j=0; j<_columns; j++) {
 	G4double pos_x = -dbo_x/2 + offset + j*sipm_pitch;
 	new G4PVPlacement(0, G4ThreeVector(pos_x, pos_y, pos_z), sipm_logic,
 			  "SIPM11", board_logic, false, sipm_no);
@@ -126,12 +130,12 @@ namespace nexus {
 
 
     // Visibilities
-    //coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    G4VisAttributes * vis = new G4VisAttributes;
-    vis->SetColor(1., 0., 0.);
-    coating_logic->SetVisAttributes(vis);
-    vis->SetColor(0., 1., 0.);
-    sipm_logic->SetVisAttributes(vis);
+    coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    //G4VisAttributes * vis = new G4VisAttributes;
+    //vis->SetColor(1., 0., 0.);
+    //coating_logic->SetVisAttributes(vis);
+    //vis->SetColor(0., 1., 0.);
+    //sipm_logic->SetVisAttributes(vis);
 
   }
 
@@ -142,7 +146,9 @@ namespace nexus {
     return _dimensions;
   }
 
-   std::vector<std::pair<int, G4ThreeVector> > NextElDB::GetPositions()
+
+
+  std::vector<std::pair<int, G4ThreeVector> > NextElDB::GetPositions()
   {
     return _positions;
   }

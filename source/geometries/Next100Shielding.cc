@@ -61,7 +61,6 @@ namespace nexus {
     _msg = new G4GenericMessenger(this, "/Geometry/Next100/", "Control commands of geometry Next100.");
     _msg->DeclareProperty("shielding_vis", _visibility, "Shielding Visibility");
 
-
     // Initializing the geometry navigator (used in vertex generation)
     _geom_navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
 

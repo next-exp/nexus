@@ -34,8 +34,6 @@ namespace nexus {
     /// Return vertex within region <region> of the chamber
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
-  private:
-    void SetParameters();
     void Construct();
 
   private:

@@ -47,7 +47,7 @@ namespace nexus {
 
 
     // Tracking Plane
-    //_tracking_plane = new Next100TrackingPlane(mother_logic);
+    _tracking_plane = new Next100TrackingPlane();
 
 
     /// Messenger
@@ -67,6 +67,8 @@ namespace nexus {
   {
     _mother_logic = mother_logic;
   }
+
+
 
   void Next100InnerElements::Construct()
   {
@@ -96,6 +98,10 @@ namespace nexus {
     _energy_plane->SetLogicalVolume(_mother_logic);
     _energy_plane->Construct();
 
+    // Tracking Plane
+    _tracking_plane->SetLogicalVolume(_mother_logic);
+    _tracking_plane->Construct();
+
   }
 
 
@@ -104,7 +110,7 @@ namespace nexus {
   {
     delete _field_cage;
     delete _energy_plane;
-    //delete _tracking_plane;
+    delete _tracking_plane;
     delete _active_gen;
   }
 
@@ -266,11 +272,11 @@ namespace nexus {
       vertex = _energy_plane->GenerateVertex(region);
     }
 
-    /*    // Tracking Plane regions
+    // Tracking Plane regions
     else if ( (region == "TRK_SUPPORT") || (region == "DICE_BOARD") ) {
       vertex = _tracking_plane->GenerateVertex(region);
     }
-    */
+
     return vertex;
   }
 }
