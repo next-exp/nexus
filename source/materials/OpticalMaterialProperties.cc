@@ -200,7 +200,8 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Sapphire()
 
 
 G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure, 
-							  G4double temperature)
+							  G4double temperature,
+							  G4int sc_yield)
 {
   XenonGasProperties GXe_prop(pressure, temperature);
   G4MaterialPropertiesTable* GXe_mpt = new G4MaterialPropertiesTable();
@@ -227,7 +228,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
   GXe_mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
   GXe_mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
   GXe_mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
-  GXe_mpt->AddConstProperty("SCINTILLATIONYIELD", 10000./MeV);
+  GXe_mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield/MeV);
   GXe_mpt->AddConstProperty("RESOLUTIONSCALE", 1.0);
   GXe_mpt->AddConstProperty("FASTTIMECONSTANT",1.*ns);
   GXe_mpt->AddConstProperty("SLOWTIMECONSTANT",45.*ns);
@@ -293,7 +294,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::PTFE()
 
   G4double ENERGIES[REFL_NUMENTRIES] = {1.0*eV, 30.*eV};
   /// This is for non-coated teflon panels
-  G4double REFLECTIVITY[REFL_NUMENTRIES] = {.5, .5};
+  G4double REFLECTIVITY[REFL_NUMENTRIES] = {.72, .72};
 
   G4double specularlobe[REFL_NUMENTRIES] = {0., 0.}; // specular reflection about the normal to a 
   //microfacet. Such a vector is chosen according to a gaussian distribution with 
@@ -318,7 +319,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::PTFE_with_TPB()
 
   G4double ENERGIES[REFL_NUMENTRIES] = {1.0*eV, 2.8*eV, 4.*eV, 6.*eV, 7.2*eV, 30.*eV};
   /// This is for TPB coated teflon panels
-  G4double REFLECTIVITY[REFL_NUMENTRIES] = {.97, .97, .97, .5, .5, .5};
+  G4double REFLECTIVITY[REFL_NUMENTRIES] = {.98, .98, .98, .72, .72, .72};
 
   G4double ENERGIES_2[2] = {1.0*eV, 30.*eV};
   G4double specularlobe[2] = {0., 0.}; // specular reflection about the normal to a 
