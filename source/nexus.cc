@@ -28,7 +28,7 @@ using namespace nexus;
 
 void PrintUsage()
 {
-  G4cerr  << "\nUsage: ./nexus [-b|i] [-n] <init_macro>\n" << G4endl;
+  G4cerr  << "\nUsage: ./nexus [-b|i] [-n number] <init_macro>\n" << G4endl;
   G4cerr  << "Available options:" << G4endl;
   G4cerr  << "   -b, --batch           : Run in batch mode (default)\n"
           << "   -i, --interactive     : Run in interactive mode\n"
