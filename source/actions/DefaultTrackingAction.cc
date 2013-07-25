@@ -9,6 +9,7 @@
 
 #include "DefaultTrackingAction.h"
 
+#include "Trajectory.h"
 #include "TrajectoryMap.h"
 
 #include <G4Track.hh>
@@ -39,7 +40,9 @@ void DefaultTrackingAction::PreUserTrackingAction(const G4Track* track)
 
   if (pdef == G4OpticalPhoton::Definition()) return;
 
-  G4VTrajectory* traj = new G4Trajectory(track);
+  G4cout << "Register Trajectory" << G4endl;
+
+  G4VTrajectory* traj = new Trajectory(track);
   fpTrackingManager->SetTrajectory(traj);
   fpTrackingManager->SetStoreTrajectory(true);
   TrajectoryMap::Add(traj);

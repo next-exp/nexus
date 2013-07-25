@@ -28,11 +28,13 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
 {
   // Create a configure the generic messenger for the app
   _msg = new G4GenericMessenger(this, "/nexus/", "Nexus control commands.");
+
+  // Define the command to register a configuration macro. The user may
+  // invoke the command as many times as needed
   _msg->DeclareMethod("RegisterMacro", &NexusApp::RegisterMacro, ""); 
 
 
   // Create the necessary classes for initialization
-
   physicsList = new G4GenericPhysicsList();
 
   _geom_fctr  = new GeometryFactory();
@@ -70,8 +72,11 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
 
 NexusApp::~NexusApp()
 {
-  PersistencyManager* current = dynamic_cast<PersistencyManager*>(G4VPersistencyManager::GetPersistencyManager());
+  // Close output file before finishing
+  PersistencyManager* current = dynamic_cast<PersistencyManager*>
+    (G4VPersistencyManager::GetPersistencyManager());
   current->CloseFile();
+
   delete _msg;
 }
 
@@ -79,6 +84,7 @@ NexusApp::~NexusApp()
 
 void NexusApp::RegisterMacro(const G4String& macro)
 {
+  // Store the name of the macro file
   _macros.push_back(macro);
 }
 

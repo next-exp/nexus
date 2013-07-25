@@ -26,6 +26,7 @@ Trajectory::Trajectory():
   G4VTrajectory(), _pdef(0), _trackId(-1), _parentId(-1),
   _initial_momentum(), _record_trjpoints(true)
 {
+  _trjpoints = new TrajectoryPointContainer();
 }
 
 
@@ -36,6 +37,7 @@ Trajectory::Trajectory(const G4Track* track)
   _trackId = track->GetTrackID();
   _parentId = track->GetParentID();
   _initial_momentum = track->GetMomentum();
+  _trjpoints = new TrajectoryPointContainer();
 }
 
 

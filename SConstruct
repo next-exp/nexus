@@ -185,9 +185,10 @@ if not env['LIBPATH']:
     ## IRENE configuration ---------------------------------
 
     if env['IRENE_PATH'] != NULL_PATH:
-        env.Append(CPPPATH = env['IRENE_PATH']+'/include')
-        env.Append(LIBPATH = env['IRENE_PATH']+'/lib')
-        env.Append(LIBS = 'irene')
+        env.PrependENVPath('PATH', env['IRENE_PATH'])
+
+    env.ParseConfig('irene-config --include --libdir --libs')
+
 
     ## Check for libraries and headers ---------------------
 

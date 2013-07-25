@@ -15,9 +15,8 @@
 #include <G4VPersistencyManager.hh>
 
 class G4GenericMessenger;
-class TFile;
-class TTree;
 namespace irene { class Event; }
+namespace irene { class RootWriter; }
 
 
 namespace nexus {
@@ -39,10 +38,8 @@ namespace nexus {
     virtual G4bool Retrieve(G4Run*&);
     virtual G4bool Retrieve(G4VPhysicalVolume*&);
 
-  private:
-    void OpenFile(const G4String&);
-
   public:
+    void OpenFile(const G4String&);
     void CloseFile();
 
 
@@ -51,14 +48,14 @@ namespace nexus {
     ~PersistencyManager();
     PersistencyManager(const PersistencyManager&);
 
+    void StoreTrajectories(const G4Event*, irene::Event*);
+
+
   private:
     G4GenericMessenger* _msg;
-
     G4bool _ready; ///< Is the PersistencyManager ready to go?
-
-    TFile* _file;       ///< Output ROOT file
-    TTree* _evttree;    ///< Event tree
     irene::Event* _evt; ///< Persistent irene event
+    irene::RootWriter* _writer; ///< Event writer to ROOT file
   };
 
 

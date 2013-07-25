@@ -9,13 +9,12 @@
 
 #include "PersistencyManager.h"
 
+#include "Trajectory.h"
+
 #include <G4GenericMessenger.hh>
 #include <G4Event.hh>
 #include <G4TrajectoryContainer.hh>
 #include <G4Trajectory.hh>
-
-// #include <TTree.h>
-// #include <TFile.h>
 
 #include <irene/Event.h>
 #include <irene/Particle.h>
@@ -26,8 +25,7 @@ using namespace nexus;
 
 
 PersistencyManager::PersistencyManager(): 
-  G4VPersistencyManager(), _msg(0), _ready(false), 
-  _file(0), _evttree(0), _evt(0)
+  G4VPersistencyManager(), _msg(0), _ready(false), _evt(0), _writer(0)
 {
   _msg = new G4GenericMessenger(this, "/nexus/persistency/");
   _msg->DeclareMethod("outputFile", &PersistencyManager::OpenFile, "");
@@ -37,8 +35,7 @@ PersistencyManager::PersistencyManager():
 
 PersistencyManager::~PersistencyManager()
 {
-  delete _evttree;
-  delete _file;
+  delete _writer;
   delete _msg;
 }
 
@@ -65,9 +62,8 @@ void PersistencyManager::OpenFile(const G4String& filename)
 {
   // If the output file was not set yet, do so
   if (!_ready) {
-    _file = new TFile(filename.data(), "RECREATE");
-    _evttree = new TTree("EVENT", "Irene event tree");
-    _evttree->Branch("EventBranch", "irene::Event", &_evt);
+    _writer = new irene::RootWriter();
+    _writer->Open(filename.data(), "RECREATE");
     _ready = true;
   }
   else {
@@ -80,11 +76,11 @@ void PersistencyManager::OpenFile(const G4String& filename)
 
 void PersistencyManager::CloseFile()
 {
-  if (!_file || !_file->IsOpen()) return;
+  if (!_writer || !_writer->IsOpen()) return;
 
-  _file->Write();
-  _file->Close();
+  _writer->Close();
 }
+
 
 
 G4bool PersistencyManager::Store(const G4Event* event)
@@ -92,38 +88,46 @@ G4bool PersistencyManager::Store(const G4Event* event)
   // Create a new irene event
   irene::Event ievt(event->GetEventID());
 
+  // Store the trajectories of the event as Irene particles
+  StoreTrajectories(event, &ievt);
 
-  // Store the trajectories of the event
-  G4TrajectoryContainer* tc = event->GetTrajectoryContainer();
+  
 
-  for (size_t i=0; i<tc->size(); ++i) {
-
-    G4Trajectory* trj = (G4Trajectory*) (*tc)[i];
-
-    irene::Particle ipart(trj->GetPDGEncoding());
-
-    G4ThreeVector position = trj->GetInitialMomentum();
-    //ipart.SetInitialMomentum()
-
-    
-
-    ipart.SetParticleID(trj->GetTrackID());
-
-    irene::Particle* ipartp = &ipart;
-
-    ievt.AddParticle(ipartp);
-  }
 
   // Add event to the tree
-  _evt = &ievt;
-  _evttree->Fill();
+  //_evt = &ievt;
+  std::cout << ievt << std::endl;
+  _writer->Write(ievt);
   _evt = 0;
 
   return true;
 }
 
 
+
+void PersistencyManager::StoreTrajectories(const G4Event* event,
+                                           irene::Event* ievent)
+{
+  // Loop through the trajectories stored in the event
+  G4TrajectoryContainer* tc = event->GetTrajectoryContainer();
+  for (unsigned int i=0; i<tc->size(); ++i) {
+
+    G4cerr << "i = " << i << G4endl;
+
+    Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[i]);
+    if (!trj) continue;
+    G4cerr << "i = " << i << G4endl;
+    irene::Particle* ipart = new irene::Particle(trj->GetPDGEncoding());
+
+    ievent->AddParticle(ipart);
+    //delete ipart;
+  }
+}
+
+
+
 G4bool PersistencyManager::Store(const G4Run*)
 {
+  // TODO. Implement here the persistency of the configuration macros
   return true;
 }
