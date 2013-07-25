@@ -104,16 +104,6 @@ vars.AddVariables(
                  'Path to irene installation.',
                  NULL_PATH),
     
-    ## OpenGL and X11
-
-    PathVariable('OGLPATH',
-                 'Path to OpenGL installation.',
-                 '/usr/X11R6'),
-
-    PathVariable('X11PATH',
-                 'Path to X11 installation.',
-                 '/usr/X11R6'),
-
 
     ## The following vars shouldn't be defined by users unless they 
     ## know what they are doing.
