@@ -67,16 +67,18 @@ SingleParticle::~SingleParticle()
 
 void SingleParticle::SetParticleDefinition(G4String particle_name)
 {
-  _particle_definition = G4ParticleTable::GetParticleTable()->
-  FindParticle(particle_name);
+  _particle_definition = 
+    G4ParticleTable::GetParticleTable()->FindParticle(particle_name);
+
+  if (!_particle_definition)
+    G4Exception("SetParticleDefinition()", "[SingleParticle]"
+      FatalException, "User gave an unknown particle name.");
 }
 
 
 
 void SingleParticle::GeneratePrimaryVertex(G4Event* event)
 {
-  if (!_particle_definition) return;
-
   // Generate an initial position for the particle using the geometry
   G4ThreeVector position = _geom->GenerateVertex(_region);
 
