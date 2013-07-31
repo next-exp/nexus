@@ -9,23 +9,21 @@
 ///  Copyright (c) 2013 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __NEW__
-#define __NEW__
+#ifndef __NEW_GEOMETRY__
+#define __NEW_GEOMETRY__
 
 #include "BaseGeometry.h"
-#include "BoxPointSampler.h"
-#include "CylinderPointSampler.h"
-
-#include "Next100Shielding.h"
-#include "Next100Vessel.h"
-#include "Next100Ics.h"
-#include "Next100InnerElements.h"
 
 class G4LogicalVolume;
 class G4GenericMessenger;
 
 
 namespace nexus {
+
+    class BoxPointSampler;
+    class CylinderPointSampler;
+
+    /// FIXME. Description of the class
 
   class NEW: public BaseGeometry {
   public:

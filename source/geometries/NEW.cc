@@ -10,6 +10,8 @@
 #include "NEW.h"
 
 #include "MaterialsList.h"
+#include "BoxPointSampler.h"
+#include "CylinderPointSampler.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
