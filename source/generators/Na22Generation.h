@@ -5,6 +5,7 @@
 
 class G4Event;
 class G4ParticleDefinition;
+class G4GenericMessenger;
 
 namespace nexus {
 
@@ -29,10 +30,11 @@ namespace nexus {
     //Destructor
     ~Na22Generation();
 
-    void ReadConfigParams();
     void GeneratePrimaryVertex(G4Event* evt);
 
   private:
+
+    G4GenericMessenger* _msg;
     
     G4double _energy_min; ///< Minimum possible kinetic energy for annihilation particle
     G4double _energy_max; ///< Maximum possible kinetic energy for annihilation particle
