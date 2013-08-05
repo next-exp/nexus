@@ -28,18 +28,15 @@ IonGun::IonGun():
 {
   _msg = new G4GenericMessenger(this, "/Generator/IonGun/",
 				"Control commands of IonGun  generator.");
-  _msg->DeclareMethod("particle", &IonGun::SetParticleDefinition, 
-		      "Set particle to be generated.");
-
   G4GenericMessenger::Command& z_ =
-    _msg->DeclareProperty("Atomic_numer", _z, 
+    _msg->DeclareProperty("atomic_numer", _z, 
 			  "Set atomic number");
-  z_.SetParameterName("Atomic_number", false);
+  z_.SetParameterName("atomic_number", false);
  
   G4GenericMessenger::Command& a_ =
-    _msg->DeclareProperty("Mass_number", _a, 
+    _msg->DeclareProperty("mass_number", _a, 
       "Set mass number");
-   a_.SetParameterName("Mass_number", false);
+   a_.SetParameterName("mass_number", false);
 
   _msg->DeclareProperty("region", _region, 
     "Set the region of the geometry where the vertex will be generated.");
@@ -53,15 +50,11 @@ IonGun::~IonGun()
   delete _msg;
 }
 
-
-void IonGun::SetParticleDefinition(G4String particle_name)
-{
-  _particle_definition = G4ParticleTable::GetParticleTable()->
-  GetIon(_z, _a, 0.);
-}
-
 void IonGun::GeneratePrimaryVertex(G4Event* event)
 {
+  _particle_definition = G4ParticleTable::GetParticleTable()->
+    GetIon(_z, _a, 0.);
+  
   if (!_particle_definition) return;
   // Generate an initial position for the particle using the geometry
   G4ThreeVector position = _geom->GenerateVertex(_region);
