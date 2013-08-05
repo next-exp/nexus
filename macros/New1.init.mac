@@ -1,0 +1,11 @@
+/control/execute macros/physics/DefaultPhysicsList.mac
+
+/Geometry/RegisterGeometry NEW
+
+/Generator/RegisterGenerator ION_GUN
+
+/Actions/RegisterTrackingAction DEFAULT
+
+/nexus/RegisterMacro macros/New1.config.mac
+
+
