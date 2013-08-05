@@ -24,6 +24,7 @@ using namespace nexus;
 
 DefaultTrackingAction::DefaultTrackingAction(): G4UserTrackingAction()
 {
+
 }
 
 
@@ -40,17 +41,24 @@ void DefaultTrackingAction::PreUserTrackingAction(const G4Track* track)
 
   if (pdef == G4OpticalPhoton::Definition()) return;
 
-  G4cout << "Register Trajectory" << G4endl;
+  // Create a new trajectory associated to the current track 
+  // and register it in the map
+  G4VTrajectory* trj = new Trajectory(track);
+  TrajectoryMap::Add(trj);
 
-  G4VTrajectory* traj = new Trajectory(track);
-  fpTrackingManager->SetTrajectory(traj);
+  // Set the trajectory in the tracking manager
   fpTrackingManager->SetStoreTrajectory(true);
-  TrajectoryMap::Add(traj);
+  fpTrackingManager->SetTrajectory(trj);
 }
 
 
 
 void DefaultTrackingAction::PostUserTrackingAction(const G4Track* track)
 {
+  //Trajectory* trj = (Trajectory*) fpTrackingManager->GimmeTrajectory();
+
+  //G4cout << "No. of trajectory points: " << trj->GetPointEntries() << G4endl;
+
+  //G4cout << "Name: " << trj->GetParticleName() << G4endl;
   return;
 }

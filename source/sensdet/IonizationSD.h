@@ -28,16 +28,21 @@ namespace nexus {
   {
   public:
     /// Constructor
-    IonizationSD(const G4String& name, const G4String&);
+    IonizationSD(const G4String& sdname);
     /// Destructor
     virtual ~IonizationSD();
     
     /// A hit collection created by this sensitive detector is attached 
-    /// in this method to the G4HCofThisEvent object
+    /// in this method to the G4HCofThisEvent object.
     virtual void Initialize(G4HCofThisEvent*);
   
     /// TODO. METHOD DESCRIPTION    
     void EndOfEvent(G4HCofThisEvent*);
+
+    /// Return the unique name of the hits collection created
+    /// by this sensitive detector. This will be used by the persistency
+    /// manager to fetch the collection from the G4HCofThisEvent object.
+    static G4String GetCollectionUniqueName();
 
   private:
     /// 

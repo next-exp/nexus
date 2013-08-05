@@ -20,10 +20,11 @@ using namespace nexus;
 
 
   
-IonizationSD::IonizationSD(const G4String& name, const G4String&):
+IonizationSD::IonizationSD(const G4String& name):
   G4VSensitiveDetector(name)
 {
-  collectionName.insert("IonizationHitsCollection");
+  collectionName.insert(GetCollectionUniqueName());
+  //collectionName.insert("IonizationHitsCollection");
 }
   
 
@@ -31,7 +32,15 @@ IonizationSD::IonizationSD(const G4String& name, const G4String&):
 IonizationSD::~IonizationSD()
 {
 }
- 
+
+
+
+G4String IonizationSD::GetCollectionUniqueName()
+{
+  G4String name = "IonizationHitsCollection";
+  return name;
+}
+
 
   
 void IonizationSD::Initialize(G4HCofThisEvent* hce)

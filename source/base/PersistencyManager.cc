@@ -10,11 +10,15 @@
 #include "PersistencyManager.h"
 
 #include "Trajectory.h"
+#include "TrajectoryMap.h"
+#include "IonizationSD.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Event.hh>
 #include <G4TrajectoryContainer.hh>
 #include <G4Trajectory.hh>
+#include <G4SDManager.hh>
+#include <G4HCtable.hh>
 
 #include <irene/Event.h>
 #include <irene/Particle.h>
@@ -67,7 +71,7 @@ void PersistencyManager::OpenFile(const G4String& filename)
     _ready = true;
   }
   else {
-    G4Exception("[PersistencyManager]", "OpenFile()", 
+    G4Exception("OpenFile()", "[PersistencyManager]", 
       JustWarning, "An output file was previously opened.");
   }
 }
@@ -89,14 +93,13 @@ G4bool PersistencyManager::Store(const G4Event* event)
   irene::Event ievt(event->GetEventID());
 
   // Store the trajectories of the event as Irene particles
-  StoreTrajectories(event, &ievt);
+  StoreTrajectories(event->GetTrajectoryContainer(), &ievt);
 
-  
+  //StoreHits(event, &ievt);
 
 
   // Add event to the tree
   //_evt = &ievt;
-  std::cout << ievt << std::endl;
   _writer->Write(ievt);
   _evt = 0;
 
@@ -105,25 +108,94 @@ G4bool PersistencyManager::Store(const G4Event* event)
 
 
 
-void PersistencyManager::StoreTrajectories(const G4Event* event,
+void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
                                            irene::Event* ievent)
 {
-  // Loop through the trajectories stored in the event
-  G4TrajectoryContainer* tc = event->GetTrajectoryContainer();
-  for (unsigned int i=0; i<tc->size(); ++i) {
-
-    G4cerr << "i = " << i << G4endl;
+  // Loop through the trajectories stored in the container
+  for (G4int i=0; i<tc->entries(); ++i) {
 
     Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[i]);
     if (!trj) continue;
-    G4cerr << "i = " << i << G4endl;
+
+    // Create an irene particle to store the trajectory information
     irene::Particle* ipart = new irene::Particle(trj->GetPDGEncoding());
+    
+    G4int trackid = trj->GetTrackID();
+    ipart->SetParticleID(trj->GetTrackID());
+    _iprtmap[trackid] = ipart;
+
+      
+
+    //ipart->SetInitialVertex();
 
     ievent->AddParticle(ipart);
-    //delete ipart;
+  }
+
+  // We'll set now the family relationships.
+  // Loop through the particles we just stored in the irene event.
+  TObjArray* iparts = ievent->GetParticles();
+  for (unsigned int i=0; i<iparts->GetEntries(); ++i) {
+
+    irene::Particle* ipart = (irene::Particle*) iparts->At(i);
+    G4VTrajectory* trj = TrajectoryMap::Get(ipart->GetParticleID());
+    int parent_id = trj->GetParentID();
+
+    if (parent_id == 0) {
+      ipart->SetPrimary(true);
+    }
+    else {
+      irene::Particle* mother = _iprtmap[parent_id];
+      ipart->SetMother(mother);
+      mother->AddDaughter(ipart);
+    }
   }
 }
 
+
+
+void PersistencyManager::StoreHits(const G4Event* evt, irene::Event* ievt)
+{
+  G4HCofThisEvent* hce = evt->GetHCofThisEvent();
+  if (!hce) return;
+
+  G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
+  G4HCtable* hct = sdmgr->GetHCtable();
+
+
+  for (int i=0; i<hct->entries(); i++) {
+    G4String sdname = hct->GetSDname(i);
+    G4cout << "SD name: " << sdname << G4endl;
+    G4String hcname = hct->GetHCname(i);
+    G4cout << "HC name: " << hcname << G4endl;
+    int hcid = sdmgr->GetCollectionID(sdname+"/"+hcname);
+    G4VHitsCollection* hits = hce->GetHC(hcid);
+
+    if (hcname == IonizationSD::GetCollectionUniqueName()) {
+      G4cout << "IONIZATION HITS COLLECTION" << G4endl;
+      IonizationHitsCollection* ihc = (IonizationHitsCollection*) hits;
+      for (G4int j=0; j<ihc->entries(); j++) {
+        G4cout << "j: " << j << G4endl;
+        IonizationHit* ahit = (IonizationHit*) ihc->GetHit(j);
+        G4cout << "Track ID: " << ahit->GetTrackID() << G4endl;
+      } 
+      
+    }
+  }
+}
+
+
+
+// void PersistencyManager::StoreIonizationHits(IonizationHitsCollection* hc,
+//                                              irene::Event* ievt)
+// {
+//   for (G4int i=0; i<hc->entries(); i++) {
+    
+//     IonizationHit* hit = dynamic_cast<IonizationHit*>(hc->GetHit(i));
+//     if (!hit) continue;
+
+    
+//   }
+// }
 
 
 G4bool PersistencyManager::Store(const G4Run*)

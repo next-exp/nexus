@@ -225,7 +225,7 @@ namespace nexus {
     active_logic->SetUserLimits(new G4UserLimits(_max_step_size));
   
     // Set the volume as an ionization sensitive detector
-    IonizationSD* ionisd = new IonizationSD("/NEXT100/ACTIVE", "ACTIVE");
+    IonizationSD* ionisd = new IonizationSD("/NEXT100/ACTIVE");
     active_logic->SetSensitiveDetector(ionisd);
     G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
 

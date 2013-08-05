@@ -7,7 +7,7 @@
 
 /Geometry/RegisterGeometry XE_SPHERE
 
-/Generator/RegisterGenerator SINGLE_PARTICLE
+/Generator/RegisterGenerator SINGLE_PARTICLE   
 
 /Actions/RegisterTrackingAction DEFAULT
 

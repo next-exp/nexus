@@ -3,5 +3,8 @@
 ###  $Id$
 ### --------------------------------------------------------
 
-/PhysicsList/RegisterPhysics G4EmLivermorePhysics
+
+
 /PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+/PhysicsList/RegisterPhysics G4EmLivermorePhysics

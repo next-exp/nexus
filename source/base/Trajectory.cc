@@ -33,6 +33,7 @@ Trajectory::Trajectory():
 
 Trajectory::Trajectory(const G4Track* track)
 {
+  _record_trjpoints = true;
   _pdef = track->GetDefinition();
   _trackId = track->GetTrackID();
   _parentId = track->GetParentID();
@@ -105,6 +106,9 @@ G4ThreeVector Trajectory::GetInitialMomentum() const
 {
   return _initial_momentum;
 }
+
+
+
 
 
 

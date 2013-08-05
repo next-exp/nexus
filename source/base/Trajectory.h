@@ -56,7 +56,8 @@ namespace nexus {
     G4double GetCharge() const;
     G4int GetPDGEncoding() const;
     G4ThreeVector GetInitialMomentum() const;
-  
+    
+    
     // Trajectory points
 
     /// Return the number of trajectory points
@@ -78,6 +79,7 @@ namespace nexus {
     G4int _parentId;  ///< Identification number of the parent particle
 
     G4ThreeVector _initial_momentum;
+    G4ThreeVector _initial_position;
 
     G4bool _record_trjpoints;
 

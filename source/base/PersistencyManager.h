@@ -13,9 +13,13 @@
 #define __PERSISTENCY_MANAGER__
 
 #include <G4VPersistencyManager.hh>
+#include <map>
 
 class G4GenericMessenger;
+class G4TrajectoryContainer;
 namespace irene { class Event; }
+namespace irene { class Particle; }
+namespace irene { class Track; }
 namespace irene { class RootWriter; }
 
 
@@ -48,7 +52,8 @@ namespace nexus {
     ~PersistencyManager();
     PersistencyManager(const PersistencyManager&);
 
-    void StoreTrajectories(const G4Event*, irene::Event*);
+    void StoreTrajectories(G4TrajectoryContainer*, irene::Event*);
+    void StoreHits(const G4Event*, irene::Event*);
 
 
   private:
@@ -56,6 +61,9 @@ namespace nexus {
     G4bool _ready; ///< Is the PersistencyManager ready to go?
     irene::Event* _evt; ///< Persistent irene event
     irene::RootWriter* _writer; ///< Event writer to ROOT file
+
+    std::map<G4int, irene::Particle*> _iprtmap;
+    std::map<G4int, irene::Track*> _itrkmap;
   };
 
 

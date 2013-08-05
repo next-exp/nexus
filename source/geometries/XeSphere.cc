@@ -11,6 +11,7 @@
 
 #include "SpherePointSampler.h"
 #include "MaterialsList.h"
+#include "IonizationSD.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Orb.hh>
@@ -78,8 +79,11 @@ namespace nexus {
 
     G4LogicalVolume* sphere_logic = 
     new G4LogicalVolume(sphere_solid, xenon, name);
-
     BaseGeometry::SetLogicalVolume(sphere_logic);
+
+    IonizationSD* ionizsd = new IonizationSD("/XE_SPHERE");
+    G4SDManager::GetSDMpointer()->AddNewDetector(ionizsd);
+    sphere_logic->SetSensitiveDetector(ionizsd);
   }
   
   

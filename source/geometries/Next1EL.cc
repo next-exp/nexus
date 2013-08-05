@@ -675,7 +675,7 @@ void Next1EL::BuildFieldCage()
     
   // Set the volume as an ionization sensitive detector
   G4String det_name = "/NEXT1/ACTIVE";
-  IonizationSD* ionisd = new IonizationSD(det_name, "ionization");
+  IonizationSD* ionisd = new IonizationSD(det_name);
   active_logic->SetSensitiveDetector(ionisd);
   G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
 

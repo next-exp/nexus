@@ -76,7 +76,7 @@ G4UserTrackingAction* ActionsFactory::CreateTrackingAction() const
 
   else {
     G4String err = "Unknown user tracking action: " + _trkact_name;
-    G4Exception("[ActionsFactory]","CreateTrackingAction()",JustWarning,err);
+    G4Exception("CreateTrackingAction()","[ActionsFactory]",JustWarning,err);
   }
   
   return p;
