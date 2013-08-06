@@ -29,7 +29,7 @@ IonGun::IonGun():
   _msg = new G4GenericMessenger(this, "/Generator/IonGun/",
 				"Control commands of IonGun  generator.");
   G4GenericMessenger::Command& z_ =
-    _msg->DeclareProperty("atomic_numer", _z, 
+    _msg->DeclareProperty("atomic_number", _z, 
 			  "Set atomic number");
   z_.SetParameterName("atomic_number", false);
  
