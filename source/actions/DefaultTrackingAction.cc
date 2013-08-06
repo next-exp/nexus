@@ -37,9 +37,7 @@ DefaultTrackingAction::~DefaultTrackingAction()
 
 void DefaultTrackingAction::PreUserTrackingAction(const G4Track* track)
 {
-  G4ParticleDefinition* pdef = track->GetDefinition();
-
-  if (pdef == G4OpticalPhoton::Definition()) return;
+  if (track->GetDefinition() == G4OpticalPhoton::Definition()) return;
 
   // Create a new trajectory associated to the current track 
   // and register it in the map
