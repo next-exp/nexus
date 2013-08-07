@@ -53,10 +53,7 @@ void DefaultTrackingAction::PreUserTrackingAction(const G4Track* track)
 
 void DefaultTrackingAction::PostUserTrackingAction(const G4Track* track)
 {
-  //Trajectory* trj = (Trajectory*) fpTrackingManager->GimmeTrajectory();
-
-  //G4cout << "No. of trajectory points: " << trj->GetPointEntries() << G4endl;
-
-  //G4cout << "Name: " << trj->GetParticleName() << G4endl;
-  return;
+  Trajectory* trj = (Trajectory*) fpTrackingManager->GimmeTrajectory();
+  trj->SetFinalPosition(track->GetPosition());
+  trj->SetFinalTime(track->GetGlobalTime());
 }
