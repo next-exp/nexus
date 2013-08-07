@@ -124,9 +124,18 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     ipart->SetParticleID(trj->GetTrackID());
     _iprtmap[trackid] = ipart;
 
-      
+    G4ThreeVector xyz = trj->GetInitialPosition();
+    G4double t = trj->GetInitialTime();
+    ipart->SetInitialVertex(xyz.x(), xyz.y(), xyz.z(), t);      
 
-    //ipart->SetInitialVertex();
+    xyz = trj->GetFinalPosition();
+    t = trj->GetFinalTime();
+    ipart->SetDecayVertex(xyz.x(), xyz.y(), xyz.z(), t);
+
+    G4double mass = trj->GetParticleDefinition()->GetPDGMass();
+    G4ThreeVector mom = trj->GetInitialMomentum();
+    G4double energy = sqrt(mom.mag2() + mass*mass);
+    ipart->SetInitialMomentum(mom.x(), mom.y(), mom.z(), energy);
 
     ievent->AddParticle(ipart);
   }

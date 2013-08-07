@@ -24,7 +24,7 @@ G4Allocator<Trajectory> TrjAllocator;
 
 Trajectory::Trajectory():
   G4VTrajectory(), _pdef(0), _trackId(-1), _parentId(-1),
-  _initial_momentum(), _record_trjpoints(true)
+  _initial_momentum(), _record_trjpoints(false)
 {
   _trjpoints = new TrajectoryPointContainer();
 }
@@ -33,11 +33,13 @@ Trajectory::Trajectory():
 
 Trajectory::Trajectory(const G4Track* track)
 {
-  _record_trjpoints = true;
+  _record_trjpoints = false;
   _pdef = track->GetDefinition();
   _trackId = track->GetTrackID();
   _parentId = track->GetParentID();
   _initial_momentum = track->GetMomentum();
+  _initial_position = track->GetVertexPosition();
+  _initial_time = track->GetGlobalTime();
   _trjpoints = new TrajectoryPointContainer();
 }
 

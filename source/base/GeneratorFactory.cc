@@ -32,7 +32,7 @@ GeneratorFactory::~GeneratorFactory()
 
 #include "SingleParticle.h"
 #include "GenbbInterface.h"
-#include <G4ParticleGun.hh>
+#include "IonGun.h"
 
 
 G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
@@ -43,7 +43,7 @@ G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
 
   else if (_name == "GENBB_INTERFACE") p = new GenbbInterface();
 
-  else if (_name == "GUN") p = new G4ParticleGun();
+  else if (_name == "ION_GUN") p = new IonGun();
 
   return p;
 }
