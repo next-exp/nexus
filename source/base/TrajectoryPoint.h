@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
 ///  \file   TrajectoryPoint.h
-///  \brief  
+///  \brief  A point (position, time) in the trajectory of a track
 /// 
 ///  \author   <justo.martin-albo@ific.uv.es>
 ///  \date     27 March 2013
@@ -18,12 +18,12 @@
 
 namespace nexus {
 
-  /// TODO. CLASS DESCRIPTION
+  /// A point (position and time) in the trajectory of a simulated track
 
   class TrajectoryPoint: public G4VTrajectoryPoint
   {
   public:
-    /// Constructor
+    /// Default constructor
     TrajectoryPoint();
     /// Copy constructor
     TrajectoryPoint(const TrajectoryPoint&);
@@ -39,7 +39,9 @@ namespace nexus {
     /// Memory deallocation
     void operator delete(void*);
 
+    /// Return the (global) position of the point
     const G4ThreeVector GetPosition() const;
+    /// Return the (global) time of the point
     G4double GetTime() const;
 
   private:
@@ -71,8 +73,7 @@ namespace nexus {
   inline const G4ThreeVector TrajectoryPoint::GetPosition() const
   { return _position; }
 
-  inline G4double TrajectoryPoint::GetTime() const
-  { return _time; }
+  inline G4double TrajectoryPoint::GetTime() const { return _time; }
 
 } // end namespace nexus
 
