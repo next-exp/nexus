@@ -14,9 +14,11 @@
 
 #include <G4VPersistencyManager.hh>
 #include <map>
+#include "IonizationHit.h"
 
 class G4GenericMessenger;
 class G4TrajectoryContainer;
+class G4HCofThisEvent;
 namespace irene { class Event; }
 namespace irene { class Particle; }
 namespace irene { class Track; }
@@ -24,6 +26,7 @@ namespace irene { class RootWriter; }
 
 
 namespace nexus {
+
 
   /// TODO. CLASS DESCRIPTION
 
@@ -53,7 +56,8 @@ namespace nexus {
     PersistencyManager(const PersistencyManager&);
 
     void StoreTrajectories(G4TrajectoryContainer*, irene::Event*);
-    void StoreHits(const G4Event*, irene::Event*);
+    void StoreHits(G4HCofThisEvent*, irene::Event*);
+    void StoreIonizationHits(IonizationHitsCollection*, irene::Event*);
 
 
   private:

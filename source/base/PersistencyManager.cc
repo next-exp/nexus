@@ -22,6 +22,7 @@
 
 #include <irene/Event.h>
 #include <irene/Particle.h>
+#include <irene/Track.h>
 #include <irene/RootWriter.h>
 
 using namespace nexus;
@@ -95,7 +96,7 @@ G4bool PersistencyManager::Store(const G4Event* event)
   // Store the trajectories of the event as Irene particles
   StoreTrajectories(event->GetTrajectoryContainer(), &ievt);
 
-  //StoreHits(event, &ievt);
+  StoreHits(event->GetHCofThisEvent(), &ievt);
 
 
   // Add event to the tree
@@ -162,49 +163,73 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
 
 
 
-void PersistencyManager::StoreHits(const G4Event* evt, irene::Event* ievt)
+void PersistencyManager::StoreHits(G4HCofThisEvent* hce, irene::Event* ievt)
 {
-  G4HCofThisEvent* hce = evt->GetHCofThisEvent();
-  if (!hce) return;
+  if (!hce) return; 
 
   G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
   G4HCtable* hct = sdmgr->GetHCtable();
 
-
+  // Loop through the hits collections
   for (int i=0; i<hct->entries(); i++) {
-    G4String sdname = hct->GetSDname(i);
-    G4cout << "SD name: " << sdname << G4endl;
+
+    // Collection are identified univocally (in principle) using 
+    // their id number, and this can be obtained using the collection
+    // and sensitive detector names.
     G4String hcname = hct->GetHCname(i);
-    G4cout << "HC name: " << hcname << G4endl;
+    G4String sdname = hct->GetSDname(i);
     int hcid = sdmgr->GetCollectionID(sdname+"/"+hcname);
+
+    // Fetch collection using the id number
     G4VHitsCollection* hits = hce->GetHC(hcid);
 
     if (hcname == IonizationSD::GetCollectionUniqueName()) {
-      G4cout << "IONIZATION HITS COLLECTION" << G4endl;
-      IonizationHitsCollection* ihc = (IonizationHitsCollection*) hits;
-      for (G4int j=0; j<ihc->entries(); j++) {
-        G4cout << "j: " << j << G4endl;
-        IonizationHit* ahit = (IonizationHit*) ihc->GetHit(j);
-        G4cout << "Track ID: " << ahit->GetTrackID() << G4endl;
-      } 
-      
+      IonizationHitsCollection* ihc =
+        dynamic_cast<IonizationHitsCollection*>(hits);
+      StoreIonizationHits(ihc, ievt);
+    }
+    else {
+      return;
     }
   }
 }
 
 
 
-// void PersistencyManager::StoreIonizationHits(IonizationHitsCollection* hc,
-//                                              irene::Event* ievt)
-// {
-//   for (G4int i=0; i<hc->entries(); i++) {
-    
-//     IonizationHit* hit = dynamic_cast<IonizationHit*>(hc->GetHit(i));
-//     if (!hit) continue;
+void PersistencyManager::StoreIonizationHits(IonizationHitsCollection* hits, 
+                                             irene::Event* ievt)
+{
+  if (!hits) return;
 
+  for (G4int i=0; i<hits->entries(); i++) {
     
-//   }
-// }
+    IonizationHit* hit = dynamic_cast<IonizationHit*>(hits->GetHit(i));
+    if (!hit) continue;
+
+    G4int trackid = hit->GetTrackID();
+
+    irene::Track* itrk = 0;
+
+    std::map<G4int, irene::Track*>::iterator it = _itrkmap.find(trackid);
+    if (it != _itrkmap.end()) {
+      G4cout << "Found this!" << G4endl;
+      itrk = it->second;
+    }
+    else {
+      std::string sdname = hits->GetSDname();
+      itrk = new irene::Track(sdname);
+      _itrkmap[trackid] = itrk;
+      itrk->SetParticle(_iprtmap[trackid]);
+      _iprtmap[trackid]->AddTrack(itrk);
+      ievt->AddTrack(itrk);
+    }
+
+    G4ThreeVector xyz = hit->GetPosition();
+    itrk->AddHit(xyz.x(), xyz.y(), xyz.z(), hit->GetTime(),
+                 hit->GetEnergyDeposit());
+  }
+}
+
 
 
 G4bool PersistencyManager::Store(const G4Run*)
