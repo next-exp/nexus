@@ -12,6 +12,7 @@
 #include "Trajectory.h"
 #include "TrajectoryMap.h"
 #include "IonizationSD.h"
+#include "PmtSD.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Event.hh>
@@ -23,6 +24,7 @@
 #include <irene/Event.h>
 #include <irene/Particle.h>
 #include <irene/Track.h>
+#include <irene/SensorHit.h>
 #include <irene/RootWriter.h>
 
 using namespace nexus;
@@ -183,12 +185,15 @@ void PersistencyManager::StoreHits(G4HCofThisEvent* hce, irene::Event* ievt)
     // Fetch collection using the id number
     G4VHitsCollection* hits = hce->GetHC(hcid);
 
-    if (hcname == IonizationSD::GetCollectionUniqueName()) {
-      IonizationHitsCollection* ihc =
-        dynamic_cast<IonizationHitsCollection*>(hits);
-      StoreIonizationHits(ihc, ievt);
-    }
+    if (hcname == IonizationSD::GetCollectionUniqueName())
+      StoreIonizationHits(hits, ievt);
+    else if (hcname == PmtSD::GetCollectionUniqueName())
+      StorePmtHits(hits, ievt);
     else {
+      G4String msg = 
+        "Collection of hits '" + sdname + "/" + hcname
+        + "' is of an unknown type and will not be stored.";
+      G4Exception("StoreHits()", "[PersistencyManager]", JustWarning, msg);
       return;
     }
   }
@@ -196,9 +201,11 @@ void PersistencyManager::StoreHits(G4HCofThisEvent* hce, irene::Event* ievt)
 
 
 
-void PersistencyManager::StoreIonizationHits(IonizationHitsCollection* hits, 
+void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc, 
                                              irene::Event* ievt)
 {
+  IonizationHitsCollection* hits = 
+    dynamic_cast<IonizationHitsCollection*>(hc);
   if (!hits) return;
 
   for (G4int i=0; i<hits->entries(); i++) {
@@ -212,7 +219,6 @@ void PersistencyManager::StoreIonizationHits(IonizationHitsCollection* hits,
 
     std::map<G4int, irene::Track*>::iterator it = _itrkmap.find(trackid);
     if (it != _itrkmap.end()) {
-      G4cout << "Found this!" << G4endl;
       itrk = it->second;
     }
     else {
@@ -227,6 +233,32 @@ void PersistencyManager::StoreIonizationHits(IonizationHitsCollection* hits,
     G4ThreeVector xyz = hit->GetPosition();
     itrk->AddHit(xyz.x(), xyz.y(), xyz.z(), hit->GetTime(),
                  hit->GetEnergyDeposit());
+  }
+}
+
+
+
+void PersistencyManager::StorePmtHits(G4VHitsCollection* hc, 
+                                      irene::Event* ievt)
+{
+  PmtHitsCollection* hits = dynamic_cast<PmtHitsCollection*>(hc);
+  if (!hits) return;
+
+  for (G4int i=0; i<hits->entries(); i++) {
+
+    PmtHit* hit = dynamic_cast<PmtHit*>(hits->GetHit(i));
+    if (!hit) continue;
+
+    std::string sdname = hits->GetSDname();
+    irene::SensorHit* isnr = new irene::SensorHit(sdname);
+
+    isnr->SetID(hit->GetPmtID());
+
+    G4ThreeVector xyz = hit->GetPosition();
+    isnr->SetPosition(xyz.x(), xyz.y(), xyz.z());
+
+    // Add the sensor hit to the irene event
+    ievt->AddSensorHit(isnr);
   }
 }
 
