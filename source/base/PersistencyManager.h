@@ -14,11 +14,11 @@
 
 #include <G4VPersistencyManager.hh>
 #include <map>
-#include "IonizationHit.h"
 
 class G4GenericMessenger;
 class G4TrajectoryContainer;
 class G4HCofThisEvent;
+class G4VHitsCollection;
 namespace irene { class Event; }
 namespace irene { class Particle; }
 namespace irene { class Track; }
@@ -57,7 +57,8 @@ namespace nexus {
 
     void StoreTrajectories(G4TrajectoryContainer*, irene::Event*);
     void StoreHits(G4HCofThisEvent*, irene::Event*);
-    void StoreIonizationHits(IonizationHitsCollection*, irene::Event*);
+    void StoreIonizationHits(G4VHitsCollection*, irene::Event*);
+    void StorePmtHits(G4VHitsCollection*, irene::Event*);
 
 
   private:

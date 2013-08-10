@@ -61,6 +61,10 @@ namespace nexus {
     /// Set a time binning for the pmt hits
     void SetTimeBinning(G4double);
 
+    /// Return the unique name of the hits collection created
+    /// by this sensitive detector. This will be used by the 
+    /// persistency manager to select the collection.
+    static G4String GetCollectionUniqueName();
 
   private:
 

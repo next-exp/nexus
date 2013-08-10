@@ -37,6 +37,13 @@ namespace nexus {
   {
   }
   
+
+
+  G4String PmtSD::GetCollectionUniqueName()
+  {
+    return "PmtHitsCollection";
+  }
+
   
   
   void PmtSD::Initialize(G4HCofThisEvent* HCE)
