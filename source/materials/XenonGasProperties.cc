@@ -12,7 +12,7 @@
 #include <G4AnalyticalPolSolver.hh>
 #include <G4MaterialPropertiesTable.hh>
 #include "CLHEP/Units/PhysicalConstants.h"
-//#include <bhep/utilities.h>
+#include <bhep/utilities.h>
 
 
 
@@ -99,10 +99,10 @@ namespace nexus {
     G4double n2 = (1. - 2*alpha) / (1. + alpha);
 
     if (n2 < 1.) {
- //      G4String msg = "Non-physical refractive index for energy "
-	// + bhep::to_string(energy) + " eV. Use n=1 instead.";
- //      G4Exception("[XenonGasProperties]", "RefractiveIndex()",
-	// 	  JustWarning, msg);
+      G4String msg = "Non-physical refractive index for energy "
+	+ bhep::to_string(energy) + " eV. Use n=1 instead.";
+      G4Exception("[XenonGasProperties]", "RefractiveIndex()",
+		  JustWarning, msg);
       n2 = 1.;
     }
     

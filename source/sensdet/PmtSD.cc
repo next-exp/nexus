@@ -16,7 +16,7 @@
 #include <G4RunManager.hh>
 #include <G4RunManager.hh>
 
-
+#include <bhep/bhep_svc.h>
 
 
 namespace nexus {
@@ -37,13 +37,6 @@ namespace nexus {
   {
   }
   
-
-
-  G4String PmtSD::GetCollectionUniqueName()
-  {
-    return "PmtHitsCollection";
-  }
-
   
   
   void PmtSD::Initialize(G4HCofThisEvent* HCE)

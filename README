@@ -1,4 +1,33 @@
+------------------------------------------------------------
+  NEXUS - NEXT Utility for Simulation
 
+  Copyright (c) 2009-2011 NEXT Collaboration
+------------------------------------------------------------
+
+
+0. Prerequisites
+-----------------
+NEXUS depends on several third party libraries. Make sure
+you have them installed:
+- CLHEP,
+- Geant4.9.2 (or later),
+- OpenGL and X11 development libraries (for visualization),
+- BHEP,
+- and ROOT.
+
+SCons (http://www.scons.org/) is used to compile and build 
+NEXUS. At least version 1.0.0 is required. SCons depends
+on Python (version >1.5.2).
+
+
+1. Building NEXUS
+------------------
+To start the building simply execute 'scons' from the top
+directory.
+
+
+2. Examples
+------------
 
 ----
 $Id$

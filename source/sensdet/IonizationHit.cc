@@ -1,14 +1,18 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author:  <justo.martin-albo@ific.uv.es>
+//  Author:  J. Martin-Albo <jmalbos@ific.uv.es>
 //  Created: 27 Apr 2009
 //
-//  Copyother (c) 2009-2013 NEXT Collaboration. All others reserved.
+//  Copyright (c) 2009 NEXT Collaboration 
 // ----------------------------------------------------------------------------
 
 #include "IonizationHit.h"
 
+#include "BhepUtils.h"
+
+#include <bhep/hit.h>
+#include <bhep/point.h>
 
 
 namespace nexus {
@@ -16,17 +20,17 @@ namespace nexus {
 
   G4Allocator<IonizationHit> IonizationHitAllocator;
   
-  
 
-  IonizationHit::IonizationHit(): G4VHit()
+  
+  IonizationHit::IonizationHit()
   {
   }
 
   
   
-  IonizationHit::IonizationHit(const IonizationHit& other): G4VHit()
+  IonizationHit::IonizationHit(const IonizationHit& right): G4VHit()
   {
-    *this = other;
+    *this = right;
   }
   
 
@@ -37,22 +41,45 @@ namespace nexus {
   
   
   
-  const IonizationHit& IonizationHit::operator=(const IonizationHit& other)
-  { 
-    _track_id   = other._track_id;
-    _time       = other._time;
-    _energy_dep = other._energy_dep;
-    _position   = other._position;
+  const IonizationHit& IonizationHit::operator =(const IonizationHit& right)
+  {
+    _track_id   = right._track_id;
+    _time       = right._time;
+    _energy_dep = right._energy_dep;
+    _position   = right._position;
     
     return *this;
   }
   
   
   
-  G4int IonizationHit::operator==(const IonizationHit& other) const
+  G4int IonizationHit::operator ==(const IonizationHit& right) const
   {
-    return (this==&other) ? 1 : 0;
+    return (this==&right) ? 1 : 0;
   }
+  
+  
+  
+  bhep::hit* IonizationHit::ToBhep(const G4String& det_name) const
+  {
+    // create a bhep hit
+    bhep::hit* bhit = new bhep::hit(bhep::TRUTH, det_name);
 
+    // set properties
+    bhit->set_point(bhep::Point3D(_position.x(),
+				  _position.y(),
+				  _position.z()));
+
+    bhit->set_amplitude(_energy_dep);
+    bhit->set_time(_time);
+
+    // associate hit to particle
+    bhep::particle& bpart = BhepUtils::GetBParticle(_track_id);
+    bhit->set_mother_particle(bpart);
+    bpart.add_hit(det_name, bhit);
+    
+    return bhit;
+  }
+  
 
 } // end namespace nexus

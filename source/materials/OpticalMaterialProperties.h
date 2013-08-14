@@ -38,8 +38,7 @@ namespace nexus {
     static G4MaterialPropertiesTable* Sapphire();
 
     static G4MaterialPropertiesTable* GXe(G4double pressure=1.*bar, 
-					  G4double temperature=STP_Temperature,
-					  G4int sc_yield=13889);
+					  G4double temperature=STP_Temperature);
 
     static G4MaterialPropertiesTable* FakeGrid(G4double pressure=1.*bar, 
 					       G4double temperature=STP_Temperature, 

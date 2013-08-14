@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author:  <justo.martin-albo@ific.uv.es>
+//  Author:  J. Martin-Albo <jmalbos@ific.uv.es>    
 //  Created: 9 Mar 2009
 //
-//  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
+//  Copyright (c) 2009, 2010 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "PrimaryGeneration.h"
@@ -13,27 +13,17 @@
 #include <G4Event.hh>
 
 
-using namespace nexus;
+namespace nexus {
+  
+  
+  void PrimaryGeneration::GeneratePrimaries(G4Event* event)
+  {
+    if (_generator == 0)
+      G4Exception("", "", FatalException, "");
+      //G4Exception("[DetectorConstruction] ERROR: Primary generator not set!");
+
+    _generator->GeneratePrimaryVertex(event);
+  }
 
 
-
-PrimaryGeneration::PrimaryGeneration():
-  G4VUserPrimaryGeneratorAction(), _generator(0)
-{
-}
-
-
-
-PrimaryGeneration::~PrimaryGeneration()
-{
-}
-
-
-
-void PrimaryGeneration::GeneratePrimaries(G4Event* event)
-{
-  if (!_generator)
-    G4Exception("", "", FatalException, "");
-
-  _generator->GeneratePrimaryVertex(event);
-}
+} // namespace nexus

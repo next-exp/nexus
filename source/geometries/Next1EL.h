@@ -18,8 +18,6 @@
 
 class G4Material;
 class G4LogicalVolume;
-class G4GenericMessenger;
-class G4UIcmdWith3VectorAndUnit;
 
 
 namespace nexus {
@@ -39,10 +37,9 @@ namespace nexus {
 
     /// Returns a vertex in a region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
-    void CalculateELTableVertices(G4double radius, G4double binning, G4double z);
     
   private:
-    void Construct();
+    void ReadParameters();
     void DefineMaterials();
     void BuildLab();
     void BuildVessel();
@@ -50,31 +47,12 @@ namespace nexus {
     void BuildEnergyPlane();
     void BuildSiPMTrackingPlane();
     void BuildPMTTrackingPlane();
+
+    void CalculateELTableVertices(G4double);
     void PrintAbsoluteSiPMPos();
     
   private:
 
-    HexagonPointSampler* _hexrnd;
-
-    // Pointers to materials definition
-    G4Material* _air;       ///< Air
-    G4Material* _gxe;       ///< Gaseous xenon
-    G4Material* _fgrid;     ///< For grid simulation
-    G4Material* _teflon;    ///< PTFE (Teflon)
-    G4Material* _steel;     ///< Stainless Steel
-    G4Material* _aluminum;  ///< Aluminum
-    G4Material* _lead;  ///< Lead
-    G4Material* _plastic;  ///< plastic
-    G4Material* _tpb; /// tpb
-
-
-    // Pointers to logical volumes
-    G4LogicalVolume* _lab_logic;
-    G4LogicalVolume* _gas_logic;
-    G4LogicalVolume* _pmt_plane_logic;
-    G4LogicalVolume* _pmt_logic;
-    
-    
     // Detector dimensions
     
     const G4double _lab_size; ///< Size of the air box containing the detector 
@@ -116,8 +94,6 @@ namespace nexus {
     const G4double _elgap_ring_height;
     const G4double _elgap_ring_thickn;
 
-    const G4double _tpb_thickn;
-
     const G4double _ltube_diam;
     const G4double _ltube_thickn;
     const G4double _ltube_up_length;
@@ -127,7 +103,6 @@ namespace nexus {
     const G4double _active_diam;
     const G4double _active_length;
     
-    const G4double _fieldcage_diam;   ///< Fieldcage diameter
     const G4double _fieldcage_length; ///< Fieldcage length
     const G4double _fieldcage_displ;  ///< Distance btw fieldcage & anode endcap
 
@@ -148,7 +123,7 @@ namespace nexus {
     const G4double _pmtholder_anode_diam;
     const G4double _pmtholder_anode_thickn;
 
-    const G4double _wire_diam; ///< diameter of the EL meshes wires
+    const G4double _tpb_thickn;
     
     
     // Dimensions read through input parameters file
@@ -156,12 +131,6 @@ namespace nexus {
 
     G4double _sideport_angle;
     G4double _sideport_posz;
-    G4bool _tpb_coating;
-    G4bool _elfield;
-    G4double _elgrid_transparency;
-    G4double _gate_transparency;
-    G4ThreeVector _specific_vertex;
-    G4double _specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z;
 
     
     // Positions in the detector geometry relevant for event vertex generation
@@ -169,17 +138,12 @@ namespace nexus {
     
     /// Position of the side source-port in the world reference system
     G4ThreeVector _sideport_position;
-    G4ThreeVector _sideNa_pos;
     /// Position of the axial source-port in the world reference system
     G4ThreeVector _axialport_position;
-    /// Position of the fieldcage in the world system of reference
-    G4ThreeVector _fieldcage_position;
     /// 
     G4ThreeVector _active_position;
     ///
     G4ThreeVector _elgap_position;
-
-    G4String _tracking_plane; ///< Tracking plane type: SIPM or PMT
         
 
     // Positions (Z axis) of the TPC electrodes with respect to the
@@ -188,28 +152,45 @@ namespace nexus {
     G4double _anode_posz;   ///< Z position of the anode wrt FIELDCAGE
     G4double _cathode_posz; ///< Z position of the cathode wrt FIELDCAGE
 
-    G4double _pressure;
-    G4double _max_step_size;
-    G4double _sc_yield;
-
-    G4double _endend;
     
+    // User-configuration parameters
+    G4double _pressure; ///< Xenon gas pressure
+    G4double _max_step_size; ///< Maximum step size for e- in the active volume
+    G4String _tracking_plane; ///< Tracking plane type: SIPM or PMT
+    G4double _binning; ///< Binning of the EL lookup table points
+    G4ThreeVector _specific_vertex; /// < Position of a particular vertex inside the geometry
+    G4int _tpb_coating; /// < Placement of TPB coating inside the upper light tube:
+    /// < 0 if false, 1 if true
+    G4double _elgrid_transparency; /// Transparency of EL meshes
+
     G4int _PMTID;
     G4int _numb_of_events;
     mutable G4int _idx_table;
-    mutable std::vector<G4ThreeVector> _table_vertices;   
-
+    std::vector<G4ThreeVector> _table_vertices;   
     std::vector<G4ThreeVector> _pmt_positions;
 
     //Vector to store the ID number of each SiPM together with its absolute position in gas
     std::vector<std::pair<int, G4ThreeVector> > _absSiPMpos;
+    
+    HexagonPointSampler* _hexrnd;
 
-    /// Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
-    G4UIcmdWith3VectorAndUnit* _specific_v_cmd;
+    // Pointers to materials definition
+    G4Material* _air;       ///< Air
+    G4Material* _gxe;       ///< Gaseous xenon
+    G4Material* _fgrid;     ///< For grid simulation
+    G4Material* _teflon;    ///< PTFE (Teflon)
+    G4Material* _steel;     ///< Stainless Steel
+    G4Material* _aluminum;  ///< Aluminum
+    G4Material* _tpb; /// tpb
+    
+
+    // Pointers to logical volumes
+    G4LogicalVolume* _lab_logic;
+    G4LogicalVolume* _gas_logic;
+    G4LogicalVolume* _pmt_plane_logic;
+    G4LogicalVolume* _pmt_logic;
   };
-
-
+  
 } // end namespace nexus
 
 #endif

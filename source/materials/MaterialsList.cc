@@ -35,8 +35,7 @@ G4Material* MaterialsList::GXe(G4double pressure, G4double temperature)
     else if (pressure/bar > 19.5 && pressure/bar < 20.5)
       density = 118.4*kg/m3;
     else
-      G4cout  << "[MaterialsList] Pressure not recognized! " 
-              << pressure/bar << G4endl;
+      G4cout << "[MaterialsList] Pressure not recognized!" << G4endl;
       
     mat = new G4Material(name, density, 1,
 			 kStateGas, 300.*kelvin, pressure);

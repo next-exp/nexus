@@ -9,10 +9,11 @@
 #include "Na22Generation.h"
 
 #include "G4Event.hh"
+#include "ConfigService.h"
 #include "DetectorConstruction.h"
 #include "BaseGeometry.h"
+#include "BhepUtils.h"
 
-#include <G4GenericMessenger.hh>
 #include <G4RunManager.hh>
 #include <G4ParticleTable.hh>
 #include <G4RandomDirection.hh>
@@ -20,36 +21,68 @@
 
 namespace nexus {
 
-  Na22Generation::Na22Generation() : _energy_min(511.*keV), _energy_max(511.*keV),
-    _energy_min_dis(1.274*MeV), _energy_max_dis(1.274*MeV),
-    _direction_is_random(true), _geom(0),
-    _direction_dis_is_random(true)
+  Na22Generation::Na22Generation() : _energy_min(0.), _energy_max(0.), 
+				     _direction_is_random(true), _geom(0),
+				     _direction_dis_is_random(true)
 
   {
-    /// For the moment, only random direction are allowed. To be fixes if needed
-     _msg = new G4GenericMessenger(this, "/Generator/Na22Generator/",
-    "Control commands of Na22 generator.");
-
-     _msg->DeclareProperty("region", _region, 
-			   "Set the region of the geometry where the vertex will be generated.");
-     _msg->DeclareProperty("solid_angle", _solid_angle,
-			   "4Pi (all space) or 2Piforward (only in the forward direction from the source)");
-     _msg->DeclareProperty("solid_angle_dis", _solid_angle_dis,
-			   "4Pi (all space) or 2Piforward (only in the forward direction from the source)");
-
-     // Set particle type searching in particle table by name
-    _particle_definition = G4ParticleTable::GetParticleTable()->
-      FindParticle("gamma");
-    _particle_dis_definition = G4ParticleTable::GetParticleTable()->
-      FindParticle("gamma");
-
     DetectorConstruction* detconst = (DetectorConstruction*)
       G4RunManager::GetRunManager()->GetUserDetectorConstruction();
     _geom = detconst->GetGeometry();
+
+    ReadConfigParams();
   }
 
   Na22Generation::~Na22Generation()
   {
+  }
+
+   void Na22Generation::ReadConfigParams()
+  {
+    // Get configuration parameters for generation
+    const ParamStore& cfg = ConfigService::Instance().Generation();
+    
+    // Set particle type searching in particle table by name
+    _particle_definition = G4ParticleTable::GetParticleTable()->
+      FindParticle(cfg.GetSParam("particle_name"));
+    _particle_dis_definition = G4ParticleTable::GetParticleTable()->
+      FindParticle(cfg.GetSParam("particle_dis_name"));
+
+    
+    // Set limits for kinetic energies
+    _energy_min = cfg.GetDParam("energy_min");
+    _energy_max = cfg.GetDParam("energy_max");
+    _energy_min_dis = cfg.GetDParam("energy_min_dis");
+    _energy_max_dis = cfg.GetDParam("energy_max_dis");
+
+    // Set momentum direction if specified;
+    if (cfg.PeekDVParam("momentum_direction")) {
+      _direction_is_random = false;
+      _momentum_direction = 
+	BhepUtils::DVto3Vector(cfg.GetDVParam("momentum_direction"));
+      // normalize the vector if needed
+      _momentum_direction = _momentum_direction.unit();
+    }
+
+      // Set momentum direction if specified; 
+    if (cfg.PeekDVParam("momentum_direction_dis")) {
+      _direction_dis_is_random = false;
+      _momentum_direction_dis = 
+	BhepUtils::DVto3Vector(cfg.GetDVParam("momentum_direction_dis"));
+      // normalize the vector if needed
+      _momentum_direction_dis = _momentum_direction_dis.unit();
+    }
+
+    // Specify the fraction of solid angle that is chosen
+    if (cfg.PeekSParam("solid_angle")){
+      _solid_angle =  cfg.GetSParam("solid_angle");
+    }
+    if (cfg.PeekSParam("solid_angle_dis")){
+      _solid_angle_dis =  cfg.GetSParam("solid_angle_dis");
+    }
+
+
+    _region = cfg.GetSParam("region");
   }
 
   void Na22Generation::GeneratePrimaryVertex(G4Event* evt)
@@ -87,7 +120,7 @@ namespace nexus {
 	  G4double sinTheta  = std::sqrt(sinTheta2); 
 	  G4double phi       = twopi*G4UniformRand();
 	  if (_solid_angle == "2Piforward"){
-	    if ((phi > 0 && phi < 2.094) || (phi > 5.24 && phi < 6.28)){    //forward from Next1EL sideport
+	    if ((phi > 0 && phi < 2.094) || (phi > 5.24 && phi < 6.28)){    //forward from sideport
 	      mom_dir = true;
 	      _momentum_direction = G4ThreeVector(sinTheta*std::cos(phi),
 						  sinTheta*std::sin(phi), cosTheta).unit();
@@ -113,7 +146,7 @@ namespace nexus {
 	  G4double sinTheta  = std::sqrt(sinTheta2); 
 	  G4double phi       = twopi*G4UniformRand();
 	  if (_solid_angle_dis == "2Piforward"){
-	    if ((phi > 0 && phi < 2.094) || (phi > 5.24 && phi < 6.28)){    //forward from Next1EL sideport
+	    if ((phi > 0 && phi < 2.094) || (phi > 5.24 && phi < 6.28)){    //forward from sideport
 	      mom_dir = true;
 	      _momentum_direction_dis = G4ThreeVector(sinTheta*std::cos(phi),
 						      sinTheta*std::sin(phi), cosTheta).unit();
@@ -168,7 +201,7 @@ namespace nexus {
     particle2->SetMomentum(-px, -py, -pz);
     particle2->SetCharge(charge);
     particle2->SetPolarization(0.,0.,0.);
-    vertex->SetPrimary(particle2);
+    //   vertex->SetPrimary(particle2);
 
      G4PrimaryParticle* gamma_dis =
       new G4PrimaryParticle(_particle_dis_definition);

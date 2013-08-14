@@ -35,7 +35,7 @@ namespace nexus {
   
   PmtR7378A::PmtR7378A(): BaseGeometry()
   {
-    Construct();
+    BuildGeometry();
   }
   
   
@@ -46,7 +46,7 @@ namespace nexus {
   
   
   
-  void PmtR7378A::Construct()
+  void PmtR7378A::BuildGeometry()
   {
     // PMT BODY //////////////////////////////////////////////////////
 
@@ -116,20 +116,20 @@ namespace nexus {
     // Sensitive detector
     PmtSD* pmtsd = new PmtSD("/PMT_R7378A/PHOTOCATHODE", "PMT");
     pmtsd->SetDetectorVolumeDepth(1);
-    pmtsd->SetTimeBinning(100.*nanosecond);
     G4SDManager::GetSDMpointer()->AddNewDetector(pmtsd);
     window_logic->SetSensitiveDetector(pmtsd);
 
+    
     // OPTICAL SURFACES //////////////////////////////////////////////
 
-    // The values for the efficiency are chosen in order to match 
+   // The values for the efficiency are chosen in order to match 
     // the curve of the quantum efficiency provided by Hamamatsu:
     // http://sales.hamamatsu.com/en/products/electron-tube-division/detectors/photomultiplier-tubes/part-r7378a.php
     // The source of light is point-like, isotropic and it has been placed at a 
     // distance of 25 cm from the surface of the PMT window.
     // The quantity to be compared with the Hamamatsu curve is:
     // number of detected photons/ number of photons that reach the PMT window.
-    // The total number of generated photons is taken as
+    // The total number of generated photons is taken as the
     // number of photons that reach the PMT window because
     // light is generated only in that fraction of solid angle that subtends the
     // window of the PMT.

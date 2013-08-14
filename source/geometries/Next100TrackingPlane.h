@@ -24,7 +24,6 @@
 
 class G4Material;
 class G4LogicalVolume;
-class G4GenericMessenger;
 
 
 namespace nexus {
@@ -36,29 +35,21 @@ namespace nexus {
 
   public:
     /// Constructor
-    Next100TrackingPlane();
+    Next100TrackingPlane(G4LogicalVolume* mother_logic);
 
     /// Destructor
     ~Next100TrackingPlane();
 
-    // Sets the Logical Volume where Inner Elements will be placed
-    void SetLogicalVolume(G4LogicalVolume* mother_logic);
-
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
-    /// Builder
-    void Construct();
-
 
   private:
+    void ReadParameters();
     void GenerateDBPositions();
 
 
   private:
-
-    // Logical Volume where whole Tracking Plane is placed
-    G4LogicalVolume* _mother_logic;
 
     // Dice board
     NextElDB* _dice_board;
@@ -72,8 +63,10 @@ namespace nexus {
     G4int _DB_columns, _num_DBs;
     std::vector<G4ThreeVector> _DB_positions;
 
+   
     // Visibility of the tracking plane
-    G4bool _visibility;
+    G4int _visibility;
+
 
     // Vertex generators
     CylinderPointSampler* _support_gen;
@@ -81,9 +74,6 @@ namespace nexus {
 
     // Geometry Navigator
     G4Navigator* _geom_navigator;
-
-    // Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
 
   };
 

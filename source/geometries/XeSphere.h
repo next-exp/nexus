@@ -2,7 +2,7 @@
 ///  \file   XeSphere.h
 ///  \brief  A simple sphere filled with Xe.
 ///
-///  \author   Javier Mu?oz Vidal <jmunoz@ific.uv.es>    
+///  \author   Javier Muñoz Vidal <jmunoz@ific.uv.es>    
 ///  \date     27 Nov 2009
 ///  \version  $Id$
 ///
@@ -15,7 +15,6 @@
 #include "BaseGeometry.h"
 
 class G4Material;
-class G4GenericMessenger;
 namespace nexus { class SpherePointSampler; }
 
 
@@ -34,18 +33,21 @@ namespace nexus {
     /// Return vertex within region <region> of the chamber
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
-    void Construct();
+  private:
+    void SetParameters();
+    void BuildGeometry();
 
   private:
-    G4bool _liquid;     ///< Whether xenon is liquid or not
-    G4double _pressure; ///< Pressure (if gaseous state was selected)
-    G4double _radius;   ///< Radius of the sphere
+    // Dimensions
+    G4double _radius;  ///< Internal radius of the sphere
+    G4double _thickn;  ///< Thickness of the spherical shell
 
-    /// Vertexes random generator
+    // Materials
+    G4Material* _shell_mat;   ///< Material the sphere is made of
+    G4Material* _tracking_mat; ///< Material used as tracker
+
+    // Vertex Generator
     SpherePointSampler* _sphere_vertex_gen;
-
-    /// Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
   };
 
 } // end namespace nexus

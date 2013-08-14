@@ -20,7 +20,7 @@ import os
 import subprocess
 
 ## Geant4 version required by NEXUS
-NEXUS_G4VERSION_NUMBER = [961]
+NEXUS_G4VERSION_NUMBER = [950, 951]
 
 ## NEXUS source code directories
 SRCDIR = ['actions',
@@ -91,19 +91,46 @@ vars.AddVariables(
     PathVariable('GEANT4_BINDIR',                     # var name
                  'Path to Geant4 headers directory',  # var description
                  NULL_PATH),                       # var default value
-        
+    
+    
+    ## CLHEP
+
+    PathVariable('CLHEP_PATH',
+                 'Path to CLHEP installation',
+                 NULL_PATH),
+    
+    PathVariable('CLHEP_INCDIR',
+                 'Path to CLHEP headers directory.',
+                 NULL_PATH),
+    
+    PathVariable('CLHEP_LIBDIR',
+                 'Path to CLHEP libraries directory.',
+                 NULL_PATH),
+    
+    
+    ## BHEP 
+
+    PathVariable('BHEP_BINDIR',                   
+                 'Path to BHEP installation.',
+                 NULL_PATH),                 
+    
     ## ROOT
 
     PathVariable('ROOT_BINDIR',
                  'Path to ROOT installation.',
                  NULL_PATH),
 
-    ## IRENE
-
-    PathVariable('IRENE_PATH',
-                 'Path to irene installation.',
-                 NULL_PATH),
     
+    ## OpenGL and X11
+
+    PathVariable('OGLPATH',
+                 'Path to OpenGL installation.',
+                 '/usr/X11R6'),
+
+    PathVariable('X11PATH',
+                 'Path to X11 installation.',
+                 '/usr/X11R6'),
+
 
     ## The following vars shouldn't be defined by users unless they 
     ## know what they are doing.
@@ -164,20 +191,20 @@ if not env['LIBPATH']:
     env.ParseConfig('geant4-config --cflags --libs')
 
 
+    ## BHEP configuration ----------------------------------
+
+    if env['BHEP_BINDIR'] != NULL_PATH:
+        env.PrependENVPath('PATH', env['BHEP_BINDIR'])
+
+    env.ParseConfig("bhep-config --libs --ldflags --include")
+
+
     ## ROOT configuration ----------------------------------
 
     if env['ROOT_BINDIR'] != NULL_PATH:
         env.PrependENVPath('PATH', env['ROOT_BINDIR'])
         
     env.ParseConfig('root-config --cflags --libs')
-
-
-    ## IRENE configuration ---------------------------------
-
-    if env['IRENE_PATH'] != NULL_PATH:
-        env.PrependENVPath('PATH', env['IRENE_PATH'])
-
-    env.ParseConfig('irene-config --include --libdir --libs')
 
 
     ## Check for libraries and headers ---------------------
@@ -194,11 +221,11 @@ if not env['LIBPATH']:
     if not conf.CheckLib(library='Cint', language='CXX', autoadd=0):
         Abort('ROOT libraries could not be found.')
 
-    if not conf.CheckCXXHeader('irene/Event.h'):
-        Abort('IRENE headers not found.')
+    if not conf.CheckCXXHeader('bhep/system_of_units.h'):
+        Abort('BHEP headers not found.')
 
-    if not conf.CheckLib(library='irene', language='CXX', autoadd=0):
-        Abort('IRENE library not found.')
+    if not conf.CheckLib(library='bhep', language='CXX', autoadd=0):
+        Abort('BHEP library not found.')
 
     env = conf.Finish()
 
@@ -207,9 +234,6 @@ vars.Save(BUILDVARS_FILE, env)
 
 ## ###################################################################
 ## BUILDING NEXUS
-
-#env.Replace(CXX = "clang++")
-#env.Replace(LDMODULE = "clang++")
 
 SRCDIR = ['source/' + dir for dir in SRCDIR]
 

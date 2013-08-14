@@ -19,9 +19,8 @@
 #include <G4Navigator.hh>
 
 
-class G4GenericMessenger;
-
 namespace nexus {
+
 
   class Next100Vessel: public BaseGeometry
   {
@@ -42,9 +41,8 @@ namespace nexus {
     /// Returns the logical volume of the inner object
     G4LogicalVolume* GetInternalLogicalVolume();
 
-    /// Builder
-    void Construct();
-
+  private:
+    void ReadParameters();
 
 
   private:
@@ -55,12 +53,8 @@ namespace nexus {
     G4double _large_nozzle_length, _small_nozzle_length;
     G4double _pressure, _temperature;
 
-    // Dimensions coming from outside  
-    G4double _nozzle_ext_diam, _up_nozzle_ypos, _central_nozzle_ypos;
-    G4double _down_nozzle_ypos, _bottom_nozzle_ypos;
-
     // Visibility of the shielding
-    G4bool _visibility;
+    G4int _visibility;
 
     // Internal Logical Volume
     G4LogicalVolume* _internal_logic_vol;
@@ -74,11 +68,9 @@ namespace nexus {
 
     G4double _perc_endcap_vol;
 
+
     // Geometry Navigator
     G4Navigator* _geom_navigator;
-
-    // Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
 
   };
 

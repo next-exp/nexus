@@ -18,12 +18,9 @@
 #include <G4ProcessTable.hh>
 #include <G4StepLimiter.hh>
 #include <G4FastSimulationManagerProcess.hh>
-#include <G4PhysicsConstructorFactory.hh>
 
 
 namespace nexus {
-
-G4_DECLARE_PHYSCONSTR_FACTORY(NexusPhysics);
 
   
   NexusPhysics::NexusPhysics(): 

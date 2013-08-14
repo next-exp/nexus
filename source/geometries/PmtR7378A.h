@@ -37,7 +37,7 @@ namespace nexus {
     /// Sets a sensitive detector associated to the
 
   private:
-    void Construct();
+    void BuildGeometry();
 
   private:
     G4double _pmt_diam, _pmt_length; ///< PMT dimensions

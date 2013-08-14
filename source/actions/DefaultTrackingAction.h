@@ -1,23 +1,23 @@
-// ----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 ///  \file   DefaultTrackingAction.h
-///  \brief  
+///  \brief  General-purpose user tracking action.
 ///
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     25 Mar 2013 
-///  \version  $Id$
+///  \author   J. Martin-Albo <jmalbos@ific.uv.es>
+///  \date     27 Apr 2009
+///  \version  $Id$ 
 ///
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
-// ----------------------------------------------------------------------------
+///  Copyright (c) 2009, 2010, 2011 NEXT Collaboration
+// -----------------------------------------------------------------------------
 
 #ifndef __DEFAULT_TRACKING_ACTION__
 #define __DEFAULT_TRACKING_ACTION__
 
 #include <G4UserTrackingAction.hh>
 
-class G4Track;
-
 
 namespace nexus {
+
+  /// This class is a general-purpose user tracking action.
 
   class DefaultTrackingAction: public G4UserTrackingAction
   {
@@ -25,12 +25,20 @@ namespace nexus {
     /// Constructor
     DefaultTrackingAction();
     /// Destructor
-    virtual ~DefaultTrackingAction();
+    ~DefaultTrackingAction();
+    
+    /// User hook at the beginning of the tracking loop.
+    /// Creates a bhep particle associated to the G4 tracking particle
+    /// and sets basic properties.
+    void PreUserTrackingAction(const G4Track*);
 
-    virtual void PreUserTrackingAction(const G4Track*);
-    virtual void PostUserTrackingAction(const G4Track*);
+    /// User hook at the end of the tracking loop
+    void PostUserTrackingAction(const G4Track*);
   };
 
-}
+  inline DefaultTrackingAction::DefaultTrackingAction() {}
+  inline DefaultTrackingAction::~DefaultTrackingAction() {}
+  
+} // namespace nexus
 
-#endif  
+#endif

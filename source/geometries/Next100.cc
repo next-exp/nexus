@@ -9,7 +9,6 @@
 
 #include "Next100.h"
 
-#include <G4GenericMessenger.hh>
 #include <G4Box.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
@@ -39,20 +38,35 @@ namespace nexus {
   // order since some of them depend on the previous ones
 
 
+  // The lab
+  BuildLab();
+
   // Shielding
   _shielding = new Next100Shielding(_nozzle_ext_diam, _up_nozzle_ypos, _central_nozzle_ypos,
-              _down_nozzle_ypos, _bottom_nozzle_ypos);
+				    _down_nozzle_ypos, _bottom_nozzle_ypos);
+  G4LogicalVolume* shielding_logic = _shielding->GetLogicalVolume();
+  G4PVPlacement*   shielding_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), shielding_logic,
+						       "LEAD_BOX", _buffer_gas_logic, false, 0);
+  //G4LogicalVolume* shielding_internal_logic = _shielding.GetInternalLogicalVolume();
 
   // Vessel
   _vessel = new Next100Vessel(_nozzle_ext_diam, _up_nozzle_ypos, _central_nozzle_ypos,
 			      _down_nozzle_ypos, _bottom_nozzle_ypos);
+  G4LogicalVolume* vessel_logic = _vessel->GetLogicalVolume();
+  G4PVPlacement*   vessel_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_logic,
+						    "VESSEL", _buffer_gas_logic, false, 0);
+  G4LogicalVolume* vessel_internal_logic = _vessel->GetInternalLogicalVolume();
 
   // Internal copper shielding
   _ics = new Next100Ics(_nozzle_ext_diam, _up_nozzle_ypos, _central_nozzle_ypos,
 			_down_nozzle_ypos, _bottom_nozzle_ypos);
+  G4LogicalVolume* ics_logic = _ics->GetLogicalVolume();
+  G4PVPlacement*   ics_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), ics_logic,
+						 "ICS", vessel_internal_logic, false, 0);
 
-  // Inner Elements
-  _inner_elements = new Next100InnerElements();
+  // INNER ELEMENTS
+  _inner_elements = new Next100InnerElements(vessel_internal_logic);
+
 
   }
   
@@ -67,7 +81,7 @@ namespace nexus {
   }
   
 
-  void Next100::Construct()
+  void Next100::BuildLab()
   {
     // LAB /////////////////////////////////////////////////////////////
     // This is just a volume of air surrounding the detector so that
@@ -85,8 +99,9 @@ namespace nexus {
     this->SetLogicalVolume(_lab_logic);
 
 
-    // BUFFER GAS   ///////////////////////////////////////////////////////////////////////////////////
-    // This is a volume, initially made of air, defined to be the mother volume of Shielding and Vessel
+    // BUFFER GAS   ////////////////////////////////////////////////////////////
+    // This is a volume, initially made of air, defined to be the mother volume
+    // of Shielding and Vessel
 
     G4Box* buffer_gas_solid = 
       new G4Box("BUFFER_GAS", _buffer_gas_size/2., _buffer_gas_size/2., _buffer_gas_size/2.);
@@ -97,33 +112,10 @@ namespace nexus {
     G4PVPlacement* buffer_gas_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), _buffer_gas_logic,
 						       "BUFFER_GAS", _lab_logic, false, 0);
 
-
-    // SHIELDING
-    _shielding->Construct();
-    G4LogicalVolume* shielding_logic = _shielding->GetLogicalVolume();
-    G4PVPlacement*   shielding_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), shielding_logic,
-                     "LEAD_BOX", _buffer_gas_logic, false, 0);
-
-    // VESSEL
-    _vessel->Construct();
-    G4LogicalVolume* vessel_logic = _vessel->GetLogicalVolume();
-    G4PVPlacement*   vessel_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_logic,
-						      "VESSEL", _buffer_gas_logic, false, 0);
-    G4LogicalVolume* vessel_internal_logic = _vessel->GetInternalLogicalVolume();
-
-
-    // Internal Copper Shielding
-    _ics->Construct();
-    G4LogicalVolume* ics_logic = _ics->GetLogicalVolume();
-    G4PVPlacement*   ics_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), ics_logic,
-						   "ICS", vessel_internal_logic, false, 0);
-
-    // Inner Elements
-    _inner_elements->SetLogicalVolume(_vessel->GetInternalLogicalVolume());
-    _inner_elements->Construct();
-
   }
   
+
+
 
 
   G4ThreeVector Next100::GenerateVertex(const G4String& region) const

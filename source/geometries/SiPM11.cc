@@ -30,6 +30,7 @@ namespace nexus {
   
   SiPM11::SiPM11(): BaseGeometry()
   {
+    BuildGeometry();
   }
   
   
@@ -47,7 +48,7 @@ namespace nexus {
   
   
   
-  void SiPM11::Construct()
+  void SiPM11::BuildGeometry()
   {
     // PACKAGE ///////////////////////////////////////////////////////
 
@@ -130,9 +131,10 @@ namespace nexus {
     }
 
     // Visibilities
-    active_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    //active_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
   }
+  
   
   
 //   void SiPM11::SetSensitiveDetector()
