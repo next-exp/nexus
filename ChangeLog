@@ -1,0 +1,39 @@
+25-07-2008 J. Martin-Albo <jmalbos@ific.uv.es>
+
+	* Generator (vertex_generator.cc): fixed bug in the random generation
+	of vertexes within IVESSEL. The thickness of IVESSEL was being
+	miscalculated and some vertexes were generated in BUFFER.
+	
+2-06-2008 J. Martin-Albo <jmalbos@ific.uv.es>
+
+	* Manager: added function read_params().
+	
+	* Build (configure.ac): several improvements in its implementation.
+	
+9-05-2008 J. Martin-Albo <jmalbos@ific.uv.es>
+
+	* Generator: vertexes are generated now in IVESSEL's 6 faces.
+
+	* Generator: minor bug fixed in the calculation of vertex position.
+
+	* Geometry (materials.cc): liquid Xenon (LXe) added to the materials
+	list.
+	
+1-04-2008 J. Martin-Albo <jmalbos@ific.uv.es>
+
+	* Trigger for background events coming from the inner vessel.
+
+	* Generator (vertex_generator.cc): vertexes can be generated
+	in IVESSEL (3 faces of 6).
+
+20-02-2008 J. Martin-Albo <jmalbos@ific.uv.es>
+
+	* Geometry: new description (OVESSEL, BUFFER, IVESSEL, ACTIVE)
+
+0-00-2007 J. Martin-Albo <jmalbos@ific.uv.es>
+
+	* Prehistory of nexus. Basic structure of the simulation.
+
+
+
+    

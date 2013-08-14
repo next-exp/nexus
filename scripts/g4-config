@@ -1,0 +1,231 @@
+#!/bin/sh
+
+SCRIPTNAME=`basename $0`
+opt=$1
+
+die() {
+ test ! -z "$*" && err_msg="$*" || err_msg="Unknown error"
+ in_die=y
+ echo " "
+ echo "$SCRIPTNAME error: $err_msg"
+ echo
+ usage
+}
+
+usage() {
+  cat<<EOF
+Usage: $G4INSTALL/bin/g4-config OPTION
+  where OPTION: 
+        --prefix   G4 base directory
+        --version  G4 version
+        --include  G4 include flags
+        --cflags   G4 include flags
+        --incdir   G4 include directory
+        --libdir   G4 library directory
+        --libs     G4 libs
+        --system   G4 system
+        --help     this message
+EOF
+  test -z $in_die && exit_code=0 || exit_code=1  
+  exit $exit_code
+}
+
+test "$1" = '-h' -o "$1" = '-?' -o "$1" = '--help' && usage
+test ! -z $opt || die "Missing option!"
+
+#test&set inc&lib vars
+
+test ! -z "$G4INSTALL" || die "The 'G4INSTALL' environment variable is not defined!"
+
+test ! -z $G4INCLUDE && g4inc=$G4INCLUDE || g4inc=$G4INSTALL/include
+test -d $g4inc || die "Can't find G4 include dir='$g4inc'"
+
+test ! -z $G4LIB && g4lib=$G4LIB/${G4SYSTEM:-.} || g4lib=$G4INSTALL/lib/${G4SYSTEM:-.}
+test -d $g4lib || die "Can't find G4 lib dir='$g4lib'"
+
+
+if [ "x$opt" = "x--prefix" ]; then
+  echo "$G4INSTALL"
+  exit 0
+fi 
+
+if [  "x$opt" = "x--version" ]; then
+  echo "$G4_VERSION"
+  exit 0
+fi 
+
+if `test "x$opt" = "x--cflags" -o "x$opt" = "x--include"`; then
+  echo " -I$g4inc -DG4DEBUG -DG4VERBOSE -DG4_STORE_TRAJECTORY -DG4USE_STL -DG4VIS_USE -DG4VIS_BUILD_OPENGLX_DRIVER -DG4VIS_USE_OPENGLX -DG4UI_USE_TCSH"
+  exit 0
+fi
+
+if [ "x$opt" = "x--incdir" ]; then
+  echo " $g4inc "
+  exit 0
+fi
+
+if [ "x$opt" = "x--system" ]; then
+  test ! -z "$G4SYSTEM" && echo "$G4SYSTEM" || echo "Unidentified"
+  exit 0
+fi
+
+if [ "x$opt" = "x--libdir" ]; then
+   echo "$g4lib"
+   exit 0
+fi 
+
+# ! --libs valid only if G4 have been compiled with GLOBAL libs!
+g4liblist_global="
+G4FR
+G4visHepRep
+G4visXXX
+G4RayTracer
+G4VRML
+G4Tree
+G4OpenGL
+G4OpenInventor
+G4vis_management
+G4modeling
+G4interfaces
+G4persistency
+#G3toG4
+G4readout
+G4run
+G4event
+G4tracking
+G4parmodels
+G4processes
+G4digits_hits
+G4track
+G4particles
+G4physicslists
+G4geometry
+G4materials
+G4graphics_reps
+G4intercoms
+G4global
+"
+# set of libs to check whether global libs are compiled
+g4global_libs_check="G4global G4Geometry"
+
+g4liblist_granular="
+G4detutils
+G4persistency
+G4gflash
+G4readout
+G4visHepRep
+G4FR
+G4geomdivision
+G4OpenGL
+G4decay
+G4brep
+G4RayTracer
+G4Tree
+G4VRML
+G4muons
+G4emhighenergy
+G4emstandard
+G4xrays
+G4UIbasic
+G4UIGAG
+G4UIcommon
+G4hadronic_binary
+G4hadronic_abrasion
+G4hadronic_iso
+G4hadronic_em_dissociation
+G4hadronic_hetcpp_evaporation
+G4hadronic_ablation
+G4hadronic_interface_ci
+G4had_im_r_matrix
+G4partutils
+G4had_preequ_exciton
+G4hadronic_stop
+G4visXXX
+G4hadronic_bert_cascade
+G4hadronic_deex_handler
+G4had_neu_hp
+G4hadronic_hetcpp_utils
+G4hadronic_deex_evaporation
+G4hadronic_radioactivedecay
+G4hadronic_coherent_elastic
+G4hadronic_body_ci
+G4hadronic_deex_gem_evaporation
+G4had_string_diff
+G4hadronic_proc
+G4hadronic_deex_photon_evaporation
+G4emlowenergy
+G4had_muon_nuclear
+G4hadronic_mgt
+G4vis_management
+G4hadronic_leading_particle
+G4hadronic_HE
+G4optical
+G4parameterisation
+G4hadronic_deex_fission
+G4geomBoolean
+G4modeling
+G4hadronic_deex_fermi_breakup
+G4had_string_frag
+G4hadronic_qgstring
+G4had_string_man
+G4had_theo_max
+G4shortlived
+G4hadronic_LE
+G4hadronic_deex_management
+G4hadronic_deex_util
+G4hadronic_xsect
+G4hadronic_deex_multifragmentation
+G4had_mod_util
+G4had_mod_man
+G4hadronic_util
+G4run
+G4event
+G4mesons
+G4transportation
+G4tracking
+G4emutils
+G4ions
+G4baryons
+G4leptons
+G4bosons
+G4cuts
+G4detector
+G4geombias
+G4specsolids
+G4hits
+G4digits
+G4csg
+G4hepnumerics
+G4navigation
+G4magneticfield
+G4volumes
+G4procman
+G4track
+G4partman
+G4geometrymng
+G4materials
+G4graphics_reps
+G4intercoms
+G4globman
+"
+
+if [ "x$opt" = "x--libs" ]; then
+  test ! -z $g4lib && g4libopt="-L$g4lib "
+
+# check G4 global libs
+  for l in $g4global_libs_check; do
+	 test -f $g4lib/lib$l.a -o -f $g4lib/lib$l.so || nonglob=1
+    test ! -z $nonglob || break
+  done
+
+  test -z $nonglob && g4liblist=$g4liblist_global || g4liblist=$g4liblist_granular
+  for l in $g4liblist; do
+    test -f $g4lib/lib$l.a -o -f $g4lib/lib$l.so\
+      &&  g4libopt="$g4libopt -l$l"
+  done
+  
+  echo " $g4libopt " 
+  exit 0
+fi 
+
+# end of g4-config

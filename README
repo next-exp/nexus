@@ -1,4 +1,102 @@
+======================================
+  NEXUS: NEXT Utility for Simulation
+======================================
+
+This is a Geant4-based application to study the possibilities offered 
+by a High Pressure Xenon gas TPC in the search for the neutrinoless 
+double beta decay (bb0nu).
+
+NEXT stands for "Neutrino Experiment with a Xenon TPC".
+
+---
+Copyright (C) 2007 - J. Martin-Albo, J. Muñoz
+
+NEXUS is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+NEXUS is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with NEXUS; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-----
-$Id$
+Availability
+=============
+Beta release 5 patch 1
+
+
+Installation
+=============
+Needed packages:
+  * Geant 4.8.1 (with headers and libs)
+  * CLHEP
+  * BHEP (and HDF5)
+  * OpenGL (for visualization)
+
+
+Configure and compile
+=====================
+You must setup the Geant4 package in the proper way
+(see the G4 installation instructions for that).
+If Geant4 libraries are not located in /usr/local, 
+you must set the environment variable "G4LBS" with the PATH 
+where they are. Typically, this should be 
+a reasonable setup:
+
+export G4INSTALL= <path to your Geant4 local installation>
+export G4WORKDIR=$G4INSTALL
+export G4SYSTEM=Linux-g++
+export G4INCLUDE=$G4INSTALL/include
+export G4TEMP=$G4INSTALL/tmp
+export G4LIB=$G4INSTALL/lib
+export G4BIN=$G4WORKDIR/bin
+export G4LEVELGAMMADATA=$G4INSTALL/data/PhotonEvaporation
+export G4RADIOACTIVEDATA=$G4INSTALL/data/RadiativeDecay
+export G4LEDATA=$G4INSTALL/../G4EMLOW2.2
+export G4NeutronHPCrossSections=$G4INSTALL/../G4NDL3.7
+
+export G4VIS_BUILD_OPENGLX_DRIVER=1
+export G4VIS_USE_OPENGLX=1
+export OGLHOME=/usr/local
+
+export G4LBS=$G4LIB/$G4SYSTEM
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:/usr/lib:/usr/X11R6/lib:$G4LBS
+
+To build the binaries:
+$ sh autogen.sh
+$ ./configure
+$ make
+
+and good luck.
+
+
+Clean everything
+================
+In case you need to clean the stuff for a rebuild from scratch:
+
+$ make clean
+
+
+Run the program
+===============
+The simulation program looks for two parameters file:
+  - resources/nexus_example.par: general configuration settings and physics options.
+  - resources/nexus_example.geom: geometry parameters file
+
+Some example files are provided with this package.
+
+To run the simulation:
+$ ./xnexus <options>
+
+Valid options:
+   -v             : visual mode (needs OpenGL)
+   -p <param_file>: parameter file path 
+
+___
+jmalbos

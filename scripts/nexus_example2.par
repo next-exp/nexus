@@ -1,0 +1,68 @@
+###
+###  NEXUS: NEXT Utility for Simulation
+###      nexus_example2.par
+###      (Example parameters file)
+###
+
+
+###### GLOBAL #############################################
+
+## NEXUS verbosity (MUTE, NORMAL, DETAILED)
+GLOBAL verbosity S NORMAL
+
+## G4 tracking verbosity ("0", "1", "2", "3", ...)
+GLOBAL tracking_verbosity S 1
+
+## Output dst file name
+##    Allowed extensions: '.txt' for text files
+##                        '.gz'  for gzipped text files
+##                        '.h5'  for HDF5 files
+GLOBAL odst_filename S ../data/nexus.tdst.txt
+
+## Number of simulated events
+GLOBAL num_events I 10
+
+## GEOMETRY parameters file
+GLOBAL geom_filename S ../scripts/nexus_example.geom
+
+## Trigger (0:OFF, 1:ON)
+GLOBAL trigger I 1
+
+
+###### PHYSICS ############################################
+
+## Energy Loss for electrons (0=DISABLED, 1=ENABLED)
+PHYSICS energy_loss I 1
+
+## Multiple Scattering for electrons (0=DISABLED, 1=ENABLED)
+PHYSICS mult_scattering I 1
+
+## Maximum Step Length in the TPC (mm)
+PHYSICS bulk_max_step D 5.
+
+## Production Cut for Bulk region (mm)
+PHYSICS bulk_cut D .01
+
+
+###### GENERATOR  ##########################################
+
+## Generator type (single_particle, idst)
+GENERATOR type S single_particle
+ 
+## Particle name
+GENERATOR particle_name S e-
+ 
+## Particle kinetic energy (keV)
+GENERATOR min_energy D 5000.
+GENERATOR max_energy D 5000.
+
+## Vertexes generator type (spot, random)
+GENERATOR vtx_type S spot
+
+## Vertex location:
+GENERATOR spot V 3
+0.
+0.
+0.
+
+
