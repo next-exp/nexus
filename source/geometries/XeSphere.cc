@@ -1,21 +1,21 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author:  Javier Mu?oz Vidal <jmunoz@ific.uv.es>    
+//  Author:  Javier Muñoz Vidal <jmunoz@ific.uv.es>    
 //  Created: 27 Nov 2009
 //  
-//  Copyright (c) 2009-2011 NEXT Collaboration
+//  Copyright (c) 2009 NEXT Collaboration
 // ---------------------------------------------------------------------------- 
 
 #include "XeSphere.h"
 
-#include "SpherePointSampler.h"
-#include "MaterialsList.h"
+#include "ConfigService.h"
 #include "IonizationSD.h"
+#include "SphereVertexGenerator.h"
+#include "MaterialsList.h"
 
-#include <G4GenericMessenger.hh>
-#include <G4Orb.hh>
 #include <G4NistManager.hh>
+#include <G4Orb.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4Material.hh>
@@ -29,30 +29,13 @@
 namespace nexus {
   
   
-  XeSphere::XeSphere(): 
-    BaseGeometry(), _liquid(true), _pressure(STP_Pressure), _radius(1.*m), _sphere_vertex_gen(0) 
+  XeSphere::XeSphere(): BaseGeometry()
   {
-    _msg = new G4GenericMessenger(this, "/Geometry/XeSphere/",
-      "Control commands of geometry XeSphere.");
-
-    _msg->DeclareProperty("LXe", _liquid, 
-      "Build the sphere with liquid xenon.");
-
-    G4GenericMessenger::Command& pressure_cmd =
-      _msg->DeclareProperty("pressure", _pressure,
-      "Set pressure for gaseous xenon (if selected).");
-    pressure_cmd.SetUnitCategory("Pressure");
-    pressure_cmd.SetParameterName("pressure", false);
-    pressure_cmd.SetRange("pressure>0.");
-
-    G4GenericMessenger::Command& radius_cmd =
-      _msg->DeclareProperty("radius", _radius, "Radius of the xenon sphere.");
-    radius_cmd.SetUnitCategory("Length");
-    radius_cmd.SetParameterName("radius", false);
-    radius_cmd.SetRange("radius>0.");
+    SetParameters();
+    BuildGeometry();
 
     // Creating the vertex generator
-    _sphere_vertex_gen = new SpherePointSampler(_radius, 0.);
+    _sphere_vertex_gen = new SphereVertexGenerator(_radius, _thickn);
   }
   
   
@@ -60,38 +43,103 @@ namespace nexus {
   XeSphere::~XeSphere()
   {
     delete _sphere_vertex_gen;
-    delete _msg;
   }
-    
   
-  
-  void XeSphere::Construct()
+
+
+  void XeSphere::SetParameters()
   {
-    G4String name = "XE_SPHERE";
+    // get geometry configuration parameters
+    const ParamStore& config = ConfigService::Instance().Geometry();
 
-    G4Orb* sphere_solid = new G4Orb(name, _radius);
+    // read chamber dimensions
+    _radius = config.GetDParam("sphere_radius");
+    _thickn = config.GetDParam("sphere_thickness");
 
-    G4Material* xenon = 0;
-    if (_liquid)
-      xenon = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
-    else
-      xenon = MaterialsList::GXe(_pressure);
+    // read materials. FIXME. Table with friendly materials names
+    G4String sphere_mat_name = config.GetSParam("sphere_material");
+    if ((sphere_mat_name == "copper") or (sphere_mat_name == "Copper"))
+    {
+      _sphere_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
+    }
+    else if ((sphere_mat_name == "steel")  or (sphere_mat_name == "Steel"))
+    {
+      _sphere_mat = MaterialsList::Steel();
+    }
+    else if ((sphere_mat_name == "air") or (sphere_mat_name == "Air"))
+    {
+      _sphere_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_Air");
+    }
+    else if ((sphere_mat_name == "titanium") or (sphere_mat_name == "Titanium"))
+    {
+      _sphere_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_Ti");
+    }
 
+    G4String tracking_mat_name = config.GetSParam("tracking_material");    
+    if (tracking_mat_name == "LXe")
+    {
+      _tracking_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
+    }
+    else if (tracking_mat_name == "GXe")
+    {
+      G4double pressure = config.GetDParam("GXe_pressure");
+      _tracking_mat = MaterialsList::GXe(pressure);
+    }  
+
+  }
+  
+  
+  
+  void XeSphere::BuildGeometry()
+  {
+    G4double outer_radius = _radius + _thickn;
+
+    // The SPHERE volume ...........................................
+
+    G4Orb* sphere_solid = new G4Orb("SPHERE", outer_radius);
+    
     G4LogicalVolume* sphere_logic = 
-    new G4LogicalVolume(sphere_solid, xenon, name);
-    BaseGeometry::SetLogicalVolume(sphere_logic);
+      new G4LogicalVolume(sphere_solid, _sphere_mat, "SPHERE");
 
-    IonizationSD* ionizsd = new IonizationSD("/XE_SPHERE");
-    G4SDManager::GetSDMpointer()->AddNewDetector(ionizsd);
-    sphere_logic->SetSensitiveDetector(ionizsd);
+    SetLogicalVolume(sphere_logic);
+  
+    
+    // ACTIVE (tracking) volumes ....................................
+
+    G4Orb* active_solid = new G4Orb("ACTIVE", _radius);
+    
+    G4LogicalVolume* active_logic = 
+      new G4LogicalVolume(active_solid, _tracking_mat, "ACTIVE");
+
+    active_logic->SetUserLimits(new G4UserLimits(5.*mm));
+
+    G4PVPlacement* active_physi =
+      new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), active_logic, "ACTIVE",
+ 			sphere_logic, false, 0);
+    
+    G4VisAttributes white(G4Colour(1., 1., 1.));
+    active_logic->SetVisAttributes(white);
+    
+    // ACTIVE defined as a sensitive detector
+    G4SDManager* SDman = G4SDManager::GetSDMpointer();
+
+    G4String SDname = "/XeSphere/SPHERE/ACTIVE";
+    IonizationSD* ionizationSD = new IonizationSD(SDname);
+    SDman->AddNewDetector(ionizationSD);
+    active_logic->SetSensitiveDetector(ionizationSD);
   }
   
   
 
   G4ThreeVector XeSphere::GenerateVertex(const G4String& region) const
   {
-    return G4ThreeVector(0., 0., 0.); 
-    //return _sphere_vertex_gen->GenerateVertex(region);
+    if (region == "CENTER") {
+      return G4ThreeVector(0., 0., 0.); 
+    }
+    // Generating in any part of the CHAMBER
+    else {
+      return _sphere_vertex_gen->GenerateVertex(region);
+    }
   }
   
 

@@ -2,29 +2,28 @@
 ///  \file   DetectorConstruction.h
 ///  \brief  Initialization class for detector setup.
 ///  
-///  \author   <justo.martin-albo@ific.uv.es>    
+///  \author   J Martin-Albo <jmalbos@ific.uv.es>    
 ///  \date     9 Mar 2009
 ///  \version  $Id$
 ///
-///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
+///  Copyright (c) 2009, 2010 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef __DETECTOR_CONSTRUCTION__
 #define __DETECTOR_CONSTRUCTION__
 
 #include <G4VUserDetectorConstruction.hh>
-
-class G4GenericMessenger;
-
+#include "BaseGeometry.h"
 
 
 namespace nexus {
 
-  class BaseGeometry;
-
-
-  /// TODO. CLASS DESCRIPTION
-
+  /// Geant4 user initialization class for detector setup.
+  /// A detector geometry selected by the user and created (allocated)
+  /// by the NexusFactory is set in the world. 
+  /// This class owns the geometry instance and takes care of deleting 
+  /// it at the end of the run.
+  
   class DetectorConstruction: public G4VUserDetectorConstruction
   {
   public:
@@ -43,21 +42,17 @@ namespace nexus {
     const BaseGeometry* GetGeometry() const;
 
   private:
-    //void CreateGeometry(G4String);
-
-  private:
-    G4GenericMessenger* _msg; 
-    BaseGeometry* _geometry; 
+    BaseGeometry* _geometry; ///< pointer to the detector geometry
   };
 
-
-  // INLINE METHODS //////////////////////////////////////////////////
- 
+  // inline methods ..................................................
+  
   inline void DetectorConstruction::SetGeometry(BaseGeometry* g)
   { _geometry = g; }
 
   inline const BaseGeometry* DetectorConstruction::GetGeometry() const
   { return _geometry; }
+
 
 } // end namespace nexus
 

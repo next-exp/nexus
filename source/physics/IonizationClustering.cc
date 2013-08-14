@@ -4,31 +4,26 @@
 //  Author:  J. Martin-Albo <jmalbos@ific.uv.es>    
 //  Created: 10 May 2010
 //  
-//  Copyright (c) 2010-2012 NEXT Collaboration. All rights reserved.
+//  Copyright (c) 2010 NEXT Collaboration
 // ---------------------------------------------------------------------------- 
 
 #include "IonizationClustering.h"
 
 #include "BaseDriftField.h"
-#include "IonizationElectron.h"
+#include "IonizationCluster.h"
 #include "DriftTrackInfo.h"
-#include "SegmentPointSampler.h"
 
-#include <G4ParticleDefinition.hh>
-#include <G4OpticalPhoton.hh>
-#include <G4Gamma.hh>
 #include <G4Poisson.hh>
 #include <Randomize.hh>
-#include <G4LorentzVector.hh>
 
 
 namespace nexus {
 
   
-  IonizationClustering::IonizationClustering(const G4String& process_name, 
+  IonizationClustering::IonizationClustering(const G4String& process_name,
 					     G4ProcessType type):
-    G4VRestDiscreteProcess(process_name, type), 
-    _rnd(new SegmentPointSampler())
+    G4VRestDiscreteProcess(process_name, type),
+    _cluster_per_step(true)
   {
     pParticleChange = &_ParticleChange;
   }
@@ -43,11 +38,7 @@ namespace nexus {
   
   G4bool IonizationClustering::IsApplicable(const G4ParticleDefinition& pdef)
   {
-    if (pdef == *IonizationElectron::Definition() ||
-	pdef == *G4OpticalPhoton::Definition())
-      return false;
-    else
-      return true;
+    return (pdef.GetPDGCharge() != 0);
   }
   
   
@@ -69,94 +60,92 @@ namespace nexus {
     _ParticleChange.Initialize(track);
 
     // The clustering process makes sense only for those regions with
-    // a drift field defined. Therefore, check whether the current region
-    // has a drift field attached. Stop the process if that is not the case.
+    // a drift field defined. Therefore, get the current region and
+    // check whether it has a drift field attached. Stop the process
+    // if that is not the case.
     G4Region* region = track.GetVolume()->GetLogicalVolume()->GetRegion();
-    BaseDriftField* field = dynamic_cast<BaseDriftField*>
-      (region->GetUserInformation());
-    if (!field) 
+    BaseDriftField* field =
+      dynamic_cast<BaseDriftField*>(region->GetUserInformation());
+
+    if (!field)
       return G4VRestDiscreteProcess::PostStepDoIt(track, step);
     
     // Get energy deposited through ionization
     G4double energy_dep = 
       step.GetTotalEnergyDeposit() - step.GetNonIonizingEnergyDeposit();
     
-    // If no energy was deposited in the last step, stop the process
     if (energy_dep <= 0)
       return G4VRestDiscreteProcess::PostStepDoIt(track, step);
     
-    // Get material properties relevant for the process
-    // G4MaterialPropertiesTable* mpt = 
-    //   track.GetMaterial()->GetMaterialPropertiesTable();
+    // // Get material properties
+    // const G4Material* material = track.GetMaterial();
+    // G4MaterialPropertiesTable* mpt = material->GetMaterialPropertiesTable();
+
     // if (!mpt)
     //   return G4VRestDiscreteProcess::PostStepDoIt(track, step);
-    
-    //G4double ioni_energy = mpt->GetConstProperty("IONIZATIONENERGY");
-    //G4double fano_factor = mpt->GetConstProperty("FANOFACTOR");
-    G4double ioni_energy = 22.4 * eV;
-    G4double fano_factor = 1.;
-    
-    G4double mean = energy_dep / ioni_energy;
 
+    // // Calculate number of charges produced in the ionization process
+    // G4double ion_potential = mpt->GetConstProperty("IONIZATION_POTENTIAL");
+    // G4double fano_factor = mpt->GetConstProperty("FANO_FACTOR");
+
+    G4double ion_potential = 22. * eV;
+    G4double fano_factor = 1.;
+
+    G4double mean = energy_dep / ion_potential;
     G4int num_charges = 0;
     
-    if (mean > 10.) {
+    if (mean < 10.) {
+      num_charges = G4int(G4Poisson(mean));
+    }
+    else {
       G4double sigma = sqrt(mean*fano_factor);
       num_charges = G4int(G4RandGauss::shoot(mean, sigma) + 0.5);
     }
-    else {
-      num_charges = G4int(G4Poisson(mean));
-    }
     
-    
-    // Generate the ionization electrons.
-    // N.B.- A kinetic energy and momentum direction must be defined for
-    // the ionization electron or Geant4 will throw an exception.
+    // Create a new ionization cluster. 
+    // A momentum direction and kinetic energy must be defined for
+    // the ionization cluster or Geant4 will throw an exception.
     // However, these are dummy values that won't be used anywhere
-    // because the transportation process is switched off for this 
-    // type of particles.
-
-    _ParticleChange.SetNumberOfSecondaries(num_charges);
-
-    G4double kinetic_energy = 5.*eV;
-    G4ThreeVector momentum_direction(0.,0.,1.);
-
-    // Set pre and post points of the step in the random generator
-    G4LorentzVector prestep (step.GetPreStepPoint()->GetPosition(),
-			     step.GetPreStepPoint()->GetGlobalTime());
-    G4LorentzVector poststep(step.GetPostStepPoint()->GetPosition(),
-			     step.GetPostStepPoint()->GetGlobalTime());
-    _rnd->SetPoints(prestep, poststep);
-
+    // because the transportation process is (should be) switched off 
+    // for this type of particles.
     
-    for (G4int i=0; i<num_charges; i++) {
+    G4ThreeVector momentum_direction(0.,0.,1.);
+    G4double kinetic_energy = 10.*eV;
+    
+    G4DynamicParticle* cluster =  
+      new G4DynamicParticle(IonizationCluster::Definition(), 
+			    momentum_direction, kinetic_energy);
+    
+    // Calculate position and time 
+    // (FIXME. For now we'll place the ionization cluster in the 
+    // middle of the step segment. Other possibilities may be
+    // implemented in the future if needed.)
+    
+    G4StepPoint* pre_point = step.GetPreStepPoint();
 
-      G4DynamicParticle* ionielectron =
-	new G4DynamicParticle(IonizationElectron::Definition(),
-			      momentum_direction, kinetic_energy);
+    G4ThreeVector position = 
+      step.GetPreStepPoint()->GetPosition() + 0.5 * step.GetDeltaPosition();
+    
+    G4double time = step.GetPreStepPoint()->GetGlobalTime();
 
-      // Calculate position and time. We distribute the charges along
-      // the step for all particles but gammas, where we use the post-step point
-      G4LorentzVector point;
-      
-      if (track.GetDefinition() == G4Gamma::Definition()) 
-	point = poststep;
-      else
-	point = _rnd->Shoot();
+    // Create new track associated to the cluster
+    G4Track* aSecondaryTrack = new G4Track(cluster, time, position);
+    aSecondaryTrack->SetTouchableHandle(pre_point->GetTouchableHandle());
+    
+    DriftTrackInfo* drift_info = new DriftTrackInfo();
+    drift_info->SetNumberOfCharges(num_charges);
+    aSecondaryTrack->SetUserInformation(drift_info);
 
-      // Create new track associated to the ionization electron
-      G4Track* aSecondaryTrack = new G4Track(ionielectron, point.t(), point.v());
-      aSecondaryTrack->SetTouchableHandle(step.GetPreStepPoint()->GetTouchableHandle());
-      aSecondaryTrack->SetUserInformation(new DriftTrackInfo);
-      _ParticleChange.AddSecondary(aSecondaryTrack);
-    }
-
+    _ParticleChange.SetNumberOfSecondaries(1);
+    _ParticleChange.AddSecondary(aSecondaryTrack);
+  
+  
     return G4VRestDiscreteProcess::PostStepDoIt(track, step);
   }
-  
-  
-  
-  G4double IonizationClustering::GetMeanFreePath(const G4Track&, G4double, 
+
+
+  G4double IonizationClustering::GetMeanFreePath(const G4Track&,
+						 G4double,
 						 G4ForceCondition* condition)
   {
     *condition = StronglyForced;
@@ -172,5 +161,4 @@ namespace nexus {
     return DBL_MAX;
   }
   
-
 } // end namespace nexus

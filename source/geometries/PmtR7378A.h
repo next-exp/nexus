@@ -19,7 +19,7 @@
 
 namespace nexus {
 
-  /// Geometry model for the Hamamatsu R7378A photomultiplier (PMT).
+  /// Geometry model for the Hamamatsu R7378A photo-multiplier (PMT).
   
   class PmtR7378A: public BaseGeometry
   {
@@ -29,22 +29,14 @@ namespace nexus {
     /// Destructor
     ~PmtR7378A();
 
-    /// Returns the PMT diameter
-    G4double Diameter() const;
-    /// Returns the PMT length
-    G4double Length() const;
-
-    /// Sets a sensitive detector associated to the
+    G4ThreeVector GetDimensions() const;
+    
+  private:
+    void BuildGeometry();
 
   private:
-    void Construct();
-
-  private:
-    G4double _pmt_diam, _pmt_length; ///< PMT dimensions
+    G4ThreeVector _dimensions;
   };
-
-  inline G4double PmtR7378A::Diameter() const { return _pmt_diam; }
-  inline G4double PmtR7378A::Length() const { return _pmt_length; }
 
 } // end namespace nexus
 

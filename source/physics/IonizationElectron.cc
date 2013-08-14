@@ -4,7 +4,7 @@
 //  Author : J. Martin-Albo <jmalbos@ific.uv.es>    
 //  Created: 19 May 2010
 //
-//  Copyright (c) 2010, 2011 NEXT Collaboration
+//  Copyright (c) 2010 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "IonizationElectron.h"
@@ -12,7 +12,6 @@
 
 
 namespace nexus {  
-  
   
   IonizationElectron* IonizationElectron::_instance = 0;
 
@@ -25,12 +24,13 @@ namespace nexus {
     // Search for ionization electron definition in particle table.
     // If we get a null pointer, the particle has not been created yet.
     
-    const G4String name = "ie-";
+    const G4String name = "ionielectron";
 
     G4ParticleDefinition* pdef =
       G4ParticleTable::GetParticleTable()->FindParticle(name);
 
     if (!pdef) {
+    
       // Create the particle. Arguments for constructor are as follows:
       //    name         mass            width           charge
       //    2*spin       parity          C-conjugation
@@ -38,17 +38,17 @@ namespace nexus {
       //    type         lepton number   baryon number   PDG encoding
       //    stable       lifetime        decay table 
       //    shortlived   subType         anti_encoding
-      pdef = new G4ParticleDefinition(name, electron_mass_c2, 0., -1.*eplus,
-				      1, 0, 0,
-				      0, 0, 0,
-				      "lepton", 1, 0, 11,
-				      true, -1.0, NULL,
-				      false, "e", 0);
+      pdef = 
+	new G4ParticleDefinition(name, electron_mass_c2, 0., -1.*eplus,
+				 1, 0, 0,
+				 0, 0, 0,
+				 "lepton", 1, 0, 11,
+				 true, -1.0, NULL,
+				 false, "e", 0);
     }
     
     _instance = reinterpret_cast<IonizationElectron*>(pdef);
     return _instance;
   }
-
 
 } // end namespace nexus

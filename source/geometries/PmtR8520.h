@@ -1,9 +1,8 @@
 // ----------------------------------------------------------------------------
 ///  \file   PmtR8520.h
-///  \brief  Hamamatsu R8520 radiopure, 1-inch, square PMT.
+///  \brief  Hamamatsu R8520 1-inch square PMT.
 ///
-///  \author   <justo.martin-albo@ific.uv.es>
-///            <edgar.gomez@uan.edu.co>
+///  \author   F. Monrabal <franmon4@ific.uv.es>    
 ///  \date     17 Aug 2009
 ///  \version  $Id$
 ///
@@ -20,7 +19,7 @@
 namespace nexus {
 
   /// Geometry of the PMT Hamamatsu R8520. This is a 1-inch, square
-  /// PMT optimized for the VUV region.
+  /// PMT optimized for the DUV region.
   
   class PmtR8520: public BaseGeometry
   {
@@ -30,15 +29,13 @@ namespace nexus {
     /// Destructor
     ~PmtR8520();
 
-    G4ThreeVector GetDimensions() const;
-   G4LogicalVolume* GetWindowLogic();
+    G4ThreeVector GetDimensions();
     
   private:
-    void BuildGeometry();   
+    void BuildGeometry();
 
   private:
     G4ThreeVector _dimensions; ///< external dimensions of the PMT
-    G4LogicalVolume* _window_logic;
   };
 
 } // end namespace nexus

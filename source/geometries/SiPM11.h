@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 ///  \file   SiPM11.h
-///  \brief  Geometry of a 1x1 mm2 SiPM
+///  \brief  
 ///
-///  \author   <justo.martin-albo@ific.uv.es>
+///  \author   L. Serra (luis.serra@ific.uv.es)
 ///  \date     2 March 2010
 ///  \version  $Id$
 ///
@@ -17,8 +17,6 @@
 
 namespace nexus {
 
-
-  /// Geometry of the Hamamatsu surface-mounted 1x1 mm2 MPPC (SiPM)
   
   class SiPM11: public BaseGeometry
   {
@@ -28,16 +26,14 @@ namespace nexus {
     /// Destructor
     ~SiPM11();
     
-    /// Return dimensions of the SiPM
-    G4ThreeVector GetDimensions() const;
+    G4ThreeVector GetDimensions();
     
-    // Builder
-    void Construct();
+  private:
+    void BuildGeometry();
     
   private:
     G4ThreeVector _dimensions; ///< external dimensions of the SiPM11
   };
-
 
 } // end namespace nexus
 

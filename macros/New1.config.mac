@@ -1,6 +1,0 @@
-/run/verbose 1
-/event/verbose 0
-/tracking/verbose 1
-/control/execute macros/generators/IonGun.mac
-/control/execute macros/geometries/NEW.mac
-/nexus/persistency/outputFile nexus.root

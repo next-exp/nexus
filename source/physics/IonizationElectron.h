@@ -6,7 +6,7 @@
 ///  \date     19 May 2010
 ///  \version  $Id$
 ///
-///  Copyright (c) 2010, 2011 NEXT Collaboration
+///  Copyright (c) 2010 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef __IONIZATION_ELECTRON__
@@ -29,8 +29,8 @@ namespace nexus {
     ~IonizationElectron();
     
   private:
-    /// Default constructor is hidden. 
-    /// No instance of this class can be created.
+    /// Default constructor is hidden. No instance of this class
+    /// can be created.
     IonizationElectron();
 
   private:
