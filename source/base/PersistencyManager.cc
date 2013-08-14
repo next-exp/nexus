@@ -92,6 +92,9 @@ void PersistencyManager::CloseFile()
 
 G4bool PersistencyManager::Store(const G4Event* event)
 {
+  _iprtmap.clear(); 
+  _itrkmap.clear();
+
   // Create a new irene event
   irene::Event ievt(event->GetEventID());
 
@@ -256,6 +259,14 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 
     G4ThreeVector xyz = hit->GetPosition();
     isnr->SetPosition(xyz.x(), xyz.y(), xyz.z());
+
+    const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
+    std::map<G4double, G4int>::const_iterator it;
+
+    for (it = wvfm.begin(); it != wvfm.end(); ++it) {
+      isnr->SetSample((*it).second, (*it).first);
+    }
+
 
     // Add the sensor hit to the irene event
     ievt->AddSensorHit(isnr);

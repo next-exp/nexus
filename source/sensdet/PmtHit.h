@@ -62,6 +62,8 @@ namespace nexus {
 
     /// Adds counts to a given time bin
     void Fill(G4double time, G4int counts=1);
+
+    const std::map<G4double, G4int>& GetHistogram() const;
         
   private:
     G4int _pmt_id;           ///< Detector ID number
@@ -96,6 +98,9 @@ namespace nexus {
 
   inline G4ThreeVector PmtHit::GetPosition() const { return _position; }
   inline void PmtHit::SetPosition(const G4ThreeVector& p) { _position = p; }
+
+  inline const std::map<G4double, G4int>& PmtHit::GetHistogram() const
+  { return _histogram; }
 
 } // namespace nexus
 
