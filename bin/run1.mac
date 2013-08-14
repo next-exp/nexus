@@ -1,0 +1,24 @@
+#
+# Macro file for "SuperNemoSim.cc"
+# 
+# can be run in batch mode, without visualization
+# or interactively: Idle> /control/execute nemo_run1.mac
+#
+#
+# For random seed
+#
+/control/shell cp currentEvent.rndm currentRun.rndm
+/random/setSavingFlag true
+/random/resetEngineFrom currentRun.rndm
+#
+#
+# Set verbosities for this run
+#
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+# 
+#
+# n events
+#
+/run/beamOn 5

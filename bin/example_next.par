@@ -1,0 +1,71 @@
+# ======================================
+# =  NEXT simulation: parameters file  =   
+# ======================================
+
+
+
+# GLOBAL variables
+# ----------------
+
+## Simulation data verbosity (MUTE, CONCISE, NORMAL, DETAILED, VERBOSE, VVERBOSE)
+GLOBAL simulation_verbosity S CONCISE
+
+## G4 Tracking verbosity ("0", "1", "2", "3", ...)
+GLOBAL G4Tracking_verbosity S 0
+
+## Output dst file name. 
+# Allowed extensions: '.txt' for text files
+#                     '.gz'  for gziped text files
+#                     '.h5' for HDF5 files
+GLOBAL odst_fname S ../data/dst_test_random_Nd150_Bon.txt
+
+## Input data ("shoot" or "idst")
+#GLOBAL idata_type S idst
+GLOBAL idata_type S shoot
+
+## Input data == "shoot".
+# E_kin (MeV) minimum limit:
+GLOBAL min_E D 1.
+# E_kin (MeV) maximum limit:
+GLOBAL max_E D 1.4
+
+## Input data == "shoot": Initial particles name
+GLOBAL part_name S e-
+
+## Input data == "idst": idst file name
+GLOBAL idst_fname S ../data/Se82_bb0nu.gz
+
+## Number of events
+GLOBAL num_events I 1
+
+## GEOMETRY parameters file
+GLOBAL geom_fname S ../geom/next.geom
+
+## In case of visual run, display a complete view (1) or just the shape (0)
+GLOBAL DISPLAY_ALL I 1
+
+
+
+# PHYSICS variables
+# -----------------
+
+## Energy Loss Enabled for electrons (0=OFF 1=ON)
+PHYSICS energy_loss I 1
+
+## Multiple Scattering Enabled for electrons (0=OFF 1=ON)
+PHYSICS mult_scattering I 1
+
+## Maximum Step Length in the TPC (mm)
+PHYSICS max_step D 2.
+
+## Cut (mm) for Bulk region
+PHYSICS bulk_cut D .01
+
+
+
+#  CHECKING variables
+#  ------------------
+
+## Print BHEP Stored particles at the end: YES (1) or NO (0)
+CHECK print_parts I 1
+
