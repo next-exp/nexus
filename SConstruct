@@ -4,109 +4,110 @@
 ###  Author : J. Martin-Albo <jmalbos@ific.uv.es>
 ###  Created: 23 July 2009
 ###  Version: $Id$
-###
-###  Note.- First time this script is executed, a configure-like step
-###  tries to find out where are located the header and libraries
-###  of all NEXUS dependencies. If it succeeds, this configuration is
-###  stored in a file and used in future builds until a clean is
-###  performed. The script tries to locate the dependencies by using
-###  pkg-config scripts or searching at common paths. This should work
-###  in most systems. However, if needed, users can provide via
-###  command-line (or the BUILDVARS_FILE) the system path to any
-###  dependency.
 ### ------------------------------------------------------------------
 
 import os
-import subprocess
 
-## Geant4 version required by NEXUS
-NEXUS_G4VERSION_NUMBER = [961]
+### ..................................................................
+### First time this script is executed, a configure-like step tries
+### to find out where headers and libraries of all dependencies are
+### located. If it succeeds, compilation flags are stored in a file
+### and used in following builds until a cleaning is performed.
+### 
+### The script tries to locate the dependencies using pkg-config 
+### scripts or searching at common paths (/usr or /usr/local).
+### That should work for most systems. However, if needed, users can
+### specify the location of any dependency via command-line or the 
+### BUILDVARS_FILE.
+###
 
-## NEXUS source code directories
-SRCDIR = ['actions',
-          'base',
-          'generators',
-          'geometries',
-          'materials',
-          'physics',
-          'physics_lists',
-          'sensdet',
-          'utils']
 
-## File where the build variables are stored
-BUILDVARS_FILE = 'buildvars.scons'
+### Some useful functions ............................................
 
-## Dummy default for path-like variables
-NULL_PATH = '/dev/null'
+def G4GlobalLibs():
+    G4LIBS = ['G4digits_hits', 'G4event', 'G4FR', 
+              'G4geometry', 'G4global', 'G4graphics_reps',
+              'G4intercoms', 'G4interfaces', 'G4materials',
+              'G4modeling', 'G4OpenGL', 'G4parmodels', 
+              'G4particles', 'G4persistency', 'G4physicslists',
+              'G4processes', 'G4RayTracer', 'G4readout', 
+              'G4run', 'G4track', 'G4tracking', 'G4Tree', 
+              'G4visHepRep', 'G4vis_management', 'G4visXXX', 
+              'G4VRML']
+    return G4LIBS
 
-## Some useful functions
+
+def RootLibs():
+    return ['Core', 'Cint', 'RIO', 'Net', 'Hist', 'Graf', 'Graf3d', 
+            'Gpad', 'Tree', 'Rint', 'Postscript', 'Matrix', 'Physics', 
+            'MathCore', 'Thread', 'freetype']
+
 
 def Abort(message):
-    """Outputs a message before exiting with an error."""
-    print 'scons: Build aborted.'
-    print 'scons:', message
+    print "scons: Build aborted."
+    print "scons:", message
     Exit(1)
 
-def AssertG4Version(path):
 
-    ## If a path was specified, add it to the cmd to be executed
-    cmd = "geant4-config --version"
-    if path != NULL_PATH:
-        cmd = path + '/' + cmd
+### Build variables ..................................................
+### These vars can be used to specify (via command-line or file) the
+### location of dependencies. They are also used to store in file
+### configured values of compilation flags ($CPPPATH, $LIBS, etc.)
+###
 
-    ## Execute the command and store the stdout and stderr
-    p = subprocess.Popen(cmd, shell=True,
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE)
+# file where the variables are (will be) stored
+BUILDVARS_FILE = 'buildvars.scons'
 
-    ## If the stdout is empty, the execution of the command failed
-    version = p.stdout.read()
-    if version == '':
-        Abort("Failed to establish Geant4 version.")
-    else:
-        version = int(''.join(version.split('.')))
-        msg = "Checking for Geant4 version..."
-        print msg, version
-        if not version in NEXUS_G4VERSION_NUMBER:
-            msg = 'This version of NEXUS requires Geant4 version(s) ' \
-                + str(NEXUS_G4VERSION_NUMBER) 
-            Abort(msg)
+# dummy default for path-variables
+DEFAULT_PATH = '.'
 
-
-
-## ###################################################################
-## BUILD VARIABLES
-## These variables can be used to specify (via command-line or file)
-## the location of dependencies. They are also used to store in file
-## configured values of compilation flags ($CPPPATH, $LIBS, etc.).
-
-## Create a Variables instance associated to  a file
+# create Variables instance (associated to file) and add it the vars
 vars = Variables(BUILDVARS_FILE)
 
-## Definition of the variables
 vars.AddVariables(
 
-    ## Geant4
+    PathVariable('BHEP_INCDIR',                     # var name
+                 'Path to BHEP headers directory.', # var description
+                 DEFAULT_PATH),                     # var default value
 
-    PathVariable('GEANT4_BINDIR',                     # var name
-                 'Path to Geant4 headers directory',  # var description
-                 NULL_PATH),                       # var default value
-        
-    ## ROOT
+    PathVariable('BHEP_LIBDIR',
+                 'Path to BHEP library directory.',
+                 DEFAULT_PATH),
 
-    PathVariable('ROOT_BINDIR',
-                 'Path to ROOT installation.',
-                 NULL_PATH),
+    PathVariable('CLHEP_INCDIR',
+                 'Path to CLHEP headers directory.',
+                 DEFAULT_PATH),
 
-    ## IRENE
+    PathVariable('CLHEP_LIBDIR',
+                 'Path to CLHEP library directory.',
+                 DEFAULT_PATH),
 
-    PathVariable('IRENE_PATH',
-                 'Path to irene installation.',
-                 NULL_PATH),
-    
+    PathVariable('ROOT_INCDIR',
+                 'Path to ROOT headers directory.',
+                 DEFAULT_PATH),
 
-    ## The following vars shouldn't be defined by users unless they 
-    ## know what they are doing.
+    PathVariable('ROOT_LIBDIR',
+                 'Path to ROOT installation',
+                 DEFAULT_PATH),
+
+    PathVariable('G4INCLUDE',
+                 'Path to Geant4 headers directory',
+                 DEFAULT_PATH),
+
+    PathVariable('G4LIBDIR',
+                 'Path to Geant4 global libraries directory.',
+                 DEFAULT_PATH),
+
+    PathVariable('OGLPATH',
+                 'Path to OpenGL libraries and headers',
+                 '/usr/X11R6'),
+
+    PathVariable('X11PATH',
+                 'Path to X11 libraries and headers',
+                 '/usr/X11R6'),
+
+    # The following vars should not be defined by users unless they 
+    # know what they are doing.
 
     ('CPPDEFINES',
      'Preprocessor definitions.',
@@ -123,11 +124,11 @@ vars.AddVariables(
     ('CPPPATH',
      'List of directories where the include headers are located.',
      []),
-    
+
     ('LIBPATH',
      'List of directories where the linked libraries are located.',
      []),
-    
+
     ('LIBS',
      'List of libraries to link against.',
      []),
@@ -135,93 +136,173 @@ vars.AddVariables(
     ('LINKFLAGS',
      'User options passed to the linker.',
      [])
-
     )
 
 
-## ###################################################################
-## CONFIGURE BUILD
+### Construction environment .........................................
 
-## Create a construction environment adding the build vars and
-## propagating the user's external environment
 env = Environment(variables=vars, ENV=os.environ)
 
-## If the LIBPATH buildvar (for instance) is not defined, the configure
-## step has not been run yet
-if not env['LIBPATH']: 
-
-    ## Create a Configure object that provides autoconf-like functionality
-    conf = Configure(env, conf_dir='.sconf', log_file='.sconf/sconf.log')
 
 
-    ## Geant4 configuration --------------------------------
+### Configure build ..................................................
 
-    AssertG4Version(env['GEANT4_BINDIR'])
+if not env['LIBPATH']:
+
+    # CLHEP ................................................
     
-    if env['GEANT4_BINDIR'] != NULL_PATH:
-        env.PrependENVPath('PATH', env['GEANT4_BINDIR'])
+    if env['CLHEP_INCDIR'] != DEFAULT_PATH:
+        env.Append(CPPPATH = env['CLHEP_INCDIR'])
+    else:
+        try:
+            env.ParseConfig("clhep-config --include")
+        except OSError:
+            Abort("CLHEP couldn't be configured.")
 
-    env.ParseConfig('geant4-config --cflags --libs')
+    if env['CLHEP_LIBDIR'] != DEFAULT_PATH:
+        env.Append(LIBPATH = env['CLHEP_LIBDIR'])
+        env.Append(LIBS = "CLHEP")
+    else:
+        try:
+            env.ParseConfig("clhep-config --libs")
+        except OSError:
+            Abort("CLHEP couldn't be configured.")
 
 
-    ## ROOT configuration ----------------------------------
+    # BHEP .................................................
 
-    if env['ROOT_BINDIR'] != NULL_PATH:
-        env.PrependENVPath('PATH', env['ROOT_BINDIR'])
+    if env['BHEP_INCDIR'] != DEFAULT_PATH:
+        env.Append(CPPPATH = env['BHEP_INCDIR'])
+    else:
+        try:
+            env.ParseConfig("bhep-config --include")
+        except OSError:
+            Abort("BHEP couldn't be configured.")
+
+    if env['BHEP_LIBDIR'] != DEFAULT_PATH:
+        env.Append(LIBPATH = env['BHEP_LIBDIR'])
+        env.Append(LIBS = "bhep")
+    else:
+        try:
+            env.ParseConfig("bhep-config --libs")
+        except OSError:
+            Abort("BHEP couldn't be configured.")
+
+
+    # ROOT .................................................
+
+    if env['ROOT_INCDIR'] != DEFAULT_PATH:
+        env.Append(CPPPATH = env['ROOT_INCDIR'])
+    else:
+        try:
+            env.ParseConfig("root-config --cflags")
+            #env.MergeFlags('-I/Users/jmalbos/Software/root/include')
+        except OSError:
+            Abort("ROOT couldn't be configured.")
+
+    if env['ROOT_LIBDIR'] != DEFAULT_PATH:
+        env.Append(LIBPATH = env['ROOT_LIBDIR'])
+        env.Append(LIBS = RootLibs())
+    else:
+        try:
+            env.ParseConfig("root-config --libs")
+        except OSError:
+            Abort("ROOT couldn't be configured.")
+
+
+    # Geant4 ...............................................
+
+    if env['G4INCLUDE'] != DEFAULT_PATH:
+        env.Append(CPPPATH = env['G4INCLUDE'])
+    else:
+        try:
+            env.Append(CPPPATH = env['ENV']['G4INCLUDE'])
+        except KeyError:
+            Abort("G4INCLUDE not set.")
+
+    if env['G4LIBDIR'] != DEFAULT_PATH:
+        env.Append(LIBPATH = env['G4LIBDIR'])
+    else:
+        try:
+            G4LIBDIR = env['ENV']['G4LIB'] + "/" + env['ENV']['G4SYSTEM']
+            env.Append(LIBPATH = G4LIBDIR)
+        except KeyError:
+            Abort('G4LIBDIR not set.')
+    
+    env.Append(LIBS = G4GlobalLibs())
+
+
+    # OpenGL and X11 .......................................
+
+    if env['PLATFORM'] == 'darwin':
         
-    env.ParseConfig('root-config --cflags --libs')
+        env.MergeFlags('-I/usr/X11R6/include')
+
+        env.MergeFlags('-L/usr/X11R6/lib  -lXmu -lXt -lXext -lX11 -lXi -lSM -lICE')
+
+        env.MergeFlags('-L/usr/X11R6/lib -lGLU -lGL')
+
+        env.MergeFlags('-Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib')
+        
+    else: # assumed posix (typically Linux-g++)
+
+        env.MergeFlags('-I/usr/include/X11')
+
+        libdir = 'lib'
+        import platform
+        if platform.architecture()[0] == '64bit':
+            libdir = 'lib64'
+
+        env.MergeFlags('-L/usr/X11R6/'+libdir+' -lXmu -lXt -lXext -lX11 -lSM -lICE')
+
+        env.MergeFlags('-I/usr/include')
+        
+        env.MergeFlags('-I/usr/'+libdir+' -lGLU -lGL')
+        
 
 
-    ## IRENE configuration ---------------------------------
+    #conf = Configure(env)
+    
+    #if not conf.CheckLibWithHeader('CLHEP','CLHEP/ClhepVersion.h','C++','',0):
+    #    Abort("CLHEP library or headers not found!")
 
-    if env['IRENE_PATH'] != NULL_PATH:
-        env.PrependENVPath('PATH', env['IRENE_PATH'])
+    #if not conf.CheckLibWithHeader('bhep', 'bhep/system_of_units.h', 'C++'):
+    #    Abort("BHEP library or headers not found!")
+    
+    #if not conf.CheckLib('Cint', '', '', 'C++'):
+    #    Abort("ROOT")
 
-    env.ParseConfig('irene-config --include --libdir --libs')
+    #env = conf.Finish()
 
 
-    ## Check for libraries and headers ---------------------
-
-    if not conf.CheckCXXHeader('G4Event.hh'):
-        Abort('Geant4 headers could not be found.')
-
-    if not conf.CheckLib(library='G4global', language='CXX', autoadd=0):
-        Abort('Geant4 libraries could not be found.')
-
-    if not conf.CheckCXXHeader('TObject.h'):
-        Abort('ROOT headers could not be found.')
-
-    if not conf.CheckLib(library='Cint', language='CXX', autoadd=0):
-        Abort('ROOT libraries could not be found.')
-
-    if not conf.CheckCXXHeader('irene/Event.h'):
-        Abort('IRENE headers not found.')
-
-    if not conf.CheckLib(library='irene', language='CXX', autoadd=0):
-        Abort('IRENE library not found.')
-
-    env = conf.Finish()
-
+# save build variables to file
 vars.Save(BUILDVARS_FILE, env)
 
+# generate help text for build vars
+Help(vars.GenerateHelpText(env))
 
-## ###################################################################
-## BUILDING NEXUS
+G4DEFINE  = ['G4VIS_USE', 'G4VIS_USE_OPENGLX']
+env['CPPDEFINES'] = G4DEFINE
 
-#env.Replace(CXX = "clang++")
-#env.Replace(LDMODULE = "clang++")
 
-SRCDIR = ['source/' + dir for dir in SRCDIR]
+### NEXUS source code ................................................
 
-env.Append(CPPPATH = SRCDIR)
+dirs = ['actions', 
+        'base', 
+        'generators', 
+        'geometries',
+        'physics']
+
+env['CPPPATH'] += dirs           
+env.MergeFlags('-lz')
 
 src = []
-for d in SRCDIR:
-    src += Glob(d+'/*.cc')
+for d in dirs:
+    src += Glob(d+'/*.cc')    
 
 env['CXXCOMSTR']  = "Compiling $SOURCE"
 env['LINKCOMSTR'] = "Linking $TARGET"
 
-nexus = env.Program('nexus', ['source/nexus.cc']+src)
+nexus = env.Program('nexus', ['nexus.cc']+src)
 
 Clean(nexus, 'buildvars.scons')
