@@ -18,7 +18,9 @@ class G4GenericMessenger;
 class G4Event;
 class G4ParticleDefinition;
 
+
 namespace nexus{
+
   class BaseGeometry;
 
   
