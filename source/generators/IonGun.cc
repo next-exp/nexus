@@ -27,15 +27,14 @@ IonGun::IonGun():
   _z(0.), _a(0.), _geom(0)
 {
   _msg = new G4GenericMessenger(this, "/Generator/IonGun/",
-				"Control commands of IonGun  generator.");
+				"Control commands of the ion gun primary generator.");
+
   G4GenericMessenger::Command& z_ =
-    _msg->DeclareProperty("atomic_number", _z, 
-			  "Set atomic number");
+    _msg->DeclareProperty("atomic_number", _z, "Set atomic number");
   z_.SetParameterName("atomic_number", false);
  
   G4GenericMessenger::Command& a_ =
-    _msg->DeclareProperty("mass_number", _a, 
-      "Set mass number");
+    _msg->DeclareProperty("mass_number", _a, "Set mass number");
    a_.SetParameterName("mass_number", false);
 
   _msg->DeclareProperty("region", _region, 
@@ -45,17 +44,24 @@ IonGun::IonGun():
   _geom = detconst->GetGeometry();
 }
 
+
+
 IonGun::~IonGun()
 {
   delete _msg;
 }
+
+
 
 void IonGun::GeneratePrimaryVertex(G4Event* event)
 {
   _particle_definition = G4ParticleTable::GetParticleTable()->
     GetIon(_z, _a, 0.);
   
-  if (!_particle_definition) return;
+  if (!_particle_definition) 
+    G4Exception("GeneratePrimaryVertex()", "[IonGun]",
+      EventMustBeAborted, "Unknown ion!");
+
   // Generate an initial position for the particle using the geometry
   G4ThreeVector position = _geom->GenerateVertex(_region);
   // Particle generated at start-of-event
