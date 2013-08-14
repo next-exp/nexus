@@ -1,10 +1,10 @@
 // ---------------------------------------------------------------------------
-//  $Id: IonGun.cc $
+//  $Id$
 //
 //  Author : Miquel Nebot Guinot <miquel.nebot@ific.uv.es>        
 //  Created: 01 Aug 2013
 //
-//  Copyright (c) 2013 NEXT Collaboration
+//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
 // ---------------------------------------------------------------------------
 
 #include "IonGun.h"

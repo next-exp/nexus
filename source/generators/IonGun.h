@@ -4,9 +4,9 @@
 ///  
 ///  \author   Miquel Nebot Guinot <miquel.nebot@ific.uv.es>       
 ///  \date     01 Aug 2013
-///  \version  $Id: IonGun.h $
+///  \version  $Id$
 ///
-///  Copyright (c) 2013 NEXT Collaboration
+///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
 #ifndef __IonGun__
