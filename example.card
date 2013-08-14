@@ -1,0 +1,13 @@
+GEOMETRY name S STANDARD
+
+GEOMETRY chamber_radius D 60.
+GEOMETRY chamber_length D 140.
+GEOMETRY chamber_thickness D 10.
+
+GENERATION generation_mode I 2.
+GENERATION particle_name S e-
+GENERATION energy_min D 0.
+GENERATION energy_max D 10.
+
+PHYSICS name S EM_STANDARD
+

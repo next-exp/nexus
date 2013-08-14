@@ -1,0 +1,118 @@
+###
+###  SConstruct - NEXUS building script 
+###
+###     Author : J Martin-Albo <jmalbos@ific.uv.es>
+###     Created: 23 Oct 2008
+###     Updated: 30 Apr 2009
+###
+
+import os
+
+
+### Libraries, includes -----------------------------------
+
+### BHEP
+BHEPPATH = '/usr/local/'
+
+
+### CLHEP
+CLHEPPATH = '/usr/local/'
+
+
+### OpenGL
+OGLPATH = '/usr/X11R6/'
+OGLLIBS = ['GLU', 'GL']
+
+
+### X11
+X11PATH = OGLPATH
+X11LIBS = ['Xmu', 'Xt', 'Xext', 'X11', 'Xi', 'SM', 'ICE']
+
+
+### Geant4
+G4LIBDIR  = '/Users/jmalbos/Software/geant4/lib/Darwin-g++/'
+G4INCLUDE = '/Users/jmalbos/Software/geant4/include'
+G4DEFINE  = ['G4VIS_USE', 'G4VIS_USE_OPENGLX']
+G4LIBS    = ['G4digits_hits', 
+             'G4event', 
+             'G4FR', 
+             'G4geometry', 
+             'G4global', 
+             'G4graphics_reps',
+             'G4intercoms', 
+             'G4interfaces', 
+             'G4materials',
+             'G4modeling', 
+             'G4OpenGL', 
+             'G4parmodels', 
+             'G4particles', 
+             'G4persistency', 
+             'G4physicslists',
+             'G4processes',
+             'G4RayTracer', 
+             'G4readout', 
+             'G4run', 
+             'G4track',
+             'G4tracking', 
+             'G4Tree', 
+             'G4visHepRep', 
+             'G4vis_management', 
+             'G4visXXX', 
+             'G4VRML']
+
+
+### NEXUS
+
+dirs = ['actions', 
+        'base', 
+        'generators', 
+        'geometries', 
+        'physics_lists']
+
+src = []
+inc = []
+for d in dirs:
+    src += Glob(d+'/*.cc')
+    inc += Glob(d+'/*.h')
+
+
+
+### Construction environment ------------------------------
+
+env = Environment(ENV=os.environ)
+
+if env['PLATFORM'] == 'darwin':
+    
+    env['LINKFLAGS'] = ['-Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib']
+
+
+env['CPPPATH']  = dirs
+env['CPPPATH'] += [BHEPPATH  + 'include']
+env['CPPPATH'] += [CLHEPPATH + 'include']
+env['CPPPATH'] += [G4INCLUDE]
+env['CPPPATH'] += [OGLPATH   + 'include']
+env['CPPPATH'] += [X11PATH   + 'include']
+
+
+env['LIBPATH']  = [BHEPPATH  + 'lib']
+env['LIBPATH'] += [CLHEPPATH + 'lib']
+env['LIBPATH'] += [G4LIBDIR]
+env['LIBPATH'] += [OGLPATH   + 'lib']
+env['LIBPATH'] += [X11PATH   + 'lib']
+
+
+env['CPPDEFINES'] = G4DEFINE
+
+
+LIBS = []
+LIBS += G4LIBS
+LIBS += ['bhep', 'z', 'm']
+LIBS += ['CLHEP']
+LIBS += X11LIBS
+LIBS += OGLLIBS
+env['LIBS'] = LIBS
+
+           
+
+### Building ----------------------------------------------
+env.Program('nexus', ['nexus.cc']+src)
