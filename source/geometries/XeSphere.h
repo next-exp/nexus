@@ -6,7 +6,7 @@
 ///  \date     27 Nov 2009
 ///  \version  $Id$
 ///
-///  Copyright (c) 2009-2011 NEXT Collaboration
+///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
 #ifndef __XE_SPHERE__
