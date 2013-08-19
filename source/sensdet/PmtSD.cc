@@ -22,13 +22,13 @@
 namespace nexus {
   
   
-  PmtSD::PmtSD(G4String sdname, G4String hcname): 
+  PmtSD::PmtSD(G4String sdname): 
     G4VSensitiveDetector(sdname), 
     _naming_order(0), _sensor_depth(0), _mother_depth(0),
     _boundary(0)
   {
     // Register the name of the collection of hits
-    collectionName.insert(hcname);
+    collectionName.insert(GetCollectionUniqueName());
   }
   
   
@@ -52,7 +52,7 @@ namespace nexus {
     _HC = new PmtHitsCollection(this->GetName(), this->GetCollectionName(0));
 
     G4int HCID = G4SDManager::GetSDMpointer()->
-      GetCollectionID(this->GetCollectionName(0)); 
+      GetCollectionID(this->GetName()+"/"+this->GetCollectionName(0)); 
 
     HCE->AddHitsCollection(HCID, _HC);
   }

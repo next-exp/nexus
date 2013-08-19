@@ -30,6 +30,7 @@ namespace nexus {
   
   SiPM11::SiPM11(): BaseGeometry()
   {
+    Construct();
   }
   
   
@@ -119,7 +120,7 @@ namespace nexus {
     G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
     
     if (!G4SDManager::GetSDMpointer()->FindSensitiveDetector(sdname, false)) {
-      PmtSD* sipmsd = new PmtSD(sdname, "SIPM");
+      PmtSD* sipmsd = new PmtSD(sdname);
       sipmsd->SetDetectorVolumeDepth(0);
       sipmsd->SetDetectorNamingOrder(1000.);
       sipmsd->SetTimeBinning(1.*microsecond);

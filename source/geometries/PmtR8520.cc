@@ -104,7 +104,7 @@ namespace nexus {
 		      "PHOTOCATHODE", pmt_logic, false, 0);
     
     // G4SDManager* SDmgr = G4SDManager::GetSDMpointer();
-    // PmtSD* pmtSD = new PmtSD("/PmtR8520/PHOTOCATHODE", "PmtHitsCollection"); 
+    // PmtSD* pmtSD = new PmtSD("/PmtR8520/PHOTOCATHODE"); 
     // //    pmtSD->SetDetectorVolumeDepth(1);
     // SDmgr->AddNewDetector(pmtSD);   
     // window_logic->SetSensitiveDetector(pmtSD);

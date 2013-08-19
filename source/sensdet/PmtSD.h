@@ -31,7 +31,7 @@ namespace nexus {
   public:
     /// Constructor providing names for the sensitive detector
     /// and the collection of hits
-    PmtSD(G4String sdname, G4String hcname);
+    PmtSD(G4String sdname);
     /// The destructor
     ~PmtSD();
     
