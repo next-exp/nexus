@@ -11,6 +11,7 @@
 
 #include "Trajectory.h"
 #include "TrajectoryMap.h"
+#include "IonizationElectron.h"
 
 #include <G4Track.hh>
 #include <G4ParticleDefinition.hh>
@@ -37,8 +38,8 @@ DefaultTrackingAction::~DefaultTrackingAction()
 
 void DefaultTrackingAction::PreUserTrackingAction(const G4Track* track)
 {
-  if (track->GetDefinition() == G4OpticalPhoton::Definition()) return;
-
+  if (track->GetDefinition() == G4OpticalPhoton::Definition() 
+      || track->GetDefinition() == IonizationElectron::Definition()) return;
   // Create a new trajectory associated to the current track 
   // and register it in the map
   G4VTrajectory* trj = new Trajectory(track);
