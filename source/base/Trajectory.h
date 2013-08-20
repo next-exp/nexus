@@ -76,6 +76,9 @@ namespace nexus {
     G4double GetFinalTime() const;
     void SetFinalTime(G4double);
 
+    G4double GetTrackLength() const;
+    void SetTrackLength(G4double);
+
     
     // Trajectory points
 
@@ -103,9 +106,12 @@ namespace nexus {
     G4double _initial_time;
     G4double _final_time;
 
+    G4double _length;
+
     G4bool _record_trjpoints;
 
     TrajectoryPointContainer* _trjpoints;
+
   };
 
 } // namespace nexus
@@ -173,5 +179,11 @@ inline G4double nexus::Trajectory::GetFinalTime() const
 
 inline void nexus::Trajectory::SetFinalTime(G4double t)
 { _final_time = t; }
+
+inline G4double nexus::Trajectory::GetTrackLength() const
+{ return _length; }
+
+inline void nexus::Trajectory::SetTrackLength(G4double l)
+{ _length = l; }
 
 #endif  

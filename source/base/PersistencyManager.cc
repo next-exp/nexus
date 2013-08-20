@@ -130,7 +130,8 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     ipart->SetParticleID(trj->GetTrackID());
     _iprtmap[trackid] = ipart;
 
-
+    G4double tracklength = trj->GetTrackLength();
+    ipart->SetTrackLength(tracklength);
 
     G4ThreeVector xyz = trj->GetInitialPosition();
     G4double t = trj->GetInitialTime();
@@ -255,6 +256,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 
   for (G4int i=0; i<hits->entries(); i++) {
 
+
     PmtHit* hit = dynamic_cast<PmtHit*>(hits->GetHit(i));
     if (!hit) continue;
 
@@ -273,7 +275,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
       isnr->SetSample((*it).second, (*it).first);
     }
 
-
+   
     // Add the sensor hit to the irene event
     ievt->AddSensorHit(isnr);
   }

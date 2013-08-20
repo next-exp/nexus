@@ -75,4 +75,5 @@ void DefaultTrackingAction::PostUserTrackingAction(const G4Track* track)
   // Record final time and position of the track
   trj->SetFinalPosition(track->GetPosition());
   trj->SetFinalTime(track->GetGlobalTime());
+  trj->SetTrackLength(track->GetTrackLength());
 }
