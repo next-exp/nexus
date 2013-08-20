@@ -14,10 +14,12 @@
 #include "IonizationElectron.h"
 
 #include <G4Track.hh>
-#include <G4ParticleDefinition.hh>
-#include <G4OpticalPhoton.hh>
 #include <G4TrackingManager.hh>
 #include <G4Trajectory.hh>
+#include <G4ParticleDefinition.hh>
+#include <G4OpticalPhoton.hh>
+
+
 
 using namespace nexus;
 
@@ -25,7 +27,6 @@ using namespace nexus;
 
 DefaultTrackingAction::DefaultTrackingAction(): G4UserTrackingAction()
 {
-
 }
 
 
@@ -38,23 +39,40 @@ DefaultTrackingAction::~DefaultTrackingAction()
 
 void DefaultTrackingAction::PreUserTrackingAction(const G4Track* track)
 {
-  if (track->GetDefinition() == G4OpticalPhoton::Definition() 
-      || track->GetDefinition() == IonizationElectron::Definition()) return;
-  // Create a new trajectory associated to the current track 
-  // and register it in the map
+  // Do nothing if the track is an optical photon or an ionization electron
+  if (track->GetDefinition() == G4OpticalPhoton::Definition() || 
+      track->GetDefinition() == IonizationElectron::Definition()) return;
+
+  // Create a new trajectory associated to the track.
+  // N.B. If the processesing of a track is interrupted to be resumed
+  // later on (to process, for instance, its secondaries) more than
+  // one trajectory associated to the track will be created, but 
+  // the event manager will merge them at some point.
   G4VTrajectory* trj = new Trajectory(track);
-  TrajectoryMap::Add(trj);
+  
+  // We register only the first trajectory of a track in the trajectory map
+  if (!TrajectoryMap::Get(track->GetTrackID()))
+    TrajectoryMap::Add(trj);
 
   // Set the trajectory in the tracking manager
   fpTrackingManager->SetStoreTrajectory(true);
   fpTrackingManager->SetTrajectory(trj);
-}
+ }
 
 
 
 void DefaultTrackingAction::PostUserTrackingAction(const G4Track* track)
 {
-  Trajectory* trj = (Trajectory*) fpTrackingManager->GimmeTrajectory();
+  // Do nothing if the track is an optical photon or an ionization electron
+  if (track->GetDefinition() == G4OpticalPhoton::Definition() || 
+    track->GetDefinition() == IonizationElectron::Definition()) return;
+
+  Trajectory* trj = (Trajectory*) TrajectoryMap::Get(track->GetTrackID());
+
+  // Do nothing if the track has no associated trajectory in the map
+  if (!trj) return;
+
+  // Record final time and position of the track
   trj->SetFinalPosition(track->GetPosition());
   trj->SetFinalTime(track->GetGlobalTime());
 }
