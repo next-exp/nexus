@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
 ///  \file   DefaultTrackingAction.h
-///  \brief  
+///  \brief  General-purpose user tracking action.
 ///
 ///  \author   <justo.martin-albo@ific.uv.es>
 ///  \date     25 Mar 2013 
@@ -18,6 +18,8 @@ class G4Track;
 
 
 namespace nexus {
+
+  // General-purpose user tracking action
 
   class DefaultTrackingAction: public G4UserTrackingAction
   {
