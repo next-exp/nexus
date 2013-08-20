@@ -31,7 +31,7 @@ Trajectory::Trajectory():
 
 
 
-Trajectory::Trajectory(const G4Track* track)
+Trajectory::Trajectory(const G4Track* track): G4VTrajectory()
 {
   _record_trjpoints = false;
   _pdef = track->GetDefinition();
@@ -110,6 +110,8 @@ void Trajectory::AppendStep(const G4Step* aStep)
 void Trajectory::MergeTrajectory(G4VTrajectory* second)
 {
   if (!second) return;
+
+  if (!_record_trjpoints) return;
 
   Trajectory* tmp = (Trajectory*) second;
   G4int entries = tmp->GetPointEntries();

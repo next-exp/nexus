@@ -130,6 +130,8 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     ipart->SetParticleID(trj->GetTrackID());
     _iprtmap[trackid] = ipart;
 
+
+
     G4ThreeVector xyz = trj->GetInitialPosition();
     G4double t = trj->GetInitialTime();
     ipart->SetInitialVertex(xyz.x(), xyz.y(), xyz.z(), t);      
@@ -152,8 +154,12 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
   for (unsigned int i=0; i<iparts->GetEntries(); ++i) {
 
     irene::Particle* ipart = (irene::Particle*) iparts->At(i);
-    G4VTrajectory* trj = TrajectoryMap::Get(ipart->GetParticleID());
+
+    Trajectory* trj = (Trajectory*) TrajectoryMap::Get(ipart->GetParticleID());
+
     int parent_id = trj->GetParentID();
+
+
 
     if (parent_id == 0) {
       ipart->SetPrimary(true);

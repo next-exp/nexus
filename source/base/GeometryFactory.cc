@@ -42,6 +42,7 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
   BaseGeometry* p = 0;
 
   if (_name == "XE_SPHERE") p = new XeSphere();
+  
   else if (_name == "NEXT1_EL") p = new Next1EL();
 
   else if (_name == "NEXT100") p = new Next100();
