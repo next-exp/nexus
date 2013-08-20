@@ -48,7 +48,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Epoxy()
   G4double energy[2] = 
     {1*eV, 10.751*eV};
   G4double rindex[2] = 
-    {1.54, 1.54*eV};
+    {1.54, 1.54};
   
   mpt->AddProperty("RINDEX", energy, rindex, 2);
 

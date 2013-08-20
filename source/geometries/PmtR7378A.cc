@@ -114,7 +114,7 @@ namespace nexus {
 			"PHOTOCATHODE", window_logic, false, 0, true);
     
     // Sensitive detector
-    PmtSD* pmtsd = new PmtSD("/PMT_R7378A/PHOTOCATHODE");
+    PmtSD* pmtsd = new PmtSD("/PMT_R7378A/Pmt");
     pmtsd->SetDetectorVolumeDepth(1);
     pmtsd->SetTimeBinning(100.*nanosecond);
     G4SDManager::GetSDMpointer()->AddNewDetector(pmtsd);

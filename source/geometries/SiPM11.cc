@@ -22,7 +22,7 @@
 #include <G4SDManager.hh>
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
-
+#include <G4PhysicalConstants.hh>
 
 
 namespace nexus {
@@ -116,7 +116,7 @@ namespace nexus {
     
     // SENSITIVE DETECTOR ////////////////////////////////////////////
 
-    G4String sdname = "/SIPM11/PHOTODIODES";
+    G4String sdname = "/SIPM11/SiPMs";
     G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
     
     if (!G4SDManager::GetSDMpointer()->FindSensitiveDetector(sdname, false)) {
