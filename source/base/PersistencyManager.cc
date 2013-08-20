@@ -159,7 +159,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     Trajectory* trj = (Trajectory*) TrajectoryMap::Get(ipart->GetParticleID());
 
     int parent_id = trj->GetParentID();
-
+    ipart->SetCreatorProcess(trj->GetCreatorProcess());
 
 
     if (parent_id == 0) {

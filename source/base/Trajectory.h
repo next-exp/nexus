@@ -79,6 +79,9 @@ namespace nexus {
     G4double GetTrackLength() const;
     void SetTrackLength(G4double);
 
+    G4String GetCreatorProcess() const;
+    void SetCreatorProcess(G4double);
+
     
     // Trajectory points
 
@@ -107,6 +110,8 @@ namespace nexus {
     G4double _final_time;
 
     G4double _length;
+
+    G4String _creator_process;
 
     G4bool _record_trjpoints;
 
@@ -185,5 +190,11 @@ inline G4double nexus::Trajectory::GetTrackLength() const
 
 inline void nexus::Trajectory::SetTrackLength(G4double l)
 { _length = l; }
+
+inline G4String nexus::Trajectory::GetCreatorProcess() const
+{ return _creator_process; }
+
+inline void nexus::Trajectory::SetCreatorProcess(G4double cp)
+{ _creator_process = cp; }
 
 #endif  

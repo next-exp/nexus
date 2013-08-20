@@ -13,6 +13,7 @@
 
 #include <G4Track.hh>
 #include <G4ParticleDefinition.hh>
+#include <G4VProcess.hh>
 
 using namespace nexus;
 
@@ -40,6 +41,11 @@ Trajectory::Trajectory(const G4Track* track): G4VTrajectory()
   _initial_momentum = track->GetMomentum();
   _initial_position = track->GetVertexPosition();
   _initial_time = track->GetGlobalTime();
+  if (_parentId != 0) {
+    _creator_process = track->GetCreatorProcess()->GetProcessName();
+  } else {
+    _creator_process = "none";
+  }
   _trjpoints = new TrajectoryPointContainer();
 }
 
