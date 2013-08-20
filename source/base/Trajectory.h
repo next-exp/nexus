@@ -80,7 +80,13 @@ namespace nexus {
     void SetTrackLength(G4double);
 
     G4String GetCreatorProcess() const;
-    void SetCreatorProcess(G4double);
+    void SetCreatorProcess(G4String);
+    
+    G4String GetInitialVolume() const;
+    void SetInitialVolume(G4String);
+
+    G4String GetDecayVolume() const;
+    void SetDecayVolume(G4String);
 
     
     // Trajectory points
@@ -112,6 +118,8 @@ namespace nexus {
     G4double _length;
 
     G4String _creator_process;
+    G4String _initial_volume;
+    G4String _decay_volume;
 
     G4bool _record_trjpoints;
 
@@ -194,7 +202,19 @@ inline void nexus::Trajectory::SetTrackLength(G4double l)
 inline G4String nexus::Trajectory::GetCreatorProcess() const
 { return _creator_process; }
 
-inline void nexus::Trajectory::SetCreatorProcess(G4double cp)
+inline void nexus::Trajectory::SetCreatorProcess(G4String cp)
 { _creator_process = cp; }
+
+inline G4String nexus::Trajectory::GetInitialVolume() const
+{ return _initial_volume; }
+
+inline void nexus::Trajectory::SetInitialVolume(G4String iv)
+{ _initial_volume = iv; }
+
+inline G4String nexus::Trajectory::GetDecayVolume() const
+{ return _decay_volume; }
+
+inline void nexus::Trajectory::SetDecayVolume(G4String dv)
+{ _decay_volume = dv; }
 
 #endif  

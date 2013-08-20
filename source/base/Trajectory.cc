@@ -41,6 +41,7 @@ Trajectory::Trajectory(const G4Track* track): G4VTrajectory()
   _initial_momentum = track->GetMomentum();
   _initial_position = track->GetVertexPosition();
   _initial_time = track->GetGlobalTime();
+  _initial_volume = track->GetLogicalVolumeAtVertex()->GetName();
   if (_parentId != 0) {
     _creator_process = track->GetCreatorProcess()->GetProcessName();
   } else {

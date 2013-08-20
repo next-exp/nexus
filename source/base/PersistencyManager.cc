@@ -141,6 +141,14 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     t = trj->GetFinalTime();
     ipart->SetDecayVertex(xyz.x(), xyz.y(), xyz.z(), t);
 
+    G4String volume = trj->GetInitialVolume();
+    ipart->SetInitialVolume(volume);
+
+    volume = trj->GetDecayVolume();
+    ipart->SetDecayVolume(volume);
+
+    
+
     G4double mass = trj->GetParticleDefinition()->GetPDGMass();
     G4ThreeVector mom = trj->GetInitialMomentum();
     G4double energy = sqrt(mom.mag2() + mass*mass);
