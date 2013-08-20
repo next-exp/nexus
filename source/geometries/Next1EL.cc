@@ -239,10 +239,10 @@ void Next1EL::Construct()
   BuildFieldCage();
   BuildEnergyPlane();
 
-  if (_tracking_plane == "SIPM") 
-    BuildSiPMTrackingPlane();
-  else 
-    BuildPMTTrackingPlane();
+  // if (_tracking_plane == "SIPM") 
+  //   BuildSiPMTrackingPlane();
+  // else 
+  //   BuildPMTTrackingPlane();
 
   G4ThreeVector v(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
   _specific_vertex = v;
@@ -952,7 +952,7 @@ void Next1EL::BuildEnergyPlane()
     new G4PVPlacement(0, G4ThreeVector(_pmt_positions[i].x(), 
   				       _pmt_positions[i].y(),
   				       transl_z-0.5*cm), 
-  		      _pmt_logic, "PMT", _gas_logic, false, i, true);
+  		      _pmt_logic, "PMT", _gas_logic, false, i);
   }
   
   // Finish with the positioning of the PMT holder
@@ -961,7 +961,7 @@ void Next1EL::BuildEnergyPlane()
     new G4LogicalVolume(pmtholder_solid, _teflon, "PMT_HOLDER_CATHODE");
  
   new G4PVPlacement(0, G4ThreeVector(0.,0.,transl_z), pmtholder_logic,
-  		    "PMT_HOLDER_CATHODE", _gas_logic, false, 0, true);
+  		    "PMT_HOLDER_CATHODE", _gas_logic, false, 0);
 
   
   
@@ -996,7 +996,7 @@ void Next1EL::BuildEnergyPlane()
     (_fieldcage_length/2. + _pmtholder_cath_displ/2.);
 
   new G4PVPlacement(0, G4ThreeVector(0.,0.,transl_z), shield_logic, 
-  		    "PMT_SHIELD", _gas_logic, false, 0, true);
+  		    "PMT_SHIELD", _gas_logic, false, 0);
   
 }
 

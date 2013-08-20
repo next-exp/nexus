@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author:  Javier Mu?oz Vidal <jmunoz@ific.uv.es>    
+//  Author:  Javier Muñoz Vidal <jmunoz@ific.uv.es>    
 //  Created: 27 Nov 2009
 //  
-//  Copyright (c) 2009-2011 NEXT Collaboration
+//  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
 // ---------------------------------------------------------------------------- 
 
 #include "XeSphere.h"
@@ -51,7 +51,7 @@ namespace nexus {
     radius_cmd.SetParameterName("radius", false);
     radius_cmd.SetRange("radius>0.");
 
-    // Creating the vertex generator
+    // Create a vertex generator for a sphere
     _sphere_vertex_gen = new SpherePointSampler(_radius, 0.);
   }
   
@@ -69,18 +69,27 @@ namespace nexus {
   {
     G4String name = "XE_SPHERE";
 
+    // Define solid volume as a sphere
     G4Orb* sphere_solid = new G4Orb(name, _radius);
 
+    // Define the material (LXe or GXe) for the sphere. 
+    // We use for this the NIST manager or the nexus materials list.
     G4Material* xenon = 0;
     if (_liquid)
       xenon = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
     else
       xenon = MaterialsList::GXe(_pressure);
 
+    // Define the logical volume of the sphere using the material 
+    // and the solid volume defined above
     G4LogicalVolume* sphere_logic = 
     new G4LogicalVolume(sphere_solid, xenon, name);
     BaseGeometry::SetLogicalVolume(sphere_logic);
 
+    // Set the logical volume of the sphere as an ionization 
+    // sensitive detector, i.e. position, time and energy deposition
+    // will be stored for each step of any charged particle crossing
+    // the volume.
     IonizationSD* ionizsd = new IonizationSD("/XE_SPHERE");
     G4SDManager::GetSDMpointer()->AddNewDetector(ionizsd);
     sphere_logic->SetSensitiveDetector(ionizsd);
@@ -90,8 +99,7 @@ namespace nexus {
 
   G4ThreeVector XeSphere::GenerateVertex(const G4String& region) const
   {
-    return G4ThreeVector(0., 0., 0.); 
-    //return _sphere_vertex_gen->GenerateVertex(region);
+    return _sphere_vertex_gen->GenerateVertex(region);
   }
   
 
