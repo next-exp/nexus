@@ -66,6 +66,8 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
     this->SetUserAction(_act_fctr->CreateTrackingAction());
   if (UI->GetCurrentValues("/Actions/RegisterRunAction"))
     this->SetUserAction(_act_fctr->CreateRunAction());
+  if (UI->GetCurrentValues("/Actions/RegisterEventAction"))
+    this->SetUserAction(_act_fctr->CreateEventAction());
 
   PersistencyManager::Initialize();
 

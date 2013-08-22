@@ -53,12 +53,13 @@ G4UserRunAction* ActionsFactory::CreateRunAction() const
 
 //////////////////////////////////////////////////////////////////////
 
-//#include "DefaultEventAction.h"
+#include "DefaultEventAction.h"
 
 
 G4UserEventAction* ActionsFactory::CreateEventAction() const
 {
   G4UserEventAction* p = 0;
+  if (_evtact_name == "DEFAULT") p = new DefaultEventAction();
   return p;
 }
 
@@ -85,12 +86,18 @@ G4UserTrackingAction* ActionsFactory::CreateTrackingAction() const
 
 //////////////////////////////////////////////////////////////////////
 
-//#include "DefaultSteppingAction.h"
+#include "DefaultSteppingAction.h"
 
 
 G4UserSteppingAction* ActionsFactory::CreateSteppingAction() const
 {
   G4UserSteppingAction* p = 0;
+  if (_stpact_name == "DEFAULT") p = new DefaultSteppingAction();
+
+  else {
+    G4String err = "Unknown user stepping action: " + _stpact_name;
+    G4Exception("CreateSteppingAction()","[ActionsFactory]",JustWarning,err);
+  }
   return p;
 }
 
