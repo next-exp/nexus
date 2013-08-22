@@ -1206,7 +1206,6 @@ void Next1EL::BuildPMTTrackingPlane()
   
 G4ThreeVector Next1EL::GenerateVertex(const G4String& region) const
 {
-  G4cout<< "Generating vertex" << G4endl;
   if (region == "SIDEPORT") {
     return _sideport_position;
   }
