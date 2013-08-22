@@ -36,6 +36,7 @@ namespace nexus {
   {
     // The SiPM
     _siPM = new SiPM11();
+    Construct();
   }
 
 
@@ -90,12 +91,12 @@ namespace nexus {
     G4double pos_z = (-dbo_z + coating_thickn) / 2.;
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,pos_z), coating_logic,
-		      "DB_WLS_COATING", board_logic, false, 0);
+		      "DB_WLS_COATING", board_logic, false, 0, true);
     
     
     // SILICON PMs ///////////////////////////////////////////////////
 
-    _siPM->Construct();
+    //  _siPM->Construct();
     G4LogicalVolume* sipm_logic = _siPM->GetLogicalVolume();
 
     pos_z = -dbo_z/2 + coating_thickn + (_siPM->GetDimensions().z())/2.;
@@ -109,7 +110,7 @@ namespace nexus {
       for (G4int j=0; j<_columns; j++) {
 	G4double pos_x = -dbo_x/2 + offset + j*sipm_pitch;
 	new G4PVPlacement(0, G4ThreeVector(pos_x, pos_y, pos_z), sipm_logic,
-			  "SIPM11", board_logic, false, sipm_no);
+			  "SIPM11", board_logic, false, sipm_no, true);
 	std::pair<int, G4ThreeVector> mypos;
 	mypos.first = sipm_no;
 	mypos.second = G4ThreeVector(pos_x, pos_y, pos_z);
