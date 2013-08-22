@@ -10,6 +10,7 @@
 /Generator/RegisterGenerator SINGLE_PARTICLE
 
 /Actions/RegisterTrackingAction DEFAULT
+/Actions/RegisterRunAction DEFAULT
 
 /nexus/RegisterMacro macros/nexus_example3.config.mac
 

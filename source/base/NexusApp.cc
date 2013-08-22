@@ -32,6 +32,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
   // Define the command to register a configuration macro. The user may
   // invoke the command as many times as needed
   _msg->DeclareMethod("RegisterMacro", &NexusApp::RegisterMacro, ""); 
+  _msg->DeclareProperty("random_seed", _random_seed, "Set random seed."); 
 
 
   // Create the necessary classes for initialization
@@ -63,9 +64,14 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
 
   if (UI->GetCurrentValues("/Actions/RegisterTrackingAction"))
     this->SetUserAction(_act_fctr->CreateTrackingAction());
-
+  if (UI->GetCurrentValues("/Actions/RegisterRunAction"))
+    this->SetUserAction(_act_fctr->CreateRunAction());
 
   PersistencyManager::Initialize();
+
+  G4int seed = _random_seed;
+  if (seed < 0) CLHEP::HepRandom::setTheSeed(time(0));
+  else CLHEP::HepRandom::setTheSeed(seed);
 }
 
 

@@ -33,7 +33,7 @@ void DefaultRunAction::BeginOfRunAction(const G4Run* run)
 }
 
 
-void DefaultRunAction::EndOfRunAction(const G4Run*)
+void DefaultRunAction::EndOfRunAction(const G4Run* run)
 {
   G4cout << "### Run " << run->GetRunID() << " end." << G4endl;
 }
