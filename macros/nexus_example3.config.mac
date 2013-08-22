@@ -5,7 +5,7 @@
 
 /run/verbose 1
 /event/verbose 0
-/tracking/verbose 2
+/tracking/verbose 0
 /control/execute macros/generators/SingleParticle.mac
 /control/execute macros/geometries/Next1EL.mac
 /nexus/persistency/outputFile nexus.root

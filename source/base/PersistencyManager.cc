@@ -109,6 +109,8 @@ G4bool PersistencyManager::Store(const G4Event* event)
   _writer->Write(ievt);
   _evt = 0;
 
+  TrajectoryMap::Clear();
+
   return true;
 }
 
