@@ -50,6 +50,8 @@ namespace nexus {
     ActionsFactory*   _act_fctr;
 
     std::vector<G4String> _macros;
+
+    G4int _random_seed;
   };
 
 } // namespace nexus
