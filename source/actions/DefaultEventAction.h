@@ -6,7 +6,7 @@
 ///  \date     15 Apr 2009
 ///  \version  $Id: DefaultEventAction.h 4339 2011-09-30 21:47:39Z jmalbos $ 
 ///
-///  Copyright (c) 2009-2011 NEXT Collaboration 
+///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
 #ifndef __DEFAULT_EVENT_ACTION__
