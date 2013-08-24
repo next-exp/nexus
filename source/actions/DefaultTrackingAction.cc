@@ -51,8 +51,8 @@ void DefaultTrackingAction::PreUserTrackingAction(const G4Track* track)
   G4VTrajectory* trj = new Trajectory(track);
   
   // We register only the first trajectory of a track in the trajectory map
-  if (!TrajectoryMap::Get(track->GetTrackID()))
-    TrajectoryMap::Add(trj);
+  //if (!TrajectoryMap::Get(track->GetTrackID()))
+  //TrajectoryMap::Add(trj);
 
   // Set the trajectory in the tracking manager
   fpTrackingManager->SetStoreTrajectory(true);
