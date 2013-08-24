@@ -59,7 +59,14 @@ G4UserRunAction* ActionsFactory::CreateRunAction() const
 G4UserEventAction* ActionsFactory::CreateEventAction() const
 {
   G4UserEventAction* p = 0;
+  
   if (_evtact_name == "DEFAULT") p = new DefaultEventAction();
+
+  else {
+    G4String err = "Unknown user event action: " + _evtact_name;
+    G4Exception("CreateEventAction()", "[ActionsFactory]", JustWarning, err);
+  }
+
   return p;
 }
 
@@ -77,7 +84,8 @@ G4UserTrackingAction* ActionsFactory::CreateTrackingAction() const
 
   else {
     G4String err = "Unknown user tracking action: " + _trkact_name;
-    G4Exception("CreateTrackingAction()","[ActionsFactory]",JustWarning,err);
+    G4Exception("CreateTrackingAction()", "[ActionsFactory]",
+      JustWarning, err);
   }
   
   return p;
