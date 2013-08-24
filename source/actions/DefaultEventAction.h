@@ -4,7 +4,7 @@
 ///
 ///  \author   J. Martin-Albo <jmalbos@ific.uv.es>
 ///  \date     15 Apr 2009
-///  \version  $Id: DefaultEventAction.h 4339 2011-09-30 21:47:39Z jmalbos $ 
+///  \version  $Id$
 ///
 ///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------

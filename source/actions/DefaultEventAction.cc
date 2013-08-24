@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-//  $Id: DefaultEventAction.cc 4383 2011-10-14 07:46:57Z paola $
+//  $Id$
 //
 //  Author : J Martin-Albo <jmalbos@ific.uv.es>
 //  Created: 15 Apr 2009
