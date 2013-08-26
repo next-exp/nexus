@@ -20,12 +20,13 @@
 #include <G4FastSimulationManagerProcess.hh>
 #include <G4PhysicsConstructorFactory.hh>
 
-G4_DECLARE_PHYSCONSTR_FACTORY(nexus::NexusPhysics);
+
 
 
 namespace nexus {
 
-  
+  G4_DECLARE_PHYSCONSTR_FACTORY(NexusPhysics);
+
   NexusPhysics::NexusPhysics(): 
     G4VPhysicsConstructor("NexusPhysics"),
     _drift_el(true)
@@ -42,7 +43,6 @@ namespace nexus {
   
   void NexusPhysics::ConstructParticle()
   {
-    G4cout << "NEXUS PHYSICS" << G4endl;
     IonizationElectron::Definition();
   }
   
