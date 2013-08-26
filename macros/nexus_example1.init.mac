@@ -3,19 +3,14 @@
 ###  $Id$
 ### --------------------------------------------------------
 
-/control/execute macros/physics/DefaultPhysicsList.mac
-
-/Geometry/RegisterGeometry NEXT1_EL
+/Geometry/RegisterGeometry XE_SPHERE
 
 /Generator/RegisterGenerator SINGLE_PARTICLE
 
+/Actions/RegisterRunAction DEFAULT
+
 /Actions/RegisterTrackingAction DEFAULT
 
+/control/execute macros/physics/DefaultPhysicsList.mac
+
 /nexus/RegisterMacro macros/nexus_example1.config.mac
-
-
-
-
-
-
-
