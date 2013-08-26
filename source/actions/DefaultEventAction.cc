@@ -50,7 +50,7 @@ namespace nexus {
       G4TrajectoryContainer* tc = event->GetTrajectoryContainer();
       if (tc) {
         for (size_t i=0; i<tc->size(); i++) {
-          G4Trajectory* trj = (G4Trajectory*) (*tc)[i];
+          G4VTrajectory* trj = (*tc)[i];
           trj->DrawTrajectory();
         }
       }
