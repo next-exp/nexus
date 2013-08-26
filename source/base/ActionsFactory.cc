@@ -94,30 +94,41 @@ G4UserTrackingAction* ActionsFactory::CreateTrackingAction() const
 
 //////////////////////////////////////////////////////////////////////
 
-//#include "DefaultSteppingAction.h"
+#include "DefaultSteppingAction.h"
 
 
 G4UserSteppingAction* ActionsFactory::CreateSteppingAction() const
 {
   G4UserSteppingAction* p = 0;
-  // if (_stpact_name == "DEFAULT") p = new DefaultSteppingAction();
 
-  // else {
-  //   G4String err = "Unknown user stepping action: " + _stpact_name;
-  //   G4Exception("CreateSteppingAction()","[ActionsFactory]",JustWarning,err);
-  // }
+  if (_stpact_name == "DEFAULT") p = new DefaultSteppingAction();
+
+  else {
+    G4String err = "Unknown user stepping action: " + _stpact_name;
+    G4Exception("CreateSteppingAction()", "[ActionsFactory]",
+      JustWarning, err);
+  }
+
   return p;
 }
 
 
 //////////////////////////////////////////////////////////////////////
 
-//#include "DefaultStackingAction.h"
+#include "DefaultStackingAction.h"
 
 
 G4UserStackingAction* ActionsFactory::CreateStackingAction() const
 {
   G4UserStackingAction* p = 0;
+
+  if (_stkact_name == "DEFAULT") p = new DefaultStackingAction();
+
+  else {
+    G4String err = "Unknown user stacking action: " + _stkact_name;
+    G4Exception("CreateStackingAction()", "[ActionsFactory]",
+      JustWarning, err);
+  }
+
   return p;
 }
-

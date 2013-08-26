@@ -9,8 +9,8 @@
 ///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef __ACTIONS_FACTORY__
-#define __ACTIONS_FACTORY__ 
+#ifndef ACTIONS_FACTORY_H
+#define ACTIONS_FACTORY_H 
 
 #include <G4String.hh>
 
@@ -48,6 +48,6 @@ namespace nexus {
     G4String _stkact_name; ///< Name of the user stacking action
   };
 
-}
+} // end namespace nexus
 
 #endif
