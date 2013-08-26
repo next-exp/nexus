@@ -10,6 +10,7 @@
 #include "Trajectory.h"
 
 #include "TrajectoryPoint.h"
+#include "TrajectoryMap.h"
 
 #include <G4Track.hh>
 #include <G4ParticleDefinition.hh>
@@ -23,31 +24,31 @@ G4Allocator<Trajectory> TrjAllocator;
 
 
 
-Trajectory::Trajectory():
+Trajectory::Trajectory(const G4Track* track): 
   G4VTrajectory(), _pdef(0), _trackId(-1), _parentId(-1),
-  _initial_momentum(), _record_trjpoints(false)
+  _initial_time(0.), _final_time(0), _record_trjpoints(false), 
+  _trjpoints(0)
 {
-  _trjpoints = new TrajectoryPointContainer();
-}
-
-
-
-Trajectory::Trajectory(const G4Track* track): G4VTrajectory()
-{
-  _record_trjpoints = false;
-  _pdef = track->GetDefinition();
-  _trackId = track->GetTrackID();
+  _pdef     = track->GetDefinition();
+  _trackId  = track->GetTrackID();
   _parentId = track->GetParentID();
+
+  if (_parentId == 0) 
+    _creator_process = "none";
+  else 
+    _creator_process = track->GetCreatorProcess()->GetProcessName();
+
   _initial_momentum = track->GetMomentum();
   _initial_position = track->GetVertexPosition();
   _initial_time = track->GetGlobalTime();
   _initial_volume = track->GetLogicalVolumeAtVertex()->GetName();
-  if (_parentId != 0) {
-    _creator_process = track->GetCreatorProcess()->GetProcessName();
-  } else {
-    _creator_process = "none";
-  }
+
   _trjpoints = new TrajectoryPointContainer();
+
+  // Add this trajectory in the map, but only if no other
+  // trajectory for this track id has been registered yet
+  if (!TrajectoryMap::Get(track->GetTrackID()))
+    TrajectoryMap::Add(this);
 }
 
 
@@ -65,20 +66,6 @@ Trajectory::~Trajectory()
     delete (*_trjpoints)[i];
   _trjpoints->clear();
   delete _trjpoints;
-}
-
-
-
-G4ParticleDefinition* Trajectory::GetParticleDefinition()
-{
-  return _pdef;
-}
-
-
-
-void Trajectory::SetParticleDefinition(G4ParticleDefinition* pdef)
-{
-  _pdef = pdef;
 }
 
 
