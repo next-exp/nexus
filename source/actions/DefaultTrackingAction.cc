@@ -41,7 +41,10 @@ void DefaultTrackingAction::PreUserTrackingAction(const G4Track* track)
 {
   // Do nothing if the track is an optical photon or an ionization electron
   if (track->GetDefinition() == G4OpticalPhoton::Definition() || 
-      track->GetDefinition() == IonizationElectron::Definition()) return;
+      track->GetDefinition() == IonizationElectron::Definition()) {
+    fpTrackingManager->SetStoreTrajectory(false);
+    return;
+  }
 
   // Create a new trajectory associated to the track.
   // N.B. If the processesing of a track is interrupted to be resumed
@@ -50,11 +53,7 @@ void DefaultTrackingAction::PreUserTrackingAction(const G4Track* track)
   // the event manager will merge them at some point.
   G4VTrajectory* trj = new Trajectory(track);
   
-  // We register only the first trajectory of a track in the trajectory map
-  //if (!TrajectoryMap::Get(track->GetTrackID()))
-  //TrajectoryMap::Add(trj);
-
-  // Set the trajectory in the tracking manager
+   // Set the trajectory in the tracking manager
   fpTrackingManager->SetStoreTrajectory(true);
   fpTrackingManager->SetTrajectory(trj);
  }
