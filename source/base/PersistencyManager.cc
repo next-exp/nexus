@@ -119,11 +119,16 @@ G4bool PersistencyManager::Store(const G4Event* event)
 void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
                                            irene::Event* ievent)
 {
+  // If the pointer is null, no trajectories were stored in this event
+  if (!tc) return;
+
   // Loop through the trajectories stored in the container
   for (G4int i=0; i<tc->entries(); ++i) {
 
     Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[i]);
     if (!trj) continue;
+
+    G4cout << trj->GetPDGEncoding() << G4endl;
 
     // Create an irene particle to store the trajectory information
     irene::Particle* ipart = new irene::Particle(trj->GetPDGEncoding());
