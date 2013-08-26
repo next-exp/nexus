@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
 ///  \file   Trajectory.h
-///  \brief  
+///  \brief  Record of a track used by the persistency mechanism.
 /// 
 ///  \author   <justo.martin-albo@ific.uv.es>
 ///  \date     26 March 2013
@@ -25,13 +25,14 @@ namespace nexus {
   typedef std::vector<G4VTrajectoryPoint*> TrajectoryPointContainer;
 
 
-  /// TODO. CLASS DESCRIPTION
+  /// Record of a track used by the persistency mechanism. 
+  /// It stores basic information of the particle and its path through 
+  /// the geometry. A number of its properties are copied from the track
+  /// in construction and cannot be modified.
 
   class Trajectory: public G4VTrajectory
   {
   public:
-    /// Default constructor
-    Trajectory();
     /// Constructor given a track
     Trajectory(const G4Track*);
     /// Copy constructor
@@ -48,42 +49,43 @@ namespace nexus {
 
   public:
 
+    /// Return pointer to the particle definition 
+    /// associated to the track
     G4ParticleDefinition* GetParticleDefinition();
-    void SetParticleDefinition(G4ParticleDefinition*);
-
+    /// Return name of the particle
     G4String GetParticleName() const;
+    /// Return charge of the particle
     G4double GetCharge() const;
+    /// Return PDG code of the particle
     G4int GetPDGEncoding () const;
-  
+
+    // Return name of the track creator process
+    G4String GetCreatorProcess() const;
+
+    /// Return id number of the associated track
     G4int GetTrackID() const;
-    void SetTrackID(G4int);
-
+    /// Return id number of the parent track
     G4int GetParentID() const;
-    void SetParentID(G4int);
 
+    // Return initial three-momentum
     G4ThreeVector GetInitialMomentum() const;
-    void SetInitialMomentum(const G4ThreeVector&);
-    
+    // Return initial position (creation vertex) 
+    // in global coordinates
     G4ThreeVector GetInitialPosition() const;
-    void SetInitialPosition(const G4ThreeVector&);
+    // Return creation time with respect to
+    // the start-of-event time
+    G4double GetInitialTime() const;
 
     G4ThreeVector GetFinalPosition() const;
     void SetFinalPosition(const G4ThreeVector&);
-
-    G4double GetInitialTime() const;
-    void SetInitialTime(G4double);
 
     G4double GetFinalTime() const;
     void SetFinalTime(G4double);
 
     G4double GetTrackLength() const;
     void SetTrackLength(G4double);
-
-    G4String GetCreatorProcess() const;
-    void SetCreatorProcess(G4String);
-    
+  
     G4String GetInitialVolume() const;
-    void SetInitialVolume(G4String);
 
     G4String GetDecayVolume() const;
     void SetDecayVolume(G4String);
@@ -100,6 +102,11 @@ namespace nexus {
     ///
     virtual void MergeTrajectory(G4VTrajectory*);
 
+  private:
+    /// The default constructor is private. A trajectory can
+    /// only be constructed associated to a track.
+    Trajectory();
+ 
 
   private:
     G4ParticleDefinition* _pdef; //< Pointer to the particle definition
@@ -118,6 +125,7 @@ namespace nexus {
     G4double _length;
 
     G4String _creator_process;
+
     G4String _initial_volume;
     G4String _decay_volume;
 
@@ -125,15 +133,15 @@ namespace nexus {
 
     TrajectoryPointContainer* _trjpoints;
 
-  };
+};
 
 } // namespace nexus
 
 
 #if defined G4TRACKING_ALLOC_EXPORT
-  extern G4DLLEXPORT G4Allocator<nexus::Trajectory> TrjAllocator;
+extern G4DLLEXPORT G4Allocator<nexus::Trajectory> TrjAllocator;
 #else
-  extern G4DLLIMPORT G4Allocator<nexus::Trajectory> TrjAllocator;
+extern G4DLLIMPORT G4Allocator<nexus::Trajectory> TrjAllocator;
 #endif
 
 
@@ -145,6 +153,9 @@ inline void* nexus::Trajectory::operator new(size_t)
 inline void nexus::Trajectory::operator delete(void* trj)
 { TrjAllocator.FreeSingle((nexus::Trajectory*) trj); }
 
+inline G4ParticleDefinition* nexus::Trajectory::GetParticleDefinition()
+{ return _pdef; }
+
 inline int nexus::Trajectory::GetPointEntries() const
 { return _trjpoints->size(); }
 
@@ -154,26 +165,14 @@ inline G4VTrajectoryPoint* nexus::Trajectory::GetPoint(G4int i) const
 inline G4ThreeVector nexus::Trajectory::GetInitialMomentum() const
 { return _initial_momentum; }
 
-inline void nexus::Trajectory::SetInitialMomentum(const G4ThreeVector& p)
-{ _initial_momentum = p; }
-
 inline G4int nexus::Trajectory::GetTrackID() const
 { return _trackId; }
-
-inline void nexus::Trajectory::SetTrackID(G4int id)
-{ _trackId = id; }
 
 inline G4int nexus::Trajectory::GetParentID() const
 { return _parentId; }
 
-inline void nexus::Trajectory::SetParentID(G4int id)
-{ _parentId = id; }
-
 inline G4ThreeVector nexus::Trajectory::GetInitialPosition() const
 { return _initial_position; }
-
-inline void nexus::Trajectory::SetInitialPosition(const G4ThreeVector& x)
-{ _initial_position = x; }
 
 inline G4ThreeVector nexus::Trajectory::GetFinalPosition() const
 { return _final_position; }
@@ -183,9 +182,6 @@ inline void nexus::Trajectory::SetFinalPosition(const G4ThreeVector& x)
 
 inline G4double nexus::Trajectory::GetInitialTime() const
 { return _initial_time; }
-
-inline void nexus::Trajectory::SetInitialTime(G4double t)
-{ _initial_time = t; }
 
 inline G4double nexus::Trajectory::GetFinalTime() const
 { return _final_time; }
@@ -202,14 +198,8 @@ inline void nexus::Trajectory::SetTrackLength(G4double l)
 inline G4String nexus::Trajectory::GetCreatorProcess() const
 { return _creator_process; }
 
-inline void nexus::Trajectory::SetCreatorProcess(G4String cp)
-{ _creator_process = cp; }
-
 inline G4String nexus::Trajectory::GetInitialVolume() const
 { return _initial_volume; }
-
-inline void nexus::Trajectory::SetInitialVolume(G4String iv)
-{ _initial_volume = iv; }
 
 inline G4String nexus::Trajectory::GetDecayVolume() const
 { return _decay_volume; }
