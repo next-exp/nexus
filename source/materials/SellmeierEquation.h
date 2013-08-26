@@ -7,11 +7,11 @@
 ///  \date    7 Nov 2011
 ///  \version $Id$
 ///
-///  Copyright (c) 2011 NEXT Collaboration
+///  Copyright (c) 2011-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef __SELLMEIER_EQUATION__
-#define __SELLMEIER_EQUATION__
+#ifndef SELLMEIER_EQUATION_H
+#define SELLMEIER_EQUATION_H
 
 
 namespace nexus {
@@ -32,7 +32,7 @@ namespace nexus {
     G4double _C[3];
   };
 
-  // inline methods ..................................................
+  // Inline definitions ///////////////////////////////////
 
   inline SellmeierEquation::SellmeierEquation(G4double* B, G4double* C)
   { 
