@@ -50,19 +50,18 @@ IonGun::~IonGun()
 {
   delete _msg;
 }
-void IonGun::SetParticleDefinition()
-{
-  _particle_definition = G4ParticleTable::GetParticleTable()->
-    GetIon(_z, _a, 0.);
-  
-  if (!_particle_definition)
-    G4Exception("SetParticleDefinition()", "[IonGun]",
-		FatalException, " can not create ion ");
-}
+
+
 
 void IonGun::GeneratePrimaryVertex(G4Event* event)
 {
- 
+  _particle_definition = 
+    G4ParticleTable::GetParticleTable()->GetIon(_z, _a, 0.);
+  
+  if (!_particle_definition)
+    G4Exception("SetParticleDefinition()", "[IonGun]",
+    FatalException, "Couldn't create an ion.");
+
   // Generate an initial position for the particle using the geometry
   G4ThreeVector position = _geom->GenerateVertex(_region);
   // Particle generated at start-of-event
