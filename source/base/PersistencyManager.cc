@@ -128,8 +128,6 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[i]);
     if (!trj) continue;
 
-    G4cout << trj->GetPDGEncoding() << G4endl;
-
     // Create an irene particle to store the trajectory information
     irene::Particle* ipart = new irene::Particle(trj->GetPDGEncoding());
     
