@@ -211,11 +211,11 @@ Next1EL::Next1EL():
   gate_transparency_cmd.SetParameterName("gate_transparency", false);
   gate_transparency_cmd.SetRange("gate_transparency>0 && gate_transparency<1");
 
-  G4GenericMessenger::Command& numb_of_events_cmd = 
-    _msg->DeclareProperty("numb_of_events", _numb_of_events,
-			  "Number of events");
-  numb_of_events_cmd.SetParameterName("numb_of_events", false);
-  numb_of_events_cmd.SetRange("numb_of_events>0");
+  // G4GenericMessenger::Command& numb_of_events_cmd = 
+  //   _msg->DeclareProperty("numb_of_events", _numb_of_events,
+  // 			  "Number of events");
+  // numb_of_events_cmd.SetParameterName("numb_of_events", false);
+  // numb_of_events_cmd.SetRange("numb_of_events>0");
    
 }
 
@@ -239,10 +239,10 @@ void Next1EL::Construct()
   BuildFieldCage();
   BuildEnergyPlane();
 
-  // if (_tracking_plane == "SIPM") 
-  //   BuildSiPMTrackingPlane();
-  // else 
-  //   BuildPMTTrackingPlane();
+  if (_tracking_plane == "SIPM") 
+    BuildSiPMTrackingPlane();
+  else 
+    BuildPMTTrackingPlane();
 
   G4ThreeVector v(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
   _specific_vertex = v;
@@ -1026,13 +1026,12 @@ void Next1EL::BuildSiPMTrackingPlane()
      G4double y = gap/2. + db_ysize/2. - j*(gap + db_xsize);
      for (G4int i=0; i<2; ++i) {
        G4double x =  - gap/2.- db_xsize/2. + i*(gap + db_xsize);
-       
        if (j == 0) {
   	 new G4PVPlacement(rotdb, G4ThreeVector(x,y,z), db_logic,
-  			   "DB", _gas_logic, false, db_no, true);
+  			   "DB", _gas_logic, false, db_no);
        } else {
   	 new G4PVPlacement(0, G4ThreeVector(x,y,z), db_logic,
-  			   "DB", _gas_logic, false, db_no, true);
+  			   "DB", _gas_logic, false, db_no);
        }
        std::vector<std::pair<int, G4ThreeVector> > positions = db.GetPositions();
        for (G4int si=0; si<positions.size(); si++) {
@@ -1229,12 +1228,12 @@ G4ThreeVector Next1EL::GenerateVertex(const G4String& region) const
   } else if (region == "AD_HOC"){
     return _specific_vertex;
   } else if (region == "EL_TABLE") {   
-    if(_numb_of_events<_table_vertices.size()){
-      G4cout<<"number events too small, you need at least "<<_table_vertices.size()
-    	    <<" events to generate EL table"<<G4endl;
-      G4cout<<"[Next1EL] Aborting the run ..."<<G4endl;
-      G4RunManager::GetRunManager()->AbortRun();
-    } else {
+    // if(_numb_of_events<_table_vertices.size()){
+    //   G4cout<<"number events too small, you need at least "<<_table_vertices.size()
+    // 	    <<" events to generate EL table"<<G4endl;
+    //   G4cout<<"[Next1EL] Aborting the run ..."<<G4endl;
+    //   G4RunManager::GetRunManager()->AbortRun();
+    // } else {
       _idx_table++;	
       if(_idx_table>=_table_vertices.size()){
     	G4cout<<"[Next1EL] Aborting the run, last event reached ..."<<G4endl;
@@ -1243,7 +1242,7 @@ G4ThreeVector Next1EL::GenerateVertex(const G4String& region) const
       if(_idx_table<=_table_vertices.size()){
     	return _table_vertices[_idx_table-1];
       }
-    }
+      //    }
   } 
 
 }
