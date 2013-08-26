@@ -102,6 +102,10 @@ namespace nexus {
     ///
     virtual void MergeTrajectory(G4VTrajectory*);
 
+    virtual void ShowTrajectory(std::ostream&) const;
+
+    virtual void DrawTrajectory(G4int) const;
+
   private:
     /// The default constructor is private. A trajectory can
     /// only be constructed associated to a track.

@@ -119,4 +119,19 @@ void Trajectory::MergeTrajectory(G4VTrajectory* second)
   tmp->_trjpoints->clear();
 }
 
+
+
+void Trajectory::ShowTrajectory(std::ostream& os) const
+{
+  // Invoke the default implementation
+  G4VTrajectory::ShowTrajectory(os);
+}
  
+
+
+ void Trajectory::DrawTrajectory(G4int i_mode) const
+ {
+  // Invoke the default implementation
+  G4VTrajectory::DrawTrajectory(i_mode);
+ }
+
