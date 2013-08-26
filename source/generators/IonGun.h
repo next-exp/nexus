@@ -41,7 +41,7 @@ namespace nexus{
     void GeneratePrimaryVertex(G4Event*);
  
   private:
-    void SetParticleDefinition(G4String);
+    void SetParticleDefinition();
 
  private:
     G4GenericMessenger* _msg;
