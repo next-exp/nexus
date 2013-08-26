@@ -124,7 +124,6 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
 
   // Loop through the trajectories stored in the container
   for (G4int i=0; i<tc->entries(); ++i) {
-
     Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[i]);
     if (!trj) continue;
 
@@ -152,8 +151,6 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     volume = trj->GetDecayVolume();
     ipart->SetDecayVolume(volume);
 
-    
-
     G4double mass = trj->GetParticleDefinition()->GetPDGMass();
     G4ThreeVector mom = trj->GetInitialMomentum();
     G4double energy = sqrt(mom.mag2() + mass*mass);
@@ -166,14 +163,10 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
   // Loop through the particles we just stored in the irene event.
   TObjArray* iparts = ievent->GetParticles();
   for (unsigned int i=0; i<iparts->GetEntries(); ++i) {
-
     irene::Particle* ipart = (irene::Particle*) iparts->At(i);
-
     Trajectory* trj = (Trajectory*) TrajectoryMap::Get(ipart->GetParticleID());
-
     int parent_id = trj->GetParentID();
     ipart->SetCreatorProcess(trj->GetCreatorProcess());
-
 
     if (parent_id == 0) {
       ipart->SetPrimary(true);
@@ -277,6 +270,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     irene::SensorHit* isnr = new irene::SensorHit(sdname);
 
     isnr->SetID(hit->GetPmtID());
+    isnr->SetBinWidth(hit->GetBinSize());
 
     G4ThreeVector xyz = hit->GetPosition();
     isnr->SetPosition(xyz.x(), xyz.y(), xyz.z());
@@ -284,9 +278,12 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
     std::map<G4double, G4int>::const_iterator it;
 
+    G4double amplitude = 0.;
     for (it = wvfm.begin(); it != wvfm.end(); ++it) {
       isnr->SetSample((*it).second, (*it).first);
+      amplitude = amplitude + (*it).second;
     }
+    isnr->SetAmplitude(amplitude);
 
    
     // Add the sensor hit to the irene event
