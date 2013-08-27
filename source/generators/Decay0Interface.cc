@@ -67,7 +67,7 @@ void Decay0Interface::GeneratePrimaryVertex(G4Event* event)
 {
   //if (!_opened) return;
 
-  G4cout << "GeneratePrimaryVertex()" << G4endl;
+  //G4cout << "GeneratePrimaryVertex()" << G4endl;
  
   // reading event-related information    
   G4int entries;     // number of particles in the event
@@ -85,7 +85,7 @@ void Decay0Interface::GeneratePrimaryVertex(G4Event* event)
     return;
   }
 
-  G4cout << "entries: " << entries << G4endl;
+  //G4cout << "entries: " << entries << G4endl;
 
   // generate a position in the detector 
   // (all primary particles will be generated there)
@@ -94,32 +94,31 @@ void Decay0Interface::GeneratePrimaryVertex(G4Event* event)
 
   // reading info for each particle in the event
   for (G4int i=0; i<entries; i++) {
+    //G4cout << i << G4endl;
 
-    G4cout << i << G4endl;
+    G4int g3code;           // GEANT3 particle code
+    G4double px, py, pz;    // Momentum components in MeV
 
-  G4int g3code;           // GEANT3 particle code
-  G4double px, py, pz;    // Momentum components in MeV
+    _file >> g3code >> px >> py >> pz >> particle_time;
 
-  _file >> g3code >> px >> py >> pz >> particle_time;
+    G4ParticleDefinition* g4code = 
+      G4ParticleTable::GetParticleTable()->FindParticle(G3toPDG(g3code));
 
-  G4ParticleDefinition* g4code = 
-  G4ParticleTable::GetParticleTable()->FindParticle(G3toPDG(g3code));
+    // create a primary particle
+    G4PrimaryParticle* particle =
+      new G4PrimaryParticle(g4code, px*MeV, py*MeV, pz*MeV);
 
-  // create a primary particle
-  G4PrimaryParticle* particle =
-    new G4PrimaryParticle(g4code, px*MeV, py*MeV, pz*MeV);
+    particle->SetMass(g4code->GetPDGMass());
+    particle->SetCharge(g4code->GetPDGCharge());
 
-  particle->SetMass(g4code->GetPDGMass());
-  particle->SetCharge(g4code->GetPDGCharge());
+    // create a primary vertex for the particle
+    G4PrimaryVertex* vertex =
+      new G4PrimaryVertex(particle_position, particle_time*second);
 
-  // create a primary vertex for the particle
-  G4PrimaryVertex* vertex =
-    new G4PrimaryVertex(particle_position, particle_time*second);
+    vertex->SetPrimary(particle);
 
-  vertex->SetPrimary(particle);
-
-  // add vertex to the event
-  event->AddPrimaryVertex(vertex);
+    // add vertex to the event
+    event->AddPrimaryVertex(vertex);
   }
 }
 

@@ -10,7 +10,7 @@
 
 
 ##### JOB CONTROL #####
-/nexus/persistency/outputFile data/Next100.root
+/nexus/persistency/outputFile /Users/javi/Development/next_scripts/irene_check/Next100_irene.next
 
 
 
@@ -36,20 +36,24 @@
 #		  ENCLOSURE_WINDOW, PMT_BODY, TRK_SUPPORT, DICE_BOARD
 
 # Single Particle
-/Generator/SingleParticle/particle e-
-/Generator/SingleParticle/min_energy 1.0 MeV
-/Generator/SingleParticle/max_energy 2.0 MeV
-/Generator/SingleParticle/region DICE_BOARD
+#/Generator/SingleParticle/particle e-
+#/Generator/SingleParticle/min_energy 1.0 MeV
+#/Generator/SingleParticle/max_energy 2.0 MeV
+#/Generator/SingleParticle/region DICE_BOARD
 #/Generator/SingleParticle/momentum_direction (0., 0., 1.)
 
 # Genbb Interface
 /Generator/GenbbInterface/inputFile /Users/javi/Development/nexus_trunk/data/Xe136_bb0nu.genbb
 /Generator/GenbbInterface/region ACTIVE
 
+# Deacy0 Interface
+/Generator/Decay0Interface/inputFile /Users/javi/Development/nexus_trunk/data/Xe136_bb0nu.genbb
+/Generator/Decay0Interface/region ACTIVE
+
 
 
 ##### VERBOSITIES #####
-/run/verbose 1
-/event/verbose 1
-/tracking/verbose 1
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
 

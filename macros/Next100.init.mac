@@ -7,8 +7,11 @@
 
 /Geometry/RegisterGeometry NEXT100
 
-/Generator/RegisterGenerator SINGLE_PARTICLE
+#/Generator/RegisterGenerator SINGLE_PARTICLE
+#/Generator/RegisterGenerator GENBB_INTERFACE
+/Generator/RegisterGenerator DECAY0
 
 /Actions/RegisterTrackingAction DEFAULT
+/Actions/RegisterEventAction DEFAULT
 
 /nexus/RegisterMacro macros/Next100.config.mac

@@ -7,6 +7,4 @@
 /PhysicsList/RegisterPhysics G4EmLivermorePhysics
 /PhysicsList/RegisterPhysics G4DecayPhysics
 #/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
-/PhysicsList/RegisterPhysics G4OpticalPhysics
-/PhysicsList/RegisterPhysics NexusPhysics
-/PhysicsList/RegisterPhysics G4StepLimiterBuilder
+#/PhysicsList/RegisterPhysics G4OpticalPhysics
