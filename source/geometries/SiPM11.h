@@ -6,11 +6,11 @@
 ///  \date     2 March 2010
 ///  \version  $Id$
 ///
-///  Copyright (c) 2010 NEXT Collaboration
+///  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef __SILICON_PM_11__
-#define __SILICON_PM_11__
+#ifndef SILICON_PM_11_H
+#define SILICON_PM_11_H
 
 #include "BaseGeometry.h"
 #include <G4ThreeVector.hh>
@@ -31,7 +31,7 @@ namespace nexus {
     /// Return dimensions of the SiPM
     G4ThreeVector GetDimensions() const;
     
-    // Builder
+    /// Invoke this method to build the volumes of the geometry
     void Construct();
     
   private:

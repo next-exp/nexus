@@ -4,7 +4,7 @@
 //  Author:  <justo.martin-albo@ific.uv.es>
 //  Created: 2 March 2010
 //  
-//  Copyright (c) 2010-2012 NEXT Collaboration. All rights reserved.
+//  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
 // ---------------------------------------------------------------------------- 
 
 #include "SiPM11.h"
