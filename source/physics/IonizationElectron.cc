@@ -4,10 +4,11 @@
 //  Author : J. Martin-Albo <jmalbos@ific.uv.es>    
 //  Created: 19 May 2010
 //
-//  Copyright (c) 2010, 2011 NEXT Collaboration
+//  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
 #include "IonizationElectron.h"
+
 #include <G4ParticleTable.hh>
 
 
@@ -15,6 +16,19 @@ namespace nexus {
   
   
   IonizationElectron* IonizationElectron::_instance = 0;
+
+
+
+  IonizationElectron::IonizationElectron(): G4ParticleDefinition()
+  {
+  }
+
+
+
+  IonizationElectron::~IonizationElectron()
+  {
+  }
+
 
 
   IonizationElectron* IonizationElectron::Definition()
@@ -38,15 +52,16 @@ namespace nexus {
       //    type         lepton number   baryon number   PDG encoding
       //    stable       lifetime        decay table 
       //    shortlived   subType         anti_encoding
-      pdef = new G4ParticleDefinition(name, electron_mass_c2, 0., -1.*eplus,
-				      1, 0, 0,
-				      0, 0, 0,
-				      "lepton", 1, 0, 11,
-				      true, -1.0, NULL,
-				      false, "e", 0);
+      pdef = 
+        new G4ParticleDefinition(name, electron_mass_c2, 0., -1.*eplus,
+				  1, 0, 0,
+				  0, 0, 0,
+				  "lepton", 1, 0, 11,
+				  true, -1.0, NULL,
+				  false, "e", 0);
     }
     
-    _instance = reinterpret_cast<IonizationElectron*>(pdef);
+    _instance = (IonizationElectron*) pdef;
     return _instance;
   }
 

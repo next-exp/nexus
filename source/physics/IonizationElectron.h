@@ -6,11 +6,11 @@
 ///  \date     19 May 2010
 ///  \version  $Id$
 ///
-///  Copyright (c) 2010, 2011 NEXT Collaboration
+///  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef __IONIZATION_ELECTRON__
-#define __IONIZATION_ELECTRON__
+#ifndef IONIZATION_ELECTRON_H
+#define IONIZATION_ELECTRON_H
 
 #include <G4ParticleDefinition.hh>
 
@@ -36,9 +36,6 @@ namespace nexus {
   private:
     static IonizationElectron* _instance;
   };
-
-  inline IonizationElectron::IonizationElectron() {}
-  inline IonizationElectron::~IonizationElectron() {}
 
 } // end namespace nexus
 
