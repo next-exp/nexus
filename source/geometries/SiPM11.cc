@@ -116,7 +116,7 @@ namespace nexus {
     
     // SENSITIVE DETECTOR ////////////////////////////////////////////
 
-    G4String sdname = "/SIPM11/SiPMs";
+    G4String sdname = "/SIPM11/SiPM";
     G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
     
     if (!G4SDManager::GetSDMpointer()->FindSensitiveDetector(sdname, false)) {
