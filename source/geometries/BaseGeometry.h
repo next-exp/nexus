@@ -30,7 +30,7 @@ namespace nexus {
     /// Returns a point within a given region of the geometry
     virtual G4ThreeVector GenerateVertex(const G4String&) const;
 
-    virtual G4ThreeVector GenerateVertex(G4int) const;
+    //virtual G4ThreeVector GenerateVertex(G4int) const;
 
     /// Returns the span (maximum dimension) of the geometry
     G4double GetSpan();
@@ -78,8 +78,8 @@ namespace nexus {
   inline G4ThreeVector BaseGeometry::GenerateVertex(const G4String&) const
   { return G4ThreeVector(0., 0., 0.); }
   
-  inline G4ThreeVector BaseGeometry::GenerateVertex(G4int) const
-  { return G4ThreeVector(); }
+  // inline G4ThreeVector BaseGeometry::GenerateVertex(G4int) const
+  // { return G4ThreeVector(); }
 
   inline void BaseGeometry::SetSpan(G4double s)
   { _span = s; }
