@@ -30,7 +30,6 @@ namespace nexus {
   
   SiPM11::SiPM11(): BaseGeometry()
   {
-    Construct();
   }
   
   
@@ -134,14 +133,6 @@ namespace nexus {
     active_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
   }
-  
-  
-//   void SiPM11::SetSensitiveDetector()
-//   {
-//     PmtSD* sensdet = new PmtSD("/SIPM11/PHOTODIODES", "SIPM11");
-//     sensdet->SetDetectorVolumeDepth(0);
-    
-//   }
   
   
 } // end namespace nexus
