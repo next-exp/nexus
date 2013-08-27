@@ -1006,6 +1006,8 @@ void Next1EL::BuildSiPMTrackingPlane()
 
    /* New Dice Board configuration */
   NextElDB db(8,8);
+  db.Construct();
+
   G4LogicalVolume* db_logic = db.GetLogicalVolume();
   G4double db_xsize = db.GetDimensions().x();
   G4double db_ysize = db.GetDimensions().y();
@@ -1227,7 +1229,7 @@ G4ThreeVector Next1EL::GenerateVertex(const G4String& region) const
     //    return  point;
   } else if (region == "AD_HOC"){
     return _specific_vertex;
-  } else if (region == "EL_TABLE") {   
+  } else if (region == "EL_TABLE") {  
     // if(_numb_of_events<_table_vertices.size()){
     //   G4cout<<"number events too small, you need at least "<<_table_vertices.size()
     // 	    <<" events to generate EL table"<<G4endl;
@@ -1280,6 +1282,7 @@ void Next1EL::CalculateELTableVertices(G4double radius,
       position[0] = -radius + i*binning;
       for (int j=0; j<imax; j++){
 	position[1] = -radius + j*binning;
+	//	G4cout << position[0] << ", " << position[1] << G4endl;
 	if (sqrt(position[0]*position[0]+position[1]*position[1])< radius){
 	  _table_vertices.push_back(position);
 	  

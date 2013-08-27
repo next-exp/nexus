@@ -36,7 +36,6 @@ namespace nexus {
   {
     // The SiPM
     _siPM = new SiPM11();
-    Construct();
   }
 
 
@@ -96,7 +95,7 @@ namespace nexus {
     
     // SILICON PMs ///////////////////////////////////////////////////
 
-    //  _siPM->Construct();
+    _siPM->Construct();
     G4LogicalVolume* sipm_logic = _siPM->GetLogicalVolume();
 
     pos_z = -dbo_z/2 + coating_thickn + (_siPM->GetDimensions().z())/2.;
@@ -131,13 +130,13 @@ namespace nexus {
 
 
     // Visibilities
-    coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    //G4VisAttributes * vis = new G4VisAttributes;
-    //vis->SetColor(1., 0., 0.);
-    //coating_logic->SetVisAttributes(vis);
-    //vis->SetColor(0., 1., 0.);
-    //sipm_logic->SetVisAttributes(vis);
+    //coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    //sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    G4VisAttributes * vis = new G4VisAttributes;
+    vis->SetColor(1., 0., 0.);
+    coating_logic->SetVisAttributes(vis);
+    vis->SetColor(0., 1., 0.);
+    sipm_logic->SetVisAttributes(vis);
 
   }
 
