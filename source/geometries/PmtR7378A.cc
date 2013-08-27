@@ -35,7 +35,6 @@ namespace nexus {
   
   PmtR7378A::PmtR7378A(): BaseGeometry()
   {
-    Construct();
   }
   
   
