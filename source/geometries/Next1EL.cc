@@ -196,7 +196,7 @@ Next1EL::Next1EL():
 			  "Set maximum step size.");
   max_step_size_cmd.SetUnitCategory("Length");
   max_step_size_cmd.SetParameterName("max_step_size", true);
-  max_step_size_cmd.SetDefaultValue("1.*mm");
+  max_step_size_cmd.SetDefaultValue("max_step_size=1");
   max_step_size_cmd.SetRange("max_step_size>0");
 
   G4GenericMessenger::Command& elgrid_transparency_cmd = 
@@ -271,6 +271,8 @@ void Next1EL::DefineMaterials()
   // GASEOUS XENON
   _gxe = MaterialsList::GXe(_pressure, 303);
   _gxe->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, 303, _sc_yield));
+
+  G4cout << "Scintillation yield: " << _sc_yield << G4endl;
 
   // if (cfg.GetSParam("particle_name") == "alpha"){
   //   _gxe->GetIonisation()->SetBirksConstant(0.126*mm/MeV);
@@ -672,6 +674,7 @@ void Next1EL::BuildFieldCage()
 
   // Limit the step size in this volume for better tracking precision
   active_logic->SetUserLimits(new G4UserLimits(_max_step_size));
+  G4cout << "Step size: " << _max_step_size << G4endl;
     
   // Set the volume as an ionization sensitive detector
   G4String det_name = "/NEXT1/ACTIVE";
@@ -929,6 +932,7 @@ void Next1EL::BuildEnergyPlane()
   // Load the geometry model of the PMT and get the pointer
   // to its logical volume
   PmtR7378A pmt;
+  pmt.Construct();
   _pmt_logic = pmt.GetLogicalVolume();
   
   // The PMTs are placed in the holder in a honeycomb arrangement. 

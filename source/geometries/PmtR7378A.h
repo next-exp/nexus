@@ -36,7 +36,6 @@ namespace nexus {
 
     /// Sets a sensitive detector associated to the
 
-  private:
     void Construct();
 
   private:
