@@ -26,54 +26,72 @@ using namespace nexus;
 
 NexusApp::NexusApp(G4String init_macro): G4RunManager()
 {
-  // Create a configure the generic messenger for the app
+  // Create and configure a generic messenger for the app
   _msg = new G4GenericMessenger(this, "/nexus/", "Nexus control commands.");
 
-  // Define the command to register a configuration macro. The user may
-  // invoke the command as many times as needed
+  // Define the command to register a configuration macro. 
+  // The user may invoke the command as many times as needed.
   _msg->DeclareMethod("RegisterMacro", &NexusApp::RegisterMacro, ""); 
 
+  // Define a command to set a seed for the random number generator.
   _msg->DeclareMethod("random_seed", &NexusApp::SetRandomSeed, 
     "Set a seed for the random number generator."); 
 
+  /////////////////////////////////////////////////////////
 
-  // Create the necessary classes for initialization
+  // We will set now the user initialization class instances 
+  // in the run manager. In order to do so, we create first the factories
+  // (the objects that construct the appropriate instances according
+  // to user's input) so that the messenger commands are already defined
+  // by the time we process the initialization macro.
+
+  GeometryFactory  geomfctr;
+  GeneratorFactory genfctr;
+  ActionsFactory   actfctr;
+
+  // The physics lists are handled with Geant4's own 'factory'
   physicsList = new G4GenericPhysicsList();
 
-  _geom_fctr  = new GeometryFactory();
-  _gen_fctr   = new GeneratorFactory();
-  _act_fctr   = new ActionsFactory();
- 
+  // Process now the initialization macro
   BatchSession* batch = new BatchSession(init_macro.c_str());
-  
   batch->SessionStart();
 
-  //G4UImanager::GetUIpointer()->ExecuteMacroFile(init_macro);
+  // Set the physics list in the run manager
+  this->SetUserInitialization(physicsList); 
 
-  // Initialization classes set in the G4RunManager
-
-  this->SetUserInitialization(physicsList);
-
+  // Set the detector construction instance in the run manager
   DetectorConstruction* dc = new DetectorConstruction();
-  dc->SetGeometry(_geom_fctr->CreateGeometry());
+  dc->SetGeometry(geomfctr.CreateGeometry());
   this->SetUserInitialization(dc);
 
+  // Set the primary generation instance in the run manager
   PrimaryGeneration* pg = new PrimaryGeneration();
-  pg->SetGenerator(_gen_fctr->CreateGenerator());
+  pg->SetGenerator(genfctr.CreateGenerator());
   this->SetUserAction(pg);
+
+  // Set the user action instances, if any, in the run manager
 
   G4UImanager* UI = G4UImanager::GetUIpointer();
 
   if (UI->GetCurrentValues("/Actions/RegisterRunAction") != "")
-    this->SetUserAction(_act_fctr->CreateRunAction());
-  if (UI->GetCurrentValues("/Actions/RegisterTrackingAction") != "")
-    this->SetUserAction(_act_fctr->CreateTrackingAction());
+    this->SetUserAction(actfctr.CreateRunAction());
+
   if (UI->GetCurrentValues("/Actions/RegisterEventAction") != "")
-    this->SetUserAction(_act_fctr->CreateEventAction());
+    this->SetUserAction(actfctr.CreateEventAction());
+
+  if (UI->GetCurrentValues("/Actions/RegisterStackingAction") != "")
+    this->SetUserAction(actfctr.CreateStackingAction());
+
+  if (UI->GetCurrentValues("/Actions/RegisterTrackingAction") != "")
+    this->SetUserAction(actfctr.CreateTrackingAction());
+
+  if (UI->GetCurrentValues("/Actions/RegisterSteppingAction") != "")
+    this->SetUserAction(actfctr.CreateSteppingAction());
+
+  /////////////////////////////////////////////////////////
 
   PersistencyManager::Initialize();
-
- }
+}
 
 
 
@@ -99,8 +117,8 @@ void NexusApp::RegisterMacro(const G4String& macro)
 
 void NexusApp::Initialize()
 {
-  // Execute command macro file before initializing the app
-  // so that all classes get configured
+  // Execute all command macro files before initializing the app
+  // so that all objects get configured
   G4UImanager* UI = G4UImanager::GetUIpointer();
   for (unsigned int i=0; i<_macros.size(); i++)
     ExecuteMacroFile(_macros[i].data());
