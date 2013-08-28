@@ -8,8 +8,9 @@
 // ---------------------------------------------------------------------------- 
 
 #include "Electroluminescence.h"
+
 #include "IonizationElectron.h"
-#include "DriftTrackInfo.h"
+//#include "DriftTrackInfo.h"
 #include "BaseDriftField.h"
 #include "UniformElectricDriftField.h"
 #include "G4Scintillation.hh"

@@ -2,15 +2,15 @@
 ///  \file   IonizationClustering.h
 ///  \brief  
 ///  
-///  \author   J. Martin-Albo <jmalbos@ific.uv.es>    
+///  \author   <justo.martin-albo@ific.uv.es>
 ///  \date     10 May 2010
 ///  \version  $Id$
 ///
-///  Copyright (c) 2010, 2011 NEXT Collaboration
+///  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef __IONIZATION_CLUSTERING__
-#define __IONIZATION_CLUSTERING__
+#ifndef IONIZATION_CLUSTERING_H
+#define IONIZATION_CLUSTERING_H
 
 #include <G4VRestDiscreteProcess.hh>
 
@@ -28,17 +28,18 @@ namespace nexus {
     
     /// Constructor
     IonizationClustering(const G4String& process_name="Clustering",
-			 G4ProcessType type = fUserDefined);
+			                   G4ProcessType type = fUserDefined);
     /// Destructor
     ~IonizationClustering();
     
-    /// Returns true (that is, the process is applicable) for any
-    /// particle but optical photons, ionization electrons and
-    /// ionization clusters
+    /// Returns true (that is, the process is applicable) 
+    /// for any particle but ionization electrons and optical photons.
+    /// Notice that even though neutral particles cannot ionize
+    /// a medium, Geant4 may assign energy depositions to them under
+    /// some circumstances. For instance, the deexcitation energy of an
+    /// atom after photoelectric effect is assigned to the incident gamma
+    /// in the standard electromagnetic version of the process.
     G4bool IsApplicable(const G4ParticleDefinition&);
-
-    /// 
-    void SingleClusterPerStep(G4bool);
 
     /// Implements the clusterization for energy depositions of
     /// particles in flight
@@ -52,17 +53,16 @@ namespace nexus {
     
     /// Returns infinity; i. e. the process does not limit the step,
     /// but sets the 'StronglyForced' condition for the PostStepDoIt 
-    /// to be invoked at every step.
+    /// to be invoked at every step
     G4double GetMeanFreePath(const G4Track&, G4double, G4ForceCondition*);
 
     /// Returns infinity; i. e. the process does not limit the time,
     /// but sets the 'StronglyForced' condition for the AtRestDoIt 
-    /// to be invoked at every step.
+    /// to be invoked at every step
     G4double GetMeanLifeTime(const G4Track&, G4ForceCondition*);
 
   private:
-
-    G4ParticleChange _ParticleChange;
+    G4ParticleChange* _ParticleChange;
     SegmentPointSampler* _rnd;
   };
   

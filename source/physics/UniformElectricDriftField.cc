@@ -9,7 +9,7 @@
 
 #include "UniformElectricDriftField.h"
 
-#include "DriftTrackInfo.h"
+//#include "DriftTrackInfo.h"
 #include "SegmentPointSampler.h"
 
 #include <Randomize.hh>

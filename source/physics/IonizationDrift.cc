@@ -12,7 +12,7 @@
 #include "BaseDriftField.h"
 //#include "IonizationCluster.h"
 #include "IonizationElectron.h"
-#include "DriftTrackInfo.h"
+//#include "DriftTrackInfo.h"
 
 #include <G4ParticleChange.hh>
 #include <G4RegionStore.hh>
@@ -63,8 +63,8 @@ namespace nexus {
       dynamic_cast<BaseDriftField*>(region->GetUserInformation());
 
     // Get the drift info associated to the cluster
-    DriftTrackInfo* drift_info =
-      dynamic_cast<DriftTrackInfo*>(track.GetUserInformation());
+    // DriftTrackInfo* drift_info =
+    //   dynamic_cast<DriftTrackInfo*>(track.GetUserInformation());
     
     // If the region has no field, the particle won't move and therefore
     // the step length is zero.
