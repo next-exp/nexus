@@ -9,8 +9,8 @@
 ///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef __GEOMETRY_FACTORY__
-#define __GEOMETRY_FACTORY__ 
+#ifndef GEOMETRY_FACTORY_H
+#define GEOMETRY_FACTORY_H 
 
 #include <G4String.hh>
 
@@ -32,21 +32,10 @@ namespace nexus {
 
     BaseGeometry* CreateGeometry() const;
 
-    // const G4String& GetGeometryName() const;
-    // void SetGeometryName(const G4String&);
-
   private:
     G4GenericMessenger* _msg;
     G4String _name;
   };
-
-  // INLINE DEFINITIONS ////////////////////////////////////
-
-  // const G4String& GeometryFactory::GetGeometryName() const
-  // { return _name; }
-
-  // void GeometryFactory::SetGeometryName(const G4String& name)
-  // { _name = name; }
 
 }
 

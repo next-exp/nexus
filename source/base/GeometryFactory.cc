@@ -32,22 +32,27 @@ GeometryFactory::~GeometryFactory()
 //////////////////////////////////////////////////////////////////////
 
 #include "XeSphere.h"
+#include "Next1EL.h"
 #include "Next100.h"
 #include "NEW.h"
-#include "Next1EL.h"
 
 
 BaseGeometry* GeometryFactory::CreateGeometry() const
 {
   BaseGeometry* p = 0;
 
-  if (_name == "XE_SPHERE") p = new XeSphere();
+  if      (_name == "XE_SPHERE") p = new XeSphere();
   
   else if (_name == "NEXT1_EL") p = new Next1EL();
 
   else if (_name == "NEXT100") p = new Next100();
 
   else if (_name == "NEW") p = new NEW();
+
+  else {
+    G4String err = "The user selected an unknown geometry: " + _name;
+    G4Exception("CreateGeometry", "[BaseGeometry]", FatalException, err);
+  }
 
   return p;
 }
