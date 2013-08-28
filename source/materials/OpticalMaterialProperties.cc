@@ -383,7 +383,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB()
 
   tpb_mpt->AddProperty("RINDEX", Energies, TPB_RIND, RIN_NUMENTRIES);
   tpb_mpt->AddProperty("WLSABSLENGTH", WLS_Abs_Energies, TPB_WLSABSL, WLSABSL_NUMENTRIES); 
-  tpb_mpt->AddProperty("WLSCOMPONENT", WLS_Emission_Energies, TPB_Emission, ABSL_NUMENTRIES);
+  tpb_mpt->AddProperty("WLSCOMPONENT", WLS_Emission_Energies, TPB_Emission, EMISSION_NUMENTRIES);
   tpb_mpt->AddConstProperty("WLSTIMECONSTANT",1.*ns);
     
   return tpb_mpt;
