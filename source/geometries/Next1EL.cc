@@ -256,8 +256,9 @@ void Next1EL::Construct()
   CalculateELTableVertices(92.5*mm, 5.*mm, z);
   
   // for (int i=0; i<_table_vertices.size(); i++){
-  //   cout <<  _table_vertices[i][0] << ", " << _table_vertices[i][1] << endl; 
+  //   G4cout <<  _table_vertices[i][0] << ", " << _table_vertices[i][1] << G4endl; 
   // }
+  // G4cout << "Number of points =  " << _table_vertices.size() << G4endl;
   
 }
   
@@ -639,6 +640,8 @@ void Next1EL::BuildFieldCage()
     el_field->SetDriftVelocity(5.*mm/microsecond);
     el_field->SetTransverseDiffusion(1.*mm/sqrt(cm));
     el_field->SetLongitudinalDiffusion(.5*mm/sqrt(cm));
+    XenonGasProperties xgp(_pressure, 303);
+    el_field->SetLightYield(xgp.ELLightYield(20*kilovolt/cm));
     G4Region* el_region = new G4Region("EL_REGION");
     el_region->SetUserInformation(el_field);
     el_region->AddRootLogicalVolume(elgap_logic);
