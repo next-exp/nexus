@@ -2,15 +2,15 @@
 ///  \file   BaseDriftField.h
 ///  \brief  Abstract base class for description of drift fields.
 ///  
-///  \author   J Martin-Albo <jmalbos@ific.uv.es>    
+///  \author   <justo.martin-albo@ific.uv.es>
 ///  \date     12 May 2010
 ///  \version  $Id$
 ///
-///  Copyright (c) 2010 NEXT Collaboration
+///  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef __BASE_DRIFT_FIELD__
-#define __BASE_DRIFT_FIELD__
+#ifndef BASE_DRIFT_FIELD_H
+#define BASE_DRIFT_FIELD_H
 
 #include <G4VUserRegionInformation.hh>
 #include <G4LorentzVector.hh>
@@ -31,13 +31,13 @@ namespace nexus {
   class BaseDriftField: public G4VUserRegionInformation
   {
   public:
-    /// constructor
+    /// Constructor
     BaseDriftField();
-    /// destructor
+    /// Destructor
     virtual ~BaseDriftField();
 
-    /// Returns the final position and time of a charge carrier
-    /// drifting under the influence of the field
+    /// Calculates the final position and time of a charge carrier
+    /// drifting under the influence of the field. Returns the step length.
     virtual G4double Drift(G4LorentzVector&) = 0;
 
     /// Returns a random 4D point (space and time) along a drift line
@@ -50,7 +50,7 @@ namespace nexus {
     void Print() const;
   };
 
-  // inline methods ..................................................
+  // Inline definitions /////////////////////////////////////////////
   
   inline BaseDriftField::BaseDriftField() {}
   
