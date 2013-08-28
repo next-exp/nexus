@@ -234,8 +234,6 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
   GXe_mpt->AddConstProperty("SLOWTIMECONSTANT",45.*ns);
   GXe_mpt->AddConstProperty("YIELDRATIO",.9);
   GXe_mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
-
-  G4cout << "Using " << sc_yield << " as a scintillation yield" << G4endl;
   
   G4double energy[2] = {0.01*eV, 100.*eV};
   G4double abslen[2] = {1.e8*m, 1.e8*m};
