@@ -45,6 +45,12 @@ G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
 
   else if (_name == "ION_GUN") p = new IonGun();
 
+  else {
+    G4String err = "The user specified an unknown generator: " + _name;
+    G4Exception("CreateGenerator()", "[GeneratorFactory]",
+        FatalException, err);
+  }
+
   return p;
 }
 
