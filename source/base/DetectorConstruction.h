@@ -9,13 +9,12 @@
 ///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef __DETECTOR_CONSTRUCTION__
-#define __DETECTOR_CONSTRUCTION__
+#ifndef DETECTOR_CONSTRUCTION_H
+#define DETECTOR_CONSTRUCTION_H
 
 #include <G4VUserDetectorConstruction.hh>
 
 class G4GenericMessenger;
-
 
 
 namespace nexus {
@@ -23,7 +22,7 @@ namespace nexus {
   class BaseGeometry;
 
 
-  /// TODO. CLASS DESCRIPTION
+  /// User initialization class for detector setup
 
   class DetectorConstruction: public G4VUserDetectorConstruction
   {
@@ -33,9 +32,9 @@ namespace nexus {
     /// Destructor
     ~DetectorConstruction();
 
-    /// Mandatory method invoked by the G4RunManager. It returns 
-    /// the physical volume that represents the world.
-    G4VPhysicalVolume* Construct();
+    /// Mandatory method invoked by the run manager. 
+    /// It returns the physical volume that represents the world.
+    virtual G4VPhysicalVolume* Construct();
 
     /// Set a detector geometry
     void SetGeometry(BaseGeometry*);
@@ -43,15 +42,11 @@ namespace nexus {
     const BaseGeometry* GetGeometry() const;
 
   private:
-    //void CreateGeometry(G4String);
-
-  private:
-    G4GenericMessenger* _msg; 
     BaseGeometry* _geometry; 
   };
 
 
-  // INLINE METHODS //////////////////////////////////////////////////
+  // INLINE DEFINITIONS /////////////////////////////////////////////
  
   inline void DetectorConstruction::SetGeometry(BaseGeometry* g)
   { _geometry = g; }
