@@ -117,8 +117,10 @@ Next1EL::Next1EL():
   _pmt_pitch (34.59 * mm),
   // PMT TRACKING PLANE //////////////////////////
   _pmtholder_anode_diam   (229. * mm),
-  _pmtholder_anode_thickn ( 13. * mm)
-  ////////////////////////////////////////////////
+  _pmtholder_anode_thickn ( 13. * mm),
+  // DEFAULT VALUES FOR SOME PARAMETERS///////////
+  _max_step_size(1.*mm),
+  _sc_yield(13889/MeV)
 {
 
   _msg = new G4GenericMessenger(this, "/Geometry/Next1EL/",
@@ -141,7 +143,6 @@ Next1EL::Next1EL():
     _msg->DeclareProperty("sc_yield", _sc_yield,
 			  "Set scintillation yield for GXe. It is in photons/MeV");
   sc_yield_cmd.SetParameterName("sc_yield", true);
-  sc_yield_cmd.SetDefaultValue("13889/MeV");
   sc_yield_cmd.SetUnitCategory("1/Energy");
 
   // G4GenericMessenger::Command&  specific_vertex_cmd =
@@ -196,7 +197,6 @@ Next1EL::Next1EL():
 			  "Set maximum step size.");
   max_step_size_cmd.SetUnitCategory("Length");
   max_step_size_cmd.SetParameterName("max_step_size", true);
-  max_step_size_cmd.SetDefaultValue("max_step_size=1");
   max_step_size_cmd.SetRange("max_step_size>0");
 
   G4GenericMessenger::Command& elgrid_transparency_cmd = 
@@ -1249,6 +1249,7 @@ G4ThreeVector Next1EL::GenerateVertex(const G4String& region) const
     	G4RunManager::GetRunManager()->AbortRun();
       }
       if(_idx_table<=_table_vertices.size()){
+       
     	return _table_vertices[_idx_table-1];
       }
       //    }
