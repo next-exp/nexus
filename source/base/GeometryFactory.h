@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
 ///  \file   GeometryFactory.h
-///  \brief  
+///  \brief  Factory class to create geometries chosen by the user
 /// 
 ///  \author   <justo.martin-albo@ific.uv.es>
 ///  \date     13 March 2013
@@ -22,7 +22,8 @@ namespace nexus {
   class BaseGeometry;
 
 
-  /// TODO. CLASS DESCRIPTION
+  /// Factory class to handle the creation of geometries according
+  /// to the user's input via messenger commands.
 
   class GeometryFactory
   {
