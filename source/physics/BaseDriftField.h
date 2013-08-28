@@ -20,9 +20,6 @@ class G4Material;
 
 namespace nexus {
 
-  class DriftTrackInfo;
-
-
   /// This is an abstract base class for the description of electric 
   /// (or electromagnetic) drift fields. It inherits from 
   /// G4VUserRegionInformation so that it can be passed to the drift
