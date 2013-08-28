@@ -228,13 +228,14 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
   GXe_mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
   GXe_mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
   GXe_mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
-  GXe_mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield/MeV);
+  GXe_mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield);
   GXe_mpt->AddConstProperty("RESOLUTIONSCALE", 1.0);
   GXe_mpt->AddConstProperty("FASTTIMECONSTANT",1.*ns);
   GXe_mpt->AddConstProperty("SLOWTIMECONSTANT",45.*ns);
   GXe_mpt->AddConstProperty("YIELDRATIO",.9);
   GXe_mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
 
+  G4cout << "Using " << sc_yield << " as a scintillation yield" << G4endl;
   
   G4double energy[2] = {0.01*eV, 100.*eV};
   G4double abslen[2] = {1.e8*m, 1.e8*m};
@@ -246,7 +247,8 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
 
 G4MaterialPropertiesTable* 
 OpticalMaterialProperties::FakeGrid(G4double pressure, G4double temperature,
-				    G4double transparency, G4double thickness)
+				    G4double transparency, G4double thickness,
+				    G4int sc_yield)
 {
   XenonGasProperties GXe_prop(pressure, temperature);
   G4MaterialPropertiesTable* FGrid_mpt = new G4MaterialPropertiesTable();
@@ -276,7 +278,7 @@ OpticalMaterialProperties::FakeGrid(G4double pressure, G4double temperature,
   FGrid_mpt->AddProperty("ABSLENGTH", abs_energy, ABSL, NUMENTRIES);
   FGrid_mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
   FGrid_mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
-  FGrid_mpt->AddConstProperty("SCINTILLATIONYIELD", 10000./MeV); 
+  FGrid_mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield); 
   FGrid_mpt->AddConstProperty("RESOLUTIONSCALE", 1.0);
   FGrid_mpt->AddConstProperty("FASTTIMECONSTANT",1.*ns);
   FGrid_mpt->AddConstProperty("SLOWTIMECONSTANT",45.*ns);

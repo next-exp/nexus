@@ -39,12 +39,13 @@ namespace nexus {
 
     static G4MaterialPropertiesTable* GXe(G4double pressure=1.*bar, 
 					  G4double temperature=STP_Temperature,
-					  G4int sc_yield=13889);
+					  G4int sc_yield=13889/MeV);
 
     static G4MaterialPropertiesTable* FakeGrid(G4double pressure=1.*bar, 
 					       G4double temperature=STP_Temperature, 
 					       G4double transparency=.9, 
-					       G4double thickness=1.*mm);
+					       G4double thickness=1.*mm,
+					       G4int sc_yield=13889/MeV);
 
     static G4MaterialPropertiesTable* Glass();
     
