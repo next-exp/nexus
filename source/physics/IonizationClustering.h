@@ -6,7 +6,7 @@
 ///  \date     10 May 2010
 ///  \version  $Id$
 ///
-///  Copyright (c) 2010-2012 NEXT Collaboration. All rights reserved.
+///  Copyright (c) 2010, 2011 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef __IONIZATION_CLUSTERING__
@@ -25,8 +25,9 @@ namespace nexus {
   class IonizationClustering: public G4VRestDiscreteProcess
   {
   public:
+    
     /// Constructor
-    IonizationClustering(const G4String& process_name="IonizClust",
+    IonizationClustering(const G4String& process_name="Clustering",
 			 G4ProcessType type = fUserDefined);
     /// Destructor
     ~IonizationClustering();
@@ -35,6 +36,9 @@ namespace nexus {
     /// particle but optical photons, ionization electrons and
     /// ionization clusters
     G4bool IsApplicable(const G4ParticleDefinition&);
+
+    /// 
+    void SingleClusterPerStep(G4bool);
 
     /// Implements the clusterization for energy depositions of
     /// particles in flight
@@ -57,10 +61,11 @@ namespace nexus {
     G4double GetMeanLifeTime(const G4Track&, G4ForceCondition*);
 
   private:
+
     G4ParticleChange _ParticleChange;
     SegmentPointSampler* _rnd;
   };
   
-} // namespace nexus
+} // end namespace nexus
 
 #endif

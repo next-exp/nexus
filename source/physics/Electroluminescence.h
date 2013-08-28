@@ -1,26 +1,25 @@
 // ----------------------------------------------------------------------------
 ///  \file   Electroluminescence.h
-///  \brief  Physics process describing the generation of EL light
+///  \brief  Physics process describing the generation of EL light.
 ///
 ///  \author   J. Martin-Albo <jmalbos@ific.uv.es>    
 ///  \date     28 Oct 2009
 ///  \version  $Id$
 ///
-///  Copyright (c) 2009-2012 NEXT Collaboration. All rights reserved.
+///  Copyright (c) 2009, 2010 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef __ELECTROLUMINESCENCE__
 #define __ELECTROLUMINESCENCE__
 
 #include <G4VDiscreteProcess.hh>
-
-class G4PhysicsTable;
+#include "G4PhysicsTable.hh"
 
 
 namespace nexus {
 
   /// This class implements a model for the electroluminescence (in gaseous
-  /// detectors) as a Geant4 discrete physics process
+  /// detectors) as a Geant4 discrete physics process.
 
   class Electroluminescence: public G4VDiscreteProcess
   {
@@ -49,20 +48,22 @@ namespace nexus {
     G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&);
     
   private:
+
     /// Returns infinity; i.e., the process does not limit the step,
     /// but sets the 'StronglyForced' condition for the DoIt to be
     /// invoked at every step.
     G4double GetMeanFreePath(const G4Track&, G4double, G4ForceCondition*);
+    void BuildThePhysicsTable();
 
   private:
     G4bool _secondaries_first;
     G4ParticleChange _ParticleChange;
     G4double _pressure;
-    G4PhysicsTable* _SlowIntegralTable;
-    G4PhysicsTable* _FastIntegralTable;
+    G4PhysicsTable* _theSlowIntegralTable;
+    G4PhysicsTable* _theFastIntegralTable;
   };
 
-  // INLINE METHODS //////////////////////////////////////////////////
+  // inline methods ..................................................
 
   inline void Electroluminescence::SetTrackSecondariesFirst(G4bool sf)
   { _secondaries_first = sf; }

@@ -32,15 +32,15 @@ namespace nexus {
     /// Constructor providing position of anode and cathode,
     /// and axis parallel to the drift lines
     UniformElectricDriftField(G4double anode_position=0., 
-			      G4double cathode_position=0.,
-			      EAxis axis=kZAxis); 
+                              G4double cathode_position=0.,
+                              EAxis axis=kZAxis); 
     
     /// Destructor
     ~UniformElectricDriftField();
     
     /// Calculate final state (position, time, drift time and length, etc.)
     /// of an ionization electron
-    G4double Drift(DriftTrackInfo*);
+    G4double Drift(G4LorentzVector& xyzt);
     
     G4LorentzVector GeneratePointAlongDriftLine(const G4LorentzVector&);
     
@@ -148,3 +148,5 @@ namespace nexus {
 } // end namespace nexus
 
 #endif
+ 
+
