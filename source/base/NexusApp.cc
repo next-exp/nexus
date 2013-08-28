@@ -32,7 +32,9 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
   // Define the command to register a configuration macro. The user may
   // invoke the command as many times as needed
   _msg->DeclareMethod("RegisterMacro", &NexusApp::RegisterMacro, ""); 
-  _msg->DeclareProperty("random_seed", _random_seed, "Set random seed."); 
+
+  _msg->DeclareMethod("random_seed", &NexusApp::SetRandomSeed, 
+    "Set a seed for the random number generator."); 
 
 
   // Create the necessary classes for initialization
@@ -71,10 +73,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
 
   PersistencyManager::Initialize();
 
-  G4int seed = _random_seed;
-  if (seed < 0) CLHEP::HepRandom::setTheSeed(time(0));
-  else CLHEP::HepRandom::setTheSeed(seed);
-}
+ }
 
 
 
@@ -120,4 +119,15 @@ void NexusApp::ExecuteMacroFile(const char* filename)
   G4UIsession* previousSession = UI->GetSession()->SessionStart();
   delete UI->GetSession();
   UI->SetSession(previousSession);
+}
+
+
+
+void NexusApp::SetRandomSeed(G4int seed)
+{
+  // Set the seed chosen by the user for the pseudo-random number
+  // generator unless a negative number was provided, in which case
+  // we will set as seed the system time.
+  if (seed < 0) CLHEP::HepRandom::setTheSeed(time(0));
+  else CLHEP::HepRandom::setTheSeed(seed);
 }

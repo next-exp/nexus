@@ -9,8 +9,8 @@
 ///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXUS_APP__
-#define __NEXUS_APP__
+#ifndef NEXUS_APP_H
+#define NEXUS_APP_H
 
 #include <G4RunManager.hh>
 
@@ -41,6 +41,9 @@ namespace nexus {
 
     void ExecuteMacroFile(const char*);
 
+    /// Set a seed for the G4 random number generator. 
+    /// If a negative value is chosen, the system time is set as seed.
+    void SetRandomSeed(G4int);
 
   private:
     G4GenericMessenger* _msg;
@@ -50,8 +53,6 @@ namespace nexus {
     ActionsFactory*   _act_fctr;
 
     std::vector<G4String> _macros;
-
-    G4int _random_seed;
   };
 
 } // namespace nexus
