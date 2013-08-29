@@ -80,8 +80,8 @@ G4UserTrackingAction* ActionsFactory::CreateTrackingAction() const
 {
   G4UserTrackingAction* p = 0;
 
-  if (_trkact_name == "DEFAULT") 
-    p = new DefaultTrackingAction();
+  if (_trkact_name == "DEFAULT") p = new DefaultTrackingAction();
+
   else {
     G4String err = "Unknown user tracking action: " + _trkact_name;
     G4Exception("CreateTrackingAction()", "[ActionsFactory]",
