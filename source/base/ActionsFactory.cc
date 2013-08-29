@@ -74,7 +74,6 @@ G4UserEventAction* ActionsFactory::CreateEventAction() const
 //////////////////////////////////////////////////////////////////////
 
 #include "DefaultTrackingAction.h"
-#include "ELTablesTrackingAction.h"
 
 
 G4UserTrackingAction* ActionsFactory::CreateTrackingAction() const
@@ -83,8 +82,6 @@ G4UserTrackingAction* ActionsFactory::CreateTrackingAction() const
 
   if (_trkact_name == "DEFAULT") 
     p = new DefaultTrackingAction();
-  else if (_trkact_name == "EL_TABLES")
-    p = new ELTablesTrackingAction();
   else {
     G4String err = "Unknown user tracking action: " + _trkact_name;
     G4Exception("CreateTrackingAction()", "[ActionsFactory]",
