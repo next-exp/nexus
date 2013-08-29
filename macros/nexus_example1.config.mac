@@ -7,8 +7,10 @@
 
 /control/execute macros/generators/SingleParticle.mac
 
+/control/execute macros/physics/IonizationElectron.mac
+
 /run/verbose 1
-/event/verbose 1
+/event/verbose 0
 /tracking/verbose 1
 
 /nexus/persistency/outputFile nexus.root
