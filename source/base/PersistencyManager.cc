@@ -92,9 +92,6 @@ void PersistencyManager::CloseFile()
 
 G4bool PersistencyManager::Store(const G4Event* event)
 {
-  _iprtmap.clear(); 
-  _itrkmap.clear();
-
   // Create a new irene event
   irene::Event ievt(event->GetEventID());
 
@@ -121,6 +118,9 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
 {
   // If the pointer is null, no trajectories were stored in this event
   if (!tc) return;
+
+  // Reset the map of irene::Particles
+  _iprtmap.clear();
 
   // Loop through the trajectories stored in the container
   for (G4int i=0; i<tc->entries(); ++i) {
@@ -223,6 +223,8 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
   IonizationHitsCollection* hits = 
     dynamic_cast<IonizationHitsCollection*>(hc);
   if (!hits) return;
+
+  _itrkmap.clear();
 
   for (G4int i=0; i<hits->entries(); i++) {
     
