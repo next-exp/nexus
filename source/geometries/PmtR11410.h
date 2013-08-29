@@ -2,31 +2,32 @@
 ///  \file   Pmt11410.h
 ///  \brief  Geometry model for the Hamamatsu R11410 PMT. 
 ///
-///  \author   J. Martin-Albo <jmalbos@ific.uv.es>
-///  \date     9 Dec 2011
+///  \author   Javier Muñoz Vidal <jmunoz@ific.uv.es>
+///  \date     1 January 2013
 ///  \version  $Id$
 ///
-///  Copyright (c) 2011 NEXT Collaboration
+///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef __PMT_R11410__
-#define __PMT_R11410__
+#ifndef PMT_R11410_H
+#define PMT_R11410_H
 
 #include "BaseGeometry.h"
-#include "CylinderPointSampler.h"
-
 #include <G4ThreeVector.hh>
-#include <G4OpticalSurface.hh>
+
+class G4OpticalSurface;
 
 
 namespace nexus {
+
+  class CylinderPointSampler;
+
 
   /// Geometry model for the Hamamatsu R11410-10 photomultiplier
   
   class PmtR11410: public BaseGeometry
   {
   public:
-
     /// Constructor
     PmtR11410();
 

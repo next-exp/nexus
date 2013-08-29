@@ -1,16 +1,18 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author:  J. Martin-Albo <jmalbos@ific.uv.es>
-//  Created: 9 Dec 2011
+//  Author:  Javier Muñoz Vidal <jmunoz@ific.uv.es>
+//  Created: 1 January 2013
 //  
-//  Copyright (c) 2011 NEXT Collaboration
+//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
 // ---------------------------------------------------------------------------- 
 
 #include "PmtR11410.h"
+
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "PmtSD.h"
+#include "CylinderPointSampler.h"
 
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
@@ -25,6 +27,8 @@
 #include <G4VisAttributes.hh>
 #include <G4Colour.hh>
 #include <Randomize.hh>
+#include <G4OpticalSurface.hh>
+
 
 
 namespace nexus {
@@ -48,24 +52,31 @@ namespace nexus {
 
   void PmtR11410::Construct()
   {
-    // PMT BODY ///////////////////////
+    // PMT BODY //////////////////////////////////////////////////////
+
     G4Tubs* front_body_solid = 
-      new G4Tubs("FRONT_BODY", 0., _front_body_diam/2., _front_body_length/2., 0., twopi);
+      new G4Tubs("FRONT_BODY", 0., _front_body_diam/2., _front_body_length/2., 
+        0., twopi);
 
     G4Tubs* rear_body_solid = 
-      new G4Tubs("REAR_BODY", 0., _rear_body_diam/2., _rear_body_length/2., 0., twopi);
+      new G4Tubs("REAR_BODY", 0., _rear_body_diam/2., _rear_body_length/2., 
+        0., twopi);
 
     // Union of the two volumes of the phototube body
     G4double z_transl = -_front_body_length/2. - _rear_body_length/2.;
     G4ThreeVector transl(0., 0., z_transl);
-    G4UnionSolid* pmt_solid = new G4UnionSolid("PMT_R11410", front_body_solid, rear_body_solid, 0, transl);
+    G4UnionSolid* pmt_solid = new G4UnionSolid("PMT_R11410", front_body_solid,
+      rear_body_solid, 0, transl);
  
     G4Material* Kovar = MaterialsList::Kovar();
-    G4LogicalVolume* pmt_logic = new G4LogicalVolume(pmt_solid, Kovar, "PMT_R11410");
+
+    G4LogicalVolume* pmt_logic = 
+      new G4LogicalVolume(pmt_solid, Kovar, "PMT_R11410");
     this->SetLogicalVolume(pmt_logic);
 
 
     // PMT GAS  //////////////////////////////////////////////////////
+
     G4double front_body_gas_diam = _front_body_diam - 2. * _body_thickness;
     G4double front_body_gas_length = _front_body_length - _body_thickness;
     G4Tubs* front_body_gas_solid = 
@@ -91,6 +102,7 @@ namespace nexus {
 
 
     // PMT WINDOW ////////////////////////////////////////////////////
+
     _window_diam = front_body_gas_diam;
     G4Tubs* window_solid =
       new G4Tubs("PMT_WINDOW", 0, _window_diam/2., _window_thickness/2., 0., twopi);
@@ -103,7 +115,9 @@ namespace nexus {
     G4PVPlacement* window_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,window_posz), window_logic,
     						    "PMT_WINDOW", pmt_gas_logic, false, 0);
 
+
     // PMT PHOTOCATHODE  /////////////////////////////////////////////
+
     G4Tubs* photocathode_solid =
       new G4Tubs("PMT_PHOTOCATHODE", 0, _photocathode_diam/2., _photocathode_thickness/2., 0., twopi);
 
@@ -125,13 +139,10 @@ namespace nexus {
     window_logic->SetSensitiveDetector(pmtsd);
 
 
-
-    /// VISIBILITIES
-    // The photocathode is the only visible part, and it is always visible
+    // VISIBILITIES //////////////////////////////////////////////////
 
     G4VisAttributes grey(G4Colour(.7, .7, .7));
     pmt_logic->SetVisAttributes(grey);
-    pmt_logic->SetVisAttributes(G4VisAttributes::Invisible);
     pmt_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
     window_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
@@ -140,8 +151,8 @@ namespace nexus {
     photocathode_logic->SetVisAttributes(brown);
 
 
+    // VERTEX GENERATORS /////////////////////////////////////////////
 
-    /// VERTEX GENERATORS   //////////
     G4double front_body_irad = _front_body_diam/2. - _body_thickness;
     G4double rear_body_irad  = _rear_body_diam/2. - _body_thickness;
 
@@ -168,7 +179,6 @@ namespace nexus {
     _front_body_perc  = front_body_vol / total_vol;
     _fr_med_body_perc = (front_body_vol + medium_body_vol) / total_vol;
     _fr_med_re_body_perc = (front_body_vol + medium_body_vol + rear_body_vol) / total_vol;
-
   }  
   
 
@@ -192,25 +202,23 @@ namespace nexus {
 
     if (region == "PMT_BODY") {
       G4double rand1 = G4UniformRand();
-      if (rand1 < _front_body_perc)
-	vertex = _front_body_gen->GenerateVertex(VOLUME);
+      if (rand1 < _front_body_perc) 
+        vertex = _front_body_gen->GenerateVertex(VOLUME);
       else if (rand1 < _fr_med_body_perc)
-	vertex = _medium_body_gen->GenerateVertex(VOLUME);
+        vertex = _medium_body_gen->GenerateVertex(VOLUME);
       else if (rand1 < _fr_med_re_body_perc)
-	vertex = _rear_body_gen->GenerateVertex(VOLUME);
+        vertex = _rear_body_gen->GenerateVertex(VOLUME);
       else
-	vertex = _rear_cap_gen->GenerateVertex(INSIDE);
+        vertex = _rear_cap_gen->GenerateVertex(INSIDE);
     }
-    
-    // G4cout << G4endl << "Ini PMT pos: " << vertex;
 
     return vertex;
   }
 
 
 
-  G4OpticalSurface* PmtR11410::GetPhotOptSurf() {
-
+  G4OpticalSurface* PmtR11410::GetPhotOptSurf() 
+  {
     // TO FIX: these are the values of PmtR7378A ///// 
     const G4int entries = 30;
 
