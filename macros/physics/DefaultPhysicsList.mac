@@ -3,8 +3,9 @@
 ###  $Id$
 ### --------------------------------------------------------
 
-
 /PhysicsList/RegisterPhysics G4EmLivermorePhysics
+/PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4DecayPhysics
 #/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
 #/PhysicsList/RegisterPhysics G4OpticalPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterBuilder
