@@ -6,13 +6,15 @@
 ///  \date     28 May 2010
 ///  \version  $Id$
 ///
-///  Copyright (c) 2010-2012 NEXT Collaboration. All rights reserved.
+///  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXUS_PHYSICS__
-#define __NEXUS_PHYSICS__
+#ifndef NEXUS_PHYSICS_H
+#define NEXUS_PHYSICS_H
 
 #include <G4VPhysicsConstructor.hh>
+
+class G4GenericMessenger;
 
 
 namespace nexus {
@@ -32,23 +34,13 @@ namespace nexus {
     /// Construct all required physics processes (Geant4 mandatory method)
     virtual void ConstructProcess();
 
-    void ActivateDriftAndElectroluminescence(G4bool);
-
-    void TrackSecondariesFirst(G4bool);
-    
   private:
-    G4bool _drift_el; ///< switch on or off the drift+el processes
-    G4bool _track_sec_first;
+    G4bool _clustering;          ///< Switch on/of the ionization clustering
+    G4bool _drift;               ///< Switch on/of the ionization drift
+    G4bool _electroluminescence; ///< Switch on/off the electroluminescence
+
+    G4GenericMessenger* _msg;
   };
-
-  // INLINE METHODS //////////////////////////////////////////////////
-
-  inline void NexusPhysics::ActivateDriftAndElectroluminescence(G4bool b)
-  { _drift_el = b; }
-
-  inline void NexusPhysics::TrackSecondariesFirst(G4bool tsf) 
-  { _track_sec_first = tsf; }
-
 
 } // end namespace nexus
 
