@@ -61,7 +61,6 @@ namespace nexus {
   G4VParticleChange*
   Electroluminescence::PostStepDoIt(const G4Track& track, const G4Step& step)
   {
-    G4cout << "EL: PostStepDoIt" << G4endl;
     // Initialize particle change with current track values
     _ParticleChange.Initialize(track);
     
@@ -84,7 +83,6 @@ namespace nexus {
     //G4double yield = field->LightYield();
     G4double yield = field->GetLightYield();
  
-    G4cout << "Yield: " << yield << G4endl;
     if (yield == 0){
       return G4VDiscreteProcess::PostStepDoIt(track, step);
     }
@@ -122,9 +120,6 @@ namespace nexus {
     //_sum = _sum + num_photons;
    
     num_photons = 500000;
-      
-    G4cout << "Numb of EL photons: " << num_photons << G4endl;
-    //   num_photons = 10;
     
     _ParticleChange.SetNumberOfSecondaries(num_photons);
     
