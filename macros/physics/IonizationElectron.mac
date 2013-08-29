@@ -3,7 +3,7 @@
 ###  in the definition of the ionization electron with no attached 
 ###  physics processes.
 ###
-###  $Id: DefaultPhysicsList.mac 9183 2013-08-29 10:14:43Z jmalbos $
+###  $Id$
 ### ------------------------------------------------------------------
 
 /PhysicsList/Nexus/clustering          false
