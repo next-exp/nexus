@@ -32,6 +32,7 @@ GeometryFactory::~GeometryFactory()
 //////////////////////////////////////////////////////////////////////
 
 #include "XeSphere.h"
+#include "CylindricChamber.h"
 #include "Next1EL.h"
 #include "Next100.h"
 #include "NEW.h"
@@ -42,6 +43,8 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
   BaseGeometry* p = 0;
 
   if      (_name == "XE_SPHERE") p = new XeSphere();
+
+  else if (_name == "CYLINDRIC_CHAMBER") p = new CylindricChamber();
   
   else if (_name == "NEXT1_EL") p = new Next1EL();
 
