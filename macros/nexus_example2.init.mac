@@ -1,14 +1,17 @@
-### --------------------------------------------------------
-###  Example 1: Initialization macro of nexus.
+### ------------------------------------------------------------------
+###  Example 2: Initialization macro.
+###
 ###  $Id: nexus_example1.init.mac 9053 2013-08-05 10:13:56Z jmalbos $
-### --------------------------------------------------------
+### ------------------------------------------------------------------
 
 /control/execute macros/physics/DefaultPhysicsList.mac
 
-/Geometry/RegisterGeometry XE_SPHERE
+/Geometry/RegisterGeometry CYLINDRIC_CHAMBER
 
 /Generator/RegisterGenerator ION_GUN   
 
+/Actions/RegisterRunAction      DEFAULT
+/Actions/RegisterEventAction    DEFAULT
 /Actions/RegisterTrackingAction DEFAULT
 
 /nexus/RegisterMacro macros/nexus_example2.config.mac
