@@ -48,9 +48,13 @@ namespace nexus {
   
   G4bool IonizationClustering::IsApplicable(const G4ParticleDefinition& pdef)
   {
-    if (pdef == *G4OpticalPhoton::Definition()) return false;
-    else if (pdef == *IonizationElectron::Definition()) return false;
-    else return true;
+    if (pdef == *G4OpticalPhoton::Definition() ||
+        pdef == *IonizationElectron::Definition()) return false;
+
+    else if ((pdef.GetPDGCharge() != 0.) ||
+             (pdef == *G4Gamma::Definition())) return true;
+
+    else return false;
   }
   
   
@@ -82,9 +86,9 @@ namespace nexus {
       return G4VRestDiscreteProcess::PostStepDoIt(track, step);
 
     //////////////////////////////////////////////////////////////////
-    // The clustering process makes sense only for those regions with
-    // a drift field defined. Therefore, check whether the current region
-    // has a drift field attached, and stop the process if that is not the case.
+    // The clustering process makes sense only for those regions with 
+    // a drift field defined. Therefore, check whether the current region 
+    // has a drift field attached, and stop the process if that's not the case.
 
     G4Region* region = track.GetVolume()->GetLogicalVolume()->GetRegion();
 
@@ -94,8 +98,14 @@ namespace nexus {
     if (!field) return G4VRestDiscreteProcess::PostStepDoIt(track, step);
 
     //////////////////////////////////////////////////////////////////
-    // Get material properties relevant for the process
+    // Calculate the number of charges to be simulated generating a 
+    // a Gaussian random number with mean given by the 'empirical'
+    // average energy needed to produce an ionization pair, W_i.
+    // The fluctuations (sigma of the distribution) are in general
+    // sub-Poissonian: \sigma^2 = F N, where F is the so-called Fano factor
+    // and N is the average number of charges.
 
+    // Fetch the W_i and F from the material properties table
     //G4MaterialPropertiesTable* mpt = 
     //  track.GetMaterial()->GetMaterialPropertiesTable();
     //if (!mpt)
@@ -105,8 +115,6 @@ namespace nexus {
     //G4double fano_factor = mpt->GetConstProperty("FANOFACTOR");
     G4double ioni_energy = 22.4 * eV;
     G4double fano_factor = .15;
-
-    //////////////////////////////////////////////////////////////////
 
     G4double mean = energy_dep / ioni_energy;
 
@@ -122,9 +130,9 @@ namespace nexus {
 
     _ParticleChange->SetNumberOfSecondaries(num_charges);
 
+    // Track secondaries first
     if ((track.GetTrackStatus() == fAlive) && num_charges > 0) 
       _ParticleChange->ProposeTrackStatus(fSuspend);
-
 
     //////////////////////////////////////////////////////////////////
 
@@ -145,7 +153,12 @@ namespace nexus {
         new G4DynamicParticle(IonizationElectron::Definition(), 
           momentum_direction, kinetic_energy);
 
-      G4LorentzVector point = _rnd->Shoot();
+      // Calculate position and time. We distribute the ie- along
+      // the step except for the depositions associated to gammas,
+      // where we use the post-step point.
+      G4LorentzVector point;
+      if (track.GetDefinition() == G4Gamma::Definition()) point = post_point;
+      else point = _rnd->Shoot();
 	
       G4Track* aSecondaryTrack = 
         new G4Track(ionielectron, point.t(), point.v());
