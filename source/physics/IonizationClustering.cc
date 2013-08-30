@@ -26,7 +26,7 @@ namespace nexus {
   
   IonizationClustering::IonizationClustering(const G4String& process_name,
                                              G4ProcessType type):
-    G4VRestDiscreteProcess(process_name,type), _ParticleChange(0), _rnd(0)
+    G4VRestDiscreteProcess(process_name, type), _ParticleChange(0), _rnd(0)
   {
     // Create particle change object
     _ParticleChange = new G4ParticleChange();
@@ -71,32 +71,42 @@ namespace nexus {
     // Initialize particle change with current track values
     _ParticleChange->Initialize(track);
 
-    // Get energy deposited through ionization during the last step    
+    //////////////////////////////////////////////////////////////////
+    // Get energy deposited through ionization during the last step.
+    // If no energy was deposited, we are done here. 
+
     G4double energy_dep = 
       step.GetTotalEnergyDeposit() - step.GetNonIonizingEnergyDeposit();
 
-    // If no energy was deposited, we are done here
     if (energy_dep <= 0.)
       return G4VRestDiscreteProcess::PostStepDoIt(track, step);
 
+    //////////////////////////////////////////////////////////////////
     // The clustering process makes sense only for those regions with
     // a drift field defined. Therefore, check whether the current region
-    // has a drift field attached. Stop the process if that is not the case.
+    // has a drift field attached, and stop the process if that is not the case.
+
     G4Region* region = track.GetVolume()->GetLogicalVolume()->GetRegion();
+
     BaseDriftField* field = 
       dynamic_cast<BaseDriftField*>(region->GetUserInformation());
+
     if (!field) return G4VRestDiscreteProcess::PostStepDoIt(track, step);
-    
+
+    //////////////////////////////////////////////////////////////////
     // Get material properties relevant for the process
-    G4MaterialPropertiesTable* mpt = 
-      track.GetMaterial()->GetMaterialPropertiesTable();
-    if (!mpt)
-      return G4VRestDiscreteProcess::PostStepDoIt(track, step);
+
+    //G4MaterialPropertiesTable* mpt = 
+    //  track.GetMaterial()->GetMaterialPropertiesTable();
+    //if (!mpt)
+    //  return G4VRestDiscreteProcess::PostStepDoIt(track, step);
     
     //G4double ioni_energy = mpt->GetConstProperty("IONIZATIONENERGY");
     //G4double fano_factor = mpt->GetConstProperty("FANOFACTOR");
     G4double ioni_energy = 22.4 * eV;
     G4double fano_factor = .15;
+
+    //////////////////////////////////////////////////////////////////
 
     G4double mean = energy_dep / ioni_energy;
 
@@ -110,11 +120,16 @@ namespace nexus {
       num_charges = G4int(G4Poisson(mean));
     }
 
+    _ParticleChange->SetNumberOfSecondaries(num_charges);
+
+    if ((track.GetTrackStatus() == fAlive) && num_charges > 0) 
+      _ParticleChange->ProposeTrackStatus(fSuspend);
+
+
+    //////////////////////////////////////////////////////////////////
 
     G4ThreeVector momentum_direction(0.,0.,1.);
     G4double kinetic_energy = 1.*eV;
-
-    _ParticleChange->SetNumberOfSecondaries(num_charges);
 
     // Set pre and post points of the step in the random generator
     G4LorentzVector pre_point(step.GetPreStepPoint()->GetPosition(),
@@ -127,15 +142,17 @@ namespace nexus {
     for (G4int i=0; i<num_charges; i++) {
 
       G4DynamicParticle* ionielectron = 
-        new G4DynamicParticle(IonizationElectron::Definition(),
-			                        momentum_direction, kinetic_energy);
+        new G4DynamicParticle(IonizationElectron::Definition(), 
+          momentum_direction, kinetic_energy);
 
       G4LorentzVector point = _rnd->Shoot();
 	
       G4Track* aSecondaryTrack = 
         new G4Track(ionielectron, point.t(), point.v());
+      
       aSecondaryTrack->
         SetTouchableHandle(step.GetPreStepPoint()->GetTouchableHandle());
+      
       _ParticleChange->AddSecondary(aSecondaryTrack);
     }
 
