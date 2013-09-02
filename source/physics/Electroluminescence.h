@@ -9,11 +9,13 @@
 ///  Copyright (c) 2009, 2010 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __ELECTROLUMINESCENCE__
-#define __ELECTROLUMINESCENCE__
+#ifndef ELECTROLUMINESCENCE_H
+#define ELECTROLUMINESCENCE_H
 
 #include <G4VDiscreteProcess.hh>
-#include "G4PhysicsTable.hh"
+
+
+class G4ParticleChange;
 
 
 namespace nexus {
@@ -26,20 +28,12 @@ namespace nexus {
   public:
     /// Constructor
     Electroluminescence(const G4String& process_name = "Electroluminescence",
-			G4ProcessType type=fUserDefined);
+			                  G4ProcessType type=fUserDefined);
     /// Destructor
     ~Electroluminescence();
 
     /// Returns true if particle is an ionization electron
     G4bool IsApplicable(const G4ParticleDefinition&);
-
-    /// If set, the ionization electron tracking is interrupted and
-    /// any produced electroluminescence photon is tracked next. When all
-    /// are done, the tracking of the electron resumes.
-    void SetTrackSecondariesFirst(G4bool);
-
-    /// Returns the state of the flag for tracking EL photons first
-    G4bool GetTrackSecondariesFirst() const;
 
   public:
     /// This is the method that implements the EL light emission
@@ -53,24 +47,18 @@ namespace nexus {
     /// but sets the 'StronglyForced' condition for the DoIt to be
     /// invoked at every step.
     G4double GetMeanFreePath(const G4Track&, G4double, G4ForceCondition*);
+
     void BuildThePhysicsTable();
+    void ComputeCumulativeDistribution(const G4PhysicsOrderedFreeVector&,
+                                       G4PhysicsOrderedFreeVector&);
 
   private:
-    G4bool _secondaries_first;
-    G4ParticleChange _ParticleChange;
-    G4double _pressure;
+    G4ParticleChange* _ParticleChange;
+
     G4PhysicsTable* _theSlowIntegralTable;
     G4PhysicsTable* _theFastIntegralTable;
   };
 
-  // inline methods ..................................................
-
-  inline void Electroluminescence::SetTrackSecondariesFirst(G4bool sf)
-  { _secondaries_first = sf; }
-
-  inline G4bool Electroluminescence::GetTrackSecondariesFirst() const
-  { return _secondaries_first; }
-  
 } // end namespace nexus
 
 #endif
