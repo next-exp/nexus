@@ -65,8 +65,9 @@ namespace nexus {
     // Union of the two volumes of the phototube body
     G4double z_transl = -_front_body_length/2. - _rear_body_length/2.;
     G4ThreeVector transl(0., 0., z_transl);
-    G4UnionSolid* pmt_solid = new G4UnionSolid("PMT_R11410", front_body_solid,
-      rear_body_solid, 0, transl);
+    G4UnionSolid* pmt_solid = 
+      new G4UnionSolid("PMT_R11410",front_body_solid,rear_body_solid,0,transl);
+ 
  
     G4Material* Kovar = MaterialsList::Kovar();
 
