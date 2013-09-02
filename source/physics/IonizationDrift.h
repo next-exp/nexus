@@ -1,22 +1,22 @@
 // ----------------------------------------------------------------------------
 ///  \file   IonizationDrift.h
-///  \brief  Drift of ionization clusters.
+///  \brief  Drift of ionization clusters
 ///
 ///  \author   J. Martin-Albo <jmalbos@ific.uv.es>    
 ///  \date     1 June 2009
 ///  \version  $Id$
 ///
-///  Copyright (c) 2009, 2010 NEXT Collaboration
+///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef __IONIZATION_DRIFT__
-#define __IONIZATION_DRIFT__
+#ifndef IONIZATION_DRIFT_H
+#define IONIZATION_DRIFT_H
 
 #include <G4VContinuousDiscreteProcess.hh>
-#include <G4ParticleChangeForTransport.hh>
+
 
 class G4Navigator;
-
+class G4ParticleChangeForTransport;
 
 namespace nexus {
 
@@ -29,20 +29,12 @@ namespace nexus {
     
     /// Constructor
     IonizationDrift(const G4String& name="Drift",
-		    G4ProcessType type=fUserDefined);
+		                G4ProcessType type=fUserDefined);
     /// Destructor
     ~IonizationDrift();
 
-    /// The process is applicable only to ionization clusters
-    /// or ionization electrons
+    /// The process is applicable only to ionization electrons
     G4bool IsApplicable(const G4ParticleDefinition&);
-
-    ///
-    void ShootChargesAfterDrift(G4bool);
-    
-    G4bool GetShootChargesAfterDrift() const;
-
-  public:
 
     G4VParticleChange* AlongStepDoIt(const G4Track&, const G4Step&);
     
@@ -60,20 +52,10 @@ namespace nexus {
 				    G4double, G4double&);
     
   private:
-
-    G4bool _shoot_charges;
     G4LorentzVector _xyzt;
-    G4ParticleChangeForTransport _ParticleChange;
+    G4ParticleChangeForTransport* _ParticleChange;
     G4Navigator* _nav; ///< Pointer to the G4 navigator for tracking
   };
-
-  // inline methods ..................................................
-  
-  inline void IonizationDrift::ShootChargesAfterDrift(G4bool sc)
-  { _shoot_charges = sc; }
-
-  inline G4bool IonizationDrift::GetShootChargesAfterDrift() const
-  { return _shoot_charges; }
 
 } // end namespace nexus
 

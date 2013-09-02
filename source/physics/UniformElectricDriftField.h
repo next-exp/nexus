@@ -9,8 +9,8 @@
 ///  Copyright (c) 2010-2012 NEXT Collaboration. All rights reserved.
 // -----------------------------------------------------------------------------
 
-#ifndef __UNIFORM_ELECTRIC_DRIFT_FIELD__
-#define __UNIFORM_ELECTRIC_DRIFT_FIELD__
+#ifndef UNIFORM_ELECTRIC_DRIFT_FIELD_H
+#define UNIFORM_ELECTRIC_DRIFT_FIELD_H
 
 #include "BaseDriftField.h"
 #include <geomdefs.hh>
@@ -65,7 +65,7 @@ namespace nexus {
     G4double GetAttachment() const;
 
     void SetLightYield(G4double);
-    G4double GetLightYield() const;
+    virtual G4double LightYield() const;
 
     void SetNumberOfPhotons(G4double);
     G4double GetNumberOfPhotons() const;
@@ -137,7 +137,7 @@ namespace nexus {
   inline void UniformElectricDriftField::SetLightYield(G4double ly)
   { _light_yield = ly; }
 
-  inline G4double UniformElectricDriftField::GetLightYield() const
+  inline G4double UniformElectricDriftField::LightYield() const
   { return _light_yield; }
 
   inline void UniformElectricDriftField::SetNumberOfPhotons(G4double nph)

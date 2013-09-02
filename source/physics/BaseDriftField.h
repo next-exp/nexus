@@ -41,21 +41,21 @@ namespace nexus {
     virtual G4LorentzVector 
     GeneratePointAlongDriftLine(const G4LorentzVector&) = 0;
 
-    virtual G4double LightYield();
+    virtual G4double LightYield() const;
 
   private:
     void Print() const;
   };
 
-  // Inline definitions /////////////////////////////////////////////
+  // INLINE DEFINITIONS //////////////////////////////////////////////
   
   inline BaseDriftField::BaseDriftField() {}
   
   inline BaseDriftField::~BaseDriftField() {}
 
-  inline void BaseDriftField::Print() const {}
+  inline G4double BaseDriftField::LightYield() const {return 0.;}
 
-  inline G4double BaseDriftField::LightYield() {return 0.;}
+  inline void BaseDriftField::Print() const {}
 
 } // end namespace nexus
 
