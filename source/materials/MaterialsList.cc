@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author:  J Martin-Albo <jmalbos@ific.uv.es>
+//  Author:  <justo.martin-albo@ific.uv.es>
 //  Created: 27 Mar 2009
 //
-//  Copyright (c) 2009-2011 NEXT Collaboration
+//  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
 #include "MaterialsList.h"
@@ -385,7 +385,8 @@ G4Material* MaterialsList::CopyMaterial(G4Material* original, G4String newname)
     G4double temperature = original->GetTemperature();
     G4double pressure = original->GetPressure();
     
-    newmat = new G4Material(newname, z, a, density, state, temperature, pressure);
+    newmat = 
+      new G4Material(newname, z, a, density, state, temperature, pressure);
   }
 
   return newmat;
