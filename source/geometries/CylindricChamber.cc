@@ -13,6 +13,7 @@
 #include "UniformElectricDriftField.h"
 #include "IonizationSD.h"
 #include "PmtR11410.h"
+#include "OpticalMaterialProperties.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Tubs.hh>
@@ -62,6 +63,7 @@ namespace nexus {
       new G4Tubs("GAS", 0., chamber_diam/2., chamber_length/2., 0., twopi);
 
     G4Material* gxe = MaterialsList::GXe(10.*bar);
+    gxe->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(10.*bar, 303));
 
     G4LogicalVolume* gas_logic = new G4LogicalVolume(gas_solid, gxe, "GAS");
 
@@ -142,6 +144,11 @@ namespace nexus {
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., -30.*cm), pmt_logic, "PMT",
       gas_logic, false, 0, true);
+
+
+    // DICE BOARD ////////////////////////////////////////////////////
+
+    
   }
 
 
