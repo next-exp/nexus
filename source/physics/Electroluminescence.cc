@@ -25,8 +25,7 @@ using namespace nexus;
 
 Electroluminescence::Electroluminescence(const G4String& process_name,
 					                               G4ProcessType type):
-  G4VDiscreteProcess(process_name, type),
-  _theSlowIntegralTable(0), _theFastIntegralTable(0)
+  G4VDiscreteProcess(process_name, type), _theFastIntegralTable(0)
 {
   _ParticleChange = new G4ParticleChange();
   pParticleChange = _ParticleChange;
@@ -39,7 +38,6 @@ Electroluminescence::Electroluminescence(const G4String& process_name,
 Electroluminescence::~Electroluminescence()
 {
   delete _theFastIntegralTable;
-  delete _theSlowIntegralTable;
 }
   
   
@@ -104,116 +102,70 @@ Electroluminescence::PostStepDoIt(const G4Track& track, const G4Step& step)
   // Energy ia sampled from integral (like it is
   // done in G4Scintillation)
   G4Material* mat = step.GetPostStepPoint()->GetTouchable()->GetVolume()->GetLogicalVolume()->GetMaterial();
-  G4MaterialPropertiesTable* mat_mpt = mat->GetMaterialPropertiesTable();
-  const G4MaterialPropertyVector* Fast_Intensity = 
-    mat_mpt->GetProperty("FASTCOMPONENT"); 
-  const G4MaterialPropertyVector* Slow_Intensity =
-    mat_mpt->GetProperty("SLOWCOMPONENT");
-     
-  if (!Fast_Intensity && !Slow_Intensity )
-    return G4VDiscreteProcess::PostStepDoIt(track, step);
+  G4MaterialPropertiesTable* mpt = mat->GetMaterialPropertiesTable();
 
-    G4int nscnt = 1;
-    if (Fast_Intensity && Slow_Intensity) nscnt = 2;
-   
-    G4int mat_index = mat->GetIndex();
-    G4int num = 0;
+  const G4MaterialPropertyVector* spectrum = mpt->GetProperty("ELSPECTRUM");
 
-    for (G4int scnt = 1; scnt <= nscnt; scnt++) {
+  if (!spectrum) return G4VDiscreteProcess::PostStepDoIt(track, step);
 
-      G4double ScintillationTime = 0.*ns;
-      G4PhysicsOrderedFreeVector* ScintillationIntegral = NULL;
-      
-      if (scnt == 1) { 
+  G4double eltime = mpt->GetConstProperty("ELTIMECONSTANT");
+  G4PhysicsOrderedFreeVector* spectrum_integral = 
+    (G4PhysicsOrderedFreeVector*)(*_theFastIntegralTable)(mat->GetIndex());
 
-        if (nscnt == 1) {
-          if(Fast_Intensity) {
-            ScintillationTime = mat_mpt->GetConstProperty("FASTTIMECONSTANT");
-            ScintillationIntegral = 
-              (G4PhysicsOrderedFreeVector*)((*_theFastIntegralTable)(mat_index));
-            }
-
-          if(Slow_Intensity) {
-            ScintillationTime = mat_mpt->GetConstProperty("SLOWTIMECONSTANT");
-            ScintillationIntegral =
-              (G4PhysicsOrderedFreeVector*)((*_theSlowIntegralTable)(mat_index));
-          }
-        } 
-        else {
-          G4double YieldRatio = mat_mpt->GetConstProperty("YIELDRATIO");
-          num = G4int (std::min(YieldRatio,1.0) * num_photons);
-          ScintillationTime = mat_mpt->GetConstProperty("FASTTIMECONSTANT");
-          ScintillationIntegral =
-            (G4PhysicsOrderedFreeVector*)((*_theFastIntegralTable)(mat_index));
-        }
-      } 
-      else {
-        num = num_photons - num;
-        ScintillationTime = mat_mpt->GetConstProperty("SLOWTIMECONSTANT");
-        ScintillationIntegral =
-          (G4PhysicsOrderedFreeVector*)((*_theSlowIntegralTable)(mat_index));
-      }
-
-      if (!ScintillationIntegral) continue;
 	
-      // Max Scintillation Integral
- 
-      G4double sc_max = ScintillationIntegral->GetMaxValue();
+  G4double sc_max = spectrum_integral->GetMaxValue();
       
-      for (G4int i=0; i<num; i++) {
-        // Generate a random direction for the photon 
-        // (EL is supposed isotropic)
-        G4double cos_theta = 1. - 2.*G4UniformRand();
-        G4double sin_theta = sqrt((1.-cos_theta)*(1.+cos_theta));
+  for (G4int i=0; i<num_photons; i++) {
+    // Generate a random direction for the photon 
+    // (EL is supposed isotropic)
+    G4double cos_theta = 1. - 2.*G4UniformRand();
+    G4double sin_theta = sqrt((1.-cos_theta)*(1.+cos_theta));
 
-        G4double phi = twopi * G4UniformRand();
-        G4double sin_phi = sin(phi);
-        G4double cos_phi = cos(phi);
+    G4double phi = twopi * G4UniformRand();
+    G4double sin_phi = sin(phi);
+    G4double cos_phi = cos(phi);
       
-        G4double px = sin_theta * cos_phi;
-        G4double py = sin_theta * sin_phi;
-        G4double pz = cos_theta;
+    G4double px = sin_theta * cos_phi;
+    G4double py = sin_theta * sin_phi;
+    G4double pz = cos_theta;
 
-        G4ThreeVector momentum(px, py, pz);
+    G4ThreeVector momentum(px, py, pz);
 
-        // Determine photon polarization accordingly
-        G4double sx = cos_theta * cos_phi;
-        G4double sy = cos_theta * sin_phi; 
-        G4double sz = -sin_theta;
+    // Determine photon polarization accordingly
+    G4double sx = cos_theta * cos_phi;
+    G4double sy = cos_theta * sin_phi; 
+    G4double sz = -sin_theta;
       
-        G4ThreeVector polarization(sx, sy, sz);
-        G4ThreeVector perp = momentum.cross(polarization);
+    G4ThreeVector polarization(sx, sy, sz);
+    G4ThreeVector perp = momentum.cross(polarization);
       
-        phi = twopi * G4UniformRand();
-        sin_phi = sin(phi); 
-        cos_phi = cos(phi);
+    phi = twopi * G4UniformRand();
+    sin_phi = sin(phi); 
+    cos_phi = cos(phi);
 
-        polarization = cos_phi * polarization + sin_phi * perp;
-        polarization = polarization.unit();
+    polarization = cos_phi * polarization + sin_phi * perp;
+    polarization = polarization.unit();
       
-        // Generate a new photon and set properties
+    // Generate a new photon and set properties
+    G4DynamicParticle* photon =
+      new G4DynamicParticle(G4OpticalPhoton::Definition(), momentum);
       
-        G4DynamicParticle* photon =
-          new G4DynamicParticle(G4OpticalPhoton::Definition(), momentum);
-      
-        photon->SetPolarization(polarization.x(), polarization.y(), polarization.z());
+    photon->
+      SetPolarization(polarization.x(), polarization.y(), polarization.z());
 
-        // Determine photon energy
-        G4double sc_value = G4UniformRand()*sc_max;
-        G4double sampled_energy = 
-        ScintillationIntegral->GetEnergy(sc_value);
-        photon->SetKineticEnergy(sampled_energy);
+    // Determine photon energy
+    G4double sc_value = G4UniformRand()*sc_max;
+    G4double sampled_energy = spectrum_integral->GetEnergy(sc_value);
+    photon->SetKineticEnergy(sampled_energy);
 
-        G4LorentzVector xyzt = 
-          field->GeneratePointAlongDriftLine(initial_position);
+    G4LorentzVector xyzt = 
+      field->GeneratePointAlongDriftLine(initial_position);
 
-        // Create the track
-        G4Track* secondary = new G4Track(photon, xyzt.t(), xyzt.v());
-        secondary->SetParentID(track.GetTrackID());
-        //secondary->
-          //SetTouchableHandle(step.GetPreStepPoint()->GetTouchableHandle());
-        _ParticleChange->AddSecondary(secondary);
-    }
+    // Create the track
+    G4Track* secondary = new G4Track(photon, xyzt.t(), xyzt.v());
+    secondary->SetParentID(track.GetTrackID());
+    _ParticleChange->AddSecondary(secondary);
+    
   }
   
   return G4VDiscreteProcess::PostStepDoIt(track, step);
@@ -223,7 +175,7 @@ Electroluminescence::PostStepDoIt(const G4Track& track, const G4Step& step)
 
 void Electroluminescence::BuildThePhysicsTable()
 {
-  if (_theFastIntegralTable && _theSlowIntegralTable) return;
+  if (_theFastIntegralTable) return;
 
   const G4MaterialTable* theMaterialTable = G4Material::GetMaterialTable();
   G4int numOfMaterials = G4Material::GetNumberOfMaterials();
@@ -232,15 +184,10 @@ void Electroluminescence::BuildThePhysicsTable()
 	
   if(!_theFastIntegralTable) 
     _theFastIntegralTable = new G4PhysicsTable(numOfMaterials);
-  if(!_theSlowIntegralTable) 
-    _theSlowIntegralTable = new G4PhysicsTable(numOfMaterials);
-
 
   for (G4int i=0 ; i<numOfMaterials; i++) {
 
   	G4PhysicsOrderedFreeVector* aPhysicsOrderedFreeVector =
-  	  new G4PhysicsOrderedFreeVector();
-  	G4PhysicsOrderedFreeVector* bPhysicsOrderedFreeVector =
   	  new G4PhysicsOrderedFreeVector();
 
   	// Retrieve vector of scintillation wavelength intensity for
@@ -253,18 +200,11 @@ void Electroluminescence::BuildThePhysicsTable()
     if (mpt) {
 
   	  G4MaterialPropertyVector* theFastLightVector = 
-  	    mpt->GetProperty("FASTCOMPONENT");
+  	    mpt->GetProperty("ELSPECTRUM");
 
   	  if (theFastLightVector) {
         ComputeCumulativeDistribution(*theFastLightVector, *aPhysicsOrderedFreeVector);
 		  }
-
-  	  G4MaterialPropertyVector* theSlowLightVector =
-  	    mpt->GetProperty("SLOWCOMPONENT");
-
-  	  if (theSlowLightVector) {
-        ComputeCumulativeDistribution(*theSlowLightVector, *bPhysicsOrderedFreeVector);
-  	  }
   	}
 
   	// The scintillation integral(s) for a given material
@@ -272,7 +212,6 @@ void Electroluminescence::BuildThePhysicsTable()
   	// position of the material in the material table.
 
   	_theFastIntegralTable->insertAt(i,aPhysicsOrderedFreeVector);
-    _theSlowIntegralTable->insertAt(i,bPhysicsOrderedFreeVector);
   }
 }
 

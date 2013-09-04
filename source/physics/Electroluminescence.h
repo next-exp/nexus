@@ -55,7 +55,6 @@ namespace nexus {
   private:
     G4ParticleChange* _ParticleChange;
 
-    G4PhysicsTable* _theSlowIntegralTable;
     G4PhysicsTable* _theFastIntegralTable;
   };
 
