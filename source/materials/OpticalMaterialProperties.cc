@@ -227,11 +227,13 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
     
   GXe_mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
   GXe_mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
+  GXe_mpt->AddProperty("ELSPECTRUM", sc_energy, intensity, sc_entries);
   GXe_mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
   GXe_mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield);
   GXe_mpt->AddConstProperty("RESOLUTIONSCALE", 1.0);
   GXe_mpt->AddConstProperty("FASTTIMECONSTANT",1.*ns);
   GXe_mpt->AddConstProperty("SLOWTIMECONSTANT",45.*ns);
+  GXe_mpt->AddConstProperty("ELTIMECONSTANT", 50.*ns);
   GXe_mpt->AddConstProperty("YIELDRATIO",.9);
   GXe_mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
   
