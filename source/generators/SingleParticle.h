@@ -62,6 +62,10 @@ namespace nexus {
 
     G4String _region;
 
+    G4double _momentum_X;
+    G4double _momentum_Y;
+    G4double _momentum_Z;
+
     const BaseGeometry* _geom; ///< Pointer to the detector geometry
   };
 

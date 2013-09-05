@@ -29,7 +29,8 @@ using namespace nexus;
 
 SingleParticle::SingleParticle():
 G4VPrimaryGenerator(), _msg(0), _particle_definition(0),
-_energy_min(0.), _energy_max(0.), _geom(0)
+_energy_min(0.), _energy_max(0.), _geom(0), _momentum_X(0.),
+_momentum_Y(0.), _momentum_Z(0.)
 {
   _msg = new G4GenericMessenger(this, "/Generator/SingleParticle/",
     "Control commands of single-particle generator.");
@@ -51,6 +52,17 @@ _energy_min(0.), _energy_max(0.), _geom(0)
 
   _msg->DeclareProperty("region", _region, 
     "Set the region of the geometry where the vertex will be generated.");
+
+  /// Temporary
+  G4GenericMessenger::Command&  momentum_X_cmd =
+    _msg->DeclareProperty("momentum_X", _momentum_X,
+   			  "x coord of momentum");
+  G4GenericMessenger::Command&  momentum_Y_cmd =
+    _msg->DeclareProperty("momentum_Y", _momentum_Y,
+   			  "y coord of momentum");
+  G4GenericMessenger::Command&  momentum_Z_cmd =
+    _msg->DeclareProperty("momentum_Z", _momentum_Z,
+   			  "z coord of momentum");
 
 
   DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
@@ -92,7 +104,7 @@ void SingleParticle::GeneratePrimaryVertex(G4Event* event)
   // Generate uniform random energy in [E_min, E_max]
   G4double kinetic_energy = RandomEnergy();
 
-  // Generate random direction
+  // Generate random direction by default
   G4ThreeVector _momentum_direction = G4RandomDirection();
 
     // Calculate cartesian components of momentum
@@ -103,10 +115,21 @@ void SingleParticle::GeneratePrimaryVertex(G4Event* event)
   G4double py = pmod * _momentum_direction.y();
   G4double pz = pmod * _momentum_direction.z();
 
+  // If user provides a momentum direction, this one is used
+  if (_momentum_X != 0. || _momentum_Y != 0. || _momentum_Z != 0.) {
+    // Normalize if needed
+    G4double mom_mod = std::sqrt(_momentum_X * _momentum_X +
+				 _momentum_Y * _momentum_Y +
+				 _momentum_Z * _momentum_Z);
+    px = pmod * _momentum_X/mom_mod;
+    py = pmod * _momentum_Y/mom_mod;
+    pz = pmod * _momentum_Z/mom_mod;
+  }
+
   // Create the new primary particle and set it some properties
   G4PrimaryParticle* particle = 
     new G4PrimaryParticle(_particle_definition, px, py, pz);
-
+ 
     // Add particle to the vertex and this to the event
   vertex->SetPrimary(particle);
   event->AddPrimaryVertex(vertex);
