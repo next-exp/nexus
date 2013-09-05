@@ -52,6 +52,7 @@ _energy_min(0.), _energy_max(0.), _geom(0)
   _msg->DeclareProperty("region", _region, 
     "Set the region of the geometry where the vertex will be generated.");
 
+
   DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
   _geom = detconst->GetGeometry();
 }
@@ -95,19 +96,16 @@ void SingleParticle::GeneratePrimaryVertex(G4Event* event)
   G4ThreeVector _momentum_direction = G4RandomDirection();
 
     // Calculate cartesian components of momentum
-  //G4double energy = kinetic_energy + _mass;
-  //G4double pmod = std::sqrt(energy*energy - _mass*_mass);
-  G4double px = _momentum_direction.x();
-  G4double py = _momentum_direction.y();
-  G4double pz = _momentum_direction.z();
+  G4double mass   = _particle_definition->GetPDGMass();
+  G4double energy = kinetic_energy + mass;
+  G4double pmod = std::sqrt(energy*energy - mass*mass);
+  G4double px = pmod * _momentum_direction.x();
+  G4double py = pmod * _momentum_direction.y();
+  G4double pz = pmod * _momentum_direction.z();
 
-    // Create the new primary particle and set it some properties
+  // Create the new primary particle and set it some properties
   G4PrimaryParticle* particle = 
     new G4PrimaryParticle(_particle_definition, px, py, pz);
-
-  //particle->SetCharge(_charge);
-  //particle->SetMass(_mass);
-  //particle->SetPolarization(0.,0.,0.);
 
     // Add particle to the vertex and this to the event
   vertex->SetPrimary(particle);
