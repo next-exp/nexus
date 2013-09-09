@@ -74,8 +74,8 @@ namespace nexus {
     G4Material* xenon = 0;
     xenon = MaterialsList::GXe(_pressure);
     G4LogicalVolume* xefv_logic= new G4LogicalVolume(_xefv,xenon,"xefv_logic");
-    G4PVPlacement* xefv_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), xefv_logic, 
-						  "XEFV",xefv_logic,false, 0);
+    G4PVPlacement* xefv_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), xefv_logic,
+						  "XEFV",_lab_logic,false, 0);
 
     // Creating the vertex generators   //////////
     _lab_gen = new BoxPointSampler(0,0,0,_lab_size/2,G4ThreeVector(0,0,0),0);
