@@ -1,0 +1,18 @@
+### --------------------------------------------------------
+###  NextNew: Configuration macro
+###  $Id: NextNew.config.mac 2013-09-09 13:13 minegui $
+### --------------------------------------------------------
+
+
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 1
+
+/control/execute macros/geometries/NEW.mac
+
+/control/execute macros/generators/IonGun.mac
+
+/control/execute macros/physics/DefaultPhysicsList.mac
+
+
+/nexus/persistency/outputFile nexus.root
