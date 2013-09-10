@@ -28,7 +28,7 @@
 #include <irene/Track.h>
 #include <irene/SensorHit.h>
 #include <irene/RootWriter.h>
-#include <irene/MacrosInfo.h>
+#include <irene/ParameterInfo.h>
 
 using namespace nexus;
 
@@ -303,7 +303,7 @@ G4bool PersistencyManager::Store(const G4Run*)
   // TODO. Implement here the persistency of the configuration macros
 
   /* With irene class that holds 1 parameter. The key of the parameter is the name of the class, the value is set through SetContent*/
-   irene::MacrosInfo* myinfo = new irene::MacrosInfo("particle", "particle");
+   irene::ParameterInfo* myinfo = new irene::ParameterInfo("particle", "particle");
    myinfo->SetContent("electron");
    _writer->WriteMetadata(myinfo);
  
