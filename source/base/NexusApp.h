@@ -36,6 +36,8 @@ namespace nexus {
 
     virtual void Initialize();
 
+    G4int GetNumberOfEventsToBeProcessed() const;
+
   private:
     void RegisterMacro(const G4String&);
 
@@ -49,6 +51,11 @@ namespace nexus {
     G4GenericMessenger* _msg;
     std::vector<G4String> _macros;
   };
+
+  // INLINE DEFINITIONS ////////////////////////////////////
+
+  inline G4int NexusApp::GetNumberOfEventsToBeProcessed() const
+  { return numberOfEventToBeProcessed; }
 
 } // namespace nexus
 
