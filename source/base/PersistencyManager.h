@@ -9,8 +9,8 @@
 ///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef __PERSISTENCY_MANAGER__
-#define __PERSISTENCY_MANAGER__
+#ifndef PERSISTENCY_MANAGER_H
+#define PERSISTENCY_MANAGER_H
 
 #include <G4VPersistencyManager.hh>
 #include <map>
