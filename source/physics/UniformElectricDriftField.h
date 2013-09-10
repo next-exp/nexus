@@ -6,7 +6,7 @@
 ///  \date    12 May 2010
 ///  \version $Id$
 ///
-///  Copyright (c) 2010-2012 NEXT Collaboration. All rights reserved.
+///  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
 // -----------------------------------------------------------------------------
 
 #ifndef UNIFORM_ELECTRIC_DRIFT_FIELD_H
