@@ -13,6 +13,7 @@
 #include "TrajectoryMap.h"
 #include "IonizationSD.h"
 #include "PmtSD.h"
+#include "NexusApp.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Event.hh>
@@ -20,6 +21,7 @@
 #include <G4Trajectory.hh>
 #include <G4SDManager.hh>
 #include <G4HCtable.hh>
+#include <G4RunManager.hh>
 
 #include <TList.h>
 
@@ -29,6 +31,10 @@
 #include <irene/SensorHit.h>
 #include <irene/RootWriter.h>
 #include <irene/ParameterInfo.h>
+
+#include <string>
+#include <sstream>
+#include <iostream>
 
 using namespace nexus;
 
@@ -300,14 +306,33 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 
 G4bool PersistencyManager::Store(const G4Run*)
 {
-  // TODO. Implement here the persistency of the configuration macros
+  std::ifstream history("G4History.macro", std::ifstream::in);
 
-  /* With irene class that holds 1 parameter. 
-     The key of the parameter is the name of the class, the value is set through SetContent */
-   irene::ParameterInfo* myinfo = new irene::ParameterInfo("particle");
-   myinfo->SetContent("electron");
-   _writer->WriteMetadata(myinfo);
- 
+  while (history.good()) {
+
+    std::string key, value;
+    std::getline(history, key, ' ');
+    std::getline(history, value);
+
+    if (key != "") {
+      irene::ParameterInfo* info = new irene::ParameterInfo(key.c_str());
+      info->SetContent(value);
+      _writer->WriteMetadata(info);
+    }
+  } 
+
+  history.close();
+
+  // Store the number of events to be processed 
+  NexusApp* app = (NexusApp*) G4RunManager::GetRunManager();
+  G4int num_events = app->GetNumberOfEventsToBeProcessed();
+
+  std::stringstream ss;
+  ss << num_events;
+
+  irene::ParameterInfo* info = new irene::ParameterInfo("num_events");
+  info->SetContent(ss.str());
+  _writer->WriteMetadata(info);
   
   return true;
 }
