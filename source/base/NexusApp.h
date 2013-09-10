@@ -36,6 +36,7 @@ namespace nexus {
 
     virtual void Initialize();
 
+    /// Returns the number of events to be processed in the current run
     G4int GetNumberOfEventsToBeProcessed() const;
 
   private:
