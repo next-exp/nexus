@@ -29,7 +29,7 @@ namespace nexus {
     // Lab dimensions
     _lab_size (5. * m),
     // Buffer gas dimensions
-    _buffer_gas_size (4. * m),
+    _buffer_gas_size (4. * m)
   {
     //Shielding
     //Vessel
@@ -37,12 +37,12 @@ namespace nexus {
     //Inner elements
   }
 
-  NEW::~NEW()
+  NextNew::~NextNew()
   {
     //deletes
   }
 
- void NEW::Construct()
+ void NextNew::Construct()
   {
     // LAB /////////////////////////////////////////////////////////////
     // This is just a volume of air surrounding the detector so that events 
@@ -86,19 +86,19 @@ namespace nexus {
   {
     G4ThreeVector vertex(0.,0.,0.);
 
-    //BUFFER GAS
-    if (region == "LAB") {
-      vertex = _lab_gen->GenerateVertex(region);
-    }
-    //VESSEL REGIONS
+    // //BUFFER GAS
+    // if (region == "LAB") {
+    //   vertex = _lab_gen->GenerateVertex(region);
+    // }
+    // //VESSEL REGIONS
 
-    // ICS REGIONS
-    else if (region == "ICS") {
-      vertex = _ics_gen->GenerateVertex(region);
-    }
-    //Xenon Fiducial Volume
-    else 
-      vertex=_xefv_gen->GenerateVertex("XEFV");
+    // // ICS REGIONS
+    // else if (region == "ICS") {
+    //   vertex = _ics_gen->GenerateVertex(region);
+    // }
+    // //Xenon Fiducial Volume
+    // else 
+    //   vertex=_xefv_gen->GenerateVertex("XEFV");
     
     return vertex;
   }

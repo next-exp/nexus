@@ -52,6 +52,7 @@ namespace nexus {
 
     //Detector parts
 
+   
 
     /// Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
