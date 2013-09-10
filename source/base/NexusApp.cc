@@ -88,6 +88,8 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
   if (UI->GetCurrentValues("/Actions/RegisterSteppingAction") != "")
     this->SetUserAction(actfctr.CreateSteppingAction());
 
+  UI->StoreHistory();
+
   /////////////////////////////////////////////////////////
 
   PersistencyManager::Initialize();
