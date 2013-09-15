@@ -36,6 +36,9 @@ namespace nexus {
     /// Create the singleton instance of the persistency manager
     static void Initialize();
 
+    /// Set whether to store or not the current event
+    void StoreCurrentEvent(G4bool);
+
     /// 
     virtual G4bool Store(const G4Event*);
     virtual G4bool Store(const G4Run*);
@@ -62,9 +65,12 @@ namespace nexus {
 
 
   private:
-    G4GenericMessenger* _msg;
-    G4bool _ready; ///< Is the PersistencyManager ready to go?
-    irene::Event* _evt; ///< Persistent irene event
+    G4GenericMessenger* _msg; ///< User configuration messenger
+
+    G4bool _ready;     ///< Is the PersistencyManager ready to go?
+    G4bool _store_evt; ///< Should we store the current event?
+
+    irene::Event* _evt;         ///< Persistent irene event
     irene::RootWriter* _writer; ///< Event writer to ROOT file
 
     std::map<G4int, irene::Particle*> _iprtmap;
@@ -74,6 +80,8 @@ namespace nexus {
 
   // INLINE DEFINITIONS //////////////////////////////////////////////
 
+  inline void PersistencyManager::StoreCurrentEvent(G4bool sce)
+  { _store_evt = sce; }
   inline G4bool PersistencyManager::Store(const G4VPhysicalVolume*)
   { return false; }
   inline G4bool PersistencyManager::Retrieve(G4Event*&) 

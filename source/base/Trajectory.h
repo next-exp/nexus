@@ -84,6 +84,9 @@ namespace nexus {
 
     G4double GetTrackLength() const;
     void SetTrackLength(G4double);
+
+    G4double GetEnergyDeposit() const;
+    void SetEnergyDeposit(G4double);
   
     G4String GetInitialVolume() const;
 
@@ -127,6 +130,7 @@ namespace nexus {
     G4double _final_time;
 
     G4double _length;
+    G4double _edep;
 
     G4String _creator_process;
 
@@ -193,11 +197,13 @@ inline G4double nexus::Trajectory::GetFinalTime() const
 inline void nexus::Trajectory::SetFinalTime(G4double t)
 { _final_time = t; }
 
-inline G4double nexus::Trajectory::GetTrackLength() const
-{ return _length; }
+inline G4double nexus::Trajectory::GetTrackLength() const { return _length; }
 
-inline void nexus::Trajectory::SetTrackLength(G4double l)
-{ _length = l; }
+inline void nexus::Trajectory::SetTrackLength(G4double l) { _length = l; }
+
+inline G4double nexus::Trajectory::GetEnergyDeposit() const { return _edep; }
+
+inline void nexus::Trajectory::SetEnergyDeposit(G4double e) { _edep = e; }
 
 inline G4String nexus::Trajectory::GetCreatorProcess() const
 { return _creator_process; }

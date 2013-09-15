@@ -41,7 +41,8 @@ using namespace nexus;
 
 
 PersistencyManager::PersistencyManager(): 
-  G4VPersistencyManager(), _msg(0), _ready(false), _evt(0), _writer(0)
+  G4VPersistencyManager(), _msg(0), _ready(false), _store_evt(true),
+    _evt(0), _writer(0)
 {
   _msg = new G4GenericMessenger(this, "/nexus/persistency/");
   _msg->DeclareMethod("outputFile", &PersistencyManager::OpenFile, "");
@@ -101,6 +102,10 @@ void PersistencyManager::CloseFile()
 
 G4bool PersistencyManager::Store(const G4Event* event)
 {
+  G4cout << "Store" << G4endl;
+
+  if (!_store_evt) return false;
+
   // Create a new irene event
   irene::Event ievt(event->GetEventID());
 
@@ -116,6 +121,7 @@ G4bool PersistencyManager::Store(const G4Event* event)
   _evt = 0;
 
   TrajectoryMap::Clear();
+  StoreCurrentEvent(true);
 
   return true;
 }
