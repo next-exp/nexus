@@ -9,9 +9,13 @@
 
 #include "FastSimEventAction.h"
 
+#include "Trajectory.h"
+#include "PersistencyManager.h"
+
 #include <G4Event.hh>
 #include <G4VVisManager.hh>
 #include <G4Trajectory.hh>
+#include <G4GenericMessenger.hh>
 
 
 using namespace nexus;
@@ -19,14 +23,17 @@ using namespace nexus;
 
 
 FastSimEventAction::FastSimEventAction(): 
-  G4UserEventAction(), _nevt(0), _nupdate(10)
+  G4UserEventAction(), _msg(0), _nevt(0), _nupdate(10), _energy_threshold(0.)
 {
+  _msg = new G4GenericMessenger(this, "/Actions/FastSimEventAction/");
+  _msg->DeclareProperty("energy_threshold", _energy_threshold, "");
 }
   
   
   
 FastSimEventAction::~FastSimEventAction()
 {
+  delete _msg;
 }
   
   
@@ -46,9 +53,23 @@ void FastSimEventAction::EndOfEventAction(const G4Event* event)
 {
   _nevt++;
 
-  G4cout << "EndOfEventAction" << G4endl;
+  G4TrajectoryContainer* tc = event->GetTrajectoryContainer();
+  if (tc) {
 
-  //event->GetHCofThisEvent()->
+    G4double total_energy = 0.;
+
+    for (G4int i=0; i<tc->entries(); ++i) {
+      Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[i]);
+      if (!trj) continue;
+      total_energy = total_energy + trj->GetEnergyDeposit();
+    }
+
+    if (total_energy > _energy_threshold) {
+      PersistencyManager* pm = dynamic_cast<PersistencyManager*>
+        (G4VPersistencyManager::GetPersistencyManager());
+      pm->StoreCurrentEvent(true);
+    }
+  }
 
 
   // draw tracks in visual mode

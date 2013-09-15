@@ -16,6 +16,7 @@
 #include <globals.hh>
 
 class G4Event;
+class G4GenericMessenger;
 
 
 namespace nexus {
@@ -36,7 +37,9 @@ namespace nexus {
     void EndOfEventAction(const G4Event*);
 
   private:
+    G4GenericMessenger* _msg;
     G4int _nevt, _nupdate;
+    G4double _energy_threshold;
   };
   
 } // namespace nexus
