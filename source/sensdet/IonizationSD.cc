@@ -10,7 +10,8 @@
 #include "IonizationSD.h"
 
 #include "IonizationHit.h"
-
+#include "Trajectory.h"
+#include "TrajectoryMap.h"
 
 #include <G4SDManager.hh>
 #include <G4Step.hh>
@@ -74,6 +75,12 @@ G4bool IonizationSD::ProcessHits(G4Step* step, G4TouchableHistory*)
     
   // Add hit to collection
   _IHC->insert(hit);
+
+  // Add energy deposit to the trajectory associated to the current track
+  Trajectory* trj = 
+    (Trajectory*) TrajectoryMap::Get(step->GetTrack()->GetTrackID());
+  edep = edep + trj->GetEnergyDeposit();
+  trj->SetEnergyDeposit(edep);
 
   return true;
 }
