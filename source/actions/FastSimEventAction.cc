@@ -35,7 +35,7 @@ FastSimEventAction::~FastSimEventAction()
 {
   delete _msg;
 }
-  
+
   
   
 void FastSimEventAction::BeginOfEventAction(const G4Event* event)
