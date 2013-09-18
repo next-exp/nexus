@@ -26,13 +26,13 @@
 
 namespace nexus {
 
-  Next100InnerElements::Next100InnerElements():
+  NextNewInnerElements::NextNewInnerElements():
     _active_diam   (47.8 * cm),//From NextNewFieldCage: 2*_tube_in_rad-_reflector_thickness
     _active_length (58. * cm),//From NextNewFieldCage:_tube_length=Drift volume (51cm) + Buffer (7cm) 
     _tracking_displ (13.36 * cm),//??????????
     _energy_displ (9.5 * cm),//???????????
     _el_gap (1.4 * mm),
-    _grid_thickn (.1 * mm),//????????
+    _grid_thickness (.1 * mm),//????????
     _el_grid_transparency (.88),
     _cathode_grid_transparency (.98)
   {
@@ -61,7 +61,7 @@ namespace nexus {
     _mother_logic = mother_logic;
   }
 
-  void Next100InnerElements::Construct()
+  void NextNewInnerElements::Construct()
   {
     // Reading material
     _gas = _mother_logic->GetMaterial();
