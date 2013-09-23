@@ -54,13 +54,16 @@ G4UserRunAction* ActionsFactory::CreateRunAction() const
 //////////////////////////////////////////////////////////////////////
 
 #include "DefaultEventAction.h"
+#include "FastSimEventAction.h"
 
 
 G4UserEventAction* ActionsFactory::CreateEventAction() const
 {
   G4UserEventAction* p = 0;
   
-  if (_evtact_name == "DEFAULT") p = new DefaultEventAction();
+  if      (_evtact_name == "DEFAULT") p = new DefaultEventAction();
+
+  else if (_evtact_name == "FAST_SIM") p = new FastSimEventAction();
 
   else {
     G4String err = "Unknown user event action: " + _evtact_name;
