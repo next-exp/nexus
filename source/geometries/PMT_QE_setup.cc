@@ -56,9 +56,9 @@ namespace nexus {
 
     // The parameterized width, height and length are internal dimensions.
     // The chamber thickness is added to obtain the external (total) size.
-    G4double width = 1.2*m;
-    G4double height = 1.2*m;
-    _length = 1.2*m;
+    G4double width = 50.*cm;
+    G4double height = 50.*cm;
+    _length = 50.*cm;
     G4double thickn = 1.*cm;
     G4double X = width  + 2.*thickn;
     G4double Y = height + 2.*thickn;
@@ -98,7 +98,30 @@ namespace nexus {
       new G4PVPlacement(0, G4ThreeVector(0.,0.,-_length/2.+_pmt_length/2.), 
 			pmt_logic, "PMT",
      			gas_logic, false, 0, true);
-   
+
+    // Positioning of the teflon panel
+    // G4Box* teflon_solid = new G4Box("GAS", 22.*cm/2., 50.*cm/2., thickn/2.); 
+    // G4Material* ptfe = MaterialsList::PEEK();
+    // G4LogicalVolume* teflon_logic = new G4LogicalVolume(teflon_solid, ptfe, "TEFLON");
+
+    // G4RotationMatrix* rotdb = new G4RotationMatrix();
+    // rotdb->rotateY(-pi/2.);
+    // new G4PVPlacement(0, G4ThreeVector(0.*cm, 0. ,-_length/2.+_pmt_length + _z_dist + 1.*cm), 
+    // 		      teflon_logic, "TEFLON", gas_logic, false, 0, true);
+    // G4RotationMatrix* rotdb2 = new G4RotationMatrix();
+    // rotdb2->rotateY(pi/2.);
+    // new G4PVPlacement(rotdb2, G4ThreeVector(-10.*cm, 0., -_length/2.+_pmt_length + _z_dist + 1.*cm), 
+    //  		      teflon_logic, "TEFLON", gas_logic, false, 2, true);
+    
+    // Optical surface
+    // G4OpticalSurface* teflon_opsur = new G4OpticalSurface("TEFLON_OPSURF");
+    // teflon_opsur->SetType(dielectric_metal);
+    // teflon_opsur->SetModel(unified);
+    // teflon_opsur->SetFinish(ground);
+    // teflon_opsur->SetSigmaAlpha(0.0000001); // it does not affect, because the reflection is totally lambertian.
+    // teflon_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+    
+    // new G4LogicalSkinSurface("TEFLON_OPSURF", teflon_logic, teflon_opsur);
 
   }
   
