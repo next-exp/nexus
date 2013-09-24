@@ -31,7 +31,7 @@
 namespace nexus {
 
   NextNewEnergyPlane::NextNewEnergyPlane():
-
+   
     _num_PMTs (12),
     _energy_plane_z_pos (34.7 * cm),//center to EP surface  //middle_nozzle(43.5)-(right_nozzle(15.8)-EP_to_rigth_nozzle(7) (from drawings)
     // Carrier Plate dimensions
@@ -45,14 +45,13 @@ namespace nexus {
     _enclosure_endcap_diam (8.5 * mm), ///?????
     _enclosure_endcap_thickness (1.0 * mm), 
     _enclosure_window_thickness (0.5 * mm), //???
-    _enclosure_pad_thickness (0.1 * mm),//  ??????
+    _enclosure_pad_thickness (0.1 * mm)//  ??????
 
-    _pmts_pitch (12.12 * cm)// inner circle, outer 12,65
   {
     /// Initializing the geometry navigator (used in vertex generation)
     _geom_navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
     /// Messenger
-    _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
+    _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNewEnergyPlane.");
     _msg->DeclareProperty("energy_plane_vis", _visibility, "Energy Plane Visibility");
     /// The PMT
     _pmt = new PmtR11410(); 
@@ -60,6 +59,7 @@ namespace nexus {
   void NextNewEnergyPlane::SetLogicalVolume(G4LogicalVolume* mother_logic)
   {
     _mother_logic = mother_logic;
+    
   }
 
   void NextNewEnergyPlane::Construct()
@@ -134,30 +134,28 @@ namespace nexus {
       enclosure_physi = new G4PVPlacement(0, pos, enclosure_logic,
 					  "ENCLOSURE", _mother_logic, false, i);
     }
+    /////  SETTING VISIBILITIES   //////////
+    if (_visibility) {
+      G4VisAttributes copper_col(G4Colour(.72, .45, .20));
+      copper_col.SetForceSolid(true);
+      carrier_plate_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
-    // /////  SETTING VISIBILITIES   //////////
+      G4VisAttributes copper_col2(G4Colour(.58, .36, .16));
+      //copper_col2.SetForceSolid(true);
+      enclosure_logic->SetVisAttributes(copper_col2);
 
-    // if (_visibility) {
-    //   G4VisAttributes copper_col(G4Colour(.72, .45, .20));
-    //   copper_col.SetForceSolid(true);
-    //   carrier_plate_logic->SetVisAttributes(copper_col);
+      enclosure_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      enclosure_window_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      //enclosure_pad_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
 
-    //   G4VisAttributes copper_col2(G4Colour(.58, .36, .16));
-    //   //copper_col2.SetForceSolid(true);
-    //   enclosure_logic->SetVisAttributes(copper_col2);
-
-    //   enclosure_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    //   enclosure_window_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    //   enclosure_pad_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    // }
-
-    // else {
-    //   carrier_plate_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    //   enclosure_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    //   enclosure_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    //   enclosure_window_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    //   enclosure_pad_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    // }
+    else {
+      carrier_plate_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      enclosure_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      enclosure_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      enclosure_window_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      //enclosure_pad_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
 
     
     // VERTEX GENERATORS   //////////
@@ -240,37 +238,35 @@ void NextNewEnergyPlane::GeneratePositions()
 
     G4int num_conc_circles = 2;
     G4int num_inner_pmts = 3;
-    G4double pitch = 14. * cm;   // inner circle radius
+    G4int num_outer_pmts = 9;
+    G4double rad1 = 7. * cm;   // inner circle radius
+    G4double rad2 = 18.5 * cm;   // outer circle radius
+    G4double offset_angle = 20.;
     G4int total_positions = 0;
     G4ThreeVector position(0.,0.,0.);
-
-
+    
     for (G4int circle=1; circle <= num_conc_circles; circle++) {
-      if (circle==2){
-	G4double rad = 37. *cm;
-	G4int num_places = 9;
-	G4int step_deg = 360.0 / num_places;
-	for (G4int place=0; place<num_places; place++) {
-	  G4double angle = place * step_deg;
-	  position.setX(rad * sin(angle * deg));
-	  position.setY(rad * cos(angle * deg));
+      if(circle==1){
+	G4int step_deg = 360.0 / num_inner_pmts;
+	for (G4int place=0; place<num_inner_pmts; place++) {
+	  G4double angle = offset_angle + (place * step_deg);
+	  position.setX(rad1 * sin(angle * deg));
+	  position.setY(rad1 * cos(angle * deg));
 	  _pmt_positions.push_back(position);
 	  total_positions++;
 	}
       }
-      else {
-	G4double rad = circle * pitch;
-	G4int num_places = circle * num_inner_pmts;
-	G4int step_deg = 360.0 / num_places;
-	for (G4int place=0; place<num_places; place++) {
+      else if (circle==2){
+	G4int step_deg = 360.0 / num_outer_pmts;
+	for (G4int place=0; place<num_outer_pmts; place++) {
 	  G4double angle = place * step_deg;
-	  position.setX(rad * sin(angle * deg));
-	  position.setY(rad * cos(angle * deg));
+	  position.setX(rad2 * sin(angle * deg));
+	  position.setY(rad2 * cos(angle * deg));
 	  _pmt_positions.push_back(position);
 	  total_positions++;
 	}
       }
-      
+      else { std::cout<<"Error in PMTs positions generation."<<std::endl; } 
     }
     // Checking
     if (total_positions != _num_PMTs) {
