@@ -17,6 +17,7 @@
 #include <G4TransportationManager.hh>
 #include "BaseGeometry.h"
 #include "CylinderPointSampler.h"
+#include "PmtR11410.h"
 
 class G4Material;
 class G4LogicalVolume;
@@ -32,7 +33,7 @@ namespace nexus{
     //Destructor
     ~Enclosure();
  
-    G4ThreeVector GetRelPosition();
+    G4ThreeVector GetObjectCenter();
 
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
@@ -45,6 +46,9 @@ namespace nexus{
     const G4double _enclosure_in_diam, _enclosure_length, _enclosure_thickness, _enclosure_endcap_diam, _enclosure_endcap_thickness;
     const G4double _enclosure_window_diam, _enclosure_window_thickness, _enclosure_pad_thickness;
 
+    PmtR11410*  _pmt;
+    G4double _pmt_z_pos;
+
     // Visibility of the tracking plane
     G4bool _visibility;
 
@@ -53,7 +57,8 @@ namespace nexus{
     CylinderPointSampler* _enclosure_flange_gen;
     CylinderPointSampler* _enclosure_cap_gen;
     CylinderPointSampler* _enclosure_window_gen;
-
+    CylinderPointSampler* _enclosure_pad_gen;
+    
     G4double _body_perc;
     G4double _flange_perc;
     

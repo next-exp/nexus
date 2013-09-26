@@ -41,11 +41,13 @@ namespace nexus{
     _enclosure_endcap_thickness (20. * mm),
     _enclosure_window_diam (85. * mm), 
     _enclosure_window_thickness (6. * mm), //???
-    _enclosure_pad_thickness (1. * mm)//  ??????
+    _enclosure_pad_thickness (20. * mm)//max 60  ??????
   {
     /// Initializing the geometry navigator (used in vertex generation)
     _geom_navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
     
+    /// The PMT
+    _pmt = new PmtR11410(); 
   }
 
   void Enclosure::Construct()
@@ -79,15 +81,30 @@ namespace nexus{
        new G4Tubs("ENCLOSURE_WINDOW", 0., _enclosure_window_diam/2., _enclosure_window_thickness/2., 0., twopi);
      G4LogicalVolume* enclosure_window_logic = new G4LogicalVolume(enclosure_window_solid, MaterialsList::Sapphire(),
 								   "ENCLOSURE_WINDOW");
-     //     G4double window_z_pos = gas_length/2+ gas_pos/2 + _enclosure_window_thickness/2;
+    
      G4double window_z_pos = _enclosure_length/2 - _enclosure_window_thickness + gas_pos/2 ;
      G4PVPlacement* enclosure_window_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,window_z_pos),
 							       enclosure_window_logic,
 							       "ENCLOSURE_WINDOW", enclosure_gas_logic, false, 0);
      
-     // Adding the optical pad?????
-     G4double pad_z_pos = window_z_pos + _enclosure_window_thickness/2. - _enclosure_pad_thickness/2.;
-     
+     // Adding the optical pad
+     G4Tubs* enclosure_pad_solid =
+       new G4Tubs("OPTICAL_PAD", 0., _enclosure_in_diam/2., _enclosure_pad_thickness/2.,0.,twopi);
+     G4LogicalVolume* enclosure_pad_logic = new G4LogicalVolume(enclosure_pad_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic"),"OPTICAL_PAD");
+     G4double pad_z_pos = _enclosure_length/2. - _enclosure_window_thickness - _enclosure_pad_thickness/2.;
+     G4PVPlacement* enclosure_pad_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,pad_z_pos),
+							  enclosure_pad_logic,"OPTICAL_PAD",
+							  enclosure_gas_logic, false, 0);
+
+     // Adding the PMT
+     _pmt->Construct();
+     G4LogicalVolume* pmt_logic = _pmt->GetLogicalVolume();
+     G4double pmt_rel_z_pos = _pmt->GetRelPosition().z();//return G4ThreeVector(0.,0., _front_body_length/2.);
+     _pmt_z_pos = window_z_pos -_enclosure_window_thickness/2.- _enclosure_pad_thickness - pmt_rel_z_pos;
+     G4PVPlacement* pmt_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,_pmt_z_pos), pmt_logic,
+						  "PMT", enclosure_gas_logic, false, 0);
+
+
      ///OPTICAL PROPERTIES//
      //Sapphire window
      //Optical Pad
@@ -100,10 +117,12 @@ namespace nexus{
      //Vacuum_col.SetForceSolid(true);
      //enclosure_gas_logic->SetVisAttributes(Vacuum_col);  
      enclosure_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
-     G4VisAttributes Sapphire_col(G4Colour(0.5,0.5,0.5));//Gray
+     G4VisAttributes Sapphire_col(G4Colour(.8,.8,1.));
      Sapphire_col.SetForceSolid(true);
      enclosure_window_logic->SetVisAttributes(Sapphire_col);
-     //enclosure_pad_logic->SetVisAttributes(G4VisAttributes::Invisible);
+     G4VisAttributes Pad_col(G4Colour(.6,.9,.2));
+     Pad_col.SetForceSolid(true);
+     enclosure_pad_logic->SetVisAttributes(Pad_col);
 
      
      // VERTEX GENERATORS   //////////
@@ -114,8 +133,9 @@ namespace nexus{
 						   G4ThreeVector (0., 0., - _enclosure_length/2. +  _enclosure_endcap_thickness/2.));
      _enclosure_cap_gen = new CylinderPointSampler( 0., _enclosure_endcap_thickness/2., _enclosure_in_diam/2., 0.,
 						   G4ThreeVector (0., 0., - _enclosure_length/2. + _enclosure_endcap_thickness/4.));
-     _enclosure_window_gen = new CylinderPointSampler(_enclosure_in_diam/2, _enclosure_window_thickness, 0., 0.,
+     _enclosure_window_gen = new CylinderPointSampler(_enclosure_window_diam/2., _enclosure_window_thickness, 0., 0.,
 						      G4ThreeVector (0., 0., _enclosure_length/2. - _enclosure_window_thickness/2.));
+     _enclosure_pad_gen = new CylinderPointSampler(_enclosure_in_diam/2., _enclosure_pad_thickness, 0., 0., G4ThreeVector(0.,0.,pad_z_pos));
      
      // Getting the enclosure body volume over total
      G4double body_vol = (_enclosure_length-_enclosure_endcap_thickness) * pi * ( (_enclosure_in_diam/2.+_enclosure_thickness)*(_enclosure_in_diam/2.+_enclosure_thickness) - (_enclosure_in_diam/2.)*(_enclosure_in_diam/2.) );
@@ -133,9 +153,10 @@ namespace nexus{
     delete _enclosure_flange_gen;
     delete _enclosure_cap_gen;
     delete _enclosure_window_gen;
+    delete _enclosure_pad_gen;
   }
 
-  G4ThreeVector Enclosure::GetRelPosition()
+  G4ThreeVector Enclosure::GetObjectCenter()
   {
     return G4ThreeVector(0., 0., _enclosure_length/2.);
   }
@@ -165,7 +186,16 @@ namespace nexus{
     else if (region == "ENCLOSURE_WINDOW") {
       vertex = _enclosure_window_gen->GenerateVertex(INSIDE);
     }
-   
+    //Optical pad
+    else if (region=="OPTICAL_PAD"){
+      vertex =_enclosure_window_gen->GenerateVertex(INSIDE);
+    }
+    //PMTs bodies 
+    else if (region == "PMT_BODY") {
+      vertex = _pmt->GenerateVertex(region);
+      vertex.setZ(vertex.z() + _pmt_z_pos);
+    }   
     return vertex;
   }
+
 }//end namespace nexus
