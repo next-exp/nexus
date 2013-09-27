@@ -20,6 +20,7 @@
 #include <G4Event.hh>
 #include <G4RandomDirection.hh>
 #include <Randomize.hh>
+#include <G4OpticalPhoton.hh>
 
 using namespace nexus;
 
@@ -129,6 +130,12 @@ void SingleParticle::GeneratePrimaryVertex(G4Event* event)
   // Create the new primary particle and set it some properties
   G4PrimaryParticle* particle = 
     new G4PrimaryParticle(_particle_definition, px, py, pz);
+
+  // Set random polarization
+  if (_particle_definition == G4OpticalPhoton::Definition()) {
+    G4ThreeVector polarization = G4RandomDirection();
+    particle->SetPolarization(polarization);
+  }
  
     // Add particle to the vertex and this to the event
   vertex->SetPrimary(particle);
