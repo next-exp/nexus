@@ -26,8 +26,8 @@ G4Allocator<Trajectory> TrjAllocator;
 
 Trajectory::Trajectory(const G4Track* track): 
   G4VTrajectory(), _pdef(0), _trackId(-1), _parentId(-1),
-  _initial_time(0.), _final_time(0), _record_trjpoints(false), 
-  _trjpoints(0)
+  _initial_time(0.), _final_time(0), _length(0.), _edep(0.), 
+  _record_trjpoints(false), _trjpoints(0)
 {
   _pdef     = track->GetDefinition();
   _trackId  = track->GetTrackID();
