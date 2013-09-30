@@ -55,19 +55,17 @@ namespace nexus {
     G4LogicalVolume* _mother_logic;
     // Dimensions
     const G4double _energy_plane_z_pos;
+    const G4double _carrier_plate_front_buffer_thickness,_carrier_plate_front_buffer_diam ;
     const G4double _carrier_plate_thickness, _carrier_plate_diam,_enclosure_hole_diam,_gas_hole_diam,_gas_hole_pos ;
-    /* const G4double _enclosure_in_diam, _enclosure_length, _enclosure_thickness, _enclosure_endcap_diam, _enclosure_endcap_thickness;   */
-    /* const G4double _enclosure_window_thickness, _enclosure_pad_thickness;  */
- 
+    
     const G4int _num_PMTs;
     const G4int _num_gas_holes;
    
     Enclosure*  _enclosure;
+    G4double _enclosure_z_pos;
     std::vector<G4ThreeVector> _pmt_positions;
     std::vector<G4ThreeVector> _gas_hole_positions;
-    
-    G4double _enclosure_z_pos;
- 
+     
     // Visibility of the energy  plane
     G4bool _visibility;
 

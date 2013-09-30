@@ -38,19 +38,13 @@ namespace nexus {
     // Carrier Plate dimensions
     _carrier_plate_thickness (12.0 * cm), 
     _carrier_plate_diam (63.0 * cm), // It must be consistent with ACTIVE diameter???
+    _carrier_plate_front_buffer_thickness (5. * mm),
+    _carrier_plate_front_buffer_diam (55. *cm),//(630-2*40)
     _gas_hole_diam (8.0 * mm), 
     _gas_hole_pos (20 * mm),
     _enclosure_hole_diam (9.3 *cm)
     
-    // // Enclosures dimensions
-    // _enclosure_length (20.0 * cm),
-    // _enclosure_in_diam (7.95 * cm), //without endcap flange TT
-    // _enclosure_thickness (0.6 * mm),
-    // _enclosure_endcap_diam (8.5 * mm), ///?????
-    // _enclosure_endcap_thickness (1.0 * mm), 
-    // _enclosure_window_thickness (0.5 * mm), //???
-    // _enclosure_pad_thickness (0.1 * mm)//  ??????
-
+    
   {
     /// Initializing the geometry navigator (used in vertex generation)
     _geom_navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
@@ -60,6 +54,9 @@ namespace nexus {
    
     /// The Enclosure
     _enclosure = new Enclosure();
+    G4double enclosure_z_center = _enclosure->GetObjectCenter().z();
+    _enclosure_z_pos = _energy_plane_z_pos - _carrier_plate_front_buffer_thickness - enclosure_z_center;
+   
   }
   void NextNewEnergyPlane::SetLogicalVolume(G4LogicalVolume* mother_logic)
   {
@@ -74,18 +71,22 @@ namespace nexus {
     ////  CARRIER PLATE  ////
     G4Tubs* carrier_plate_nh_solid = 
       new G4Tubs("CARRIER_NH_PLATE", 0., _carrier_plate_diam/2., _carrier_plate_thickness/2., 0., twopi);
-   
+    
+    //Making front buffer
+    G4Tubs* carrier_plate_front_buffer_solid =
+      new G4Tubs("CARRIER_PLATE_FBUF_SOLID",0., _carrier_plate_front_buffer_diam/2.,(_carrier_plate_front_buffer_thickness+1.*mm)/2.,0.,twopi);
+    G4SubtractionSolid* carrier_plate_solid = new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_nh_solid,carrier_plate_front_buffer_solid,0,G4ThreeVector(0.,0.,_carrier_plate_thickness/2. - _carrier_plate_front_buffer_thickness/2.));
+    
     // Making PMT holes
     G4Tubs* carrier_plate_pmt_hole_solid = 
-      new G4Tubs("CARRIER_PLATE_PMT_HOLE", 0., _enclosure_hole_diam/2., (_carrier_plate_thickness+1.*cm)/2., 0., twopi);
-     G4SubtractionSolid* carrier_plate_solid = new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_nh_solid,carrier_plate_pmt_hole_solid,0,_pmt_positions[0] );
-     for (int i=1; i<_num_PMTs; i++) {
+      new G4Tubs("CARRIER_PLATE_PMT_HOLE", 0., _enclosure_hole_diam/2., (_carrier_plate_thickness+1.*mm)/2., 0., twopi);
+    for (int i=0; i<_num_PMTs; i++) {
        carrier_plate_solid = new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_solid,
     						   carrier_plate_pmt_hole_solid, 0, _pmt_positions[i]);
      }
      //Making holes for XeGas flow
      G4Tubs* gas_hole_solid =
-       new G4Tubs("GAS_HOLE", 0., _gas_hole_diam/2, (_carrier_plate_thickness+1.*cm)/2., 0., twopi);
+       new G4Tubs("GAS_HOLE", 0., _gas_hole_diam/2, (_carrier_plate_thickness+1*mm)/2., 0., twopi);
      for (int i=0; i<_num_gas_holes; i++){
        carrier_plate_solid = new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_solid, gas_hole_solid, 0, _gas_hole_positions[i]);
      }
@@ -104,13 +105,12 @@ namespace nexus {
     G4LogicalVolume* enclosure_logic = _enclosure->GetLogicalVolume();
     G4double enclosure_z_center = _enclosure->GetObjectCenter().z();// return G4ThreeVector(0., 0., _enclosure_length/2.);
        
-    // Placing the enclosures
-    G4double  enclosure_z_pos = _energy_plane_z_pos - enclosure_z_center;
+    // Placing the enclosures 
     G4PVPlacement* enclosure_physi;
     G4ThreeVector pos;
     for (int i=0; i<_num_PMTs; i++) {
       pos = _pmt_positions[i];
-      pos.setZ(enclosure_z_pos);
+      pos.setZ(_enclosure_z_pos);
       enclosure_physi = new G4PVPlacement(0, pos, enclosure_logic,
       					  "ENCLOSURE", _mother_logic, false, i);
     }
@@ -139,7 +139,7 @@ namespace nexus {
   G4ThreeVector NextNewEnergyPlane::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);
-
+      
     /// Carrier Plate   // As it is full of holes, let's get sure vertexes are in the right volume
     if (region == "CARRIER_PLATE") {
       G4VPhysicalVolume *VertexVolume;
@@ -154,21 +154,28 @@ namespace nexus {
       G4double rand = _num_PMTs * G4UniformRand();
       G4ThreeVector enclosure_pos = _pmt_positions[int(rand)];
       vertex = ini_vertex + enclosure_pos;
-      vertex.setZ(vertex.z() + _energy_plane_z_pos);
+      vertex.setZ(vertex.z() + _enclosure_z_pos);  
     }
     else if (region == "ENCLOSURE_WINDOW") {
       G4ThreeVector ini_vertex = _enclosure->GenerateVertex(region);
       G4double rand = _num_PMTs * G4UniformRand();
       G4ThreeVector enclosure_pos = _pmt_positions[int(rand)];
       vertex = ini_vertex + enclosure_pos;
-      vertex.setZ(vertex.z() + _energy_plane_z_pos);
+      vertex.setZ(vertex.z() + _enclosure_z_pos);
+    }
+    else if (region == "OPTICAL_PAD") {
+      G4ThreeVector ini_vertex = _enclosure->GenerateVertex(region);
+      G4double rand = _num_PMTs * G4UniformRand();
+      G4ThreeVector enclosure_pos = _pmt_positions[int(rand)];
+      vertex = ini_vertex + enclosure_pos;
+      vertex.setZ(vertex.z() + _enclosure_z_pos);
     }
     else if (region== "PMT_BODY"){
       G4ThreeVector ini_vertex = _enclosure->GenerateVertex(region);
       G4double rand = _num_PMTs * G4UniformRand();
       G4ThreeVector pmt_pos = _pmt_positions[int(rand)];
       vertex = ini_vertex + pmt_pos;
-      vertex.setZ(vertex.z() + _energy_plane_z_pos);
+      vertex.setZ(vertex.z() + _enclosure_z_pos);
     }
     return vertex;
   }
