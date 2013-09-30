@@ -75,7 +75,7 @@ namespace nexus {
     //Making front buffer
     G4Tubs* carrier_plate_front_buffer_solid =
       new G4Tubs("CARRIER_PLATE_FBUF_SOLID",0., _carrier_plate_front_buffer_diam/2.,(_carrier_plate_front_buffer_thickness+1.*mm)/2.,0.,twopi);
-    G4SubtractionSolid* carrier_plate_solid = new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_nh_solid,carrier_plate_front_buffer_solid,0,G4ThreeVector(0.,0.,_carrier_plate_thickness/2. - _carrier_plate_front_buffer_thickness/2.));
+    G4SubtractionSolid* carrier_plate_solid = new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_nh_solid,carrier_plate_front_buffer_solid,0,G4ThreeVector(0.,0.,_carrier_plate_thickness/2. - _carrier_plate_front_buffer_thickness/2.+.5*mm));
     
     // Making PMT holes
     G4Tubs* carrier_plate_pmt_hole_solid = 
