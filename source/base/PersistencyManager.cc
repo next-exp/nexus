@@ -102,7 +102,10 @@ void PersistencyManager::CloseFile()
 
 G4bool PersistencyManager::Store(const G4Event* event)
 {
-  if (!_store_evt) return false;
+  if (!_store_evt) {
+    TrajectoryMap::Clear();    
+    return false;
+  }
 
   G4cout << "Store" << G4endl;
 
@@ -120,7 +123,7 @@ G4bool PersistencyManager::Store(const G4Event* event)
   // Add event to the tree
   //_evt = &ievt;
   _writer->Write(ievt);
-  _evt = 0;
+  //_evt = 0;
 
   TrajectoryMap::Clear();
   StoreCurrentEvent(true);
