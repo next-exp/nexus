@@ -82,8 +82,8 @@ namespace nexus{
      G4LogicalVolume* enclosure_window_logic = new G4LogicalVolume(enclosure_window_solid, MaterialsList::Sapphire(),
 								   "ENCLOSURE_WINDOW");
     
-     G4double window_z_pos = _enclosure_length/2 - _enclosure_window_thickness/2.;
-     G4PVPlacement* enclosure_window_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,window_z_pos),
+     _window_z_pos = _enclosure_length/2 - _enclosure_window_thickness/2.;
+     G4PVPlacement* enclosure_window_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,_window_z_pos),
 							       enclosure_window_logic,
 							       "ENCLOSURE_WINDOW", enclosure_logic, false, 0);
      
@@ -91,7 +91,7 @@ namespace nexus{
      G4Tubs* enclosure_pad_solid =
        new G4Tubs("OPTICAL_PAD", 0., _enclosure_in_diam/2., _enclosure_pad_thickness/2.,0.,twopi);
      G4LogicalVolume* enclosure_pad_logic = new G4LogicalVolume(enclosure_pad_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic"),"OPTICAL_PAD");
-     G4double pad_z_pos = window_z_pos - _enclosure_window_thickness/2. - _enclosure_pad_thickness/2.;
+     G4double pad_z_pos = _window_z_pos - _enclosure_window_thickness/2. - _enclosure_pad_thickness/2.;
      G4PVPlacement* enclosure_pad_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,pad_z_pos),
 							  enclosure_pad_logic,"OPTICAL_PAD",
 							    enclosure_logic, false, 0);
@@ -133,9 +133,9 @@ namespace nexus{
 						   G4ThreeVector (0., 0., - _enclosure_length/2. +  _enclosure_endcap_thickness/2.));
      _enclosure_cap_gen = new CylinderPointSampler( 0., _enclosure_endcap_thickness/2., _enclosure_in_diam/2., 0.,
 						   G4ThreeVector (0., 0., - _enclosure_length/2. + _enclosure_endcap_thickness/4.));
-     _enclosure_window_gen = new CylinderPointSampler(_enclosure_window_diam/2., _enclosure_window_thickness, 0., 0.,
+     _enclosure_window_gen = new CylinderPointSampler(0., _enclosure_window_thickness,_enclosure_window_diam/2., 0.,
 						      G4ThreeVector (0., 0., _enclosure_length/2. - _enclosure_window_thickness/2.));
-     _enclosure_pad_gen = new CylinderPointSampler(_enclosure_in_diam/2., _enclosure_pad_thickness, 0., 0., G4ThreeVector(0.,0.,pad_z_pos));
+     _enclosure_pad_gen = new CylinderPointSampler(0., _enclosure_pad_thickness, _enclosure_in_diam/2., 0., G4ThreeVector(0.,0.,pad_z_pos));
      
      // Getting the enclosure body volume over total
      G4double body_vol = (_enclosure_length-_enclosure_endcap_thickness) * pi * ( (_enclosure_in_diam/2.+_enclosure_thickness)*(_enclosure_in_diam/2.+_enclosure_thickness) - (_enclosure_in_diam/2.)*(_enclosure_in_diam/2.) );
@@ -156,39 +156,38 @@ namespace nexus{
     delete _enclosure_pad_gen;
   }
 
-  G4ThreeVector Enclosure::GetObjectCenter()
-  {
-    return G4ThreeVector(0., 0., _enclosure_length/2.);
-  }
-
+  G4ThreeVector Enclosure::GetObjectCenter(){ return G4ThreeVector(0., 0., _enclosure_length/2.);}
+  
   G4ThreeVector Enclosure::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);
     
     /// Enclosures bodies
     if (region == "ENCLOSURE_BODY") {
-      //G4double rand1 = G4UniformRand();
+      G4double rand1 = G4UniformRand();
       // Generating in the cilindric part of the enclosure
-      //if (rand1 < _body_perc) {
-	vertex = _enclosure_body_gen->GenerateVertex(TUBE_VOLUME);
-	//}
-      // // Generating in the union/flange
-      // else if (rand1 < _flange_perc){
-      // 	vertex = _enclosure_flange_gen->GenerateVertex(VOLUME);
-      // }
-      // // Generating in the rear cap of the enclosure
-      // else {
-      // 	vertex = _enclosure_cap_gen->GenerateVertex(VOLUME);
-      // }
+      if (rand1 < _body_perc) {
+	vertex = _enclosure_body_gen->GenerateVertex(VOLUME);
+      }
+      // Generating in the union/flange
+      else if (rand1 < _flange_perc){
+       	vertex = _enclosure_flange_gen->GenerateVertex(VOLUME);
+      }
+      // Generating in the rear cap of the enclosure
+      else {
+       	vertex = _enclosure_cap_gen->GenerateVertex(VOLUME);
+      }
      
     }
     /// Enclosures windows
     else if (region == "ENCLOSURE_WINDOW") {
       vertex = _enclosure_window_gen->GenerateVertex(VOLUME);
+      //z translation made in CylinderPointSampler
     }
     //Optical pad
     else if (region=="OPTICAL_PAD"){
-      vertex =_enclosure_window_gen->GenerateVertex(VOLUME);
+      vertex =_enclosure_pad_gen->GenerateVertex(VOLUME);
+      //z translation made in CylinderPointSampler    
     }
     //PMTs bodies 
     else if (region == "PMT_BODY") {

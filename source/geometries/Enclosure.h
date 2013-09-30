@@ -34,6 +34,7 @@ namespace nexus{
     ~Enclosure();
  
     G4ThreeVector GetObjectCenter();
+   
 
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
@@ -47,7 +48,7 @@ namespace nexus{
     const G4double _enclosure_window_diam, _enclosure_window_thickness, _enclosure_pad_thickness;
 
     PmtR11410*  _pmt;
-    G4double _pmt_z_pos;
+    G4double _pmt_z_pos, _window_z_pos;
 
     // Visibility of the tracking plane
     G4bool _visibility;
