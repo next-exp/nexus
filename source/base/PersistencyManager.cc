@@ -102,9 +102,11 @@ void PersistencyManager::CloseFile()
 
 G4bool PersistencyManager::Store(const G4Event* event)
 {
+  if (!_store_evt) return false;
+
   G4cout << "Store" << G4endl;
 
-  if (!_store_evt) return false;
+
 
   // Create a new irene event
   irene::Event ievt(event->GetEventID());

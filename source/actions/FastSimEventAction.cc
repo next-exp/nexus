@@ -53,6 +53,11 @@ void FastSimEventAction::EndOfEventAction(const G4Event* event)
 {
   _nevt++;
 
+  PersistencyManager* pm = dynamic_cast<PersistencyManager*>
+    (G4VPersistencyManager::GetPersistencyManager());
+  pm->StoreCurrentEvent(false);
+
+
   G4TrajectoryContainer* tc = event->GetTrajectoryContainer();
   if (tc) {
 
@@ -65,8 +70,6 @@ void FastSimEventAction::EndOfEventAction(const G4Event* event)
     }
 
     if (total_energy > _energy_threshold) {
-      PersistencyManager* pm = dynamic_cast<PersistencyManager*>
-        (G4VPersistencyManager::GetPersistencyManager());
       pm->StoreCurrentEvent(true);
     }
   }
