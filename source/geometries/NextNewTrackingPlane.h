@@ -17,8 +17,7 @@
 #include <G4TransportationManager.hh>
 
 #include "CylinderPointSampler.h"
-#include "BoxPointSampler.h"
-#include "NextElDB.h"
+#include "NextNewKDB.h"
 
 class G4Material;
 class G4LogicalVolume;
@@ -54,15 +53,17 @@ namespace nexus {
     // Logical Volume where whole Tracking Plane is placed
     G4LogicalVolume* _mother_logic;
     // Dice board
-    NextElDB* _dice_board;
+    NextNewKDB* _kapton_dice_board;
     // Dimensions
-    G4double _support_diam, _support_thickness;
-    G4double _tracking_plane_z_pos;
+    const G4double _support_plate_diam, _support_plate_thickness, _support_plate_front_buffer_diam,
+      _support_plate_front_buffer_thickness, _support_plate_tread_diam, _support_plate_tread_thickness;
+    const G4double _tracking_plane_z_pos;
     G4double _el_gap_z_edge, _z_displ;////????????
-    G4double _cable_hole_width, _cable_hole_high;
+    const G4double _cable_hole_width, _cable_hole_high;
 
-    G4int _SiPM_rows, _SiPM_columns;
-    G4int _DB_columns, _num_DBs;
+    const G4int _SiPM_rows, _SiPM_columns;
+    const G4int _DB_columns, _num_DBs, _dice_gap;
+    G4ThreeVector _kdb_dimensions;
     std::vector<G4ThreeVector> _DB_positions;
 
     // Visibility of the tracking plane
@@ -70,8 +71,7 @@ namespace nexus {
 
     // Vertex generators
     CylinderPointSampler* _support_gen;
-    BoxPointSampler* _dice_board_gen;
-
+    
     // Geometry Navigator
     G4Navigator* _geom_navigator;
 
