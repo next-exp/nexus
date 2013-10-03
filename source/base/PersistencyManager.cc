@@ -107,10 +107,6 @@ G4bool PersistencyManager::Store(const G4Event* event)
     return false;
   }
 
-  G4cout << "Store" << G4endl;
-
-
-
   // Create a new irene event
   irene::Event ievt(event->GetEventID());
 
