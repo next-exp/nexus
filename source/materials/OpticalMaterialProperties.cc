@@ -126,7 +126,50 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FusedSilica()
   return mpt;
 }
 
+G4MaterialPropertiesTable* OpticalMaterialProperties::GlassEpoxy()
+{
+  // Optical properties of Optorez 1330 glass epoxy.
+  // Obtained from http://refractiveindex.info and http://www.zeonex.com/applications_optical.asp
 
+  G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
+
+  // REFRACTIVE INDEX //////////////////////////////////////////////////////////
+ 
+  const G4int ri_entries = 200;
+  
+  G4double ri_energy[ri_entries];
+  for (int i=0; i<ri_entries; i++) {
+    ri_energy[i] = (1 + i*0.049)*eV;
+  }
+
+  G4double rindex[ri_entries];
+  for (int i=0; i<ri_entries; i++) {
+    G4double lambda = h_Planck*c_light/ri_energy[i]*1000; // in micron
+    G4double n2 = 2.291142 - 3.311944E-2*pow(lambda,2) - 1.630099E-2*pow(lambda,-2) + 7.265983E-3*pow(lambda,-4) - 6.806145E-4*pow(lambda,-6) + 1.960732E-5*pow(lambda,-8);
+    rindex[i] = sqrt(n2);
+  }
+
+  mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
+
+  // ABSORPTION LENGTH /////////////////////////////////////////////////////////
+
+  const G4int abs_entries = 16;
+  
+  G4double abs_energy[abs_entries]=
+    {1.*eV, 2.132*eV, 2.735*eV, 2.908*eV, 3.119*eV, 
+     3.320*eV, 3.476*eV, 3.588*eV, 3.749*eV, 3.869*eV, 
+     3.973*eV, 4.120*eV, 4.224*eV, 4.320*eV, 4.420*eV, 
+     5.018*eV};
+  G4double abslength[abs_entries] =
+    {15000.*cm, 326.*mm, 117.68*mm, 85.89*mm, 50.93*mm, 
+     31.25*mm, 17.19*mm, 10.46*mm, 5.26*mm, 3.77*mm, 
+     2.69*mm, 1.94*mm, 1.33*mm, 0.73*mm, 0.32*mm,
+     0.10*mm}; 
+ 
+  mpt->AddProperty("ABSLENGTH", abs_energy, abslength, abs_entries);
+
+  return mpt;
+}
 
 G4MaterialPropertiesTable* OpticalMaterialProperties::Glass()
 {
@@ -176,22 +219,36 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Sapphire()
   
   G4double energy[entries];
   G4double rindex[entries];
-
   for (G4int i=0; i<entries; i++) {
 
     G4double wl = wlmin + i*step;
+    energy[i] = h_Planck*c_light/wl;
     rindex[i] = seq.RefractiveIndex(wl);
-    
   }
 
-  const G4int ABS_NUMENTRIES = 2;
-  G4double Energies[ABS_NUMENTRIES] = {1*eV, 8.*eV};
-  G4double SAPPHIRE_ABSL[ABS_NUMENTRIES] = {100.*cm, 100.*cm};
-  
+  /*const G4int ABS_NUMENTRIES = 18;
+  G4double Energies[ABS_NUMENTRIES] = {1.000*eV, 1.231*eV, 1.696*eV, 2.045*eV, 2.838*eV, 3.687*eV, 
+				       4.276*eV, 4.922*eV, 5.577*eV, 6.150*eV, 6.755*eV, 7.277*eV, 
+				       7.687*eV, 7.872*eV, 7.993*eV, 8.186*eV, 8.406*eV, 8.915*eV};
+  G4double SAPPHIRE_ABSL[ABS_NUMENTRIES] = {577.50*mm, 577.50*mm, 201.52*mm, 99.51*mm, 59.47*mm, 54.42*mm,
+					    45.89*mm, 22.25*mm, 11.97*mm, 7.711*mm, 5.027*mm, 3.689*mm, 
+					    2.847*mm, 1.991*mm, 1.230*mm, 0.923*mm, 0.763*mm, 0.664*mm};*/
+
+    const G4int ABS_NUMENTRIES = 19;
+  G4double Energies[ABS_NUMENTRIES] = {1.*eV, 1.249*eV, 1.454*eV, 1.773*eV, 2.130*eV, 2.599*eV, 3.072*eV,
+				       3.788*eV, 4.431*eV, 4.998*eV, 5.550*eV, 6.098*eV, 6.459*eV, 
+				       6.806*eV, 7.097*eV, 7.324*eV, 7.597*eV, 7.922*eV, 8.217*eV};
+  G4double SAPPHIRE_ABSL[ABS_NUMENTRIES] = {3455.0*mm, 3455.0*mm, 3455.0*mm, 1725.0*mm, 859.99*mm, 379.42*mm, 340.98*mm,
+					    283.30*mm, 242.11*mm, 177.06*mm, 114.24*mm, 71.773*mm, 51.560*mm, 
+					    35.471*mm, 23.725*mm, 16.830*mm, 11.407*mm, 6.771*mm, 4.635*mm};
+
+    /*const G4int ABS_NUMENTRIES = 2;
+  G4double Energies[ABS_NUMENTRIES] = {1*eV, 8.217*eV};
+  G4double SAPPHIRE_ABSL[ABS_NUMENTRIES] = {150000.*mm, 150000*mm};*/
+ 
   mpt->AddProperty("RINDEX", energy, rindex, entries);
   mpt->AddProperty("ABSLENGTH", Energies, SAPPHIRE_ABSL, ABS_NUMENTRIES); 
 
-  
   return mpt;
 }
 
