@@ -80,8 +80,13 @@ void PersistencyManager::OpenFile(const G4String& filename)
   // If the output file was not set yet, do so
   if (!_ready) {
     _writer = new irene::RootWriter();
-    _writer->Open(filename.data(), "RECREATE");
-    _ready = true;
+    G4bool path_exists = _writer->Open(filename.data(), "RECREATE");
+    if (path_exists) {
+      _ready = true;
+    } else {
+      G4Exception("OpenFile()", "[PersistencyManager]", 
+      FatalException, "The path for the output file is not correct.");
+    }
   }
   else {
     G4Exception("OpenFile()", "[PersistencyManager]", 
