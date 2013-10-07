@@ -19,6 +19,7 @@
 
 #include <G4GenericPhysicsList.hh>
 #include <G4UImanager.hh>
+#include <G4StateManager.hh>
 
 using namespace nexus;
 
@@ -32,6 +33,12 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
   // Define the command to register a configuration macro. 
   // The user may invoke the command as many times as needed.
   _msg->DeclareMethod("RegisterMacro", &NexusApp::RegisterMacro, ""); 
+
+  // Some commands, which we call 'delayed', only work if executed
+  // after the initialization of the application. The user may include
+  // them in configuration macros registered with the command defined below.
+  _msg->DeclareMethod("RegisterDelayedMacro", 
+    &NexusApp::RegisterDelayedMacro, "");
 
   // Define a command to set a seed for the random number generator.
   _msg->DeclareMethod("random_seed", &NexusApp::SetRandomSeed, 
@@ -92,7 +99,10 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
 
   /////////////////////////////////////////////////////////
 
+  // Set by default a random seed (system time) for the random
+  // number generator
   SetRandomSeed(-1);
+  
   PersistencyManager::Initialize();
 }
 
@@ -118,6 +128,14 @@ void NexusApp::RegisterMacro(const G4String& macro)
 
 
 
+void NexusApp::RegisterDelayedMacro(const G4String& macro)
+{
+  // Store the name of the macro file
+  _delayed.push_back(macro);
+}
+
+
+
 void NexusApp::Initialize()
 {
   // Execute all command macro files before initializing the app
@@ -126,8 +144,10 @@ void NexusApp::Initialize()
   for (unsigned int i=0; i<_macros.size(); i++)
     ExecuteMacroFile(_macros[i].data());
 
-  // Initialize the run manager
   G4RunManager::Initialize();
+
+  for (unsigned int j=0; j<_delayed.size(); j++)
+    ExecuteMacroFile(_delayed[j].data());
 }
 
 
