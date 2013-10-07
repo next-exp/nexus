@@ -42,6 +42,8 @@ namespace nexus {
   private:
     void RegisterMacro(const G4String&);
 
+    void RegisterDelayedMacro(const G4String&);
+
     void ExecuteMacroFile(const char*);
 
     /// Set a seed for the G4 random number generator. 
@@ -51,6 +53,7 @@ namespace nexus {
   private:
     G4GenericMessenger* _msg;
     std::vector<G4String> _macros;
+    std::vector<G4String> _delayed;
   };
 
   // INLINE DEFINITIONS ////////////////////////////////////
