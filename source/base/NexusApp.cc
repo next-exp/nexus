@@ -92,6 +92,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
 
   /////////////////////////////////////////////////////////
 
+  SetRandomSeed(-1);
   PersistencyManager::Initialize();
 }
 
