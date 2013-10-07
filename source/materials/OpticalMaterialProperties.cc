@@ -234,13 +234,13 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Sapphire()
 					    45.89*mm, 22.25*mm, 11.97*mm, 7.711*mm, 5.027*mm, 3.689*mm, 
 					    2.847*mm, 1.991*mm, 1.230*mm, 0.923*mm, 0.763*mm, 0.664*mm};*/
 
-    const G4int ABS_NUMENTRIES = 19;
-  G4double Energies[ABS_NUMENTRIES] = {1.*eV, 1.249*eV, 1.454*eV, 1.773*eV, 2.130*eV, 2.599*eV, 3.072*eV,
-				       3.788*eV, 4.431*eV, 4.998*eV, 5.550*eV, 6.098*eV, 6.459*eV, 
-				       6.806*eV, 7.097*eV, 7.324*eV, 7.597*eV, 7.922*eV, 8.217*eV};
-  G4double SAPPHIRE_ABSL[ABS_NUMENTRIES] = {3455.0*mm, 3455.0*mm, 3455.0*mm, 1725.0*mm, 859.99*mm, 379.42*mm, 340.98*mm,
-					    283.30*mm, 242.11*mm, 177.06*mm, 114.24*mm, 71.773*mm, 51.560*mm, 
-					    35.471*mm, 23.725*mm, 16.830*mm, 11.407*mm, 6.771*mm, 4.635*mm};
+  const G4int ABS_NUMENTRIES = 19;
+  G4double Energies[ABS_NUMENTRIES] = {1.000*eV, 1.296*eV, 1.683*eV, 2.075*eV, 2.585*eV, 3.088*eV,
+				       3.709*eV, 4.385*eV, 4.972*eV, 5.608*eV, 6.066*eV, 6.426*eV, 
+				       6.806*eV, 7.135*eV, 7.401*eV, 7.637*eV, 7.880*eV, 8.217*eV};
+  G4double SAPPHIRE_ABSL[ABS_NUMENTRIES] = {3455.0*mm, 3455.0*mm, 3455.0*mm, 3455.0*mm, 3455.0*mm, 3140.98*mm,
+					    2283.30*mm, 1742.11*mm, 437.06*mm, 219.24*mm, 117.773*mm, 80.560*mm, 
+					    48.071*mm, 28.805*mm, 17.880*mm, 11.567*mm, 7.718*mm, 4.995*mm};
 
     /*const G4int ABS_NUMENTRIES = 2;
   G4double Energies[ABS_NUMENTRIES] = {1*eV, 8.217*eV};
@@ -252,9 +252,149 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Sapphire()
   return mpt;
 }
 
+G4MaterialPropertiesTable* OpticalMaterialProperties::GAr()
+{
+  G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
+
+  // REFRACTIVE INDEX ////////////////////////////////////////////////
+
+  const G4int ri_entries = 200;
+  
+  G4double ri_energy[ri_entries];
+  for (int i=0; i<ri_entries; i++) {
+    ri_energy[i] = (1 + i*0.049)*eV;
+  }
+
+  G4double rindex[ri_entries];
+
+  for (int i=0; i<ri_entries; i++) {
+    G4double lambda = h_Planck*c_light/ri_energy[i]*1000; // in micron
+    rindex[i] = 1 + 0.012055*(0.2075*pow(lambda,2)/(91.012*pow(lambda,2)-1) + 0.0415*pow(lambda,2)/(87.892*pow(lambda,2)-1) + 4.3330*pow(lambda,2)/(214.02*pow(lambda,2)-1)); // From refractiveindex.info
+    //    std::cout << "rindex = " << rindex[i] << std::endl;
+  }
+
+  mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
+
+  // EMISSION SPECTRUM ////////////////////////////////////////////////
+
+  // Sampling from ~110 nm to 150 nm <----> from ~11.236 eV to 8.240 eV
+  const G4int sc_entries = 380;
+  G4double sc_energy[sc_entries];
+  G4double intensity[sc_entries];
+
+  G4double Wavelength_peak = 128.*nm;
+  G4double Wavelength_sigma = 2.929*nm;
+  
+  G4double Energy_peak = (h_Planck*c_light/Wavelength_peak);
+  G4double Energy_sigma = (h_Planck*c_light*Wavelength_sigma/pow(Wavelength_peak,2));
+  
+  //  std::cout << "Energy_peak = " << Energy_peak << std::endl;
+
+  for (int j=0;j<sc_entries;j++){
+    sc_energy[j] = 8.240*eV + 0.008*j*eV;
+    intensity[j] = exp(-pow(Energy_peak/eV-sc_energy[j]/eV,2)/(2*pow(Energy_sigma/eV, 2)))/(Energy_sigma/eV*sqrt(pi*2.));
+    //    std::cout << "(energy, intensity) = (" << sc_energy[j] << "," << intensity[j] << ")" << std::endl;
+  }
+
+  mpt->AddProperty("ELSPECTRUM", sc_energy, intensity, sc_entries);
+
+  // ABSORTION LENGTH ////////////////////////////////////////////////
+
+  G4double energy[2] = {0.01*eV, 100.*eV};
+  G4double abslen[2] = {1.e8*m, 1.e8*m};
+  mpt->AddProperty("ABSLENGTH", energy, abslen, 2);
+
+  G4double fano = 0.3;//An argon gas proportional scintillation counter with UV avalanche photodiode scintillation readout C.M.B. Monteiro, J.A.M. Lopes, P.C.P.S. Simoes, J.M.F. dos Santos, C.A.N. Conde 
+  mpt->AddConstProperty("RESOLUTIONSCALE",fano);
+
+  mpt->AddConstProperty("ELTIMECONSTANT", 1260.*ns);
+  mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
+  
+  //  G4double sc_yield = 13889/MeV;
+
+  //mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
+  //mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
+  //mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield);
+  //7mpt->AddConstProperty("FASTTIMECONSTANT",7.*ns);
+  //mpt->AddConstProperty("SLOWTIMECONSTANT",1260.*ns);
+  //mpt->AddConstProperty("YIELDRATIO",.9);
+  return mpt; 
+}
+
+G4MaterialPropertiesTable* OpticalMaterialProperties::LAr()
+{
+  G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
+
+  // REFRACTIVE INDEX ////////////////////////////////////////////////
+
+  const G4int ri_entries = 200;
+  
+  G4double ri_energy[ri_entries];
+  for (int i=0; i<ri_entries; i++) {
+    ri_energy[i] = (1 + i*0.049)*eV;
+  }
+
+  G4double rindex[ri_entries];
+
+  for (int i=0; i<ri_entries; i++) {
+    G4double epsilon;
+    G4double lambda = h_Planck*c_light/ri_energy[i]*1000; // in micron
+    if(lambda*1000<110*nm)
+      epsilon = 1.0e4;
+    else{      
+      epsilon = 1.0 / (lambda * lambda); // 1 / (lambda)^2
+      epsilon = 1.2055e-2 * ( 0.2075 / (91.012 - epsilon) +
+                  0.0415 / (87.892 - epsilon) +
+                  4.3330 / (214.02 - epsilon) );
+      epsilon *= (8./12.); // Bideau-Sellmeier -> Clausius-Mossotti
+      G4double LArRho = 1400;
+      G4double GArRho = 1.784;
+      epsilon *= (LArRho / GArRho); // density correction (Ar gas -> LAr liquid)
+      if (epsilon < 0.0 || epsilon > 0.999999) 
+	epsilon = 4.0e6;
+      else
+	epsilon = (1.0 + 2.0 * epsilon) / (1.0 - epsilon); // solve Clausius-Mossotti
+    }
+    rindex[i] = sqrt(epsilon);
+  }
+
+  mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
+
+  // ABSORTION LENGTH ////////////////////////////////////////////////
+
+  G4double energy[2] = {0.01*eV, 100.*eV};
+  G4double abslen[2] = {1.e8*m, 1.e8*m};
+  mpt->AddProperty("ABSLENGTH", energy, abslen, 2);
+
+  G4double fano = 0.11;// Doke et al, NIM 134 (1976)353
+  mpt->AddConstProperty("RESOLUTIONSCALE",fano);
 
 
+  // EMISSION SPECTRUM ////////////////////////////////////////////////
 
+  // Sampling from ~110 nm to 150 nm <----> from ~11.236 eV to 8.240 eV
+  const G4int sc_entries = 500;
+  G4double sc_energy[sc_entries];
+  G4double intensity[sc_entries];
+
+  G4double Wavelength_peak = 128.*nm;
+  G4double Wavelength_sigma = 2.929*nm;
+  
+  G4double Energy_peak = (h_Planck*c_light/Wavelength_peak);
+  G4double Energy_sigma = (h_Planck*c_light*Wavelength_sigma/pow(Wavelength_peak,2));
+
+  for (int j=0;j<sc_entries;j++){
+    sc_energy[j] = 8.240*eV + 0.008*j*eV;
+    intensity[j] = exp(-pow(Energy_peak/eV-sc_energy[j]/eV,2)/(2*pow(Energy_sigma/eV, 2)))/(Energy_sigma/eV*sqrt(pi*2.));
+  }
+
+  mpt->AddProperty("ELSPECTRUM", sc_energy, intensity, sc_entries);
+
+  mpt->AddConstProperty("ELTIMECONSTANT", 1260.*ns);
+  mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
+
+  return mpt;
+}
 
 G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure, 
 							  G4double temperature,
