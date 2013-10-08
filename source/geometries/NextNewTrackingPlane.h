@@ -66,11 +66,18 @@ namespace nexus {
     G4ThreeVector _kdb_dimensions;
     std::vector<G4ThreeVector> _DB_positions;
 
+    G4double _dice_board_z_pos;
+
     // Visibility of the tracking plane
     G4bool _visibility;
 
     // Vertex generators
-    CylinderPointSampler* _support_gen;
+    CylinderPointSampler* _support_body_gen;
+    CylinderPointSampler* _support_flange_gen;
+    CylinderPointSampler* _support_buffer_gen;
+    
+    G4double _body_perc;
+    G4double _flange_perc;
     
     // Geometry Navigator
     G4Navigator* _geom_navigator;
