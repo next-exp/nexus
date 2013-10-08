@@ -38,6 +38,9 @@ namespace nexus {
     
     static G4MaterialPropertiesTable* Sapphire();
 
+    static G4MaterialPropertiesTable* GAr();
+    static G4MaterialPropertiesTable* LAr();
+
     static G4MaterialPropertiesTable* GXe(G4double pressure=1.*bar, 
 					  G4double temperature=STP_Temperature,
 					  G4int sc_yield=13889/MeV);
