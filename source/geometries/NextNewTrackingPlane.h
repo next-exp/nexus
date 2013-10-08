@@ -58,7 +58,7 @@ namespace nexus {
     const G4double _support_plate_diam, _support_plate_thickness, _support_plate_front_buffer_diam,
       _support_plate_front_buffer_thickness, _support_plate_tread_diam, _support_plate_tread_thickness;
     const G4double _tracking_plane_z_pos;
-    G4double _el_gap_z_edge, _z_displ;////????????
+    G4double _el_gap_z_edge, _z_kdb_displ;////????????
     const G4double _cable_hole_width, _cable_hole_high;
 
     const G4int _SiPM_rows, _SiPM_columns;
