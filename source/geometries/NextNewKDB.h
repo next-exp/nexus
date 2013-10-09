@@ -28,7 +28,7 @@ namespace nexus {
     /// Destructor
     ~NextNewKDB();
 
-    G4ThreeVector GetDimensions();
+    G4ThreeVector GetDimensions() const;
     const std::vector<std::pair<int, G4ThreeVector> >& GetPositions();
 
     /// Builder

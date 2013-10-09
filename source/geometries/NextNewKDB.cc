@@ -142,7 +142,7 @@ namespace nexus{
 
 
 
-  G4ThreeVector NextNewKDB::GetDimensions()
+  G4ThreeVector NextNewKDB::GetDimensions() const
   {
     return _dimensions;
   }
