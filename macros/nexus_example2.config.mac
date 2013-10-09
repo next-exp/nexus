@@ -6,10 +6,13 @@
 
 #/control/execute macros/geometries/CylindricChamber.mac
 
-/control/execute macros/generators/IonGun.mac
+/Generator/SingleParticle/particle e-
+/Generator/SingleParticle/min_energy  1. keV
+/Generator/SingleParticle/max_energy 10. keV
+/Generator/SingleParticle/region CENTER
 
 /run/verbose 1
 /event/verbose 0
-/tracking/verbose 2
+/tracking/verbose 1
 
-/nexus/persistency/outputFile nexus.root
+/nexus/persistency/outputFile data/nexus_example2.root
