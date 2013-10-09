@@ -72,12 +72,13 @@ namespace nexus {
       }
     }
 
-    xyzt.set(time, position);
-    
     // Calculate step length as euclidean distance between initial
     // and final positions
     G4ThreeVector displacement = position - xyzt.vect();
     G4double step_length = displacement.mag();
+
+    // Set the new time and position of the drifting charge
+    xyzt.set(time, position);
     
     return step_length;
   }
