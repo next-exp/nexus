@@ -126,7 +126,7 @@ G4int main(int argc, char** argv)
     vismgr->Initialize();
 
     G4UIsession* session = new G4UIterminal(new G4UItcsh);
-    UI->ApplyCommand("/control/execute vis.mac");
+    UI->ApplyCommand("/control/execute macros/vis.mac");
     session->SessionStart();
 
     delete session;
