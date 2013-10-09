@@ -1,22 +1,24 @@
 // ----------------------------------------------------------------------------
 ///  \file   NextNewKDB.h
-///  \brief  
+///  \brief  Geometry of the Kapton Dice Boards used in the NEW detector.
 ///
 ///  \author  <miquel.nebot@ific.uv.es>
 ///  \date    18 Sept 2013
-///  \version $Id: 
+///  \version $Id$
 //
-///  Copyright (c) 2013 NEXT Collaboration
+///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXT_NEW_KDB__
-#define __NEXT_NEW_KDB__
+#ifndef NEXT_NEW_KDB_H
+#define NEXT_NEW_KDB_H
 
-#include "SiPM11.h"
 #include "BaseGeometry.h"
 #include <vector>
 
+
 namespace nexus {
+
+  /// Geometry of the Kapton Dice Boards (KDB) used in the NEW detector
 
   class NextNewKDB: public BaseGeometry
   {
@@ -27,17 +29,17 @@ namespace nexus {
     ~NextNewKDB();
 
     G4ThreeVector GetDimensions();
-    std::vector<std::pair<int, G4ThreeVector> > GetPositions();
+    const std::vector<std::pair<int, G4ThreeVector> >& GetPositions();
+
     /// Builder
-    void Construct();
+    virtual void Construct();
 
   private:
     G4int _rows, _columns;
     G4ThreeVector _dimensions;
     std::vector<std::pair<int, G4ThreeVector> > _positions;
-
-    SiPM11* _siPM;
   };
+
 } // end namespace nexus
+
 #endif
-    
