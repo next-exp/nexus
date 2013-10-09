@@ -264,7 +264,6 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
       _itrkmap[trackid] = itrk;
       itrk->SetParticle(_iprtmap[trackid]);
       _iprtmap[trackid]->AddTrack(itrk);
-      G4cout << "here peto" << G4endl;
       ievt->AddTrack(itrk);
     }
 
