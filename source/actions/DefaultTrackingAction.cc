@@ -42,8 +42,8 @@ void DefaultTrackingAction::PreUserTrackingAction(const G4Track* track)
   // Do nothing if the track is an optical photon or an ionization electron
   if (track->GetDefinition() == G4OpticalPhoton::Definition() || 
       track->GetDefinition() == IonizationElectron::Definition()) {
-    fpTrackingManager->SetStoreTrajectory(false);
-    return;
+      fpTrackingManager->SetStoreTrajectory(false);    
+      return;
   }
 
   // Create a new trajectory associated to the track.
