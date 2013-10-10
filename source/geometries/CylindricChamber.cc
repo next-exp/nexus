@@ -9,11 +9,12 @@
 
 #include "CylindricChamber.h"
 
+#include "PmtR11410.h"
+#include "NextNewKDB.h"
 #include "MaterialsList.h"
+#include "OpticalMaterialProperties.h"
 #include "UniformElectricDriftField.h"
 #include "IonizationSD.h"
-#include "PmtR11410.h"
-#include "OpticalMaterialProperties.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Tubs.hh>
@@ -142,22 +143,31 @@ namespace nexus {
     pmt_geom.Construct();
     G4LogicalVolume* pmt_logic = pmt_geom.GetLogicalVolume();
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., -30.*cm), pmt_logic, "PMT",
-      gas_logic, false, 0, true);
+    pos_z = -30. * cm;
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., pos_z), pmt_logic, 
+      "PMT", gas_logic, false, 0, true);
 
 
     // DICE BOARD ////////////////////////////////////////////////////
 
+    NextNewKDB kdb_geom(5,5);
+    kdb_geom.Construct();
+
+    G4LogicalVolume* kdb_logic = kdb_geom.GetLogicalVolume();
     
+    pos_z = active_length/2. + elgap_length + 5.0*mm;
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., pos_z), kdb_logic,
+      "KDB", gas_logic, false, 0, true);
+
   }
-
-
 
 
 
   G4ThreeVector CylindricChamber::GenerateVertex(const G4String& region) const
   {
-    return G4ThreeVector();//_sphere_vertex_gen->GenerateVertex(region);
+    return G4ThreeVector(0.,0.,0.);
   }
   
 
