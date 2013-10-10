@@ -12,9 +12,12 @@
 #include "IonizationHit.h"
 #include "Trajectory.h"
 #include "TrajectoryMap.h"
+#include "IonizationElectron.h"
 
 #include <G4SDManager.hh>
 #include <G4Step.hh>
+#include <G4OpticalPhoton.hh>
+
 
 
 using namespace nexus;
@@ -61,6 +64,12 @@ void IonizationSD::Initialize(G4HCofThisEvent* hce)
   
 G4bool IonizationSD::ProcessHits(G4Step* step, G4TouchableHistory*)
 {
+  G4Track* track = step->GetTrack();
+
+  if (track->GetParticleDefinition() == G4OpticalPhoton::Definition() ||
+      track->GetParticleDefinition() == IonizationElectron::Definition())
+    return false;
+
   G4double edep = step->GetTotalEnergyDeposit();
     
   // Discard steps where no energy was deposited in the detector
