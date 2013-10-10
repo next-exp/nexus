@@ -192,6 +192,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     }
     else {
       irene::Particle* mother = _iprtmap[parent_id];
+      ipart->SetPrimary(false);
       ipart->SetMother(mother);
       mother->AddDaughter(ipart);
     }
