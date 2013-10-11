@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 ///  \file     NextNewFieldCage.h  
-///  \brief    This is a geometry formed by the reflector tube and 
-///            TPB layer if needed
+///  \brief    This is a geometry formed by the reflector tube and  TPB layer if needed.
+///            Also build the EL, Cathode and Electric Drift Field. 
 ///
 ///  \author   <miquel.nebot@ific.uv.es>
 ///  \date     12 Sept 2013
@@ -29,6 +29,9 @@ namespace nexus {
     NextNewFieldCage();
     /// Destructor
     ~NextNewFieldCage();
+    
+    /// Sets the Logical Volume where Elements will be placed
+    void SetLogicalVolume(G4LogicalVolume* mother_logic);
 
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
@@ -38,15 +41,34 @@ namespace nexus {
     void Construct();
 
   private:
+    // Mother Logical Volume 
+    G4LogicalVolume* _mother_logic;
+    G4Material* _gas;
+    G4double _pressure;
+    G4double _temperature;
+
     // Pointers to materials definition
     G4Material* _hdpe;//High density polyethylene
+    
+    void BuildELRegion();
+    void BuildCathodeGrid();
+    void BuildActive();    
+
     // Dimensions
-    G4double _tube_in_rad, _tube_length, _tube_thickness, _tube_z_pos;
+    G4double _cage_tot_length, _tube_in_diam, _tube_length, _tube_thickness, _tube_z_pos;
     G4double _reflector_thickness;
-    // Visibility of the shielding
+    G4double _el_gap_z_pos, _el_tot_zone, _el_gap_length, _grid_thickness, _el_grid_transparency;
+    G4double _cathode_grid_transparency;
+    G4double _drift_length;
+
+    // Visibility 
     G4bool _visibility;
+
     // Vertex generators
-    CylinderPointSampler* _body_gen;
+    CylinderPointSampler* _field_cage_gen;
+    CylinderPointSampler* _reflector_gen;
+    CylinderPointSampler* _active_gen;
+
     // Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
   };
