@@ -13,6 +13,7 @@
 #include "IonizationClustering.h"
 #include "IonizationDrift.h"
 #include "Electroluminescence.h"
+#include "WavelengthShifting.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4OpticalPhoton.hh>
@@ -61,6 +62,7 @@ namespace nexus {
   {
     IonizationElectron::Definition();
     G4OpticalPhoton::Definition();
+    //G4OpticalPhoton::OpticalPhotonDefinition();
   }
   
   
@@ -69,12 +71,20 @@ namespace nexus {
   {
     G4ProcessManager* pmanager = 0;
     
+    // Add our own wavelength shifting process for the optical photon
+    pmanager = G4OpticalPhoton::Definition()->GetProcessManager();
+    if (!pmanager) {
+      G4Exception("ConstructProcess()", "[NexusPhysics]", FatalException, 
+        "G4OpticalPhoton without a process manager.");
+    }
+    WavelengthShifting* wls = new WavelengthShifting();
+    pmanager->AddDiscreteProcess(wls);
+
     pmanager = IonizationElectron::Definition()->GetProcessManager();
     if (!pmanager) {
       G4Exception("ConstructProcess()", "[NexusPhysics]", FatalException, 
         "Ionization electron without a process manager.");
     }
-
 
     // Add drift and electroluminescence to the process table of the ie-
 
