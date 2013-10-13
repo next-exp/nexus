@@ -62,6 +62,18 @@ namespace nexus {
      return G4VDiscreteProcess::PostStepDoIt(track, step);
    }
 
+   const G4DynamicParticle* particle = track.GetDynamicParticle();
+   
+   G4double thePhotonEnergy = particle->GetTotalEnergy();
+   G4double conversion_efficiency = 
+     WLS_Conversion_Efficiency->Value(thePhotonEnergy);
+   
+   G4double rndm = G4UniformRand();
+   if (rndm > conversion_efficiency) {
+     return G4VDiscreteProcess::PostStepDoIt(track, step);
+   }	 
+   _ParticleChange->SetNumberOfSecondaries(1);
+
    G4int materialIndex = material->GetIndex();
    G4PhysicsOrderedFreeVector* WLSIntegral  =
      (G4PhysicsOrderedFreeVector*)((*_wlsIntegralTable)(materialIndex));
@@ -182,11 +194,11 @@ namespace nexus {
 	 G4double conversion_efficiency = 
 	   WLS_Conversion_Efficiency->Value(thePhotonEnergy);
 	 
-	 G4double rndm = G4UniformRand();
-	 if (rndm > conversion_efficiency) {
+	 // If the photon has zero conversion efficiency, it must not enter the process at all.
+	 if (conversion_efficiency == 0.) {
 	   return AttenuationLength;
 	 }	 
-	 _ParticleChange->SetNumberOfSecondaries(1);
+	 // _ParticleChange->SetNumberOfSecondaries(1);
 	 AttenuationLength = DBL_MIN;
        }
      }
