@@ -120,6 +120,7 @@ namespace nexus {
   {
     delete _field_cage_gen;
     delete _reflector_gen;
+    delete _active_gen;
    }
   
   G4ThreeVector NextNewFieldCage::GetPosition() const
@@ -130,21 +131,19 @@ namespace nexus {
   G4ThreeVector NextNewFieldCage::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);
-    // // Vertex in the plastic cylinder
-    // if (region == "FIELD_CAGE") {
-    //   vertex = _body_gen->GenerateVertex(TUBE_VOLUME);
-    //   // Field Cage region
-    //   if (region == "FIELD_CAGE") {
-    //   vertex = _field_cage->GenerateVertex(region);
-    // }
-
-    // // Active region
-    // else if (region == "ACTIVE") {
-    //   vertex = _active_gen->GenerateVertex(TUBE_VOLUME);
-    // }
+    if (region == "FIELD_CAGE") {
+      vertex = _field_cage_gen->GenerateVertex(TUBE_VOLUME);
+    }
+    else if (region == "REFLECTOR") {
+      vertex = _reflector_gen->GenerateVertex(TUBE_VOLUME);
+    }
+    // Active region
+    else if (region == "ACTIVE") {
+      vertex = _active_gen->GenerateVertex(VOLUME);
+    }
     // //EL GAP
     // //Cathode grid
-    // }
+ 
     return vertex;
   }
 
