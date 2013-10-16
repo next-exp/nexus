@@ -45,9 +45,14 @@ namespace nexus {
 
   private:
     //Dimensions
-    G4double  _vessel_in_rad, _vessel_body_length, _vessel_length, _vessel_thickness;
+    G4double  _vessel_in_diam, _vessel_body_length, _vessel_tube_length, _vessel_length, _vessel_thickness;
     G4double _endcap_in_rad, _endcap_theta, _endcap_thickness, _endcap_in_z_width;
-    G4double _flange_out_rad, _flange_length, _flange_z_pos;
+    G4double _flange_out_diam, _flange_length, _flange_z_pos;
+
+    G4double _lat_nozzle_in_diam, _lat_nozzle_high, _lat_nozzle_thickness, _lat_nozzle_flange_diam, _lat_nozzle_flange_high;
+    G4double _up_nozzle_in_diam, _up_nozzle_high, _up_nozzle_thickness, _up_nozzle_flange_diam, _up_nozzle_flange_high;
+    G4double  _endcap_nozzle_in_diam, _endcap_nozzle_high, _endcap_nozzle_thickness, _endcap_nozzle_flange_diam, _endcap_nozzle_flange_high;
+    G4double  _lat_nozzle_x_pos, _lat_nozzle_z_pos, _up_nozzle_y_pos, _up_nozzle_z_pos, _endcap_nozzle_z_pos;
 
     G4double _pressure, _temperature;
 
