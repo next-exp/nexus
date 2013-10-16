@@ -54,6 +54,7 @@ namespace nexus {
     static G4MaterialPropertiesTable* Glass();
     
     static G4MaterialPropertiesTable* TPB();
+    static G4MaterialPropertiesTable* TPBOld();
     static G4MaterialPropertiesTable* TPBmatr();
     static G4MaterialPropertiesTable* WLS2();
     static G4MaterialPropertiesTable* TPH();
