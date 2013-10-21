@@ -54,6 +54,11 @@ namespace nexus {
     _msg->DeclareProperty("field_cage_vis", _visibility, 
 			  "Field Cage Visibility");
 
+    
+  // Boolean-type properties (true or false)
+  _msg->DeclareProperty("elfield", _elfield,
+			"True if the EL field is on (full simulation), false if it's not (parametrized simulation.");
+
     G4GenericMessenger::Command& step_cmd = 
       _msg->DeclareProperty("max_step_size", _max_step_size, 
 			    "Maximum Step Size");
@@ -126,7 +131,7 @@ namespace nexus {
     reflector_opt_surf->SetModel(unified);
     reflector_opt_surf->SetFinish(ground);
     reflector_opt_surf->SetSigmaAlpha(0.1);
-    reflector_opt_surf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+    reflector_opt_surf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
     new G4LogicalSkinSurface("FC_REFLECTOR", reflector_logic, 
 			     reflector_opt_surf);
 
@@ -139,7 +144,7 @@ namespace nexus {
     //teflon_col.SetForceSolid(true);
     reflector_logic->SetVisAttributes(teflon_col);
     G4VisAttributes tpb_col(G4Colour(1., 0., 0.));
-    tpb_col.SetForceSolid(true);
+    //   tpb_col.SetForceSolid(true);
     tpb_logic->SetVisAttributes(tpb_col);
     // }
     // else {
@@ -181,7 +186,7 @@ namespace nexus {
     }
     // Active region
     else if (region == "ACTIVE") {
-      vertex = _active_gen->GenerateVertex(VOLUME);
+      vertex = _active_gen->GenerateVertex(INSIDE);
     }
     // //EL GAP
     // //Cathode grid
@@ -203,17 +208,19 @@ namespace nexus {
 			"EL_GAP", _mother_logic, false, 0,true);
    
 
-    // Define EL electric field
-    UniformElectricDriftField* el_field = new UniformElectricDriftField();
-    el_field->SetCathodePosition(_el_gap_z_pos - _el_gap_length/2.);
-    el_field->SetAnodePosition  (_el_gap_z_pos + _el_gap_length/2.);
-    el_field->SetDriftVelocity(2.5 * mm/microsecond);
-    //el_field->SetFieldStrength(20 * kilovolt);
-    el_field->SetTransverseDiffusion(1. * mm/sqrt(cm));
-    el_field->SetLongitudinalDiffusion(1. * mm/sqrt(cm));
-    G4Region* el_region = new G4Region("EL_REGION");
-    el_region->SetUserInformation(el_field);
-    el_region->AddRootLogicalVolume(el_gap_logic);
+    if (_elfield) {
+      // Define EL electric field
+      UniformElectricDriftField* el_field = new UniformElectricDriftField();
+      el_field->SetCathodePosition(_el_gap_z_pos - _el_gap_length/2.);
+      el_field->SetAnodePosition  (_el_gap_z_pos + _el_gap_length/2.);
+      el_field->SetDriftVelocity(2.5 * mm/microsecond);
+      //el_field->SetFieldStrength(20 * kilovolt);
+      el_field->SetTransverseDiffusion(1. * mm/sqrt(cm));
+      el_field->SetLongitudinalDiffusion(1. * mm/sqrt(cm));
+      G4Region* el_region = new G4Region("EL_REGION");
+      el_region->SetUserInformation(el_field);
+      el_region->AddRootLogicalVolume(el_gap_logic);
+    }
 
     ///// EL GRIDS /////
     G4Material* fgrid_mat = MaterialsList::FakeDielectric(_gas, "el_grid_mat");
