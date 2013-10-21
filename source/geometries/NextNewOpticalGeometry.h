@@ -10,7 +10,15 @@
 #define __NEXTNEW_OPTICALGEOMETRY__
 
 #include "BaseGeometry.h"
-#include "NextNewInnerElements.h"
+namespace nexus { class NextNewVessel; }
+namespace nexus { class NextNewInnerElements; }
+namespace nexus { class NextNewIcs; }
+//namespace nexus { class Enclosure; }
+//namespace nexus { class NextNewEnergyPlane; }
+//namespace nexus { class NextNewTrackingPlane; }
+//namespace nexus { class NextNewKDB; }
+//namespace nexus { class SiPM11;}
+//namespace nexus { class NextNewFieldCage; } 
 
 namespace nexus {
 
@@ -24,17 +32,23 @@ namespace nexus {
     NextNewOpticalGeometry();
     ///Destructor
     ~NextNewOpticalGeometry();
-
+    
     /// Returns a vertex in a region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
+    /// Builder
+    void Construct();
 
-  private:
-
-    void ReadParameters();
-    
+  private:     
     G4double _pressure;
-
+    NextNewVessel* _vessel;
     NextNewInnerElements* _inner_elements;
+    NextNewIcs* _ics;
+    //Enclosure* _enclosure;
+    //NextNewEnergyPlane*    _energy_plane;
+    //NextNewKDB* _kdb;
+    //SiPM11* _sipm;
+    //NextNewTrackingPlane* _tracking_plane;
+    //NextNewFieldCage* _field_cage;
 
   };
 
