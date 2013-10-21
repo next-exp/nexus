@@ -19,6 +19,7 @@
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4VisAttributes.hh>
+#include <G4GenericMessenger.hh>
 
 using namespace nexus;
 
@@ -28,6 +29,16 @@ NextNewOpticalGeometry::NextNewOpticalGeometry():
  // Build the internal gas volume with all the objects that live there 
 
   _inner_elements = new NextNewInnerElements();//gas_logic
+
+  _msg = new G4GenericMessenger(this, "/Geometry/NextNewOpticalGeometry/",
+				"Control commands of geometry NextNew");
+  //Gas pressure
+  G4GenericMessenger::Command& pressure_cmd =
+    _msg->DeclareProperty("pressure", _pressure,
+			  "Set pressure for gaseous xenon.");
+  pressure_cmd.SetUnitCategory("Pressure");
+  pressure_cmd.SetParameterName("pressure", false);
+  pressure_cmd.SetRange("pressure>0.");
 
 }
 

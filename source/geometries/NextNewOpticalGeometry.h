@@ -10,6 +10,8 @@
 #define __NEXTNEW_OPTICALGEOMETRY__
 
 #include "BaseGeometry.h"
+
+class G4GenericMessenger;
 namespace nexus { class NextNewInnerElements; }
 
 namespace nexus {
@@ -31,8 +33,8 @@ namespace nexus {
     void Construct();
 
   private:     
-    G4double _pressure;
-    
+    G4GenericMessenger* _msg;
+    G4double _pressure;    
     NextNewInnerElements* _inner_elements;
    
   };
