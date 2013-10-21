@@ -62,8 +62,7 @@ namespace nexus {
 
     // Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
-    
-    G4double _max_step_size;
+  
   };
 
 } // end namespace nexus
