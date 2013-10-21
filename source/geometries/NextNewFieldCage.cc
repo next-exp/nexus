@@ -35,6 +35,7 @@ namespace nexus {
     _grid_thickness (4.58 * mm), //grid support ????
     _el_tot_zone (24.1 * mm),
     _el_grid_transparency (.88),
+    _gate_transparency (.76),
     _cathode_grid_transparency (.98),
     _cage_tot_length (58.9 * cm),   // Drift volume (51cm) + Buffer (7cm) 
     _tube_length (611.95*mm),//554-12.05+60+10// (56.49 * cm)= 58.9??? -2.41
@@ -56,7 +57,6 @@ namespace nexus {
     _gas = _mother_logic->GetMaterial();
     _pressure =    _gas->GetPressure();
     _temperature = _gas->GetTemperature();
-    
   }
 
   void NextNewFieldCage::Construct()
@@ -94,6 +94,20 @@ namespace nexus {
 			reflector_logic, "FC_REFLECTOR", _mother_logic, 
 			false, 0,true);
 
+    // TPB coating
+    G4Tubs* tpb_solid =
+      new G4Tubs("REFLECTOR_TPB", _tube_in_diam/2.-_reflector_thickness,
+		 _tube_in_diam/2.-_reflector_thickness + 1.*micrometer,
+		 _tube_length/2., 0, twopi);
+    G4Material* tpb = MaterialsList::TPB();
+    tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+    G4LogicalVolume* tpb_logic = 
+      new G4LogicalVolume(tpb_solid, tpb, "REFLECTOR_TPB");
+    G4PVPlacement* tpb_physi = 
+      new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), 
+			tpb_logic, "REFLECTOR_TPB", reflector_logic, 
+			false, 0,true);
+
     /// OPTICAL SURFACE PROPERTIES    ////////
     G4OpticalSurface* reflector_opt_surf = new G4OpticalSurface("FC_REFLECTOR");
     reflector_opt_surf->SetType(dielectric_metal);
@@ -108,13 +122,16 @@ namespace nexus {
     // if (_visibility) {
     G4VisAttributes hdpe_col(G4Colour(.6, .8, .79));
     //hdpe_col.SetForceSolid(true);    
-    field_cage_logic->SetVisAttributes(hdpe_col);
+    //field_cage_logic->SetVisAttributes(hdpe_col);
     G4VisAttributes teflon_col(G4Colour(0., 0., .7));
     //teflon_col.SetForceSolid(true);
     reflector_logic->SetVisAttributes(teflon_col);
+    G4VisAttributes tpb_col(G4Colour(1., 0., 0.));
+    tpb_col.SetForceSolid(true);
+    tpb_logic->SetVisAttributes(tpb_col);
     // }
     // else {
-    //   field_cage_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    field_cage_logic->SetVisAttributes(G4VisAttributes::Invisible);
     //   reflector_logic->SetVisAttributes(G4VisAttributes::Invisible);
     // }
 
@@ -164,18 +181,21 @@ namespace nexus {
   void NextNewFieldCage::BuildELRegion()
   {
     ///// EL GAP /////
-    G4double el_gap_diam = _tube_in_diam;
-   
+    G4double el_gap_diam = _tube_in_diam;  
     G4Tubs* el_gap_solid = 
-      new G4Tubs("EL_GAP", 0., el_gap_diam/2., _el_gap_length/2., 0, twopi);
-    G4LogicalVolume* el_gap_logic = new G4LogicalVolume(el_gap_solid, _gas, "EL_GAP");
-    G4PVPlacement* el_gap_physi = new G4PVPlacement(0, G4ThreeVector(0., 0., _el_gap_z_pos), el_gap_logic,
-						    "EL_GAP", _mother_logic, false, 0,true);
+      new G4Tubs("EL_GAP", 0., el_gap_diam/2., _el_gap_length/2., 0, twopi);   
+    G4LogicalVolume* el_gap_logic = 
+      new G4LogicalVolume(el_gap_solid, _gas, "EL_GAP");  
+    G4PVPlacement* el_gap_physi = 
+      new G4PVPlacement(0, G4ThreeVector(0., 0., _el_gap_z_pos), el_gap_logic,
+			"EL_GAP", _mother_logic, false, 0,true);
+   
+
     // Define EL electric field
     UniformElectricDriftField* el_field = new UniformElectricDriftField();
     el_field->SetCathodePosition(_el_gap_z_pos - _el_gap_length/2.);
     el_field->SetAnodePosition  (_el_gap_z_pos + _el_gap_length/2.);
-    el_field->SetDriftVelocity(5. * mm/microsecond);
+    el_field->SetDriftVelocity(2.5 * mm/microsecond);
     //el_field->SetFieldStrength(20 * kilovolt);
     el_field->SetTransverseDiffusion(1. * mm/sqrt(cm));
     el_field->SetLongitudinalDiffusion(1. * mm/sqrt(cm));
@@ -185,7 +205,10 @@ namespace nexus {
 
     ///// EL GRIDS /////
     G4Material* fgrid_mat = MaterialsList::FakeDielectric(_gas, "el_grid_mat");
-    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature,_el_grid_transparency, _grid_thickness));
+    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _el_grid_transparency, _grid_thickness));
+
+    G4Material* fgate_mat = MaterialsList::FakeDielectric(_gas, "gate__mat");
+    fgate_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _gate_transparency, _grid_thickness));
     
     // Dimensions & position
     G4double grid_diam = _tube_in_diam; // _active_diam;
@@ -194,12 +217,18 @@ namespace nexus {
     //_el_grid_ref_z = poszInner;
     G4Tubs* diel_grid_solid = 
       new G4Tubs("EL_GRID", 0., grid_diam/2., _grid_thickness/2., 0, twopi);
-    G4LogicalVolume* diel_grid_logic = new G4LogicalVolume(diel_grid_solid, fgrid_mat, "EL_GRID");
-    G4PVPlacement* diel_grid_physi;
-    diel_grid_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,poszInner), diel_grid_logic, "EL_GRID_1",
-  					_mother_logic, false, 0,true);
-    diel_grid_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,poszOuter), diel_grid_logic, "EL_GRID_2",
-  					_mother_logic, false, 1,true);
+
+    G4LogicalVolume* gate_logic = 
+      new G4LogicalVolume(diel_grid_solid, fgate_mat, "EL_GRID_GATE");
+    G4PVPlacement* gate_physi = 
+      new G4PVPlacement(0, G4ThreeVector(0., 0., poszInner), gate_logic, 
+			"EL_GRID_GATE",	_mother_logic, false, 0,true);
+
+    G4LogicalVolume* anode_logic = 
+      new G4LogicalVolume(diel_grid_solid, fgrid_mat, "EL_GRID_ANODE");
+    G4PVPlacement* anode_physi = 
+      new G4PVPlacement(0, G4ThreeVector(0., 0., poszOuter), anode_logic, 
+			"EL_GRID_ANODE", _mother_logic, false, 0, true);
     
     /// Visibilities
   //   if (_grids_visibility) {
