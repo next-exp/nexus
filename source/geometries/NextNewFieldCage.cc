@@ -72,18 +72,27 @@ namespace nexus {
     _tube_z_pos =  _el_gap_z_pos -_el_tot_zone/2. -_tube_length/2.;
     //(160.*cm/2. + 8.7*cm - _tube_length/2.);  //Vessel_body_len (160)+ Ener_zone displ(8.7)-
     G4Tubs* field_cage_solid =
-      new G4Tubs("FIELD_CAGE", _tube_in_diam/2., _tube_in_diam/2. + _tube_thickness, _tube_length/2., 0, twopi);
+      new G4Tubs("FIELD_CAGE", _tube_in_diam/2.,
+		 _tube_in_diam/2. + _tube_thickness, _tube_length/2., 0, twopi);
     _hdpe = MaterialsList::HDPE();
-    G4LogicalVolume* field_cage_logic = new G4LogicalVolume(field_cage_solid, _hdpe, "FIELD_CAGE");
-    G4PVPlacement* field_cage_physi = new G4PVPlacement(0, G4ThreeVector(0., 0., _tube_z_pos), field_cage_logic, 
-						       "FIELD_CAGE", _mother_logic, false, 0,true);
+    G4LogicalVolume* field_cage_logic = 
+      new G4LogicalVolume(field_cage_solid, _hdpe, "FIELD_CAGE");
+    G4PVPlacement* field_cage_physi = 
+      new G4PVPlacement(0, G4ThreeVector(0., 0., _tube_z_pos), 
+			field_cage_logic, "FIELD_CAGE", _mother_logic, 
+			false, 0,true);
     //Internal reflector
     G4Tubs* reflector_solid = 
-      new G4Tubs("FC_REFLECTOR", _tube_in_diam/2.-_reflector_thickness, _tube_in_diam/2., _tube_length/2., 0, twopi);
-    G4Material* teflon = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
-    G4LogicalVolume* reflector_logic = new G4LogicalVolume(reflector_solid, teflon, "FC_REFLECTOR");
-    G4PVPlacement* reflector_physi = new G4PVPlacement(0, G4ThreeVector(0., 0., _tube_z_pos), reflector_logic, 
-						       "FC_REFLECTOR", _mother_logic, false, 0,true);
+      new G4Tubs("FC_REFLECTOR", _tube_in_diam/2.-_reflector_thickness, 
+		 _tube_in_diam/2., _tube_length/2., 0, twopi);
+    G4Material* teflon = 
+      G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+    G4LogicalVolume* reflector_logic = 
+      new G4LogicalVolume(reflector_solid, teflon, "FC_REFLECTOR");
+    G4PVPlacement* reflector_physi = 
+      new G4PVPlacement(0, G4ThreeVector(0., 0., _tube_z_pos), 
+			reflector_logic, "FC_REFLECTOR", _mother_logic, 
+			false, 0,true);
 
     /// OPTICAL SURFACE PROPERTIES    ////////
     G4OpticalSurface* reflector_opt_surf = new G4OpticalSurface("FC_REFLECTOR");
@@ -92,7 +101,8 @@ namespace nexus {
     reflector_opt_surf->SetFinish(ground);
     reflector_opt_surf->SetSigmaAlpha(0.1);
     reflector_opt_surf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
-    new G4LogicalSkinSurface("FC_REFLECTOR", reflector_logic, reflector_opt_surf);
+    new G4LogicalSkinSurface("FC_REFLECTOR", reflector_logic, 
+			     reflector_opt_surf);
 
     /// SETTING VISIBILITIES   //////////
     // if (_visibility) {
@@ -109,11 +119,14 @@ namespace nexus {
     // }
 
     /// VERTEX GENERATORS   //////////
-    _field_cage_gen  = new CylinderPointSampler(_tube_in_diam/2., _tube_length, _tube_thickness,
-					  0., G4ThreeVector (0., 0., _tube_z_pos));
+    _field_cage_gen  = 
+      new CylinderPointSampler(_tube_in_diam/2., _tube_length, _tube_thickness,
+			       0., G4ThreeVector (0., 0., _tube_z_pos));
 
-    _reflector_gen  = new CylinderPointSampler(_tube_in_diam/2.- _reflector_thickness, _tube_length, _reflector_thickness,
-					  0., G4ThreeVector (0., 0., _tube_z_pos));
+    _reflector_gen  = 
+      new CylinderPointSampler(_tube_in_diam/2.- _reflector_thickness, 
+			       _tube_length, _reflector_thickness,
+			       0., G4ThreeVector (0., 0., _tube_z_pos));
   }
 
   NextNewFieldCage::~NextNewFieldCage()
