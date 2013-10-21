@@ -12,6 +12,7 @@
 #include <G4GenericMessenger.hh>
 #include "UniformElectricDriftField.h"
 #include "OpticalMaterialProperties.h"
+#include "IonizationSD.h"
 
 #include <G4PVPlacement.hh>
 #include <G4VisAttributes.hh>
@@ -21,6 +22,8 @@
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
 #include <G4NistManager.hh>
+#include <G4UserLimits.hh>
+#include <G4SDManager.hh>
 
 namespace nexus {
 
@@ -46,8 +49,17 @@ namespace nexus {
 
   {
     /// Messenger
-    _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
-    _msg->DeclareProperty("field_cage_vis", _visibility, "Field Cage Visibility");
+    _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", 
+			     "Control commands of geometry NextNew.");
+    _msg->DeclareProperty("field_cage_vis", _visibility, 
+			  "Field Cage Visibility");
+
+    G4GenericMessenger::Command& step_cmd = 
+      _msg->DeclareProperty("max_step_size", _max_step_size, 
+			    "Maximum Step Size");
+    step_cmd.SetUnitCategory("Length");
+    step_cmd.SetParameterName("max_step_size", false);
+    step_cmd.SetRange("max_step_size>0.");
   }
 
   void NextNewFieldCage::SetLogicalVolume(G4LogicalVolume* mother_logic)
@@ -247,8 +259,7 @@ namespace nexus {
   {
     ///// CATHODE ////// 
     G4Material* fgrid_mat = MaterialsList::FakeDielectric(_gas, "cath_grid_mat");
-    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, 
-   									      _cathode_grid_transparency, _grid_thickness));
+    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _cathode_grid_transparency, _grid_thickness));
     // Dimensions & position
     G4double grid_diam = _tube_in_diam - 2*_reflector_thickness;
     G4double posz = - _el_gap_z_pos;//_el_grid_ref_z - _grid_thickn - _active_length;
@@ -256,9 +267,11 @@ namespace nexus {
     // Building the grid
     G4Tubs* diel_grid_solid = 
       new G4Tubs("CATH_GRID", 0., grid_diam/2., _grid_thickness/2., 0, twopi);
-    G4LogicalVolume* diel_grid_logic = new G4LogicalVolume(diel_grid_solid, fgrid_mat, "CATHODE_GRID");
-    G4PVPlacement* diel_grid_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,posz), diel_grid_logic, "CATHODE_GRID",
- 						       _mother_logic, false, 0,true);
+    G4LogicalVolume* diel_grid_logic = 
+      new G4LogicalVolume(diel_grid_solid, fgrid_mat, "CATHODE_GRID");
+    G4PVPlacement* diel_grid_physi = 
+      new G4PVPlacement(0, G4ThreeVector(0.,0.,posz), diel_grid_logic, 
+			"CATHODE_GRID", _mother_logic, false, 0,true);
     /// Visibilities
     G4VisAttributes grid_col(G4Colour(0.5, 0.5, .5));
     //grid_col.SetForceSolid(true);
@@ -275,32 +288,37 @@ namespace nexus {
   {
     G4double active_posz = _el_gap_z_pos -_el_tot_zone/2. - _drift_length/2.;
     G4Tubs* active_solid = 
-      new G4Tubs("ACTIVE",  0., _tube_in_diam/2.-_reflector_thickness, _drift_length/2., 0, twopi);
-    G4LogicalVolume* active_logic = new G4LogicalVolume(active_solid, _gas, "ACTIVE");
-    G4PVPlacement* active_physi = new G4PVPlacement(0, G4ThreeVector(0., 0., active_posz), active_logic,
-   						    "ACTIVE", _mother_logic, false, 0,true);
-    // // Limit the step size in this volume for better tracking precision
-    // active_logic->SetUserLimits(new G4UserLimits(_max_step_size));
-    // // Set the volume as an ionization sensitive detector
-    // IonizationSD* ionisd = new IonizationSD("/NEXT100/ACTIVE");
-    // active_logic->SetSensitiveDetector(ionisd);
-    // G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
-    // //Define a drift field for this volume
-    // UniformElectricDriftField* field = new UniformElectricDriftField();
-    // field->SetCathodePosition(active_posz - _active_length/2.);
-    // field->SetAnodePosition(active_posz + _active_length/2.);
-    // field->SetDriftVelocity(1. * mm/microsecond);
-    // field->SetTransverseDiffusion(1. * mm/sqrt(cm));
-    // field->SetLongitudinalDiffusion(.5 * mm/sqrt(cm));  
-    // G4Region* drift_region = new G4Region("DRIFT");
-    // drift_region->SetUserInformation(field);
-    // drift_region->AddRootLogicalVolume(active_logic);
+      new G4Tubs("ACTIVE",  0., _tube_in_diam/2.-_reflector_thickness, 
+		 _drift_length/2., 0, twopi);
+    G4LogicalVolume* active_logic = 
+      new G4LogicalVolume(active_solid, _gas, "ACTIVE");
+    G4PVPlacement* active_physi = 
+      new G4PVPlacement(0, G4ThreeVector(0., 0., active_posz), active_logic, 
+			"ACTIVE", _mother_logic, false, 0,true);
+    // Limit the step size in this volume for better tracking precision
+    active_logic->SetUserLimits(new G4UserLimits(_max_step_size));
+    // Set the volume as an ionization sensitive detector
+    IonizationSD* ionisd = new IonizationSD("/NEXTNEW/ACTIVE");
+    active_logic->SetSensitiveDetector(ionisd);
+    G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
+    // Define a drift field for this volume
+    UniformElectricDriftField* field = new UniformElectricDriftField();
+    field->SetCathodePosition(active_posz - _drift_length/2.);
+    field->SetAnodePosition(active_posz + _drift_length/2.);
+    field->SetDriftVelocity(1. * mm/microsecond);
+    field->SetTransverseDiffusion(1. * mm/sqrt(cm));
+    field->SetLongitudinalDiffusion(.5 * mm/sqrt(cm));  
+    G4Region* drift_region = new G4Region("DRIFT");
+    drift_region->SetUserInformation(field);
+    drift_region->AddRootLogicalVolume(active_logic);
   
     /// Visibilities
     active_logic->SetVisAttributes(G4VisAttributes::Invisible);
     // VERTEX GENERATOR
-    _active_gen  = new CylinderPointSampler(0., _drift_length,_tube_in_diam/2.-_reflector_thickness ,
-					    0., G4ThreeVector (0., 0., active_posz));
+    _active_gen = 
+      new CylinderPointSampler(0., _drift_length,
+			       _tube_in_diam/2.-_reflector_thickness,
+			       0., G4ThreeVector (0., 0., active_posz));
   }
 
 }//end namespace nexus

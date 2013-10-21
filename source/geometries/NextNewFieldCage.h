@@ -41,6 +41,8 @@ namespace nexus {
     void Construct();
 
   private:
+
+    G4double _max_step_size;
     // Mother Logical Volume 
     G4LogicalVolume* _mother_logic;
     G4Material* _gas;

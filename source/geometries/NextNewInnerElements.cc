@@ -32,13 +32,9 @@ namespace nexus {
     _tracking_plane = new NextNewTrackingPlane();
 
     /// Messenger
-    _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
+    _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", 
+				  "Control commands of geometry NextNew.");
     _msg->DeclareProperty("vis", _visibility, "Grids Visibility");
-    
-    G4GenericMessenger::Command& step_cmd = _msg->DeclareProperty("max_step_size", _max_step_size, "Maximum Step Size");
-    step_cmd.SetUnitCategory("Length");
-    step_cmd.SetParameterName("max_step_size", false);
-    step_cmd.SetRange("max_step_size>0.");
 
   }
    
