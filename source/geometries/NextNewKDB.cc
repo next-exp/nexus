@@ -119,14 +119,14 @@ namespace nexus{
 
     /// OPTICAL SURFACES ////////////////////////////////////////////
 
-    G4OpticalSurface* dboard_opsur = new G4OpticalSurface("DB");
-    dboard_opsur->SetType(dielectric_metal);
-    dboard_opsur->SetModel(unified);
-    dboard_opsur->SetFinish(ground);
-    dboard_opsur->SetSigmaAlpha(0.1);
-    dboard_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
+    // G4OpticalSurface* dboard_opsur = new G4OpticalSurface("DB");
+    // dboard_opsur->SetType(dielectric_metal);
+    // dboard_opsur->SetModel(unified);
+    // dboard_opsur->SetFinish(ground);
+    // dboard_opsur->SetSigmaAlpha(0.1);
+    // dboard_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
     
-    new G4LogicalSkinSurface("DB", board_logic, dboard_opsur);
+    // new G4LogicalSkinSurface("DB", board_logic, dboard_opsur);
 
 
     // Visibilities
