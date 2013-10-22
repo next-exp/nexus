@@ -51,7 +51,7 @@ namespace nexus {
       
     case INSIDE: {
       G4double phi = GetPhi();
-      G4double rad = GetRadius(0., _inner_radius);
+      G4double rad = GetRadius(0., _outer_radius);
       G4double x = rad * cos(phi);
       G4double y = rad * sin(phi);
       G4double z = GetLength(0., _inner_length);
