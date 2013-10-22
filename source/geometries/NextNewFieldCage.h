@@ -15,6 +15,7 @@
 
 #include "BaseGeometry.h"
 #include "CylinderPointSampler.h"
+#include <vector>
 
 class G4Material;
 class G4LogicalVolume;
@@ -35,6 +36,10 @@ namespace nexus {
 
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
+
+    /// To calculate the vertices for the EL table generation
+    void CalculateELTableVertices(G4double radius, 
+				  G4double binning, G4double z);
     ///
     G4ThreeVector GetPosition() const;
     /// Builder
@@ -57,10 +62,12 @@ namespace nexus {
     void BuildActive();    
 
     // Dimensions
-    G4double _cage_tot_length, _tube_in_diam, _tube_length, _tube_thickness, _tube_z_pos;
+    G4double _cage_tot_length, _tube_in_diam, _tube_length; 
+    G4double _tube_thickness, _tube_z_pos;
     G4double _reflector_thickness;
     G4double _el_gap_z_pos, _el_tot_zone, _el_gap_length, _grid_thickness;
-    G4double _el_grid_transparency, _gate_transparency, _cathode_grid_transparency;
+    G4double _el_grid_transparency, _gate_transparency; 
+    G4double _cathode_grid_transparency;
     G4double _drift_length;
 
     // Visibility 
@@ -73,6 +80,9 @@ namespace nexus {
 
     // Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
+
+    mutable G4int _idx_table;
+    mutable std::vector<G4ThreeVector> _table_vertices;
   };
 
 } //end namespace nexus

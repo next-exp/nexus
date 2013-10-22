@@ -13,6 +13,7 @@
 #include "UniformElectricDriftField.h"
 #include "OpticalMaterialProperties.h"
 #include "IonizationSD.h"
+#include "XenonGasProperties.h"
 
 #include <G4PVPlacement.hh>
 #include <G4VisAttributes.hh>
@@ -24,6 +25,7 @@
 #include <G4NistManager.hh>
 #include <G4UserLimits.hh>
 #include <G4SDManager.hh>
+#include <G4RunManager.hh>
 
 namespace nexus {
 
@@ -34,8 +36,8 @@ namespace nexus {
     _drift_length (539.45 * mm),//tube_length - buffer -cathode
     // _trk_displ (13.36 * cm),
     //  _ener_displ (9.5 * cm),
-    _el_gap_length (.484 * cm),
-    _grid_thickness (4.58 * mm), //grid support ????
+    _el_gap_length (.5 * cm),
+    _grid_thickness (.1 * mm), //it's just fake dielectric
     _el_tot_zone (24.1 * mm),
     _el_grid_transparency (.88),
     _gate_transparency (.76),
@@ -161,6 +163,13 @@ namespace nexus {
       new CylinderPointSampler(_tube_in_diam/2.- _reflector_thickness, 
 			       _tube_length, _reflector_thickness,
 			       0., G4ThreeVector (0., 0., _tube_z_pos));
+    G4double z = _el_gap_z_pos - _el_gap_length/2. + .5*mm;
+    //    G4cout << "Zeta pos: "<< z << G4endl;
+    CalculateELTableVertices(_tube_in_diam/2., 5.*mm, z);
+    // G4cout << "Points: "<< _table_vertices.size() << G4endl;
+    // for (int i=0; i<_table_vertices.size(); i++){
+    //   G4cout << _table_vertices[i][0]<< ", "<< _table_vertices[i][1] << ",  " << _table_vertices[i][2] << G4endl; 
+    // }
   }
 
   NextNewFieldCage::~NextNewFieldCage()
@@ -187,12 +196,46 @@ namespace nexus {
     // Active region
     else if (region == "ACTIVE") {
       vertex = _active_gen->GenerateVertex(INSIDE);
-    }
+    } 
+    else if (region == "EL_TABLE") {  
+      _idx_table++;	
+      if(_idx_table>=_table_vertices.size()){
+    	G4cout<<"[NextNewFieldCage::GenerateVertex()] Aborting the run,"
+	      << " last event reached ..."<<G4endl;
+    	G4RunManager::GetRunManager()->AbortRun();
+      }
+      if(_idx_table<=_table_vertices.size()){   
+    	return _table_vertices[_idx_table-1];
+      }
+    } 
     // //EL GAP
     // //Cathode grid
  
     return vertex;
   }
+
+void NextNewFieldCage::CalculateELTableVertices(G4double radius, 
+				       G4double binning, G4double z)		
+{     
+    G4ThreeVector position;
+
+    ///Squared pitch
+    position[2] = z;
+
+    G4int imax = floor(2*radius/binning);
+
+    for (int i=0; i<imax; i++){
+      position[0] = -radius + i*binning;
+      for (int j=0; j<imax; j++){
+	position[1] = -radius + j*binning;
+	if (sqrt(position[0]*position[0]+position[1]*position[1])< radius){
+	  _table_vertices.push_back(position);	  
+	} else {
+	  continue;
+	}
+      }
+    }
+}
 
 
   void NextNewFieldCage::BuildELRegion()
@@ -214,26 +257,28 @@ namespace nexus {
       el_field->SetCathodePosition(_el_gap_z_pos - _el_gap_length/2.);
       el_field->SetAnodePosition  (_el_gap_z_pos + _el_gap_length/2.);
       el_field->SetDriftVelocity(2.5 * mm/microsecond);
-      //el_field->SetFieldStrength(20 * kilovolt);
       el_field->SetTransverseDiffusion(1. * mm/sqrt(cm));
-      el_field->SetLongitudinalDiffusion(1. * mm/sqrt(cm));
+      el_field->SetLongitudinalDiffusion(.5 * mm/sqrt(cm));
+      XenonGasProperties xgp(_pressure, _temperature);
+      el_field->SetLightYield(xgp.ELLightYield(20*kilovolt/cm));
       G4Region* el_region = new G4Region("EL_REGION");
       el_region->SetUserInformation(el_field);
       el_region->AddRootLogicalVolume(el_gap_logic);
     }
 
     ///// EL GRIDS /////
-    G4Material* fgrid_mat = MaterialsList::FakeDielectric(_gas, "el_grid_mat");
+    G4Material* fgrid_mat = MaterialsList::FakeDielectric(_gas, "el_grid_anode_mat");
     fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _el_grid_transparency, _grid_thickness));
 
-    G4Material* fgate_mat = MaterialsList::FakeDielectric(_gas, "gate__mat");
+    G4Material* fgate_mat = MaterialsList::FakeDielectric(_gas, "el_grid_gate_mat");
     fgate_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _gate_transparency, _grid_thickness));
     
-    // Dimensions & position
+    // Dimensions & position: the grids are simulated inside the EL gap. Their thickness 
+    // is symbolic.
     G4double grid_diam = _tube_in_diam; // _active_diam;
-    G4double poszInner = _el_gap_z_pos - _el_gap_length/2. - _grid_thickness/2.;
-    G4double poszOuter = _el_gap_z_pos + _el_gap_length/2. + _grid_thickness/2.;
-    //_el_grid_ref_z = poszInner;
+    G4double poszInner =  - _el_gap_length/2. + _grid_thickness/2.;
+    G4double poszOuter =  _el_gap_length/2. - _grid_thickness/2.;
+   
     G4Tubs* diel_grid_solid = 
       new G4Tubs("EL_GRID", 0., grid_diam/2., _grid_thickness/2., 0, twopi);
 
@@ -241,13 +286,13 @@ namespace nexus {
       new G4LogicalVolume(diel_grid_solid, fgate_mat, "EL_GRID_GATE");
     G4PVPlacement* gate_physi = 
       new G4PVPlacement(0, G4ThreeVector(0., 0., poszInner), gate_logic, 
-			"EL_GRID_GATE",	_mother_logic, false, 0,true);
+			"EL_GRID_GATE", el_gap_logic, false, 0,true);
 
     G4LogicalVolume* anode_logic = 
       new G4LogicalVolume(diel_grid_solid, fgrid_mat, "EL_GRID_ANODE");
     G4PVPlacement* anode_physi = 
       new G4PVPlacement(0, G4ThreeVector(0., 0., poszOuter), anode_logic, 
-			"EL_GRID_ANODE", _mother_logic, false, 0, true);
+			"EL_GRID_ANODE", el_gap_logic, false, 1, true);
     
     /// Visibilities
   //   if (_grids_visibility) {
