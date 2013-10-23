@@ -41,7 +41,7 @@ namespace nexus{
     _enclosure_endcap_thickness (20. * mm),
     _enclosure_window_diam (85. * mm), 
     _enclosure_window_thickness (6. * mm), //???
-    _enclosure_pad_thickness (20. * mm)//max 60  ??????
+    _enclosure_pad_thickness (2. * mm)//max 60  ??????
   {
     /// Initializing the geometry navigator (used in vertex generation)
     _geom_navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
@@ -52,57 +52,83 @@ namespace nexus{
 
   void Enclosure::Construct()
   {
+    /// Assign optical properties to materials ///
+    G4Material* sapphire = MaterialsList::Sapphire();
+    sapphire->SetMaterialPropertiesTable(OpticalMaterialProperties::Sapphire());
+    G4Material* vacuum = 
+      G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
+    vacuum->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
+
      /////   ENCLOSURES  /////
      G4Tubs* enclosure_body = 
-      new G4Tubs("ENCLOSURE_BODY", 0.,  _enclosure_in_diam/2.+ _enclosure_thickness, _enclosure_length/2., 0., twopi);
+      new G4Tubs("ENCLOSURE_BODY", 0.,  
+		 _enclosure_in_diam/2.+ _enclosure_thickness, 
+		 _enclosure_length/2., 0., twopi);
      G4Tubs* enclosure_endcap = 
-       new G4Tubs("ENCLOSURE_ENDCAP",0.,_enclosure_endcap_diam/2, _enclosure_endcap_thickness/2, 0., twopi); 
-     G4ThreeVector transl(0.,0.,-_enclosure_length/2 + _enclosure_endcap_thickness/2);
+       new G4Tubs("ENCLOSURE_ENDCAP", 0., _enclosure_endcap_diam/2,
+		  _enclosure_endcap_thickness/2, 0., twopi); 
+     G4ThreeVector transl(0., 0., 
+			  -_enclosure_length/2 + _enclosure_endcap_thickness/2);
      G4UnionSolid* enclosure_solid = 
-       new G4UnionSolid("ENCLOSURE_SOLID",enclosure_body,enclosure_endcap,0,transl);
+       new G4UnionSolid("ENCLOSURE_SOLID", enclosure_body, enclosure_endcap, 
+			0, transl);
 
-     G4LogicalVolume* enclosure_logic = new G4LogicalVolume(enclosure_solid,
-							    G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
-							    "ENCLOSURE");     
+     G4LogicalVolume* enclosure_logic = 
+       new G4LogicalVolume(enclosure_solid, 
+			   G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"), "ENCLOSURE");     
      this->SetLogicalVolume(enclosure_logic);
 
      // Filling the enclosure with vacuum
      G4double gas_diam = _enclosure_in_diam ;
-     G4double gas_length = _enclosure_length-_enclosure_endcap_thickness/2-_enclosure_window_thickness-_enclosure_pad_thickness;
-     G4Tubs* enclosure_gas_solid = new G4Tubs("ENCLOSURE_GAS", 0., gas_diam/2., gas_length/2., 0., twopi);
-     G4LogicalVolume* enclosure_gas_logic = new G4LogicalVolume(enclosure_gas_solid,
-								G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic"),
-								"ENCLOSURE_GAS");
-     G4double gas_pos = (_enclosure_endcap_thickness/2 - _enclosure_window_thickness-_enclosure_pad_thickness )/2;
-     G4PVPlacement* enclosure_gas_physi = new G4PVPlacement(0,G4ThreeVector(0.,0.,gas_pos), enclosure_gas_logic,
-							    "ENCLOSURE_GAS", enclosure_logic, false, 0);
+     G4double gas_length = 
+       _enclosure_length-_enclosure_endcap_thickness/2-
+       _enclosure_window_thickness-_enclosure_pad_thickness;
+     G4Tubs* enclosure_gas_solid = 
+       new G4Tubs("ENCLOSURE_GAS", 0., gas_diam/2., gas_length/2., 0., twopi);
+     G4LogicalVolume* enclosure_gas_logic = 
+       new G4LogicalVolume(enclosure_gas_solid,	vacuum, "ENCLOSURE_GAS");
+     G4double gas_pos = 
+       (_enclosure_endcap_thickness/2-_enclosure_window_thickness-
+     	_enclosure_pad_thickness)/2;
+     G4PVPlacement* enclosure_gas_physi = 
+       new G4PVPlacement(0,G4ThreeVector(0.,0.,gas_pos), enclosure_gas_logic,
+			 "ENCLOSURE_GAS", enclosure_logic, false, 0, true);
+
      // Adding the sapphire window
      G4Tubs* enclosure_window_solid = 
-       new G4Tubs("ENCLOSURE_WINDOW", 0., _enclosure_window_diam/2., _enclosure_window_thickness/2., 0., twopi);
-     G4LogicalVolume* enclosure_window_logic = new G4LogicalVolume(enclosure_window_solid, MaterialsList::Sapphire(),
-								   "ENCLOSURE_WINDOW");
+       new G4Tubs("ENCLOSURE_WINDOW", 0., _enclosure_window_diam/2., 
+		  _enclosure_window_thickness/2., 0., twopi);
+     G4LogicalVolume* enclosure_window_logic = 
+       new G4LogicalVolume(enclosure_window_solid, sapphire,
+			   "ENCLOSURE_WINDOW");
     
      _window_z_pos = _enclosure_length/2 - _enclosure_window_thickness/2.;
-     G4PVPlacement* enclosure_window_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,_window_z_pos),
-							       enclosure_window_logic,
-							       "ENCLOSURE_WINDOW", enclosure_logic, false, 0);
+     G4PVPlacement* enclosure_window_physi =
+       new G4PVPlacement(0, G4ThreeVector(0.,0.,_window_z_pos),
+     			 enclosure_window_logic, "ENCLOSURE_WINDOW", 
+     			 enclosure_logic, false, 0, true);
      
+         
      // Adding the optical pad
      G4Tubs* enclosure_pad_solid =
        new G4Tubs("OPTICAL_PAD", 0., _enclosure_in_diam/2., _enclosure_pad_thickness/2.,0.,twopi);
-     G4LogicalVolume* enclosure_pad_logic = new G4LogicalVolume(enclosure_pad_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic"),"OPTICAL_PAD");
-     G4double pad_z_pos = _window_z_pos - _enclosure_window_thickness/2. - _enclosure_pad_thickness/2.;
-     G4PVPlacement* enclosure_pad_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,pad_z_pos),
-							  enclosure_pad_logic,"OPTICAL_PAD",
-							    enclosure_logic, false, 0);
+     G4LogicalVolume* enclosure_pad_logic = 
+       new G4LogicalVolume(enclosure_pad_solid, vacuum, "OPTICAL_PAD");
+     G4double pad_z_pos = 
+       _window_z_pos-_enclosure_window_thickness/2.-_enclosure_pad_thickness/2.;
+     G4PVPlacement* enclosure_pad_physi = 
+       new G4PVPlacement(0, G4ThreeVector(0.,0.,pad_z_pos),
+     			 enclosure_pad_logic,"OPTICAL_PAD",
+     			 enclosure_logic, false, 0, true);
 
      // Adding the PMT
      _pmt->Construct();
      G4LogicalVolume* pmt_logic = _pmt->GetLogicalVolume();
      G4double pmt_rel_z_pos = _pmt->GetRelPosition().z();//return G4ThreeVector(0.,0., _front_body_length/2.);
      _pmt_z_pos = gas_length/2.- pmt_rel_z_pos;
-     G4PVPlacement* pmt_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,_pmt_z_pos), pmt_logic,
-						  "PMT", enclosure_gas_logic, false, 0);
+     G4PVPlacement* pmt_physi = 
+       new G4PVPlacement(0, G4ThreeVector(0.,0.,_pmt_z_pos), pmt_logic,
+			 "PMT", enclosure_gas_logic, false, 0, true);
 
 
      ///OPTICAL PROPERTIES//
@@ -126,21 +152,39 @@ namespace nexus{
 
      
      // VERTEX GENERATORS   //////////
-     _enclosure_body_gen = new CylinderPointSampler(_enclosure_in_diam/2., _enclosure_length - _enclosure_endcap_thickness,
-						    _enclosure_thickness, 0.,G4ThreeVector (0., 0., 0.),0);
-     _enclosure_flange_gen = new CylinderPointSampler( _enclosure_in_diam/2., _enclosure_endcap_thickness, 
-						       _enclosure_endcap_diam/2. - _enclosure_in_diam/2. , 0.,
-						   G4ThreeVector (0., 0., - _enclosure_length/2. +  _enclosure_endcap_thickness/2.));
-     _enclosure_cap_gen = new CylinderPointSampler( 0., _enclosure_endcap_thickness/2., _enclosure_in_diam/2., 0.,
-						   G4ThreeVector (0., 0., - _enclosure_length/2. + _enclosure_endcap_thickness/4.));
-     _enclosure_window_gen = new CylinderPointSampler(0., _enclosure_window_thickness,_enclosure_window_diam/2., 0.,
-						      G4ThreeVector (0., 0., _enclosure_length/2. - _enclosure_window_thickness/2.));
+     _enclosure_body_gen = 
+       new CylinderPointSampler(_enclosure_in_diam/2., 
+				_enclosure_length - _enclosure_endcap_thickness,
+				_enclosure_thickness, 0.,
+				G4ThreeVector(0., 0., 0.), 0);
+     _enclosure_flange_gen = 
+       new CylinderPointSampler(_enclosure_in_diam/2., 
+				_enclosure_endcap_thickness, 
+				_enclosure_endcap_diam/2.-_enclosure_in_diam/2.
+				, 0., G4ThreeVector(0., 0., - _enclosure_length/2. +  _enclosure_endcap_thickness/2.));
+     _enclosure_cap_gen = 
+       new CylinderPointSampler(0., _enclosure_endcap_thickness/2., 
+				_enclosure_in_diam/2., 0.,
+				G4ThreeVector (0., 0., - _enclosure_length/2. + _enclosure_endcap_thickness/4.));
+     _enclosure_window_gen = 
+       new CylinderPointSampler(0., _enclosure_window_thickness,
+				_enclosure_window_diam/2., 0.,
+				G4ThreeVector (0., 0., _enclosure_length/2. - _enclosure_window_thickness/2.));
      _enclosure_pad_gen = new CylinderPointSampler(0., _enclosure_pad_thickness, _enclosure_in_diam/2., 0., G4ThreeVector(0.,0.,pad_z_pos));
      
      // Getting the enclosure body volume over total
-     G4double body_vol = (_enclosure_length-_enclosure_endcap_thickness) * pi * ( (_enclosure_in_diam/2.+_enclosure_thickness)*(_enclosure_in_diam/2.+_enclosure_thickness) - (_enclosure_in_diam/2.)*(_enclosure_in_diam/2.) );
-     G4double flange_vol = _enclosure_endcap_thickness * pi * ((_enclosure_endcap_diam/2.)*(_enclosure_endcap_diam/2.)-(_enclosure_in_diam/2.)*(_enclosure_in_diam/2.));
-     G4double cap_vol = _enclosure_endcap_thickness/2 * pi * (_enclosure_in_diam/2.) * (_enclosure_in_diam/2.);
+     G4double body_vol = 
+       (_enclosure_length-_enclosure_endcap_thickness) * pi * 
+       ((_enclosure_in_diam/2.+_enclosure_thickness)*
+	(_enclosure_in_diam/2.+_enclosure_thickness) - 
+	(_enclosure_in_diam/2.)*(_enclosure_in_diam/2.) );
+     G4double flange_vol = 
+       _enclosure_endcap_thickness * pi * 
+       ((_enclosure_endcap_diam/2.)*(_enclosure_endcap_diam/2.)-
+	(_enclosure_in_diam/2.)*(_enclosure_in_diam/2.));
+     G4double cap_vol = 
+       _enclosure_endcap_thickness/2 * pi * 
+       (_enclosure_in_diam/2.) * (_enclosure_in_diam/2.);
      G4double total_vol = body_vol + flange_vol + cap_vol;
      _body_perc = body_vol / total_vol;
      _flange_perc =  (flange_vol + body_vol) / total_vol;
