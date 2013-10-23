@@ -20,6 +20,7 @@
 #include <G4PVPlacement.hh>
 #include <G4VisAttributes.hh>
 #include <G4GenericMessenger.hh>
+#include <G4NistManager.hh>
 
 using namespace nexus;
 
@@ -49,6 +50,26 @@ NextNewOpticalGeometry::~NextNewOpticalGeometry()
 
 void NextNewOpticalGeometry::Construct()
 {
+
+  // LAB /////////////////////////////////////////////////////////////
+  // This is just a volume of air without optical properties surrounding 
+  // the gas so that optical photons die there.
+    
+  // AIR
+  G4Material* air = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
+
+  G4double lab_size = 3.2*m;
+  G4Box* lab_solid = 
+    new G4Box("LAB", lab_size/2., lab_size/2., lab_size/2.);    
+  G4LogicalVolume* lab_logic = 
+    new G4LogicalVolume(lab_solid, air, "LAB");
+ 
+  lab_logic->SetVisAttributes(G4VisAttributes::Invisible);
+
+  // Set this volume as the wrapper for the whole geometry 
+  // (i.e., this is the volume that will be placed in the world)
+  this->SetLogicalVolume(lab_logic);
+
   ///MOTHER VOLUME
   // Build a big box of gaseous xenon which hosts the optical geometry
   G4Material* gxe = MaterialsList::GXe(_pressure, 303);
@@ -56,12 +77,13 @@ void NextNewOpticalGeometry::Construct()
 
   G4double gas_size = 3.*m;
   G4Box* gas_solid = new G4Box("GAS", gas_size/2., gas_size/2., gas_size/2.);
-
   G4LogicalVolume* gas_logic = new G4LogicalVolume(gas_solid, gxe, "GAS");
+  new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), gas_logic,
+		    "GAS", lab_logic, false, 0, true); 
 
   // Set this volume as the wrapper for the whole geometry 
   // (i.e., this is the volume that will be placed in the world)
-  this->SetLogicalVolume(gas_logic);
+  //  this->SetLogicalVolume(gas_logic);
 
   // Visibilities
   gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
