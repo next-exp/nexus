@@ -790,3 +790,43 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::BC480()
   return bc480_mpt;
 }
 
+G4MaterialPropertiesTable* OpticalMaterialProperties::PMMA()
+{
+  // Optical properties of Optorez 1330 glass epoxy.
+  // Obtained from http://refractiveindex.info and http://www.zeonex.com/applications_optical.asp
+
+  G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
+
+  // REFRACTIVE INDEX //////////////////////////////////////////////////////////
+ 
+  const G4int ri_entries = 200;
+  
+  G4double ri_energy[ri_entries];
+  for (int i=0; i<ri_entries; i++) {
+    ri_energy[i] = (1 + i*0.049)*eV;
+  }
+
+  G4double rindex[ri_entries];
+  for (int i=0; i<ri_entries; i++) {
+    G4double lambda = h_Planck*c_light/ri_energy[i]*1000; // in micron
+    G4double n2 = 2.399964 - 8.308636E-2*pow(lambda,2) - 1.919569E-1*pow(lambda,-2) + 8.720608E-2*pow(lambda,-4) - 1.666411E-2*pow(lambda,-6) + 1.169519E-3*pow(lambda,-8);
+    rindex[i] = sqrt(n2);
+  }
+
+  mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
+
+  // ABSORPTION LENGTH /////////////////////////////////////////////////////////
+
+  const G4int abs_entries = 14;
+  
+  G4double abs_energy[abs_entries]=
+    {2.722 *eV, 3.047 *eV, 3.097 *eV, 3.136 *eV, 3.168 *eV, 3.229 *eV, 3.291 *eV, 
+     3.323 *eV, 3.345 *eV, 3.363 *eV, 3.397 *eV, 3.451 *eV, 3.511 *eV, 3.590 *eV,};
+  G4double abslength[abs_entries] =
+    {15000.*cm, 4537. *mm, 329.7 *mm, 98.60 *mm, 36.94 *mm, 10.36 *mm, 4.356 *mm, 
+     2.563 *mm, 1.765 *mm, 1.474 *mm, 1.153 *mm, 0.922 *mm, 0.765 *mm, 0.671 *mm}; 
+ 
+  mpt->AddProperty("ABSLENGTH", abs_energy, abslength, abs_entries);
+
+  return mpt;
+}
