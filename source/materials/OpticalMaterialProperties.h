@@ -62,6 +62,7 @@ namespace nexus {
     static G4MaterialPropertiesTable* BC480(); 
     static G4MaterialPropertiesTable* PTFE();
     static G4MaterialPropertiesTable* PTFE_with_TPB();
+    static G4MaterialPropertiesTable* PMMA();
 
   
   private:
