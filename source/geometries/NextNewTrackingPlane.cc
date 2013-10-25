@@ -118,7 +118,7 @@ namespace nexus {
       post = _DB_positions[i];
       post.setZ(_dice_board_z_pos);
       dice_board_physi = new G4PVPlacement(0, post, dice_board_logic,
-					   "DICE_BOARD", _mother_logic, false, i);
+					   "DICE_BOARD", _mother_logic, false, i+1);
     }
    
     //// SETTING VISIBILITIES   //////////    
