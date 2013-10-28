@@ -53,7 +53,8 @@ namespace nexus {
 
     static G4MaterialPropertiesTable* Glass();
     
-    static G4MaterialPropertiesTable* TPB();
+    static G4MaterialPropertiesTable* TPB(G4double pressure=10.*bar, 
+					  G4double temperature=STP_Temperature);
     static G4MaterialPropertiesTable* TPBOld();
     static G4MaterialPropertiesTable* TPBmatr();
     static G4MaterialPropertiesTable* WLS2();
