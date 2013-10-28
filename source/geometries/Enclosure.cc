@@ -41,7 +41,8 @@ namespace nexus{
     _enclosure_endcap_thickness (20. * mm),
     _enclosure_window_diam (85. * mm), 
     _enclosure_window_thickness (6. * mm), //???
-    _enclosure_pad_thickness (2. * mm)//max 60  ??????
+    _enclosure_pad_thickness (2. * mm),//max 60  ??????
+    _enclosure_tpb_thickness(1.*micrometer)
   {
     /// Initializing the geometry navigator (used in vertex generation)
     _geom_navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
@@ -58,6 +59,8 @@ namespace nexus{
     G4Material* vacuum = 
       G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
     vacuum->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
+    // G4Material* tpb = MaterialsList::TPB();
+    // tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
 
      /////   ENCLOSURES  /////
      G4Tubs* enclosure_body = 
@@ -97,17 +100,34 @@ namespace nexus{
      // Adding the sapphire window
      G4Tubs* enclosure_window_solid = 
        new G4Tubs("ENCLOSURE_WINDOW", 0., _enclosure_window_diam/2., 
-		  _enclosure_window_thickness/2., 0., twopi);
+		  _enclosure_window_thickness/2., 
+		  0., twopi);
      G4LogicalVolume* enclosure_window_logic = 
        new G4LogicalVolume(enclosure_window_solid, sapphire,
 			   "ENCLOSURE_WINDOW");
     
+     // _window_z_pos = _enclosure_length/2 - 
+     //   (_enclosure_window_thickness + _enclosure_tpb_thickness)/2.;
      _window_z_pos = _enclosure_length/2 - _enclosure_window_thickness/2.;
      G4PVPlacement* enclosure_window_physi =
        new G4PVPlacement(0, G4ThreeVector(0.,0.,_window_z_pos),
      			 enclosure_window_logic, "ENCLOSURE_WINDOW", 
      			 enclosure_logic, false, 0, true);
-     
+
+     // Adding the TPB to the sapphire window
+     // G4Tubs* enclosure_window_solid = 
+     //   new G4Tubs("ENCLOSURE_TPB", 0., _enclosure_window_diam/2., 
+     // 		  _enclosure_tpb_thickness/2., 0., twopi);
+     // G4LogicalVolume* enclosure_tpb_logic = 
+     //   new G4LogicalVolume(enclosure_tpb_solid, tpb,
+     // 			   "ENCLOSURE_TPB");
+     // G4double tpb_pos = 
+     //   (_enclosure_window_thickness +_enclosure_tpb_thickness)/2. -
+     //   _enclosure_tpb_thickness/2.;
+     //  G4PVPlacement* enclosure_tpb_physi =
+     // 	new G4PVPlacement(0, G4ThreeVector(0.,0.,tpb_pos),
+     // 			 enclosure_tpb_logic, "ENCLOSURE_TPB", 
+     // 			 enclosure_window_logic, false, 0, true);
          
      // Adding the optical pad
      G4Tubs* enclosure_pad_solid =
@@ -200,7 +220,11 @@ namespace nexus{
     delete _enclosure_pad_gen;
   }
 
-  G4ThreeVector Enclosure::GetObjectCenter(){ return G4ThreeVector(0., 0., _enclosure_length/2.);}
+  G4ThreeVector Enclosure::GetObjectCenter()
+  { return G4ThreeVector(0., 0., _enclosure_length/2.);}
+
+  G4double Enclosure::GetWindowDiameter()
+  { return _enclosure_window_diam;}
   
   G4ThreeVector Enclosure::GenerateVertex(const G4String& region) const
   {

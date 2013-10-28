@@ -44,7 +44,7 @@ namespace nexus {
     _gas_hole_diam (8.0 * mm), 
     _gas_hole_pos (20 * mm),
     _enclosure_hole_diam (9.3 *cm),
-
+    _tpb_thickness (1.*micrometer),
     _scan_in_diam (500 *mm),
     _scan_in_length (100 *mm),
     _scan_tube_thickness (5*mm),
@@ -66,6 +66,9 @@ namespace nexus {
   void NextNewEnergyPlane::SetLogicalVolume(G4LogicalVolume* mother_logic)
   {
     _mother_logic = mother_logic;
+     _gas = _mother_logic->GetMaterial();
+    _pressure =    _gas->GetPressure();
+    _temperature = _gas->GetTemperature();
   }
 
   void NextNewEnergyPlane::Construct()
@@ -75,49 +78,84 @@ namespace nexus {
 
     ////  CARRIER PLATE  ////
     G4Tubs* carrier_plate_nh_solid = 
-      new G4Tubs("CARRIER_NH_PLATE", 0., _carrier_plate_diam/2., _carrier_plate_thickness/2., 0., twopi);
+      new G4Tubs("CARRIER_NH_PLATE", 0., _carrier_plate_diam/2., 
+		 _carrier_plate_thickness/2., 0., twopi);
     
     //Making front buffer
     G4Tubs* carrier_plate_front_buffer_solid =
-      new G4Tubs("CARRIER_PLATE_FBUF_SOLID",0., _carrier_plate_front_buffer_diam/2.,(_carrier_plate_front_buffer_thickness+1.*mm)/2.,0.,twopi);
-    G4SubtractionSolid* carrier_plate_solid = new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_nh_solid,carrier_plate_front_buffer_solid,0,G4ThreeVector(0.,0.,_carrier_plate_thickness/2. - _carrier_plate_front_buffer_thickness/2.+.5*mm));
+      new G4Tubs("CARRIER_PLATE_FBUF_SOLID",0.,
+		 _carrier_plate_front_buffer_diam/2.,
+		 (_carrier_plate_front_buffer_thickness+1.*mm)/2.,0.,twopi);
+    G4SubtractionSolid* carrier_plate_solid = 
+      new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_nh_solid,
+			     carrier_plate_front_buffer_solid, 0, 
+			     G4ThreeVector(0., 0., _carrier_plate_thickness/2. 
+- _carrier_plate_front_buffer_thickness/2.+.5*mm));
     
     // Making PMT holes
     G4Tubs* carrier_plate_pmt_hole_solid = 
-      new G4Tubs("CARRIER_PLATE_PMT_HOLE", 0., _enclosure_hole_diam/2., (_carrier_plate_thickness+1.*mm)/2., 0., twopi);
+      new G4Tubs("CARRIER_PLATE_PMT_HOLE", 0., _enclosure_hole_diam/2., 
+		 (_carrier_plate_thickness+1.*mm)/2., 0., twopi);
     for (int i=0; i<_num_PMTs; i++) {
-       carrier_plate_solid = new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_solid,
-    						   carrier_plate_pmt_hole_solid, 0, _pmt_positions[i]);
+       carrier_plate_solid = 
+	 new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_solid,
+				carrier_plate_pmt_hole_solid, 0, 
+				_pmt_positions[i]);
      }
      //Making holes for XeGas flow
      G4Tubs* gas_hole_solid =
-       new G4Tubs("GAS_HOLE", 0., _gas_hole_diam/2, (_carrier_plate_thickness+1*mm)/2., 0., twopi);
+       new G4Tubs("GAS_HOLE", 0., _gas_hole_diam/2, 
+		  (_carrier_plate_thickness+1*mm)/2., 0., twopi);
      for (int i=0; i<_num_gas_holes; i++){
-       carrier_plate_solid = new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_solid, gas_hole_solid, 0, _gas_hole_positions[i]);
+       carrier_plate_solid = 
+	 new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_solid, 
+				gas_hole_solid, 0, _gas_hole_positions[i]);
      }
     
-    G4LogicalVolume* carrier_plate_logic = new G4LogicalVolume(carrier_plate_solid,
-							       G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
-							       "CARRIER_PLATE");
+    G4LogicalVolume* carrier_plate_logic = 
+      new G4LogicalVolume(carrier_plate_solid, 
+			  G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
+			  "CARRIER_PLATE");
     
     ///Placement
-    G4double carrier_plate_z_pos = _energy_plane_z_pos - _carrier_plate_thickness/2.;
-    G4PVPlacement* _carrier_plate_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,carrier_plate_z_pos), carrier_plate_logic,
-							    "CARRIER_PLATE", _mother_logic, false, 0);
+    G4double carrier_plate_z_pos = 
+      _energy_plane_z_pos - _carrier_plate_thickness/2.;
+    G4PVPlacement* _carrier_plate_physi = 
+      new G4PVPlacement(0, G4ThreeVector(0.,0.,carrier_plate_z_pos), 
+			carrier_plate_logic, "CARRIER_PLATE", 
+			_mother_logic, false, 0, true);
    
     ///ENCLOSURES + PMT ///
     _enclosure->Construct();
     G4LogicalVolume* enclosure_logic = _enclosure->GetLogicalVolume();
     G4double enclosure_z_center = _enclosure->GetObjectCenter().z();// return G4ThreeVector(0., 0., _enclosure_length/2.);
+
+    /// TPB coating on sapphire window
+    G4Material* tpb = MaterialsList::TPB();
+    tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB(_pressure, _temperature));
+    G4double window_diam =  _enclosure->GetWindowDiameter();
+    G4Tubs* tpb_solid = new G4Tubs("ENCLOSURE_TPB", 0., window_diam/2, 
+		  _tpb_thickness/2., 0., twopi);
+    G4LogicalVolume* tpb_logic = 
+      new G4LogicalVolume(tpb_solid, tpb,
+			   "ENCLOSURE_TPB");
        
     // Placing the enclosures 
     G4PVPlacement* enclosure_physi;
+    G4PVPlacement* tpb_physi;
     G4ThreeVector pos;
+    G4ThreeVector tpb_pos;
     for (int i=0; i<_num_PMTs; i++) {
       pos = _pmt_positions[i];
+      tpb_pos = _pmt_positions[i];
       pos.setZ(_enclosure_z_pos);
+      tpb_pos.setZ(_enclosure_z_pos + enclosure_z_center + _tpb_thickness/2.);
       enclosure_physi = new G4PVPlacement(0, pos, enclosure_logic,
-      					  "ENCLOSURE", _mother_logic, false, i);
+      					  "ENCLOSURE", _mother_logic, 
+					  false, i, true);
+      tpb_physi =  new G4PVPlacement(0, tpb_pos, tpb_logic,
+      					  "ENCLOSURE_TPB", _mother_logic, 
+				      false, i, true);
     }
      
     /// SUPER CAN ////
@@ -147,8 +185,10 @@ namespace nexus {
     }
     
     // VERTEX GENERATORS   //////////
-    _carrier_gen = new CylinderPointSampler(_carrier_plate_diam/2., _carrier_plate_thickness, 0., 0.,
-					     G4ThreeVector (0., 0., carrier_plate_z_pos));
+    _carrier_gen = 
+      new CylinderPointSampler(_carrier_plate_diam/2., 
+			       _carrier_plate_thickness, 0., 0.,
+			       G4ThreeVector (0., 0., carrier_plate_z_pos));
     _scan_tube_gen = new CylinderPointSampler(_scan_in_diam/2.,_scan_in_length,_scan_tube_thickness,0.,
 					      G4ThreeVector(0.,0.,scan_z_pos));
     _scan_end_gen = new CylinderPointSampler(0.,_scan_end_thickness,_scan_in_diam/2.+_scan_tube_thickness,0.,
@@ -174,7 +214,8 @@ namespace nexus {
       G4VPhysicalVolume *VertexVolume;
       do {
 	vertex = _carrier_gen->GenerateVertex(INSIDE);
-	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	VertexVolume = 
+	  _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
       } while (VertexVolume->GetName() != "CARRIER_PLATE");
     }
     //Enclosures

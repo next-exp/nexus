@@ -34,6 +34,7 @@ namespace nexus{
     ~Enclosure();
  
     G4ThreeVector GetObjectCenter();
+    G4double GetWindowDiameter();
    
 
     /// Generate a vertex within a given region of the geometry
@@ -46,6 +47,7 @@ namespace nexus{
     //Dimensions
     const G4double _enclosure_in_diam, _enclosure_length, _enclosure_thickness, _enclosure_endcap_diam, _enclosure_endcap_thickness;
     const G4double _enclosure_window_diam, _enclosure_window_thickness, _enclosure_pad_thickness;
+    const G4double _enclosure_tpb_thickness;
 
     PmtR11410*  _pmt;
     G4double _pmt_z_pos, _window_z_pos;
