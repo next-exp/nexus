@@ -48,6 +48,9 @@ namespace nexus {
     void Construct();
 
   private:
+    G4Material* _gas;
+    G4double _pressure, _temperature;
+
     void GeneratePMTsPositions();
     void GenerateGasHolePositions();
 
@@ -58,6 +61,7 @@ namespace nexus {
     const G4double _carrier_plate_front_buffer_thickness,_carrier_plate_front_buffer_diam ;
     const G4double _carrier_plate_thickness, _carrier_plate_diam,_enclosure_hole_diam,_gas_hole_diam,_gas_hole_pos ;
     G4double _scan_in_diam, _scan_in_length, _scan_tube_thickness, _scan_end_thickness;
+    const G4double _tpb_thickness;
 
     const G4int _num_PMTs;
     const G4int _num_gas_holes;

@@ -133,12 +133,18 @@ namespace nexus {
     /// TPB coating on sapphire window
     G4Material* tpb = MaterialsList::TPB();
     tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB(_pressure, _temperature));
+    G4cout << "P and T on sapphire windows TPB: " << _pressure << 
+      ", " << _temperature << G4endl;
     G4double window_diam =  _enclosure->GetWindowDiameter();
     G4Tubs* tpb_solid = new G4Tubs("ENCLOSURE_TPB", 0., window_diam/2, 
 		  _tpb_thickness/2., 0., twopi);
     G4LogicalVolume* tpb_logic = 
       new G4LogicalVolume(tpb_solid, tpb,
 			   "ENCLOSURE_TPB");
+
+    G4VisAttributes * visattrib_blue = new G4VisAttributes;
+    visattrib_blue->SetColor(0., 0., 1.);
+    tpb_logic->SetVisAttributes(visattrib_blue);
        
     // Placing the enclosures 
     G4PVPlacement* enclosure_physi;

@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-//  $Id: Enclosure.cc  $
+//  $Id$
 //
 //  Author:  <miquel.nebot@ific.uv.es>
 //  Created: 24 Sept 2013
@@ -59,8 +59,6 @@ namespace nexus{
     G4Material* vacuum = 
       G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
     vacuum->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
-    // G4Material* tpb = MaterialsList::TPB();
-    // tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
 
      /////   ENCLOSURES  /////
      G4Tubs* enclosure_body = 
@@ -106,29 +104,12 @@ namespace nexus{
        new G4LogicalVolume(enclosure_window_solid, sapphire,
 			   "ENCLOSURE_WINDOW");
     
-     // _window_z_pos = _enclosure_length/2 - 
-     //   (_enclosure_window_thickness + _enclosure_tpb_thickness)/2.;
      _window_z_pos = _enclosure_length/2 - _enclosure_window_thickness/2.;
      G4PVPlacement* enclosure_window_physi =
        new G4PVPlacement(0, G4ThreeVector(0.,0.,_window_z_pos),
      			 enclosure_window_logic, "ENCLOSURE_WINDOW", 
      			 enclosure_logic, false, 0, true);
 
-     // Adding the TPB to the sapphire window
-     // G4Tubs* enclosure_window_solid = 
-     //   new G4Tubs("ENCLOSURE_TPB", 0., _enclosure_window_diam/2., 
-     // 		  _enclosure_tpb_thickness/2., 0., twopi);
-     // G4LogicalVolume* enclosure_tpb_logic = 
-     //   new G4LogicalVolume(enclosure_tpb_solid, tpb,
-     // 			   "ENCLOSURE_TPB");
-     // G4double tpb_pos = 
-     //   (_enclosure_window_thickness +_enclosure_tpb_thickness)/2. -
-     //   _enclosure_tpb_thickness/2.;
-     //  G4PVPlacement* enclosure_tpb_physi =
-     // 	new G4PVPlacement(0, G4ThreeVector(0.,0.,tpb_pos),
-     // 			 enclosure_tpb_logic, "ENCLOSURE_TPB", 
-     // 			 enclosure_window_logic, false, 0, true);
-         
      // Adding the optical pad
      G4Tubs* enclosure_pad_solid =
        new G4Tubs("OPTICAL_PAD", 0., _enclosure_in_diam/2., _enclosure_pad_thickness/2.,0.,twopi);
@@ -150,10 +131,6 @@ namespace nexus{
        new G4PVPlacement(0, G4ThreeVector(0.,0.,_pmt_z_pos), pmt_logic,
 			 "PMT", enclosure_gas_logic, false, 0, true);
 
-
-     ///OPTICAL PROPERTIES//
-     //Sapphire window
-     //Optical Pad
      
      /////  SETTING VISIBILITIES   //////////    
      G4VisAttributes copper_col(G4Colour(.58, .36, .16));
