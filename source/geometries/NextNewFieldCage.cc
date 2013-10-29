@@ -32,22 +32,17 @@ namespace nexus {
   NextNewFieldCage::NextNewFieldCage(): 
     BaseGeometry(),
     // Field cage dimensions
-    // _active_diam (48.2 * cm),
-    _drift_length (539.45 * mm),//tube_length - buffer -cathode
-    // _trk_displ (13.36 * cm),
-    //  _ener_displ (9.5 * cm),
+    _dist_EL_cathode(554. * mm),
+    _buffer_length(70. * mm),
     _el_gap_length (.5 * cm),
     _grid_thickness (.1 * mm), //it's just fake dielectric
-    _el_tot_zone (24.1 * mm),
+    _cathode_thickness(1. * mm),
     _el_grid_transparency (.88),
     _gate_transparency (.76),
     _cathode_grid_transparency (.98),
-    _cage_tot_length (58.9 * cm),   // Drift volume (51cm) + Buffer (7cm) 
-    _tube_length (611.95*mm),//554-12.05+60+10// (56.49 * cm)= 58.9??? -2.41
-    _tube_in_diam (48. * cm),  //=_vessel_in_rad -ics - _tube_thickness  
+    _tube_in_diam (48. * cm),
     _tube_thickness (2.0 * cm),    
-    _reflector_thickness (.5 * cm),
-    _el_gap_z_pos ( 277 * mm)
+    _reflector_thickness (.5 * cm)
 
   {
     /// Messenger
@@ -67,6 +62,12 @@ namespace nexus {
     step_cmd.SetUnitCategory("Length");
     step_cmd.SetParameterName("max_step_size", false);
     step_cmd.SetRange("max_step_size>0.");
+
+    // Derived dimensions 
+    _drift_length = _dist_EL_cathode-_el_gap_length/2.-_cathode_thickness/2.;
+    _tube_length = _dist_EL_cathode + _cathode_thickness + _buffer_length -
+      _el_gap_length/2.;
+    _el_gap_z_pos = _dist_EL_cathode/2.;
   }
 
   void NextNewFieldCage::SetLogicalVolume(G4LogicalVolume* mother_logic)
@@ -88,8 +89,8 @@ namespace nexus {
     BuildActive(); 
 
     //////FIELD CAGE//////
-    _tube_z_pos =  _el_gap_z_pos -_el_tot_zone/2. -_tube_length/2.;
-    //(160.*cm/2. + 8.7*cm - _tube_length/2.);  //Vessel_body_len (160)+ Ener_zone displ(8.7)-
+    _tube_z_pos =  _el_gap_z_pos -_el_gap_length/2. -_tube_length/2.;
+
     G4Tubs* field_cage_solid =
       new G4Tubs("FIELD_CAGE", _tube_in_diam/2.,
 		 _tube_in_diam/2. + _tube_thickness, _tube_length/2., 0, twopi);
@@ -100,6 +101,7 @@ namespace nexus {
       new G4PVPlacement(0, G4ThreeVector(0., 0., _tube_z_pos), 
 			field_cage_logic, "FIELD_CAGE", _mother_logic, 
 			false, 0,true);
+
     //Internal reflector
     G4Tubs* reflector_solid = 
       new G4Tubs("FC_REFLECTOR", _tube_in_diam/2.-_reflector_thickness, 
@@ -119,7 +121,7 @@ namespace nexus {
 		 _tube_in_diam/2.-_reflector_thickness + 1.*micrometer,
 		 _tube_length/2., 0, twopi);
     G4Material* tpb = MaterialsList::TPB();
-    tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+    tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB(_pressure, _temperature));
     G4LogicalVolume* tpb_logic = 
       new G4LogicalVolume(tpb_solid, tpb, "REFLECTOR_TPB");
     G4PVPlacement* tpb_physi = 
@@ -138,21 +140,22 @@ namespace nexus {
 			     reflector_opt_surf);
 
     /// SETTING VISIBILITIES   //////////
-    // if (_visibility) {
-    G4VisAttributes hdpe_col(G4Colour(.6, .8, .79));
-    //hdpe_col.SetForceSolid(true);    
-    //field_cage_logic->SetVisAttributes(hdpe_col);
-    G4VisAttributes teflon_col(G4Colour(0., 0., .7));
-    //teflon_col.SetForceSolid(true);
-    reflector_logic->SetVisAttributes(teflon_col);
-    G4VisAttributes tpb_col(G4Colour(1., 0., 0.));
-    //   tpb_col.SetForceSolid(true);
-    tpb_logic->SetVisAttributes(tpb_col);
-    // }
-    // else {
-    field_cage_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    //   reflector_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    // }
+    if (_visibility) {
+      G4VisAttributes hdpe_col(G4Colour(.6, .8, .79));
+      hdpe_col.SetForceSolid(true);    
+      field_cage_logic->SetVisAttributes(hdpe_col);
+      G4VisAttributes teflon_col(G4Colour(0., 0., 1.));
+      teflon_col.SetForceSolid(true);
+      reflector_logic->SetVisAttributes(teflon_col);
+      G4VisAttributes tpb_col(G4Colour(1., 0., 0.));
+      tpb_col.SetForceSolid(true);
+      tpb_logic->SetVisAttributes(tpb_col);
+    }
+    else {
+      field_cage_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      reflector_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      tpb_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
 
     /// VERTEX GENERATORS   //////////
     _field_cage_gen  = 
@@ -166,7 +169,7 @@ namespace nexus {
     G4double z = _el_gap_z_pos - _el_gap_length/2. + .5*mm;
     //    G4cout << "Zeta pos: "<< z << G4endl;
     CalculateELTableVertices(_tube_in_diam/2., 5.*mm, z);
-    // G4cout << "Points: "<< _table_vertices.size() << G4endl;
+     G4cout << "Points: "<< _table_vertices.size() << G4endl;
     // for (int i=0; i<_table_vertices.size(); i++){
     //   G4cout << _table_vertices[i][0]<< ", "<< _table_vertices[i][1] << ",  " << _table_vertices[i][2] << G4endl; 
     // }
@@ -210,7 +213,7 @@ namespace nexus {
     } 
     // //EL GAP
     // //Cathode grid
- 
+   
     return vertex;
   }
 
@@ -250,7 +253,6 @@ void NextNewFieldCage::CalculateELTableVertices(G4double radius,
       new G4PVPlacement(0, G4ThreeVector(0., 0., _el_gap_z_pos), el_gap_logic,
 			"EL_GAP", _mother_logic, false, 0,true);
    
-
     if (_elfield) {
       // Define EL electric field
       UniformElectricDriftField* el_field = new UniformElectricDriftField();
@@ -267,13 +269,16 @@ void NextNewFieldCage::CalculateELTableVertices(G4double radius,
     }
 
     ///// EL GRIDS /////
-    G4Material* fgrid_mat = MaterialsList::FakeDielectric(_gas, "el_grid_anode_mat");
+    G4Material* fgrid_mat = 
+      MaterialsList::FakeDielectric(_gas, "el_grid_anode_mat");
     fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _el_grid_transparency, _grid_thickness));
 
-    G4Material* fgate_mat = MaterialsList::FakeDielectric(_gas, "el_grid_gate_mat");
+    G4Material* fgate_mat = 
+      MaterialsList::FakeDielectric(_gas, "el_grid_gate_mat");
     fgate_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _gate_transparency, _grid_thickness));
     
-    // Dimensions & position: the grids are simulated inside the EL gap. Their thickness 
+    // Dimensions & position: the grids are simulated inside the EL gap. 
+    // Their thickness 
     // is symbolic.
     G4double grid_diam = _tube_in_diam; // _active_diam;
     G4double poszInner =  - _el_gap_length/2. + _grid_thickness/2.;
@@ -294,51 +299,53 @@ void NextNewFieldCage::CalculateELTableVertices(G4double radius,
       new G4PVPlacement(0, G4ThreeVector(0., 0., poszOuter), anode_logic, 
 			"EL_GRID_ANODE", el_gap_logic, false, 1, true);
     
+
     /// Visibilities
-  //   if (_grids_visibility) {
-    G4VisAttributes grid_col(G4Colour(0.5, 0.5, .5));
-    // grid_col.SetForceSolid(true);
-    el_gap_logic->SetVisAttributes(grid_col);
-  //     // grids are white
-  //   }
-  //   else {
-  //     el_gap_logic->SetVisAttributes(G4VisAttributes::Invisible);
-  //     diel_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);
-  //   }
+    if (_visibility) {
+      G4VisAttributes grid_col(G4Colour(0.5, 0.5, .5));
+      grid_col.SetForceSolid(true);
+      el_gap_logic->SetVisAttributes(grid_col);
+      // grids are white
+    }
+    else {
+      el_gap_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      gate_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      anode_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
   }
 
   void NextNewFieldCage::BuildCathodeGrid()
   {
     ///// CATHODE ////// 
-    G4Material* fgrid_mat = MaterialsList::FakeDielectric(_gas, "cath_grid_mat");
-    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _cathode_grid_transparency, _grid_thickness));
+    G4Material* fgrid_mat = 
+      MaterialsList::FakeDielectric(_gas, "cath_grid_mat");
+    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _cathode_grid_transparency, _cathode_thickness));
     // Dimensions & position
     G4double grid_diam = _tube_in_diam - 2*_reflector_thickness;
-    G4double posz = - _el_gap_z_pos;//_el_grid_ref_z - _grid_thickn - _active_length;
-  //   //G4cout << G4endl << "Cathode Grid posz: " << posz/cm << G4endl;
+    G4double posz = - _el_gap_z_pos; 
     // Building the grid
     G4Tubs* diel_grid_solid = 
-      new G4Tubs("CATH_GRID", 0., grid_diam/2., _grid_thickness/2., 0, twopi);
+      new G4Tubs("CATH_GRID", 0., grid_diam/2., _cathode_thickness/2., 0, twopi);
     G4LogicalVolume* diel_grid_logic = 
       new G4LogicalVolume(diel_grid_solid, fgrid_mat, "CATHODE_GRID");
     G4PVPlacement* diel_grid_physi = 
       new G4PVPlacement(0, G4ThreeVector(0.,0.,posz), diel_grid_logic, 
 			"CATHODE_GRID", _mother_logic, false, 0,true);
     /// Visibilities
-    G4VisAttributes grid_col(G4Colour(0.5, 0.5, .5));
-    //grid_col.SetForceSolid(true);
+    G4VisAttributes grid_col(G4Colour(1., 0., 0.));
+    grid_col.SetForceSolid(true);
     diel_grid_logic->SetVisAttributes(grid_col);
-    //  // Grid is white
-  //   if (!_grids_visibility) {
-  //     diel_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);
-  //   }
+    // Grid is white
+    if (!_visibility) {
+      diel_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
   }
 
 
 
   void NextNewFieldCage::BuildActive()
   {
-    G4double active_posz = _el_gap_z_pos -_el_tot_zone/2. - _drift_length/2.;
+    G4double active_posz = _el_gap_z_pos -_el_gap_length/2. - _drift_length/2.;
     G4Tubs* active_solid = 
       new G4Tubs("ACTIVE",  0., _tube_in_diam/2.-_reflector_thickness, 
 		 _drift_length/2., 0, twopi);
@@ -347,6 +354,7 @@ void NextNewFieldCage::CalculateELTableVertices(G4double radius,
     G4PVPlacement* active_physi = 
       new G4PVPlacement(0, G4ThreeVector(0., 0., active_posz), active_logic, 
 			"ACTIVE", _mother_logic, false, 0,true);
+
     // Limit the step size in this volume for better tracking precision
     active_logic->SetUserLimits(new G4UserLimits(_max_step_size));
     // Set the volume as an ionization sensitive detector

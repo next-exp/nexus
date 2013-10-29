@@ -62,13 +62,15 @@ namespace nexus {
     void BuildActive();    
 
     // Dimensions
-    G4double _cage_tot_length, _tube_in_diam, _tube_length; 
+    G4double _dist_EL_cathode, _buffer_length;
+    G4double _tube_in_diam, _tube_length; 
     G4double _tube_thickness, _tube_z_pos;
     G4double _reflector_thickness;
-    G4double _el_gap_z_pos, _el_tot_zone, _el_gap_length, _grid_thickness;
+    G4double _el_gap_z_pos, _el_gap_length, _grid_thickness;
     G4double _el_grid_transparency, _gate_transparency; 
     G4double _cathode_grid_transparency;
     G4double _drift_length;
+    G4double _cathode_thickness;
 
     // Visibility 
     G4bool _visibility;
