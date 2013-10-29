@@ -39,13 +39,11 @@ G4Material* MaterialsList::GXe(G4double pressure, G4double temperature)
               << pressure/bar << G4endl;
       
     mat = new G4Material(name, density, 1,
-			 kStateGas, 300.*kelvin, pressure);
+			 kStateGas, temperature, pressure);
     
     G4Element* Xe = nist->FindOrBuildElement("Xe");
     mat->AddElement(Xe,1);
   }
-
-  G4cout << mat << G4endl;
 
   return mat;
 }
