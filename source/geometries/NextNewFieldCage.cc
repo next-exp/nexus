@@ -42,7 +42,8 @@ namespace nexus {
     _cathode_grid_transparency (.98),
     _tube_in_diam (48. * cm),
     _tube_thickness (2.0 * cm),    
-    _reflector_thickness (.5 * cm)
+    _reflector_thickness (.5 * cm),
+    _tpb_thickness(1.*micrometer)
 
   {
     /// Messenger
@@ -118,7 +119,7 @@ namespace nexus {
     // TPB coating
     G4Tubs* tpb_solid =
       new G4Tubs("REFLECTOR_TPB", _tube_in_diam/2.-_reflector_thickness,
-		 _tube_in_diam/2.-_reflector_thickness + 1.*micrometer,
+		 _tube_in_diam/2.-_reflector_thickness + _tpb_thickness,
 		 _tube_length/2., 0, twopi);
     G4Material* tpb = MaterialsList::TPB();
     tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB(_pressure, _temperature));
