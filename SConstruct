@@ -20,7 +20,7 @@ import os
 import subprocess
 
 ## Geant4 version required by NEXUS
-NEXUS_G4VERSION_NUMBER = [961]
+NEXUS_G4VERSION_NUMBER = [961, 962]
 
 ## NEXUS source code directories
 SRCDIR = ['actions',
