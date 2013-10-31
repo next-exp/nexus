@@ -23,7 +23,7 @@
 #include <G4LogicalSkinSurface.hh>
 #include <G4NistManager.hh>
 #include <Randomize.hh>
-#include <G4RotationMatrix.hh>
+
 
 namespace nexus {
 
@@ -38,7 +38,7 @@ namespace nexus {
 
     _z_kdb_displ (0.0 * cm), //distance between DB and suport plate( kdb_surface at the same level as support surface)
    
-    _tracking_plane_z_pos (28 *cm),//_el_gap_z_pos (25.5 *cm) From drawings + _el_gap(1.4)/2 + _el_grid_thickness + _el_to_
+    _tracking_plane_z_pos (28.905 *cm),//_el_gap_z_pos (25.5 *cm) From drawings + _el_gap(1.4)/2 + _el_grid_thickness + _el_to_
 
     _cable_hole_width (45 * mm),
     _cable_hole_high (8 * mm),
@@ -50,6 +50,7 @@ namespace nexus {
     // Number of Dice Boards, DB columns
     _num_DBs (28),
     _DB_columns (6),
+    _dice_side (79.*mm),
     _dice_gap (1. *mm)// distance between dices
   {
     /// Initializing the geometry navigator (used in vertex generation)
@@ -123,6 +124,8 @@ namespace nexus {
    
     //// SETTING VISIBILITIES   //////////    
     // if (_visibility) {
+    G4VisAttributes dark_green_col(G4Colour(0., .6, 0.));
+    dice_board_logic->SetVisAttributes(dark_green_col);
     G4VisAttributes Copper_col(G4Colour(.72, .45, .20));
     //Copper_col.SetForceSolid(true);
     support_plate_logic->SetVisAttributes(Copper_col);
@@ -172,17 +175,17 @@ namespace nexus {
 	// As it is full of holes, let's get sure vertexes are in the right volume
 	G4VPhysicalVolume *VertexVolume;
 	do {
-	  vertex = _support_body_gen->GenerateVertex(VOLUME);
+	  vertex = _support_body_gen->GenerateVertex("BODY_VOL");
 	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
 	} while (VertexVolume->GetName() != "SUPPORT_PLATE");
       }
       // Generating in the flange
       else if (rand1 < _flange_perc){
-       	vertex = _support_flange_gen->GenerateVertex(VOLUME);
+       	vertex = _support_flange_gen->GenerateVertex("BODY_VOL");
       }
       // Generating in the buffer
       else {
-       	vertex = _support_buffer_gen->GenerateVertex(VOLUME);
+       	vertex = _support_buffer_gen->GenerateVertex("BODY_VOL");
       }
     }
       
@@ -208,8 +211,8 @@ namespace nexus {
     G4int num_rows[] = {3, 5, 6, 6, 5, 3};
     G4int total_positions = 0;
     // Separation between consecutive columns / rows _dice_gap
-    G4double x_step = 79*mm+_dice_gap;
-    G4double y_step =79*mm+_dice_gap;
+    G4double x_step = _dice_side +_dice_gap;
+    G4double y_step = _dice_side +_dice_gap;
     G4double x_dim = x_step * (_DB_columns -1);
     G4ThreeVector position(0.,0.,0.);
     // For every column
