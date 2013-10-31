@@ -219,7 +219,7 @@ namespace nexus {
     if (region == "CARRIER_PLATE") {
       G4VPhysicalVolume *VertexVolume;
       do {
-	vertex = _carrier_gen->GenerateVertex(INSIDE);
+	vertex = _carrier_gen->GenerateVertex("INSIDE");
 	VertexVolume = 
 	  _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
       } while (VertexVolume->GetName() != "CARRIER_PLATE");
@@ -257,9 +257,9 @@ namespace nexus {
     else if (region== "SUPERCAN"){
       G4double rand = G4UniformRand();
       if (rand < _perc_endcap_scan)
-	vertex = _scan_end_gen->GenerateVertex(VOLUME);
+	vertex = _scan_end_gen->GenerateVertex("BODY_VOL");
       else 
-	vertex = _scan_tube_gen->GenerateVertex(VOLUME);
+	vertex = _scan_tube_gen->GenerateVertex("BODY_VOL");
     }
     return vertex;
   }
