@@ -9,12 +9,14 @@
 
 #include "NextNewFieldCage.h"
 #include "MaterialsList.h"
-#include <G4GenericMessenger.hh>
+#include "IonizationSD.h"
+#include "PmtSD.h"
 #include "UniformElectricDriftField.h"
 #include "OpticalMaterialProperties.h"
 #include "IonizationSD.h"
 #include "XenonGasProperties.h"
 
+#include <G4GenericMessenger.hh>
 #include <G4PVPlacement.hh>
 #include <G4VisAttributes.hh>
 #include <G4Material.hh>
@@ -192,14 +194,14 @@ namespace nexus {
   {
     G4ThreeVector vertex(0., 0., 0.);
     if (region == "FIELD_CAGE") {
-      vertex = _field_cage_gen->GenerateVertex(TUBE_VOLUME);
+      vertex = _field_cage_gen->GenerateVertex("BODY_VOL");
     }
     else if (region == "REFLECTOR") {
-      vertex = _reflector_gen->GenerateVertex(TUBE_VOLUME);
+      vertex = _reflector_gen->GenerateVertex("BODY_VOL");
     }
     // Active region
     else if (region == "ACTIVE") {
-      vertex = _active_gen->GenerateVertex(INSIDE);
+      vertex = _active_gen->GenerateVertex("INSIDE");
     } 
     else if (region == "EL_TABLE") {  
       _idx_table++;	
