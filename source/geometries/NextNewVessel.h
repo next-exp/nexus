@@ -15,7 +15,7 @@
 #include "BaseGeometry.h"
 #include "CylinderPointSampler.h"
 #include "SpherePointSampler.h"
-//#include "BoxPointSampler.h"
+
 
 #include <G4Navigator.hh>
 
@@ -67,10 +67,10 @@ namespace nexus {
     CylinderPointSampler* _body_gen;
     SpherePointSampler*   _tracking_endcap_gen;
     SpherePointSampler*   _energy_endcap_gen;
-    CylinderPointSampler* _tracking_flange_gen;
-    CylinderPointSampler* _energy_flange_gen;
+    CylinderPointSampler* _flange_gen;
 
     G4double _perc_endcap_vol;
+    G4double _perc_tube_vol;
     
     // Geometry Navigator
     G4Navigator* _geom_navigator;

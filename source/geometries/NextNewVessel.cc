@@ -39,8 +39,8 @@ namespace nexus {
 
     // Flange dimensions (one cylinder = 1 on the _vessel_body side + 1 on the _endcap side)
     _flange_out_diam (82.0 * cm),//Flange inner radius = vessel inner radius + vessel thickness
-    _flange_length (5.0 * cm),
-    _flange_z_pos (_vessel_body_length/2.),
+    _flange_length (10.0 * cm), //5for body + 5for endcap
+    _flange_z_pos (_vessel_body_length/2.),//435
 
     // Endcaps dimensions
     _endcap_in_rad (53.2 * cm), //=(66.52/2 - 1.26)
@@ -49,13 +49,13 @@ namespace nexus {
     _endcap_in_z_width (9.628 * cm),  // inner spherical part till flange
 
     // Nozzle dimensions
-    _lat_nozzle_in_diam  (30.*mm),//lat_nozzle_in_diam;
+    _lat_nozzle_in_diam  (30.*mm),
     _lat_nozzle_high (51.*mm),
     _lat_nozzle_thickness (6.1*mm),
     _lat_nozzle_flange_diam (75.*mm),
     _lat_nozzle_flange_high (15.*mm),
 
-    _up_nozzle_in_diam (60.*mm), //up_nozzle_in_diam;
+    _up_nozzle_in_diam (60.*mm), 
     _up_nozzle_high (54.3*mm),
     _up_nozzle_thickness (6.51*mm),
     _up_nozzle_flange_diam (130*mm),
@@ -67,10 +67,10 @@ namespace nexus {
     _endcap_nozzle_flange_diam (165.*mm),
     _endcap_nozzle_flange_high (22.*mm),
 
-    _lat_nozzle_z_pos (120*mm),//xpos = lat_anode_nozzle_xpos;
-    _lat_nozzle_x_pos (_vessel_in_diam/2. +_lat_nozzle_high/2.),// lat_cathode_nozzle_xpos;
+    _lat_nozzle_z_pos (120*mm),
+    _lat_nozzle_x_pos (_vessel_in_diam/2. +_lat_nozzle_high/2.),
     _up_nozzle_y_pos (_vessel_in_diam/2. +_up_nozzle_high/2.),
-    _up_nozzle_z_pos ( 277. *mm),//anode_nozzle_zpos;
+    _up_nozzle_z_pos ( 277. *mm),//anode_nozzle_zpos = -cathode_nozzle_zpos
     _endcap_nozzle_z_pos (_vessel_tube_length/2. + _endcap_in_z_width), //bodylegth/2 + 300mm???? 
 
 
@@ -127,7 +127,7 @@ void NextNewVessel::Construct()
     
     // Flange solid
     G4Tubs* vessel_flange_solid = new G4Tubs("VESSEL_FLANGE", vessel_out_diam/2., _flange_out_diam/2.,
-					     _flange_length, 0., twopi);
+					     _flange_length/2., 0., twopi);
     
     // Nozzle solids
     G4Tubs* lateral_nozzle_tube_solid = 
@@ -158,7 +158,7 @@ void NextNewVessel::Construct()
     G4ThreeVector energy_endcap_pos(0, 0, -1. * endcap_z_pos);
     G4ThreeVector tracking_flange_pos(0, 0, _flange_z_pos);
     G4ThreeVector energy_flange_pos(0, 0, -1. * _flange_z_pos);
-
+    
     // Body + Tracking endcap
     G4UnionSolid* vessel_solid = new G4UnionSolid("VESSEL", vessel_tube_solid, vessel_tracking_endcap_solid,
                                                   0, tracking_endcap_pos);
@@ -167,11 +167,11 @@ void NextNewVessel::Construct()
                                     0, energy_endcap_pos);
     // Body + Tracking endcap + Energy endcap + Tracking flange
     vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, vessel_flange_solid,
-				    0, tracking_flange_pos);
-    // Body + Tracking endcap + Energy endcap + Tracking flange + Energy flange
-    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid,
-                                    vessel_flange_solid, 0, energy_flange_pos);
-
+				    0,tracking_flange_pos);
+    // Body + Tracking endcap + Energy endcap + Tracking flange + Energy flange 
+    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, vessel_flange_solid,
+				    0, energy_flange_pos);
+   
     // building nozzles
     G4UnionSolid* lateral_nozzle_solid = new G4UnionSolid("LAT_NOZZLE", lateral_nozzle_tube_solid,
 							  lateral_nozzle_flange_solid, 0,
@@ -268,92 +268,89 @@ void NextNewVessel::Construct()
 
 
     //// VERTEX GENERATORS   //
-    // _body_gen  = new CylinderPointSampler(_vessel_in_rad, _vessel_length, _vessel_thickness, 0.);
-    // _tracking_endcap_gen = new SpherePointSampler(_endcap_in_rad, _endcap_thickness, tracking_endcap_pos, 0,
-    //                                                0., twopi, 0., _endcap_theta);
-    // _energy_endcap_gen = new SpherePointSampler(_endcap_in_rad, _endcap_thickness, energy_endcap_pos, 0,
-    //                                              0., twopi, 180.*deg - _endcap_theta, _endcap_theta);
-    // _tracking_flange_gen  = new CylinderPointSampler(vessel_out_rad, _flange_length,
-    //                                                  _flange_out_rad-vessel_out_rad, 0., tracking_flange_pos);
-    // _energy_flange_gen  = new CylinderPointSampler(vessel_out_rad, _flange_length,
-    //                                                _flange_out_rad-vessel_out_rad, 0., energy_flange_pos);
+    _body_gen   = new CylinderPointSampler(_vessel_in_diam/2., _vessel_tube_length, _vessel_thickness, 0.);
+    _flange_gen = new CylinderPointSampler(vessel_out_diam/2., _flange_length,
+					    _flange_out_diam/2.-vessel_out_diam/2., 0., G4ThreeVector(0.,0.,0.));
+    //trick to avoid vertex the vessel_gas-vessel interface -1*mm thickness
+    _tracking_endcap_gen = new SpherePointSampler(_endcap_in_rad+1*mm, _endcap_thickness-1*mm, tracking_endcap_pos, 0,
+						  0., twopi, 0., _endcap_theta);
+    _energy_endcap_gen = new SpherePointSampler(_endcap_in_rad+1*mm, _endcap_thickness-1*mm, energy_endcap_pos, 0,
+						0., twopi, 180.*deg - _endcap_theta, _endcap_theta);
 
-
-    /// Calculating some prob ?????????????????
-    // G4double body_vol = vessel_body_solid->GetCubicVolume() - vessel_gas_body_solid->GetCubicVolume();
-    // G4double endcap_vol =  vessel_tracking_endcap_solid->GetCubicVolume() - vessel_gas_tracking_endcap_solid->GetCubicVolume();
-    // _perc_endcap_vol = endcap_vol / (body_vol + 2. * endcap_vol);
-
-   }
    
-   NextNewVessel::~NextNewVessel()
-   {
-     delete _body_gen;
-     delete _tracking_endcap_gen;
-     delete _energy_endcap_gen;
-     delete _tracking_flange_gen;
-     delete _energy_flange_gen;
-   }
 
-G4LogicalVolume* NextNewVessel::GetInternalLogicalVolume()
+    /// Calculating some prob
+    G4double body_vol = vessel_tube_solid->GetCubicVolume() - vessel_gas_tube_solid->GetCubicVolume();
+    G4double flange_vol = vessel_flange_solid->GetCubicVolume();
+    G4double endcap_vol = vessel_tracking_endcap_solid->GetCubicVolume() - vessel_gas_tracking_endcap_solid->GetCubicVolume();
+    G4double vol_tot = body_vol+ 2*flange_vol+ 2*endcap_vol;
+    _perc_tube_vol = body_vol/vol_tot; 
+    _perc_endcap_vol = endcap_vol /vol_tot;
+  }
+   
+  NextNewVessel::~NextNewVessel()
+  {
+    delete _body_gen;
+    delete _flange_gen;     
+    delete _tracking_endcap_gen;
+    delete _energy_endcap_gen;
+  }
+
+  G4LogicalVolume* NextNewVessel::GetInternalLogicalVolume()
   {
     return _internal_logic_vol;
   }
-
-
-G4ThreeVector NextNewVessel::GenerateVertex(const G4String& region) const
+  
+  G4ThreeVector NextNewVessel::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);
-
-    // // Vertex in the whole VESSEL volume except flanges
-    // if (region == "VESSEL") {
-    //   G4double rand = G4UniformRand();
-    //   if (rand < _perc_endcap_vol) {
-    //     G4VPhysicalVolume *VertexVolume;
-    //     do {
-    //       vertex = _tracking_endcap_gen->GenerateVertex("VOLUME");  // Tracking endcap
-    //       VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
-    //     } while (VertexVolume->GetName() != "VESSEL");
-    //   }
-    //   else if (rand > 1. - _perc_endcap_vol) {
-    //     G4VPhysicalVolume *VertexVolume;
-    //     do {
-    //       vertex = _energy_endcap_gen->GenerateVertex("VOLUME");  // Energy endcap
-    //       VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
-    //     } while (VertexVolume->GetName() != "VESSEL");
-    //   }
-    //   else
-    //     vertex = _body_gen->GenerateVertex(TUBE_VOLUME);  // Body
-    // }
-
-    // // Vertex in FLANGES
-    // else if (region == "VESSEL_FLANGES") {
-    //   if (G4UniformRand() < 0.5)
-    //     vertex = _tracking_flange_gen->GenerateVertex(TUBE_VOLUME);
-    //   else
-    //     vertex = _energy_flange_gen->GenerateVertex(TUBE_VOLUME);
-    // }
-
-    // // Vertex in TRACKING ENDCAP
-    // else if (region == "VESSEL_TRACKING_ENDCAP") {
-    //   G4VPhysicalVolume *VertexVolume;
-    //   do {
-    //     vertex = _tracking_endcap_gen->GenerateVertex("VOLUME");  // Tracking endcap
-    //     VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
-    //   } while (VertexVolume->GetName() != "VESSEL");
-    // }
-
-    // // Vertex in ENERGY ENDCAP
-    // else if (region == "VESSEL_ENERGY_ENDCAP") {
-    //   G4VPhysicalVolume *VertexVolume;
-    //   do {
-    //     vertex = _energy_endcap_gen->GenerateVertex("VOLUME");  // Energy endcap
-    //     VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
-    //   } while (VertexVolume->GetName() != "VESSEL");
-    // }
-
+    std::cout<< "generatevertex "<<std::endl;
+    // Vertex in the VESSEL volume
+    if (region == "VESSEL") {
+      G4double rand = G4UniformRand();
+      if (rand < _perc_tube_vol) { //VESSEL_TUBE
+      // //G4VPhysicalVolume *VertexVolume;
+      // //do {
+	std::cout<< "vessel tube \t"<< rand <<"\t"<< _perc_tube_vol << std::endl;      
+      	vertex = _body_gen->GenerateVertex("BODY_VOL");   
+      //   //VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+      //  //} while (VertexVolume->GetName() != "VESSEL_BODY");
+      }
+      // Vertex in ENDCAPCAPS
+      else if (rand < (_perc_tube_vol+2*_perc_endcap_vol)){
+      //G4VPhysicalVolume *VertexVolume;
+      //do {
+	if (G4UniformRand() < 0.5){
+	  std::cout<< "tracking endcap "<< rand <<"\t"<< _perc_tube_vol+2*_perc_endcap_vol<< std::endl;
+	  vertex = _tracking_endcap_gen->GenerateVertex("VOLUME");  // Tracking 
+	}
+	else {
+	  std::cout<< "energy endcap " << rand <<"\t"<< _perc_tube_vol+2*_perc_endcap_vol<< std::endl;
+	  vertex = _energy_endcap_gen->GenerateVertex("VOLUME");  // Energy endcap	
+	}
+      //VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+      // } while (VertexVolume->GetName() != "VESSEL_TRACKING_ENDCAP");
+      }
+            
+      else { //FLANGES
+	if (G4UniformRand() < 0.5) {
+	  vertex = _flange_gen->GenerateVertex("BODY_VOL");
+	  vertex.setZ(vertex.z() + _flange_z_pos);
+	  std::cout<< "flange tracking \t"<<vertex.z() <<"\t"<< rand << std::endl;
+	}
+	else {
+	  vertex = _flange_gen->GenerateVertex("BODY_VOL");
+	  vertex.setZ(vertex.z() - _flange_z_pos);
+	  std::cout<< "flange energy \t"<<vertex.z() <<"\t"<<rand<< std::endl;
+	}
+      }
+    }
+      
+    else if (region =="SOURCE_PORT_ANODE"){ vertex = G4ThreeVector(_lat_nozzle_x_pos, 0.,_lat_nozzle_z_pos);}
+    else if (region =="SOURCE_PORT_CATHODE"){ vertex = G4ThreeVector(_lat_nozzle_x_pos, 0.,-_lat_nozzle_z_pos);}
+    
     return vertex;
   }
+  
+}//end namespace nexus
 
-
-} //end namespace nexus
