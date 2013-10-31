@@ -212,26 +212,26 @@ namespace nexus{
       G4double rand1 = G4UniformRand();
       // Generating in the cilindric part of the enclosure
       if (rand1 < _body_perc) {
-	vertex = _enclosure_body_gen->GenerateVertex(VOLUME);
+	vertex = _enclosure_body_gen->GenerateVertex("BODY_VOL");
       }
       // Generating in the union/flange
       else if (rand1 < _flange_perc){
-       	vertex = _enclosure_flange_gen->GenerateVertex(VOLUME);
+       	vertex = _enclosure_flange_gen->GenerateVertex("BODY_VOL");
       }
       // Generating in the rear cap of the enclosure
       else {
-       	vertex = _enclosure_cap_gen->GenerateVertex(VOLUME);
+       	vertex = _enclosure_cap_gen->GenerateVertex("BODY_VOL");
       }
      
     }
     /// Enclosures windows
     else if (region == "ENCLOSURE_WINDOW") {
-      vertex = _enclosure_window_gen->GenerateVertex(VOLUME);
+      vertex = _enclosure_window_gen->GenerateVertex("BODY_VOL");
       //z translation made in CylinderPointSampler
     }
     //Optical pad
     else if (region=="OPTICAL_PAD"){
-      vertex =_enclosure_pad_gen->GenerateVertex(VOLUME);
+      vertex =_enclosure_pad_gen->GenerateVertex("BODY_VOL");
       //z translation made in CylinderPointSampler    
     }
     //PMTs bodies 
