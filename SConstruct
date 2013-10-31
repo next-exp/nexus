@@ -208,9 +208,6 @@ vars.Save(BUILDVARS_FILE, env)
 ## ###################################################################
 ## BUILDING NEXUS
 
-#env.Replace(CXX = "clang++")
-#env.Replace(LDMODULE = "clang++")
-
 SRCDIR = ['source/' + dir for dir in SRCDIR]
 
 env.Append(CPPPATH = SRCDIR)
