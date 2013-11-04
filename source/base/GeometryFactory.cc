@@ -35,8 +35,8 @@ GeometryFactory::~GeometryFactory()
 #include "CylindricChamber.h"
 #include "Next1EL.h"
 #include "Next100.h"
-#include "NEW.h"
-
+#include "NextNewOpticalGeometry.h"
+#include "NextNew.h"
 
 BaseGeometry* GeometryFactory::CreateGeometry() const
 {
@@ -50,7 +50,9 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
 
   else if (_name == "NEXT100") p = new Next100();
 
-  else if (_name == "NEW") p = new NEW();
+  else if (_name == "OPTICAL_GEOMETRY") p = new NextNewOpticalGeometry();
+
+  else if (_name == "NEXT_NEW") p = new NextNew();
 
   else {
     G4String err = "The user selected an unknown geometry: " + _name;
