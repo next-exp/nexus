@@ -62,7 +62,7 @@ namespace nexus {
     const G4double _cable_hole_width, _cable_hole_high;
 
     const G4int _SiPM_rows, _SiPM_columns;
-    const G4int _DB_columns, _num_DBs, _dice_gap;
+    const G4int _DB_columns, _num_DBs, _dice_side, _dice_gap;
     G4ThreeVector _kdb_dimensions;
     std::vector<G4ThreeVector> _DB_positions;
 
