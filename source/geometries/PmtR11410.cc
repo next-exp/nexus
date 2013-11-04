@@ -205,13 +205,13 @@ namespace nexus {
     if (region == "PMT_BODY") {
       G4double rand1 = G4UniformRand();
       if (rand1 < _front_body_perc) 
-        vertex = _front_body_gen->GenerateVertex(VOLUME);
+        vertex = _front_body_gen->GenerateVertex("WHOLE_VOL");
       else if (rand1 < _fr_med_body_perc)
-        vertex = _medium_body_gen->GenerateVertex(VOLUME);
+        vertex = _medium_body_gen->GenerateVertex("WHOLE_VOL");
       else if (rand1 < _fr_med_re_body_perc)
-        vertex = _rear_body_gen->GenerateVertex(VOLUME);
+        vertex = _rear_body_gen->GenerateVertex("WHOLE_VOL");
       else
-        vertex = _rear_cap_gen->GenerateVertex(INSIDE);
+        vertex = _rear_cap_gen->GenerateVertex("INSIDE");
     }
 
     return vertex;
