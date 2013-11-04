@@ -248,7 +248,7 @@ namespace nexus {
     if (region == "CARRIER_PLATE") {
       G4VPhysicalVolume *VertexVolume;
       do {
-	vertex = _carrier_gen->GenerateVertex(INSIDE);
+	vertex = _carrier_gen->GenerateVertex("INSIDE");
 	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
       } while (VertexVolume->GetName() != "CARRIER_PLATE");
     }
@@ -258,11 +258,11 @@ namespace nexus {
       G4double rand1 = G4UniformRand();
       // Generating in the cilindric part of the enclosure
       if (rand1 < _enclosure_body_perc) {
-	vertex = _enclosure_body_gen->GenerateVertex(VOLUME);
+	vertex = _enclosure_body_gen->GenerateVertex("WHOLE_VOL");
       }
       // Generating in the rear cap of the enclosure
       else {
-	vertex = _enclosure_cap_gen->GenerateVertex(INSIDE);
+	vertex = _enclosure_cap_gen->GenerateVertex("INSIDE");
       }
       // Translating the vertex to a random enclosure
       G4double rand2 = _num_PMTs * G4UniformRand();
@@ -272,7 +272,7 @@ namespace nexus {
 
     // Enclosures windows
     else if (region == "ENCLOSURE_WINDOW") {
-      vertex = _enclosure_window_gen->GenerateVertex(INSIDE);
+      vertex = _enclosure_window_gen->GenerateVertex("INSIDE");
       G4double rand = _num_PMTs * G4UniformRand();
       G4ThreeVector enclosure_pos = _pmt_positions[int(rand)];
       vertex += enclosure_pos;
