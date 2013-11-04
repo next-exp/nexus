@@ -165,7 +165,7 @@ namespace nexus {
     if (region == "TRK_SUPPORT") {
       G4VPhysicalVolume *VertexVolume;
       do {
-	vertex = _support_gen->GenerateVertex(INSIDE);
+	vertex = _support_gen->GenerateVertex("INSIDE");
 	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
       } while (VertexVolume->GetName() != "SUPPORT_PLATE");
     }
