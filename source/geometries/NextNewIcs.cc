@@ -38,7 +38,7 @@ namespace nexus {
 
     // Body dimensions
     _body_out_diam (64.0  * cm), // inner diameter of the vessel
-    _body_length (68.4 * cm), /// nozzle to nozzle + flanges????????
+    _body_length (68.4 * cm), /// nozzle to nozzle + flanges     ???????????
     _body_thickness (6.0 * cm),
 
     // Tracking plane tread dimensions 

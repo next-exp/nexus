@@ -143,6 +143,7 @@ namespace nexus {
     // VISIBILITIES //////////////////////////////////////////////////
 
     G4VisAttributes grey(G4Colour(.7, .7, .7));
+    grey.SetForceSolid(true);
     pmt_logic->SetVisAttributes(grey);
     pmt_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
     window_logic->SetVisAttributes(G4VisAttributes::Invisible);

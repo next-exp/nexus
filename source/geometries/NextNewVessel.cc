@@ -35,7 +35,7 @@ namespace nexus {
     _vessel_in_diam (64.0  * cm),
     _vessel_body_length (87. * cm),//body cylinder(without flanges)
     _vessel_tube_length (122.256 * cm),  //  870 body + 2. *( (50-10)bodyflange + (50-10)endcapflange + 96.28 endcap)
-    _vessel_thickness (2.4  * cm),
+    _vessel_thickness (1.2  * cm),
 
     // Flange dimensions (one cylinder = 1 on the _vessel_body side + 1 on the _endcap side)
     _flange_out_diam (82.0 * cm),//Flange inner radius = vessel inner radius + vessel thickness
@@ -249,18 +249,18 @@ void NextNewVessel::Construct()
 							    "VESSEL_GAS");
     _internal_logic_vol = vessel_gas_logic;
     G4PVPlacement* vessel_gas_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_gas_logic,
-                                                        "VESSEL_GAS", vessel_logic, false, 0);
+                                                        "VESSEL_GAS", vessel_logic, false, 0,true);
 
 						   	   
     // SETTING VISIBILITIES   //////////
     //if (_visibility) {
-    G4VisAttributes titanium_col(G4Colour(.71, .69, .66));
+    //G4VisAttributes titanium_col(G4Colour(.71, .69, .66));
     // titanium_col.SetForceSolid(true);
-    vessel_logic->SetVisAttributes(titanium_col);
-    // G4VisAttributes gas_col(G4Colour(1., 1., 1.));
-    // gas_col.SetForceSolid(true);
-    // vessel_gas_logic->SetVisAttributes(gas_col);
-    vessel_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    //vessel_logic->SetVisAttributes(titanium_col);
+    //G4VisAttributes gas_col(G4Colour(1., 1., 1.));
+    //gas_col.SetForceSolid(true);
+    //vessel_gas_logic->SetVisAttributes(gas_col);
+    // vessel_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
     // }
       //else {
       //vessel_logic->SetVisAttributes(G4VisAttributes::Invisible);
@@ -309,40 +309,41 @@ void NextNewVessel::Construct()
     if (region == "VESSEL") {
       G4double rand = G4UniformRand();
       if (rand < _perc_tube_vol) { //VESSEL_TUBE
-      // //G4VPhysicalVolume *VertexVolume;
-      // //do {
-	std::cout<< "vessel tube \t"<< rand <<"\t"<< _perc_tube_vol << std::endl;      
-      	vertex = _body_gen->GenerateVertex("BODY_VOL");   
-      //   //VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
-      //  //} while (VertexVolume->GetName() != "VESSEL_BODY");
+	G4VPhysicalVolume *VertexVolume;
+	do {
+	  std::cout<< "vessel tube \t"<< rand <<"\t"<< _perc_tube_vol << std::endl;      
+	  vertex = _body_gen->GenerateVertex("BODY_VOL");   
+	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	  std::cout<<vertex<<std::endl;
+	} while (VertexVolume->GetName() != "VESSEL");
       }
-      // Vertex in ENDCAPCAPS
+      //Vertex in ENDCAPCAPS
       else if (rand < (_perc_tube_vol+2*_perc_endcap_vol)){
-      //G4VPhysicalVolume *VertexVolume;
-      //do {
-	if (G4UniformRand() < 0.5){
-	  std::cout<< "tracking endcap "<< rand <<"\t"<< _perc_tube_vol+2*_perc_endcap_vol<< std::endl;
-	  vertex = _tracking_endcap_gen->GenerateVertex("VOLUME");  // Tracking 
-	}
-	else {
-	  std::cout<< "energy endcap " << rand <<"\t"<< _perc_tube_vol+2*_perc_endcap_vol<< std::endl;
-	  vertex = _energy_endcap_gen->GenerateVertex("VOLUME");  // Energy endcap	
-	}
-      //VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
-      // } while (VertexVolume->GetName() != "VESSEL_TRACKING_ENDCAP");
-      }
-            
+	G4VPhysicalVolume *VertexVolume;
+	do {
+	  if (G4UniformRand() < 0.5){
+	    std::cout<< "tracking endcap "<< rand <<"\t"<< _perc_tube_vol+2*_perc_endcap_vol<< std::endl;
+	    vertex = _tracking_endcap_gen->GenerateVertex("VOLUME");  // Tracking 
+	  }
+	  else {
+	    std::cout<< "energy endcap " << rand <<"\t"<< _perc_tube_vol+2*_perc_endcap_vol<< std::endl;
+	    vertex = _energy_endcap_gen->GenerateVertex("VOLUME");  // Energy endcap	
+	  }
+	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	  std::cout<<vertex<<std::endl;
+	} while (VertexVolume->GetName() != "VESSEL");
+      }    
       else { //FLANGES
-	if (G4UniformRand() < 0.5) {
+   	if (G4UniformRand() < 0.5) {
 	  vertex = _flange_gen->GenerateVertex("BODY_VOL");
 	  vertex.setZ(vertex.z() + _flange_z_pos);
 	  std::cout<< "flange tracking \t"<<vertex.z() <<"\t"<< rand << std::endl;
-	}
-	else {
+    	}
+    	else {
 	  vertex = _flange_gen->GenerateVertex("BODY_VOL");
-	  vertex.setZ(vertex.z() - _flange_z_pos);
+    	  vertex.setZ(vertex.z() - _flange_z_pos);
 	  std::cout<< "flange energy \t"<<vertex.z() <<"\t"<<rand<< std::endl;
-	}
+   	}
       }
     }
       

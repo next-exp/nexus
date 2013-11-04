@@ -161,7 +161,13 @@ namespace nexus {
     }
 
     // Visibilities
-    active_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    G4VisAttributes active_col(G4Colour(1.,1.,0.));
+    active_col.SetForceSolid(true);
+    active_logic->SetVisAttributes(active_col);
+    G4VisAttributes plastic_col(G4Colour(.5,.5,.7));
+    plastic_col.SetForceSolid(true);
+    plastic_logic->SetVisAttributes(plastic_col);
+    //active_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
   }
   
