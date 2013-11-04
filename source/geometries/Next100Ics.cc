@@ -195,7 +195,7 @@ namespace nexus {
       G4double rand = G4UniformRand();
 
       if (rand < _perc_body_vol)
-	vertex = _body_gen->GenerateVertex(TUBE_VOLUME);        // Body
+	vertex = _body_gen->GenerateVertex("BODY_VOLUME");        // Body
 
       // (thick version with cone substraction)
       // else if  (rand < _perc_tracking_vol) {
@@ -208,15 +208,15 @@ namespace nexus {
 
       // (thin version without substractions)
       else if  (rand < _perc_tracking_vol)
-	vertex = _tracking_gen->GenerateVertex(TUBE_VOLUME);    // Tracking plane
+	vertex = _tracking_gen->GenerateVertex("BODY_VOLUME");    // Tracking plane
 
       else if  (rand < _perc_energy_cyl_vol)
-	vertex = _energy_cyl_gen->GenerateVertex(TUBE_VOLUME);  // Energy plane, cylindric section
+	vertex = _energy_cyl_gen->GenerateVertex("BODY_VOLUME");  // Energy plane, cylindric section
 
       else {
 	G4VPhysicalVolume *VertexVolume;
 	do {
-	  vertex = _energy_sph_gen->GenerateVertex("VOLUME");     // Energy plane, spherical section
+	  vertex = _energy_sph_gen->GenerateVertex("WHOLE_VOL");     // Energy plane, spherical section
 	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
 	} while (VertexVolume->GetName() != "ICS");
       }
