@@ -1,27 +1,22 @@
 // ----------------------------------------------------------------------------
 ///  \file   CylinderPointSampler.h
-///  \brief  
+///  \brief  Generator of random points in a cylinder.
 ///
 ///  \author   Javier Muñoz Vidal <jmunoz@ific.uv.es>
 ///  \date     2 November 2009
 ///  \version  $Id$
 ///
-///  Copyright (c) 2009, 2010 NEXT Collaboration
+///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef __CYLINDER_POINT_SAMPLER__
-#define __CYLINDER_POINT_SAMPLER__
+#ifndef CYLINDER_POINT_SAMPLER_H
+#define CYLINDER_POINT_SAMPLER_H
 
 #include <G4ThreeVector.hh>
 #include <G4RotationMatrix.hh>
 
 
 namespace nexus {
-  
-  enum CylinderRegion { INSIDE, VOLUME, SURFACE, 
-			TUBE_VOLUME, ENDCAPS_VOLUME,
-			TUBE_SURFACE, ENDCAPS_SURFACE };
-  
   
   /// Generator of random positions in a cylinder
 
@@ -38,7 +33,6 @@ namespace nexus {
 
     /// Returns vertex within region <region> of the chamber
     G4ThreeVector GenerateVertex(const G4String& region);
-    G4ThreeVector GenerateVertex(CylinderRegion);
 
   private:
     G4double GetRadius(G4double inner, G4double outer);
