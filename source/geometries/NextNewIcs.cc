@@ -172,13 +172,13 @@ namespace nexus {
         // As it is full of holes, let's get sure vertexes are in the right volume
         G4VPhysicalVolume *VertexVolume;
         do {
-          vertex = _body_gen->GenerateVertex(TUBE_VOLUME);
+          vertex = _body_gen->GenerateVertex("BODY_VOL");
           VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
         } while (VertexVolume->GetName() != "ICS");
       }
       // Generating in the tread
       else {
-        vertex = _tread_gen->GenerateVertex(TUBE_VOLUME);
+        vertex = _tread_gen->GenerateVertex("BODY_VOL");
       }
       
       return vertex;
