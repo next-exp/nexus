@@ -1,7 +1,8 @@
 // ----------------------------------------------------------------------------
 //  $Id: NextNew.cc  $
 //
-//  Author:  Miquel Nebot Guinot <miquel.nebot@ific.uv.es>    
+//  Author:  Miquel Nebot Guinot <miquel.nebot@ific.uv.es>
+//           <jmunoz@ific.uv.es>, <justo.martin-albo@ific.uv.es>   
 //  Created: Sept 2013
 //  
 //  Copyright (c) 2013 NEXT Collaboration
@@ -10,12 +11,13 @@
 #include "NextNew.h"
 
 //#include "MaterialsList.h"
-
+#include "NextNewVessel.h"
+//#include "NextNewIcs.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
 
-//#include <G4Material.hh>
+#include <G4Material.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4VisAttributes.hh>
@@ -33,13 +35,20 @@ namespace nexus {
   {
     //Shielding
     //Vessel
+    _vessel = new NextNewVessel();
+    
+
     //ICS
+    //  _ics = new NextNewIcs();   
     //Inner elements
   }
 
   NextNew::~NextNew()
   {
     //deletes
+    delete _vessel;
+    
+    //delete _ics;
   }
 
  void NextNew::Construct()
@@ -75,9 +84,18 @@ namespace nexus {
     //SHIELDING
 
     //VESSEL
+    _vessel->Construct();
+    G4LogicalVolume* vessel_logic = _vessel->GetLogicalVolume();
+    G4ThreeVector position(0.,0.,0.);
+    G4PVPlacement* vessel_physi = new G4PVPlacement(0, position, vessel_logic, "VESSEL", _buffer_gas_logic, false, 0, true);
 
+        
     //ICS
-
+    // _ics->Construct();
+    // G4LogicalVolume* ics_logic = _ics->GetLogicalVolume();
+    // G4ThreeVector pos(0.,0.,0.);
+    // G4PVPlacement* ics_physi = new G4PVPlacement(0, pos, ics_logic, "ICS", _buffer_gas_logic,false, 0, true);
+ 
     //INNER ELEMENTS
 
   }
@@ -85,17 +103,24 @@ namespace nexus {
   G4ThreeVector NextNew::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0.,0.,0.);
-
-    // //BUFFER GAS
-    // if (region == "LAB") {
-    //   vertex = _lab_gen->GenerateVertex(region);
-    // }
-    // //VESSEL REGIONS
-
-    // // ICS REGIONS
-    // else if (region == "ICS") {
-    //   vertex = _ics_gen->GenerateVertex(region);
-    // }
+    //BUFFER GAS
+    if (region == "LAB") {
+      //vertex = _lab_gen->GenerateVertex(region);
+    }
+    //VESSEL REGIONS
+    if((region == "VESSEL") || 
+       (region == "SOURCE_PORT_ANODE") ||
+       (region == "SOURCE_PORT_CATHODE")) {
+      vertex = _vessel->GenerateVertex(region);
+    }
+    // ICS REGIONS
+    else if (region == "ICS"){  
+      //vertex = _ics->GenerateVertex(region);
+    }
+    //INNER ELEMENTS
+    else if (region=="INNER_ELEMENTS"){
+      // vertex = _inner_elements->GenerateVertex(region);
+    }
     // //Xenon Fiducial Volume
     // else 
     //   vertex=_xefv_gen->GenerateVertex("XEFV");

@@ -2,7 +2,7 @@
 ///  \file   NextNew.h
 ///  \brief  
 ///
-///  \author   <miquel.nebot@ific.uv.es>
+///  \author   <miquel.nebot@ific.uv.es>, <jmunoz@ific.uv.es>, <justo.martin-albo@ific.uv.es>
 ///  \date     Sept 2013
 ///  \version  $Id$
 ///
@@ -13,7 +13,11 @@
 #define __NEXTNEW__
 
 #include "BaseGeometry.h"
-#include "Next100Shielding.h"
+//#include "Next100Shielding.h"
+
+namespace nexus { class NextNewVessel; }
+//namespace nexus { class NextNewIcs; }
+
 
 class G4LogicalVolume;
 class G4GenericMessenger;
@@ -41,9 +45,7 @@ namespace nexus {
     // Detector dimensions
     const G4double _lab_size; /// Size of the air box containing the detector 
     const G4double _buffer_gas_size;///Mother volume of shielding and vessel 
-    G4double _vessel_dim; ///Vessel Diameter
-    G4double _vessel_length; /// vessel length
-    G4double _ics_width; /// inner copper shielding width
+   
     G4double _pressure;  ///Pressure Gas Xenon
 
     // Pointers to logical volumes
@@ -51,9 +53,9 @@ namespace nexus {
     G4LogicalVolume* _buffer_gas_logic;
 
     //Detector parts
-
-   
-
+    NextNewVessel* _vessel;   
+    // NextNewIcs* _ics;
+    
     /// Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
 
