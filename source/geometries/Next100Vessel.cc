@@ -326,15 +326,15 @@ namespace nexus {
 	} while (VertexVolume->GetName() != "VESSEL");
       }
       else
-	vertex = _body_gen->GenerateVertex(TUBE_VOLUME);  // Body
+	vertex = _body_gen->GenerateVertex("BODY_VOLUME");  // Body
     }
 
     // Vertex in FLANGES
     else if (region == "VESSEL_FLANGES") {
       if (G4UniformRand() < 0.5)
-      	vertex = _tracking_flange_gen->GenerateVertex(TUBE_VOLUME);
+      	vertex = _tracking_flange_gen->GenerateVertex("BODY_VOLUME");
       else
-      	vertex = _energy_flange_gen->GenerateVertex(TUBE_VOLUME);
+      	vertex = _energy_flange_gen->GenerateVertex("BODY_VOLUME");
     }
 
     // Vertex in TRACKING ENDCAP

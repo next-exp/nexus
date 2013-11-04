@@ -113,7 +113,7 @@ namespace nexus {
 
     // Vertex in the plastic cylinder
     if (region == "FIELD_CAGE") {
-      vertex = _body_gen->GenerateVertex(TUBE_VOLUME);
+      vertex = _body_gen->GenerateVertex("BODY_VOLUME");
     }
 
     return vertex;

@@ -263,7 +263,7 @@ namespace nexus {
 
     // Active region
     else if (region == "ACTIVE") {
-      vertex = _active_gen->GenerateVertex(TUBE_VOLUME);
+      vertex = _active_gen->GenerateVertex("BODY_VOLUME");
     }
 
     // Energy Plane regions
