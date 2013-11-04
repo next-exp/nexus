@@ -4,7 +4,7 @@
 //  Author : Javier Muñoz Vidal <jmunoz@ific.uv.es>
 //  Created: 2 November 2009
 //
-//  Copyright (c) 2009, 2010 NEXT Collaboration
+//  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
 #include "CylinderPointSampler.h"
@@ -45,104 +45,6 @@ namespace nexus {
   
 
   
-  G4ThreeVector CylinderPointSampler::GenerateVertex(CylinderRegion region)
-  {
-    switch (region) {
-      
-    case INSIDE: {
-      G4double phi = GetPhi();
-      G4double rad = GetRadius(0., _outer_radius);
-      G4double x = rad * cos(phi);
-      G4double y = rad * sin(phi);
-      G4double z = GetLength(0., _inner_length);
-      return RotateAndTranslate(G4ThreeVector(x, y, z));
-    }
-      
-    case VOLUME: {
-      if (G4UniformRand() < _perc_body_vol) {
-	// Generating in the body volume
-	G4double phi = GetPhi();
-	G4double rad = GetRadius(_inner_radius, _outer_radius);
-	G4double x = rad * cos(phi);
-	G4double y = rad * sin(phi);
-	G4double z = GetLength(0., _inner_length);
-	return RotateAndTranslate(G4ThreeVector(x, y, z));
-      }
-      else {
-	// Generating in the endcaps volume
-	G4double phi = GetPhi();
-	G4double rad = GetRadius(0., _outer_radius);
-	G4double x = rad * cos(phi);
-	G4double y = rad * sin(phi);
-	G4double origin = -0.5 * (_inner_length + _endcaps_thickness);
-	G4double z = GetLength(origin, _endcaps_thickness);
-	return RotateAndTranslate(G4ThreeVector(x, y, z));
-      }
-    }
-      
-    case SURFACE: {
-      if (G4UniformRand() < _perc_body_surf) {
-	// Generating in the body surface
-	G4double phi = GetPhi();
-	G4double x = _inner_radius * cos(phi);
-	G4double y = _inner_radius * sin(phi);
-	G4double z = GetLength(0., _inner_length);
-	return RotateAndTranslate(G4ThreeVector(x, y, z));
-      }
-      else {
-	// Generating in the endcaps surface
-	G4double phi = GetPhi();
-	G4double rad = GetRadius(0., _inner_radius);
-	G4double x = rad * cos(phi);
-	G4double y = rad * sin(phi);
-	G4double z = -0.5 * _inner_length;
-	return RotateAndTranslate(G4ThreeVector(x, y, z));
-      }
-    }
-
-    case TUBE_VOLUME: {
-      G4double phi = GetPhi();
-      G4double rad = GetRadius(_inner_radius, _outer_radius);
-      G4double x = rad * cos(phi);
-      G4double y = rad * sin(phi);
-      G4double z = GetLength(0., _inner_length);
-      return RotateAndTranslate(G4ThreeVector(x, y, z));
-    }
-
-    case ENDCAPS_VOLUME: {
-      G4double phi = GetPhi();
-      G4double rad = GetRadius(0., _outer_radius);
-      G4double x = rad * cos(phi);
-      G4double y = rad * sin(phi);
-      G4double origin = -0.5 * (_inner_length + _endcaps_thickness);
-      G4double z = GetLength(origin, _endcaps_thickness);
-      return RotateAndTranslate(G4ThreeVector(x, y, z));
-    }
-
-    case TUBE_SURFACE: {
-      G4double phi = GetPhi();
-      G4double x = _inner_radius * cos(phi);
-      G4double y = _inner_radius * sin(phi);
-      G4double z = GetLength(0., _inner_length);
-      return RotateAndTranslate(G4ThreeVector(x, y, z));
-    }
-
-    case ENDCAPS_SURFACE: {
-      G4double phi = GetPhi();
-      G4double rad = GetRadius(0., _inner_radius);
-      G4double x = rad * cos(phi);
-      G4double y = rad * sin(phi);
-      G4double z = -0.5 * _inner_length;
-      return RotateAndTranslate(G4ThreeVector(x, y, z));
-    }
-      
-    default:
-      ;
-      //G4Exception("[CylinderPointSampler] ERROR: Unknown region!");
-    }
-  }
-  
-  
   G4ThreeVector CylinderPointSampler::GenerateVertex(const G4String& region)
   {
     G4double x, y, z;
@@ -176,26 +78,26 @@ namespace nexus {
 
     // Generating in the whole volume
     else if (region == "WHOLE_VOL") {
+
       G4double rand = G4UniformRand();
 
       if (rand < _perc_body_vol) {
-	// Generating in the body volume
-	G4double phi = GetPhi();
+        // Generating in the body volume
+        G4double phi = GetPhi();
         G4double rad = GetRadius(_inner_radius, _outer_radius);
-	x = rad * cos(phi);
-	y = rad * sin(phi);
-	G4double origin = 0.;
-	z = GetLength(origin, _inner_length);
+        x = rad * cos(phi);
+        y = rad * sin(phi);
+        G4double origin = 0.;
+        z = GetLength(origin, _inner_length);
       }
-
       else {
-	// Generating in the endcaps volume
-	G4double phi = GetPhi();
-	G4double rad = GetRadius(0., _outer_radius);
-	x = rad * cos(phi);
-	y = rad * sin(phi);
-	G4double origin = -0.5 * (_inner_length + _endcaps_thickness);
-	z = GetLength(origin, _endcaps_thickness);
+        // Generating in the endcaps volume
+        G4double phi = GetPhi();
+        G4double rad = GetRadius(0., _outer_radius);
+        x = rad * cos(phi);
+        y = rad * sin(phi);
+        G4double origin = -0.5 * (_inner_length + _endcaps_thickness);
+        z = GetLength(origin, _endcaps_thickness);
       }
 
       return RotateAndTranslate(G4ThreeVector(x, y, z));
@@ -234,31 +136,32 @@ namespace nexus {
    
     // Generating in the whole surface
     else if (region == "WHOLE_SURF") {
+
       G4double rand = G4UniformRand();
 
       if (rand < _perc_body_surf) {
-	// Generating in the body surface
-	G4double phi = GetPhi();
-	x = _inner_radius * cos(phi);
-	y = _inner_radius * sin(phi);
-	G4double origin = 0.;
-	z = GetLength(origin, _inner_length);
+        // Generating in the body surface
+        G4double phi = GetPhi();
+        x = _inner_radius * cos(phi);
+        y = _inner_radius * sin(phi);
+        G4double origin = 0.;
+        z = GetLength(origin, _inner_length);
       }
       else {
-	// Generating in the endcaps surface
-	G4double phi = GetPhi();
-	G4double rad = GetRadius(0., _inner_radius);
-	x = rad * cos(phi);
-	y = rad * sin(phi);
-	z = -0.5 * _inner_length;
+        // Generating in the endcaps surface
+        G4double phi = GetPhi();
+        G4double rad = GetRadius(0., _inner_radius);
+        x = rad * cos(phi);
+        y = rad * sin(phi);
+        z = -0.5 * _inner_length;
       }
 
       return RotateAndTranslate(G4ThreeVector(x, y, z));
     }
 
-   
     // Unknown region
     else {
+      return G4ThreeVector();
       //G4Exception("[CylinderPointSampler] ERROR: Unknown region!");
     }
   }
@@ -302,4 +205,5 @@ namespace nexus {
     return real_pos;
   }
   
+
 } // end namespace nexus
