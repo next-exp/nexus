@@ -36,10 +36,8 @@ namespace nexus {
     //Shielding
     //Vessel
     _vessel = new NextNewVessel();
-    
-
     //ICS
-    //  _ics = new NextNewIcs();   
+    //_ics = new NextNewIcs();   
     //Inner elements
   }
 
@@ -47,7 +45,6 @@ namespace nexus {
   {
     //deletes
     delete _vessel;
-    
     //delete _ics;
   }
 
@@ -87,9 +84,12 @@ namespace nexus {
     _vessel->Construct();
     G4LogicalVolume* vessel_logic = _vessel->GetLogicalVolume();
     G4ThreeVector position(0.,0.,0.);
-    G4PVPlacement* vessel_physi = new G4PVPlacement(0, position, vessel_logic, "VESSEL", _buffer_gas_logic, false, 0, true);
-
-        
+    G4PVPlacement* vessel_physi = new G4PVPlacement(0, position, vessel_logic, "VESSEL",
+     						    _buffer_gas_logic, false, 0, true);
+    // G4LogicalVolume* vessel_gas_logic = _vessel->GetInternalLogicalVolume();
+    // G4PVPlacement* vessel_gas_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_gas_logic,
+    //                                                     "VESSEL_GAS", _buffer_gas_logic, false, 0,true);
+   
     //ICS
     // _ics->Construct();
     // G4LogicalVolume* ics_logic = _ics->GetLogicalVolume();

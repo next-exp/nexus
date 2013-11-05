@@ -18,10 +18,8 @@
 namespace nexus { class NextNewVessel; }
 //namespace nexus { class NextNewIcs; }
 
-
 class G4LogicalVolume;
 class G4GenericMessenger;
-
 
 namespace nexus {
 
@@ -35,7 +33,6 @@ namespace nexus {
 
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
-
 
   private:
     void BuildLab();
@@ -54,7 +51,7 @@ namespace nexus {
 
     //Detector parts
     NextNewVessel* _vessel;   
-    // NextNewIcs* _ics;
+    //    NextNewIcs* _ics;
     
     /// Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
