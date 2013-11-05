@@ -5,9 +5,10 @@
 
 /control/execute macros/physics/DefaultPhysicsList.mac
 
-/Geometry/RegisterGeometry NEXTNEW
+/Geometry/RegisterGeometry NEXT_NEW
+#/Geometry/RegisterGeometry OPTICAL_GEOMETRY
 
-/Generator/RegisterGenerator DECAY0
+/Generator/RegisterGenerator SINGLE_PARTICLE
 
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction DEFAULT
