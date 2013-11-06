@@ -38,7 +38,7 @@ namespace nexus{
     _enclosure_in_diam (80. * mm), 
     _enclosure_thickness (6. * mm),
     _enclosure_endcap_diam (119. * mm), 
-    _enclosure_endcap_thickness (20. * mm),
+    _enclosure_endcap_thickness (60. * mm),
     _enclosure_window_diam (85. * mm), 
     _enclosure_window_thickness (6. * mm), //???
     _enclosure_pad_thickness (2. * mm),//max 60  ??????

@@ -60,7 +60,6 @@ namespace nexus {
     const G4double _energy_plane_z_pos;
     const G4double _carrier_plate_front_buffer_thickness,_carrier_plate_front_buffer_diam ;
     const G4double _carrier_plate_thickness, _carrier_plate_diam,_enclosure_hole_diam,_gas_hole_diam,_gas_hole_pos ;
-    G4double _scan_in_diam, _scan_in_length, _scan_tube_thickness, _scan_end_thickness;
     const G4double _tpb_thickness;
 
     const G4int _num_PMTs;
@@ -76,9 +75,6 @@ namespace nexus {
 
     // Vertex generators
     CylinderPointSampler* _carrier_gen;
-    CylinderPointSampler* _scan_tube_gen;
-    CylinderPointSampler* _scan_end_gen;
-    G4double _perc_endcap_scan;
 
     // Geometry Navigator
     G4Navigator* _geom_navigator;

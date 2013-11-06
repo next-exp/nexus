@@ -44,11 +44,7 @@ namespace nexus {
     _gas_hole_diam (8.0 * mm), 
     _gas_hole_pos (20 * mm),
     _enclosure_hole_diam (9.3 *cm),
-    _tpb_thickness (1.*micrometer),
-    _scan_in_diam (500 *mm),
-    _scan_in_length (100 *mm),
-    _scan_tube_thickness (5*mm),
-    _scan_end_thickness (34*mm)   
+    _tpb_thickness (1.*micrometer)
     
   {
     /// Initializing the geometry navigator (used in vertex generation)
@@ -164,27 +160,12 @@ namespace nexus {
 				      false, i, true);
     }
      
-    /// SUPER CAN ////
-    G4double scan_z_pos = _energy_plane_z_pos - _carrier_plate_thickness -_scan_in_length/2.;
-    G4Tubs* scan_tube_solid = 
-      new G4Tubs("SCAN_TUBE",_scan_in_diam/2., _scan_in_diam/2. +_scan_tube_thickness,_scan_in_length/2., 0., twopi);
-     G4Tubs* scan_end_solid = 
-      new G4Tubs("SCAN_END",0., _scan_in_diam/2. +_scan_tube_thickness,_scan_end_thickness/2., 0., twopi);
-     G4UnionSolid* scan_solid = new G4UnionSolid("SUPERCAN",scan_tube_solid,scan_end_solid,0,
-						 G4ThreeVector(0.,0.,-(_scan_in_length/2.+_scan_end_thickness/2.)));
-     G4LogicalVolume* scan_logic = new G4LogicalVolume(scan_solid,MaterialsList::Steel316Ti(),"SUPERCAN");
-     G4PVPlacement* _scan_physi = new G4PVPlacement(0,G4ThreeVector(0.,0.,scan_z_pos), scan_logic,"SUPERCAN",
-						    _mother_logic, false, 0,true);
-
+   
     /////  SETTING VISIBILITIES   //////////
     if (_visibility) {
       G4VisAttributes copper_col(G4Colour(.72, .45, .20));
       //copper_col.SetForceSolid(true);
-      carrier_plate_logic->SetVisAttributes(copper_col); 
-      G4VisAttributes steel_col(G4Colour(.88, .87, .86));
-      //steel_col.SetForceSolid(true);
-      scan_logic->SetVisAttributes(steel_col); 
-      
+      carrier_plate_logic->SetVisAttributes(copper_col);      
     }
     else {
       carrier_plate_logic->SetVisAttributes(G4VisAttributes::Invisible);
@@ -195,15 +176,7 @@ namespace nexus {
       new CylinderPointSampler(_carrier_plate_diam/2., 
 			       _carrier_plate_thickness, 0., 0.,
 			       G4ThreeVector (0., 0., carrier_plate_z_pos));
-    _scan_tube_gen = new CylinderPointSampler(_scan_in_diam/2.,_scan_in_length,_scan_tube_thickness,0.,
-					      G4ThreeVector(0.,0.,scan_z_pos));
-    _scan_end_gen = new CylinderPointSampler(0.,_scan_end_thickness,_scan_in_diam/2.+_scan_tube_thickness,0.,
-					     G4ThreeVector(0.,0.,scan_z_pos-(_scan_in_length/2.+_scan_end_thickness/2.)));
-    G4double scan_end_vol = _scan_end_thickness*pi*(_scan_in_diam/2.+_scan_tube_thickness)*
-      (_scan_in_diam/2.+_scan_tube_thickness);
-    G4double scan_tot_vol = scan_solid->GetCubicVolume();
-    _perc_endcap_scan= scan_end_vol/scan_tot_vol;
-
+    
   }     
  
   NextNewEnergyPlane::~NextNewEnergyPlane()
@@ -253,14 +226,7 @@ namespace nexus {
       vertex = ini_vertex + pmt_pos;
       vertex.setZ(vertex.z() + _enclosure_z_pos);
     }
-    //Supercan
-    else if (region== "SUPERCAN"){
-      G4double rand = G4UniformRand();
-      if (rand < _perc_endcap_scan)
-	vertex = _scan_end_gen->GenerateVertex("BODY_VOL");
-      else 
-	vertex = _scan_tube_gen->GenerateVertex("BODY_VOL");
-    }
+   
     return vertex;
   }
   
