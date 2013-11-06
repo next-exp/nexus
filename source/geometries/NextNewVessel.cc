@@ -162,15 +162,15 @@ void NextNewVessel::Construct()
     // Body + Tracking endcap
     G4UnionSolid* vessel_solid = new G4UnionSolid("VESSEL", vessel_tube_solid, vessel_tracking_endcap_solid,
                                                   0, tracking_endcap_pos);
-    // Body + Tracking endcap + Energy endcap
-    // vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, vessel_energy_endcap_solid,
-    //                                 0, energy_endcap_pos);
-    // // Body + Tracking endcap + Energy endcap + Tracking flange
-    // vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, vessel_flange_solid,
-    // 				    0,tracking_flange_pos);
-    // // Body + Tracking endcap + Energy endcap + Tracking flange + Energy flange 
-    // vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, vessel_flange_solid,
-    //  				    0, energy_flange_pos);
+    //Body + Tracking endcap + Energy endcap
+    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, vessel_energy_endcap_solid,
+				    0, energy_endcap_pos);
+    // Body + Tracking endcap + Energy endcap + Tracking flange
+    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, vessel_flange_solid,
+    				    0,tracking_flange_pos);
+    // Body + Tracking endcap + Energy endcap + Tracking flange + Energy flange 
+    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, vessel_flange_solid,
+      				    0, energy_flange_pos);
    
     // building nozzles
     G4UnionSolid* lateral_nozzle_solid = new G4UnionSolid("LAT_NOZZLE", lateral_nozzle_tube_solid,
@@ -200,18 +200,18 @@ void NextNewVessel::Construct()
      				    rot_lat, G4ThreeVector(_lat_nozzle_x_pos, 0.,-_lat_nozzle_z_pos));
     
     // Body + Tracking endcap + Energy endcap + Tracking flange + Energy flange + Lateral nozzles + Upper nozzles
-    // vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, up_nozzle_solid,
-    //    				    rot_up, G4ThreeVector(0.,_up_nozzle_y_pos,_up_nozzle_z_pos));
-    // vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, up_nozzle_solid,
-    //   				    rot_up, G4ThreeVector(0.,_up_nozzle_y_pos,0.));
-    // vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, up_nozzle_solid,
-    //   				    rot_up, G4ThreeVector(0.,_up_nozzle_y_pos, -_up_nozzle_z_pos));
+    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, up_nozzle_solid,
+        				    rot_up, G4ThreeVector(0.,_up_nozzle_y_pos,_up_nozzle_z_pos));
+    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, up_nozzle_solid,
+       				    rot_up, G4ThreeVector(0.,_up_nozzle_y_pos,0.));
+    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, up_nozzle_solid,
+       				    rot_up, G4ThreeVector(0.,_up_nozzle_y_pos, -_up_nozzle_z_pos));
    
     // Body + Tracking endcap + Energy endcap + Tracking flange + Energy flange + Lateral nozzles + Upper nozzles + Endcap nozzles
-    // vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, endcap_nozzle_solid,
-    //  				    0, G4ThreeVector(0.,0.,_endcap_nozzle_z_pos));
-    // vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, endcap_nozzle_solid,
-    //  				    rot_endcap, G4ThreeVector(0.,0.,-_endcap_nozzle_z_pos));
+    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, endcap_nozzle_solid,
+      				    0, G4ThreeVector(0.,0.,_endcap_nozzle_z_pos));
+    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, endcap_nozzle_solid,
+      				    rot_endcap, G4ThreeVector(0.,0.,-_endcap_nozzle_z_pos));
    
 
     ////GAS SOLID //////
@@ -219,23 +219,23 @@ void NextNewVessel::Construct()
     G4UnionSolid* vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_tube_solid,
      						      vessel_gas_tracking_endcap_solid, 0, tracking_endcap_pos);
     // Body gas + Tracking endcap gas + Energy endcap gas
-    // vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid,
-    // 						      vessel_gas_energy_endcap_solid, 0, energy_endcap_pos);
+    vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid,
+     						      vessel_gas_energy_endcap_solid, 0, energy_endcap_pos);
     // Body gas + Tracking endcap gas + Energy endcap gas + nozzles gas
-    // vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, lateral_nozzle_gas_solid, 
-    //  					rot_lat, G4ThreeVector(_lat_nozzle_x_pos, 0.,_lat_nozzle_z_pos));
-    // vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, lateral_nozzle_gas_solid, 
-    //  					rot_lat, G4ThreeVector(_lat_nozzle_x_pos, 0.,-_lat_nozzle_z_pos));
-    // vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, up_nozzle_gas_solid, 
-    //   					rot_up, G4ThreeVector(0.,_up_nozzle_y_pos,_up_nozzle_z_pos));
-    // vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, up_nozzle_gas_solid, 
-    //  					rot_up, G4ThreeVector(0.,_up_nozzle_y_pos,0.));
-    // vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, up_nozzle_gas_solid, 
-    //   					rot_up, G4ThreeVector(0.,_up_nozzle_y_pos,-_up_nozzle_z_pos));
-    // vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, endcap_nozzle_gas_solid, 
-    //   					0, G4ThreeVector(0.,0.,_endcap_nozzle_z_pos));
-    // vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, endcap_nozzle_gas_solid, 
-    // 					rot_endcap, G4ThreeVector(0.,0.,-_endcap_nozzle_z_pos));
+    vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, lateral_nozzle_gas_solid, 
+      					rot_lat, G4ThreeVector(_lat_nozzle_x_pos, 0.,_lat_nozzle_z_pos));
+    vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, lateral_nozzle_gas_solid, 
+      					rot_lat, G4ThreeVector(_lat_nozzle_x_pos, 0.,-_lat_nozzle_z_pos));
+    vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, up_nozzle_gas_solid, 
+       					rot_up, G4ThreeVector(0.,_up_nozzle_y_pos,_up_nozzle_z_pos));
+    vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, up_nozzle_gas_solid, 
+      					rot_up, G4ThreeVector(0.,_up_nozzle_y_pos,0.));
+    vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, up_nozzle_gas_solid, 
+       					rot_up, G4ThreeVector(0.,_up_nozzle_y_pos,-_up_nozzle_z_pos));
+    vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, endcap_nozzle_gas_solid, 
+       					0, G4ThreeVector(0.,0.,_endcap_nozzle_z_pos));
+    vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, endcap_nozzle_gas_solid, 
+     					rot_endcap, G4ThreeVector(0.,0.,-_endcap_nozzle_z_pos));
     
 
     //// LOGICS //////
@@ -267,24 +267,24 @@ void NextNewVessel::Construct()
 
 
     //// VERTEX GENERATORS   //
-    // _body_gen   = new CylinderPointSampler(_vessel_in_diam/2., _vessel_tube_length, _vessel_thickness, 0.);
-    // _flange_gen = new CylinderPointSampler(vessel_out_diam/2., _flange_length,
-    // 					    _flange_out_diam/2.-vessel_out_diam/2., 0., G4ThreeVector(0.,0.,0.));
-    // //trick to avoid vertex the vessel_gas-vessel interface -1*mm thickness
-    // _tracking_endcap_gen = new SpherePointSampler(_endcap_in_rad+1*mm, _endcap_thickness-1*mm, tracking_endcap_pos, 0,
-    // 						  0., twopi, 0., _endcap_theta);
-    // _energy_endcap_gen = new SpherePointSampler(_endcap_in_rad+1*mm, _endcap_thickness-1*mm, energy_endcap_pos, 0,
-    // 						0., twopi, 180.*deg - _endcap_theta, _endcap_theta);
+    _body_gen   = new CylinderPointSampler(_vessel_in_diam/2., _vessel_tube_length, _vessel_thickness, 0.);
+    _flange_gen = new CylinderPointSampler(vessel_out_diam/2., _flange_length,
+     					    _flange_out_diam/2.-vessel_out_diam/2., 0., G4ThreeVector(0.,0.,0.));
+    //trick to avoid vertex the vessel_gas-vessel interface -1*mm thickness
+    _tracking_endcap_gen = new SpherePointSampler(_endcap_in_rad+1*mm, _endcap_thickness-1*mm, tracking_endcap_pos, 0,
+     						  0., twopi, 0., _endcap_theta);
+    _energy_endcap_gen = new SpherePointSampler(_endcap_in_rad+1*mm, _endcap_thickness-1*mm, energy_endcap_pos, 0,
+     						0., twopi, 180.*deg - _endcap_theta, _endcap_theta);
 
    
 
-    // /// Calculating some prob
-    // G4double body_vol = vessel_tube_solid->GetCubicVolume() - vessel_gas_tube_solid->GetCubicVolume();
-    // G4double flange_vol = vessel_flange_solid->GetCubicVolume();
-    // G4double endcap_vol = vessel_tracking_endcap_solid->GetCubicVolume() - vessel_gas_tracking_endcap_solid->GetCubicVolume();
-    // G4double vol_tot = body_vol+ 2*flange_vol+ 2*endcap_vol;
-    // _perc_tube_vol = body_vol/vol_tot; 
-    // _perc_endcap_vol = endcap_vol /vol_tot;
+     /// Calculating some prob
+    G4double body_vol = vessel_tube_solid->GetCubicVolume() - vessel_gas_tube_solid->GetCubicVolume();
+    G4double flange_vol = vessel_flange_solid->GetCubicVolume();
+    G4double endcap_vol = vessel_tracking_endcap_solid->GetCubicVolume() - vessel_gas_tracking_endcap_solid->GetCubicVolume();
+    G4double vol_tot = body_vol+ 2*flange_vol+ 2*endcap_vol;
+    _perc_tube_vol = body_vol/vol_tot; 
+    _perc_endcap_vol = endcap_vol /vol_tot;
   }
    
   NextNewVessel::~NextNewVessel()
