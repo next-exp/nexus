@@ -35,9 +35,9 @@ namespace nexus {
    
     _num_PMTs (12),
     _num_gas_holes (12),
-    _energy_plane_z_pos (-35.45 * cm), // added .75 cm because the gap 
+    //_energy_plane_z_pos (-35.45 * cm), // added .75 cm because the gap 
     // between the two parts of the reflector is 1.5 cm 
-    //_energy_plane_z_pos (-34.7 * cm),//center to EP surface  //middle_nozzle(43.5)-(right_nozzle(15.8)-EP_to_rigth_nozzle(7) (from drawings)
+    _energy_plane_z_pos (-34.7 * cm),//center to EP surface  //middle_nozzle(43.5)-(right_nozzle(15.8)-EP_to_rigth_nozzle(7) (from drawings)
     // Carrier Plate dimensions
     _carrier_plate_thickness (12.0 * cm), 
     _carrier_plate_diam (63.0 * cm), // ???

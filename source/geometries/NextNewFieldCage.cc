@@ -69,8 +69,7 @@ namespace nexus {
 
     // Derived dimensions 
     _drift_length = _dist_EL_cathode-_el_gap_length/2.-_cathode_thickness/2.;
-    _tube_length = _dist_EL_cathode + _cathode_thickness + _buffer_length -
-      _el_gap_length/2.;
+    _tube_length = _dist_EL_cathode + _buffer_length -  _el_gap_length/2.;
     _el_gap_z_pos = _dist_EL_cathode/2.;
   }
 
@@ -126,9 +125,11 @@ namespace nexus {
 			_mother_logic, false, 0,true);
 
     //Internal reflector buffer region
-    G4double tube_buffer_length = _buffer_length;
+    G4double tube_buffer_length = _buffer_length - _cathode_gap/2.;
     G4double tube_buffer_pos = _el_gap_z_pos -_el_gap_length/2. -
-      tube_drift_length - _cathode_gap - _buffer_length/2.;
+      tube_drift_length - _cathode_gap - tube_buffer_length/2.;
+    G4cout << "Abs pos of buffer: " << tube_buffer_pos << G4endl;
+    
     G4Tubs* reflector_buffer_solid = 
       new G4Tubs("FC_REFLECTOR_BUFFER", _tube_in_diam/2.-_reflector_thickness, 
 		 _tube_in_diam/2., tube_buffer_length/2., 0, twopi);
