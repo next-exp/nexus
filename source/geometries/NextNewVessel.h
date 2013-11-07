@@ -39,6 +39,8 @@ namespace nexus {
     /// Returns the logical volume of the inner object
     G4LogicalVolume* GetInternalLogicalVolume();
 
+    G4double GetNozzlesPositions();
+
     /// Builder
     void Construct();
 
@@ -63,7 +65,6 @@ namespace nexus {
     G4LogicalVolume* _internal_logic_vol;
 
     // Vertex generators
-    //BoxPointSampler* _lab_gen;????????
     CylinderPointSampler* _body_gen;
     SpherePointSampler*   _tracking_endcap_gen;
     SpherePointSampler*   _energy_endcap_gen;
