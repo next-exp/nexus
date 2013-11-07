@@ -20,6 +20,7 @@
 class G4Material;
 class G4LogicalVolume;
 class G4GenericMessenger;
+class G4VisAttributes;
 
 namespace nexus {
 
@@ -34,16 +35,25 @@ namespace nexus {
     /// Sets the Logical Volume where Elements will be placed
     void SetLogicalVolume(G4LogicalVolume* mother_logic);
 
-    /// Generate a vertex within a given region of the geometry
+    /// Generates a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
-    /// To calculate the vertices for the EL table generation
-    void CalculateELTableVertices(G4double radius, 
-				  G4double binning, G4double z);
-    ///
+    /// Gives the absolute position of the field cage ensemble
     G4ThreeVector GetPosition() const;
+
     /// Builder
     void Construct();
+
+  private:
+    void DefineMaterials();
+    void BuildELRegion();
+    void BuildCathodeGrid();
+    void BuildActive(); 
+    void BuildFieldCage(); 
+
+    /// Calculates the vertices for the EL table generation
+    void CalculateELTableVertices(G4double radius, 
+				  G4double binning, G4double z);
 
   private:
     G4bool _elfield;
@@ -55,11 +65,9 @@ namespace nexus {
     G4double _temperature;
 
     // Pointers to materials definition
-    G4Material* _hdpe;//High density polyethylene
-    
-    void BuildELRegion();
-    void BuildCathodeGrid();
-    void BuildActive();    
+    G4Material* _hdpe; 
+    G4Material* _tpb;
+    G4Material* _teflon;    
 
     // Dimensions
     G4double _dist_EL_cathode, _buffer_length;
@@ -70,10 +78,16 @@ namespace nexus {
     G4double _el_grid_transparency, _gate_transparency; 
     G4double _cathode_grid_transparency;
     G4double _drift_length;
-    G4double _cathode_thickness;
+    G4double _cathode_thickness, _cathode_gap;
 
     // Visibility 
     G4bool _visibility;
+    G4VisAttributes* _grey_color;
+    G4VisAttributes* _red_color;
+    G4VisAttributes* _light_blue_color;
+    G4VisAttributes* _blue_color;
+    G4VisAttributes* _green_color;
+    
 
     // Vertex generators
     CylinderPointSampler* _field_cage_gen;
