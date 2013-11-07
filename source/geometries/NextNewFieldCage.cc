@@ -75,10 +75,6 @@ namespace nexus {
     // Calculate vertices for EL table generation
     G4double z = _el_gap_z_pos - _el_gap_length/2. + .5*mm;
     CalculateELTableVertices(_tube_in_diam/2., 5.*mm, z);
-    G4cout << "Points: "<< _table_vertices.size() << G4endl;
-    for (int i=0; i<_table_vertices.size(); i++){
-      G4cout << i <<", " <<  _table_vertices[i][0]<< ", "<< _table_vertices[i][1] << G4endl; 
-    }
 
     // declare colors to be used for visibilities
     _grey_color = new G4VisAttributes;
