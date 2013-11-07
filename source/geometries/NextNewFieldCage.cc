@@ -39,6 +39,7 @@ namespace nexus {
     _el_gap_length (.5 * cm),
     _grid_thickness (.1 * mm), //it's just fake dielectric
     _cathode_thickness(1. * mm),
+    _cathode_gap(15. * mm),
     _el_grid_transparency (.88),
     _gate_transparency (.76),
     _cathode_grid_transparency (.98),
@@ -104,32 +105,65 @@ namespace nexus {
       new G4PVPlacement(0, G4ThreeVector(0., 0., _tube_z_pos), 
 			field_cage_logic, "FIELD_CAGE", _mother_logic, 
 			false, 0,true);
-
-    //Internal reflector
-    G4Tubs* reflector_solid = 
-      new G4Tubs("FC_REFLECTOR", _tube_in_diam/2.-_reflector_thickness, 
-		 _tube_in_diam/2., _tube_length/2., 0, twopi);
+    
     G4Material* teflon = 
       G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
-    G4LogicalVolume* reflector_logic = 
-      new G4LogicalVolume(reflector_solid, teflon, "FC_REFLECTOR");
-    G4PVPlacement* reflector_physi = 
-      new G4PVPlacement(0, G4ThreeVector(0., 0., _tube_z_pos), 
-			reflector_logic, "FC_REFLECTOR", _mother_logic, 
-			false, 0,true);
+
+    //Internal reflector drift region
+    G4double tube_drift_length = _dist_EL_cathode - _el_gap_length/2. - 
+      _cathode_gap/2.;
+    G4double tube_drift_pos = _el_gap_z_pos -_el_gap_length/2. -
+      tube_drift_length/2.;
+    G4Tubs* reflector_drift_solid = 
+      new G4Tubs("FC_REFLECTOR_DRIFT", 
+		 _tube_in_diam/2. -  _reflector_thickness, _tube_in_diam/2., 
+		 tube_drift_length/2., 0, twopi);
+    G4LogicalVolume* reflector_drift_logic = 
+      new G4LogicalVolume(reflector_drift_solid, teflon, "FC_REFLECTOR_DRIFT");
+    G4PVPlacement* reflector_drift_physi = 
+      new G4PVPlacement(0, G4ThreeVector(0., 0., tube_drift_pos), 
+			reflector_drift_logic, "FC_REFLECTOR_DRIFT", 
+			_mother_logic, false, 0,true);
+
+    //Internal reflector buffer region
+    G4double tube_buffer_length = _buffer_length;
+    G4double tube_buffer_pos = _el_gap_z_pos -_el_gap_length/2. -
+      tube_drift_length - _cathode_gap - _buffer_length/2.;
+    G4Tubs* reflector_buffer_solid = 
+      new G4Tubs("FC_REFLECTOR_BUFFER", _tube_in_diam/2.-_reflector_thickness, 
+		 _tube_in_diam/2., tube_buffer_length/2., 0, twopi);
+    G4LogicalVolume* reflector_buffer_logic = 
+      new G4LogicalVolume(reflector_buffer_solid, teflon, 
+			  "FC_REFLECTOR_BUFFER");
+    G4PVPlacement* reflector_buffer_physi = 
+      new G4PVPlacement(0, G4ThreeVector(0., 0., tube_buffer_pos), 
+			reflector_buffer_logic, "FC_REFLECTOR_BUFFER", 
+			_mother_logic, false, 0,true);
 
     // TPB coating
-    G4Tubs* tpb_solid =
-      new G4Tubs("REFLECTOR_TPB", _tube_in_diam/2.-_reflector_thickness,
-		 _tube_in_diam/2.-_reflector_thickness + _tpb_thickness,
-		 _tube_length/2., 0, twopi);
     G4Material* tpb = MaterialsList::TPB();
     tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB(_pressure, _temperature));
-    G4LogicalVolume* tpb_logic = 
-      new G4LogicalVolume(tpb_solid, tpb, "REFLECTOR_TPB");
-    G4PVPlacement* tpb_physi = 
+
+    G4Tubs* tpb_drift_solid =
+      new G4Tubs("DRIFT_TPB", _tube_in_diam/2.-_reflector_thickness,
+		 _tube_in_diam/2.-_reflector_thickness + _tpb_thickness,
+		 tube_drift_length/2., 0, twopi);   
+    G4LogicalVolume* tpb_drift_logic = 
+      new G4LogicalVolume(tpb_drift_solid, tpb, "DRIFT_TPB");
+    G4PVPlacement* tpb_drift_physi = 
       new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), 
-			tpb_logic, "REFLECTOR_TPB", reflector_logic, 
+			tpb_drift_logic, "DRIFT_TPB", reflector_drift_logic, 
+			false, 0,true);
+
+    G4Tubs* tpb_buffer_solid =
+      new G4Tubs("BUFFER_TPB", _tube_in_diam/2.-_reflector_thickness,
+		 _tube_in_diam/2.-_reflector_thickness + _tpb_thickness,
+		 tube_buffer_length/2., 0, twopi);    
+    G4LogicalVolume* tpb_buffer_logic = 
+      new G4LogicalVolume(tpb_buffer_solid, tpb, "BUFFER_TPB");
+    G4PVPlacement* tpb_buffer_physi = 
+      new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), 
+			tpb_buffer_logic, "BUFFER_TPB", reflector_buffer_logic, 
 			false, 0,true);
 
     /// OPTICAL SURFACE PROPERTIES    ////////
@@ -139,7 +173,9 @@ namespace nexus {
     reflector_opt_surf->SetFinish(ground);
     reflector_opt_surf->SetSigmaAlpha(0.1);
     reflector_opt_surf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
-    new G4LogicalSkinSurface("FC_REFLECTOR", reflector_logic, 
+    new G4LogicalSkinSurface("FC_REFLECTOR_DRIFT", reflector_drift_logic, 
+			     reflector_opt_surf);
+    new G4LogicalSkinSurface("FC_REFLECTOR_BUFFER", reflector_buffer_logic, 
 			     reflector_opt_surf);
 
     /// SETTING VISIBILITIES   //////////
@@ -149,15 +185,19 @@ namespace nexus {
       field_cage_logic->SetVisAttributes(hdpe_col);
       G4VisAttributes teflon_col(G4Colour(0., 0., 1.));
       teflon_col.SetForceSolid(true);
-      reflector_logic->SetVisAttributes(teflon_col);
+      reflector_drift_logic->SetVisAttributes(teflon_col);
+      reflector_buffer_logic->SetVisAttributes(teflon_col);
       G4VisAttributes tpb_col(G4Colour(1., 0., 0.));
       tpb_col.SetForceSolid(true);
-      tpb_logic->SetVisAttributes(tpb_col);
+      tpb_drift_logic->SetVisAttributes(tpb_col);
+      tpb_buffer_logic->SetVisAttributes(tpb_col);
     }
     else {
       field_cage_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      reflector_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      tpb_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      reflector_drift_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      reflector_buffer_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      tpb_drift_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      tpb_buffer_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
     /// VERTEX GENERATORS   //////////
