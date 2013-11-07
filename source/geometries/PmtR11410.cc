@@ -134,8 +134,9 @@ namespace nexus {
     new G4LogicalSkinSurface("PMT_PHOTOCATHODE", photocathode_logic, pmt_opt_surf);
 
     // Sensitive detector
-    PmtSD* pmtsd = new PmtSD("/PMT_R11410/PMT_PHOTOCATHODE");
+    PmtSD* pmtsd = new PmtSD("/PMT_R11410/PmtR11410");
     pmtsd->SetDetectorVolumeDepth(4);
+    pmtsd->SetTimeBinning(100.*nanosecond);
     G4SDManager::GetSDMpointer()->AddNewDetector(pmtsd);
     window_logic->SetSensitiveDetector(pmtsd);
 
