@@ -26,13 +26,8 @@
 namespace nexus {
 
   
-  NextNewIcs::NextNewIcs():/*const G4double lat_nozzle_in_diam,
-			 const G4double up_nozzle_in_diam,
-			 const G4double lat_anode_nozzle_xpos,
-			 const G4double lat_cathode_nozzle_xpos,
-			 const G4double anode_nozzle_zpos,
-			 const G4double central_nozzle_zpos,
-			 const G4double cathode_nozzle_zpos):*/
+  NextNewIcs::NextNewIcs(const G4double lat_nozzle_z_pos,
+			 const G4double up_nozzle_z_pos ):
 
     BaseGeometry(),
 
@@ -45,24 +40,24 @@ namespace nexus {
     _tracking_tread_diam (55. * cm), //_support_plate_tread_diam from TP +.5
     _tracking_tread_length (84.1 * mm), //_support_plate_tread_thickness + _el_tot_zone 
 
-     /// Needed External variables
+   
     _lat_nozzle_in_diam  (30.*mm),//lat_nozzle_in_diam;
     _up_nozzle_in_diam (60.*mm), //up_nozzle_in_diam;
-    _lat_nozzle_z_pos (120*mm),//xpos = lat_anode_nozzle_xpos;
     _lat_nozzle_x_pos (_body_out_diam/2. -_body_thickness/2.),// lat_cathode_nozzle_xpos;
-    _up_nozzle_y_pos (_lat_nozzle_x_pos),
-    _up_nozzle_z_pos ( 277. *mm)//anode_nozzle_zpos;
-    // _up_central_nozzle_zpos = 0.*mm;//central_nozzle_zpos;
-    // _cathode_nozzle_zpos = 277.*mm; //cathode_nozzle_zpos;
-    {
-   
+    _up_nozzle_y_pos (_lat_nozzle_x_pos)
+    
+  {
+    /// Needed External variables   
+    _lat_nozzle_z_pos = lat_nozzle_z_pos;
+    _up_nozzle_z_pos = up_nozzle_z_pos;
+      
     // Initializing the geometry navigator (used in vertex generation)
     _geom_navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
-
+    
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry Next100.");
     _msg->DeclareProperty("ics_vis", _visibility, "ICS Visibility");
-
+    
   }
   
 

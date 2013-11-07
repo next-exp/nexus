@@ -25,13 +25,8 @@ namespace nexus {
   {
   public:
     /// Constructor
-    NextNewIcs()/*const G4double lat_nozzle_in_diam,
-	       const G4double up_nozzle_in_diam,
-	       const G4double lat_anode_nozzle_xpos,
-	       const G4double lat_cathode_nozzle_xpos,
-	       const G4double anode_nozzle_zpos,
-	       const G4double central_nozzle_zpos,
-	       const G4double cathode_nozzle_zpos)*/;
+    NextNewIcs(const G4double lat_nozzle_z_pos,
+	       const G4double up_nozzle_z_pos );
 
     /// Destructor
     ~NextNewIcs();

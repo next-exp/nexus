@@ -300,9 +300,9 @@ void NextNewVessel::Construct()
     return _internal_logic_vol;
   }
   
-  G4double NextNewVessel::GetNozzlesPositions()
+  G4double NextNewVessel::GetNozzlesZPositions()
   { 
-    return   _lat_nozzle_z_pos, _lat_nozzle_x_pos, _up_nozzle_y_pos, _up_nozzle_z_pos;
+    return   _lat_nozzle_z_pos, _up_nozzle_z_pos;
   }
 
   G4ThreeVector NextNewVessel::GenerateVertex(const G4String& region) const
