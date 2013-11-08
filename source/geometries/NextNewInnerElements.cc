@@ -78,7 +78,7 @@ namespace nexus {
       vertex = _energy_plane->GenerateVertex(region);
     }
     else if ( (region == "FIELD_CAGE") || (region== "REFLECTOR") || 
-	      (region == "ACTIVE") ) {
+	      (region == "ACTIVE") || (region== "EL_TABLE")) {
       vertex=_field_cage->GenerateVertex(region);
     }
     else if ( (region == "SUPPORT_PLATE") || (region == "DICE_BOARD") ) {
