@@ -13,10 +13,12 @@
 #define __NEXTNEW__
 
 #include "BaseGeometry.h"
-//#include "Next100Shielding.h"
+#include "BoxPointSampler.h"
 
+namespace nexus { class Next100Shielding; }
 namespace nexus { class NextNewVessel; }
-//namespace nexus { class NextNewIcs; }
+namespace nexus { class NextNewIcs; }
+namespace nexus { class NextNewInnerElements; }
 
 class G4LogicalVolume;
 class G4GenericMessenger;
@@ -50,9 +52,14 @@ namespace nexus {
     G4LogicalVolume* _buffer_gas_logic;
 
     //Detector parts
+    Next100Shielding* _shielding;
     NextNewVessel* _vessel;   
-    //    NextNewIcs* _ics;
+    NextNewIcs* _ics;
+    NextNewInnerElements* _inner_elements;
     
+    //Vertex genrator    
+    BoxPointSampler* _lab_gen;
+
     /// Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
 

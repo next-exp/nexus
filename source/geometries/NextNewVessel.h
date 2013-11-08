@@ -39,7 +39,8 @@ namespace nexus {
     /// Returns the logical volume of the inner object
     G4LogicalVolume* GetInternalLogicalVolume();
 
-    G4double GetNozzlesZPositions();
+    G4double GetUPNozzleZPosition();
+    G4double GetLATNozzleZPosition();
 
     /// Builder
     void Construct();

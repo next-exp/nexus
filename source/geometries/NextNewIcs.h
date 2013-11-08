@@ -25,11 +25,17 @@ namespace nexus {
   {
   public:
     /// Constructor
-    NextNewIcs(const G4double lat_nozzle_z_pos,
-	       const G4double up_nozzle_z_pos );
+    NextNewIcs();/*const G4double lat_nozzle_z_pos,
+		   const G4double up_nozzle_z_pos );*/
 
     /// Destructor
     ~NextNewIcs();
+
+    /// Sets the Logical Volume where ICS will be placed
+    void SetLogicalVolume(G4LogicalVolume* mother_logic);
+
+    /// Sets external positions
+    void SetNozzlesZPosition(const G4double lat_nozzle_z_pos, const G4double up_nozzle_z_pos);
 
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
@@ -39,6 +45,8 @@ namespace nexus {
 
 
   private:
+    // Mother Logical Volume of the ICS
+    G4LogicalVolume* _mother_logic;
     // Dimensions
     G4double _body_out_diam, _body_length, _body_thickness;
     G4double _tracking_tread_diam, _tracking_tread_length;

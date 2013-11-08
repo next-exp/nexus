@@ -86,7 +86,6 @@ namespace nexus {
 
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
-
     _msg->DeclareProperty("vessel_vis", _visibility, "Vessel Visibility");
 
     G4GenericMessenger::Command& pressure_cmd = _msg->DeclareProperty("pressure", _pressure, "Xenon pressure");
@@ -245,25 +244,25 @@ void NextNewVessel::Construct()
     this->SetLogicalVolume(vessel_logic);
 
     G4Material* vessel_gas_mat =  MaterialsList::GXe(_pressure, _temperature);
-    //vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature));
+    vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature));
     G4LogicalVolume* vessel_gas_logic = new G4LogicalVolume(vessel_gas_solid, vessel_gas_mat,"VESSEL_GAS");
-    // _internal_logic_vol = vessel_gas_logic;
+    _internal_logic_vol = vessel_gas_logic;
     G4PVPlacement* vessel_gas_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_gas_logic,
     							"VESSEL_GAS", vessel_logic, false, 0,true);
 						   	   
     // SETTING VISIBILITIES   //////////
-    //if (_visibility) {
-    G4VisAttributes titanium_col(G4Colour(.71, .69, .66));
-    //titanium_col.SetForceSolid(true);
-    vessel_logic->SetVisAttributes(titanium_col);
-    // G4VisAttributes gas_col(G4Colour(1., 1., 1.));
-    // gas_col.SetForceSolid(true);
-    // vessel_gas_logic->SetVisAttributes(gas_col);
-    vessel_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    // }
-      //else {
-    // vessel_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    // }
+    if (_visibility) {
+      G4VisAttributes titanium_col(G4Colour(.71, .69, .66));
+      //titanium_col.SetForceSolid(true);
+      vessel_logic->SetVisAttributes(titanium_col);
+      // G4VisAttributes gas_col(G4Colour(1., 1., 1.));
+      // gas_col.SetForceSolid(true);
+      // vessel_gas_logic->SetVisAttributes(gas_col);
+      vessel_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
+    else {
+      vessel_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
 
 
     //// VERTEX GENERATORS   //
@@ -300,9 +299,14 @@ void NextNewVessel::Construct()
     return _internal_logic_vol;
   }
   
-  G4double NextNewVessel::GetNozzlesZPositions()
+  G4double NextNewVessel::GetUPNozzleZPosition()
   { 
-    return   _lat_nozzle_z_pos, _up_nozzle_z_pos;
+    return _up_nozzle_z_pos;
+  }
+
+ G4double NextNewVessel::GetLATNozzleZPosition()
+  { 
+    return _lat_nozzle_z_pos;
   }
 
   G4ThreeVector NextNewVessel::GenerateVertex(const G4String& region) const

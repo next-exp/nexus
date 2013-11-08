@@ -123,16 +123,17 @@ namespace nexus {
     }
    
     //// SETTING VISIBILITIES   //////////    
-    // if (_visibility) {
-    G4VisAttributes dark_green_col(G4Colour(0., .6, 0.));
-    dice_board_logic->SetVisAttributes(dark_green_col);
-    G4VisAttributes Copper_col(G4Colour(.72, .45, .20));
-    //Copper_col.SetForceSolid(true);
-    support_plate_logic->SetVisAttributes(Copper_col);
-    // }
-    // else {
-    //   support_plate_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    // }
+    if (_visibility) {
+      G4VisAttributes dark_green_col(G4Colour(0., .6, 0.));
+      dice_board_logic->SetVisAttributes(dark_green_col);
+      G4VisAttributes Copper_col(G4Colour(.72, .45, .20));
+      //Copper_col.SetForceSolid(true);
+      support_plate_logic->SetVisAttributes(Copper_col);
+    }
+    else {
+      dice_board_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      support_plate_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
 
 
     // VERTEX GENERATORS   //////////

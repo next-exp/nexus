@@ -24,6 +24,8 @@ class G4LogicalVolume;
 class G4GenericMessenger;
 class G4OpticalSurface;
 
+class G4GenericMessenger;
+
 namespace nexus{
   class Enclosure: public BaseGeometry
   {
@@ -67,6 +69,7 @@ namespace nexus{
     
     // Geometry Navigator
     G4Navigator* _geom_navigator;
+
     // Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
 

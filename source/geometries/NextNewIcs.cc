@@ -26,14 +26,14 @@
 namespace nexus {
 
   
-  NextNewIcs::NextNewIcs(const G4double lat_nozzle_z_pos,
-			 const G4double up_nozzle_z_pos ):
+  NextNewIcs::NextNewIcs():/*const G4double lat_nozzle_z_pos,
+			     const G4double up_nozzle_z_pos ):*/
 
     BaseGeometry(),
 
     // Body dimensions
     _body_out_diam (64.0  * cm), // inner diameter of the vessel
-    _body_length (68.4 * cm), /// nozzle to nozzle + flanges     ???????????
+    _body_length  (68.4 * cm), /// nozzle to nozzle + flanges     ???????????
     _body_thickness (6.0 * cm),
 
     // Tracking plane tread dimensions 
@@ -47,9 +47,9 @@ namespace nexus {
     _up_nozzle_y_pos (_lat_nozzle_x_pos)
     
   {
-    /// Needed External variables   
-    _lat_nozzle_z_pos = lat_nozzle_z_pos;
-    _up_nozzle_z_pos = up_nozzle_z_pos;
+    // /// Needed External variables   
+    // _lat_nozzle_z_pos = lat_nozzle_z_pos;
+    // _up_nozzle_z_pos = up_nozzle_z_pos;
       
     // Initializing the geometry navigator (used in vertex generation)
     _geom_navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
@@ -59,16 +59,25 @@ namespace nexus {
     _msg->DeclareProperty("ics_vis", _visibility, "ICS Visibility");
     
   }
-  
+   
+  void NextNewIcs::SetLogicalVolume(G4LogicalVolume* mother_logic)
+  {
+    _mother_logic = mother_logic;
+  }
 
-  
+  void NextNewIcs::SetNozzlesZPosition(const G4double lat_nozzle_z_pos, const G4double up_nozzle_z_pos)
+  {
+    _lat_nozzle_z_pos = lat_nozzle_z_pos;
+    _up_nozzle_z_pos = up_nozzle_z_pos;
+  }
+
   void NextNewIcs::Construct()
   {
     ////// INNER COPPER SHIELDING BARREL  ///////////
 
     G4Tubs* ics_body_nh_solid = 
       new G4Tubs("ICS_BODY", _body_out_diam/2. - _body_thickness,
-		 _body_out_diam/2.,_body_length/2., 0., twopi);
+		 _body_out_diam/2.- 1*mm,_body_length/2., 0., twopi);
 
     G4Tubs* ics_tracking_tread_solid = 
       new G4Tubs("ICS_TRACKING_TREAD", _body_out_diam/2. - _body_thickness - 2.*mm, _body_out_diam/2. - _body_thickness/2.,
@@ -114,8 +123,10 @@ namespace nexus {
     
     G4LogicalVolume* ics_logic = new G4LogicalVolume(ics_solid,
      						     G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"), "ICS");
-
-    this->SetLogicalVolume(ics_logic);
+    G4PVPlacement* _ics_physi = 
+      new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), ics_logic, "ICS", _mother_logic, false, 0, true);
+   
+    //this->SetLogicalVolume(ics_logic);
 
 
     // SETTING VISIBILITIES   //////////

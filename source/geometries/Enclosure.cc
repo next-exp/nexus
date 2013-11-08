@@ -47,6 +47,10 @@ namespace nexus{
     /// Initializing the geometry navigator (used in vertex generation)
     _geom_navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
     
+    /// Messenger
+    _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
+    _msg->DeclareProperty("enclosure_vis", _visibility, "Vessel Visibility");
+
     /// The PMT
     _pmt = new PmtR11410(); 
   }
@@ -132,21 +136,28 @@ namespace nexus{
 			 "PMT", enclosure_gas_logic, false, 0, true);
 
      
-     /////  SETTING VISIBILITIES   //////////    
-     G4VisAttributes copper_col(G4Colour(.58, .36, .16));
-     //copper_col.SetForceSolid(true);// ==/vis/viewer/set/style surface
-     enclosure_logic->SetVisAttributes(copper_col);
-     G4VisAttributes Vacuum_col(G4Colour(.48,.45,.58));
-     Vacuum_col.SetForceSolid(true);
-     enclosure_gas_logic->SetVisAttributes(Vacuum_col);  
-     enclosure_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
-     G4VisAttributes Sapphire_col(G4Colour(.8,.8,1.));
-     Sapphire_col.SetForceSolid(true);
-     enclosure_window_logic->SetVisAttributes(Sapphire_col);
-     G4VisAttributes Pad_col(G4Colour(.6,.9,.2));
-     Pad_col.SetForceSolid(true);
-     enclosure_pad_logic->SetVisAttributes(Pad_col);
-
+     /////  SETTING VISIBILITIES   //////////   
+     // if (_visibility) { 
+       G4VisAttributes copper_col(G4Colour(.58, .36, .16));
+       //copper_col.SetForceSolid(true);
+       enclosure_logic->SetVisAttributes(copper_col);
+       // G4VisAttributes Vacuum_col(G4Colour(.48,.45,.58));
+       // Vacuum_col.SetForceSolid(true);
+       // enclosure_gas_logic->SetVisAttributes(Vacuum_col);  
+       enclosure_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
+       G4VisAttributes Sapphire_col(G4Colour(.8,.8,1.));
+       Sapphire_col.SetForceSolid(true);
+       enclosure_window_logic->SetVisAttributes(Sapphire_col);
+       G4VisAttributes Pad_col(G4Colour(.6,.9,.2));
+       Pad_col.SetForceSolid(true);
+       enclosure_pad_logic->SetVisAttributes(Pad_col);
+     // }
+     // else {
+     //   enclosure_logic->SetVisAttributes(G4VisAttributes::Invisible);     
+     //   enclosure_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);    
+     //   enclosure_window_logic->SetVisAttributes(G4VisAttributes::Invisible);
+     //   enclosure_pad_logic->SetVisAttributes(G4VisAttributes::Invisible);
+     // }
      
      // VERTEX GENERATORS   //////////
      _enclosure_body_gen = 
