@@ -15,6 +15,8 @@
 #include "BaseGeometry.h"
 #include <G4ThreeVector.hh>
 
+class G4GenericMessenger;
+
 namespace nexus {
 
 
@@ -36,6 +38,13 @@ namespace nexus {
     
   private:
     G4ThreeVector _dimensions; ///< external dimensions of the SiPM11
+
+    // Visibility of the tracking plane
+    G4bool _visibility;
+
+     // Messenger for the definition of control commands
+    G4GenericMessenger* _msg; 
+
   };
 
 

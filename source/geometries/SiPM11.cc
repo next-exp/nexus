@@ -11,6 +11,7 @@
 
 #include "PmtSD.h"
 #include "MaterialsList.h"
+#include <G4GenericMessenger.hh>
 #include "OpticalMaterialProperties.h"
 
 #include <G4Box.hh>
@@ -30,6 +31,9 @@ namespace nexus {
   
   SiPM11::SiPM11(): BaseGeometry()
   {
+    /// Messenger
+    _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
+    _msg->DeclareProperty("SiPM11_vis", _visibility, "SiPM11 Visibility");
   }
   
   
@@ -161,14 +165,21 @@ namespace nexus {
     }
 
     // Visibilities
-    G4VisAttributes active_col(G4Colour(1.,1.,0.));
-    active_col.SetForceSolid(true);
-    active_logic->SetVisAttributes(active_col);
-    G4VisAttributes plastic_col(G4Colour(.5,.5,.7));
-    plastic_col.SetForceSolid(true);
-    plastic_logic->SetVisAttributes(plastic_col);
-    //active_logic->SetVisAttributes(G4VisAttributes::Invisible);
-
+    if (_visibility) {
+      G4VisAttributes sipm_col(G4Colour(.40,.55,.55));
+      sipm_logic->SetVisAttributes(sipm_col);
+      G4VisAttributes active_col(G4Colour(1.,1.,0.));
+      active_col.SetForceSolid(true);
+      active_logic->SetVisAttributes(active_col);
+      G4VisAttributes plastic_col(G4Colour(.5,.5,.7));
+      plastic_col.SetForceSolid(true);
+      plastic_logic->SetVisAttributes(plastic_col);
+    }
+    else {
+      sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      active_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      plastic_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
   }
   
   
