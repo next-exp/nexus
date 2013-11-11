@@ -155,7 +155,7 @@ namespace nexus {
       new G4LogicalVolume(el_gap_solid, _gas, "EL_GAP");  
     G4PVPlacement* el_gap_physi = 
       new G4PVPlacement(0, G4ThreeVector(0., 0., _el_gap_z_pos), el_gap_logic,
-			"EL_GAP", _mother_logic, false, 0,true);
+			"EL_GAP", _mother_logic, false, 0, false);
    
     if (_elfield) {
       // Define EL electric field
@@ -194,13 +194,13 @@ namespace nexus {
       new G4LogicalVolume(diel_grid_solid, fgate_mat, "EL_GRID_GATE");
     G4PVPlacement* gate_physi = 
       new G4PVPlacement(0, G4ThreeVector(0., 0., poszInner), gate_logic, 
-			"EL_GRID_GATE", el_gap_logic, false, 0,true);
+			"EL_GRID_GATE", el_gap_logic, false, 0, false);
 
     G4LogicalVolume* anode_logic = 
       new G4LogicalVolume(diel_grid_solid, fgrid_mat, "EL_GRID_ANODE");
     G4PVPlacement* anode_physi = 
       new G4PVPlacement(0, G4ThreeVector(0., 0., poszOuter), anode_logic, 
-			"EL_GRID_ANODE", el_gap_logic, false, 1, true);
+			"EL_GRID_ANODE", el_gap_logic, false, 1, false);
     
 
     /// Visibilities
@@ -228,7 +228,7 @@ namespace nexus {
       new G4LogicalVolume(diel_grid_solid, fgrid_mat, "CATHODE_GRID");
     G4PVPlacement* diel_grid_physi = 
       new G4PVPlacement(0, G4ThreeVector(0.,0.,posz), diel_grid_logic, 
-			"CATHODE_GRID", _mother_logic, false, 0,true);
+			"CATHODE_GRID", _mother_logic, false, 0, false);
     
     if (_visibility) {
       _red_color->SetForceSolid(true);
@@ -247,7 +247,7 @@ namespace nexus {
       new G4LogicalVolume(active_solid, _gas, "ACTIVE");
     G4PVPlacement* active_physi = 
       new G4PVPlacement(0, G4ThreeVector(0., 0., active_posz), active_logic, 
-			"ACTIVE", _mother_logic, false, 0,true);
+			"ACTIVE", _mother_logic, false, 0, false);
 
     // Limit the step size in this volume for better tracking precision
     active_logic->SetUserLimits(new G4UserLimits(_max_step_size));
@@ -288,7 +288,7 @@ namespace nexus {
     G4PVPlacement* field_cage_physi = 
       new G4PVPlacement(0, G4ThreeVector(0., 0., _tube_z_pos), 
 			field_cage_logic, "FIELD_CAGE", _mother_logic, 
-			false, 0,true);
+			false, 0, false);
     
     //Internal reflector drift region
     G4double tube_drift_length = _dist_EL_cathode - _el_gap_length/2. - 
@@ -304,7 +304,7 @@ namespace nexus {
     G4PVPlacement* reflector_drift_physi = 
       new G4PVPlacement(0, G4ThreeVector(0., 0., tube_drift_pos), 
 			reflector_drift_logic, "FC_REFLECTOR_DRIFT", 
-			_mother_logic, false, 0,true);
+			_mother_logic, false, 0, false);
 
     //Internal reflector buffer region
     G4double tube_buffer_length = _buffer_length - _cathode_gap/2.;
@@ -320,7 +320,7 @@ namespace nexus {
     G4PVPlacement* reflector_buffer_physi = 
       new G4PVPlacement(0, G4ThreeVector(0., 0., tube_buffer_pos), 
 			reflector_buffer_logic, "FC_REFLECTOR_BUFFER", 
-			_mother_logic, false, 0,true);
+			_mother_logic, false, 0, false);
 
 
     G4Tubs* tpb_drift_solid =
@@ -332,7 +332,7 @@ namespace nexus {
     G4PVPlacement* tpb_drift_physi = 
       new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), 
 			tpb_drift_logic, "DRIFT_TPB", reflector_drift_logic, 
-			false, 0,true);
+			false, 0, false);
 
     G4Tubs* tpb_buffer_solid =
       new G4Tubs("BUFFER_TPB", _tube_in_diam/2.-_reflector_thickness,
@@ -343,7 +343,7 @@ namespace nexus {
     G4PVPlacement* tpb_buffer_physi = 
       new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), 
 			tpb_buffer_logic, "BUFFER_TPB", reflector_buffer_logic, 
-			false, 0,true);
+			false, 0, false);
 
     /// OPTICAL SURFACE PROPERTIES    ////////
     G4OpticalSurface* reflector_opt_surf = new G4OpticalSurface("FC_REFLECTOR");

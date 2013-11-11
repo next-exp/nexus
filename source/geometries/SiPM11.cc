@@ -88,7 +88,7 @@ namespace nexus {
     G4double epoxy_z = 0.300 * mm;
 
     new G4PVPlacement(0, G4ThreeVector(0, 0., epoxy_z/2), plastic_logic,
-		      "PLASTIC", sipm_logic, false, 0, true);
+		      "PLASTIC", sipm_logic, false, 0, false);
 
     // ACTIVE WINDOW /////////////////////////////////////////////////
 
@@ -109,7 +109,7 @@ namespace nexus {
     G4double pos_z = epoxy_z/2. - active_depth/2. - pcb_z/2;
 
     new G4PVPlacement(0, G4ThreeVector(pos_x, 0., pos_z), active_logic,
-		      "PHOTODIODES", sipm_logic, false, 0, true);
+		      "PHOTODIODES", sipm_logic, false, 0, false);
     
     
     // OPTICAL SURFACES //////////////////////////////////////////////

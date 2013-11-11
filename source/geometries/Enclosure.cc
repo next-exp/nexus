@@ -97,7 +97,7 @@ namespace nexus{
      	_enclosure_pad_thickness)/2;
      G4PVPlacement* enclosure_gas_physi = 
        new G4PVPlacement(0,G4ThreeVector(0.,0.,gas_pos), enclosure_gas_logic,
-			 "ENCLOSURE_GAS", enclosure_logic, false, 0, true);
+			 "ENCLOSURE_GAS", enclosure_logic, false, 0, false);
 
      // Adding the sapphire window
      G4Tubs* enclosure_window_solid = 
@@ -112,7 +112,7 @@ namespace nexus{
      G4PVPlacement* enclosure_window_physi =
        new G4PVPlacement(0, G4ThreeVector(0.,0.,_window_z_pos),
      			 enclosure_window_logic, "ENCLOSURE_WINDOW", 
-     			 enclosure_logic, false, 0, true);
+     			 enclosure_logic, false, 0, false);
 
      // Adding the optical pad
      G4Tubs* enclosure_pad_solid =
@@ -124,7 +124,7 @@ namespace nexus{
      G4PVPlacement* enclosure_pad_physi = 
        new G4PVPlacement(0, G4ThreeVector(0.,0.,pad_z_pos),
      			 enclosure_pad_logic,"OPTICAL_PAD",
-     			 enclosure_logic, false, 0, true);
+     			 enclosure_logic, false, 0, false);
 
      // Adding the PMT
      _pmt->Construct();
@@ -133,7 +133,7 @@ namespace nexus{
      _pmt_z_pos = gas_length/2.- pmt_rel_z_pos;
      G4PVPlacement* pmt_physi = 
        new G4PVPlacement(0, G4ThreeVector(0.,0.,_pmt_z_pos), pmt_logic,
-			 "PMT", enclosure_gas_logic, false, 0, true);
+			 "PMT", enclosure_gas_logic, false, 0, false);
 
      
      /////  SETTING VISIBILITIES   //////////   

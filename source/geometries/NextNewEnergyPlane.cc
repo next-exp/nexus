@@ -121,7 +121,7 @@ namespace nexus {
     G4PVPlacement* _carrier_plate_physi = 
       new G4PVPlacement(0, G4ThreeVector(0.,0.,carrier_plate_z_pos), 
 			carrier_plate_logic, "CARRIER_PLATE", 
-			_mother_logic, false, 0, true);
+			_mother_logic, false, 0, false);
    
     ///ENCLOSURES + PMT ///
     _enclosure->Construct();
@@ -156,10 +156,10 @@ namespace nexus {
       tpb_pos.setZ(_enclosure_z_pos + enclosure_z_center + _tpb_thickness/2.);
       enclosure_physi = new G4PVPlacement(0, pos, enclosure_logic,
       					  "ENCLOSURE", _mother_logic, 
-					  false, i, true);
+					  false, i, false);
       tpb_physi =  new G4PVPlacement(0, tpb_pos, tpb_logic,
       					  "ENCLOSURE_TPB", _mother_logic, 
-				      false, i, true);
+				     false, i, false);
     }
      
    
