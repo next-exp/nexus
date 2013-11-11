@@ -1,0 +1,9 @@
+### --------------------------------------------------------
+###  Example config macro for the single-particle generator.
+###  $Id$
+### --------------------------------------------------------
+
+/Generator/SingleParticle/particle e-
+/Generator/SingleParticle/min_energy 1. MeV
+/Generator/SingleParticle/max_energy 2. MeV
+/Generator/SingleParticle/region CENTER

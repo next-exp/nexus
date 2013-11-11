@@ -1,0 +1,16 @@
+### --------------------------------------------------------
+###  Example 1: Configuration macro
+###  $Id$
+### --------------------------------------------------------
+
+/control/execute macros/geometries/XeSphere.mac
+
+/control/execute macros/generators/SingleParticle.mac
+
+/control/execute macros/physics/IonizationElectron.mac
+
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 1
+
+/nexus/persistency/outputFile nexus.root

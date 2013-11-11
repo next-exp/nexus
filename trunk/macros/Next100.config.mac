@@ -1,0 +1,59 @@
+### --------------------------------------------------------
+###  Next100: Configuration macro
+###  $Id: Next100.config.mac 8758 2013-06-15 11:12:45Z jmunoz $
+### --------------------------------------------------------
+
+
+##### ACTIONS #####
+# ???
+
+
+
+##### JOB CONTROL #####
+/nexus/persistency/outputFile /Users/javi/Development/next_scripts/irene_check/Next100_irene.next
+
+
+
+##### GEOMETRY #####
+/Geometry/Next100/pressure 10. bar
+/Geometry/Next100/max_step_size 5. mm
+
+/Geometry/Next100/shielding_vis false
+/Geometry/Next100/vessel_vis false
+/Geometry/Next100/ics_vis false
+/Geometry/Next100/field_cage_vis false
+/Geometry/Next100/grids_vis false
+/Geometry/Next100/energy_plane_vis false
+/Geometry/Next100/tracking_plane_vis false
+
+
+
+##### GENERATOR #####
+
+# Region options: EXTERNAL, SHIELDING_LEAD, SHIELDING_STEEL, SHIELDING_GAS
+#                 VESSEL, VESSEL_FLANGES, VESSEL_TRACKING_ENDCAP, VESSEL_ENERGY_ENDCAP
+#		  ICS, FIELD_CAGE, ACTIVE, CARRIER_PLATE, ENCLOSURE_BODY
+#		  ENCLOSURE_WINDOW, PMT_BODY, TRK_SUPPORT, DICE_BOARD
+
+# Single Particle
+#/Generator/SingleParticle/particle e-
+#/Generator/SingleParticle/min_energy 1.0 MeV
+#/Generator/SingleParticle/max_energy 2.0 MeV
+#/Generator/SingleParticle/region DICE_BOARD
+#/Generator/SingleParticle/momentum_direction (0., 0., 1.)
+
+# Genbb Interface
+/Generator/GenbbInterface/inputFile /Users/javi/Development/nexus_trunk/data/Xe136_bb0nu.genbb
+/Generator/GenbbInterface/region ACTIVE
+
+# Deacy0 Interface
+/Generator/Decay0Interface/inputFile /Users/javi/Development/nexus_trunk/data/Xe136_bb0nu.genbb
+/Generator/Decay0Interface/region ACTIVE
+
+
+
+##### VERBOSITIES #####
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+

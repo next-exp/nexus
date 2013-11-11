@@ -1,0 +1,8 @@
+### --------------------------------------------------------
+###  Example config macro for the geometry XeSphere.
+###  $Id$
+### --------------------------------------------------------
+
+/Geometry/XeSphere/LXe false
+/Geometry/XeSphere/pressure 15. atmosphere
+/Geometry/XeSphere/radius 10. m

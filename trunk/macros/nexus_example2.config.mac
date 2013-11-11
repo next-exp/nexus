@@ -1,0 +1,18 @@
+### ------------------------------------------------------------------
+###  Example 2: Configuration macro
+###
+###  $Id: nexus_example1.config.mac 9053 2013-08-05 10:13:56Z jmalbos $
+### ------------------------------------------------------------------
+
+#/control/execute macros/geometries/CylindricChamber.mac
+
+/Generator/SingleParticle/particle e-
+/Generator/SingleParticle/min_energy  1. keV
+/Generator/SingleParticle/max_energy 10. keV
+/Generator/SingleParticle/region CENTER
+
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 1
+
+/nexus/persistency/outputFile data/nexus_example2.root

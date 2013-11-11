@@ -1,0 +1,32 @@
+### --------------------------------------------------------
+###  NextNew: Configuration macro
+###  $Id: NextNew.config.mac 2013-09-09 13:13 minegui $
+### --------------------------------------------------------
+
+
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 1
+
+/control/execute macros/geometries/NextNew.mac
+
+#/control/execute macros/generators/SingleParticle.mac
+/Generator/SingleParticle/particle e-
+/Generator/SingleParticle/min_energy 1. keV
+/Generator/SingleParticle/max_energy 1. keV
+#/Generator/SingleParticle/momentum_X 4.
+#/Generator/SingleParticle/momentum_Y -1.
+#/Generator/SingleParticle/momentum_Z 0.
+/Generator/SingleParticle/region VESSEL
+
+
+#/control/execute macros/physics/DefaultPhysicsList.mac
+#/PhysicsList/RegisterPhysics G4EmLivermorePhysics
+#/PhysicsList/RegisterPhysics NexusPhysics
+#/PhysicsList/RegisterPhysics G4DecayPhysics
+#/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+#/PhysicsList/RegisterPhysics G4OpticalPhysics
+
+
+
+/nexus/persistency/outputFile nexus.root

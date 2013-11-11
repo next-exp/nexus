@@ -1,0 +1,7 @@
+### --------------------------------------------------------
+###  Example config macro for the genbb generator.
+###  $Id: GenbbInterface.mac 8754 2013-06-19 15:15:13Z jmunoz $
+### --------------------------------------------------------
+
+/Generator/GenbbInterface/inputFile /Users/javi/Development/nexus_trunk/data/Xe136_bb0nu.genbb
+/Generator/GenbbInterface/region ACTIVE
