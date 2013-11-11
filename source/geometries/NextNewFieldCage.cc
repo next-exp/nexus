@@ -48,7 +48,9 @@ namespace nexus {
     _reflector_thickness (.5 * cm),
     _tpb_thickness(1.*micrometer),
     // Visibility
-    _visibility(0)
+    _visibility(0),
+    // Step size
+    _max_step_size(1.*mm)
 
   {
     // Derived dimensions 
@@ -389,7 +391,7 @@ namespace nexus {
     }
     // Active region
     else if (region == "ACTIVE") {
-      vertex = _active_gen->GenerateVertex("INSIDE");
+      vertex = _active_gen->GenerateVertex("BODY_VOL");
     } 
     else if (region == "EL_TABLE") {  
       _idx_table++;	

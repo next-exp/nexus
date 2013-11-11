@@ -106,7 +106,7 @@ namespace nexus {
     // Generating in the volume inside
     else if (region == "INSIDE") {
       G4double phi = GetPhi();
-      G4double rad = GetRadius(0., _outer_radius);
+      G4double rad = GetRadius(0., _inner_radius);
       x = rad * cos(phi);
       y = rad * sin(phi);
       G4double origin = 0.;
