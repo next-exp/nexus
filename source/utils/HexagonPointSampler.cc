@@ -65,8 +65,19 @@ namespace nexus {
       
       // Transform point to the user's system of reference and return
       return RotateAndTranslate(point);
-    }
-    else if (region == TRIANGLE) {
+    } else if (region == PLANE) {
+       /// Get a random point in a triangular sector of the hexagonal section
+      G4ThreeVector point = RandomPointInTriangle();
+      
+      /// Pick a triangular sector of the hexagon and rotate the
+      /// previous point accordingly
+      G4int face = floor(G4UniformRand() * 6.);
+      point.rotateZ(face*pi/3.);
+
+      //point.setZ(RandomLength(-_length/2., -_length/2+100.));
+      point.setZ(RandomLength(_length/2.-20., _length/2.));
+      return RotateAndTranslate(point);
+    } else if (region == TRIANGLE) {
 
     }
     // // else if (region == TRIANGLE) {
