@@ -272,7 +272,8 @@ void Next1EL::DefineMaterials()
   // GASEOUS XENON
   _gxe = MaterialsList::GXe(_pressure, 303);
   _gxe->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, 303, _sc_yield));
-
+   // G4cout << "Prova: " << _gxe->GetMaterialPropertiesTable()->GetProperty("GROUPVEL")->Value(2.)
+   // 	   << G4endl;
   G4cout << "Scintillation yield: " << _sc_yield << G4endl;
 
   // if (cfg.GetSParam("particle_name") == "alpha"){
@@ -291,7 +292,7 @@ void Next1EL::DefineMaterials()
   _plastic = MaterialsList::PS();
   //TPB
   _tpb = MaterialsList::TPB();
-  _tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+  _tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPBOld());
 }
 
 
@@ -959,7 +960,7 @@ void Next1EL::BuildEnergyPlane()
     new G4PVPlacement(0, G4ThreeVector(_pmt_positions[i].x(), 
   				       _pmt_positions[i].y(),
   				       transl_z-0.5*cm), 
-  		      _pmt_logic, "PMT", _gas_logic, false, i);
+  		      _pmt_logic, "PMT", _gas_logic, false, i, true);
   }
   
   // Finish with the positioning of the PMT holder
@@ -1019,7 +1020,7 @@ void Next1EL::BuildSiPMTrackingPlane()
   G4double db_xsize = db.GetDimensions().x();
   G4double db_ysize = db.GetDimensions().y();
   G4double db_zsize = db.GetDimensions().z();
-
+  
   G4RotationMatrix* rotdb = new G4RotationMatrix();
   rotdb->rotateZ(pi);
 
@@ -1160,7 +1161,7 @@ void Next1EL::BuildPMTTrackingPlane()
 				  G4ThreeVector(_pmt_positions[0].x(), 
 						_pmt_positions[0].y(),
 						posz)), 
-		    _pmt_logic, "PMT", _gas_logic, false, 19, true);
+		    _pmt_logic, "PMT", _gas_logic, false, 19);
   
   // the anode plane is rotated 0 degrees around the z axis
   G4RotationMatrix rotanode;
@@ -1191,14 +1192,14 @@ void Next1EL::BuildPMTTrackingPlane()
     				    G4ThreeVector(pmt_pos_rot[i].x(), 
     						  pmt_pos_rot[i].y(),
     						  posz)), 
-    		      _pmt_logic, "PMT", _gas_logic, false, pmt_no, true);
+    		      _pmt_logic, "PMT", _gas_logic, false, pmt_no);
   }
   
   G4LogicalVolume* pmtholder_logic =
     new G4LogicalVolume(pmtholder_solid, _teflon, "PMT_HOLDER_ANODE");
   
   new G4PVPlacement(0, G4ThreeVector(0,0,posz), pmtholder_logic,
-   		    "PMT_HOLDER_ANODE", _gas_logic, false, 0, true);
+   		    "PMT_HOLDER_ANODE", _gas_logic, false, 0);
 
   // OPTICAL SURFACE ////////////////////////////////////////////////
 
@@ -1214,20 +1215,19 @@ void Next1EL::BuildPMTTrackingPlane()
   
 G4ThreeVector Next1EL::GenerateVertex(const G4String& region) const
 {
+  G4ThreeVector vertex(0., 0., 0.);
   if (region == "SIDEPORT") {
     return _sideport_position;
-  }
-  else if (region == "AXIALPORT") {
+  } else if (region == "AXIALPORT") {
     return _axialport_position;
-  }
-  else if (region == "ACTIVE") {
+  } else if (region == "ACTIVE") {
     return _hexrnd->GenerateVertex(INSIDE);
-    // } else if (region == "RESTRICTED") {
-    //G4ThreeVector point = _hexrnd->GenerateVertex(PLANE, 100.);
-  //   G4cout <<  point.getX() << ", "
-// 	   <<  point.getY() << ", " 
-// 	   <<  point.getZ() << G4endl;
-    // return  point;
+    } else if (region == "RESTRICTED") {
+    G4ThreeVector point = _hexrnd->GenerateVertex(PLANE);
+    // G4cout <<  point.getX() << ", "
+    // 	   <<  point.getY() << ", " 
+    // 	   <<  point.getZ() << G4endl;
+    return  point;
     //  } else if (region == "FIXED_RADIUS") {
     //  G4ThreeVector point = _hexrnd->GenerateVertex(RADIUS, 10.);
     // G4cout <<  point.getX() << ", "
@@ -1254,6 +1254,10 @@ G4ThreeVector Next1EL::GenerateVertex(const G4String& region) const
       }
       //    }
   } 
+    
+  G4cout << "[Next1EL::GenerateVertex()]: Generating particle in (0,0,0)" << G4endl;
+  return vertex;
+  
 
 }
 
