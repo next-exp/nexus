@@ -31,7 +31,8 @@ Electroluminescence::Electroluminescence(const G4String& process_name,
   pParticleChange = _ParticleChange;
     
   BuildThePhysicsTable();
-}
+
+ }
   
   
   
@@ -74,6 +75,7 @@ Electroluminescence::PostStepDoIt(const G4Track& track, const G4Step& step)
 
   // Generate a random number of photons around mean 'yield'
   G4double mean = yield * step_length;
+
   G4int num_photons;
         
   if (yield < 10.) { // Poissonian regime
@@ -81,9 +83,9 @@ Electroluminescence::PostStepDoIt(const G4Track& track, const G4Step& step)
   }
   else {             // Gaussian regime            
     G4double sigma = sqrt(mean);
-    num_photons = G4int(G4RandGauss::shoot(yield, sigma) + 0.5);
+    num_photons = G4int(G4RandGauss::shoot(mean, sigma) + 0.5);
   }
-   
+
     //num_photons = 500000;
       
   _ParticleChange->SetNumberOfSecondaries(num_photons);
