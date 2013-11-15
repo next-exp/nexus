@@ -25,6 +25,8 @@ namespace nexus {
   public:
     /// Default constructor
     TrajectoryPoint();
+    /// Constructor giving a position and time
+    TrajectoryPoint(G4ThreeVector, G4double);
     /// Copy constructor
     TrajectoryPoint(const TrajectoryPoint&);
     /// Destructor

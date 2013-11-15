@@ -22,6 +22,13 @@ TrajectoryPoint::TrajectoryPoint():
 
 
 
+TrajectoryPoint::TrajectoryPoint(G4ThreeVector pos, G4double t):
+  _position(pos), _time(t)
+{
+}
+
+
+
 TrajectoryPoint::TrajectoryPoint(const TrajectoryPoint& other)
 {
   *this = other;
