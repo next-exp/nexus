@@ -9,8 +9,8 @@
 ///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef __TRAJECTORY_POINT__
-#define __TRAJECTORY_POINT__
+#ifndef TRAJECTORY_POINT_H
+#define TRAJECTORY_POINT_H
 
 #include <G4VTrajectoryPoint.hh>
 #include <G4Allocator.hh>
