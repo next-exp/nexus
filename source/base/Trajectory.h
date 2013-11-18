@@ -107,7 +107,7 @@ namespace nexus {
 
     virtual void ShowTrajectory(std::ostream&) const;
 
-    virtual void DrawTrajectory(G4int) const;
+    virtual void DrawTrajectory() const;
 
   private:
     /// The default constructor is private. A trajectory can

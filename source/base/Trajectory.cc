@@ -27,7 +27,7 @@ G4Allocator<Trajectory> TrjAllocator;
 Trajectory::Trajectory(const G4Track* track): 
   G4VTrajectory(), _pdef(0), _trackId(-1), _parentId(-1),
   _initial_time(0.), _final_time(0), _length(0.), _edep(0.), 
-  _record_trjpoints(false), _trjpoints(0)
+  _record_trjpoints(true), _trjpoints(0)
 {
   _pdef     = track->GetDefinition();
   _trackId  = track->GetTrackID();
@@ -91,11 +91,13 @@ G4double Trajectory::GetCharge() const
 
 
 
-void Trajectory::AppendStep(const G4Step* aStep)
+void Trajectory::AppendStep(const G4Step* step)
 {
   if (!_record_trjpoints) return;
 
-  TrajectoryPoint* point = new TrajectoryPoint();
+  TrajectoryPoint* point = 
+    new TrajectoryPoint(step->GetPostStepPoint()->GetPosition(),
+                        step->GetPostStepPoint()->GetGlobalTime());
   _trjpoints->push_back(point);
 }
 
@@ -129,9 +131,9 @@ void Trajectory::ShowTrajectory(std::ostream& os) const
  
 
 
- void Trajectory::DrawTrajectory(G4int i_mode) const
+ void Trajectory::DrawTrajectory() const
  {
   // Invoke the default implementation
-  G4VTrajectory::DrawTrajectory(i_mode);
+  G4VTrajectory::DrawTrajectory();
  }
 
