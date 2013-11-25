@@ -282,6 +282,7 @@ void NextNewVessel::Construct()
     G4double flange_vol = vessel_flange_solid->GetCubicVolume();
     G4double endcap_vol = vessel_tracking_endcap_solid->GetCubicVolume() - vessel_gas_tracking_endcap_solid->GetCubicVolume();
     G4double vol_tot = body_vol+ 2*flange_vol+ 2*endcap_vol;
+    //std::cout<<"VESSEL VOLUME: \t"<<vol_tot<<std::endl;
     _perc_tube_vol = body_vol/vol_tot; 
     _perc_endcap_vol = endcap_vol /vol_tot;
   }
@@ -312,17 +313,17 @@ void NextNewVessel::Construct()
   G4ThreeVector NextNewVessel::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);
-    std::cout<< "generatevertex "<<std::endl;
+    
     // Vertex in the VESSEL volume
     if (region == "VESSEL") {
       G4double rand = G4UniformRand();
       if (rand < _perc_tube_vol) { //VESSEL_TUBE
 	G4VPhysicalVolume *VertexVolume;
 	do {
-	  std::cout<< "vessel tube \t"<< rand <<"\t"<< _perc_tube_vol << std::endl;      
+	  // std::cout<< "vessel tube \t"<< rand <<"\t"<< _perc_tube_vol << std::endl;      
 	  vertex = _body_gen->GenerateVertex("BODY_VOL");   
 	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
-	  std::cout<<vertex<<std::endl;
+	  // std::cout<<vertex<<std::endl;
 	} while (VertexVolume->GetName() != "VESSEL");
       }
       //Vertex in ENDCAPCAPS
@@ -330,27 +331,27 @@ void NextNewVessel::Construct()
 	G4VPhysicalVolume *VertexVolume;
 	do {
 	  if (G4UniformRand() < 0.5){
-	    std::cout<< "tracking endcap "<< rand <<"\t"<< _perc_tube_vol+2*_perc_endcap_vol<< std::endl;
+	    //std::cout<< "tracking endcap "<< rand <<"\t"<< _perc_tube_vol+2*_perc_endcap_vol<< std::endl;
 	    vertex = _tracking_endcap_gen->GenerateVertex("VOLUME");  // Tracking 
 	  }
 	  else {
-	    std::cout<< "energy endcap " << rand <<"\t"<< _perc_tube_vol+2*_perc_endcap_vol<< std::endl;
+	    //std::cout<< "energy endcap " << rand <<"\t"<< _perc_tube_vol+2*_perc_endcap_vol<< std::endl;
 	    vertex = _energy_endcap_gen->GenerateVertex("VOLUME");  // Energy endcap	
 	  }
 	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
-	  std::cout<<vertex<<std::endl;
+	  //std::cout<<vertex<<std::endl;
 	} while (VertexVolume->GetName() != "VESSEL");
       }    
       else { //FLANGES
    	if (G4UniformRand() < 0.5) {
 	  vertex = _flange_gen->GenerateVertex("BODY_VOL");
 	  vertex.setZ(vertex.z() + _flange_z_pos);
-	  std::cout<< "flange tracking \t"<<vertex.z() <<"\t"<< rand << std::endl;
+	  //std::cout<< "flange tracking \t"<<vertex.z() <<"\t"<< rand << std::endl;
     	}
     	else {
 	  vertex = _flange_gen->GenerateVertex("BODY_VOL");
     	  vertex.setZ(vertex.z() - _flange_z_pos);
-	  std::cout<< "flange energy \t"<<vertex.z() <<"\t"<<rand<< std::endl;
+	  //std::cout<< "flange energy \t"<<vertex.z() <<"\t"<<rand<< std::endl;
    	}
       }
     }
