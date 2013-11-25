@@ -92,7 +92,7 @@ namespace nexus {
     //SHIELDING
     _shielding->Construct();
     G4LogicalVolume* shielding_logic = _shielding->GetLogicalVolume();
-    G4PVPlacement* shielding_physi = new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),shielding_logic, "SHIELDING",
+    G4PVPlacement* shielding_physi = new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),shielding_logic, "LEAD_BOX",
 						       _buffer_gas_logic, false, 0, false);
 
     //VESSEL
@@ -132,6 +132,7 @@ namespace nexus {
     if ( (region == "SHIELDING_LEAD") || (region == "SHIELDING_STEEL") || 
 	 (region == "SHIELDING_GAS") ||  (region == "EXTERNAL") ) {
       vertex = _shielding->GenerateVertex(region);
+     
     }
     //VESSEL REGIONS
     if ( (region == "VESSEL") || 
