@@ -139,7 +139,8 @@ namespace nexus {
 
 
     // Creating the vertex generators   //////////
-    _lead_gen  = new BoxPointSampler(steel_x, steel_y, steel_z, _lead_thickness, G4ThreeVector(0.,0.,0.), 0);
+    //_lead_gen  = new BoxPointSampler(steel_x, steel_y, steel_z, _lead_thickness, G4ThreeVector(0.,0.,0.), 0);
+    _lead_gen  = new BoxPointSampler(steel_x, steel_y, steel_z, 5.*cm, G4ThreeVector(0.,0.,0.), 0);
     _steel_gen = new BoxPointSampler(_shield_x, _shield_y, _shield_z, _steel_thickness, G4ThreeVector(0.,0.,0.), 0);
     G4double offset = 1.*cm;
     _external_gen = new BoxPointSampler(lead_x + offset, lead_y + offset, lead_z + offset,

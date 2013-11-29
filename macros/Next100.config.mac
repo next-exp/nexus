@@ -10,12 +10,12 @@
 
 
 ##### JOB CONTROL #####
-/nexus/persistency/outputFile /Users/javi/Development/next_scripts/irene_check/Next100_irene.next
+/nexus/persistency/outputFile /home/jmunoz/dev/irene_check/Next100_irene.next
 
 
 
 ##### GEOMETRY #####
-/Geometry/Next100/pressure 10. bar
+/Geometry/Next100/pressure 15. bar
 /Geometry/Next100/max_step_size 5. mm
 
 /Geometry/Next100/shielding_vis false
@@ -43,11 +43,11 @@
 #/Generator/SingleParticle/momentum_direction (0., 0., 1.)
 
 # Genbb Interface
-/Generator/GenbbInterface/inputFile /Users/javi/Development/nexus_trunk/data/Xe136_bb0nu.genbb
-/Generator/GenbbInterface/region ACTIVE
+#/Generator/GenbbInterface/inputFile /Users/javi/Development/nexus_trunk/data/Xe136_bb0nu.genbb
+#/Generator/GenbbInterface/region ACTIVE
 
 # Deacy0 Interface
-/Generator/Decay0Interface/inputFile /Users/javi/Development/nexus_trunk/data/Xe136_bb0nu.genbb
+/Generator/Decay0Interface/inputFile /data4/NEXT/NEXT100/genbb/v1r4p0/Xe136_bb0nu/Xe136_bb0nu.0.genbb
 /Generator/Decay0Interface/region ACTIVE
 
 
