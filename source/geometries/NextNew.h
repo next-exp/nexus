@@ -16,6 +16,7 @@
 #include "BoxPointSampler.h"
 
 namespace nexus { class Next100Shielding; }
+namespace nexus { class NextNewPedestal; }
 namespace nexus { class NextNewVessel; }
 namespace nexus { class NextNewIcs; }
 namespace nexus { class NextNewInnerElements; }
@@ -53,6 +54,7 @@ namespace nexus {
 
     //Detector parts
     Next100Shielding* _shielding;
+    NextNewPedestal* _pedestal;
     NextNewVessel* _vessel;   
     NextNewIcs* _ics;
     NextNewInnerElements* _inner_elements;

@@ -12,6 +12,7 @@
 
 //#include "MaterialsList.h"
 #include "Next100Shielding.h"
+#include "NextNewPedestal.h"
 #include "NextNewVessel.h"
 #include "NextNewIcs.h"
 #include "NextNewInnerElements.h"
@@ -37,6 +38,8 @@ namespace nexus {
   {
     //Shielding
     _shielding = new Next100Shielding(100*mm,0.,0.,0.,0.);
+    //Pedestal
+    _pedestal =new NextNewPedestal();
     //Vessel
     _vessel = new NextNewVessel();
     //ICS
@@ -49,6 +52,7 @@ namespace nexus {
   {
     //deletes
     delete _shielding;
+    delete _pedestal;
     delete _vessel;
     delete _ics;
     delete _inner_elements;
@@ -94,6 +98,9 @@ namespace nexus {
     G4LogicalVolume* shielding_logic = _shielding->GetLogicalVolume();
     G4PVPlacement* shielding_physi = new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),shielding_logic, "LEAD_BOX",
 						       _buffer_gas_logic, false, 0, false);
+    //PEDESTAL
+    _pedestal->SetLogicalVolume(_buffer_gas_logic);
+    _pedestal->Construct();
 
     //VESSEL
     _vessel->Construct();
@@ -129,10 +136,14 @@ namespace nexus {
       vertex = _lab_gen->GenerateVertex(region);
     }
     //LEAD CASTLE
-    if ( (region == "SHIELDING_LEAD") || (region == "SHIELDING_STEEL") || 
+    else if ( (region == "SHIELDING_LEAD") || (region == "SHIELDING_STEEL") || 
 	 (region == "SHIELDING_GAS") ||  (region == "EXTERNAL") ) {
       vertex = _shielding->GenerateVertex(region);
      
+    }
+    //PEDESTAL
+   else if (region == "PEDESTAL") {
+      vertex = _pedestal->GenerateVertex(region);
     }
     //VESSEL REGIONS
     if ( (region == "VESSEL") || 
