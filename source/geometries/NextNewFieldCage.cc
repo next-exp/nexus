@@ -50,7 +50,9 @@ namespace nexus {
     // Visibility
     _visibility(0),
     // Step limiter
-    _max_step_size(1.*mm)
+    _max_step_size(1.*mm),
+    // EL field ON or OFF
+    _elfield(0)
 
   {
     // Derived dimensions 
