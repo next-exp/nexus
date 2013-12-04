@@ -13,6 +13,7 @@
 //#include "MaterialsList.h"
 #include "Next100Shielding.h"
 #include "NextNewPedestal.h"
+#include "NextNewRnTube.h"
 #include "NextNewVessel.h"
 #include "NextNewIcs.h"
 #include "NextNewInnerElements.h"
@@ -39,7 +40,9 @@ namespace nexus {
     //Shielding
     _shielding = new Next100Shielding(100*mm,0.,0.,0.,0.);
     //Pedestal
-    _pedestal =new NextNewPedestal();
+    _pedestal = new NextNewPedestal();
+    //Radon Tube
+    _rn_tube = new NextNewRnTube();
     //Vessel
     _vessel = new NextNewVessel();
     //ICS
@@ -53,6 +56,7 @@ namespace nexus {
     //deletes
     delete _shielding;
     delete _pedestal;
+    delete _rn_tube;
     delete _vessel;
     delete _ics;
     delete _inner_elements;
@@ -102,8 +106,13 @@ namespace nexus {
     _pedestal->SetLogicalVolume(_buffer_gas_logic);
     _pedestal->Construct();
 
+    //RADON TUBE
+    _rn_tube->SetLogicalVolume(_buffer_gas_logic);
+    _rn_tube->Construct();
+
+   
     //VESSEL
-    _vessel->Construct();
+     _vessel->Construct();
     G4LogicalVolume* vessel_logic = _vessel->GetLogicalVolume();
     G4ThreeVector position(0.,0.,0.);
     G4PVPlacement* vessel_physi = new G4PVPlacement(0, position, vessel_logic, "VESSEL",
@@ -145,6 +154,11 @@ namespace nexus {
    else if (region == "PEDESTAL") {
       vertex = _pedestal->GenerateVertex(region);
     }
+    //RADON TUBE
+   else if (region == "RN_TUBE") {
+      vertex = _rn_tube->GenerateVertex(region);
+    }
+
     //VESSEL REGIONS
     if ( (region == "VESSEL") || 
 	 (region == "SOURCE_PORT_ANODE") ||
