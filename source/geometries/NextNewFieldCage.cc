@@ -245,6 +245,9 @@ namespace nexus {
     G4Tubs* active_solid = 
       new G4Tubs("ACTIVE",  0., _tube_in_diam/2.-_reflector_thickness, 
 		 _drift_length/2., 0, twopi);
+    G4double activevol = active_solid->GetCubicVolume();
+    std::cout<<"ACTIVE VOLUME: \t"<<activevol<<std::endl;
+
     G4LogicalVolume* active_logic = 
       new G4LogicalVolume(active_solid, _gas, "ACTIVE");
     G4PVPlacement* active_physi = 
@@ -284,7 +287,8 @@ namespace nexus {
     G4Tubs* field_cage_solid =
       new G4Tubs("FIELD_CAGE", _tube_in_diam/2.,
 		 _tube_in_diam/2. + _tube_thickness, _tube_length/2., 0, twopi);
-  
+    G4double fieldcagevol= field_cage_solid->GetCubicVolume();
+    std::cout<<"FIELD CAGE VOLUME:\t"<<fieldcagevol<<std::endl;
     G4LogicalVolume* field_cage_logic = 
       new G4LogicalVolume(field_cage_solid, _hdpe, "FIELD_CAGE");
     G4PVPlacement* field_cage_physi = 
