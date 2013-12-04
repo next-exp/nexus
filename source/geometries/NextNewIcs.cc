@@ -155,7 +155,7 @@ namespace nexus {
       (_tracking_tread_length)*pi*((_body_out_diam/2.)*(_body_out_diam/2.)-(_tracking_tread_diam/2.)*( _tracking_tread_diam/2.));
     G4double total_vol = body_vol + tread_vol;
     _body_perc = body_vol/total_vol;
-
+    std::cout<<"ICS VOLUME:\t"<<total_vol<<std::endl;
   }
 
   NextNewIcs::~NextNewIcs()

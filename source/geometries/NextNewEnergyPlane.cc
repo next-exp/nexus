@@ -178,7 +178,8 @@ namespace nexus {
       new CylinderPointSampler(_carrier_plate_diam/2., 
 			       _carrier_plate_thickness, 0., 0.,
 			       G4ThreeVector (0., 0., carrier_plate_z_pos));
-    
+    G4double total_vol = carrier_plate_solid->GetCubicVolume();
+    std::cout<<"CARRIER PLATE (EP) VOLUME: \t"<<total_vol<<std::endl;   
   }     
  
   NextNewEnergyPlane::~NextNewEnergyPlane()

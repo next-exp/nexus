@@ -53,7 +53,7 @@ namespace nexus {
 						       MaterialsList::Steel316Ti(),
 						       "TABLE");
     G4PVPlacement* _table_physi = 
-      new G4PVPlacement(0, G4ThreeVector(0.,_y_pos,0.), table_logic, "TABLE", _mother_logic, false, 0, true);
+      new G4PVPlacement(0, G4ThreeVector(0.,_y_pos,0.), table_logic, "TABLE", _mother_logic, false, 0, false);
    
     // SETTING VISIBILITIES   //////////
     //if (_visibility) {

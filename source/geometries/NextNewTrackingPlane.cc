@@ -154,7 +154,7 @@ namespace nexus {
      G4double total_vol = body_vol + flange_vol + buffer_vol;
      _body_perc = body_vol / total_vol;
      _flange_perc =  (flange_vol + body_vol) / total_vol;
-
+     std::cout<<"SUPPORT PLATE (TP) VOLUME: \t"<<total_vol<<std::endl;
   }
 
   NextNewTrackingPlane::~NextNewTrackingPlane()
