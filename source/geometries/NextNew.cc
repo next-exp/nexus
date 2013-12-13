@@ -17,6 +17,7 @@
 #include "NextNewVessel.h"
 #include "NextNewIcs.h"
 #include "NextNewInnerElements.h"
+#include <OpticalMaterialProperties.h>
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -25,6 +26,7 @@
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4VisAttributes.hh>
+#include <G4UserLimits.hh>
 #include <G4NistManager.hh>
 
 
@@ -88,8 +90,18 @@ namespace nexus {
 
     G4Box* buffer_gas_solid = 
       new G4Box("BUFFER_GAS", _buffer_gas_size/2., _buffer_gas_size/2., _buffer_gas_size/2.);
+    //G4Material* _air= G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
+    //    _air->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(1. *bar, 303.*kelvin));
     
-    _buffer_gas_logic = new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "BUFFER_GAS");
+    _buffer_gas_logic = new G4LogicalVolume(lab_solid,
+					    G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
+					    "BUFFER_GAS");
+    ////////////////////////////////////////
+    ////Limit the uStepMax=Maximum step length, uTrakMax=Maximum total track length,
+    //uTimeMax= Maximum global time for a track, uEkinMin= Minimum remaining kinetic energy for a track
+    //uRangMin=	 Minimum remaining range for a track
+    _buffer_gas_logic->SetUserLimits(new G4UserLimits( _lab_size, _lab_size,100 *s,100.*keV,0.));
+   
     // _buffer_gas_logic->SetVisAttributes(G4VisAttributes (G4Colour(.86, .86, .86)));
     _buffer_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
