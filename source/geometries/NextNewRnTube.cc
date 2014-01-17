@@ -16,6 +16,7 @@
 #include <G4VisAttributes.hh>
 #include <G4Tubs.hh>
 #include <G4NistManager.hh>
+#include <G4UserLimits.hh>
 
 namespace nexus {
 
@@ -47,6 +48,12 @@ namespace nexus {
     rn_solid = new G4UnionSolid("RN_TUBE", rn_solid,endcap_solid, 0, G4ThreeVector(0.,0.,_length/2.+_thickness/2.) );
     G4Material* mother_material = _mother_logic->GetMaterial();
     G4LogicalVolume* tube_logic = new G4LogicalVolume(rn_solid,mother_material,"RN_TUBE");
+  ////////////////////////////////////////
+    ////Limit the uStepMax=Maximum step length, uTrakMax=Maximum total track length,
+    //uTimeMax= Maximum global time for a track, uEkinMin= Minimum remaining kinetic energy for a track
+    //uRangMin=	 Minimum remaining range for a track
+    tube_logic->SetUserLimits(new G4UserLimits( 1E8*m, 1E8*m,1E12 *s,100.*keV,0.));
+
     G4PVPlacement* _tube_physi = 
       new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), tube_logic, "RN_TUBE", _mother_logic, false, 0,false);
    
@@ -65,7 +72,8 @@ namespace nexus {
    		 
     // Calculating some probs
     G4double tube_vol = tube_solid->GetCubicVolume();
-    std::cout<<"RADON TUBE VOLUME:\t"<<tube_vol<<std::endl;
+    G4double cylinder_vol=   _length*pi*(_inner_diam/2.*_inner_diam/2.);
+    std::cout<<"RADON TUBE VOLUME:\t"<<tube_vol<<"\t INNER VOLUME:\t"<<cylinder_vol<<std::endl;
   }
 
   NextNewRnTube::~NextNewRnTube()
