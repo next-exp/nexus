@@ -13,6 +13,7 @@
 //#include "MaterialsList.h"
 #include "Next100Shielding.h"
 #include "NextNewPedestal.h"
+#include "NextNewCuCastle.h"
 #include "NextNewRnTube.h"
 #include "NextNewVessel.h"
 #include "NextNewIcs.h"
@@ -43,6 +44,8 @@ namespace nexus {
     _shielding = new Next100Shielding(100*mm,0.,0.,0.,0.);
     //Pedestal
     _pedestal = new NextNewPedestal();
+    //Copper Castle
+    _cu_castle = new NextNewCuCastle();
     //Radon Tube
     _rn_tube = new NextNewRnTube();
     //Vessel
@@ -58,6 +61,7 @@ namespace nexus {
     //deletes
     delete _shielding;
     delete _pedestal;
+    delete _cu_castle;
     delete _rn_tube;
     delete _vessel;
     delete _ics;
@@ -118,6 +122,10 @@ namespace nexus {
     _pedestal->SetLogicalVolume(_buffer_gas_logic);
     _pedestal->Construct();
 
+    //COPPER CASTLE 
+    _cu_castle->SetLogicalVolume(_buffer_gas_logic);
+    _cu_castle->Construct();
+
     //RADON TUBE
     _rn_tube->SetLogicalVolume(_buffer_gas_logic);
     _rn_tube->Construct();
@@ -166,6 +174,10 @@ namespace nexus {
    else if (region == "PEDESTAL") {
       vertex = _pedestal->GenerateVertex(region);
     }
+    //COPER CASTLE
+   else if (region == "CU_CASTLE"){
+     vertex = _cu_castle->GenerateVertex(region);
+   }
     //RADON TUBE
    else if (region == "RN_TUBE") {
       vertex = _rn_tube->GenerateVertex(region);
