@@ -29,7 +29,7 @@ namespace nexus {
     _table_x (1200. *mm),
     _table_y (15. *mm),
     _table_z (2500. *mm),
-    _y_pos(-495. *mm)
+    _y_pos(-600. *mm)
     
   {
    
@@ -53,17 +53,17 @@ namespace nexus {
 						       MaterialsList::Steel316Ti(),
 						       "TABLE");
     G4PVPlacement* _table_physi = 
-      new G4PVPlacement(0, G4ThreeVector(0.,_y_pos,0.), table_logic, "TABLE", _mother_logic, false, 0, false);
+      new G4PVPlacement(0, G4ThreeVector(0.,_y_pos,0.), table_logic, "TABLE", _mother_logic, false, 0,false);
    
     // SETTING VISIBILITIES   //////////
-    //if (_visibility) {
+    if (_visibility) {
     G4VisAttributes steel_col(G4Colour(.88, .87, .86));
     steel_col.SetForceSolid(true);
     table_logic->SetVisAttributes(steel_col);
-    // }
-      //else {
-      //table_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    // }
+    }
+    else {
+      table_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
 
 
     // VERTEX GENERATORS   //////////
