@@ -13,6 +13,7 @@
 #define BASE_GEOMETRY_H
 
 #include <G4ThreeVector.hh>
+#include <CLHEP/Units/SystemOfUnits.h>
 
 class G4LogicalVolume;
 
