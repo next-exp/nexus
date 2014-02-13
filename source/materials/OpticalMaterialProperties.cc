@@ -15,8 +15,6 @@
 #include "SellmeierEquation.h"
 #include <G4MaterialPropertiesTable.hh>
 
-#include <CLHEP/Units/PhysicalConstants.h>
-
 using namespace nexus;
 using namespace CLHEP;
 
