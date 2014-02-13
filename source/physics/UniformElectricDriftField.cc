@@ -17,6 +17,7 @@
 
 namespace nexus {
   
+  using namespace CLHEP;
 
   const G4double UniformElectricDriftField::_secmargin = 1. * micrometer;
 
