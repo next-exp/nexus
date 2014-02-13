@@ -14,9 +14,14 @@
 
 #include <globals.hh>
 
+#include <CLHEP/Units/SystemOfUnits.h>
+
+
 class G4Material;
 
 namespace nexus {
+
+  using namespace CLHEP;
 
   /// Definition of materials of common use.
   /// (This is a stateless class. All methods must be defined as static.)

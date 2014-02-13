@@ -13,10 +13,7 @@
 #include <G4Element.hh>
 #include <G4NistManager.hh>
 
-#include <CLHEP/Units/SystemOfUnits.h>
-
 using namespace nexus;
-using namespace CLHEP;
   
   
 G4Material* MaterialsList::GXe(G4double pressure, G4double temperature)
