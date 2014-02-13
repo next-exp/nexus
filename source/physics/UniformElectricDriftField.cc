@@ -8,10 +8,11 @@
 // ----------------------------------------------------------------------------
 
 #include "UniformElectricDriftField.h"
-
 #include "SegmentPointSampler.h"
 
 #include <Randomize.hh>
+
+#include "CLHEP/Units/SystemOfUnits.h"
 
 
 namespace nexus {

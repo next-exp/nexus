@@ -22,10 +22,10 @@
 #include <Randomize.hh>
 #include <G4OpticalPhoton.hh>
 
+#include "CLHEP/Units/SystemOfUnits.h"
+
 using namespace nexus;
-
-
-
+using namespace CLHEP;
 
 
 SingleParticle::SingleParticle():

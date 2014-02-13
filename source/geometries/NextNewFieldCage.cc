@@ -29,7 +29,12 @@
 #include <G4SDManager.hh>
 #include <G4RunManager.hh>
 
+#include <CLHEP/Units/SystemOfUnits.h>
+#include <CLHEP/Units/PhysicalConstants.h>
+
 namespace nexus {
+
+  using namespace CLHEP;
 
   NextNewFieldCage::NextNewFieldCage(): 
     BaseGeometry(),

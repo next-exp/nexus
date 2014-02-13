@@ -18,7 +18,12 @@
 #include <G4RandomDirection.hh>
 #include <Randomize.hh>
 
+#include "CLHEP/Units/SystemOfUnits.h"
+#include "CLHEP/Units/PhysicalConstants.h"
+
 namespace nexus {
+
+  using namespace CLHEP;
 
   Na22Generation::Na22Generation() : _energy_min(511.*keV), _energy_max(511.*keV),
     _energy_min_dis(1.274*MeV), _energy_max_dis(1.274*MeV),

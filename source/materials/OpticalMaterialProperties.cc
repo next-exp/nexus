@@ -15,8 +15,10 @@
 #include "SellmeierEquation.h"
 #include <G4MaterialPropertiesTable.hh>
 
-using namespace nexus;
+#include <CLHEP/Units/PhysicalConstants.h>
 
+using namespace nexus;
+using namespace CLHEP;
 
 
 G4MaterialPropertiesTable* OpticalMaterialProperties::Vacuum()

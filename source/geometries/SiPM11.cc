@@ -8,7 +8,6 @@
 // ---------------------------------------------------------------------------- 
 
 #include "SiPM11.h"
-
 #include "PmtSD.h"
 #include "MaterialsList.h"
 #include <G4GenericMessenger.hh>
@@ -25,9 +24,12 @@
 #include <G4LogicalSkinSurface.hh>
 #include <G4PhysicalConstants.hh>
 
+#include <CLHEP/Units/SystemOfUnits.h>
+
 
 namespace nexus {
 
+  using namespace CLHEP;
   
   SiPM11::SiPM11(): BaseGeometry()
   {

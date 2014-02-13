@@ -15,10 +15,14 @@
 #include <Randomize.hh>
 #include <G4RunManager.hh>
 
+#include "CLHEP/Units/PhysicalConstants.h"
+
 #include <vector>
 
 
 namespace nexus {
+
+  using namespace CLHEP;
   
 
   HexagonPointSampler::HexagonPointSampler

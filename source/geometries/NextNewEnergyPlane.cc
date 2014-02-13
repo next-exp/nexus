@@ -10,8 +10,8 @@
 #include "NextNewEnergyPlane.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
-#include <G4GenericMessenger.hh>
 
+#include <G4GenericMessenger.hh>
 #include <G4PVPlacement.hh>
 #include <G4VisAttributes.hh>
 #include <G4Material.hh>
@@ -22,14 +22,16 @@
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
 #include <G4NistManager.hh>
-
 #include <G4VPhysicalVolume.hh>
 #include <G4TransportationManager.hh>
-
 #include <Randomize.hh>
 
+#include <CLHEP/Units/SystemOfUnits.h>
+#include <CLHEP/Units/PhysicalConstants.h>
 
 namespace nexus {
+
+  using namespace CLHEP;
 
   NextNewEnergyPlane::NextNewEnergyPlane():
    

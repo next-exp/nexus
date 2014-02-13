@@ -18,7 +18,6 @@ class G4GenericMessenger;
 
 
 namespace nexus {
-  
 
   class CylindricChamber: public BaseGeometry
   {

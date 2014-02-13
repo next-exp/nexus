@@ -29,8 +29,14 @@
 #include <Randomize.hh>
 #include <G4OpticalSurface.hh>
 
+#include <CLHEP/Units/SystemOfUnits.h>
+#include <CLHEP/Units/PhysicalConstants.h>
+
 
 namespace nexus{
+
+  using namespace CLHEP;
+
   Enclosure::Enclosure():
 
     // Enclosures dimensions

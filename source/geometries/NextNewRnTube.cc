@@ -18,7 +18,12 @@
 #include <G4NistManager.hh>
 #include <G4UserLimits.hh>
 
+#include <CLHEP/Units/SystemOfUnits.h>
+#include <CLHEP/Units/PhysicalConstants.h>
+
 namespace nexus {
+
+  using namespace CLHEP;
 
   NextNewRnTube::NextNewRnTube():
     BaseGeometry(),

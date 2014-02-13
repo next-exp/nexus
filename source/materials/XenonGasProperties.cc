@@ -11,13 +11,14 @@
 
 #include <G4AnalyticalPolSolver.hh>
 #include <G4MaterialPropertiesTable.hh>
-#include "CLHEP/Units/PhysicalConstants.h"
-//#include <bhep/utilities.h>
 
+#include "CLHEP/Units/SystemOfUnits.h"
+#include "CLHEP/Units/PhysicalConstants.h"
 
 
 namespace nexus {
-  
+
+  using namespace CLHEP; 
   
   XenonGasProperties::XenonGasProperties(G4double pressure,
 					 G4double temperature):

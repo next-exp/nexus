@@ -20,9 +20,13 @@
 #include <G4LorentzVector.hh>
 #include <G4Gamma.hh>
 
+#include "CLHEP/Units/SystemOfUnits.h"
+
 
 namespace nexus {
 
+
+  using namespace CLHEP;
   
   IonizationClustering::IonizationClustering(const G4String& process_name,
                                              G4ProcessType type):

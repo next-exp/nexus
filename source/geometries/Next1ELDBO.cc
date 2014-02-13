@@ -23,11 +23,15 @@
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
 
+#include <CLHEP/Units/SystemOfUnits.h>
+#include <CLHEP/Units/PhysicalConstants.h>
+
 #include <sstream>
 
 
 namespace nexus {
 
+  using namespace CLHEP;
 
   Next1ELDBO::Next1ELDBO(G4int rows, G4int columns): BaseGeometry()
   {

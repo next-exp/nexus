@@ -22,9 +22,13 @@
 #include <G4PVPlacement.hh>
 #include <G4SDManager.hh>
 
+#include <CLHEP/Units/SystemOfUnits.h>
+#include <CLHEP/Units/PhysicalConstants.h>
+
 
 namespace nexus {
   
+  using namespace CLHEP;
 
   CylindricChamber::CylindricChamber(): 
     BaseGeometry(), _msg(0)

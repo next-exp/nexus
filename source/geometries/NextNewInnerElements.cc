@@ -21,7 +21,12 @@
 #include <G4UserLimits.hh>
 #include <G4SDManager.hh>
 
+#include <CLHEP/Units/SystemOfUnits.h>
+#include <CLHEP/Units/PhysicalConstants.h>
+
 namespace nexus {
+
+  using namespace CLHEP;
 
   NextNewInnerElements::NextNewInnerElements():
     BaseGeometry()

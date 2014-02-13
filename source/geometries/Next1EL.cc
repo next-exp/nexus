@@ -45,7 +45,11 @@
 #include <G4UnitsTable.hh>
 #include <G4UIcmdWith3VectorAndUnit.hh>
 
+#include <CLHEP/Units/SystemOfUnits.h>
+#include <CLHEP/Units/PhysicalConstants.h>
+
 using namespace nexus;
+using namespace CLHEP;
 
 Next1EL::Next1EL():
   BaseGeometry(),

@@ -16,10 +16,14 @@
 
 #include <globals.hh>
 
+#include <CLHEP/Units/SystemOfUnits.h>
+
 class G4MaterialPropertiesTable;
 
 
 namespace nexus {
+
+  using namespace CLHEP;
 
   /// Optical properties of several materials. 
   /// (N.B. This is a stateless class where all methods are static functions.)

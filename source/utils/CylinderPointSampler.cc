@@ -11,8 +11,12 @@
 
 #include <Randomize.hh>
 
+#include "CLHEP/Units/PhysicalConstants.h"
+
 
 namespace nexus {
+
+  using namespace CLHEP;
 
   
   CylinderPointSampler::CylinderPointSampler

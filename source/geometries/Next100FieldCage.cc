@@ -21,9 +21,12 @@
 #include <G4LogicalSkinSurface.hh>
 #include <G4NistManager.hh>
 
-
+#include <CLHEP/Units/SystemOfUnits.h>
+#include <CLHEP/Units/PhysicalConstants.h>
 
 namespace nexus {
+
+  using namespace CLHEP;
 
   Next100FieldCage::Next100FieldCage(): 
     BaseGeometry(),

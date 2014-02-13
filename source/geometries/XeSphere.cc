@@ -25,9 +25,11 @@
 #include <G4UserLimits.hh>
 #include <Randomize.hh>
 
+#include <CLHEP/Units/SystemOfUnits.h>
 
 namespace nexus {
   
+  using namespace CLHEP;
   
   XeSphere::XeSphere(): 
     BaseGeometry(), _liquid(true), _pressure(STP_Pressure), _radius(1.*m), _sphere_vertex_gen(0) 

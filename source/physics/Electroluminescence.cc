@@ -19,7 +19,10 @@
 #include <Randomize.hh>
 #include <G4Poisson.hh>
 
+#include "CLHEP/Units/PhysicalConstants.h"
+
 using namespace nexus;
+using namespace CLHEP;
 
 
 

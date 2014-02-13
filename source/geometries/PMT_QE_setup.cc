@@ -30,9 +30,13 @@
 #include <Randomize.hh>
 #include <G4GenericMessenger.hh>
 
+#include <CLHEP/Units/SystemOfUnits.h>
+#include <CLHEP/Units/PhysicalConstants.h>
+
 
 namespace nexus {
 
+  using namespace CLHEP;
 
   PMT_QE_setup::PMT_QE_setup(): BaseGeometry()
   {

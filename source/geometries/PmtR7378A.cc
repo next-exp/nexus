@@ -20,18 +20,18 @@
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4Material.hh>
-
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
 #include <G4LogicalBorderSurface.hh>
-
 #include <G4VisAttributes.hh>
-
 #include <G4SDManager.hh>
 
+#include <CLHEP/Units/SystemOfUnits.h>
+#include <CLHEP/Units/PhysicalConstants.h>
 
 namespace nexus {
   
+  using namespace CLHEP;
   
   PmtR7378A::PmtR7378A(): BaseGeometry()
   {

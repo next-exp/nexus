@@ -23,8 +23,12 @@
 #include <G4TransportationManager.hh>
 #include <G4RotationMatrix.hh>
 
+#include <CLHEP/Units/SystemOfUnits.h>
+#include <CLHEP/Units/PhysicalConstants.h>
+
 namespace nexus {
 
+  using namespace CLHEP;
   
   NextNewIcs::NextNewIcs():/*const G4double lat_nozzle_z_pos,
 			     const G4double up_nozzle_z_pos ):*/

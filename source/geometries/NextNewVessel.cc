@@ -25,7 +25,12 @@
 #include <G4TransportationManager.hh>
 #include <G4RotationMatrix.hh>
 
+#include <CLHEP/Units/SystemOfUnits.h>
+#include <CLHEP/Units/PhysicalConstants.h>
+
 namespace nexus {
+
+  using namespace CLHEP;
   
   NextNewVessel::NextNewVessel():
 

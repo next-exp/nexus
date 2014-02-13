@@ -24,9 +24,12 @@
 #include <Randomize.hh>
 #include <G4TransportationManager.hh>
 
+#include <CLHEP/Units/SystemOfUnits.h>
+#include <CLHEP/Units/PhysicalConstants.h>
 
 namespace nexus {
 
+  using namespace CLHEP;
   
   Next100Vessel::Next100Vessel(const G4double nozzle_ext_diam,
 			       const G4double up_nozzle_ypos,

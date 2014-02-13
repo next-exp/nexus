@@ -17,8 +17,9 @@
 
 class G4LogicalVolume;
 
-
 namespace nexus {
+
+  using namespace CLHEP;
 
   /// Abstract base class for encapsulation of detector geometries.
 

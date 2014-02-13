@@ -11,8 +11,12 @@
 
 #include <G4ParticleTable.hh>
 
+#include "CLHEP/Units/PhysicalConstants.h"
+
 
 namespace nexus {  
+
+  using namespace CLHEP;
   
   
   IonizationElectron* IonizationElectron::_instance = 0;

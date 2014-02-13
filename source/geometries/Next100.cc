@@ -16,11 +16,13 @@
 #include <G4VisAttributes.hh>
 #include <G4NistManager.hh>
 
-
+#include <CLHEP/Units/SystemOfUnits.h>
+#include <CLHEP/Units/PhysicalConstants.h>
 
 namespace nexus {
 
-  
+  using namespace CLHEP;
+
   Next100::Next100():
     BaseGeometry(),
     // Lab dimensions

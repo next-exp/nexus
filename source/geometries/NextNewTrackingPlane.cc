@@ -24,8 +24,12 @@
 #include <G4NistManager.hh>
 #include <Randomize.hh>
 
+#include <CLHEP/Units/SystemOfUnits.h>
+#include <CLHEP/Units/PhysicalConstants.h>
 
 namespace nexus {
+
+  using namespace CLHEP;
 
   NextNewTrackingPlane::NextNewTrackingPlane(): 
     // Dimensions

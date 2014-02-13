@@ -8,7 +8,6 @@
 // ---------------------------------------------------------------------------- 
 
 #include "PmtR11410.h"
-
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "PmtSD.h"
@@ -29,10 +28,13 @@
 #include <Randomize.hh>
 #include <G4OpticalSurface.hh>
 
+#include <CLHEP/Units/SystemOfUnits.h>
+#include <CLHEP/Units/PhysicalConstants.h>
 
 
 namespace nexus {
   
+  using namespace CLHEP;
   
   PmtR11410::PmtR11410():
     BaseGeometry(),

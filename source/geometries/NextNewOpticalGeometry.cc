@@ -22,7 +22,11 @@
 #include <G4GenericMessenger.hh>
 #include <G4NistManager.hh>
 
+#include <CLHEP/Units/SystemOfUnits.h>
+#include <CLHEP/Units/PhysicalConstants.h>
+
 using namespace nexus;
+using namespace CLHEP;
 
 NextNewOpticalGeometry::NextNewOpticalGeometry():
   BaseGeometry()

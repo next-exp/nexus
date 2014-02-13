@@ -10,9 +10,13 @@
 
 #include <G4OpticalPhoton.hh>
 #include <Randomize.hh>
-#include "G4WLSTimeGeneratorProfileDelta.hh"
+#include <G4WLSTimeGeneratorProfileDelta.hh>
+
+#include "CLHEP/Units/PhysicalConstants.h"
 
 namespace nexus {
+
+  using namespace CLHEP;
 
   WavelengthShifting::WavelengthShifting(const G4String& name, G4ProcessType type): 
     G4VDiscreteProcess(name, type), _wlsIntegralTable(0)

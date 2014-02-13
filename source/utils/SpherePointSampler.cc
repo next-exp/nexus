@@ -12,8 +12,12 @@
 #include <G4RotationMatrix.hh>
 #include <Randomize.hh>
 
+#include "CLHEP/Units/PhysicalConstants.h"
+
 
 namespace nexus {
+
+  using namespace CLHEP;
 
   SpherePointSampler::SpherePointSampler(G4double inner_rad, 
 					 G4double thickness,
