@@ -15,7 +15,7 @@
 #include <globals.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
-
+#include <CLHEP/Units/PhysicalConstants.h>
 
 class G4Material;
 
