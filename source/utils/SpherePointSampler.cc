@@ -12,8 +12,6 @@
 #include <G4RotationMatrix.hh>
 #include <Randomize.hh>
 
-#include "CLHEP/Units/PhysicalConstants.h"
-
 
 namespace nexus {
 

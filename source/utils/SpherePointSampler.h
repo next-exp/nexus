@@ -16,8 +16,11 @@
 #include <G4ThreeVector.hh>
 #include <G4RotationMatrix.hh>
 
+#include <CLHEP/Units/PhysicalConstants.h>
 
 namespace nexus {
+
+  using namespace CLHEP;
 
   /// Generator of random points in a sphere
   class SpherePointSampler
