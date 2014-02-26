@@ -14,7 +14,6 @@
 #include "Next100Shielding.h"
 #include "NextNewPedestal.h"
 #include "NextNewCuCastle.h"
-#include "NextNewRnTube.h"
 #include "NextNewVessel.h"
 #include "NextNewIcs.h"
 #include "NextNewInnerElements.h"
@@ -50,8 +49,7 @@ namespace nexus {
     _pedestal = new NextNewPedestal();
     //Copper Castle
     _cu_castle = new NextNewCuCastle();
-    //Radon Tube
-    _rn_tube = new NextNewRnTube();
+    
     //Vessel
     _vessel = new NextNewVessel();
     //ICS
@@ -66,7 +64,7 @@ namespace nexus {
     delete _shielding;
     delete _pedestal;
     delete _cu_castle;
-    delete _rn_tube;
+   
     delete _vessel;
     delete _ics;
     delete _inner_elements;
@@ -131,11 +129,7 @@ namespace nexus {
     _pedestal->SetLogicalVolume(_buffer_gas_logic);
     _pedestal->Construct();
 
-     //RADON TUBE
-    // _rn_tube->SetLogicalVolume(_buffer_gas_logic);
-    // _rn_tube->Construct();
-
-   
+    
     //VESSEL
      _vessel->Construct();
     G4LogicalVolume* vessel_logic = _vessel->GetLogicalVolume();
@@ -149,9 +143,7 @@ namespace nexus {
     _ics->SetNozzlesZPosition( _vessel->GetLATNozzleZPosition(),_vessel->GetUPNozzleZPosition());
     _ics->Construct();
 
-    // G4LogicalVolume* ics_logic = _ics->GetLogicalVolume();
-    // G4PVPlacement* ics_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), ics_logic, "ICS", _buffer_gas_logic,false, 0, true);
- 
+   
     //INNER ELEMENTS
     _inner_elements->SetLogicalVolume(vessel_gas_logic);
     _inner_elements->Construct();
@@ -185,9 +177,10 @@ namespace nexus {
    else if (region == "CU_CASTLE"){
      vertex = _cu_castle->GenerateVertex(region);
    }
-    //RADON TUBE
-   else if (region == "RN_TUBE") {
-      vertex = _rn_tube->GenerateVertex(region);
+    //RADON 
+    //on the inner lead surface (SHIELDING_GAS) and on the outer copper castle surface (RN_CU_CASTLE)
+   else if (region == "RN_CU_CASTLE") {
+     vertex = _cu_castle->GenerateVertex(region);
     }
 
     //VESSEL REGIONS

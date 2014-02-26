@@ -93,6 +93,8 @@ namespace nexus {
 
     // VERTEX GENERATORS   //////////
     _cu_box_gen = new BoxPointSampler(_x-2.*_thickness,_y,_z,_thickness,G4ThreeVector(0.,_thickness,0.),0);
+    _cu_external_surf_gen = new BoxPointSampler(_x-.1*mm,_y+2*_thickness-.1*mm,_z+2*_thickness-.1*mm,
+						0.,G4ThreeVector(0.,_thickness,0.),0);
        		 
     // Calculating some probs
     G4double castle_vol = cu_castle_solid->GetCubicVolume();
@@ -104,6 +106,7 @@ namespace nexus {
   NextNewCuCastle::~NextNewCuCastle()
   {
     delete _cu_box_gen;
+    delete _cu_external_surf_gen;
   }
   
   G4ThreeVector NextNewCuCastle::GenerateVertex(const G4String& region) const
@@ -115,8 +118,15 @@ namespace nexus {
 	vertex = _cu_box_gen->GenerateVertex("WHOLE_VOL");
 	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
       } while (VertexVolume->GetName() != "CU_CASTLE");
-      
     }
+    else if (region == "RN_CU_CASTLE") {
+	G4VPhysicalVolume *VertexVolume;
+	do {
+	  vertex = _cu_external_surf_gen->GenerateVertex("WHOLE_SURF");
+	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	} while (VertexVolume->GetName() != "CU_CASTLE");
+      }
+  
     return vertex;
   }
 

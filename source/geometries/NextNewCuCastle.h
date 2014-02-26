@@ -51,7 +51,7 @@ namespace nexus {
 
     // Vertex generators
     BoxPointSampler* _cu_box_gen;
-   
+    BoxPointSampler*  _cu_external_surf_gen;   
     // Geometry Navigator
     G4Navigator* _geom_navigator;
 
