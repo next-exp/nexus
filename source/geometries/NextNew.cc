@@ -122,17 +122,18 @@ namespace nexus {
     G4LogicalVolume* shielding_logic = _shielding->GetLogicalVolume();
     G4PVPlacement* shielding_physi = new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),shielding_logic, "LEAD_BOX",
 						       _buffer_gas_logic, false, 0, false);
-    //PEDESTAL
-    _pedestal->SetLogicalVolume(_buffer_gas_logic);
-    _pedestal->Construct();
 
     //COPPER CASTLE 
     _cu_castle->SetLogicalVolume(_buffer_gas_logic);
     _cu_castle->Construct();
+  
+    //PEDESTAL
+    _pedestal->SetLogicalVolume(_buffer_gas_logic);
+    _pedestal->Construct();
 
-    //RADON TUBE
-    _rn_tube->SetLogicalVolume(_buffer_gas_logic);
-    _rn_tube->Construct();
+     //RADON TUBE
+    // _rn_tube->SetLogicalVolume(_buffer_gas_logic);
+    // _rn_tube->Construct();
 
    
     //VESSEL
@@ -154,6 +155,8 @@ namespace nexus {
     //INNER ELEMENTS
     _inner_elements->SetLogicalVolume(vessel_gas_logic);
     _inner_elements->Construct();
+
+   
 
     //// VERTEX GENERATORS   //
     _lab_gen = new BoxPointSampler(_buffer_gas_size,_buffer_gas_size,_buffer_gas_size, _lab_size-_buffer_gas_size,G4ThreeVector(0.,0.,0.),0);

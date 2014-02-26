@@ -23,29 +23,24 @@
 #include <G4SDManager.hh>
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
-
-#include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
+#include <G4GenericMessenger.hh>
 
 #include <sstream>
 
 
 namespace nexus{
 
-  using namespace CLHEP;
-
   NextNewKDB::NextNewKDB(G4int rows, G4int columns):
     BaseGeometry(), _rows(rows), _columns(columns)
   {
+    /// Messenger
+    _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
+    _msg->DeclareProperty("kdb_vis", _visibility, "Kapton Dice Boards Visibility");
   }
-
-
 
   NextNewKDB::~NextNewKDB()
   {
   }
-
-
 
   void NextNewKDB::Construct()
   {
@@ -132,26 +127,26 @@ namespace nexus{
     
     // new G4LogicalSkinSurface("DB", board_logic, dboard_opsur);
 
-
-    // Visibilities
-    //coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    //sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    // G4VisAttributes * vis = new G4VisAttributes;
-    // vis->SetColor(1., 0., 0.);
-    // coating_logic->SetVisAttributes(vis);
-    // vis->SetColor(0., 1., 0.);
-    // sipm_logic->SetVisAttributes(vis);
-
+    // SETTING VISIBILITIES   //////////
+    if (_visibility) {
+      G4VisAttributes silicon_col(G4Colour(1., 1., 0.));
+      silicon_col.SetForceSolid(true);
+      sipm_logic->SetVisAttributes(silicon_col);
+      G4VisAttributes tpb_col(G4Colour(1., 1., 1.));
+      // tpb_col.SetForceSolid(true);
+      coating_logic->SetVisAttributes(tpb_col);
+      
+    }
+    else {
+      coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
   }
-
-
 
   G4ThreeVector NextNewKDB::GetDimensions() const
   {
     return _dimensions;
   }
-
-
   
   const std::vector<std::pair<int, G4ThreeVector> >& NextNewKDB::GetPositions()
   {

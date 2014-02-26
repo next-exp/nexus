@@ -15,6 +15,7 @@
 #include "BoxPointSampler.h"
 
 #include <G4Navigator.hh>
+#include <G4TransportationManager.hh>
 
 class G4GenericMessenger;
 
@@ -49,9 +50,10 @@ namespace nexus {
     G4bool _visibility;
 
     // Vertex generators
-    BoxPointSampler* _cu_wall_y_gen;
-    BoxPointSampler* _cu_wall_x_gen;
-    G4double _wall_perc;
+    BoxPointSampler* _cu_box_gen;
+   
+    // Geometry Navigator
+    G4Navigator* _geom_navigator;
 
     // Messenger for the definition of control commands
     G4GenericMessenger* _msg; 

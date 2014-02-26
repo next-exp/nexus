@@ -15,6 +15,7 @@
 #include "BaseGeometry.h"
 #include <vector>
 
+class G4GenericMessenger;
 
 namespace nexus {
 
@@ -38,6 +39,13 @@ namespace nexus {
     G4int _rows, _columns;
     G4ThreeVector _dimensions;
     std::vector<std::pair<int, G4ThreeVector> > _positions;
+ 
+    // Visibility of the shielding
+    G4bool _visibility;
+    
+    // Messenger for the definition of control commands
+    G4GenericMessenger* _msg;    
+ 
   };
 
 } // end namespace nexus
