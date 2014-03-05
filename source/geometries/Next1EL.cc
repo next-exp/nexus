@@ -276,14 +276,10 @@ void Next1EL::DefineMaterials()
   // GASEOUS XENON
   _gxe = MaterialsList::GXe(_pressure, 303);
   _gxe->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, 303, _sc_yield));
-   // G4cout << "Prova: " << _gxe->GetMaterialPropertiesTable()->GetProperty("GROUPVEL")->Value(2.)
-   // 	   << G4endl;
+   
   G4cout << "Scintillation yield: " << _sc_yield << G4endl;
 
-  // if (cfg.GetSParam("particle_name") == "alpha"){
-  //   _gxe->GetIonisation()->SetBirksConstant(0.126*mm/MeV);
-  // }
-
+ 
   // PTFE (TEFLON)
   _teflon = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
   // STAINLESS STEEL
@@ -296,7 +292,7 @@ void Next1EL::DefineMaterials()
   _plastic = MaterialsList::PS();
   //TPB
   _tpb = MaterialsList::TPB();
-  _tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPBOld());
+  _tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
 }
 
 
