@@ -195,19 +195,12 @@ namespace nexus {
 
     // Vertex in the whole ICS volume
     if (region == "ICS") {
+
       G4double rand = G4UniformRand();
 
       if (rand < _perc_body_vol)
 	vertex = _body_gen->GenerateVertex("BODY_VOLUME");        // Body
 
-      // (thick version with cone substraction)
-      // else if  (rand < _perc_tracking_vol) {
-      // 	G4VPhysicalVolume *VertexVolume;
-      // 	do {
-      // 	  vertex = _tracking_gen->GenerateVertex(TUBE_VOLUME);    // Tracking plane
-      // 	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
-      // 	} while (VertexVolume->GetName() != "ICS");
-      // }
 
       // (thin version without substractions)
       else if  (rand < _perc_tracking_vol)
@@ -219,7 +212,7 @@ namespace nexus {
       else {
 	G4VPhysicalVolume *VertexVolume;
 	do {
-	  vertex = _energy_sph_gen->GenerateVertex("WHOLE_VOL");     // Energy plane, spherical section
+	  vertex = _energy_sph_gen->GenerateVertex("VOLUME");     // Energy plane, spherical section
 	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
 	} while (VertexVolume->GetName() != "ICS");
       }

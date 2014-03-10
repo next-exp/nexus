@@ -496,7 +496,6 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::PTFE()
   G4double ENERGIES[REFL_NUMENTRIES] = {1.0*eV, 30.*eV};
   /// This is for non-coated teflon panels
   G4double REFLECTIVITY[REFL_NUMENTRIES] = {.72, .72};
-  G4cout << "0.72!!!!!!" << G4endl;
   G4double specularlobe[REFL_NUMENTRIES] = {0., 0.}; // specular reflection about the normal to a 
   //microfacet. Such a vector is chosen according to a gaussian distribution with 
   //sigma = SigmaAlhpa (in rad) and centered in the average normal.
