@@ -133,13 +133,13 @@ namespace nexus {
 
 
     // Visibilities
-    //coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    //sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    G4VisAttributes * vis = new G4VisAttributes;
-    vis->SetColor(1., 0., 0.);
-    coating_logic->SetVisAttributes(vis);
-    vis->SetColor(0., 1., 0.);
-    sipm_logic->SetVisAttributes(vis);
+    coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    //G4VisAttributes * vis = new G4VisAttributes;
+    //vis->SetColor(1., 0., 0.);
+    //coating_logic->SetVisAttributes(vis);
+    //vis->SetColor(0., 1., 0.);
+    //sipm_logic->SetVisAttributes(vis);
 
   }
 

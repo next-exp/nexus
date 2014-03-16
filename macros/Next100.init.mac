@@ -3,15 +3,18 @@
 ###  $Id: Next100.init.mac 8754 2013-06-15 15:15:13Z jmunoz $
 ### --------------------------------------------------------
 
-/control/execute macros/physics/DefaultPhysicsList.mac
-
 /Geometry/RegisterGeometry NEXT100
 
 #/Generator/RegisterGenerator SINGLE_PARTICLE
 #/Generator/RegisterGenerator GENBB_INTERFACE
 /Generator/RegisterGenerator DECAY0
 
-/Actions/RegisterTrackingAction DEFAULT
+/Actions/RegisterRunAction DEFAULT
+
 /Actions/RegisterEventAction DEFAULT
+
+/Actions/RegisterTrackingAction DEFAULT
+
+/control/execute macros/physics/DefaultPhysicsList.mac
 
 /nexus/RegisterMacro macros/Next100.config.mac

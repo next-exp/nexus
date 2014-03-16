@@ -15,6 +15,7 @@
 #include <G4PVPlacement.hh>
 #include <G4VisAttributes.hh>
 #include <G4NistManager.hh>
+#include <G4UserLimits.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
@@ -94,6 +95,11 @@ namespace nexus {
       new G4Box("BUFFER_GAS", _buffer_gas_size/2., _buffer_gas_size/2., _buffer_gas_size/2.);
     
     _buffer_gas_logic = new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "BUFFER_GAS");
+    ////////////////////////////////////////
+    ////Limit the uStepMax=Maximum step length, uTrakMax=Maximum total track length,
+    //uTimeMax= Maximum global time for a track, uEkinMin= Minimum remaining kinetic energy for a track
+    //uRangMin=	 Minimum remaining range for a track
+    _buffer_gas_logic->SetUserLimits(new G4UserLimits( _lab_size*1E6, _lab_size*1E6,1E12 *s,100.*keV,0.));
     _buffer_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
     G4PVPlacement* buffer_gas_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), _buffer_gas_logic,

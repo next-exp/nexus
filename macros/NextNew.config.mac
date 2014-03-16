@@ -12,12 +12,12 @@
 
 #/control/execute macros/generators/SingleParticle.mac
 /Generator/SingleParticle/particle e-
-/Generator/SingleParticle/min_energy 1. keV
-/Generator/SingleParticle/max_energy 1. keV
-#/Generator/SingleParticle/momentum_X 4.
-#/Generator/SingleParticle/momentum_Y -1.
-#/Generator/SingleParticle/momentum_Z 0.
-/Generator/SingleParticle/region VESSEL
+/Generator/SingleParticle/min_energy 1. MeV
+/Generator/SingleParticle/max_energy 1. MeV
+/Generator/SingleParticle/momentum_X 0.
+/Generator/SingleParticle/momentum_Y 0.
+/Generator/SingleParticle/momentum_Z 1.
+/Generator/SingleParticle/region SHIEDING_LEAD
 
 
 #/control/execute macros/physics/DefaultPhysicsList.mac
