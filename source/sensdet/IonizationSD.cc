@@ -56,8 +56,9 @@ void IonizationSD::Initialize(G4HCofThisEvent* hce)
     new IonizationHitsCollection(SensitiveDetectorName, collectionName[0]);
 
   G4int hcid = 
-    G4SDManager::GetSDMpointer()->GetCollectionID(collectionName[0]);
+    G4SDManager::GetSDMpointer()->GetCollectionID(SensitiveDetectorName+"/"+collectionName[0]);
   hce->AddHitsCollection(hcid, _IHC);
+ 
 }
   
   
