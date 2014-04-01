@@ -732,7 +732,7 @@ void Next1EL::BuildFieldCage()
     UniformElectricDriftField* el_field = new UniformElectricDriftField();
     el_field->SetCathodePosition(_elgap_position.z()-_elgap_length/2.);
     el_field->SetAnodePosition(_elgap_position.z()+_elgap_length/2.);
-    el_field->SetDriftVelocity(5.*mm/microsecond);
+    el_field->SetDriftVelocity(2.5*mm/microsecond);
     el_field->SetTransverseDiffusion(1.*mm/sqrt(cm));
     el_field->SetLongitudinalDiffusion(.5*mm/sqrt(cm));
     XenonGasProperties xgp(_pressure, 303);
@@ -785,7 +785,7 @@ void Next1EL::BuildFieldCage()
   field->SetAnodePosition(_elgap_position.z()-_elgap_length/2.);
   field->SetDriftVelocity(1.*mm/microsecond);
   field->SetTransverseDiffusion(1.*mm/sqrt(cm));
-  field->SetLongitudinalDiffusion(.5*mm/sqrt(cm));
+  field->SetLongitudinalDiffusion(.3*mm/sqrt(cm));
   
   G4Region* drift_region = new G4Region("DRIFT");
   drift_region->SetUserInformation(field);
