@@ -3,7 +3,7 @@
 //  $Id$
 //
 //  Authors:  <justo.martin-albo@ific.uv.es>
-//            <paola.ferrario@ific.uv.es>
+//                <paola.ferrario@ific.uv.es>
 //  Created: 27 Jan 2010
 //  
 //  Copyright (c) 2010, 2011 NEXT Collaboration
@@ -20,6 +20,7 @@
 #include "UniformElectricDriftField.h"
 #include "XenonGasProperties.h"
 #include "NextElDB.h"
+#include "CylinderPointSampler.h"
 
 #include <G4Box.hh>
 #include <G4Tubs.hh>
@@ -149,18 +150,6 @@ Next1EL::Next1EL():
   sc_yield_cmd.SetParameterName("sc_yield", true);
   sc_yield_cmd.SetUnitCategory("1/Energy");
 
-  // G4GenericMessenger::Command&  specific_vertex_cmd =
-  //   _msg->DeclareProperty("specific_vertex", _specific_vertex,
-  // 			  "If region is AD_HOC, vertex where particles are generated");
-  // specific_vertex_cmd.SetParameterName("specific_vertex", true);
-  // specific_vertex_cmd.SetUnitCategory("Length");
-
-  // _specific_v_cmd = 
-  //   new G4UIcmdWith3VectorAndUnit("/Geometry/Next1EL/specific_vertex", _msg);
-  // _specific_v_cmd->SetParameterName("specific_vertex_X", "specific_vertex_Y", 
-  // 				   "specific_vertex_Z", true);
-  // _specific_v_cmd->SetUnitCategory("Length");
-
   /// Temporary
   G4GenericMessenger::Command&  specific_vertex_X_cmd =
     _msg->DeclareProperty("specific_vertex_X", _specific_vertex_X,
@@ -229,6 +218,7 @@ Next1EL::~Next1EL()
 {
   delete _hexrnd;
   delete _msg;
+  delete _cps;
   // delete _specific_v_cmd;
 }
   
@@ -239,6 +229,7 @@ void Next1EL::Construct()
   // The following methods must be invoked in this particular
   // order since some of them depend on the previous ones
   BuildLab();
+  BuildExtScintillator();
   BuildVessel();
   BuildFieldCage();
   BuildEnergyPlane();
@@ -258,11 +249,6 @@ void Next1EL::Construct()
   G4double z = _vessel_length/2. - _fieldcage_displ - _elgap_ring_height - _elgap_length + .5*mm;
 
   CalculateELTableVertices(92.5*mm, 5.*mm, z);
-  
-  // for (int i=0; i<_table_vertices.size(); i++){
-  //   G4cout <<  _table_vertices[i][0] << ", " << _table_vertices[i][1] << G4endl; 
-  // }
-  // G4cout << "Number of points =  " << _table_vertices.size() << G4endl;
   
 }
   
@@ -313,6 +299,111 @@ void Next1EL::BuildLab()
   // Set this volume as the wrapper for the whole geometry 
   // (i.e., this is the volume that will be placed in the world)
   this->SetLogicalVolume(_lab_logic);
+}
+
+void Next1EL::BuildExtScintillator()
+{
+  G4double vessel_total_diam = _vessel_diam + 2.*_vessel_thickn;
+  // rotation of the source-port
+  G4RotationMatrix rot;
+  rot.rotateY(-pi/2.);
+  rot.rotateZ(_sideport_angle);
+
+  _sideNa_pos = G4ThreeVector((-vessel_total_diam/2. - _sideport_length - 
+			_sideport_flange_thickn) 
+		       * cos(_sideport_angle),
+			(-vessel_total_diam/2. - _sideport_length - 
+			 _sideport_flange_thickn) 
+		       * sin(_sideport_angle),
+		       _sideport_posz);
+
+///The source itself
+  G4double source_thick = .1*mm;
+  G4double source_diam = 3.*mm;
+  G4Tubs* source_solid = 
+    new G4Tubs("SOURCE", 0., source_diam/2., source_thick/2., 0., twopi);
+  G4Material* sodium22_mat = 
+    G4NistManager::Instance()->FindOrBuildMaterial("G4_Na");
+  G4LogicalVolume* source_logic = 
+    new G4LogicalVolume(source_solid, sodium22_mat, "SOURCE");
+  
+  G4ThreeVector pos_source = 
+    G4ThreeVector( _sideNa_pos.getX()-source_thick/2.*cos(_sideport_angle),
+		   _sideNa_pos.getY()-source_thick/2.*sin(_sideport_angle), 
+		   _sideNa_pos.getZ());
+  G4PVPlacement* source_physi = 
+    new G4PVPlacement(G4Transform3D(rot, pos_source), source_logic, "SOURCE",
+		      _lab_logic, false, 0, true);
+  G4VisAttributes * vis_green = new G4VisAttributes;
+   vis_green->SetColor(0., 1., 0.);
+   vis_green->SetForceSolid(true);
+   source_logic->SetVisAttributes(vis_green);
+
+   G4RotationMatrix* rot2 = new  G4RotationMatrix();
+   rot2->rotateY(-pi/2.);
+   rot2->rotateZ(_sideport_angle);
+    
+   _cps =  
+     new CylinderPointSampler(source_diam/2., source_thick, 0., 0., pos_source, rot2);
+   
+
+  ///Plastic support
+  G4double support_thick = 6.2*mm;
+  G4double support_diam = 25.33*mm;
+  G4Tubs* support_solid = 
+    new G4Tubs("SUPPORT", 0., support_diam/2., support_thick/2., 0., twopi);
+  G4LogicalVolume* support_logic = 
+    new G4LogicalVolume(support_solid, _plastic, "SUPPORT");
+  G4ThreeVector pos_support = 
+    G4ThreeVector(pos_source.getX()-(support_thick+source_thick)/2.*cos(_sideport_angle),
+		  pos_source.getY()-(support_thick+source_thick)/2.*sin(_sideport_angle), 
+		  pos_source.getZ());
+  G4PVPlacement* pos_physi = 
+    new G4PVPlacement(G4Transform3D(rot, pos_support), support_logic, 
+		      "SOURCE_SUPPORT",  _lab_logic, false, 0, true);
+  
+   G4VisAttributes * vis_red = new G4VisAttributes;
+   vis_red->SetColor(1., 0., 0.);
+   vis_red->SetForceSolid(true);
+   support_logic->SetVisAttributes(vis_red);
+   
+  
+  /// NaI scintillator behind
+  G4double dist_sc = 5.*cm;
+  G4double radius = 44.5/2.*mm;
+  G4double length = 38.7*mm;
+  G4Tubs* sc_solid = new G4Tubs("NaI", 0., radius, length/2., 0., twopi);
+  G4Material* mat = 
+    G4NistManager::Instance()->FindOrBuildMaterial("G4_SODIUM_IODIDE");
+  G4LogicalVolume* sc_logic = new G4LogicalVolume(sc_solid, mat, "NaI");
+  sc_logic->SetUserLimits(new G4UserLimits(1.*mm));
+
+  // G4ThreeVector pos_scint = 
+  //   G4ThreeVector(pos_al.getX()-(al_thick/2.+dist_sc)*cos(_sideport_angle),
+  // 		  pos_al.getY()-(al_thick/2.+dist_sc)*sin(_sideport_angle), 
+  // 		  sideNa.getZ());
+  G4ThreeVector pos_scint = 
+    G4ThreeVector(pos_support.getX() - 
+		  (support_thick/2.+dist_sc+length/2.)*cos(_sideport_angle),
+		  pos_support .getY()-(support_thick/2.+dist_sc+length/2.)*sin(_sideport_angle), 
+		  _sideNa_pos.getZ());
+  G4PVPlacement* sc_physi = 
+    new G4PVPlacement(G4Transform3D(rot, pos_scint), sc_logic, "NaI",
+		      _lab_logic, false, 0, true);
+  G4VisAttributes * vis_blue = new G4VisAttributes;
+  vis_blue->SetColor(0., 0., 1.);
+  vis_blue->SetForceSolid(true);
+  sc_logic->SetVisAttributes(vis_blue);
+  
+
+  // NaI is defined as an ionization sensitive volume.
+  G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
+  G4String detname = "/NEXT1/SCINT";
+  IonizationSD* ionisd = new IonizationSD(detname);
+  sdmgr->AddNewDetector(ionisd);
+  sc_logic->SetSensitiveDetector(ionisd);
+  
+
 }
 
   
@@ -402,6 +493,12 @@ void Next1EL::BuildVessel()
   
   new G4PVPlacement(G4Transform3D(rotport, posport), sideport_flange_logic,
 		    "SIDEPORT_FLANGE", _lab_logic, false, 0, true);
+  G4VisAttributes * vis = new G4VisAttributes;
+  vis->SetColor(0.5, 0.5, .5);
+  vis->SetForceSolid(true);
+  sideport_flange_logic->SetVisAttributes(vis);
+ 
+
   
 
   // TUBE ..................................................
@@ -422,9 +519,6 @@ void Next1EL::BuildVessel()
 
   new G4PVPlacement(G4Transform3D(rotport, posport), sideport_tube_logic, 
 		    "SIDEPORT",  _gas_logic, false, 0, true);
-  // G4cout << "Sideport: " << _sideport_position.x() << ", " 
-  // 	 << _sideport_position.y() << ", " 
-  // 	 << _sideport_position.z() << G4endl;
   
   G4Tubs* sideport_tube_air_solid =
     new G4Tubs("SIDEPORT_AIR", 0., _sideport_tube_diam/2.,
@@ -678,7 +772,6 @@ void Next1EL::BuildFieldCage()
 
   // Limit the step size in this volume for better tracking precision
   active_logic->SetUserLimits(new G4UserLimits(_max_step_size));
-  G4cout << "Step size: " << _max_step_size << G4endl;
     
   // Set the volume as an ionization sensitive detector
   G4String det_name = "/NEXT1/ACTIVE";
@@ -1220,13 +1313,14 @@ G4ThreeVector Next1EL::GenerateVertex(const G4String& region) const
     return _sideport_position;
   } else if (region == "AXIALPORT") {
     return _axialport_position;
+  } else if (region == "Na22LATERAL") {
+    //  G4ThreeVector point = _cps->GenerateVertex("INSIDE");
+    G4ThreeVector point = _sideNa_pos;
+    return point;
   } else if (region == "ACTIVE") {
     return _hexrnd->GenerateVertex(INSIDE);
     } else if (region == "RESTRICTED") {
     G4ThreeVector point = _hexrnd->GenerateVertex(PLANE);
-    // G4cout <<  point.getX() << ", "
-    // 	   <<  point.getY() << ", " 
-    // 	   <<  point.getZ() << G4endl;
     return  point;
     //  } else if (region == "FIXED_RADIUS") {
     //  G4ThreeVector point = _hexrnd->GenerateVertex(RADIUS, 10.);
@@ -1237,12 +1331,6 @@ G4ThreeVector Next1EL::GenerateVertex(const G4String& region) const
   } else if (region == "AD_HOC"){
     return _specific_vertex;
   } else if (region == "EL_TABLE") {  
-    // if(_numb_of_events<_table_vertices.size()){
-    //   G4cout<<"number events too small, you need at least "<<_table_vertices.size()
-    // 	    <<" events to generate EL table"<<G4endl;
-    //   G4cout<<"[Next1EL] Aborting the run ..."<<G4endl;
-    //   G4RunManager::GetRunManager()->AbortRun();
-    // } else {
       _idx_table++;	
       if(_idx_table>=_table_vertices.size()){
     	G4cout<<"[Next1EL] Aborting the run, last event reached ..."<<G4endl;
@@ -1252,7 +1340,7 @@ G4ThreeVector Next1EL::GenerateVertex(const G4String& region) const
        
     	return _table_vertices[_idx_table-1];
       }
-      //    }
+
   } 
     
   G4cout << "[Next1EL::GenerateVertex()]: Generating particle in (0,0,0)" << G4endl;
