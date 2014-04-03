@@ -25,6 +25,7 @@ class G4UIcmdWith3VectorAndUnit;
 namespace nexus {
   
   class HexagonPointSampler;
+  class CylinderPointSampler;
 
   
   /// Geometry of the NEXT1-EL detector
@@ -45,6 +46,7 @@ namespace nexus {
     void Construct();
     void DefineMaterials();
     void BuildLab();
+    void BuildExtScintillator();
     void BuildVessel();
     void BuildFieldCage();
     void BuildEnergyPlane();
@@ -207,6 +209,9 @@ namespace nexus {
     /// Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
     G4UIcmdWith3VectorAndUnit* _specific_v_cmd;
+
+    /// To generate vertices in the Na22 source
+    CylinderPointSampler* _cps;
   };
 
 
