@@ -204,7 +204,7 @@ namespace nexus {
 
       // (thin version without substractions)
       else if  (rand < _perc_tracking_vol)
-	vertex = _tracking_gen->GenerateVertex("BODY_VO");    // Tracking plane
+	vertex = _tracking_gen->GenerateVertex("BODY_VOL");    // Tracking plane
 
       else if  (rand < _perc_energy_cyl_vol)
 	vertex = _energy_cyl_gen->GenerateVertex("BODY_VOL");  // Energy plane, cylindric section
