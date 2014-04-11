@@ -263,7 +263,6 @@ namespace nexus {
     // Field Cage region
     if (region == "FIELD_CAGE") {
       vertex = _field_cage->GenerateVertex(region);
-      std::cout << "****************************** IE *************   " << vertex << std::endl;
     }
 
     // Active region
