@@ -263,11 +263,12 @@ namespace nexus {
     // Field Cage region
     if (region == "FIELD_CAGE") {
       vertex = _field_cage->GenerateVertex(region);
+      std::cout << "****************************** IE *************   " << vertex << std::endl;
     }
 
     // Active region
     else if (region == "ACTIVE") {
-      vertex = _active_gen->GenerateVertex("BODY_VOLUME");
+      vertex = _active_gen->GenerateVertex("BODY_VOL");
     }
 
     // Energy Plane regions
