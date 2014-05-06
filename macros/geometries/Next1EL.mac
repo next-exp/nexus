@@ -3,6 +3,7 @@
 ###  $Id: Next1EL.mac $
 ### --------------------------------------------------------
 
+/Geometry/Next1EL/external_scintillator false
 /Geometry/Next1EL/elfield false
 /Geometry/Next1EL/tpb_coating true
 /Geometry/Next1EL/sc_yield 13889 1/MeV

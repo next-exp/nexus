@@ -160,6 +160,7 @@ namespace nexus {
     G4double _sideport_posz;
     G4bool _tpb_coating;
     G4bool _elfield;
+    G4bool _external_scintillator;
     G4double _elgrid_transparency;
     G4double _gate_transparency;
     G4ThreeVector _specific_vertex;
@@ -171,6 +172,7 @@ namespace nexus {
     
     /// Position of the side source-port in the world reference system
     G4ThreeVector _sideport_position;
+    G4ThreeVector _sideport_ext_position;
     G4ThreeVector _sideNa_pos;
     /// Position of the axial source-port in the world reference system
     G4ThreeVector _axialport_position;

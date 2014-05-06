@@ -136,6 +136,8 @@ Next1EL::Next1EL():
 			"True if the EL field is on (full simulation), false if it's not (parametrized simulation.");
   _msg->DeclareProperty("tpb_coating", _tpb_coating,
 			"True if the upper light tube is coated.");
+  _msg->DeclareProperty("external_scintillator", _external_scintillator,
+			"True if the an external NaI scintillator is used.");
 
   
   // String-like properties
@@ -229,7 +231,8 @@ void Next1EL::Construct()
   // The following methods must be invoked in this particular
   // order since some of them depend on the previous ones
   BuildLab();
-  BuildExtScintillator();
+  if (_external_scintillator)
+    BuildExtScintillator();
   BuildVessel();
   BuildFieldCage();
   BuildEnergyPlane();
@@ -498,6 +501,10 @@ void Next1EL::BuildVessel()
   vis->SetForceSolid(true);
   sideport_flange_logic->SetVisAttributes(vis);
  
+  radial_pos = -(vessel_total_diam/2. + _sideport_length + _sideport_flange_thickn);
+  _sideport_ext_position.setX(radial_pos * cos(_sideport_angle));
+  _sideport_ext_position.setY(radial_pos * sin(_sideport_angle));
+  _sideport_ext_position.setZ(_sideport_posz);
 
   
 
@@ -1309,8 +1316,10 @@ void Next1EL::BuildPMTTrackingPlane()
 G4ThreeVector Next1EL::GenerateVertex(const G4String& region) const
 {
   G4ThreeVector vertex(0., 0., 0.);
-  if (region == "SIDEPORT") {
-    return _sideport_position;
+  if (region == "CENTER") {  
+    return _active_position;
+  } else if (region == "SIDEPORT") {
+    return _sideport_ext_position;
   } else if (region == "AXIALPORT") {
     return _axialport_position;
   } else if (region == "Na22LATERAL") {
