@@ -53,6 +53,10 @@ void FastSimEventAction::EndOfEventAction(const G4Event* event)
 {
   _nevt++;
 
+  /// This method only behaves as you want, if there is only 1 kind of ionization hits.
+  /// If there are more than one (for instance, in the presence of an external scintillator),
+  /// the energy of specific ionization hits that you are considering must be summed.
+
   PersistencyManager* pm = dynamic_cast<PersistencyManager*>
     (G4VPersistencyManager::GetPersistencyManager());
   pm->StoreCurrentEvent(false);
