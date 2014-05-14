@@ -43,11 +43,13 @@ namespace nexus {
     _buffer_length(70. * mm),
     _el_gap_length (.5 * cm),
     _grid_thickness (.1 * mm), //it's just fake dielectric
+    _anode_quartz_thickness (.5 *cm),
     _cathode_thickness(1. * mm),
     _cathode_gap(15. * mm),
     _el_grid_transparency (.88),
     _gate_transparency (.76),
     _cathode_grid_transparency (.98),
+    _anode_quartz_transparency (),
     _tube_in_diam (48. * cm),
     _tube_thickness (2.0 * cm),    
     _reflector_thickness (.5 * cm),
@@ -132,6 +134,8 @@ namespace nexus {
     BuildActive(); 
     // Proper field cage and light tube
     BuildFieldCage();
+    //build the quartz anode
+    BuildAnodeGrid();
     
   }
   
@@ -150,6 +154,8 @@ namespace nexus {
     // TPB coating
     _tpb = MaterialsList::TPB();
     _tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB(_pressure, _temperature));
+    //ITO coating
+    //    _ito = Materiallist::ITO();
   }
 
   void NextNewFieldCage::BuildELRegion()
@@ -180,6 +186,10 @@ namespace nexus {
     }
 
     ///// EL GRIDS /////
+    // G4Material* fgrid_mat = 
+    //   MaterialsList::FakeDielectric(_gas, "el_grid_anode_mat");
+    // fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _el_grid_transparency, _grid_thickness));
+
     G4Material* fgrid_mat = 
       MaterialsList::FakeDielectric(_gas, "el_grid_anode_mat");
     fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _el_grid_transparency, _grid_thickness));
@@ -201,23 +211,55 @@ namespace nexus {
       new G4LogicalVolume(diel_grid_solid, fgate_mat, "EL_GRID_GATE");
     G4PVPlacement* gate_physi = 
       new G4PVPlacement(0, G4ThreeVector(0., 0., poszInner), gate_logic, 
-			"EL_GRID_GATE", el_gap_logic, false, 0, false);
-
-    G4LogicalVolume* anode_logic = 
-      new G4LogicalVolume(diel_grid_solid, fgrid_mat, "EL_GRID_ANODE");
-    G4PVPlacement* anode_physi = 
-      new G4PVPlacement(0, G4ThreeVector(0., 0., poszOuter), anode_logic, 
-			"EL_GRID_ANODE", el_gap_logic, false, 1, false);
-    
+			"EL_GRID_GATE", el_gap_logic, false, 0, false);  
 
     /// Visibilities
     if (_visibility) {
       _grey_color->SetForceSolid(true);
       el_gap_logic->SetVisAttributes(_grey_color);
-    } else {         
+      G4VisAttributes col(G4Colour(.32, .56, .93));//blue
+      col.SetForceSolid(true);
+      gate_logic->SetVisAttributes(col); 
+    } 
+    else {         
       el_gap_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
   }
+
+  void NextNewFieldCage::BuildAnodeGrid()
+  {
+    G4double anode_diam = _tube_in_diam; // _active_diam;
+    G4double pos_z_anode =  _el_gap_z_pos + _el_gap_length/2. +  _anode_quartz_thickness/2.+_tpb_thickness;
+  
+    ///// ANODE ////// 
+    G4Material* fanode_mat =  MaterialsList::FusedSilica();
+    
+    G4Tubs* anode_quartz_solid =
+      new G4Tubs("QUARTZ_ANODE", 0., anode_diam/2. , _anode_quartz_thickness/2., 0, twopi);
+    G4LogicalVolume* anode_logic = 
+      new G4LogicalVolume(anode_quartz_solid, fanode_mat, "EL_QUARTZ_ANODE");
+    G4PVPlacement* anode_physi = 
+      new G4PVPlacement(0, G4ThreeVector(0., 0., pos_z_anode), anode_logic, 
+			"EL_QUARTZ_ANODE", _mother_logic, false, 1, true);
+
+    G4Tubs* tpb_anode_solid =
+      new G4Tubs("TPB_ANODE", 0., anode_diam/2. , _tpb_thickness/2., 0, twopi);
+    G4LogicalVolume* tpb_anode_logic = 
+      new G4LogicalVolume(tpb_anode_solid, _tpb, "TPB_ANODE");
+    G4PVPlacement* tpb_anode_physi = 
+      new G4PVPlacement(0, G4ThreeVector(0., 0., pos_z_anode-_anode_quartz_thickness/2.-_tpb_thickness/2.), tpb_anode_logic, 
+			"TPB_ANODE", _mother_logic, false, 1, true);
+    
+     
+    if (_visibility) {
+      _red_color->SetForceSolid(true);
+      anode_logic->SetVisAttributes(_red_color);
+      G4VisAttributes color(G4Colour(.24, .100, .24));//green
+      color.SetForceSolid(true);
+      tpb_anode_logic->SetVisAttributes(color);
+    }
+  }
+
 
   void NextNewFieldCage::BuildCathodeGrid()
   {

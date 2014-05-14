@@ -50,6 +50,7 @@ namespace nexus {
     void BuildCathodeGrid();
     void BuildActive(); 
     void BuildFieldCage(); 
+    void BuildAnodeGrid();
 
     /// Calculates the vertices for the EL table generation
     void CalculateELTableVertices(G4double radius, 
@@ -67,6 +68,7 @@ namespace nexus {
     // Pointers to materials definition
     G4Material* _hdpe; 
     G4Material* _tpb;
+    G4Material* _ito;
     G4Material* _teflon;    
 
     // Dimensions
@@ -76,6 +78,7 @@ namespace nexus {
     G4double _reflector_thickness, _tpb_thickness;
     G4double _el_gap_z_pos, _el_gap_length, _grid_thickness;
     G4double _el_grid_transparency, _gate_transparency; 
+    G4double _anode_quartz_thickness, _anode_quartz_transparency;
     G4double _cathode_grid_transparency;
     G4double _drift_length;
     G4double _cathode_thickness, _cathode_gap;
