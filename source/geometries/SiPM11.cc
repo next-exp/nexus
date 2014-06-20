@@ -138,9 +138,15 @@ namespace nexus {
 				      0.4991  ,0.4898  ,0.4662  ,0.4355  ,0.4002  ,
 				      0.3471  ,0.2878  ,0.2308  ,0.1620  ,0.0804  ,
 				      0.0390  };
+
+
+    G4double efficiency_red[entries];
+    for (G4int i=0; i<entries; ++i) {
+      efficiency_red[i] = efficiency[i]*.6;
+    }
     
     G4MaterialPropertiesTable* sipm_mt = new G4MaterialPropertiesTable();
-    sipm_mt->AddProperty("EFFICIENCY", energies, efficiency, entries);
+    sipm_mt->AddProperty("EFFICIENCY", energies, efficiency_red, entries);
     sipm_mt->AddProperty("REFLECTIVITY", energies, reflectivity, entries);
 
     G4OpticalSurface* sipm_opsurf = 

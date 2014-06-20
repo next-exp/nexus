@@ -743,7 +743,8 @@ void Next1EL::BuildFieldCage()
     el_field->SetTransverseDiffusion(1.*mm/sqrt(cm));
     el_field->SetLongitudinalDiffusion(.5*mm/sqrt(cm));
     XenonGasProperties xgp(_pressure, 303);
-    el_field->SetLightYield(xgp.ELLightYield(20*kilovolt/cm));
+    // el_field->SetLightYield(xgp.ELLightYield(24.8571*kilovolt/cm));//value for E that gives Y=1160 photons per ie- in normal conditions
+    el_field->SetLightYield(xgp.ELLightYield(23.2857*kilovolt/cm));
     G4Region* el_region = new G4Region("EL_REGION");
     el_region->SetUserInformation(el_field);
     el_region->AddRootLogicalVolume(elgap_logic);
@@ -1125,7 +1126,7 @@ void Next1EL::BuildSiPMTrackingPlane()
   rotdb->rotateZ(pi);
 
   /// Distance of SiPM surface from the beginning of EL region
-  G4double dist_el = 2.5*mm;
+  G4double dist_el = 7.5*mm;
   G4double z = _elgap_position.z() + _elgap_length/2. + dist_el 
     + db_zsize/2.; 
 
