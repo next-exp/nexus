@@ -171,6 +171,7 @@ namespace nexus {
       do {
 	vertex = _support_gen->GenerateVertex("INSIDE");
 	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	//std::cout << VertexVolume->GetName() << std::endl;
       } while (VertexVolume->GetName() != "SUPPORT_PLATE");
     }
 

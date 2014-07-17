@@ -370,6 +370,37 @@ G4Material* MaterialsList::OpticalSilicone()
 
 
 
+G4Material* MaterialsList::SeF6(G4double pressure, G4double temperature)
+{
+  // Composition ranges correspond to Selenium Hexafluoride
+  
+  G4String name = "SeF6";
+  G4Material* mat = G4Material::GetMaterial(name, false);
+    
+  if (mat == 0) {
+    
+    G4NistManager* nist = G4NistManager::Instance();
+    G4double density = 7.887*kg/m3;
+
+    if (pressure/bar > 9.5 && pressure/bar < 10.5)
+      density *= 10.;
+    else
+      G4cout  << "[MaterialsList] Pressure " << pressure/bar
+              << " bar not recognized for SeF6! ... Assuming 1bar. " << G4endl;
+    
+    mat = new G4Material(name, density, 2, kStateGas, temperature, pressure);
+    G4Element* Se = nist->FindOrBuildElement("Se");
+    mat->AddElement(Se, 1);
+    G4Element* F = nist->FindOrBuildElement("F");
+    mat->AddElement(F, 6);
+  }    
+
+  return mat;
+}
+
+
+
+
 G4Material* MaterialsList::CopyMaterial(G4Material* original, G4String newname)
 {
   G4Material* newmat = G4Material::GetMaterial(newname, false);
