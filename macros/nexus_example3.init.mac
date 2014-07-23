@@ -1,6 +1,6 @@
 ### --------------------------------------------------------
-###  Example 1: Initialization macro of nexus.
-###  $Id: nexus_example1.init.mac 9063 2013-08-07 08:51:19Z jmalbos $
+###  Example 3: Initialization macro of nexus.
+###  $Id: nexus_example3.init.mac 9063 2013-08-07 08:51:19Z jmalbos $
 ### --------------------------------------------------------
 
 /control/execute macros/physics/DefaultPhysicsList.mac
@@ -11,6 +11,8 @@
 
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterRunAction DEFAULT
+
+/nexus/historyFile myHistory.macro
 
 /nexus/RegisterMacro macros/nexus_example3.config.mac
 

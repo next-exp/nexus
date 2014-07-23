@@ -1,6 +1,6 @@
 ### --------------------------------------------------------
-###  Example 1: Configuration macro
-###  $Id: nexus_example1.config.mac 9053 2013-08-05 10:13:56Z jmalbos $
+###  Example 3: Configuration macro
+###  $Id: nexus_example3.config.mac 9053 2013-08-05 10:13:56Z jmalbos $
 ### --------------------------------------------------------
 
 /run/verbose 1
@@ -8,5 +8,8 @@
 /tracking/verbose 0
 /control/execute macros/generators/SingleParticle.mac
 /control/execute macros/geometries/Next1EL.mac
+
 /nexus/persistency/outputFile nexus.next
+/nexus/persistency/historyFile myHistory.macro ## must be the same as /nexus/historyFile
+
 /nexus/random_seed -2

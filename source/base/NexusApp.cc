@@ -25,7 +25,7 @@ using namespace nexus;
 
 
 
-NexusApp::NexusApp(G4String init_macro): G4RunManager()
+NexusApp::NexusApp(G4String init_macro): G4RunManager(), _historyFile("G4history.macro")
 {
   // Create and configure a generic messenger for the app
   _msg = new G4GenericMessenger(this, "/nexus/", "Nexus control commands.");
@@ -43,6 +43,10 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
   // Define a command to set a seed for the random number generator.
   _msg->DeclareMethod("random_seed", &NexusApp::SetRandomSeed, 
     "Set a seed for the random number generator."); 
+
+  // To customize the name of the G4history file
+  _msg->DeclareProperty("historyFile", _historyFile, 
+    "Set the name of the file to store executed commands."); 
 
   /////////////////////////////////////////////////////////
 
@@ -95,7 +99,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
   if (UI->GetCurrentValues("/Actions/RegisterSteppingAction") != "")
     this->SetUserAction(actfctr.CreateSteppingAction());
 
-  UI->StoreHistory();
+  UI->StoreHistory(_historyFile.c_str());
 
   /////////////////////////////////////////////////////////
 

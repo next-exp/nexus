@@ -54,6 +54,8 @@ namespace nexus {
     G4GenericMessenger* _msg;
     std::vector<G4String> _macros;
     std::vector<G4String> _delayed;
+
+    G4String _historyFile;
   };
 
   // INLINE DEFINITIONS ////////////////////////////////////

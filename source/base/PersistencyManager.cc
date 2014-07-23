@@ -41,11 +41,12 @@ using namespace nexus;
 
 
 PersistencyManager::PersistencyManager(): 
-  G4VPersistencyManager(), _msg(0), _ready(false), _store_evt(true),
-    _evt(0), _writer(0)
+  G4VPersistencyManager(), _msg(0), _historyFile("G4history.macro"), 
+  _ready(false), _store_evt(true),  _evt(0), _writer(0)
 {
   _msg = new G4GenericMessenger(this, "/nexus/persistency/");
   _msg->DeclareMethod("outputFile", &PersistencyManager::OpenFile, "");
+  _msg->DeclareProperty("historyFile", _historyFile, "Name of the file where the configuration information are stored");
 }
 
 
@@ -317,7 +318,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 
 G4bool PersistencyManager::Store(const G4Run*)
 {
-  std::ifstream history("G4History.macro", std::ifstream::in);
+  std::ifstream history(_historyFile, std::ifstream::in);
 
   while (history.good()) {
 

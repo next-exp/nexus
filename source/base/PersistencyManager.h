@@ -67,6 +67,8 @@ namespace nexus {
   private:
     G4GenericMessenger* _msg; ///< User configuration messenger
 
+    G4String _historyFile;
+
     G4bool _ready;     ///< Is the PersistencyManager ready to go?
     G4bool _store_evt; ///< Should we store the current event?
 
