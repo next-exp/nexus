@@ -1,0 +1,23 @@
+#######################################################################
+#### Secondary macro to generate look-up tables in the NEW detector ###
+#######################################################################
+
+
+/run/verbose 0 
+/event/verbose 0 
+/tracking/verbose 0
+
+### Generation
+/Generator/SingleParticle/particle ie-
+/Generator/SingleParticle/min_energy 1. eV
+/Generator/SingleParticle/max_energy 1. eV
+/Generator/SingleParticle/region EL_TABLE
+
+### Geometry
+/Geometry/NextNew/elfield true
+/Geometry/NextNewOpticalGeometry/pressure 15. atmosphere
+
+/nexus/persistency/outputFile table.NEW.next 
+
+/nexus/random_seed -2 
+
