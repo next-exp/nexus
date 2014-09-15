@@ -1,5 +1,6 @@
 #################################################
 ### Macro for the electroluminescence process ###
+### $Id $                                                          ###
 #################################################
 
 /Physics/Electroluminescence/table_generation true
