@@ -9,8 +9,8 @@
 
 /control/execute macros/physics/IonizationElectron.mac
 
-/run/verbose 1
+/run/verbose 0
 /event/verbose 0
-/tracking/verbose 1
+/tracking/verbose 0
 
-/nexus/persistency/outputFile nexus.root
+/nexus/persistency/outputFile nexus.next
