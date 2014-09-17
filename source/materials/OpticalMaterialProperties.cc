@@ -55,8 +55,6 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Epoxy()
   return mpt;
 }
 
-
-
 G4MaterialPropertiesTable* OpticalMaterialProperties::FusedSilica()
 {
   // Optical properties of Suprasil 311/312(c) synthetic fused silica.
@@ -122,6 +120,63 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FusedSilica()
      .28*cm, .220*cm, .215*cm, .00005*cm, .00005*cm}; 
  
   mpt->AddProperty("ABSLENGTH", abs_energy, abslength, abs_entries);
+
+  return mpt;
+}
+
+G4MaterialPropertiesTable* OpticalMaterialProperties::FakeFusedSilica(G4double transparency, G4double thickness)
+{
+  // Optical properties of Suprasil 311/312(c) synthetic fused silica.
+  // Obtained from http://heraeus-quarzglas.com
+
+  G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
+
+  // REFRACTIVE INDEX //////////////////////////////////////////////////////////
+  // The range must be the same as fused silica
+ 
+  const G4int ri_entries = 200;
+  
+  G4double ri_energy[ri_entries];
+  for (int i=0; i<ri_entries; i++) {
+    ri_energy[i] = (1 + i*0.049)*eV;
+  }
+
+  // The following values for the refractive index have been calculated
+  // using Sellmeier's equation:
+  //    n^2 - 1 = B_1 * \lambda^2 / (\lambda^2 - C_1) +
+  //            + B_2 * \lambda^2 / (\lambda^2 - C_2) +
+  //            + B_3 * \lambda^2 / (\lambda^2 - C_3),
+  // with wavelength \lambda in micrometers and 
+  //    B_1 = 4.73E-1, B_2 = 6.31E-1, B_3 = 9.06E-1
+  //    C_1 = 1.30E-2, C_2 = 4.13E-3, C_3 = 9.88E+1.
+
+  G4double B_1 = 4.73e-1;
+  G4double B_2 = 6.31e-1;
+  G4double B_3 = 9.06e-1;
+  G4double C_1 = 1.30e-2;
+  G4double C_2 = 4.13e-3;
+  G4double C_3 = 9.88e+1;
+
+  G4double rindex[ri_entries];
+  for (int i=0; i<ri_entries; i++) {
+    G4double lambda = h_Planck*c_light/ri_energy[i]*1000; // in micron
+    G4double n2 = 1 + B_1*pow(lambda,2)/(pow(lambda,2)-C_1) 
+      + B_2*pow(lambda,2)/(pow(lambda,2)-C_2)
+      + B_3*pow(lambda,2)/(pow(lambda,2)-C_3);
+    rindex[i] = sqrt(n2);
+  }
+
+  mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
+
+  // ABSORPTION LENGTH /////////////////////////////////////////////////////////
+  // It matches the transparency
+
+  G4double abs_length = -thickness/log(transparency);
+  const G4int NUMENTRIES  = 2;
+  G4double abs_energy[NUMENTRIES] = { .1*eV, 100.*eV };
+  G4double ABSL[NUMENTRIES]  = {abs_length, abs_length};
+
+  mpt->AddProperty("ABSLENGTH", abs_energy, ABSL, NUMENTRIES);
 
   return mpt;
 }
@@ -578,7 +633,6 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB(G4double pressure, G4d
    {0., 0., 0., .86, .90, .94, 
     .90, .80, .75, .70, .75, .82, 
     .85, .92};
- G4cout << "New TPB" << G4endl;
  
  tpb_mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
  tpb_mpt->AddProperty("WLSCOMPONENT", WLS_Emission_Energies, 

@@ -254,21 +254,21 @@ G4Material* MaterialsList::TPB()
 }
   
   
-G4Material* MaterialsList::TPH()
+G4Material* MaterialsList::ITO()
 {
-  G4String name = "TPH"; // p-terphenyl
+  G4String name = "ITO"; 
 
   G4Material* mat = G4Material::GetMaterial(name, false);
 
   if (mat == 0) {
     G4NistManager* nist = G4NistManager::Instance();
       
-    G4Element* H = nist->FindOrBuildElement("H");
-    G4Element* C = nist->FindOrBuildElement("C");
+    G4Element* In = nist->FindOrBuildElement("In");
+    G4Element* O = nist->FindOrBuildElement("O");
 
-    mat = new G4Material(name, 1.23*g/cm3, 2, kStateSolid);
-    mat->AddElement(H, 14);
-    mat->AddElement(C, 18);
+    mat = new G4Material(name, 7.14*g/cm3, 2, kStateSolid);
+    mat->AddElement(In, 2);
+    mat->AddElement(O, 3);
   }
     
   return mat;

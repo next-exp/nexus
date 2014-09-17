@@ -69,19 +69,20 @@ namespace nexus {
     G4Material* _hdpe; 
     G4Material* _tpb;
     G4Material* _ito;
-    G4Material* _teflon;    
+    G4Material* _teflon; 
+    G4Material* _quartz;
 
     // Dimensions
-    G4double _dist_EL_cathode, _buffer_length;
-    G4double _tube_in_diam, _tube_length; 
+    G4double _dist_feedthroughs, _cathode_thickness, _cathode_gap;
+    G4double _buffer_length;
+    G4double _tube_in_diam, _tube_length_drift, _tube_length_buff, _dist_tube_el; 
     G4double _tube_thickness, _tube_z_pos;
     G4double _reflector_thickness, _tpb_thickness;
     G4double _el_gap_z_pos, _el_gap_length, _grid_thickness;
     G4double _el_grid_transparency, _gate_transparency; 
-    G4double _anode_quartz_thickness, _anode_quartz_transparency;
+    G4double _anode_quartz_thickness, _anode_quartz_transparency, _anode_quartz_diam;
     G4double _cathode_grid_transparency;
-    G4double _drift_length;
-    G4double _cathode_thickness, _cathode_gap;
+    G4double  _ito_transparency, _ito_thickness;
 
     // Visibility 
     G4bool _visibility;
@@ -93,8 +94,10 @@ namespace nexus {
     
 
     // Vertex generators
-    CylinderPointSampler* _field_cage_gen;
-    CylinderPointSampler* _reflector_gen;
+    CylinderPointSampler* _drift_tube_gen;
+    CylinderPointSampler* _reflector_drift_gen;
+    CylinderPointSampler* _buffer_tube_gen;
+    CylinderPointSampler* _reflector_buffer_gen;
     CylinderPointSampler* _active_gen;
 
     // Messenger for the definition of control commands

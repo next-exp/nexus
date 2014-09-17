@@ -40,6 +40,9 @@ namespace nexus {
     /// Synthetic fused silica (suprasil) with transmission in the deep
     /// ultraviolet down to 160 nm
     static G4MaterialPropertiesTable* FusedSilica();
+
+    static G4MaterialPropertiesTable* FakeFusedSilica(G4double transparency=.9, 
+						      G4double thickness=1.*mm);
     
     static G4MaterialPropertiesTable* Sapphire();
 

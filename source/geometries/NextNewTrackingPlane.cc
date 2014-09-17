@@ -41,9 +41,9 @@ namespace nexus {
     _support_plate_tread_thickness (6. * cm), //sup_thik/2
 
     _z_kdb_displ (0.0 * cm), //distance between DB and suport plate( kdb_surface at the same level as support surface)
-   
-    _tracking_plane_z_pos (28.905 *cm),//_el_gap_z_pos (25.5 *cm) From drawings + _el_gap(1.4)/2 + _el_grid_thickness + _el_to_
-
+    _tracking_plane_z_pos (284.1 *mm),
+    //    _tracking_plane_z_pos (28.905 *cm),//_el_gap_z_pos (25.5 *cm) From drawings + _el_gap(1.4)/2 + _el_grid_thickness + _el_to_
+    //    _dice_board_z_pos (282.25*mm), // its surface must be 2 mm away from the end of the anode plate --> pos_z_anode + anode_thickness/2. + 2.*mm = 284.1 *mm + half of DB thick
     _cable_hole_width (45 * mm),
     _cable_hole_high (8 * mm),
 
@@ -109,21 +109,25 @@ namespace nexus {
     ///// Support Plate placement
     G4double support_plate_z_pos =  _tracking_plane_z_pos + _support_plate_thickness/2.;
     G4PVPlacement* support_plate_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,support_plate_z_pos), support_plate_logic,
-							   "SUPPORT_PLATE", _mother_logic, false, 0);  
+							   "SUPPORT_PLATE", _mother_logic, false, 0, true);  
     /////  DICE BOARDS  ///// 
     _kapton_dice_board->Construct();
     _kdb_dimensions = _kapton_dice_board->GetDimensions();
     G4LogicalVolume* dice_board_logic = _kapton_dice_board->GetLogicalVolume();
     G4double db_thickness =_kdb_dimensions.z();
     ////Dice Boards placement
-    _dice_board_z_pos = support_plate_z_pos -_support_plate_thickness/2. -_z_kdb_displ +db_thickness/2.;
+    //_dice_board_z_pos = support_plate_z_pos -_support_plate_thickness/2. -_z_kdb_displ +db_thickness/2.;
+    G4double dice_board_z_pos = _tracking_plane_z_pos + db_thickness/2.;
+    G4cout << "DB thickness = " << db_thickness  << G4endl;
+    G4cout << "KDB start at " << dice_board_z_pos - db_thickness/2. << G4endl;
+    G4cout << "KDB end at " << dice_board_z_pos + db_thickness/2. << G4endl;
     G4PVPlacement* dice_board_physi;
     G4ThreeVector post;
     for (int i=0; i<_num_DBs; i++) {
       post = _DB_positions[i];
-      post.setZ(_dice_board_z_pos);
+      post.setZ(dice_board_z_pos);
       dice_board_physi = new G4PVPlacement(0, post, dice_board_logic,
-					   "DICE_BOARD", _mother_logic, false, i+1);
+					   "DICE_BOARD", _mother_logic, false, i+1, true);
     }
    
     //// SETTING VISIBILITIES   //////////    
@@ -158,7 +162,7 @@ namespace nexus {
      G4double total_vol = body_vol + flange_vol + buffer_vol;
      _body_perc = body_vol / total_vol;
      _flange_perc =  (flange_vol + body_vol) / total_vol;
-     std::cout<<"SUPPORT PLATE (TP) VOLUME: \t"<<total_vol<<std::endl;
+     // std::cout<<"SUPPORT PLATE (TP) VOLUME: \t"<<total_vol<<std::endl;
   }
 
   NextNewTrackingPlane::~NextNewTrackingPlane()
@@ -211,7 +215,7 @@ namespace nexus {
   
   void NextNewTrackingPlane::GenerateDBPositions()
   {
-    std::cout<< "Generating DB positions"<<std::endl;
+    //  std::cout<< "Generating DB positions"<<std::endl;
     /// Function that computes and stores the XY positions of Dice Boards
     G4int num_rows[] = {3, 5, 6, 6, 5, 3};
     G4int total_positions = 0;

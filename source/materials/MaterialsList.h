@@ -61,6 +61,9 @@ namespace nexus {
     // TPB (tetraphenyl butadiene)
     static G4Material* TPB();
 
+    // ITO (indium tin oxide)
+    static G4Material* ITO();
+
     // PTH (p-terphenyl)
     static G4Material* TPH();
 

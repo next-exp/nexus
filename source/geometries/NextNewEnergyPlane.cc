@@ -37,9 +37,9 @@ namespace nexus {
    
     _num_PMTs (12),
     _num_gas_holes (12),
-    //_energy_plane_z_pos (-35.45 * cm), // added .75 cm because the gap 
+    _energy_plane_z_pos (-40.7 * cm), // it's -347 * mm + 60 mm added to the buffer length w.r.t the previous design
     // between the two parts of the reflector is 1.5 cm 
-    _energy_plane_z_pos (-34.7 * cm),//center to EP surface  //middle_nozzle(43.5)-(right_nozzle(15.8)-EP_to_rigth_nozzle(7) (from drawings)
+    //_energy_plane_z_pos (-34.7 * cm),//center to EP surface  //middle_nozzle(43.5)-(right_nozzle(15.8)-EP_to_rigth_nozzle(7) (from drawings)
     // Carrier Plate dimensions
     _carrier_plate_thickness (12.0 * cm), 
     _carrier_plate_diam (63.0 * cm), // ???
@@ -123,7 +123,7 @@ namespace nexus {
     G4PVPlacement* _carrier_plate_physi = 
       new G4PVPlacement(0, G4ThreeVector(0.,0.,carrier_plate_z_pos), 
 			carrier_plate_logic, "CARRIER_PLATE", 
-			_mother_logic, false, 0, false);
+			_mother_logic, false, 0, true);
    
     ///ENCLOSURES + PMT ///
     _enclosure->Construct();
@@ -133,8 +133,8 @@ namespace nexus {
     /// TPB coating on sapphire window
     G4Material* tpb = MaterialsList::TPB();
     tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB(_pressure, _temperature));
-    G4cout << "P and T on sapphire windows TPB: " << _pressure << 
-      ", " << _temperature << G4endl;
+    // G4cout << "P and T on sapphire windows TPB: " << _pressure << 
+    //   ", " << _temperature << G4endl;
     G4double window_diam =  _enclosure->GetWindowDiameter();
     G4Tubs* tpb_solid = new G4Tubs("ENCLOSURE_TPB", 0., window_diam/2, 
 		  _tpb_thickness/2., 0., twopi);
@@ -158,10 +158,10 @@ namespace nexus {
       tpb_pos.setZ(_enclosure_z_pos + enclosure_z_center + _tpb_thickness/2.);
       enclosure_physi = new G4PVPlacement(0, pos, enclosure_logic,
       					  "ENCLOSURE", _mother_logic, 
-					  false, i, false);
+					  false, i, true);
       tpb_physi =  new G4PVPlacement(0, tpb_pos, tpb_logic,
       					  "ENCLOSURE_TPB", _mother_logic, 
-				     false, i, false);
+				     false, i, true);
     }
      
    
@@ -181,7 +181,7 @@ namespace nexus {
 			       _carrier_plate_thickness, 0., 0.,
 			       G4ThreeVector (0., 0., carrier_plate_z_pos));
     G4double total_vol = carrier_plate_solid->GetCubicVolume();
-    std::cout<<"CARRIER PLATE (EP) VOLUME: \t"<<total_vol<<std::endl;   
+    //  std::cout<<"CARRIER PLATE (EP) VOLUME: \t"<<total_vol<<std::endl;   
   }     
  
   NextNewEnergyPlane::~NextNewEnergyPlane()

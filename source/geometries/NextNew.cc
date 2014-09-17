@@ -111,7 +111,8 @@ namespace nexus {
     // _buffer_gas_logic->SetVisAttributes(G4VisAttributes (G4Colour(.86, .86, .86)));
     _buffer_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
-    G4PVPlacement* buffer_gas_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), _buffer_gas_logic,
+    G4PVPlacement* buffer_gas_physi = 
+      new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), _buffer_gas_logic,
 							"BUFFER_GAS", _lab_logic, false, 0, false);
 
 
@@ -134,8 +135,9 @@ namespace nexus {
      _vessel->Construct();
     G4LogicalVolume* vessel_logic = _vessel->GetLogicalVolume();
     G4ThreeVector position(0.,0.,0.);
-    G4PVPlacement* vessel_physi = new G4PVPlacement(0, position, vessel_logic, "VESSEL",
-     						    _buffer_gas_logic, false, 0, false);
+    G4PVPlacement* vessel_physi = 
+      new G4PVPlacement(0, position, vessel_logic, 
+			"VESSEL", _buffer_gas_logic, false, 0, false);
     G4LogicalVolume* vessel_gas_logic = _vessel->GetInternalLogicalVolume();
       
     //ICS
