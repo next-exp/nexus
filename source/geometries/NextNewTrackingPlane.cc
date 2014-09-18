@@ -55,7 +55,8 @@ namespace nexus {
     _num_DBs (28),
     _DB_columns (6),
     _dice_side (79.*mm),
-    _dice_gap (1. *mm)// distance between dices
+    _dice_gap (1. *mm),// distance between dices
+    _visibility (0)
   {
     /// Initializing the geometry navigator (used in vertex generation)
     _geom_navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
@@ -109,7 +110,7 @@ namespace nexus {
     ///// Support Plate placement
     G4double support_plate_z_pos =  _tracking_plane_z_pos + _support_plate_thickness/2.;
     G4PVPlacement* support_plate_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,support_plate_z_pos), support_plate_logic,
-							   "SUPPORT_PLATE", _mother_logic, false, 0, true);  
+							   "SUPPORT_PLATE", _mother_logic, false, 0, false);  
     /////  DICE BOARDS  ///// 
     _kapton_dice_board->Construct();
     _kdb_dimensions = _kapton_dice_board->GetDimensions();
@@ -118,16 +119,14 @@ namespace nexus {
     ////Dice Boards placement
     //_dice_board_z_pos = support_plate_z_pos -_support_plate_thickness/2. -_z_kdb_displ +db_thickness/2.;
     G4double dice_board_z_pos = _tracking_plane_z_pos + db_thickness/2.;
-    G4cout << "DB thickness = " << db_thickness  << G4endl;
-    G4cout << "KDB start at " << dice_board_z_pos - db_thickness/2. << G4endl;
-    G4cout << "KDB end at " << dice_board_z_pos + db_thickness/2. << G4endl;
+    
     G4PVPlacement* dice_board_physi;
     G4ThreeVector post;
     for (int i=0; i<_num_DBs; i++) {
       post = _DB_positions[i];
       post.setZ(dice_board_z_pos);
       dice_board_physi = new G4PVPlacement(0, post, dice_board_logic,
-					   "DICE_BOARD", _mother_logic, false, i+1, true);
+					   "DICE_BOARD", _mother_logic, false, i+1, false);
     }
    
     //// SETTING VISIBILITIES   //////////    

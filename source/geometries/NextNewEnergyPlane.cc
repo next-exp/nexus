@@ -37,7 +37,7 @@ namespace nexus {
    
     _num_PMTs (12),
     _num_gas_holes (12),
-    _energy_plane_z_pos (-40.7 * cm), // it's -347 * mm + 60 mm added to the buffer length w.r.t the previous design
+    _energy_plane_z_pos (-38.2 * cm), // it's -347 * mm - 35 mm to match the 130 mm distance between cathode and surface of sapphire windows.
     // between the two parts of the reflector is 1.5 cm 
     //_energy_plane_z_pos (-34.7 * cm),//center to EP surface  //middle_nozzle(43.5)-(right_nozzle(15.8)-EP_to_rigth_nozzle(7) (from drawings)
     // Carrier Plate dimensions
@@ -48,7 +48,8 @@ namespace nexus {
     _gas_hole_diam (8.0 * mm), 
     _gas_hole_pos (20 * mm),
     _enclosure_hole_diam (9.3 *cm),
-    _tpb_thickness (1.*micrometer)
+    _tpb_thickness (1.*micrometer),
+    _visibility(1)
     
   {
     /// Initializing the geometry navigator (used in vertex generation)
@@ -123,7 +124,7 @@ namespace nexus {
     G4PVPlacement* _carrier_plate_physi = 
       new G4PVPlacement(0, G4ThreeVector(0.,0.,carrier_plate_z_pos), 
 			carrier_plate_logic, "CARRIER_PLATE", 
-			_mother_logic, false, 0, true);
+			_mother_logic, false, 0, false);
    
     ///ENCLOSURES + PMT ///
     _enclosure->Construct();
@@ -158,10 +159,10 @@ namespace nexus {
       tpb_pos.setZ(_enclosure_z_pos + enclosure_z_center + _tpb_thickness/2.);
       enclosure_physi = new G4PVPlacement(0, pos, enclosure_logic,
       					  "ENCLOSURE", _mother_logic, 
-					  false, i, true);
+					  false, i, false);
       tpb_physi =  new G4PVPlacement(0, tpb_pos, tpb_logic,
       					  "ENCLOSURE_TPB", _mother_logic, 
-				     false, i, true);
+				     false, i, false);
     }
      
    

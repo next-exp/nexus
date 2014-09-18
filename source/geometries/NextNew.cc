@@ -113,14 +113,14 @@ namespace nexus {
 
     G4PVPlacement* buffer_gas_physi = 
       new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), _buffer_gas_logic,
-							"BUFFER_GAS", _lab_logic, false, 0, false);
+							"BUFFER_GAS", _lab_logic, false, 0, true);
 
 
     //SHIELDING
     _shielding->Construct();
     G4LogicalVolume* shielding_logic = _shielding->GetLogicalVolume();
     G4PVPlacement* shielding_physi = new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),shielding_logic, "LEAD_BOX",
-						       _buffer_gas_logic, false, 0, false);
+						       _buffer_gas_logic, false, 0, true);
 
     //COPPER CASTLE 
     _cu_castle->SetLogicalVolume(_buffer_gas_logic);
