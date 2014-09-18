@@ -1,2 +1,6 @@
 tag 4.03.03 - 5 Mar 2014 
-	-Next1EL.cc: back to using the most recent simulation of TPB wavelength shifting
+	-Next1EL.cc: back to using the most recent simulation of TPB wavelength shifting.
+tag 4.03.08 - 18 Sept 2014
+	- Major modifications to the NEW geometry, according to the latest drawings.
+	- A few new parameters added for the EL process.
+	- Bug fixed in the storage of metadata.
