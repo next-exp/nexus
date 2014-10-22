@@ -18,6 +18,7 @@
 #include <G4OpticalPhoton.hh>
 #include <Randomize.hh>
 #include <G4Poisson.hh>
+#include <G4GenericMessenger.hh>
 
 #include "CLHEP/Units/PhysicalConstants.h"
 
@@ -28,13 +29,22 @@ using namespace CLHEP;
 
 Electroluminescence::Electroluminescence(const G4String& process_name,
 					                               G4ProcessType type):
-  G4VDiscreteProcess(process_name, type), _theFastIntegralTable(0)
+  G4VDiscreteProcess(process_name, type), _theFastIntegralTable(0), 
+  _table_generation(false), _photons_per_point(0)
 {
   _ParticleChange = new G4ParticleChange();
   pParticleChange = _ParticleChange;
     
   BuildThePhysicsTable();
 
+   /// Messenger
+  _msg = new G4GenericMessenger(this, "/Physics/Electroluminescence/", 
+				"Control commands of the Electroluminescence physics process.");
+  _msg->DeclareProperty("table_generation", _table_generation, 
+			"EL Table generation");  
+  _msg->DeclareProperty("photons_per_point", _photons_per_point, 
+			"Photon per point");  
+  
  }
   
   
@@ -68,7 +78,7 @@ Electroluminescence::PostStepDoIt(const G4Track& track, const G4Step& step)
     _ParticleChange->ProposeTrackStatus(fStopAndKill);
     return G4VDiscreteProcess::PostStepDoIt(track, step);
   }
-
+  
   // Get the light yield from the field
   const G4double yield = field->LightYield();
   G4double step_length = step.GetStepLength();
@@ -89,7 +99,8 @@ Electroluminescence::PostStepDoIt(const G4Track& track, const G4Step& step)
     num_photons = G4int(G4RandGauss::shoot(mean, sigma) + 0.5);
   }
 
-    //num_photons = 500000;
+  if (_table_generation)
+    num_photons = _photons_per_point;
       
   _ParticleChange->SetNumberOfSecondaries(num_photons);
 
@@ -103,12 +114,11 @@ Electroluminescence::PostStepDoIt(const G4Track& track, const G4Step& step)
   G4ThreeVector position = step.GetPreStepPoint()->GetPosition();
   G4double time = step.GetPreStepPoint()->GetGlobalTime();
   G4LorentzVector initial_position(position, time);
-    
-  // Energy ia sampled from integral (like it is
+  
+  // Energy is sampled from integral (like it is
   // done in G4Scintillation)
   G4Material* mat = step.GetPostStepPoint()->GetTouchable()->GetVolume()->GetLogicalVolume()->GetMaterial();
   G4MaterialPropertiesTable* mpt = mat->GetMaterialPropertiesTable();
-
   const G4MaterialPropertyVector* spectrum = mpt->GetProperty("ELSPECTRUM");
 
   if (!spectrum) return G4VDiscreteProcess::PostStepDoIt(track, step);

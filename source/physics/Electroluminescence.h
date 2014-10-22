@@ -16,6 +16,7 @@
 
 
 class G4ParticleChange;
+class G4GenericMessenger;
 
 
 namespace nexus {
@@ -56,6 +57,11 @@ namespace nexus {
     G4ParticleChange* _ParticleChange;
 
     G4PhysicsTable* _theFastIntegralTable;
+
+    G4GenericMessenger* _msg;
+
+    G4bool _table_generation;
+    G4int _photons_per_point;
   };
 
 } // end namespace nexus
