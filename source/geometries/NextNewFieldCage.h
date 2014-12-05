@@ -100,6 +100,10 @@ namespace nexus {
     CylinderPointSampler* _reflector_buffer_gen;
     CylinderPointSampler* _active_gen;
 
+    G4double _specific_vertex_X;
+    G4double _specific_vertex_Y;
+    G4double _specific_vertex_Z;
+
     // Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
 

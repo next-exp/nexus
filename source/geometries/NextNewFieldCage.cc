@@ -87,6 +87,23 @@ namespace nexus {
     step_cmd.SetParameterName("max_step_size", false);
     step_cmd.SetRange("max_step_size>0.");
 
+    G4GenericMessenger::Command&  specific_vertex_X_cmd =
+      _msg->DeclareProperty("specific_vertex_X", _specific_vertex_X,
+			    "If region is AD_HOC, x coord where particles are generated");
+    specific_vertex_X_cmd.SetParameterName("specific_vertex_X", true);
+    specific_vertex_X_cmd.SetUnitCategory("Length");
+    G4GenericMessenger::Command&  specific_vertex_Y_cmd =
+      _msg->DeclareProperty("specific_vertex_Y", _specific_vertex_Y,
+			    "If region is AD_HOC, y coord where particles are generated");
+    specific_vertex_Y_cmd.SetParameterName("specific_vertex_Y", true);
+    specific_vertex_Y_cmd.SetUnitCategory("Length");
+    G4GenericMessenger::Command&  specific_vertex_Z_cmd =
+      _msg->DeclareProperty("specific_vertex_Z", _specific_vertex_Z,
+			    "If region is AD_HOC, z coord where particles are generated");
+    specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
+    specific_vertex_Z_cmd.SetUnitCategory("Length");
+    
+
     // Calculate vertices for EL table generation
     G4double z = _el_gap_z_pos - _el_gap_length/2. + .5*mm;
     CalculateELTableVertices(_tube_in_diam/2., 1.*mm, z);
@@ -501,8 +518,9 @@ namespace nexus {
     // Active region
     else if (region == "ACTIVE") {
       vertex = _active_gen->GenerateVertex("BODY_VOL");
-    } 
-    else if (region == "EL_TABLE") {  
+    } else if (region == "AD_HOC") {
+      vertex = G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
+    } else if (region == "EL_TABLE") {  
       _idx_table++;	
       if(_idx_table>=_table_vertices.size()){
     	G4cout<<"[NextNewFieldCage::GenerateVertex()] Aborting the run,"
