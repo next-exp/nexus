@@ -47,6 +47,7 @@ namespace nexus {
 
     // Dimensions
     G4double _shield_x, _shield_y, _shield_z;
+    G4double  _beam_base_thickness, _lateral_z_separation, _roof_z_separation , _front_x_separation;
     G4double _lead_thickness, _steel_thickness;
 
     // Dimensions coming from outside  
@@ -60,6 +61,18 @@ namespace nexus {
     BoxPointSampler* _lead_gen;
     BoxPointSampler* _steel_gen;
     BoxPointSampler* _external_gen;
+    BoxPointSampler* _lat_roof_gen;
+    BoxPointSampler* _front_roof_gen;
+    BoxPointSampler* _struct_x_gen;
+    BoxPointSampler* _struct_z_gen; 
+    BoxPointSampler* _lat_beam_gen;
+    BoxPointSampler* _front_beam_gen;
+
+    G4double _perc_roof_vol; 
+    G4double _perc_front_roof_vol;
+    G4double _perc_top_struct_vol;
+    G4double _perc_struc_x_vol;
+ 
 
     // Geometry Navigator
     G4Navigator* _geom_navigator;
