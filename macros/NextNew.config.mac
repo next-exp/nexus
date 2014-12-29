@@ -4,29 +4,23 @@
 ### --------------------------------------------------------
 
 
-/run/verbose 1
+/run/verbose 2
 /event/verbose 0
-/tracking/verbose 1
+/tracking/verbose 2
 
 /control/execute macros/geometries/NextNew.mac
 
-#/control/execute macros/generators/SingleParticle.mac
-/Generator/SingleParticle/particle e-
-/Generator/SingleParticle/min_energy 1. MeV
-/Generator/SingleParticle/max_energy 1. MeV
-/Generator/SingleParticle/momentum_X 0.
-/Generator/SingleParticle/momentum_Y 0.
-/Generator/SingleParticle/momentum_Z 1.
-/Generator/SingleParticle/region SHIEDING_LEAD
+
+/Generator/IonGun/atomic_number 83
+/Generator/IonGun/mass_number 214
+/Generator/IonGun/region  DICE_BOARD
+
+# ACTIONS
+/Actions/FastSimEventAction/energy_threshold 0.600000
+# PHYSICS
+/PhysicsList/Nexus/clustering          false
+/PhysicsList/Nexus/drift               false
+/PhysicsList/Nexus/electroluminescence false
 
 
-#/control/execute macros/physics/DefaultPhysicsList.mac
-#/PhysicsList/RegisterPhysics G4EmLivermorePhysics
-#/PhysicsList/RegisterPhysics NexusPhysics
-#/PhysicsList/RegisterPhysics G4DecayPhysics
-#/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
-#/PhysicsList/RegisterPhysics G4OpticalPhysics
-
-
-
-/nexus/persistency/outputFile nexus.root
+/nexus/persistency/outputFile NextNew.Bi214.DICE_BOARD.next
