@@ -82,7 +82,8 @@ namespace nexus {
 	      (region == "PMT_BODY") ) {
       vertex = _energy_plane->GenerateVertex(region);
     }
-    else if ( (region == "FIELD_CAGE") || (region== "REFLECTOR") || 
+    else if ( (region == "DRIFT_TUBE") || (region== "REFLECTOR_DRIFT") ||
+	      (region == "BUFFER_TUBE") || (region== "REFLECTOR_BUFFER") ||
 	      (region == "ACTIVE") || (region== "EL_TABLE") || (region == "AD_HOC")) {
       vertex=_field_cage->GenerateVertex(region);
     }
