@@ -3,8 +3,6 @@
 ###  $Id: NextNew.init.mac  2013-09-09 13:05 minegui $
 ### --------------------------------------------------------
 
-/control/execute macros/physics/DefaultPhysicsList.mac
-
 #Use NEXT_NEW to simulate the hole geometry
 #Use OPTICAL_GEOMETRY to simulate only the inner part of the detector
 /Geometry/RegisterGeometry NEXT_NEW
