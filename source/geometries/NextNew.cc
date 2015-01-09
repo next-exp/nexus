@@ -199,7 +199,9 @@ namespace nexus {
     else if ( (region == "CENTER") ||
 	      (region == "CARRIER_PLATE") || (region == "ENCLOSURE_BODY") || (region == "ENCLOSURE_WINDOW") || 
 	      (region=="OPTICAL_PAD") || (region == "PMT_BODY") ||
-	      (region == "FIELD_CAGE") || (region== "REFLECTOR") || (region == "ACTIVE") ||
+	      (region == "DRIFT_TUBE") || (region== "REFLECTOR_DRIFT") ||
+	      (region == "BUFFER_TUBE") || (region== "REFLECTOR_BUFFER") ||
+	      (region == "ACTIVE") || (region== "EL_TABLE") || (region == "AD_HOC") ||
 	      (region == "SUPPORT_PLATE") || (region == "DICE_BOARD") ){
       vertex = _inner_elements->GenerateVertex(region);
     }
