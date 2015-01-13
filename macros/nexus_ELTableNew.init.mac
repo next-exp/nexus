@@ -21,8 +21,8 @@
 /Actions/RegisterEventAction DEFAULT 
 
 
-/nexus/RegisterMacro nexus_ELTableNew.config.mac 
+/nexus/RegisterMacro macros/nexus_ELTableNew.config.mac 
 
-/nexus/RegisterDelayedMacro EL_tables.mac 
+/nexus/RegisterDelayedMacro macros/EL_tables.mac 
 
 
