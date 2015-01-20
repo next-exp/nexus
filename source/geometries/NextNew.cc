@@ -13,7 +13,7 @@
 //#include "MaterialsList.h"
 #include "Next100Shielding.h"
 #include "NextNewPedestal.h"
-#include "NextNewCuCastle.h"
+//#include "NextNewCuCastle.h"
 #include "NextNewVessel.h"
 #include "NextNewIcs.h"
 #include "NextNewInnerElements.h"
@@ -48,7 +48,7 @@ namespace nexus {
     //Pedestal
     _pedestal = new NextNewPedestal();
     //Copper Castle
-    _cu_castle = new NextNewCuCastle();
+    // _cu_castle = new NextNewCuCastle();
     
     //Vessel
     _vessel = new NextNewVessel();
@@ -63,7 +63,7 @@ namespace nexus {
     //deletes
     delete _shielding;
     delete _pedestal;
-    delete _cu_castle;
+    // delete _cu_castle;
    
     delete _vessel;
     delete _ics;
@@ -113,18 +113,18 @@ namespace nexus {
 
     G4PVPlacement* buffer_gas_physi = 
       new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), _buffer_gas_logic,
-							"BUFFER_GAS", _lab_logic, false, 0, true);
+							"BUFFER_GAS", _lab_logic, false, 0, false);
 
 
     //SHIELDING
     _shielding->Construct();
     G4LogicalVolume* shielding_logic = _shielding->GetLogicalVolume();
     G4PVPlacement* shielding_physi = new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),shielding_logic, "LEAD_BOX",
-						       _buffer_gas_logic, false, 0, true);
+						       _buffer_gas_logic, false, 0, false);
 
     //COPPER CASTLE 
-    _cu_castle->SetLogicalVolume(_buffer_gas_logic);
-    _cu_castle->Construct();
+    // _cu_castle->SetLogicalVolume(_buffer_gas_logic);
+    // _cu_castle->Construct();
   
     //PEDESTAL
     _pedestal->SetLogicalVolume(_buffer_gas_logic);
@@ -132,12 +132,12 @@ namespace nexus {
 
     
     //VESSEL
-     _vessel->Construct();
+    _vessel->Construct();
     G4LogicalVolume* vessel_logic = _vessel->GetLogicalVolume();
     G4ThreeVector position(0.,0.,0.);
     G4PVPlacement* vessel_physi = 
       new G4PVPlacement(0, position, vessel_logic, 
-			"VESSEL", _buffer_gas_logic, false, 0, false);
+    			"VESSEL", _buffer_gas_logic, false, 0, false);
     G4LogicalVolume* vessel_gas_logic = _vessel->GetInternalLogicalVolume();
       
     //ICS
@@ -167,7 +167,7 @@ namespace nexus {
     }
     //LEAD CASTLE
     else if ( (region == "SHIELDING_LEAD") || (region == "SHIELDING_STEEL") || 
-	 (region == "SHIELDING_GAS") ||  (region == "EXTERNAL") ) {
+	      (region == "SHIELDING_GAS") || (region=="SHIELDING_STRUCT") ||  (region == "EXTERNAL") ) {
       vertex = _shielding->GenerateVertex(region);
      
     }
@@ -175,15 +175,15 @@ namespace nexus {
    else if (region == "PEDESTAL") {
       vertex = _pedestal->GenerateVertex(region);
     }
-    //COPER CASTLE
-   else if (region == "CU_CASTLE"){
-     vertex = _cu_castle->GenerateVertex(region);
-   }
-    //RADON 
-    //on the inner lead surface (SHIELDING_GAS) and on the outer copper castle surface (RN_CU_CASTLE)
-   else if (region == "RN_CU_CASTLE") {
-     vertex = _cu_castle->GenerateVertex(region);
-    }
+   //  //COPER CASTLE
+   // else if (region == "CU_CASTLE"){
+   //   vertex = _cu_castle->GenerateVertex(region);
+   //}
+   //  //RADON 
+   //  //on the inner lead surface (SHIELDING_GAS) and on the outer copper castle surface (RN_CU_CASTLE)
+   // else if (region == "RN_CU_CASTLE") {
+   //   vertex = _cu_castle->GenerateVertex(region);
+   //  }
 
     //VESSEL REGIONS
     if ( (region == "VESSEL") || 
@@ -198,11 +198,11 @@ namespace nexus {
     //INNER ELEMENTS
     else if ( (region == "CENTER") ||
 	      (region == "CARRIER_PLATE") || (region == "ENCLOSURE_BODY") || (region == "ENCLOSURE_WINDOW") || 
-	      (region=="OPTICAL_PAD") || (region == "PMT_BODY") ||
+	      (region=="OPTICAL_PAD") || (region == "PMT_BODY") || (region=="PMT_BASE") ||
 	      (region == "DRIFT_TUBE") || (region== "REFLECTOR_DRIFT") ||
 	      (region == "BUFFER_TUBE") || (region== "REFLECTOR_BUFFER") ||
 	      (region == "ACTIVE") || (region== "EL_TABLE") || (region == "AD_HOC") ||
-	      (region == "SUPPORT_PLATE") || (region == "DICE_BOARD") ){
+	      (region == "SUPPORT_PLATE") || (region == "DICE_BOARD") || (region == "DB_PLUG") ){
       vertex = _inner_elements->GenerateVertex(region);
     }
    

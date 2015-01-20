@@ -79,7 +79,7 @@ namespace nexus {
     // INNER ELEMENTS regions
     else if ( (region == "CARRIER_PLATE") || (region == "ENCLOSURE_BODY") ||
 	      (region == "ENCLOSURE_WINDOW") || (region=="OPTICAL_PAD") || 
-	      (region == "PMT_BODY") ) {
+	      (region == "PMT_BODY")||(region=="PMT_BASE") ) {
       vertex = _energy_plane->GenerateVertex(region);
     }
     else if ( (region == "DRIFT_TUBE") || (region== "REFLECTOR_DRIFT") ||
@@ -87,7 +87,7 @@ namespace nexus {
 	      (region == "ACTIVE") || (region== "EL_TABLE") || (region == "AD_HOC")) {
       vertex=_field_cage->GenerateVertex(region);
     }
-    else if ( (region == "SUPPORT_PLATE") || (region == "DICE_BOARD") ) {
+    else if ( (region == "SUPPORT_PLATE") || (region == "DICE_BOARD")|| (region == "DB_PLUG") ) {
       vertex = _tracking_plane->GenerateVertex(region);
     }
     return vertex;

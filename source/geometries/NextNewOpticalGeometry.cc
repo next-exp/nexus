@@ -83,7 +83,7 @@ void NextNewOpticalGeometry::Construct()
   G4Box* gas_solid = new G4Box("GAS", gas_size/2., gas_size/2., gas_size/2.);
   G4LogicalVolume* gas_logic = new G4LogicalVolume(gas_solid, gxe, "GAS");
   new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), gas_logic,
-		    "GAS", lab_logic, false, 0, true); 
+		    "GAS", lab_logic, false, 0, false); 
 
   // Set this volume as the wrapper for the whole geometry 
   // (i.e., this is the volume that will be placed in the world)
