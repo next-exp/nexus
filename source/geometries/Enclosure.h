@@ -50,6 +50,7 @@ namespace nexus{
     const G4double _enclosure_in_diam, _enclosure_length, _enclosure_thickness, _enclosure_endcap_diam, _enclosure_endcap_thickness;
     const G4double _enclosure_window_diam, _enclosure_window_thickness, _enclosure_pad_thickness;
     const G4double _enclosure_tpb_thickness;
+    const G4double _pmt_base_diam, _pmt_base_thickness,_pmt_base_z;
 
     PmtR11410*  _pmt;
     G4double _pmt_z_pos, _window_z_pos;
@@ -63,6 +64,8 @@ namespace nexus{
     CylinderPointSampler* _enclosure_cap_gen;
     CylinderPointSampler* _enclosure_window_gen;
     CylinderPointSampler* _enclosure_pad_gen;
+    CylinderPointSampler* _pmt_base_gen;
+
     
     G4double _body_perc;
     G4double _flange_perc;

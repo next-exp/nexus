@@ -48,6 +48,9 @@ namespace nexus{
     _enclosure_window_diam (85. * mm), 
     _enclosure_window_thickness (6. * mm), //???
     _enclosure_pad_thickness (2. * mm),//max 60  ??????
+    _pmt_base_diam (47. *mm),
+    _pmt_base_thickness (5. *mm),
+    _pmt_base_z (50. *mm), //distance from window
     _enclosure_tpb_thickness(1.*micrometer)
   {
     /// Initializing the geometry navigator (used in vertex generation)
@@ -140,16 +143,25 @@ namespace nexus{
      G4PVPlacement* pmt_physi = 
        new G4PVPlacement(0, G4ThreeVector(0.,0.,_pmt_z_pos), pmt_logic,
 			 "PMT", enclosure_gas_logic, false, 0, false);
-
+     // Adding the PMT base
+     G4Tubs* pmt_base_solid = 
+       new G4Tubs("PMT_BASE", 0., _pmt_base_diam/2., _pmt_base_thickness, 0.,twopi);
+     G4LogicalVolume* pmt_base_logic = 
+       new G4LogicalVolume(pmt_base_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON"),
+			   "PMT_BASE");
+     G4PVPlacement* pmt_base_physi = 
+       new G4PVPlacement(0, G4ThreeVector(0.,0., -_pmt_base_z),
+			 pmt_base_logic, "PMT_BASE", enclosure_gas_logic, false, 0, false);
+     //std::cout<<"1_pmt_base_z_pos  "<< -_pmt_base_z<<std::endl; 
      
      /////  SETTING VISIBILITIES   //////////   
-     // if (_visibility) { 
+     if (_visibility) { 
        G4VisAttributes copper_col(G4Colour(.58, .36, .16));
        //copper_col.SetForceSolid(true);
        enclosure_logic->SetVisAttributes(copper_col);
-       // G4VisAttributes Vacuum_col(G4Colour(.48,.45,.58));
+       G4VisAttributes Vacuum_col(G4Colour(.48,.45,.58));
        // Vacuum_col.SetForceSolid(true);
-       // enclosure_gas_logic->SetVisAttributes(Vacuum_col);  
+       enclosure_gas_logic->SetVisAttributes(Vacuum_col);  
        enclosure_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
        G4VisAttributes Sapphire_col(G4Colour(.8,.8,1.));
        Sapphire_col.SetForceSolid(true);
@@ -157,13 +169,18 @@ namespace nexus{
        G4VisAttributes Pad_col(G4Colour(.6,.9,.2));
        Pad_col.SetForceSolid(true);
        enclosure_pad_logic->SetVisAttributes(Pad_col);
-     // }
-     // else {
-     //   enclosure_logic->SetVisAttributes(G4VisAttributes::Invisible);     
-     //   enclosure_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);    
-     //   enclosure_window_logic->SetVisAttributes(G4VisAttributes::Invisible);
-     //   enclosure_pad_logic->SetVisAttributes(G4VisAttributes::Invisible);
-     // }
+       G4VisAttributes Base_col(G4Colour(1.,.84,0.));
+       Base_col.SetForceSolid(true);
+       pmt_base_logic->SetVisAttributes(Base_col);
+
+     }
+     else {
+       enclosure_logic->SetVisAttributes(G4VisAttributes::Invisible);     
+       enclosure_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);    
+       enclosure_window_logic->SetVisAttributes(G4VisAttributes::Invisible);
+       enclosure_pad_logic->SetVisAttributes(G4VisAttributes::Invisible);
+       pmt_base_logic->SetVisAttributes(G4VisAttributes::Invisible);
+     }
      
      // VERTEX GENERATORS   //////////
      _enclosure_body_gen = 
@@ -185,6 +202,9 @@ namespace nexus{
 				_enclosure_window_diam/2., 0.,
 				G4ThreeVector (0., 0., _enclosure_length/2. - _enclosure_window_thickness/2.));
      _enclosure_pad_gen = new CylinderPointSampler(0., _enclosure_pad_thickness, _enclosure_in_diam/2., 0., G4ThreeVector(0.,0.,pad_z_pos));
+
+     _pmt_base_gen = new CylinderPointSampler(0., _pmt_base_thickness, _pmt_base_diam/2., 0., G4ThreeVector(0.,0., -_pmt_base_z +10.*mm ));//10mm fitting???
+
      
      // Getting the enclosure body volume over total
      G4double body_vol = 
@@ -202,7 +222,9 @@ namespace nexus{
      G4double total_vol = body_vol + flange_vol + cap_vol;
      _body_perc = body_vol / total_vol;
      _flange_perc =  (flange_vol + body_vol) / total_vol;
-     std::cout<<"ENCLOSURE VOLUME: \t"<<total_vol<<std::endl;
+     // std::cout<<"ENCLOSURE VOLUME: \t"<<total_vol<<std::endl;
+     // std::cout<<"ENCLOSURE WINDOW  VOLUME: \t"<<enclosure_window_solid->GetCubicVolume()<<std::endl;
+
    }
 
   Enclosure::~Enclosure()
@@ -212,6 +234,7 @@ namespace nexus{
     delete _enclosure_cap_gen;
     delete _enclosure_window_gen;
     delete _enclosure_pad_gen;
+    delete _pmt_base_gen;
   }
 
   G4ThreeVector Enclosure::GetObjectCenter()
@@ -250,6 +273,12 @@ namespace nexus{
     else if (region=="OPTICAL_PAD"){
       vertex =_enclosure_pad_gen->GenerateVertex("BODY_VOL");
       //z translation made in CylinderPointSampler    
+    }
+    //PMT base 
+    else if (region=="PMT_BASE"){
+      vertex =_pmt_base_gen->GenerateVertex("BODY_VOL");
+      //z translation made in CylinderPointSampler 
+      //std::cout<<"vertx z  "<< vertex.z()<<std::endl;  
     }
     //PMTs bodies 
     else if (region == "PMT_BODY") {
