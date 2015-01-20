@@ -25,7 +25,7 @@ namespace nexus {
   {
   public:
     /// Constructor
-    NextNewKDB(G4int rows, G4int columns);
+    NextNewKDB(G4int rows, G4int columns);//, G4double support_thickness);
     /// Destructor
     ~NextNewKDB();
 
@@ -37,6 +37,7 @@ namespace nexus {
 
   private:
     G4int _rows, _columns;
+    //G4double _support_thickness;
     G4ThreeVector _dimensions;
     std::vector<std::pair<int, G4ThreeVector> > _positions;
  

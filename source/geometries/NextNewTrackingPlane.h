@@ -17,6 +17,7 @@
 #include <G4TransportationManager.hh>
 
 #include "CylinderPointSampler.h"
+#include "BoxPointSampler.h"
 #include "NextNewKDB.h"
 
 class G4Material;
@@ -60,6 +61,7 @@ namespace nexus {
     const G4double _tracking_plane_z_pos;
     G4double _el_gap_z_edge, _z_kdb_displ;////????????
     const G4double _cable_hole_width, _cable_hole_high;
+    const G4double _plug_x,_plug_y,_plug_z;
 
     const G4int _SiPM_rows, _SiPM_columns;
     const G4int _DB_columns, _num_DBs, _dice_side, _dice_gap;
@@ -75,6 +77,7 @@ namespace nexus {
     CylinderPointSampler* _support_body_gen;
     CylinderPointSampler* _support_flange_gen;
     CylinderPointSampler* _support_buffer_gen;
+    BoxPointSampler* _plug_gen;
     
     G4double _body_perc;
     G4double _flange_perc;

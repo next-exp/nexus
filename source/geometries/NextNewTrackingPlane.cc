@@ -46,6 +46,9 @@ namespace nexus {
     //    _dice_board_z_pos (282.25*mm), // its surface must be 2 mm away from the end of the anode plate --> pos_z_anode + anode_thickness/2. + 2.*mm = 284.1 *mm + half of DB thick
     _cable_hole_width (45 * mm),
     _cable_hole_high (8 * mm),
+    _plug_x (40. *mm),
+    _plug_y (4. *mm), //two union conectores   
+    _plug_z (6. *mm),
 
     // SiPMs per Dice Board
     _SiPM_rows (8),
@@ -56,6 +59,7 @@ namespace nexus {
     _DB_columns (6),
     _dice_side (79.*mm),
     _dice_gap (1. *mm),// distance between dices
+   
     _visibility (0)
   {
     /// Initializing the geometry navigator (used in vertex generation)
@@ -128,6 +132,19 @@ namespace nexus {
       dice_board_physi = new G4PVPlacement(0, post, dice_board_logic,
 					   "DICE_BOARD", _mother_logic, false, i+1, false);
     }
+    //PIGGY TAIL PLUG/////////////////////////////////////////////////////
+    G4Box* plug_solid = new G4Box("DB_CONECTOR", _plug_x/2., _plug_y/2., _plug_z/2.);
+    G4LogicalVolume* plug_logic = new G4LogicalVolume(plug_solid,  MaterialsList::PEEK(), "DB_PLUG");
+    G4PVPlacement * plug_physi;  
+    G4ThreeVector positn;
+    for (int i=0; i<_num_DBs; i++) {
+      positn = _DB_positions[i];
+      positn.setY(positn.y()- 10.*mm);
+      positn.setZ(dice_board_z_pos + _support_plate_front_buffer_thickness + _support_plate_thickness);
+      dice_board_physi = new G4PVPlacement(0, positn, plug_logic,"DB_PLUG",
+					   _mother_logic, false, i+1, false);
+    }
+    
    
     //// SETTING VISIBILITIES   //////////    
     if (_visibility) {
@@ -136,6 +153,9 @@ namespace nexus {
       G4VisAttributes Copper_col(G4Colour(.72, .45, .20));
       //Copper_col.SetForceSolid(true);
       support_plate_logic->SetVisAttributes(Copper_col);
+      G4VisAttributes plug_col(G4Colour(1., 1., .8));
+      plug_logic->SetVisAttributes(plug_col);
+     
     }
     else {
       dice_board_logic->SetVisAttributes(G4VisAttributes::Invisible);
@@ -152,7 +172,8 @@ namespace nexus {
     _support_buffer_gen  = new CylinderPointSampler(_support_plate_front_buffer_diam/2., _support_plate_front_buffer_thickness/2.,
 						    (_support_plate_tread_diam-_support_plate_front_buffer_diam)/2., 0., 
 						    G4ThreeVector(0., 0., support_plate_z_pos -_support_plate_thickness/2. +_support_plate_front_buffer_thickness/2.));
- 
+    _plug_gen = new BoxPointSampler(_plug_x, _plug_y, _plug_z,0.,
+				    G4ThreeVector(0.,0.,dice_board_z_pos + _support_plate_front_buffer_thickness + _support_plate_thickness),0);
 
      // Getting the support  volume over total
     G4double body_vol = (_support_plate_thickness-_support_plate_front_buffer_thickness)*pi*(_support_plate_tread_diam/2.)*(_support_plate_tread_diam/2.);
@@ -195,8 +216,7 @@ namespace nexus {
       else {
        	vertex = _support_buffer_gen->GenerateVertex("BODY_VOL");
       }
-    }
-      
+    } 
     // Dice Boards
     else if (region == "DICE_BOARD") {
       G4ThreeVector ini_vertex = _kapton_dice_board->GenerateVertex(region);
@@ -206,6 +226,16 @@ namespace nexus {
       vertex.setZ(vertex.z() +_dice_board_z_pos);
       
     }
+    // PIGGY TAIL PLUG
+    else if (region == "DB_PLUG") {
+      G4ThreeVector ini_vertex = _plug_gen->GenerateVertex("INSIDE");
+      G4double rand = _num_DBs * G4UniformRand();
+      G4ThreeVector db_pos = _DB_positions[int(rand)];
+      vertex = ini_vertex + db_pos;
+      vertex.setY(vertex.y()- 10.*mm);
+      vertex.setZ(vertex.z() +_dice_board_z_pos);
+    }
+    
     
     return vertex;
   }

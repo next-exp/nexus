@@ -34,8 +34,11 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  NextNewKDB::NextNewKDB(G4int rows, G4int columns):
-    BaseGeometry(), _rows(rows), _columns(columns)
+  NextNewKDB::NextNewKDB(G4int rows, G4int columns): 
+    BaseGeometry(),
+    _rows(rows),
+    _columns(columns),
+    _visibility (0)
   {
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
@@ -57,7 +60,7 @@ namespace nexus {
     const G4double db_x = _columns * sipm_pitch - 2. * board_side_reduction ;  
     const G4double db_y =    _rows * sipm_pitch - 2. * board_side_reduction ;
     const G4double db_z = board_thickness;
- 
+   
     _dimensions.setX(db_x);
     _dimensions.setY(db_y);
     _dimensions.setZ(db_z);
@@ -74,7 +77,7 @@ namespace nexus {
       new G4LogicalVolume(board_solid, kapton, "DICE_BOARD");
     this->SetLogicalVolume(board_logic);
 
-
+   
     // WLS COATING //////////////////////////////////////////////////
 
     G4Box* coating_solid = 
@@ -134,7 +137,7 @@ namespace nexus {
     // SETTING VISIBILITIES   //////////
     if (_visibility) {
       G4VisAttributes silicon_col(G4Colour(1., 1., 0.));
-      silicon_col.SetForceSolid(true);
+      // silicon_col.SetForceSolid(true);
       sipm_logic->SetVisAttributes(silicon_col);
       G4VisAttributes tpb_col(G4Colour(1., 1., 1.));
       // tpb_col.SetForceSolid(true);
