@@ -277,17 +277,17 @@ namespace nexus {
     G4double lateral_vol = lat_beam_solid->GetCubicVolume();
     //std::cout<<"LAT BEAM STRUCT VOLUME "<<lateral_vol<<"\t TOTAL LATERAL BEAMS VOL "<<8*lateral_vol<<std::endl;
     G4double total_vol = roof_vol+struct_top_vol+(8*lateral_vol);
-    std::cout<<"TOTAL STRUCTURE VOLUME "<<total_vol<<std::endl;
+    //std::cout<<"TOTAL STRUCTURE VOLUME "<<total_vol<<std::endl;
 
     _perc_roof_vol = roof_vol/total_vol; 
     _perc_front_roof_vol = 2*(lead_x*_beam_base_thickness*_lead_thickness) /roof_vol;
     _perc_top_struct_vol = struct_top_vol /total_vol;
     _perc_struc_x_vol = 4*((_shield_x+2*_lead_thickness+2*_steel_thickness)*_lead_thickness*_beam_base_thickness)/struct_top_vol; 
 
-    std::cout<<"SHIELDING LEAD VOLUME:\t"<<lead_box_solid->GetCubicVolume()<<std::endl;
-    std::cout<<"SHIELDING STEEL VOLUME:\t"<<steel_box_solid->GetCubicVolume()<<std::endl;
-    std::cout<<"VOLUME INSIDE THE SHIELDING CASTLE:\t"<<shielding_box_solid->GetCubicVolume()<<std::endl;
-
+    // std::cout<<"SHIELDING LEAD VOLUME:\t"<<lead_box_solid->GetCubicVolume()<<std::endl;
+    // std::cout<<"SHIELDING STEEL VOLUME:\t"<<steel_box_solid->GetCubicVolume()<<std::endl;
+    // std::cout<<"VOLUME INSIDE THE SHIELDING CASTLE:\t"<<shielding_box_solid->GetCubicVolume()<<std::endl;
+    
   }
 
 

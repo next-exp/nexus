@@ -31,7 +31,9 @@ namespace nexus {
 
   using namespace CLHEP;
   
-  SiPM11::SiPM11(): BaseGeometry()
+  SiPM11::SiPM11(): BaseGeometry(),
+		    _visibility(0)
+
   {
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");

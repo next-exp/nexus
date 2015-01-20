@@ -75,7 +75,7 @@ namespace nexus {
    		 
     // Calculating some probs
     G4double table_vol = table_solid->GetCubicVolume();
-    std::cout<<"TABLE VOLUME:\t"<<table_vol<<std::endl;
+    // std::cout<<"TABLE VOLUME:\t"<<table_vol<<std::endl;
   }
 
   NextNewPedestal::~NextNewPedestal()

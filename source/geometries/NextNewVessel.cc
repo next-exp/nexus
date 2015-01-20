@@ -287,7 +287,7 @@ void NextNewVessel::Construct()
     G4double flange_vol = vessel_flange_solid->GetCubicVolume();
     G4double endcap_vol = vessel_tracking_endcap_solid->GetCubicVolume() - vessel_gas_tracking_endcap_solid->GetCubicVolume();
     G4double vol_tot = body_vol+ 2*flange_vol+ 2*endcap_vol;
-    std::cout<<"VESSEL VOLUME: \t"<<vol_tot<<std::endl;
+    //    std::cout<<"VESSEL VOLUME: \t"<<vol_tot<<std::endl;
     _perc_tube_vol = body_vol/vol_tot; 
     _perc_endcap_vol = endcap_vol /vol_tot;
   }
