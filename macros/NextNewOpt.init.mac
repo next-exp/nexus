@@ -1,0 +1,18 @@
+### --------------------------------------------------------
+###  NextNew: Initialization macro of nexus.
+###  $Id: NextNew.init.mac  2013-09-09 13:05 minegui $
+### --------------------------------------------------------
+
+/control/execute macros/physics/DefaultPhysicsList.mac
+
+/Geometry/RegisterGeometry OPTICAL_GEOMETRY
+
+/Generator/RegisterGenerator SINGLE_PARTICLE
+
+/Actions/RegisterTrackingAction DEFAULT
+/Actions/RegisterEventAction DEFAULT
+/Actions/RegisterSteppingAction DEFAULT
+/Actions/RegisterStackingAction DEFAULT
+/Actions/RegisterRunAction DEFAULT
+
+/nexus/RegisterMacro macros/NextNewOpt.config.mac

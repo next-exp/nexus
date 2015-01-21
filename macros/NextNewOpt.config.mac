@@ -1,0 +1,24 @@
+### --------------------------------------------------------
+###  NextNew: Configuration macro
+###  $Id: NextNew.config.mac 2013-09-09 13:13 minegui $
+### --------------------------------------------------------
+
+
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+# Geometry
+/Geometry/NextNew/elfield 0
+/Geometry/NextNew/max_step_size 1. mm
+/Geometry/NextNewOpticalGeometry/pressure 15. bar
+
+### Generation
+/Generator/SingleParticle/particle e-
+/Generator/SingleParticle/min_energy 1. MeV
+/Generator/SingleParticle/max_energy 1. MeV
+/Generator/SingleParticle/region ACTIVE
+
+/control/execute macros/physics/IonizationElectron.mac
+
+/nexus/persistency/outputFile /path/to/directory/myoutput.next
