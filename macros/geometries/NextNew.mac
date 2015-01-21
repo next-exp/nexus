@@ -13,3 +13,4 @@
 /Geometry/NextNew/vessel_vis true
 
 /Geometry/NextNew/pressure 10. bar
+/Geometry/NextNew/sc_yield 19711 1/MeV

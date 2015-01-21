@@ -80,6 +80,9 @@ namespace nexus {
     // Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
 
+    // Primary scintillation yield
+    G4double _sc_yield;
+
   };
 
 } // end namespace nexus

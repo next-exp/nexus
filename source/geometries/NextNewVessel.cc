@@ -80,7 +80,8 @@ namespace nexus {
 
 
     // Vessel gas
-    _temperature (303 * kelvin)
+    _temperature (303 * kelvin),
+    _pressure(1. * bar)
 
   {
     /// Needed External variables
@@ -97,6 +98,14 @@ namespace nexus {
     pressure_cmd.SetUnitCategory("Pressure");
     pressure_cmd.SetParameterName("pressure", false);
     pressure_cmd.SetRange("pressure>0.");
+
+    G4GenericMessenger::Command& sc_yield_cmd = 
+      _msg->DeclareProperty("sc_yield", _sc_yield,
+			    "Set scintillation yield for GXe. It is in photons/MeV");
+    sc_yield_cmd.SetParameterName("sc_yield", true);
+    sc_yield_cmd.SetUnitCategory("1/Energy");
+    
+    
   }
 
 
@@ -249,7 +258,7 @@ void NextNewVessel::Construct()
     this->SetLogicalVolume(vessel_logic);
 
     G4Material* vessel_gas_mat =  MaterialsList::GXe(_pressure, _temperature);
-    vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature));
+    vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
     G4LogicalVolume* vessel_gas_logic = new G4LogicalVolume(vessel_gas_solid, vessel_gas_mat,"VESSEL_GAS");
     _internal_logic_vol = vessel_gas_logic;
     G4PVPlacement* vessel_gas_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_gas_logic,
