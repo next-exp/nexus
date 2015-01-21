@@ -140,7 +140,7 @@ namespace nexus {
 
     // Shielding regions
     if ((region == "SHIELDING_LEAD") || (region == "SHIELDING_STEEL") ||
-	(region == "EXTERNAL")       || (region == "SHIELDING_GAS") ) {
+	(region == "EXTERNAL")       || (region == "SHIELDING_GAS") || (region == "SHIELDING_STRUCT") ) {
       vertex = _shielding->GenerateVertex(region);
     }
 
