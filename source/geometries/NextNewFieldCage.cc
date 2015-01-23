@@ -74,7 +74,7 @@ namespace nexus {
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", 
 				  "Control commands of geometry NextNew.");
-
+    
     _msg->DeclareProperty("field_cage_vis", _visibility, 
 			  "Field Cage Visibility");    
     _msg->DeclareProperty("elfield", _elfield,

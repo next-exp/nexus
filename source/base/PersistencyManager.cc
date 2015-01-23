@@ -272,7 +272,9 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
     G4ThreeVector xyz = hit->GetPosition();
     itrk->AddHit(xyz.x(), xyz.y(), xyz.z(), hit->GetTime(),
                  hit->GetEnergyDeposit());
+   
   }
+   
 }
 
 
