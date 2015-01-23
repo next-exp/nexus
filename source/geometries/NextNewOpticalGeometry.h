@@ -34,7 +34,8 @@ namespace nexus {
 
   private:     
     G4GenericMessenger* _msg;
-    G4double _pressure;    
+    G4double _pressure;
+    G4double _sc_yield;
     NextNewInnerElements* _inner_elements;
    
   };

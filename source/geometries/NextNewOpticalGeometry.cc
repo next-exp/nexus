@@ -21,6 +21,7 @@
 #include <G4VisAttributes.hh>
 #include <G4GenericMessenger.hh>
 #include <G4NistManager.hh>
+#include <G4UnitsTable.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
@@ -29,7 +30,9 @@ using namespace nexus;
 using namespace CLHEP;
 
 NextNewOpticalGeometry::NextNewOpticalGeometry():
-  BaseGeometry()
+  BaseGeometry(),
+  _pressure(1. * bar),
+  _sc_yield(16670. * 1/MeV)
 {
  // Build the internal gas volume with all the objects that live there 
 
@@ -44,6 +47,14 @@ NextNewOpticalGeometry::NextNewOpticalGeometry():
   pressure_cmd.SetUnitCategory("Pressure");
   pressure_cmd.SetParameterName("pressure", false);
   pressure_cmd.SetRange("pressure>0.");
+
+  new G4UnitDefinition("1/MeV","1/MeV", "1/Energy", 1/MeV);
+  
+  G4GenericMessenger::Command& sc_yield_cmd = 
+    _msg->DeclareProperty("sc_yield", _sc_yield,
+			  "Set scintillation yield for GXe. It is in photons/MeV");
+  sc_yield_cmd.SetParameterName("sc_yield", true);
+  sc_yield_cmd.SetUnitCategory("1/Energy");
 
 }
 
@@ -77,7 +88,7 @@ void NextNewOpticalGeometry::Construct()
   ///MOTHER VOLUME
   // Build a big box of gaseous xenon which hosts the optical geometry
   G4Material* gxe = MaterialsList::GXe(_pressure, 303);
-  gxe->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, 303));
+  gxe->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, 303, _sc_yield));
 
   G4double gas_size = 3.*m;
   G4Box* gas_solid = new G4Box("GAS", gas_size/2., gas_size/2., gas_size/2.);
