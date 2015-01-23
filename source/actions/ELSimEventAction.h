@@ -4,7 +4,7 @@
 ///
 ///  \author   P. Ferrario <paolafer@ific.uv.es>
 ///  \date     23 Jan 2015
-///  \version  $Id:$
+///  \version  $Id$
 ///
 ///  Copyright (c) 2009-2015 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
