@@ -1,16 +1,16 @@
 // ----------------------------------------------------------------------------
-///  \file   DefaultEventAction.h
+///  \file   ELSimEventAction.h
 ///  \brief  A general-purpose user event action.
 ///
-///  \author   J. Martin-Albo <jmalbos@ific.uv.es>
-///  \date     15 Apr 2009
-///  \version  $Id$
+///  \author   P. Ferrario <paolafer@ific.uv.es>
+///  \date     23 Jan 2015
+///  \version  $Id:$
 ///
-///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
+///  Copyright (c) 2009-2015 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef __DEFAULT_EVENT_ACTION__
-#define __DEFAULT_EVENT_ACTION__
+#ifndef __ELSIM_EVENT_ACTION__
+#define __ELSIM_EVENT_ACTION__
 
 #include <G4UserEventAction.hh>
 #include <globals.hh>
@@ -20,15 +20,16 @@ class G4GenericMessenger;
 
 namespace nexus {
     
-  /// This class is a general-purpose event run action.
+  /// This class is a general-purpose event action, where all events are stored, not only
+  /// those that deposit some energy in the active volume. It is used mainly for EL table production
   
-  class DefaultEventAction: public G4UserEventAction
+  class ELSimEventAction: public G4UserEventAction
   {
   public:
     /// Constructor
-    DefaultEventAction();
+    ELSimEventAction();
     /// Destructor
-    ~DefaultEventAction();
+    ~ELSimEventAction();
     
     /// Hook at the beginning of the event loop
     void BeginOfEventAction(const G4Event*);
@@ -36,9 +37,9 @@ namespace nexus {
     void EndOfEventAction(const G4Event*);
 
   private:
-    G4GenericMessenger* _msg;
+   
     G4int _nevt, _nupdate;
-    G4double _energy_threshold;
+
   };
   
 } // namespace nexus
