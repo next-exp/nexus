@@ -10,3 +10,10 @@ tag 4.03.10 - 23 Jan 2015
 	- Reorganization of the Event Actions
 	- Scintillation yield parameter added to the NEW geometries
 	- Specific vertex generation option added to the NEW geometry
+tag 4.03.11 - 9 Feb 2015
+	- Version of nexus that depends on Geant4-10. It is backward-incompatible, 
+	meaning that cannot be used with previous versions of Geant4. 
+	The last tag with Geant4-9.6 is 4.03.10 
+	- Change in the electromagnetic physics list: from 
+	G4EmLivermorePhysics to G4EmStandardPhysics_option4
+	
