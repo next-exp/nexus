@@ -51,14 +51,14 @@ namespace nexus {
 
 
 
-  G4bool ELParamSimulation::ModelTrigger(const G4FastTrack& ftrack)
+  G4bool ELParamSimulation::ModelTrigger(const G4FastTrack& /*ftrack*/)
   {
     return true;
   }
 
 
 
-  void ELParamSimulation::DoIt(const G4FastTrack& ftrack, G4FastStep& fstep)
+  void ELParamSimulation::DoIt(const G4FastTrack& ftrack, G4FastStep& /*fstep*/)
   {
     // Get spatial coordinates
     G4ThreeVector position = ftrack.GetPrimaryTrack()->GetPosition();
@@ -83,9 +83,9 @@ namespace nexus {
 
 
     ///FIXME. Parameters to be put in some other place
-    G4int fNum_tbins = 5;
-    G4double fBinWidth = 200.;
-    G4int gain = 1170;
+    // G4int fNum_tbins = 5;
+    // G4double fBinWidth = 200.;
+    // G4int gain = 1170;
 
     // Get track coordinates
     // ...

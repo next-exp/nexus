@@ -163,7 +163,7 @@ namespace nexus {
     G4String sdname = "/SIPM11/SiPM";
     G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
     
-    if (!G4SDManager::GetSDMpointer()->FindSensitiveDetector(sdname, false)) {
+    if (!sdmgr->FindSensitiveDetector(sdname, false)) {
       PmtSD* sipmsd = new PmtSD(sdname);
       sipmsd->SetDetectorVolumeDepth(0);
       sipmsd->SetDetectorNamingOrder(1000.);

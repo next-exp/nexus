@@ -144,7 +144,7 @@ void NexusApp::Initialize()
 {
   // Execute all command macro files before initializing the app
   // so that all objects get configured
-  G4UImanager* UI = G4UImanager::GetUIpointer();
+  // G4UImanager* UI = G4UImanager::GetUIpointer();
   for (unsigned int i=0; i<_macros.size(); i++)
     ExecuteMacroFile(_macros[i].data());
 

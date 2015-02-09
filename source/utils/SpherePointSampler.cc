@@ -25,10 +25,12 @@ namespace nexus {
 					 G4double delta_phi,
 					 G4double start_theta,
 					 G4double delta_theta):
-    _inner_rad(inner_rad), _thickness(thickness), _origin(origin), 
-    _rotation(rotation), _outer_rad(inner_rad + thickness),
+    _inner_rad(inner_rad), _outer_rad(inner_rad + thickness), 
+    _thickness(thickness), 
     _start_phi(start_phi), _delta_phi(delta_phi),
-    _start_theta(start_theta), _delta_theta(delta_theta)
+    _start_theta(start_theta), _delta_theta(delta_theta),
+    _origin(origin), 
+    _rotation(rotation)   
   {
     _cos_start_theta = cos(_start_theta);
     _diff_cos_thetas = _cos_start_theta - cos(_start_theta + _delta_theta);
@@ -38,11 +40,12 @@ namespace nexus {
   
   G4ThreeVector SpherePointSampler::GenerateVertex(const G4String& region)
   {
-    G4double x, y, z, origin;
-    
+    G4double x, y, z;
+    G4ThreeVector point;
+
     // Default vertex
     if (region == "CENTER") {
-      return G4ThreeVector(0., 0., 0.); 
+      point = G4ThreeVector(0., 0., 0.); 
     }
     
     // Generating in the inner surface
@@ -53,7 +56,7 @@ namespace nexus {
       x = rad * sin(theta) * cos(phi);
       y = rad * sin(theta) * sin(phi);
       z = rad * cos(theta);
-      return RotateAndTranslate(G4ThreeVector(x, y, z));
+      point = RotateAndTranslate(G4ThreeVector(x, y, z));
     }
 
     // Generating between the inner and outer surfaces
@@ -64,7 +67,7 @@ namespace nexus {
       x = rad * sin(theta) * cos(phi);
       y = rad * sin(theta) * sin(phi);
       z = rad * cos(theta);
-      return RotateAndTranslate(G4ThreeVector(x, y, z));
+      point = RotateAndTranslate(G4ThreeVector(x, y, z));
     }
 
     // Generating inside
@@ -75,7 +78,7 @@ namespace nexus {
       x = rad * sin(theta) * cos(phi);
       y = rad * sin(theta) * sin(phi);
       z = rad * cos(theta);
-      return RotateAndTranslate(G4ThreeVector(x, y, z));
+      point =  RotateAndTranslate(G4ThreeVector(x, y, z));
     }
 
 
@@ -85,6 +88,8 @@ namespace nexus {
 		  "Unknown Region!");
       //G4Exception("[SpherePointSampler] ERROR: Unknown Region!");
     }
+
+    return point;
   }
   
 

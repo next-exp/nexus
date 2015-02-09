@@ -138,7 +138,7 @@ namespace nexus {
       columns.push_back(0);
     }
 
-    for (int i=0; i<columns.size(); i++){
+    for (unsigned int i=0; i<columns.size(); i++){
       content.push_back(columns[i]);
     }
 

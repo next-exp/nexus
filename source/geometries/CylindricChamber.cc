@@ -169,7 +169,7 @@ namespace nexus {
 
 
 
-  G4ThreeVector CylindricChamber::GenerateVertex(const G4String& region) const
+  G4ThreeVector CylindricChamber::GenerateVertex(const G4String& /*region*/) const
   {
     return G4ThreeVector(0.,0.,0.);
   }

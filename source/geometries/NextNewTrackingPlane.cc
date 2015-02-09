@@ -40,10 +40,10 @@ namespace nexus {
     _support_plate_tread_diam (54.56 *cm), //sup_diam-2* 42.2mm from drawings
     _support_plate_tread_thickness (6. * cm), //sup_thik/2
 
-    _z_kdb_displ (0.0 * cm), //distance between DB and suport plate( kdb_surface at the same level as support surface)
     _tracking_plane_z_pos (284.1 *mm),
     //    _tracking_plane_z_pos (28.905 *cm),//_el_gap_z_pos (25.5 *cm) From drawings + _el_gap(1.4)/2 + _el_grid_thickness + _el_to_
     //    _dice_board_z_pos (282.25*mm), // its surface must be 2 mm away from the end of the anode plate --> pos_z_anode + anode_thickness/2. + 2.*mm = 284.1 *mm + half of DB thick
+    _z_kdb_displ (0.0 * cm), //distance between DB and suport plate( kdb_surface at the same level as support surface)
     _cable_hole_width (45 * mm),
     _cable_hole_high (8 * mm),
     _plug_x (40. *mm),
@@ -54,9 +54,9 @@ namespace nexus {
     _SiPM_rows (8),
     _SiPM_columns (8),
 
-    // Number of Dice Boards, DB columns
-    _num_DBs (28),
+    // Number of Dice Boards, DB columns   
     _DB_columns (6),
+    _num_DBs (28),
     _dice_side (79.*mm),
     _dice_gap (1. *mm),// distance between dices
    
@@ -102,7 +102,7 @@ namespace nexus {
     G4Box* support_plate_cable_hole_solid = 
       new G4Box("SUPPORT_PLATE_HOLE", _cable_hole_width/2., _cable_hole_high/2., _support_plate_thickness/2. + 1.*mm);
     G4ThreeVector pos;
-    for (int i=0; i<_DB_positions.size(); i++) {
+    for (unsigned int i=0; i<_DB_positions.size(); i++) {
       pos = _DB_positions[i];
       support_plate_solid = new G4SubtractionSolid("SUPPORT_PLATE", support_plate_solid,
      						   support_plate_cable_hole_solid, 0, pos);

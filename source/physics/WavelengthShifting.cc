@@ -182,7 +182,7 @@ namespace nexus {
     }
   }
 
-  G4double WavelengthShifting::GetMeanFreePath(const G4Track& track, G4double, G4ForceCondition* condition)
+  G4double WavelengthShifting::GetMeanFreePath(const G4Track& track, G4double, G4ForceCondition* /*condition*/)
   { 
     G4double AttenuationLength = DBL_MAX;
   

@@ -864,42 +864,42 @@ void Next1EL::BuildFieldCage()
   
   // FIELD SHAPING RINGS /////////////////////////////////////////////
     
-  G4Tubs* ring_solid = new G4Tubs("FIELD_RING", _ring_diam/2.,
-   				  (_ring_diam/2.+_ring_thickn),
-				  _ring_height/2., 0, twopi);
+  // G4Tubs* ring_solid = new G4Tubs("FIELD_RING", _ring_diam/2.,
+  //  				  (_ring_diam/2.+_ring_thickn),
+  // 				  _ring_height/2., 0, twopi);
     
-  G4LogicalVolume* ring_logic =
-    new G4LogicalVolume(ring_solid, _aluminum, "FIELD_RING");
+  // G4LogicalVolume* ring_logic =
+  //   new G4LogicalVolume(ring_solid, _aluminum, "FIELD_RING");
 
   
-  // DRIFT REGION ................................
+  // // DRIFT REGION ................................
 
-  G4int num_rings = 19;
+  // G4int num_rings = 19;
 
-  posz = _fieldcage_length/2. - 2.*_elgap_ring_height 
-    - _elgap_length - 5.*mm - _ring_height/2.;
+  // posz = _fieldcage_length/2. - 2.*_elgap_ring_height 
+  //   - _elgap_length - 5.*mm - _ring_height/2.;
 
-  for (G4int i=0; i<num_rings; i++) {
+  // for (G4int i=0; i<num_rings; i++) {
       
-    // new G4PVPlacement(0, G4ThreeVector(0., 0., posz), ring_logic,
-    //   		      "FIELD_RING", fieldcage_logic, false, i, true);
+  //   new G4PVPlacement(0, G4ThreeVector(0., 0., posz), ring_logic,
+  //     		      "FIELD_RING", fieldcage_logic, false, i, true);
       
-    posz = posz - _ring_height - 5.1 * mm;
-  }
+  //   posz = posz - _ring_height - 5.1 * mm;
+  // }
 
   
-  // BUFFER ......................................
+  // // BUFFER ......................................
 
-  posz = _fieldcage_length/2. - _ring_height - _elgap_length
-    - _ltube_gap - _ltube_up_length - _ltube_gap - 10.*mm - _ring_height/2.;
+  // posz = _fieldcage_length/2. - _ring_height - _elgap_length
+  //   - _ltube_gap - _ltube_up_length - _ltube_gap - 10.*mm - _ring_height/2.;
 
-  for (G4int i=19; i<23; i++) {
+  // for (G4int i=19; i<23; i++) {
 
-    //  new G4PVPlacement(0, G4ThreeVector(0., 0., posz), ring_logic,
-    //   		      "FIELD_RING", fieldcage_logic, false, i, true);
+  //    new G4PVPlacement(0, G4ThreeVector(0., 0., posz), ring_logic,
+  //     		      "FIELD_RING", fieldcage_logic, false, i, true);
       
-    posz = posz - _ring_height - 10. * mm;
-  }
+  //   posz = posz - _ring_height - 10. * mm;
+  // }
 
   
   // CATHODE .....................................
@@ -1047,7 +1047,7 @@ void Next1EL::BuildEnergyPlane()
   hexsampler.TesselateWithFixedPitch(_pmt_pitch, _pmt_positions);
 
   // Loop over the vector of positions
-  for (G4int i = 0; i<_pmt_positions.size(); i++) {
+  for (unsigned int i = 0; i<_pmt_positions.size(); i++) {
     
     // Make a hole for the PMT in the holder
     pmtholder_solid = 
@@ -1145,7 +1145,7 @@ void Next1EL::BuildSiPMTrackingPlane()
   			   "DB", _gas_logic, false, db_no);
        }
        std::vector<std::pair<int, G4ThreeVector> > positions = db.GetPositions();
-       for (G4int si=0; si<positions.size(); si++) {
+       for (unsigned int si=0; si<positions.size(); si++) {
   	 G4ThreeVector mypos = positions[si].second;
   	 G4ThreeVector mypos_rot = (*rotdb)*mypos;
   	 std::pair<int, G4ThreeVector> abs_pos;
@@ -1271,7 +1271,7 @@ void Next1EL::BuildPMTTrackingPlane()
   std::vector<G4ThreeVector> pmt_pos_rot;
   pmt_pos_rot.push_back(G4ThreeVector(0., 0., 0.));
 
-  for (G4int i=1; i<_pmt_positions.size(); i++){
+  for (unsigned int i=1; i<_pmt_positions.size(); i++){
 
     G4ThreeVector pos(_pmt_positions[i].x(),
 			 _pmt_positions[i].y(),
@@ -1281,7 +1281,7 @@ void Next1EL::BuildPMTTrackingPlane()
   }
 
   // Loop over the PMT positions
-  for (G4int i=1; i<pmt_pos_rot.size(); i++) {
+  for (unsigned int i=1; i<pmt_pos_rot.size(); i++) {
 
     G4int pmt_no = i + _pmt_positions.size();
 
@@ -1318,20 +1318,18 @@ G4ThreeVector Next1EL::GenerateVertex(const G4String& region) const
 {
   G4ThreeVector vertex(0., 0., 0.);
   if (region == "CENTER") {  
-    return _active_position;
+    vertex = _active_position;
   } else if (region == "SIDEPORT") {
-    return _sideport_ext_position;
+    vertex = _sideport_ext_position;
   } else if (region == "AXIALPORT") {
-    return _axialport_position;
+    vertex = _axialport_position;
   } else if (region == "Na22LATERAL") {
-    //  G4ThreeVector point = _cps->GenerateVertex("INSIDE");
-    G4ThreeVector point = _sideNa_pos;
-    return point;
+    //    G4ThreeVector point = _sideNa_pos;
+    vertex = _sideNa_pos;
   } else if (region == "ACTIVE") {
-    return _hexrnd->GenerateVertex(INSIDE);
-    } else if (region == "RESTRICTED") {
-    G4ThreeVector point = _hexrnd->GenerateVertex(PLANE);
-    return  point;
+    vertex =  _hexrnd->GenerateVertex(INSIDE);
+  } else if (region == "RESTRICTED") {
+    vertex =  _hexrnd->GenerateVertex(PLANE);
     //  } else if (region == "FIXED_RADIUS") {
     //  G4ThreeVector point = _hexrnd->GenerateVertex(RADIUS, 10.);
     // G4cout <<  point.getX() << ", "
@@ -1339,21 +1337,21 @@ G4ThreeVector Next1EL::GenerateVertex(const G4String& region) const
     // 	   <<  point.getZ() << G4endl;
     //    return  point;
   } else if (region == "AD_HOC"){
-    return _specific_vertex;
+    vertex =  _specific_vertex;
   } else if (region == "EL_TABLE") {  
       _idx_table++;	
       if(_idx_table>=_table_vertices.size()){
     	G4cout<<"[Next1EL] Aborting the run, last event reached ..."<<G4endl;
     	G4RunManager::GetRunManager()->AbortRun();
       }
-      if(_idx_table<=_table_vertices.size()){
-       
-    	return _table_vertices[_idx_table-1];
+      if(_idx_table<=_table_vertices.size()){     
+    	vertex =  _table_vertices[_idx_table-1];
       }
-
+  } else {
+    G4Exception("[Next1EL]", "GenerateVertex()", FatalException,
+		  "Unknown vertex generation region!");     
   } 
-    
-  G4cout << "[Next1EL::GenerateVertex()]: Generating particle in (0,0,0)" << G4endl;
+   
   return vertex;
   
 
@@ -1363,7 +1361,7 @@ void Next1EL::PrintAbsoluteSiPMPos()
 {
   G4cout << "----- Absolute position of SiPMs in gas volume -----" << G4endl;
   G4cout <<  G4endl;
-  for (G4int i=0; i<_absSiPMpos.size(); i++) {
+  for (unsigned int i=0; i<_absSiPMpos.size(); i++) {
     std::pair<int, G4ThreeVector> abs_pos = _absSiPMpos[i];
     G4cout << "ID number: " << _absSiPMpos[i].first << ", position: " 
     	   << _absSiPMpos[i].second.getX() << ", "
@@ -1384,9 +1382,9 @@ void Next1EL::CalculateELTableVertices(G4double radius,
 
     G4int imax = floor(2*radius/binning);
 
-    const G4double a = 92.38;
-    const G4double b = 46.19;
-    const G4double c = 80.;
+    // const G4double a = 92.38;
+    // const G4double b = 46.19;
+    // const G4double c = 80.;
 
     for (int i=0; i<imax; i++){
       position[0] = -radius + i*binning;

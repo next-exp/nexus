@@ -81,8 +81,8 @@ namespace nexus {
 
 
     // Vessel gas
+     _pressure(1. * bar),
     _temperature (303 * kelvin),
-    _pressure(1. * bar),
     _sc_yield(16670. * 1/MeV)
 
   {

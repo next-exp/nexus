@@ -28,7 +28,7 @@ DefaultSteppingAction::~DefaultSteppingAction()
 
 
 
-void DefaultSteppingAction::UserSteppingAction(const G4Step* step)
+void DefaultSteppingAction::UserSteppingAction(const G4Step* /*step*/)
 {
   return;
 }

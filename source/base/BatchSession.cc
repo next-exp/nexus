@@ -43,7 +43,7 @@ static void Tokenize(const G4String& str, std::vector<G4String>& tokens)
 
 
 BatchSession::BatchSession(G4String filename, G4UIsession* previous_session):
-  G4UIsession(), _prev(previous_session), _opened(false)
+  G4UIsession(),  _opened(false), _prev(previous_session)
 {
   _macrostream.open(filename.data(), std::ios::in);
 

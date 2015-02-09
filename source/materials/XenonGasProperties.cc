@@ -55,7 +55,7 @@ namespace nexus {
     //  82.058 cm3 atm mol-1 K-1
     // value for molar mass: 131.29 g/mol
 
-    G4double _density = (_pressure/atmosphere)*131.29/(_temperature*82.058);
+    _density = (_pressure/atmosphere)*131.29/(_temperature*82.058);
 
     return _density;
   }

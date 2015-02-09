@@ -42,21 +42,21 @@ namespace nexus {
     _dist_feedthroughs(514. * mm),
     _cathode_thickness(.1 * mm),
     _cathode_gap (16. * mm),
-    _tube_length_drift (508.*mm),
-    _dist_tube_el (15.*mm),
-    _tube_length_buff (122.*mm),
     _buffer_length (130. * mm), // from center of cathode to surface of sapphire windows
+    _tube_in_diam (432. * mm),
+    _tube_length_drift (508.*mm),
+    _tube_length_buff (122.*mm),
+    _dist_tube_el (15.*mm),
+    _tube_thickness (2.0 * cm),  
+     _reflector_thickness (.5 * cm),
+    _tpb_thickness(1.*micrometer),
     _el_gap_length (5 * mm),
     _grid_thickness (.1 * mm), //it's just fake dielectric
-    _anode_quartz_thickness (3 *mm),
-    _anode_quartz_diam (522.*mm),
-    _el_grid_transparency (.88),
+     _el_grid_transparency (.88),
     _gate_transparency (.76),
+    _anode_quartz_thickness (3 *mm),
+    _anode_quartz_diam (522.*mm),  
     _cathode_grid_transparency (.98),
-    _tube_in_diam (432. * mm),
-    _tube_thickness (2.0 * cm),    
-    _reflector_thickness (.5 * cm),
-    _tpb_thickness(1.*micrometer),
     _ito_transparency (.90),
     _ito_thickness (_grid_thickness),
     // Visibility
@@ -229,7 +229,7 @@ namespace nexus {
     G4Tubs* active_solid = 
       new G4Tubs("ACTIVE",  0., _tube_in_diam/2.-_reflector_thickness, 
 		 active_length/2., 0, twopi);
-    G4double activevol = active_solid->GetCubicVolume();
+    //G4double activevol = active_solid->GetCubicVolume();
     //  std::cout<<"ACTIVE VOLUME: \t"<<activevol<<std::endl;
     
     G4LogicalVolume* active_logic = 
@@ -306,7 +306,6 @@ namespace nexus {
     // Their thickness is symbolic.
     G4double grid_diam = _tube_in_diam; // _active_diam;
     G4double poszInner =  - _el_gap_length/2. + _grid_thickness/2.;
-    G4double poszOuter =  _el_gap_length/2. - _grid_thickness/2.;
    
     G4Tubs* diel_grid_solid = 
       new G4Tubs("EL_GRID", 0., grid_diam/2., _grid_thickness/2., 0, twopi);
@@ -317,8 +316,9 @@ namespace nexus {
       new G4PVPlacement(0, G4ThreeVector(0., 0., poszInner), gate_logic, 
 			"EL_GRID_GATE", el_gap_logic, false, 0, false);  
 
-    G4LogicalVolume* anode_logic = 
-      new G4LogicalVolume(diel_grid_solid, fgrid_mat, "EL_GRID_ANODE");
+    // G4LogicalVolume* anode_logic = 
+    //   new G4LogicalVolume(diel_grid_solid, fgrid_mat, "EL_GRID_ANODE");
+    // G4double poszOuter =  _el_gap_length/2. - _grid_thickness/2.;
     // G4PVPlacement* anode_physi = 
     //   new G4PVPlacement(0, G4ThreeVector(0., 0., poszOuter), anode_logic, 
     // 			"EL_GRID_ANODE", el_gap_logic, false, 1, false);
@@ -385,7 +385,7 @@ namespace nexus {
     G4Tubs* drift_tube_solid =
       new G4Tubs("DRIFT_TUBE", _tube_in_diam/2.,
     		 _tube_in_diam/2. + _tube_thickness, _tube_length_drift/2., 0, twopi);
-    G4double fieldcagevol= drift_tube_solid->GetCubicVolume();
+    //  G4double fieldcagevol= drift_tube_solid->GetCubicVolume();
     // std::cout<<"FIELD CAGE VOLUME:\t"<<fieldcagevol<<std::endl;
     G4LogicalVolume* drift_tube_logic = 
       new G4LogicalVolume(drift_tube_solid, _hdpe, "DRIFT_TUBE");
@@ -522,15 +522,18 @@ namespace nexus {
       vertex = G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
     } else if (region == "EL_TABLE") {  
       _idx_table++;	
-      if(_idx_table>=_table_vertices.size()){
+      if (_idx_table>=_table_vertices.size()){
     	G4cout<<"[NextNewFieldCage::GenerateVertex()] Aborting the run,"
 	      << " last event reached ..."<<G4endl;
     	G4RunManager::GetRunManager()->AbortRun();
       }
       if(_idx_table<=_table_vertices.size()){   
-    	return _table_vertices[_idx_table-1];
+    	vertex =  _table_vertices[_idx_table-1];
       }
-    } 
+    } else {
+    G4Exception("[NextNewFieldCage]", "GenerateVertex()", FatalException,
+		  "Unknown vertex generation region!");     
+  } 
    
     return vertex;
   }

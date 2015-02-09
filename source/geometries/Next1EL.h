@@ -115,8 +115,9 @@ namespace nexus {
     const G4double _elgap_length; ///< Length of the EL gap
     
     const G4double _elgap_ring_diam;
-    const G4double _elgap_ring_height;
     const G4double _elgap_ring_thickn;
+    const G4double _elgap_ring_height;
+    const G4double _wire_diam; ///< diameter of the EL meshes wires
 
     const G4double _tpb_thickn;
 
@@ -137,8 +138,8 @@ namespace nexus {
     const G4double _ring_height;
     const G4double _ring_thickn;
 
-    const G4double _bar_thickn;
     const G4double _bar_width;
+    const G4double _bar_thickn;
     const G4double _bar_addon_length;
 
     const G4double _pmtholder_cath_diam;
@@ -150,7 +151,8 @@ namespace nexus {
     const G4double _pmtholder_anode_diam;
     const G4double _pmtholder_anode_thickn;
 
-    const G4double _wire_diam; ///< diameter of the EL meshes wires
+   G4double _max_step_size;
+   G4double _sc_yield;
     
     
     // Dimensions read through input parameters file
@@ -193,8 +195,7 @@ namespace nexus {
     G4double _cathode_posz; ///< Z position of the cathode wrt FIELDCAGE
 
     G4double _pressure;
-    G4double _max_step_size;
-    G4double _sc_yield;
+    
 
     G4double _endend;
     

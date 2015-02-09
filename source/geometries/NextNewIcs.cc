@@ -46,8 +46,8 @@ namespace nexus {
 
    
     _lat_nozzle_in_diam  (30.*mm),//lat_nozzle_in_diam;
-    _up_nozzle_in_diam (60.*mm), //up_nozzle_in_diam;
     _lat_nozzle_x_pos (_body_out_diam/2. -_body_thickness/2.),// lat_cathode_nozzle_xpos;
+    _up_nozzle_in_diam (60.*mm), //up_nozzle_in_diam;
     _up_nozzle_y_pos (_lat_nozzle_x_pos)
     
   {
@@ -189,10 +189,12 @@ namespace nexus {
       // Generating in the tread
       else {
         vertex = _tread_gen->GenerateVertex("BODY_VOL");
-      }
-      
-      return vertex;
+      }     
+    } else {
+      G4Exception("[NextNewIcs]", "GenerateVertex()", FatalException,
+		   "Unknown Region!");    
     }
+    return vertex;
   }
 
 } //end namespace nexus

@@ -112,9 +112,9 @@ namespace nexus {
 
       IonizationClustering* clust = new IonizationClustering();
 
-      theParticleIterator->reset();
-      while ((*theParticleIterator)()) {
-        G4ParticleDefinition* particle = theParticleIterator->value();
+      aParticleIterator->reset();
+      while ((*aParticleIterator)()) {
+        G4ParticleDefinition* particle = aParticleIterator->value();
         pmanager = particle->GetProcessManager();
 
         if (clust->IsApplicable(*particle)) {

@@ -40,18 +40,18 @@ namespace nexus{
   Enclosure::Enclosure():
 
     // Enclosures dimensions
-    _enclosure_length (200.0 * mm),
     _enclosure_in_diam (80. * mm), 
+    _enclosure_length (200.0 * mm),
     _enclosure_thickness (6. * mm),
     _enclosure_endcap_diam (119. * mm), 
     _enclosure_endcap_thickness (60. * mm),
     _enclosure_window_diam (85. * mm), 
     _enclosure_window_thickness (6. * mm), //???
     _enclosure_pad_thickness (2. * mm),//max 60  ??????
+    _enclosure_tpb_thickness(1.*micrometer),
     _pmt_base_diam (47. *mm),
     _pmt_base_thickness (5. *mm),
-    _pmt_base_z (50. *mm), //distance from window
-    _enclosure_tpb_thickness(1.*micrometer)
+    _pmt_base_z (50. *mm) //distance from window
   {
     /// Initializing the geometry navigator (used in vertex generation)
     _geom_navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();

@@ -35,9 +35,9 @@ namespace nexus {
     // Dimensions
     _support_diam (106.0 * cm),
     _support_thickness (2.0 * cm),
-    _z_displ (0.5 * cm),
     _el_gap_z_edge (66.895 * cm),   // This must be consistent withh Next100InnerElements:
     // el_gap_posz + el_gap_thickness/2. + grid_thickness/2.
+    _z_displ (0.5 * cm),
     _hole_size (45 * mm),
 
     // SiPMTs per Dice Board
@@ -45,8 +45,8 @@ namespace nexus {
     _SiPM_columns (8),
 
     // Number of Dice Boards, DB columns
-    _num_DBs (107),
-    _DB_columns (11)
+    _DB_columns (11),
+    _num_DBs (107)
   {
 
     /// Initializing the geometry navigator (used in vertex generation)

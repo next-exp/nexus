@@ -57,8 +57,7 @@ namespace nexus {
 				  G4double binning, G4double z);
 
   private:
-    G4bool _elfield;
-    G4double _max_step_size;
+   
     // Mother Logical Volume 
     G4LogicalVolume* _mother_logic;
     G4Material* _gas;
@@ -91,8 +90,10 @@ namespace nexus {
     G4VisAttributes* _light_blue_color;
     G4VisAttributes* _blue_color;
     G4VisAttributes* _green_color;
-    
 
+    G4double _max_step_size;
+    G4bool _elfield;
+    
     // Vertex generators
     CylinderPointSampler* _drift_tube_gen;
     CylinderPointSampler* _reflector_drift_gen;

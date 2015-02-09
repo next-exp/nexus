@@ -40,7 +40,8 @@ namespace nexus {
     _msg = new G4GenericMessenger(this, "/Geometry/MagBox/", "Control commands of geometry MagBox.");
 
     // Active gas name
-    G4GenericMessenger::Command& gas_cmd = _msg->DeclareProperty("gas_name", _gas_name, "Gas Name");
+    // G4GenericMessenger::Command& gas_cmd = 
+    _msg->DeclareProperty("gas_name", _gas_name, "Gas Name");
     //_msg->DeclareProperty("gas_name", _gas_name, "Active Gas Name");
     
     // Pressure

@@ -94,7 +94,7 @@ namespace nexus {
     G4Box* buffer_gas_solid = 
       new G4Box("BUFFER_GAS", _buffer_gas_size/2., _buffer_gas_size/2., _buffer_gas_size/2.);
     
-    _buffer_gas_logic = new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "BUFFER_GAS");
+    _buffer_gas_logic = new G4LogicalVolume(buffer_gas_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "BUFFER_GAS");
     ////////////////////////////////////////
     ////Limit the uStepMax=Maximum step length, uTrakMax=Maximum total track length,
     //uTimeMax= Maximum global time for a track, uEkinMin= Minimum remaining kinetic energy for a track

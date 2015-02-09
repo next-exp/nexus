@@ -63,7 +63,7 @@ G4int main(int argc, char** argv)
 
   while (true) {
 
-    int option_index = 0;
+    //  int option_index = 0;
     opterr = 0;
     c = getopt_long(argc, argv, "bin:", long_options, 0);
     

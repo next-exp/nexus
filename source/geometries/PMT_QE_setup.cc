@@ -83,8 +83,8 @@ namespace nexus {
     
     G4Material* gxe = MaterialsList::GXe(gxe_pressure);
     gxe->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(gxe_pressure));
-    G4Material* air = 
-      G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
+    // G4Material* air = 
+    //   G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
     
     G4LogicalVolume* gas_logic = new G4LogicalVolume(gas_solid, gxe, "GAS");
        
@@ -131,6 +131,8 @@ namespace nexus {
   
   G4ThreeVector PMT_QE_setup::GenerateVertex(const G4String& region) const
   {
+    G4ThreeVector point;
+
     if (region == "CIRCLE"){
       //     G4double pmt_diameter = _pmt.Diameter(); // this is R7378A
       G4double pmt_diameter = 64.*mm;  // this is R11410
@@ -140,11 +142,13 @@ namespace nexus {
       G4double x = r*cos(phi);
       G4double y = r*sin(phi);
       
-      return G4ThreeVector(x, y,-_length/2.+_pmt_length+_z_dist);
+      point =  G4ThreeVector(x, y,-_length/2.+_pmt_length+_z_dist);
 
     } else if (region == "POINT") {     
-      return G4ThreeVector(0, 0, -_length/2.+_pmt_length+_z_dist);
+      point = G4ThreeVector(0, 0, -_length/2.+_pmt_length+_z_dist);
     }
+    
+    return point;
   }
 
 

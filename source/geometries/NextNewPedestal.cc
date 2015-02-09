@@ -74,7 +74,7 @@ namespace nexus {
     _table_gen = new BoxPointSampler(_table_x,_table_y,_table_z,0., G4ThreeVector(0.,_y_pos,0.), 0);
    		 
     // Calculating some probs
-    G4double table_vol = table_solid->GetCubicVolume();
+    // G4double table_vol = table_solid->GetCubicVolume();
     // std::cout<<"TABLE VOLUME:\t"<<table_vol<<std::endl;
   }
 

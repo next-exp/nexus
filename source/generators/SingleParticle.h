@@ -60,13 +60,15 @@ namespace nexus {
     G4double _energy_min; ///< Minimum kinetic energy 
     G4double _energy_max; ///< Maximum kinetic energy
 
+    const BaseGeometry* _geom; ///< Pointer to the detector geometry
+
     G4String _region;
 
     G4double _momentum_X;
     G4double _momentum_Y;
     G4double _momentum_Z;
 
-    const BaseGeometry* _geom; ///< Pointer to the detector geometry
+    
   };
 
 } // end namespace nexus

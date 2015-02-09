@@ -25,10 +25,11 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  Na22Generation::Na22Generation() : _energy_min(511.*keV), _energy_max(511.*keV),
-    _energy_min_dis(1.274*MeV), _energy_max_dis(1.274*MeV),
-    _direction_is_random(true), _geom(0),
-    _direction_dis_is_random(true)
+  Na22Generation::Na22Generation() : _geom(0), 
+				     _energy_min(511.*keV), _energy_max(511.*keV),
+				     _energy_min_dis(1.274*MeV), _energy_max_dis(1.274*MeV),
+				     _direction_is_random(true), 
+				     _direction_dis_is_random(true)
 
   {
     /// For the moment, only random direction are allowed. To be fixes if needed

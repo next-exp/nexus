@@ -20,7 +20,7 @@
 
 namespace nexus {
 
-  enum HexagonRegion { INSIDE, TRIANGLE, PLANE };
+  enum HexagonRegion { INSIDE, PLANE };
 
   
   /// FIXME.

@@ -23,7 +23,7 @@ namespace nexus {
   (G4double inner_radius, G4double inner_length, 
    G4double body_thickness, G4double endcaps_thickness, 
    G4ThreeVector origin, G4RotationMatrix* rotation):
-    _inner_radius(inner_radius), _inner_length(inner_length),
+    _inner_length(inner_length), _inner_radius(inner_radius), 
     _body_thickness(body_thickness), _endcaps_thickness(endcaps_thickness),
     _outer_radius(_inner_radius + _body_thickness),
     _origin(origin), _rotation(rotation)
@@ -52,10 +52,11 @@ namespace nexus {
   G4ThreeVector CylinderPointSampler::GenerateVertex(const G4String& region)
   {
     G4double x, y, z;
- 
+    G4ThreeVector point;
+
     // Center of the chamber
     if (region == "CENTER") {
-      return RotateAndTranslate(G4ThreeVector(0., 0., 0.)); 
+     point =  RotateAndTranslate(G4ThreeVector(0., 0., 0.)); 
     }
     
     // Generating in the endcap volume
@@ -66,7 +67,7 @@ namespace nexus {
       y = rad * sin(phi);
       G4double origin = -0.5 * (_inner_length + _endcaps_thickness);
       z = GetLength(origin, _endcaps_thickness);
-      return RotateAndTranslate(G4ThreeVector(x, y, z));
+      point =  RotateAndTranslate(G4ThreeVector(x, y, z));
     }
 
     // Generating in the body volume
@@ -77,7 +78,7 @@ namespace nexus {
       y = rad * sin(phi);
       G4double origin = 0.;
       z = GetLength(origin, _inner_length);
-      return RotateAndTranslate(G4ThreeVector(x, y, z));
+      point = RotateAndTranslate(G4ThreeVector(x, y, z));
     }
 
     // Generating in the whole volume
@@ -104,7 +105,7 @@ namespace nexus {
         z = GetLength(origin, _endcaps_thickness);
       }
 
-      return RotateAndTranslate(G4ThreeVector(x, y, z));
+      point =  RotateAndTranslate(G4ThreeVector(x, y, z));
     }
     
     // Generating in the volume inside
@@ -115,7 +116,7 @@ namespace nexus {
       y = rad * sin(phi);
       G4double origin = 0.;
       z = GetLength(origin, _inner_length);
-      return RotateAndTranslate(G4ThreeVector(x, y, z));
+      point =  RotateAndTranslate(G4ThreeVector(x, y, z));
     }
 
     // Generating in the endcap surface
@@ -125,7 +126,7 @@ namespace nexus {
       x = rad * cos(phi);
       y = rad * sin(phi);
       z = -0.5 * _inner_length;
-      return RotateAndTranslate(G4ThreeVector(x, y, z));
+      point = RotateAndTranslate(G4ThreeVector(x, y, z));
     }
    
     // Generating in the body surface
@@ -135,7 +136,7 @@ namespace nexus {
       y = _inner_radius * sin(phi);
       G4double origin = 0.;
       z = GetLength(origin, _inner_length);
-      return RotateAndTranslate(G4ThreeVector(x, y, z));
+      point = RotateAndTranslate(G4ThreeVector(x, y, z));
     }
    
     // Generating in the whole surface
@@ -160,14 +161,16 @@ namespace nexus {
         z = -0.5 * _inner_length;
       }
 
-      return RotateAndTranslate(G4ThreeVector(x, y, z));
+      point =  RotateAndTranslate(G4ThreeVector(x, y, z));
     }
 
     // Unknown region
     else {
-      return G4ThreeVector();
-      //G4Exception("[CylinderPointSampler] ERROR: Unknown region!");
+      G4Exception("[CylinderPointSampler]", "GenerateVertex()", FatalException,
+		  "Unknown Region!");     
     }
+
+    return point;
   }
 
 

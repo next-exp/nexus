@@ -99,7 +99,7 @@ namespace nexus {
     //G4Material* _air= G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
     //    _air->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(1. *bar, 303.*kelvin));
     
-    _buffer_gas_logic = new G4LogicalVolume(lab_solid,
+    _buffer_gas_logic = new G4LogicalVolume(buffer_gas_solid,
 					    G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
 					    "BUFFER_GAS");
     ////////////////////////////////////////

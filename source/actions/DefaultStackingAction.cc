@@ -27,7 +27,7 @@ DefaultStackingAction::~DefaultStackingAction()
 
 
 G4ClassificationOfNewTrack 
-DefaultStackingAction::ClassifyNewTrack(const G4Track* track)
+DefaultStackingAction::ClassifyNewTrack(const G4Track* /*track*/)
 {
   return fUrgent;
 }

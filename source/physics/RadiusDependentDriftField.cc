@@ -25,7 +25,7 @@ RadiusDependentDriftField::~RadiusDependentDriftField()
 
 
 
-G4double RadiusDependentDriftField::Drift(G4LorentzVector& xyzt)
+G4double RadiusDependentDriftField::Drift(G4LorentzVector& /*xyzt*/)
 {
   return 0.;
 }

@@ -58,13 +58,13 @@ namespace nexus {
     G4LogicalVolume* _mother_logic;
 
     // Dimensions
+    const G4int _num_PMTs;
     const G4double _energy_plane_posz;
     const G4double _carrier_plate_thickness, _carrier_plate_diam, _carrier_plate_central_hole_diam;
-    const G4double _enclosure_diam, _enclosure_length, _enclosure_thickness;
+    const G4double _enclosure_length,  _enclosure_diam, _enclosure_thickness;
     const G4double _enclosure_window_thickness, _enclosure_pad_thickness;
     const G4double _pmts_pitch;
 
-    const G4int _num_PMTs;
     PmtR11410*  _pmt;
     std::vector<G4ThreeVector> _pmt_positions;
     G4double _pmt_zpos;

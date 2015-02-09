@@ -138,19 +138,23 @@ void Decay0Interface::ProcessHeader()
 
 G4int Decay0Interface::G3toPDG(const G4int G3code)
 {
-  if      (G3code == 1) return  22;         // gamma
-  else if (G3code == 2) return -11;         // e+
-  else if (G3code == 3) return  11;         // e-
-  else if (G3code == 5) return -13;         // mu+
-  else if (G3code == 6) return 13;          // mu-
-  else if (G3code == 13) return 2112;       // neutron
-  else if (G3code == 14) return 2212;       // proton
-  else if (G3code == 47) return 1000020040; // alpha
+  int pdg_code;
+  if      (G3code == 1) pdg_code =  22;         // gamma
+  else if (G3code == 2)  pdg_code = -11;         // e+
+  else if (G3code == 3) pdg_code =   11;         // e-
+  else if (G3code == 5) pdg_code =  -13;         // mu+
+  else if (G3code == 6) pdg_code =  13;          // mu-
+  else if (G3code == 13) pdg_code =  2112;       // neutron
+  else if (G3code == 14) pdg_code =  2212;       // proton
+  else if (G3code == 47) pdg_code =  1000020040; // alpha
   else {
     G4cerr << "[Decay0Interface] ERROR: Particle with unknown GEANT3 code: "
     << G3code << G4endl;
+     G4Exception("[Decay0Interface]", "G3toPDG()", FatalException,
+		 "Unknown particle GEANT3 code!");     
   //G4Exception("Aborting run...");
   }
+  return pdg_code;
 }
 
 

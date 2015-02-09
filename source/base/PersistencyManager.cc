@@ -182,7 +182,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
   // We'll set now the family relationships.
   // Loop through the particles we just stored in the irene event.
   TObjArray* iparts = ievent->GetParticles();
-  for (unsigned int i=0; i<iparts->GetEntries(); ++i) {
+  for (G4int i=0; i<iparts->GetEntries(); ++i) {
     irene::Particle* ipart = (irene::Particle*) iparts->At(i);
     Trajectory* trj = (Trajectory*) TrajectoryMap::Get(ipart->GetParticleID());
     int parent_id = trj->GetParentID();

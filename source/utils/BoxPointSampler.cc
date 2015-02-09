@@ -60,12 +60,12 @@ namespace nexus {
   G4ThreeVector BoxPointSampler::GenerateVertex(const G4String& region)
   {
     G4double x, y, z, origin;
-    
+    G4ThreeVector point;
     ///////////////////////////////////////////////////////
 
     // Default vertex
     if (region == "CENTER") {
-      return G4ThreeVector(0., 0., 0.); 
+      point = G4ThreeVector(0., 0., 0.); 
     }
 
     ///////////////////////////////////////////////////////
@@ -76,7 +76,7 @@ namespace nexus {
       y = GetLength(0., _outer_y);
       origin = -0.5 * (_inner_z + _thickness);
       z = GetLength(origin, _thickness);
-      return RotateAndTranslate(G4ThreeVector(x, y, z));
+      point = RotateAndTranslate(G4ThreeVector(x, y, z));
     }
 
     ///////////////////////////////////////////////////////
@@ -115,7 +115,7 @@ namespace nexus {
         y = GetLength(0., _inner_y);
         z = GetLength(0., _inner_z);
       }
-      return RotateAndTranslate(G4ThreeVector(x, y, z));
+      point = RotateAndTranslate(G4ThreeVector(x, y, z));
     }
 
     ///////////////////////////////////////////////////////
@@ -125,7 +125,7 @@ namespace nexus {
       x = GetLength(0., _inner_x);
       y = GetLength(0., _inner_y);
       z = GetLength(0., _inner_z);
-      return RotateAndTranslate(G4ThreeVector(x, y, z));
+      point =  RotateAndTranslate(G4ThreeVector(x, y, z));
     }
 
     ///////////////////////////////////////////////////////
@@ -135,7 +135,7 @@ namespace nexus {
       x = GetLength(0., _inner_x);
       y = GetLength(0., _inner_y);
       z = -0.5 * _inner_z;
-      return RotateAndTranslate(G4ThreeVector(x, y, z));
+      point =  RotateAndTranslate(G4ThreeVector(x, y, z));
     }
 
     ///////////////////////////////////////////////////////
@@ -175,7 +175,7 @@ namespace nexus {
         z = GetLength(0., _inner_z);
       }
 
-      return RotateAndTranslate(G4ThreeVector(x, y, z));
+      point =  RotateAndTranslate(G4ThreeVector(x, y, z));
     }
 
     ///////////////////////////////////////////////////////
@@ -184,8 +184,11 @@ namespace nexus {
     else {
       G4String err = "Unknown generation region: " + region;
       G4Exception("GenerateVertex()", "[BoxPointSampler]",
-        FatalErrorInArgument, err);
+        FatalErrorInArgument, err);   
     }
+
+    return point;
+
   }
 
 

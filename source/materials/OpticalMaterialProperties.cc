@@ -266,9 +266,9 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Sapphire()
   SellmeierEquation seq(B, C);
 
 
-  G4double wlmin =  150. * nm;
-  G4double wlmax = 1000. * nm;
-  G4double step  =   10. * nm;
+ const  G4double wlmin =  150. * nm;
+  const G4double wlmax = 1000. * nm;
+  const G4double step  =   10. * nm;
 
   const G4int entries = G4int((wlmax-wlmin)/step);
   
@@ -486,7 +486,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
   GXe_mpt->AddConstProperty("RESOLUTIONSCALE", 1.0);
   GXe_mpt->AddConstProperty("FASTTIMECONSTANT",1.*ns);
   GXe_mpt->AddConstProperty("SLOWTIMECONSTANT",45.*ns);
-  GXe_mpt->AddConstProperty("ELTIMECONSTANT", 50.*ns);
+  //  GXe_mpt->AddConstProperty("ELTIMECONSTANT", 50.*ns);
   GXe_mpt->AddConstProperty("YIELDRATIO",.9);
   GXe_mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
   
@@ -603,8 +603,8 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB(G4double pressure, G4d
   G4MaterialPropertiesTable* tpb_mpt = new G4MaterialPropertiesTable();
     
   const G4int ri_entries = 9;
-  const G4int ABSL_NUMENTRIES = 8;
-  const G4int WLSABSL_NUMENTRIES = 7;
+  //const G4int ABSL_NUMENTRIES = 8;
+  //const G4int WLSABSL_NUMENTRIES = 7;
   const G4int EMISSION_NUMENTRIES = 55;
 
   XenonGasProperties GXe_prop(pressure, temperature); 
@@ -750,7 +750,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPH()
 {
   G4MaterialPropertiesTable* TPH_mpt = new G4MaterialPropertiesTable();
     
-  const G4int SCIN_NUMENTRIES = 7;
+  // const G4int SCIN_NUMENTRIES = 7;
   const G4int RIN_NUMENTRIES  = 2;
   const G4int Emission_NUMENTRIES = 7;
   const G4int ABS_NUMENTRIES = 5;
@@ -789,7 +789,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::BC480()
 {
   G4MaterialPropertiesTable* bc480_mpt = new G4MaterialPropertiesTable();
     
-  const G4int SCIN_NUMENTRIES = 7;
+  //const G4int SCIN_NUMENTRIES = 7;
   const G4int RIN_NUMENTRIES  = 30;
   const G4int Emission_NUMENTRIES = 5;
   const G4int WLS_ABS_NUMENTRIES = 7;

@@ -41,13 +41,13 @@ namespace nexus {
     // between the two parts of the reflector is 1.5 cm 
     //_energy_plane_z_pos (-34.7 * cm),//center to EP surface  //middle_nozzle(43.5)-(right_nozzle(15.8)-EP_to_rigth_nozzle(7) (from drawings)
     // Carrier Plate dimensions
-    _carrier_plate_thickness (12.0 * cm), 
-    _carrier_plate_diam (63.0 * cm), // ???
     _carrier_plate_front_buffer_thickness (5. * mm),
     _carrier_plate_front_buffer_diam (55. *cm),//(630-2*40)
+    _carrier_plate_thickness (12.0 * cm), 
+    _carrier_plate_diam (63.0 * cm), // ???
+    _enclosure_hole_diam (9.3 *cm),
     _gas_hole_diam (8.0 * mm), 
     _gas_hole_pos (20 * mm),
-    _enclosure_hole_diam (9.3 *cm),
     _tpb_thickness (1.*micrometer),
     _visibility(1)
     
@@ -182,7 +182,7 @@ namespace nexus {
       new CylinderPointSampler(_carrier_plate_diam/2., 
 			       _carrier_plate_thickness, 0., 0.,
 			       G4ThreeVector (0., 0., carrier_plate_z_pos));
-    G4double total_vol = carrier_plate_solid->GetCubicVolume();
+    // G4double total_vol = carrier_plate_solid->GetCubicVolume();
     //  std::cout<<"CARRIER PLATE (EP) VOLUME: \t"<<total_vol<<std::endl;   
   }     
  

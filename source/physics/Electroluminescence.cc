@@ -123,7 +123,6 @@ Electroluminescence::PostStepDoIt(const G4Track& track, const G4Step& step)
 
   if (!spectrum) return G4VDiscreteProcess::PostStepDoIt(track, step);
 
-  G4double eltime = mpt->GetConstProperty("ELTIMECONSTANT");
   G4PhysicsOrderedFreeVector* spectrum_integral = 
     (G4PhysicsOrderedFreeVector*)(*_theFastIntegralTable)(mat->GetIndex());
 
@@ -238,7 +237,7 @@ void Electroluminescence::ComputeCumulativeDistribution(
   G4double sum = 0.;
   cdf.InsertValues(pdf.Energy(0), sum);
 
-  for (G4int i=1; i<pdf.GetVectorLength(); ++i) {
+  for (unsigned int i=1; i<pdf.GetVectorLength(); ++i) {
     G4double area = 
       0.5 * (pdf.Energy(i) - pdf.Energy(i-1)) * (pdf[i] + pdf[i-1]);
     sum = sum + area;

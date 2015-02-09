@@ -27,7 +27,7 @@ namespace nexus {
   DefaultEventAction::DefaultEventAction(): 
     G4UserEventAction(), _nevt(0), _nupdate(10), _energy_threshold(0.)
   {
-    _msg = new G4GenericMessenger(this, "/Actions/FastSimEventAction/");
+    _msg = new G4GenericMessenger(this, "/Actions/DefaultEventAction/");
     
     G4GenericMessenger::Command& thresh_cmd =
        _msg->DeclareProperty("energy_threshold", _energy_threshold, "");
@@ -43,7 +43,7 @@ namespace nexus {
   
   
   
-  void DefaultEventAction::BeginOfEventAction(const G4Event* event)
+  void DefaultEventAction::BeginOfEventAction(const G4Event* /*event*/)
   {
     // Print out event number info
     if ((_nevt % _nupdate) == 0) {

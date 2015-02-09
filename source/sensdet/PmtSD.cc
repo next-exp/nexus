@@ -112,6 +112,7 @@ namespace nexus {
       }
     }
    
+    return true;
   }
   
 
@@ -127,7 +128,7 @@ namespace nexus {
   }
   
   
-  void PmtSD::EndOfEvent(G4HCofThisEvent* HCE)
+  void PmtSD::EndOfEvent(G4HCofThisEvent* /*HCE*/)
   {
     //  int HCID = G4SDManager::GetSDMpointer()->
     //    GetCollectionID(this->GetCollectionName(0)); 
@@ -135,11 +136,6 @@ namespace nexus {
     // HCE->AddHitsCollection(HCID, _HC);
 
 
-    // bhep::event& bevt = bhep::bhep_svc::instance()->get_event();
-    // for (G4int i=0; i<_HC->entries(); i++) {
-    //   bhep::hit* bhit = (*_HC)[i]->ToBhep();
-    //   bevt.add_true_hit(collectionName[0], bhit);
-    // }
   }
   
   

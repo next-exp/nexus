@@ -31,7 +31,7 @@ namespace nexus {
   
   
   
-  void ELSimEventAction::BeginOfEventAction(const G4Event* event)
+  void ELSimEventAction::BeginOfEventAction(const G4Event* /*event*/)
   {
     // Print out event number info
     if ((_nevt % _nupdate) == 0) {

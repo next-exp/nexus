@@ -35,7 +35,8 @@ namespace nexus {
   private:
 
     G4GenericMessenger* _msg;
-    
+    const BaseGeometry* _geom;
+
     G4double _energy_min; ///< Minimum possible kinetic energy for annihilation particle
     G4double _energy_max; ///< Maximum possible kinetic energy for annihilation particle
     G4double _energy_min_dis; ///< Minimum possible kinetic energy for disexcitation gamma
@@ -53,7 +54,7 @@ namespace nexus {
     G4ParticleDefinition* _particle_dis_definition;
     G4ParticleDefinition* _particle_definition;
 
-    const BaseGeometry* _geom;
+    
   };
 
 }// end namespace nexus

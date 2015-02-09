@@ -15,7 +15,7 @@
 #include <G4GenericMessenger.hh>
 #include <G4RunManager.hh>
 #include <G4ParticleDefinition.hh>
-#include <G4ParticleTable.hh>
+#include <G4IonTable.hh>
 #include <G4PrimaryVertex.hh>
 
 
@@ -57,7 +57,7 @@ IonGun::~IonGun()
 
 void IonGun::GeneratePrimaryVertex(G4Event* event)
 {
- _particle_definition = G4ParticleTable::GetParticleTable()->
+ _particle_definition = G4IonTable::GetIonTable()->
     GetIon(_z, _a, 0.);
   
   if (!_particle_definition)

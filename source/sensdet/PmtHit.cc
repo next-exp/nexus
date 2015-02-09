@@ -25,7 +25,7 @@ PmtHit::PmtHit():
   
 
 PmtHit::PmtHit(G4int id, const G4ThreeVector& position, G4double bin_size):
-  G4VHit(), _pmt_id(id), _position(position), _bin_size(bin_size)
+  G4VHit(), _pmt_id(id),  _bin_size(bin_size), _position(position)
 {
 }
   
