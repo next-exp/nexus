@@ -16,7 +16,7 @@
 /Generator/IonGun/region  DICE_BOARD
 
 # ACTIONS
-/Actions/FastSimEventAction/energy_threshold 0.600000
+/Actions/DefaultEventAction/energy_threshold 0.600000
 # PHYSICS
 /PhysicsList/Nexus/clustering          false
 /PhysicsList/Nexus/drift               false
