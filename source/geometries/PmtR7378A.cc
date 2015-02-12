@@ -108,7 +108,7 @@ namespace nexus {
     vis_solid.SetForceSolid(true);
     phcath_logic->SetVisAttributes(vis_solid);
 
-    G4PVPlacement* phcath_physi =
+    //G4PVPlacement* phcath_physi =
       new G4PVPlacement(0, G4ThreeVector(0.,0.,phcath_posz), phcath_logic,
 			"PHOTOCATHODE", window_logic, false, 0, true);
     
