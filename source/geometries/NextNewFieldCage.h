@@ -110,6 +110,7 @@ namespace nexus {
 
     mutable G4int _idx_table;
     mutable std::vector<G4ThreeVector> _table_vertices;
+    G4double _el_pitch;
   };
 
 } //end namespace nexus

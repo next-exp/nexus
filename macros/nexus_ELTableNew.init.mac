@@ -3,7 +3,7 @@
 ### $Id $                                                                                          ###
 #######################################################################
 
-/PhysicsList/RegisterPhysics G4EmLivermorePhysics
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
 /PhysicsList/RegisterPhysics G4DecayPhysics
 /PhysicsList/RegisterPhysics G4OpticalPhysics
 /PhysicsList/RegisterPhysics NexusPhysics
@@ -23,6 +23,6 @@
 
 /nexus/RegisterMacro macros/nexus_ELTableNew.config.mac 
 
-/nexus/RegisterDelayedMacro macros/EL_tables.mac 
+/nexus/RegisterDelayedMacro macros/physics/EL_tables.mac 
 
 

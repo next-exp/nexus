@@ -17,6 +17,7 @@
 ### Geometry
 /Geometry/NextNew/elfield true
 /Geometry/NextNewOpticalGeometry/pressure 15. atmosphere
+/Geometry/NextNew/el_pitch 1. mm
 
 /nexus/persistency/outputFile table.NEW.next 
 
