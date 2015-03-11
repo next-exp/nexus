@@ -102,30 +102,30 @@ namespace nexus {
     _buffer_gas_logic->SetUserLimits(new G4UserLimits( _lab_size*1E6, _lab_size*1E6,1E12 *s,100.*keV,0.));
     _buffer_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
-    G4PVPlacement* buffer_gas_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), _buffer_gas_logic,
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), _buffer_gas_logic,
 						       "BUFFER_GAS", _lab_logic, false, 0);
 
 
     // SHIELDING
     _shielding->Construct();
     G4LogicalVolume* shielding_logic = _shielding->GetLogicalVolume();
-    G4PVPlacement*   shielding_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), shielding_logic,
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), shielding_logic,
                      "LEAD_BOX", _buffer_gas_logic, false, 0);
 
     // VESSEL
     _vessel->Construct();
     G4LogicalVolume* vessel_logic = _vessel->GetLogicalVolume();
-    G4PVPlacement*   vessel_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_logic,
-						      "VESSEL", _buffer_gas_logic, false, 0);
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_logic,
+		      "VESSEL", _buffer_gas_logic, false, 0);
     G4LogicalVolume* vessel_internal_logic = _vessel->GetInternalLogicalVolume();
-
+    
 
     // Internal Copper Shielding
     _ics->Construct();
     G4LogicalVolume* ics_logic = _ics->GetLogicalVolume();
-    G4PVPlacement*   ics_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), ics_logic,
-						   "ICS", vessel_internal_logic, false, 0);
-
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), ics_logic,
+		      "ICS", vessel_internal_logic, false, 0);
+    
     // Inner Elements
     _inner_elements->SetLogicalVolume(_vessel->GetInternalLogicalVolume());
     _inner_elements->Construct();

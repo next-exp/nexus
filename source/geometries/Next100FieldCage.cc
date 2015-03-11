@@ -37,7 +37,8 @@ namespace nexus {
     _tube_thickn (2.54 * cm),      // Consistent with ACTIVE & reflector thicness
 
     // Internal reflector thickness
-    _refl_thickn (.1 * mm)
+    _refl_thickn (.1 * mm),
+    _tpb_thickn (1 * micrometer)
   {
 
     /// Messenger
@@ -46,6 +47,10 @@ namespace nexus {
 
   }
 
+  void Next100FieldCage::SetMotherLogicalVolume(G4LogicalVolume* mother_logic)
+  {
+    _mother_logic = mother_logic;
+  }
 
 
   void Next100FieldCage::Construct()
@@ -65,8 +70,23 @@ namespace nexus {
     G4Tubs* reflector_solid = new G4Tubs("FC_REFLECTOR", _tube_diam/2., _tube_diam/2.  + _refl_thickn,
 					 _tube_length/2., 0, twopi);
     G4LogicalVolume* reflector_logic = new G4LogicalVolume(reflector_solid, _hdpe, "FC_REFLECTOR");
-    G4PVPlacement* reflector_physi = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), reflector_logic, 
-						       "FC_REFLECTOR", field_cage_logic, false, 0);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), reflector_logic, 
+		      "FC_REFLECTOR", field_cage_logic, false, 0, true);
+
+    //Cover  the internal reflector with TPB
+    G4Material* gas = _mother_logic->GetMaterial();
+    G4double pressure =    gas->GetPressure();
+    G4double temperature = gas->GetTemperature();
+
+    G4Material* tpb = MaterialsList::TPB();
+    tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB(pressure, temperature));
+    G4Tubs* tpb_solid = 
+      new G4Tubs("REFLECTOR_TPB", _tube_diam/2., _tube_diam/2.  + _tpb_thickn,
+		 _tube_length/2., 0, twopi);
+    G4LogicalVolume* tpb_logic = 
+      new G4LogicalVolume(tpb_solid, tpb, "REFLECTOR_TPB");
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), tpb_logic, 
+		      "REFLECTOR_TPB", reflector_logic, false, 0, true);
 
 
     // OPTICAL SURFACE PROPERTIES    ////////

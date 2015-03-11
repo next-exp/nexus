@@ -44,15 +44,16 @@ namespace nexus {
     /// Builder
     void Construct();
 
+    /// Sets as mother the volume where the class is placed
+    void SetMotherLogicalVolume(G4LogicalVolume* mother_logic);
 
   private:
     // Pointers to materials definition
     G4Material* _hdpe;
 
-
     // Dimensions
     G4double _tube_diam, _tube_length, _tube_thickn, _tube_zpos;
-    G4double _refl_thickn;
+    G4double _refl_thickn, _tpb_thickn;
 
    
     // Visibility of the shielding
@@ -66,6 +67,8 @@ namespace nexus {
     // Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
 
+    // Logical volume where the class is placed
+    G4LogicalVolume* _mother_logic;
 
   };
 

@@ -83,11 +83,12 @@ namespace nexus {
 
 
     // Field Cage
+    _field_cage->SetMotherLogicalVolume(_mother_logic);
     _field_cage->Construct();
     G4LogicalVolume* field_cage_logic = _field_cage->GetLogicalVolume();
     G4ThreeVector    field_cage_pos =   _field_cage->GetPosition();
-    G4PVPlacement*   field_logic_physi = new G4PVPlacement(0, field_cage_pos, field_cage_logic,
-							   "FIELD_CAGE", _mother_logic, false, 0);
+    new G4PVPlacement(0, field_cage_pos, field_cage_logic,
+		      "FIELD_CAGE", _mother_logic, false, 0);
 
     // EL Region
     BuildELRegion();
@@ -131,8 +132,8 @@ namespace nexus {
 
     G4LogicalVolume* el_gap_logic = new G4LogicalVolume(el_gap_solid, _gas, "EL_GAP");
 
-    G4PVPlacement* el_gap_physi = new G4PVPlacement(0, G4ThreeVector(0., 0., el_gap_posz), el_gap_logic,
-						    "EL_GAP", _mother_logic, false, 0);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., el_gap_posz), el_gap_logic,
+		      "EL_GAP", _mother_logic, false, 0);
 
     // Define EL electric field
     UniformElectricDriftField* el_field = new UniformElectricDriftField();
@@ -201,8 +202,8 @@ namespace nexus {
 
     G4LogicalVolume* diel_grid_logic = new G4LogicalVolume(diel_grid_solid, fgrid_mat, "CATH_GRID");
 
-    G4PVPlacement* diel_grid_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,posz), diel_grid_logic, "CATH_GRID",
-						       _mother_logic, false, 0);
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,posz), diel_grid_logic, "CATH_GRID",
+		      _mother_logic, false, 0);
 
     /// Visibilities
     // Grid is white
@@ -222,8 +223,8 @@ namespace nexus {
 
     G4LogicalVolume* active_logic = new G4LogicalVolume(active_solid, _gas, "ACTIVE");
 
-    G4PVPlacement* active_physi = new G4PVPlacement(0, G4ThreeVector(0., 0., active_posz), active_logic,
-						    "ACTIVE", _mother_logic, false, 0);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., active_posz), active_logic,
+		      "ACTIVE", _mother_logic, false, 0);
 
     // Limit the step size in this volume for better tracking precision
     active_logic->SetUserLimits(new G4UserLimits(_max_step_size));
