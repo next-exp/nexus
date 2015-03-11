@@ -52,6 +52,8 @@ namespace nexus {
 
 
   private:
+
+    void CalculateELTableVertices(G4double radius, G4double binning,  G4double z);	
     
     G4LogicalVolume* _mother_logic;
     G4Material* _gas;
@@ -70,6 +72,11 @@ namespace nexus {
     G4double _el_gap_length;
     G4double _grid_thickn;
     G4double _el_grid_transparency, _cath_grid_transparency;
+    // True if EL field is on
+    G4bool _elfield;
+    // Pitch of the EL grid generation points
+    G4double  _el_pitch;
+    G4double _el_gap_posz;
 
     G4double _el_grid_ref_z;
 
@@ -89,6 +96,10 @@ namespace nexus {
 
     // Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
+
+    // Variables for the EL table generation
+    mutable G4int _idx_table;
+    mutable std::vector<G4ThreeVector> _table_vertices;
 
   };
 

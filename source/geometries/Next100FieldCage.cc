@@ -38,7 +38,8 @@ namespace nexus {
 
     // Internal reflector thickness
     _refl_thickn (.1 * mm),
-    _tpb_thickn (1 * micrometer)
+    _tpb_thickn (1 * micrometer),
+    _visibility (0)
   {
 
     /// Messenger

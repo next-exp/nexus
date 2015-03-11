@@ -159,7 +159,7 @@ namespace nexus {
     else if ((region == "FIELD_CAGE") || (region == "ACTIVE") ||
 	     (region == "CARRIER_PLATE") || (region == "ENCLOSURE_BODY") ||
 	     (region == "ENCLOSURE_WINDOW") || (region == "PMT_BODY") ||
-	     (region == "TRK_SUPPORT") || (region == "DICE_BOARD") ) {
+	     (region == "TRK_SUPPORT") || (region == "DICE_BOARD") || (region == "EL_TABLE") ) {
       vertex = _inner_elements->GenerateVertex(region);
     }
 
