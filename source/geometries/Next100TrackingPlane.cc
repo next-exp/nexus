@@ -95,8 +95,7 @@ namespace nexus {
 
     ///// Support Plate placement
     G4double support_plate_posz = _el_gap_z_edge + _z_displ + db_thickness + _support_thickness/2.;
-    G4PVPlacement* support_plate_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,support_plate_posz), support_plate_logic,
-							   "SUPPORT_PLATE", _mother_logic, false, 0);
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,support_plate_posz), support_plate_logic,  "SUPPORT_PLATE", _mother_logic, false, 0);
 
     ///// Dice Boards placement
     G4double dice_board_posz = _el_gap_z_edge + _z_displ + db_thickness/2.;

@@ -110,27 +110,32 @@ namespace nexus {
 
     G4Tubs* nozzle_hole_solid = new G4Tubs("NOZZLE_HOLE", 0.*cm, hole_diam/2., hole_length/2., 0.*deg, 360.*deg);
 
-    G4SubtractionSolid* ics_energy_sph_solid = new G4SubtractionSolid("ICS_ENERGY_SPH", ics_energy_sph_nh_solid,
-								      nozzle_hole_solid, 0, G4ThreeVector(0., _up_nozzle_ypos, hole_zpos) );
+    G4SubtractionSolid* ics_energy_sph_solid = 
+      new G4SubtractionSolid("ICS_ENERGY_SPH", ics_energy_sph_nh_solid,
+			     nozzle_hole_solid, 0, G4ThreeVector(0., _up_nozzle_ypos, hole_zpos) );
 
-    ics_energy_sph_solid = new G4SubtractionSolid("ICS_ENERGY_SPH", ics_energy_sph_solid,
-						  nozzle_hole_solid, 0, G4ThreeVector(0., _central_nozzle_ypos, hole_zpos) );
+    ics_energy_sph_solid = 
+      new G4SubtractionSolid("ICS_ENERGY_SPH", ics_energy_sph_solid,
+			     nozzle_hole_solid, 0, G4ThreeVector(0., _central_nozzle_ypos, hole_zpos) );
 
-    ics_energy_sph_solid = new G4SubtractionSolid("ICS_ENERGY_SPH", ics_energy_sph_solid,
-						  nozzle_hole_solid, 0, G4ThreeVector(0., _down_nozzle_ypos, hole_zpos) );
+    ics_energy_sph_solid = 
+      new G4SubtractionSolid("ICS_ENERGY_SPH", ics_energy_sph_solid,
+			     nozzle_hole_solid, 0, G4ThreeVector(0., _down_nozzle_ypos, hole_zpos) );
 
-    ics_energy_sph_solid = new G4SubtractionSolid("ICS_ENERGY_SPH", ics_energy_sph_solid,
-						  nozzle_hole_solid, 0, G4ThreeVector(0., _bottom_nozzle_ypos, hole_zpos) );
+    ics_energy_sph_solid = 
+      new G4SubtractionSolid("ICS_ENERGY_SPH", ics_energy_sph_solid,
+			     nozzle_hole_solid, 0, G4ThreeVector(0., _bottom_nozzle_ypos, hole_zpos) );
 
 
-    G4Tubs* ics_energy_cyl_solid = new G4Tubs("ICS_ENERGY_CYL",  _body_in_rad, _body_in_rad + _energy_thickness,
-					      _energy_cyl_length/2., 0.*deg, 360.*deg);
+    G4Tubs* ics_energy_cyl_solid = 
+      new G4Tubs("ICS_ENERGY_CYL",  _body_in_rad, _body_in_rad + _energy_thickness,  _energy_cyl_length/2., 0.*deg, 360.*deg);
 
 
     // Unions of parts
     G4double ics_tracking_zpos = _body_length/2. + _tracking_length/2.;
-    G4UnionSolid* ics_solid = new G4UnionSolid("ICS", ics_body_solid, ics_tracking_solid,
-					       0, G4ThreeVector(0., 0., ics_tracking_zpos) );
+    G4UnionSolid* ics_solid = 
+      new G4UnionSolid("ICS", ics_body_solid, ics_tracking_solid,
+		       0, G4ThreeVector(0., 0., ics_tracking_zpos) );
 
     ics_solid = new G4UnionSolid("ICS", ics_solid, ics_energy_sph_solid,
 				 0, G4ThreeVector(0., 0., _energy_sph_zpos) );
@@ -139,8 +144,9 @@ namespace nexus {
     ics_solid = new G4UnionSolid("ICS", ics_solid, ics_energy_cyl_solid,
 				 0, G4ThreeVector(0., 0., energy_cyl_zpos) );
 
-    G4LogicalVolume* ics_logic = new G4LogicalVolume(ics_solid,
-     						     G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"), "ICS");
+    G4LogicalVolume* ics_logic = 
+      new G4LogicalVolume(ics_solid,
+			  G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"), "ICS");
 
     this->SetLogicalVolume(ics_logic);
 
@@ -157,13 +163,15 @@ namespace nexus {
 
 
     // VERTEX GENERATORS   //////////
-    _body_gen = new CylinderPointSampler(_body_in_rad, _body_length, _body_thickness, 0.);
+    _body_gen = 
+      new CylinderPointSampler(_body_in_rad, _body_length, _body_thickness, 0.);
 
-    _tracking_gen = new CylinderPointSampler(0.*cm, _tracking_length, _tracking_orad, 0.,
+    _tracking_gen = 
+      new CylinderPointSampler(0.*cm, _tracking_length, _tracking_orad, 0.,
 					     G4ThreeVector(0., 0., ics_tracking_zpos));
 
-    _energy_cyl_gen = new CylinderPointSampler(_body_in_rad, _energy_cyl_length, _energy_thickness, 0.,
-					       G4ThreeVector(0., 0., energy_cyl_zpos));
+    _energy_cyl_gen = 
+      new CylinderPointSampler(_body_in_rad, _energy_cyl_length, _energy_thickness, 0.,  G4ThreeVector(0., 0., energy_cyl_zpos));
 
     _energy_sph_gen = new SpherePointSampler(_energy_orad - _energy_thickness, _energy_thickness, G4ThreeVector(0., 0., _energy_sph_zpos),
 					     0,	0., twopi, 180.*deg - _energy_theta, _energy_theta);

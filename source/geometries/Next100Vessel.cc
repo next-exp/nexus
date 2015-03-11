@@ -210,8 +210,8 @@ namespace nexus {
     G4LogicalVolume* vessel_gas_logic = new G4LogicalVolume(vessel_gas_solid, vessel_gas_mat, "VESSEL_GAS");
     _internal_logic_vol = vessel_gas_logic;
 
-    G4PVPlacement* vessel_gas_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_gas_logic,
-							"VESSEL_GAS", vessel_logic, false, 0);
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_gas_logic,
+		      "VESSEL_GAS", vessel_logic, false, 0);
 
 
     //// Vacuum Manifold
@@ -227,9 +227,9 @@ namespace nexus {
 								 G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
 								 "VACUUM_MANIFOLD");
 
-    G4PVPlacement* vacuum_manifold_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,vacuum_manifold_zpos), vacuum_manifold_logic,
-							     "VACUUM_MANIFOLD", vessel_gas_logic, false, 0);
-
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,vacuum_manifold_zpos), vacuum_manifold_logic,
+		      "VACUUM_MANIFOLD", vessel_gas_logic, false, 0);
+    
 
     G4double vacuum_manifold_gas_rad = vacuum_manifold_rad - _vessel_thickness;
     G4double vacuum_manifold_gas_length = vacuum_manifold_length - 2. * _vessel_thickness;
@@ -241,9 +241,9 @@ namespace nexus {
 								     G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic"),
 								     "VACUUM_MANIFOLD_GAS");
 
-    G4PVPlacement* vacuum_manifold_gas_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vacuum_manifold_gas_logic,
-								 "VACUUM_MANIFOLD_GAS", vacuum_manifold_logic, false, 0);
-
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vacuum_manifold_gas_logic,
+		      "VACUUM_MANIFOLD_GAS", vacuum_manifold_logic, false, 0);
+    
 
 
     // SETTING VISIBILITIES   //////////
