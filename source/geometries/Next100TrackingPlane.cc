@@ -46,7 +46,8 @@ namespace nexus {
 
     // Number of Dice Boards, DB columns
     _DB_columns (11),
-    _num_DBs (107)
+    _num_DBs (107),
+    _visibility(0)
   {
 
     /// Initializing the geometry navigator (used in vertex generation)

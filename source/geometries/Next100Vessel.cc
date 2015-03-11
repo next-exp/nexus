@@ -60,7 +60,9 @@ namespace nexus {
     _small_nozzle_length (240.0 * cm),
 
     // Vessel gas
-    _temperature (303 * kelvin)
+    _temperature (303 * kelvin),
+    // Visibility
+    _visibility(0)
   {
 
     /// Needed External variables

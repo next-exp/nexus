@@ -54,7 +54,8 @@ namespace nexus {
     _energy_orad (108.94 * cm),        // This must be consistent with vessel "_endcap_in_rad (108.94 * cm)"
     _energy_thickness (9. * cm),
     _energy_sph_zpos (-5.76 * cm),     // This must be consistent with vessel "_endcap_z_pos (-5.76 * cm)"
-    _energy_cyl_length (13.0 * cm)
+    _energy_cyl_length (13.0 * cm),
+    _visibility (0)
   {
 
     /// Needed External variables

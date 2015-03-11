@@ -51,7 +51,8 @@ namespace nexus {
     _front_x_separation (154.*mm), //distance between the two front beams
     // Box thickness
     _lead_thickness (20. * cm),
-    _steel_thickness (6. * mm)
+    _steel_thickness (6. * mm),
+    _visibility (0)
 
   {
 
