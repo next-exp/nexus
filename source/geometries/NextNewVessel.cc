@@ -265,9 +265,9 @@ void NextNewVessel::Construct()
     vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
     G4LogicalVolume* vessel_gas_logic = new G4LogicalVolume(vessel_gas_solid, vessel_gas_mat,"VESSEL_GAS");
     _internal_logic_vol = vessel_gas_logic;
-    G4PVPlacement* vessel_gas_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_gas_logic,
-    							"VESSEL_GAS", vessel_logic, false, 0, false);
-						   	   
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_gas_logic,
+		      "VESSEL_GAS", vessel_logic, false, 0, false);
+    
     // SETTING VISIBILITIES   //////////
     if (_visibility) {
       G4VisAttributes titanium_col(G4Colour(.71, .69, .66));

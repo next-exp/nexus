@@ -59,8 +59,7 @@ namespace nexus {
     //uRangMin=	 Minimum remaining range for a track
     tube_logic->SetUserLimits(new G4UserLimits( 1E8*m, 1E8*m,1E12 *s,100.*keV,0.));
 
-    G4PVPlacement* _tube_physi = 
-      new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), tube_logic, "RN_TUBE", _mother_logic, false, 0,false);
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), tube_logic, "RN_TUBE", _mother_logic, false, 0,false);
    
     // SETTING VISIBILITIES   //////////
     if (_visibility) {

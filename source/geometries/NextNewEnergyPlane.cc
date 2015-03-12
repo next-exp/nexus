@@ -121,10 +121,10 @@ namespace nexus {
     ///Placement
     G4double carrier_plate_z_pos = 
       _energy_plane_z_pos - _carrier_plate_thickness/2.;
-    G4PVPlacement* _carrier_plate_physi = 
-      new G4PVPlacement(0, G4ThreeVector(0.,0.,carrier_plate_z_pos), 
-			carrier_plate_logic, "CARRIER_PLATE", 
-			_mother_logic, false, 0, false);
+    
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,carrier_plate_z_pos), 
+		      carrier_plate_logic, "CARRIER_PLATE", 
+		      _mother_logic, false, 0, false);
    
     ///ENCLOSURES + PMT ///
     _enclosure->Construct();

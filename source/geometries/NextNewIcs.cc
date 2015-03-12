@@ -127,8 +127,7 @@ namespace nexus {
     
     G4LogicalVolume* ics_logic = new G4LogicalVolume(ics_solid,
      						     G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"), "ICS");
-    G4PVPlacement* _ics_physi = 
-      new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), ics_logic, "ICS", _mother_logic, false, 0, false);
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), ics_logic, "ICS", _mother_logic, false, 0, false);
    
     //this->SetLogicalVolume(ics_logic);
 

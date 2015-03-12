@@ -113,8 +113,8 @@ namespace nexus {
 							       "SUPPORT_PLATE"); 
     ///// Support Plate placement
     G4double support_plate_z_pos =  _tracking_plane_z_pos + _support_plate_thickness/2.;
-    G4PVPlacement* support_plate_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,support_plate_z_pos), support_plate_logic,
-							   "SUPPORT_PLATE", _mother_logic, false, 0, false);  
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,support_plate_z_pos), support_plate_logic,
+		      "SUPPORT_PLATE", _mother_logic, false, 0, false);  
     /////  DICE BOARDS  ///// 
     _kapton_dice_board->Construct();
     _kdb_dimensions = _kapton_dice_board->GetDimensions();
@@ -135,7 +135,7 @@ namespace nexus {
     //PIGGY TAIL PLUG/////////////////////////////////////////////////////
     G4Box* plug_solid = new G4Box("DB_CONECTOR", _plug_x/2., _plug_y/2., _plug_z/2.);
     G4LogicalVolume* plug_logic = new G4LogicalVolume(plug_solid,  MaterialsList::PEEK(), "DB_PLUG");
-    G4PVPlacement * plug_physi;  
+    //G4PVPlacement * plug_physi;  
     G4ThreeVector positn;
     for (int i=0; i<_num_DBs; i++) {
       positn = _DB_positions[i];

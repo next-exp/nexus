@@ -87,21 +87,19 @@ namespace nexus {
     //   G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
     
     G4LogicalVolume* gas_logic = new G4LogicalVolume(gas_solid, gxe, "GAS");
-       
-    G4PVPlacement* gas_physi = 
-      new G4PVPlacement(0, G4ThreeVector(0,0,0), gas_logic, "GAS",
-			chamber_logic, false, 0, true);
-
+        
+    new G4PVPlacement(0, G4ThreeVector(0,0,0), gas_logic, "GAS",
+		      chamber_logic, false, 0, true);
+    
     // Positioning of the PMT /////////////////////////////////////////
     _pmt.Construct();
     G4LogicalVolume* pmt_logic = _pmt.GetLogicalVolume();
     //   _pmt_length = _pmt.Length() // this is R7378A
     _pmt_length = 20*cm; // this is R11410
     
-    G4PVPlacement* pmt_physi = 
-      new G4PVPlacement(0, G4ThreeVector(0.,0.,-_length/2.+_pmt_length/2.), 
-			pmt_logic, "PMT",
-     			gas_logic, false, 0, true);
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,-_length/2.+_pmt_length/2.), 
+		      pmt_logic, "PMT",
+		      gas_logic, false, 0, true);
 
     // Positioning of the teflon panel
     // G4Box* teflon_solid = new G4Box("GAS", 22.*cm/2., 50.*cm/2., thickn/2.); 

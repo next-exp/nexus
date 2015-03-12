@@ -100,9 +100,9 @@ namespace nexus {
     G4LogicalVolume* pmt_gas_logic = new G4LogicalVolume(pmt_gas_solid, pmt_gas_mat, "PMT_GAS");
 
     G4double pmt_gas_posz = _body_thickness/2.;
-    G4PVPlacement* pmt_gas_physi = new G4PVPlacement(0, G4ThreeVector(0., 0., pmt_gas_posz), pmt_gas_logic,
-						     "PMT_GAS", pmt_logic, false, 0);
-
+    new G4PVPlacement(0, G4ThreeVector(0., 0., pmt_gas_posz), pmt_gas_logic,
+		      "PMT_GAS", pmt_logic, false, 0);
+    
 
     // PMT WINDOW ////////////////////////////////////////////////////
 
@@ -115,10 +115,10 @@ namespace nexus {
     G4LogicalVolume* window_logic = new G4LogicalVolume(window_solid, silica, "PMT_WINDOW");
 
     G4double window_posz = front_body_gas_length/2. - _window_thickness/2.;
-    G4PVPlacement* window_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,window_posz), window_logic,
-    						    "PMT_WINDOW", pmt_gas_logic, false, 0);
-
-
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,window_posz), window_logic,
+		      "PMT_WINDOW", pmt_gas_logic, false, 0);
+    
+    
     // PMT PHOTOCATHODE  /////////////////////////////////////////////
 
     G4Tubs* photocathode_solid =
@@ -128,9 +128,9 @@ namespace nexus {
     G4LogicalVolume* photocathode_logic = new G4LogicalVolume(photocathode_solid, aluminum, "PMT_PHOTOCATHODE");
 
     G4double photocathode_posz = window_posz - _window_thickness/2. - _photocathode_thickness/2.;
-    G4PVPlacement* photocathode_physi = new G4PVPlacement(0, G4ThreeVector(0., 0., photocathode_posz), photocathode_logic,
-     							  "PMT_PHOTOCATHODE", pmt_gas_logic, false, 0);
-
+    new G4PVPlacement(0, G4ThreeVector(0., 0., photocathode_posz), photocathode_logic,
+		      "PMT_PHOTOCATHODE", pmt_gas_logic, false, 0);
+    
     // Optical properties
     G4OpticalSurface* pmt_opt_surf = GetPhotOptSurf();
     new G4LogicalSkinSurface("PMT_PHOTOCATHODE", photocathode_logic, pmt_opt_surf);
