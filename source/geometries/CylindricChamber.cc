@@ -72,9 +72,8 @@ namespace nexus {
 
     G4LogicalVolume* gas_logic = new G4LogicalVolume(gas_solid, gxe, "GAS");
 
-    G4PVPlacement* gas_physi =
-      new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), gas_logic, "GAS",
-        chamber_logic, false, 0, true);
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), gas_logic, "GAS",
+		      chamber_logic, false, 0, true);
 
 
     // ACTIVE ////////////////////////////////////////////////////////
@@ -88,9 +87,8 @@ namespace nexus {
     G4LogicalVolume* active_logic = 
       new G4LogicalVolume(active_solid, gxe, "ACTIVE");
 
-    G4PVPlacement* active_physi =
-      new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), active_logic, "ACTIVE",
-        gas_logic, false, 0, true);
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), active_logic, "ACTIVE",
+		      gas_logic, false, 0, true);
 
     // Define this volume as an ionization sensitive detector
     IonizationSD* sensdet = new IonizationSD("/CYLINDRIC_CHAMBER/ACTIVE");
@@ -123,9 +121,8 @@ namespace nexus {
 
     G4double pos_z = active_length/2. + elgap_length/2.;
 
-    G4PVPlacement* elgap_physi =
-      new G4PVPlacement(0, G4ThreeVector(0.,0.,pos_z), elgap_logic, "EL_GAP",
-        gas_logic, false, 0, true);
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,pos_z), elgap_logic, "EL_GAP",
+		      gas_logic, false, 0, true);
 
     // Define an EL field for this volume
     UniformElectricDriftField* el_field = new UniformElectricDriftField();

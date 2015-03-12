@@ -106,9 +106,9 @@ namespace nexus {
     G4LogicalVolume* active_logic = new G4LogicalVolume(active_solid, _gas, "ACTIVE");
     active_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
-    G4PVPlacement* active_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), active_logic,
-						    "ACTIVE", lab_logic, false, 0, false);
-
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), active_logic,
+		      "ACTIVE", lab_logic, false, 0, false);
+    
     // Set the ACTIVE volume as an ionization sensitive detector
     IonizationSD* ionisd = new IonizationSD("/MAGBOX/ACTIVE");
     active_logic->SetSensitiveDetector(ionisd);

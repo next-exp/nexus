@@ -71,8 +71,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   G4LogicalVolume* geometry_logic = _geometry->GetLogicalVolume();
   
-  G4PVPlacement* geometry_physi = new G4PVPlacement(0, G4ThreeVector(0,0,0),
-    geometry_logic, geometry_logic->GetName(), world_logic, false, 0);
-
+  new G4PVPlacement(0, G4ThreeVector(0,0,0),
+		    geometry_logic, geometry_logic->GetName(), world_logic, false, 0);
+  
   return world_physi;
 }

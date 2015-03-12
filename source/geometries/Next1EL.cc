@@ -334,9 +334,9 @@ void Next1EL::BuildExtScintillator()
     G4ThreeVector( _sideNa_pos.getX()-source_thick/2.*cos(_sideport_angle),
 		   _sideNa_pos.getY()-source_thick/2.*sin(_sideport_angle), 
 		   _sideNa_pos.getZ());
-  G4PVPlacement* source_physi = 
-    new G4PVPlacement(G4Transform3D(rot, pos_source), source_logic, "SOURCE",
-		      _lab_logic, false, 0, true);
+
+  new G4PVPlacement(G4Transform3D(rot, pos_source), source_logic, "SOURCE",
+		    _lab_logic, false, 0, true);
   G4VisAttributes * vis_green = new G4VisAttributes;
    vis_green->SetColor(0., 1., 0.);
    vis_green->SetForceSolid(true);
@@ -361,9 +361,8 @@ void Next1EL::BuildExtScintillator()
     G4ThreeVector(pos_source.getX()-(support_thick+source_thick)/2.*cos(_sideport_angle),
 		  pos_source.getY()-(support_thick+source_thick)/2.*sin(_sideport_angle), 
 		  pos_source.getZ());
-  G4PVPlacement* pos_physi = 
-    new G4PVPlacement(G4Transform3D(rot, pos_support), support_logic, 
-		      "SOURCE_SUPPORT",  _lab_logic, false, 0, true);
+  new G4PVPlacement(G4Transform3D(rot, pos_support), support_logic, 
+		    "SOURCE_SUPPORT",  _lab_logic, false, 0, true);
   
    G4VisAttributes * vis_red = new G4VisAttributes;
    vis_red->SetColor(1., 0., 0.);
@@ -389,10 +388,9 @@ void Next1EL::BuildExtScintillator()
     G4ThreeVector(pos_support.getX() - 
 		  (support_thick/2.+dist_sc+length/2.)*cos(_sideport_angle),
 		  pos_support .getY()-(support_thick/2.+dist_sc+length/2.)*sin(_sideport_angle), 
-		  _sideNa_pos.getZ());
-  G4PVPlacement* sc_physi = 
-    new G4PVPlacement(G4Transform3D(rot, pos_scint), sc_logic, "NaI",
-		      _lab_logic, false, 0, true);
+		  _sideNa_pos.getZ()); 
+  new G4PVPlacement(G4Transform3D(rot, pos_scint), sc_logic, "NaI",
+		    _lab_logic, false, 0, true);
   G4VisAttributes * vis_blue = new G4VisAttributes;
   vis_blue->SetColor(0., 0., 1.);
   vis_blue->SetForceSolid(true);
@@ -724,16 +722,14 @@ void Next1EL::BuildFieldCage()
   G4LogicalVolume* diel_grid_gate_logic =
     new G4LogicalVolume(diel_grid, fgrid_gate, "GRID_GATE");
   G4double pos1 = - _elgap_length/2. + diel_thickn/2.;
-  G4PVPlacement* diel_grid_gate_physi =
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,pos1), diel_grid_gate_logic, "GRID_GATE",
-    		      elgap_logic, false, 0, true);
+  new G4PVPlacement(0, G4ThreeVector(0.,0.,pos1), diel_grid_gate_logic, "GRID_GATE",
+		    elgap_logic, false, 0, true);
 
   G4LogicalVolume* diel_grid_logic =
     new G4LogicalVolume(diel_grid, fgrid, "GRID");
   G4double pos2 = _elgap_length/2. - diel_thickn/2.;
-  G4PVPlacement* diel_grid_physi =
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,pos2), diel_grid_logic, "GRID",
-		      elgap_logic, false, 1, true);
+  new G4PVPlacement(0, G4ThreeVector(0.,0.,pos2), diel_grid_logic, "GRID",
+		    elgap_logic, false, 1, true);
   
   if (_elfield) {
     UniformElectricDriftField* el_field = new UniformElectricDriftField();
@@ -919,9 +915,8 @@ void Next1EL::BuildFieldCage()
 
   posz = _cathode_posz - diel_thickn/2.;
  
-  G4PVPlacement* diel_cathd_physi =
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,posz + _fieldcage_position.z()), diel_cathd_logic, "CATHODE",
-  		      _gas_logic, false, 0, true);
+  new G4PVPlacement(0, G4ThreeVector(0.,0.,posz + _fieldcage_position.z()), diel_cathd_logic, "CATHODE",
+		    _gas_logic, false, 0, true);
    
     
   // SUPPORT BARS ////////////////////////////////////////////////////

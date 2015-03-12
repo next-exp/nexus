@@ -77,9 +77,8 @@ namespace nexus {
     G4LogicalVolume* cu_castle_logic =
       new G4LogicalVolume (cu_castle_solid,
 			   G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),"CU_CASTLE");
-    G4PVPlacement* _cu_castle_physi = 
-      new G4PVPlacement(0, G4ThreeVector(0.,_y/2.+_thickness,0.), cu_castle_logic,
-			"CU_CASTLE", _mother_logic, false, 0, false);
+    new G4PVPlacement(0, G4ThreeVector(0.,_y/2.+_thickness,0.), cu_castle_logic,
+		      "CU_CASTLE", _mother_logic, false, 0, false);
    
     // SETTING VISIBILITIES   //////////
     if (_visibility) {
