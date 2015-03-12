@@ -100,13 +100,12 @@ namespace nexus{
      G4Tubs* enclosure_gas_solid = 
        new G4Tubs("ENCLOSURE_GAS", 0., gas_diam/2., gas_length/2., 0., twopi);
      G4LogicalVolume* enclosure_gas_logic = 
-       new G4LogicalVolume(enclosure_gas_solid,	vacuum, "ENCLOSURE_GAS");
+       new G4LogicalVolume(enclosure_gas_solid, vacuum, "ENCLOSURE_GAS");
      G4double gas_pos = 
        (_enclosure_endcap_thickness/2-_enclosure_window_thickness-
      	_enclosure_pad_thickness)/2;
-     G4PVPlacement* enclosure_gas_physi = 
-       new G4PVPlacement(0,G4ThreeVector(0.,0.,gas_pos), enclosure_gas_logic,
-			 "ENCLOSURE_GAS", enclosure_logic, false, 0, false);
+     new G4PVPlacement(0,G4ThreeVector(0.,0.,gas_pos), enclosure_gas_logic,
+		       "ENCLOSURE_GAS", enclosure_logic, false, 0, false);
 
      // Adding the sapphire window
      G4Tubs* enclosure_window_solid = 
@@ -118,10 +117,9 @@ namespace nexus{
 			   "ENCLOSURE_WINDOW");
     
      _window_z_pos = _enclosure_length/2 - _enclosure_window_thickness/2.;
-     G4PVPlacement* enclosure_window_physi =
-       new G4PVPlacement(0, G4ThreeVector(0.,0.,_window_z_pos),
-     			 enclosure_window_logic, "ENCLOSURE_WINDOW", 
-     			 enclosure_logic, false, 0, false);
+     new G4PVPlacement(0, G4ThreeVector(0.,0.,_window_z_pos),
+		       enclosure_window_logic, "ENCLOSURE_WINDOW", 
+		       enclosure_logic, false, 0, false);
 
      // Adding the optical pad
      G4Tubs* enclosure_pad_solid =
@@ -130,28 +128,25 @@ namespace nexus{
        new G4LogicalVolume(enclosure_pad_solid, vacuum, "OPTICAL_PAD");
      G4double pad_z_pos = 
        _window_z_pos-_enclosure_window_thickness/2.-_enclosure_pad_thickness/2.;
-     G4PVPlacement* enclosure_pad_physi = 
-       new G4PVPlacement(0, G4ThreeVector(0.,0.,pad_z_pos),
-     			 enclosure_pad_logic,"OPTICAL_PAD",
-     			 enclosure_logic, false, 0, false);
-
+     new G4PVPlacement(0, G4ThreeVector(0.,0.,pad_z_pos),
+		       enclosure_pad_logic,"OPTICAL_PAD",
+		       enclosure_logic, false, 0, false);
+     
      // Adding the PMT
      _pmt->Construct();
      G4LogicalVolume* pmt_logic = _pmt->GetLogicalVolume();
      G4double pmt_rel_z_pos = _pmt->GetRelPosition().z();//return G4ThreeVector(0.,0., _front_body_length/2.);
      _pmt_z_pos = gas_length/2.- pmt_rel_z_pos;
-     G4PVPlacement* pmt_physi = 
-       new G4PVPlacement(0, G4ThreeVector(0.,0.,_pmt_z_pos), pmt_logic,
-			 "PMT", enclosure_gas_logic, false, 0, false);
+     new G4PVPlacement(0, G4ThreeVector(0.,0.,_pmt_z_pos), pmt_logic,
+		       "PMT", enclosure_gas_logic, false, 0, false);
      // Adding the PMT base
      G4Tubs* pmt_base_solid = 
        new G4Tubs("PMT_BASE", 0., _pmt_base_diam/2., _pmt_base_thickness, 0.,twopi);
      G4LogicalVolume* pmt_base_logic = 
        new G4LogicalVolume(pmt_base_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON"),
-			   "PMT_BASE");
-     G4PVPlacement* pmt_base_physi = 
-       new G4PVPlacement(0, G4ThreeVector(0.,0., -_pmt_base_z),
-			 pmt_base_logic, "PMT_BASE", enclosure_gas_logic, false, 0, false);
+			   "PMT_BASE"); 
+     new G4PVPlacement(0, G4ThreeVector(0.,0., -_pmt_base_z),
+		       pmt_base_logic, "PMT_BASE", enclosure_gas_logic, false, 0, false);
      //std::cout<<"1_pmt_base_z_pos  "<< -_pmt_base_z<<std::endl; 
      
      /////  SETTING VISIBILITIES   //////////   

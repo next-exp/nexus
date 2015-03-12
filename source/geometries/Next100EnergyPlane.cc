@@ -114,6 +114,13 @@ namespace nexus {
     ////////////////////////
     /////   Enclosures   ///
 
+    /// Assign optical properties to materials ///
+    G4Material* sapphire = MaterialsList::Sapphire();
+    sapphire->SetMaterialPropertiesTable(OpticalMaterialProperties::Sapphire());
+    G4Material* vacuum = 
+      G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
+    vacuum->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
+
     G4Tubs* enclosure_solid = 
       new G4Tubs("ENCLOSURE", 0., _enclosure_diam/2., _enclosure_length/2., 0., twopi);
 
@@ -126,20 +133,20 @@ namespace nexus {
     G4double gas_length = _enclosure_length - _enclosure_thickness;
     G4Tubs* enclosure_gas_solid = new G4Tubs("ENCLOSURE_GAS", 0., gas_diam/2., gas_length/2., 0., twopi);
 
-    G4LogicalVolume* enclosure_gas_logic = new G4LogicalVolume(enclosure_gas_solid,
-							       G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic"),
-							       "ENCLOSURE_GAS");
-
+    G4LogicalVolume* enclosure_gas_logic = 
+      new G4LogicalVolume(enclosure_gas_solid, vacuum, "ENCLOSURE_GAS");
+    
     G4ThreeVector gas_pos(0., 0., _enclosure_thickness/2.);
     new G4PVPlacement(0, gas_pos, enclosure_gas_logic,
 		      "ENCLOSURE_GAS", enclosure_logic, false, 0);
 
     // Adding the sapphire window
     G4double window_diam = gas_diam;
-    G4Tubs* enclosure_window_solid = new G4Tubs("ENCLOSURE_WINDOW", 0., window_diam/2., _enclosure_window_thickness/2., 0., twopi);
+    G4Tubs* enclosure_window_solid = 
+      new G4Tubs("ENCLOSURE_WINDOW", 0., window_diam/2., _enclosure_window_thickness/2., 0., twopi);
 
-    G4LogicalVolume* enclosure_window_logic = new G4LogicalVolume(enclosure_window_solid, MaterialsList::Sapphire(),
-								  "ENCLOSURE_WINDOW");
+    G4LogicalVolume* enclosure_window_logic = 
+      new G4LogicalVolume(enclosure_window_solid, sapphire, "ENCLOSURE_WINDOW");
 
     G4double window_posz = gas_length/2. - _enclosure_window_thickness/2.;
     new G4PVPlacement(0, G4ThreeVector(0.,0.,window_posz), enclosure_window_logic,
@@ -147,10 +154,14 @@ namespace nexus {
     
     // Adding the optical pad
     G4double pad_diam = gas_diam;
-    G4Tubs* enclosure_pad_solid = new G4Tubs("ENCLOSURE_PAD", 0., pad_diam/2., _enclosure_pad_thickness/2., 0., twopi);
+    G4Tubs* enclosure_pad_solid = 
+      new G4Tubs("ENCLOSURE_PAD", 0., pad_diam/2., _enclosure_pad_thickness/2., 0., twopi);
 
-    G4LogicalVolume* enclosure_pad_logic = new G4LogicalVolume(enclosure_pad_solid, MaterialsList::OpticalSilicone(),
-							       "ENCLOSURE_PAD");
+    // G4LogicalVolume* enclosure_pad_logic =
+    //   new G4LogicalVolume(enclosure_pad_solid, MaterialsList::OpticalSilicone(),
+    // 							       "ENCLOSURE_PAD");
+    G4LogicalVolume* enclosure_pad_logic =
+      new G4LogicalVolume(enclosure_pad_solid, vacuum, "ENCLOSURE_PAD");
 
     // *************** Add optical properties of the pad   TO BE DONE !!    ********************************
 
