@@ -14,8 +14,8 @@
 /Geometry/Next100/pressure 15. bar
 /Geometry/Next100/max_step_size 1. mm
 /Geometry/Next100/elfield 1
-/Geometry/Next100/el_pitch 5. mm
-
+/Geometry/Next100/el_table_binning 1. mm
+/Geometry/Next100/el_table_point_id 0
 
 
 ### Generation
