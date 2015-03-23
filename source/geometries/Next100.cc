@@ -70,6 +70,7 @@ namespace nexus {
   }
   
 
+
   void Next100::Construct()
   {
     // LAB /////////////////////////////////////////////////////////////
@@ -139,28 +140,38 @@ namespace nexus {
     G4ThreeVector vertex(0.,0.,0.);
 
     // Shielding regions
-    if ((region == "SHIELDING_LEAD") || (region == "SHIELDING_STEEL") ||
-	(region == "EXTERNAL")       || (region == "SHIELDING_GAS") || (region == "SHIELDING_STRUCT") ) {
-      vertex = _shielding->GenerateVertex(region);
+    if ((region == "SHIELDING_LEAD")  || 
+    	(region == "SHIELDING_STEEL") ||
+		(region == "EXTERNAL")        || 
+		(region == "SHIELDING_GAS")   || 
+		(region == "SHIELDING_STRUCT") ) {
+		vertex = _shielding->GenerateVertex(region);
     }
 
     // Vessel regions
-    else if ((region == "VESSEL") || (region == "VESSEL_FLANGES") ||
-	     (region == "VESSEL_TRACKING_ENDCAP") || (region == "VESSEL_ENERGY_ENDCAP")) {
-      vertex = _vessel->GenerateVertex(region);
+    else if ((region == "VESSEL") || 
+    		 (region == "VESSEL_FLANGES") ||
+	     	 (region == "VESSEL_TRACKING_ENDCAP") || 
+	     	 (region == "VESSEL_ENERGY_ENDCAP")) {
+    	vertex = _vessel->GenerateVertex(region);
     }
 
-    // ICS regions
+    // Inner copper shielding
     else if (region == "ICS") {
-      vertex = _ics->GenerateVertex(region);
+    	vertex = _ics->GenerateVertex(region);
     }
 
-    // INNER ELEMENTS regions
-    else if ((region == "FIELD_CAGE") || (region == "ACTIVE") ||
-	     (region == "CARRIER_PLATE") || (region == "ENCLOSURE_BODY") ||
-	     (region == "ENCLOSURE_WINDOW") || (region == "PMT_BODY") ||
-	     (region == "TRK_SUPPORT") || (region == "DICE_BOARD") || (region == "EL_TABLE") ) {
-      vertex = _inner_elements->GenerateVertex(region);
+    // Inner elements (photosensors' planes and field cage)
+    else if ((region == "FIELD_CAGE") || 
+    		 (region == "ACTIVE") ||
+    		 (region == "CARRIER_PLATE") || 
+    		 (region == "ENCLOSURE_BODY") ||
+    		 (region == "ENCLOSURE_WINDOW") ||
+    		 (region == "PMT_BODY") ||
+    		 (region == "TRK_SUPPORT") ||
+    		 (region == "DICE_BOARD") ||
+    		 (region == "EL_TABLE") ) {
+    	vertex = _inner_elements->GenerateVertex(region);
     }
 
     return vertex;

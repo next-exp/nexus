@@ -8,6 +8,9 @@
 // ---------------------------------------------------------------------------- 
 
 #include "Next100InnerElements.h"
+#include "Next100FieldCage.h"
+#include "Next100EnergyPlane.h"
+#include "Next100TrackingPlane.h"
 #include "IonizationSD.h"
 #include "PmtSD.h"
 #include "UniformElectricDriftField.h"
@@ -29,39 +32,36 @@
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
 
+using namespace CLHEP;
+
+
 namespace nexus {
 
-  using namespace CLHEP;
 
   Next100InnerElements::Next100InnerElements():
     _max_step_size (1.*mm),
     _active_diam   (106.9 * cm),
     _active_length (130. * cm),
     _trk_displ (13.36 * cm),
-    //  _ener_displ (9.5 * cm),
     _el_gap_length (.5 * cm),
     _grid_thickn (.1 * mm),
     _el_grid_transparency (.88),
     _cath_grid_transparency (.98),
-     // EL field ON or OFF
-    _elfield(0),
-    _el_pitch(5.*mm),
-    // Visibility of grids
-    _grids_visibility(0)
+    _elfield(0), // EL field ON or OFF
+    _el_table_binning(1.*mm),
+    _el_table_point_id(-1),
+    _grids_visibility(false) // Visibility of grids
   {
     _el_gap_posz = (160.*cm / 2.) - _trk_displ;
 
     // Field Cage
     _field_cage = new Next100FieldCage();
 
-
     // Energy Plane
     _energy_plane = new Next100EnergyPlane();
 
-
     // Tracking Plane
     _tracking_plane = new Next100TrackingPlane();
-
 
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/Next100/", "Control commands of geometry Next100.");
@@ -79,13 +79,15 @@ namespace nexus {
 
      // Calculate vertices for EL table generation
     G4GenericMessenger::Command& pitch_cmd = 
-      _msg->DeclareProperty("el_pitch", _el_pitch, 
-			    "Pitch for EL generation");
+      _msg->DeclareProperty("el_table_binning", _el_table_binning, 
+			    "Binning of EL lookup tables.");
     pitch_cmd.SetUnitCategory("Length");
-    pitch_cmd.SetParameterName("el_pitch", false);
-    pitch_cmd.SetRange("el_pitch>0.");
+    pitch_cmd.SetParameterName("el_table_binning", false);
+    pitch_cmd.SetRange("el_table_binning>0.");
 
+    _msg->DeclareProperty("el_table_point_id", _el_table_point_id, "");
   }
+
 
 
   void Next100InnerElements::SetLogicalVolume(G4LogicalVolume* mother_logic)
@@ -129,13 +131,8 @@ namespace nexus {
     _tracking_plane->Construct();
 
     G4double z = _el_gap_posz - _el_gap_length/2. + .5*mm;
-    G4double max_radius = floor(_active_diam/2./_el_pitch)*_el_pitch;
-    CalculateELTableVertices(max_radius, _el_pitch, z);
-    // for (G4int i=0; i<_table_vertices.size(); ++i) {
-    //   G4cout << i << ", " << _table_vertices[i].getX() << ", "
-    //          << _table_vertices[i].getY() << ", "<< z << G4endl;
-    // }
-
+    G4double max_radius = floor(_active_diam/2./_el_table_binning)*_el_table_binning;
+    CalculateELTableVertices(max_radius, _el_table_binning, z);
   }
 
 
@@ -318,64 +315,62 @@ namespace nexus {
     }
 
     // Energy Plane regions
-    else if ( (region == "CARRIER_PLATE") || (region == "ENCLOSURE_BODY") ||
-	      (region == "ENCLOSURE_WINDOW") || (region == "PMT_BODY") ) {
+    else if ((region == "CARRIER_PLATE") || 
+             (region == "ENCLOSURE_BODY") ||
+             (region == "ENCLOSURE_WINDOW") ||
+             (region == "PMT_BODY") ) {
       vertex = _energy_plane->GenerateVertex(region);
     }
 
     // Tracking Plane regions
-    else if ( (region == "TRK_SUPPORT") || (region == "DICE_BOARD") ) {
+    else if ((region == "TRK_SUPPORT") || 
+             (region == "DICE_BOARD")) {
       vertex = _tracking_plane->GenerateVertex(region);
     }  
-    // Generating EL table
-    else if (region == "EL_TABLE") {  
-      _idx_table++;	
-      if (_idx_table>=_table_vertices.size()){
-    	G4cout<<"[Next100InnerElements::GenerateVertex()] Aborting the run,"
-	      << " last event reached ..."<<G4endl;
-    	G4RunManager::GetRunManager()->AbortRun();
+
+    else if (region == "EL_TABLE") {
+      try {
+        vertex = _table_vertices[_el_table_point_id];
       }
-      if(_idx_table<=_table_vertices.size()){   
-    	vertex =  _table_vertices[_idx_table-1];
+      catch (const std::out_of_range& oor) {
+        G4Exception("[Next100InnerElements]", "GenerateVertex()", FatalErrorInArgument, "EL lookup table point id out of range.");
       }
     }
 
     else {
-      G4Exception("[Next100InnerElements]", "GenerateVertex()", FatalException,
-		  "Unknown vertex generation region!");     
+      G4Exception("[Next100InnerElements]", "GenerateVertex()", FatalException,"Unknown vertex generation region!");     
     }
 
     return vertex;
   }
 
-  void Next100InnerElements::CalculateELTableVertices(G4double radius, 
-						  G4double binning, 
-						  G4double z)		
-  {     
-    G4ThreeVector position;
 
-    ///Squared pitch
-    position[2] = z;
 
-    G4int imax = floor(2*radius/binning);
+  void Next100InnerElements::CalculateELTableVertices(G4double radius, G4double binning, G4double z)		
+  { 
+    // Calculate the xyz positions of the points of an EL lookup table 
+    // (arranged as a square grid) given a certain binning
 
-    for (int i=0; i<imax + 1; i++){
-      position[0] = -radius + i*binning;
-      int base = 0;
-      for (int j=0; j<imax + 1; j++){
-	position[1] = -radius + j*binning;
-	if (sqrt(position[0]*position[0]+position[1]*position[1])<= radius){
-	  _table_vertices.push_back(position);
-	} else {
-	  continue;
-	}
-	base += 1;
+    G4ThreeVector xyz(0., 0., z);
+
+    G4int imax = floor(2*radius/binning); // maximum bin number (minus 1)
+
+    // Loop through x and y bin numbers
+    for (int i=0; i<imax+1; i++) {
+
+      xyz.setX(-radius + i * binning);
+
+      for (int j=0; j<imax + 1; j++) {
+        xyz.setY(-radius + j * binning);
       }
-      //      G4cout << base << ", ";
+
+      // Store the point if it's inside the active volume defined by the
+      // field cage (of circular cross section). Discard it otherwise.
+      if (sqrt(xyz.x()*xyz.x()+xyz.y()*xyz.y()) <= radius)
+        _table_vertices.push_back(xyz);
+      else
+        continue;
     }
-    //  G4cout << G4endl;
   }
-
-}
-
-
+  
+} // end namespace nexus

@@ -9,8 +9,8 @@
 ///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef __DEFAULT_TRACKING_ACTION__
-#define __DEFAULT_TRACKING_ACTION__
+#ifndef DEFAULT_TRACKING_ACTION_H
+#define DEFAULT_TRACKING_ACTION_H
 
 #include <G4UserTrackingAction.hh>
 

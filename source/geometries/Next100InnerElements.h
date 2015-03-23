@@ -1,30 +1,32 @@
 // ----------------------------------------------------------------------------
-///  \file   
-///  \brief  
+///  \file   Next100InnerElements.h
+///  \brief  Geometry of the field cage and sensor planes of NEXT-100.
 ///
 ///  \author   <jmunoz@ific.uv.es>
 ///  \date     2 Mar 2012
 ///  \version  $Id$
 ///
-///  Copyright (c) 2012 NEXT Collaboration
+///  Copyright (c) 2012-2015 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXT100_INNER_ELEMENTS__
-#define __NEXT100_INNER_ELEMENTS__
-
-#include "Next100FieldCage.h"
-#include "Next100EnergyPlane.h"
-#include "Next100TrackingPlane.h"
-#include "CylinderPointSampler.h"
+#ifndef NEXT100_INNER_ELEMENTS_H
+#define NEXT100_INNER_ELEMENTS_H
 
 #include <G4ThreeVector.hh>
-
+#include <vector>
 
 class G4LogicalVolume;
 class G4Material;
 class G4GenericMessenger;
 
+
 namespace nexus {
+
+  class Next100FieldCage;
+  class Next100EnergyPlane;
+  class Next100TrackingPlane;
+  class CylinderPointSampler;
+
 
   /// This is a geometry placer that encloses from the FIELD CAGE to inside
   /// covering the ACTIVE region, EL gap and its grids, the cathode grid ...
@@ -32,16 +34,16 @@ namespace nexus {
   class Next100InnerElements{
 
   public:
-    // Constructor
+    ///Constructor
     Next100InnerElements();
 
-    // Destructor
+    /// Destructor
     ~Next100InnerElements();
 
-    // Sets the Logical Volume where Inner Elements will be placed
-    void SetLogicalVolume(G4LogicalVolume* mother_logic);
+    /// Set the logical volume that encloses the entire geometry
+    void SetLogicalVolume(G4LogicalVolume*);
 
-    // It Returns the relative position respect to the rest of NEXT100 geometry
+    /// Return the relative position respect to the rest of NEXT100 geometry
     G4ThreeVector GetPosition() const;
 
     /// Generate a vertex within a given region of the geometry
@@ -53,16 +55,17 @@ namespace nexus {
 
   private:
 
-    void CalculateELTableVertices(G4double radius, G4double binning,  G4double z);	
+    void BuildELRegion();
+    void BuildCathodeGrid();
+    void BuildActive();
+
+    void CalculateELTableVertices(G4double, G4double, G4double);	
     
     G4LogicalVolume* _mother_logic;
     G4Material* _gas;
+
     G4double _pressure;
     G4double _temperature;
-
-    void BuildELRegion();
-    void BuildCathodeGrid();
-    void BuildActive();    
 
     G4double _max_step_size;
     
@@ -74,8 +77,10 @@ namespace nexus {
     G4double _el_grid_transparency, _cath_grid_transparency;
     // True if EL field is on
     G4bool _elfield;
-    // Pitch of the EL grid generation points
-    G4double  _el_pitch;
+
+    G4double _el_table_binning; ///< Binning of EL lookup table
+    G4int _el_table_point_id; ///< Id of the EL point to be simulated
+
     G4double _el_gap_posz;
 
     G4double _el_grid_ref_z;
@@ -85,22 +90,17 @@ namespace nexus {
     Next100EnergyPlane*   _energy_plane;
     Next100TrackingPlane* _tracking_plane;
 
-
     // Visibilities
     G4bool _grids_visibility;
 
-
     // Vertex Generators
     CylinderPointSampler* _active_gen;
-
 
     // Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
 
     // Variables for the EL table generation
-    mutable G4int _idx_table;
     mutable std::vector<G4ThreeVector> _table_vertices;
-
   };
 
 } // end namespace nexus
