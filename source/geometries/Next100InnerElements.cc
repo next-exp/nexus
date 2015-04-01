@@ -360,7 +360,7 @@ namespace nexus {
 
       xyz.setX(-radius + i * binning);
 
-      for (int j=0; j<imax + 1; j++) {
+      for (int j=0; j<imax+1; j++) {
         xyz.setY(-radius + j * binning);
       }
 
