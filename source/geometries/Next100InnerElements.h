@@ -80,6 +80,7 @@ namespace nexus {
 
     G4double _el_table_binning; ///< Binning of EL lookup table
     G4int _el_table_point_id; ///< Id of the EL point to be simulated
+    mutable G4int _el_table_index; ///< Index for EL lookup table generation
 
     G4double _el_gap_posz;
 

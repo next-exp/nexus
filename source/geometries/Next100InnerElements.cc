@@ -4,10 +4,11 @@
 //  Authors: <jmunoz@ific.uv.es>
 //  Created: 2 Mar 2012
 //  
-//  Copyright (c) 2012 NEXT Collaboration
+//  Copyright (c) 2012-2015 NEXT Collaboration
 // ---------------------------------------------------------------------------- 
 
 #include "Next100InnerElements.h"
+
 #include "Next100FieldCage.h"
 #include "Next100EnergyPlane.h"
 #include "Next100TrackingPlane.h"
@@ -330,21 +331,29 @@ namespace nexus {
     }  
 
     else if (region == "EL_TABLE") {
+
+      unsigned int i = _el_table_point_id + _el_table_index;
+
+      if (i == (_table_vertices.size()-1)) {
+        G4Exception("[Next100InnerElements]", "GenerateVertex()", 
+          RunMustBeAborted, "Reached last event in EL lookup table.");
+      }
+
       try {
-        vertex = _table_vertices[_el_table_point_id];
+        vertex = _table_vertices.at(i);
+        _el_table_index++;
       }
       catch (const std::out_of_range& oor) {
-        G4Exception("[Next100InnerElements]", "GenerateVertex()", FatalErrorInArgument, "EL lookup table point id out of range.");
+        G4Exception("[Next100InnerElements]", "GenerateVertex()", FatalErrorInArgument, "EL lookup table point out of range.");
       }
     }
-
     else {
-      G4Exception("[Next100InnerElements]", "GenerateVertex()", FatalException,"Unknown vertex generation region!");     
+      G4Exception("[Next100InnerElements]", "GenerateVertex()", FatalException, 
+        "Unknown vertex generation region!");     
     }
 
     return vertex;
   }
-
 
 
   void Next100InnerElements::CalculateELTableVertices(G4double radius, G4double binning, G4double z)		
@@ -356,21 +365,20 @@ namespace nexus {
 
     G4int imax = floor(2*radius/binning); // maximum bin number (minus 1)
 
-    // Loop through x and y bin numbers
-    for (int i=0; i<imax+1; i++) {
+    for (int i=0; i<imax+1; i++) { // Loop through the x bins
 
-      xyz.setX(-radius + i * binning);
+      xyz.setX(-radius + i * binning); // x position
 
-      for (int j=0; j<imax+1; j++) {
-        xyz.setY(-radius + j * binning);
+      for (int j=0; j<imax+1; j++) { // Loop through the y bins
+
+        xyz.setY(-radius + j * binning); // y position
+
+        // Store the point if it is inside the active volume defined by the
+        // field cage (of circular cross section). Discard it otherwise.
+        if (sqrt(xyz.x()*xyz.x()+xyz.y()*xyz.y()) <= radius)
+          _table_vertices.push_back(xyz);
       }
 
-      // Store the point if it's inside the active volume defined by the
-      // field cage (of circular cross section). Discard it otherwise.
-      if (sqrt(xyz.x()*xyz.x()+xyz.y()*xyz.y()) <= radius)
-        _table_vertices.push_back(xyz);
-      else
-        continue;
     }
   }
   
