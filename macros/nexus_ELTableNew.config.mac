@@ -6,7 +6,7 @@
 
 /run/verbose 0 
 /event/verbose 0 
-/tracking/verbose 0
+/tracking/verbose 1
 
 ### Generation
 /Generator/SingleParticle/particle ie-
@@ -17,7 +17,8 @@
 ### Geometry
 /Geometry/NextNew/elfield true
 /Geometry/NextNewOpticalGeometry/pressure 15. atmosphere
-/Geometry/NextNew/el_pitch 1. mm
+/Geometry/NextNew/el_table_binning 1. mm
+/Geometry/NextNew/el_table_point_id 146504
 
 /nexus/persistency/outputFile table.NEW.next 
 

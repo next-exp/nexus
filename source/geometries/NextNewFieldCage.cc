@@ -4,10 +4,11 @@
 //  Authors: <miquel.nebot@ific.uv.es>
 //  Created: 12 Sept 2013
 //  
-//  Copyright (c) 2013 NEXT Collaboration
+//  Copyright (c) 2013-2015 NEXT Collaboration
 // ---------------------------------------------------------------------------- 
 
 #include "NextNewFieldCage.h"
+
 #include "MaterialsList.h"
 #include "IonizationSD.h"
 #include "PmtSD.h"
@@ -65,7 +66,8 @@ namespace nexus {
     _max_step_size(1.*mm),
     // EL field ON or OFF
     _elfield(0),
-    _el_pitch(5.*mm)
+    _el_table_index(0),
+    _el_table_binning(5.*mm)
   {
     // Derived dimensions 
     //   _drift_length = _dist_EL_cathode-_el_gap_length/2.-_cathode_thickness/2.;
@@ -107,11 +109,13 @@ namespace nexus {
 
     // Calculate vertices for EL table generation
     G4GenericMessenger::Command& pitch_cmd = 
-      _msg->DeclareProperty("el_pitch", _el_pitch, 
+      _msg->DeclareProperty("el_table_binning", _el_table_binning, 
 			    "Pitch for EL generation");
     pitch_cmd.SetUnitCategory("Length");
-    pitch_cmd.SetParameterName("el_pitch", false);
-    pitch_cmd.SetRange("el_pitch>0.");
+    pitch_cmd.SetParameterName("el_table_binning", false);
+    pitch_cmd.SetRange("el_table_binning>0.");
+
+    _msg->DeclareProperty("el_table_point_id", _el_table_point_id, "");
 
     // declare colors to be used for visibilities
     _grey_color = new G4VisAttributes;
@@ -168,8 +172,8 @@ namespace nexus {
     BuildFieldCage();
 
     G4double z = _el_gap_z_pos - _el_gap_length/2. + .5*mm;
-    G4double max_radius = floor(_tube_in_diam/2./_el_pitch)*_el_pitch;
-    CalculateELTableVertices(max_radius, _el_pitch, z);
+    G4double max_radius = floor(_tube_in_diam/2./_el_table_binning)*_el_table_binning;
+    CalculateELTableVertices(max_radius, _el_table_binning, z);
     // for (G4int i=0; i<_table_vertices.size(); ++i) {
     //   G4cout << i << ", " << _table_vertices[i].getX() << ", "
     //          << _table_vertices[i].getY() << ", "<< z << G4endl;
@@ -499,6 +503,7 @@ namespace nexus {
   G4ThreeVector NextNewFieldCage::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);
+
     if (region == "DRIFT_TUBE") {
       vertex = _drift_tube_gen->GenerateVertex("BODY_VOL");
     }
@@ -511,56 +516,58 @@ namespace nexus {
      else if (region == "REFLECTOR_BUFFER") {
       vertex = _reflector_buffer_gen->GenerateVertex("BODY_VOL");
     }
-    // Active region
     else if (region == "ACTIVE") {
       vertex = _active_gen->GenerateVertex("BODY_VOL");
-    } else if (region == "AD_HOC") {
+    } 
+    else if (region == "AD_HOC") {
       vertex = G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
-    } else if (region == "EL_TABLE") {  
-      _idx_table++;	
-      if (_idx_table>=_table_vertices.size()){
-    	G4cout<<"[NextNewFieldCage::GenerateVertex()] Aborting the run,"
-	      << " last event reached ..."<<G4endl;
-    	G4RunManager::GetRunManager()->AbortRun();
+    }
+    else if (region == "EL_TABLE") {
+
+      G4int i = _el_table_point_id + _el_table_index;
+
+      if (i >= (_el_table_vertices.size()-1)) {
+        G4Exception("[Next100InnerElements]", "GenerateVertex()", RunMustBeAborted, "EL lookup table point id out of range.");
+        //G4RunManager::GetRunManager()->AbortRun();
       }
-      if(_idx_table<=_table_vertices.size()){   
-    	vertex =  _table_vertices[_idx_table-1];
-      }
-    } else {
-    G4Exception("[NextNewFieldCage]", "GenerateVertex()", FatalException,
+
+      vertex = _el_table_vertices.at(_el_table_point_id+_el_table_index);
+      _el_table_index++;
+    }
+    else {
+      G4Exception("[NextNewFieldCage]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");     
-  } 
+    } 
    
     return vertex;
   }
 
-  void NextNewFieldCage::CalculateELTableVertices(G4double radius, 
-						  G4double binning, 
-						  G4double z)		
-  {     
-    G4ThreeVector position;
 
-    ///Squared pitch
-    position[2] = z;
+  void NextNewFieldCage::CalculateELTableVertices(G4double radius, G4double binning, G4double z)
+  {
+    // Calculate the xyz positions of the points of an EL lookup table 
+    // (arranged as a square grid) given a certain binning
 
-    G4int imax = floor(2*radius/binning);
+    G4ThreeVector xyz(0.,0.,z);
 
-    for (int i=0; i<imax + 1; i++){
-      position[0] = -radius + i*binning;
-      int base = 0;
-      for (int j=0; j<imax + 1; j++){
-	position[1] = -radius + j*binning;
-	if (sqrt(position[0]*position[0]+position[1]*position[1])<= radius){
-	  _table_vertices.push_back(position);
-	} else {
-	  continue;
-	}
-	base += 1;
+    G4int imax = floor(2.*radius/binning); // max bin number (minus 1)
+
+    for (G4int i=0; i<imax+1; ++i) {
+      xyz.setX(-radius + i*binning);
+
+      for (G4int j=0; j<imax+1; ++j) {
+        xyz.setY(-radius + j*binning);
+        // Store the point if it's inside the active volume defined by the
+        // field cage (of circular cross section). Discard it otherwise.
+        if (sqrt(xyz.x()*xyz.x()+xyz.y()*xyz.y()) <= radius) {
+          _el_table_vertices.push_back(xyz);
+        }
       }
-      G4cout << base << ", ";
     }
-    G4cout << G4endl;
+
+    G4cout << "size = " << _el_table_vertices.size() << G4endl;
   }
+
 
   G4ThreeVector NextNewFieldCage::GetPosition() const
   {
