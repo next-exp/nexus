@@ -17,6 +17,6 @@ tag 4.04.00 - 9 Feb 2015
 	- Change in the electromagnetic physics list: from 
 	G4EmLivermorePhysics to G4EmStandardPhysics_option4
 	
-tag v4_04_02 - 4 Apr 2015
+tag v4_04_03 - 4 Apr 2015
 	- EL table generation scheme changed to generation of the whole statistics for a given range of points,
 	for NEW and NEXT-100 geometry.
