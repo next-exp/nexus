@@ -1,17 +1,17 @@
 // ----------------------------------------------------------------------------
 ///  \file     NextNewFieldCage.h  
-///  \brief    This is a geometry formed by the reflector tube and  TPB layer if needed.
-///            Also build the EL, Cathode and Electric Drift Field. 
+///  \brief    Reflector tube coated with TPB layer. 
+///            Also builds the EL, Cathode and Electric Drift Field. 
 ///
 ///  \author   <miquel.nebot@ific.uv.es>
 ///  \date     12 Sept 2013
 ///  \version  $Id$
 ///
-///  Copyright (c) 2013 NEXT Collaboration
+///  Copyright (c) 2013-2015 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXTNEW_FIELDCAGE__
-#define __NEXTNEW_FIELDCAGE__
+#ifndef NEXTNEW_FIELDCAGE_H
+#define NEXTNEW_FIELDCAGE_H
 
 #include "BaseGeometry.h"
 #include "CylinderPointSampler.h"
@@ -21,6 +21,7 @@ class G4Material;
 class G4LogicalVolume;
 class G4GenericMessenger;
 class G4VisAttributes;
+
 
 namespace nexus {
 
@@ -108,9 +109,10 @@ namespace nexus {
     // Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
 
-    mutable G4int _idx_table;
-    mutable std::vector<G4ThreeVector> _table_vertices;
-    G4double _el_pitch;
+    G4int _el_table_point_id;
+    mutable G4int _el_table_index;
+    mutable std::vector<G4ThreeVector> _el_table_vertices;
+    G4double _el_table_binning;
   };
 
 } //end namespace nexus
