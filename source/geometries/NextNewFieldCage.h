@@ -14,7 +14,6 @@
 #define NEXTNEW_FIELDCAGE_H
 
 #include "BaseGeometry.h"
-#include "CylinderPointSampler.h"
 #include <vector>
 
 class G4Material;
@@ -24,6 +23,9 @@ class G4VisAttributes;
 
 
 namespace nexus {
+
+    class CylinderPointSampler;
+
 
   class NextNewFieldCage: public BaseGeometry
   {

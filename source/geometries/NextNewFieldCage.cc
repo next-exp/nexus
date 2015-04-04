@@ -16,6 +16,7 @@
 #include "OpticalMaterialProperties.h"
 #include "IonizationSD.h"
 #include "XenonGasProperties.h"
+#include "CylinderPointSampler.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4PVPlacement.hh>
@@ -106,7 +107,6 @@ namespace nexus {
     specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
     specific_vertex_Z_cmd.SetUnitCategory("Length");
     
-
     // Calculate vertices for EL table generation
     G4GenericMessenger::Command& pitch_cmd = 
       _msg->DeclareProperty("el_table_binning", _el_table_binning, 
@@ -130,6 +130,7 @@ namespace nexus {
     _green_color->SetColor(0., 1., 0.);
   }
 
+
   NextNewFieldCage::~NextNewFieldCage()
   {
     delete _drift_tube_gen;
@@ -145,13 +146,11 @@ namespace nexus {
     delete _green_color;
   }
 
+
   void NextNewFieldCage::SetLogicalVolume(G4LogicalVolume* mother_logic)
   {
     _mother_logic = mother_logic;
   }
-
-
- 
 
 
   void NextNewFieldCage::Construct()
@@ -174,14 +173,10 @@ namespace nexus {
     G4double z = _el_gap_z_pos - _el_gap_length/2. + .5*mm;
     G4double max_radius = floor(_tube_in_diam/2./_el_table_binning)*_el_table_binning;
     CalculateELTableVertices(max_radius, _el_table_binning, z);
-    // for (G4int i=0; i<_table_vertices.size(); ++i) {
-    //   G4cout << i << ", " << _table_vertices[i].getX() << ", "
-    //          << _table_vertices[i].getY() << ", "<< z << G4endl;
-    // }
-  
   }
 
-   void  NextNewFieldCage::DefineMaterials()
+
+  void  NextNewFieldCage::DefineMaterials()
   {
     _gas = _mother_logic->GetMaterial();
     _pressure =    _gas->GetPressure();
@@ -205,8 +200,7 @@ namespace nexus {
   }
   
   
-  
-   void NextNewFieldCage::BuildCathodeGrid()
+  void NextNewFieldCage::BuildCathodeGrid()
   {
     ///// CATHODE ////// 
     G4Material* fgrid_mat = 
@@ -229,9 +223,9 @@ namespace nexus {
     }
   }
 
-   void NextNewFieldCage::BuildActive()
+
+  void NextNewFieldCage::BuildActive()
   {
-    //G4double active_posz = _el_gap_z_pos -_el_gap_length/2. - _drift_length/2.;
     G4double active_length = 
       _cathode_gap/2. + _tube_length_drift + _dist_tube_el;
     G4double active_posz = 
@@ -240,8 +234,7 @@ namespace nexus {
     G4Tubs* active_solid = 
       new G4Tubs("ACTIVE",  0., _tube_in_diam/2.-_reflector_thickness, 
 		 active_length/2., 0, twopi);
-    //G4double activevol = active_solid->GetCubicVolume();
-    //  std::cout<<"ACTIVE VOLUME: \t"<<activevol<<std::endl;
+
     
     G4LogicalVolume* active_logic = 
       new G4LogicalVolume(active_solid, _gas, "ACTIVE");
@@ -324,13 +317,6 @@ namespace nexus {
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., poszInner), gate_logic, 
 		      "EL_GRID_GATE", el_gap_logic, false, 0, false);  
-
-    // G4LogicalVolume* anode_logic = 
-    //   new G4LogicalVolume(diel_grid_solid, fgrid_mat, "EL_GRID_ANODE");
-    // G4double poszOuter =  _el_gap_length/2. - _grid_thickness/2.;
-    // G4PVPlacement* anode_physi = 
-    //   new G4PVPlacement(0, G4ThreeVector(0., 0., poszOuter), anode_logic, 
-    // 			"EL_GRID_ANODE", el_gap_logic, false, 1, false);
 
     /// Visibilities
     if (_visibility) {
@@ -524,15 +510,20 @@ namespace nexus {
     }
     else if (region == "EL_TABLE") {
 
-      G4int i = _el_table_point_id + _el_table_index;
+      unsigned int i = _el_table_point_id + _el_table_index;
 
-      if (i >= (_el_table_vertices.size()-1)) {
-        G4Exception("[Next100InnerElements]", "GenerateVertex()", RunMustBeAborted, "EL lookup table point id out of range.");
-        //G4RunManager::GetRunManager()->AbortRun();
+      if (i == (_el_table_vertices.size()-1)) {
+        G4Exception("[Next100InnerElements]", "GenerateVertex()", 
+          RunMustBeAborted, "Reached last event in EL lookup table.");
       }
 
-      vertex = _el_table_vertices.at(_el_table_point_id+_el_table_index);
-      _el_table_index++;
+      try {
+        vertex = _el_table_vertices.at(i);
+        _el_table_index++;
+      }
+      catch (const std::out_of_range& oor) {
+        G4Exception("[NextNewFieldCage]", "GenerateVertex()", FatalErrorInArgument, "EL lookup table point out of range.");
+      }
     }
     else {
       G4Exception("[NextNewFieldCage]", "GenerateVertex()", FatalException,
@@ -552,28 +543,27 @@ namespace nexus {
 
     G4int imax = floor(2.*radius/binning); // max bin number (minus 1)
 
-    for (G4int i=0; i<imax+1; ++i) {
-      xyz.setX(-radius + i*binning);
+    for (G4int i=0; i<imax+1; ++i) { // Loop through the x bins
 
-      for (G4int j=0; j<imax+1; ++j) {
-        xyz.setY(-radius + j*binning);
+      xyz.setX(-radius + i*binning); // x position
+
+      for (G4int j=0; j<imax+1; ++j) { // Loop through the y bins
+
+        xyz.setY(-radius + j*binning); // y position
+
         // Store the point if it's inside the active volume defined by the
         // field cage (of circular cross section). Discard it otherwise.
-        if (sqrt(xyz.x()*xyz.x()+xyz.y()*xyz.y()) <= radius) {
+        if (sqrt(xyz.x()*xyz.x()+xyz.y()*xyz.y()) <= radius)
           _el_table_vertices.push_back(xyz);
-        }
       }
     }
-
-    G4cout << "size = " << _el_table_vertices.size() << G4endl;
   }
 
 
   G4ThreeVector NextNewFieldCage::GetPosition() const
   {
-    return G4ThreeVector (0., 0., _tube_z_pos);
+    return G4ThreeVector(0., 0., _tube_z_pos);
   }
  
-
 }//end namespace nexus
 
