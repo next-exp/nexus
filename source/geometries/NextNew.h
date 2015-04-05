@@ -2,15 +2,16 @@
 ///  \file   NextNew.h
 ///  \brief  
 ///
-///  \author   <miquel.nebot@ific.uv.es>, <jmunoz@ific.uv.es>, <justo.martin-albo@ific.uv.es>
+///  \author   <miquel.nebot@ific.uv.es>, <jmunoz@ific.uv.es>, 
+///            <justo.martin-albo@ific.uv.es>
 ///  \date     Sept 2013
 ///  \version  $Id$
 ///
-///  Copyright (c) 2013 NEXT Collaboration
+///  Copyright (c) 2013-2015 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXTNEW__
-#define __NEXTNEW__
+#ifndef NEXTNEW_H
+#define NEXTNEW_H
 
 #include "BaseGeometry.h"
 #include "BoxPointSampler.h"
@@ -24,6 +25,7 @@ namespace nexus { class NextNewInnerElements; }
 
 class G4LogicalVolume;
 class G4GenericMessenger;
+
 
 namespace nexus {
 
@@ -44,10 +46,10 @@ namespace nexus {
 
   private:
     // Detector dimensions
-    const G4double _lab_size; /// Size of the air box containing the detector 
-    const G4double _buffer_gas_size;///Mother volume of shielding and vessel 
+    const G4double _lab_size; ///< Size of the air box containing the detector 
+    const G4double _buffer_gas_size; ///< Mother volume of shielding and vessel 
    
-    G4double _pressure;  ///Pressure Gas Xenon
+    G4double _pressure; ///< Pressure xenon gas
 
     // Pointers to logical volumes
     G4LogicalVolume* _lab_logic;
@@ -57,17 +59,14 @@ namespace nexus {
     Next100Shielding* _shielding;
     NextNewPedestal* _pedestal;
     NextNewCuCastle* _cu_castle;
-    
     NextNewVessel* _vessel;   
     NextNewIcs* _ics;
     NextNewInnerElements* _inner_elements;
     
-    //Vertex genrator    
-    BoxPointSampler* _lab_gen;
+    BoxPointSampler* _lab_gen; ///< Vertex generator
 
     /// Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
-
   };
   
 } // end namespace nexus

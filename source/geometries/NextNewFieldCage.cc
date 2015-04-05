@@ -35,9 +35,11 @@
 #include <CLHEP/Units/PhysicalConstants.h>
 #include <stdexcept>
 
+using namespace CLHEP;
+
+
 namespace nexus {
 
-  using namespace CLHEP;
 
   NextNewFieldCage::NextNewFieldCage(): 
     BaseGeometry(),
@@ -48,7 +50,7 @@ namespace nexus {
     _buffer_length (130. * mm), // from center of cathode to surface of sapphire windows
     _tube_in_diam (432. * mm),
     _tube_length_drift (508.*mm),
-    _tube_length_buff (122.*mm),
+    //_tube_length_buff (122.*mm),
     _dist_tube_el (15.*mm),
     _tube_thickness (2.0 * cm),  
      _reflector_thickness (.5 * cm),
