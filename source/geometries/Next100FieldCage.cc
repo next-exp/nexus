@@ -59,20 +59,24 @@ namespace nexus {
     // Build the larger cylinder
     _tube_zpos = - (160.*cm/2. + 8.7*cm - _tube_length/2.);  // Considering Vessel_body_len = 160   &  Ener_zone displ = 8.7
 
-    G4Tubs* field_cage_solid = new G4Tubs("FIELD_CAGE", _tube_diam/2., _tube_diam/2. + _tube_thickn,
+    G4Tubs* field_cage_solid = 
+      new G4Tubs("FIELD_CAGE", _tube_diam/2., _tube_diam/2. + _tube_thickn,
 					  _tube_length/2., 0, twopi);
 
     _hdpe = MaterialsList::HDPE();
-    G4LogicalVolume* field_cage_logic = new G4LogicalVolume(field_cage_solid, _hdpe, "FIELD_CAGE");
+    G4LogicalVolume* field_cage_logic = 
+      new G4LogicalVolume(field_cage_solid, _hdpe, "FIELD_CAGE");
     this->SetLogicalVolume(field_cage_logic);
 
 
     // Build the internal reflector
-    G4Tubs* reflector_solid = new G4Tubs("FC_REFLECTOR", _tube_diam/2., _tube_diam/2.  + _refl_thickn,
-					 _tube_length/2., 0, twopi);
-    G4LogicalVolume* reflector_logic = new G4LogicalVolume(reflector_solid, _hdpe, "FC_REFLECTOR");
+    G4Tubs* reflector_solid = 
+      new G4Tubs("FC_REFLECTOR", _tube_diam/2., _tube_diam/2.  + _refl_thickn,
+		 _tube_length/2., 0, twopi);
+    G4LogicalVolume* reflector_logic = 
+      new G4LogicalVolume(reflector_solid, _hdpe, "FC_REFLECTOR");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), reflector_logic, 
-		      "FC_REFLECTOR", field_cage_logic, false, 0, true);
+		      "FC_REFLECTOR", field_cage_logic, false, 0);
 
     //Cover  the internal reflector with TPB
     G4Material* gas = _mother_logic->GetMaterial();
@@ -87,7 +91,7 @@ namespace nexus {
     G4LogicalVolume* tpb_logic = 
       new G4LogicalVolume(tpb_solid, tpb, "REFLECTOR_TPB");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), tpb_logic, 
-		      "REFLECTOR_TPB", reflector_logic, false, 0, true);
+		      "REFLECTOR_TPB", reflector_logic, false, 0);
 
 
     // OPTICAL SURFACE PROPERTIES    ////////
@@ -96,7 +100,7 @@ namespace nexus {
     reflector_opsur->SetModel(unified);
     reflector_opsur->SetFinish(ground);
     reflector_opsur->SetSigmaAlpha(0.1);
-    reflector_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+    reflector_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
     new G4LogicalSkinSurface("FC_REFLECTOR", reflector_logic, reflector_opsur);
 
 
