@@ -9,8 +9,8 @@
 ///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef __IONIZATION_SD__
-#define __IONIZATION_SD__
+#ifndef IONIZATION_SD_H
+#define IONIZATION_SD_H
 
 #include <G4VSensitiveDetector.hh>
 #include "IonizationHit.h"
@@ -36,13 +36,14 @@ namespace nexus {
     /// in this method to the G4HCofThisEvent object.
     virtual void Initialize(G4HCofThisEvent*);
   
-    /// TODO. METHOD DESCRIPTION    
     void EndOfEvent(G4HCofThisEvent*);
 
     /// Return the unique name of the hits collection created
     /// by this sensitive detector. This will be used by the persistency
     /// manager to fetch the collection from the G4HCofThisEvent object.
     static G4String GetCollectionUniqueName();
+
+    void IncludeInTotalEnergyDeposit(G4bool);
 
   private:
     /// 
@@ -51,7 +52,11 @@ namespace nexus {
   private:
     IonizationHitsCollection* _IHC;
     G4String _det_name;
+    G4bool _include;
   };
+
+  inline void IonizationSD::IncludeInTotalEnergyDeposit(G4bool inc) 
+  { _include = inc; } 
   
 } // end namespace nexus
 

@@ -25,10 +25,9 @@ using namespace nexus;
 
   
 IonizationSD::IonizationSD(const G4String& name):
-  G4VSensitiveDetector(name)
+  G4VSensitiveDetector(name), _include(true)
 {
   collectionName.insert(GetCollectionUniqueName());
-  //collectionName.insert("IonizationHitsCollection");
 }
   
 
@@ -86,11 +85,16 @@ G4bool IonizationSD::ProcessHits(G4Step* step, G4TouchableHistory*)
   // Add hit to collection
   _IHC->insert(hit);
 
-  // Add energy deposit to the trajectory associated to the current track
-  Trajectory* trj = 
-    (Trajectory*) TrajectoryMap::Get(step->GetTrack()->GetTrackID());
-  edep = edep + trj->GetEnergyDeposit();
-  trj->SetEnergyDeposit(edep);
+  // Add energy deposit to the trajectory associated 
+  // to the current track
+  if (_include) {
+    Trajectory* trj = 
+      (Trajectory*) TrajectoryMap::Get(step->GetTrack()->GetTrackID());
+    if (trj) {
+      edep += trj->GetEnergyDeposit();
+      trj->SetEnergyDeposit(edep);
+    }
+  }
 
   return true;
 }
