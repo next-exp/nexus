@@ -27,12 +27,18 @@ G4Material* MaterialsList::GXe(G4double pressure, G4double temperature)
 
     G4double density = 5.5*kg/m3;
 
-    if (pressure/bar > 9.5 && pressure/bar < 10.5)
+    if (pressure/bar > 4.9 && pressure/bar < 5.1)
+      density = 27.2*kg/m3;
+    else if (pressure/bar > 9.9 && pressure/bar < 10.1)
       density = 55.587*kg/m3;
-    else if (pressure/bar > 14.5 && pressure/bar < 15.5)
+    else if (pressure/bar > 14.9 && pressure/bar < 15.1)
       density = 85.95 *kg/m3;
-    else if (pressure/bar > 19.5 && pressure/bar < 20.5)
+    else if (pressure/bar > 19.9 && pressure/bar < 20.1)
       density = 118.4*kg/m3;
+    else if (pressure/bar > 29.9 && pressure/bar < 30.1)
+      density = 193.6*kg/m3;
+    else if (pressure/bar > 39.9 && pressure/bar < 40.1)
+      density = 284.3*kg/m3;
     else
       G4cout  << "[MaterialsList] Pressure not recognized! " 
               << pressure/bar << G4endl;

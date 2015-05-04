@@ -401,6 +401,7 @@ void Next1EL::BuildExtScintillator()
   G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
   G4String detname = "/NEXT1/SCINT";
   IonizationSD* ionisd = new IonizationSD(detname);
+  ionisd->IncludeInTotalEnergyDeposit(false);
   sdmgr->AddNewDetector(ionisd);
   sc_logic->SetSensitiveDetector(ionisd);
   
