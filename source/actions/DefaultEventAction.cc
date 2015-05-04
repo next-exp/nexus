@@ -19,6 +19,7 @@
 #include <G4HCofThisEvent.hh>
 #include <G4SDManager.hh>
 #include <G4HCtable.hh>
+#include <globals.hh>
 
 
 namespace nexus {
@@ -31,8 +32,8 @@ namespace nexus {
     
     G4GenericMessenger::Command& thresh_cmd =
        _msg->DeclareProperty("energy_threshold", _energy_threshold, "");
-     thresh_cmd.SetParameterName("energy_threshold", true);
-     thresh_cmd.SetUnitCategory("Energy");
+    thresh_cmd.SetParameterName("energy_threshold", true);
+    thresh_cmd.SetUnitCategory("Energy");
   }
   
   
@@ -58,56 +59,30 @@ namespace nexus {
   {
     _nevt++;
 
+    // Determine whether total energy deposit in ionization sensitive 
+    // detectors is above threshold
+    if (_energy_threshold >= 0.) {
 
-    PersistencyManager* pm = dynamic_cast<PersistencyManager*>
-      (G4VPersistencyManager::GetPersistencyManager());
-    pm->StoreCurrentEvent(false);
+      // Get the trajectories stored for this event and loop through them
+      // to calculate the total energy deposit
 
-    G4HCofThisEvent* hc = event->GetHCofThisEvent();
-    if (hc) {
-      
-      G4SDManager* sdmgr = G4SDManager::GetSDMpointer();     
-      G4HCtable* hct = sdmgr->GetHCtable();
+      G4double edep = 0.;
 
-      G4double total_energy = 0.;
-      for (int i=0; i<hct->entries(); i++) {
-	G4String hcname = hct->GetHCname(i);
-	G4String sdname = hct->GetSDname(i);
-	if (sdname == "ACTIVE") {
-	  int active_id = sdmgr->GetCollectionID(sdname+"/"+hcname);
-	  G4VHitsCollection* hits = hc->GetHC(active_id);
-
-	  IonizationHitsCollection* ioni_hits = 
-	    dynamic_cast<IonizationHitsCollection*>(hits);
-	  if (!ioni_hits) return;
-	  
-	  if (_energy_threshold != 0.) { // only need to loop over the hits if I have an actual threshold
-	    for (G4int ihit=0; ihit<ioni_hits->entries(); ihit++) {
-	      IonizationHit* hit = dynamic_cast<IonizationHit*>(ioni_hits->GetHit(ihit));
-	      total_energy +=  hit->GetEnergyDeposit();
-	    }
-	    if (total_energy > _energy_threshold) {
-	      pm->StoreCurrentEvent(true);
-	    }
-	  } else {
-	    if (ioni_hits->entries() != 0)
-	      pm->StoreCurrentEvent(true);
-	  }
-	}
-      }
-   
-    }
-
-    
-    // draw tracks in visual mode
-    if (G4VVisManager::GetConcreteInstance()) {
       G4TrajectoryContainer* tc = event->GetTrajectoryContainer();
       if (tc) {
-        for (size_t i=0; i<tc->size(); i++) {
-          G4VTrajectory* trj = (*tc)[i];
-          trj->DrawTrajectory();
+        for (unsigned int i=0; i<tc->size(); ++i) {
+          Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[i]);
+          edep += trj->GetEnergyDeposit();
+          // Draw tracks in visual mode
+          if (G4VVisManager::GetConcreteInstance()) trj->DrawTrajectory();
         }
       }
+
+      PersistencyManager* pm = dynamic_cast<PersistencyManager*>
+        (G4VPersistencyManager::GetPersistencyManager());
+ 
+      if (edep > _energy_threshold) pm->StoreCurrentEvent(true);
+      else pm->StoreCurrentEvent(false);
     }
   }
 
