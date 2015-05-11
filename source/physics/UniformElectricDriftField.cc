@@ -27,7 +27,7 @@ namespace nexus {
   (G4double anode_position, G4double cathode_position, EAxis axis): 
     BaseDriftField(), 
     _axis(axis), _anode_pos(anode_position), _cathode_pos(cathode_position), 
-    _drift_velocity(0.), _transv_diff(0.), _longit_diff(0.)   
+    _drift_velocity(0.), _transv_diff(0.), _longit_diff(0.),  _light_yield(0.)    
   {
     // initialize random generator with dummy values
     _rnd = new SegmentPointSampler(G4LorentzVector(0.,0.,0.,-999.),

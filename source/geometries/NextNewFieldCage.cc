@@ -291,7 +291,7 @@ namespace nexus {
       el_field->SetTransverseDiffusion(1. * mm/sqrt(cm));
       el_field->SetLongitudinalDiffusion(.5 * mm/sqrt(cm));
       XenonGasProperties xgp(_pressure, _temperature);
-      el_field->SetLightYield(xgp.ELLightYield(20*kilovolt/cm));
+      el_field->SetLightYield(xgp.ELLightYield(34.5*kilovolt/cm)); //it's 2.3 kV/cm/bar
       G4Region* el_region = new G4Region("EL_REGION");
       el_region->SetUserInformation(el_field);
       el_region->AddRootLogicalVolume(el_gap_logic);
