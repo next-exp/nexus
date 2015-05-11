@@ -16,7 +16,8 @@
 
 ### Geometry
 /Geometry/NextNew/elfield true
-/Geometry/NextNewOpticalGeometry/pressure 15. atmosphere
+## pressure must be set in bar!!!
+/Geometry/NextNewOpticalGeometry/pressure 15. bar
 /Geometry/NextNew/el_table_binning 1. mm
 /Geometry/NextNew/el_table_point_id 146504
 
