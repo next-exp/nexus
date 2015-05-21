@@ -27,7 +27,11 @@ G4Material* MaterialsList::GXe(G4double pressure, G4double temperature)
 
     G4double density = 5.5*kg/m3;
 
-    if (pressure/bar > 4.9 && pressure/bar < 5.1)
+    if (pressure/bar > 0.9 && pressure/bar < 1.1)
+      density = 5.324*kg/m3;
+    else if (pressure/bar > 1.9 && pressure/bar < 2.1)
+      density = 10.7*kg/m3;
+    else if (pressure/bar > 4.9 && pressure/bar < 5.1)
       density = 27.2*kg/m3;
     else if (pressure/bar > 9.9 && pressure/bar < 10.1)
       density = 55.587*kg/m3;
