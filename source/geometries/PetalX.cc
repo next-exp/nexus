@@ -34,6 +34,7 @@ namespace nexus {
     BaseGeometry(),
 
     // Detector dimensions
+    det_thickness_(1.*cm),
     det_size_(20.*cm),
     active_size_ (10.*cm)
 
@@ -67,15 +68,19 @@ namespace nexus {
     lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
     this->SetLogicalVolume(lab_logic_);
 
+    lXe_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
+  
+    BuildDetector();
+    BuildLXe() ;
     BuildActive();
   }
 
   void PetalX::BuildDetector() 
   {
-     G4Box* det_solid = 
-       new G4Box("ACTIVE", det_size_/2., det_size_/2., det_size_/2.);
+    G4Box* det_solid = 
+      new G4Box("WALL", det_size_/2., det_size_/2., det_size_/2.);
 
-     G4Material* steel = MaterialsList::Steel();
+    G4Material* steel = MaterialsList::Steel();
     
     det_logic_ = new G4LogicalVolume(det_solid, steel, "WALL");
     det_logic_->SetVisAttributes(G4VisAttributes::Invisible);
@@ -83,18 +88,30 @@ namespace nexus {
 		      "WALL", lab_logic_, false, 0, true);
   }
 
+ void PetalX::BuildLXe() 
+  {
+    G4double lXe_size_ = det_size_ - 2.* det_thickness_;
+    G4Box* lXe_solid = 
+      new G4Box("LXE", lXe_size_/2., lXe_size_/2., lXe_size_/2.);
+    
+    lXe_logic_ = new G4LogicalVolume(lXe_solid, lXe_, "LXE");
+    lXe_logic_->SetVisAttributes(G4VisAttributes::Invisible);
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), lXe_logic_,
+		      "LXE", det_logic_, false, 0, true);
+  }
+
   void PetalX::BuildActive() 
   {
     G4Box* active_solid = 
       new G4Box("ACTIVE", active_size_/2., active_size_/2., active_size_/2.);
 
-    lXe_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
+   
 
     G4LogicalVolume* active_logic = new G4LogicalVolume(active_solid, lXe_, "ACTIVE");
     active_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), active_logic,
-		      "ACTIVE", det_logic_, false, 0, true);
+		      "ACTIVE", lXe_logic_, false, 0, true);
     
     // Set the ACTIVE volume as an ionization sensitive active
     IonizationSD* ionisd = new IonizationSD("/PETALX/ACTIVE");
@@ -121,6 +138,11 @@ namespace nexus {
     G4double db_zsize = db.GetDimensions().z();
 
     G4double displ = active_size_/2. + db_zsize/2.;
+
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), db_logic,
+		      "DICE_BOARD", lXe_logic_, false, 0, true);
+
+    
   }
     
   G4ThreeVector PetalX::GenerateVertex(const G4String& region) const
