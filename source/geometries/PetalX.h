@@ -38,12 +38,16 @@ namespace nexus {
 
   private:
 
+    void BuildDetector(); 
     void BuildActive(); 
+    void BuildSiPMPlane(); 
 
     G4LogicalVolume* lab_logic_;
+    G4LogicalVolume* det_logic_;
 
     // Detector dimensions
-    const G4double detector_size_; /// Size of the Xe box    
+    const G4double det_size_; /// Size of the detector
+    const G4double active_size_; /// Size of the Xe active volume   
 
     // ACTIVE gas Xenon
     G4Material* lXe_;
