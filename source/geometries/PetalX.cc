@@ -10,7 +10,7 @@
 #include "PetalX.h"
 #include "MaterialsList.h"
 #include "IonizationSD.h"
-#include "NextNewKDB.h"
+#include "PetKDB.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -61,7 +61,7 @@ namespace nexus {
   void PetalX::Construct()
   {
     // LAB. This is just a volume of air surrounding the detector
-    G4double lab_size = 50.*cm;
+    G4double lab_size = 1.*m;
     G4Box* lab_solid = new G4Box("LAB", lab_size/2., lab_size/2., lab_size/2.);
     
     lab_logic_ = new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
@@ -73,6 +73,7 @@ namespace nexus {
     BuildDetector();
     BuildLXe() ;
     BuildActive();
+    BuildSiPMPlane();
   }
 
   void PetalX::BuildDetector() 
@@ -129,17 +130,18 @@ namespace nexus {
 
   void PetalX::BuildSiPMPlane()
   {
-    NextNewKDB db(9,9);
+    PetKDB db(10,10);
     db.Construct();
 
     G4LogicalVolume* db_logic = db.GetLogicalVolume();
     G4double db_xsize = db.GetDimensions().x();
     G4double db_ysize = db.GetDimensions().y();
     G4double db_zsize = db.GetDimensions().z();
+    G4cout << "dice board x = " << db_xsize << ", y = " 
+	   << db_ysize << ", z = " <<  db_zsize << std::endl;
+    G4double displ = -active_size_/2. - db_zsize/2.;
 
-    G4double displ = active_size_/2. + db_zsize/2.;
-
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), db_logic,
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,displ), db_logic,
 		      "DICE_BOARD", lXe_logic_, false, 0, true);
 
     
