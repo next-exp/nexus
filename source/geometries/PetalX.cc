@@ -11,6 +11,7 @@
 #include "MaterialsList.h"
 #include "IonizationSD.h"
 #include "PetKDB.h"
+#include "OpticalMaterialProperties.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -26,6 +27,7 @@
 #include <G4TransportationManager.hh>
 #include <G4SDManager.hh>
 #include <G4SystemOfUnits.hh>
+#include <G4RotationMatrix.hh>
 
 
 namespace nexus {
@@ -69,11 +71,12 @@ namespace nexus {
     this->SetLogicalVolume(lab_logic_);
 
     lXe_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
+    lXe_->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe());
   
-    BuildDetector();
-    BuildLXe() ;
-    BuildActive();
-    BuildSiPMPlane();
+      BuildDetector();
+      BuildLXe() ;
+      BuildActive();
+      BuildSiPMPlane();
   }
 
   void PetalX::BuildDetector() 
@@ -134,15 +137,20 @@ namespace nexus {
     db.Construct();
 
     G4LogicalVolume* db_logic = db.GetLogicalVolume();
-    G4double db_xsize = db.GetDimensions().x();
-    G4double db_ysize = db.GetDimensions().y();
+    //   G4double db_xsize = db.GetDimensions().x();
+    // G4double db_ysize = db.GetDimensions().y();
     G4double db_zsize = db.GetDimensions().z();
-    G4cout << "dice board x = " << db_xsize << ", y = " 
-	   << db_ysize << ", z = " <<  db_zsize << std::endl;
+    // G4cout << "dice board x = " << db_xsize << ", y = " 
+    // 	   << db_ysize << ", z = " <<  db_zsize << std::endl;
     G4double displ = -active_size_/2. - db_zsize/2.;
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,displ), db_logic,
 		      "DICE_BOARD", lXe_logic_, false, 0, true);
+
+    G4RotationMatrix rot;
+    rot.rotateX(pi);
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0.,0.,-displ)), db_logic,
+				    "DICE_BOARD", lXe_logic_, false, 0, true);
 
     
   }
@@ -154,6 +162,8 @@ namespace nexus {
     // ACTIVE
     if (region == "ACTIVE") {
       vertex = active_gen_->GenerateVertex(region);
+    } else if (region == "OUTSIDE") {
+      vertex = G4ThreeVector(0., 0., -60.*cm);
     }
    
     return vertex;

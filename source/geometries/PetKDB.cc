@@ -9,7 +9,7 @@
 
 #include "PetKDB.h"
 
-#include "SiPM3mm.h"
+#include "SiPMpet.h"
 #include "PmtSD.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
@@ -111,7 +111,7 @@ namespace nexus {
 
     // SILICON PMs //////////////////////////////////////////////////
 
-    SiPM3mm sipm;
+    SiPMpet sipm;
     sipm.Construct();
     G4LogicalVolume* sipm_logic = sipm.GetLogicalVolume();
 
@@ -130,7 +130,7 @@ namespace nexus {
 	G4cout << pos_x << ", " << pos_y << ", " << pos_z << G4endl;
 
         new G4PVPlacement(0, G4ThreeVector(pos_x, pos_y, pos_z), 
-          sipm_logic, "SIPM3mm", out_logic, false, sipm_no, true);
+          sipm_logic, "SIPMpet", out_logic, false, sipm_no, true);
 
         std::pair<int, G4ThreeVector> mypos;
         mypos.first = sipm_no;
