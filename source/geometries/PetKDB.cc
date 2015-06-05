@@ -70,8 +70,6 @@ namespace nexus {
     _dimensions.setY(out_y);
     _dimensions.setZ(out_z);
 
-    G4cout << "DB whole volume = " << out_z << G4endl;
-
     G4Material* out_material = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
 
     G4Box* out_solid = new G4Box("LXE_DICE", out_x/2., out_y/2., out_z/2.);
@@ -95,18 +93,18 @@ namespace nexus {
    
     // WLS COATING //////////////////////////////////////////////////
 
-    // G4Box* coating_solid = 
-    //   new G4Box("DB_WLS_COATING", db_x/2., db_y/2., coating_thickness/2.);
+    G4Box* coating_solid = 
+      new G4Box("DB_WLS_COATING", db_x/2., db_y/2., coating_thickness/2.);
 
-    // G4Material* TPB = MaterialsList::TPB();
-    // TPB->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+    G4Material* TPB = MaterialsList::TPB();
+    TPB->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB_LXe());
 
-    // G4LogicalVolume* coating_logic =
-    //   new G4LogicalVolume(coating_solid, TPB, "DB_WLS_COATING");
+    G4LogicalVolume* coating_logic =
+      new G4LogicalVolume(coating_solid, TPB, "DB_WLS_COATING");
 
-    // G4double pos_z = -db_z/2. + coating_thickness / 2.;
-    // new G4PVPlacement(0, G4ThreeVector(0.,0.,pos_z), coating_logic,
-    // 		      "DB_WLS_COATING", board_logic, false, 0, true);
+    G4double pos_z = db_z/2. - coating_thickness / 2.;
+    new G4PVPlacement(0, G4ThreeVector(0., 0., pos_z), coating_logic,
+    		      "DB_WLS_COATING", board_logic, false, 0, true);
 
 
     // SILICON PMs //////////////////////////////////////////////////
@@ -115,7 +113,7 @@ namespace nexus {
     sipm.Construct();
     G4LogicalVolume* sipm_logic = sipm.GetLogicalVolume();
 
-    G4double pos_z = db_z/2. - border+ (sipm.GetDimensions().z())/2.;
+    pos_z = db_z/2. - border+ (sipm.GetDimensions().z())/2.;
     G4double offset = sipm_pitch/2. - board_side_reduction;
     G4int sipm_no = 0;
 
@@ -127,7 +125,7 @@ namespace nexus {
 
         G4double pos_x = -db_x/2 + offset + j*sipm_pitch;
 
-	G4cout << pos_x << ", " << pos_y << ", " << pos_z << G4endl;
+	//G4cout << pos_x << ", " << pos_y << ", " << pos_z << G4endl;
 
         new G4PVPlacement(0, G4ThreeVector(pos_x, pos_y, pos_z), 
           sipm_logic, "SIPMpet", out_logic, false, sipm_no, true);
@@ -139,6 +137,8 @@ namespace nexus {
         sipm_no++;
       }
     }
+
+    //   G4cout << "SiPMs start at " << pos_z - sipm.GetDimensions().z()/2. << " and end at " << pos_z + sipm.GetDimensions().z()/2. << " in the ref system of LXe outer box " << G4endl;
 
     /// OPTICAL SURFACES ////////////////////////////////////////////
 
