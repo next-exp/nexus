@@ -112,7 +112,11 @@ namespace nexus {
    
 
     G4LogicalVolume* active_logic = new G4LogicalVolume(active_solid, lXe_, "ACTIVE");
-    active_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    //active_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    G4VisAttributes red_color;
+    red_color.SetColor(1., 0., 0.);
+    red_color.SetForceSolid(true);
+    active_logic->SetVisAttributes(red_color);
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), active_logic,
 		      "ACTIVE", lXe_logic_, false, 0, true);
@@ -142,15 +146,38 @@ namespace nexus {
     G4double db_zsize = db.GetDimensions().z();
     // G4cout << "dice board x = " << db_xsize << ", y = " 
     // 	   << db_ysize << ", z = " <<  db_zsize << std::endl;
-    G4double displ = -active_size_/2. - db_zsize/2.;
+    G4double displ = active_size_/2. + db_zsize/2.;
 
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,displ), db_logic,
-		      "DICE_BOARD", lXe_logic_, false, 0, true);
+    new G4PVPlacement(0, G4ThreeVector(0.,0., -displ), db_logic,
+     		      "LXE_DICE", lXe_logic_, false, 0, true);
+
+    //  G4cout << " LXe outer box starts at " << displ  - db_zsize/2. << "and ends at " << displ + db_zsize/2. << G4endl;
 
     G4RotationMatrix rot;
-    rot.rotateX(pi);
-    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0.,0.,-displ)), db_logic,
-				    "DICE_BOARD", lXe_logic_, false, 0, true);
+    
+    rot.rotateY(pi/2.);
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(-displ, 0., 0.)), db_logic,
+		      "LXE_DICE", lXe_logic_, false, 1, true);
+
+    rot.rotateY(pi/2.);
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., 0., displ)), db_logic,
+		      "LXE_DICE", lXe_logic_, false, 2, true);
+    
+    rot.rotateY(pi/2.);
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(displ, 0., 0.)), db_logic,
+		      "LXE_DICE", lXe_logic_, false, 3, true);
+
+    rot.rotateZ(pi/2.);
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., displ, 0.)), db_logic,
+    		      "LXE_DICE", lXe_logic_, false, 4, true);
+    
+    rot.rotateZ(pi);
+     new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., -displ, 0.)), db_logic,
+    		      "LXE_DICE", lXe_logic_, false, 5, true);
+
+    
+
+    
 
     
   }
@@ -164,6 +191,8 @@ namespace nexus {
       vertex = active_gen_->GenerateVertex(region);
     } else if (region == "OUTSIDE") {
       vertex = G4ThreeVector(0., 0., -60.*cm);
+    } else if (region == "CENTER") {
+      vertex = G4ThreeVector(0., 5.*mm, -5.*mm);
     }
    
     return vertex;

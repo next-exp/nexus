@@ -79,7 +79,7 @@ namespace nexus {
 
     // TPB coating
     G4double tpb_z = 0.001 * mm;
-    G4Box* tpb_solid = new G4Box("SIPMpet", sipm_x/2., sipm_y/2., tpb_z/2);
+    G4Box* tpb_solid = new G4Box("TPB", sipm_x/2., sipm_y/2., tpb_z/2);
     G4Material* TPB = MaterialsList::TPB();
     TPB->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB_LXe());
     G4LogicalVolume* tpb_logic =
@@ -89,7 +89,7 @@ namespace nexus {
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,pos_z), tpb_logic,
                       "TPB", sipm_logic, false, 0, true);
-
+    //   G4cout << "TPB starts in " << pos_z - tpb_z/2 << " in the ref system of SiPM" << G4endl;
 
     // PCB ///////////////////////////////////////////////////////
 
