@@ -84,6 +84,7 @@ namespace nexus {
     }
     else if ( (region == "DRIFT_TUBE") || (region== "REFLECTOR_DRIFT") ||
 	      (region == "BUFFER_TUBE") || (region== "REFLECTOR_BUFFER") ||
+	      (region == "ANODE_QUARTZ")||
 	      (region == "ACTIVE") || (region== "EL_TABLE") || (region == "AD_HOC")) {
       vertex=_field_cage->GenerateVertex(region);
     }

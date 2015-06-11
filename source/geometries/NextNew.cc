@@ -199,6 +199,7 @@ namespace nexus {
 	      (region=="OPTICAL_PAD") || (region == "PMT_BODY") || (region=="PMT_BASE") ||
 	      (region == "DRIFT_TUBE") || (region== "REFLECTOR_DRIFT") ||
 	      (region == "BUFFER_TUBE") || (region== "REFLECTOR_BUFFER") ||
+	      (region == "ANODE_QUARTZ")||
 	      (region == "ACTIVE") || (region== "EL_TABLE") || (region == "AD_HOC") ||
 	      (region == "SUPPORT_PLATE") || (region == "DICE_BOARD") || (region == "DB_PLUG") ){
       vertex = _inner_elements->GenerateVertex(region);
