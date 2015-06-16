@@ -1,0 +1,19 @@
+### --------------------------------------------------------
+### Example to run the muons Generator 
+### Author: Neus Lopez March <neus.lopez@ific.uv.es>    
+### date: 30 Jan 2014
+### --------------------------------------------------------
+
+/control/execute macros/physics/DefaultPhysicsList.mac
+
+/nexus/random_seed 1504001
+
+/Geometry/RegisterGeometry NEXT1_EL
+/Generator/RegisterGenerator MUONS_GENERATION
+
+/Actions/RegisterTrackingAction DEFAULT
+/Actions/RegisterEventAction MUONS
+/Actions/RegisterRunAction DEFAULT
+##/Actions/RegisterSteppingAction DEFAULT
+
+/nexus/RegisterMacro macros/MuonsExample_1_config.mac

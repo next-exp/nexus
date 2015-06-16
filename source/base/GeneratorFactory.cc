@@ -36,6 +36,7 @@ GeneratorFactory::~GeneratorFactory()
 #include "Na22Generation.h"
 #include "GenbbInterface.h"
 #include "SingleParticle2Pi.h"
+#include "MuonsGeneration.h"
 
 
 G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
@@ -53,6 +54,8 @@ G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
   else if (_name == "GEN_BB") p = new GenbbInterface();
 
   else if (_name == "2PI") p = new SingleParticle2Pi();
+
+  else if (_name == "MUONS_GENERATION") p = new MuonsGeneration();
 
   else {
     G4String err = "The user specified an unknown generator: " + _name;

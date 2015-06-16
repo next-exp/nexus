@@ -1,0 +1,41 @@
+### --------------------------------------------------------
+### Example to run the muons Generator 
+### Author: Neus Lopez March <neus.lopez@ific.uv.es>    
+### date: 30 Jan 2014
+### --------------------------------------------------------
+
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+# GENERATION
+/Generator/MuonsGeneration/particle mu-
+/Generator/MuonsGeneration/min_energy  4. GeV
+/Generator/MuonsGeneration/max_energy  4. GeV
+
+/Generator/MuonsGeneration/region MUONS    
+
+# GEOMETRY
+/Geometry/Next1EL/elfield false
+/Geometry/Next1EL/tpb_coating true
+/Geometry/Next1EL/external_scintillator false
+/Geometry/Next1EL/sc_yield 19711 1/MeV
+/Geometry/Next1EL/pressure 10. atmosphere
+/Geometry/Next1EL/tracking_plane SIPM
+/Geometry/Next1EL/sideport_posz 60. mm
+/Geometry/Next1EL/elgrid_transparency .88
+/Geometry/Next1EL/gate_transparency .76
+/Geometry/Next1EL/sideport_angle 30. deg
+/Geometry/Next1EL/muonsGenerator true
+
+# ACTIONS
+/Actions/MuonsEventAction/energy_threshold 0.00000
+/Actions/MuonsEventAction/stringHist MuonsHist_1.root
+
+# PHYSICS
+/PhysicsList/Nexus/clustering          false
+/PhysicsList/Nexus/drift               false
+/PhysicsList/Nexus/electroluminescence false
+
+# PHYSICS
+/nexus/persistency/outputFile MuonsExample_1.next
