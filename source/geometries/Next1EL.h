@@ -61,7 +61,6 @@ namespace nexus {
     // Pointers to materials definition
     G4Material* _air;       ///< Air
     G4Material* _gxe;       ///< Gaseous xenon
-    G4Material* _fgrid;     ///< For grid simulation
     G4Material* _teflon;    ///< PTFE (Teflon)
     G4Material* _steel;     ///< Stainless Steel
     G4Material* _aluminum;  ///< Aluminum
@@ -73,7 +72,6 @@ namespace nexus {
     // Pointers to logical volumes
     G4LogicalVolume* _lab_logic;
     G4LogicalVolume* _gas_logic;
-    G4LogicalVolume* _pmt_plane_logic;
     G4LogicalVolume* _pmt_logic;
     
     
@@ -117,7 +115,7 @@ namespace nexus {
     const G4double _elgap_ring_diam;
     const G4double _elgap_ring_thickn;
     const G4double _elgap_ring_height;
-    const G4double _wire_diam; ///< diameter of the EL meshes wires
+    //   const G4double _wire_diam; ///< diameter of the EL meshes wires
 
     const G4double _tpb_thickn;
 
@@ -130,12 +128,11 @@ namespace nexus {
     const G4double _active_diam;
     const G4double _active_length;
     
-    const G4double _fieldcage_diam;   ///< Fieldcage diameter
     const G4double _fieldcage_length; ///< Fieldcage length
     const G4double _fieldcage_displ;  ///< Distance btw fieldcage & anode endcap
 
     const G4double _ring_diam;
-    const G4double _ring_height;
+    //   const G4double _ring_height;
     const G4double _ring_thickn;
 
     const G4double _bar_width;
@@ -195,12 +192,7 @@ namespace nexus {
     G4double _cathode_posz; ///< Z position of the cathode wrt FIELDCAGE
 
     G4double _pressure;
-    
 
-    G4double _endend;
-    
-    G4int _PMTID;
-    G4int _numb_of_events;
     mutable G4int _idx_table;
     mutable std::vector<G4ThreeVector> _table_vertices;   
 
@@ -211,7 +203,6 @@ namespace nexus {
 
     /// Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
-    G4UIcmdWith3VectorAndUnit* _specific_v_cmd;
 
     /// To generate vertices in the Na22 source
     CylinderPointSampler* _cps;

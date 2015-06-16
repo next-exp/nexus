@@ -47,7 +47,8 @@ namespace nexus {
   private:
     // Dimensions
     G4double _body_in_rad, _body_length, _body_thickness;
-    G4double _tracking_orad, _tracking_length, _tracking_irad, _tracking_cone_height, _tracking_hole_rad;
+    G4double _tracking_orad, _tracking_length, _tracking_hole_rad;
+    //    G4double _tracking_cone_height, _tracking_irad;
     G4double _energy_theta, _energy_orad, _energy_thickness, _energy_sph_zpos, _energy_cyl_length;
 
     // Dimensions coming from outside  

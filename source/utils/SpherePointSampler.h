@@ -47,7 +47,6 @@ namespace nexus {
   private:
     // Sphere dimensions
     G4double _inner_rad, _outer_rad;
-    G4double _thickness;
     G4double _start_phi, _delta_phi;
     G4double _start_theta, _delta_theta;
 

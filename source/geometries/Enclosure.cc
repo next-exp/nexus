@@ -48,7 +48,7 @@ namespace nexus{
     _enclosure_window_diam (85. * mm), 
     _enclosure_window_thickness (6. * mm), //???
     _enclosure_pad_thickness (2. * mm),//max 60  ??????
-    _enclosure_tpb_thickness(1.*micrometer),
+    //   _enclosure_tpb_thickness(1.*micrometer),
     _pmt_base_diam (47. *mm),
     _pmt_base_thickness (5. *mm),
     _pmt_base_z (50. *mm) //distance from window

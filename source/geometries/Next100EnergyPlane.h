@@ -63,7 +63,7 @@ namespace nexus {
     const G4double _carrier_plate_thickness, _carrier_plate_diam, _carrier_plate_central_hole_diam;
     const G4double _enclosure_length,  _enclosure_diam, _enclosure_thickness;
     const G4double _enclosure_window_thickness, _enclosure_pad_thickness;
-    const G4double _pmts_pitch;
+    // const G4double _pmts_pitch;
 
     PmtR11410*  _pmt;
     std::vector<G4ThreeVector> _pmt_positions;

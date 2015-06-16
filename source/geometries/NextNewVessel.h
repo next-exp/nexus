@@ -48,7 +48,7 @@ namespace nexus {
 
   private:
     //Dimensions
-    G4double  _vessel_in_diam, _vessel_body_length, _vessel_tube_length, _vessel_length, _vessel_thickness;
+    G4double  _vessel_in_diam, _vessel_body_length, _vessel_tube_length, _vessel_thickness;
     G4double _flange_out_diam, _flange_length, _flange_z_pos;
     G4double _endcap_in_rad, _endcap_theta, _endcap_thickness, _endcap_in_z_width;  
 
