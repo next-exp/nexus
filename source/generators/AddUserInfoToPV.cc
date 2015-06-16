@@ -1,9 +1,12 @@
-// ----------------------------------------------------------------------------
-//  
-// \brief  Add user info to the Primary Vertex
+//---------------------------------------------------------------------------
+//   \file   AddUserInfoToPV
+///  \brief  Add User info (muons) to the Primary Vertex
 ///  
 ///  \author   Neus Lopez March <neus.lopez@ific.uv.es>    
 ///  \date     30 Jan 2014
+/// 
+///
+///  Copyright (c) 2015 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "AddUserInfoToPV.h"
