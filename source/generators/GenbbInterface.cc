@@ -213,7 +213,7 @@ namespace nexus {
 
   G4int GenbbInterface::G3toPDG(const G4int G3code)
   {
-    int pdg_code;
+    int pdg_code = 0;
     if      (G3code == 1) pdg_code =  22;         // gamma
     else if (G3code == 2)  pdg_code = -11;         // e+
     else if (G3code == 3) pdg_code =   11;         // e-

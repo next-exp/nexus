@@ -72,9 +72,6 @@ namespace nexus {
 
     G4int FindPmtID(const G4VTouchable*);
 
-  private:
-    G4int _hcid;
-
     G4int _naming_order; ///< Order of the naming scheme
     G4int _sensor_depth; ///< Depth of the SD in the geometry tree
     G4int _mother_depth; ///< Depth of the SD's mother in the geometry tree

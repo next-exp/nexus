@@ -25,8 +25,7 @@ namespace nexus {
 					 G4double delta_phi,
 					 G4double start_theta,
 					 G4double delta_theta):
-    _inner_rad(inner_rad), _outer_rad(inner_rad + thickness), 
-    _thickness(thickness), 
+    _inner_rad(inner_rad), _outer_rad(inner_rad + thickness),  
     _start_phi(start_phi), _delta_phi(delta_phi),
     _start_theta(start_theta), _delta_theta(delta_theta),
     _origin(origin), 

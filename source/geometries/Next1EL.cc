@@ -88,7 +88,7 @@ Next1EL::Next1EL():
   _elgap_ring_diam   (229. * mm),
   _elgap_ring_thickn ( 12. * mm),
   _elgap_ring_height (  5. * mm),
-  _wire_diam(.003048 * cm),
+  // _wire_diam(.003048 * cm),
   // TPB
   _tpb_thickn (.001 * mm),
   // LIGHT TUBE //////////////////////////////////
@@ -101,14 +101,13 @@ Next1EL::Next1EL():
   _active_diam   (_ltube_diam),
   _active_length (300. * mm),
   // FIELD CAGE //////////////////////////////////
-  _fieldcage_diam   (_vessel_diam),
   _fieldcage_length (_elgap_ring_height + _elgap_length +
 		     _active_length + _ltube_gap +
 		     _ltube_bt_length),
   _fieldcage_displ  (84.*mm),
   // FIELD SHAPING RINGS /////////////////////////
   _ring_diam   (229. * mm),
-  _ring_height ( 10. * mm),
+  // _ring_height ( 10. * mm),
   _ring_thickn (  6. * mm),
   // SUPPORT BARS ////////////////////////////////
   _bar_width  ( 40. * mm),
@@ -205,12 +204,6 @@ Next1EL::Next1EL():
 			  "Set the transparency of the gate EL mesh.");
   gate_transparency_cmd.SetParameterName("gate_transparency", false);
   gate_transparency_cmd.SetRange("gate_transparency>0 && gate_transparency<1");
-
-  // G4GenericMessenger::Command& numb_of_events_cmd = 
-  //   _msg->DeclareProperty("numb_of_events", _numb_of_events,
-  // 			  "Number of events");
-  // numb_of_events_cmd.SetParameterName("numb_of_events", false);
-  // numb_of_events_cmd.SetRange("numb_of_events>0");
    
 }
 
@@ -221,7 +214,6 @@ Next1EL::~Next1EL()
   delete _hexrnd;
   delete _msg;
   delete _cps;
-  // delete _specific_v_cmd;
 }
   
   
@@ -924,14 +916,15 @@ void Next1EL::BuildFieldCage()
  
   G4double bar_length = _fieldcage_length - 2.*_elgap_ring_height - _elgap_length;
 
-  G4Box* bar = new G4Box("SUPPORT_BAR", _bar_thickn/2., 
+  G4Box* bar_base = new G4Box("SUPPORT_BAR", _bar_thickn/2., 
 			 _bar_width/2., bar_length/2.);
   
   G4Box* addon = new G4Box("SUPPORT_BAR", _bar_thickn/2., 
 			   _bar_width/2., _bar_addon_length/2.);
 
-  G4UnionSolid* bar_solid = new G4UnionSolid("SUPPORT_BAR", bar, addon, 0, 		     
-					     G4ThreeVector(_bar_thickn, 0., (bar_length - _bar_addon_length)/2.));
+  G4UnionSolid* bar_solid =
+    new G4UnionSolid("SUPPORT_BAR", bar_base, addon, 0, 		     
+		     G4ThreeVector(_bar_thickn, 0., (bar_length - _bar_addon_length)/2.));
 
   G4LogicalVolume* bar_logic =
     new G4LogicalVolume(bar_solid, MaterialsList::PEEK(), "SUPPORT_BAR");

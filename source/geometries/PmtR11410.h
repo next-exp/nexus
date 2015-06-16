@@ -53,9 +53,6 @@ namespace nexus {
     G4double _body_thickness;
     G4double _window_diam, _window_thickness;
     G4double _photocathode_diam, _photocathode_thickness;
-    
-    // Visibility of the PMT
-    G4int _visibility;
 
     // Vertex generators
     CylinderPointSampler* _front_body_gen;

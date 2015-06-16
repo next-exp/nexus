@@ -51,7 +51,7 @@ namespace nexus {
     _enclosure_window_thickness (7.1 * mm),
     _enclosure_pad_thickness (2.0 * mm),          // To be checked
 
-    _pmts_pitch (11.0 * cm),
+    //   _pmts_pitch (11.0 * cm),
     _visibility(0)
   {
 
