@@ -30,6 +30,7 @@
 #include <G4UserLimits.hh>
 #include <G4SDManager.hh>
 #include <G4RunManager.hh>
+#include <G4UnitsTable.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
@@ -64,6 +65,13 @@ namespace nexus {
     _cathode_grid_transparency (.98),
     _ito_transparency (.90),
     _ito_thickness (_grid_thickness),
+    //
+    _ELtransv_diff(0. * mm/sqrt(cm)),
+    _ELlong_diff(0. * mm/sqrt(cm)),
+    _drift_transv_diff(1. * mm/sqrt(cm)),
+    _drift_long_diff(.3 * mm/sqrt(cm)),
+    //
+    _ELelectric_field(34.5*kilovolt/cm), // it corresponds to 2.3 kV/cm/bar at 15 bar
     // Visibility
     _visibility(0),
     // Step limiter
@@ -77,7 +85,11 @@ namespace nexus {
     //   _drift_length = _dist_EL_cathode-_el_gap_length/2.-_cathode_thickness/2.;
     //  _tube_length_drift = _dist_EL_cathode + _buffer_length -  _el_gap_length/2.;
     _el_gap_z_pos = -_dist_feedthroughs/2. + _cathode_gap/2. +  _tube_length_drift + _dist_tube_el + _el_gap_length/2.;
-    _pos_z_anode = _el_gap_z_pos + _el_gap_length/2. +  _anode_quartz_thickness/2.+ 0.1*mm; // 0.1 mm is needed because EL is produced only if the PostStepVolume is GAS material.
+
+    // Define a new category
+    new G4UnitDefinition("kilovolt/cm","kV/cm","Electric field", kilovolt/cm);
+    new G4UnitDefinition("mm/sqrt(cm)","mm/sqrt(cm)","Diffusion", mm/sqrt(cm));
+
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", 
 				  "Control commands of geometry NextNew.");
@@ -109,6 +121,36 @@ namespace nexus {
 			    "If region is AD_HOC, z coord where particles are generated");
     specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
     specific_vertex_Z_cmd.SetUnitCategory("Length");
+
+    G4GenericMessenger::Command&  ELtransv_diff_cmd =
+      _msg->DeclareProperty("ELtransv_diff", _ELtransv_diff,
+			    "Tranvsersal diffusion in the EL region");
+    ELtransv_diff_cmd.SetParameterName("ELtransv_diff", true);
+    ELtransv_diff_cmd.SetUnitCategory("Diffusion");
+
+    G4GenericMessenger::Command&  ELlong_diff_cmd =
+      _msg->DeclareProperty("ELlong_diff", _ELlong_diff,
+			    "Longitudinal diffusion in the EL region");
+    ELlong_diff_cmd.SetParameterName("ELlong_diff", true);
+    ELlong_diff_cmd.SetUnitCategory("Diffusion");
+
+    G4GenericMessenger::Command& drift_transv_diff_cmd =
+      _msg->DeclareProperty("drift_transv_diff", _drift_transv_diff,
+			    "Tranvsersal diffusion in the drift region");
+    drift_transv_diff_cmd.SetParameterName("drift_transv_diff", true);
+    drift_transv_diff_cmd.SetUnitCategory("Diffusion");
+
+    G4GenericMessenger::Command& drift_long_diff_cmd =
+      _msg->DeclareProperty("drift_long_diff", _drift_long_diff,
+			    "Longitudinal diffusion in the drift region");
+    drift_long_diff_cmd.SetParameterName("drift_long_diff", true);
+    drift_long_diff_cmd.SetUnitCategory("Diffusion");
+
+    G4GenericMessenger::Command& El_field_cmd =
+      _msg->DeclareProperty("EL_field", _ELelectric_field,
+			    "Electric field in the EL region");
+    El_field_cmd.SetParameterName("EL_field", true);
+    El_field_cmd.SetUnitCategory("Electric field");
     
     // Calculate vertices for EL table generation
     G4GenericMessenger::Command& pitch_cmd = 
@@ -256,8 +298,8 @@ namespace nexus {
     field->SetCathodePosition(active_posz - active_length/2.); 
     field->SetAnodePosition(active_posz + active_length/2.);
     field->SetDriftVelocity(1. * mm/microsecond);
-    field->SetTransverseDiffusion(1. * mm/sqrt(cm));
-    field->SetLongitudinalDiffusion(.3 * mm/sqrt(cm));  
+    field->SetTransverseDiffusion(_drift_transv_diff);
+    field->SetLongitudinalDiffusion(_drift_long_diff);  
     G4Region* drift_region = new G4Region("DRIFT");
     drift_region->SetUserInformation(field);
     drift_region->AddRootLogicalVolume(active_logic);
@@ -288,10 +330,10 @@ namespace nexus {
       el_field->SetCathodePosition(_el_gap_z_pos - _el_gap_length/2.);
       el_field->SetAnodePosition  (_el_gap_z_pos + _el_gap_length/2.);
       el_field->SetDriftVelocity(2.5 * mm/microsecond);
-      el_field->SetTransverseDiffusion(1. * mm/sqrt(cm));
-      el_field->SetLongitudinalDiffusion(.5 * mm/sqrt(cm));
+      el_field->SetTransverseDiffusion(_ELtransv_diff);
+      el_field->SetLongitudinalDiffusion(_ELlong_diff);
       XenonGasProperties xgp(_pressure, _temperature);
-      el_field->SetLightYield(xgp.ELLightYield(34.5*kilovolt/cm)); //it's 2.3 kV/cm/bar
+      el_field->SetLightYield(xgp.ELLightYield(_ELelectric_field)); 
       G4Region* el_region = new G4Region("EL_REGION");
       el_region->SetUserInformation(el_field);
       el_region->AddRootLogicalVolume(el_gap_logic);
@@ -337,7 +379,7 @@ namespace nexus {
   void NextNewFieldCage::BuildAnodeGrid()
   {
     G4double anode_diam = _anode_quartz_diam; 
-    G4double pos_z_anode =  _pos_z_anode;
+    G4double pos_z_anode =  _el_gap_z_pos + _el_gap_length/2. +  _anode_quartz_thickness/2.+ 0.1*mm; // 0.1 mm is needed because EL is produced only if the PostStepVolume is GAS material.
   
     ///// ANODE ////// 
     
@@ -487,11 +529,6 @@ namespace nexus {
       new CylinderPointSampler(_tube_in_diam/2.- _reflector_thickness, 
     			       tube_length_buffer,  _reflector_thickness,
     			       0., G4ThreeVector (0., 0., buffer_tube_z_pos));
-
-    _anode_quartz_gen = 
-      new CylinderPointSampler(0.,_anode_quartz_thickness,_anode_quartz_diam/2., 
-			       0., G4ThreeVector (0., 0., _pos_z_anode));
-
   }
 
   G4ThreeVector NextNewFieldCage::GenerateVertex(const G4String& region) const
@@ -510,10 +547,6 @@ namespace nexus {
      else if (region == "REFLECTOR_BUFFER") {
       vertex = _reflector_buffer_gen->GenerateVertex("BODY_VOL");
     }
-     else if (region == "ANODE_QUARTZ") {
-      vertex = _anode_quartz_gen->GenerateVertex("BODY_VOL");
-    }
-
     else if (region == "ACTIVE") {
       vertex = _active_gen->GenerateVertex("BODY_VOL");
     } 
