@@ -122,13 +122,13 @@ namespace nexus {
     G4double db_thickness =_kdb_dimensions.z();
     ////Dice Boards placement
     //_dice_board_z_pos = support_plate_z_pos -_support_plate_thickness/2. -_z_kdb_displ +db_thickness/2.;
-    G4double dice_board_z_pos = _tracking_plane_z_pos + db_thickness/2.;
+    _dice_board_z_pos = _tracking_plane_z_pos + db_thickness/2.;
     
     G4PVPlacement* dice_board_physi;
     G4ThreeVector post;
     for (int i=0; i<_num_DBs; i++) {
       post = _DB_positions[i];
-      post.setZ(dice_board_z_pos);
+      post.setZ(_dice_board_z_pos);
       dice_board_physi = new G4PVPlacement(0, post, dice_board_logic,
 					   "DICE_BOARD", _mother_logic, false, i+1, false);
     }
@@ -140,7 +140,7 @@ namespace nexus {
     for (int i=0; i<_num_DBs; i++) {
       positn = _DB_positions[i];
       positn.setY(positn.y()- 10.*mm);
-      positn.setZ(dice_board_z_pos + _support_plate_front_buffer_thickness + _support_plate_thickness);
+      positn.setZ(_dice_board_z_pos + _support_plate_front_buffer_thickness + _support_plate_thickness);
       dice_board_physi = new G4PVPlacement(0, positn, plug_logic,"DB_PLUG",
 					   _mother_logic, false, i+1, false);
     }
@@ -173,12 +173,15 @@ namespace nexus {
 						    (_support_plate_tread_diam-_support_plate_front_buffer_diam)/2., 0., 
 						    G4ThreeVector(0., 0., support_plate_z_pos -_support_plate_thickness/2. +_support_plate_front_buffer_thickness/2.));
     _plug_gen = new BoxPointSampler(_plug_x, _plug_y, _plug_z,0.,
-				    G4ThreeVector(0.,0.,dice_board_z_pos + _support_plate_front_buffer_thickness + _support_plate_thickness),0);
+				    G4ThreeVector(0.,0.,_dice_board_z_pos + _support_plate_front_buffer_thickness + _support_plate_thickness),0);
 
      // Getting the support  volume over total
-    G4double body_vol = (_support_plate_thickness-_support_plate_front_buffer_thickness)*pi*(_support_plate_tread_diam/2.)*(_support_plate_tread_diam/2.);
-    G4double flange_vol = (_support_plate_thickness/2.)*pi*((_support_plate_diam/2.)*(_support_plate_diam/2.)-( _support_plate_tread_diam/2.)*( _support_plate_tread_diam/2.));
-    G4double buffer_vol = (_support_plate_front_buffer_thickness/2.)*pi*((_support_plate_tread_diam/2.)*(_support_plate_tread_diam/2.)-(_support_plate_front_buffer_diam/2.)*(_support_plate_front_buffer_diam/2.));
+    G4double body_vol = 
+      (_support_plate_thickness-_support_plate_front_buffer_thickness)*pi*(_support_plate_tread_diam/2.)*(_support_plate_tread_diam/2.);
+    G4double flange_vol = 
+      (_support_plate_thickness/2.)*pi*((_support_plate_diam/2.)*(_support_plate_diam/2.)-( _support_plate_tread_diam/2.)*( _support_plate_tread_diam/2.));
+    G4double buffer_vol = 
+      (_support_plate_front_buffer_thickness/2.)*pi*((_support_plate_tread_diam/2.)*(_support_plate_tread_diam/2.)-(_support_plate_front_buffer_diam/2.)*(_support_plate_front_buffer_diam/2.));
      G4double total_vol = body_vol + flange_vol + buffer_vol;
      _body_perc = body_vol / total_vol;
      _flange_perc =  (flange_vol + body_vol) / total_vol;
@@ -219,12 +222,11 @@ namespace nexus {
     } 
     // Dice Boards
     else if (region == "DICE_BOARD") {
-      G4ThreeVector ini_vertex = _kapton_dice_board->GenerateVertex(region);
+      G4ThreeVector ini_vertex = _kapton_dice_board->GenerateVertex("INSIDE");
       G4double rand = _num_DBs * G4UniformRand();
       G4ThreeVector db_pos = _DB_positions[int(rand)];
       vertex = ini_vertex + db_pos;
-      vertex.setZ(vertex.z() +_dice_board_z_pos);
-      
+      vertex.setZ(vertex.z() +_dice_board_z_pos);     
     }
     // PIGGY TAIL PLUG
     else if (region == "DB_PLUG") {

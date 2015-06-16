@@ -16,6 +16,7 @@
 #include <vector>
 
 class G4GenericMessenger;
+namespace nexus {class BoxPointSampler;}
 
 namespace nexus {
 
@@ -29,11 +30,12 @@ namespace nexus {
     /// Destructor
     ~NextNewKDB();
 
-    G4ThreeVector GetDimensions() const;
-    const std::vector<std::pair<int, G4ThreeVector> >& GetPositions();
-
     /// Builder
     virtual void Construct();
+  
+    G4ThreeVector GetDimensions() const;
+    const std::vector<std::pair<int, G4ThreeVector> >& GetPositions();
+    G4ThreeVector GenerateVertex(const G4String& region) const;
 
   private:
     G4int _rows, _columns;
@@ -46,6 +48,9 @@ namespace nexus {
     
     // Messenger for the definition of control commands
     G4GenericMessenger* _msg;    
+
+    // Vertex generator
+    BoxPointSampler* _dice_gen;
  
   };
 

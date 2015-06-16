@@ -9,10 +9,11 @@
 
 #include "NextNewKDB.h"
 
-#include "SiPM11.h"
+#include "SiPMSensl.h"
 #include "PmtSD.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
+#include "BoxPointSampler.h"
 
 #include <G4Box.hh>
 #include <G4VisAttributes.hh>
@@ -48,23 +49,31 @@ namespace nexus {
   NextNewKDB::~NextNewKDB()
   {
   }
+  
 
   void NextNewKDB::Construct()
   {
     // DIMENSIONS ///////////////////////////////////////////////////
 
+    SiPMSensl sipm;
+    sipm.Construct();
+   
+
     const G4double sipm_pitch = 10. * mm;
     const G4double coating_thickness = 0.1 * micrometer;
-    const G4double board_thickness = 0.3 * mm;
+    const G4double board_thickness = 0.3 * mm; // this is the real DB thickness
     const G4double board_side_reduction = .5 * mm;    
     const G4double db_x = _columns * sipm_pitch - 2. * board_side_reduction ;  
     const G4double db_y =    _rows * sipm_pitch - 2. * board_side_reduction ;
-    const G4double db_z = board_thickness;
+    //  const G4double db_z = board_thickness;
+    const G4double db_z = sipm.GetDimensions().z() + 1. * mm; // this is in order not to have volumes overlapping
    
     _dimensions.setX(db_x);
     _dimensions.setY(db_y);
     _dimensions.setZ(db_z);
 
+    // Vertex generator
+    _dice_gen = new BoxPointSampler(db_x, db_y, board_thickness, 0., G4ThreeVector(0., 0., 0.), 0);
 
     // KAPTON BOARD /////////////////////////////////////////////////
 
@@ -89,17 +98,14 @@ namespace nexus {
     G4LogicalVolume* coating_logic =
       new G4LogicalVolume(coating_solid, TPB, "DB_WLS_COATING");
 
-    G4double pos_z = (-db_z + coating_thickness) / 2.;//???????????????
+    G4double pos_z = (-db_z + coating_thickness) / 2.;
     new G4PVPlacement(0, G4ThreeVector(0.,0.,pos_z), coating_logic,
 		      "DB_WLS_COATING", board_logic, false, 0, false);
 
 
     // SILICON PMs //////////////////////////////////////////////////
 
-    SiPM11 sipm;
-    sipm.Construct();
     G4LogicalVolume* sipm_logic = sipm.GetLogicalVolume();
-
     pos_z = -db_z/2. + coating_thickness + (sipm.GetDimensions().z())/2.;
     G4double offset = sipm_pitch/2. - board_side_reduction;
     G4int sipm_no = 0;
@@ -113,7 +119,7 @@ namespace nexus {
         G4double pos_x = -db_x/2 + offset + j*sipm_pitch;
 
         new G4PVPlacement(0, G4ThreeVector(pos_x, pos_y, pos_z), 
-          sipm_logic, "SIPM11", board_logic, false, sipm_no, false);
+          sipm_logic, "SIPMSensl", board_logic, false, sipm_no, false);
 
         std::pair<int, G4ThreeVector> mypos;
         mypos.first = sipm_no;
@@ -148,6 +154,8 @@ namespace nexus {
       coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
       sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
+
+    // VERTEX GENERATOR
   }
 
   G4ThreeVector NextNewKDB::GetDimensions() const
@@ -160,5 +168,10 @@ namespace nexus {
     return _positions;
   }
 
+  G4ThreeVector NextNewKDB::GenerateVertex(const G4String& region) const
+  {
+    G4ThreeVector  vertex =_dice_gen->GenerateVertex(region);
+    return vertex;
+  }
 
 } // end namespace nexus
