@@ -26,7 +26,7 @@ namespace nexus {
   
   class HexagonPointSampler;
   class CylinderPointSampler;
-
+  class MuonsPointSampler;
   
   /// Geometry of the NEXT1-EL detector
     
@@ -46,6 +46,7 @@ namespace nexus {
     void Construct();
     void DefineMaterials();
     void BuildLab();
+    void BuildMuons();
     void BuildExtScintillator();
     void BuildVessel();
     void BuildFieldCage();
@@ -57,6 +58,7 @@ namespace nexus {
   private:
 
     HexagonPointSampler* _hexrnd;
+    MuonsPointSampler* _muons_sampling;
 
     // Pointers to materials definition
     G4Material* _air;       ///< Air
@@ -151,7 +153,7 @@ namespace nexus {
    G4double _max_step_size;
    G4double _sc_yield;
     
-    
+ 
     // Dimensions read through input parameters file
     //
 
@@ -164,7 +166,7 @@ namespace nexus {
     G4double _gate_transparency;
     G4ThreeVector _specific_vertex;
     G4double _specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z;
-
+    G4bool _muonsGenerator;
     
     // Positions in the detector geometry relevant for event vertex generation
     //

@@ -21,7 +21,9 @@
 #include "XenonGasProperties.h"
 #include "NextElDB.h"
 #include "CylinderPointSampler.h"
+#include "MuonsPointSampler.h"
 
+#include <G4Orb.hh>
 #include <G4Box.hh>
 #include <G4Tubs.hh>
 #include <G4UnionSolid.hh>
@@ -205,6 +207,12 @@ Next1EL::Next1EL():
   gate_transparency_cmd.SetParameterName("gate_transparency", false);
   gate_transparency_cmd.SetRange("gate_transparency>0 && gate_transparency<1");
    
+
+  //muons building
+  G4GenericMessenger::Command& muonsGenerator_cmd =_msg->DeclareProperty("muonsGenerator", _muonsGenerator,
+			"Build or not Muons");
+  muonsGenerator_cmd.SetParameterName("muonsGenerator", false);
+
 }
 
 
@@ -212,6 +220,7 @@ Next1EL::Next1EL():
 Next1EL::~Next1EL()
 {
   delete _hexrnd;
+  delete _muons_sampling;
   delete _msg;
   delete _cps;
 }
@@ -223,6 +232,8 @@ void Next1EL::Construct()
   // The following methods must be invoked in this particular
   // order since some of them depend on the previous ones
   BuildLab();
+  if(_muonsGenerator)
+    BuildMuons(); 
   if (_external_scintillator)
     BuildExtScintillator();
   BuildVessel();
@@ -295,6 +306,56 @@ void Next1EL::BuildLab()
   // (i.e., this is the volume that will be placed in the world)
   this->SetLogicalVolume(_lab_logic);
 }
+
+void Next1EL::BuildMuons()
+{
+  // MUONS /////////////////////////////////////////////////////////////
+  // This is just a volume of air surrounding the detector so that
+  // muons can be generated on the surface.
+  // 
+    
+
+  //  G4double xMuons =  _lab_size/10.;
+  //G4double yMuons = _lab_size/500.;
+  //G4double zMuons = _lab_size/5.;
+
+  G4double xMuons =  _lab_size/3;
+  G4double yMuons = _lab_size/500.;
+  G4double zMuons = _lab_size/2;
+  
+  G4double yMuonsOrigin = 400.;
+  
+  G4Box* muon_solid = 
+    new G4Box("MUONS", xMuons, yMuons, zMuons);
+  
+  //visualization sphere
+  //G4Orb * muon_solid_ref = new G4Orb ("MUONS_ref",25);
+  
+  G4LogicalVolume*  muon_logic = new G4LogicalVolume(muon_solid, _air, "MUONS");
+  //placing the sphere for visualization
+  //G4LogicalVolume*  muon_logic_ref = new G4LogicalVolume(muon_solid_ref, _air, "MUONS_ref");
+  
+  new G4PVPlacement(0, G4ThreeVector(0., yMuonsOrigin, 0.), muon_logic,
+		    "MUONS", _lab_logic, false, 0, true);
+
+  //to visualize the reference
+  //  new G4PVPlacement(0, G4ThreeVector(0., yMuonsOrigin, 0.), muon_logic_ref,
+  //		    "MUONS_ref", _lab_logic, false, 0, true);
+  
+  //  _muons_ref_position=  G4ThreeVector(0., yMuonsOrigin, 0.);
+  
+  //sampling position in plane
+  _muons_sampling = new MuonsPointSampler(xMuons, yMuonsOrigin, zMuons);
+  
+  // visualization
+  G4VisAttributes * vis_red_neus = new G4VisAttributes;
+  vis_red_neus->SetColor(1., 0., 0.);
+  vis_red_neus->SetForceSolid(true);
+  muon_logic->SetVisAttributes(vis_red_neus);
+  //  muon_logic_ref->SetVisAttributes(vis_red_neus);
+  
+}
+
 
 void Next1EL::BuildExtScintillator()
 {
@@ -1336,10 +1397,14 @@ G4ThreeVector Next1EL::GenerateVertex(const G4String& region) const
       if(_idx_table<=_table_vertices.size()){     
     	vertex =  _table_vertices[_idx_table-1];
       }
+  } else if (region == "MUONS") {
+    //generate muons sampling the plane 
+    vertex = _muons_sampling->GenerateVertex();
+    
   } else {
-    G4Exception("[Next1EL]", "GenerateVertex()", FatalException,
+      G4Exception("[Next1EL]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");     
-  } 
+    } 
    
   return vertex;
   
