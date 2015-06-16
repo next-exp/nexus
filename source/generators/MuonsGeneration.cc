@@ -84,7 +84,6 @@ MuonsGeneration::~MuonsGeneration()
 }
 
 
-
 void MuonsGeneration::SetParticleDefinition(G4String particle_name)
 {
   _particle_definition = 
