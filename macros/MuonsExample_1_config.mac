@@ -1,6 +1,7 @@
 ### --------------------------------------------------------
-###  NextNew: Configuration macro
-###  $Id: nexus_NEW.Kr.config.mac 10047 2015-01-23 17:07:30Z paola $
+### Example to run the muons Generator 
+### Author: Neus Lopez March <neus.lopez@ific.uv.es>    
+### date: 30 Jan 2014
 ### --------------------------------------------------------
 
 /run/verbose 0
@@ -28,8 +29,9 @@
 /Geometry/Next1EL/muonsGenerator true
 
 # ACTIONS
-/Actions/DefaultEventAction/energy_threshold 0.00000
-/Actions/DefaultEventAction/stringHist MuonsHist_1.root
+/Actions/MuonsEventAction/energy_threshold 0.00000
+/Actions/MuonsEventAction/stringHist MuonsHist_1.root
+
 # PHYSICS
 /PhysicsList/Nexus/clustering          false
 /PhysicsList/Nexus/drift               false
