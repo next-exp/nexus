@@ -44,6 +44,8 @@ namespace nexus {
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
     _msg->DeclareProperty("kdb_vis", _visibility, "Kapton Dice Boards Visibility");
+
+    _sipm = new SiPMSensl;
   }
 
   NextNewKDB::~NextNewKDB()
@@ -54,11 +56,9 @@ namespace nexus {
   void NextNewKDB::Construct()
   {
     // DIMENSIONS ///////////////////////////////////////////////////
-
-    SiPMSensl sipm;
-    sipm.Construct();
+    
+    _sipm->Construct();
    
-
     const G4double sipm_pitch = 10. * mm;
     const G4double coating_thickness = 0.1 * micrometer;
     const G4double board_thickness = 0.3 * mm; // this is the real DB thickness
@@ -66,7 +66,7 @@ namespace nexus {
     const G4double db_x = _columns * sipm_pitch - 2. * board_side_reduction ;  
     const G4double db_y =    _rows * sipm_pitch - 2. * board_side_reduction ;
     //  const G4double db_z = board_thickness;
-    const G4double db_z = sipm.GetDimensions().z() + 1. * mm; // this is in order not to have volumes overlapping
+    const G4double db_z = _sipm->GetDimensions().z() + 1. * mm; // this is in order not to have volumes overlapping
    
     _dimensions.setX(db_x);
     _dimensions.setY(db_y);
@@ -105,8 +105,8 @@ namespace nexus {
 
     // SILICON PMs //////////////////////////////////////////////////
 
-    G4LogicalVolume* sipm_logic = sipm.GetLogicalVolume();
-    pos_z = -db_z/2. + coating_thickness + (sipm.GetDimensions().z())/2.;
+    G4LogicalVolume* sipm_logic = _sipm->GetLogicalVolume();
+    pos_z = -db_z/2. + coating_thickness + (_sipm->GetDimensions().z())/2.;
     G4double offset = sipm_pitch/2. - board_side_reduction;
     G4int sipm_no = 0;
 
@@ -128,17 +128,6 @@ namespace nexus {
         sipm_no++;
       }
     }
-
-    /// OPTICAL SURFACES ////////////////////////////////////////////
-
-    // G4OpticalSurface* dboard_opsur = new G4OpticalSurface("DB");
-    // dboard_opsur->SetType(dielectric_metal);
-    // dboard_opsur->SetModel(unified);
-    // dboard_opsur->SetFinish(ground);
-    // dboard_opsur->SetSigmaAlpha(0.1);
-    // dboard_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
-    
-    // new G4LogicalSkinSurface("DB", board_logic, dboard_opsur);
 
     // SETTING VISIBILITIES   //////////
     if (_visibility) {

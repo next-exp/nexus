@@ -15,12 +15,11 @@
 /Actions/RegisterTrackingAction DEFAULT
 
 ### PHYSICS
-/PhysicsList/RegisterPhysics G4EmLivermorePhysics
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4DecayPhysics
 /PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
-#/PhysicsList/RegisterPhysics G4OpticalPhysics
-/PhysicsList/RegisterPhysics NexusStepLimiterBuilder
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 
 /nexus/RegisterMacro macros/NextNew.config.mac
