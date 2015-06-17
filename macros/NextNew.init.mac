@@ -11,7 +11,7 @@
 /Generator/RegisterGenerator ION_GUN
 
 /Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction FAST_SIM
+/Actions/RegisterEventAction DEFAULT
 /Actions/RegisterTrackingAction DEFAULT
 
 ### PHYSICS
