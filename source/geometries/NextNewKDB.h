@@ -16,6 +16,7 @@
 #include <vector>
 
 class G4GenericMessenger;
+namespace nexus {class SiPMSensl;}
 namespace nexus {class BoxPointSampler;}
 
 namespace nexus {
@@ -47,7 +48,10 @@ namespace nexus {
     G4bool _visibility;
     
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg;    
+    G4GenericMessenger* _msg;
+
+    // Instance of the SiPM class
+    SiPMSensl* _sipm;
 
     // Vertex generator
     BoxPointSampler* _dice_gen;

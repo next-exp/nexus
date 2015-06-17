@@ -43,7 +43,7 @@ namespace nexus {
     _tracking_plane_z_pos (284.1 *mm),
     //    _tracking_plane_z_pos (28.905 *cm),//_el_gap_z_pos (25.5 *cm) From drawings + _el_gap(1.4)/2 + _el_grid_thickness + _el_to_
     //    _dice_board_z_pos (282.25*mm), // its surface must be 2 mm away from the end of the anode plate --> pos_z_anode + anode_thickness/2. + 2.*mm = 284.1 *mm + half of DB thick
-    _z_kdb_displ (0.0 * cm), //distance between DB and suport plate( kdb_surface at the same level as support surface)
+    //   _z_kdb_displ (0.0 * cm), //distance between DB and support plate( kdb_surface at the same level as support surface)
     _cable_hole_width (45 * mm),
     _cable_hole_high (8 * mm),
     _plug_x (40. *mm),
