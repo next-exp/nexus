@@ -92,7 +92,7 @@ namespace nexus {
     new G4LogicalVolume(plastic_solid, plastic, "PLASTIC");
 
     new G4PVPlacement(0, G4ThreeVector(0, 0., 0.), plastic_logic,
-		      "PLASTIC", sipm_logic, false, 0, true);
+		      "PLASTIC", sipm_logic, false, 0, false);
 
     // ACTIVE WINDOW /////////////////////////////////////////////////
 
@@ -111,7 +111,7 @@ namespace nexus {
     G4double pos_z = -support_z/2. - active_depth/2.;
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., pos_z), active_logic,
-		      "PHOTODIODES", sipm_logic, false, 0, true);
+		      "PHOTODIODES", sipm_logic, false, 0, false);
     
     
     // OPTICAL SURFACES //////////////////////////////////////////////
