@@ -1,0 +1,31 @@
+
+### GEOMETRY
+/Geometry/PetalX/max_step_size 1.0 mm
+#/Geometry/PetalX/kdb_vis true
+
+### GENERATOR
+
+/Generator/SingleParticle/region OUTSIDE
+/Generator/SingleParticle/particle gamma
+/Generator/SingleParticle/min_energy 511. keV
+/Generator/SingleParticle/max_energy 511. keV
+/Generator/SingleParticle/min_costheta 0.995893
+/Generator/SingleParticle/max_costheta 1.
+/Generator/SingleParticle/min_phi 0.
+/Generator/SingleParticle/max_phi 6.28319
+
+
+### PHYSICS
+/PhysicsList/Nexus/clustering          false
+/PhysicsList/Nexus/drift               false
+/PhysicsList/Nexus/electroluminescence false
+
+
+### VERBOSITIES
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+
+### OUTPUT FILE
+/nexus/persistency/outputFile test.next
