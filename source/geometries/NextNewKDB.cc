@@ -72,8 +72,9 @@ namespace nexus {
     _dimensions.setY(db_y);
     _dimensions.setZ(db_z);
 
+    double vertex_displ = db_z/2. - board_thickness/2.;
     // Vertex generator
-    _dice_gen = new BoxPointSampler(db_x, db_y, board_thickness, 0., G4ThreeVector(0., 0., 0.), 0);
+    _dice_gen = new BoxPointSampler(db_x, db_y, board_thickness, 0., G4ThreeVector(0., 0., -vertex_displ), 0);
 
     // KAPTON BOARD /////////////////////////////////////////////////
 
@@ -159,7 +160,13 @@ namespace nexus {
 
   G4ThreeVector NextNewKDB::GenerateVertex(const G4String& region) const
   {
-    G4ThreeVector  vertex =_dice_gen->GenerateVertex(region);
+    G4ThreeVector vertex(0., 0., 0.);
+    if (region == "DICE_BOARD") {
+      vertex =_dice_gen->GenerateVertex("INSIDE");
+    } else {
+      G4Exception("[NextNewKDB]", "GenerateVertex()", FatalException,
+                  "Unknown vertex generation region!");     
+    }
     return vertex;
   }
 

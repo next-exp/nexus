@@ -222,7 +222,7 @@ namespace nexus {
     } 
     // Dice Boards
     else if (region == "DICE_BOARD") {
-      G4ThreeVector ini_vertex = _kapton_dice_board->GenerateVertex("INSIDE");
+      G4ThreeVector ini_vertex = _kapton_dice_board->GenerateVertex(region);
       G4double rand = _num_DBs * G4UniformRand();
       G4ThreeVector db_pos = _DB_positions[int(rand)];
       vertex = ini_vertex + db_pos;
