@@ -16,7 +16,7 @@
 #include <G4ThreeVector.hh>
 
 class G4OpticalSurface;
-
+class G4GenericMessenger;
 
 namespace nexus {
 
@@ -61,6 +61,11 @@ namespace nexus {
     CylinderPointSampler* _rear_cap_gen;
 
     G4double _front_body_perc, _fr_med_body_perc, _fr_med_re_body_perc;
+
+    G4bool _visibility;
+
+    //Messenger for configuration parameters
+    G4GenericMessenger* _msg;
 
   };
 

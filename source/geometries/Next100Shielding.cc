@@ -9,6 +9,8 @@
 
 #include "Next100Shielding.h"
 #include "MaterialsList.h"
+#include "Visibilities.h"
+
 #include <G4GenericMessenger.hh>
 
 #include <G4SubtractionSolid.hh>
@@ -52,7 +54,7 @@ namespace nexus {
     // Box thickness
     _lead_thickness (20. * cm),
     _steel_thickness (6. * mm),
-    _visibility (0)
+    _visibility (1)
 
   {
 
@@ -232,21 +234,22 @@ namespace nexus {
 
     // SETTING VISIBILITIES   //////////
     if (_visibility) {
-      G4VisAttributes grey(G4Colour(.3, .3, .3));
-      lead_box_logic->SetVisAttributes(grey);
-      G4VisAttributes steel(G4Colour(.88, .87, .86));
-      steel_box_logic->SetVisAttributes(steel);
-      G4VisAttributes antiox(G4Colour(.55, .09, .09));
-      antiox.SetForceSolid(true);
-      roof_logic->SetVisAttributes(antiox);
-      lat_beam_logic->SetVisAttributes(antiox);
-      struct_logic->SetVisAttributes(antiox);
-      //void_box_logic->SetVisAttributes(grey);
+      G4VisAttributes dark_grey_col = nexus::DarkGrey();
+      lead_box_logic->SetVisAttributes(dark_grey_col);
+      G4VisAttributes dark_red_col = nexus::DarkRed();
+      steel_box_logic->SetVisAttributes(dark_red_col);
+      G4VisAttributes antiox_col = nexus::BloodRed();
+      //  antiox.SetForceSolid(true);
+      roof_logic->SetVisAttributes(antiox_col);
+      lat_beam_logic->SetVisAttributes(antiox_col);
+      struct_logic->SetVisAttributes(antiox_col);
     }
     else {
       lead_box_logic->SetVisAttributes(G4VisAttributes::Invisible);
       steel_box_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      //void_box_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      roof_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      struct_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      lat_beam_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
 

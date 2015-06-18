@@ -9,8 +9,9 @@
 
 #include "NextNewPedestal.h"
 #include "MaterialsList.h"
-#include <G4GenericMessenger.hh>
+#include "Visibilities.h"
 
+#include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4VisAttributes.hh>
@@ -33,7 +34,8 @@ namespace nexus {
     _table_x (1200. *mm),
     _table_y (15. *mm),
     _table_z (2500. *mm),
-    _y_pos(-600. *mm)
+    _y_pos(-600. *mm),
+    _visibility(1)
     
   {
    
@@ -60,9 +62,9 @@ namespace nexus {
    
     // SETTING VISIBILITIES   //////////
     if (_visibility) {
-    G4VisAttributes steel_col(G4Colour(.88, .87, .86));
-    steel_col.SetForceSolid(true);
-    table_logic->SetVisAttributes(steel_col);
+      G4VisAttributes steel_col = nexus::LightGrey();
+      //   steel_col.SetForceSolid(true);
+      table_logic->SetVisAttributes(steel_col);
     }
     else {
       table_logic->SetVisAttributes(G4VisAttributes::Invisible);

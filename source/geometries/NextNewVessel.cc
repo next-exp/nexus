@@ -10,8 +10,9 @@
 #include "NextNewVessel.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
-#include <G4GenericMessenger.hh>
+#include "Visibilities.h"
 
+#include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4VisAttributes.hh>
@@ -83,6 +84,7 @@ namespace nexus {
     // Vessel gas
      _pressure(1. * bar),
     _temperature (303 * kelvin),
+    _visibility(1),
     _sc_yield(16670. * 1/MeV)
 
   {
@@ -269,16 +271,12 @@ void NextNewVessel::Construct()
 		      "VESSEL_GAS", vessel_logic, false, 0, false);
     
     // SETTING VISIBILITIES   //////////
+    vessel_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
     if (_visibility) {
-      G4VisAttributes titanium_col(G4Colour(.71, .69, .66));
-      //titanium_col.SetForceSolid(true);
+      G4VisAttributes titanium_col = nexus::TitaniumGrey();
+      //   titanium_col.SetForceSolid(true);
       vessel_logic->SetVisAttributes(titanium_col);
-      // G4VisAttributes gas_col(G4Colour(1., 1., 1.));
-      // gas_col.SetForceSolid(true);
-      // vessel_gas_logic->SetVisAttributes(gas_col);
-      vessel_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    }
-    else {
+    } else {
       vessel_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
 

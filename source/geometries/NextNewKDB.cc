@@ -14,6 +14,7 @@
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "BoxPointSampler.h"
+#include "Visibilities.h"
 
 #include <G4Box.hh>
 #include <G4VisAttributes.hh>
@@ -39,7 +40,7 @@ namespace nexus {
     BaseGeometry(),
     _rows(rows),
     _columns(columns),
-    _visibility (0)
+    _visibility (1)
   {
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
@@ -132,17 +133,14 @@ namespace nexus {
 
     // SETTING VISIBILITIES   //////////
     if (_visibility) {
-      G4VisAttributes silicon_col(G4Colour(1., 1., 0.));
-      // silicon_col.SetForceSolid(true);
-      sipm_logic->SetVisAttributes(silicon_col);
-      G4VisAttributes tpb_col(G4Colour(1., 1., 1.));
-      // tpb_col.SetForceSolid(true);
-      coating_logic->SetVisAttributes(tpb_col);
-      
-    }
-    else {
+      G4VisAttributes board_col = nexus::Yellow();
+      board_logic->SetVisAttributes(board_col);
+      G4VisAttributes tpb_col = nexus::DarkGreen();
+      tpb_col.SetForceSolid(true);
+      coating_logic->SetVisAttributes(tpb_col);      
+    } else {
+      board_logic->SetVisAttributes(G4VisAttributes::Invisible);
       coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
     // VERTEX GENERATOR

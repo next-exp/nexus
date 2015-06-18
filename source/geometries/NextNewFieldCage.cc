@@ -17,6 +17,7 @@
 #include "IonizationSD.h"
 #include "XenonGasProperties.h"
 #include "CylinderPointSampler.h"
+#include "Visibilities.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4PVPlacement.hh>
@@ -73,7 +74,7 @@ namespace nexus {
     //
     _ELelectric_field(34.5*kilovolt/cm), // it corresponds to 2.3 kV/cm/bar at 15 bar
     // Visibility
-    _visibility(0),
+    _visibility(1),
     // Step limiter
     _max_step_size(1.*mm),
     // EL field ON or OFF
@@ -162,17 +163,17 @@ namespace nexus {
 
     _msg->DeclareProperty("el_table_point_id", _el_table_point_id, "");
 
-    // declare colors to be used for visibilities
-    _grey_color = new G4VisAttributes;
-    _grey_color->SetColor(.5, .5, .5);
-    _red_color = new G4VisAttributes;
-    _red_color->SetColor(1., 0., 0.);
-    _light_blue_color = new G4VisAttributes;
-    _light_blue_color->SetColor(.6, .8, .79);
-    _blue_color = new G4VisAttributes;
-    _blue_color->SetColor(0., 0., 1.);
-    _green_color = new G4VisAttributes;
-    _green_color->SetColor(0., 1., 0.);
+    // // declare colors to be used for visibilities
+    // _grey_color = new G4VisAttributes;
+    // _grey_color->SetColor(.5, .5, .5);
+    // _red_color = new G4VisAttributes;
+    // _red_color->SetColor(1., 0., 0.);
+    // _light_blue_color = new G4VisAttributes;
+    // _light_blue_color->SetColor(.6, .8, .79);
+    // _blue_color = new G4VisAttributes;
+    // _blue_color->SetColor(0., 0., 1.);
+    // _green_color = new G4VisAttributes;
+    // _green_color->SetColor(0., 1., 0.);
   }
 
 
@@ -184,11 +185,11 @@ namespace nexus {
     delete _reflector_buffer_gen;
     delete _active_gen;
 
-    delete _grey_color;
-    delete _red_color;
-    delete _light_blue_color;
-    delete _blue_color;
-    delete _green_color;
+    // delete _grey_color;
+    // delete _red_color;
+    // delete _light_blue_color;
+    // delete _blue_color;
+    // delete _green_color;
   }
 
 
@@ -263,8 +264,8 @@ namespace nexus {
 		      "CATHODE_GRID", _mother_logic, false, 0, false);
     
     if (_visibility) {
-      //   _red_color->SetForceSolid(true);
-      diel_grid_logic->SetVisAttributes(_red_color);
+      G4VisAttributes cathode_col = nexus::Red();
+      diel_grid_logic->SetVisAttributes(cathode_col);
     }
   }
 
@@ -365,14 +366,15 @@ namespace nexus {
 
     /// Visibilities
     if (_visibility) {
-      _grey_color->SetForceSolid(true);
-      el_gap_logic->SetVisAttributes(_grey_color);
-      G4VisAttributes col(G4Colour(.32, .56, .93));//blue
-      col.SetForceSolid(true);
-      gate_logic->SetVisAttributes(col); 
+      G4VisAttributes gap_col = nexus::LightGrey();
+      //   gap_col.SetForceSolid(true);
+      el_gap_logic->SetVisAttributes(gap_col);
+      G4VisAttributes gate_col = nexus::LightBlue();
+      //    gate_col.SetForceSolid(true);
+      gate_logic->SetVisAttributes(gate_col); 
     } 
     else {         
-      el_gap_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      gate_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
   }
 
@@ -405,10 +407,15 @@ namespace nexus {
   			"ITO_ANODE", anode_logic, false, 0, false);
      
     if (_visibility) {
-      _red_color->SetForceSolid(true);
-      anode_logic->SetVisAttributes(_red_color);
-      _green_color->SetForceSolid(true);
-      tpb_anode_logic->SetVisAttributes(_green_color);
+      G4VisAttributes anode_col = nexus::Red();
+      // anode_col.SetForceSolid(true);
+      anode_logic->SetVisAttributes(anode_col);
+      G4VisAttributes tpb_col = nexus::DarkGreen();
+      //  tpb_col.SetForceSolid(true);
+      tpb_anode_logic->SetVisAttributes(tpb_col);
+    } else {
+      anode_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      tpb_anode_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
    
   }
@@ -500,16 +507,23 @@ namespace nexus {
 
     /// SETTING VISIBILITIES   //////////
     if (_visibility) {
-      _light_blue_color->SetForceSolid(true);    
-      drift_tube_logic->SetVisAttributes(_light_blue_color);
-      buffer_tube_logic->SetVisAttributes(_light_blue_color);
-      _blue_color->SetForceSolid(true);
-      reflector_drift_logic->SetVisAttributes(_blue_color);
-      reflector_buffer_logic->SetVisAttributes(_blue_color);
-      _green_color->SetForceSolid(true);
-      tpb_drift_logic->SetVisAttributes(_green_color);
-      tpb_buffer_logic->SetVisAttributes(_green_color);
-    } 
+      G4VisAttributes tube_col = nexus::LightBlue();    
+      drift_tube_logic->SetVisAttributes(tube_col);
+      buffer_tube_logic->SetVisAttributes(tube_col);
+      G4VisAttributes reflector_col = nexus::White();
+      reflector_drift_logic->SetVisAttributes(reflector_col);
+      reflector_buffer_logic->SetVisAttributes(reflector_col);
+      G4VisAttributes tpb_col = nexus::DarkGreen();
+      tpb_drift_logic->SetVisAttributes(tpb_col);
+      tpb_buffer_logic->SetVisAttributes(tpb_col);
+    } else {
+      drift_tube_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      buffer_tube_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      reflector_drift_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      reflector_buffer_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      tpb_drift_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      tpb_buffer_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
 
     /// VERTEX GENERATORS   //////////
     _drift_tube_gen  = 

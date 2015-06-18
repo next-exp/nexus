@@ -8,8 +8,9 @@
 // ---------------------------------------------------------------------------- 
 
 #include "NextNewCuCastle.h"
-#include <G4GenericMessenger.hh>
+#include "Visibilities.h"
 
+#include <G4GenericMessenger.hh>
 #include <G4SubtractionSolid.hh>
 #include <G4UnionSolid.hh>
 #include <G4LogicalVolume.hh>
@@ -35,7 +36,8 @@ namespace nexus {
     _x (1020. *mm),
     _y (900. *mm),
     _z (1440. *mm),
-    _thickness (60. *mm)    
+    _thickness (60. *mm),
+    _visibility(1)
   
   {
     /// Initializing the geometry navigator (used in vertex generation)
@@ -82,11 +84,10 @@ namespace nexus {
    
     // SETTING VISIBILITIES   //////////
     if (_visibility) {
-      G4VisAttributes copper_col(G4Colour(.72, .45, .20));
-      //steel_col.SetForceSolid(true);
+      G4VisAttributes copper_col = nexus::CopperBrown();
+      //   copper_col.SetForceSolid(true);
       cu_castle_logic->SetVisAttributes(copper_col);
-    }
-    else {
+    } else {
       cu_castle_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
 

@@ -12,6 +12,7 @@
 #include "MaterialsList.h"
 #include <G4GenericMessenger.hh>
 #include "OpticalMaterialProperties.h"
+#include "Visibilities.h"
 
 #include <G4Box.hh>
 #include <G4LogicalVolume.hh>
@@ -193,22 +194,21 @@ namespace nexus {
       sipm_logic->SetSensitiveDetector(sipmsd);
     }
 
-    // Visibilities
-    // if (_visibility) {
-    //   G4VisAttributes sipm_col(G4Colour(.40,.55,.55));
-    //   sipm_logic->SetVisAttributes(sipm_col);
-      G4VisAttributes active_col(G4Colour(0.,0.,1.));
-      active_col.SetForceSolid(true);
-      active_logic->SetVisAttributes(active_col);
-    //   G4VisAttributes plastic_col(G4Colour(.5,.5,.7));
-    //   plastic_col.SetForceSolid(true);
-    //   plastic_logic->SetVisAttributes(plastic_col);
-    // }
-    // else {
-    //   sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    //   active_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    //   plastic_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    // }
+      // Visibilities
+    if (_visibility) {
+      G4VisAttributes sipm_col = nexus::DirtyWhite();
+      sipm_logic->SetVisAttributes(sipm_col);
+      G4VisAttributes blue_col = nexus::Blue();
+      blue_col.SetForceSolid(true);
+      active_logic->SetVisAttributes(blue_col);
+      G4VisAttributes plastic_col = nexus::Lilla();
+      plastic_col.SetForceSolid(true);
+      plastic_logic->SetVisAttributes(plastic_col);
+    } else {
+      sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      active_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      plastic_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
   }
   
   

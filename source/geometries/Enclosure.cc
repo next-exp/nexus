@@ -12,6 +12,7 @@
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "CylinderPointSampler.h"
+#include "Visibilities.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
@@ -51,7 +52,8 @@ namespace nexus{
     //   _enclosure_tpb_thickness(1.*micrometer),
     _pmt_base_diam (47. *mm),
     _pmt_base_thickness (5. *mm),
-    _pmt_base_z (50. *mm) //distance from window
+    _pmt_base_z (50. *mm), //distance from window
+    _visibility(1)
   {
     /// Initializing the geometry navigator (used in vertex generation)
     _geom_navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
@@ -151,27 +153,19 @@ namespace nexus{
      
      /////  SETTING VISIBILITIES   //////////   
      if (_visibility) { 
-       G4VisAttributes copper_col(G4Colour(.58, .36, .16));
-       //copper_col.SetForceSolid(true);
+       G4VisAttributes copper_col = nexus::CopperBrown();
        enclosure_logic->SetVisAttributes(copper_col);
-       G4VisAttributes Vacuum_col(G4Colour(.48,.45,.58));
-       // Vacuum_col.SetForceSolid(true);
-       enclosure_gas_logic->SetVisAttributes(Vacuum_col);  
-       enclosure_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
-       G4VisAttributes Sapphire_col(G4Colour(.8,.8,1.));
-       Sapphire_col.SetForceSolid(true);
-       enclosure_window_logic->SetVisAttributes(Sapphire_col);
-       G4VisAttributes Pad_col(G4Colour(.6,.9,.2));
-       Pad_col.SetForceSolid(true);
-       enclosure_pad_logic->SetVisAttributes(Pad_col);
-       G4VisAttributes Base_col(G4Colour(1.,.84,0.));
-       Base_col.SetForceSolid(true);
-       pmt_base_logic->SetVisAttributes(Base_col);
-
-     }
-     else {
-       enclosure_logic->SetVisAttributes(G4VisAttributes::Invisible);     
-       enclosure_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);    
+       G4VisAttributes sapphire_col = nexus::Lilla();
+       //     sapphire_col.SetForceSolid(true);
+       enclosure_window_logic->SetVisAttributes(sapphire_col);
+       G4VisAttributes pad_col = nexus::LightGreen();
+       pad_col.SetForceSolid(true);
+       enclosure_pad_logic->SetVisAttributes(pad_col);
+       G4VisAttributes base_col = nexus::Yellow();
+       base_col.SetForceSolid(true);
+       pmt_base_logic->SetVisAttributes(base_col);
+     } else {
+       enclosure_logic->SetVisAttributes(G4VisAttributes::Invisible);        
        enclosure_window_logic->SetVisAttributes(G4VisAttributes::Invisible);
        enclosure_pad_logic->SetVisAttributes(G4VisAttributes::Invisible);
        pmt_base_logic->SetVisAttributes(G4VisAttributes::Invisible);

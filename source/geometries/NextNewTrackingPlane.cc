@@ -9,8 +9,8 @@
 
 #include "NextNewTrackingPlane.h"
 #include "MaterialsList.h"
-#include <G4GenericMessenger.hh>
 #include "OpticalMaterialProperties.h"
+#include "Visibilities.h"
 
 #include <G4PVPlacement.hh>
 #include <G4VisAttributes.hh>
@@ -23,6 +23,7 @@
 #include <G4LogicalSkinSurface.hh>
 #include <G4NistManager.hh>
 #include <Randomize.hh>
+#include <G4GenericMessenger.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
@@ -60,7 +61,7 @@ namespace nexus {
     _dice_side (79.*mm),
     _dice_gap (1. *mm),// distance between dices
    
-    _visibility (0)
+    _visibility (1)
   {
     /// Initializing the geometry navigator (used in vertex generation)
     _geom_navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
@@ -146,20 +147,17 @@ namespace nexus {
     }
     
    
-    //// SETTING VISIBILITIES   //////////    
+   //// SETTING VISIBILITIES   //////////    
     if (_visibility) {
-      G4VisAttributes dark_green_col(G4Colour(0., .6, 0.));
-      dice_board_logic->SetVisAttributes(dark_green_col);
-      G4VisAttributes Copper_col(G4Colour(.72, .45, .20));
-      //Copper_col.SetForceSolid(true);
-      support_plate_logic->SetVisAttributes(Copper_col);
-      G4VisAttributes plug_col(G4Colour(1., 1., .8));
-      plug_logic->SetVisAttributes(plug_col);
-     
+      G4VisAttributes light_brown_col = nexus::CopperBrown();
+      support_plate_logic->SetVisAttributes(light_brown_col);
+      G4VisAttributes dirty_white_col =nexus::DirtyWhite();
+      dirty_white_col.SetForceSolid(true);
+      plug_logic->SetVisAttributes(dirty_white_col);    
     }
     else {
-      dice_board_logic->SetVisAttributes(G4VisAttributes::Invisible);
       support_plate_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      plug_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
 

@@ -10,6 +10,7 @@
 #include "NextNewEnergyPlane.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
+#include "Visibilities.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4PVPlacement.hh>
@@ -169,12 +170,14 @@ namespace nexus {
    
     /////  SETTING VISIBILITIES   //////////
     if (_visibility) {
-      G4VisAttributes copper_col(G4Colour(.72, .45, .20));
-      //copper_col.SetForceSolid(true);
-      carrier_plate_logic->SetVisAttributes(copper_col);      
-    }
-    else {
+      G4VisAttributes brown_col = nexus::CopperBrown();
+      carrier_plate_logic->SetVisAttributes(brown_col);
+      G4VisAttributes green_col = nexus::DarkGreen();
+      green_col.SetForceSolid(true);
+      tpb_logic->SetVisAttributes(green_col); 
+    } else {
       carrier_plate_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      tpb_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
     
     // VERTEX GENERATORS   //////////

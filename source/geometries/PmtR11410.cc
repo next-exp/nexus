@@ -12,6 +12,7 @@
 #include "OpticalMaterialProperties.h"
 #include "PmtSD.h"
 #include "CylinderPointSampler.h"
+#include "Visibilities.h"
 
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
@@ -27,6 +28,7 @@
 #include <G4Colour.hh>
 #include <Randomize.hh>
 #include <G4OpticalSurface.hh>
+#include <G4GenericMessenger.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
@@ -46,8 +48,11 @@ namespace nexus {
     _body_thickness (.5 * mm),       // To be checked
     _window_thickness (2. * mm),
     _photocathode_diam (64. * mm),
-    _photocathode_thickness (.1 * mm)
+    _photocathode_thickness (.1 * mm),
+    _visibility(1)
   {
+    _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
+    _msg->DeclareProperty("PmtR11410_vis", _visibility, "NEW PMTs Visibility");
   }
   
 
@@ -144,16 +149,19 @@ namespace nexus {
 
 
     // VISIBILITIES //////////////////////////////////////////////////
-
-    G4VisAttributes grey(G4Colour(.7, .7, .7));
-    grey.SetForceSolid(true);
-    pmt_logic->SetVisAttributes(grey);
     pmt_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    window_logic->SetVisAttributes(G4VisAttributes::Invisible);
-
-    G4VisAttributes brown(G4Colour(.93, .87, .8));
-    brown.SetForceSolid(true);
-    photocathode_logic->SetVisAttributes(brown);
+    if (_visibility) {
+      G4VisAttributes grey(G4Colour(.7, .7, .7));
+      grey.SetForceSolid(true);
+      pmt_logic->SetVisAttributes(grey);
+      window_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      G4VisAttributes brown(G4Colour(.93, .87, .8));
+      brown.SetForceSolid(true);
+      photocathode_logic->SetVisAttributes(brown);
+    } else {
+      pmt_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      photocathode_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
 
 
     // VERTEX GENERATORS /////////////////////////////////////////////
