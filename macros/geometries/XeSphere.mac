@@ -4,5 +4,5 @@
 ### --------------------------------------------------------
 
 /Geometry/XeSphere/LXe false
-/Geometry/XeSphere/pressure 15. atmosphere
+/Geometry/XeSphere/pressure 15. bar
 /Geometry/XeSphere/radius 10. m

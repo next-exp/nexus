@@ -24,7 +24,7 @@
 
 
 ### ACTIONS
-/Actions/FastSimEventAction/energy_threshold 0.0
+/Actions/FastSimEventAction/energy_threshold 0.0 MeV
 
 
 ### PHYSICS

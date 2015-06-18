@@ -10,7 +10,7 @@
 /Generator/RegisterGenerator SINGLE_PARTICLE
 
 /Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterRunAction DEFAULT
+/Actions/RegisterEventAction DEFAULT
 
 /nexus/historyFile myHistory.macro
 
