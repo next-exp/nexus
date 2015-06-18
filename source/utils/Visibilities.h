@@ -21,6 +21,10 @@ namespace nexus {
   { G4Colour myColour; G4Colour::GetColour("white", myColour); G4VisAttributes myAttr(myColour); return myAttr;}
   static G4VisAttributes Red()
   { G4Colour myColour(1., 0., 0.); G4VisAttributes myAttr(myColour); return myAttr;}
+  static G4VisAttributes DarkRed()
+  { G4Colour myColour(.88, .87, .86); G4VisAttributes myAttr(myColour); return myAttr;}
+  static G4VisAttributes BloodRed()
+  { G4Colour myColour(.55, .09, .09); G4VisAttributes myAttr(myColour); return myAttr;}
   static G4VisAttributes DarkGreen()
   { G4Colour myColour(0., .6, 0.); G4VisAttributes myAttr(myColour); return myAttr;}
    static G4VisAttributes LightGreen()
@@ -37,8 +41,12 @@ namespace nexus {
   { G4Colour myColour(.6, .8, .79); G4VisAttributes myAttr(myColour); return myAttr;}
   static G4VisAttributes Lilla()
   { G4Colour myColour(.5,.5,.7); G4VisAttributes myAttr(myColour); return myAttr;}
+  static G4VisAttributes DarkGrey()
+  { G4Colour myColour(.3, .3, .3); G4VisAttributes myAttr(myColour); return myAttr;}
    static G4VisAttributes LightGrey()
   { G4Colour myColour(.7,.7,.7); G4VisAttributes myAttr(myColour); return myAttr;}
+   static G4VisAttributes TitaniumGrey()
+  { G4Colour myColour(.71, .69, .66); G4VisAttributes myAttr(myColour); return myAttr;}
 
   
     
