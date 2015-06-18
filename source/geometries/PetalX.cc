@@ -36,7 +36,9 @@ namespace nexus {
     BaseGeometry(),
 
     // Detector dimensions
-    det_thickness_(1.*cm),
+    //    vacuum_thickn_(1.*mm),
+    //   outer_wall_thickn_(3.*mm),
+    det_thickness_(1.*mm),
     det_size_(20.*cm),
     active_size_ (10.*cm)
 
@@ -73,11 +75,34 @@ namespace nexus {
     lXe_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
     lXe_->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe());
   
-      BuildDetector();
-      BuildLXe() ;
-      BuildActive();
-      BuildSiPMPlane();
+    BuildDetector();
+    BuildLXe() ;
+    BuildActive();
+    BuildSiPMPlane();
   }
+
+  // void PetalX::BuildOuterWall() 
+  // {
+  //   G4Box* outwall_solid = 
+  //     new G4Box("OUTER_WALL", (det_size_+2.*mm)/2., (det_size_+2.*mm)/2., (det_size_+2.*mm)/2.);
+
+  //   G4Material* steel = MaterialsList::Steel();
+    
+  //   outwall_logic_ = new G4LogicalVolume(outwall_solid, steel, "OUTER_WALL");
+  //   outwall_logic_->SetVisAttributes(G4VisAttributes::Invisible);
+  //   new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), outwall_logic_,
+  // 		      "OUTER_WALL", lab_logic_, false, 0, true);
+
+  //     G4Box* vacuum_solid = 
+  //     new G4Box("VACUUM", (det_size_+ 2.*mm - outer_wall_thick_*2)/2., (det_size_+2.*mm)/2., (det_size_+2.*mm)/2.);
+
+  //   G4Material* steel = MaterialsList::Steel();
+    
+  //   outwall_logic_ = new G4LogicalVolume(outwall_solid, steel, "VACUUM");
+  //   outwall_logic_->SetVisAttributes(G4VisAttributes::Invisible);
+  //   new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), outwall_logic_,
+  // 		      "VACUUM", lab_logic_, false, 0, true);
+  // }
 
   void PetalX::BuildDetector() 
   {

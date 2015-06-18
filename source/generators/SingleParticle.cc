@@ -141,17 +141,19 @@ void SingleParticle::GeneratePrimaryVertex(G4Event* event)
     G4bool mom_dir = false;
     while (mom_dir == false) {
       G4double cosTheta  = 2.*G4UniformRand()-1.;
-      G4double sinTheta2 = 1. - cosTheta*cosTheta;
-      if( sinTheta2 < 0.)  sinTheta2 = 0.;
-      G4double sinTheta  = std::sqrt(sinTheta2); 
-      G4double phi = twopi*G4UniformRand();
-      if (_costheta_max < 0.77){    
-	mom_dir = true;
-	_momentum_direction = G4ThreeVector(sinTheta*std::cos(phi),
-					    sinTheta*std::sin(phi), cosTheta).unit();
-	px = pmod * _momentum_direction.x();
-	py = pmod * _momentum_direction.y();
-	pz = pmod * _momentum_direction.z();
+      if (cosTheta > _costheta_min && cosTheta < _costheta_max){   
+	G4double sinTheta2 = 1. - cosTheta*cosTheta;
+	if( sinTheta2 < 0.)  sinTheta2 = 0.;
+	G4double sinTheta  = std::sqrt(sinTheta2); 
+	G4double phi = twopi*G4UniformRand();
+	  if (phi > _phi_min && phi < _phi_max){   	
+	    mom_dir = true;
+	    _momentum_direction = G4ThreeVector(sinTheta*std::cos(phi),
+						sinTheta*std::sin(phi), cosTheta).unit();
+	    px = pmod * _momentum_direction.x();
+	    py = pmod * _momentum_direction.y();
+	    pz = pmod * _momentum_direction.z();
+	  }
       }
     }
   }
