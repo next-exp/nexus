@@ -60,18 +60,16 @@ _energy_min(0.), _energy_max(0.), _geom(0), _momentum_X(0.),
 			"Set the region of the geometry where the vertex will be generated.");
   
   /// Temporary
-  G4GenericMessenger::Command&  momentum_X_cmd =
-    _msg->DeclareProperty("momentum_X", _momentum_X,
-   			  "x coord of momentum");
-  G4GenericMessenger::Command&  momentum_Y_cmd =
-    _msg->DeclareProperty("momentum_Y", _momentum_Y,
-   			  "y coord of momentum");
-  G4GenericMessenger::Command&  momentum_Z_cmd =
-    _msg->DeclareProperty("momentum_Z", _momentum_Z,
-   			  "z coord of momentum");
+  _msg->DeclareProperty("momentum_X", _momentum_X,
+			"x coord of momentum");
+  _msg->DeclareProperty("momentum_Y", _momentum_Y,
+			"y coord of momentum");
+  _msg->DeclareProperty("momentum_Z", _momentum_Z,
+			"z coord of momentum");
   
   
-  DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
+  DetectorConstruction* detconst =
+    (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
   _geom = detconst->GetGeometry();
   
 }

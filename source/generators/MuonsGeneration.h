@@ -9,7 +9,7 @@
 ///  Copyright (c) 2015 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __MUONS_GEMERATION__
+#ifndef __MUONS_GENERATION__
 #define __MUONS_GENERATION__
 
 #include <G4VPrimaryGenerator.hh>
@@ -58,11 +58,13 @@ namespace nexus {
 
     G4String _region;
 
+    const BaseGeometry* _geom; ///< Pointer to the detector geometry
+
     G4double _momentum_X;
     G4double _momentum_Y;
     G4double _momentum_Z;
 
-    const BaseGeometry* _geom; ///< Pointer to the detector geometry
+    
   };
 
 } // end namespace nexus
