@@ -162,9 +162,6 @@ void MuonsGeneration::GeneratePrimaryVertex(G4Event* event)
   vertex->SetPrimary(particle);
   event->AddPrimaryVertex(vertex);
   
-  G4VUserPrimaryVertexInformation *getinfo = vertex->GetUserInformation();
-  AddUserInfoToPV *my_getinfo = dynamic_cast<AddUserInfoToPV*>(getinfo);
-  
 }
 
 G4double MuonsGeneration::RandomEnergy() const
