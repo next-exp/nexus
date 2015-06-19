@@ -91,6 +91,7 @@ namespace nexus {
     G4int _nevt; ///< Event ID
     G4int _start_id; ///< ID for the first event in file
     G4bool _first_evt; ///< true only for the first event of the run
+
     G4bool _hdf5dump; ///< if true write to hdf5 file
 
     HDF5Writer* _h5writer;  ///< Event writer to hdf5 file

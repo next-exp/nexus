@@ -199,6 +199,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     gate::MCParticle* ipart = new gate::MCParticle();
     ipart->SetPDG(trj->GetPDGEncoding());
     ipart->SetLabel(trj->GetParticleName());
+
     
     G4int trackid = trj->GetTrackID();
     ipart->SetID(trj->GetTrackID());
@@ -209,9 +210,9 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     G4ThreeVector ini_xyz = trj->GetInitialPosition();
     G4double ini_t = trj->GetInitialTime(); 
     ipart->SetInitialVtx(gate::Vector4D(ini_xyz.x(), ini_xyz.y(), ini_xyz.z(), ini_t));
-
     G4ThreeVector xyz = trj->GetFinalPosition();
     G4double t = trj->GetFinalTime();
+
     ipart->SetFinalVtx(gate::Vector4D(xyz.x(), xyz.y(), xyz.z(), t));
     
     G4String ini_volume = trj->GetInitialVolume();
@@ -432,6 +433,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     wf->SetData(data);
     isnr->SetAmplitude(amplitude);
 
+
     // Add the sensor hit to the ate event
     ievt->AddMCSensHit(isnr);    
   }
@@ -460,8 +462,10 @@ G4bool PersistencyManager::Store(const G4Run*)
   std::stringstream ss;
   ss << num_events;
 
+
   grun.store("num_events", ss.str());
   grun.SetNumEvents((int)_saved_evts);
+
   _writer->WriteRunInfo(grun);
 
   return true;

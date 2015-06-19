@@ -244,7 +244,6 @@ if not env['LIBPATH']:
     
  #   env.Append(LIBS = ['gsl','gslcblas'])
 
-
 #    if not conf.CheckLib(library='GSL', language='CXX', autoadd=0):
 #        Abort('GSL library not found.')
 ## ##################################################################
