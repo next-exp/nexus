@@ -12,6 +12,7 @@
 /Geometry/NextNew/elfield 0
 /Geometry/NextNew/max_step_size 1. mm
 /Geometry/NextNewOpticalGeometry/pressure 15. bar
+/Geometry/NextNew/field_cage_vis true
 
 ### Generation
 /Generator/SingleParticle/particle e-
