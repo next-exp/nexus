@@ -9,6 +9,7 @@
 
 #include "Next100Vessel.h"
 #include "MaterialsList.h"
+#include "Visibilities.h"
 #include "OpticalMaterialProperties.h"
 #include <G4GenericMessenger.hh>
 
@@ -248,7 +249,7 @@ namespace nexus {
 
     // SETTING VISIBILITIES   //////////
     if (_visibility) {
-      G4VisAttributes grey(G4Colour(.7, .7, .7));
+      G4VisAttributes grey = DarkGrey();
       //grey.SetForceSolid(true);
       vessel_logic->SetVisAttributes(grey);
       //grey.SetForceSolid(true);

@@ -9,6 +9,7 @@
 
 #include "Next100TrackingPlane.h"
 #include "MaterialsList.h"
+#include "Visibilities.h"
 #include <G4GenericMessenger.hh>
 #include "OpticalMaterialProperties.h"
 
@@ -124,7 +125,7 @@ namespace nexus {
     
 
     if (_visibility) {
-      G4VisAttributes grey_col(G4Colour(.89, .89, .89));
+      G4VisAttributes grey_col = nexus:: LightGrey();
       grey_col.SetForceSolid(true);
       support_plate_logic->SetVisAttributes(grey_col);
     }

@@ -18,6 +18,7 @@
 #include "OpticalMaterialProperties.h"
 #include "MaterialsList.h"
 #include "XenonGasProperties.h"
+#include "Visibilities.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
@@ -215,12 +216,11 @@ namespace nexus {
 
     /// Visibilities
     if (_grids_visibility) {
-      G4VisAttributes light_blue(G4Colour(0.5, 0.5, .8));
+      G4VisAttributes light_blue = nexus::LightBlue();
       light_blue.SetForceSolid(true);
       el_gap_logic->SetVisAttributes(light_blue);
       // grids are white
-    }
-    else {
+    } else {
       el_gap_logic->SetVisAttributes(G4VisAttributes::Invisible);
       diel_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }

@@ -9,6 +9,7 @@
 
 #include "Next100FieldCage.h"
 #include "MaterialsList.h"
+#include "Visibilities.h"
 #include <G4GenericMessenger.hh>
 #include "OpticalMaterialProperties.h"
 
@@ -39,7 +40,7 @@ namespace nexus {
     // Internal reflector thickness
     _refl_thickn (.1 * mm),
     _tpb_thickn (1 * micrometer),
-    _visibility (0)
+    _visibility (1)
   {
 
     /// Messenger
@@ -106,11 +107,10 @@ namespace nexus {
 
     // SETTING VISIBILITIES   //////////
     if (_visibility) {
-      G4VisAttributes light_blue(G4Colour(0., 0., .7));
-      G4VisAttributes blue(G4Colour(0., 0., 1.));
+      G4VisAttributes light_blue = nexus::LightBlue();
+      G4VisAttributes blue = nexus::Blue();
       //blue.SetForceSolid(true);
       //light_blue.SetForceSolid(true);
-
       field_cage_logic->SetVisAttributes(light_blue);
       reflector_logic->SetVisAttributes(blue);
     }

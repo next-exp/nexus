@@ -9,6 +9,8 @@
 
 #include "Next100Ics.h"
 #include "MaterialsList.h"
+#include "Visibilities.h"
+
 #include <G4GenericMessenger.hh>
 
 #include <G4SubtractionSolid.hh>
@@ -153,7 +155,7 @@ namespace nexus {
 
     // SETTING VISIBILITIES   //////////
     if (_visibility) {
-      G4VisAttributes copper_col(G4Colour(.72, .45, .20));
+      G4VisAttributes copper_col = nexus::CopperBrown();
       copper_col.SetForceSolid(true);
       ics_logic->SetVisAttributes(copper_col);
     }

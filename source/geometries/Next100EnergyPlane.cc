@@ -10,6 +10,8 @@
 #include "Next100EnergyPlane.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
+#include "Visibilities.h"
+
 #include <G4GenericMessenger.hh>
 
 #include <G4PVPlacement.hh>
@@ -196,27 +198,20 @@ namespace nexus {
 
     /////////////////////////////////////
     //  SETTING VISIBILITIES   //////////
-
+    enclosure_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    enclosure_window_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    enclosure_pad_logic->SetVisAttributes(G4VisAttributes::Invisible);
     if (_visibility) {
-      G4VisAttributes copper_col(G4Colour(.72, .45, .20));
+      G4VisAttributes copper_col = CopperBrown();
       copper_col.SetForceSolid(true);
       carrier_plate_logic->SetVisAttributes(copper_col);
 
-      G4VisAttributes copper_col2(G4Colour(.58, .36, .16));
+      G4VisAttributes enclosure_col = nexus::Brown();
       //copper_col2.SetForceSolid(true);
-      enclosure_logic->SetVisAttributes(copper_col2);
-
-      enclosure_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      enclosure_window_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      enclosure_pad_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    }
-
-    else {
+      enclosure_logic->SetVisAttributes(enclosure_col);      
+    } else {
       carrier_plate_logic->SetVisAttributes(G4VisAttributes::Invisible);
       enclosure_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      enclosure_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      enclosure_window_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      enclosure_pad_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
 
