@@ -33,7 +33,7 @@ namespace nexus {
   using namespace CLHEP;
   
   SiPMSensl::SiPMSensl(): BaseGeometry(),
-		    _visibility(0)
+		    _visibility(1)
 
   {
     /// Messenger

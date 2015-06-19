@@ -9,8 +9,9 @@
 
 #include "NextNewIcs.h"
 #include "MaterialsList.h"
-#include <G4GenericMessenger.hh>
+#include "Visibilities.h"
 
+#include <G4GenericMessenger.hh>
 #include <G4SubtractionSolid.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
@@ -133,14 +134,14 @@ namespace nexus {
 
 
     // SETTING VISIBILITIES   //////////
-    //if (_visibility) {
-    G4VisAttributes copper_col(G4Colour(.72, .45, .20));
-    // copper_col.SetForceSolid(true);
-    ics_logic->SetVisAttributes(copper_col);
-    // }
-      //else {
-      //ics_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    // }
+    if (_visibility) {
+      G4VisAttributes copper_col = nexus::CopperBrown();
+      // copper_col.SetForceSolid(true);
+      ics_logic->SetVisAttributes(copper_col);
+    }
+    else {
+      ics_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
 
 
     // VERTEX GENERATORS   //////////
