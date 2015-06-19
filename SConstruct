@@ -204,10 +204,17 @@ if not env['LIBPATH']:
         Abort('ROOT libraries could not be found.')
 
     ## GATE configuration --------------------------   -------
+<<<<<<< HEAD
     
     if env['GATE_DIR'] != NULL_PATH:
         env.PrependENVPath('PATH', env['GATE_DIR'])
 
+=======
+
+    if env['GATE_DIR'] != NULL_PATH:
+        env.PrependENVPath('PATH', env['GATE_DIR'])
+    
+>>>>>>> petalx links now with GATE instead of irene. The PersistencyManager generates as output a GATE dst.
     env['GATE_DIR'] = os.environ['GATE_DIR']
     
     env.Append( CPPPATH = [env['GATE_DIR']] )
@@ -220,9 +227,17 @@ if not env['LIBPATH']:
         Abort('GATE headers not found.')
     
     env.Append(LIBS = ['GATE','GATEIO'])
+<<<<<<< HEAD
 
     if env['HDF5_DIR'] != NULL_PATH:
         env.PrependENVPath('PATH', env['HDF5_DIR'])
+=======
+<<<<<<< HEAD
+     
+    if env['HDF5_LIB'] != NULL_PATH:
+        env.PrependENVPath('PATH', env['HDF5_LIB'])
+      
+>>>>>>> petalx links now with GATE instead of irene. The PersistencyManager generates as output a GATE dst.
     try: 
         env['HDF5_LIB'] = os.environ['HDF5_LIB']
         env.Append( LIBPATH = [env['HDF5_LIB']] )
@@ -246,6 +261,17 @@ if not env['LIBPATH']:
 #    if not conf.CheckLib(library='GSL', language='CXX', autoadd=0):
 #        Abort('GSL library not found.')
 
+<<<<<<< HEAD
+=======
+=======
+
+    if not conf.CheckLib(library='GATE', language='CXX', autoadd=0):
+        Abort('GATE library not found.')
+>>>>>>> petalx links now with GATE instead of irene. The PersistencyManager generates as output a GATE dst.
+
+ #   if not conf.CheckLib(library='GSL', language='CXX', autoadd=0):
+  #      Abort('GSL library not found.')
+>>>>>>> petalx links now with GATE instead of irene. The PersistencyManager generates as output a GATE dst.
 ## ##################################################################
     env = conf.Finish()
 

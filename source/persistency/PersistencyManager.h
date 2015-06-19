@@ -98,7 +98,6 @@ namespace nexus {
     HDF5Writer* _h5writer;  ///< Event writer to hdf5 file
 
     std::pair<G4int, G4double> _event_info;
-
   };
 
 
