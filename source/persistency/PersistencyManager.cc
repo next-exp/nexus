@@ -406,6 +406,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 
     isnr->SetPosition(gate::Point3D(xyz.x(), xyz.y(), xyz.z()));
     
+
     if (hit->GetPmtID()<1000) isnr->SetSensorType(gate::PMT);
     else isnr->SetSensorType(gate::SIPM);
 
