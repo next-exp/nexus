@@ -38,6 +38,7 @@ GeometryFactory::~GeometryFactory()
 #include "NextNewOpticalGeometry.h"
 #include "NextNew.h"
 #include "MagBox.h"
+#include "PetalX.h"
 
 BaseGeometry* GeometryFactory::CreateGeometry() const
 {
@@ -56,6 +57,8 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
   else if (_name == "NEXT_NEW") p = new NextNew();
 
   else if (_name == "MAG_BOX") p = new MagBox();
+  
+  else if (_name == "PETALX") p = new PetalX();
 
   else {
     G4String err = "The user selected an unknown geometry: " + _name;
