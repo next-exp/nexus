@@ -1,3 +1,9 @@
+tag v4_04_05 - 19 Jun 2015
+	- transverse and longitudinal diffusion and electric field strength passed by configuration parameters 
+	- Muon generator added
+	- Definition of colors in one place, to be used by all the geometry classes.
+	- NEW SiPM simulated with the specifications of the Sensl ones. New class (SiPMSensl added)
+	- Change in the KDB volume, that is now bigger than reality, in order not to have volume overlapping with the SiPMs. The vertex generator is simulated only inside the true volume.
 tag v4_04_04 - 5 May 2015
 	- More values of pressure added to calculate density of gaseous xenon in MaterialsList
 tag v4_04_03 - 4 Apr 2015
