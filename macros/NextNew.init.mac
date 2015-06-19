@@ -24,3 +24,4 @@
 
 
 /nexus/RegisterMacro macros/NextNew.config.mac
+/nexus/RegisterDelayedMacro macros/physics/Bi214.mac
