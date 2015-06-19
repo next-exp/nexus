@@ -471,7 +471,6 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 
 G4bool PersistencyManager::Store(const G4Run*)
 {
-   
   gate::Run grun = gate::Run();
 
   // Store the number of events to be processed 
@@ -489,16 +488,10 @@ G4bool PersistencyManager::Store(const G4Run*)
 
   std::stringstream ss;
   ss << num_events;
-
-
+  
   grun.store("num_events", ss.str());
   grun.SetNumEvents((int)_saved_evts);
-
   _writer->WriteRunInfo(grun);
-
-  // if (_hdf5dump) {
-  //   _h5writer->WriteRunInfo(-1);
-  // }
 
   return true;
 }
