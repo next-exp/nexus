@@ -5,7 +5,7 @@ tag v4_04_05 - 19 Jun 2015
 	- NEW SiPM simulated with the specifications of the Sensl ones. New class (SiPMSensl added)
 	- Change in the KDB volume, that is now bigger than reality, in order not to have volume overlapping with the SiPMs. The vertex generator is simulated only inside the true volume.
 	- macro added that shows how to stop a decay chain at any point
-	
+	- Vertex generator added for the quartz plate.
 tag v4_04_04 - 5 May 2015
 	- More values of pressure added to calculate density of gaseous xenon in MaterialsList
 
