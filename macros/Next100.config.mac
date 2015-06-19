@@ -10,7 +10,7 @@
 
 
 ##### JOB CONTROL #####
-/nexus/persistency/outputFile /home/jmunoz/dev/irene_check/Next100_irene.next
+/nexus/persistency/outputFile Next100_irene.next
 
 
 
@@ -47,8 +47,14 @@
 #/Generator/GenbbInterface/region ACTIVE
 
 # Deacy0 Interface
-/Generator/Decay0Interface/inputFile /data4/NEXT/NEXT100/genbb/v1r4p0/Xe136_bb0nu/Xe136_bb0nu.0.genbb
-/Generator/Decay0Interface/region ACTIVE
+#/Generator/Decay0Interface/inputFile /data4/NEXT/NEXT100/genbb/v1r4p0/Xe136_bb0nu/Xe136_bb0nu.0.genbb
+#/Generator/Decay0Interface/region ACTIVE
+
+# Ion Gun
+/Generator/IonGun/atomic_number 83
+/Generator/IonGun/mass_number 214
+/nexus/RegisterDelayedMacro /data4/NEXT/users/jmalbos/Bi214/sim/newStyle/grdm.mac
+/Generator/IonGun/region FIELD_CAGE
 
 
 
