@@ -86,6 +86,7 @@ namespace nexus {
     //   _drift_length = _dist_EL_cathode-_el_gap_length/2.-_cathode_thickness/2.;
     //  _tube_length_drift = _dist_EL_cathode + _buffer_length -  _el_gap_length/2.;
     _el_gap_z_pos = -_dist_feedthroughs/2. + _cathode_gap/2. +  _tube_length_drift + _dist_tube_el + _el_gap_length/2.;
+    _pos_z_anode =  _el_gap_z_pos + _el_gap_length/2. +  _anode_quartz_thickness/2.+ 0.1*mm; // 0.1 mm is needed because EL is produced only if the PostStepVolume is GAS material.
 
     // Define a new category
     new G4UnitDefinition("kilovolt/cm","kV/cm","Electric field", kilovolt/cm);
@@ -381,7 +382,6 @@ namespace nexus {
   void NextNewFieldCage::BuildAnodeGrid()
   {
     G4double anode_diam = _anode_quartz_diam; 
-    G4double pos_z_anode =  _el_gap_z_pos + _el_gap_length/2. +  _anode_quartz_thickness/2.+ 0.1*mm; // 0.1 mm is needed because EL is produced only if the PostStepVolume is GAS material.
   
     ///// ANODE ////// 
     
@@ -389,7 +389,7 @@ namespace nexus {
       new G4Tubs("QUARTZ_ANODE", 0., anode_diam/2. , _anode_quartz_thickness/2., 0, twopi);
     G4LogicalVolume* anode_logic = 
       new G4LogicalVolume(anode_quartz_solid, _quartz, "EL_QUARTZ_ANODE");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., pos_z_anode), anode_logic, 
+    new G4PVPlacement(0, G4ThreeVector(0., 0., _pos_z_anode), anode_logic, 
 		      "EL_QUARTZ_ANODE", _mother_logic, false, 0, false);
    
     G4Tubs* tpb_anode_solid =
@@ -543,6 +543,10 @@ namespace nexus {
       new CylinderPointSampler(_tube_in_diam/2.- _reflector_thickness, 
     			       tube_length_buffer,  _reflector_thickness,
     			       0., G4ThreeVector (0., 0., buffer_tube_z_pos));
+
+     _anode_quartz_gen = 
+      new CylinderPointSampler(0.,_anode_quartz_thickness,_anode_quartz_diam/2., 
+			       0., G4ThreeVector (0., 0., _pos_z_anode));
   }
 
   G4ThreeVector NextNewFieldCage::GenerateVertex(const G4String& region) const
@@ -563,6 +567,9 @@ namespace nexus {
     }
     else if (region == "ACTIVE") {
       vertex = _active_gen->GenerateVertex("BODY_VOL");
+    } 
+    else if (region == "ANODE_QUARTZ") {
+      vertex = _anode_quartz_gen->GenerateVertex("BODY_VOL");
     } 
     else if (region == "AD_HOC") {
       vertex = G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);

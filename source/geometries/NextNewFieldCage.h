@@ -80,7 +80,7 @@ namespace nexus {
     G4double _tube_in_diam, _tube_length_drift, _dist_tube_el; //_tube_length_buff 
     G4double _tube_thickness, _tube_z_pos;
     G4double _reflector_thickness, _tpb_thickness;
-    G4double _el_gap_z_pos, _el_gap_length, _grid_thickness;
+    G4double _el_gap_z_pos, _pos_z_anode, _el_gap_length, _grid_thickness;
     G4double _el_grid_transparency, _gate_transparency; 
     G4double _anode_quartz_thickness, _anode_quartz_diam; //_anode_quartz_transparency
     G4double _cathode_grid_transparency;
@@ -112,6 +112,7 @@ namespace nexus {
     CylinderPointSampler* _buffer_tube_gen;
     CylinderPointSampler* _reflector_buffer_gen;
     CylinderPointSampler* _active_gen;
+    CylinderPointSampler* _anode_quartz_gen;
 
     G4double _specific_vertex_X;
     G4double _specific_vertex_Y;
