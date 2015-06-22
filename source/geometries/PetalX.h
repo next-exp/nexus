@@ -18,7 +18,8 @@
 class G4LogicalVolume;
 class G4GenericMessenger;
 class G4Material;
-
+namespace nexus{class PetKDB;}
+namespace nexus{class PetPlainDice;}
 
 namespace nexus {
 
@@ -48,6 +49,8 @@ namespace nexus {
     G4LogicalVolume* lXe_logic_;
 
     // Detector dimensions
+    //   const G4double vacuum_thickn_; // thickness of vaccuum layer between walls
+    //  const G4double outer_wall_thickn_; // Thickness of the outer wall
     const G4double det_thickness_; // Thickness of the walls of the detector
     const G4double det_size_; /// Size of the detector
     const G4double active_size_; /// Size of the LXe active volume   
@@ -64,6 +67,10 @@ namespace nexus {
 
     /// Messenger for the definition of control commands
     G4GenericMessenger* msg_; 
+
+    // Dice class
+    PetKDB* db_;
+    PetPlainDice* pdb_;
 
   };
   
