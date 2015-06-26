@@ -37,7 +37,7 @@ namespace nexus {
     BaseGeometry(),
     _rows(rows),
     _columns(columns),
-    _visibility (0)
+    _visibility (1)
   {
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/PetalX/", "Control commands of geometry Pet.");
@@ -82,13 +82,26 @@ namespace nexus {
 
     G4Box* board_solid = new G4Box("DICE_BOARD", db_x/2., db_y/2., db_z/2.);
  
-    G4Material* kapton =
-      G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
+    // G4Material* kapton =
+    //   G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
+    G4Material* teflon = 
+      G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
  
     G4LogicalVolume* board_logic = 
-      new G4LogicalVolume(board_solid, kapton, "DICE_BOARD");
+      new G4LogicalVolume(board_solid, teflon, "DICE_BOARD");
     new G4PVPlacement(0, G4ThreeVector(0.,0., -border), board_logic,
 			"DICE_BOARD", out_logic, false, 0, true);
+
+    // OPTICAL SURFACE FOR REFLECTION
+    G4OpticalSurface* db_opsur = new G4OpticalSurface("DICE_BOARD");
+    db_opsur->SetType(dielectric_metal);
+    db_opsur->SetModel(unified);
+    db_opsur->SetFinish(ground);
+    db_opsur->SetSigmaAlpha(0.1);
+   
+    db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
+    
+    new G4LogicalSkinSurface("DICE_BOARD", board_logic, db_opsur);
 
    
     // WLS COATING //////////////////////////////////////////////////
@@ -153,19 +166,19 @@ namespace nexus {
 
     // SETTING VISIBILITIES   //////////
     // _visibility  = true;
-    //  if (_visibility) {
+    if (_visibility) {
       G4VisAttributes silicon_col(G4Colour(1., 1., 0.));
       silicon_col.SetForceSolid(true);
       sipm_logic->SetVisAttributes(silicon_col);
       G4VisAttributes tpb_col(G4Colour(1., 1., 1.));
       tpb_col.SetForceSolid(true);
-      //     coating_logic->SetVisAttributes(tpb_col);
+      coating_logic->SetVisAttributes(tpb_col);
       
-    // }
-    // else {
-    //   coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    //   sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    // }
+    }
+    else {
+      coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
   }
 
   G4ThreeVector PetKDB::GetDimensions() const

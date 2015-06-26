@@ -246,6 +246,7 @@ if not env['LIBPATH']:
 
 #    if not conf.CheckLib(library='GSL', language='CXX', autoadd=0):
 #        Abort('GSL library not found.')
+
 ## ##################################################################
     env = conf.Finish()
 

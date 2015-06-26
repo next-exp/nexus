@@ -129,6 +129,7 @@ namespace nexus {
 
         new G4PVPlacement(0, G4ThreeVector(pos_x, pos_y, pos_z), 
           sipm_logic, "SIPMSensl", board_logic, false, sipm_no, false);
+        
         std::pair<int, G4ThreeVector> mypos;
         mypos.first = sipm_no;
         mypos.second = G4ThreeVector(pos_x, pos_y, pos_z);
