@@ -1,7 +1,7 @@
 
 ### GEOMETRY
 /Geometry/PetalX/max_step_size 1.0 mm
-#/Geometry/PetalX/kdb_vis true
+/Geometry/PetalX/kdb_vis true
 
 ### GENERATOR
 

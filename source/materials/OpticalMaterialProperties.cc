@@ -592,10 +592,10 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LXe()
     
   LXe_mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
   LXe_mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
-  LXe_mpt->AddProperty("ELSPECTRUM", sc_energy, intensity, sc_entries);
+  // LXe_mpt->AddProperty("ELSPECTRUM", sc_energy, intensity, sc_entries);
   LXe_mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
   LXe_mpt->AddConstProperty("SCINTILLATIONYIELD", 60000./MeV);
-  LXe_mpt->AddConstProperty("RESOLUTIONSCALE", 1.0);
+  LXe_mpt->AddConstProperty("RESOLUTIONSCALE", sqrt(20.0));
   LXe_mpt->AddConstProperty("RAYLEIGH", 36.*cm);
   // check constants with the Aprile
   LXe_mpt->AddConstProperty("FASTTIMECONSTANT",1.*ns);
