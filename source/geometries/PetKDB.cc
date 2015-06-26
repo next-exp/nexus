@@ -181,6 +181,7 @@ namespace nexus {
 
     // SETTING VISIBILITIES   //////////
     // _visibility  = true;
+
     if (visibility_) {
       G4VisAttributes silicon_col(G4Colour(1., 1., 0.));
       silicon_col.SetForceSolid(true);
