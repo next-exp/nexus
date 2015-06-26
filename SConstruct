@@ -265,9 +265,14 @@ if not env['LIBPATH']:
 =======
 =======
 
+<<<<<<< HEAD
     if not conf.CheckLib(library='GATE', language='CXX', autoadd=0):
         Abort('GATE library not found.')
 >>>>>>> petalx links now with GATE instead of irene. The PersistencyManager generates as output a GATE dst.
+=======
+ #   if not conf.CheckLib(library='GATE', language='CXX', autoadd=0):
+  #      Abort('GATE library not found.')
+>>>>>>> c
 
  #   if not conf.CheckLib(library='GSL', language='CXX', autoadd=0):
   #      Abort('GSL library not found.')
