@@ -19,6 +19,7 @@
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
+#include <stdexcept>
 
 namespace nexus {
 
@@ -173,7 +174,11 @@ namespace nexus {
     		 (region == "EL_TABLE") ) {
     	vertex = _inner_elements->GenerateVertex(region);
     }
-
+    else {
+      G4Exception("[Next100]", "GenerateVertex()", FatalException,
+		  "Unknown vertex generation region!");     
+    }
+    
     return vertex;
   }
 

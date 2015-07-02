@@ -27,6 +27,7 @@
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
+#include <stdexcept>
 
 namespace nexus {
 
@@ -359,6 +360,10 @@ namespace nexus {
 	vertex = _energy_endcap_gen->GenerateVertex("VOLUME");  // Energy endcap
 	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
       } while (VertexVolume->GetName() != "VESSEL");
+    }
+     else {
+      G4Exception("[Next100Vessel]", "GenerateVertex()", FatalException,
+		  "Unknown vertex generation region!");     
     }
 
     return vertex;

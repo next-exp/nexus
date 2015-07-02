@@ -27,6 +27,7 @@
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
+#include <stdexcept>
 
 namespace nexus {
 
@@ -235,7 +236,10 @@ namespace nexus {
       vertex.setY(vertex.y()- 10.*mm);
       vertex.setZ(vertex.z() +_dice_board_z_pos);
     }
-    
+    else {
+      G4Exception("[NextNewTrackingPlane]", "GenerateVertex()", FatalException,
+		  "Unknown vertex generation region!");     
+    }
     
     return vertex;
   }

@@ -580,7 +580,7 @@ namespace nexus {
 
       if (i == (_el_table_vertices.size()-1)) {
         G4Exception("[Next100InnerElements]", "GenerateVertex()", 
-          RunMustBeAborted, "Reached last event in EL lookup table.");
+		    RunMustBeAborted, "Reached last event in EL lookup table.");
       }
 
       try {

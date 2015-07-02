@@ -29,6 +29,7 @@
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
+#include <stdexcept>
 
 namespace nexus {
 
@@ -228,6 +229,11 @@ namespace nexus {
 	} while (VertexVolume->GetName() != "ICS");
       }
     }
+    else {
+      G4Exception("[Next100Ics]", "GenerateVertex()", FatalException,
+		  "Unknown vertex generation region!");     
+    }
+     
 
 
     return vertex;

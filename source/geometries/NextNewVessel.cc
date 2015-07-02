@@ -29,6 +29,7 @@
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
+#include <stdexcept>
 
 namespace nexus {
 
@@ -370,10 +371,13 @@ void NextNewVessel::Construct()
 	  //std::cout<< "flange energy \t"<<vertex.z() <<"\t"<<rand<< std::endl;
    	}
       }
-    }
-      
+    }      
     else if (region =="SOURCE_PORT_ANODE"){ vertex = G4ThreeVector(_lat_nozzle_x_pos, 0.,_lat_nozzle_z_pos);}
     else if (region =="SOURCE_PORT_CATHODE"){ vertex = G4ThreeVector(_lat_nozzle_x_pos, 0.,-_lat_nozzle_z_pos);}
+    else {
+      G4Exception("[NextNewVessel]", "GenerateVertex()", FatalException,
+		  "Unknown vertex generation region!");     
+    }
     
     return vertex;
   }

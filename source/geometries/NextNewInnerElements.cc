@@ -91,6 +91,10 @@ namespace nexus {
     else if ( (region == "SUPPORT_PLATE") || (region == "DICE_BOARD")|| (region == "DB_PLUG") ) {
       vertex = _tracking_plane->GenerateVertex(region);
     }
+    else {
+      G4Exception("[NextNewInnerElements]", "GenerateVertex()", FatalException,
+		  "Unknown vertex generation region!");     
+    } 
     return vertex;
   }
 }//end namespace nexus

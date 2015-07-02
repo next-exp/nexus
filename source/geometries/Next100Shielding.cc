@@ -29,6 +29,7 @@
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
+#include <stdexcept>
 
 namespace nexus {
 
@@ -325,7 +326,7 @@ namespace nexus {
     G4ThreeVector vertex(0., 0., 0.);
 
    
-      if (region == "SHIELDING_LEAD") {
+    if (region == "SHIELDING_LEAD") {
       G4VPhysicalVolume *VertexVolume;
       do {
 	vertex = _lead_gen->GenerateVertex("WHOLE_VOL");
@@ -459,6 +460,11 @@ namespace nexus {
       }   
 
     }
+    else {
+      G4Exception("[Next100Shielding]", "GenerateVertex()", FatalException,
+		  "Unknown vertex generation region!");     
+    }
+    
     return vertex;
   }
 

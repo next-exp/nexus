@@ -24,6 +24,7 @@
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
+#include <stdexcept>
 
 namespace nexus {
 
@@ -142,6 +143,10 @@ namespace nexus {
     // Vertex in the plastic cylinder
     if (region == "FIELD_CAGE") {
       vertex = _body_gen->GenerateVertex("BODY_VOL");
+    }
+    else {
+      G4Exception("[Next100FieldCage]", "GenerateVertex()", FatalException,
+		  "Unknown vertex generation region!");     
     }
 
     return vertex;

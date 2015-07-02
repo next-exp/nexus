@@ -27,6 +27,7 @@
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
+#include <stdexcept>
 
 namespace nexus {
 
@@ -182,6 +183,10 @@ namespace nexus {
       G4double rand = _num_DBs * G4UniformRand();
       G4ThreeVector db_pos = _DB_positions[int(rand)];
       vertex += db_pos;
+    }
+    else {
+      G4Exception("[Next100TrackingPlane]", "GenerateVertex()", FatalException,
+		  "Unknown vertex generation region!");     
     }
 
     return vertex;

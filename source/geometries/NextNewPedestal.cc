@@ -20,7 +20,7 @@
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
-
+#include <stdexcept>
 
 namespace nexus {
 
@@ -90,6 +90,10 @@ namespace nexus {
     if (region == "PEDESTAL") {
       vertex = _table_gen->GenerateVertex("INSIDE");
     }
+    else {
+      G4Exception("[NextNewPedestal]", "GenerateVertex()", FatalException,
+		  "Unknown vertex generation region!");     
+    } 
     return vertex;
   }
 

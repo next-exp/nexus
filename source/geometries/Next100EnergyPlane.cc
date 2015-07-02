@@ -31,6 +31,7 @@
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
+#include <stdexcept>
 
 namespace nexus {
 
@@ -298,7 +299,11 @@ namespace nexus {
       G4double z_translation = _energy_plane_posz - _enclosure_length/2. + _pmt_zpos + _enclosure_thickness/2.;
       vertex.setZ(vertex.z() + z_translation);
     }
-
+    else {
+      G4Exception("[Next100EnergyPlane]", "GenerateVertex()", FatalException,
+		  "Unknown vertex generation region!");     
+    }
+    
     return vertex;
   }
 

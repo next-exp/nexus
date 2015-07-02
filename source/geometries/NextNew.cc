@@ -31,6 +31,7 @@
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
+#include <stdexcept>
 
 namespace nexus {
 
@@ -204,6 +205,10 @@ namespace nexus {
 	      (region == "SUPPORT_PLATE") || (region == "DICE_BOARD") || (region == "DB_PLUG") ){
       vertex = _inner_elements->GenerateVertex(region);
     }
+    else {
+      G4Exception("[NextNew]", "GenerateVertex()", FatalException,
+		  "Unknown vertex generation region!");     
+    } 
    
     return vertex;
   }

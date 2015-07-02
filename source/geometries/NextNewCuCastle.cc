@@ -25,6 +25,7 @@
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
+#include <stdexcept>
 
 namespace nexus {
 
@@ -126,6 +127,10 @@ namespace nexus {
 	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
 	} while (VertexVolume->GetName() != "CU_CASTLE");
       }
+    else {
+      G4Exception("[NextNewCuCastle]", "GenerateVertex()", FatalException,
+		  "Unknown vertex generation region!");     
+    } 
   
     return vertex;
   }

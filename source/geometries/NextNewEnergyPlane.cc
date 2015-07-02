@@ -29,6 +29,7 @@
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
+#include <stdexcept>
 
 namespace nexus {
 
@@ -248,6 +249,11 @@ namespace nexus {
       vertex = ini_vertex + pmt_pos;
       vertex.setZ(vertex.z() + _enclosure_z_pos);
     }
+
+    else {
+      G4Exception("[NextNewCuCastle]", "GenerateVertex()", FatalException,
+		  "Unknown vertex generation region!");     
+    } 
    
     return vertex;
   }

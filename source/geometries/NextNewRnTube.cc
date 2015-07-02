@@ -20,6 +20,7 @@
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
+#include <stdexcept>
 
 namespace nexus {
 
@@ -90,6 +91,10 @@ namespace nexus {
     G4ThreeVector vertex(0., 0., 0.);
     if (region == "RN_TUBE") {
       vertex = _tube_gen->GenerateVertex("WHOLE_VOL");
+    }
+    else {
+      G4Exception("[NextNewRnTube]", "GenerateVertex()", FatalException,
+		  "Unknown vertex generation region!");     
     }
     return vertex;
   }

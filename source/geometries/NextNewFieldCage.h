@@ -97,11 +97,6 @@ namespace nexus {
 
     // Visibility 
     G4bool _visibility;
-    G4VisAttributes* _grey_color;
-    G4VisAttributes* _red_color;
-    G4VisAttributes* _light_blue_color;
-    G4VisAttributes* _blue_color;
-    G4VisAttributes* _green_color;
 
     G4double _max_step_size;
     G4bool _elfield;
@@ -119,7 +114,8 @@ namespace nexus {
     G4double _specific_vertex_Z;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
+    G4GenericMessenger* _msg;
+    
 
     G4int _el_table_point_id;
     mutable G4int _el_table_index;

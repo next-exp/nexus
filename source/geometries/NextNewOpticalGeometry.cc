@@ -112,7 +112,6 @@ void NextNewOpticalGeometry::Construct()
 
 G4ThreeVector NextNewOpticalGeometry::GenerateVertex(const G4String& region) const
 {
-  G4ThreeVector vertex(0.,0.,0.);   
-  vertex = _inner_elements->GenerateVertex(region);   
+  G4ThreeVector vertex = _inner_elements->GenerateVertex(region);   
   return vertex; 
 }
