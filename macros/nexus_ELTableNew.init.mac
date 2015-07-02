@@ -10,7 +10,7 @@
 
 /Geometry/RegisterGeometry OPTICAL_GEOMETRY
 
-/Generator/RegisterGenerator SINGLE_PARTICLE 
+/Generator/RegisterGenerator EL_TABLE_GENERATOR
 
 /Actions/RegisterTrackingAction DEFAULT 
 /Actions/RegisterSteppingAction DEFAULT 
