@@ -59,8 +59,8 @@ namespace nexus {
   {
     // PACKAGE ///////////////////////////////////////////////////////
 
-    G4double sipm_x = 7. * mm;
-    G4double sipm_y = 7. * mm;
+    G4double sipm_x = 6.2* mm;
+    G4double sipm_y = 6.2 * mm;
     G4double sipm_z = 0.850 * mm;
 
     _dimensions.setX(sipm_x);
@@ -129,35 +129,41 @@ namespace nexus {
 
     // SiPM efficiency set using the official Hamamatsu specs.
     
-    const G4int entries = 26;
-    
-    G4double energies[entries]     = {1.405*eV, 1.456*eV, 1.515*eV, 1.597*eV, 1.689*eV,
-				      1.763*eV, 1.836*eV, 1.915*eV, 2.007*eV, 2.105*eV, 
-				      2.190*eV, 2.285*eV, 2.366*eV, 2.448*eV, 2.563*eV, 
-				      2.718*eV, 2.838*eV, 2.977*eV, 3.099*eV, 3.243*eV, 
-				      3.387*eV, 3.525*eV, 3.608*eV, 3.695*eV, 3.762*eV, 
-				      3.857*eV };
+    const G4int entries = 21;
+
+
+     G4double energies[entries] = {1.54980241262*eV,1.59979603883*eV,
+                                 1.65312257346*eV,1.71012680013*eV,1.77120275727*eV,
+                                 1.8368028594*eV,1.90744912322*eV,1.98374708815*eV,
+                                 2.06640321682*eV,2.15624683494*eV,2.25425805471*eV,
+                                 2.36160367637*eV,2.47968386018*eV,2.61019353704*eV,
+                                 2.75520428909*eV,2.91727512963*eV,3.09960482523*eV,
+                                 3.30624514691*eV,3.54240551455*eV,3.81489824644*eV,
+                                 3.96749*eV};
     G4double reflectivity[entries] = {0.      ,0.      ,0.      ,0.      ,0.      ,
-				      0.      ,0.      ,0.      ,0.      ,0.      ,
-				      0.      ,0.      ,0.      ,0.      ,0.      ,
-				      0.      ,0.      ,0.      ,0.      ,0.      ,
-				      0.      ,0.      ,0.      ,0.      ,0.      ,
-				      0.      };
-    G4double efficiency[entries]   = {0.0556  ,0.0698  ,0.0893  ,0.1250  ,0.1661  ,
-				      0.1983  ,0.2341  ,0.2663  ,0.3058  ,0.3488  ,
-				      0.3868  ,0.4247  ,0.4499  ,0.4734  ,0.4915  ,
-				      0.4991  ,0.4898  ,0.4662  ,0.4355  ,0.4002  ,
-				      0.3471  ,0.2878  ,0.2308  ,0.1620  ,0.0804  ,
-				      0.0390  };
-
-
+                                      0.      ,0.      ,0.      ,0.      ,0.      ,
+                                      0.      ,0.      ,0.      ,0.      ,0.      ,
+                                      0.      ,0.      ,0.      ,0.      ,0.,      
+                                       0. };
+    G4double efficiency[entries]   = {0.036, 0.048, 
+                                      0.06, 0.07, 0.09, 
+                                      0.105, 0.12, 0.145,  
+                                      0.17, 0.2, 0.235, 
+                                      0.275, 0.32, 0.37, 
+                                      0.42,  0.425, 0.415,
+                                      0.35,  0.315, 0.185,
+                                      0.06};
+    
     G4double efficiency_red[entries];
     for (G4int i=0; i<entries; ++i) {
-      efficiency_red[i] = efficiency[i]*.6;
+      efficiency_red[i] = efficiency[i]*1.24;
     }
+
+
     
     G4MaterialPropertiesTable* sipm_mt = new G4MaterialPropertiesTable();
-    sipm_mt->AddProperty("EFFICIENCY", energies, efficiency_red, entries);
+    //sipm_mt->AddProperty("EFFICIENCY", energies, efficiency_red, entries);
+    sipm_mt->AddProperty("EFFICIENCY", energies, efficiency, entries);
     sipm_mt->AddProperty("REFLECTIVITY", energies, reflectivity, entries);
 
     G4OpticalSurface* sipm_opsurf = 
