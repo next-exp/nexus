@@ -594,14 +594,14 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LXe()
   LXe_mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
   // LXe_mpt->AddProperty("ELSPECTRUM", sc_energy, intensity, sc_entries);
   LXe_mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
-  LXe_mpt->AddConstProperty("SCINTILLATIONYIELD", 60000./MeV);
-  LXe_mpt->AddConstProperty("RESOLUTIONSCALE", sqrt(20.0));
+  LXe_mpt->AddConstProperty("SCINTILLATIONYIELD", 72407./MeV);
+  LXe_mpt->AddConstProperty("RESOLUTIONSCALE", 1);
   LXe_mpt->AddConstProperty("RAYLEIGH", 36.*cm);
   // check constants with the Aprile
-  LXe_mpt->AddConstProperty("FASTTIMECONSTANT",1.*ns);
+  LXe_mpt->AddConstProperty("FASTTIMECONSTANT",2.*ns);
   LXe_mpt->AddConstProperty("SLOWTIMECONSTANT",45.*ns);
   //  LXe_mpt->AddConstProperty("ELTIMECONSTANT", 50.*ns);
-  LXe_mpt->AddConstProperty("YIELDRATIO",.9);
+  LXe_mpt->AddConstProperty("YIELDRATIO",1.);
   LXe_mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
   
   G4double energy[2] = {0.01*eV, 100.*eV};

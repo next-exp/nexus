@@ -40,9 +40,8 @@ namespace nexus {
     //    vacuum_thickn_(1.*mm),
     //   outer_wall_thickn_(3.*mm),
     det_thickness_(1.*mm),
-    det_size_(20.*cm),
-    active_size_ (10.*cm)
-
+    //  det_size_(20.*cm),
+    active_size_ (5.*cm)
   {
     // Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/PetalX/", "Control commands of geometry PetalX.");
@@ -55,8 +54,12 @@ namespace nexus {
     step_cmd.SetParameterName("max_step_size", false);
     step_cmd.SetRange("max_step_size>0.");
 
-     db_ = new PetKDB(10,10);
-     pdb_ = new PetPlainDice(10,10);
+     db_ = new PetKDB(8,8);
+     db_->Construct(); //here, otherwise we don't know its dimensions
+     pdb_ = new PetPlainDice(8,8);
+
+     db_z_ = db_->GetDimensions().z();
+
   }
 
 
@@ -180,8 +183,7 @@ namespace nexus {
     G4double displ = active_size_/2. + db_zsize/2.;
 
     
-    // for the moment, no instruments on the entrance face
-    new G4PVPlacement(0, G4ThreeVector(0.,0., -displ), pdb_logic,
+    new G4PVPlacement(0, G4ThreeVector(0.,0., -displ), db_logic,
      		      "LXE_DICE", lXe_logic_, false, 0, true);
     
     //  G4cout << " LXe outer box starts at " << displ  - db_zsize/2. << "and ends at " << displ + db_zsize/2. << G4endl;
@@ -190,28 +192,23 @@ namespace nexus {
     
     rot.rotateY(pi/2.);
     new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(-displ, 0., 0.)), db_logic,
-		      "LXE_DICE", lXe_logic_, false, 0, true);
+		      "LXE_DICE", lXe_logic_, false, 1, true);
 
     rot.rotateY(pi/2.);
     new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., 0., displ)), db_logic,
-		      "LXE_DICE", lXe_logic_, false, 1, true);
+		      "LXE_DICE", lXe_logic_, false, 2, true);
     
     rot.rotateY(pi/2.);
     new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(displ, 0., 0.)), db_logic,
-		      "LXE_DICE", lXe_logic_, false, 2, true);
+		      "LXE_DICE", lXe_logic_, false, 3, true);
 
     rot.rotateZ(pi/2.);
     new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., displ, 0.)), db_logic,
-    		      "LXE_DICE", lXe_logic_, false, 3, true);
+    		      "LXE_DICE", lXe_logic_, false, 4, true);
     
     rot.rotateZ(pi);
      new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., -displ, 0.)), db_logic,
-    		      "LXE_DICE", lXe_logic_, false, 4, true);
-
-    
-
-    
-
+    		      "LXE_DICE", lXe_logic_, false, 5, true);
     
   }
     
