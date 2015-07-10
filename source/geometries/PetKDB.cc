@@ -55,7 +55,8 @@ namespace nexus {
     const G4double sipm_pitch = 6.2 * mm;
     const G4double coating_thickness = 0.1 * micrometer;
     const G4double board_thickness = 0.3 * mm;
-    const G4double board_side_reduction = .5 * mm;    
+    //const G4double board_side_reduction = .5 * mm;
+    const G4double board_side_reduction = 0. * mm;  
 
     const G4double db_x = _columns * sipm_pitch - 2. * board_side_reduction ;  
     const G4double db_y =    _rows * sipm_pitch - 2. * board_side_reduction ;
@@ -63,8 +64,11 @@ namespace nexus {
 
     // Outer element volume  /////////////////////////////////////////////////// 
     const G4double border = .5*mm;
-    const G4double out_x = db_x + 2.*border;
-    const G4double out_y = db_y + 2.*border;
+    // const G4double out_x = db_x + 2.*border;
+    // const G4double out_y = db_y + 2.*border;
+    // const G4double out_z = db_z + 2.*border;
+    const G4double out_x = db_x;
+    const G4double out_y = db_y;
     const G4double out_z = db_z + 2.*border;
 
     _dimensions.setX(out_x);
@@ -81,7 +85,7 @@ namespace nexus {
 
     // KAPTON BOARD /////////////////////////////////////////////////
 
-    std::cout << "db_x: " << db_x << "db_y: " << db_y << "db_z: " << db_z << std::endl;
+    std::cout << "db_x: " << db_x << ", db_y: " << db_y << ", db_z: " << db_z << std::endl;
     G4Box* board_solid = new G4Box("DICE_BOARD", db_x/2., db_y/2., db_z/2.);
  
     // G4Material* kapton =
