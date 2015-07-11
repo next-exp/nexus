@@ -52,18 +52,19 @@ namespace nexus {
   {
    
 
-    const G4double sipm_pitch = 10. * mm;
+    const G4double sipm_pitch = 6.2 * mm;
     const G4double coating_thickness = 0.1 * micrometer;
     const G4double board_thickness = 0.3 * mm;
-    const G4double board_side_reduction = .5 * mm;    
+    //const G4double board_side_reduction = .5 * mm;
+    const G4double board_side_reduction = 0. * mm;    
     const G4double db_x = _columns * sipm_pitch - 2. * board_side_reduction ;  
     const G4double db_y =    _rows * sipm_pitch - 2. * board_side_reduction ;
     const G4double db_z = board_thickness;
 
     // Outer element volume  /////////////////////////////////////////////////// 
     const G4double border = .5*mm;
-    const G4double out_x = db_x + 2.*border;
-    const G4double out_y = db_y + 2.*border;
+    const G4double out_x = db_x ;
+    const G4double out_y = db_y;
     const G4double out_z = db_z + 2.*border;
 
     _dimensions.setX(out_x);
