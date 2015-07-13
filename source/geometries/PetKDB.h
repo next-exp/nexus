@@ -40,16 +40,16 @@ namespace nexus {
     void SetMaterial(G4Material& mat);
 
   private:
-    G4int _rows, _columns;
+    G4int rows_, columns_;
     //G4double _support_thickness;
-    G4ThreeVector _dimensions;
-    std::vector<std::pair<int, G4ThreeVector> > _positions;
+    G4ThreeVector dimensions_;
+    std::vector<std::pair<int, G4ThreeVector> > positions_;
  
     // Visibility of the shielding
-    G4bool _visibility;
+    G4bool visibility_;
     
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg;    
+    G4GenericMessenger* msg_;    
     
     // Outer material
     //G4Material* _out_mat;
