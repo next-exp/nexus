@@ -27,9 +27,13 @@ namespace nexus {
   {
   public:
     /// Constructor
-    PetKDB(G4int rows, G4int columns);//, G4double support_thickness);
+    PetKDB();
+
     /// Destructor
     ~PetKDB();
+
+    // Dimension setter
+    void SetXYsize(G4double xysize);
 
     G4ThreeVector GetDimensions() const;
     const std::vector<std::pair<int, G4ThreeVector> >& GetPositions();
@@ -47,9 +51,14 @@ namespace nexus {
  
     // Visibility of the shielding
     G4bool visibility_;
+
+    // xy dimensions
+    G4double xysize_;
     
     // Messenger for the definition of control commands
     G4GenericMessenger* msg_;    
+    
+    G4double sipm_pitch_;
     
     // Outer material
     //G4Material* _out_mat;

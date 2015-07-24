@@ -33,27 +33,37 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  PetKDB::PetKDB(G4int rows, G4int columns): 
+  PetKDB::PetKDB(): 
     BaseGeometry(),
-    rows_(rows),
-    columns_(columns),
-    visibility_ (0)
+    rows_(8),
+    columns_(8),
+    visibility_ (0),
+    xysize_(5.*cm)
   {
     /// Messenger
-    msg_ = new G4GenericMessenger(this, "/Geometry/PetalX/", "Control commands of geometry Pet.");
-    msg_->DeclareProperty("kdb_vis", visibility_, "Kapton Dice Boards Visibility");
+   msg_ = new G4GenericMessenger(this, "/Geometry/PetalX/", "Control commands of geometry Pet.");
+   msg_->DeclareProperty("kdb_vis", visibility_, "Kapton Dice Boards Visibility");
+   msg_->DeclareProperty("kdb_columns", columns_, "Number of rows in SiPMs");
+   msg_->DeclareProperty("kdb_rows", rows_, "Number of rows in SiPMs");
 
+   sipm_ = new SiPMpet;
+   
   }
 
   PetKDB::~PetKDB()
   {
   }
 
+  void PetKDB::SetXYsize(G4double xysize)
+  {
+    xysize_ = xysize;
+  }
+
   void PetKDB::Construct()
   {
-   
 
-    const G4double sipm_pitch = 7.1 * mm;
+    //    const G4double sipm_pitch = 6.2 * mm;
+    G4double sipm_pitch = xysize_/rows_;
     const G4double coating_thickness = 0.1 * micrometer;
     const G4double board_thickness = 0.3 * mm;
     //const G4double board_side_reduction = .5 * mm;

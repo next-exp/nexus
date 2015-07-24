@@ -33,32 +33,45 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  PetPlainDice::PetPlainDice(G4int rows, G4int columns): 
+  PetPlainDice::PetPlainDice(): 
     BaseGeometry(),
-    _rows(rows),
-    _columns(columns),
-    _visibility (1)
+    rows_(8),
+    columns_(8),
+    visibility_ (1),
+    ysize_(5.*cm),
+    xsize_(5.*cm)
   {
     /// Messenger
-    _msg = new G4GenericMessenger(this, "/Geometry/PetalX/", "Control commands of geometry Pet.");
-    _msg->DeclareProperty("plain_dice_vis", _visibility, "Kapton Dice Boards Visibility");
+    msg_ = new G4GenericMessenger(this, "/Geometry/PetalX/", "Control commands of geometry Pet.");
+    msg_->DeclareProperty("plain_dice_vis", visibility_, "Kapton Dice Boards Visibility");
+    msg_->DeclareProperty("plain_columns", columns_, "Number of rows in SiPMs");
+    msg_->DeclareProperty("plain_rows", rows_, "Number of rows in SiPMs");
   }
 
   PetPlainDice::~PetPlainDice()
   {
   }
 
+  void PetPlainDice::SetSize(G4double xsize, G4double ysize)
+  {
+  xsize_ = xsize;
+  ysize_ = ysize;
+  }
+
   void PetPlainDice::Construct()
   {
    
 
-    const G4double sipm_pitch = 6.2 * mm;
+    //   const G4double sipm_pitch = 6.2 * mm;
+     G4double sipm_pitch = ysize_/rows_;
     const G4double coating_thickness = 0.1 * micrometer;
     const G4double board_thickness = 0.3 * mm;
     //const G4double board_side_reduction = .5 * mm;
     const G4double board_side_reduction = 0. * mm;    
-    const G4double db_x = _columns * sipm_pitch - 2. * board_side_reduction ;  
-    const G4double db_y =    _rows * sipm_pitch - 2. * board_side_reduction ;
+    // const G4double db_x = columns_ * sipm_pitch - 2. * board_side_reduction ;  
+    // const G4double db_y =    rows_ * sipm_pitch - 2. * board_side_reduction ;
+     const G4double db_x = xsize_ ;  
+    const G4double db_y =    rows_ * sipm_pitch - 2. * board_side_reduction ;
     const G4double db_z = board_thickness;
 
     // Outer element volume  /////////////////////////////////////////////////// 
@@ -67,9 +80,9 @@ namespace nexus {
     const G4double out_y = db_y;
     const G4double out_z = db_z + 2.*border;
 
-    _dimensions.setX(out_x);
-    _dimensions.setY(out_y);
-    _dimensions.setZ(out_z);
+    dimensions_.setX(out_x);
+    dimensions_.setY(out_y);
+    dimensions_.setZ(out_z);
 
     G4Material* out_material = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
 
@@ -131,11 +144,11 @@ namespace nexus {
     G4double offset = sipm_pitch/2. - board_side_reduction;
     G4int sipm_no = 0;
 
-    for (G4int i=0; i<_rows; i++) {
+    for (G4int i=0; i<rows_; i++) {
 
       G4double pos_y = db_y/2. - offset - i*sipm_pitch;
 
-      for (G4int j=0; j<_columns; j++) {
+      for (G4int j=0; j<columns_; j++) {
 
         G4double pos_x = -db_x/2 + offset + j*sipm_pitch;
 
@@ -167,7 +180,7 @@ namespace nexus {
 
     // SETTING VISIBILITIES   //////////
     // _visibility  = true;
-    if (_visibility) {
+    if (visibility_) {
       /*
       G4VisAttributes silicon_col(G4Colour(1., 1., 0.));
       silicon_col.SetForceSolid(true);
@@ -186,12 +199,12 @@ namespace nexus {
 
   G4ThreeVector PetPlainDice::GetDimensions() const
   {
-    return _dimensions;
+    return dimensions_;
   }
   
   const std::vector<std::pair<int, G4ThreeVector> >& PetPlainDice::GetPositions()
   {
-    return _positions;
+    return positions_;
   }
 
   // void PetPlainDice::SetMaterial(G4Material& mat)

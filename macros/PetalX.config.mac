@@ -9,7 +9,7 @@
 /Generator/SingleParticle/particle gamma
 /Generator/SingleParticle/min_energy 511. keV
 /Generator/SingleParticle/max_energy 511. keV
-/Generator/SingleParticle/min_costheta 0.995893
+/Generator/SingleParticle/min_costheta 0.999992
 /Generator/SingleParticle/max_costheta 1.
 /Generator/SingleParticle/min_phi 0.
 /Generator/SingleParticle/max_phi 6.28319

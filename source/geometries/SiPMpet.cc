@@ -32,7 +32,7 @@ namespace nexus {
   using namespace CLHEP;
   
   SiPMpet::SiPMpet(): BaseGeometry(),
-		    _visibility(0)
+				   _visibility(0)
 
   {
     /// Messenger
@@ -59,7 +59,7 @@ namespace nexus {
   {
     // PACKAGE ///////////////////////////////////////////////////////
 
-    G4double sipm_x = 6.2* mm;
+    G4double sipm_x = 6.2 * mm;
     G4double sipm_y = 6.2 * mm;
     G4double sipm_z = 0.850 * mm;
 

@@ -18,4 +18,4 @@
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterSteppingAction DEFAULT 
 
-/nexus/RegisterMacro macros/PetalX.config.mac
+/nexus/RegisterMacro macros/PetalX.2.config.mac
