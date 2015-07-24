@@ -20,6 +20,7 @@ class G4GenericMessenger;
 class G4Material;
 namespace nexus{class PetKDB;}
 namespace nexus{class PetPlainDice;}
+namespace nexus {class BoxPointSampler;}
 
 namespace nexus {
 
@@ -68,9 +69,16 @@ namespace nexus {
     /// Messenger for the definition of control commands
     G4GenericMessenger* msg_; 
 
+    /// Vertex generator from a surface just outside the detector walls
+    BoxPointSampler* surf_gen_;
+
     // Dice class
     PetKDB* db_;
     PetPlainDice* pdb_;
+
+    G4double db_z_;
+
+    G4double z_size_;
 
   };
   

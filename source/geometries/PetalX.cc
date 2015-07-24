@@ -13,6 +13,7 @@
 #include "PetKDB.h"
 #include "PetPlainDice.h"
 #include "OpticalMaterialProperties.h"
+#include "BoxPointSampler.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -41,10 +42,19 @@ namespace nexus {
     //   outer_wall_thickn_(3.*mm),
     det_thickness_(1.*mm),
     //  det_size_(20.*cm),
-    active_size_ (5.*cm)
+    active_size_ (5.*cm),
+    z_size_(4.*cm)
+
   {
     // Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/PetalX/", "Control commands of geometry PetalX.");
+
+    // z size
+     G4GenericMessenger::Command& zsize_cmd = 
+       msg_->DeclareProperty("z_size", z_size_, "z dimension");
+     zsize_cmd.SetUnitCategory("Length");
+     zsize_cmd.SetParameterName("z_size", false);
+     zsize_cmd.SetRange("z_size>0.");
    
     // Maximum Step Size
     G4GenericMessenger::Command& step_cmd = 
@@ -54,28 +64,39 @@ namespace nexus {
     step_cmd.SetParameterName("max_step_size", false);
     step_cmd.SetRange("max_step_size>0.");
 
-     db_ = new PetKDB(8,8);
-     db_->Construct(); //here, otherwise we don't know its dimensions
-     pdb_ = new PetPlainDice(8,8);
-
-     db_z_ = db_->GetDimensions().z();
-
+    db_ = new PetKDB();
+    pdb_ = new PetPlainDice();
   }
 
 
   PetalX::~PetalX()
   {    
     delete active_gen_;
+    delete surf_gen_;
   }
 
 
   void PetalX::Construct()
   {
+
+    db_->SetXYsize( active_size_);
+    db_->Construct();
+    db_z_ = db_->GetDimensions().z();
+
+    // Vertex Generators
+    active_gen_ = new BoxPointSampler(active_size_, active_size_, z_size_, 0.,
+				      G4ThreeVector(0.,0.,0.) ,0);
+
+    double zpos_generation = z_size_/2. + db_z_ + det_thickness_ + 1.*mm;
+    surf_gen_ =  new BoxPointSampler(active_size_, active_size_, 0., 0., 
+				     G4ThreeVector(0.,0., -zpos_generation) ,0);
+
     // LAB. This is just a volume of air surrounding the detector
     G4double lab_size = 1.*m;
     G4Box* lab_solid = new G4Box("LAB", lab_size/2., lab_size/2., lab_size/2.);
     
-    lab_logic_ = new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
+    lab_logic_ = 
+      new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
     lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
     this->SetLogicalVolume(lab_logic_);
 
@@ -113,9 +134,11 @@ namespace nexus {
 
   void PetalX::BuildDetector() 
   {
+    G4double det_size = active_size_ + 2.*db_z_ + 2.*det_thickness_;
+    G4double det_size2 = z_size_+ 2.*db_z_ + 2.*det_thickness_;
     G4Box* det_solid = 
-      new G4Box("WALL", det_size_/2., det_size_/2., det_size_/2.);
-
+      //   new G4Box("WALL", det_size/2., det_size/2., det_size/2.);
+      new G4Box("WALL", det_size/2., det_size/2., det_size2/2.);
     G4Material* steel = MaterialsList::Steel();
     
     det_logic_ = new G4LogicalVolume(det_solid, steel, "WALL");
@@ -126,9 +149,10 @@ namespace nexus {
 
  void PetalX::BuildLXe() 
   {
-    G4double lXe_size_ = det_size_ - 2.* det_thickness_;
+    G4double lXe_size = active_size_ + 2.*db_z_ ;
+    G4double lXe_size2 = z_size_ + 2.*db_z_ ;
     G4Box* lXe_solid = 
-      new G4Box("LXE", lXe_size_/2., lXe_size_/2., lXe_size_/2.);
+      new G4Box("LXE", lXe_size/2., lXe_size/2., lXe_size2/2.);
     
     lXe_logic_ = new G4LogicalVolume(lXe_solid, lXe_, "LXE");
     lXe_logic_->SetVisAttributes(G4VisAttributes::Invisible);
@@ -139,7 +163,7 @@ namespace nexus {
   void PetalX::BuildActive() 
   {
     G4Box* active_solid = 
-      new G4Box("ACTIVE", active_size_/2., active_size_/2., active_size_/2.);
+      new G4Box("ACTIVE", active_size_/2., active_size_/2., z_size_/2.);
 
    
 
@@ -162,15 +186,11 @@ namespace nexus {
     std::cout << "*** Maximum Step Size (mm): " << max_step_size_/mm << std::endl;
     active_logic->SetUserLimits(new G4UserLimits(max_step_size_));
 
-    // Vertex Generator
-    active_gen_ = new BoxPointSampler(active_size_, active_size_, active_size_, 0.,
-				      G4ThreeVector(0.,0.,0.) ,0);
   }
 
   void PetalX::BuildSiPMPlane()
   {
-    
-    db_->Construct();
+    pdb_->SetSize(z_size_, active_size_);
     pdb_->Construct();
 
     G4LogicalVolume* db_logic = db_->GetLogicalVolume();
@@ -181,9 +201,9 @@ namespace nexus {
     // G4cout << "dice board x = " << db_xsize << ", y = " 
     // 	   << db_ysize << ", z = " <<  db_zsize << std::endl;
     G4double displ = active_size_/2. + db_zsize/2.;
-
+    G4double displ2 = z_size_/2. + db_zsize/2.;
     
-    new G4PVPlacement(0, G4ThreeVector(0.,0., -displ), db_logic,
+    new G4PVPlacement(0, G4ThreeVector(0.,0., -displ2), db_logic,
      		      "LXE_DICE", lXe_logic_, false, 0, true);
     
     //  G4cout << " LXe outer box starts at " << displ  - db_zsize/2. << "and ends at " << displ + db_zsize/2. << G4endl;
@@ -191,23 +211,23 @@ namespace nexus {
     G4RotationMatrix rot;
     
     rot.rotateY(pi/2.);
-    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(-displ, 0., 0.)), db_logic,
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(-displ, 0., 0.)), pdb_logic,
 		      "LXE_DICE", lXe_logic_, false, 1, true);
 
     rot.rotateY(pi/2.);
-    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., 0., displ)), db_logic,
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., 0., displ2)), db_logic,
 		      "LXE_DICE", lXe_logic_, false, 2, true);
     
     rot.rotateY(pi/2.);
-    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(displ, 0., 0.)), db_logic,
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(displ, 0., 0.)), pdb_logic,
 		      "LXE_DICE", lXe_logic_, false, 3, true);
 
     rot.rotateZ(pi/2.);
-    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., displ, 0.)), db_logic,
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., displ, 0.)), pdb_logic,
     		      "LXE_DICE", lXe_logic_, false, 4, true);
     
     rot.rotateZ(pi);
-     new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., -displ, 0.)), db_logic,
+     new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., -displ, 0.)), pdb_logic,
     		      "LXE_DICE", lXe_logic_, false, 5, true);
     
   }
@@ -223,6 +243,8 @@ namespace nexus {
       vertex = G4ThreeVector(0., 0., -60.*cm);
     } else if (region == "CENTER") {
       vertex = G4ThreeVector(0., 5.*mm, -5.*mm);
+    } else if (region == "SURFACE") {
+      vertex = surf_gen_->GenerateVertex("Z_SURF");
     }
    
     return vertex;
