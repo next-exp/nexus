@@ -66,6 +66,7 @@ namespace nexus {
 
     db_ = new PetKDB();
     pdb_ = new PetPlainDice();
+
   }
 
 
@@ -211,7 +212,7 @@ namespace nexus {
     G4RotationMatrix rot;
     
     rot.rotateY(pi/2.);
-    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(-displ, 0., 0.)), pdb_logic,
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(-displ, 0., 0.)), db_logic,
 		      "LXE_DICE", lXe_logic_, false, 1, true);
 
     rot.rotateY(pi/2.);
@@ -219,15 +220,15 @@ namespace nexus {
 		      "LXE_DICE", lXe_logic_, false, 2, true);
     
     rot.rotateY(pi/2.);
-    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(displ, 0., 0.)), pdb_logic,
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(displ, 0., 0.)), db_logic,
 		      "LXE_DICE", lXe_logic_, false, 3, true);
 
     rot.rotateZ(pi/2.);
-    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., displ, 0.)), pdb_logic,
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., displ, 0.)), db_logic,
     		      "LXE_DICE", lXe_logic_, false, 4, true);
     
     rot.rotateZ(pi);
-     new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., -displ, 0.)), pdb_logic,
+     new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., -displ, 0.)), db_logic,
     		      "LXE_DICE", lXe_logic_, false, 5, true);
     
   }
