@@ -34,6 +34,7 @@ GeneratorFactory::~GeneratorFactory()
 #include "Decay0Interface.h"
 #include "IonGun.h"
 #include "Na22Generation.h"
+#include "Kr83mGeneration.h"
 #include "GenbbInterface.h"
 #include "SingleParticle2Pi.h"
 #include "MuonsGeneration.h"
@@ -42,7 +43,7 @@ GeneratorFactory::~GeneratorFactory()
 G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
 {
   G4VPrimaryGenerator* p = 0;
-
+  
   if (_name == "SINGLE_PARTICLE") p = new SingleParticle();
 
   else if (_name == "DECAY0") p = new Decay0Interface();
@@ -50,6 +51,8 @@ G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
   else if (_name == "ION_GUN") p = new IonGun();
 
   else if (_name == "NA22") p = new Na22Generation();
+
+  else if (_name == "Kr83m") p = new Kr83mGeneration();
 
   else if (_name == "GEN_BB") p = new GenbbInterface();
 
