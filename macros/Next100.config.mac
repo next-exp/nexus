@@ -42,18 +42,15 @@
 #/Generator/SingleParticle/region DICE_BOARD
 #/Generator/SingleParticle/momentum_direction (0., 0., 1.)
 
-# Genbb Interface
-#/Generator/GenbbInterface/inputFile /Users/javi/Development/nexus_trunk/data/Xe136_bb0nu.genbb
-#/Generator/GenbbInterface/region ACTIVE
 
-# Deacy0 Interface
+# Deacy0 Interface for bb0nu/bb2nu decays
 #/Generator/Decay0Interface/inputFile /data4/NEXT/NEXT100/genbb/v1r4p0/Xe136_bb0nu/Xe136_bb0nu.0.genbb
 #/Generator/Decay0Interface/region ACTIVE
 
-# Ion Gun
+# Ion Gun for background decays
 /Generator/IonGun/atomic_number 83
 /Generator/IonGun/mass_number 214
-/nexus/RegisterDelayedMacro /data4/NEXT/users/jmalbos/Bi214/sim/newStyle/grdm.mac
+/nexus/RegisterDelayedMacro macros/physics/Bi214.mac
 /Generator/IonGun/region FIELD_CAGE
 
 

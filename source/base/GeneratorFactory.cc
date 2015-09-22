@@ -35,7 +35,6 @@ GeneratorFactory::~GeneratorFactory()
 #include "IonGun.h"
 #include "Na22Generation.h"
 #include "Kr83mGeneration.h"
-#include "GenbbInterface.h"
 #include "SingleParticle2Pi.h"
 #include "MuonsGeneration.h"
 
@@ -53,8 +52,6 @@ G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
   else if (_name == "NA22") p = new Na22Generation();
 
   else if (_name == "Kr83m") p = new Kr83mGeneration();
-
-  else if (_name == "GEN_BB") p = new GenbbInterface();
 
   else if (_name == "2PI") p = new SingleParticle2Pi();
 

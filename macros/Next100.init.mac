@@ -5,8 +5,6 @@
 
 /Geometry/RegisterGeometry NEXT100
 
-#/Generator/RegisterGenerator SINGLE_PARTICLE
-#/Generator/RegisterGenerator GENBB_INTERFACE
 /Generator/RegisterGenerator DECAY0
 
 /Actions/RegisterRunAction DEFAULT
