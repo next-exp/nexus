@@ -39,6 +39,9 @@ GeometryFactory::~GeometryFactory()
 #include "NextNew.h"
 #include "MagBox.h"
 #include "PetalX.h"
+#include "PetalX2.h"
+#include "PetalX4.h"
+#include "FullRing.h"
 
 BaseGeometry* GeometryFactory::CreateGeometry() const
 {
@@ -59,6 +62,12 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
   else if (_name == "MAG_BOX") p = new MagBox();
   
   else if (_name == "PETALX") p = new PetalX();
+
+  else if (_name == "PETALX2") p = new PetalX2();
+
+  else if (_name == "PETALX4") p = new PetalX4();
+
+  else if (_name == "FULLRING") p = new FullRing();
 
   else {
     G4String err = "The user selected an unknown geometry: " + _name;
