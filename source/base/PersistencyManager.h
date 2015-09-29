@@ -19,10 +19,10 @@ class G4GenericMessenger;
 class G4TrajectoryContainer;
 class G4HCofThisEvent;
 class G4VHitsCollection;
-namespace irene { class Event; }
-namespace irene { class Particle; }
-namespace irene { class Track; }
-namespace irene { class RootWriter; }
+namespace gate { class Event; }
+namespace gate { class MCParticle; }
+namespace gate { class MCTrack; }
+namespace gate { class RootWriter; }
 
 
 namespace nexus {
@@ -58,10 +58,10 @@ namespace nexus {
     ~PersistencyManager();
     PersistencyManager(const PersistencyManager&);
 
-    void StoreTrajectories(G4TrajectoryContainer*, irene::Event*);
-    void StoreHits(G4HCofThisEvent*, irene::Event*);
-    void StoreIonizationHits(G4VHitsCollection*, irene::Event*);
-    void StorePmtHits(G4VHitsCollection*, irene::Event*);
+    void StoreTrajectories(G4TrajectoryContainer*, gate::Event*);
+    void StoreHits(G4HCofThisEvent*, gate::Event*);
+    void StoreIonizationHits(G4VHitsCollection*, gate::Event*);
+    void StorePmtHits(G4VHitsCollection*, gate::Event*);
 
 
   private:
@@ -72,11 +72,11 @@ namespace nexus {
     G4bool _ready;     ///< Is the PersistencyManager ready to go?
     G4bool _store_evt; ///< Should we store the current event?
 
-    irene::Event* _evt;         ///< Persistent irene event
-    irene::RootWriter* _writer; ///< Event writer to ROOT file
+    gate::Event* _evt;         ///< Persistent gate event
+    gate::RootWriter* _writer; ///< Event writer to ROOT file
 
-    std::map<G4int, irene::Particle*> _iprtmap;
-    std::map<G4int, irene::Track*> _itrkmap;
+    std::map<G4int, gate::MCParticle*> _iprtmap;
+    std::map<G4int, gate::MCTrack*> _itrkmap;
   };
 
 

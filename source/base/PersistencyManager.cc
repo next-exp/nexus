@@ -25,12 +25,11 @@
 
 #include <TList.h>
 
-#include <irene/Event.h>
-#include <irene/Particle.h>
-#include <irene/Track.h>
-#include <irene/SensorHit.h>
-#include <irene/RootWriter.h>
-#include <irene/ParameterInfo.h>
+#include <GATE/Run.h>
+#include <GATE/Event.h>
+#include <GATE/Particle.h>
+#include <GATE/Track.h>
+#include <GATE/RootWriter.h>
 
 #include <string>
 #include <sstream>
@@ -79,13 +78,13 @@ void PersistencyManager::Initialize()
 void PersistencyManager::OpenFile(const G4String& filename)
 {
   // If the output file was not set yet, do so
-  if (!_ready) {
-    _writer = new irene::RootWriter();
-    _ready = (G4bool) _writer->Open(filename.data(), "RECREATE");
-    
-    if (!_ready)
-      G4Exception("OpenFile()", "[PersistencyManager]", 
-        FatalException, "The path for the output file does not exist.");
+  if (!_writer) {
+    _writer = new gate::RootWriter();
+    //_ready = (G4bool) _writer->Open(filename.data(), "RECREATE");
+    _writer->Open(filename.data(), "RECREATE");
+    //if (!_ready)
+    //  G4Exception("OpenFile()", "[PersistencyManager]", 
+    //    FatalException, "The path for the output file does not exist.");
   }
   else {
     G4Exception("OpenFile()", "[PersistencyManager]", 
@@ -111,10 +110,11 @@ G4bool PersistencyManager::Store(const G4Event* event)
     return false;
   }
 
-  // Create a new irene event
-  irene::Event ievt(event->GetEventID());
+  // Create a new GATE event
+  gate::Event ievt;
+  ievt.SetEventID(event->GetEventID());
 
-  // Store the trajectories of the event as Irene particles
+  // Store the trajectories of the event as Gate particles
   StoreTrajectories(event->GetTrajectoryContainer(), &ievt);
 
   StoreHits(event->GetHCofThisEvent(), &ievt);
@@ -134,12 +134,12 @@ G4bool PersistencyManager::Store(const G4Event* event)
 
 
 void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
-                                           irene::Event* ievent)
+                                           gate::Event* ievent)
 {
   // If the pointer is null, no trajectories were stored in this event
   if (!tc) return;
 
-  // Reset the map of irene::Particles
+  // Reset the map of gate::Particles
   _iprtmap.clear();
 
   // Loop through the trajectories stored in the container
@@ -147,52 +147,51 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[i]);
     if (!trj) continue;
 
-    // Create an irene particle to store the trajectory information
-    irene::Particle* ipart = new irene::Particle(trj->GetPDGEncoding());
+    // Create an gate particle to store the trajectory information
+    gate::MCParticle* ipart = new gate::MCParticle();
+    ipart->SetPDG(trj->GetPDGEncoding());
     
     G4int trackid = trj->GetTrackID();
-    ipart->SetParticleID(trj->GetTrackID());
+    ipart->SetID(trj->GetTrackID());
     _iprtmap[trackid] = ipart;
 
-    G4double tracklength = trj->GetTrackLength();
-    ipart->SetTrackLength(tracklength);
+    ipart->SetPathLength(trj->GetTrackLength());
 
     G4ThreeVector xyz = trj->GetInitialPosition();
-    G4double t = trj->GetInitialTime();
-    ipart->SetInitialVertex(xyz.x(), xyz.y(), xyz.z(), t);      
-
+    G4double t = trj->GetInitialTime(); 
+    ipart->SetInitialVtx(gate::Vector4D(xyz.x(), xyz.y(), xyz.z(),t));
+    
     xyz = trj->GetFinalPosition();
     t = trj->GetFinalTime();
-    ipart->SetDecayVertex(xyz.x(), xyz.y(), xyz.z(), t);
-
+    ipart->SetFinalVtx(gate::Vector4D(xyz.x(), xyz.y(), xyz.z(),t));
+    
     G4String volume = trj->GetInitialVolume();
-    ipart->SetInitialVolume(volume);
-
+    ipart->SetInitialVol(volume);
     volume = trj->GetDecayVolume();
-    ipart->SetDecayVolume(volume);
+    ipart->SetFinalVol(volume);
 
     G4double mass = trj->GetParticleDefinition()->GetPDGMass();
     G4ThreeVector mom = trj->GetInitialMomentum();
     G4double energy = sqrt(mom.mag2() + mass*mass);
-    ipart->SetInitialMomentum(mom.x(), mom.y(), mom.z(), energy);
+    ipart->SetInitialMom(mom.x(), mom.y(), mom.z(), energy);
 
-    ievent->AddParticle(ipart);
+    ievent->AddMCParticle(ipart);
   }
 
   // We'll set now the family relationships.
-  // Loop through the particles we just stored in the irene event.
-  TObjArray* iparts = ievent->GetParticles();
-  for (G4int i=0; i<iparts->GetEntries(); ++i) {
-    irene::Particle* ipart = (irene::Particle*) iparts->At(i);
-    Trajectory* trj = (Trajectory*) TrajectoryMap::Get(ipart->GetParticleID());
+  // Loop through the particles we just stored in the gate event.
+  const std::vector<gate::MCParticle*>& iparts = ievent->GetMCParticles();
+  for (size_t i=0; i<iparts.size(); ++i) {
+    gate::MCParticle* ipart = (gate::MCParticle*) iparts.at(i);
+    Trajectory* trj = (Trajectory*) TrajectoryMap::Get(ipart->GetID());
     int parent_id = trj->GetParentID();
-    ipart->SetCreatorProcess(trj->GetCreatorProcess());
+    ipart->SetCreatorProc(trj->GetCreatorProcess());
 
     if (parent_id == 0) {
       ipart->SetPrimary(true);
     }
     else {
-      irene::Particle* mother = _iprtmap[parent_id];
+      gate::MCParticle* mother = _iprtmap[parent_id];
       ipart->SetPrimary(false);
       ipart->SetMother(mother);
       mother->AddDaughter(ipart);
@@ -202,7 +201,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
 
 
 
-void PersistencyManager::StoreHits(G4HCofThisEvent* hce, irene::Event* ievt)
+void PersistencyManager::StoreHits(G4HCofThisEvent* hce, gate::Event* ievt)
 {
   if (!hce) return; 
 
@@ -239,7 +238,7 @@ void PersistencyManager::StoreHits(G4HCofThisEvent* hce, irene::Event* ievt)
 
 
 void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc, 
-                                             irene::Event* ievt)
+                                             gate::Event* ievt)
 {
   IonizationHitsCollection* hits = 
     dynamic_cast<IonizationHitsCollection*>(hc);
@@ -254,24 +253,29 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
 
     G4int trackid = hit->GetTrackID();
 
-    irene::Track* itrk = 0;
+    gate::MCTrack* itrk = 0;
 
-    std::map<G4int, irene::Track*>::iterator it = _itrkmap.find(trackid);
+    std::map<G4int, gate::MCTrack*>::iterator it = _itrkmap.find(trackid);
     if (it != _itrkmap.end()) {
       itrk = it->second;
     }
     else {
       std::string sdname = hits->GetSDname();
-      itrk = new irene::Track(sdname);
+      itrk = new gate::MCTrack();
+      itrk->SetLabel(sdname);
       _itrkmap[trackid] = itrk;
       itrk->SetParticle(_iprtmap[trackid]);
       _iprtmap[trackid]->AddTrack(itrk);
-      ievt->AddTrack(itrk);
+      ievt->AddMCTrack(itrk);
     }
 
     G4ThreeVector xyz = hit->GetPosition();
-    itrk->AddHit(xyz.x(), xyz.y(), xyz.z(), hit->GetTime(),
-                 hit->GetEnergyDeposit());
+    gate::MCHit* ghit = new gate::MCHit();
+    ghit->SetPosition(gate::Point3D(xyz.x(), xyz.y(), xyz.z()));
+    ghit->SetTime(hit->GetTime());
+    ghit->SetAmplitude(hit->GetEnergyDeposit());
+    itrk->AddHit(ghit);
+    ievt->AddMCHit(ghit);
    
   }
    
@@ -280,7 +284,7 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
 
 
 void PersistencyManager::StorePmtHits(G4VHitsCollection* hc, 
-                                      irene::Event* ievt)
+                                      gate::Event* ievt)
 {
   PmtHitsCollection* hits = dynamic_cast<PmtHitsCollection*>(hc);
   if (!hits) return;
@@ -290,29 +294,35 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 
     PmtHit* hit = dynamic_cast<PmtHit*>(hits->GetHit(i));
     if (!hit) continue;
-
+    
     std::string sdname = hits->GetSDname();
-    irene::SensorHit* isnr = new irene::SensorHit(sdname);
-
-    isnr->SetID(hit->GetPmtID());
-    isnr->SetBinWidth(hit->GetBinSize());
-
+    gate::Hit* isnr = new gate::Hit();
+    isnr->SetLabel(sdname);
+    isnr->SetSensorID(hit->GetPmtID());
     G4ThreeVector xyz = hit->GetPosition();
-    isnr->SetPosition(xyz.x(), xyz.y(), xyz.z());
-
+    isnr->SetPosition(gate::Point3D(xyz.x(), xyz.y(), xyz.z()));
+    isnr->SetSensorType(gate::NOSTYPE);//not defined in nexus
+    
+    gate::Waveform* wf = new gate::Waveform();
+    isnr->SetWaveform(wf);
+    double binsize = hit->GetBinSize();
+    wf->SetSampWidth(binsize);
+    
     const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
     std::map<G4double, G4int>::const_iterator it;
-
+    std::vector< std::pair<unsigned short,unsigned short> > data;
     G4double amplitude = 0.;
-    for (it = wvfm.begin(); it != wvfm.end(); ++it) {
-      isnr->SetSample((*it).second, (*it).first);
-      amplitude = amplitude + (*it).second;
-    }
+    unsigned short idx=0;  
+  for (it = wvfm.begin(); it != wvfm.end(); ++it) {
+        //isnr->SetSample((*it).second, (*it).first);
+        data.push_back(std::make_pair((*it).first/binsize,(unsigned short)(*it).second));
+        amplitude = amplitude + (*it).second;
+        idx++;}
+    wf->SetData(data);
     isnr->SetAmplitude(amplitude);
 
-   
-    // Add the sensor hit to the irene event
-    ievt->AddSensorHit(isnr);
+    // Add the sensor hit to the ate event
+    ievt->AddMCSensHit(isnr);    
   }
 }
 
@@ -320,8 +330,10 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 
 G4bool PersistencyManager::Store(const G4Run*)
 {
+    
+    gate::Run grun = gate::Run(); 
+    
   std::ifstream history(_historyFile, std::ifstream::in);
-
   while (history.good()) {
 
     std::string key, value;
@@ -329,9 +341,12 @@ G4bool PersistencyManager::Store(const G4Run*)
     std::getline(history, value);
 
     if (key != "") {
-      irene::ParameterInfo* info = new irene::ParameterInfo(key.c_str());
-      info->SetContent(value);
-      _writer->WriteMetadata(info);
+      
+        grun.fstore(key,value);
+        
+        //gate::ParameterInfo* info = new gate::ParameterInfo(key.c_str());
+        //info->SetContent(value);
+      //_writer->WriteMetadata(info); 
     }
   } 
 
@@ -344,9 +359,13 @@ G4bool PersistencyManager::Store(const G4Run*)
   std::stringstream ss;
   ss << num_events;
 
-  irene::ParameterInfo* info = new irene::ParameterInfo("num_events");
-  info->SetContent(ss.str());
-  _writer->WriteMetadata(info);
+  //gate::ParameterInfo* info = new gate::ParameterInfo("num_events");
+  //info->SetContent(ss.str());
+  //_writer->WriteMetadata(info); 
+ 
+  grun.store("num_events",ss.str());
   
+  _writer->WriteRunInfo(grun);
+
   return true;
 }

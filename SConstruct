@@ -98,10 +98,10 @@ vars.AddVariables(
                  'Path to ROOT installation.',
                  NULL_PATH),
 
-    ## IRENE
+    ## GATE
 
-    PathVariable('IRENE_PATH',
-                 'Path to irene installation.',
+    PathVariable('GATE_DIR',
+                 'Path to GATE installation.',
                  NULL_PATH),
     
 
@@ -170,16 +170,7 @@ if not env['LIBPATH']:
         env.PrependENVPath('PATH', env['ROOT_BINDIR'])
         
     env.ParseConfig('root-config --cflags --libs')
-
-
-    ## IRENE configuration ---------------------------------
-
-    if env['IRENE_PATH'] != NULL_PATH:
-        env.PrependENVPath('PATH', env['IRENE_PATH'])
-
-    env.ParseConfig('irene-config --include --libdir --libs')
-
-
+ 
     ## Check for libraries and headers ---------------------
 
     if not conf.CheckCXXHeader('G4Event.hh'):
@@ -194,11 +185,24 @@ if not env['LIBPATH']:
     if not conf.CheckLib(library='Cint', language='CXX', autoadd=0):
         Abort('ROOT libraries could not be found.')
 
-    if not conf.CheckCXXHeader('irene/Event.h'):
-        Abort('IRENE headers not found.')
+    ## GATE configuration --------------------------   -------
 
-    if not conf.CheckLib(library='irene', language='CXX', autoadd=0):
-        Abort('IRENE library not found.')
+    if env['GATE_DIR'] != NULL_PATH:
+        env.PrependENVPath('PATH', env['GATE_DIR'])
+    
+    env['GATE_DIR'] = os.environ['GATE_DIR']
+    
+    env.Append( CPPPATH = [env['GATE_DIR']] )
+                                                          
+    env.Append( LIBPATH = [env['GATE_DIR']+'/lib/'] )
+
+    if not conf.CheckCXXHeader('GATE/Event.h'):
+        Abort('GATE headers not found.')
+    
+    env.Append(LIBS = ['GATE','GATEIO'])
+
+ #   if not conf.CheckLib(library='GATE', language='CXX', autoadd=0):
+  #      Abort('GATE library not found.')
 
     env = conf.Finish()
 
