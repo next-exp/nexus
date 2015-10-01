@@ -241,7 +241,7 @@ namespace nexus {
     if (region == "ACTIVE") {
       vertex = active_gen_->GenerateVertex(region);
     } else if (region == "OUTSIDE") {
-      vertex = G4ThreeVector(0., 0., -60.*cm);
+      vertex = G4ThreeVector(0., 0., -20.*cm);
     } else if (region == "CENTER") {
       vertex = G4ThreeVector(0., 5.*mm, -5.*mm);
     } else if (region == "SURFACE") {

@@ -4,7 +4,8 @@
 #include "BaseGeometry.h"
 
 class G4GenericMessenger;
-namespace nexus {class PetaloTrap;}
+namespace nexus {class PetaloTrap;
+  class CylinderPointSampler;}
 
 namespace nexus {
   class FullRing : public BaseGeometry {
@@ -21,6 +22,7 @@ namespace nexus {
     private:
     void Construct();
     void BuildDetector(); 
+    void BuildPhantom();
 
     PetaloTrap* module_;
     
@@ -30,6 +32,11 @@ namespace nexus {
     G4GenericMessenger* msg_; 
 
     G4double det_thickness_, n_modules_, z_size_, ring_diameter_;
+
+    double phantom_diam_; 
+    double phantom_length_;
+
+    CylinderPointSampler* cylindric_gen_;
 
   };
 }

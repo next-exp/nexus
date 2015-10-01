@@ -17,6 +17,7 @@
 
 #include <G4GenericMessenger.hh>
 #include <G4OpticalPhoton.hh>
+#include <G4Gamma.hh>
 #include <G4ProcessManager.hh>
 #include <G4ProcessTable.hh>
 #include <G4StepLimiter.hh>
@@ -34,7 +35,7 @@ namespace nexus {
 
   NexusPhysics::NexusPhysics(): 
     G4VPhysicsConstructor("NexusPhysics"), 
-    _clustering(true), _drift(true), _electroluminescence(true)
+    _clustering(true), _drift(true), _electroluminescence(true), _noCompt(false)
   {
     _msg = new G4GenericMessenger(this, "/PhysicsList/Nexus/",
       "Control commands of the nexus physics list.");
@@ -47,6 +48,9 @@ namespace nexus {
 
     _msg->DeclareProperty("electroluminescence", _electroluminescence,
       "Switch on/off the electroluminescence.");
+
+    _msg->DeclareProperty("offCompt", _noCompt,
+			  "Switch off Compton Scattering.");
   }
   
   
@@ -122,6 +126,13 @@ namespace nexus {
           pmanager->AddRestProcess(clust);
         }
       }
+    }
+
+    if (_noCompt) {
+      pmanager  = G4Gamma::Definition()->GetProcessManager();
+       G4VProcess* cs = G4ProcessTable::GetProcessTable()->
+        FindProcess("compt", G4Gamma::Definition());
+       pmanager->RemoveProcess(cs);
     }
 
   }

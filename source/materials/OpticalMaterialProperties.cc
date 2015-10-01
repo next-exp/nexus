@@ -705,6 +705,32 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::PTFE_with_TPB()
   return teflon_mpt;
 }
 
+G4MaterialPropertiesTable* OpticalMaterialProperties::PTFE_non_reflectant()
+{
+  G4MaterialPropertiesTable* teflon_mpt = new G4MaterialPropertiesTable();
+
+  const G4int REFL_NUMENTRIES = 6;
+
+  G4double ENERGIES[REFL_NUMENTRIES] = {1.0*eV, 2.8*eV, 4.*eV, 6.*eV, 7.2*eV, 30.*eV};
+  /// This is for TPB coated teflon panels
+  G4double REFLECTIVITY[REFL_NUMENTRIES] = {0., 0., 0., 0., 0., 0.};
+
+  G4double ENERGIES_2[2] = {1.0*eV, 30.*eV};
+  G4double specularlobe[2] = {0., 0.}; // specular reflection about the normal to a 
+  //microfacet. Such a vector is chosen according to a gaussian distribution with 
+  //sigma = SigmaAlhpa (in rad) and centered in the average normal.
+  G4double specularspike[2] = {0., 0.}; // specular reflection about the average normal 
+  G4double backscatter[2] = {0., 0.}; //180 degrees reflection
+  // 1 - the sum of these three last parameters is the percentage of Lambertian reflection
+
+  teflon_mpt->AddProperty("REFLECTIVITY", ENERGIES, REFLECTIVITY, REFL_NUMENTRIES);
+  teflon_mpt->AddProperty("SPECULARLOBECONSTANT",ENERGIES_2,specularlobe,2);
+  teflon_mpt->AddProperty("SPECULARSPIKECONSTANT",ENERGIES_2,specularspike,2);
+  teflon_mpt->AddProperty("BACKSCATTERCONSTANT",ENERGIES_2,backscatter,2);
+
+  return teflon_mpt;
+}
+
 
 G4MaterialPropertiesTable* OpticalMaterialProperties::TPB(G4double pressure, G4double temperature)
 {
