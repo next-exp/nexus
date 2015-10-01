@@ -200,19 +200,16 @@ namespace nexus {
     G4LogicalVolume* diel_grid_logic = 
       new G4LogicalVolume(diel_grid_solid, fgrid_mat, "EL_GRID");
 
-    G4PVPlacement* diel_grid_physi;
     // diel_grid_physi = 
     //   new G4PVPlacement(0, G4ThreeVector(0.,0.,posz1), diel_grid_logic, "EL_GRID_1",
     // 					_mother_logic, false, 0);
     // diel_grid_physi = 
     //   new G4PVPlacement(0, G4ThreeVector(0.,0.,posz2), diel_grid_logic, "EL_GRID_2",
     // 					_mother_logic, false, 1);
-    diel_grid_physi = 
-      new G4PVPlacement(0, G4ThreeVector(0.,0.,posz1), diel_grid_logic, "EL_GRID_1",
-			el_gap_logic, false, 0, true);
-    diel_grid_physi = 
-      new G4PVPlacement(0, G4ThreeVector(0.,0.,posz2), diel_grid_logic, "EL_GRID_2",
-			el_gap_logic, false, 1, true);
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,posz1), diel_grid_logic, "EL_GRID_1",
+		      el_gap_logic, false, 0, true);
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,posz2), diel_grid_logic, "EL_GRID_2",
+		      el_gap_logic, false, 1, true);
 
     /// Visibilities
     if (_grids_visibility) {
