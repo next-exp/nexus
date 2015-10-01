@@ -150,8 +150,6 @@ namespace nexus {
     tpb_logic->SetVisAttributes(visattrib_blue);
        
     // Placing the enclosures 
-    G4PVPlacement* enclosure_physi;
-    G4PVPlacement* tpb_physi;
     G4ThreeVector pos;
     G4ThreeVector tpb_pos;
     for (int i=0; i<_num_PMTs; i++) {
@@ -159,12 +157,10 @@ namespace nexus {
       tpb_pos = _pmt_positions[i];
       pos.setZ(_enclosure_z_pos);
       tpb_pos.setZ(_enclosure_z_pos + enclosure_z_center + _tpb_thickness/2.);
-      enclosure_physi = new G4PVPlacement(0, pos, enclosure_logic,
-      					  "ENCLOSURE", _mother_logic, 
-					  false, i, false);
-      tpb_physi =  new G4PVPlacement(0, tpb_pos, tpb_logic,
-      					  "ENCLOSURE_TPB", _mother_logic, 
-				     false, i, false);
+      new G4PVPlacement(0, pos, enclosure_logic, "ENCLOSURE", _mother_logic, 
+			false, i, false);
+      new G4PVPlacement(0, tpb_pos, tpb_logic, "ENCLOSURE_TPB", _mother_logic, 
+			false, i, false);
       //std::cout<<"enclosure positions"<< _pmt_positions[i]<< _enclosure_z_pos<<std::endl;  
     }
      

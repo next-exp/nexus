@@ -126,16 +126,16 @@ namespace nexus {
     //_dice_board_z_pos = support_plate_z_pos -_support_plate_thickness/2. -_z_kdb_displ +db_thickness/2.;
     _dice_board_z_pos = _tracking_plane_z_pos + db_thickness/2.;
     
-    G4PVPlacement* dice_board_physi;
+    //  G4PVPlacement* dice_board_physi;
     G4ThreeVector post;
     for (int i=0; i<_num_DBs; i++) {
       post = _DB_positions[i];
       post.setZ(_dice_board_z_pos);
-      dice_board_physi = new G4PVPlacement(0, post, dice_board_logic,
-					   "DICE_BOARD", _mother_logic, false, i+1, false);
+      new G4PVPlacement(0, post, dice_board_logic,
+			"DICE_BOARD", _mother_logic, false, i+1, false);
     }
     //PIGGY TAIL PLUG/////////////////////////////////////////////////////
-    G4Box* plug_solid = new G4Box("DB_CONECTOR", _plug_x/2., _plug_y/2., _plug_z/2.);
+    G4Box* plug_solid = new G4Box("DB_CONNECTOR", _plug_x/2., _plug_y/2., _plug_z/2.);
     G4LogicalVolume* plug_logic = new G4LogicalVolume(plug_solid,  MaterialsList::PEEK(), "DB_PLUG");
     //G4PVPlacement * plug_physi;  
     G4ThreeVector positn;
@@ -143,8 +143,8 @@ namespace nexus {
       positn = _DB_positions[i];
       positn.setY(positn.y()- 10.*mm);
       positn.setZ(_dice_board_z_pos + _support_plate_front_buffer_thickness + _support_plate_thickness);
-      dice_board_physi = new G4PVPlacement(0, positn, plug_logic,"DB_PLUG",
-					   _mother_logic, false, i+1, false);
+      new G4PVPlacement(0, positn, plug_logic,"DB_PLUG",
+			_mother_logic, false, i+1, false);
     }
     
    
