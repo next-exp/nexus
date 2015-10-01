@@ -10,14 +10,18 @@
 #include "FullRing.h"
 #include "PetaloTrap.h"
 #include "PmtR7378A.h"
-
+#include "CylinderPointSampler.h"
+#include "MaterialsList.h"
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
+#include <G4Tubs.hh>
 #include <G4Material.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4NistManager.hh>
 #include <G4VisAttributes.hh>
+
+#include <stdexcept>
 
 namespace nexus {
 
@@ -50,6 +54,12 @@ namespace nexus {
      diameter_cmd.SetRange("ring_diameter>0.");
 
      module_ = new PetaloTrap();
+
+     phantom_diam_ = 20.*cm;
+     phantom_length_ = 4.*cm;
+
+     cylindric_gen_ = 
+       new CylinderPointSampler(0., phantom_length_, phantom_diam_/2., 0., G4ThreeVector (0., 0., 0.));
 
   }
 
@@ -107,6 +117,20 @@ namespace nexus {
     }
   }
 
+ void FullRing::BuildPhantom()
+  {
+     
+
+    G4Tubs* phantom_solid = new G4Tubs("PHANTOM",  0., phantom_diam_/2., 
+                 phantom_length_/2., 0, twopi);
+    G4LogicalVolume* phantom_logic =  
+      new G4LogicalVolume(phantom_solid, MaterialsList::PEEK(), "PHANTOM");
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), phantom_logic,
+		       "PAHNTOM", lab_logic_, false, 0, true);   
+
+ 
+  }
+
   
 
   G4ThreeVector FullRing::GenerateVertex(const G4String& region) const
@@ -124,6 +148,13 @@ namespace nexus {
     // } else if (region == "SURFACE") {
     //   vertex = surf_gen_->GenerateVertex("Z_SURF");
     // }
+
+    if (region == "PHANTOM") {
+      vertex = cylindric_gen_->GenerateVertex("BODY_VOL");
+    } else {
+      G4Exception("[FullRing]", "GenerateVertex()", FatalException,
+                  "Unknown vertex generation region!");     
+    }
     
     return vertex;
   }

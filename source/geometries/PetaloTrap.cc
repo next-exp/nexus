@@ -89,16 +89,26 @@ namespace nexus {
     det_logic_->SetVisAttributes(grey_color);
 
     G4Trap* lxe_solid = 
-      new G4Trap("LXE", (size1_-2.*det_thickness_)/2., (size2_-2.*det_thickness_)/2., (size1_-2.*det_thickness_)/2., (size2_-2.*det_thickness_)/2., (z_size_-det_thickness_)/2.);
+      new G4Trap("ACTIVE", (size1_-2.*det_thickness_)/2., (size2_-2.*det_thickness_)/2., (size1_-2.*det_thickness_)/2., (size2_-2.*det_thickness_)/2., (z_size_-det_thickness_)/2.);
    
     G4Material* lXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
     lXe->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe());
     
-    G4LogicalVolume* lxe_logic = new G4LogicalVolume(lxe_solid, lXe, "LXE");
+    G4LogicalVolume* lxe_logic = new G4LogicalVolume(lxe_solid, lXe, "ACTIVE");
     // lxe_logic->SetVisAttributes(white_color);  
    
     new G4PVPlacement(0, G4ThreeVector(0.,0.,-det_thickness_/2.), lxe_logic,
-		  "LXE", det_logic_, false, 0, true);
+		  "ACTIVE", det_logic_, false, 0, true);
+
+    // Set the ACTIVE volume as an ionization sensitive active
+    IonizationSD* ionisd = new IonizationSD("/PETALX/ACTIVE");
+    lxe_logic->SetSensitiveDetector(ionisd);
+    G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
+
+    // Limit the step size in ACTIVE volume for better tracking precision
+    std::cout << "*** Maximum Step Size (mm): " << max_step_size_/mm << std::endl;
+    lxe_logic->SetUserLimits(new G4UserLimits(max_step_size_));
+
     G4Colour otherColour(.6, .8, .79); 
     G4VisAttributes myAttr(otherColour); 
     myAttr.SetForceSolid(true);

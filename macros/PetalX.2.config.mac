@@ -1,15 +1,15 @@
 
 ### GEOMETRY
-/Geometry/PetalX/z_size 2. cm
-/Geometry/PetalX/max_step_size 1.0 mm
+/Geometry/PetalX2/z_size 5. cm
+/Geometry/PetalX2/max_step_size 1.0 mm
 /Geometry/PetalX/kdb_vis false
 /Geometry/PetalX/plain_dice_vis true
 /Geometry/PetalX/SiPMpet_vis false
 
-/Geometry/PetalX/plain_columns 7
-/Geometry/PetalX/plain_rows 7
-/Geometry/PetalX/kdb_columns 7
-/Geometry/PetalX/kdb_rows 7
+/Geometry/PetalX/plain_columns 6
+/Geometry/PetalX/plain_rows 6
+/Geometry/PetalX/kdb_columns 6
+/Geometry/PetalX/kdb_rows 6
 
 
 ### GENERATOR

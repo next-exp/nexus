@@ -20,6 +20,8 @@
 #include <G4GenericPhysicsList.hh>
 #include <G4UImanager.hh>
 #include <G4StateManager.hh>
+#include <G4ComptonScattering.hh>
+#include <G4ProcessManager.hh>
 
 using namespace nexus;
 
@@ -79,6 +81,11 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), _historyFile("G4history
 
   // Set the physics list in the run manager
   this->SetUserInitialization(physicsList); 
+
+  // G4ComptonScattering* cs = new G4ComptonScattering();
+  // G4ProcessManager* pm = G4Gamma::Definition()->GetProcessManager();
+  // G4int i = pm->GetProcessIndex(cs);
+  // G4cout << "Compton is " << i << G4endl;
 
   // Set the detector construction instance in the run manager
   DetectorConstruction* dc = new DetectorConstruction();

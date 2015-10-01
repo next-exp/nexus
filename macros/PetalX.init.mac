@@ -7,7 +7,7 @@
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 ### GEOMETRY
-/Geometry/RegisterGeometry PETALX
+/Geometry/RegisterGeometry PETALX2
 
 ### GENERATOR
 /Generator/RegisterGenerator SINGLE_PARTICLE
@@ -18,4 +18,4 @@
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterSteppingAction DEFAULT 
 
-/nexus/RegisterMacro macros/PetalX.2.config.mac
+/nexus/RegisterMacro macros/PetalX.config.mac
