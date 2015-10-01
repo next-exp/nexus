@@ -174,6 +174,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     G4ThreeVector mom = trj->GetInitialMomentum();
     G4double energy = sqrt(mom.mag2() + mass*mass);
     ipart->SetInitialMom(mom.x(), mom.y(), mom.z(), energy);
+    ipart->SetFinalMom(0, 0, 0, mass);
 
     ievent->AddMCParticle(ipart);
   }
