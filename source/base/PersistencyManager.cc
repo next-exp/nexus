@@ -301,8 +301,10 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     isnr->SetSensorID(hit->GetPmtID());
     G4ThreeVector xyz = hit->GetPosition();
     isnr->SetPosition(gate::Point3D(xyz.x(), xyz.y(), xyz.z()));
-    isnr->SetSensorType(gate::NOSTYPE);//not defined in nexus
     
+    if (hit->GetPmtID()<1000) isnr->SetSensorType(gate::PMT);
+    else isnr->SetSensorType(gate::SIPM);
+
     gate::Waveform* wf = new gate::Waveform();
     isnr->SetWaveform(wf);
     double binsize = hit->GetBinSize();
