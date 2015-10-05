@@ -101,13 +101,12 @@ namespace nexus {
 
     ///// Dice Boards placement
     G4double dice_board_posz = _el_gap_z_edge + _z_displ + db_thickness/2.;
-    G4PVPlacement* dice_board_physi;
     G4ThreeVector pos;
     for (int i=0; i<_num_DBs; i++) {
       pos = _DB_positions[i];
       pos.setZ(dice_board_posz);
-      dice_board_physi = new G4PVPlacement(0, pos, dice_board_logic,
-					   "DICE_BOARD", _mother_logic, false, i);
+      new G4PVPlacement(0, pos, dice_board_logic,
+			"DICE_BOARD", _mother_logic, false, i);
     }
 
     // G4PVPlacement* dice_board_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), dice_board_logic,

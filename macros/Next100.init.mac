@@ -5,7 +5,7 @@
 
 /Geometry/RegisterGeometry NEXT100
 
-/Generator/RegisterGenerator DECAY0
+/Generator/RegisterGenerator ION_GUN
 
 /Actions/RegisterRunAction DEFAULT
 
@@ -16,3 +16,4 @@
 /control/execute macros/physics/DefaultPhysicsList.mac
 
 /nexus/RegisterMacro macros/Next100.config.mac
+/nexus/RegisterDelayedMacro macros/physics/Bi214.mac

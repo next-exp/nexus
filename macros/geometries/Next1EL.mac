@@ -7,7 +7,7 @@
 /Geometry/Next1EL/elfield false
 /Geometry/Next1EL/tpb_coating true
 /Geometry/Next1EL/sc_yield 13889 1/MeV
-/Geometry/Next1EL/pressure 10. atmosphere
+/Geometry/Next1EL/pressure 10. bar
 /Geometry/Next1EL/tracking_plane SIPM
 /Geometry/Next1EL/sideport_posz -64. mm
 /Geometry/Next1EL/elgrid_transparency .88

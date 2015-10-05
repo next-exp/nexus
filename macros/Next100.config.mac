@@ -5,12 +5,11 @@
 
 
 ##### ACTIONS #####
-# ???
 
 
 
 ##### JOB CONTROL #####
-/nexus/persistency/outputFile Next100_irene.next
+/nexus/persistency/outputFile Next100.next
 
 
 
@@ -50,7 +49,6 @@
 # Ion Gun for background decays
 /Generator/IonGun/atomic_number 83
 /Generator/IonGun/mass_number 214
-/nexus/RegisterDelayedMacro macros/physics/Bi214.mac
 /Generator/IonGun/region FIELD_CAGE
 
 

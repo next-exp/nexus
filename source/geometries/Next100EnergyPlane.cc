@@ -184,13 +184,12 @@ namespace nexus {
 
     // Placing the enclosures
     G4double enclosure_posz =  _energy_plane_posz - _enclosure_length/2.;
-    G4PVPlacement* enclosure_physi;
     G4ThreeVector pos;
     for (int i=0; i<_num_PMTs; i++) {
       pos = _pmt_positions[i];
       pos.setZ(enclosure_posz);
-      enclosure_physi = new G4PVPlacement(0, pos, enclosure_logic,
-					  "ENCLOSURE", _mother_logic, false, i);
+      new G4PVPlacement(0, pos, enclosure_logic,
+			"ENCLOSURE", _mother_logic, false, i);
     }
 
     // G4PVPlacement* enclosure_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), enclosure_logic,
@@ -206,7 +205,6 @@ namespace nexus {
       G4VisAttributes copper_col = CopperBrown();
       copper_col.SetForceSolid(true);
       carrier_plate_logic->SetVisAttributes(copper_col);
-
       G4VisAttributes enclosure_col = nexus::Brown();
       //copper_col2.SetForceSolid(true);
       enclosure_logic->SetVisAttributes(enclosure_col);      
