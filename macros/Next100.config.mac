@@ -43,7 +43,7 @@
 
 
 # Deacy0 Interface for bb0nu/bb2nu decays
-#/Generator/Decay0Interface/inputFile /data4/NEXT/NEXT100/genbb/v1r4p0/Xe136_bb0nu/Xe136_bb0nu.0.genbb
+#/Generator/Decay0Interface/inputFile /data4/NEXT/NEXTNEW/decay0/Xe136_bb0nu
 #/Generator/Decay0Interface/region ACTIVE
 
 # Ion Gun for background decays
