@@ -9,6 +9,8 @@
 /control/execute macros/generators/SingleParticle.mac
 /control/execute macros/geometries/Next1EL.mac
 
+/control/execute physics/IonizationElectron.mac
+
 /nexus/persistency/outputFile nexus.next
 /nexus/persistency/historyFile myHistory.macro ## must be the same as /nexus/historyFile
 
