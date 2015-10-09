@@ -9,10 +9,7 @@
 /tracking/verbose 0
 
 # GENERATION
-/Generator/SingleParticle/particle e-
-/Generator/SingleParticle/min_energy 40. keV
-/Generator/SingleParticle/max_energy 40. keV
-/Generator/SingleParticle/region ACTIVE
+/Generator/Kr83mGenerator/region ACTIVE
 
 # GEOMETRY
 /Geometry/NextNew/pressure 15. bar

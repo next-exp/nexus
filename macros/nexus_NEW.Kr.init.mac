@@ -10,7 +10,7 @@
 
 /Geometry/RegisterGeometry NEXT_NEW
 
-/Generator/RegisterGenerator SINGLE_PARTICLE
+/Generator/RegisterGenerator Kr83m
 
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction DEFAULT
