@@ -81,8 +81,14 @@ namespace nexus {
       PersistencyManager* pm = dynamic_cast<PersistencyManager*>
         (G4VPersistencyManager::GetPersistencyManager());
  
-      if (edep > _energy_threshold) pm->StoreCurrentEvent(true);
-      else pm->StoreCurrentEvent(false);
+      // if (edep > _energy_threshold) pm->StoreCurrentEvent(true);
+      // else pm->StoreCurrentEvent(false);
+      if (!event->IsAborted() && edep > _energy_threshold) {
+	pm->StoreCurrentEvent(true);
+      } else {
+	pm->StoreCurrentEvent(false);
+      }
+
     }
   }
 
