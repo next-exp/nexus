@@ -534,7 +534,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
 
   for (G4int i=0; i<ri_entries; i++) {
     rindex[i] = GXe_prop.RefractiveIndex(ri_energy[i]);
-    //   G4cout << ri_energy[i] << ", " << rindex[i] << G4endl;
+    //  G4cout << ri_energy[i] << ", " << rindex[i] << G4endl;
   }
 
   // Sampling from ~150 nm to 200 nm <----> from 6.20625 eV to 8.20625 eV
@@ -570,15 +570,15 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LXe()
   XenonLiquidProperties LXe_prop;
   G4MaterialPropertiesTable* LXe_mpt = new G4MaterialPropertiesTable();
 
-  const G4int ri_entries = 9;
+  const G4int ri_entries = 18;
   G4double ri_energy[ri_entries] 
-    = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 7*eV, 8*eV, 9*eV};
+    = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV, 7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV, 8*eV, 8.2*eV, 8.21*eV};
 
   G4double rindex[ri_entries];
 
   for (G4int i=0; i<ri_entries; i++) {
     rindex[i] = LXe_prop.RefractiveIndex(ri_energy[i]);
-    //   G4cout << ri_energy[i] << ", " << rindex[i] << G4endl;
+    G4cout << ri_energy[i] << ", " << rindex[i] << G4endl;
   }
 
   // Sampling from ~150 nm to 200 nm <----> from 6.20625 eV to 8.20625 eV
@@ -594,11 +594,11 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LXe()
   LXe_mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
   // LXe_mpt->AddProperty("ELSPECTRUM", sc_energy, intensity, sc_entries);
   LXe_mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
-  LXe_mpt->AddConstProperty("SCINTILLATIONYIELD", 72407./MeV);
+  LXe_mpt->AddConstProperty("SCINTILLATIONYIELD", 58708./MeV);
   LXe_mpt->AddConstProperty("RESOLUTIONSCALE", 1);
   LXe_mpt->AddConstProperty("RAYLEIGH", 36.*cm);
   // check constants with the Aprile
-  LXe_mpt->AddConstProperty("FASTTIMECONSTANT",2.*ns);
+  LXe_mpt->AddConstProperty("FASTTIMECONSTANT",2.2*ns);
   LXe_mpt->AddConstProperty("SLOWTIMECONSTANT",45.*ns);
   //  LXe_mpt->AddConstProperty("ELTIMECONSTANT", 50.*ns);
   LXe_mpt->AddConstProperty("YIELDRATIO",1.);
@@ -792,14 +792,17 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB_LXe()
 
   G4MaterialPropertiesTable* tpb_mpt = new G4MaterialPropertiesTable();
     
-  const G4int ri_entries = 9;
+  // const G4int ri_entries = 9;
   //const G4int ABSL_NUMENTRIES = 8;
   //const G4int WLSABSL_NUMENTRIES = 7;
   const G4int EMISSION_NUMENTRIES = 55;
 
   XenonLiquidProperties LXe_prop; 
+
+  const G4int ri_entries = 18;
   G4double ri_energy[ri_entries] 
-    = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 7*eV, 8*eV, 9*eV};
+    = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV, 7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV, 8*eV, 8.2*eV, 8.21*eV};
+  
   G4double rindex[ri_entries];
   for (G4int i=0; i<ri_entries; i++) {
     rindex[i] = LXe_prop.RefractiveIndex(ri_energy[i]);

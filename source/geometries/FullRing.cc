@@ -12,6 +12,7 @@
 #include "PmtR7378A.h"
 #include "CylinderPointSampler.h"
 #include "MaterialsList.h"
+#include "PetKDBFixedPitch.h"
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
 #include <G4Tubs.hh>
@@ -54,9 +55,10 @@ namespace nexus {
      diameter_cmd.SetRange("ring_diameter>0.");
 
      module_ = new PetaloTrap();
+     kdb_ = new PetKDBFixedPitch();
 
-     phantom_diam_ = 20.*cm;
-     phantom_length_ = 4.*cm;
+     phantom_diam_ = 12.*cm;
+     phantom_length_ = 10.*cm;
 
      cylindric_gen_ = 
        new CylinderPointSampler(0., phantom_length_, phantom_diam_/2., 0., G4ThreeVector (0., 0., 0.));
@@ -78,7 +80,24 @@ namespace nexus {
     lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
     this->SetLogicalVolume(lab_logic_);
   
-    BuildDetector();
+    // BuildDetector();
+    //   BuildOneModule();
+
+     // Dimensions
+    G4double size1 = 2.*ring_diameter_/2.*tan(pi/n_modules_);
+    G4double size2 = size1 + 2.*z_size_*tan(pi/n_modules_);
+    G4cout << size1 << ", vs " << size2 << G4endl;
+
+    
+    module_->SetParameters(size1, size2, z_size_);
+    module_->Construct();
+
+    //    PmtR7378A pmt;
+    //   pmt.Construct();
+    //    G4LogicalVolume* module_logic = pmt.GetLogicalVolume();
+    G4LogicalVolume* module_logic = module_->GetLogicalVolume();
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), module_logic,
+     		      "MODULE", lab_logic_, false, 0, true);   
   }
 
   void FullRing::BuildDetector()
@@ -105,15 +124,16 @@ namespace nexus {
     rot.rotateX(-pi/2.);
     // The first must be positioned outside the loop
     new G4PVPlacement(G4Transform3D(rot, position), module_logic,
-		      "TRAP", lab_logic_, false, 0, true);   
+		      "MODULE0", lab_logic_, false, 0, true);   
 
     for (G4int i=1; i<n_modules_;++i) {
       G4double angle = i*step;
       rot.rotateZ(step);
       position.setX(-radius*sin(angle));
       position.setY(radius*cos(angle));
+      G4String vol_name = "MODULE" + i;
       new G4PVPlacement(G4Transform3D(rot, position), module_logic,
-		      "TRAP", lab_logic_, false, i, true);   
+		      vol_name, lab_logic_, false, i, true);   
     }
   }
 
@@ -129,6 +149,38 @@ namespace nexus {
 		       "PAHNTOM", lab_logic_, false, 0, true);   
 
  
+  }
+
+ void FullRing::BuildOneModule()
+  {
+
+     // Dimensions
+    G4double size1 = 2.*ring_diameter_/2.*tan(pi/n_modules_);
+    G4double size2 = size1 + 2.*z_size_*tan(pi/n_modules_);
+    G4cout << size1 << ", vs " << size2 << G4endl;
+
+    
+    module_->SetParameters(size1, size2, z_size_);
+    module_->Construct();
+
+    //    PmtR7378A pmt;
+    //   pmt.Construct();
+    //    G4LogicalVolume* module_logic = pmt.GetLogicalVolume();
+    G4LogicalVolume* module_logic = module_->GetLogicalVolume();
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), module_logic,
+     		      "MODULE", lab_logic_, false, 0, true);   
+
+
+    kdb_->SetXYsize(size1);
+    kdb_->Construct();
+    G4double db_z = kdb_->GetDimensions().z();
+    
+   G4double displ = (z_size_-det_thickness_)/2. + db_z/2.;
+
+   G4LogicalVolume* db_logic = kdb_->GetLogicalVolume();
+   // new G4PVPlacement(0, G4ThreeVector(0.,0., -displ), db_logic,
+   // 		     "LXE_DICE", lab_logic_, false, 0, true);
+
   }
 
   

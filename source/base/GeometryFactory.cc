@@ -42,6 +42,7 @@ GeometryFactory::~GeometryFactory()
 #include "PetalX2.h"
 #include "PetalX4.h"
 #include "FullRing.h"
+#include "PetaloTrapAlone.h"
 
 BaseGeometry* GeometryFactory::CreateGeometry() const
 {
@@ -68,6 +69,8 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
   else if (_name == "PETALX4") p = new PetalX4();
 
   else if (_name == "FULLRING") p = new FullRing();
+  
+  else if (_name == "TRAP") p = new PetaloTrapAlone();
 
   else {
     G4String err = "The user selected an unknown geometry: " + _name;
