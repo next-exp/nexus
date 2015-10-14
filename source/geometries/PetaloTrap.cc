@@ -74,7 +74,7 @@ namespace nexus {
 
     G4double det_size1 = size1_;
     G4double det_size2 = size2_;
-    G4cout << det_size1  << ", vs " << det_size2 << G4endl;
+    G4cout << "Single module, dimensions: "<< det_size1  << ", vs " << det_size2 << G4endl;
     G4Trap* det_solid = 
       //   new G4Box("WALL", det_size/2., det_size/2., det_size/2.);
       new G4Trap("TRAP", det_size1/2., det_size2/2., det_size1/2., det_size2/2., (z_size_)/2.);
