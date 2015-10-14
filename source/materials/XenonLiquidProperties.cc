@@ -84,7 +84,7 @@ namespace nexus {
     if (n2 < 1.) {
       G4String msg = "Non-physical refractive index for energy. Use n=1 instead. ";
 	// + bhep::to_string(energy) + " eV. Use n=1 instead.";
-      //     G4cout << "refractive index = " << n2 << G4endl;
+      G4cout << "refractive index for energy " << energy << " = " << n2 << G4endl;
       G4Exception("[XenonLiquidProperties]", "RefractiveIndex()",
       	 	  JustWarning, msg);
       n2 = 1.;

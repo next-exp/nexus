@@ -18,7 +18,7 @@
 class G4LogicalVolume;
 class G4GenericMessenger;
 class G4Material;
-namespace nexus{class PetKDB;}
+namespace nexus{class PetKDBFixedPitch;}
 namespace nexus{class PetPlainDice;}
 namespace nexus {class BoxPointSampler;}
 
@@ -43,7 +43,7 @@ namespace nexus {
     void BuildDetector(); 
     //    void BuildLXe();
     //  void BuildActive(); 
-    //   void BuildSiPMPlane(); 
+    void BuildSiPMPlanes(); 
 
     G4LogicalVolume* lab_logic_;
     G4LogicalVolume* det_logic_;
@@ -72,6 +72,8 @@ namespace nexus {
     G4double z_size_;
     G4double ring_diameter_;
     G4double size1_, size2_;
+
+    PetKDBFixedPitch* db_;
 
   };
   

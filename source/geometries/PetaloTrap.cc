@@ -12,6 +12,7 @@
 #include "IonizationSD.h"
 #include "OpticalMaterialProperties.h"
 #include "BoxPointSampler.h"
+#include "PetKDBFixedPitch.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -35,7 +36,7 @@ namespace nexus {
   PetaloTrap::PetaloTrap():
     BaseGeometry(),
     // Detector dimensions
-    det_thickness_(5*mm)
+    det_thickness_(1.*mm)
   {
     
     // Messenger
@@ -52,6 +53,10 @@ namespace nexus {
     // size1_ = 2.*ring_diameter_/2.*tan(pi/n_modules_);
     // size2_ = size1_ + 2.*z_size_*tan(pi/n_modules_);
     // G4cout << size1_  << ", vs " << size2_ << G4endl;
+
+    //  SetParameters(31.6312*mm, 40.2579*mm, 30.*mm);
+
+    db_ = new PetKDBFixedPitch();
   }
 
 
@@ -64,7 +69,9 @@ namespace nexus {
 
   void PetaloTrap::Construct()
   {  
-  
+    db_->SetXYsize(size1_);
+    db_->Construct();
+
     G4double det_size1 = size1_;
     G4double det_size2 = size2_;
     G4cout << det_size1  << ", vs " << det_size2 << G4endl;
@@ -77,16 +84,12 @@ namespace nexus {
     det_logic_ = new G4LogicalVolume(det_solid, steel, "TRAP");
 
     this->SetLogicalVolume(det_logic_);
-    //det_logic_->SetVisAttributes(G4VisAttributes::Invisible);    
-   
-    //   G4Colour myColour; 
-    //   G4Colour::GetColour("white", myColour);
-  
+    //   det_logic_->SetVisAttributes(G4VisAttributes::Invisible);    
 
     G4Colour myColour(.6, .8, .79); 
     G4VisAttributes grey_color(myColour); 
     grey_color.SetForceSolid(true);
-    det_logic_->SetVisAttributes(grey_color);
+    // det_logic_->SetVisAttributes(grey_color);
 
     G4Trap* lxe_solid = 
       new G4Trap("ACTIVE", (size1_-2.*det_thickness_)/2., (size2_-2.*det_thickness_)/2., (size1_-2.*det_thickness_)/2., (size2_-2.*det_thickness_)/2., (z_size_-det_thickness_)/2.);
@@ -109,13 +112,31 @@ namespace nexus {
     std::cout << "*** Maximum Step Size (mm): " << max_step_size_/mm << std::endl;
     lxe_logic->SetUserLimits(new G4UserLimits(max_step_size_));
 
-    G4Colour otherColour(.6, .8, .79); 
-    G4VisAttributes myAttr(otherColour); 
-    myAttr.SetForceSolid(true);
+    //   G4Colour otherColour(.6, .8, .79); 
+    //   G4VisAttributes myAttr(otherColour); 
+    //   myAttr.SetForceSolid(true);
     // lxe_logic->SetVisAttributes(myAttr);
     
-
+    BuildSiPMPlanes();
   }
+
+ void PetaloTrap::BuildSiPMPlanes()
+ {
+   G4double db_z = db_->GetDimensions().z();
+
+   G4double displ = (z_size_-det_thickness_)/2. + db_z/2.;
+
+   G4LogicalVolume* db_logic = db_->GetLogicalVolume();
+   new G4PVPlacement(0, G4ThreeVector(0.,0., -displ), db_logic,
+		     "LXE_DICE", lXe_logic_, false, 0, true);
+
+   db_->SetXYsize( size2_);
+   db_->Construct();
+   db_logic = db_->GetLogicalVolume();
+   new G4PVPlacement(0, G4ThreeVector(0.,0., displ), db_logic,
+   		     "LXE_DICE", lXe_logic_, false, 1, true);
+   
+ }
 
 
   /*

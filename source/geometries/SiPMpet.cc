@@ -10,8 +10,8 @@
 #include "SiPMpet.h"
 #include "PmtSD.h"
 #include "MaterialsList.h"
-#include <G4GenericMessenger.hh>
 #include "OpticalMaterialProperties.h"
+#include "Visibilities.h"
 
 #include <G4Box.hh>
 #include <G4LogicalVolume.hh>
@@ -23,6 +23,7 @@
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
 #include <G4PhysicalConstants.hh>
+#include <G4GenericMessenger.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 
@@ -153,16 +154,9 @@ namespace nexus {
                                       0.42,  0.425, 0.415,
                                       0.35,  0.315, 0.185,
                                       0.06};
-    
-    G4double efficiency_red[entries];
-    for (G4int i=0; i<entries; ++i) {
-      efficiency_red[i] = efficiency[i]*1.24;
-    }
-
 
     
     G4MaterialPropertiesTable* sipm_mt = new G4MaterialPropertiesTable();
-    //sipm_mt->AddProperty("EFFICIENCY", energies, efficiency_red, entries);
     sipm_mt->AddProperty("EFFICIENCY", energies, efficiency, entries);
     sipm_mt->AddProperty("REFLECTIVITY", energies, reflectivity, entries);
 
@@ -175,14 +169,14 @@ namespace nexus {
     
     // SENSITIVE DETECTOR ////////////////////////////////////////////
 
-    G4String sdname = "/SIPM11/SiPM";
+    G4String sdname = "/SIPMpet/SiPM";
     G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
     
     if (!sdmgr->FindSensitiveDetector(sdname, false)) {
       PmtSD* sipmsd = new PmtSD(sdname);
       sipmsd->SetDetectorVolumeDepth(0);
       sipmsd->SetDetectorNamingOrder(1000.);
-      sipmsd->SetTimeBinning(25.*nanosecond);
+      sipmsd->SetTimeBinning(1.*picosecond);
       sipmsd->SetMotherVolumeDepth(1);
       
       G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
@@ -191,9 +185,10 @@ namespace nexus {
 
     // Visibilities
     if (_visibility) {
-      G4VisAttributes sipm_col(G4Colour(.40,.55,.55));
-      sipm_logic->SetVisAttributes(sipm_col);
-      G4VisAttributes active_col(G4Colour(1.,1.,0.));
+      G4VisAttributes red_col = nexus::Red();
+      sipm_logic->SetVisAttributes(red_col);
+
+      G4VisAttributes active_col(G4Colour(.6, .8, .79));
       active_col.SetForceSolid(true);
       active_logic->SetVisAttributes(active_col);
     }

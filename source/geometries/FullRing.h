@@ -5,7 +5,8 @@
 
 class G4GenericMessenger;
 namespace nexus {class PetaloTrap;
-  class CylinderPointSampler;}
+  class CylinderPointSampler;
+  class PetKDBFixedPitch;}
 
 namespace nexus {
   class FullRing : public BaseGeometry {
@@ -23,8 +24,10 @@ namespace nexus {
     void Construct();
     void BuildDetector(); 
     void BuildPhantom();
+    void BuildOneModule(); 
 
     PetaloTrap* module_;
+    PetKDBFixedPitch* kdb_;
     
     G4LogicalVolume* lab_logic_;
 
