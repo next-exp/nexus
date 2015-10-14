@@ -80,24 +80,7 @@ namespace nexus {
     lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
     this->SetLogicalVolume(lab_logic_);
   
-    // BuildDetector();
-    //   BuildOneModule();
-
-     // Dimensions
-    G4double size1 = 2.*ring_diameter_/2.*tan(pi/n_modules_);
-    G4double size2 = size1 + 2.*z_size_*tan(pi/n_modules_);
-    G4cout << size1 << ", vs " << size2 << G4endl;
-
-    
-    module_->SetParameters(size1, size2, z_size_);
-    module_->Construct();
-
-    //    PmtR7378A pmt;
-    //   pmt.Construct();
-    //    G4LogicalVolume* module_logic = pmt.GetLogicalVolume();
-    G4LogicalVolume* module_logic = module_->GetLogicalVolume();
-    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), module_logic,
-     		      "MODULE", lab_logic_, false, 0, true);   
+    BuildDetector();
   }
 
   void FullRing::BuildDetector()
@@ -106,15 +89,10 @@ namespace nexus {
     // Dimensions
     G4double size1 = 2.*ring_diameter_/2.*tan(pi/n_modules_);
     G4double size2 = size1 + 2.*z_size_*tan(pi/n_modules_);
-    G4cout << size1 << ", vs " << size2 << G4endl;
-
-    
+    G4cout << "Dimensions: "<< size1 << " and " << size2 << G4endl;
+  
     module_->SetParameters(size1, size2, z_size_);
     module_->Construct();
-
-    //    PmtR7378A pmt;
-    //   pmt.Construct();
-    //    G4LogicalVolume* module_logic = pmt.GetLogicalVolume();
     G4LogicalVolume* module_logic = module_->GetLogicalVolume();
 
     G4double step = 2.*pi/n_modules_;
@@ -150,39 +128,6 @@ namespace nexus {
 
  
   }
-
- void FullRing::BuildOneModule()
-  {
-
-     // Dimensions
-    G4double size1 = 2.*ring_diameter_/2.*tan(pi/n_modules_);
-    G4double size2 = size1 + 2.*z_size_*tan(pi/n_modules_);
-    G4cout << size1 << ", vs " << size2 << G4endl;
-
-    
-    module_->SetParameters(size1, size2, z_size_);
-    module_->Construct();
-
-    //    PmtR7378A pmt;
-    //   pmt.Construct();
-    //    G4LogicalVolume* module_logic = pmt.GetLogicalVolume();
-    G4LogicalVolume* module_logic = module_->GetLogicalVolume();
-    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), module_logic,
-     		      "MODULE", lab_logic_, false, 0, true);   
-
-
-    kdb_->SetXYsize(size1);
-    kdb_->Construct();
-    G4double db_z = kdb_->GetDimensions().z();
-    
-   G4double displ = (z_size_-det_thickness_)/2. + db_z/2.;
-
-   G4LogicalVolume* db_logic = kdb_->GetLogicalVolume();
-   // new G4PVPlacement(0, G4ThreeVector(0.,0., -displ), db_logic,
-   // 		     "LXE_DICE", lab_logic_, false, 0, true);
-
-  }
-
   
 
   G4ThreeVector FullRing::GenerateVertex(const G4String& region) const
