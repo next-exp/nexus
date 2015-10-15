@@ -10,6 +10,8 @@
 
 ##### JOB CONTROL #####
 /nexus/persistency/outputFile Next100.next
+## eventType options: bb0nu, bb2nu, background
+/nexus/persistency/eventType background
 
 
 
@@ -50,8 +52,6 @@
 /Generator/IonGun/atomic_number 83
 /Generator/IonGun/mass_number 214
 /Generator/IonGun/region FIELD_CAGE
-
-
 
 ##### VERBOSITIES #####
 /run/verbose 0

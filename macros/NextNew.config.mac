@@ -23,5 +23,5 @@
 /PhysicsList/Nexus/drift               false
 /PhysicsList/Nexus/electroluminescence false
 
-
+/nexus/persistency/eventType background
 /nexus/persistency/outputFile NextNew.Bi214.DICE_BOARD.next

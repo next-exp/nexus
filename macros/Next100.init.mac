@@ -13,7 +13,11 @@
 
 /Actions/RegisterTrackingAction DEFAULT
 
-/control/execute macros/physics/DefaultPhysicsList.mac
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics NexusPhysics
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 /nexus/RegisterMacro macros/Next100.config.mac
 /nexus/RegisterDelayedMacro macros/physics/Bi214.mac
