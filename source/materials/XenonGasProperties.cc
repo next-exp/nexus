@@ -15,6 +15,8 @@
 #include "CLHEP/Units/SystemOfUnits.h"
 #include "CLHEP/Units/PhysicalConstants.h"
 
+#include <stdexcept>
+
 
 namespace nexus {
 
@@ -35,7 +37,7 @@ namespace nexus {
   
 
   
-  G4double XenonGasProperties::Density()
+  G4double XenonGasProperties::Density(G4double pressure)
   {
 
     // G4double data[50][1] =
@@ -47,7 +49,7 @@ namespace nexus {
     //   };
 
     // Ideal gas state equation P*V = n*R*T
-    // I'm assuming atmosphere = bar 
+    // assuming atmosphere = bar 
 
     // values for R
     //  8.3145 J mol-1 K-1
@@ -55,9 +57,33 @@ namespace nexus {
     //  82.058 cm3 atm mol-1 K-1
     // value for molar mass: 131.29 g/mol
 
-    _density = (_pressure/atmosphere)*131.29/(_temperature*82.058);
+    // Warning: this is a dimensionless value.
+    // _density = 
+    //   (_pressure/atmosphere)*131.29/(_temperature*82.058);
 
-    return _density;
+    G4double density = 5.324*kg/m3;
+    
+    if (pressure/bar > 0.9 && pressure/bar < 1.1)
+      density = 5.324*kg/m3;
+    else if (pressure/bar > 1.9 && pressure/bar < 2.1)
+      density = 10.7*kg/m3;
+    else if (pressure/bar > 4.9 && pressure/bar < 5.1)
+      density = 27.2*kg/m3;
+    else if (pressure/bar > 9.9 && pressure/bar < 10.1)
+      density = 55.587*kg/m3;
+    else if (pressure/bar > 14.9 && pressure/bar < 15.1)
+      density = 85.95 *kg/m3;
+    else if (pressure/bar > 19.9 && pressure/bar < 20.1)
+      density = 118.4*kg/m3;
+    else if (pressure/bar > 29.9 && pressure/bar < 30.1)
+      density = 193.6*kg/m3;
+    else if (pressure/bar > 39.9 && pressure/bar < 40.1)
+      density = 284.3*kg/m3;
+    else
+      G4Exception("[XenonGaseousProperties]", "Density()", FatalException,
+                  "Unknown xenon density for this pressure!");     
+   
+    return density;
   }
   
 
@@ -91,14 +117,15 @@ namespace nexus {
 
     for (G4int i=0; i<3; i++)
       virial = virial + P[i] / (energy*energy - E[i]*E[i]);
-    
-    G4double density = 6.E-3;
+
+    // Need to use g/cm3    
+    G4double density = Density(_pressure) / g * cm3;
+
     G4double mol_density = density / 131.29;
     G4double alpha = virial * mol_density;
     
     // Isolating now the n2 from equation (1) and taking the square root
     G4double n2 = (1. - 2*alpha) / (1. + alpha);
-
     if (n2 < 1.) {
  //      G4String msg = "Non-physical refractive index for energy "
 	// + bhep::to_string(energy) + " eV. Use n=1 instead.";
