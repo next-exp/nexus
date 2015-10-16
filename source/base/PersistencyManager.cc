@@ -258,6 +258,7 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
 
   _itrkmap.clear();
 
+  double evt_energy = 0.;
   for (G4int i=0; i<hits->entries(); i++) {
     
     IonizationHit* hit = dynamic_cast<IonizationHit*>(hits->GetHit(i));
@@ -270,8 +271,7 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
     std::map<G4int, gate::MCTrack*>::iterator it = _itrkmap.find(trackid);
     if (it != _itrkmap.end()) {
       itrk = it->second;
-    }
-    else {
+    } else {  
       std::string sdname = hits->GetSDname();
       itrk = new gate::MCTrack();
       itrk->SetLabel(sdname);
@@ -283,13 +283,27 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
 
     G4ThreeVector xyz = hit->GetPosition();
     gate::MCHit* ghit = new gate::MCHit();
+    ghit->SetID(i);
     ghit->SetPosition(gate::Point3D(xyz.x(), xyz.y(), xyz.z()));
     ghit->SetTime(hit->GetTime());
     ghit->SetAmplitude(hit->GetEnergyDeposit());
+    evt_energy += hit->GetEnergyDeposit();
     itrk->AddHit(ghit);
-    ievt->AddMCHit(ghit);
-   
+    ievt->AddMCHit(ghit);      
   }
+
+  ievt->SetMCEnergy(evt_energy);
+
+  for (G4int tr=0; tr<ievt->GetMCTracks().size(); ++tr) {
+    G4double tot_energy = 0.;
+    gate::MCTrack* mytrack =  ievt->GetMCTracks()[tr];
+    const std::vector<gate::BHit*> myhits = mytrack->GetHits();
+    for (G4int h=0; h<myhits.size(); ++h) {
+      tot_energy += myhits[h]->GetAmplitude();
+    }
+    mytrack->SetEnergy(tot_energy);
+  }
+
    
 }
 
