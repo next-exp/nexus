@@ -283,7 +283,6 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
 
     G4ThreeVector xyz = hit->GetPosition();
     gate::MCHit* ghit = new gate::MCHit();
-    ghit->SetID(i);
     ghit->SetPosition(gate::Point3D(xyz.x(), xyz.y(), xyz.z()));
     ghit->SetTime(hit->GetTime());
     ghit->SetAmplitude(hit->GetEnergyDeposit());
@@ -300,6 +299,7 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
     const std::vector<gate::BHit*> myhits = mytrack->GetHits();
     for (G4int h=0; h<myhits.size(); ++h) {
       tot_energy += myhits[h]->GetAmplitude();
+      myhits[h]->SetID(h);
     }
     mytrack->SetEnergy(tot_energy);
   }
