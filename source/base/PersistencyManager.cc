@@ -301,6 +301,7 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
       tot_energy += myhits[h]->GetAmplitude();
       myhits[h]->SetID(h);
     }
+    mytrack->SetExtremes(0, myhits.size()-1);
     mytrack->SetEnergy(tot_energy);
   }
 
