@@ -15,6 +15,7 @@
 #include <G4VPersistencyManager.hh>
 #include <map>
 
+
 class G4GenericMessenger;
 class G4TrajectoryContainer;
 class G4HCofThisEvent;
@@ -72,7 +73,9 @@ namespace nexus {
     G4bool _ready;     ///< Is the PersistencyManager ready to go?
     G4bool _store_evt; ///< Should we store the current event?
 
-    gate::Event* _evt;         ///< Persistent gate event
+    G4String event_type_; ///< event type: bb0nu, bb2nu, background or not set
+
+    // gate::Event* _evt;         ///< Persistent gate event
     gate::RootWriter* _writer; ///< Event writer to ROOT file
 
     std::map<G4int, gate::MCParticle*> _iprtmap;
