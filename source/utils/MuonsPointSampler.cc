@@ -41,12 +41,11 @@ namespace nexus {
   G4ThreeVector MuonsPointSampler::GetXZPointInMuonsPlane()
   {
     
-    //y is fixed
-    G4double y = 400;
+    // y is fixed
     G4double x = -_x + G4UniformRand()*2*_x;
     G4double z = -_z + G4UniformRand()*2*_z;
     
-    G4ThreeVector mypoint(x,y,z);
+    G4ThreeVector mypoint(x, _yPoint, z);
     
     // std::cout<<"Generating Muons in: "<<x<<" , "<<y<<" , "<<z<<std::endl;
     return mypoint;

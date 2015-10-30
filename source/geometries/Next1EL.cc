@@ -309,50 +309,40 @@ void Next1EL::BuildLab()
 
 void Next1EL::BuildMuons()
 {
-  // MUONS /////////////////////////////////////////////////////////////
-  // This is just a volume of air surrounding the detector so that
-  // muons can be generated on the surface.
-  // 
-    
-
-  //  G4double xMuons =  _lab_size/10.;
-  //G4double yMuons = _lab_size/500.;
-  //G4double zMuons = _lab_size/5.;
+  // MUONS ///////////////////////////////////////////////////////////// 
 
   G4double xMuons =  _lab_size/3;
   G4double yMuons = _lab_size/500.;
   G4double zMuons = _lab_size/2;
-  
+
   G4double yMuonsOrigin = 400.;
+
+  //sampling position in a surface above the detector 
+  _muons_sampling = new MuonsPointSampler(xMuons, yMuonsOrigin, zMuons);
+  
+  
+  // To visualize the muon generation surface
+  
+  //visualization sphere
+  G4Orb * muon_solid_ref = new G4Orb ("MUONS_ref",25);
+  G4LogicalVolume*  muon_logic_ref = new G4LogicalVolume(muon_solid_ref, _air, "MUONS_ref");
+  // new G4PVPlacement(0, G4ThreeVector(0., yMuonsOrigin, 0.), muon_logic_ref, 
+  //                             "MUONS_ref", _lab_logic, false, 0, true);
   
   G4Box* muon_solid = 
     new G4Box("MUONS", xMuons, yMuons, zMuons);
-  
-  //visualization sphere
-  //G4Orb * muon_solid_ref = new G4Orb ("MUONS_ref",25);
-  
-  G4LogicalVolume*  muon_logic = new G4LogicalVolume(muon_solid, _air, "MUONS");
-  //placing the sphere for visualization
-  //G4LogicalVolume*  muon_logic_ref = new G4LogicalVolume(muon_solid_ref, _air, "MUONS_ref");
-  
+  G4LogicalVolume*  muon_logic = new G4LogicalVolume(muon_solid, _air, "MUONS");  
   new G4PVPlacement(0, G4ThreeVector(0., yMuonsOrigin, 0.), muon_logic,
 		    "MUONS", _lab_logic, false, 0, true);
 
-  //to visualize the reference
-  //  new G4PVPlacement(0, G4ThreeVector(0., yMuonsOrigin, 0.), muon_logic_ref,
-  //		    "MUONS_ref", _lab_logic, false, 0, true);
-  
-  //  _muons_ref_position=  G4ThreeVector(0., yMuonsOrigin, 0.);
-  
-  //sampling position in plane
-  _muons_sampling = new MuonsPointSampler(xMuons, yMuonsOrigin, zMuons);
-  
-  // visualization
+   // visualization
   G4VisAttributes * vis_red_neus = new G4VisAttributes;
   vis_red_neus->SetColor(1., 0., 0.);
   vis_red_neus->SetForceSolid(true);
   muon_logic->SetVisAttributes(vis_red_neus);
   //  muon_logic_ref->SetVisAttributes(vis_red_neus);
+  
+  
   
 }
 
