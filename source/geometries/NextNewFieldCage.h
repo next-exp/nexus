@@ -49,11 +49,13 @@ namespace nexus {
 
   private:
     void DefineMaterials();
-    void BuildELRegion();
     void BuildCathodeGrid();
     void BuildActive(); 
+    void BuildBuffer(); 
+    void BuildELRegion();
     void BuildFieldCage(); 
     void BuildAnodeGrid();
+    
 
     /// Calculates the vertices for the EL table generation
     void CalculateELTableVertices(G4double radius, 

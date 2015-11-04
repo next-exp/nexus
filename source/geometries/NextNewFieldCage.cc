@@ -210,6 +210,8 @@ namespace nexus {
     // Build the different parts
      // ACTIVE region
     BuildActive(); 
+    // Buffer region
+    BuildBuffer();
     // EL Region
     BuildELRegion();
     //build the quartz anode
@@ -315,6 +317,28 @@ namespace nexus {
 			       0., G4ThreeVector (0., 0., active_posz));
   }
 
+void NextNewFieldCage::BuildBuffer()
+  {
+    G4double length = _buffer_length - _cathode_thickness/2.;
+    G4double buffer_posz = 
+      -_dist_feedthroughs/2.  - _cathode_thickness -  length/2.;
+    G4Tubs* buffer_solid = 
+      new G4Tubs("BUFFER",  0., _tube_in_diam/2.-_reflector_thickness, 
+		 length/2., 0, twopi);
+
+    
+    G4LogicalVolume* buffer_logic = 
+      new G4LogicalVolume(buffer_solid, _gas, "BUFFER");
+    new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_posz), buffer_logic, 
+		      "BUFFER", _mother_logic, false, 0, false);
+
+     // Set the volume as an ionization sensitive detector
+    IonizationSD* buffsd = new IonizationSD("/NEXTNEW/BUFFER");
+    buffsd->IncludeInTotalEnergyDeposit(false);
+    buffer_logic->SetSensitiveDetector(buffsd);
+    G4SDManager::GetSDMpointer()->AddNewDetector(buffsd);
+  }
+
   void NextNewFieldCage::BuildELRegion()
   {
     ///// EL GAP /////
@@ -408,7 +432,7 @@ namespace nexus {
      
     if (_visibility) {
       G4VisAttributes anode_col = nexus::Red();
-      // anode_col.SetForceSolid(true);
+      //  anode_col.SetForceSolid(true);
       anode_logic->SetVisAttributes(anode_col);
       G4VisAttributes tpb_col = nexus::DarkGreen();
       //  tpb_col.SetForceSolid(true);
@@ -511,8 +535,12 @@ namespace nexus {
       drift_tube_logic->SetVisAttributes(tube_col);
       buffer_tube_logic->SetVisAttributes(tube_col);
       G4VisAttributes reflector_col = nexus::White();
-      reflector_drift_logic->SetVisAttributes(reflector_col);
-      reflector_buffer_logic->SetVisAttributes(reflector_col);
+      G4Colour mycolour = G4Colour (1.0, 1.0, 1.0, .5);
+      G4VisAttributes myAttr(mycolour);
+      myAttr.SetForceSolid(true);
+      reflector_drift_logic->SetVisAttributes(myAttr);
+      //      G4VisAttributes buffer_refl_col = nexus::White();
+      reflector_buffer_logic->SetVisAttributes(myAttr);
       G4VisAttributes tpb_col = nexus::DarkGreen();
       tpb_drift_logic->SetVisAttributes(tpb_col);
       tpb_buffer_logic->SetVisAttributes(tpb_col);
