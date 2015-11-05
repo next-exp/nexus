@@ -162,19 +162,18 @@ namespace nexus {
     G4ThreeVector vertex(0.,0.,0.);
     //BUFFER GAS
     if (region == "LAB") {
-      vertex = _lab_gen->GenerateVertex(region);
+      vertex = _lab_gen->GenerateVertex("INSIDE");
     }
     //LEAD CASTLE
     else if ( (region == "SHIELDING_LEAD") || (region == "SHIELDING_STEEL") || 
 	      (region == "SHIELDING_GAS") || (region=="SHIELDING_STRUCT") ||  (region == "EXTERNAL") ) {
-      vertex = _shielding->GenerateVertex(region);
-     
+      vertex = _shielding->GenerateVertex(region);   
     }
     //PEDESTAL
-   else if (region == "PEDESTAL") {
+    else if (region == "PEDESTAL") {
       vertex = _pedestal->GenerateVertex(region);
     }
-   //  //COPER CASTLE
+    //  //COPPER CASTLE
    // else if (region == "CU_CASTLE"){
    //   vertex = _cu_castle->GenerateVertex(region);
    //}
@@ -185,9 +184,9 @@ namespace nexus {
    //  }
 
     //VESSEL REGIONS
-    if ( (region == "VESSEL") || 
-	 (region == "SOURCE_PORT_ANODE") ||
-	 (region == "SOURCE_PORT_CATHODE")) {
+    else if ( (region == "VESSEL") || 
+	      (region == "SOURCE_PORT_ANODE") ||
+	      (region == "SOURCE_PORT_CATHODE")) {
       vertex = _vessel->GenerateVertex(region);
     }
     // ICS REGIONS
@@ -209,7 +208,6 @@ namespace nexus {
       G4Exception("[NextNew]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");     
     } 
-   
     return vertex;
   }
   

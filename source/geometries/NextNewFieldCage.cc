@@ -330,7 +330,7 @@ void NextNewFieldCage::BuildBuffer()
     G4LogicalVolume* buffer_logic = 
       new G4LogicalVolume(buffer_solid, _gas, "BUFFER");
     new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_posz), buffer_logic, 
-		      "BUFFER", _mother_logic, false, 0, true);
+		      "BUFFER", _mother_logic, false, 0, false);
 
      // Set the volume as an ionization sensitive detector
     IonizationSD* buffsd = new IonizationSD("/NEXTNEW/BUFFER");
