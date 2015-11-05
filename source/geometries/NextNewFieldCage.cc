@@ -319,7 +319,7 @@ namespace nexus {
 
 void NextNewFieldCage::BuildBuffer()
   {
-    G4double length = _buffer_length - _cathode_thickness/2.;
+    G4double length = _buffer_length - _cathode_gap/2.;
     G4double buffer_posz = 
       -_dist_feedthroughs/2.  - _cathode_thickness -  length/2.;
     G4Tubs* buffer_solid = 
@@ -330,7 +330,7 @@ void NextNewFieldCage::BuildBuffer()
     G4LogicalVolume* buffer_logic = 
       new G4LogicalVolume(buffer_solid, _gas, "BUFFER");
     new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_posz), buffer_logic, 
-		      "BUFFER", _mother_logic, false, 0, false);
+		      "BUFFER", _mother_logic, false, 0, true);
 
      // Set the volume as an ionization sensitive detector
     IonizationSD* buffsd = new IonizationSD("/NEXTNEW/BUFFER");
