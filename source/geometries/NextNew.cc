@@ -107,7 +107,8 @@ namespace nexus {
     ////Limit the uStepMax=Maximum step length, uTrakMax=Maximum total track length,
     //uTimeMax= Maximum global time for a track, uEkinMin= Minimum remaining kinetic energy for a track
     //uRangMin=	 Minimum remaining range for a track
-    _buffer_gas_logic->SetUserLimits(new G4UserLimits( _lab_size*1E6, _lab_size*1E6,1E12 *s,100.*keV,0.));
+    // _buffer_gas_logic->SetUserLimits(new G4UserLimits( _lab_size*1E6, _lab_size*1E6,1E12 *s,100.*keV,0.));
+    _buffer_gas_logic->SetUserLimits(new G4UserLimits( DBL_MAX, DBL_MAX, DBL_MAX,100.*keV,0.));
    
     // _buffer_gas_logic->SetVisAttributes(G4VisAttributes (G4Colour(.86, .86, .86)));
     _buffer_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
