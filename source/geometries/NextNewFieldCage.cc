@@ -46,9 +46,9 @@ namespace nexus {
   NextNewFieldCage::NextNewFieldCage(): 
     BaseGeometry(),
     // Field cage dimensions
-    _dist_feedthroughs(514. * mm),
+    _dist_feedthroughs(514. * mm), //distance between the centres of the feedthroughs
     _cathode_thickness(.1 * mm),
-    _cathode_gap (16. * mm),
+    _cathode_gap (20. * mm), // at Nov 19, 16. * mm // It is assumed to be centred in the feedthrough
     _buffer_length (124. * mm), // from center of cathode to surface of sapphire windows // at Nov 19, 130. * mm
     _tube_in_diam (396. * mm), // at Nov 19, 432.*mm
     _tube_length_drift (507.*mm), // at Nov 19, 508. * mm
@@ -70,6 +70,7 @@ namespace nexus {
     _cathode_grid_transparency (.98),
     _ito_transparency (.90),
     _ito_thickness (_grid_thickness),
+    _buffer_tube_length (110. * mm),
     //
     _ELtransv_diff(0. * mm/sqrt(cm)),
     _ELlong_diff(0. * mm/sqrt(cm)),
@@ -249,6 +250,7 @@ namespace nexus {
     fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _cathode_grid_transparency, _cathode_thickness));
     // Dimensions & position
     G4double grid_diam = _tube_in_diam;
+    // The centre of the feedthrough is the limit of the active volume. 
     G4double posz = - _dist_feedthroughs/2. - _cathode_thickness/2.; 
     // Building the grid
     G4Tubs* diel_grid_solid = 
@@ -311,7 +313,8 @@ namespace nexus {
 
 void NextNewFieldCage::BuildBuffer()
   {
-    G4double length = _buffer_length - _cathode_gap/2.;
+    //G4double length = _buffer_length - _cathode_gap/2.;
+    G4double length = _buffer_length;
     G4double buffer_posz = 
       -_dist_feedthroughs/2.  - _cathode_thickness -  length/2.;
     G4Tubs* buffer_solid = 
@@ -453,6 +456,9 @@ void NextNewFieldCage::BuildBuffer()
 		      hdpe_tube_logic, "HDPE_TUBE", _mother_logic, 
 		       false, 0, true);
 
+     G4cout << "Hdpe tube starts in " << hdpe_tube_z_pos - _hdpe_length/2.  << 
+       " and ends in " << hdpe_tube_z_pos + _hdpe_length/2. << G4endl;
+
      // Copper rings
      G4double ring_in_diam = _hdpe_in_diam - 2. * _ring_thickness;
      G4double ring_out_diam =_hdpe_in_diam;
@@ -486,6 +492,9 @@ void NextNewFieldCage::BuildBuffer()
     new G4PVPlacement(0, G4ThreeVector(0., 0., drift_tube_z_pos), 
 		      drift_tube_logic, "DRIFT_TUBE", _mother_logic, 
 		      false, 0, false);
+
+    G4cout << "Light tube drift starts in " << drift_tube_z_pos - _tube_length_drift/2.  << 
+      " and ends in " << drift_tube_z_pos + _tube_length_drift/2. << G4endl;
     
     G4double tube_length_buffer = _buffer_length - _cathode_gap/2.;
     G4double buffer_tube_z_pos = 
@@ -499,6 +508,8 @@ void NextNewFieldCage::BuildBuffer()
 		      buffer_tube_logic, "BUFFER_TUBE", _mother_logic, 
 		      false, 0, false);
 
+  G4cout << "Buffer tube drift starts in " << buffer_tube_z_pos - tube_length_buffer/2.  << 
+      " and ends in " << buffer_tube_z_pos + tube_length_buffer/2. << G4endl;
 
     G4Tubs* tpb_drift_solid =
       new G4Tubs("DRIFT_TPB", _tube_in_diam/2., _tube_in_diam/2. + _tpb_thickness,
