@@ -49,7 +49,7 @@ namespace nexus {
     _dist_feedthroughs(514. * mm), //distance between the centres of the feedthroughs
     _cathode_thickness(.1 * mm),
     _cathode_gap (20. * mm), // at Nov 19, 16. * mm // It is assumed to be centred in the feedthrough
-    _buffer_length (124. * mm), // from center of cathode to surface of sapphire windows // at Nov 19, 130. * mm
+    _windows_end_z (-387. * mm), // position in gas where the sapphire windows end. To be read from NextNewEnergyPlane.cc
     _tube_in_diam (396. * mm), // at Nov 19, 432.*mm
     _tube_length_drift (507.*mm), // at Nov 19, 508. * mm
     _tube_thickness (2.0 * cm),  
@@ -58,6 +58,7 @@ namespace nexus {
     _hdpe_in_diam (452. * mm),
     _hdpe_out_diam (490. * mm),
     _hdpe_ledge (12. * mm),
+    _buffer_tube_length (110. * mm),
     _ring_width (10. * mm),
     _ring_thickness (3. * mm),
     _tpb_thickness(1.*micrometer),
@@ -70,7 +71,6 @@ namespace nexus {
     _cathode_grid_transparency (.98),
     _ito_transparency (.90),
     _ito_thickness (_grid_thickness),
-    _buffer_tube_length (110. * mm),
     //
     _ELtransv_diff(0. * mm/sqrt(cm)),
     _ELlong_diff(0. * mm/sqrt(cm)),
@@ -88,10 +88,13 @@ namespace nexus {
     _el_table_binning(5.*mm)
   {
     // Derived dimensions 
-    //   _drift_length = _dist_EL_cathode-_el_gap_length/2.-_cathode_thickness/2.;
-    //  _tube_length_drift = _dist_EL_cathode + _buffer_length -  _el_gap_length/2.;
-    _el_gap_z_pos = -_dist_feedthroughs/2. + _cathode_gap/2. +  _tube_length_drift + _dist_tube_el + _el_gap_length/2.;
-    _pos_z_anode =  _el_gap_z_pos + _el_gap_length/2. +  _anode_quartz_thickness/2.+ 0.1*mm; // 0.1 mm is needed because EL is produced only if the PostStepVolume is GAS material.
+    _buffer_length = 
+      - _dist_feedthroughs/2. - _cathode_thickness - _windows_end_z , // from the end of the cathode to surface of sapphire windows // It's 129.9 mm
+ 
+    _el_gap_z_pos = 
+      -_dist_feedthroughs/2. + _cathode_gap/2. +  _tube_length_drift + _dist_tube_el + _el_gap_length/2.;
+    _pos_z_anode =  
+      _el_gap_z_pos + _el_gap_length/2. +  _anode_quartz_thickness/2.+ 0.1*mm; // 0.1 mm is needed because EL is produced only if the PostStepVolume is GAS material.
 
     // Define a new category
     new G4UnitDefinition("kilovolt/cm","kV/cm","Electric field", kilovolt/cm);
@@ -277,7 +280,8 @@ namespace nexus {
     G4Tubs* active_solid = 
       new G4Tubs("ACTIVE",  0., _tube_in_diam/2., 
 		 active_length/2., 0, twopi);
-
+    // G4cout << "Active starts in " <<  active_posz  -  active_length/2. << " and ends in " 
+    // 	   << active_posz +  active_length/2. << G4endl;
     
     G4LogicalVolume* active_logic = 
       new G4LogicalVolume(active_solid, _gas, "ACTIVE");
@@ -314,14 +318,14 @@ namespace nexus {
 void NextNewFieldCage::BuildBuffer()
   {
     //G4double length = _buffer_length - _cathode_gap/2.;
-    G4double length = _buffer_length;
     G4double buffer_posz = 
-      -_dist_feedthroughs/2.  - _cathode_thickness -  length/2.;
+      -_dist_feedthroughs/2.  - _cathode_thickness -  _buffer_length/2.;
     G4Tubs* buffer_solid = 
       new G4Tubs("BUFFER",  0., _tube_in_diam/2., 
-		 length/2., 0, twopi);
+		 _buffer_length /2., 0, twopi);
 
-    
+    // G4cout << "Buffer (gas) starts in " << buffer_posz - _buffer_length/2. << " and ends in " 
+    // 	   << buffer_posz + _buffer_length/2. << G4endl;
     G4LogicalVolume* buffer_logic = 
       new G4LogicalVolume(buffer_solid, _gas, "BUFFER");
     new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_posz), buffer_logic, 
@@ -344,6 +348,9 @@ void NextNewFieldCage::BuildBuffer()
       new G4LogicalVolume(el_gap_solid, _gas, "EL_GAP");  
     new G4PVPlacement(0, G4ThreeVector(0., 0., _el_gap_z_pos), el_gap_logic,
 		      "EL_GAP", _mother_logic, false, 0, false);
+
+    // G4cout << "EL gap region starts in " << _el_gap_z_pos - _el_gap_length/2. << " and ends in " 
+    // 	   << _el_gap_z_pos + _el_gap_length/2. << G4endl;
    
     if (_elfield) {
       // Define EL electric field
@@ -411,6 +418,9 @@ void NextNewFieldCage::BuildBuffer()
     new G4PVPlacement(0, G4ThreeVector(0., 0., _pos_z_anode), anode_logic, 
 		      "EL_QUARTZ_ANODE", _mother_logic, false, 0, false);
    
+    // G4cout << "Anode plate starts in " << _pos_z_anode - _anode_quartz_thickness/2. << " and ends in " << 
+    //   _pos_z_anode + _anode_quartz_thickness/2. << G4endl;
+
     G4Tubs* tpb_anode_solid =
       new G4Tubs("TPB_ANODE", 0., anode_diam/2. , _tpb_thickness/2., 0, twopi);
     G4LogicalVolume* tpb_anode_logic = 
@@ -456,8 +466,8 @@ void NextNewFieldCage::BuildBuffer()
 		      hdpe_tube_logic, "HDPE_TUBE", _mother_logic, 
 		       false, 0, true);
 
-     G4cout << "Hdpe tube starts in " << hdpe_tube_z_pos - _hdpe_length/2.  << 
-       " and ends in " << hdpe_tube_z_pos + _hdpe_length/2. << G4endl;
+     // G4cout << "Hdpe tube starts in " << hdpe_tube_z_pos - _hdpe_length/2.  << 
+     //   " and ends in " << hdpe_tube_z_pos + _hdpe_length/2. << G4endl;
 
      // Copper rings
      G4double ring_in_diam = _hdpe_in_diam - 2. * _ring_thickness;
@@ -493,23 +503,23 @@ void NextNewFieldCage::BuildBuffer()
 		      drift_tube_logic, "DRIFT_TUBE", _mother_logic, 
 		      false, 0, false);
 
-    G4cout << "Light tube drift starts in " << drift_tube_z_pos - _tube_length_drift/2.  << 
-      " and ends in " << drift_tube_z_pos + _tube_length_drift/2. << G4endl;
+    // G4cout << "Light tube drift starts in " << drift_tube_z_pos - _tube_length_drift/2.  << 
+    //   " and ends in " << drift_tube_z_pos + _tube_length_drift/2. << G4endl;
     
-    G4double tube_length_buffer = _buffer_length - _cathode_gap/2.;
+    //G4double tube_length_buffer = _buffer_length - _cathode_gap/2.;
     G4double buffer_tube_z_pos = 
-      - _dist_feedthroughs/2. - _cathode_gap/2. - tube_length_buffer/2.;
+      - _dist_feedthroughs/2. - _cathode_gap/2. - _buffer_tube_length/2.;
     G4Tubs* buffer_tube_solid =
       new G4Tubs("BUFFER_TUBE", _tube_in_diam/2.,
-    		 _tube_in_diam/2. + _tube_thickness, tube_length_buffer/2., 0, twopi);   
+    		 _tube_in_diam/2. + _tube_thickness, _buffer_tube_length/2., 0, twopi);   
     G4LogicalVolume* buffer_tube_logic = 
       new G4LogicalVolume(buffer_tube_solid, _teflon, "BUFFER_TUBE");
     new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_tube_z_pos), 
 		      buffer_tube_logic, "BUFFER_TUBE", _mother_logic, 
 		      false, 0, false);
 
-  G4cout << "Buffer tube drift starts in " << buffer_tube_z_pos - tube_length_buffer/2.  << 
-      " and ends in " << buffer_tube_z_pos + tube_length_buffer/2. << G4endl;
+  // G4cout << "Buffer tube drift starts in " << buffer_tube_z_pos - _buffer_tube_length/2.  << 
+  //     " and ends in " << buffer_tube_z_pos + _buffer_tube_length/2. << G4endl;
 
     G4Tubs* tpb_drift_solid =
       new G4Tubs("DRIFT_TPB", _tube_in_diam/2., _tube_in_diam/2. + _tpb_thickness,
@@ -522,7 +532,7 @@ void NextNewFieldCage::BuildBuffer()
     
     G4Tubs* tpb_buffer_solid =
       new G4Tubs("BUFFER_TPB", _tube_in_diam/2.,  _tube_in_diam/2. + _tpb_thickness,
-    		 tube_length_buffer/2., 0, twopi);    
+    		 _buffer_tube_length/2., 0, twopi);    
     G4LogicalVolume* tpb_buffer_logic = 
       new G4LogicalVolume(tpb_buffer_solid, _tpb, "BUFFER_TPB"); 
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), 
@@ -579,7 +589,7 @@ void NextNewFieldCage::BuildBuffer()
     			       0., G4ThreeVector (0., 0., drift_tube_z_pos));
     
     _buffer_tube_gen  = 
-      new CylinderPointSampler(_tube_in_diam/2., tube_length_buffer, _tube_thickness,
+      new CylinderPointSampler(_tube_in_diam/2., _buffer_tube_length, _tube_thickness,
     			       0., G4ThreeVector (0., 0., buffer_tube_z_pos));
 
      _anode_quartz_gen = 
