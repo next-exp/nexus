@@ -75,13 +75,16 @@ namespace nexus {
     G4Material* _ito;
     G4Material* _teflon; 
     G4Material* _quartz;
+    G4Material* _copper;
 
     // Dimensions
     G4double _dist_feedthroughs, _cathode_thickness, _cathode_gap;
-    G4double _buffer_length;
-    G4double _tube_in_diam, _tube_length_drift, _dist_tube_el; //_tube_length_buff 
-    G4double _tube_thickness, _tube_z_pos;
-    G4double _reflector_thickness, _tpb_thickness;
+    G4double _windows_end_z, _buffer_length;
+    G4double _tube_in_diam, _tube_length_drift, _tube_thickness, _dist_tube_el; //_tube_length_buff 
+    G4double _hdpe_length, _hdpe_in_diam, _hdpe_out_diam, _hdpe_ledge;
+    G4double _buffer_tube_length;
+    G4double  _ring_width, _ring_thickness, _tube_z_pos;
+    G4double _tpb_thickness;
     G4double _el_gap_z_pos, _pos_z_anode, _el_gap_length, _grid_thickness;
     G4double _el_grid_transparency, _gate_transparency; 
     G4double _anode_quartz_thickness, _anode_quartz_diam; //_anode_quartz_transparency
@@ -105,9 +108,8 @@ namespace nexus {
     
     // Vertex generators
     CylinderPointSampler* _drift_tube_gen;
-    CylinderPointSampler* _reflector_drift_gen;
+    CylinderPointSampler* _hdpe_tube_gen;
     CylinderPointSampler* _buffer_tube_gen;
-    CylinderPointSampler* _reflector_buffer_gen;
     CylinderPointSampler* _active_gen;
     CylinderPointSampler* _anode_quartz_gen;
 
