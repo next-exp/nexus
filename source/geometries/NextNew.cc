@@ -107,7 +107,8 @@ namespace nexus {
     ////Limit the uStepMax=Maximum step length, uTrakMax=Maximum total track length,
     //uTimeMax= Maximum global time for a track, uEkinMin= Minimum remaining kinetic energy for a track
     //uRangMin=	 Minimum remaining range for a track
-    _buffer_gas_logic->SetUserLimits(new G4UserLimits( _lab_size*1E6, _lab_size*1E6,1E12 *s,100.*keV,0.));
+    // _buffer_gas_logic->SetUserLimits(new G4UserLimits( _lab_size*1E6, _lab_size*1E6,1E12 *s,100.*keV,0.));
+    _buffer_gas_logic->SetUserLimits(new G4UserLimits( DBL_MAX, DBL_MAX, DBL_MAX,100.*keV,0.));
    
     // _buffer_gas_logic->SetVisAttributes(G4VisAttributes (G4Colour(.86, .86, .86)));
     _buffer_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
@@ -162,19 +163,18 @@ namespace nexus {
     G4ThreeVector vertex(0.,0.,0.);
     //BUFFER GAS
     if (region == "LAB") {
-      vertex = _lab_gen->GenerateVertex(region);
+      vertex = _lab_gen->GenerateVertex("INSIDE");
     }
     //LEAD CASTLE
     else if ( (region == "SHIELDING_LEAD") || (region == "SHIELDING_STEEL") || 
 	      (region == "SHIELDING_GAS") || (region=="SHIELDING_STRUCT") ||  (region == "EXTERNAL") ) {
-      vertex = _shielding->GenerateVertex(region);
-     
+      vertex = _shielding->GenerateVertex(region);   
     }
     //PEDESTAL
-   else if (region == "PEDESTAL") {
+    else if (region == "PEDESTAL") {
       vertex = _pedestal->GenerateVertex(region);
     }
-   //  //COPER CASTLE
+    //  //COPPER CASTLE
    // else if (region == "CU_CASTLE"){
    //   vertex = _cu_castle->GenerateVertex(region);
    //}
@@ -185,9 +185,9 @@ namespace nexus {
    //  }
 
     //VESSEL REGIONS
-    if ( (region == "VESSEL") || 
-	 (region == "SOURCE_PORT_ANODE") ||
-	 (region == "SOURCE_PORT_CATHODE")) {
+    else if ( (region == "VESSEL") || 
+	      (region == "SOURCE_PORT_ANODE") ||
+	      (region == "SOURCE_PORT_CATHODE")) {
       vertex = _vessel->GenerateVertex(region);
     }
     // ICS REGIONS
@@ -209,7 +209,6 @@ namespace nexus {
       G4Exception("[NextNew]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");     
     } 
-   
     return vertex;
   }
   

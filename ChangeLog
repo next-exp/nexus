@@ -1,3 +1,10 @@
+tag v5_00_00 - 28 Oct 2015
+	- Change from IRENE to GATE in persistency.
+	- 83Kr generator added.
+	- Xenon density used in the refractive index calculation taken  from pressure.
+	- Event writing skipped if one event is aborted, in order not to have the whole run crashed.
+	- Obsolete GenbbInterface class  eliminated. Decay0 to be used instead.
+	
 tag v4_04_05 - 19 Jun 2015
 	- transverse and longitudinal diffusion and electric field strength passed by configuration parameters 
 	- Muon generator added
