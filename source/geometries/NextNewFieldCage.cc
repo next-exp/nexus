@@ -49,7 +49,7 @@ namespace nexus {
     _dist_feedthroughs(514. * mm), //distance between the centres of the feedthroughs
     _cathode_thickness(.1 * mm),
     _cathode_gap (20. * mm), // at Nov 19, 16. * mm // It is assumed to be centred in the feedthrough
-    _windows_end_z (-387. * mm), // position in gas where the sapphire windows end. To be read from NextNewEnergyPlane.cc
+    _windows_end_z (-386.999 * mm), // position in gas where the sapphire windows end. To be read from NextNewEnergyPlane.cc
     _tube_in_diam (396. * mm), // at Nov 19, 432.*mm
     _tube_length_drift (507.*mm), // at Nov 19, 508. * mm
     _tube_thickness (2.0 * cm),  
