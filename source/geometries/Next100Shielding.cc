@@ -122,7 +122,7 @@ namespace nexus {
     G4double top_beam_y = _shield_y/2.+ _steel_thickness + _lead_thickness/2.; 
     
     G4Box* roof_beam = new G4Box("STRUCT_BEAM",lead_x/2.,_beam_base_thickness/2.,lead_z/2.);
-    G4Box* aux_box = new G4Box("AUX_box",_shield_x/2.,_beam_base_thickness,_shield_z/2.);
+    G4Box* aux_box = new G4Box("AUX_box",_shield_x/2.+ _steel_thickness,_beam_base_thickness,_shield_z/2.+ _steel_thickness);
     G4SubtractionSolid* roof_beam_solid = new G4SubtractionSolid("STRUCT_BEAM",roof_beam,aux_box,0,G4ThreeVector(0.,0.,0.));
   
     G4Box* lat_beam_solid = new G4Box("STRUCT_BEAM",
