@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+//  $Id: PmtSD.cc 10054 2015-02-09 14:50:49Z paola $
 //
 //  Author:  <justo.martin-albo@ific.uv.es>
 //  Created: 15 Feb 2010
@@ -14,9 +14,6 @@
 #include <G4ProcessManager.hh>
 #include <G4OpBoundaryProcess.hh>
 #include <G4RunManager.hh>
-#include <G4RunManager.hh>
-
-
 
 
 namespace nexus {
@@ -100,6 +97,7 @@ namespace nexus {
  	// If no hit associated to this sensor exists already,
  	// create it and set main properties
  	if (!hit) {
+	  //	  G4cout << "Building SD hit number " << pmt_id << G4endl;
  	  hit = new PmtHit();
  	  hit->SetPmtID(pmt_id);
  	  hit->SetBinSize(_timebinning);
@@ -122,7 +120,9 @@ namespace nexus {
     G4int pmtid = touchable->GetCopyNumber(_sensor_depth);
     if (_naming_order != 0) {
       G4int motherid = touchable->GetCopyNumber(_mother_depth);
-      pmtid = _naming_order * motherid + pmtid;
+      G4int granmaid = touchable->GetCopyNumber(_grandmother_depth);
+      // G4cout << "Granma  = " << granmaid << ", mother = "<< motherid << G4endl;
+      pmtid = 10000*granmaid + _naming_order * motherid + pmtid;
     } 
     return pmtid;
   }

@@ -4,7 +4,7 @@
 ///
 ///  \author   J. Martin-Albo <jmalbos@ific.uv.es>
 ///  \date     15 Feb 2020  
-///  \version  $Id$
+///  \version  $Id: PmtSD.h 9094 2013-08-19 14:52:12Z paola $
 ///
 ///  Copyright (c) 2010-2012 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
@@ -56,6 +56,11 @@ namespace nexus {
     /// Return the naming order of the SD
     G4int GetDetectorNamingOrder() const;
 
+    /// Set the depth of the SD's grandmother volume in the geometry hierarchy
+    void SetGrandMotherVolumeDepth(G4int);
+    /// Return the depth of the SD's grandmother volume in the geometry hierarchy
+    G4int GetGrandMotherVolumeDepth() const;
+
     /// Return the time binning chosen for the pmt hits
     G4double GetTimeBinning() const;
     /// Set a time binning for the pmt hits
@@ -72,9 +77,13 @@ namespace nexus {
 
     G4int FindPmtID(const G4VTouchable*);
 
+  private:
+    G4int _hcid;
+
     G4int _naming_order; ///< Order of the naming scheme
     G4int _sensor_depth; ///< Depth of the SD in the geometry tree
     G4int _mother_depth; ///< Depth of the SD's mother in the geometry tree
+    G4int _grandmother_depth; ///< Depth of the SD's grandmother in the geometry tree
     
     G4double _timebinning; ///< Time bin width
     
@@ -93,6 +102,9 @@ namespace nexus {
 
   inline void PmtSD::SetDetectorNamingOrder(G4int o) { _naming_order = o; }
   inline G4int PmtSD::GetDetectorNamingOrder() const { return _naming_order; }
+
+  inline void PmtSD::SetGrandMotherVolumeDepth(G4int d) { _grandmother_depth = d; }
+  inline G4int PmtSD::GetGrandMotherVolumeDepth() const { return _grandmother_depth; }
 
   inline G4double PmtSD::GetTimeBinning() const { return _timebinning; }
   inline void PmtSD::SetTimeBinning(G4double tb) { _timebinning = tb; }
