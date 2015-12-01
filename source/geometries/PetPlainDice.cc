@@ -9,7 +9,7 @@
 
 #include "PetPlainDice.h"
 
-#include "SiPMpet.h"
+#include "SiPMpetVUV.h"
 #include "PmtSD.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
@@ -113,13 +113,14 @@ namespace nexus {
     db_opsur->SetFinish(ground);
     db_opsur->SetSigmaAlpha(0.1);
    
-    db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
+    // db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
+    db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_LXe());
     
     new G4LogicalSkinSurface("DICE_BOARD", board_logic, db_opsur);
 
    
     // WLS COATING //////////////////////////////////////////////////
-
+    
     G4Box* coating_solid = 
       new G4Box("DB_WLS_COATING", db_x/2., db_y/2., coating_thickness/2.);
 
@@ -133,50 +134,8 @@ namespace nexus {
     new G4PVPlacement(0, G4ThreeVector(0., 0., pos_z), coating_logic,
     		      "DB_WLS_COATING", board_logic, false, 0, true);
 
-
-    // SILICON PMs //////////////////////////////////////////////////
-    /*
-    SiPMpet sipm;
-    sipm.Construct();
-    G4LogicalVolume* sipm_logic = sipm.GetLogicalVolume();
-
-    pos_z = db_z/2. - border+ (sipm.GetDimensions().z())/2.;
-    G4double offset = sipm_pitch/2. - board_side_reduction;
-    G4int sipm_no = 0;
-
-    for (G4int i=0; i<rows_; i++) {
-
-      G4double pos_y = db_y/2. - offset - i*sipm_pitch;
-
-      for (G4int j=0; j<columns_; j++) {
-
-        G4double pos_x = -db_x/2 + offset + j*sipm_pitch;
-
-	//G4cout << pos_x << ", " << pos_y << ", " << pos_z << G4endl;
-
-        new G4PVPlacement(0, G4ThreeVector(pos_x, pos_y, pos_z), 
-          sipm_logic, "SIPMpet", out_logic, false, sipm_no, true);
-
-        std::pair<int, G4ThreeVector> mypos;
-        mypos.first = sipm_no;
-        mypos.second = G4ThreeVector(pos_x, pos_y, pos_z);
-        _positions.push_back(mypos);
-        sipm_no++;
-      }
-    }
-    */
-    //   G4cout << "SiPMs start at " << pos_z - sipm.GetDimensions().z()/2. << " and end at " << pos_z + sipm.GetDimensions().z()/2. << " in the ref system of LXe outer box " << G4endl;
-
-    /// OPTICAL SURFACES ////////////////////////////////////////////
-
-    // G4OpticalSurface* dboard_opsur = new G4OpticalSurface("DB");
-    // dboard_opsur->SetType(dielectric_metal);
-    // dboard_opsur->SetModel(unified);
-    // dboard_opsur->SetFinish(ground);
-    // dboard_opsur->SetSigmaAlpha(0.1);
-    // dboard_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
     
-    // new G4LogicalSkinSurface("DB", board_logic, dboard_opsur);
+   
 
     // SETTING VISIBILITIES   //////////
     // _visibility  = true;
@@ -188,11 +147,11 @@ namespace nexus {
       */
       G4VisAttributes tpb_col(G4Colour(1., 1., 1.));
       tpb_col.SetForceSolid(true);
-      coating_logic->SetVisAttributes(tpb_col);
+      //   coating_logic->SetVisAttributes(tpb_col);
       
     }
     else {
-      coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      //   coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
       //     sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
   }
