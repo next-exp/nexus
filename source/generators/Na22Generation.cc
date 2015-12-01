@@ -25,9 +25,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  Na22Generation::Na22Generation() : _geom(0) 
-			
-
+ Na22Generation::Na22Generation() : _geom(0) 
   {
     /// For the moment, only random direction are allowed. To be fixes if needed
      _msg = new G4GenericMessenger(this, "/Generator/Na22Generator/",
@@ -35,7 +33,6 @@ namespace nexus {
 
      _msg->DeclareProperty("region", _region, 
 			   "Set the region of the geometry where the vertex will be generated.");
-
 
     DetectorConstruction* detconst = (DetectorConstruction*)
       G4RunManager::GetRunManager()->GetUserDetectorConstruction();
@@ -49,6 +46,7 @@ namespace nexus {
   void Na22Generation::GeneratePrimaryVertex(G4Event* evt)
   {
     // Ask the geometry to generate a position for the particle
+
     G4ThreeVector position = _geom->GenerateVertex(_region); 
     G4double time = 0.;
     G4PrimaryVertex* vertex = 
