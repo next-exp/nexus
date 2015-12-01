@@ -43,6 +43,8 @@ GeometryFactory::~GeometryFactory()
 #include "PetalX4.h"
 #include "FullRing.h"
 #include "PetaloTrapAlone.h"
+#include "PMT_QE_setup.h"
+#include "Lab.h"
 
 BaseGeometry* GeometryFactory::CreateGeometry() const
 {
@@ -61,6 +63,8 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
   else if (_name == "NEXT_NEW") p = new NextNew();
 
   else if (_name == "MAG_BOX") p = new MagBox();
+
+  else if (_name == "PMT_QE_SETUP") p = new PMT_QE_setup();
   
   else if (_name == "PETALX") p = new PetalX();
 
@@ -71,6 +75,8 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
   else if (_name == "FULLRING") p = new FullRing();
   
   else if (_name == "TRAP") p = new PetaloTrapAlone();
+
+  else if (_name == "2MODULES") p = new Lab();
 
   else {
     G4String err = "The user selected an unknown geometry: " + _name;
