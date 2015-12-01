@@ -184,6 +184,7 @@ G4bool PersistencyManager::Store(const G4Event* event)
 void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
                                            gate::Event* ievent)
 {
+  
   // If the pointer is null, no trajectories were stored in this event
   if (!tc) return;
 
@@ -380,7 +381,6 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
     mytrack->SetExtremes(0, myhits.size()-1);
     mytrack->SetEnergy(tot_energy);
   }
-
    
 }
 
@@ -393,7 +393,6 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
   if (!hits) return;
 
   for (G4int i=0; i<hits->entries(); i++) {
-
 
     PmtHit* hit = dynamic_cast<PmtHit*>(hits->GetHit(i));
     if (!hit) continue;
@@ -435,7 +434,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     isnr->SetAmplitude(amplitude);
 
 
-    // Add the sensor hit to the ate event
+    // Add the sensor hit to the gate event
     ievt->AddMCSensHit(isnr);    
   }
 }
