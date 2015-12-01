@@ -37,7 +37,6 @@ namespace nexus {
     const BaseGeometry* _geom;
 
     G4String _region;
-    
   };
 
 }// end namespace nexus
