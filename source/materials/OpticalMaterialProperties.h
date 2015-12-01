@@ -36,6 +36,7 @@ namespace nexus {
     static G4MaterialPropertiesTable* Vacuum();
     static G4MaterialPropertiesTable* Epoxy();
     static G4MaterialPropertiesTable* GlassEpoxy();
+    static G4MaterialPropertiesTable* EpoxyVUV();
 
     /// Synthetic fused silica (suprasil) with transmission in the deep
     /// ultraviolet down to 160 nm
@@ -74,6 +75,7 @@ namespace nexus {
     static G4MaterialPropertiesTable* PS();
     static G4MaterialPropertiesTable* BC480(); 
     static G4MaterialPropertiesTable* PTFE();
+    static G4MaterialPropertiesTable* PTFE_LXe();
     static G4MaterialPropertiesTable* PTFE_with_TPB();
     static G4MaterialPropertiesTable* PTFE_non_reflectant();
     static G4MaterialPropertiesTable* PMMA();

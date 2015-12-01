@@ -49,8 +49,59 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Epoxy()
     {1*eV, 10.751*eV};
   G4double rindex[2] = 
     {1.54, 1.54};
+
+  // ABSORPTION LENGTH /////////////////////////////////////////////////////////
+
+  const G4int abs_entries = 17;
   
+  G4double abs_energy[abs_entries]=
+    {1.*eV, 2.132*eV, 2.735*eV, 2.908*eV, 3.119*eV, 
+     3.320*eV, 3.476*eV, 3.588*eV, 3.749*eV, 3.869*eV, 
+     3.973*eV, 4.120*eV, 4.224*eV, 4.320*eV, 4.420*eV, 
+     5.018*eV, 8.*eV};
+  G4double abslength[abs_entries] =
+    {15000.*cm, 326.*mm, 117.68*mm, 85.89*mm, 50.93*mm, 
+     31.25*mm, 17.19*mm, 10.46*mm, 5.26*mm, 3.77*mm, 
+     2.69*mm, 1.94*mm, 1.94*mm, 1.94*mm, 1.94*mm,
+     1.94*mm, 1.94*mm}; 
+ 
   mpt->AddProperty("RINDEX", energy, rindex, 2);
+  mpt->AddProperty("ABSLENGTH", abs_energy, abslength, abs_entries);
+
+  return mpt;
+}
+
+G4MaterialPropertiesTable* OpticalMaterialProperties::EpoxyVUV()
+{
+  // Optical properties adjusted in order not to modify the trajectories of photons and
+  // not to absorb them before they meet the photocathode. To be set to real properties when available
+
+  G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
+
+  XenonLiquidProperties LXe_prop;
+
+  const G4int ri_entries = 18;
+  G4double ri_energy[ri_entries] 
+    = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV, 7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV, 8*eV, 8.2*eV, 8.21*eV};
+
+  G4double ri_index[ri_entries];
+
+  for (G4int i=0; i<ri_entries; i++) {
+    // ri_index[i] = 1.54;
+    ri_index[i] = LXe_prop.RefractiveIndex(ri_energy[i]);
+  }
+
+  // ABSORPTION LENGTH /////////////////////////////////////////////////////////
+
+  const G4int abs_entries = 2;
+  
+  G4double abs_energy[abs_entries]=
+    {1.*eV, 10.*eV};
+  G4double abslength[abs_entries] =
+    {1.e8*m, 1.e8*m}; 
+ 
+  mpt->AddProperty("RINDEX", ri_energy, ri_index, ri_entries);
+  mpt->AddProperty("ABSLENGTH", abs_energy, abslength, abs_entries);
 
   return mpt;
 }
@@ -578,7 +629,8 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LXe()
 
   for (G4int i=0; i<ri_entries; i++) {
     rindex[i] = LXe_prop.RefractiveIndex(ri_energy[i]);
-    G4cout << ri_energy[i] << ", " << rindex[i] << G4endl;
+    // rindex[i] = 1.54;
+    //   G4cout << ri_energy[i] << ", " << rindex[i] << G4endl;
   }
 
   // Sampling from ~150 nm to 200 nm <----> from 6.20625 eV to 8.20625 eV
@@ -601,7 +653,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LXe()
   LXe_mpt->AddConstProperty("FASTTIMECONSTANT",2.2*ns);
   LXe_mpt->AddConstProperty("SLOWTIMECONSTANT",45.*ns);
   //  LXe_mpt->AddConstProperty("ELTIMECONSTANT", 50.*ns);
-  LXe_mpt->AddConstProperty("YIELDRATIO",1.);
+  LXe_mpt->AddConstProperty("YIELDRATIO", .2);
   LXe_mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
   
   G4double energy[2] = {0.01*eV, 100.*eV};
@@ -664,6 +716,30 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::PTFE()
   G4double ENERGIES[REFL_NUMENTRIES] = {1.0*eV, 30.*eV};
   /// This is for non-coated teflon panels
   G4double REFLECTIVITY[REFL_NUMENTRIES] = {.72, .72};
+  G4double specularlobe[REFL_NUMENTRIES] = {0., 0.}; // specular reflection about the normal to a 
+  //microfacet. Such a vector is chosen according to a gaussian distribution with 
+  //sigma = SigmaAlhpa (in rad) and centered in the average normal.
+  G4double specularspike[REFL_NUMENTRIES] = {0., 0.}; // specular reflection about the average normal 
+  G4double backscatter[REFL_NUMENTRIES] = {0., 0.}; //180 degrees reflection
+  // 1 - the sum of these three last parameters is the percentage of Lambertian reflection
+
+  teflon_mpt->AddProperty("REFLECTIVITY", ENERGIES, REFLECTIVITY, REFL_NUMENTRIES);
+  teflon_mpt->AddProperty("SPECULARLOBECONSTANT",ENERGIES,specularlobe,REFL_NUMENTRIES);
+  teflon_mpt->AddProperty("SPECULARSPIKECONSTANT",ENERGIES,specularspike,REFL_NUMENTRIES);
+  teflon_mpt->AddProperty("BACKSCATTERCONSTANT",ENERGIES,backscatter,REFL_NUMENTRIES);
+
+  return teflon_mpt;
+}
+
+G4MaterialPropertiesTable* OpticalMaterialProperties::PTFE_LXe()
+{
+  G4MaterialPropertiesTable* teflon_mpt = new G4MaterialPropertiesTable();
+
+  const G4int REFL_NUMENTRIES = 2;
+
+  G4double ENERGIES[REFL_NUMENTRIES] = {1.0*eV, 30.*eV};
+  /// This is for non-coated teflon panels
+  G4double REFLECTIVITY[REFL_NUMENTRIES] = {0.95, 0.95};
   G4double specularlobe[REFL_NUMENTRIES] = {0., 0.}; // specular reflection about the normal to a 
   //microfacet. Such a vector is chosen according to a gaussian distribution with 
   //sigma = SigmaAlhpa (in rad) and centered in the average normal.
