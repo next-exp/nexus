@@ -10,7 +10,7 @@
 /Geometry/RegisterGeometry 2MODULES
 
 ### GENERATOR
-/Generator/RegisterGenerator NA22
+/Generator/RegisterGenerator DOUBLE_PARTICLE
 
 ### ACTIONS
 /Actions/RegisterRunAction DEFAULT
@@ -18,4 +18,4 @@
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterSteppingAction DEFAULT 
 
-/nexus/RegisterMacro macros/Pet2boxes.noCompt.config.mac
+/nexus/RegisterMacro macros/Pet2boxes.config.mac

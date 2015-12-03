@@ -36,6 +36,8 @@ namespace nexus {
     
     /// Returns a point within a given region of the geometry
     virtual G4ThreeVector GenerateVertex(const G4String&) const;
+     /// Returns an std::pair of points within a given region of the geometry
+    virtual std::pair<G4ThreeVector, G4ThreeVector> GenerateVertices(const G4String&) const;
 
     /// Returns the span (maximum dimension) of the geometry
     G4double GetSpan();
@@ -94,6 +96,9 @@ namespace nexus {
   
   inline G4ThreeVector BaseGeometry::GenerateVertex(const G4String&) const
   { return G4ThreeVector(0., 0., 0.); }
+
+  inline std::pair<G4ThreeVector, G4ThreeVector> BaseGeometry::GenerateVertices(const G4String&) const
+    { return std::make_pair(G4ThreeVector(0., 0., 0.),G4ThreeVector(0., 0., 0.)); }
   
   inline void BaseGeometry::SetSpan(G4double s) { _span = s; }
   

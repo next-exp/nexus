@@ -8,14 +8,19 @@
 
 
 ### GENERATOR
+/Generator/DoubleParticle/particle e-
+/Generator/DoubleParticle/min_energy 511 keV
+/Generator/DoubleParticle/max_energy 511 keV
+/Generator/DoubleParticle/region ANYTHING
 
-/Generator/Na22Generator/region CENTER
-/Generator/Na22Generator/min_costheta 0.981513
-/Generator/Na22Generator/max_costheta 1
-/Generator/Na22Generator/min_phi 0
-/Generator/Na22Generator/max_phi 6.28319
-/Generator/Na22Generator/solid_angle specific
-/Generator/Na22Generator/solid_angle_dis 4Pi
+
+#/Generator/Na22Generator/region CENTER
+#/Generator/Na22Generator/min_costheta 0.981513
+#/Generator/Na22Generator/max_costheta 1
+#/Generator/Na22Generator/min_phi 0
+#/Generator/Na22Generator/max_phi 6.28319
+#/Generator/Na22Generator/solid_angle specific
+#/Generator/Na22Generator/solid_angle_dis 4Pi
 
 
 
@@ -28,7 +33,7 @@
 ### VERBOSITIES
 /run/verbose 0
 /event/verbose 0
-/tracking/verbose 0
+/tracking/verbose 1
 
 
 ### OUTPUT FILE
