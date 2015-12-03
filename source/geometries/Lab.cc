@@ -26,6 +26,8 @@
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
 
+#include <TTree.h>
+
 
 namespace nexus {
   
@@ -35,6 +37,27 @@ namespace nexus {
     BaseGeometry(), _msg(0)
   {
     module_ = new Pet2boxes();
+
+        // To read a TTree
+    file_ = new TFile("GeneratePhotonsTree.root","READ");
+  
+    
+    TTree* tree = dynamic_cast<TTree*>(file_->Get("tpg"));
+
+    
+    tree->SetBranchAddress("px1", &px1_);
+    tree->SetBranchAddress("py1", &py1_);
+    tree->SetBranchAddress("pz1", &pz1_);
+    tree->SetBranchAddress("px2", &px2_);
+    tree->SetBranchAddress("py2", &py2_);
+    tree->SetBranchAddress("pz2", &pz2_);
+    for (G4int i=0; i<tree->GetEntries(); ++i) {
+      tree->GetEntry(i);
+      G4ThreeVector pos1(px1_, py1_, pz1_);
+      G4ThreeVector pos2(px2_, py2_, pz2_);
+      std::pair<G4ThreeVector, G4ThreeVector> positions = std::make_pair(pos1, pos2);
+      vertices_.push_back(positions);
+    }
   }
 
 
@@ -82,7 +105,28 @@ namespace nexus {
 
   G4ThreeVector Lab::GenerateVertex(const G4String& /*region*/) const
   {
+    
     return G4ThreeVector(0.,0.,0.);
+  }
+
+  std::pair<G4ThreeVector, G4ThreeVector> Lab::GenerateVertices(const G4String& /*region*/) const
+  {
+    std::pair<G4ThreeVector, G4ThreeVector> vertices;
+    unsigned int i = index_;
+
+    if (i == (vertices_.size()-1)) {
+      G4Exception("[Pet2boxes]", "GenerateVertex()", 
+		  RunMustBeAborted, "Reached last event in vertices list.");
+    }
+
+    try {
+      vertices = vertices_.at(i);
+      index_++;
+    }
+    catch (const std::out_of_range& oor) {
+      G4Exception("[Pet2boxes]", "GenerateVertex()", FatalErrorInArgument, "Point out of range.");
+    }
+    return vertices;
   }
   
 
