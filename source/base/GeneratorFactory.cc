@@ -69,6 +69,8 @@ G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
 
   else if (_name == "E+E-PAIR") p = new ElecPositronPair();
 
+  else if (_name == "DOUBLE_PARTICLE") p = new DoubleParticle();
+
   else {
     G4String err = "The user specified an unknown generator: " + _name;
     G4Exception("CreateGenerator()", "[GeneratorFactory]",
