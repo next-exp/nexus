@@ -70,7 +70,7 @@ namespace nexus {
     _central_nozzle_ypos = central_nozzle_ypos;
     _down_nozzle_ypos = down_nozzle_ypos;
     _bottom_nozzle_ypos = bottom_nozzle_ypos;
-
+  
 
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/Next100/", "Control commands of geometry Next100.");
@@ -97,14 +97,14 @@ namespace nexus {
 
     G4Box* lead_box_nh_solid = new G4Box("LEAD_BOX_NH", lead_x/2., lead_y/2., lead_z/2.);
     //make the services holes
-    G4SubtractionSolid* lead_box_solid = new G4SubtractionSolid("LEAD_BOX", lead_box_nh_solid, nozzle_hole_solid,
-								0, G4ThreeVector(0. , _up_nozzle_ypos, 0.) );
-    lead_box_solid = new G4SubtractionSolid("LEAD_BOX", lead_box_solid, nozzle_hole_solid,
+    // G4SubtractionSolid* lead_box_solid = new G4SubtractionSolid("LEAD_BOX", lead_box_nh_solid, nozzle_hole_solid,
+    // 								0, G4ThreeVector(0. , _up_nozzle_ypos, 0.) );
+    G4SubtractionSolid* lead_box_solid = new G4SubtractionSolid("LEAD_BOX", lead_box_solid, nozzle_hole_solid,
 					    0, G4ThreeVector(0., _central_nozzle_ypos, 0.) );
-    lead_box_solid = new G4SubtractionSolid("LEAD_BOX", lead_box_solid, nozzle_hole_solid,
-					    0, G4ThreeVector(0., _down_nozzle_ypos, 0.) );
-    lead_box_solid = new G4SubtractionSolid("LEAD_BOX", lead_box_solid, nozzle_hole_solid,
-					    0, G4ThreeVector(0., _bottom_nozzle_ypos, 0.) );
+    // lead_box_solid = new G4SubtractionSolid("LEAD_BOX", lead_box_solid, nozzle_hole_solid,
+    // 					    0, G4ThreeVector(0., _down_nozzle_ypos, 0.) );
+    // lead_box_solid = new G4SubtractionSolid("LEAD_BOX", lead_box_solid, nozzle_hole_solid,
+    // 					    0, G4ThreeVector(0., _bottom_nozzle_ypos, 0.) );
 
     lead_box_solid = new G4SubtractionSolid("LEAD_BOX", lead_box_solid, shielding_box_solid);
 
