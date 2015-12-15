@@ -26,11 +26,11 @@ namespace nexus {
   {
   public:
     /// Constructor
-    Next100Shielding(const G4double nozzle_ext_diam,
-		     const G4double up_nozzle_ypos,
-		     const G4double central_nozzle_ypos,
-		     const G4double down_nozzle_ypos,
-		     const G4double bottom_nozzle_ypos);
+    Next100Shielding(const G4double nozzle_ext_diam=0.,
+		     const G4double up_nozzle_ypos=0.,
+		     const G4double central_nozzle_ypos=0.,
+		     const G4double down_nozzle_ypos=0.,
+		     const G4double bottom_nozzle_ypos=0.);
 
     /// Destructor
     ~Next100Shielding();
