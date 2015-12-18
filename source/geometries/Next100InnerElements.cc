@@ -317,7 +317,8 @@ namespace nexus {
     else if ((region == "CARRIER_PLATE") || 
              (region == "ENCLOSURE_BODY") ||
              (region == "ENCLOSURE_WINDOW") ||
-             (region == "PMT_BODY") ) {
+             (region == "PMT_BODY")||
+	     (region == "PMT") ) {
       vertex = _energy_plane->GenerateVertex(region);
     }
 

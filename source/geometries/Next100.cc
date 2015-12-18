@@ -169,6 +169,7 @@ namespace nexus {
     		 (region == "ENCLOSURE_BODY") ||
     		 (region == "ENCLOSURE_WINDOW") ||
     		 (region == "PMT_BODY") ||
+    		 (region == "PMT") ||
     		 (region == "TRK_SUPPORT") ||
     		 (region == "DICE_BOARD") ||
     		 (region == "EL_TABLE") ) {

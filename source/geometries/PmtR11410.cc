@@ -181,17 +181,29 @@ namespace nexus {
     _rear_cap_gen = new CylinderPointSampler(rear_body_irad, _body_thickness, 0., 0.,
 					     G4ThreeVector (0., 0., -_front_body_length/2. - _rear_body_length + _body_thickness/2.));
 
+    ///Front cap of the pmt: frame+window+photocathode
+    _front_cap_gen = new CylinderPointSampler(front_body_irad, _window_thickness+_photocathode_thickness, 0., 0.,
+					      G4ThreeVector (0., 0., _front_body_length/2. - _window_thickness/2. - _photocathode_thickness/2.));
+
 
 
     // Getting the enclosure body volume over total
     G4double front_body_vol  = _front_body_length * pi * ((_front_body_diam/2.)*(_front_body_diam/2.) - front_body_irad*front_body_irad);
     G4double medium_body_vol = _body_thickness * pi * (front_body_irad*front_body_irad - (_rear_body_diam/2.)*(_rear_body_diam/2.));
     G4double rear_body_vol   = (_rear_body_length+_body_thickness) * pi * ((_rear_body_diam/2.)*(_rear_body_diam/2.) - rear_body_irad*rear_body_irad);
-    G4double rear_cap_vol    = _body_thickness * pi * rear_body_irad*rear_body_irad;
-    G4double total_vol       = front_body_vol + medium_body_vol + rear_body_vol + rear_cap_vol;
-    _front_body_perc  = front_body_vol / total_vol;
-    _fr_med_body_perc = (front_body_vol + medium_body_vol) / total_vol;
-    _fr_med_re_body_perc = (front_body_vol + medium_body_vol + rear_body_vol) / total_vol;
+    G4double rear_cap_vol    = _body_thickness * pi * rear_body_irad*rear_body_irad;   
+    G4double front_cap_vol    = (_window_thickness + _photocathode_thickness) * pi * front_body_irad*front_body_irad;
+    
+    G4double total_body_vol       = front_body_vol + medium_body_vol + rear_body_vol + rear_cap_vol; //without window
+    G4double total_vol       = front_body_vol + medium_body_vol + rear_body_vol + rear_cap_vol + front_cap_vol;
+    _front_body_perc  = front_body_vol / total_body_vol;
+    _fr_med_body_perc = (front_body_vol + medium_body_vol) / total_body_vol;
+    _fr_med_re_body_perc = (front_body_vol + medium_body_vol + rear_body_vol) / total_body_vol;
+ 
+    _front_perc  = front_body_vol / total_vol;
+    _fr_med_perc = (front_body_vol + medium_body_vol) / total_vol;
+    _fr_med_re_perc = (front_body_vol + medium_body_vol + rear_body_vol) / total_vol;
+    _fr_med_re_cap_perc = (front_body_vol + medium_body_vol + rear_body_vol+ rear_cap_vol) / total_vol;
   }  
   
 
@@ -223,6 +235,20 @@ namespace nexus {
         vertex = _rear_body_gen->GenerateVertex("WHOLE_VOL");
       else
         vertex = _rear_cap_gen->GenerateVertex("INSIDE");
+    }
+    
+    if (region == "PMT") {
+      G4double rand1 = G4UniformRand();
+      if (rand1 < _front_perc) 
+        vertex = _front_body_gen->GenerateVertex("WHOLE_VOL");
+      else if (rand1 < _fr_med_perc)
+        vertex = _medium_body_gen->GenerateVertex("WHOLE_VOL");
+      else if (rand1 < _fr_med_re_perc)
+        vertex = _rear_body_gen->GenerateVertex("WHOLE_VOL");
+      else if (rand1 < _fr_med_re_cap_perc)
+        vertex = _rear_cap_gen->GenerateVertex("INSIDE");
+      else
+        vertex = _front_cap_gen->GenerateVertex("INSIDE");
     }
 
     return vertex;

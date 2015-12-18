@@ -59,8 +59,10 @@ namespace nexus {
     CylinderPointSampler* _medium_body_gen;
     CylinderPointSampler* _rear_body_gen;
     CylinderPointSampler* _rear_cap_gen;
+    CylinderPointSampler* _front_cap_gen;
 
     G4double _front_body_perc, _fr_med_body_perc, _fr_med_re_body_perc;
+    G4double _front_perc, _fr_med_perc, _fr_med_re_perc, _fr_med_re_cap_perc;
 
     G4bool _visibility;
 

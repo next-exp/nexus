@@ -289,7 +289,7 @@ namespace nexus {
     }
 
     // PMTs bodies
-    else if (region == "PMT_BODY") {
+    else if ((region == "PMT_BODY")||(region == "PMT") ) {
       G4ThreeVector ini_vertex = _pmt->GenerateVertex(region);
       G4double rand = _num_PMTs * G4UniformRand();
       G4ThreeVector pmt_pos = _pmt_positions[int(rand)];
