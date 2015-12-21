@@ -23,7 +23,7 @@
 /Geometry/Next100/vessel_vis false
 /Geometry/Next100/ics_vis false
 /Geometry/Next100/field_cage_vis false
-/Geometry/Next100/grids_vis false
+/Geometry/Next100/grids_vis true
 /Geometry/Next100/energy_plane_vis false
 /Geometry/Next100/tracking_plane_vis false
 
@@ -52,6 +52,10 @@
 /Generator/IonGun/atomic_number 83
 /Generator/IonGun/mass_number 214
 /Generator/IonGun/region FIELD_CAGE
+
+# ACTIONS
+/Actions/DefaultEventAction/energy_threshold 0.6 MeV
+/Actions/DefaultEventAction/max_energy 2.55 MeV
 
 ##### VERBOSITIES #####
 /run/verbose 0

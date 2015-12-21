@@ -39,6 +39,7 @@ namespace nexus {
     G4GenericMessenger* _msg;
     G4int _nevt, _nupdate;
     G4double _energy_threshold;
+    G4double _energy_max;
   };
   
 } // namespace nexus

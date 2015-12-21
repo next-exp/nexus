@@ -34,6 +34,11 @@ namespace nexus {
        _msg->DeclareProperty("energy_threshold", _energy_threshold, "");
     thresh_cmd.SetParameterName("energy_threshold", true);
     thresh_cmd.SetUnitCategory("Energy");
+
+    G4GenericMessenger::Command& max_energy_cmd =
+      _msg->DeclareProperty("max_energy", _energy_max, "");
+    max_energy_cmd.SetParameterName("max_energy", true);
+    max_energy_cmd.SetUnitCategory("Energy");
   }
   
   
@@ -83,7 +88,7 @@ namespace nexus {
  
       // if (edep > _energy_threshold) pm->StoreCurrentEvent(true);
       // else pm->StoreCurrentEvent(false);
-      if (!event->IsAborted() && edep > _energy_threshold) {
+      if (!event->IsAborted() && edep > _energy_threshold && edep < _energy_max) {
 	pm->StoreCurrentEvent(true);
       } else {
 	pm->StoreCurrentEvent(false);
