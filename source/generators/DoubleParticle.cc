@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author : J Martin-Albo <jmalbos@ific.uv.es>    
-//  Created: 27 Mar 2009
+//  Author : P Ferrario <paolafer@ific.uv.es>    
+//  Created: 
 //
 //  Copyright (c) 2009, 2010 NEXT Collaboration
 // ----------------------------------------------------------------------------
@@ -10,7 +10,6 @@
 #include "DoubleParticle.h"
 
 #include "DetectorConstruction.h"
-//#include "BaseGeometry.h"
 #include "Pet2boxes.h"
 
 #include <G4GenericMessenger.hh>
@@ -23,7 +22,8 @@
 #include <Randomize.hh>
 #include <G4OpticalPhoton.hh>
 
-#include "CLHEP/Units/SystemOfUnits.h"
+#include <CLHEP/Units/SystemOfUnits.h>
+#include <CLHEP/Units/PhysicalConstants.h>
 
 using namespace nexus;
 using namespace CLHEP;
@@ -112,12 +112,15 @@ void DoubleParticle::GeneratePrimaryVertex(G4Event* event)
   G4ThreeVector pos1 = positions.first;
   G4ThreeVector pos2 = positions.second;
 
+  G4double time1 = sqrt(pos1.getX()*pos1.getX() + pos1.getY()*pos1.getY() + pos1.getZ()*pos1.getZ())/c_light;
+  G4double time2 = sqrt(pos2.getX()*pos2.getX() + pos2.getY()*pos2.getY() + pos2.getZ()*pos2.getZ())/c_light;
 
   // Particle generated at start-of-event
+  // G4cout << time1/picosecond << ", " << time2/picosecond << G4endl;
   G4double time = 0.;
 
   // Create a new vertex
-  G4PrimaryVertex* vertex = new G4PrimaryVertex(pos1, time);
+  G4PrimaryVertex* vertex = new G4PrimaryVertex(pos1, time1);
 
   // Generate uniform random energy in [E_min, E_max]
   G4double kinetic_energy = RandomEnergy();
@@ -150,7 +153,7 @@ void DoubleParticle::GeneratePrimaryVertex(G4Event* event)
   event->AddPrimaryVertex(vertex);
 
    // Create a new vertex
-  G4PrimaryVertex* vertex2 = new G4PrimaryVertex(pos2, time);
+  G4PrimaryVertex* vertex2 = new G4PrimaryVertex(pos2, time2);
 
   // Generate uniform random energy in [E_min, E_max]
   G4double kinetic_energy2 = RandomEnergy();
@@ -161,10 +164,10 @@ void DoubleParticle::GeneratePrimaryVertex(G4Event* event)
     // Calculate cartesian components of momentum
   // G4double mass   = _particle_definition->GetPDGMass();
   G4double energy2 = kinetic_energy2 + mass;
-  G4double pmod2 = std::sqrt(energy*energy - mass*mass);
-  G4double px2 = pmod * _momentum_direction.x();
-  G4double py2 = pmod * _momentum_direction.y();
-  G4double pz2 = pmod * _momentum_direction.z();
+  G4double pmod2 = std::sqrt(energy2*energy2 - mass*mass);
+  G4double px2 = pmod2 * _momentum_direction2.x();
+  G4double py2 = pmod2 * _momentum_direction2.y();
+  G4double pz2 = pmod2 * _momentum_direction2.z();
 
   // Create the new primary particle and set it some properties
   G4PrimaryParticle* particle2 = 
