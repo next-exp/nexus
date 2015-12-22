@@ -26,7 +26,7 @@ namespace nexus {
 
 
   DefaultEventAction::DefaultEventAction(): 
-    G4UserEventAction(), _nevt(0), _nupdate(10), _energy_threshold(0.)
+    G4UserEventAction(), _nevt(0), _nupdate(10), _energy_threshold(0.), _energy_max(DBL_MAX)
   {
     _msg = new G4GenericMessenger(this, "/Actions/DefaultEventAction/");
     
