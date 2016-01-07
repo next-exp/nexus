@@ -34,13 +34,13 @@
 # Region options: EXTERNAL, SHIELDING_LEAD, SHIELDING_STEEL, SHIELDING_GAS
 #                 VESSEL, VESSEL_FLANGES, VESSEL_TRACKING_ENDCAP, VESSEL_ENERGY_ENDCAP
 #		  ICS, FIELD_CAGE, ACTIVE, CARRIER_PLATE, ENCLOSURE_BODY
-#		  ENCLOSURE_WINDOW, PMT_BODY, TRK_SUPPORT, DICE_BOARD
+#		  ENCLOSURE_WINDOW, PMT_BODY,PMT, TRK_SUPPORT, DICE_BOARD
 
 # Single Particle
-#/Generator/SingleParticle/particle e-
-#/Generator/SingleParticle/min_energy 1.0 MeV
-#/Generator/SingleParticle/max_energy 2.0 MeV
-#/Generator/SingleParticle/region DICE_BOARD
+/Generator/SingleParticle/particle e-
+/Generator/SingleParticle/min_energy 1.0 MeV
+/Generator/SingleParticle/max_energy 2.0 MeV
+/Generator/SingleParticle/region PMT
 #/Generator/SingleParticle/momentum_direction (0., 0., 1.)
 
 
@@ -49,9 +49,9 @@
 #/Generator/Decay0Interface/region ACTIVE
 
 # Ion Gun for background decays
-/Generator/IonGun/atomic_number 83
-/Generator/IonGun/mass_number 214
-/Generator/IonGun/region FIELD_CAGE
+#/Generator/IonGun/atomic_number 83
+#/Generator/IonGun/mass_number 214
+#/Generator/IonGun/region FIELD_CAGE
 
 ##### VERBOSITIES #####
 /run/verbose 0
