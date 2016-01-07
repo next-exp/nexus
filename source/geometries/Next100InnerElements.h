@@ -56,8 +56,10 @@ namespace nexus {
   private:
 
     void BuildELRegion();
+    void BuildAnodePlate();
     void BuildCathodeGrid();
     void BuildActive();
+    void BuildBuffer();
 
     void CalculateELTableVertices(G4double, G4double, G4double);	
     
@@ -71,12 +73,17 @@ namespace nexus {
     
     G4double _active_diam;
     G4double _active_length;
+    G4double _windows_end_z;
     G4double _trk_displ, _ener_displ; // Displacement of tracking / energy zones
     G4double _el_gap_length;
     G4double _grid_thickn;
     G4double _el_grid_transparency, _cath_grid_transparency;
     // True if EL field is on
     G4bool _elfield;
+
+    G4double _anode_quartz_thickness, _anode_quartz_diam; 
+    G4double _tpb_thickness;
+    G4double _ito_transparency, _ito_thickness;
 
     G4double _el_table_binning; ///< Binning of EL lookup table
     G4int _el_table_point_id; ///< Id of the EL point to be simulated
@@ -93,6 +100,8 @@ namespace nexus {
 
     // Visibilities
     G4bool _grids_visibility;
+
+    G4double _cathode_pos_z, _buffer_length;
 
     // Vertex Generators
     CylinderPointSampler* _active_gen;

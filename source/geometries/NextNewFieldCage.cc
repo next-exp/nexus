@@ -432,7 +432,7 @@ void NextNewFieldCage::BuildBuffer()
       new G4Tubs("ITO_ANODE", 0., anode_diam/2. , _ito_thickness/2., 0, twopi);
     G4LogicalVolume* ito_anode_logic = 
       new G4LogicalVolume(ito_anode_solid, _ito, "ITO_ANODE");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., -_anode_quartz_thickness/2.+_tpb_thickness + _ito_thickness/2.), ito_anode_logic, 
+    new G4PVPlacement(0, G4ThreeVector(0., 0., +_anode_quartz_thickness/2.- _ito_thickness/2.), ito_anode_logic, 
   			"ITO_ANODE", anode_logic, false, 0, false);
      
     if (_visibility) {

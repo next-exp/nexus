@@ -45,17 +45,27 @@ namespace nexus {
     _max_step_size (1.*mm),
     _active_diam   (106.9 * cm),
     _active_length (130. * cm),
+    _windows_end_z (-386.999 * mm), // TO BE CHANGED (so far, it's the NEW value). It's the position in gas where the sapphire windows end. To be read from Next100EnergyPlane.cc, once TPB is added to sapphire windows
     _trk_displ (13.36 * cm),
     _el_gap_length (.5 * cm),
     _grid_thickn (.1 * mm),
     _el_grid_transparency (.88),
     _cath_grid_transparency (.98),
     _elfield(0), // EL field ON or OFF
+    _anode_quartz_thickness (3 *mm),
+    _anode_quartz_diam (110.*cm), 
+    _tpb_thickness(1.*micrometer),
+    _ito_transparency (.90),
+    _ito_thickness (_grid_thickn),
     _el_table_binning(1.*mm),
     _el_table_point_id(-1),
     _grids_visibility(false) // Visibility of grids
   {
     _el_gap_posz = (160.*cm / 2.) - _trk_displ;
+
+    _cathode_pos_z = _el_gap_posz - _el_gap_length/2. - _active_length - _grid_thickn/2. ;
+    _buffer_length = 
+       _cathode_pos_z - _windows_end_z , // from the end of the cathode to surface of sapphire windows // It's 129.9 mm
 
     // Field Cage
     _field_cage = new Next100FieldCage();
@@ -119,11 +129,16 @@ namespace nexus {
     // EL Region
     BuildELRegion();
 
+    BuildAnodePlate();
+
     // Cathode Grid
     BuildCathodeGrid();
   
     // ACTIVE region
     BuildActive(); 
+
+    // Buffer region
+    //BuildBuffer();
 
     // Energy Plane
     _energy_plane->SetLogicalVolume(_mother_logic);
@@ -200,16 +215,10 @@ namespace nexus {
     G4LogicalVolume* diel_grid_logic = 
       new G4LogicalVolume(diel_grid_solid, fgrid_mat, "EL_GRID");
 
-    // diel_grid_physi = 
-    //   new G4PVPlacement(0, G4ThreeVector(0.,0.,posz1), diel_grid_logic, "EL_GRID_1",
-    // 					_mother_logic, false, 0);
-    // diel_grid_physi = 
-    //   new G4PVPlacement(0, G4ThreeVector(0.,0.,posz2), diel_grid_logic, "EL_GRID_2",
-    // 					_mother_logic, false, 1);
     new G4PVPlacement(0, G4ThreeVector(0.,0.,posz1), diel_grid_logic, "EL_GRID_1",
 		      el_gap_logic, false, 0, true);
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,posz2), diel_grid_logic, "EL_GRID_2",
-		      el_gap_logic, false, 1, true);
+    // new G4PVPlacement(0, G4ThreeVector(0.,0.,posz2), diel_grid_logic, "EL_GRID_2",
+    // 		      el_gap_logic, false, 1, true); // not there, if quartz plate
 
     /// Visibilities
     if (_grids_visibility) {
@@ -223,6 +232,58 @@ namespace nexus {
     }
   }
 
+ void Next100InnerElements::BuildAnodePlate()
+  {
+     // Materials: quartz
+    G4Material* quartz =  MaterialsList::FusedSilica();
+    quartz->SetMaterialPropertiesTable(OpticalMaterialProperties::FusedSilica());
+    // TPB coating
+    G4Material* tpb = MaterialsList::TPB();
+    tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB(_pressure, _temperature));
+     //ITO coating  
+    G4Material* ito = MaterialsList::ITO();
+    ito->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeFusedSilica(_ito_transparency, _ito_thickness));
+  
+    G4Tubs* anode_solid =
+      new G4Tubs("ANODE_PLATE", 0., _anode_quartz_diam/2. , _anode_quartz_thickness/2., 0, twopi);
+    G4LogicalVolume* anode_logic = 
+      new G4LogicalVolume(anode_solid, quartz, "ANODE_PLATE");
+
+    G4double pos_anode_z = _el_gap_posz + _el_gap_length/2. + _anode_quartz_thickness/2. + 0.1*mm; // 0.1 mm is needed because EL is produced only if the PostStepVolume is GAS material.
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., pos_anode_z), anode_logic, 
+ 		      "ANODE_PLATE", _mother_logic, false, 0, true);
+   
+    // G4cout << "Anode plate starts in " << _pos_z_anode - _anode_quartz_thickness/2. << " and ends in " << 
+    //   _pos_z_anode + _anode_quartz_thickness/2. << G4endl;
+
+    G4Tubs* tpb_anode_solid =
+      new G4Tubs("TPB_ANODE", 0., _anode_quartz_diam/2. , _tpb_thickness/2., 0, twopi);
+    G4LogicalVolume* tpb_anode_logic = 
+      new G4LogicalVolume(tpb_anode_solid, tpb, "TPB_ANODE");
+    new G4PVPlacement(0, G4ThreeVector(0., 0., -_anode_quartz_thickness/2.+_tpb_thickness/2.), tpb_anode_logic, 
+ 		      "TPB_ANODE", anode_logic, false, 0, true);  
+
+    G4Tubs* ito_anode_solid =
+      new G4Tubs("ITO_ANODE", 0., _anode_quartz_diam/2. , _ito_thickness/2., 0, twopi);
+    G4LogicalVolume* ito_anode_logic = 
+      new G4LogicalVolume(ito_anode_solid, ito, "ITO_ANODE");
+    new G4PVPlacement(0, G4ThreeVector(0., 0., +_anode_quartz_thickness/2.- _ito_thickness/2.), ito_anode_logic, 
+  			"ITO_ANODE", anode_logic, false, 0, true);
+     
+    if (_grids_visibility) {
+      G4VisAttributes anode_col = nexus::Red();
+      anode_col.SetForceSolid(true);
+      anode_logic->SetVisAttributes(anode_col);
+      G4VisAttributes tpb_col = nexus::DarkGreen();
+      //tpb_col.SetForceSolid(true);
+      tpb_anode_logic->SetVisAttributes(tpb_col);
+    } else {
+      anode_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      tpb_anode_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
+   
+  }
 
 
   void Next100InnerElements::BuildCathodeGrid()
@@ -236,6 +297,7 @@ namespace nexus {
     G4double grid_diam = _active_diam;
     // G4double posz = _el_grid_ref_z - _grid_thickn - _active_length;
     G4double posz = _el_gap_posz - _el_gap_length/2. - _active_length - _grid_thickn/2. ;
+   
     //G4cout << G4endl << "Cathode Grid posz: " << posz/cm << G4endl;
 
     // Building the grid
@@ -297,7 +359,28 @@ namespace nexus {
 					    0., G4ThreeVector (0., 0., active_posz));
   }
 
+void Next100InnerElements::BuildBuffer()
+  {
 
+G4double buffer_posz = _el_gap_posz - _el_gap_length/2. - _active_length - _grid_thickn - _buffer_length/2.;
+    G4Tubs* buffer_solid = 
+      new G4Tubs("BUFFER",  0., _active_diam/2., 
+		 _buffer_length /2., 0, twopi);
+
+    // G4cout << "Buffer (gas) starts in " << buffer_posz - _buffer_length/2. << " and ends in " 
+    // 	   << buffer_posz + _buffer_length/2. << G4endl;
+    G4LogicalVolume* buffer_logic = 
+      new G4LogicalVolume(buffer_solid, _gas, "BUFFER");
+    new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_posz), buffer_logic, 
+		      "BUFFER", _mother_logic, false, 0, true);
+
+     // Set the volume as an ionization sensitive detector
+    IonizationSD* buffsd = new IonizationSD("/NEXT100/BUFFER");
+    buffsd->IncludeInTotalEnergyDeposit(false);
+    buffer_logic->SetSensitiveDetector(buffsd);
+    G4SDManager::GetSDMpointer()->AddNewDetector(buffsd); ;
+
+  }
 
   G4ThreeVector Next100InnerElements::GenerateVertex(const G4String& region) const
   {

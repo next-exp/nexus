@@ -58,7 +58,9 @@ namespace nexus {
     _flange_z_pos (80.0 * cm),
 
     // Nozzle dimensions
-    _large_nozzle_length (320.0 * cm),
+    //  _large_nozzle_length (320.0 * cm),
+    //  _small_nozzle_length (240.0 * cm),
+     _large_nozzle_length (250.0 * cm),
     _small_nozzle_length (240.0 * cm),
 
     // Vessel gas
@@ -253,7 +255,7 @@ namespace nexus {
       G4VisAttributes grey = DarkGrey();
       //grey.SetForceSolid(true);
       vessel_logic->SetVisAttributes(grey);
-      //grey.SetForceSolid(true);
+      grey.SetForceSolid(true);
       vessel_gas_logic->SetVisAttributes(grey);
       //grey.SetForceSolid(true);
       vacuum_manifold_logic->SetVisAttributes(grey);
