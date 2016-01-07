@@ -53,6 +53,10 @@
 #/Generator/IonGun/mass_number 214
 #/Generator/IonGun/region FIELD_CAGE
 
+# ACTIONS
+/Actions/DefaultEventAction/energy_threshold 0.6 MeV
+/Actions/DefaultEventAction/max_energy 2.55 MeV
+
 ##### VERBOSITIES #####
 /run/verbose 0
 /event/verbose 0
