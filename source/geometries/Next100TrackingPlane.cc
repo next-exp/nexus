@@ -84,7 +84,7 @@ namespace nexus {
     }
 
     G4LogicalVolume* support_plate_logic = new G4LogicalVolume(support_plate_solid,
-							       MaterialsList::HDPE(),
+							        G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
 							       "SUPPORT_PLATE");
 
 
@@ -125,8 +125,9 @@ namespace nexus {
     
 
     if (_visibility) {
-      G4VisAttributes grey_col = nexus:: LightGrey();
-      grey_col.SetForceSolid(true);
+      G4VisAttributes light_brown_col = nexus::CopperBrown();
+      support_plate_logic->SetVisAttributes(light_brown_col);
+      light_brown_col.SetForceSolid(true);
       support_plate_logic->SetVisAttributes(grey_col);
     }
     else {
