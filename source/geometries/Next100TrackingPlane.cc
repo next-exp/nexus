@@ -128,7 +128,7 @@ namespace nexus {
       G4VisAttributes light_brown_col = nexus::CopperBrown();
       support_plate_logic->SetVisAttributes(light_brown_col);
       light_brown_col.SetForceSolid(true);
-      support_plate_logic->SetVisAttributes(grey_col);
+      support_plate_logic->SetVisAttributes(light_brown_col);
     }
     else {
       support_plate_logic->SetVisAttributes(G4VisAttributes::Invisible);
