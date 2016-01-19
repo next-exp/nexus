@@ -166,10 +166,12 @@ namespace nexus {
     else if ((region == "FIELD_CAGE") || 
     		 (region == "ACTIVE") ||
     		 (region == "CARRIER_PLATE") || 
-    		 (region == "ENCLOSURE_BODY") ||
+    		 (region == "ENCLOSURE") ||
     		 (region == "ENCLOSURE_WINDOW") ||
+    		 (region == "ENCLOSURE_PAD") ||
     		 (region == "PMT_BODY") ||
     		 (region == "PMT") ||
+    		 (region == "PMT_BASE") ||
     		 (region == "TRK_SUPPORT") ||
     		 (region == "DICE_BOARD") ||
     		 (region == "EL_TABLE") ) {

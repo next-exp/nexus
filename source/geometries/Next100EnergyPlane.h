@@ -61,8 +61,11 @@ namespace nexus {
     const G4int _num_PMTs;
     const G4double _energy_plane_posz;
     const G4double _carrier_plate_thickness, _carrier_plate_diam, _carrier_plate_central_hole_diam;
-    const G4double _enclosure_length,  _enclosure_diam, _enclosure_thickness;
-    const G4double _enclosure_window_thickness, _enclosure_pad_thickness;
+    const G4double _enclosure_length, _enclosure_diam;
+    const G4double _enclosure_flange_length;
+    const G4double _enclosure_window_thickness,_enclosure_window_diam;
+    const G4double _enclosure_pad_thickness;
+    const G4double _pmt_base_diam, _pmt_base_thickness;
     // const G4double _pmts_pitch;
 
     PmtR11410*  _pmt;
@@ -76,9 +79,10 @@ namespace nexus {
 
     // Vertex generators
     CylinderPointSampler* _carrier_gen;
-    CylinderPointSampler* _enclosure_body_gen;
-    CylinderPointSampler* _enclosure_cap_gen;
+    CylinderPointSampler* _enclosure_flange_gen;
     CylinderPointSampler* _enclosure_window_gen;
+    CylinderPointSampler* _enclosure_pad_gen;
+    CylinderPointSampler* _pmt_base_gen;
 
     G4double _enclosure_body_perc;
     

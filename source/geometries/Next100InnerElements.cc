@@ -216,7 +216,7 @@ namespace nexus {
       new G4LogicalVolume(diel_grid_solid, fgrid_mat, "EL_GRID");
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,posz1), diel_grid_logic, "EL_GRID_1",
-		      el_gap_logic, false, 0, true);
+		      el_gap_logic, false, 0, false);
     // new G4PVPlacement(0, G4ThreeVector(0.,0.,posz2), diel_grid_logic, "EL_GRID_2",
     // 		      el_gap_logic, false, 1, true); // not there, if quartz plate
 
@@ -252,7 +252,7 @@ namespace nexus {
     G4double pos_anode_z = _el_gap_posz + _el_gap_length/2. + _anode_quartz_thickness/2. + 0.1*mm; // 0.1 mm is needed because EL is produced only if the PostStepVolume is GAS material.
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., pos_anode_z), anode_logic, 
- 		      "ANODE_PLATE", _mother_logic, false, 0, true);
+ 		      "ANODE_PLATE", _mother_logic, false, 0, false);
    
     // G4cout << "Anode plate starts in " << _pos_z_anode - _anode_quartz_thickness/2. << " and ends in " << 
     //   _pos_z_anode + _anode_quartz_thickness/2. << G4endl;
@@ -262,14 +262,14 @@ namespace nexus {
     G4LogicalVolume* tpb_anode_logic = 
       new G4LogicalVolume(tpb_anode_solid, tpb, "TPB_ANODE");
     new G4PVPlacement(0, G4ThreeVector(0., 0., -_anode_quartz_thickness/2.+_tpb_thickness/2.), tpb_anode_logic, 
- 		      "TPB_ANODE", anode_logic, false, 0, true);  
+ 		      "TPB_ANODE", anode_logic, false, 0, false);  
 
     G4Tubs* ito_anode_solid =
       new G4Tubs("ITO_ANODE", 0., _anode_quartz_diam/2. , _ito_thickness/2., 0, twopi);
     G4LogicalVolume* ito_anode_logic = 
       new G4LogicalVolume(ito_anode_solid, ito, "ITO_ANODE");
     new G4PVPlacement(0, G4ThreeVector(0., 0., +_anode_quartz_thickness/2.- _ito_thickness/2.), ito_anode_logic, 
-  			"ITO_ANODE", anode_logic, false, 0, true);
+  			"ITO_ANODE", anode_logic, false, 0, false);
      
     if (_grids_visibility) {
       G4VisAttributes anode_col = nexus::Red();
@@ -306,7 +306,7 @@ namespace nexus {
     G4LogicalVolume* diel_grid_logic = new G4LogicalVolume(diel_grid_solid, fgrid_mat, "CATH_GRID");
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,posz), diel_grid_logic, "CATH_GRID",
-		      _mother_logic, false, 0, true);
+		      _mother_logic, false, 0, false);
 
     /// Visibilities
     // Grid is white
@@ -328,7 +328,7 @@ namespace nexus {
     G4LogicalVolume* active_logic = new G4LogicalVolume(active_solid, _gas, "ACTIVE");
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., active_posz), active_logic,
-		      "ACTIVE", _mother_logic, false, 0, true);
+		      "ACTIVE", _mother_logic, false, 0, false);
 
     // Limit the step size in this volume for better tracking precision
     active_logic->SetUserLimits(new G4UserLimits(_max_step_size));
@@ -398,10 +398,12 @@ G4double buffer_posz = _el_gap_posz - _el_gap_length/2. - _active_length - _grid
 
     // Energy Plane regions
     else if ((region == "CARRIER_PLATE") || 
-             (region == "ENCLOSURE_BODY") ||
+             (region == "ENCLOSURE") ||
              (region == "ENCLOSURE_WINDOW") ||
+             (region == "ENCLOSURE_PAD") ||
              (region == "PMT_BODY")||
-	     (region == "PMT") ) {
+	     (region == "PMT")||
+	     (region == "PMT_BASE") ) {
       vertex = _energy_plane->GenerateVertex(region);
     }
 
