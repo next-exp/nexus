@@ -192,6 +192,7 @@ namespace nexus {
     delete _support_body_gen;
     delete _support_flange_gen;
     delete _support_buffer_gen;
+    delete _plug_gen;
   }
 
   G4ThreeVector NextNewTrackingPlane::GenerateVertex(const G4String& region) const
