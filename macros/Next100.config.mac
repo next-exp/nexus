@@ -23,7 +23,7 @@
 /Geometry/Next100/vessel_vis false
 /Geometry/Next100/ics_vis false
 /Geometry/Next100/field_cage_vis false
-/Geometry/Next100/grids_vis true
+/Geometry/Next100/grids_vis false
 /Geometry/Next100/energy_plane_vis false
 /Geometry/Next100/tracking_plane_vis false
 
@@ -31,16 +31,17 @@
 
 ##### GENERATOR #####
 
-# Region options: EXTERNAL, SHIELDING_LEAD, SHIELDING_STEEL, SHIELDING_GAS
+# Region options: EXTERNAL, SHIELDING_LEAD, SHIELDING_STEEL, SHIELDING_GAS, SHIELDING_STRUCT
 #                 VESSEL, VESSEL_FLANGES, VESSEL_TRACKING_ENDCAP, VESSEL_ENERGY_ENDCAP
-#		  ICS, FIELD_CAGE, ACTIVE, CARRIER_PLATE, ENCLOSURE_BODY
-#		  ENCLOSURE_WINDOW, PMT_BODY,PMT, TRK_SUPPORT, DICE_BOARD
+#		  ICS, DB_PLUG,
+#		  FIELD_CAGE, ACTIVE, CARRIER_PLATE, ENCLOSURE, ENCLOSURE_WINDOW, ENCLOSURE_PAD,
+#		  PMT_BODY, PMT, TRK_SUPPORT, DICE_BOARD, EL_TABLE
 
 # Single Particle
 /Generator/SingleParticle/particle e-
 /Generator/SingleParticle/min_energy 1.0 MeV
 /Generator/SingleParticle/max_energy 2.0 MeV
-/Generator/SingleParticle/region PMT
+/Generator/SingleParticle/region DICE_BOARD
 #/Generator/SingleParticle/momentum_direction (0., 0., 1.)
 
 
