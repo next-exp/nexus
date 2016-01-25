@@ -123,13 +123,14 @@ namespace nexus {
     
 
     // Internal Copper Shielding
+    _ics->SetLogicalVolume(vessel_internal_logic);
     _ics->Construct();
-    G4LogicalVolume* ics_logic = _ics->GetLogicalVolume();
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), ics_logic,
-		      "ICS", vessel_internal_logic, false, 0);
+    // G4LogicalVolume* ics_logic = _ics->GetLogicalVolume();
+    // new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), ics_logic,
+    // 		      "ICS", vessel_internal_logic, false, 0);
     
     // Inner Elements
-    _inner_elements->SetLogicalVolume(_vessel->GetInternalLogicalVolume());
+    _inner_elements->SetLogicalVolume(vessel_internal_logic);
     _inner_elements->Construct();
 
   }
@@ -146,20 +147,21 @@ namespace nexus {
 		(region == "EXTERNAL")        || 
 		(region == "SHIELDING_GAS")   || 
 		(region == "SHIELDING_STRUCT") ) {
-		vertex = _shielding->GenerateVertex(region);
+      vertex = _shielding->GenerateVertex(region);
     }
 
     // Vessel regions
     else if ((region == "VESSEL") || 
     		 (region == "VESSEL_FLANGES") ||
 	     	 (region == "VESSEL_TRACKING_ENDCAP") || 
-	     	 (region == "VESSEL_ENERGY_ENDCAP")) {
-    	vertex = _vessel->GenerateVertex(region);
+	     (region == "VESSEL_ENERGY_ENDCAP")) {
+      vertex = _vessel->GenerateVertex(region);
     }
 
     // Inner copper shielding
-    else if (region == "ICS") {
-    	vertex = _ics->GenerateVertex(region);
+    else if ((region == "ICS") ||
+	     (region == "DB_PLUG")) {
+      vertex = _ics->GenerateVertex(region);
     }
 
     // Inner elements (photosensors' planes and field cage)
@@ -175,7 +177,7 @@ namespace nexus {
     		 (region == "TRK_SUPPORT") ||
     		 (region == "DICE_BOARD") ||
     		 (region == "EL_TABLE") ) {
-    	vertex = _inner_elements->GenerateVertex(region);
+      vertex = _inner_elements->GenerateVertex(region);
     }
     else {
       G4Exception("[Next100]", "GenerateVertex()", FatalException,

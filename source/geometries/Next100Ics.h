@@ -15,6 +15,7 @@
 #include "BaseGeometry.h"
 #include "CylinderPointSampler.h"
 #include "SpherePointSampler.h"
+#include "BoxPointSampler.h"
 
 #include <G4Navigator.hh>
 
@@ -37,23 +38,36 @@ namespace nexus {
     /// Destructor
     ~Next100Ics();
 
+    /// Sets the Logical Volume where ICS will be placed
+    void SetLogicalVolume(G4LogicalVolume* mother_logic);
+    
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
     /// Builder
     void Construct();
 
+  private:
+    void GenerateDBPositions();
+
 
   private:
+    // Mother Logical Volume of the ICS
+    G4LogicalVolume* _mother_logic;
     // Dimensions
     G4double _body_in_rad, _body_length, _body_thickness;
-    G4double _tracking_orad, _tracking_length, _tracking_hole_rad;
+    G4double _tracking_orad, _tracking_length;
+    G4double _plug_x, _plug_y, _plug_z, _plug_posz;
+    G4double _DB_columns, _num_DBs;
     //    G4double _tracking_cone_height, _tracking_irad;
     G4double _energy_theta, _energy_orad, _energy_thickness, _energy_sph_zpos, _energy_cyl_length;
 
     // Dimensions coming from outside  
     G4double _nozzle_ext_diam, _up_nozzle_ypos, _central_nozzle_ypos;
     G4double _down_nozzle_ypos, _bottom_nozzle_ypos;
+
+    std::vector<G4ThreeVector> _DB_positions;
+
 
     // Visibility of the shielding
     G4bool _visibility;
@@ -63,6 +77,7 @@ namespace nexus {
     CylinderPointSampler* _tracking_gen;
     CylinderPointSampler* _energy_cyl_gen;
     SpherePointSampler*   _energy_sph_gen;
+    BoxPointSampler* _plug_gen;
 
     G4double _perc_body_vol, _perc_tracking_vol, _perc_energy_cyl_vol;
 

@@ -19,6 +19,7 @@
 #include <G4VisAttributes.hh>
 #include <G4UnionSolid.hh>
 #include <G4Tubs.hh>
+#include <G4Box.hh>
 #include <G4Cons.hh>
 #include <G4Sphere.hh>
 #include <G4NistManager.hh>
@@ -50,7 +51,15 @@ namespace nexus {
     // Tracking plane dimensions  (thin version without substractions)
     _tracking_orad (65.0 * cm),        // To be checked
     _tracking_length (10.0 * cm),
-    _tracking_hole_rad (6.0 * cm),     // To be checked
+  
+    //KDB plugs constructed here because the copper tracking plane is divided in two parts,
+    // one hosted in the Next100Trackingplane class (support) and the proper shielding hosted here.
+    _plug_x (40. *mm),
+    _plug_y (4. *mm), //two union conectors   
+    _plug_z (6. *mm),
+    // Number of Dice Boards, DB columns
+    _DB_columns (11),
+    _num_DBs (107),
 
     // Energy plane dimensions
     _energy_theta (36.5 * deg),        // This must be consistent with vessel "_endcap_theta (38.6 * deg)"
@@ -58,6 +67,7 @@ namespace nexus {
     _energy_thickness (9. * cm),
     _energy_sph_zpos (-5.76 * cm),     // This must be consistent with vessel "_endcap_z_pos (-5.76 * cm)"
     _energy_cyl_length (13.0 * cm),
+
     _visibility (0)
   {
 
@@ -78,10 +88,18 @@ namespace nexus {
 
   }
   
+  void Next100Ics::SetLogicalVolume(G4LogicalVolume* mother_logic)
+  {
+    _mother_logic = mother_logic;
+  }
 
   
   void Next100Ics::Construct()
   {
+
+    // Dice Boards holes positions
+    GenerateDBPositions();
+
     // ICS SOLIDS  ///////////
 
     // Body
@@ -93,14 +111,16 @@ namespace nexus {
     G4Tubs* ics_tracking_nh_solid = new G4Tubs("ICS_TRACKING_NH", 0.*cm, _tracking_orad,
     					       _tracking_length/2., 0.*deg, 360.*deg);
 
-    G4Tubs* ics_tracking_hole_solid = new G4Tubs("ICS_TRACKING_HOLE", 0.*cm, _tracking_hole_rad,
-    						 _tracking_length/2. + 5*cm, 0.*deg, 360.*deg);
-
+    // Making DB tails holes
+    G4Box* ics_tracking_hole_solid = new G4Box("ICS_TRACKING_HOLE", _plug_x/2., _plug_y,  _tracking_length);
+      
     G4SubtractionSolid* ics_tracking_solid = new G4SubtractionSolid("ICS_TRACKING", ics_tracking_nh_solid,
-    								    ics_tracking_hole_solid, 0, G4ThreeVector(0. , 0., 0.) );
-
-
-
+     								    ics_tracking_hole_solid, 0,_DB_positions[0]);
+    for (int i=1; i<_num_DBs; i++) {
+      ics_tracking_solid = new G4SubtractionSolid("ICS_TRACKING", ics_tracking_solid,
+     						  ics_tracking_hole_solid, 0, _DB_positions[i]);
+    }
+    
     // Energy plane
     G4Sphere* ics_energy_sph_nh_solid = new G4Sphere("ICS_ENERGY_SPH_NH",
 						     _energy_orad - _energy_thickness,  _energy_orad,   //radius
@@ -151,17 +171,38 @@ namespace nexus {
       new G4LogicalVolume(ics_solid,
 			  G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"), "ICS");
 
-    this->SetLogicalVolume(ics_logic);
+    //this->SetLogicalVolume(ics_logic);
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), ics_logic, "ICS", _mother_logic, false, 0, false);
+
+    
+    ///// DB plugs placement
+    G4Box* plug_solid = new G4Box("DB_PLUG", _plug_x/2., _plug_y/2., _plug_z/2.);
+    G4LogicalVolume* plug_logic = new G4LogicalVolume(plug_solid,  MaterialsList::PEEK(), "DB_PLUG");
+     _plug_posz = ics_tracking_zpos + _tracking_length/2. + _plug_z ;
+    G4ThreeVector pos;
+    for (int i=0; i<_num_DBs; i++) {
+      pos = _DB_positions[i];
+      pos.setY(pos.y()- 10.*mm);
+      pos.setZ(_plug_posz);
+      new G4PVPlacement(0, pos, plug_logic,
+    			"DB_PLUG", _mother_logic, false, i, false);
+    }
+
 
 
     // SETTING VISIBILITIES   //////////
     if (_visibility) {
       G4VisAttributes copper_col = nexus::CopperBrown();
-      copper_col.SetForceSolid(true);
+      //copper_col.SetForceSolid(true);
       ics_logic->SetVisAttributes(copper_col);
+      G4VisAttributes dirty_white_col =nexus::DirtyWhite();
+      dirty_white_col.SetForceSolid(true);
+      plug_logic->SetVisAttributes(dirty_white_col); 
+
     }
     else {
       ics_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      plug_logic->SetVisAttributes(G4VisAttributes::Invisible);
   }
 
 
@@ -178,6 +219,10 @@ namespace nexus {
 
     _energy_sph_gen = new SpherePointSampler(_energy_orad - _energy_thickness, _energy_thickness, G4ThreeVector(0., 0., _energy_sph_zpos),
 					     0,	0., twopi, 180.*deg - _energy_theta, _energy_theta);
+
+
+    _plug_gen = new BoxPointSampler(_plug_x, _plug_y, _plug_z,0.,
+				    G4ThreeVector(0.,0.,0.),0);
 
 
     // Calculating some probs
@@ -197,6 +242,7 @@ namespace nexus {
   Next100Ics::~Next100Ics()
   {
     delete _body_gen;
+    delete _plug_gen;
   }
   
 
@@ -210,13 +256,18 @@ namespace nexus {
 
       G4double rand = G4UniformRand();
 
-      if (rand < _perc_body_vol)
+      if (rand < _perc_body_vol){
 	vertex = _body_gen->GenerateVertex("BODY_VOL");        // Body
+      }
 
-
-      // (thin version without substractions)
-      else if  (rand < _perc_tracking_vol)
-	vertex = _tracking_gen->GenerateVertex("BODY_VOL");    // Tracking plane
+   
+      else if  (rand < _perc_tracking_vol){
+	G4VPhysicalVolume *VertexVolume;
+	do {
+	  vertex = _tracking_gen->GenerateVertex("BODY_VOL");    // Tracking plane	  
+	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	} while (VertexVolume->GetName() != "ICS_TRACKING");
+      }
 
       else if  (rand < _perc_energy_cyl_vol)
 	vertex = _energy_cyl_gen->GenerateVertex("BODY_VOL");  // Energy plane, cylindric section
@@ -229,14 +280,67 @@ namespace nexus {
 	} while (VertexVolume->GetName() != "ICS");
       }
     }
+
+    // PIGGY TAIL PLUG
+    else if (region == "DB_PLUG") {
+      G4ThreeVector ini_vertex = _plug_gen->GenerateVertex("INSIDE");
+      G4double rand = _num_DBs * G4UniformRand();
+      G4ThreeVector db_pos = _DB_positions[int(rand)];
+      vertex = ini_vertex + db_pos;
+      vertex.setY(vertex.y()- 10.*mm);
+      vertex.setZ(vertex.z() + _plug_posz);
+    }
+ 
+
     else {
       G4Exception("[Next100Ics]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");     
     }
      
 
-
     return vertex;
+  }
+
+
+  void Next100Ics::GenerateDBPositions()
+  {
+    /// Function that computes and stores the XY positions of Dice Boards
+
+    G4int num_rows[] = {6, 9, 10, 11, 12, 11, 12, 11, 10, 9, 6};
+    G4int total_positions = 0;
+
+    // Separation between consecutive columns / rows
+    G4double x_step = (45. + 35.191) * mm;
+    G4double y_step = (45. + 36.718) * mm;
+
+    G4double x_dim = x_step * (_DB_columns -1);
+
+    G4ThreeVector position(0.,0.,0.);
+
+    // For every column
+    for (G4int col=0; col<_DB_columns; col++) {
+      G4double pos_x = x_dim/2. - col * x_step;
+      G4int rows = num_rows[col];
+      G4double y_dim = y_step * (rows-1);
+      // For every row
+      for (G4int row=0; row<rows; row++) {
+	G4double pos_y = y_dim/2. - row * y_step;
+
+	position.setX(pos_x);
+	position.setY(pos_y);
+	_DB_positions.push_back(position);
+	total_positions++;
+	//G4cout << G4endl << position;
+      }
+    }
+
+    // Checking
+    if (total_positions != _num_DBs) {
+      G4cout << "\n\nERROR: Number of DBs doesn't match with number of positions calculated\n";
+      exit(0);
+    }
+
+
   }
 
 
