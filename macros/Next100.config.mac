@@ -38,10 +38,10 @@
 #		  PMT_BODY, PMT, TRK_SUPPORT, DICE_BOARD, EL_TABLE
 
 # Single Particle
-/Generator/SingleParticle/particle e-
-/Generator/SingleParticle/min_energy 1.0 MeV
-/Generator/SingleParticle/max_energy 2.0 MeV
-/Generator/SingleParticle/region DICE_BOARD
+#/Generator/SingleParticle/particle e-
+#/Generator/SingleParticle/min_energy 1.0 MeV
+#/Generator/SingleParticle/max_energy 2.0 MeV
+#/Generator/SingleParticle/region DICE_BOARD
 #/Generator/SingleParticle/momentum_direction (0., 0., 1.)
 
 
@@ -50,9 +50,9 @@
 #/Generator/Decay0Interface/region ACTIVE
 
 # Ion Gun for background decays
-#/Generator/IonGun/atomic_number 83
-#/Generator/IonGun/mass_number 214
-#/Generator/IonGun/region FIELD_CAGE
+/Generator/IonGun/atomic_number 83
+/Generator/IonGun/mass_number 214
+/Generator/IonGun/region FIELD_CAGE
 
 # ACTIONS
 /Actions/DefaultEventAction/energy_threshold 0.6 MeV
