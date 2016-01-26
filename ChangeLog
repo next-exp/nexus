@@ -1,3 +1,13 @@
+tag v5_00_01 - 26 Jan 2016
+	- Some minor changes in the NEW geometry, according to the latest drawings and
+	  current status. In particular the lateral (anode) and upper source collimators have 
+	  been simulated.
+	- Possibility of a cut on the maximum energy of the event added
+	- Macros for full simulation added
+	- Modifications of the NEXT-100 geometry, sticking as much as possible to 
+	  the current design of NEW.
+	- Nozzle holes in shielding eliminated + one nozzle in the NEXT-100 cut in order to fit.
+		
 tag v5_00_00 - 28 Oct 2015
 	- Change from IRENE to GATE in persistency.
 	- 83Kr generator added.
@@ -25,7 +35,7 @@ tag 4.04.00 - 9 Feb 2015
 	meaning that cannot be used with previous versions of Geant4. 
 	The last tag with Geant4-9.6 is 4.03.10 
 	- Change in the electromagnetic physics list: from 
-	G4EmLivermorePhysics to G4EmStandardPhysics_option4
+ 	G4EmLivermorePhysics to G4EmStandardPhysics_option4
 
 tag 4.03.10 - 23 Jan 2015
 	- Addition to the NEW geometry: steel beam structure in the lead
