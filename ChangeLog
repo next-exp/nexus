@@ -1,4 +1,4 @@
-tag v5_00_01 - 26 Jan 2016
+tag v5_00_02 - 26 Jan 2016
 	- Some minor changes in the NEW geometry, according to the latest drawings and
 	  current status. In particular the lateral (anode) and upper source collimators have 
 	  been simulated.
