@@ -57,6 +57,15 @@ namespace nexus {
     G4double  _endcap_nozzle_in_diam, _endcap_nozzle_high, _endcap_nozzle_thickness, _endcap_nozzle_flange_diam, _endcap_nozzle_flange_high;
     G4double  _lat_nozzle_z_pos, _lat_nozzle_x_pos,  _up_nozzle_y_pos, _up_nozzle_z_pos, _endcap_nozzle_z_pos;
 
+     // Dimensions of the source tubes
+    G4double _port_tube_diam, _port_tube_thickness, _port_tube_window_thickn;
+    G4double _lat_port_tube_length;
+    G4double _up_port_tube_length, _axial_port_tube_length; 
+
+    // Position of the sources
+    G4ThreeVector _lateral_port_source_pos;
+    G4ThreeVector _upper_port_source_pos;    
+
     G4double _pressure, _temperature;
 
     // Visibility of the shielding
@@ -82,6 +91,8 @@ namespace nexus {
 
     // Primary scintillation yield
     G4double _sc_yield;
+
+   
 
   };
 

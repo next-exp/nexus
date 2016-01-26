@@ -11,9 +11,10 @@
 /control/execute macros/geometries/NextNew.mac
 
 
+
 /Generator/IonGun/atomic_number 83
 /Generator/IonGun/mass_number 214
-/Generator/IonGun/region  DICE_BOARD
+/Generator/IonGun/region  SOURCE_PORT_UP
 
 # ACTIONS
 /Actions/DefaultEventAction/energy_threshold 0.6 MeV

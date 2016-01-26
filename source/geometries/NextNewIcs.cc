@@ -46,9 +46,9 @@ namespace nexus {
     _tracking_tread_length (84.1 * mm), //_support_plate_tread_thickness + _el_tot_zone 
 
    
-    _lat_nozzle_in_diam  (30.*mm),//lat_nozzle_in_diam;
+    _lat_nozzle_in_diam  (5.*mm),//lat_nozzle_in_diam; before 30 mm
     _lat_nozzle_x_pos (_body_out_diam/2. -_body_thickness/2.),// lat_cathode_nozzle_xpos;
-    _up_nozzle_in_diam (60.*mm), //up_nozzle_in_diam;
+    _up_nozzle_in_diam (5.*mm), //up_nozzle_in_diam; before 60 mm
     _up_nozzle_y_pos (_lat_nozzle_x_pos)
     
   {
@@ -136,7 +136,7 @@ namespace nexus {
     // SETTING VISIBILITIES   //////////
     if (_visibility) {
       G4VisAttributes copper_col = nexus::CopperBrown();
-      // copper_col.SetForceSolid(true);
+      copper_col.SetForceSolid(true);
       ics_logic->SetVisAttributes(copper_col);
     }
     else {

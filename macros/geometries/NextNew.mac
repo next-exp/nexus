@@ -3,17 +3,17 @@
 ###  $Id: NextNew.mac $
 ### --------------------------------------------------------
 
-/Geometry/Next100/shielding_vis true
-/Geometry/NextNew/table_vis true
-/Geometry/NextNew/ics_vis true
+/Geometry/Next100/shielding_vis false
+/Geometry/NextNew/table_vis false
+/Geometry/NextNew/ics_vis false
 /Geometry/NextNew/vessel_vis true
 /Geometry/NextNew/energy_plane_vis true
 /Geometry/NextNew/enclosure_vis true
 /Geometry/NextNew/tracking_plane_vis true
-/Geometry/NextNew/kdb_vis true
+/Geometry/NextNew/kdb_vis false
 /Geometry/NextNew/SiPMSensl_vis false
 /Geometry/NextNew/PmtR11410_vis true
-/Geometry/NextNew/field_cage_vis true
+/Geometry/NextNew/field_cage_vis false
 
 
 /Geometry/NextNew/pressure 15. bar

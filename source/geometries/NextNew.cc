@@ -187,6 +187,7 @@ namespace nexus {
     //VESSEL REGIONS
     else if ( (region == "VESSEL") || 
 	      (region == "SOURCE_PORT_ANODE") ||
+	      (region == "SOURCE_PORT_UP") ||
 	      (region == "SOURCE_PORT_CATHODE")) {
       vertex = _vessel->GenerateVertex(region);
     }

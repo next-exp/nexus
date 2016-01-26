@@ -51,6 +51,8 @@ namespace nexus {
     _gas_hole_diam (8.0 * mm), 
     _gas_hole_pos (20 * mm),
     _tpb_thickness (1.*micrometer),
+    _axial_port_hole_diam (5 * mm),
+    _axial_port_thickn (4. * mm),
     _visibility(1)
     
   {
@@ -83,6 +85,7 @@ namespace nexus {
     G4Tubs* carrier_plate_nh_solid = 
       new G4Tubs("CARRIER_NH_PLATE", 0., _carrier_plate_diam/2., 
 		 _carrier_plate_thickness/2., 0., twopi);
+
     
     //Making front buffer
     G4Tubs* carrier_plate_front_buffer_solid =
@@ -114,19 +117,44 @@ namespace nexus {
 	 new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_solid, 
 				gas_hole_solid, 0, _gas_hole_positions[i]);
      }
+
+
+     
+    // // Material is vacuum
+    // G4Material* vacuum = 
+    //   G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
+    // vacuum->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
+    //  G4LogicalVolume* axial_port_hole_logic = new G4LogicalVolume(axial_port_hole_solid, 
+    //			vacuum, "AXIAL_PORT_HOLE");
+     //   G4LogicalVolume* axial_port_hole_logic = new G4LogicalVolume(axial_port_hole_solid, 
+     //			vacuum, "AXIAL_PORT_HOLE");
+     // new G4PVPlacement(0,G4ThreeVector(0.,0., - _axial_port_thickn/2.),
+     //		    axial_port_hole_logic, "AXIAL_PORT_HOLE", 
+     //		    carrier_plate_logic, false, 0, true);
+
+     // Making hole for axial port
+    G4Tubs* axial_port_hole_solid = new G4Tubs("AXIAL_PORT_HOLE", 0., _axial_port_hole_diam/2., 
+					       (_carrier_plate_thickness - _axial_port_thickn + 1.*mm)/2., 0., twopi);
+    carrier_plate_solid  =
+      new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_solid, axial_port_hole_solid,
+			     0, G4ThreeVector(0., 0., - _axial_port_thickn/2. - 1./2. * mm));
+    
     
     G4LogicalVolume* carrier_plate_logic = 
       new G4LogicalVolume(carrier_plate_solid, 
 			  G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
 			  "CARRIER_PLATE");
-    
+   
+
     ///Placement
     G4double carrier_plate_z_pos = 
       _energy_plane_z_pos - _carrier_plate_thickness/2.;
     
     new G4PVPlacement(0, G4ThreeVector(0.,0.,carrier_plate_z_pos), 
 		      carrier_plate_logic, "CARRIER_PLATE", 
-		      _mother_logic, false, 0, false);
+		      _mother_logic, false, 0, true);
+
+    
    
     ///ENCLOSURES + PMT ///
     _enclosure->Construct();

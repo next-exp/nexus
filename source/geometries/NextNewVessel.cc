@@ -26,6 +26,7 @@
 #include <G4TransportationManager.hh>
 #include <G4RotationMatrix.hh>
 #include <G4UnitsTable.hh>
+#include <G4Transform3D.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
@@ -61,13 +62,13 @@ namespace nexus {
     _lat_nozzle_high (51.*mm),
     _lat_nozzle_thickness (6.1*mm),
     _lat_nozzle_flange_diam (75.*mm),
-    _lat_nozzle_flange_high (15.*mm),
+    _lat_nozzle_flange_high (15.*mm), // This is half the total thickness of the flange+cover
 
     _up_nozzle_in_diam (60.*mm), 
     _up_nozzle_high (54.3*mm),
     _up_nozzle_thickness (6.51*mm),
     _up_nozzle_flange_diam (130*mm),
-    _up_nozzle_flange_high (16.7*mm),
+    _up_nozzle_flange_high (16.7*mm), // This is half the total thickness of the flange+cover
    
     _endcap_nozzle_in_diam (88.*mm),
     _endcap_nozzle_high (86.*mm),
@@ -80,6 +81,13 @@ namespace nexus {
     _up_nozzle_y_pos (_vessel_in_diam/2. +_up_nozzle_high/2.),
     _up_nozzle_z_pos ( 277. *mm),//anode_nozzle_zpos = -cathode_nozzle_zpos
     _endcap_nozzle_z_pos (_vessel_tube_length/2. + _endcap_in_z_width), //bodylegth/2 + 300mm???? 
+
+    _port_tube_diam (10. * mm),
+    _port_tube_thickness (1. * mm),
+    _port_tube_window_thickn (2. * mm),
+    _lat_port_tube_length (53. * mm), 
+    _up_port_tube_length (58. * mm), 
+    _axial_port_tube_length (727. * mm),
 
 
     // Vessel gas
@@ -195,14 +203,13 @@ void NextNewVessel::Construct()
     // building nozzles
     G4UnionSolid* lateral_nozzle_solid = new G4UnionSolid("LAT_NOZZLE", lateral_nozzle_tube_solid,
      							  lateral_nozzle_flange_solid, 0,
-    							  G4ThreeVector(0.,0.,_lat_nozzle_high));
-
+    							  G4ThreeVector(0.,0., _lat_nozzle_high + _lat_nozzle_flange_high));
     G4UnionSolid* up_nozzle_solid = new G4UnionSolid("UP_NOZZLE", up_nozzle_tube_solid,
 						     up_nozzle_flange_solid, 0,
-						     G4ThreeVector(0.,0.,_up_nozzle_high));    
+						     G4ThreeVector(0.,0.,_up_nozzle_high + _up_nozzle_flange_high));    
     G4UnionSolid* endcap_nozzle_solid = new G4UnionSolid("ENDCAP_NOZZLE", endcap_nozzle_tube_solid,
 							 endcap_nozzle_flange_solid, 0,
-							 G4ThreeVector(0.,0.,_endcap_nozzle_high));    
+							 G4ThreeVector(0.,0.,_endcap_nozzle_high + _endcap_nozzle_flange_high));    
     //Rotate the lateral nozzles 
     G4RotationMatrix* rot_lat = new G4RotationMatrix();
     rot_lat->rotateY(3*pi/2.);
@@ -214,19 +221,28 @@ void NextNewVessel::Construct()
     rot_endcap->rotateY(pi);
     
     // Body + Tracking endcap + Energy endcap + Tracking flange + Energy flange + Lateral nozzles
-    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, lateral_nozzle_solid,
-      				    rot_lat, G4ThreeVector(_lat_nozzle_x_pos, 0.,_lat_nozzle_z_pos));
-    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, lateral_nozzle_solid,
-     				    rot_lat, G4ThreeVector(_lat_nozzle_x_pos, 0.,-_lat_nozzle_z_pos));
+    // vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, lateral_nozzle_solid,
+    //   				    rot_lat, G4ThreeVector(_lat_nozzle_x_pos, 0.,_lat_nozzle_z_pos));
+     vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, lateral_nozzle_solid,
+      				    rot_lat, G4ThreeVector( _vessel_in_diam/2., 0.,_lat_nozzle_z_pos));
+
+    // vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, lateral_nozzle_solid,
+    //  				    rot_lat, G4ThreeVector(_lat_nozzle_x_pos, 0.,-_lat_nozzle_z_pos));
+     vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, lateral_nozzle_solid,
+     				    rot_lat, G4ThreeVector(_vessel_in_diam/2., 0.,-_lat_nozzle_z_pos));
     
     // Body + Tracking endcap + Energy endcap + Tracking flange + Energy flange + Lateral nozzles + Upper nozzles
-    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, up_nozzle_solid,
-    				    rot_up, G4ThreeVector(0.,_up_nozzle_y_pos,_up_nozzle_z_pos));
-    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, up_nozzle_solid,
-        				    rot_up, G4ThreeVector(0.,_up_nozzle_y_pos,0.));
-    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, up_nozzle_solid,
-				    rot_up, G4ThreeVector(0.,_up_nozzle_y_pos+3.8*cm, -_up_nozzle_z_pos)); //!!!!!!!
-   
+    // vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, up_nozzle_solid,
+    // 				    rot_up, G4ThreeVector(0.,_up_nozzle_y_pos,_up_nozzle_z_pos));
+     vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, up_nozzle_solid,
+				     rot_up, G4ThreeVector(0., _vessel_in_diam/2., _up_nozzle_z_pos));
+     // vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, up_nozzle_solid,
+     //     				    rot_up, G4ThreeVector(0.,_up_nozzle_y_pos,0.));
+     vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, up_nozzle_solid,
+				     rot_up, G4ThreeVector(0., _vessel_in_diam/2., 0.));
+     vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, up_nozzle_solid,
+				     rot_up, G4ThreeVector(0.,_up_nozzle_y_pos+3.8*cm, -_up_nozzle_z_pos)); //!!!!!!!
+     
     // Body + Tracking endcap + Energy endcap + Tracking flange + Energy flange + Lateral nozzles + Upper nozzles + Endcap nozzles
     vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, endcap_nozzle_solid,
      				    0, G4ThreeVector(0.,0.,_endcap_nozzle_z_pos));
@@ -242,16 +258,26 @@ void NextNewVessel::Construct()
     vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid,
       						      vessel_gas_energy_endcap_solid, 0, energy_endcap_pos);
     // Body gas + Tracking endcap gas + Energy endcap gas + nozzles gas
+    // vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, lateral_nozzle_gas_solid, 
+    //   					rot_lat, G4ThreeVector(_lat_nozzle_x_pos, 0.,_lat_nozzle_z_pos));
+    // vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, lateral_nozzle_gas_solid, 
+    //   					rot_lat, G4ThreeVector(_lat_nozzle_x_pos, 0.,-_lat_nozzle_z_pos));
+    // vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, up_nozzle_gas_solid, 
+    //    					rot_up, G4ThreeVector(0.,_up_nozzle_y_pos,_up_nozzle_z_pos));
+    // vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, up_nozzle_gas_solid, 
+    //  					rot_up, G4ThreeVector(0.,_up_nozzle_y_pos,0.));
+    // vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, up_nozzle_gas_solid, 
+    //    					rot_up, G4ThreeVector(0.,_up_nozzle_y_pos,-_up_nozzle_z_pos));
     vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, lateral_nozzle_gas_solid, 
-      					rot_lat, G4ThreeVector(_lat_nozzle_x_pos, 0.,_lat_nozzle_z_pos));
+      					rot_lat, G4ThreeVector(_vessel_in_diam/2., 0.,_lat_nozzle_z_pos));
     vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, lateral_nozzle_gas_solid, 
-      					rot_lat, G4ThreeVector(_lat_nozzle_x_pos, 0.,-_lat_nozzle_z_pos));
+      					rot_lat, G4ThreeVector(_vessel_in_diam/2., 0.,-_lat_nozzle_z_pos));
     vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, up_nozzle_gas_solid, 
-       					rot_up, G4ThreeVector(0.,_up_nozzle_y_pos,_up_nozzle_z_pos));
+       					rot_up, G4ThreeVector(0., _vessel_in_diam/2.,_up_nozzle_z_pos));
     vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, up_nozzle_gas_solid, 
-     					rot_up, G4ThreeVector(0.,_up_nozzle_y_pos,0.));
+     					rot_up, G4ThreeVector(0., _vessel_in_diam/2,0.));
     vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, up_nozzle_gas_solid, 
-       					rot_up, G4ThreeVector(0.,_up_nozzle_y_pos,-_up_nozzle_z_pos));
+       					rot_up, G4ThreeVector(0., _vessel_in_diam/2,-_up_nozzle_z_pos));
     vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, endcap_nozzle_gas_solid, 
        					0, G4ThreeVector(0.,0.,_endcap_nozzle_z_pos));
     vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, endcap_nozzle_gas_solid, 
@@ -270,12 +296,81 @@ void NextNewVessel::Construct()
     _internal_logic_vol = vessel_gas_logic;
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_gas_logic,
 		      "VESSEL_GAS", vessel_logic, false, 0, false);
+
+
+    /// SOURCE TUBES ////
+    // Lateral
+    G4Tubs* lateral_port_tube_solid = new G4Tubs("LATERAL_PORT", 0., (_port_tube_diam/2.+_port_tube_thickness),
+						 (_lat_port_tube_length - _lat_nozzle_flange_high)/2., 0, twopi);
+    G4LogicalVolume* lateral_port_tube_logic =
+    new G4LogicalVolume(lateral_port_tube_solid, MaterialsList::Steel316Ti(), "LATERAL_PORT");
+
+    //   G4ThreeVector pos_lateral_port(_lat_nozzle_x_pos + (_lat_port_tube_length - _lat_nozzle_flange_high)/2., 0., _lat_nozzle_z_pos);
+    G4ThreeVector pos_lateral_port(_lat_nozzle_x_pos  + _lat_nozzle_high/2. - (_lat_port_tube_length - _lat_nozzle_flange_high)/2.,  0., _lat_nozzle_z_pos);
+    new G4PVPlacement(G4Transform3D(*rot_lat, pos_lateral_port), lateral_port_tube_logic,
+		      "LATERAL_PORT", vessel_gas_logic, false, 0, false);
+
+    G4Tubs* lateral_port_tube_air_solid =
+    new G4Tubs("LATERAL_PORT_AIR", 0., _port_tube_diam/2.,
+	       (_lat_port_tube_length - _lat_nozzle_flange_high - _port_tube_window_thickn)/2.,
+	       0, twopi);
+     
+  G4LogicalVolume* lateral_port_tube_air_logic =
+    new G4LogicalVolume(lateral_port_tube_air_solid, 
+			G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LATERAL_PORT_AIR");
+  
+  new G4PVPlacement(0,G4ThreeVector(0.,0.,-_port_tube_window_thickn/2.),
+		    lateral_port_tube_air_logic, "LATERAL_PORT_AIR", 
+		    lateral_port_tube_logic, false, 0, false);
+
+  // The position of the source is assumed to be at the end of the tube, inside.
+  // To be changed for different configurations
+  _lateral_port_source_pos.setX(_lat_nozzle_x_pos  + _lat_nozzle_high/2. - (_lat_port_tube_length - _lat_nozzle_flange_high) + _port_tube_window_thickn);
+  _lateral_port_source_pos.setY(0.);
+  _lateral_port_source_pos.setZ(_lat_nozzle_z_pos);
+
+   // Upper
+    G4Tubs* upper_port_tube_solid = new G4Tubs("UPPER_PORT", 0., _port_tube_diam/2.+_port_tube_thickness,
+						 (_up_port_tube_length - _up_nozzle_flange_high)/2., 0, twopi);
+    G4LogicalVolume* upper_port_tube_logic =
+    new G4LogicalVolume(upper_port_tube_solid, MaterialsList::Steel316Ti(), "UPPER_PORT");
+
+    //    G4ThreeVector pos_upper_port(0., _up_nozzle_y_pos + (_up_port_tube_length - _up_nozzle_flange_high)/2., _up_nozzle_z_pos);
+    G4ThreeVector pos_upper_port(0., _up_nozzle_y_pos + _up_nozzle_high/2. - (_up_port_tube_length - _up_nozzle_flange_high)/2., 0.);
+    new G4PVPlacement(G4Transform3D(*rot_up, pos_upper_port), upper_port_tube_logic,
+		      "UPPER_PORT", vessel_gas_logic, false, 0, false);
+
+    G4Tubs* upper_port_tube_air_solid =
+    new G4Tubs("UPPER_PORT_AIR", 0., _port_tube_diam/2.,
+	       (_up_port_tube_length - _up_nozzle_flange_high - _port_tube_window_thickn)/2.,
+	       0, twopi);
+     
+  G4LogicalVolume* upper_port_tube_air_logic =
+    new G4LogicalVolume(upper_port_tube_air_solid, 
+			G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "UPPER_PORT_AIR");
+  
+  new G4PVPlacement(0,G4ThreeVector(0.,0.,-_port_tube_window_thickn/2.),
+		    upper_port_tube_air_logic, "UPPER_PORT_AIR", 
+		    upper_port_tube_logic, false, 0, false);
+
+  // The position of the source is assumed to be at the end of the tube, inside.
+  // To be changed for different configurations
+  _upper_port_source_pos.setX(0.);
+  _upper_port_source_pos.setY(_up_nozzle_y_pos  + _up_nozzle_high/2. - (_up_port_tube_length - _up_nozzle_flange_high) + _port_tube_window_thickn);
+  _upper_port_source_pos.setZ(0.);
     
     // SETTING VISIBILITIES   //////////
     vessel_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
     if (_visibility) {
       G4VisAttributes titanium_col = nexus::TitaniumGrey();
       //   titanium_col.SetForceSolid(true);
+      vessel_logic->SetVisAttributes(titanium_col);
+      lateral_port_tube_logic->SetVisAttributes(titanium_col);
+      upper_port_tube_logic->SetVisAttributes(titanium_col);
+      G4VisAttributes air_col = nexus::Yellow();
+      air_col.SetForceSolid(true);
+      lateral_port_tube_air_logic->SetVisAttributes(air_col);
+      upper_port_tube_air_logic->SetVisAttributes(air_col);
       vessel_logic->SetVisAttributes(titanium_col);
     } else {
       vessel_logic->SetVisAttributes(G4VisAttributes::Invisible);
@@ -372,7 +467,12 @@ void NextNewVessel::Construct()
    	}
       }
     }      
-    else if (region =="SOURCE_PORT_ANODE"){ vertex = G4ThreeVector(_lat_nozzle_x_pos, 0.,_lat_nozzle_z_pos);}
+    else if (region =="SOURCE_PORT_ANODE") { 
+      vertex = _lateral_port_source_pos; 
+    }
+    else if (region =="SOURCE_PORT_UP"){ 
+      vertex = _upper_port_source_pos;
+    }
     else if (region =="SOURCE_PORT_CATHODE"){ vertex = G4ThreeVector(_lat_nozzle_x_pos, 0.,-_lat_nozzle_z_pos);}
     else {
       G4Exception("[NextNewVessel]", "GenerateVertex()", FatalException,

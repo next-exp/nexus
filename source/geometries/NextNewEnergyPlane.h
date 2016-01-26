@@ -65,6 +65,8 @@ namespace nexus {
     const G4double _carrier_plate_thickness, _carrier_plate_diam,_enclosure_hole_diam,_gas_hole_diam,_gas_hole_pos ;
     const G4double _tpb_thickness;
 
+    const G4double _axial_port_hole_diam,  _axial_port_thickn;
+
    
     Enclosure*  _enclosure;
     G4double _enclosure_z_pos;
