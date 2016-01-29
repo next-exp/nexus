@@ -473,7 +473,12 @@ void NextNewVessel::Construct()
     else if (region =="SOURCE_PORT_UP"){ 
       vertex = _upper_port_source_pos;
     }
-    else if (region =="SOURCE_PORT_CATHODE"){ vertex = G4ThreeVector(_lat_nozzle_x_pos, 0.,-_lat_nozzle_z_pos);}
+    else if (region =="SOURCE_PORT_CATHODE"){ vertex = G4ThreeVector(_lat_nozzle_x_pos, 0.,-_lat_nozzle_z_pos);
+    }  
+    else if (region =="SOURCE_PORT_AXIAL") { 
+      //vertex = _axial_port_source_pos; 
+      vertex = G4ThreeVector(0., 0., -_endcap_nozzle_z_pos);
+    }
     else {
       G4Exception("[NextNewVessel]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");     

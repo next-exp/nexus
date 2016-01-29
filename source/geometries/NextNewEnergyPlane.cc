@@ -96,27 +96,27 @@ namespace nexus {
       new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_nh_solid,
 			     carrier_plate_front_buffer_solid, 0, 
 			     G4ThreeVector(0., 0., _carrier_plate_thickness/2. 
-- _carrier_plate_front_buffer_thickness/2.+.5*mm));
+					   - _carrier_plate_front_buffer_thickness/2.+.5*mm));
     
     // Making PMT holes
     G4Tubs* carrier_plate_pmt_hole_solid = 
       new G4Tubs("CARRIER_PLATE_PMT_HOLE", 0., _enclosure_hole_diam/2., 
 		 (_carrier_plate_thickness+1.*mm)/2., 0., twopi);
     for (int i=0; i<_num_PMTs; i++) {
-       carrier_plate_solid = 
-	 new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_solid,
-				carrier_plate_pmt_hole_solid, 0, 
-				_pmt_positions[i]);
-     }
-     //Making holes for XeGas flow
-     G4Tubs* gas_hole_solid =
-       new G4Tubs("GAS_HOLE", 0., _gas_hole_diam/2, 
-		  (_carrier_plate_thickness+1*mm)/2., 0., twopi);
-     for (int i=0; i<_num_gas_holes; i++){
-       carrier_plate_solid = 
-	 new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_solid, 
-				gas_hole_solid, 0, _gas_hole_positions[i]);
-     }
+      carrier_plate_solid = 
+	new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_solid,
+			       carrier_plate_pmt_hole_solid, 0, 
+			       _pmt_positions[i]);
+    }
+    //Making holes for XeGas flow
+    G4Tubs* gas_hole_solid =
+      new G4Tubs("GAS_HOLE", 0., _gas_hole_diam/2, 
+		 (_carrier_plate_thickness+1*mm)/2., 0., twopi);
+    for (int i=0; i<_num_gas_holes; i++){
+      carrier_plate_solid = 
+	new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_solid, 
+			       gas_hole_solid, 0, _gas_hole_positions[i]);
+    }
 
 
      
@@ -126,33 +126,34 @@ namespace nexus {
     // vacuum->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
     //  G4LogicalVolume* axial_port_hole_logic = new G4LogicalVolume(axial_port_hole_solid, 
     //			vacuum, "AXIAL_PORT_HOLE");
-     //   G4LogicalVolume* axial_port_hole_logic = new G4LogicalVolume(axial_port_hole_solid, 
-     //			vacuum, "AXIAL_PORT_HOLE");
-     // new G4PVPlacement(0,G4ThreeVector(0.,0., - _axial_port_thickn/2.),
-     //		    axial_port_hole_logic, "AXIAL_PORT_HOLE", 
-     //		    carrier_plate_logic, false, 0, true);
+    //   G4LogicalVolume* axial_port_hole_logic = new G4LogicalVolume(axial_port_hole_solid, 
+    //			vacuum, "AXIAL_PORT_HOLE");
+    // new G4PVPlacement(0,G4ThreeVector(0.,0., - _axial_port_thickn/2.),
+    //		    axial_port_hole_logic, "AXIAL_PORT_HOLE", 
+    //		    carrier_plate_logic, false, 0, true);
 
-     // Making hole for axial port
-    G4Tubs* axial_port_hole_solid = new G4Tubs("AXIAL_PORT_HOLE", 0., _axial_port_hole_diam/2., 
-					       (_carrier_plate_thickness - _axial_port_thickn + 1.*mm)/2., 0., twopi);
+    // Making hole for axial port
+    G4Tubs* axial_port_hole_solid = 
+      new G4Tubs("AXIAL_PORT_HOLE", 0., _axial_port_hole_diam/2., 
+		 _carrier_plate_thickness/2., 0., twopi);
     carrier_plate_solid  =
-      new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_solid, axial_port_hole_solid,
-			     0, G4ThreeVector(0., 0., - _axial_port_thickn/2. - 1./2. * mm));
+      new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_solid, axial_port_hole_solid, 
+			     0, G4ThreeVector(0., 0., - _carrier_plate_front_buffer_thickness - _axial_port_thickn));
     
-    
+     
     G4LogicalVolume* carrier_plate_logic = 
       new G4LogicalVolume(carrier_plate_solid, 
 			  G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
 			  "CARRIER_PLATE");
-   
-
+     
+     
     ///Placement
     G4double carrier_plate_z_pos = 
       _energy_plane_z_pos - _carrier_plate_thickness/2.;
     
     new G4PVPlacement(0, G4ThreeVector(0.,0.,carrier_plate_z_pos), 
 		      carrier_plate_logic, "CARRIER_PLATE", 
-		      _mother_logic, false, 0, true);
+		      _mother_logic, false, 0, false);
 
     
    
@@ -168,10 +169,10 @@ namespace nexus {
     //   ", " << _temperature << G4endl;
     G4double window_diam =  _enclosure->GetWindowDiameter();
     G4Tubs* tpb_solid = new G4Tubs("ENCLOSURE_TPB", 0., window_diam/2, 
-		  _tpb_thickness/2., 0., twopi);
+				   _tpb_thickness/2., 0., twopi);
     G4LogicalVolume* tpb_logic = 
       new G4LogicalVolume(tpb_solid, tpb,
-			   "ENCLOSURE_TPB");
+			  "ENCLOSURE_TPB");
 
     G4VisAttributes * visattrib_blue = new G4VisAttributes;
     visattrib_blue->SetColor(0., 0., 1.);
@@ -196,6 +197,7 @@ namespace nexus {
     /////  SETTING VISIBILITIES   //////////
     if (_visibility) {
       G4VisAttributes brown_col = nexus::CopperBrown();
+      brown_col.SetForceSolid(true);
       carrier_plate_logic->SetVisAttributes(brown_col);
       G4VisAttributes green_col = nexus::DarkGreen();
       green_col.SetForceSolid(true);
@@ -282,7 +284,7 @@ namespace nexus {
     return vertex;
   }
   
-void NextNewEnergyPlane::GeneratePMTsPositions()
+  void NextNewEnergyPlane::GeneratePMTsPositions()
   {
     /// Function that computes and stores the XY positions of PMTs in the carrier plate
     G4int num_conc_circles = 2;
@@ -323,18 +325,18 @@ void NextNewEnergyPlane::GeneratePMTsPositions()
       exit(0);
     }
   }
- void NextNewEnergyPlane::GenerateGasHolePositions()
- {
+  void NextNewEnergyPlane::GenerateGasHolePositions()
+  {
     /// Function that computes and stores the XY positions of gas holes in the carrier plate
-   G4double rad = _carrier_plate_diam/2. - _gas_hole_pos;
-   G4ThreeVector post(0.,0.,0.);
-   G4int step_deg = 360.0 /_num_gas_holes;
-   for (G4int place=0; place<_num_gas_holes; place++) {
-     G4double angle = place * step_deg;
-     post.setX(rad * sin(angle * deg));
-     post.setY(rad * cos(angle * deg));
-     _gas_hole_positions.push_back(post); 
-   }
- }
+    G4double rad = _carrier_plate_diam/2. - _gas_hole_pos;
+    G4ThreeVector post(0.,0.,0.);
+    G4int step_deg = 360.0 /_num_gas_holes;
+    for (G4int place=0; place<_num_gas_holes; place++) {
+      G4double angle = place * step_deg;
+      post.setX(rad * sin(angle * deg));
+      post.setY(rad * cos(angle * deg));
+      _gas_hole_positions.push_back(post); 
+    }
+  }
 
 }//end namespace nexus
