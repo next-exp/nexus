@@ -187,6 +187,10 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     ipart->SetInitialMom(mom.x(), mom.y(), mom.z(), energy);
     ipart->SetFinalMom(0, 0, 0, mass);
 
+    // if (trj->GetPDGEncoding() == 22 && energy > 0.799 &&
+    //  energy < 0.800 )
+    //   G4cout << "Event numb " << ievent->GetEventID() << G4endl;
+
     ievent->AddMCParticle(ipart);
   }
 
@@ -293,11 +297,11 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
 
   ievt->SetMCEnergy(evt_energy);
 
-  for (G4int tr=0; tr<ievt->GetMCTracks().size(); ++tr) {
+  for (unsigned int tr=0; tr<ievt->GetMCTracks().size(); ++tr) {
     G4double tot_energy = 0.;
     gate::MCTrack* mytrack =  ievt->GetMCTracks()[tr];
     const std::vector<gate::BHit*> myhits = mytrack->GetHits();
-    for (G4int h=0; h<myhits.size(); ++h) {
+    for (unsigned int h=0; h<myhits.size(); ++h) {
       tot_energy += myhits[h]->GetAmplitude();
       myhits[h]->SetID(h);
     }
@@ -342,11 +346,13 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     std::vector< std::pair<unsigned short,unsigned short> > data;
     G4double amplitude = 0.;
     unsigned short idx=0;  
-  for (it = wvfm.begin(); it != wvfm.end(); ++it) {
-        //isnr->SetSample((*it).second, (*it).first);
-        data.push_back(std::make_pair((*it).first/binsize,(unsigned short)(*it).second));
-        amplitude = amplitude + (*it).second;
-        idx++;}
+    for (it = wvfm.begin(); it != wvfm.end(); ++it) {
+      unsigned short time_bin = (unsigned short)((*it).first/binsize+0.5);
+      unsigned short charge = (unsigned short)((*it).second+0.5);
+
+      data.push_back(std::make_pair(time_bin, charge));
+      amplitude = amplitude + (*it).second;
+      idx++;}
     wf->SetData(data);
     isnr->SetAmplitude(amplitude);
 
