@@ -108,18 +108,18 @@ namespace nexus {
 
 
     // Tracking plane
-    G4Tubs* ics_tracking_nh_solid = new G4Tubs("ICS_TRACKING_NH", 0.*cm, _tracking_orad,
+    G4Tubs* ics_tracking_solid = new G4Tubs("ICS_TRACKING_NH", 0.*cm, _tracking_orad,
     					       _tracking_length/2., 0.*deg, 360.*deg);
 
-    // Making DB tails holes
-    G4Box* ics_tracking_hole_solid = new G4Box("ICS_TRACKING_HOLE", _plug_x/2., _plug_y,  _tracking_length);
+    // // Making DB tails holes
+    // G4Box* ics_tracking_hole_solid = new G4Box("ICS_TRACKING_HOLE", _plug_x/2., _plug_y,  _tracking_length);
       
-    G4SubtractionSolid* ics_tracking_solid = new G4SubtractionSolid("ICS_TRACKING", ics_tracking_nh_solid,
-     								    ics_tracking_hole_solid, 0,_DB_positions[0]);
-    for (int i=1; i<_num_DBs; i++) {
-      ics_tracking_solid = new G4SubtractionSolid("ICS_TRACKING", ics_tracking_solid,
-     						  ics_tracking_hole_solid, 0, _DB_positions[i]);
-    }
+    // G4SubtractionSolid* ics_tracking_solid = new G4SubtractionSolid("ICS_TRACKING", ics_tracking_nh_solid,
+    //  								    ics_tracking_hole_solid, 0,_DB_positions[0]);
+    // for (int i=1; i<_num_DBs; i++) {
+    //   ics_tracking_solid = new G4SubtractionSolid("ICS_TRACKING", ics_tracking_solid,
+    //  						  ics_tracking_hole_solid, 0, _DB_positions[i]);
+    // }
     
     // Energy plane
     G4Sphere* ics_energy_sph_nh_solid = new G4Sphere("ICS_ENERGY_SPH_NH",
@@ -155,7 +155,7 @@ namespace nexus {
 
 
     // Unions of parts
-    G4double ics_tracking_zpos = _body_length/2. + _tracking_length/2.;
+    G4double ics_tracking_zpos = _body_length/2. - _tracking_length/2.;
     G4UnionSolid* ics_solid = 
       new G4UnionSolid("ICS", ics_body_solid, ics_tracking_solid,
 		       0, G4ThreeVector(0., 0., ics_tracking_zpos) );
