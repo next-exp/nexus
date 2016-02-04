@@ -39,6 +39,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <iomanip>
 
 using namespace nexus;
 
@@ -207,13 +208,11 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     _iprtmap[trackid] = ipart;
 
     ipart->SetPathLength(trj->GetTrackLength());
-
     G4ThreeVector ini_xyz = trj->GetInitialPosition();
     G4double ini_t = trj->GetInitialTime(); 
     ipart->SetInitialVtx(gate::Vector4D(ini_xyz.x(), ini_xyz.y(), ini_xyz.z(), ini_t));
     G4ThreeVector xyz = trj->GetFinalPosition();
     G4double t = trj->GetFinalTime();
-
     ipart->SetFinalVtx(gate::Vector4D(xyz.x(), xyz.y(), xyz.z(), t));
     
     G4String ini_volume = trj->GetInitialVolume();
@@ -226,7 +225,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     G4double energy = sqrt(mom.mag2() + mass*mass);
     ipart->SetInitialMom(mom.x(), mom.y(), mom.z(), energy);
     ipart->SetFinalMom(0, 0, 0, mass);
-
+  //  std::cout << "After: "<< ipart->GetInitialVtx4D().GetT() << std::endl;
     ievent->AddMCParticle(ipart);
 
     if (_hdf5dump) {
@@ -246,6 +245,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
                                    &momentum[0], 3, kin_energy, trj->GetCreatorProcess().c_str());
     }
   }
+
 
   // We'll set now the family relationships.
   // Loop through the particles we just stored in the gate event.
@@ -400,7 +400,8 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     std::string sdname = hits->GetSDname();
     gate::Hit* isnr = new gate::Hit();
     isnr->SetLabel(sdname);
-    isnr->SetSensorID(hit->GetPmtID());
+ 
+   isnr->SetSensorID(hit->GetPmtID());
     G4ThreeVector xyz = hit->GetPosition();
 
     isnr->SetPosition(gate::Point3D(xyz.x(), xyz.y(), xyz.z()));
@@ -416,13 +417,13 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     
     const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
     std::map<G4double, G4int>::const_iterator it;
-    std::vector< std::pair<unsigned int,float> > data;
+    std::vector< std::pair<unsigned int,unsigned int> > data;
     G4double amplitude = 0.;
     
     for (it = wvfm.begin(); it != wvfm.end(); ++it) {
       unsigned int time_bin = (unsigned int)((*it).first/binsize+0.5);
       unsigned int charge = (unsigned int)((*it).second+0.5);
-      
+
       data.push_back(std::make_pair(time_bin, charge));
       amplitude = amplitude + (*it).second;
 
