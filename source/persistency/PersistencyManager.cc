@@ -210,11 +210,26 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
 
     ipart->SetPathLength(trj->GetTrackLength());
 
+<<<<<<< HEAD:source/persistency/PersistencyManager.cc
     G4ThreeVector ini_xyz = trj->GetInitialPosition();
     G4double ini_t = trj->GetInitialTime(); 
     ipart->SetInitialVtx(gate::Vector4D(ini_xyz.x(), ini_xyz.y(), ini_xyz.z(), ini_t));
     G4ThreeVector xyz = trj->GetFinalPosition();
     G4double t = trj->GetFinalTime();
+=======
+    G4ThreeVector xyz = trj->GetInitialPosition();
+    G4double t = trj->GetInitialTime(); 
+<<<<<<< HEAD
+    ipart->SetInitialVtx(gate::Vector4D(xyz.x(), xyz.y(), xyz.z(), t));
+   
+=======
+//	G4cout << t << G4endl;
+    ipart->SetInitialVtx(gate::Vector4D(xyz.x(), xyz.y(), xyz.z(),t));
+    
+>>>>>>> Type change in GATE waveforms
+    xyz = trj->GetFinalPosition();
+    t = trj->GetFinalTime();
+>>>>>>> Type change in GATE waveforms:source/base/PersistencyManager.cc
     ipart->SetFinalVtx(gate::Vector4D(xyz.x(), xyz.y(), xyz.z(), t));
     
     G4String ini_volume = trj->GetInitialVolume();
@@ -229,6 +244,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     ipart->SetFinalMom(0, 0, 0, mass);
   //  std::cout << "After: "<< ipart->GetInitialVtx4D().GetT() << std::endl;
     ievent->AddMCParticle(ipart);
+<<<<<<< HEAD:source/persistency/PersistencyManager.cc
 
     if (_hdf5dump) {
       float ini_pos[4] = {(float)ini_xyz.x(), (float)ini_xyz.y(), (float)ini_xyz.z(), (float)ini_t};
@@ -247,6 +263,10 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
                                    &momentum[0], 3, kin_energy, trj->GetCreatorProcess().c_str());
     }
   }
+=======
+  
+}
+>>>>>>> Type change in GATE waveforms:source/base/PersistencyManager.cc
 
 
   // We'll set now the family relationships.
