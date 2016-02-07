@@ -306,6 +306,76 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Sapphire()
   return mpt;
 }
 
+G4MaterialPropertiesTable* OpticalMaterialProperties::OptCoupler()
+{
+  //For comparison of optical coupling materials.
+  G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
+
+  // REFRACTIVE INDEX ////////////////////////////////////////////////
+  //Start with curing gel NyeGel OCK-451. sing quoted formula for now.
+  G4double um2 = micrometer*micrometer;
+  // G4double nm2 = nm*nm;
+
+  // G4double B[3] = {1.4313493, 0.65054713, 5.3414021};
+  // G4double C[3] = {0.0052799261*um2, 0.0142382647*um2, 325.017834*um2};
+  // SellmeierEquation seq(B, C);
+  G4double constTerm = 1.4954;//1.496135;//1.30311;
+  G4double squareTerm = 0.008022*um2;//0.00000000006921989*um2;//0.0304109*um2;
+  G4double quadTerm = 0.;//0.00008070513*um2*um2;//0.000740633*um2*um2;
+  //Ideal coupler (geometric mean).
+  //G4double BS[3] = {1.4313493, 0.65054713, 5.3414021};
+  //G4double CS[3] = {0.0052799261*um2, 0.0142382647*um2, 325.017834*um2};
+  //SellmeierEquation seqS(BS, CS);//Sapphire
+  //G4double BFS[3] = {4.73e-1,6.31e-1,9.06e-1};
+  //G4double CFS[3] = {1.30e-2*um2,4.13e-3*um2,9.88e+1*um2};
+  //SellmeierEquation seqFS(BFS, CFS);//Fused Silica
+
+
+  G4double wlmin =  150. * nm;
+  G4double wlmax = 1000. * nm;
+  G4double step  =   10. * nm;
+
+  const G4int entries = G4int((wlmax-wlmin)/step);
+  
+  G4double energy[entries];
+  G4double rindex[entries];
+
+  for (G4int i=0; i<entries; i++) {
+
+    G4double wl = wlmin + i*step;
+    // rindex[i] = seq.RefractiveIndex(wl);
+    energy[i] = h_Planck*c_light/wl;
+    rindex[i] = constTerm + squareTerm/(wl*wl) + quadTerm/pow(wl,4);
+    //rindex[i] = 1.0;//sqrt(seqS.RefractiveIndex(wl)*seqFS.RefractiveIndex(wl));
+    
+  }
+  
+  //Values estimated from printed plot. Will need to be improved.
+  const G4int ABS_NUMENTRIES = 10;
+  //NyoGel451
+  G4double Energies[ABS_NUMENTRIES] = {1.77*eV, 2.07*eV,2.48*eV,2.76*eV,2.92*eV,3.10*eV,3.31*eV,3.54*eV,3.81*eV,4.13*eV};
+  //CargilleOpGel152
+  //G4double Energies[ABS_NUMENTRIES] = {1.89*eV, 1.93*eV, 1.96*eV, 2.11*eV, 2.27*eV, 2.55*eV, 2.59*eV, 3.07*eV, 3.40*eV, 3.88*eV};
+  //Dow
+  //G4double Energies[ABS_NUMENTRIES] = {2.07*eV, 2.16*eV, 2.26*eV, 2.36*eV, 2.48*eV, 2.61*eV, 2.76*eV, 2.92*eV, 3.10*eV, 3.31*eV, 3.55*eV};
+  // G4double SAPPHIRE_ABSL[ABS_NUMENTRIES] = {100.*cm, 100.*cm};
+  //NyoGel451
+  G4double OPTCOUP_ABSL[ABS_NUMENTRIES] = {1332.8*mm,1332.8*mm,1332.8*mm,666.17*mm,499.5*mm,399.5*mm,199.5*mm,132.83*mm,99.5*mm,4.5*mm};
+  //CargilleOpGel152 - estimated from data sheet plot
+  //G4double OPTCOUP_ABSL[ABS_NUMENTRIES] = {3.32*mm, 3.18*mm, 2.92*mm, 2.59*mm, 1.96*mm, 1.40*mm, 1.36*mm, 0.74*mm, 0.49*mm, 0.31*mm};
+  //dow - estimated from paper plot
+  //G4double OPTCOUP_ABSL[ABS_NUMENTRIES] = {3.*cm, 2.67*cm, 2.35*cm, 2.14*cm, 1.89*cm, 1.62*cm, 1.52*cm, 1.32*cm, 1.11*cm, 0.95*cm, 0.8*cm};
+  
+  mpt->AddProperty("RINDEX", energy, rindex, entries);
+  // mpt->AddProperty("ABSLENGTH", Energies, SAPPHIRE_ABSL, ABS_NUMENTRIES); 
+  mpt->AddProperty("ABSLENGTH", Energies, OPTCOUP_ABSL, ABS_NUMENTRIES);
+
+  
+  return mpt;
+
+}
+
+
 G4MaterialPropertiesTable* OpticalMaterialProperties::GAr()
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
@@ -782,7 +852,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPH()
 
 
 ///Properties of WLS BC480  
-///Ref: Optical properties of wavelength shifting panels. P .Soler and Z.H.Wang School ofPhysics, Unioersity of Sydney, Sydney, NSW, 2006, Australia
+///Ref: Optical properties of wavelength shifting panels. P .Soler and Z.H.Wang School of Physics, University of Sydney, Sydney, NSW, 2006, Australia
 ///Saint Gobain crystals
 G4MaterialPropertiesTable* OpticalMaterialProperties::BC480()
 {
@@ -890,3 +960,5 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::PMMA()
 
   return mpt;
 }
+
+

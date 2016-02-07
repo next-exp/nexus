@@ -30,6 +30,7 @@
 #include <G4UserLimits.hh>
 #include <G4SDManager.hh>
 #include <G4RunManager.hh>
+#include <G4UnitsTable.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
@@ -45,16 +46,21 @@ namespace nexus {
     _max_step_size (1.*mm),
     _active_diam   (106.9 * cm),
     _active_length (130. * cm),
-    _windows_end_z (-386.999 * mm), // TO BE CHANGED (so far, it's the NEW value). It's the position in gas where the sapphire windows end. To be read from Next100EnergyPlane.cc, once TPB is added to sapphire windows
+    _windows_end_z (-704.349 * mm), // It's the position in gas where the sapphire windows end. To be read from Next100EnergyPlane.cc, once TPB is added to sapphire windows
     _trk_displ (13.36 * cm),
     _el_gap_length (.5 * cm),
     _grid_thickn (.1 * mm),
     _el_grid_transparency (.88),
     _cath_grid_transparency (.98),
     _elfield(0), // EL field ON or OFF
+    _ELtransv_diff (0. * mm/sqrt(cm)),
+    _ELlong_diff (0. * mm/sqrt(cm)),
+    _ELelectric_field (34.5*kilovolt/cm),
+    _drift_transv_diff (1. * mm/sqrt(cm)),
+    _drift_long_diff (.3 * mm/sqrt(cm)),
     _anode_quartz_thickness (3 *mm),
     _anode_quartz_diam (110.*cm), 
-    _tpb_thickness(1.*micrometer),
+    _tpb_thickness (1.*micrometer),
     _ito_transparency (.90),
     _ito_thickness (_grid_thickn),
     _el_table_binning(1.*mm),
@@ -65,7 +71,7 @@ namespace nexus {
 
     _cathode_pos_z = _el_gap_posz - _el_gap_length/2. - _active_length - _grid_thickn/2. ;
     _buffer_length = 
-       _cathode_pos_z - _windows_end_z , // from the end of the cathode to surface of sapphire windows // It's 129.9 mm
+       _cathode_pos_z - _grid_thickn/2. - _windows_end_z , // from the end of the cathode to surface of sapphire windows // It's 129.9 mm
 
     // Field Cage
     _field_cage = new Next100FieldCage();
@@ -75,6 +81,10 @@ namespace nexus {
 
     // Tracking Plane
     _tracking_plane = new Next100TrackingPlane();
+
+    // Define a new category
+    new G4UnitDefinition("kilovolt/cm","kV/cm","Electric field", kilovolt/cm);
+    new G4UnitDefinition("mm/sqrt(cm)","mm/sqrt(cm)","Diffusion", mm/sqrt(cm));
 
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/Next100/", "Control commands of geometry Next100.");
@@ -89,6 +99,36 @@ namespace nexus {
 
     _msg->DeclareProperty("elfield", _elfield,
 			  "True if the EL field is on (full simulation), false if it's not (parametrized simulation.");
+
+    G4GenericMessenger::Command&  ELtransv_diff_cmd =
+      _msg->DeclareProperty("ELtransv_diff", _ELtransv_diff,
+			    "Tranvsersal diffusion in the EL region");
+    ELtransv_diff_cmd.SetParameterName("ELtransv_diff", true);
+    ELtransv_diff_cmd.SetUnitCategory("Diffusion");
+
+    G4GenericMessenger::Command&  ELlong_diff_cmd =
+      _msg->DeclareProperty("ELlong_diff", _ELlong_diff,
+			    "Longitudinal diffusion in the EL region");
+    ELlong_diff_cmd.SetParameterName("ELlong_diff", true);
+    ELlong_diff_cmd.SetUnitCategory("Diffusion");
+
+    G4GenericMessenger::Command& drift_transv_diff_cmd =
+      _msg->DeclareProperty("drift_transv_diff", _drift_transv_diff,
+			    "Tranvsersal diffusion in the drift region");
+    drift_transv_diff_cmd.SetParameterName("drift_transv_diff", true);
+    drift_transv_diff_cmd.SetUnitCategory("Diffusion");
+
+    G4GenericMessenger::Command& drift_long_diff_cmd =
+      _msg->DeclareProperty("drift_long_diff", _drift_long_diff,
+			    "Longitudinal diffusion in the drift region");
+    drift_long_diff_cmd.SetParameterName("drift_long_diff", true);
+    drift_long_diff_cmd.SetUnitCategory("Diffusion");
+
+    G4GenericMessenger::Command& El_field_cmd =
+      _msg->DeclareProperty("EL_field", _ELelectric_field,
+			    "Electric field in the EL region");
+    El_field_cmd.SetParameterName("EL_field", true);
+    El_field_cmd.SetUnitCategory("Electric field");
 
      // Calculate vertices for EL table generation
     G4GenericMessenger::Command& pitch_cmd = 
@@ -138,7 +178,7 @@ namespace nexus {
     BuildActive(); 
 
     // Buffer region
-    //BuildBuffer();
+    BuildBuffer();
 
     // Energy Plane
     _energy_plane->SetLogicalVolume(_mother_logic);
@@ -180,16 +220,19 @@ namespace nexus {
     new G4PVPlacement(0, G4ThreeVector(0., 0., _el_gap_posz), el_gap_logic,
 		      "EL_GAP", _mother_logic, false, 0);
 
+    // G4cout << "EL GAP starts in " << _el_gap_posz - _el_gap_length/2.
+    // 	   << " and ends in " << _el_gap_posz + _el_gap_length/2. << G4endl;
+
  if (_elfield) {
     // Define EL electric field
     UniformElectricDriftField* el_field = new UniformElectricDriftField();
     el_field->SetCathodePosition(_el_gap_posz - _el_gap_length/2.);
     el_field->SetAnodePosition  (_el_gap_posz + _el_gap_length/2.);
     el_field->SetDriftVelocity(2.5 * mm/microsecond);
-    el_field->SetTransverseDiffusion(1. * mm/sqrt(cm));
-    el_field->SetLongitudinalDiffusion(.5 * mm/sqrt(cm));
+    el_field->SetTransverseDiffusion(_ELtransv_diff);
+    el_field->SetLongitudinalDiffusion(_ELlong_diff);
     XenonGasProperties xgp(_pressure, _temperature);
-    el_field->SetLightYield(xgp.ELLightYield(20*kilovolt/cm));
+    el_field->SetLightYield(xgp.ELLightYield(_ELelectric_field));
     G4Region* el_region = new G4Region("EL_REGION");
     el_region->SetUserInformation(el_field);
     el_region->AddRootLogicalVolume(el_gap_logic);
@@ -202,10 +245,9 @@ namespace nexus {
     // Dimensions & position: the grids are simulated inside the EL gap. 
     // Their thickness is symbolic.
     G4double grid_diam = _active_diam;
-    //   G4double posz1 = _el_gap_posz - _el_gap_length/2. - _grid_thickn/2.;
+    
     G4double posz1 = - _el_gap_length/2. + _grid_thickn/2.;
-    //    G4double posz2 = _el_gap_posz + _el_gap_length/2. + _grid_thickn/2.;
-    G4double posz2 =  _el_gap_length/2. - _grid_thickn/2.;
+    //   G4double posz2 =  _el_gap_length/2. - _grid_thickn/2.;
 
     _el_grid_ref_z = posz1;
 
@@ -323,6 +365,9 @@ namespace nexus {
     //    G4double active_posz = _el_grid_ref_z - _grid_thickn/2. - _active_length/2.;
     G4double active_posz = _el_gap_posz - _el_gap_length/2. - _active_length/2.;
 
+    // G4cout << "ACTIVE starts in " << active_posz - _active_length/2.
+    // 	   << " and ends in " << active_posz + _active_length/2. << G4endl;
+
     G4Tubs* active_solid = new G4Tubs("ACTIVE",  0., _active_diam/2., _active_length/2., 0, twopi);
 
     G4LogicalVolume* active_logic = new G4LogicalVolume(active_solid, _gas, "ACTIVE");
@@ -343,8 +388,8 @@ namespace nexus {
     field->SetCathodePosition(active_posz - _active_length/2.);
     field->SetAnodePosition(active_posz + _active_length/2.);
     field->SetDriftVelocity(1. * mm/microsecond);
-    field->SetTransverseDiffusion(1. * mm/sqrt(cm));
-    field->SetLongitudinalDiffusion(.5 * mm/sqrt(cm));  
+    field->SetTransverseDiffusion(_drift_transv_diff);
+    field->SetLongitudinalDiffusion(_drift_long_diff);  
     G4Region* drift_region = new G4Region("DRIFT");
     drift_region->SetUserInformation(field);
     drift_region->AddRootLogicalVolume(active_logic);
@@ -362,7 +407,7 @@ namespace nexus {
 void Next100InnerElements::BuildBuffer()
   {
 
-G4double buffer_posz = _el_gap_posz - _el_gap_length/2. - _active_length - _grid_thickn - _buffer_length/2.;
+    G4double buffer_posz =_el_gap_posz - _el_gap_length/2. - _active_length - _grid_thickn - _buffer_length/2.;
     G4Tubs* buffer_solid = 
       new G4Tubs("BUFFER",  0., _active_diam/2., 
 		 _buffer_length /2., 0, twopi);
@@ -372,7 +417,7 @@ G4double buffer_posz = _el_gap_posz - _el_gap_length/2. - _active_length - _grid
     G4LogicalVolume* buffer_logic = 
       new G4LogicalVolume(buffer_solid, _gas, "BUFFER");
     new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_posz), buffer_logic, 
-		      "BUFFER", _mother_logic, false, 0, true);
+		      "BUFFER", _mother_logic, false, 0, false);
 
      // Set the volume as an ionization sensitive detector
     IonizationSD* buffsd = new IonizationSD("/NEXT100/BUFFER");

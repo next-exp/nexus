@@ -78,8 +78,17 @@ namespace nexus {
     G4double _el_gap_length;
     G4double _grid_thickn;
     G4double _el_grid_transparency, _cath_grid_transparency;
+    
     // True if EL field is on
     G4bool _elfield;
+
+    // Transversal and longitudinal diffusions
+    G4double _ELtransv_diff; ///< transversal diffusion in the EL gap
+    G4double _ELlong_diff; ///< longitudinal diffusion in the EL gap
+    G4double _ELelectric_field; ///< electric field in the EL region
+    G4double _drift_transv_diff; ///< transversal diffusion in the drift region
+    G4double _drift_long_diff; ///< longitudinal diffusion in the drift region
+		     
 
     G4double _anode_quartz_thickness, _anode_quartz_diam; 
     G4double _tpb_thickness;

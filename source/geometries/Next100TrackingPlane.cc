@@ -60,7 +60,8 @@ namespace nexus {
     _msg->DeclareProperty("tracking_plane_vis", _visibility, "Tracking Plane Visibility");
 
     // The Dice Board
-    _dice_board = new NextElDB(_SiPM_rows, _SiPM_columns);
+    // _dice_board = new NextElDB(_SiPM_rows, _SiPM_columns);
+    _dice_board = new NextNewKDB(_SiPM_rows, _SiPM_columns);
   }
 
 
@@ -106,7 +107,7 @@ namespace nexus {
       pos = _DB_positions[i];
       pos.setZ(dice_board_posz);
       new G4PVPlacement(0, pos, dice_board_logic,
-			"DICE_BOARD", _mother_logic, false, i);
+			"DICE_BOARD", _mother_logic, false, i, false);
     }
 
     // G4PVPlacement* dice_board_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), dice_board_logic,
@@ -120,7 +121,7 @@ namespace nexus {
     // SETTING VISIBILITIES   //////////
 
     // Dice boards always visible in dark green
-    G4VisAttributes dark_green_col(G4Colour(0., .6, 0.));
+    G4VisAttributes dark_green_col = nexus::DarkGreen();
     dice_board_logic->SetVisAttributes(dark_green_col);
     
 

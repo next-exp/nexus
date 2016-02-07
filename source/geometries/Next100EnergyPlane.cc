@@ -40,12 +40,12 @@ namespace nexus {
   Next100EnergyPlane::Next100EnergyPlane():
 
     _num_PMTs (60),
-    _energy_plane_posz (-70.435 * cm),            // It is CathodeGrid_posz (-63.625 cm) - 6.81 cm (from drawings)
+    _energy_plane_posz (-70.435 * cm),  // It is CathodeGrid_posz (-63.625 cm) - 6.81 cm (from drawings)
 
     // Carrier Plate dimensions
     _carrier_plate_thickness (10.0 * cm),         // To be checked
-    _carrier_plate_diam (106.9 * cm),             // It must be consistent with ACTIVE diameter
-    _carrier_plate_central_hole_diam (10. * cm),  // It is nozzle_external_diam + 1 cm   (equal to the ICS hole)
+    _carrier_plate_diam (106.9 * cm),            // It must be consistent with ACTIVE diameter
+    _carrier_plate_central_hole_diam (10. * cm), // It is nozzle_external_diam + 1 cm   (equal to the ICS hole)
 
     // Enclosures dimensions
     _enclosure_length (18.434 * cm),
@@ -56,6 +56,7 @@ namespace nexus {
     _enclosure_pad_thickness (2.0 * mm),          // To be checked
     _pmt_base_diam (47. *mm),
     _pmt_base_thickness (5. *mm),
+    _tpb_thickness (1.*micrometer),
     //   _pmts_pitch (11.0 * cm),
     _visibility(0)
   {
@@ -77,6 +78,9 @@ namespace nexus {
   void Next100EnergyPlane::SetLogicalVolume(G4LogicalVolume* mother_logic)
   {
     _mother_logic = mother_logic;
+    _gas = _mother_logic->GetMaterial();
+    _pressure =    _gas->GetPressure();
+    _temperature = _gas->GetTemperature();
   }
 
 
@@ -113,7 +117,7 @@ namespace nexus {
 
     G4double carrier_plate_posz = _energy_plane_posz - _carrier_plate_thickness/2.;
     new G4PVPlacement(0, G4ThreeVector(0.,0.,carrier_plate_posz), carrier_plate_logic,
-		      "CARRIER_PLATE", _mother_logic, false, 0);
+		      "CARRIER_PLATE", _mother_logic, false, 0, false);
     
 
     ////////////////////////
@@ -125,8 +129,10 @@ namespace nexus {
     G4Material* vacuum = 
       G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
     vacuum->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
+    G4Material* optical_coupler = MaterialsList::Epoxy();
+    optical_coupler->SetMaterialPropertiesTable(OpticalMaterialProperties::OptCoupler());
 
-    // // A "pseudo-enclosure"of vacuum is contructed to hold the elements that are replicated
+    // // A "pseudo-enclosure"of vacuum is constructed to hold the elements that are replicated
     G4Tubs* enclosure_gas_solid = new G4Tubs("ENCLOSURE_GAS", 0., _enclosure_diam/2., _enclosure_length/2., 0., twopi);
     G4LogicalVolume* enclosure_gas_logic = 
       new G4LogicalVolume(enclosure_gas_solid, vacuum, "ENCLOSURE_GAS");
@@ -134,9 +140,9 @@ namespace nexus {
     G4Tubs* enclosure_flange_solid = 
       new G4Tubs("ENCLOSURE_FLANGE", _enclosure_window_diam/2., _enclosure_diam/2., _enclosure_flange_length/2., 0., twopi);
 
-    G4LogicalVolume* enclosure_flange_logic = new G4LogicalVolume(enclosure_flange_solid,
-							   G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
-							   "ENCLOSURE_FLANGE");
+    G4LogicalVolume* enclosure_flange_logic =
+      new G4LogicalVolume(enclosure_flange_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
+			  "ENCLOSURE_FLANGE");
     
     G4ThreeVector flange_pos(0., 0., _enclosure_length/2. - _enclosure_flange_length/2.);
     new G4PVPlacement(0, flange_pos, enclosure_flange_logic,
@@ -162,14 +168,23 @@ namespace nexus {
     //   new G4LogicalVolume(enclosure_pad_solid, MaterialsList::OpticalSilicone(),
     // 							       "ENCLOSURE_PAD");
     G4LogicalVolume* enclosure_pad_logic =
-      new G4LogicalVolume(enclosure_pad_solid, vacuum, "ENCLOSURE_PAD");
-
-    // *************** Add optical properties of the pad   TO BE DONE !!    ********************************
+      new G4LogicalVolume(enclosure_pad_solid, optical_coupler, "ENCLOSURE_PAD");
 
     G4double pad_posz = window_posz - _enclosure_window_thickness/2. - _enclosure_pad_thickness/2.;
     new G4PVPlacement(0, G4ThreeVector(0.,0.,pad_posz), enclosure_pad_logic,
 		      "ENCLOSURE_PAD", enclosure_gas_logic, false, 0, false);
-    
+
+    /// TPB coating on sapphire window
+    G4Material* tpb = MaterialsList::TPB();
+    tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB(_pressure, _temperature));
+    // G4cout << "P and T on sapphire windows TPB: " << _pressure << 
+    //   ", " << _temperature << G4endl;
+    G4Tubs* tpb_solid = new G4Tubs("ENCLOSURE_TPB", 0., _enclosure_window_diam/2, 
+				   _tpb_thickness/2., 0., twopi);
+    G4LogicalVolume* tpb_logic = 
+      new G4LogicalVolume(tpb_solid, tpb, "ENCLOSURE_TPB");
+
+      
 
     // Adding the PMT
     _pmt->Construct();
@@ -189,15 +204,24 @@ namespace nexus {
     G4double pmt_base_pos = -_enclosure_length/2. + _pmt_base_thickness; //to be checked
     new G4PVPlacement(0, G4ThreeVector(0.,0., pmt_base_pos),
 		      pmt_base_logic, "PMT_BASE", enclosure_gas_logic, false, 0, false);
+
+   
     
-    // Placing the "pseudo-enclosures" with all internal components in place
+    // Placing the "pseudo-enclosures" with all internal components in place + TPB in front
     G4double enclosure_posz =  _energy_plane_posz - _enclosure_length/2.;
+    // G4cout << "Enclosure ends at z = " << enclosure_posz + _enclosure_length/2. << G4endl;
+    // G4cout << "TPB ends at z = " << _energy_plane_posz + _tpb_thickness << G4endl;
     G4ThreeVector pos;
+    G4ThreeVector tpb_pos;
     for (int i=0; i<_num_PMTs; i++) {
       pos = _pmt_positions[i];
       pos.setZ(enclosure_posz);
+      tpb_pos = _pmt_positions[i];
+      tpb_pos.setZ(_energy_plane_posz + _tpb_thickness/2.);      
       new G4PVPlacement(0, pos, enclosure_gas_logic,
 			"PSEUDO-ENCLOSURE", _mother_logic, false, i, false);
+      new G4PVPlacement(0, tpb_pos, tpb_logic, "ENCLOSURE_TPB", _mother_logic, 
+			false, i, false);
     }
 
     // G4PVPlacement* enclosure_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), enclosure_logic,
@@ -225,15 +249,16 @@ namespace nexus {
       G4VisAttributes base_col = nexus::Yellow();
       base_col.SetForceSolid(true);
       pmt_base_logic->SetVisAttributes(base_col);
-  
-     
+      G4VisAttributes tpb_col = nexus::LightBlue();
+      tpb_col.SetForceSolid(true);
+      tpb_logic->SetVisAttributes(tpb_col);     
     } else {
       carrier_plate_logic->SetVisAttributes(G4VisAttributes::Invisible);
       enclosure_flange_logic->SetVisAttributes(G4VisAttributes::Invisible);
       enclosure_window_logic->SetVisAttributes(G4VisAttributes::Invisible);
       enclosure_pad_logic->SetVisAttributes(G4VisAttributes::Invisible);
       pmt_base_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      
+      tpb_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
 
@@ -290,7 +315,7 @@ namespace nexus {
       G4double rand2 = _num_PMTs * G4UniformRand();
       G4ThreeVector enclosure_pos = _pmt_positions[int(rand2)];
       vertex += enclosure_pos;
-      G4cout << vertex<<G4endl;
+      //      G4cout << vertex<<G4endl;
     }
 
     // Enclosures windows

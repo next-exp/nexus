@@ -20,6 +20,7 @@
 #include "CylinderPointSampler.h"
 #include "BoxPointSampler.h"
 #include "NextElDB.h"
+#include "NextNewKDB.h"
 
 
 class G4Material;
@@ -61,7 +62,8 @@ namespace nexus {
     G4LogicalVolume* _mother_logic;
 
     // Dice board
-    NextElDB* _dice_board;
+    //   NextElDB* _dice_board;
+    NextNewKDB* _dice_board;
 
     // Dimensions
     G4double _support_diam, _support_thickness;

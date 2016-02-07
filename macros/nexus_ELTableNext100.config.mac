@@ -6,9 +6,10 @@
 ##### VERBOSITIES #####
 /run/verbose 0
 /event/verbose 0
-/tracking/verbose 0
+/tracking/verbose 1
 
 
+/Generator/ELTableGenerator/num_ie 1000
 
 ##### GEOMETRY #####
 /Geometry/Next100/pressure 15. bar
@@ -16,13 +17,7 @@
 /Geometry/Next100/elfield 1
 /Geometry/Next100/el_table_binning 1. mm
 /Geometry/Next100/el_table_point_id 0
-
-
-### Generation
-/Generator/SingleParticle/particle ie-
-/Generator/SingleParticle/min_energy 1. eV
-/Generator/SingleParticle/max_energy 1. eV
-/Generator/SingleParticle/region EL_TABLE
+/Geometry/Next100/energy_plane_vis true
 
 
 ##### JOB CONTROL #####

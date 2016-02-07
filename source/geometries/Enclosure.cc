@@ -74,6 +74,8 @@ namespace nexus{
     G4Material* vacuum = 
       G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
     vacuum->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
+    G4Material* optical_coupler = MaterialsList::Epoxy();
+    optical_coupler->SetMaterialPropertiesTable(OpticalMaterialProperties::OptCoupler());
 
      /////   ENCLOSURES  /////
      G4Tubs* enclosure_body = 
@@ -127,7 +129,7 @@ namespace nexus{
      G4Tubs* enclosure_pad_solid =
        new G4Tubs("OPTICAL_PAD", 0., _enclosure_in_diam/2., _enclosure_pad_thickness/2.,0.,twopi);
      G4LogicalVolume* enclosure_pad_logic = 
-       new G4LogicalVolume(enclosure_pad_solid, vacuum, "OPTICAL_PAD");
+       new G4LogicalVolume(enclosure_pad_solid, optical_coupler, "OPTICAL_PAD");
      G4double pad_z_pos = 
        _window_z_pos-_enclosure_window_thickness/2.-_enclosure_pad_thickness/2.;
      new G4PVPlacement(0, G4ThreeVector(0.,0.,pad_z_pos),

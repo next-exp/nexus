@@ -10,7 +10,7 @@
 
 /Geometry/RegisterGeometry NEXT100
 
-/Generator/RegisterGenerator SINGLE_PARTICLE
+/Generator/RegisterGenerator EL_TABLE_GENERATOR
 
 /Actions/RegisterRunAction DEFAULT
 /Actions/RegisterEventAction EL_SIM

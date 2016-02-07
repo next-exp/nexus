@@ -107,13 +107,13 @@ namespace nexus {
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), _buffer_gas_logic,
 						       "BUFFER_GAS", _lab_logic, false, 0);
 
-
+    
     // SHIELDING
     _shielding->Construct();
     G4LogicalVolume* shielding_logic = _shielding->GetLogicalVolume();
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), shielding_logic,
                      "LEAD_BOX", _buffer_gas_logic, false, 0);
-
+   
     // VESSEL
     _vessel->Construct();
     G4LogicalVolume* vessel_logic = _vessel->GetLogicalVolume();
@@ -121,10 +121,11 @@ namespace nexus {
 		      "VESSEL", _buffer_gas_logic, false, 0);
     G4LogicalVolume* vessel_internal_logic = _vessel->GetInternalLogicalVolume();
     
-
+    
     // Internal Copper Shielding
     _ics->SetLogicalVolume(vessel_internal_logic);
     _ics->Construct();
+   
     // G4LogicalVolume* ics_logic = _ics->GetLogicalVolume();
     // new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), ics_logic,
     // 		      "ICS", vessel_internal_logic, false, 0);

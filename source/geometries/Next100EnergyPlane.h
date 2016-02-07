@@ -56,6 +56,8 @@ namespace nexus {
 
     // Mother Logical Volume of the whole Energy PLane
     G4LogicalVolume* _mother_logic;
+    G4Material* _gas;
+    G4double _pressure, _temperature;
 
     // Dimensions
     const G4int _num_PMTs;
@@ -66,6 +68,7 @@ namespace nexus {
     const G4double _enclosure_window_thickness,_enclosure_window_diam;
     const G4double _enclosure_pad_thickness;
     const G4double _pmt_base_diam, _pmt_base_thickness;
+    const G4double _tpb_thickness;
     // const G4double _pmts_pitch;
 
     PmtR11410*  _pmt;
@@ -84,7 +87,7 @@ namespace nexus {
     CylinderPointSampler* _enclosure_pad_gen;
     CylinderPointSampler* _pmt_base_gen;
 
-    G4double _enclosure_body_perc;
+    //  G4double _enclosure_body_perc;
     
     // Geometry Navigator
     G4Navigator* _geom_navigator;

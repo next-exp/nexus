@@ -46,6 +46,8 @@ namespace nexus {
     
     static G4MaterialPropertiesTable* Sapphire();
 
+    static G4MaterialPropertiesTable* OptCoupler();
+
     static G4MaterialPropertiesTable* GAr();
     static G4MaterialPropertiesTable* LAr();
 
