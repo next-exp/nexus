@@ -1,3 +1,7 @@
+tag v5_00_05 - 8 Feb 2016
+	- Changes in the PersistencyManager class to avoid wrong truncation and overflow.
+	- More updates of the NEXT-100 geometry.
+	
 tag v5_00_02 - 26 Jan 2016
 	- Some minor changes in the NEW geometry, according to the latest drawings and
 	  current status. In particular the lateral (anode) and upper source collimators have 
