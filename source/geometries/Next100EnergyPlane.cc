@@ -53,7 +53,7 @@ namespace nexus {
     _enclosure_flange_length (19.5 * mm),
     _enclosure_window_thickness (7.1 * mm),
     _enclosure_window_diam (85. * mm), 
-    _enclosure_pad_thickness (2.0 * mm),          // To be checked
+    _enclosure_pad_thickness (1.0 * mm),         
     _pmt_base_diam (47. *mm),
     _pmt_base_thickness (5. *mm),
     _tpb_thickness (1.*micrometer),
@@ -129,7 +129,7 @@ namespace nexus {
     G4Material* vacuum = 
       G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
     vacuum->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
-    G4Material* optical_coupler = MaterialsList::Epoxy();
+    G4Material* optical_coupler = MaterialsList::OpticalSilicone();
     optical_coupler->SetMaterialPropertiesTable(OpticalMaterialProperties::OptCoupler());
 
     // // A "pseudo-enclosure"of vacuum is constructed to hold the elements that are replicated

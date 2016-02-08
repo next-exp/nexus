@@ -48,7 +48,7 @@ namespace nexus{
     _enclosure_endcap_thickness (60. * mm),
     _enclosure_window_diam (85. * mm), 
     _enclosure_window_thickness (6. * mm), //???
-    _enclosure_pad_thickness (2. * mm),//max 60  ??????
+    _enclosure_pad_thickness (1. * mm),//max 60  ??????
     //   _enclosure_tpb_thickness(1.*micrometer),
     _pmt_base_diam (47. *mm),
     _pmt_base_thickness (5. *mm),
@@ -74,7 +74,7 @@ namespace nexus{
     G4Material* vacuum = 
       G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
     vacuum->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
-    G4Material* optical_coupler = MaterialsList::Epoxy();
+    G4Material* optical_coupler = MaterialsList::OpticalSilicone();
     optical_coupler->SetMaterialPropertiesTable(OpticalMaterialProperties::OptCoupler());
 
      /////   ENCLOSURES  /////
@@ -156,9 +156,10 @@ namespace nexus{
      /////  SETTING VISIBILITIES   //////////   
      if (_visibility) { 
        G4VisAttributes copper_col = nexus::CopperBrown();
+       //      copper_col.SetForceSolid(true);
        enclosure_logic->SetVisAttributes(copper_col);
        G4VisAttributes sapphire_col = nexus::Lilla();
-       //     sapphire_col.SetForceSolid(true);
+       sapphire_col.SetForceSolid(true);
        enclosure_window_logic->SetVisAttributes(sapphire_col);
        G4VisAttributes pad_col = nexus::LightGreen();
        pad_col.SetForceSolid(true);

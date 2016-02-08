@@ -379,7 +379,6 @@ G4Material* MaterialsList::OpticalSilicone()
 }
 
 
-
 G4Material* MaterialsList::SeF6(G4double pressure, G4double temperature)
 {
   // Composition ranges correspond to Selenium Hexafluoride
