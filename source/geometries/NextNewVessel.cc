@@ -358,6 +358,33 @@ void NextNewVessel::Construct()
   _upper_port_source_pos.setX(0.);
   _upper_port_source_pos.setY(_up_nozzle_y_pos  + _up_nozzle_high/2. - (_up_port_tube_length - _up_nozzle_flange_high) + _port_tube_window_thickn);
   _upper_port_source_pos.setZ(0.);
+
+   // Endcap:  CHECK ALL MEASUREMENTS
+  /*
+    G4Tubs* axial_port_tube_solid = new G4Tubs("AXIAL_PORT", 0., _port_tube_diam/2.+_port_tube_thickness,
+                                                (_axial_port_tube_length - _endcap_nozzle_flange_high)/2., 0, twopi);
+    G4LogicalVolume* axial_port_tube_logic =
+    new G4LogicalVolume(axial_port_tube_solid, MaterialsList::Steel316Ti(), "AXIAL_PORT");
+
+
+    G4ThreeVector pos_axial_port(0., 0., -_endcap_nozzle_z_pos); // CHECK Z POS!
+    new G4PVPlacement(G4Transform3D(*rot_endcap, pos_axial_port), axial_port_tube_logic,
+                     "AXIAL_PORT", vessel_gas_logic, false, 0, false);
+
+    G4Tubs* axial_port_tube_air_solid =
+    new G4Tubs("AXIAL_PORT_AIR", 0., _port_tube_diam/2.,
+              (_axial_port_tube_length - _endcap_nozzle_flange_high - _port_tube_window_thickn)/2.,
+              0, twopi);
+     
+  G4LogicalVolume* axial_port_tube_air_logic =
+    new G4LogicalVolume(axial_port_tube_air_solid, 
+                       G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "AXIAL_PORT_AIR");
+  
+  new G4PVPlacement(0,G4ThreeVector(0.,0.,-_port_tube_window_thickn/2.),
+                   axial_port_tube_air_logic, "AXIAL_PORT_AIR", 
+                   axial_port_tube_logic, false, 0, false);
+  */
+
     
     // SETTING VISIBILITIES   //////////
     vessel_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);

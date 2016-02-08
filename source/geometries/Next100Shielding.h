@@ -26,14 +26,13 @@ namespace nexus {
   {
   public:
     /// Constructor
-    Next100Shielding(const G4double nozzle_ext_diam=0.,
-		     const G4double up_nozzle_ypos=0.,
-		     const G4double central_nozzle_ypos=0.,
-		     const G4double down_nozzle_ypos=0.,
-		     const G4double bottom_nozzle_ypos=0.);
+    Next100Shielding();
 
     /// Destructor
     ~Next100Shielding();
+
+    // Returns the inner air logical volume to place the vessel into it
+    G4LogicalVolume* GetAirLogicalVolume() const;
 
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
@@ -49,10 +48,6 @@ namespace nexus {
     G4double _shield_x, _shield_y, _shield_z;
     G4double  _beam_base_thickness, _lateral_z_separation, _roof_z_separation , _front_x_separation;
     G4double _lead_thickness, _steel_thickness;
-
-    // Dimensions coming from outside  
-    G4double _nozzle_ext_diam, _up_nozzle_ypos, _central_nozzle_ypos;
-    G4double _down_nozzle_ypos, _bottom_nozzle_ypos;
 
     // Visibility of the shielding
     G4bool _visibility;
@@ -80,6 +75,8 @@ namespace nexus {
     // Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
 
+    // Air logical volume
+    G4LogicalVolume* _air_box_logic;
 
   };
 

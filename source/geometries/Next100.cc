@@ -44,8 +44,7 @@ namespace nexus {
 
 
   // Shielding
-  _shielding = new Next100Shielding(_nozzle_ext_diam, _up_nozzle_ypos, _central_nozzle_ypos,
-              _down_nozzle_ypos, _bottom_nozzle_ypos);
+  _shielding = new Next100Shielding();
 
   // Vessel
   _vessel = new Next100Vessel(_nozzle_ext_diam, _up_nozzle_ypos, _central_nozzle_ypos,
@@ -89,7 +88,7 @@ namespace nexus {
     // (i.e., this is the volume that will be placed in the world)
     this->SetLogicalVolume(_lab_logic);
 
-
+    /*
     // BUFFER GAS   ///////////////////////////////////////////////////////////////////////////////////
     // This is a volume, initially made of air, defined to be the mother volume of Shielding and Vessel
 
@@ -107,18 +106,19 @@ namespace nexus {
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), _buffer_gas_logic,
 						       "BUFFER_GAS", _lab_logic, false, 0);
 
-    
+    */
     // SHIELDING
     _shielding->Construct();
     G4LogicalVolume* shielding_logic = _shielding->GetLogicalVolume();
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), shielding_logic,
-                     "LEAD_BOX", _buffer_gas_logic, false, 0);
+                     "LEAD_BOX", _lab_logic, false, 0);
    
     // VESSEL
     _vessel->Construct();
+    G4LogicalVolume* shielding_air_logic = _shielding->GetAirLogicalVolume();
     G4LogicalVolume* vessel_logic = _vessel->GetLogicalVolume();
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_logic,
-		      "VESSEL", _buffer_gas_logic, false, 0);
+		      "VESSEL", shielding_air_logic, false, 0);
     G4LogicalVolume* vessel_internal_logic = _vessel->GetInternalLogicalVolume();
     
     

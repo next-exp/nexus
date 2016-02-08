@@ -26,6 +26,7 @@
 #include <Randomize.hh>
 #include <G4TransportationManager.hh>
 #include <G4RotationMatrix.hh>
+#include <G4UserLimits.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
@@ -35,11 +36,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  Next100Shielding::Next100Shielding(const G4double nozzle_ext_diam,
-				     const G4double up_nozzle_ypos,
-				     const G4double central_nozzle_ypos,
-				     const G4double down_nozzle_ypos,
-				     const G4double bottom_nozzle_ypos):
+  Next100Shielding::Next100Shielding():
     BaseGeometry(),
 
     // Shielding internal dimensions
@@ -64,14 +61,6 @@ namespace nexus {
     /// The Steel beam structure is placed inside the lead
 
 
-    /// Needed External variables
-    _nozzle_ext_diam = nozzle_ext_diam;
-    _up_nozzle_ypos = up_nozzle_ypos;
-    _central_nozzle_ypos = central_nozzle_ypos;
-    _down_nozzle_ypos = down_nozzle_ypos;
-    _bottom_nozzle_ypos = bottom_nozzle_ypos;
-  
-
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/Next100/", "Control commands of geometry Next100.");
     _msg->DeclareProperty("shielding_vis", _visibility, "Shielding Visibility");
@@ -87,27 +76,14 @@ namespace nexus {
   {
     // Auxiliary solids
     G4Box* shielding_box_solid = new G4Box("SHIELD_BOX", _shield_x/2., _shield_y/2., _shield_z/2.);
-    // G4Tubs* nozzle_hole_solid = new G4Tubs("NOZZLE_HOLE", 0.*cm, _nozzle_ext_diam/2.,
-    // 					   (_shield_z + 100.*cm)/2., 0.*deg, 360.*deg);
 
     // LEAD BOX   ///////////
     G4double lead_x = _shield_x + 2. * _steel_thickness + 2. * _lead_thickness;
     G4double lead_y = _shield_y + 2. * _steel_thickness + 2. * _lead_thickness;
     G4double lead_z = _shield_z + 2. * _steel_thickness + 2. * _lead_thickness;
 
-    G4Box* lead_box_full_solid = new G4Box("LEAD_BOX_FULL", lead_x/2., lead_y/2., lead_z/2.);
-    //make the services holes. Not done, for the time being
-     // G4SubtractionSolid* lead_box_solid = new G4SubtractionSolid("LEAD_BOX", lead_box_nh_solid, nozzle_hole_solid,
-     // 								 0, G4ThreeVector(0. , _up_nozzle_ypos, 0.) );
-     // lead_box_solid = new G4SubtractionSolid("LEAD_BOX", lead_box_solid, nozzle_hole_solid,
-     //					    0, G4ThreeVector(0., _central_nozzle_ypos, 0.) );
-    // lead_box_solid = new G4SubtractionSolid("LEAD_BOX", lead_box_solid, nozzle_hole_solid,
-    // 					    0, G4ThreeVector(0., _down_nozzle_ypos, 0.) );
-    // lead_box_solid = new G4SubtractionSolid("LEAD_BOX", lead_box_solid, nozzle_hole_solid,
-    // 					    0, G4ThreeVector(0., _bottom_nozzle_ypos, 0.) );
-    G4SubtractionSolid*  lead_box_solid = new G4SubtractionSolid("LEAD_BOX", lead_box_full_solid, shielding_box_solid);
-
-
+    G4Box* lead_box_solid = new G4Box("LEAD_BOX", lead_x/2., lead_y/2., lead_z/2.);
+  
     G4LogicalVolume* lead_box_logic = new G4LogicalVolume(lead_box_solid,
 							  G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"),
 							  "LEAD_BOX");
@@ -207,22 +183,8 @@ namespace nexus {
     G4double steel_y = _shield_y + 2. * _steel_thickness;
     G4double steel_z = _shield_z + 2. * _steel_thickness;
     
-    G4Box* steel_box_full_solid = 
-      new G4Box("STEEL_BOX_FULL", steel_x/2., steel_y/2., steel_z/2.);
-    // G4SubtractionSolid* steel_box_solid = 
-    //   new G4SubtractionSolid("STEEL_BOX", steel_box_nh_solid, nozzle_hole_solid,
-    // 			     0, G4ThreeVector(0. , _up_nozzle_ypos, 0.) );
-    // steel_box_solid = 
-    //   new G4SubtractionSolid("STEEL_BOX", steel_box_solid, nozzle_hole_solid,
-    // 					     0, G4ThreeVector(0. , _central_nozzle_ypos, 0.) );
-    // steel_box_solid = 
-    //   new G4SubtractionSolid("STEEL_BOX", steel_box_solid, nozzle_hole_solid,
-    // 					     0, G4ThreeVector(0. , _down_nozzle_ypos, 0.) );
-    // steel_box_solid = 
-    //   new G4SubtractionSolid("STEEL_BOX", steel_box_solid, nozzle_hole_solid,
-    // 					     0, G4ThreeVector(0. , _bottom_nozzle_ypos, 0.) );
-    G4SubtractionSolid*  steel_box_solid =
-      new G4SubtractionSolid("STEEL_BOX", steel_box_full_solid, shielding_box_solid);
+    G4Box* steel_box_solid = 
+      new G4Box("STEEL_BOX", steel_x/2., steel_y/2., steel_z/2.);
 
     G4LogicalVolume* steel_box_logic = new G4LogicalVolume(steel_box_solid,
 							   MaterialsList::Steel(),
@@ -230,6 +192,25 @@ namespace nexus {
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), steel_box_logic,
 		      "STEEL_BOX", lead_box_logic, false, 0);
+
+    // AIR INSIDE
+    G4Box* air_box_solid = 
+      new G4Box("INNER_AIR", _shield_x/2., _shield_y/2., _shield_z/2.);
+ 
+    _air_box_logic = 
+      new G4LogicalVolume(air_box_solid,
+			  G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
+			  "INNER_AIR");
+
+    ////Limit the uStepMax=Maximum step length, uTrakMax=Maximum total track length,
+    //uTimeMax= Maximum global time for a track, uEkinMin= Minimum remaining kinetic energy for a track
+    //uRangMin=         Minimum remaining range for a track
+    _air_box_logic->SetUserLimits(new G4UserLimits( DBL_MAX, DBL_MAX, DBL_MAX,100.*keV,0.));
+    _air_box_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), _air_box_logic,
+		      "INNER_AIR", steel_box_logic, false, 0);
+    
 
 
     // SETTING VISIBILITIES   //////////
@@ -318,7 +299,10 @@ namespace nexus {
     delete _front_beam_gen;
   }
 
-
+  G4LogicalVolume* Next100Shielding::GetAirLogicalVolume() const
+  {
+    return _air_box_logic;
+  }
 
   G4ThreeVector Next100Shielding::GenerateVertex(const G4String& region) const
   {

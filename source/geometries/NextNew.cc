@@ -45,7 +45,7 @@ namespace nexus {
     _buffer_gas_size (4. * m)
   {
     //Shielding
-    _shielding = new Next100Shielding(100*mm,0.,0.,0.,0.);
+    _shielding = new Next100Shielding();
     //Pedestal
     _pedestal = new NextNewPedestal();
     //Copper Castle
@@ -91,7 +91,7 @@ namespace nexus {
     // (i.e., this is the volume that will be placed in the world)
     this->SetLogicalVolume(_lab_logic);
 
-   
+    /* 
     // BUFFER GAS   ///////////////////////////////////////////////////////////////////////////////////
     // This is a volume, initially made of air, defined to be the mother volume of Shielding and Vessel
 
@@ -116,12 +116,12 @@ namespace nexus {
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), _buffer_gas_logic,
 		      "BUFFER_GAS", _lab_logic, false, 0, false);
     
-
+    */
     //SHIELDING
     _shielding->Construct();
     G4LogicalVolume* shielding_logic = _shielding->GetLogicalVolume();
     new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),shielding_logic, "LEAD_BOX",
-		      _buffer_gas_logic, false, 0, false);
+		      _lab_logic, false, 0, false);
     
     //COPPER CASTLE 
     // _cu_castle->SetLogicalVolume(_buffer_gas_logic);
@@ -134,10 +134,11 @@ namespace nexus {
     
     //VESSEL
     _vessel->Construct();
+    G4LogicalVolume* shielding_air_logic = _shielding->GetAirLogicalVolume();
     G4LogicalVolume* vessel_logic = _vessel->GetLogicalVolume();
     G4ThreeVector position(0.,0.,0.); 
     new G4PVPlacement(0, position, vessel_logic, 
-		      "VESSEL", _buffer_gas_logic, false, 0, false);
+		      "VESSEL", shielding_air_logic, false, 0, false);
     G4LogicalVolume* vessel_gas_logic = _vessel->GetInternalLogicalVolume();
       
     //ICS
