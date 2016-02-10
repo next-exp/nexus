@@ -37,10 +37,14 @@ AnalysisSteppingAction::~AnalysisSteppingAction()
 void AnalysisSteppingAction::UserSteppingAction(const G4Step* step)
 {
   G4ParticleDefinition* pdef = step->GetTrack()->GetDefinition();
-  G4Track* track = step->GetTrack();
+ 
   //Check whether the track is an optical photon
   if (pdef != G4OpticalPhoton::Definition()) return;
   
+  /*
+  // example of information one can access about optical photons
+  
+  G4Track* track = step->GetTrack();
   G4int pid = track->GetParentID();
   G4int tid = track->GetTrackID();
   G4StepPoint* point1 = step->GetPreStepPoint();
@@ -52,6 +56,7 @@ void AnalysisSteppingAction::UserSteppingAction(const G4Step* step)
 
   G4String proc_name = step->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
   G4int copy_no = step->GetPostStepPoint()->GetTouchable()->GetReplicaNumber(1);
+  */
 
   // Retrieve the pointer to the optical boundary process.
   // We do this only once per run defining our local pointer as static.

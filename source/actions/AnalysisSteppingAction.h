@@ -13,7 +13,7 @@
 #define ANALYSIS_STEPPING_ACTION_H
 
 #include <G4UserSteppingAction.hh>
-#include <Globals.hh>
+#include <globals.hh>
 
 class G4Step;
 

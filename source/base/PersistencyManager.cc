@@ -263,6 +263,8 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
   _itrkmap.clear();
 
   double evt_energy = 0.;
+  std::string sdname = hits->GetSDname();
+
   for (G4int i=0; i<hits->entries(); i++) {
     
     IonizationHit* hit = dynamic_cast<IonizationHit*>(hits->GetHit(i));
@@ -276,7 +278,6 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
     if (it != _itrkmap.end()) {
       itrk = it->second;
     } else {  
-      std::string sdname = hits->GetSDname();
       itrk = new gate::MCTrack();
       itrk->SetLabel(sdname);
       _itrkmap[trackid] = itrk;
@@ -287,6 +288,7 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
 
     G4ThreeVector xyz = hit->GetPosition();
     gate::MCHit* ghit = new gate::MCHit();
+    ghit->SetLabel(sdname);
     ghit->SetPosition(gate::Point3D(xyz.x(), xyz.y(), xyz.z()));
     ghit->SetTime(hit->GetTime());
     ghit->SetAmplitude(hit->GetEnergyDeposit());
