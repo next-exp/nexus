@@ -1,3 +1,8 @@
+tag v5_00_06 - 12 Feb 2016
+	- Vertex generator added to quartz plate
+	- New stepping action added as an example to track optical photons
+	- Label added to true hits to indicate the sensitive detector they belong to (ACTIVE, BUFFER...)
+	
 tag v5_00_05 - 8 Feb 2016
 	- Changes in the PersistencyManager class to avoid wrong truncation and overflow.
 	- More updates of the NEXT-100 geometry.
