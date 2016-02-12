@@ -201,6 +201,7 @@ namespace nexus {
     delete _energy_plane;
     delete _tracking_plane;
     delete _active_gen;
+    delete _anode_quartz_gen;
   }
 
 
@@ -312,6 +313,10 @@ namespace nexus {
       new G4LogicalVolume(ito_anode_solid, ito, "ITO_ANODE");
     new G4PVPlacement(0, G4ThreeVector(0., 0., +_anode_quartz_thickness/2.- _ito_thickness/2.), ito_anode_logic, 
   			"ITO_ANODE", anode_logic, false, 0, false);
+
+    _anode_quartz_gen = 
+      new CylinderPointSampler(0.,_anode_quartz_thickness,_anode_quartz_diam/2., 
+			       0., G4ThreeVector (0., 0., pos_anode_z));
      
     if (_grids_visibility) {
       G4VisAttributes anode_col = nexus::Red();
@@ -440,6 +445,10 @@ void Next100InnerElements::BuildBuffer()
     else if (region == "ACTIVE") {
       vertex = _active_gen->GenerateVertex("BODY_VOL");
     }
+    // Anode plate
+    else if (region == "ANODE_QUARTZ") {
+      vertex = _anode_quartz_gen->GenerateVertex("BODY_VOL");
+    } 
 
     // Energy Plane regions
     else if ((region == "CARRIER_PLATE") || 

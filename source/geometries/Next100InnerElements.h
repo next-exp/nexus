@@ -114,6 +114,7 @@ namespace nexus {
 
     // Vertex Generators
     CylinderPointSampler* _active_gen;
+    CylinderPointSampler* _anode_quartz_gen;
 
     // Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
