@@ -42,7 +42,7 @@ namespace nexus {
     /// of an ionization electron
     G4double Drift(G4LorentzVector& xyzt);
     
-    G4LorentzVector GeneratePointAlongDriftLine(const G4LorentzVector&);
+    G4LorentzVector GeneratePointAlongDriftLine(const G4LorentzVector&, const G4LorentzVector&);
     
     // Setters/getters
     

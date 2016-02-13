@@ -114,6 +114,10 @@ Electroluminescence::PostStepDoIt(const G4Track& track, const G4Step& step)
   G4ThreeVector position = step.GetPreStepPoint()->GetPosition();
   G4double time = step.GetPreStepPoint()->GetGlobalTime();
   G4LorentzVector initial_position(position, time);
+
+  G4ThreeVector position_end = step.GetPostStepPoint()->GetPosition();
+  G4double time_end = step.GetPostStepPoint()->GetGlobalTime();
+  G4LorentzVector final_position(position_end, time_end);
   
   // Energy is sampled from integral (like it is
   // done in G4Scintillation)
@@ -173,7 +177,7 @@ Electroluminescence::PostStepDoIt(const G4Track& track, const G4Step& step)
     photon->SetKineticEnergy(sampled_energy);
 
     G4LorentzVector xyzt = 
-      field->GeneratePointAlongDriftLine(initial_position);
+      field->GeneratePointAlongDriftLine(initial_position, final_position);
 
     // Create the track
     G4Track* secondary = new G4Track(photon, xyzt.t(), xyzt.v());

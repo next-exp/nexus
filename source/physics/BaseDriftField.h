@@ -39,7 +39,7 @@ namespace nexus {
 
     /// Returns a random 4D point (space and time) along a drift line
     virtual G4LorentzVector 
-    GeneratePointAlongDriftLine(const G4LorentzVector&) = 0;
+      GeneratePointAlongDriftLine(const G4LorentzVector&, const G4LorentzVector&) = 0;
 
     virtual G4double LightYield() const;
 
