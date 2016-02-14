@@ -33,7 +33,7 @@ G4double RadiusDependentDriftField::Drift(G4LorentzVector& /*xyzt*/)
 
 
 G4LorentzVector 
-RadiusDependentDriftField::GeneratePointAlongDriftLine(const G4LorentzVector&)
+RadiusDependentDriftField::GeneratePointAlongDriftLine(const G4LorentzVector&, const G4LorentzVector&)
 {
   return G4LorentzVector();
 }
