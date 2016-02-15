@@ -1,3 +1,5 @@
+tag v5_00_08 - 15 feb 2016
+	- Code for S1 parametrization + example macro files added
 tag v5_00_07 - 15 feb 2016
 	- Bug fixed in generation of photons along the drift in the EL region
 
