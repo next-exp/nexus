@@ -38,6 +38,7 @@ GeneratorFactory::~GeneratorFactory()
 #include "SingleParticle2Pi.h"
 #include "MuonsGeneration.h"
 #include "ELTableGenerator.h"
+#include "ScintillationGenerator.h"
 
 
 G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
@@ -59,6 +60,8 @@ G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
   else if (_name == "MUONS_GENERATION") p = new MuonsGeneration();
 
   else if (_name == "EL_TABLE_GENERATOR") p = new ELTableGenerator();
+
+  else if (_name == "S1GENERATOR") p = new ScintillationGenerator();
 
   else {
     G4String err = "The user specified an unknown generator: " + _name;

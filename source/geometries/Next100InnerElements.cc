@@ -191,6 +191,16 @@ namespace nexus {
     G4double z = _el_gap_posz - _el_gap_length/2. + .5*mm;
     G4double max_radius = floor(_active_diam/2./_el_table_binning)*_el_table_binning;
     CalculateELTableVertices(max_radius, _el_table_binning, z);
+
+    for (G4int i=0; i< _table_vertices.size(); ++i) {
+      if (_table_vertices[i].x() <= 50. * mm && _table_vertices[i].x() >= -50. * mm && 
+	  _table_vertices[i].y() == -50. * mm) {
+	  //	  _table_vertices[i].y() <= 10. * cm && _table_vertices[i].y() >= -10. * cm ) {
+	G4cout << _table_vertices[i].x()  << ", " <<  _table_vertices[i].y() << ": " << i << G4endl;
+	//G4cout << i << G4endl;
+      }
+    }
+
   }
 
 
