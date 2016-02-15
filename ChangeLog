@@ -1,12 +1,15 @@
+tag v5_00_07 - 15 feb 2016
+	- Bug fixed in generation of photons along the drift in the EL region
+
 tag v5_00_06 - 12 Feb 2016
 	- Vertex generator added to quartz plate
 	- New stepping action added as an example to track optical photons
 	- Label added to true hits to indicate the sensitive detector they belong to (ACTIVE, BUFFER...)
-	
+
 tag v5_00_05 - 8 Feb 2016
 	- Changes in the PersistencyManager class to avoid wrong truncation and overflow.
 	- More updates of the NEXT-100 geometry.
-	
+
 tag v5_00_02 - 26 Jan 2016
 	- Some minor changes in the NEW geometry, according to the latest drawings and
 	  current status. In particular the lateral (anode) and upper source collimators have 
@@ -16,16 +19,16 @@ tag v5_00_02 - 26 Jan 2016
 	- Modifications of the NEXT-100 geometry, sticking as much as possible to 
 	  the current design of NEW.
 	- Nozzle holes in shielding eliminated + one nozzle in the NEXT-100 cut in order to fit.
-		
+
 tag v5_00_00 - 28 Oct 2015
 	- Change from IRENE to GATE in persistency.
 	- 83Kr generator added.
 	- Xenon density used in the refractive index calculation taken  from pressure.
 	- Event writing skipped if one event is aborted, in order not to have the whole run crashed.
 	- Obsolete GenbbInterface class  eliminated. Decay0 to be used instead.
-	
+
 tag v4_04_05 - 19 Jun 2015
-	- transverse and longitudinal diffusion and electric field strength passed by configuration parameters 
+	- transverse and longitudinal diffusion and electric field strength passed by configuration parameters
 	- Muon generator added
 	- Definition of colors in one place, to be used by all the geometry classes.
 	- NEW SiPM simulated with the specifications of the Sensl ones. New class (SiPMSensl added)
