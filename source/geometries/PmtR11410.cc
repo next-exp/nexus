@@ -52,7 +52,7 @@ namespace nexus {
     _visibility(1),
     _sd_depth(2)
   {
-    _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
+    _msg = new G4GenericMessenger(this, "/Geometry/PmtR11410/", "Control commands of geometry NextNew.");
     _msg->DeclareProperty("PmtR11410_vis", _visibility, "NEW PMTs Visibility");
     _msg->DeclareProperty("SD_depth", _sd_depth, "Sensitive detector depth in volume being replicated");
   }

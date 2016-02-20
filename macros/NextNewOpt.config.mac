@@ -13,6 +13,7 @@
 /Geometry/NextNew/max_step_size 1. mm
 /Geometry/NextNewOpticalGeometry/pressure 15. bar
 /Geometry/NextNew/field_cage_vis true
+/Geometry/PmtR11410/SD_depth 4
 
 ### Generation
 /Generator/SingleParticle/particle e-

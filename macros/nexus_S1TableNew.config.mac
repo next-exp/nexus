@@ -17,6 +17,7 @@
 
 # GEOMETRY
 /Geometry/NextNewOpticalGeometry/pressure 15. bar
+/Geometry/PmtR11410/SD_depth 4
 
 # PHYSICS
 /control/execute macros/physics/IonizationElectron.mac
