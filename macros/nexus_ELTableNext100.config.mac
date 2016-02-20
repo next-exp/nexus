@@ -18,7 +18,6 @@
 /Geometry/Next100/el_table_binning 1. mm
 /Geometry/Next100/el_table_point_id 1000
 /Geometry/Next100/energy_plane_vis true
-/Geometry/Next100/ELtransv_diff 1. mm/sqrt(cm)
 /Geometry/NextNew/SD_depth 3
 
 
