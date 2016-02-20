@@ -12,8 +12,9 @@
 /Geometry/NextNew/tracking_plane_vis true
 /Geometry/NextNew/kdb_vis false
 /Geometry/NextNew/SiPMSensl_vis false
-/Geometry/NextNew/PmtR11410_vis true
+/Geometry/PmtR11410/PmtR11410_vis true
 /Geometry/NextNew/field_cage_vis false
+/Geometry/PmtR11410/SD_depth 4
 
 
 /Geometry/NextNew/pressure 15. bar
