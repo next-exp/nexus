@@ -49,10 +49,12 @@ namespace nexus {
     _window_thickness (2. * mm),
     _photocathode_diam (64. * mm),
     _photocathode_thickness (.1 * mm),
-    _visibility(1)
+    _visibility(1),
+    _sd_depth(2)
   {
     _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
     _msg->DeclareProperty("PmtR11410_vis", _visibility, "NEW PMTs Visibility");
+    _msg->DeclareProperty("SD_depth", _sd_depth, "Sensitive detector depth in volume being replicated");
   }
   
 
@@ -142,7 +144,7 @@ namespace nexus {
 
     // Sensitive detector
     PmtSD* pmtsd = new PmtSD("/PMT_R11410/PmtR11410");
-    pmtsd->SetDetectorVolumeDepth(4);
+    pmtsd->SetDetectorVolumeDepth(_sd_depth);
     pmtsd->SetTimeBinning(100.*nanosecond);
     G4SDManager::GetSDMpointer()->AddNewDetector(pmtsd);
     window_logic->SetSensitiveDetector(pmtsd);

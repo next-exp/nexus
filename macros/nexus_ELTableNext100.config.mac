@@ -6,18 +6,20 @@
 ##### VERBOSITIES #####
 /run/verbose 0
 /event/verbose 0
-/tracking/verbose 1
+/tracking/verbose 0
 
 
-/Generator/ELTableGenerator/num_ie 1000
+/Generator/ELTableGenerator/num_ie 10
 
 ##### GEOMETRY #####
 /Geometry/Next100/pressure 15. bar
 /Geometry/Next100/max_step_size 1. mm
 /Geometry/Next100/elfield 1
 /Geometry/Next100/el_table_binning 1. mm
-/Geometry/Next100/el_table_point_id 0
+/Geometry/Next100/el_table_point_id 1000
 /Geometry/Next100/energy_plane_vis true
+/Geometry/Next100/ELtransv_diff 1. mm/sqrt(cm)
+/Geometry/NextNew/SD_depth 3
 
 
 ##### JOB CONTROL #####

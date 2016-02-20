@@ -65,6 +65,7 @@ namespace nexus {
     G4double _front_perc, _fr_med_perc, _fr_med_re_perc, _fr_med_re_cap_perc;
 
     G4bool _visibility;
+    G4int _sd_depth;
 
     //Messenger for configuration parameters
     G4GenericMessenger* _msg;
