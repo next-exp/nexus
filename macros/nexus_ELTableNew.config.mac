@@ -17,7 +17,7 @@
 /Geometry/NextNewOpticalGeometry/pressure 15. bar
 /Geometry/NextNew/el_table_binning 1. mm
 /Geometry/NextNew/el_table_point_id 0
-/Geometry/NextNew/SD_depth 3
+/Geometry/NextNew/SD_depth 4
 
 /nexus/persistency/outputFile table.NEW.next 
 
