@@ -112,7 +112,7 @@ namespace nexus {
       pos = _DB_positions[i];
       pos.setZ(dice_board_posz);
       new G4PVPlacement(0, pos, dice_board_logic,
-			"DICE_BOARD", _mother_logic, false, i+1, true);
+			"DICE_BOARD", _mother_logic, false, i+1, false);
       // Store the absolute positions of SiPMs in gas, for possible checks
       for (unsigned int si=0; si< SiPM_positions.size(); si++) {
 	G4ThreeVector mypos =  SiPM_positions[si].second;
@@ -125,7 +125,7 @@ namespace nexus {
       }
     }
 
-    //PrintAbsoluteSiPMPos();
+    // PrintAbsoluteSiPMPos();
 
     ////////////////////////////////////////////////
     ////// It remains the electronics to add  //////
