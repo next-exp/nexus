@@ -54,6 +54,7 @@ namespace nexus {
 
   private:
     void GenerateDBPositions();
+    void PrintAbsoluteSiPMPos();
 
 
   private:
@@ -87,6 +88,8 @@ namespace nexus {
     // Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
 
+    // Container to store the absolute position of SiPMs in gas
+    std::vector<std::pair<int, G4ThreeVector> > _absSiPMpos;
   };
 
 } //end namespace nexus

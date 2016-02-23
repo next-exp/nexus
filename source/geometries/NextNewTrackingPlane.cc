@@ -127,13 +127,30 @@ namespace nexus {
     _dice_board_z_pos = _tracking_plane_z_pos + db_thickness/2.;
     
     //  G4PVPlacement* dice_board_physi;
+    const std::vector<std::pair<int, G4ThreeVector> > SiPM_positions = 
+      _kapton_dice_board->GetPositions();
+    
     G4ThreeVector post;
     for (int i=0; i<_num_DBs; i++) {
       post = _DB_positions[i];
       post.setZ(_dice_board_z_pos);
       new G4PVPlacement(0, post, dice_board_logic,
 			"DICE_BOARD", _mother_logic, false, i+1, false);
+      // Store the absolute positions of SiPMs in gas, for possible checks
+      for (unsigned int si=0; si< SiPM_positions.size(); si++) {
+	G4ThreeVector mypos =  SiPM_positions[si].second;
+	std::pair<int, G4ThreeVector> abs_pos;
+	abs_pos.first = (i+1)*1000+ SiPM_positions[si].first ;
+	//abs_pos.first = (_num_DBs - i)*1000+ SiPM_positions[si].first ;
+	abs_pos.second = 
+	  G4ThreeVector(post.getX()+mypos.getX(), post.getY()+mypos.getY(), post.getZ()+mypos.getZ());
+
+	_absSiPMpos.push_back(abs_pos);
+      }
     }
+
+    //   PrintAbsoluteSiPMPos();
+    
     //PIGGY TAIL PLUG/////////////////////////////////////////////////////
     G4Box* plug_solid = new G4Box("DB_CONNECTOR", _plug_x/2., _plug_y/2., _plug_z/2.);
     G4LogicalVolume* plug_logic = new G4LogicalVolume(plug_solid,  MaterialsList::PEEK(), "DB_PLUG");
@@ -163,16 +180,20 @@ namespace nexus {
 
 
     // VERTEX GENERATORS   //////////
-    _support_body_gen  = new CylinderPointSampler(0., _support_plate_thickness-_support_plate_front_buffer_thickness,
-						  _support_plate_tread_diam/2., 0., G4ThreeVector(0., 0., support_plate_z_pos));
-    _support_flange_gen  = new CylinderPointSampler(_support_plate_tread_diam/2., _support_plate_thickness/2.,
-						    (_support_plate_diam - _support_plate_tread_diam)/2., 0., 
-						    G4ThreeVector(0., 0., support_plate_z_pos+_support_plate_thickness/4.));
-    _support_buffer_gen  = new CylinderPointSampler(_support_plate_front_buffer_diam/2., _support_plate_front_buffer_thickness/2.,
-						    (_support_plate_tread_diam-_support_plate_front_buffer_diam)/2., 0., 
-						    G4ThreeVector(0., 0., support_plate_z_pos -_support_plate_thickness/2. +_support_plate_front_buffer_thickness/2.));
-    _plug_gen = new BoxPointSampler(_plug_x, _plug_y, _plug_z,0.,
-				    G4ThreeVector(0.,0.,_dice_board_z_pos + _support_plate_front_buffer_thickness + _support_plate_thickness),0);
+    _support_body_gen  =
+      new CylinderPointSampler(0., _support_plate_thickness-_support_plate_front_buffer_thickness,
+			       _support_plate_tread_diam/2., 0., G4ThreeVector(0., 0., support_plate_z_pos));
+    _support_flange_gen  =
+      new CylinderPointSampler(_support_plate_tread_diam/2., _support_plate_thickness/2.,
+			       (_support_plate_diam - _support_plate_tread_diam)/2., 0., 
+			       G4ThreeVector(0., 0., support_plate_z_pos+_support_plate_thickness/4.));
+    _support_buffer_gen  =
+      new CylinderPointSampler(_support_plate_front_buffer_diam/2., _support_plate_front_buffer_thickness/2.,
+			       (_support_plate_tread_diam-_support_plate_front_buffer_diam)/2., 0., 
+			       G4ThreeVector(0., 0., support_plate_z_pos -_support_plate_thickness/2. +_support_plate_front_buffer_thickness/2.));
+    _plug_gen =
+      new BoxPointSampler(_plug_x, _plug_y, _plug_z,0.,
+			  G4ThreeVector(0.,0.,_dice_board_z_pos + _support_plate_front_buffer_thickness + _support_plate_thickness),0);
 
      // Getting the support  volume over total
     G4double body_vol = 
@@ -278,4 +299,20 @@ namespace nexus {
       exit(0);
     }
   }
+
+  void NextNewTrackingPlane::PrintAbsoluteSiPMPos()
+  {
+    G4cout << "----- Absolute position of SiPMs in gas volume -----" << G4endl;
+    G4cout <<  G4endl;
+    for (unsigned int i=0; i<_absSiPMpos.size(); i++) {
+      std::pair<int, G4ThreeVector> abs_pos = _absSiPMpos[i];
+      G4cout << "ID number: " << _absSiPMpos[i].first << ", position: " 
+	     << _absSiPMpos[i].second.getX() << ", "
+	     << _absSiPMpos[i].second.getY() << ", "
+	     << _absSiPMpos[i].second.getZ()  << G4endl;
+    }
+    G4cout <<  G4endl;
+    G4cout << "---------------------------------------------------" << G4endl;
+  }
+  
 }//end namespace nexus

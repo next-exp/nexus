@@ -70,6 +70,7 @@ namespace nexus {
   {
 
     // Dice Boards positions
+    _dice_board->Construct();
     GenerateDBPositions();
 
     ///// Support plate
@@ -90,7 +91,7 @@ namespace nexus {
 
 
     ///// Dice Boards
-    _dice_board->Construct();
+ 
     G4LogicalVolume* dice_board_logic = _dice_board->GetLogicalVolume();
     G4ThreeVector db_dimensions = _dice_board->GetDimensions();
     G4double db_thickness = db_dimensions.z();
@@ -102,17 +103,29 @@ namespace nexus {
 
     ///// Dice Boards placement
     G4double dice_board_posz = _el_gap_z_edge + _z_displ + db_thickness/2.;
+
+     const std::vector<std::pair<int, G4ThreeVector> > SiPM_positions = 
+      _dice_board->GetPositions();
+    
     G4ThreeVector pos;
     for (int i=0; i<_num_DBs; i++) {
       pos = _DB_positions[i];
       pos.setZ(dice_board_posz);
       new G4PVPlacement(0, pos, dice_board_logic,
-			"DICE_BOARD", _mother_logic, false, i, false);
+			"DICE_BOARD", _mother_logic, false, i, true);
+      // Store the absolute positions of SiPMs in gas, for possible checks
+      for (unsigned int si=0; si< SiPM_positions.size(); si++) {
+	G4ThreeVector mypos =  SiPM_positions[si].second;
+	std::pair<int, G4ThreeVector> abs_pos;
+	abs_pos.first = (i+1)*1000+ SiPM_positions[si].first ;
+	abs_pos.second = 
+	  G4ThreeVector(pos.getX()+mypos.getX(), pos.getY()+mypos.getY(), pos.getZ()+mypos.getZ());
+
+	_absSiPMpos.push_back(abs_pos);
+      }
     }
 
-    // G4PVPlacement* dice_board_physi = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), dice_board_logic,
-    //  						      "DICE_BOARD", _mother_logic, false, 0);
-
+    //PrintAbsoluteSiPMPos();
 
     ////////////////////////////////////////////////
     ////// It remains the electronics to add  //////
@@ -201,11 +214,15 @@ namespace nexus {
     /// Function that computes and stores the XY positions of Dice Boards
 
     G4int num_rows[] = {6, 9, 10, 11, 12, 11, 12, 11, 10, 9, 6};
+   
     G4int total_positions = 0;
 
     // Separation between consecutive columns / rows
-    G4double x_step = (45. + 35.191) * mm;
-    G4double y_step = (45. + 36.718) * mm;
+    // G4double x_step = (45. + 35.191) * mm;
+    // G4double y_step = (45. + 36.718) * mm;
+ 
+    G4double x_step = _dice_board->GetDimensions().getX() + 1.*mm;
+    G4double y_step = _dice_board->GetDimensions().getY() + 1.*mm;
 
     G4double x_dim = x_step * (_DB_columns -1);
 
@@ -223,8 +240,7 @@ namespace nexus {
 	position.setX(pos_x);
 	position.setY(pos_y);
 	_DB_positions.push_back(position);
-	total_positions++;
-	//G4cout << G4endl << position;
+	total_positions++; 
       }
     }
 
@@ -235,6 +251,21 @@ namespace nexus {
     }
 
 
+  }
+
+   void Next100TrackingPlane::PrintAbsoluteSiPMPos()
+  {
+    G4cout << "----- Absolute position of SiPMs in gas volume -----" << G4endl;
+    G4cout <<  G4endl;
+    for (unsigned int i=0; i<_absSiPMpos.size(); i++) {
+      std::pair<int, G4ThreeVector> abs_pos = _absSiPMpos[i];
+      G4cout << "ID number: " << _absSiPMpos[i].first << ", position: " 
+      	     << _absSiPMpos[i].second.getX() << ", "
+      	     << _absSiPMpos[i].second.getY() << ", "
+      	     << _absSiPMpos[i].second.getZ()  << G4endl;
+    }
+    G4cout <<  G4endl;
+    G4cout << "---------------------------------------------------" << G4endl;
   }
 
 }
