@@ -14,7 +14,7 @@
 #include <G4VDiscreteProcess.hh>
 
 class G4ParticleChange;
-class G4WLSTimeGeneratorProfileDelta;
+class G4VWLSTimeGeneratorProfile;
 
 namespace nexus {
 
@@ -40,7 +40,7 @@ namespace nexus {
   private:
     G4ParticleChange* _ParticleChange;
     G4PhysicsTable* _wlsIntegralTable;
-    G4WLSTimeGeneratorProfileDelta*  _WLSTimeGeneratorProfile;
+    G4VWLSTimeGeneratorProfile*  _WLSTimeGeneratorProfile;
   
   };
 

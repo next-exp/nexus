@@ -10,7 +10,7 @@
 
 #include <G4OpticalPhoton.hh>
 #include <Randomize.hh>
-#include <G4WLSTimeGeneratorProfileDelta.hh>
+#include <G4WLSTimeGeneratorProfileExponential.hh>
 
 #include "CLHEP/Units/PhysicalConstants.h"
 
@@ -25,7 +25,7 @@ namespace nexus {
     pParticleChange = _ParticleChange;
    
     _WLSTimeGeneratorProfile = 
-      new G4WLSTimeGeneratorProfileDelta("WLSTimeGeneratorProfileDelta");
+      new G4WLSTimeGeneratorProfileExponential("WLSTimeGeneratorProfileExponential");
 
     BuildThePhysicsTable();
   }
