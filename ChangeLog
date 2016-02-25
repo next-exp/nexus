@@ -1,5 +1,10 @@
+tag v5_00_09
+	- Macros for S1 generation in NEXT-100 added
+	- Wavelength shifting decay times changed to be sampled by an exponential
+	
 tag v5_00_08 - 15 feb 2016
 	- Code for S1 parametrization + example macro files added
+	
 tag v5_00_07 - 15 feb 2016
 	- Bug fixed in generation of photons along the drift in the EL region
 
