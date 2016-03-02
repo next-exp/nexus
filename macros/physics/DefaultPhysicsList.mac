@@ -4,8 +4,8 @@
 ### --------------------------------------------------------
 
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
-/PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4DecayPhysics
-#/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
-/PhysicsList/RegisterPhysics G4OpticalPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+#/PhysicsList/RegisterPhysics G4OpticalPhysics
+/PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics

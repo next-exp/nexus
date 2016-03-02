@@ -16,6 +16,7 @@
 
 
 ##### GEOMETRY #####
+/Geometry/Next100/elfield false
 /Geometry/Next100/pressure 15. bar
 /Geometry/Next100/max_step_size 5. mm
 
@@ -58,6 +59,11 @@
 # ACTIONS
 /Actions/DefaultEventAction/energy_threshold 0.6 MeV
 /Actions/DefaultEventAction/max_energy 2.55 MeV
+
+## No full simulation
+/PhysicsList/Nexus/clustering          false
+/PhysicsList/Nexus/drift               false
+/PhysicsList/Nexus/electroluminescence false
 
 ##### VERBOSITIES #####
 /run/verbose 0

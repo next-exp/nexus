@@ -464,7 +464,7 @@ void NextNewFieldCage::BuildBuffer()
       new G4LogicalVolume(hdpe_tube_solid, _hdpe, "HDPE_TUBE");
      new G4PVPlacement(0, G4ThreeVector(0., 0., hdpe_tube_z_pos), 
 		      hdpe_tube_logic, "HDPE_TUBE", _mother_logic, 
-		       false, 0, true);
+		       false, 0, false);
 
      // G4cout << "Hdpe tube starts in " << hdpe_tube_z_pos - _hdpe_length/2.  << 
      //   " and ends in " << hdpe_tube_z_pos + _hdpe_length/2. << G4endl;

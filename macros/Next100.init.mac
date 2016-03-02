@@ -3,21 +3,21 @@
 ###  $Id: Next100.init.mac 8754 2013-06-15 15:15:13Z jmunoz $
 ### --------------------------------------------------------
 
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+/PhysicsList/RegisterPhysics NexusPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
+
 /Geometry/RegisterGeometry NEXT100
 
 /Generator/RegisterGenerator ION_GUN
 
 /Actions/RegisterRunAction DEFAULT
-
 /Actions/RegisterEventAction DEFAULT
-
+/Actions/RegisterSteppingAction DEFAULT
 /Actions/RegisterTrackingAction DEFAULT
 
-/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
-/PhysicsList/RegisterPhysics NexusPhysics
-/PhysicsList/RegisterPhysics G4DecayPhysics
-/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
-/PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 /nexus/RegisterMacro macros/Next100.config.mac
 /nexus/RegisterDelayedMacro macros/physics/Bi214.mac
