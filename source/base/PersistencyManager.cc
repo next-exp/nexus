@@ -297,7 +297,9 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
     ievt->AddMCHit(ghit);      
   }
 
-  ievt->SetMCEnergy(evt_energy);
+  if (sdname == "ACTIVE") {
+    ievt->SetMCEnergy(evt_energy);
+  }
 
   for (unsigned int tr=0; tr<ievt->GetMCTracks().size(); ++tr) {
     G4double tot_energy = 0.;
