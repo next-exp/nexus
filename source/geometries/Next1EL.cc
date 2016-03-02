@@ -324,8 +324,8 @@ void Next1EL::BuildMuons()
   // To visualize the muon generation surface
   
   //visualization sphere
-  G4Orb * muon_solid_ref = new G4Orb ("MUONS_ref",25);
-  G4LogicalVolume*  muon_logic_ref = new G4LogicalVolume(muon_solid_ref, _air, "MUONS_ref");
+  // G4Orb * muon_solid_ref = new G4Orb ("MUONS_ref",25);
+  // G4LogicalVolume*  muon_logic_ref = new G4LogicalVolume(muon_solid_ref, _air, "MUONS_ref");
   // new G4PVPlacement(0, G4ThreeVector(0., yMuonsOrigin, 0.), muon_logic_ref, 
   //                             "MUONS_ref", _lab_logic, false, 0, true);
   

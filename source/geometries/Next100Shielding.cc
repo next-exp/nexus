@@ -75,7 +75,7 @@ namespace nexus {
   void Next100Shielding::Construct()
   {
     // Auxiliary solids
-    G4Box* shielding_box_solid = new G4Box("SHIELD_BOX", _shield_x/2., _shield_y/2., _shield_z/2.);
+    //   G4Box* shielding_box_solid = new G4Box("SHIELD_BOX", _shield_x/2., _shield_y/2., _shield_z/2.);
 
     // LEAD BOX   ///////////
     G4double lead_x = _shield_x + 2. * _steel_thickness + 2. * _lead_thickness;
