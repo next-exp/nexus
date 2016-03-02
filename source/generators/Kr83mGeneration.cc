@@ -19,6 +19,11 @@
 #include <Randomize.hh>
 #include "CLHEP/Units/SystemOfUnits.h"
 #include "CLHEP/Units/PhysicalConstants.h"
+//
+// in Global space... temporary hack. 
+//
+// #include <fstream>
+// std::ofstream fOutCheckKr83mTmp;
 
 namespace nexus {
 
@@ -87,6 +92,13 @@ namespace nexus {
     DetectorConstruction* detconst = (DetectorConstruction*)
       G4RunManager::GetRunManager()->GetUserDetectorConstruction();
     _geom = detconst->GetGeometry();
+    //
+    // to debug possible problem with paucity of X-ray from the 32 kEV line..
+    // May 2 
+//    fOutCheckKr83mTmp.open("./testK484m_1.txt");
+//    fOutCheckKr83mTmp << " Evt key ID e " << std::endl;
+// bug in selecting the ad-hoc decay mode.. 
+//
   }
 
   Kr83mGeneration::~Kr83mGeneration()
@@ -95,19 +107,23 @@ namespace nexus {
 
   void Kr83mGeneration::GeneratePrimaryVertex(G4Event* evt)
   {
+    // Add an Ascci ntuple to debug.. 
+   // const int evtNum = evt->GetEventID();
+    
     // Ask the geometry to generate a position for the particle
     G4ThreeVector position = _geom->GenerateVertex(_region);
    //
    // First transition (32 kEv) Always one electron. Set it's kinetic energy. 
    // Decide if we emit an X-ray.. 
    //
+   
     const double probXRay = G4UniformRand();
     double eKin32 = _energy_32;
     double eXray = 0.;
     if (probXRay < _probability_Xrays[_probability_Xrays.size() -1]) {
       size_t kSel = _probability_Xrays.size() - 1;
       for (size_t k=1; k!= _probability_Xrays.size(); k++) {
-        if ((probXRay >= _probability_Xrays[k-1]) && (probXRay < _probability_Xrays[k-1])) {
+        if ((probXRay >= _probability_Xrays[k-1]) && (probXRay < _probability_Xrays[k])) {
           kSel = k-1;
 	  break;
         } 
@@ -115,7 +131,7 @@ namespace nexus {
       eKin32 = _energy_32 - _energy_Xrays[kSel];
       eXray = _energy_Xrays[kSel];
     }
-  
+   
     G4double mass = _particle_defelectron->GetPDGMass();
    // Calculate cartesian components of momentum for the most energetic EC 
     G4double energy = eKin32 + mass;
@@ -138,7 +154,7 @@ namespace nexus {
     particle1->SetPolarization(0.,0.,0.);
     particle1->SetProperTime(time);
     vertex->SetPrimary(particle1);
-
+//    fOutCheckKr83mTmp << " " << evtNum << " 32  11 " << eKin32 << std::endl;  
     if (eXray > (0.0001*keV)) {
       pmod = eXray;
       G4ThreeVector momentum_dirXr = G4RandomDirection();
@@ -150,6 +166,7 @@ namespace nexus {
       particle2->SetPolarization(0.,0.,0.);
       particle2->SetProperTime(time);
       vertex->SetPrimary(particle2);
+//      fOutCheckKr83mTmp << " " << evtNum << " 320  22 " << eXray << std::endl;  
     }
     // 
     // set the second gamma. Decide first if we have a 9.4 keV gamma, 
@@ -173,6 +190,7 @@ namespace nexus {
       particle3->SetPolarization(0.,0.,0.);
       particle3->SetProperTime(time9);
       vertex->SetPrimary(particle3);
+//      fOutCheckKr83mTmp << " " << evtNum << " 9  22 " << _energy_9 << std::endl;  
     } else { // a soft electron. (Electron Conversion )    
      // Calculate cartesian components of momentum for the most energetic EC 
       energy = _energy_9 + mass;
@@ -185,6 +203,7 @@ namespace nexus {
       particle3->SetMomentum(px, py, pz);
       particle3->SetProperTime(time9);
       vertex->SetPrimary(particle3);
+//      fOutCheckKr83mTmp << " " << evtNum << " 9  11 " << _energy_9 << std::endl;  
    }   
    evt->AddPrimaryVertex(vertex);
   }
