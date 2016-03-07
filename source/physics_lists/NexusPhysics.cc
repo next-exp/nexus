@@ -15,9 +15,11 @@
 #include "Electroluminescence.h"
 #include "WavelengthShifting.h"
 
+#include <G4Scintillation.hh>
 #include <G4GenericMessenger.hh>
 #include <G4OpticalPhoton.hh>
 #include <G4Gamma.hh>
+#include <G4Electron.hh>
 #include <G4ProcessManager.hh>
 #include <G4ProcessTable.hh>
 #include <G4StepLimiter.hh>
@@ -35,7 +37,8 @@ namespace nexus {
 
   NexusPhysics::NexusPhysics(): 
     G4VPhysicsConstructor("NexusPhysics"), 
-    _clustering(true), _drift(true), _electroluminescence(true), _noCompt(false)
+    _clustering(true), _drift(true), _electroluminescence(true), risetime_(false),
+    _noCompt(false),  _noCher(false), _noScint(false)
   {
     _msg = new G4GenericMessenger(this, "/PhysicsList/Nexus/",
       "Control commands of the nexus physics list.");
@@ -49,8 +52,16 @@ namespace nexus {
     _msg->DeclareProperty("electroluminescence", _electroluminescence,
       "Switch on/off the electroluminescence.");
 
+    _msg->DeclareProperty("scintRiseTime", risetime_,
+      "True if LYSO is used");
+
     _msg->DeclareProperty("offCompt", _noCompt,
 			  "Switch off Compton Scattering.");
+
+    _msg->DeclareProperty("offCherenkov", _noCher,
+			  "Switch off Cherenkov.");
+    _msg->DeclareProperty("offScintillation", _noScint,
+			  "Switch off Scintillation.");
   }
   
   
@@ -58,6 +69,7 @@ namespace nexus {
   NexusPhysics::~NexusPhysics()
   {
     delete _msg;
+    delete _wls;
   }
   
   
@@ -81,9 +93,19 @@ namespace nexus {
       G4Exception("ConstructProcess()", "[NexusPhysics]", FatalException, 
         "G4OpticalPhoton without a process manager.");
     }
-    WavelengthShifting* wls = new WavelengthShifting();
-    pmanager->AddDiscreteProcess(wls);
+    //WavelengthShifting* wls = new WavelengthShifting();
+    _wls = new WavelengthShifting();
+    pmanager->AddDiscreteProcess(_wls);
 
+    // Add rise time to scintillation
+    if (risetime_) {
+      pmanager  = G4Electron::Definition()->GetProcessManager();
+      G4Scintillation*  theScintillationProcess = 
+	(G4Scintillation*)G4ProcessTable::GetProcessTable()->
+	FindProcess("Scintillation", G4Electron::Definition());
+      theScintillationProcess->SetFiniteRiseTime(true);
+    }
+    
     pmanager = IonizationElectron::Definition()->GetProcessManager();
     if (!pmanager) {
       G4Exception("ConstructProcess()", "[NexusPhysics]", FatalException, 
@@ -133,6 +155,30 @@ namespace nexus {
        G4VProcess* cs = G4ProcessTable::GetProcessTable()->
         FindProcess("compt", G4Gamma::Definition());
        pmanager->RemoveProcess(cs);
+    }
+    if (_noCher) {
+       pmanager  = G4Electron::Definition()->GetProcessManager();
+       G4VProcess* cs = G4ProcessTable::GetProcessTable()->
+        FindProcess("Cerenkov", G4Electron::Definition());
+       pmanager->RemoveProcess(cs);
+       pmanager  = G4Gamma::Definition()->GetProcessManager();
+       cs = G4ProcessTable::GetProcessTable()->
+	 FindProcess("Cerenkov", G4Gamma::Definition());
+       pmanager->RemoveProcess(cs);
+    }
+    if (_noScint) {
+       pmanager  = G4Electron::Definition()->GetProcessManager();
+       G4VProcess* cs = G4ProcessTable::GetProcessTable()->
+        FindProcess("Scintillation", G4Electron::Definition());
+       pmanager->RemoveProcess(cs);
+        pmanager  = G4Gamma::Definition()->GetProcessManager();
+       cs = G4ProcessTable::GetProcessTable()->
+	 FindProcess("Scintillation", G4Gamma::Definition());
+       pmanager->RemoveProcess(cs);
+       // pmanager  = G4Alpha::Definition()->GetProcessManager();
+       //   cs = G4ProcessTable::GetProcessTable()->
+       // 	 FindProcess("Scintillation", G4Alpha::Definition());
+       // pmanager->RemoveProcess(cs);
     }
 
   }

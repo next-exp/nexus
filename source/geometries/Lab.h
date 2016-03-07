@@ -18,7 +18,9 @@
 
 class G4GenericMessenger;
 namespace nexus {class Pet2boxes;}
-
+namespace nexus {class PetLYSObox;}
+namespace nexus {class PetLXeCell;}
+namespace nexus {class PetLYSOCell;}
 
 namespace nexus {
 
@@ -40,12 +42,18 @@ namespace nexus {
     /// Messenger for the definition of control commands
     G4GenericMessenger* _msg;
 
-    Pet2boxes* module_;
+    //Pet2boxes* module_;
+    // PetLYSObox* module_;
+    // PetLXeCell* module_;
+    PetLYSOCell* module_;
 
     TFile* file_;
     G4float px1_, py1_, pz1_, px2_, py2_, pz2_;
     mutable G4int index_;
     mutable std::vector<std::pair<G4ThreeVector, G4ThreeVector> > vertices_;
+
+    G4int starting_point_;
+    G4String filename_;
     
   };
 
