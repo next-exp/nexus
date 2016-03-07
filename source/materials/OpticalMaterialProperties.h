@@ -36,7 +36,7 @@ namespace nexus {
     static G4MaterialPropertiesTable* Vacuum();
     static G4MaterialPropertiesTable* Epoxy();
     static G4MaterialPropertiesTable* GlassEpoxy();
-    static G4MaterialPropertiesTable* EpoxyVUV();
+    static G4MaterialPropertiesTable* EpoxyFixedRefr(G4double n);
 
     /// Synthetic fused silica (suprasil) with transmission in the deep
     /// ultraviolet down to 160 nm
@@ -55,7 +55,7 @@ namespace nexus {
     static G4MaterialPropertiesTable* GXe(G4double pressure=1.*bar, 
 					  G4double temperature=STP_Temperature,
 					  G4int sc_yield=13889/MeV);
-   static G4MaterialPropertiesTable* LXe();
+    static G4MaterialPropertiesTable* LXe();
 
     static G4MaterialPropertiesTable* FakeGrid(G4double pressure=1.*bar, 
 					       G4double temperature=STP_Temperature, 
@@ -63,22 +63,27 @@ namespace nexus {
 					       G4double thickness=1.*mm,
 					       G4int sc_yield=25510/MeV);
 
+    static G4MaterialPropertiesTable* FakeLXe();
+    static G4MaterialPropertiesTable* LXe_nconst();
+
+
     static G4MaterialPropertiesTable* Glass();
     
     static G4MaterialPropertiesTable* TPB(G4double pressure=10.*bar, 
 					  G4double temperature=STP_Temperature);
-    static G4MaterialPropertiesTable* TPB_LXe();									
+    static G4MaterialPropertiesTable* TPB_LXe();
+    static G4MaterialPropertiesTable* TPB_LXe_nconst();
+
     static G4MaterialPropertiesTable* TPBOld();
     static G4MaterialPropertiesTable* TPBmatr();
     static G4MaterialPropertiesTable* WLS2();
-    static G4MaterialPropertiesTable* TPH();
-    static G4MaterialPropertiesTable* PS();
-    static G4MaterialPropertiesTable* BC480(); 
     static G4MaterialPropertiesTable* PTFE();
-    static G4MaterialPropertiesTable* PTFE_LXe();
+    static G4MaterialPropertiesTable* PTFE_LXe(G4double reflectivity=0.95);
     static G4MaterialPropertiesTable* PTFE_with_TPB();
     static G4MaterialPropertiesTable* PTFE_non_reflectant();
-    static G4MaterialPropertiesTable* PMMA();
+    static G4MaterialPropertiesTable* LYSO();
+    static G4MaterialPropertiesTable* LYSO_nconst();
+    static G4MaterialPropertiesTable* FakeLYSO();
 
   
   private:

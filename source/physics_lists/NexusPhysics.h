@@ -19,7 +19,7 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  /// FIXME. Class description
+  class WavelengthShifting;
   
   class NexusPhysics: public G4VPhysicsConstructor
   {
@@ -39,9 +39,14 @@ namespace nexus {
     G4bool _drift;               ///< Switch on/of the ionization drift
     G4bool _electroluminescence; ///< Switch on/off the electroluminescence
 
+    G4bool risetime_; ///< Rise time for LYSO
+
     G4bool _noCompt; ///< Switch off Compton scattering
+    G4bool _noCher;
+    G4bool _noScint;
 
     G4GenericMessenger* _msg;
+    WavelengthShifting* _wls;
   };
 
 } // end namespace nexus

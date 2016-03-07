@@ -10,6 +10,9 @@
 #include "Lab.h"
 
 #include "Pet2boxes.h"
+#include "PetLXeCell.h"
+#include "PetLYSObox.h"
+#include "PetLYSOCell.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "UniformElectricDriftField.h"
@@ -25,9 +28,9 @@
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
+#include <stdexcept>
 
 #include <TTree.h>
-#include <stdexcept>
 
 
 namespace nexus {
@@ -37,28 +40,20 @@ namespace nexus {
   Lab::Lab(): 
     BaseGeometry(), _msg(0)
   {
-    module_ = new Pet2boxes();
+    _msg = new G4GenericMessenger(this, "/Geometry/Lab/", 
+				  "Control commands of geometry Lab.");
+    _msg->DeclareProperty("starting_point", starting_point_, "");
+    _msg->DeclareProperty("file_name", filename_, "");
 
-        // To read a TTree
-    file_ = new TFile("GeneratePhotonsTree.root","READ");
-  
-    
-    TTree* tree = dynamic_cast<TTree*>(file_->Get("tpg"));
+    //module_ = new Pet2boxes();
+    // module_ = new PetLYSObox();
 
+    // G4cout << "LXe cell being instantiated" << G4endl;
+    // module_ = new PetLXeCell();
     
-    tree->SetBranchAddress("px1", &px1_);
-    tree->SetBranchAddress("py1", &py1_);
-    tree->SetBranchAddress("pz1", &pz1_);
-    tree->SetBranchAddress("px2", &px2_);
-    tree->SetBranchAddress("py2", &py2_);
-    tree->SetBranchAddress("pz2", &pz2_);
-    for (G4int i=0; i<tree->GetEntries(); ++i) {
-      tree->GetEntry(i);
-      G4ThreeVector pos1(px1_, py1_, pz1_);
-      G4ThreeVector pos2(px2_, py2_, pz2_);
-      std::pair<G4ThreeVector, G4ThreeVector> positions = std::make_pair(pos1, pos2);
-      vertices_.push_back(positions);
-    }
+    G4cout << "LYSO cell being instantiated" << G4endl;
+    module_ = new PetLYSOCell();
+    
   }
 
 
@@ -72,6 +67,42 @@ namespace nexus {
 
   void Lab::Construct()
   {
+        // To read a TTree
+    
+    file_ = new TFile(filename_.c_str(),"READ");
+    G4cout << filename_.c_str() << G4endl;
+    
+    TTree* tree = dynamic_cast<TTree*>(file_->Get("tpg"));
+
+    
+    tree->SetBranchAddress("px1", &px1_);
+    tree->SetBranchAddress("py1", &py1_);
+    tree->SetBranchAddress("pz1", &pz1_);
+    tree->SetBranchAddress("px2", &px2_);
+    tree->SetBranchAddress("py2", &py2_);
+    tree->SetBranchAddress("pz2", &pz2_);
+    for (G4int i=0; i<tree->GetEntries(); ++i) {
+      tree->GetEntry(i);
+      //      G4ThreeVector pos1(px1_, py1_, pz1_ );
+      //G4ThreeVector pos2(px2_, py2_, pz2_ );
+      // New vertices (Jan 2016)
+      G4ThreeVector pos1(px1_, py1_, - pz1_ - 100.);
+      G4ThreeVector pos2(px2_, py2_, pz2_ + 100.);
+     
+ // if ( px1_ < 12. && px1_ > -12. && py1_ < 12. && py1_ > -12. &&  pz1_ < -100. && pz1_  > -150. &&
+ // 	   px2_ < 12. && px2_ > -12. && py2_ < 12. && py2_ > -12. &&  pz2_ > 100. && pz2_ < 150.) {
+      if ( px1_ < 12. && px1_ > -12. && py1_ < 12. && py1_ > -12. &&  (-pz1_-100) < -100. && (- pz1_ - 100) > -150. &&
+      	   px2_ < 12. && px2_ > -12. && py2_ < 12. && py2_ > -12. &&  (pz2_+100) > 100. && (pz2_+100) < 150.) {
+	//    G4cout << px1_ << ", " << py1_ << ", " << pz1_  << G4endl;
+	//    G4cout << px2_ << ", " << py2_ << ", " << pz2_  << G4endl;
+	std::pair<G4ThreeVector, G4ThreeVector> positions = std::make_pair(pos1, pos2);
+	//	G4cout << pos1 << ", " << pos2 << G4endl;
+	vertices_.push_back(positions);
+      }
+    }
+    file_ ->Close();
+    
+    //   G4cout << "Size of points: " << vertices_.size() << G4endl;
     // LAB /////////////////////////////////////////////////////////////
     // This is just a volume of air surrounding the detector so that
   // events (from calibration sources or cosmic rays) can be generated 
@@ -88,16 +119,16 @@ namespace nexus {
     // Set this volume as the wrapper for the whole geometry 
     // (i.e., this is the volume that will be placed in the world)
     this->SetLogicalVolume(lab_logic);
-   
+    
     module_->Construct();
 
     G4LogicalVolume* module_logic = module_->GetLogicalVolume();
-    new G4PVPlacement(0, G4ThreeVector(0.,0., -10.*cm - 1.5*cm), module_logic, "MODULE_0",
+    new G4PVPlacement(0, G4ThreeVector(0.,0., -10.*cm - 2.5*cm), module_logic, "MODULE_0",
         lab_logic, false, 0, true);
 
     G4RotationMatrix rot;
     rot.rotateY(pi);
-    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0.,0., 10.*cm + 1.5*cm)), module_logic, "MODULE_1",
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0.,0., 10.*cm + 2.5*cm)), module_logic, "MODULE_1",
         lab_logic, false, 1, true);
     
   }
@@ -113,7 +144,7 @@ namespace nexus {
   std::pair<G4ThreeVector, G4ThreeVector> Lab::GenerateVertices(const G4String& /*region*/) const
   {
     std::pair<G4ThreeVector, G4ThreeVector> vertices;
-    unsigned int i = index_;
+    unsigned int i = starting_point_ + index_;
 
     if (i == (vertices_.size()-1)) {
       G4Exception("[Pet2boxes]", "GenerateVertex()", 

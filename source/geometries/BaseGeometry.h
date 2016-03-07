@@ -50,7 +50,9 @@ namespace nexus {
 
     /// Setter for the starting point of EL generation in z
     void SetELzCoord(G4double z);  
-    
+
+    G4ThreeVector GetDimensions();
+   
     /// Destructor
     virtual ~BaseGeometry();
 
@@ -67,6 +69,12 @@ namespace nexus {
 
     /// Sets the drift variable to true if a drift field exists
     void SetDrift(G4bool);
+
+    void SetDimensions(G4ThreeVector dim);
+
+  protected:
+    G4ThreeVector _dimensions; ///< XYZ dimensions of a regular geometry
+
     
   private:
     /// Copy-constructor (hidden)
@@ -104,6 +112,7 @@ namespace nexus {
   
   inline G4double BaseGeometry::GetSpan() { return _span; }
 
+
   inline void BaseGeometry::SetDrift(G4bool drift) { _drift = drift; }
 
   inline G4bool BaseGeometry::GetDrift() const { return _drift; }
@@ -111,6 +120,11 @@ namespace nexus {
   inline G4double BaseGeometry::GetELzCoord() const {return _el_z;}
 
   inline void BaseGeometry::SetELzCoord(G4double z) {_el_z = z;}
+  
+  inline void BaseGeometry::SetDimensions(G4ThreeVector dim) {  _dimensions = dim; }
+  
+  inline  G4ThreeVector BaseGeometry::GetDimensions()  { return _dimensions; }
+
     
 } // end namespace nexus
 

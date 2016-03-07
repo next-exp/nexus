@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author:  <justo.martin-albo@ific.uv.es>
+//  Author:  
 //  Created: 2 March 2010
 //  
 //  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
@@ -32,12 +32,13 @@ namespace nexus {
   using namespace CLHEP;
   
   SiPMpetVUV::SiPMpetVUV(): BaseGeometry(),
-		    _visibility(0)
+			    _visibility(0), _refr_index(1)
 
   {
     /// Messenger
-    _msg = new G4GenericMessenger(this, "/Geometry/PetalX/", "Control commands of geometry.");
+    _msg = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
     _msg->DeclareProperty("SiPMpet_vis", _visibility, "SiPMpet Visibility");
+    _msg->DeclareProperty("refr_index", _refr_index, "Refraction index for epoxy");
   }
   
   
@@ -48,10 +49,10 @@ namespace nexus {
 
 
 
-  G4ThreeVector SiPMpetVUV::GetDimensions() const
-  {
-    return _dimensions;
-  }
+  // G4ThreeVector SiPMpetVUV::GetDimensions() const
+  // {
+  //   return _dimensions;
+  // }
   
   
   
@@ -69,15 +70,21 @@ namespace nexus {
     G4double sipm_x = 3.* mm;
     G4double sipm_y = 3. * mm;
     G4double sipm_z = 1.55 * mm;
+    
+    SetDimensions(G4ThreeVector(sipm_x, sipm_y, sipm_z));
 
-    _dimensions.setX(sipm_x);
-    _dimensions.setY(sipm_y);
-    _dimensions.setZ(sipm_z);
+    // _dimensions.setX(sipm_x);
+    // _dimensions.setY(sipm_y);
+    //  _dimensions.setZ(sipm_z);
+   
 
     G4Box* sipm_solid = new G4Box("SIPMpet", sipm_x/2., sipm_y/2., sipm_z/2);
 
     G4Material* epoxy = MaterialsList::Epoxy();
-    epoxy->SetMaterialPropertiesTable(OpticalMaterialProperties::EpoxyVUV());
+    G4cout << "Epoxy used with constant refraction index = " <<  _refr_index << G4endl;
+    epoxy->SetMaterialPropertiesTable(OpticalMaterialProperties::EpoxyFixedRefr(_refr_index));
+    
+
     
     G4LogicalVolume* sipm_logic = 
       new G4LogicalVolume(sipm_solid, epoxy, "SIPMpet");
@@ -171,9 +178,11 @@ namespace nexus {
       PmtSD* sipmsd = new PmtSD(sdname);
       sipmsd->SetDetectorVolumeDepth(0);
       sipmsd->SetDetectorNamingOrder(1000.);
-      sipmsd->SetTimeBinning(5.*picosecond);
-      sipmsd->SetMotherVolumeDepth(1);
-      sipmsd->SetGrandMotherVolumeDepth(3);
+      sipmsd->SetTimeBinning(25.*picosecond);
+      //sipmsd->SetMotherVolumeDepth(1);
+      //     sipmsd->SetGrandMotherVolumeDepth(3);
+      sipmsd->SetMotherVolumeDepth(2);
+      //sipmsd->SetGrandMotherVolumeDepth(2);
       
       G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
       sipm_logic->SetSensitiveDetector(sipmsd);
