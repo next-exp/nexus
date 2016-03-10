@@ -53,14 +53,16 @@ namespace nexus {
     G4double _endcap_in_rad, _endcap_theta, _endcap_thickness, _endcap_in_z_width;
     G4double _flange_out_rad, _flange_length, _flange_z_pos;
     G4double _large_nozzle_length, _small_nozzle_length;
+    G4double _sc_yield;
     G4double _pressure, _temperature;
+   
+    // Visibility of the shielding
+    G4bool _visibility;
 
     // Dimensions coming from outside  
     G4double _nozzle_ext_diam, _up_nozzle_ypos, _central_nozzle_ypos;
     G4double _down_nozzle_ypos, _bottom_nozzle_ypos;
 
-    // Visibility of the shielding
-    G4bool _visibility;
 
     // Internal Logical Volume
     G4LogicalVolume* _internal_logic_vol;

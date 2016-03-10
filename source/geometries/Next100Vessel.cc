@@ -24,6 +24,7 @@
 #include <G4Colour.hh>
 #include <Randomize.hh>
 #include <G4TransportationManager.hh>
+#include <G4UnitsTable.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
@@ -64,6 +65,8 @@ namespace nexus {
     _small_nozzle_length (240.0 * cm),
 
     // Vessel gas
+    _sc_yield(16670. * 1/MeV),
+    _pressure(15 * bar),
     _temperature (303 * kelvin),
     // Visibility
     _visibility(0)
@@ -90,6 +93,14 @@ namespace nexus {
     pressure_cmd.SetUnitCategory("Pressure");
     pressure_cmd.SetParameterName("pressure", false);
     pressure_cmd.SetRange("pressure>0.");
+
+    new G4UnitDefinition("1/MeV","1/MeV", "1/Energy", 1/MeV);
+
+    G4GenericMessenger::Command& sc_yield_cmd = 
+      _msg->DeclareProperty("sc_yield", _sc_yield,
+			    "Set scintillation yield for GXe. It is in photons/MeV");
+    sc_yield_cmd.SetParameterName("sc_yield", true);
+    sc_yield_cmd.SetUnitCategory("1/Energy");
 
   }
   
@@ -209,7 +220,7 @@ namespace nexus {
     this->SetLogicalVolume(vessel_logic);
 
     G4Material* vessel_gas_mat =  MaterialsList::GXe(_pressure, _temperature);
-    vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature));
+    vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
 
     G4LogicalVolume* vessel_gas_logic = new G4LogicalVolume(vessel_gas_solid, vessel_gas_mat, "VESSEL_GAS");
     _internal_logic_vol = vessel_gas_logic;
