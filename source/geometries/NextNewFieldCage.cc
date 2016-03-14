@@ -96,6 +96,8 @@ namespace nexus {
     _pos_z_anode =  
       _el_gap_z_pos + _el_gap_length/2. +  _anode_quartz_thickness/2.+ 0.1*mm; // 0.1 mm is needed because EL is produced only if the PostStepVolume is GAS material.
 
+    _el_table_z = _el_gap_z_pos - _el_gap_length/2. + .5*mm;
+
     // Define a new category
     new G4UnitDefinition("kilovolt/cm","kV/cm","Electric field", kilovolt/cm);
     new G4UnitDefinition("mm/sqrt(cm)","mm/sqrt(cm)","Diffusion", mm/sqrt(cm));
@@ -172,6 +174,12 @@ namespace nexus {
 
     _msg->DeclareProperty("el_table_point_id", _el_table_point_id, "");
 
+     G4GenericMessenger::Command& eltable_z_cmd = 
+      _msg->DeclareProperty("el_table_z", _el_table_z, 
+			    "Z coordinate for EL generation");
+    eltable_z_cmd.SetUnitCategory("Length");
+    eltable_z_cmd.SetParameterName("el_table_z", false);
+
   }
 
 
@@ -212,9 +220,10 @@ namespace nexus {
     // Proper field cage and light tube
     BuildFieldCage();
 
-    G4double z = _el_gap_z_pos - _el_gap_length/2. + .5*mm;
+    //  G4double z = _el_gap_z_pos - _el_gap_length/2. + .5*mm;
     G4double max_radius = floor(_tube_in_diam/2./_el_table_binning)*_el_table_binning;
-    CalculateELTableVertices(max_radius, _el_table_binning, z);
+
+    CalculateELTableVertices(max_radius, _el_table_binning, _el_table_z);
   }
 
 
