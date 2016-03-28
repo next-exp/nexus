@@ -16,7 +16,8 @@
 #include <G4RunManager.hh>
 #include <G4ParticleTable.hh>
 #include <G4ParticleDefinition.hh>
-
+#include "decay0.h"
+#include <iostream>
 using namespace nexus;
 
 
@@ -25,28 +26,43 @@ using namespace nexus;
 Decay0Interface::Decay0Interface(): 
   G4VPrimaryGenerator(), _msg(0), _opened(false), _geom(0)
 {
+
   _msg = new G4GenericMessenger(this, "/Generator/Decay0Interface/",
     "Control commands of the Decay0 interface.");
 
   _msg->DeclareMethod("inputFile", &Decay0Interface::OpenInputFile, "");
   _msg->DeclareProperty("region", _region, "");
+  
+  _msg->DeclareMethod("Xe136DecayMode", &Decay0Interface::SetXe136DecayMode, "");
+  _msg->DeclareMethod("Ba136FinalState", &Decay0Interface::SetBa136FinalState, "");
 
   DetectorConstruction* detConst = (DetectorConstruction*)
   G4RunManager::GetRunManager()->GetUserDetectorConstruction();
   _geom = detConst->GetGeometry();
+  
+  _decay0 = 0;
+  _myEventCounter = 0;
 }
 
 
 
 Decay0Interface::~Decay0Interface()
 {
-  _file.close();
+  if (_file.is_open()) _file.close();
+  if (_fOutDebug.is_open()) _fOutDebug.close(); 
+  if (_decay0 != 0) delete _decay0;
 }
 
 
 
 void Decay0Interface::OpenInputFile(G4String filename)
 {
+   if (filename.find("none") != std::string::npos) {
+      std::cerr << " We will use the new interface to Decay00 " << std::endl;
+     _opened = false;
+     return;
+   }
+     
   _file.open(filename.data());
 
   if (_file.good()) {
@@ -65,7 +81,45 @@ void Decay0Interface::OpenInputFile(G4String filename)
 /// vertices accordingly
 void Decay0Interface::GeneratePrimaryVertex(G4Event* event)
 {
-  //if (!_opened) return;
+  const bool runG4 = true;
+  if (!_opened) {
+     if (_decay0 == 0) {
+       const std::string XeName("Xe136");
+       _decay0 = new decay0(XeName, _Ba136FinalState, _Xe136DecayMode);
+      // Temporary debugging file, just generate particle and dump them on a file 
+      std::ostringstream fOutStrStr; fOutStrStr << "./Decay0Out_" << _Ba136FinalState << "_" << _Xe136DecayMode << "_V1.txt";
+      std::string fOutStr(fOutStrStr.str());
+      _fOutDebug.open(fOutStr.c_str());
+       if (_fOutDebug.is_open()) _fOutDebug << " evt tr pdg px py pz e t  " << std::endl;
+     }
+     
+     std::vector<decay0Part> theParts;
+     _decay0->decay0DoIt(theParts);
+     if (_fOutDebug.is_open()) {
+       int k = 0;
+       for (std::vector<decay0Part>::const_iterator itp = theParts.begin(); itp != theParts.end(); itp++, k++) {
+         _fOutDebug << " " << _myEventCounter << " " << k << " " << itp->_pdgCode << " " 
+	           << itp->_pmom[0] << " " <<  itp->_pmom[1] << " " << itp->_pmom[2] << " "
+		   << itp->_energy << " " << itp->_time << std::endl;
+        }
+     }
+     if (runG4) {
+        particle_position = _geom->GenerateVertex(_region);
+        for (std::vector<decay0Part>::const_iterator itp = theParts.begin(); itp != theParts.end(); itp++) {
+          G4ParticleDefinition* g4code = 
+             G4ParticleTable::GetParticleTable()->FindParticle(itp->_pdgCode);
+          G4PrimaryParticle* particle =
+	     new G4PrimaryParticle(g4code, MeV*itp->_pmom[0], MeV*itp->_pmom[1], MeV*itp->_pmom[2]);
+         // create a primary vertex for the particle
+          G4PrimaryVertex* vertex =
+              new G4PrimaryVertex(particle_position, particle_time*second);
+         vertex->SetPrimary(particle);
+         event->AddPrimaryVertex(vertex);
+        } 
+    }
+     _myEventCounter++;
+     return;
+   }
 
   //G4cout << "GeneratePrimaryVertex()" << G4endl;
  
