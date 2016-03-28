@@ -1,0 +1,22 @@
+### --------------------------------------------------------
+###  Example 3: Configuration macro
+###  $Id: nexus_example3.config.mac 9053 2013-08-05 10:13:56Z jmalbos $
+### --------------------------------------------------------
+
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+/control/execute macros/generators/GenbbInterface.mac
+#
+/Geometry/NextNew/pressure 15. bar
+/Geometry/NextNew/sc_yield 16670. 1/MeV
+/Geometry/NextNew/elfield false
+
+# PHYSICS
+/control/execute macros/physics/IonizationElectron.mac
+
+
+/nexus/persistency/outputFile ./bb0_GS_mode1_S1L1f.next
+/nexus/persistency/historyFile myHistory.macro ## must be the same as /nexus/historyFile
+
+/nexus/random_seed 542862
