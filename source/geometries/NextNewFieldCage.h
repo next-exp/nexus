@@ -125,6 +125,7 @@ namespace nexus {
     mutable G4int _el_table_index;
     mutable std::vector<G4ThreeVector> _el_table_vertices;
     G4double _el_table_binning;
+    G4double _el_table_z;
   };
 
 } //end namespace nexus

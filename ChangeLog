@@ -1,3 +1,6 @@
+tag v5_00_10
+	- Possibility of changing the z coordinate in the generation of EL table added for studies at different diffusions
+	
 tag v5_00_09
 	- Macros for S1 generation in NEXT-100 added
 	- Wavelength shifting decay times changed to be sampled by an exponential
