@@ -65,6 +65,7 @@ namespace nexus {
     _ito_thickness (_grid_thickn),
     _el_table_binning(1.*mm),
     _el_table_point_id(-1),
+    _el_table_index(0),
     _grids_visibility(false) // Visibility of grids
   {
     _el_gap_posz = (160.*cm / 2.) - _trk_displ;
