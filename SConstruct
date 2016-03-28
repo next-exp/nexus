@@ -20,7 +20,7 @@ import os
 import subprocess
 
 ## Geant4 version required by NEXUS
-NEXUS_G4VERSION_NUMBER = [1010, 1011]
+NEXUS_G4VERSION_NUMBER = [1010, 1011, 1012]
 
 ## NEXUS source code directories
 SRCDIR = ['actions',
@@ -118,7 +118,7 @@ vars.AddVariables(
 
     ('CPPFLAGS',
      'User-specified preprocessor options.',
-     []),
+     ['-g']),
     
     ('CPPPATH',
      'List of directories where the include headers are located.',
@@ -204,6 +204,31 @@ if not env['LIBPATH']:
  #   if not conf.CheckLib(library='GATE', language='CXX', autoadd=0):
   #      Abort('GATE library not found.')
 
+    ## GSL configuration --------------------------   -------
+
+    env['GSL_DIR'] = os.environ['GSL_DIR']
+    
+    if env['GSL_DIR'] != NULL_PATH:
+        env.PrependENVPath('PATH', env['GSL_DIR'])
+    
+    env['GSL_LIB'] = os.environ['GSL_LIB']
+    
+    env['GSL_INC'] = os.environ['GSL_INC']
+    
+    env.Append( CPPPATH = [env['GSL_INC']] )
+                                                          
+    env.Append( LIBPATH = [env['GSL_LIB']] )
+
+    if not conf.CheckCXXHeader('gsl/gsl_errno.h'):
+        Abort('GSL headers not found.')
+    
+    env.Append(LIBS = ['gsl','gslcblas'])
+
+
+
+ #   if not conf.CheckLib(library='GSL', language='CXX', autoadd=0):
+  #      Abort('GSL library not found.')
+## ##################################################################
     env = conf.Finish()
 
 vars.Save(BUILDVARS_FILE, env)
