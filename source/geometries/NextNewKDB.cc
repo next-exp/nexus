@@ -40,12 +40,13 @@ namespace nexus {
     BaseGeometry(),
     _rows(rows),
     _columns(columns),
-    _visibility (1)
+    _visibility (1),
+    _teflon_masks(false)
   {
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
     _msg->DeclareProperty("kdb_vis", _visibility, "Kapton Dice Boards Visibility");
-
+    _msg->DeclareProperty("teflon_masks", _teflon_masks, "True if teflon masks are places in fron of dices");
     _sipm = new SiPMSensl;
   }
 
@@ -132,6 +133,19 @@ namespace nexus {
         _positions.push_back(mypos);
         sipm_no++;
       }
+    }
+
+    if (_teflon_masks == true) {
+      // Setting reflectivity properties of TEFLON
+      /// Optical surfaces
+      G4OpticalSurface* dboard_opsur = new G4OpticalSurface("KDB");
+      dboard_opsur->SetType(dielectric_metal);
+      dboard_opsur->SetModel(unified);
+      dboard_opsur->SetFinish(ground);
+      dboard_opsur->SetSigmaAlpha(0.1);
+      dboard_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
+      
+      new G4LogicalSkinSurface("KDB", board_logic, dboard_opsur);
     }
 
     // SETTING VISIBILITIES   //////////
