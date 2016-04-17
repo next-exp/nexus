@@ -161,6 +161,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     // Create an gate particle to store the trajectory information
     gate::MCParticle* ipart = new gate::MCParticle();
     ipart->SetPDG(trj->GetPDGEncoding());
+    ipart->SetLabel(trj->GetParticleName());
     
     G4int trackid = trj->GetTrackID();
     ipart->SetID(trj->GetTrackID());
