@@ -25,7 +25,7 @@
 struct decay0Part {
   int _pdgCode;
   double _pmom[3];
-  double _energy;
+  double _energy; // kinetic
   double _time;
 };
 
