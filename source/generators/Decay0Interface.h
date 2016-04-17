@@ -64,12 +64,15 @@ namespace nexus {
     int _Xe136DecayMode; // See method printDecayModeList  Default is 1
     int _Ba136FinalState; // labeled by energy level, in keV . 
                           // Valid list: 0, 819,  1551, 1579, 2080, 2129, 2141, 2223, 2315, 2400) 
-			  // default is 0 (ground state)  
+			  // default is 0 (ground state) 
+			   
+    double _energyThreshold;
     
     std::ofstream _fOutDebug; // for debugging... 
     const BaseGeometry* _geom;
     
     
+    inline void SetEnergyThreshold(double e) { _energyThreshold = e;}
     inline void SetXe136DecayMode(int dcm) { _Xe136DecayMode = dcm;}
     inline void SetBa136FinalState(int fs) { _Ba136FinalState = fs;}
   };
