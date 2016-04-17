@@ -16,14 +16,14 @@ int decay0Functions_Zdbb; // the Z of the
 bbFinalState::bbFinalState():
 _spin(0),
 _key(0),
-_levelE(0.), // Grohnd state, default.. 
+_levelE(0.), // Ground state, default.. 
 _itrans02(0)
 {
 }
 bbFinalState::bbFinalState(int spin, int keyNum, double Elev, int itr2):
 _spin(spin),
 _key(keyNum),
-_levelE(Elev), // Grohnd state, default.. 
+_levelE(Elev), // Ground state, default.. 
 _itrans02(itr2)
 {
 }
