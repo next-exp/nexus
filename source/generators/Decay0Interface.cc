@@ -33,6 +33,7 @@ Decay0Interface::Decay0Interface():
   _msg->DeclareMethod("inputFile", &Decay0Interface::OpenInputFile, "");
   _msg->DeclareProperty("region", _region, "");
   
+  _msg->DeclareMethod("EnergyThreshold", &Decay0Interface::SetEnergyThreshold, ""); // for electrons only. 
   _msg->DeclareMethod("Xe136DecayMode", &Decay0Interface::SetXe136DecayMode, "");
   _msg->DeclareMethod("Ba136FinalState", &Decay0Interface::SetBa136FinalState, "");
 
@@ -82,20 +83,31 @@ void Decay0Interface::OpenInputFile(G4String filename)
 void Decay0Interface::GeneratePrimaryVertex(G4Event* event)
 {
   const bool runG4 = true;
+//  const bool runG4 = false;
   if (!_opened) {
      if (_decay0 == 0) {
        const std::string XeName("Xe136");
        _decay0 = new decay0(XeName, _Ba136FinalState, _Xe136DecayMode);
       // Temporary debugging file, just generate particle and dump them on a file 
-      std::ostringstream fOutStrStr; fOutStrStr << "./Decay0Out_" << _Ba136FinalState << "_" << _Xe136DecayMode << "_V1.txt";
-      std::string fOutStr(fOutStrStr.str());
-      _fOutDebug.open(fOutStr.c_str());
+//      std::ostringstream fOutStrStr; fOutStrStr << "./Decay0Out_" << _Ba136FinalState << "_" << _Xe136DecayMode << "_V1.txt";
+//      std::string fOutStr(fOutStrStr.str());
+//      _fOutDebug.open(fOutStr.c_str());
        if (_fOutDebug.is_open()) _fOutDebug << " evt tr pdg px py pz e t  " << std::endl;
      }
      
      std::vector<decay0Part> theParts;
      _decay0->decay0DoIt(theParts);
-     if (_fOutDebug.is_open()) {
+     //
+     // Keep the event only if the sum of the electron energies are above the threshold. 
+     //
+     double eTotKin = 0.;
+     for(std::vector<decay0Part>::const_iterator itp = theParts.begin(); itp != theParts.end(); itp++) {
+       
+       if (std::abs(itp->_pdgCode) == 11) eTotKin += itp->_energy; 
+     }
+     const bool keepEvt = eTotKin > _energyThreshold;
+     _myEventCounter++;
+     if (_fOutDebug.is_open() && keepEvt ) {
        int k = 0;
        for (std::vector<decay0Part>::const_iterator itp = theParts.begin(); itp != theParts.end(); itp++, k++) {
          _fOutDebug << " " << _myEventCounter << " " << k << " " << itp->_pdgCode << " " 
@@ -103,7 +115,7 @@ void Decay0Interface::GeneratePrimaryVertex(G4Event* event)
 		   << itp->_energy << " " << itp->_time << std::endl;
         }
      }
-     if (runG4) {
+     if (runG4 && keepEvt) {
         particle_position = _geom->GenerateVertex(_region);
         for (std::vector<decay0Part>::const_iterator itp = theParts.begin(); itp != theParts.end(); itp++) {
           G4ParticleDefinition* g4code = 
@@ -117,7 +129,6 @@ void Decay0Interface::GeneratePrimaryVertex(G4Event* event)
          event->AddPrimaryVertex(vertex);
         } 
     }
-     _myEventCounter++;
      return;
    }
 
