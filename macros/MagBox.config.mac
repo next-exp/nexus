@@ -11,20 +11,17 @@
 #/Generator/IonGun/mass_number 214
 #/Generator/IonGun/region ENCLOSURE_WINDOW
 
-#/Generator/SingleParticle/region CENTER
-#/Generator/SingleParticle/particle e-
-#/Generator/SingleParticle/min_energy 2447. keV
-#/Generator/SingleParticle/max_energy 2447. keV
+/Generator/SingleParticle/region CENTER
+/Generator/SingleParticle/particle e-
+/Generator/SingleParticle/min_energy 2447. keV
+/Generator/SingleParticle/max_energy 2447. keV
 #/Generator/SingleParticle/momentum_X  0.
 #/Generator/SingleParticle/momentum_Y  1.
 #/Generator/SingleParticle/momentum_Z  0.
 
-/Generator/Decay0Interface/inputFile /data4/NEXT/NEXTNEW/decay0/Xe136_bb0nu/Xe136_bb0nu_decay0.0.txt
-/Generator/Decay0Interface/region CENTER
+#/Generator/Decay0Interface/inputFile /data4/NEXT/NEXTNEW/decay0/Xe136_bb0nu/Xe136_bb0nu_decay0.0.txt
+#/Generator/Decay0Interface/region CENTER
 
-
-### ACTIONS
-/Actions/FastSimEventAction/energy_threshold 0.0 MeV
 
 
 ### PHYSICS
@@ -41,4 +38,4 @@
 
 ### JOB CONTROL
 #/nexus/persistency/outputFile tst.next
-/nexus/persistency/outputFile /data4/NEXT/MAGBOX/sim2/MagBox_Xe_20atm_10tesla.Xe136_bb0nu.0.next
+/nexus/persistency/outputFile output.next

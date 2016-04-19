@@ -40,6 +40,10 @@ namespace nexus {
     /// Set whether to store or not the current event
     void StoreCurrentEvent(G4bool);
 
+    /// Set to the PM the name of the logical volume of the main geometry
+    /// for hit coordinate conversion if needed
+    void SetDriftCoord();
+
     /// 
     virtual G4bool Store(const G4Event*);
     virtual G4bool Store(const G4Run*);
@@ -80,6 +84,9 @@ namespace nexus {
 
     std::map<G4int, gate::MCParticle*> _iprtmap;
     std::map<G4int, gate::MCTrack*> _itrkmap;
+
+    G4double _el_starting_z; ///< z where EL photons start to be generated
+    G4bool _drift_z; ///< true if we want to write the z drift coordinate instead of true nexus
   };
 
 

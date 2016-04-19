@@ -83,6 +83,8 @@ namespace nexus {
       new G4Box("LAB", _lab_size/2., _lab_size/2., _lab_size/2.);
     
     _lab_logic = new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
+
+    this->SetDrift(true);
     
     //_lab_logic->SetVisAttributes(G4VisAttributes (G4Colour(.46, .46, .46)));
     _lab_logic->SetVisAttributes(G4VisAttributes::Invisible);
@@ -150,7 +152,7 @@ namespace nexus {
     //INNER ELEMENTS
     _inner_elements->SetLogicalVolume(vessel_gas_logic);
     _inner_elements->Construct();
-
+    SetELzCoord(_inner_elements->GetELzCoord());
    
 
     //// VERTEX GENERATORS   //

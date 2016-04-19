@@ -78,6 +78,8 @@ void NextNewOpticalGeometry::Construct()
     new G4Box("LAB", lab_size/2., lab_size/2., lab_size/2.);    
   G4LogicalVolume* lab_logic = 
     new G4LogicalVolume(lab_solid, air, "LAB");
+
+  this->SetDrift(true);
  
   lab_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
@@ -106,6 +108,7 @@ void NextNewOpticalGeometry::Construct()
   ///INNER ELEMENTS
   _inner_elements->SetLogicalVolume(gas_logic);
   _inner_elements->Construct();
+  SetELzCoord(_inner_elements->GetELzCoord());
   
 }
  

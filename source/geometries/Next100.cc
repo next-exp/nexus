@@ -84,6 +84,8 @@ namespace nexus {
     _lab_logic = new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
     _lab_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
+    this->SetDrift(true);
+
     // Set this volume as the wrapper for the whole geometry 
     // (i.e., this is the volume that will be placed in the world)
     this->SetLogicalVolume(_lab_logic);
@@ -133,6 +135,7 @@ namespace nexus {
     // Inner Elements
     _inner_elements->SetLogicalVolume(vessel_internal_logic);
     _inner_elements->Construct();
+    SetELzCoord(_inner_elements->GetELzCoord());
 
   }
   

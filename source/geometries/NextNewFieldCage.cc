@@ -97,6 +97,7 @@ namespace nexus {
       _el_gap_z_pos + _el_gap_length/2. +  _anode_quartz_thickness/2.+ 0.1*mm; // 0.1 mm is needed because EL is produced only if the PostStepVolume is GAS material.
 
     _el_table_z = _el_gap_z_pos - _el_gap_length/2. + .5*mm;
+    SetELzCoord(_el_table_z);
 
     // Define a new category
     new G4UnitDefinition("kilovolt/cm","kV/cm","Electric field", kilovolt/cm);

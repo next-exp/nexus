@@ -59,6 +59,7 @@ namespace nexus {
     _energy_plane->Construct();
     _field_cage->SetLogicalVolume(_mother_logic);
     _field_cage->Construct();
+    SetELzCoord(_field_cage->GetELzCoord());
     _tracking_plane->SetLogicalVolume(_mother_logic);
     _tracking_plane->Construct();
   }

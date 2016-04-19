@@ -14,6 +14,7 @@
 
 #include <G4ThreeVector.hh>
 #include <vector>
+#include "BaseGeometry.h"
 
 class G4LogicalVolume;
 class G4Material;
@@ -31,7 +32,8 @@ namespace nexus {
   /// This is a geometry placer that encloses from the FIELD CAGE to inside
   /// covering the ACTIVE region, EL gap and its grids, the cathode grid ...
 
-  class Next100InnerElements{
+  class Next100InnerElements : public BaseGeometry
+  {
 
   public:
     ///Constructor

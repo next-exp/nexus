@@ -150,6 +150,10 @@ void NexusApp::Initialize()
 
   G4RunManager::Initialize();
 
+  PersistencyManager* pm = dynamic_cast<PersistencyManager*>
+    (G4VPersistencyManager::GetPersistencyManager());
+  pm->SetDriftCoord();
+
   for (unsigned int j=0; j<_delayed.size(); j++)
     ExecuteMacroFile(_delayed[j].data());
 }
