@@ -130,13 +130,13 @@ G4bool PersistencyManager::Store(const G4Event* event)
   gate::Event ievt;
   ievt.SetEventID(event->GetEventID());
   if (event_type_ == "bb0nu") {
-    ievt.SetEventType(gate::BB0NU);
+    ievt.SetMCEventType(gate::BB0NU);
   } else if (event_type_ == "bb2nu") {
-    ievt.SetEventType(gate::BB2NU);
+    ievt.SetMCEventType(gate::BB2NU);
   } else if (event_type_ == "background") {
-    ievt.SetEventType(gate::BKG);
+    ievt.SetMCEventType(gate::BKG);
   } else {
-    ievt.SetEventType(gate::NOETYPE);
+    ievt.SetMCEventType(gate::NOETYPE);
   }
 
   // Store the trajectories of the event as Gate particles
