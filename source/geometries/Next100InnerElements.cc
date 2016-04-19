@@ -189,8 +189,9 @@ namespace nexus {
     _tracking_plane->SetLogicalVolume(_mother_logic);
     _tracking_plane->Construct();
 
-    G4double z = _el_gap_posz - _el_gap_length/2. + .5*mm;
+    G4double z = _el_gap_posz - _el_gap_length/2.;
     SetELzCoord(z);
+    z = z + .5*mm;
     G4double max_radius = floor(_active_diam/2./_el_table_binning)*_el_table_binning;
     CalculateELTableVertices(max_radius, _el_table_binning, z);
 

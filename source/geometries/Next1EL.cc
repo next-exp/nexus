@@ -252,8 +252,9 @@ void Next1EL::Construct()
   _idx_table = 0;
   _table_vertices.clear();
   /// Ionielectrons are generated at a z = .5 mm inside the EL gap
-  G4double z = _vessel_length/2. - _fieldcage_displ - _elgap_ring_height - _elgap_length + .5*mm;
+  G4double z = _vessel_length/2. - _fieldcage_displ - _elgap_ring_height - _elgap_length;
   SetELzCoord(z);
+  z = z +  .5*mm;
   CalculateELTableVertices(92.5*mm, 5.*mm, z);
   
 }
