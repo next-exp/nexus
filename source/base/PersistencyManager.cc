@@ -305,8 +305,10 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
     gate::MCHit* ghit = new gate::MCHit();
     ghit->SetLabel(sdname);
 
-    G4double hit_z = - xyz.z() + _el_starting_z; // do the shift to drift length coordinate
-    if (!_drift_z)  hit_z = xyz.z();
+    G4double hit_z = xyz.z();
+    if (sdname == "ACTIVE" && _drift_z) {
+      hit_z = - xyz.z() + _el_starting_z; // do the shift to drift length coordinate
+    }
 
     ghit->SetPosition(gate::Point3D(xyz.x(), xyz.y(), hit_z));
     ghit->SetTime(hit->GetTime());
