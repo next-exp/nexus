@@ -24,6 +24,7 @@
 #include <G4SDManager.hh>
 #include <G4HCtable.hh>
 #include <G4RunManager.hh>
+#include <G4Run.hh>
 
 #include <TList.h>
 
@@ -45,7 +46,7 @@ using namespace nexus;
 PersistencyManager::PersistencyManager(): 
   G4VPersistencyManager(), _msg(0), _historyFile("G4history.macro"), 
   _ready(false), _store_evt(true),  event_type_("other"),_writer(0), _el_starting_z(-10.*mm),
-  _drift_z(false)
+  _drift_z(false), _saved_evts(0)
 {
   _msg = new G4GenericMessenger(this, "/nexus/persistency/");
   _msg->DeclareMethod("outputFile", &PersistencyManager::OpenFile, "");
@@ -125,6 +126,8 @@ G4bool PersistencyManager::Store(const G4Event* event)
     TrajectoryMap::Clear();    
     return false;
   }
+
+  _saved_evts++;
 
   // Create a new GATE event
   gate::Event ievt;
@@ -414,14 +417,17 @@ G4bool PersistencyManager::Store(const G4Run*)
   NexusApp* app = (NexusApp*) G4RunManager::GetRunManager();
   G4int num_events = app->GetNumberOfEventsToBeProcessed();
 
-  std::stringstream ss;
+   std::stringstream ss;
   ss << num_events;
 
   //gate::ParameterInfo* info = new gate::ParameterInfo("num_events");
   //info->SetContent(ss.str());
   //_writer->WriteMetadata(info); 
  
-  grun.store("num_events",ss.str());
+  grun.store("num_events", ss.str());
+
+  ss << _saved_evts;
+  grun.store("saved_events", ss.str());
   
   _writer->WriteRunInfo(grun);
 

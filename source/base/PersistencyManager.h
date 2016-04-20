@@ -87,6 +87,8 @@ namespace nexus {
 
     G4double _el_starting_z; ///< z where EL photons start to be generated
     G4bool _drift_z; ///< true if we want to write the z drift coordinate instead of true nexus
+
+    G4int _saved_evts;
   };
 
 
