@@ -43,6 +43,7 @@ Decay0Interface::Decay0Interface():
   
   _decay0 = 0;
   _myEventCounter = 0;
+  _energyThreshold = 0.;
 }
 
 
