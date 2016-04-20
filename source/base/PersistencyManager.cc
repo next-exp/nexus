@@ -420,14 +420,9 @@ G4bool PersistencyManager::Store(const G4Run*)
    std::stringstream ss;
   ss << num_events;
 
-  //gate::ParameterInfo* info = new gate::ParameterInfo("num_events");
-  //info->SetContent(ss.str());
-  //_writer->WriteMetadata(info); 
- 
   grun.store("num_events", ss.str());
 
-  ss << _saved_evts;
-  grun.store("saved_events", ss.str());
+  grun.SetNumEvents((int)_saved_evts);
   
   _writer->WriteRunInfo(grun);
 
