@@ -86,9 +86,6 @@ void AnalysisTrackingAction::PreUserTrackingAction(const G4Track* track)
   // if ( track->GetCreatorProcess())
   //   G4cout << track->GetCreatorProcess()->GetProcessName()  << G4endl;
   // Do nothing if the track is an optical photon or an ionization electron
-
-  // if (track->GetDefinition() == G4Electron::Definition() ) 
-    //   G4cout << "Electron"<< G4endl;
    
   if (track->GetDefinition() == G4OpticalPhoton::Definition() || 
       track->GetDefinition() == IonizationElectron::Definition()) {
@@ -98,22 +95,12 @@ void AnalysisTrackingAction::PreUserTrackingAction(const G4Track* track)
      if (track->GetCreatorProcess()->GetProcessName() == "Cerenkov") {
   	cer+= 1;
 	//track->CalculateVelocityForOpticalPhoton()
-	       
-	//	G4cout << "Cherenkov"<< G4endl;
-	//	if (track->GetPosition().z() < 0.) {
-	//  	  G4double time = sqrt(track->GetPosition().x()*track->GetPosition().x() + track->GetPosition().y()*track->GetPosition().y() + track->GetPosition().z()*track->GetPosition().z())/c_light;
-	  //	  G4cout << "Cher starts "<< track->GetKineticEnergy()/eV<< G4endl;
-	  // 	  hCherEnergy->Fill(track->GetKineticEnergy()/eV);
-	  hCherLambda->Fill(h_Planck*c_light/track->GetKineticEnergy()/nanometer);
-	  //	}
-  	//G4cout << "Cherenkov" << G4endl;
+	hCherLambda->Fill(h_Planck*c_light/track->GetKineticEnergy()/nanometer);	
      } 
      
      else if (track->GetCreatorProcess()->GetProcessName() == "Scintillation") {
        scint += 1;
-       //	hScintEnergy->Fill(track->GetKineticEnergy()/eV);
        hScintLambda->Fill(h_Planck*c_light/track->GetKineticEnergy()/nanometer);
-       //	G4cout << "Scintillation" << G4endl;
      }  
      
       return;
@@ -136,12 +123,6 @@ void AnalysisTrackingAction::PreUserTrackingAction(const G4Track* track)
 
 void AnalysisTrackingAction::PostUserTrackingAction(const G4Track* track)
 {
-
-
-    // if (track->GetCreatorProcess()->GetProcessName() == "Cerenkov") {
-      
-    // }
-
   // Do nothing if the track is an optical photon or an ionization electron
   if (track->GetDefinition() == G4OpticalPhoton::Definition() || 
     track->GetDefinition() == IonizationElectron::Definition()) return;
