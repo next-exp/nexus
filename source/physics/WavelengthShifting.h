@@ -16,6 +16,10 @@
 class G4ParticleChange;
 class G4VWLSTimeGeneratorProfile;
 
+class TH1F;
+class TFile;
+
+
 namespace nexus {
 
   /// This is a class with a nexus-defined process for wavelength shifting. It differs from
@@ -41,7 +45,10 @@ namespace nexus {
     G4ParticleChange* _ParticleChange;
     G4PhysicsTable* _wlsIntegralTable;
     G4VWLSTimeGeneratorProfile*  _WLSTimeGeneratorProfile;
-  
+
+    TH1F* hWLSTime;
+    TFile* histo_file;
+
   };
 
 }

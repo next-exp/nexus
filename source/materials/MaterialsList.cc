@@ -540,7 +540,30 @@ G4Material* MaterialsList::SeF6(G4double pressure, G4double temperature)
   return mat;
 }
 
+G4Material* MaterialsList::LYSO()
+{
+  G4String name = "LYSO"; 
 
+  G4Material* mat = G4Material::GetMaterial(name, false);
+
+  if (mat == 0) {
+    G4NistManager* nist = G4NistManager::Instance();    
+
+    G4Element* Si = nist->FindOrBuildElement("Si");
+    G4Element* O = nist->FindOrBuildElement("O");
+    G4Element* Y = nist->FindOrBuildElement("Y");
+    G4Element* Lu = nist->FindOrBuildElement("Lu");
+
+    // Saint Gobain LYSO cristals
+    mat = new G4Material(name, 7.1*g/cm3, 4, kStateSolid);
+    mat->AddElement(Si, 0.064);
+    mat->AddElement(O, 0.182);
+    mat->AddElement(Y, 0.040);
+    mat->AddElement(Lu, 0.714);
+  }
+    
+  return mat;
+}
 
 
 G4Material* MaterialsList::CopyMaterial(G4Material* original, G4String newname)
