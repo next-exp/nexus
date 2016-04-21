@@ -187,12 +187,17 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     ipart->SetPathLength(trj->GetTrackLength());
 
     G4ThreeVector xyz = trj->GetInitialPosition();
+    G4double pos_z = - xyz.z() + _el_starting_z; // do the shift to drift length coordinate
+    if (!_drift_z)  pos_z = xyz.z();
+
     G4double t = trj->GetInitialTime(); 
-    ipart->SetInitialVtx(gate::Vector4D(xyz.x(), xyz.y(), xyz.z(),t));
+    ipart->SetInitialVtx(gate::Vector4D(xyz.x(), xyz.y(), pos_z, t));
     
     xyz = trj->GetFinalPosition();
+    pos_z = - xyz.z() + _el_starting_z; // do the shift to drift length coordinate
+    if (!_drift_z)  pos_z = xyz.z();
     t = trj->GetFinalTime();
-    ipart->SetFinalVtx(gate::Vector4D(xyz.x(), xyz.y(), xyz.z(),t));
+    ipart->SetFinalVtx(gate::Vector4D(xyz.x(), xyz.y(), pos_z, t));
     
     G4String volume = trj->GetInitialVolume();
     ipart->SetInitialVol(volume);
@@ -357,7 +362,10 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     isnr->SetLabel(sdname);
     isnr->SetSensorID(hit->GetPmtID());
     G4ThreeVector xyz = hit->GetPosition();
-    isnr->SetPosition(gate::Point3D(xyz.x(), xyz.y(), xyz.z()));
+    G4double pos_z = - xyz.z() + _el_starting_z; // do the shift to drift length coordinate
+    if (!_drift_z)  pos_z = xyz.z();
+
+    isnr->SetPosition(gate::Point3D(xyz.x(), xyz.y(), pos_z));
     
     if (hit->GetPmtID()<1000) isnr->SetSensorType(gate::PMT);
     else isnr->SetSensorType(gate::SIPM);
