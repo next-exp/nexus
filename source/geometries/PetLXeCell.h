@@ -11,8 +11,10 @@ class G4Material;
 namespace nexus{class PetPlainDice;}
 namespace nexus {class BoxPointSampler;}
 //namespace nexus {class SiPMbase;} 
-/* namespace nexus {class SiPMpetVUV;} */
-/* namespace nexus {class SiPMpetTPB;} */
+namespace nexus {class SiPMpetBlue;}
+namespace nexus {class SiPMpetTPB;} 
+namespace nexus {class SiPMpetVUV;} 
+namespace nexus {class SiPMpetPlots;} 
 
 namespace nexus {
 
@@ -35,6 +37,7 @@ namespace nexus {
     void BuildLXe();
     void BuildActive(); 
     void BuildSiPMPlane(); 
+    //  void BuildSiPMChessPlane(); 
 
     G4LogicalVolume* lab_logic_;
     G4LogicalVolume* det_logic_;
@@ -67,13 +70,17 @@ namespace nexus {
     // PetKDBFixedPitch* db_;
     PetPlainDice* pdb_;
 
-    //SiPMpetVUV* sipm_;
     BaseGeometry* sipm_;
+    /* SiPMpetVUV* sipmVUV_; */
+    /* SiPMpetTPB* sipmTPB_; */
+    /* SiPMpetPlots* sipmPlots_; */
+    /* SiPMpetBlue* sipmBlue_; */
+    
 
     G4double  pdb_z_;
 
     G4double z_size_;
-    G4bool tpb_; ///< are we using TPB-coated SiPMs?
+    G4String type_; ///< are we using TPB-coated SiPMs?
     G4bool phys_; ///< are we using physical optical properties for LXe?
 
   };

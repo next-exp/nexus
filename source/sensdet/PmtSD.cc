@@ -102,6 +102,7 @@ namespace nexus {
  	  hit->SetPmtID(pmt_id);
  	  hit->SetBinSize(_timebinning);
  	  hit->SetPosition(touchable->GetTranslation());
+	  //	  G4cout << "Sensor " << pmt_id << " in pos " << touchable->GetTranslation() << G4endl;
  	  _HC->insert(hit);
  	}
 	
@@ -120,9 +121,11 @@ namespace nexus {
     G4int pmtid = touchable->GetCopyNumber(_sensor_depth);
     if (_naming_order != 0) {
       G4int motherid = touchable->GetCopyNumber(_mother_depth);
-      G4int granmaid = touchable->GetCopyNumber(_grandmother_depth);
-      // G4cout << "Granma  = " << granmaid << ", mother = "<< motherid << G4endl;
-      pmtid = 10000*granmaid + _naming_order * motherid + pmtid;
+      // G4int granmaid = touchable->GetCopyNumber(_grandmother_depth);
+      //G4cout << "mother = "<< motherid << G4endl;
+      // "Granma  = " << granmaid 
+      //pmtid = 10000*granmaid + _naming_order * motherid + pmtid;
+      pmtid = 10000*motherid + pmtid;
     } 
     return pmtid;
   }

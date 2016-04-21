@@ -14,8 +14,11 @@
 #include "PetPlainDice.h"
 #include "OpticalMaterialProperties.h"
 #include "BoxPointSampler.h"
+#include "SiPMpetBlue.h"
 #include "SiPMpetVUV.h"
 #include "SiPMpetTPB.h"
+#include "SiPMpetPlots.h"
+#include "Photocathode.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -43,11 +46,12 @@ namespace nexus {
     //    vacuum_thickn_(1.*mm),
     //   outer_wall_thickn_(3.*mm),
     det_thickness_(1.*mm),
+    max_step_size_(1.*mm),
     //  det_size_(20.*cm),
     active_size_ (2.4*cm),
     //  active_size_(4.8*cm),
     z_size_(5.*cm),
-    tpb_(false),
+    type_("VUV"),
     phys_(true)
 
   {
@@ -61,8 +65,8 @@ namespace nexus {
      zsize_cmd.SetParameterName("z_size", false);
      zsize_cmd.SetRange("z_size>0.");
 
-     // Are we using TPB SiPMs?
-     msg_->DeclareProperty("tpb", tpb_, "tpb on SiPMs");
+     // Which kind of SiPMs are we using?
+     msg_->DeclareProperty("SiPMtype", type_, "type of SiPMs");
      //Are we using physical opt properties?
      msg_->DeclareProperty("physics", phys_, "physical optical properties");
    
@@ -76,14 +80,18 @@ namespace nexus {
 
     //   db_ = new PetKDBFixedPitch();
     pdb_ = new PetPlainDice();
-    //  G4cout << "tpb = " << tpb_ << G4endl;
-    // //    if (tpb_) {
-     G4cout << "TPB coated SiPM are being instantiated" << G4endl;
-     sipm_ = new SiPMpetTPB;
-    // } else {
-    // G4cout << "VUV sensitive SiPM are being instantiated" << G4endl;
-    // sipm_ = new SiPMpetVUV;
-    // }
+
+    //G4cout << "VUV sensitive SiPM are being instantiated" << G4endl;
+    //sipm_ = new SiPMpetVUV;
+    //sipm_ = new SiPMpetPlots;
+    sipm_ = new Photocathode;
+
+    // sipmVUV_ = new SiPMpetVUV;
+    // sipmTPB_ = new SiPMpetTPB;
+    // sipmPlots_ = new SiPMpetPlots;
+    // sipmBlue_ = new SiPMpetBlue;
+
+   
 
   }
 
@@ -98,14 +106,22 @@ namespace nexus {
   void PetLXeCell::Construct()
   {
 
-    // db_->SetXYsize( active_size_);
-    // db_->SetPitchSize(3.*mm);
-    // db_->Construct();
-    // db_z_ = db_->GetDimensions().z();
-
     pdb_->SetSize(z_size_, active_size_);
     pdb_->Construct();
     pdb_z_ = pdb_->GetDimensions().z();
+
+    // if (type_ == "TPB") {
+    //   G4cout << "TPB coated SiPM are being instantiated" << G4endl;
+    //   sipm_ = sipmTPB_;
+    // } else if (type_ == "plots") {
+    //   sipm_ = sipmPlots_;
+    // } else if (type_ == "blue") {
+    //   sipm_ = sipmBlue_;
+    // } else {
+    //   G4cout << "VUV sensitive SiPM are being instantiated" << G4endl;
+    //   sipm_ = sipmVUV_;
+    // }
+
 
     sipm_->Construct();
 
@@ -130,7 +146,8 @@ namespace nexus {
     lXe_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
     if (phys_) {
       G4cout << "LXe used with optical properties" << G4endl;
-      lXe_->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe());
+      // lXe_->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe());
+      lXe_->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe_window());
     } else {
       G4cout << "LXe used with constant refraction index = 1.7" << G4endl;
       lXe_->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe_nconst());
@@ -140,6 +157,7 @@ namespace nexus {
     BuildLXe() ;
     BuildActive();
     BuildSiPMPlane();
+    // BuildSiPMChessPlane();
   }
 
   
@@ -284,6 +302,100 @@ namespace nexus {
      
     
   }
+
+ // void PetLXeCell::BuildSiPMChessPlane()
+ //  {
+   
+ //    G4int rows = 8;
+ //    G4int columns = 8;
+ //    G4LogicalVolume* sipmTPB_logic = sipmTPB_->GetLogicalVolume();
+ //    G4LogicalVolume* sipmBlue_logic = sipmBlue_->GetLogicalVolume();
+
+ //    // G4double pos_z = db_z/2. - border+ (sipm_->GetDimensions().z())/2.;
+ //    G4double pos_z =  -z_size_/2. - (sipmBlue_->GetDimensions().z())/2 ;
+ //    G4cout << "Pos of SiPM in LXe dice = " << pos_z << G4endl;
+    
+ //    G4double sipm_pitch = sipmBlue_->GetDimensions().x();
+ //    G4cout << "SiPM pitch = " << sipm_pitch << G4endl;
+
+ //    G4int sipm_no = 0;
+
+ //    for (G4int i=0; i<rows; i++) {
+
+ //      G4double pos_y = active_size_/2. - sipmBlue_->GetDimensions().y()/2. - i*sipm_pitch;
+
+ //      for (G4int j=0; j<columns; j++) {
+
+ //        G4double pos_x = -active_size_/2  + sipmBlue_->GetDimensions().x()/2. +  j*sipm_pitch;
+
+ // 	//	G4cout << pos_x << ", " << pos_y << ", " << pos_z << G4endl;
+
+ // 	if ((i+j) % 2 == 0) {
+ // 	  new G4PVPlacement(0, G4ThreeVector(pos_x, pos_y, pos_z), 
+ // 			    sipmBlue_logic, "SIPMpetBlue", lXe_logic_, false, sipm_no, true);
+ // 	} else {
+ // 	  new G4PVPlacement(0, G4ThreeVector(pos_x, pos_y, pos_z), 
+ // 			    sipmTPB_logic, "SIPMpet", lXe_logic_, false, sipm_no, true);
+ // 	}
+
+ //        // std::pair<int, G4ThreeVector> mypos;
+ //        // mypos.first = sipm_no;
+ //        // mypos.second = G4ThreeVector(pos_x, pos_y, pos_z);
+ //        // positions_.push_back(mypos);
+ //        sipm_no++;
+ //      }
+ //    }
+    
+ //    pos_z =  z_size_/2. + (sipmBlue_->GetDimensions().z())/2 ;
+ //    G4RotationMatrix rot;
+ //    rot.rotateY(pi);
+
+ //    sipm_no = 2000;
+
+ //    for (G4int i=0; i<rows; i++) {
+
+ //      G4double pos_y = active_size_/2. - sipmBlue_->GetDimensions().y()/2.  - i*sipm_pitch;
+
+ //      for (G4int j=0; j<columns; j++) {
+
+ //        G4double pos_x = active_size_/2 - sipmBlue_->GetDimensions().x()/2.  -  j*sipm_pitch;
+
+ // 	//	G4cout << pos_x << ", " << pos_y << ", " << pos_z << G4endl;
+
+ // 	if ((i+j) % 2 == 0) {
+ // 	  new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(pos_x, pos_y, pos_z)), 
+ // 			    sipmBlue_logic, "SIPMpetBlue", lXe_logic_, false, sipm_no, true);
+ // 	} else {
+ // 	  new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(pos_x, pos_y, pos_z)), 
+ // 			    sipmTPB_logic, "SIPMpet", lXe_logic_, false, sipm_no, true);
+ // 	}
+
+ //        // std::pair<int, G4ThreeVector> mypos;
+ //        // mypos.first = sipm_no;
+ //        // mypos.second = G4ThreeVector(pos_x, pos_y, pos_z);
+ //        // positions_.push_back(mypos);
+ //        sipm_no++;
+ //      }
+ //    }
+
+ //    G4LogicalVolume* pdb_logic = pdb_->GetLogicalVolume();
+
+ //    G4double displ = active_size_/2. + pdb_z_/2.;
+ //    rot.rotateY(pi/2.);
+ //    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(-displ, 0., 0.)), pdb_logic,
+ //                      "DICE", lXe_logic_, false, 1, true);
+ //    rot.rotateZ(pi/2.);
+ //    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., displ, 0.)), pdb_logic,
+ //                      "DICE", lXe_logic_, false, 2, true);    
+ //    rot.rotateZ(pi/2.);
+ //     new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(displ, 0., 0.)), pdb_logic,
+ //                      "DICE", lXe_logic_, false, 3, true);
+ //     rot.rotateZ(pi/2);
+ //     new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., -displ, 0.)), pdb_logic,
+ // 		       "DICE", lXe_logic_, false, 4, true);
+     
+    
+ //  }
     
   G4ThreeVector PetLXeCell::GenerateVertex(const G4String& region) const
   {

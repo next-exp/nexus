@@ -16,6 +16,7 @@
 #include "BoxPointSampler.h"
 #include "SiPMpetVUV.h"
 #include "SiPMpetTPB.h"
+#include "SiPMpetPlots.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -76,8 +77,6 @@ namespace nexus {
    
     G4cout << "VUV sensitive SiPM are being instantiated" << G4endl;
     sipm_ = new SiPMpetVUV;
-
-
   }
 
 
@@ -90,7 +89,6 @@ namespace nexus {
 
   void PetLYSOCell::Construct()
   {
-
     // db_->SetXYsize( active_size_);
     // db_->SetPitchSize(3.*mm);
     // db_->Construct();
