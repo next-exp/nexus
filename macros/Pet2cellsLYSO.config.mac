@@ -1,12 +1,17 @@
 
 ### GEOMETRY
 /Geometry/Lab/starting_point 0
-/Geometry/Lab/file_name "/data4/NEXT/users/paolafer/dev_area/nexus/petalx_new/vertices_LXe_128_128_50.root"
-/Geometry/Pet2boxes/z_size 5. cm
-/Geometry/Pet2boxes/max_step_size 1.0 mm
+/Geometry/Lab/file_name "/data4/NEXT/users/paolafer/dev_area/nexus/petalx_new/vertices_LYSO_128_128_50.root"
+/Geometry/Lab/det_type LYSO
+/Geometry/PetLYSOCell/z_size 5. cm
+/Geometry/PetLYSOCell/max_step_size 1.0 mm
+/Geometry/PetLYSOCell/physics true
 /Geometry/PetPlainDice/reflectivity 0.97
-/Geometry/PetalX/SiPMpet_vis true
 
+#/Geometry/PetKDBFixedPitch/reflectivity 0.97
+#/Geometry/PetKDBFixedPitch/kdb_vis true
+/Geometry/SiPMpet/SiPMpet_vis true
+/Geometry/SiPMpet/refr_index 1.54
 
 ### GENERATOR
 /Generator/DoubleParticle/particle e-
@@ -23,15 +28,16 @@
 #/Generator/Na22Generator/solid_angle specific
 #/Generator/Na22Generator/solid_angle_dis 4Pi
 
-
+### OUTPUT FILE
+/nexus/persistency/outputFile prova.pet
 
 ### PHYSICS
+/PhysicsList/Nexus/scintRiseTime true
 /PhysicsList/Nexus/clustering          false
 /PhysicsList/Nexus/drift               false
 /PhysicsList/Nexus/electroluminescence false
-/PhysicsList/Nexus/electroluminescence false
 /PhysicsList/Nexus/offScintillation false
-/PhysicsList/Nexus/offCherenkov false
+/PhysicsList/Nexus/offCherenkov true
 
 
 ### VERBOSITIES
@@ -40,5 +46,4 @@
 /tracking/verbose 0
 
 
-### OUTPUT FILE
-/nexus/persistency/outputFile prova.next
+
