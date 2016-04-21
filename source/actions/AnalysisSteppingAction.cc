@@ -101,10 +101,8 @@ AnalysisSteppingAction::~AnalysisSteppingAction()
 void AnalysisSteppingAction::UserSteppingAction(const G4Step* step)
 { 
   G4ParticleDefinition* pdef = step->GetTrack()->GetDefinition();
-  //G4Track* track = step->GetTrack();
+
   //  Check whether the track is an optical photon  
- 
-    // G4cout << "One step" << G4endl;
   if (pdef != G4OpticalPhoton::Definition()) return;
 
 
@@ -114,6 +112,7 @@ void AnalysisSteppingAction::UserSteppingAction(const G4Step* step)
   G4TouchableHandle touch2 = point2->GetTouchableHandle();
   G4String vol1name = touch1->GetVolume()->GetName();
   G4String vol2name = touch2->GetVolume()->GetName();
+  //G4Track* track = step->GetTrack();
 
   //G4String proc_name = step->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
   //G4int copy_no = step->GetPostStepPoint()->GetTouchable()->GetReplicaNumber(1);
@@ -137,12 +136,7 @@ void AnalysisSteppingAction::UserSteppingAction(const G4Step* step)
   if (step->GetPostStepPoint()->GetStepStatus() == fGeomBoundary) {
 
     // if boundary->GetStatus() == 2 in SiPMpet refraction takes place
-    if (  vol2name == "PHOTOCATHODE" //SiPMpet
-	  && vol1name == "SIPMpet") { // 
-      //  && vol1name == "ACTIVE_LYSO") { //ACTIVE_LXE // 
-      G4cout << "Boundary status: " << boundary->GetStatus() 
-       	     << " in volume "<< vol2name << G4endl;
-      if (boundary->GetStatus() == Detection) {
+    if (boundary->GetStatus() == Detection) {
 	detected = detected + 1;	
 	double distance = 
 	  std::pow(point2->GetPosition().getX() - point1->GetPosition().getX(), 2) + 
@@ -160,30 +154,6 @@ void AnalysisSteppingAction::UserSteppingAction(const G4Step* step)
     
       //	G4cout << "check: " << velocity << ", " << track_velocity << G4endl;
     }
-
-    if (vol2name == "PHOTODIODES") {
-      if (boundary->GetStatus() == Detection) {
-	//  G4cout << "Detected" << G4endl;
-	//	detected = detected + 1;	
-
-	//   } else {
-	//	not_det = not_det + 1;
-	// double distance = 
-	//   std::pow(point2->GetPosition().getX() - point1->GetPosition().getX(), 2) + 
-	//   std::pow(point2->GetPosition().getY() - point1->GetPosition().getY(), 2)  + std::pow(point2->GetPosition().getZ() - point1->GetPosition().getZ(), 2) ;
-	// distance = std::sqrt(distance);
-	//	double n = step->GetDeltaTime() * c_light / distance;
-	// G4cout << "time of step = "<<  step->GetDeltaTime() /picosecond << G4endl;
-	// G4cout << "distance = "<<  distance << G4endl;
-
-	  // G4cout << "n = "<<  n << G4endl;
-	  //    G4cout << "Pre step "<< point1->GetPosition() << G4endl;
-	  //    G4cout << "Post step "<< point2->GetPosition() << G4endl;
-
-      }
-    }
-
-  }
 
   return;
 }
