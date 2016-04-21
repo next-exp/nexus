@@ -55,7 +55,6 @@ namespace nexus {
     static G4MaterialPropertiesTable* GXe(G4double pressure=1.*bar, 
 					  G4double temperature=STP_Temperature,
 					  G4int sc_yield=13889/MeV);
-    static G4MaterialPropertiesTable* LXe();
 
     static G4MaterialPropertiesTable* FakeGrid(G4double pressure=1.*bar, 
 					       G4double temperature=STP_Temperature, 
@@ -63,16 +62,18 @@ namespace nexus {
 					       G4double thickness=1.*mm,
 					       G4int sc_yield=25510/MeV);
 
-    static G4MaterialPropertiesTable* FakeLXe();
-    static G4MaterialPropertiesTable* LXe_nconst();
+   static G4MaterialPropertiesTable* LXe();
+   static G4MaterialPropertiesTable* FakeLXe();
+   static G4MaterialPropertiesTable* LXe_nconst();
+   static G4MaterialPropertiesTable* LXe_window();
 
 
     static G4MaterialPropertiesTable* Glass();
     
     static G4MaterialPropertiesTable* TPB(G4double pressure=10.*bar, 
 					  G4double temperature=STP_Temperature);
-    static G4MaterialPropertiesTable* TPB_LXe();
-    static G4MaterialPropertiesTable* TPB_LXe_nconst();
+    static G4MaterialPropertiesTable* TPB_LXe(G4double decay=2.2*nanosecond);
+    static G4MaterialPropertiesTable* TPB_LXe_nconst(G4double decay=2.2*nanosecond);
 
     static G4MaterialPropertiesTable* TPBOld();
     static G4MaterialPropertiesTable* TPBmatr();

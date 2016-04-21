@@ -11,7 +11,6 @@
 
 #include "Pet2boxes.h"
 #include "PetLXeCell.h"
-#include "PetLYSObox.h"
 #include "PetLYSOCell.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
@@ -38,21 +37,23 @@ namespace nexus {
   using namespace CLHEP;
 
   Lab::Lab(): 
-    BaseGeometry(), _msg(0)
+    BaseGeometry(), _msg(0), type_("LXe")
   {
     _msg = new G4GenericMessenger(this, "/Geometry/Lab/", 
 				  "Control commands of geometry Lab.");
     _msg->DeclareProperty("starting_point", starting_point_, "");
     _msg->DeclareProperty("file_name", filename_, "");
+     // Which material are we using?
+     _msg->DeclareProperty("det_type", type_, "type of detector");
 
     //module_ = new Pet2boxes();
     // module_ = new PetLYSObox();
 
-    // G4cout << "LXe cell being instantiated" << G4endl;
-    // module_ = new PetLXeCell();
-    
-    G4cout << "LYSO cell being instantiated" << G4endl;
-    module_ = new PetLYSOCell();
+     //  module_ = new PetLYSOCell();
+     module_ = new PetLXeCell();
+  
+     //   moduleLXe_ = new PetLXeCell();
+     //   moduleLYSO_ = new PetLYSOCell();
     
   }
 
@@ -120,6 +121,14 @@ namespace nexus {
     // (i.e., this is the volume that will be placed in the world)
     this->SetLogicalVolume(lab_logic);
     
+    // if (type_ == "LYSO" ) {
+    //   G4cout << "LYSO cell being instantiated" << G4endl;
+    //   module_ = moduleLYSO_;
+    // } else {
+    //   G4cout << "LXe cell being instantiated" << G4endl;
+    //   module_ = moduleLXe_;
+    // }
+
     module_->Construct();
 
     G4LogicalVolume* module_logic = module_->GetLogicalVolume();
@@ -136,8 +145,7 @@ namespace nexus {
 
 
   G4ThreeVector Lab::GenerateVertex(const G4String& /*region*/) const
-  {
-    
+  {   
     return G4ThreeVector(0.,0.,0.);
   }
 
@@ -158,6 +166,7 @@ namespace nexus {
     catch (const std::out_of_range& oor) {
       G4Exception("[Pet2boxes]", "GenerateVertex()", FatalErrorInArgument, "Point out of range.");
     }
+    
     return vertices;
   }
   

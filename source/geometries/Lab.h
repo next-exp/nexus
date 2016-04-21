@@ -18,7 +18,6 @@
 
 class G4GenericMessenger;
 namespace nexus {class Pet2boxes;}
-namespace nexus {class PetLYSObox;}
 namespace nexus {class PetLXeCell;}
 namespace nexus {class PetLYSOCell;}
 
@@ -44,8 +43,13 @@ namespace nexus {
 
     //Pet2boxes* module_;
     // PetLYSObox* module_;
-    // PetLXeCell* module_;
-    PetLYSOCell* module_;
+
+    //   BaseGeometry* module_;
+    PetLXeCell* moduleLXe_;
+    PetLYSOCell* moduleLYSO_;
+
+    // PetLYSOCell* module_;
+    PetLXeCell* module_;
 
     TFile* file_;
     G4float px1_, py1_, pz1_, px2_, py2_, pz2_;
@@ -54,6 +58,7 @@ namespace nexus {
 
     G4int starting_point_;
     G4String filename_;
+    G4String type_;
     
   };
 

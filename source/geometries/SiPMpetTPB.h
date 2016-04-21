@@ -20,7 +20,7 @@ class G4GenericMessenger;
 namespace nexus {
 
 
-  /// Geometry of the Hamamatsu surface-mounted 1x1 mm2 MPPC (SiPM)
+  /// Geometry of  3x3 mm2 active surface SiPMs
   
   class SiPMpetTPB: public BaseGeometry
   {
@@ -31,16 +31,23 @@ namespace nexus {
     ~SiPMpetTPB();
     
     /// Return dimensions of the SiPM
-    G4ThreeVector GetDimensions() const;
+    //G4ThreeVector GetDimensions() const;
     
     /// Invoke this method to build the volumes of the geometry
     void Construct();
     
   private:
-    G4ThreeVector _dimensions; ///< external dimensions of the SiPMpetTPB
+    //G4ThreeVector _dimensions; ///< external dimensions of the SiPMpetTPB
 
     // Visibility of the tracking plane
     G4bool _visibility;
+    
+    // Optical properties to be used for epoxy
+    G4double _refr_index;
+
+    G4double _decay_time; ///< decay time of TPB
+
+    G4bool _phys;
 
      // Messenger for the definition of control commands
     G4GenericMessenger* _msg; 

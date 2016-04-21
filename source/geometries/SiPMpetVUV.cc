@@ -130,14 +130,14 @@ namespace nexus {
 
     // SiPM efficiency set using the official Hamamatsu specs.
     
-    const G4int entries = 11;
+    const G4int entries = 12;
 
 
-     G4double energies[entries] = {6.19919*eV, 6.35814*eV, 6.52546*eV,
+    G4double energies[entries] = {1.5*eV, 6.19919*eV, 6.35814*eV, 6.52546*eV,
 				   6.70182*eV, 6.88799*eV, 7.08479*eV,
 				   7.29316*eV, 7.51417*eV, 7.74898*eV,
 				   7.99895*eV, 8.26558*eV};
-    G4double reflectivity[entries] = {0., 0., 0.,
+    G4double reflectivity[entries] = {0., 0., 0., 0.,
 				      0., 0., 0.,
                                       0., 0., 0.,      
 				      0., 0.};
@@ -145,7 +145,7 @@ namespace nexus {
     //                                   0.082, 0.081, 0.08, 
     //                                   0.08,  0.09, 0.092,
     //                                   0.108, 0.130};
-    G4double efficiency[entries]   = {1., 1., 1., 
+    G4double efficiency[entries]   = {1., 1., 1., 1., 
                                       1., 1., 1., 
                                       1., 1., 1.,
                                       1., 1.};
@@ -178,7 +178,7 @@ namespace nexus {
       PmtSD* sipmsd = new PmtSD(sdname);
       sipmsd->SetDetectorVolumeDepth(0);
       sipmsd->SetDetectorNamingOrder(1000.);
-      sipmsd->SetTimeBinning(25.*picosecond);
+      sipmsd->SetTimeBinning(5.*picosecond);
       //sipmsd->SetMotherVolumeDepth(1);
       //     sipmsd->SetGrandMotherVolumeDepth(3);
       sipmsd->SetMotherVolumeDepth(2);

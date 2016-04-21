@@ -14,6 +14,9 @@
 
 #include "CLHEP/Units/PhysicalConstants.h"
 
+#include<TH1F.h>
+#include <TFile.h>
+
 namespace nexus {
 
   using namespace CLHEP;
@@ -28,6 +31,9 @@ namespace nexus {
       new G4WLSTimeGeneratorProfileExponential("WLSTimeGeneratorProfileExponential");
 
     BuildThePhysicsTable();
+
+    // hWLSTime = new TH1F("WLSTime", "WLS photon production time", 50000, 0., 50000);
+    // hWLSTime->GetXaxis()->SetTitle("time (ps)");
   }
 
   WavelengthShifting::~WavelengthShifting()
@@ -38,6 +44,10 @@ namespace nexus {
       delete _wlsIntegralTable;
     }
     delete _WLSTimeGeneratorProfile;
+
+    // histo_file = new TFile("HistoFile.root","recreate");
+    // hWLSTime->Write();
+    // histo_file->Close();
   }
 
   G4bool WavelengthShifting::IsApplicable(const G4ParticleDefinition& aParticleType)
@@ -138,6 +148,8 @@ namespace nexus {
    aSecondaryTrack->SetTouchableHandle(track.GetTouchableHandle());   
    aSecondaryTrack->SetParentID(track.GetTrackID());
    _ParticleChange->AddSecondary(aSecondaryTrack);
+
+   //hWLSTime->Fill(TimeDelay/picosecond);
      
    return G4VDiscreteProcess::PostStepDoIt(track, step);
    

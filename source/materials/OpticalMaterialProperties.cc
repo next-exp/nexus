@@ -621,9 +621,16 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LXe()
   XenonLiquidProperties LXe_prop;
   G4MaterialPropertiesTable* LXe_mpt = new G4MaterialPropertiesTable();
 
-  const G4int ri_entries = 18;
-  G4double ri_energy[ri_entries] 
-    = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV, 7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV, 8*eV, 8.2*eV, 8.21*eV};
+   const G4int ri_entries = 18;
+   G4double ri_energy[ri_entries] 
+  = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV, 7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV, 8*eV, 8.2*eV, 8.21*eV};
+
+  //  const G4int ri_entries = 38;
+  // G4double ri_energy[ri_entries] 
+  //   = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV, 
+  //      7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV, 8*eV, 8.2*eV, 8.4*eV, 8.6*eV, 8.8*eV, 
+  //      9.*eV, 9.2*eV, 9.4*eV, 9.6*eV, 9.8*eV, 10.*eV, 10.2*eV, 10.4*eV, 10.6*eV, 10.8*eV, 
+  //      11.*eV, 11.2*eV, 11.4*eV, 11.6*eV, 11.8*eV, 12.*eV, 12.2*eV, 12.4*eV};
 
   G4double rindex[ri_entries];
 
@@ -635,8 +642,15 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LXe()
 
   for (G4int i=0; i<ri_entries; i++) {
     rindex[i] = LXe_prop.RefractiveIndex(ri_energy[i]);
-    // G4cout << ri_energy[i] << ", " << rindex[i] << ", " << << G4endl;
   }
+
+  // for (G4int i=ri_entries-1; i>=0; i--) {
+  //   G4cout << h_Planck*c_light/ri_energy[i]/nanometer << ", " << G4endl;
+  // }
+
+  // for (G4int i=ri_entries-1; i>=0; i--) {
+  //   G4cout  << rindex[i] << ", " << G4endl;
+  // }
 
   // Sampling from ~150 nm to 200 nm <----> from 6.20625 eV to 8.20625 eV
   const G4int sc_entries = 500;
@@ -739,6 +753,65 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LXe_nconst()
   }
   G4double intensity[sc_entries];
   LXe_prop.Scintillation(sc_entries, sc_energy, intensity);
+    
+  LXe_mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
+  LXe_mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
+  LXe_mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
+  // LXe_mpt->AddProperty("ELSPECTRUM", sc_energy, intensity, sc_entries);
+  LXe_mpt->AddConstProperty("SCINTILLATIONYIELD", 58708./MeV);
+  LXe_mpt->AddConstProperty("RESOLUTIONSCALE", 1);
+  LXe_mpt->AddConstProperty("RAYLEIGH", 36.*cm);
+  // check constants with the Aprile
+  LXe_mpt->AddConstProperty("FASTTIMECONSTANT", 2.2*ns);
+  LXe_mpt->AddConstProperty("SLOWTIMECONSTANT", 27.*ns);
+  //  LXe_mpt->AddConstProperty("SLOWTIMECONSTANT",40.*ns);
+  //  LXe_mpt->AddConstProperty("ELTIMECONSTANT", 50.*ns);
+  LXe_mpt->AddConstProperty("YIELDRATIO", 0.065);
+  LXe_mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
+  
+  G4double energy[2] = {0.01*eV, 100.*eV};
+  G4double abslen[2] = {1.e8*m, 1.e8*m};
+  LXe_mpt->AddProperty("ABSLENGTH", energy, abslen, 2);
+ 
+  return LXe_mpt;
+}
+
+G4MaterialPropertiesTable* OpticalMaterialProperties::LXe_window()
+{
+  XenonLiquidProperties LXe_prop;
+  G4MaterialPropertiesTable* LXe_mpt = new G4MaterialPropertiesTable();
+
+   const G4int ri_entries = 11;
+   G4double ri_energy[ri_entries] 
+     = {4.1328*eV, 4.33944*eV, 4.54608*eV, 4.75272*eV, 4.95936*eV, 
+	5.166*eV, 5.37264*eV, 5.57928*eV, 5.78592*eV, 5.99256*eV, 6.1992*eV};
+
+  //  const G4int ri_entries = 38;
+  // G4double ri_energy[ri_entries] 
+  //   = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV, 
+  //      7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV, 8*eV, 8.2*eV, 8.4*eV, 8.6*eV, 8.8*eV, 
+  //      9.*eV, 9.2*eV, 9.4*eV, 9.6*eV, 9.8*eV, 10.*eV, 10.2*eV, 10.4*eV, 10.6*eV, 10.8*eV, 
+  //      11.*eV, 11.2*eV, 11.4*eV, 11.6*eV, 11.8*eV, 12.*eV, 12.2*eV, 12.4*eV};
+
+  G4double rindex[ri_entries];
+
+  for (G4int i=0; i<ri_entries; i++) {
+    rindex[i] = LXe_prop.RefractiveIndex(ri_energy[i]);
+  }
+
+  // Sampling from ~150 nm to 200 nm <----> from 6.20625 eV to 8.20625 eV
+  const G4int sc_entries = 500;
+  G4double sc_energy[sc_entries];
+  for (int j=0;j<sc_entries;j++){
+    sc_energy[j] =  6.20625*eV + 0.004*j*eV;
+  }
+  G4double intensity[sc_entries];
+  LXe_prop.Scintillation(sc_entries, sc_energy, intensity);
+ 
+
+  // for (G4int i=0; i<ri_entries; i++) {   
+  //   G4cout << ri_energy[i] << ", " << rindex[i] << ", " << int2[i] << G4endl;
+  // }
     
   LXe_mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
   LXe_mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
@@ -909,6 +982,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::PTFE_non_reflectant()
 
 G4MaterialPropertiesTable* OpticalMaterialProperties::TPB(G4double pressure, G4double temperature)
 {
+  
   /// This is the simulation of the optical properties of TPB (tetraphenyl butadiene)
   /// a wavelength shifter which allows to converts VUV photons to blue photons.
   /// A WLS material is characterized by its photon absorption and photon emission spectrum
@@ -953,12 +1027,12 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB(G4double pressure, G4d
 		      TPB_Emission, EMISSION_NUMENTRIES);
  tpb_mpt->AddProperty("WLSCONVEFFICIENCY", WLS_Energies, 
 		      TPB_ConvEfficiency, wls_numentries); 
- tpb_mpt->AddConstProperty("WLSTIMECONSTANT",1.*ns);
+ tpb_mpt->AddConstProperty("WLSTIMECONSTANT",2.2*ns);
  
   return tpb_mpt;
 }
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::TPB_LXe()
+G4MaterialPropertiesTable* OpticalMaterialProperties::TPB_LXe(G4double decay)
 {
   /// This is the simulation of the optical properties of TPB (tetraphenyl butadiene)
   /// a wavelength shifter which allows to converts VUV photons to blue photons.
@@ -977,6 +1051,13 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB_LXe()
   const G4int ri_entries = 18;
   G4double ri_energy[ri_entries] 
     = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV, 7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV, 8*eV, 8.2*eV, 8.21*eV};
+
+  // const G4int ri_entries = 38;
+  // G4double ri_energy[ri_entries] 
+  //   = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV, 
+  //      7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV, 8*eV, 8.2*eV, 8.4*eV, 8.6*eV, 8.8*eV, 
+  //      9.*eV, 9.2*eV, 9.4*eV, 9.6*eV, 9.8*eV, 10.*eV, 10.2*eV, 10.4*eV, 10.6*eV, 10.8*eV, 
+  //      11.*eV, 11.2*eV, 11.4*eV, 11.6*eV, 11.8*eV, 12.*eV, 12.2*eV, 12.4*eV};
   
   G4double rindex[ri_entries];
   for (G4int i=0; i<ri_entries; i++) {
@@ -993,27 +1074,40 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB_LXe()
 
  
  // Values taken from Gehman's paper http://arxiv.org/pdf/1104.3259.pdf
- const G4int wls_numentries = 14;
+ // const G4int wls_numentries = 14;
+ // G4double WLS_Energies[wls_numentries] = 
+ //   {1.*eV, 2.8*eV, 4.*eV, 4.95937*eV, 5.16601*eV, 5.39062*eV, 
+ //    5.63565*eV, 5.90401*eV, 6.19921*eV, 6.52548*eV, 6.88801*eV, 7.29319*eV, 
+ //    7.74901*eV, 8.26561*eV};
+ // G4double TPB_ConvEfficiency[wls_numentries] = 
+ //   {0., 0., 0., .86, .90, .94, 
+ //    .90, .80, .75, .70, .75, .82, 
+ //    .85, .92};
+
+  const G4int wls_numentries = 17;
  G4double WLS_Energies[wls_numentries] = 
    {1.*eV, 2.8*eV, 4.*eV, 4.95937*eV, 5.16601*eV, 5.39062*eV, 
     5.63565*eV, 5.90401*eV, 6.19921*eV, 6.52548*eV, 6.88801*eV, 7.29319*eV, 
-    7.74901*eV, 8.26561*eV};
+    7.74901*eV, 8.26561*eV, 9.*eV, 10.*eV, 12.4*eV};
  G4double TPB_ConvEfficiency[wls_numentries] = 
    {0., 0., 0., .86, .90, .94, 
     .90, .80, .75, .70, .75, .82, 
-    .85, .92};
+    .85, .92, 1., 1., 1.};
  
  tpb_mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
  tpb_mpt->AddProperty("WLSCOMPONENT", WLS_Emission_Energies, 
 		      TPB_Emission, EMISSION_NUMENTRIES);
  tpb_mpt->AddProperty("WLSCONVEFFICIENCY", WLS_Energies, 
 		      TPB_ConvEfficiency, wls_numentries); 
- tpb_mpt->AddConstProperty("WLSTIMECONSTANT",1.*nanosecond);
+ tpb_mpt->AddConstProperty("WLSTIMECONSTANT", decay);
+ //tpb_mpt->AddConstProperty("WLSTIMECONSTANT",0.1*picosecond);
  
+ G4cout << "Decay time of TPB = " << decay/nanosecond << " nanoseconds." << G4endl;
+
   return tpb_mpt;
 }
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::TPB_LXe_nconst()
+G4MaterialPropertiesTable* OpticalMaterialProperties::TPB_LXe_nconst(G4double decay)
 {
   /// This is the simulation of the optical properties of TPB (tetraphenyl butadiene)
   /// a wavelength shifter which allows to converts VUV photons to blue photons.
@@ -1062,8 +1156,11 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB_LXe_nconst()
 		      TPB_Emission, EMISSION_NUMENTRIES);
  tpb_mpt->AddProperty("WLSCONVEFFICIENCY", WLS_Energies, 
 		      TPB_ConvEfficiency, wls_numentries); 
- tpb_mpt->AddConstProperty("WLSTIMECONSTANT",1.*nanosecond);
+ tpb_mpt->AddConstProperty("WLSTIMECONSTANT", decay);
+ //tpb_mpt->AddConstProperty("WLSTIMECONSTANT", 0.1*picosecond);
  
+ G4cout << "Decay time of TPB = " << decay/nanosecond << " nanoseconds." << G4endl;
+
   return tpb_mpt;
 }
 
@@ -1126,24 +1223,59 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LYSO()
 
   // Refractive index taken by "Optical and Scintillation Properties of Inorganic Scintillators in High Energy Physics", R. Mao, Liyuan Zhang, and Ren-Yuan Zhu, IEEE TRANSACTIONS ON NUCLEAR SCIENCE, VOL. 55, NO. 4, AUGUST 2008
   // http://www.hep.caltech.edu/~zhu/papers/08_tns_crystal.pdf
-  const G4int ri_entries = 9;
-  G4double ri_energy[ri_entries] = {1.9074*eV, 2.2708*eV, 2.4028*eV, 2.5511*eV, 2.6895*eV, 2.8437*eV, 2.9520*eV, 3.0613*eV, 3.2542*eV};
-  G4double rindex[ri_entries] = { 1.802, 1.806, 1.810, 1.813, 1.818, 1.822, 1.827, 1.833, 1.842};
+  const G4int ri_entries = 16;
+  // G4double ri_energy[ri_entries] = {1.9074*eV, 2.2708*eV, 2.4028*eV, 2.5511*eV, 2.6895*eV, 2.8437*eV, 2.9520*eV, 3.0613*eV, 3.2542*eV};
+  // G4double rindex[ri_entries] = { 1.802, 1.806, 1.810, 1.813, 1.818, 1.822, 1.827, 1.833, 1.842};
+  G4double ri_energy[ri_entries] = {1.9074*eV, 2.0891*eV, 2.2708*eV, 
+				    2.3368*eV, 2.4028*eV, 2.5511*eV, 2.6203*eV,
+				    2.6895*eV, 2.7665*eV, 2.8437*eV, 2.89785*eV, 
+				    2.9520*eV, 3.00665*eV, 3.0613*eV, 
+				    3.1578*eV, 3.2542*eV};
+  G4double rindex[ri_entries] = { 1.802, 1.804, 1.806, 
+				  1.808, 1.810, 1.813, 1.8155, 
+				  1.818, 1.820, 1.822, 1.8245, 
+				  1.827, 1.830, 1.833, 
+				  1.838, 1.842};
   
- 
+  // for (G4int i=ri_entries-1; i>0; i--) {
+  //   G4cout << h_Planck*c_light/ri_energy[i]/nanometer << ", " << c_light/( rindex[i] + (rindex[i]-rindex[i-1])/(std::log(ri_energy[i]) - std::log(ri_energy[i-1]) ))/mm*picosecond << ": " << rindex[i]-rindex[i-1] << ", "
+  // 	   << std::log(ri_energy[i]) - std::log(ri_energy[i-1]) << G4endl;
+  // }
+  
+  //  for (G4int i=ri_entries-1; i>=0; i--) {
+  for (G4int i=1; i<ri_entries; i++) {
+    G4cout  << rindex[i] << ", " << G4endl;
+  }
 
-  const G4int sc_entries = 7;
-  G4double sc_energy[sc_entries] = 
-    {1.9074*eV, 2.2543*eV, 2.4797*eV, 2.6436*eV, 2.8700*eV, 3.0996*eV, 3.2542*eV};
+ //  for (G4int i=1; i<ri_entries; i++) {
+//      G4cout  << ri_energy[i]/eV<< ", ";
+//    }
+//   G4cout << G4endl;
+
+// for (G4int i=1; i<ri_entries; i++) {
+//   G4cout << (rindex[i]-rindex[i-1])/(std::log(ri_energy[i]) - std::log(ri_energy[i-1]) ) << ", ";
+//  }
+
+  // const G4int sc_entries = 11;
+  // G4double sc_energy[sc_entries] = 
+  //   {1.9074*eV, 2.2543*eV, 2.4797*eV, 2.5511*eV, 2.6436*eV, 2.6895*eV, 2.8437*eV, 2.8700*eV, 2.9520*eV, 3.0996*eV, 3.2542*eV};
  
-  G4double intensity[sc_entries] = {0., 0.0643, 0.1929, 0.4, 1, 0.4071, 0.};
+  // G4double intensity[sc_entries] = {0., 0.0643, 0.1929, 0.2500, 0.4, 0.5214, 0.9571, 1, 0.8286, 0.4071, 0.};
+const G4int sc_entries = 13;
+  G4double sc_energy[sc_entries] = 
+    {1.9074*eV, 2.2543*eV, 2.4797*eV, 2.5511*eV, 2.6436*eV, 2.6895*eV, 2.8437*eV, 2.8700*eV, 2.9520*eV, 3.0258*eV, 3.0996*eV, 3.1769*eV, 3.2542*eV};
+ 
+  G4double intensity[sc_entries] = {0., 0.0643, 0.1929, 0.2500, 0.4, 0.5214, 0.9571, 1, 0.8286, 0.6, 0.4071, 0.2, 0.};
+
+  
  
     
   mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
   mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
-  mpt->AddConstProperty("FASTSCINTILLATIONRISETIME", 0.77*ns); //1.7/Ln(9)
+  mpt->AddConstProperty("FASTSCINTILLATIONRISETIME", 0.773703*ns); //1.7/Ln(9)
   // mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
   mpt->AddConstProperty("SCINTILLATIONYIELD", 32000./MeV);
+  // mpt->AddConstProperty("SCINTILLATIONYIELD", 100./MeV);
   mpt->AddConstProperty("RESOLUTIONSCALE", 1);
   //mpt->AddConstProperty("RAYLEIGH", 36000.*cm);
   // check constants with the Aprile
@@ -1182,9 +1314,10 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LYSO_nconst()
     
   mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
   mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
-  mpt->AddConstProperty("FASTSCINTILLATIONRISETIME", .77*ns);
+  mpt->AddConstProperty("FASTSCINTILLATIONRISETIME", 0.773703*ns);
   // mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
   mpt->AddConstProperty("SCINTILLATIONYIELD", 32000./MeV);
+  // mpt->AddConstProperty("SCINTILLATIONYIELD", 100./MeV);
   mpt->AddConstProperty("RESOLUTIONSCALE", 1);
   //mpt->AddConstProperty("RAYLEIGH", 36000.*cm);
   // check constants with the Aprile

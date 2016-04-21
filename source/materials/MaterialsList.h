@@ -93,7 +93,9 @@ namespace nexus {
     /// Selenium Hexafluoride
     static G4Material* SeF6(G4double pressure=STP_Pressure,
 			   G4double temperature=STP_Temperature);
-    
+
+    //LYSO
+    static G4Material* LYSO();
 
     // Fake dielectric (to be deprecated)
     static G4Material* FakeDielectric(G4Material*, G4String);
