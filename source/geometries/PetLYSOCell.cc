@@ -16,7 +16,6 @@
 #include "BoxPointSampler.h"
 #include "SiPMpetVUV.h"
 #include "SiPMpetTPB.h"
-#include "SiPMpetPlots.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>

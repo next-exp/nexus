@@ -10,7 +10,6 @@ class G4Material;
 //namespace nexus{class PetKDBFixedPitch;}
 namespace nexus{class PetPlainDice;}
 namespace nexus {class BoxPointSampler;}
-//namespace nexus {class SiPMbase;} 
 /* namespace nexus {class SiPMpetVUV;} */
 /* namespace nexus {class SiPMpetTPB;} */
 
