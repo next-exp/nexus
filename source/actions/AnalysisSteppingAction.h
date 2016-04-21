@@ -1,9 +1,7 @@
 // ----------------------------------------------------------------------------
-///  \file   DefaultSteppingAction.h
-///  \brief  General-purpose user stepping action.
+///  \file   AnalysisSteppingAction.h
 ///
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     24 August 2013
+///
 ///  \version  $Id$
 ///
 ///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
@@ -13,14 +11,17 @@
 #define ANALYSIS_STEPPING_ACTION_H
 
 #include <G4UserSteppingAction.hh>
+#include <G4GenericMessenger.hh>
 #include <globals.hh>
 
-class G4Step;
+#include <vector>
 
+class G4Step;
+class G4GenericMessenger;
+class TH1F;
+class TH2F;
 
 namespace nexus {
-
-  //  Stepping action to analyze the behaviour of optical photons
 
   class AnalysisSteppingAction: public G4UserSteppingAction
   {
@@ -33,7 +34,20 @@ namespace nexus {
     virtual void UserSteppingAction(const G4Step*);
 
   private:
-    G4int det;
+    G4int detected;
+    G4int not_det;
+
+    std::vector<double> times;
+    std::vector<double> wavelengths;
+
+    TH1F* hVelocity;
+    TH2F* hVE;
+    TH2F* hTV;
+    TH1F* hCherLambdaDet;
+
+    G4GenericMessenger* _msg;
+    G4int file_no_;
+
   };
 
 } // namespace nexus

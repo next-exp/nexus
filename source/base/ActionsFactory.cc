@@ -81,7 +81,7 @@ G4UserEventAction* ActionsFactory::CreateEventAction() const
 
 #include "DefaultTrackingAction.h"
 #include "ValidationTrackingAction.h"
-
+#include "AnalysisTrackingAction.h"
 
 G4UserTrackingAction* ActionsFactory::CreateTrackingAction() const
 {
@@ -89,6 +89,8 @@ G4UserTrackingAction* ActionsFactory::CreateTrackingAction() const
 
   if (_trkact_name == "DEFAULT") p = new DefaultTrackingAction();
   else if (_trkact_name == "VALIDATION") p = new ValidationTrackingAction();
+  else if (_trkact_name == "ANALYSIS") p = new AnalysisTrackingAction();
+
   else {
     G4String err = "Unknown user tracking action: " + _trkact_name;
     G4Exception("CreateTrackingAction()", "[ActionsFactory]",
