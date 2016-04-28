@@ -1,3 +1,10 @@
+tag v5_00_13
+	- two new vertices added to NEXT100 geometries.
+
+tag v5_00_12
+	- Change in z coordinate for those geometries that have a drift field. 
+	- Number of simulated events actually written to file saved as a property of the run
+	
 tag v5_00_11
 	- Decay0 class added to generate double beta decay events
 	- Teflon masks added in fron of dice boards for the NEW geometry
