@@ -118,6 +118,11 @@ namespace nexus {
     CylinderPointSampler* _active_gen;
     CylinderPointSampler* _anode_quartz_gen;
 
+    // Vertex decided by user
+    G4double _specific_vertex_X;
+    G4double _specific_vertex_Y;
+    G4double _specific_vertex_Z;
+
     // Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
 

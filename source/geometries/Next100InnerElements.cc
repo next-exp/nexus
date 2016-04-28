@@ -101,6 +101,22 @@ namespace nexus {
     _msg->DeclareProperty("elfield", _elfield,
 			  "True if the EL field is on (full simulation), false if it's not (parametrized simulation.");
 
+    G4GenericMessenger::Command&  specific_vertex_X_cmd =
+      _msg->DeclareProperty("specific_vertex_X", _specific_vertex_X,
+                            "If region is AD_HOC, x coord where particles are generated");
+    specific_vertex_X_cmd.SetParameterName("specific_vertex_X", true);
+    specific_vertex_X_cmd.SetUnitCategory("Length");
+    G4GenericMessenger::Command&  specific_vertex_Y_cmd =
+      _msg->DeclareProperty("specific_vertex_Y", _specific_vertex_Y,
+                            "If region is AD_HOC, y coord where particles are generated");
+    specific_vertex_Y_cmd.SetParameterName("specific_vertex_Y", true);
+    specific_vertex_Y_cmd.SetUnitCategory("Length");
+    G4GenericMessenger::Command&  specific_vertex_Z_cmd =
+      _msg->DeclareProperty("specific_vertex_Z", _specific_vertex_Z,
+                            "If region is AD_HOC, z coord where particles are generated");
+    specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
+    specific_vertex_Z_cmd.SetUnitCategory("Length");
+
     G4GenericMessenger::Command&  ELtransv_diff_cmd =
       _msg->DeclareProperty("ELtransv_diff", _ELtransv_diff,
 			    "Tranvsersal diffusion in the EL region");
@@ -469,8 +485,17 @@ void Next100InnerElements::BuildBuffer()
     else if ((region == "TRK_SUPPORT") || 
              (region == "DICE_BOARD")) {
       vertex = _tracking_plane->GenerateVertex(region);
-    }  
+    } 
+    // Vertex decided by user
+    else if (region == "AD_HOC") {
+      vertex = 
+	G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
+    }
 
+    // Axial port --- temporary, until correct copper thickness is known
+    else if (region == "AXIAL_PORT") {
+      vertex = G4ThreeVector(0., 0., _windows_end_z);
+    }
     else if (region == "EL_TABLE") {
 
       unsigned int i = _el_table_point_id + _el_table_index;

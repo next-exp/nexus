@@ -156,8 +156,8 @@ namespace nexus {
 
     // Vessel regions
     else if ((region == "VESSEL") || 
-    		 (region == "VESSEL_FLANGES") ||
-	     	 (region == "VESSEL_TRACKING_ENDCAP") || 
+	     (region == "VESSEL_FLANGES") ||
+	     (region == "VESSEL_TRACKING_ENDCAP") || 
 	     (region == "VESSEL_ENERGY_ENDCAP")) {
       vertex = _vessel->GenerateVertex(region);
     }
@@ -181,6 +181,8 @@ namespace nexus {
 	     (region == "PMT_BASE") ||
 	     (region == "TRK_SUPPORT") ||
 	     (region == "DICE_BOARD") ||
+	     (region == "AD_HOC") ||
+	     (region == "AXIAL_PORT") ||
 	     (region == "EL_TABLE") ) {
       vertex = _inner_elements->GenerateVertex(region);
     }
