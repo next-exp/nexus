@@ -103,6 +103,12 @@ vars.AddVariables(
     PathVariable('GATE_DIR',
                  'Path to GATE installation.',
                  NULL_PATH),
+
+    ## gsl
+
+    PathVariable('GSL_DIR',
+                 'Path to gsl installation.',
+                 NULL_PATH),
     
 
     ## The following vars shouldn't be defined by users unless they 
@@ -205,24 +211,16 @@ if not env['LIBPATH']:
   #      Abort('GATE library not found.')
 
     ## GSL configuration --------------------------   -------
-
-    env['GSL_DIR'] = os.environ['GSL_DIR']
     
     if env['GSL_DIR'] != NULL_PATH:
         env.PrependENVPath('PATH', env['GSL_DIR'])
-    
-    env['GSL_LIB'] = os.environ['GSL_LIB']
-    
-    env['GSL_INC'] = os.environ['GSL_INC']
-    
-    env.Append( CPPPATH = [env['GSL_INC']] )
-                                                          
-    env.Append( LIBPATH = [env['GSL_LIB']] )
+
+    env.ParseConfig('gsl-config --cflags --libs')
 
     if not conf.CheckCXXHeader('gsl/gsl_errno.h'):
         Abort('GSL headers not found.')
     
-    env.Append(LIBS = ['gsl','gslcblas'])
+ #   env.Append(LIBS = ['gsl','gslcblas'])
 
 
 
