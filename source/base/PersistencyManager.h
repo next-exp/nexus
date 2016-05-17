@@ -54,7 +54,7 @@ namespace nexus {
     virtual G4bool Retrieve(G4VPhysicalVolume*&);
 
   public:
-    void OpenFile(const G4String&);
+    void OpenFile(G4String);
     void CloseFile();
 
 

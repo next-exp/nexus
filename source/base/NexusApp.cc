@@ -124,7 +124,7 @@ NexusApp::~NexusApp()
 
 
 
-void NexusApp::RegisterMacro(const G4String& macro)
+void NexusApp::RegisterMacro(G4String macro)
 {
   // Store the name of the macro file
   _macros.push_back(macro);
@@ -132,7 +132,7 @@ void NexusApp::RegisterMacro(const G4String& macro)
 
 
 
-void NexusApp::RegisterDelayedMacro(const G4String& macro)
+void NexusApp::RegisterDelayedMacro(G4String macro)
 {
   // Store the name of the macro file
   _delayed.push_back(macro);

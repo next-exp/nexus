@@ -92,7 +92,7 @@ void PersistencyManager::SetDriftCoord()
   } 
 }
 
-void PersistencyManager::OpenFile(const G4String& filename)
+void PersistencyManager::OpenFile(G4String filename)
 {
   // If the output file was not set yet, do so
   if (!_writer) {

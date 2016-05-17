@@ -20,7 +20,7 @@ import os
 import subprocess
 
 ## Geant4 version required by NEXUS
-NEXUS_G4VERSION_NUMBER = [1010, 1011, 1012]
+NEXUS_G4VERSION_NUMBER = [1020, 1021]
 
 ## NEXUS source code directories
 SRCDIR = ['actions',
@@ -125,6 +125,10 @@ vars.AddVariables(
     ('CPPFLAGS',
      'User-specified preprocessor options.',
      ['-g']),
+
+    ('CXXFLAGS',
+     'c++ compiler options.',
+     ['-std=c++11']),
     
     ('CPPPATH',
      'List of directories where the include headers are located.',

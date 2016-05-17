@@ -40,9 +40,9 @@ namespace nexus {
     G4int GetNumberOfEventsToBeProcessed() const;
 
   private:
-    void RegisterMacro(const G4String&);
+    void RegisterMacro(G4String);
 
-    void RegisterDelayedMacro(const G4String&);
+    void RegisterDelayedMacro(G4String);
 
     void ExecuteMacroFile(const char*);
 
