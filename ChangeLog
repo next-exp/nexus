@@ -1,3 +1,7 @@
+tag v5_01_00
+	- First tag to be used with Geant4.10.02
+	- Change in the way of linking to gsl
+
 tag v5_00_13
 	- two new vertices added to NEXT100 geometries.
 
