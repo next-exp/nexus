@@ -8,6 +8,7 @@
 // ----------------------------------------------------------------------------
 
 #include "MaterialsList.h"
+#include "XenonGasProperties.h"
 
 #include <G4Material.hh>
 #include <G4Element.hh>
@@ -24,33 +25,92 @@ G4Material* MaterialsList::GXe(G4double pressure, G4double temperature)
     
   if (mat == 0) {
     G4NistManager* nist = G4NistManager::Instance();
-
-    G4double density = 5.5*kg/m3;
-
-    if (pressure/bar > 0.9 && pressure/bar < 1.1)
-      density = 5.324*kg/m3;
-    else if (pressure/bar > 1.9 && pressure/bar < 2.1)
-      density = 10.7*kg/m3;
-    else if (pressure/bar > 4.9 && pressure/bar < 5.1)
-      density = 27.2*kg/m3;
-    else if (pressure/bar > 9.9 && pressure/bar < 10.1)
-      density = 55.587*kg/m3;
-    else if (pressure/bar > 14.9 && pressure/bar < 15.1)
-      density = 85.95 *kg/m3;
-    else if (pressure/bar > 19.9 && pressure/bar < 20.1)
-      density = 118.4*kg/m3;
-    else if (pressure/bar > 29.9 && pressure/bar < 30.1)
-      density = 193.6*kg/m3;
-    else if (pressure/bar > 39.9 && pressure/bar < 40.1)
-      density = 284.3*kg/m3;
-    else
-      G4cout  << "[MaterialsList] Pressure not recognized! " 
-              << pressure/bar << G4endl;
       
-    mat = new G4Material(name, density, 1,
+    mat = new G4Material(name, XenonGasProperties::Density(pressure), 1,
 			 kStateGas, temperature, pressure);
     
     G4Element* Xe = nist->FindOrBuildElement("Xe");
+  
+    mat->AddElement(Xe,1);
+  }
+
+  return mat;
+}
+
+G4Material* MaterialsList::GXeEnriched(G4double pressure, G4double temperature)
+{
+  G4String name = "GXeEnriched";
+  
+  G4Material* mat = G4Material::GetMaterial(name, false);
+    
+  if (mat == 0) {
+      
+    mat = new G4Material(name, XenonGasProperties::Density(pressure), 1,
+			 kStateGas, temperature, pressure);
+    
+    G4Element* Xe = new G4Element("GXeEnriched", "Xe", 6);
+    // Isotopic mass per mole taken from
+    // http://rushim.ru/books/spravochniki/handbook-chemistry-and-physics.pdf
+    G4Isotope* Xe129 = new G4Isotope("Xe129", 54, 129, XenonGasProperties::MassPerMole(129));
+    G4Isotope* Xe130 = new G4Isotope("Xe130", 54, 130, XenonGasProperties::MassPerMole(130));
+    G4Isotope* Xe131 = new G4Isotope("Xe131", 54, 131, XenonGasProperties::MassPerMole(131));
+    G4Isotope* Xe132 = new G4Isotope("Xe132", 54, 132, XenonGasProperties::MassPerMole(132));
+    G4Isotope* Xe134 = new G4Isotope("Xe134", 54, 134, XenonGasProperties::MassPerMole(134));
+    G4Isotope* Xe136 = new G4Isotope("Xe136", 54, 136, XenonGasProperties::MassPerMole(136));
+
+    Xe->AddIsotope(Xe129, 0.0656392*perCent);
+    Xe->AddIsotope(Xe130, 0.0656392*perCent);
+    Xe->AddIsotope(Xe131, 0.234361*perCent);
+    Xe->AddIsotope(Xe132, 0.708251*perCent);
+    Xe->AddIsotope(Xe134, 8.6645*perCent);
+    Xe->AddIsotope(Xe136, 90.2616*perCent);
+   
+    
+    // G4cout << Xe->GetNumberOfIsotopes() << G4endl;
+    // G4cout << Xe->GetIsotopeVector()->size() << G4endl;
+    // for (G4int i=0; i< Xe->GetNumberOfIsotopes(); ++i) {
+    //   G4cout << Xe->GetIsotope(i)->GetName() << G4endl;
+    // }
+    
+    mat->AddElement(Xe,1);
+  }
+
+  return mat;
+}
+
+G4Material* MaterialsList::GXeDepleted(G4double pressure, G4double temperature)
+{
+  G4String name = "GXeDepleted";
+  
+  G4Material* mat = G4Material::GetMaterial(name, false);
+    
+  if (mat == 0) {
+      
+    mat = new G4Material(name, XenonGasProperties::Density(pressure), 1,
+			 kStateGas, temperature, pressure);
+
+    
+    G4Element* Xe = new G4Element("GXeDepleted", "Xe", 5);
+   
+    G4Isotope* Xe129 = new G4Isotope("Xe129", 54, 129, XenonGasProperties::MassPerMole(129));
+    G4Isotope* Xe131 = new G4Isotope("Xe131", 54, 131, XenonGasProperties::MassPerMole(131));
+    G4Isotope* Xe132 = new G4Isotope("Xe132", 54, 132, XenonGasProperties::MassPerMole(132));
+    G4Isotope* Xe134 = new G4Isotope("Xe134", 54, 134, XenonGasProperties::MassPerMole(134));
+    G4Isotope* Xe136 = new G4Isotope("Xe136", 54, 136, XenonGasProperties::MassPerMole(136));
+
+    Xe->AddIsotope(Xe129, 27.11*perCent);
+    Xe->AddIsotope(Xe131, 27.07*perCent);
+    Xe->AddIsotope(Xe132, 28.18*perCent);
+    Xe->AddIsotope(Xe134, 8.59*perCent);
+    Xe->AddIsotope(Xe136, 2.87*perCent);
+   
+    
+    // G4cout << Xe->GetNumberOfIsotopes() << G4endl;
+    // G4cout << Xe->GetIsotopeVector()->size() << G4endl;
+    // for (G4int i=0; i< Xe->GetNumberOfIsotopes(); ++i) {
+    //   G4cout << Xe->GetIsotope(i)->GetName() << G4endl;
+    // }
+    
     mat->AddElement(Xe,1);
   }
 

@@ -34,14 +34,16 @@ namespace nexus {
     G4double Scintillation(G4double energy);
     void Scintillation(G4int entries, G4double* energy, G4double* intensity);
 
-    G4double Density(G4double pressure);
+    static G4double Density(G4double pressure);
+    static G4double MassPerMole(G4int a);
 
     /// Electroluminescence yield of pure xenon gas
     G4double ELLightYield(G4double field_strength) const;
     
 
   private:
-    G4double _pressure, _temperature;
+    G4double _pressure;
+    //    G4double _temperature;
     
   };
 
