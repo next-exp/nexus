@@ -69,7 +69,8 @@ namespace nexus {
     _pressure(15 * bar),
     _temperature (303 * kelvin),
     // Visibility
-    _visibility(0)
+    _visibility(0),
+    _xenon("natural")
   {
 
     /// Needed External variables
@@ -88,6 +89,7 @@ namespace nexus {
     _msg = new G4GenericMessenger(this, "/Geometry/Next100/", "Control commands of geometry Next100.");
 
     _msg->DeclareProperty("vessel_vis", _visibility, "Vessel Visibility");
+    _msg->DeclareProperty("xenon_type", _xenon, "Type of xenon being used");
 
     G4GenericMessenger::Command& pressure_cmd = _msg->DeclareProperty("pressure", _pressure, "Xenon pressure");
     pressure_cmd.SetUnitCategory("Pressure");
@@ -219,7 +221,18 @@ namespace nexus {
 							"VESSEL");
     this->SetLogicalVolume(vessel_logic);
 
-    G4Material* vessel_gas_mat =  MaterialsList::GXe(_pressure, _temperature);
+    G4Material* vessel_gas_mat = nullptr;    
+    if (_xenon == "natural") {
+      vessel_gas_mat = MaterialsList::GXe(_pressure, _temperature);
+    } else if (_xenon == "enriched") {
+      vessel_gas_mat =  MaterialsList::GXeEnriched(_pressure, _temperature);
+    } else if  (_xenon == "depleted") {
+      vessel_gas_mat =  MaterialsList::GXeDepleted(_pressure, _temperature);
+    } else {
+      G4Exception("[Next100Vessel]", "Construct()", FatalException,
+		  "Unknown kind of xenon, valid options are: natural, enriched, depleted.");     
+    }
+    
     vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
 
     G4LogicalVolume* vessel_gas_logic = new G4LogicalVolume(vessel_gas_solid, vessel_gas_mat, "VESSEL_GAS");
