@@ -42,6 +42,11 @@
 #include <iomanip>
 
 #include "CLHEP/Units/SystemOfUnits.h"
+<<<<<<< HEAD:source/persistency/PersistencyManager.cc
+=======
+
+using namespace nexus;
+>>>>>>> Changes in petalo to use g4.10.02:source/base/PersistencyManager.cc
 
 using namespace nexus;
 
@@ -219,14 +224,8 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
 =======
     G4ThreeVector xyz = trj->GetInitialPosition();
     G4double t = trj->GetInitialTime(); 
-<<<<<<< HEAD
     ipart->SetInitialVtx(gate::Vector4D(xyz.x(), xyz.y(), xyz.z(), t));
-   
-=======
-//	G4cout << t << G4endl;
-    ipart->SetInitialVtx(gate::Vector4D(xyz.x(), xyz.y(), xyz.z(),t));
-    
->>>>>>> Type change in GATE waveforms
+
     xyz = trj->GetFinalPosition();
     t = trj->GetFinalTime();
 >>>>>>> Type change in GATE waveforms:source/base/PersistencyManager.cc
@@ -458,7 +457,10 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     wf->SetData(data);
     isnr->SetAmplitude(amplitude);
 
+<<<<<<< HEAD:source/persistency/PersistencyManager.cc
     /*
+=======
+>>>>>>> Changes in petalo to use g4.10.02:source/base/PersistencyManager.cc
     const std::map<G4double, G4double>&  wvls= hit->GetWavelengths();
     std::map<G4double, G4double>::const_iterator w;
 
@@ -482,7 +484,11 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 	count++;
       }
     }
+<<<<<<< HEAD:source/persistency/PersistencyManager.cc
     */
+=======
+
+>>>>>>> Changes in petalo to use g4.10.02:source/base/PersistencyManager.cc
     ievt->AddMCSensHit(isnr);    
   }
 }
@@ -491,7 +497,31 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 
 G4bool PersistencyManager::Store(const G4Run*)
 {
+<<<<<<< HEAD:source/persistency/PersistencyManager.cc
   gate::Run grun = gate::Run();
+=======
+    
+  gate::Run grun = gate::Run(); 
+    
+  std::ifstream history(_historyFile, std::ifstream::in);
+  while (history.good()) {
+
+    std::string key, value;
+    std::getline(history, key, ' ');
+    std::getline(history, value);
+
+    if (key != "") {
+      
+        grun.fstore(key,value);
+
+        //gate::ParameterInfo* info = new gate::ParameterInfo(key.c_str());
+        //info->SetContent(value);
+      //_writer->WriteMetadata(info); 
+    }
+  } 
+
+  history.close();
+>>>>>>> Changes in petalo to use g4.10.02:source/base/PersistencyManager.cc
 
   // Store the number of events to be processed 
   NexusApp* app = (NexusApp*) G4RunManager::GetRunManager();
