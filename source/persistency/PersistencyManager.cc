@@ -41,6 +41,8 @@
 #include <iostream>
 #include <iomanip>
 
+#include "CLHEP/Units/SystemOfUnits.h"
+
 using namespace nexus;
 
 
@@ -391,7 +393,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 {
   PmtHitsCollection* hits = dynamic_cast<PmtHitsCollection*>(hc);
   if (!hits) return;
-
+ 
   for (G4int i=0; i<hits->entries(); i++) {
 
     PmtHit* hit = dynamic_cast<PmtHit*>(hits->GetHit(i));
@@ -434,8 +436,30 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     wf->SetData(data);
     isnr->SetAmplitude(amplitude);
 
+    const std::map<G4double, G4double>&  wvls= hit->GetWavelengths();
+    std::map<G4double, G4double>::const_iterator w;
 
-    // Add the sensor hit to the gate event
+    std::vector<double > value;
+    int count =0;
+    std::ostringstream strs;
+    strs << hit->GetPmtID();
+    std::string sens_id = strs.str();
+    //   G4cout << "Longitud = " << wvls.size() << G4endl;
+    for (w = wvls.begin(); w != wvls.end(); ++w) {
+      if (count < 100) {
+	value.clear();
+	std::ostringstream strs2;
+	strs2 << count;
+	std::string order = strs2.str();
+	std::string key = sens_id + '_' + order;
+	value.push_back(w->first/CLHEP::picosecond);
+	value.push_back(w->second/CLHEP::nanometer);
+	//	G4cout << key << ", " << value[0] << ", " << value[1] << G4endl;
+	ievt->fstore(key, value);
+	count++;
+      }
+    }
+
     ievt->AddMCSensHit(isnr);    
   }
 }
@@ -444,7 +468,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 
 G4bool PersistencyManager::Store(const G4Run*)
 {
-    
+   
   gate::Run grun = gate::Run();
 
   // Store the number of events to be processed 
