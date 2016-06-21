@@ -1,3 +1,8 @@
+tag v5_01_01
+	- TPB eliminated from KDB
+	- Enriched and depleted xenon added as new materials
+	- new tracking action for geant4 version validation added
+	
 tag v5_01_00
 	- First tag to be used with Geant4.10.02
 	- Change in the way of linking to gsl
