@@ -80,7 +80,10 @@ namespace nexus {
     G4Navigator* _geom_navigator;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
+    G4GenericMessenger* _msg;
+
+    // Type of xenon being used
+    G4String _xenon;
 
   };
 

@@ -24,7 +24,8 @@ namespace nexus {
   
   XenonGasProperties::XenonGasProperties(G4double pressure,
 					 G4double temperature):
-    _pressure(pressure), _temperature(temperature)
+    _pressure(pressure)
+    //, _temperature(temperature)
   {
     //Density();
   }
@@ -84,6 +85,33 @@ namespace nexus {
                   "Unknown xenon density for this pressure!");     
    
     return density;
+  }
+
+  G4double XenonGasProperties::MassPerMole(G4int a)
+  {
+    // Isotopic mass per mole taken from
+    // http://rushim.ru/books/spravochniki/handbook-chemistry-and-physics.pdf
+    
+    G4double mass_per_mole = 135.907220*g/mole;
+    if (a == 129) {
+      mass_per_mole = 128.9047795*g/mole;
+    } else if (a == 130) {
+      mass_per_mole = 129.9035079*g/mole;
+    } else if (a == 131) {
+      mass_per_mole = 130.9050819*g/mole;
+    } else if (a == 132) {
+      mass_per_mole = 131.9041545*g/mole;
+    } else if (a == 134) {
+      mass_per_mole = 133.9053945*g/mole;
+    } else if (a == 136) {
+      mass_per_mole = 135.907220*g/mole;
+    }
+    else {
+      G4Exception("[XenonGaseousProperties]", "MassPerMole()", FatalException,
+                  "Unknown mass per mole for this isotope!");
+    }
+
+    return mass_per_mole;
   }
   
 

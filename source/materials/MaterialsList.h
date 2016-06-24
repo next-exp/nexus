@@ -33,6 +33,10 @@ namespace nexus {
     // Gaseous xenon
     static G4Material* GXe(G4double pressure=STP_Pressure,
 			   G4double temperature=STP_Temperature);
+    static G4Material* GXeEnriched(G4double pressure=STP_Pressure,
+			   G4double temperature=STP_Temperature);
+    static G4Material* GXeDepleted(G4double pressure=STP_Pressure,
+				   G4double temperature=STP_Temperature);
     
     // Stainless Steel (grade 304L)
     static G4Material* Steel();
