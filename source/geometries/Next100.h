@@ -23,6 +23,8 @@
 class G4LogicalVolume;
 class G4GenericMessenger;
 
+namespace nexus {class BoxPointSampler;}
+
 
 namespace nexus {
 
@@ -48,7 +50,6 @@ namespace nexus {
   private:
     // Detector dimensions
     const G4double _lab_size;          /// Size of the air box containing the detector 
-    const G4double _buffer_gas_size;   /// Size of the mother volume of shielding and vessel 
 
     // External diameter of nozzles and y positions
     const G4double _nozzle_ext_diam; 
@@ -66,6 +67,8 @@ namespace nexus {
     Next100InnerElements* _inner_elements;
     //Next100FieldCage* _field_cage;
     /* Next100InternalVolume* _internal_volume; */
+
+    BoxPointSampler* _lab_gen; ///< Vertex generator
 
  
     /// Messenger for the definition of control commands

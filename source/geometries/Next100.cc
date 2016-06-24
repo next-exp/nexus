@@ -8,6 +8,7 @@
 // ---------------------------------------------------------------------------- 
 
 #include "Next100.h"
+#include "BoxPointSampler.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -29,8 +30,6 @@ namespace nexus {
     BaseGeometry(),
     // Lab dimensions
     _lab_size (5. * m),
-    // Buffer gas dimensions
-    _buffer_gas_size (4. * m),
     // Nozzles external diam and y positions
     _nozzle_ext_diam (9. * cm),
     _up_nozzle_ypos (20. * cm),
@@ -137,6 +136,10 @@ namespace nexus {
     _inner_elements->Construct();
     SetELzCoord(_inner_elements->GetELzCoord());
 
+    //// VERTEX GENERATORS   //
+    _lab_gen = 
+      new BoxPointSampler(_lab_size - 1.*m, _lab_size - 1.*m, _lab_size  - 1.*m, 1.*m,G4ThreeVector(0.,0.,0.),0);
+
   }
   
 
@@ -145,8 +148,12 @@ namespace nexus {
   {
     G4ThreeVector vertex(0.,0.,0.);
 
+     //AIR AROUND SHIELDING
+    if (region == "LAB") {
+      vertex = _lab_gen->GenerateVertex("INSIDE");
+    }
     // Shielding regions
-    if ((region == "SHIELDING_LEAD")  || 
+    else if ((region == "SHIELDING_LEAD")  || 
     	(region == "SHIELDING_STEEL") ||
 		(region == "EXTERNAL")        || 
 		(region == "SHIELDING_GAS")   || 

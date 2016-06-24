@@ -14,7 +14,6 @@
 #define NEXTNEW_H
 
 #include "BaseGeometry.h"
-#include "BoxPointSampler.h"
 
 namespace nexus { class Next100Shielding; }
 namespace nexus { class NextNewPedestal; }
@@ -22,6 +21,7 @@ namespace nexus { class NextNewCuCastle; }
 namespace nexus { class NextNewVessel; }
 namespace nexus { class NextNewIcs; }
 namespace nexus { class NextNewInnerElements; }
+namespace nexus {class BoxPointSampler;}
 
 class G4LogicalVolume;
 class G4GenericMessenger;
@@ -46,8 +46,7 @@ namespace nexus {
 
   private:
     // Detector dimensions
-    const G4double _lab_size; ///< Size of the air box containing the detector 
-    const G4double _buffer_gas_size; ///< Mother volume of shielding and vessel 
+    const G4double _lab_size; ///< Size of the air box containing the detector  
    
     G4double _pressure; ///< Pressure xenon gas
 

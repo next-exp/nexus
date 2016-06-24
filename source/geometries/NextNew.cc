@@ -17,7 +17,8 @@
 #include "NextNewVessel.h"
 #include "NextNewIcs.h"
 #include "NextNewInnerElements.h"
-#include <OpticalMaterialProperties.h>
+#include "BoxPointSampler.h"
+#include "OpticalMaterialProperties.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -40,9 +41,8 @@ namespace nexus {
   NextNew::NextNew():
     BaseGeometry(),
     // Lab dimensions
-    _lab_size (5. * m),
+    _lab_size (5. * m)
     // Buffer gas dimensions
-    _buffer_gas_size (4. * m)
   {
     //Shielding
     _shielding = new Next100Shielding();
@@ -128,15 +128,16 @@ namespace nexus {
     //COPPER CASTLE 
     // _cu_castle->SetLogicalVolume(_buffer_gas_logic);
     // _cu_castle->Construct();
+
+    G4LogicalVolume* shielding_air_logic = _shielding->GetAirLogicalVolume();
   
     //PEDESTAL
-    _pedestal->SetLogicalVolume(_buffer_gas_logic);
+    _pedestal->SetLogicalVolume(shielding_air_logic);
     _pedestal->Construct();
 
     
     //VESSEL
     _vessel->Construct();
-    G4LogicalVolume* shielding_air_logic = _shielding->GetAirLogicalVolume();
     G4LogicalVolume* vessel_logic = _vessel->GetLogicalVolume();
     G4ThreeVector position(0.,0.,0.); 
     new G4PVPlacement(0, position, vessel_logic, 
@@ -156,7 +157,8 @@ namespace nexus {
    
 
     //// VERTEX GENERATORS   //
-    _lab_gen = new BoxPointSampler(_buffer_gas_size,_buffer_gas_size,_buffer_gas_size, _lab_size-_buffer_gas_size,G4ThreeVector(0.,0.,0.),0);
+    _lab_gen = 
+      new BoxPointSampler(_lab_size - 1.*m, _lab_size - 1.*m, _lab_size  - 1.*m, 1.*m,G4ThreeVector(0.,0.,0.),0);
 
 
   }
@@ -164,7 +166,7 @@ namespace nexus {
   G4ThreeVector NextNew::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0.,0.,0.);
-    //BUFFER GAS
+    //AIR AROUND SHIELDING
     if (region == "LAB") {
       vertex = _lab_gen->GenerateVertex("INSIDE");
     }
