@@ -308,8 +308,10 @@ namespace nexus {
   {
     G4ThreeVector vertex(0., 0., 0.);
 
-   
-    if (region == "SHIELDING_LEAD") {
+    if (region == "SOURCE_PORT_AXIAL") {
+      vertex = G4ThreeVector(0., 0., - _shield_z/2. + 1.*mm); // The real position happens to be inside lead...
+                                                              // The dimensions of the simulated castle are not correct   
+    } else if (region == "SHIELDING_LEAD") {
       G4VPhysicalVolume *VertexVolume;
       do {
 	vertex = _lead_gen->GenerateVertex("WHOLE_VOL");

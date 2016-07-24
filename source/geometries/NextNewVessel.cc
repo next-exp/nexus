@@ -27,6 +27,7 @@
 #include <G4RotationMatrix.hh>
 #include <G4UnitsTable.hh>
 #include <G4Transform3D.hh>
+#include <G4SubtractionSolid.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
@@ -87,8 +88,11 @@ namespace nexus {
     _port_tube_window_thickn (2. * mm),
     _lat_port_tube_length (53. * mm), 
     _up_port_tube_length (58. * mm), 
-    _axial_port_tube_length (727. * mm),
-
+    // _axial_port_tube_length (727. * mm),
+    _axial_port_tube_length (777. * mm), // whole tube, according to drawings
+    _axial_port_tube_out(30.*mm), // part of the tube which sticks out of the flange
+    _axial_port_flange(20.*mm),
+    _axial_distance_flange_endcap(51.*cm), // distance from the end of the endcap and the beginning of the flange
 
     // Vessel gas
      _pressure(1. * bar),
@@ -176,11 +180,23 @@ void NextNewVessel::Construct()
     
     G4Tubs* endcap_nozzle_tube_solid =
       new G4Tubs("ENDCAP_TUBE_NOZZLE", 0., _endcap_nozzle_in_diam/2.+_endcap_nozzle_thickness,_endcap_nozzle_high, 0., twopi);
-    G4Tubs* endcap_nozzle_flange_solid =
-      new G4Tubs("ENDCAP_NOZZLE_FLANGE", 0., _endcap_nozzle_flange_diam/2.,_endcap_nozzle_flange_high, 0., twopi);
+    G4Tubs* endcap_nozzle_flange_solid_b =
+      new G4Tubs("ENDCAP_NOZZLE_FLANGE_B", 0., _endcap_nozzle_flange_diam/2.,_endcap_nozzle_flange_high, 0., twopi);
     G4Tubs* endcap_nozzle_gas_solid =
       new G4Tubs("ENDCAP_NOZZLE_GAS", 0., _endcap_nozzle_in_diam/2.-1*mm,_endcap_nozzle_high, 0., twopi);
-  
+    // G4Tubs* axialport_air_solid =
+    //   new G4Tubs("AXIALPORT_AIR", 0., _port_tube_diam/2.,_endcap_nozzle_flange_high, 0., twopi);
+    // G4LogicalVolume* axialport_air_logic =
+    //   new G4LogicalVolume(axialport_air_solid , G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),"AXIALPORT_AIR");
+
+    // // Making hole for axial port
+    G4Tubs* axial_port_hole_solid = 
+      new G4Tubs("AXIAL_PORT_HOLE", 0., _port_tube_diam/2., 
+    		 _endcap_nozzle_flange_high + 1.*mm, 0., twopi);
+    G4SubtractionSolid* endcap_nozzle_flange_solid =
+      new G4SubtractionSolid("ENDCAP_NOZZLE_FLANGE", endcap_nozzle_flange_solid_b, axial_port_hole_solid, 
+    			     0, G4ThreeVector(0., 0., 0.));
+    
 
     //// UNIONS ///////
     G4double endcap_z_pos = (_vessel_tube_length/2.)- (_endcap_in_rad -_endcap_in_z_width);
@@ -284,6 +300,8 @@ void NextNewVessel::Construct()
        					0, G4ThreeVector(0.,0.,_endcap_nozzle_z_pos));
     vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, endcap_nozzle_gas_solid, 
       					rot_endcap, G4ThreeVector(0.,0.,-_endcap_nozzle_z_pos));
+    // vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, axialport_air_solid, 
+    //   					rot_endcap, G4ThreeVector(0.,0.,-_endcap_nozzle_z_pos - _endcap_nozzle_high/2. - _endcap_nozzle_flange_high /2.));
     
 
     //// LOGICS //////
@@ -308,7 +326,7 @@ void NextNewVessel::Construct()
     G4LogicalVolume* vessel_gas_logic = new G4LogicalVolume(vessel_gas_solid, vessel_gas_mat,"VESSEL_GAS");
     _internal_logic_vol = vessel_gas_logic;
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_gas_logic,
-		      "VESSEL_GAS", vessel_logic, false, 0, false);
+		      "VESSEL_GAS", vessel_logic, false, 0, true);
 
 
     /// SOURCE TUBES ////
@@ -372,38 +390,45 @@ void NextNewVessel::Construct()
   _upper_port_source_pos.setY(_up_nozzle_y_pos  + _up_nozzle_high/2. - (_up_port_tube_length - _up_nozzle_flange_high) + _port_tube_window_thickn);
   _upper_port_source_pos.setZ(0.);
 
-   // Endcap:  CHECK ALL MEASUREMENTS
-  /*
-    G4Tubs* axial_port_tube_solid = new G4Tubs("AXIAL_PORT", 0., _port_tube_diam/2.+_port_tube_thickness,
-                                                (_axial_port_tube_length - _endcap_nozzle_flange_high)/2., 0, twopi);
+  // Endcap:  we decided to simulate only the part of the tube inside the the endcap nozzle
+  // and place the source outside the detector at the correct distance.
+
+  G4double simulated_length =
+    _axial_port_tube_length - _axial_port_tube_out - _axial_port_flange*2 -
+    _axial_distance_flange_endcap + _endcap_nozzle_high;
+  
+  G4Tubs* axial_port_tube_solid =
+    new G4Tubs("AXIAL_PORT", 0., _port_tube_diam/2.+_port_tube_thickness,
+	       simulated_length/2., 0, twopi);
     G4LogicalVolume* axial_port_tube_logic =
     new G4LogicalVolume(axial_port_tube_solid, MaterialsList::Steel316Ti(), "AXIAL_PORT");
 
-
-    G4ThreeVector pos_axial_port(0., 0., -_endcap_nozzle_z_pos); // CHECK Z POS!
-    new G4PVPlacement(G4Transform3D(*rot_endcap, pos_axial_port), axial_port_tube_logic,
-                     "AXIAL_PORT", vessel_gas_logic, false, 0, false);
+    G4ThreeVector pos_axial_port(0.,0.,  - _endcap_nozzle_z_pos - _endcap_nozzle_high +  simulated_length/2.);
+    
+    new G4PVPlacement(0, pos_axial_port, axial_port_tube_logic,
+     		      "AXIAL_PORT", vessel_gas_logic, false, 0, false);
+		      
 
     G4Tubs* axial_port_tube_air_solid =
     new G4Tubs("AXIAL_PORT_AIR", 0., _port_tube_diam/2.,
-              (_axial_port_tube_length - _endcap_nozzle_flange_high - _port_tube_window_thickn)/2.,
+              (simulated_length - _port_tube_window_thickn)/2.,
               0, twopi);
      
   G4LogicalVolume* axial_port_tube_air_logic =
     new G4LogicalVolume(axial_port_tube_air_solid, 
                        G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "AXIAL_PORT_AIR");
   
-  new G4PVPlacement(0,G4ThreeVector(0.,0.,-_port_tube_window_thickn/2.),
+  new G4PVPlacement(0,G4ThreeVector(0.,0., -_port_tube_window_thickn/2.),
                    axial_port_tube_air_logic, "AXIAL_PORT_AIR", 
                    axial_port_tube_logic, false, 0, false);
-  */
-
+  
+  
     
     // SETTING VISIBILITIES   //////////
     vessel_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
     if (_visibility) {
       G4VisAttributes titanium_col = nexus::TitaniumGrey();
-      //   titanium_col.SetForceSolid(true);
+      titanium_col.SetForceSolid(true);
       vessel_logic->SetVisAttributes(titanium_col);
       lateral_port_tube_logic->SetVisAttributes(titanium_col);
       upper_port_tube_logic->SetVisAttributes(titanium_col);
@@ -412,6 +437,7 @@ void NextNewVessel::Construct()
       lateral_port_tube_air_logic->SetVisAttributes(air_col);
       upper_port_tube_air_logic->SetVisAttributes(air_col);
       vessel_logic->SetVisAttributes(titanium_col);
+      // vessel_gas_logic->SetVisAttributes(air_col);
     } else {
       vessel_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }

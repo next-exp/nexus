@@ -19,6 +19,7 @@
 #include "NextNewInnerElements.h"
 #include "BoxPointSampler.h"
 #include "OpticalMaterialProperties.h"
+#include "Visibilities.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -154,7 +155,11 @@ namespace nexus {
     _inner_elements->SetLogicalVolume(vessel_gas_logic);
     _inner_elements->Construct();
     SetELzCoord(_inner_elements->GetELzCoord());
-   
+
+
+    G4VisAttributes air_col = nexus::OGreen();
+    air_col.SetForceSolid(true);
+    //  shielding_air_logic->SetVisAttributes(air_col);
 
     //// VERTEX GENERATORS   //
     _lab_gen = 
@@ -172,7 +177,8 @@ namespace nexus {
     }
     //LEAD CASTLE
     else if ( (region == "SHIELDING_LEAD") || (region == "SHIELDING_STEEL") || 
-	      (region == "SHIELDING_GAS") || (region=="SHIELDING_STRUCT") ||  (region == "EXTERNAL") ) {
+	      (region == "SHIELDING_GAS") || (region=="SHIELDING_STRUCT") ||
+	      (region == "EXTERNAL") || (region == "SOURCE_PORT_AXIAL") ) {
       vertex = _shielding->GenerateVertex(region);   
     }
     //PEDESTAL
@@ -193,8 +199,7 @@ namespace nexus {
     else if ( (region == "VESSEL") || 
 	      (region == "SOURCE_PORT_ANODE") ||
 	      (region == "SOURCE_PORT_UP") ||
-	      (region == "SOURCE_PORT_CATHODE") ||
-	      (region == "SOURCE_PORT_AXIAL")) {
+	      (region == "SOURCE_PORT_CATHODE")) {
       vertex = _vessel->GenerateVertex(region);
     }
     // ICS REGIONS
@@ -215,7 +220,8 @@ namespace nexus {
     else {
       G4Exception("[NextNew]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");     
-    } 
+    }
+    G4cout << vertex << G4endl;
     return vertex;
   }
   
