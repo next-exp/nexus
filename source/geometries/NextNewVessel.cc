@@ -96,7 +96,7 @@ namespace nexus {
 
     // Vessel gas
     _pressure(1. * bar),
-    _temperature (303 * kelvin),
+    _temperature (300 * kelvin),
     _visibility(1),
     _sc_yield(16670. * 1/MeV),
     _gas("naturalXe")

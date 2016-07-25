@@ -32,7 +32,9 @@ using namespace CLHEP;
 NextNewOpticalGeometry::NextNewOpticalGeometry():
   BaseGeometry(),
   _pressure(1. * bar),
-  _sc_yield(16670. * 1/MeV)
+  _temperature (300 * kelvin),
+  _sc_yield(16670. * 1/MeV),
+  _gas("naturalXe")
 {
  // Build the internal gas volume with all the objects that live there 
 
@@ -55,6 +57,8 @@ NextNewOpticalGeometry::NextNewOpticalGeometry():
 			  "Set scintillation yield for GXe. It is in photons/MeV");
   sc_yield_cmd.SetParameterName("sc_yield", true);
   sc_yield_cmd.SetUnitCategory("1/Energy");
+
+  _msg->DeclareProperty("gas", _gas, "Gas being used");
 
 }
 
@@ -88,13 +92,30 @@ void NextNewOpticalGeometry::Construct()
   this->SetLogicalVolume(lab_logic);
 
   ///MOTHER VOLUME
-  // Build a big box of gaseous xenon which hosts the optical geometry
-  G4Material* gxe = MaterialsList::GXe(_pressure, 303);
-  gxe->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, 303, _sc_yield));
+  // Build a big box of gas which hosts the optical geometry
+
+   G4Material* gas_mat = nullptr;
+   
+    if (_gas == "naturalXe") {
+      gas_mat = MaterialsList::GXe(_pressure, _temperature);
+      gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
+    } else if (_gas == "enrichedXe") {
+      gas_mat =  MaterialsList::GXeEnriched(_pressure, _temperature);
+      gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
+    } else if  (_gas == "depletedXe") {
+      gas_mat =  MaterialsList::GXeDepleted(_pressure, _temperature);
+      gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
+    } else if (_gas == "Ar") {
+      gas_mat =  MaterialsList::GAr(_pressure, _temperature);
+      gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GAr(_sc_yield));
+    } else {
+      G4Exception("[NextNewOpticalGeometry]", "Construct()", FatalException,
+		  "Unknown kind of gas, valid options are: naturalXe, enrichedXe, depletedXe, Ar.");
+    }
 
   G4double gas_size = 3.*m;
   G4Box* gas_solid = new G4Box("GAS", gas_size/2., gas_size/2., gas_size/2.);
-  G4LogicalVolume* gas_logic = new G4LogicalVolume(gas_solid, gxe, "GAS");
+  G4LogicalVolume* gas_logic = new G4LogicalVolume(gas_solid, gas_mat, "GAS");
   new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), gas_logic,
 		    "GAS", lab_logic, false, 0, false); 
 

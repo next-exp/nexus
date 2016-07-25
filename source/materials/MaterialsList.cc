@@ -126,7 +126,7 @@ G4Material* MaterialsList::GAr(G4double pressure, G4double temperature)
   if (mat == 0) {
     G4NistManager* nist = G4NistManager::Instance();
       
-    mat = new G4Material(name, ArgonGasProperties::Density(pressure, temperature), 1,
+    mat = new G4Material(name, ArgonGasProperties::Density(pressure), 1,
 			 kStateGas, temperature, pressure);
     
     G4Element* Ar = nist->FindOrBuildElement("Ar");

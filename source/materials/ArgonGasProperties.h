@@ -29,7 +29,7 @@ namespace nexus {
     /* G4double Scintillation(G4double energy); */
     /* void Scintillation(G4int entries, G4double* energy, G4double* intensity); */
 
-    static G4double Density(G4double pressure=5.*CLHEP::bar, G4double temperature=300*CLHEP::kelvin);
+    static G4double Density(G4double pressure=5.*CLHEP::bar);
     
 
     /// Electroluminescence yield of pure xenon gas

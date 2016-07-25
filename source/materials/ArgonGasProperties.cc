@@ -34,9 +34,10 @@ namespace nexus {
   
 
   
-  G4double ArgonGasProperties::Density(G4double pressure, G4double temperature)
+  G4double ArgonGasProperties::Density(G4double pressure)
   {
     //These values are for a temperature of 300 K
+    // taken from http://www.nist.gov/srd/upload/jpcrd363.pdf
     G4double density = 1.60279*kg/m3;
     
     if (pressure/bar > 0.9 && pressure/bar < 1.1)
