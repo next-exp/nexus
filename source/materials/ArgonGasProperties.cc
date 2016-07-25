@@ -36,22 +36,28 @@ namespace nexus {
   
   G4double ArgonGasProperties::Density(G4double pressure, G4double temperature)
   {
+    //These values are for a temperature of 300 K
+    G4double density = 1.60279*kg/m3;
     
-    G4double molar_gas_constant = 8.31451 * joule/kelvin/mole;
-    G4double molar_mass = 39.948 * g/mole;
-    G4double z = 0; // compression factor
-    G4double density = pressure * molar_mass / (z * molar_gas_constant * temperature);
-
-    // For the moment, we've taken an extrapolation at 5 bar from Table 1 in
-    // http://ac.els-cdn.com/S0021961484710482/1-s2.0-S0021961484710482-main.pdf?_tid=9936a022-5251-11e6-ba48-00000aacb361&acdnat=1469442289_572738393c175d46c19778666e386358
-    if (temperature == 303.*kelvin && pressure > 4.9*bar && pressure < 5.1*bar) {
-      density = 0.08*g/cm3;
-    } else {
+    if (pressure/bar > 0.9 && pressure/bar < 1.1)
+      density = 1.60279*kg/m3;
+    else if (pressure/bar > 1.9 && pressure/bar < 2.1)
+      density = 3.20719*kg/m3;
+    else if (pressure/bar > 4.9 && pressure/bar < 5.1)
+      density = 8.032*kg/m3;
+    else if (pressure/bar > 9.9 && pressure/bar < 10.1)
+      density = 16.1118*kg/m3;
+    else if (pressure/bar > 14.9 && pressure/bar < 15.1)
+      density = 24.2369 *kg/m3;
+    else if (pressure/bar > 19.9 && pressure/bar < 20.1)
+      density = 32.4066*kg/m3;
+    else if (pressure/bar > 29.9 && pressure/bar < 30.1)
+      density = 48.8708*kg/m3;
+    else if (pressure/bar > 39.9 && pressure/bar < 40.1)
+      density = 65.494*kg/m3;
+    else
       G4Exception("[ArgonGaseousProperties]", "Density()", FatalException,
-                  "Unknown argon density for this temperature and pressure!"); 
-    }
-    
-      
+                  "Unknown argon density for this pressure!");     
    
     return density;
   }

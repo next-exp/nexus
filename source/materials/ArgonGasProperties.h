@@ -19,7 +19,7 @@ namespace nexus {
   {
   public:
     /// Constructor
-    ArgonGasProperties(G4double pressure=5.*CLHEP::bar, G4double temperature=303*CLHEP::kelvin);
+    ArgonGasProperties(G4double pressure=5.*CLHEP::bar, G4double temperature=300*CLHEP::kelvin);
     /// Destructor
     ~ArgonGasProperties();
 
@@ -29,7 +29,7 @@ namespace nexus {
     /* G4double Scintillation(G4double energy); */
     /* void Scintillation(G4int entries, G4double* energy, G4double* intensity); */
 
-    static G4double Density(G4double pressure=5.*CLHEP::bar, G4double temperature=303*CLHEP::kelvin);
+    static G4double Density(G4double pressure=5.*CLHEP::bar, G4double temperature=300*CLHEP::kelvin);
     
 
     /// Electroluminescence yield of pure xenon gas
