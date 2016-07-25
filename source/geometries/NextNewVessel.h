@@ -93,8 +93,8 @@ namespace nexus {
     // Primary scintillation yield
     G4double _sc_yield;
 
-    // Type of xenon being used
-    G4String _xenon;
+    // Gas being used
+    G4String _gas;
 
    
 

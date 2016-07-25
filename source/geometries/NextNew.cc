@@ -157,10 +157,6 @@ namespace nexus {
     SetELzCoord(_inner_elements->GetELzCoord());
 
 
-    G4VisAttributes air_col = nexus::OGreen();
-    air_col.SetForceSolid(true);
-    //  shielding_air_logic->SetVisAttributes(air_col);
-
     //// VERTEX GENERATORS   //
     _lab_gen = 
       new BoxPointSampler(_lab_size - 1.*m, _lab_size - 1.*m, _lab_size  - 1.*m, 1.*m,G4ThreeVector(0.,0.,0.),0);
@@ -221,7 +217,6 @@ namespace nexus {
       G4Exception("[NextNew]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");     
     }
-    G4cout << vertex << G4endl;
     return vertex;
   }
   

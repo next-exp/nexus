@@ -95,11 +95,11 @@ namespace nexus {
     _axial_distance_flange_endcap(51.*cm), // distance from the end of the endcap and the beginning of the flange
 
     // Vessel gas
-     _pressure(1. * bar),
+    _pressure(1. * bar),
     _temperature (303 * kelvin),
     _visibility(1),
     _sc_yield(16670. * 1/MeV),
-    _xenon("natural")
+    _gas("naturalXe")
 
   {
     /// Needed External variables
@@ -111,7 +111,7 @@ namespace nexus {
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
     _msg->DeclareProperty("vessel_vis", _visibility, "Vessel Visibility");
-    _msg->DeclareProperty("xenon_type", _xenon, "Type of xenon being used");
+    // _msg->DeclareProperty("xenon_type", _xenon, "Type of xenon being used");
 
     G4GenericMessenger::Command& pressure_cmd = _msg->DeclareProperty("pressure", _pressure, "Xenon pressure");
     pressure_cmd.SetUnitCategory("Pressure");
@@ -125,6 +125,9 @@ namespace nexus {
 			    "Set scintillation yield for GXe. It is in photons/MeV");
     sc_yield_cmd.SetParameterName("sc_yield", true);
     sc_yield_cmd.SetUnitCategory("1/Energy");
+
+    _msg->DeclareProperty("gas", _gas, "Gas being used");
+   
     
     
   }
@@ -310,23 +313,29 @@ void NextNewVessel::Construct()
 							"VESSEL");
     this->SetLogicalVolume(vessel_logic);
 
-    G4Material* vessel_gas_mat = nullptr;    
-    if (_xenon == "natural") {
+    G4Material* vessel_gas_mat = nullptr;
+   
+    if (_gas == "naturalXe") {
       vessel_gas_mat = MaterialsList::GXe(_pressure, _temperature);
-    } else if (_xenon == "enriched") {
+      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
+    } else if (_gas == "enrichedXe") {
       vessel_gas_mat =  MaterialsList::GXeEnriched(_pressure, _temperature);
-    } else if  (_xenon == "depleted") {
+      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
+    } else if  (_gas == "depletedXe") {
       vessel_gas_mat =  MaterialsList::GXeDepleted(_pressure, _temperature);
+      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
+    } else if (_gas == "Ar") {
+      vessel_gas_mat =  MaterialsList::GAr(_pressure, _temperature);
+      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GAr(_sc_yield));
     } else {
       G4Exception("[NextNewVessel]", "Construct()", FatalException,
-		  "Unknown kind of xenon, valid options are: natural, enriched, depleted.");     
+		  "Unknown kind of gas, valid options are: naturalXe, enrichedXe, depletedXe, Ar.");     
     }
-    
-    vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
+
     G4LogicalVolume* vessel_gas_logic = new G4LogicalVolume(vessel_gas_solid, vessel_gas_mat,"VESSEL_GAS");
     _internal_logic_vol = vessel_gas_logic;
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_gas_logic,
-		      "VESSEL_GAS", vessel_logic, false, 0, true);
+		      "VESSEL_GAS", vessel_logic, false, 0, false);
 
 
     /// SOURCE TUBES ////

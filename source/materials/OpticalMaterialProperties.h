@@ -48,7 +48,7 @@ namespace nexus {
 
     static G4MaterialPropertiesTable* OptCoupler();
 
-    static G4MaterialPropertiesTable* GAr();
+    static G4MaterialPropertiesTable* GAr(G4double sc_yield);
     static G4MaterialPropertiesTable* LAr();
 
     static G4MaterialPropertiesTable* GXe(G4double pressure=1.*bar, 

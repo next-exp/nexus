@@ -376,7 +376,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::OptCoupler()
 }
 
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::GAr()
+G4MaterialPropertiesTable* OpticalMaterialProperties::GAr(G4double sc_yield)
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
@@ -396,8 +396,6 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GAr()
     rindex[i] = 1 + 0.012055*(0.2075*pow(lambda,2)/(91.012*pow(lambda,2)-1) + 0.0415*pow(lambda,2)/(87.892*pow(lambda,2)-1) + 4.3330*pow(lambda,2)/(214.02*pow(lambda,2)-1)); // From refractiveindex.info
     //    std::cout << "rindex = " << rindex[i] << std::endl;
   }
-
-  mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
 
   // EMISSION SPECTRUM ////////////////////////////////////////////////
 
@@ -420,7 +418,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GAr()
     //    std::cout << "(energy, intensity) = (" << sc_energy[j] << "," << intensity[j] << ")" << std::endl;
   }
 
-  mpt->AddProperty("ELSPECTRUM", sc_energy, intensity, sc_entries);
+  
 
   // ABSORTION LENGTH ////////////////////////////////////////////////
 
@@ -428,20 +426,27 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GAr()
   G4double abslen[2] = {1.e8*m, 1.e8*m};
   mpt->AddProperty("ABSLENGTH", energy, abslen, 2);
 
-  G4double fano = 0.3;//An argon gas proportional scintillation counter with UV avalanche photodiode scintillation readout C.M.B. Monteiro, J.A.M. Lopes, P.C.P.S. Simoes, J.M.F. dos Santos, C.A.N. Conde 
-  mpt->AddConstProperty("RESOLUTIONSCALE",fano);
+  G4double fano = 0.3;//An argon gas proportional scintillation counter with UV avalanche photodiode scintillation readout C.M.B. Monteiro, J.A.M. Lopes, P.C.P.S. Simoes, J.M.F. dos Santos, C.A.N. Conde
 
-  mpt->AddConstProperty("ELTIMECONSTANT", 1260.*ns);
+  mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
+  mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
+  mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
+  mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield);
+  mpt->AddProperty("ELSPECTRUM", sc_energy, intensity, sc_entries);
+  mpt->AddConstProperty("FASTTIMECONSTANT",1.*ns);
+  mpt->AddConstProperty("SLOWTIMECONSTANT",45.*ns);
+  mpt->AddConstProperty("YIELDRATIO",.9);
+  
+  //mpt->AddConstProperty("RESOLUTIONSCALE",fano);
+  mpt->AddConstProperty("RESOLUTIONSCALE", 1.0);
+
+  // mpt->AddConstProperty("ELTIMECONSTANT", 1260.*ns);
   mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
   
   //  G4double sc_yield = 13889/MeV;
 
-  //mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
-  //mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
-  //mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield);
   //7mpt->AddConstProperty("FASTTIMECONSTANT",7.*ns);
   //mpt->AddConstProperty("SLOWTIMECONSTANT",1260.*ns);
-  //mpt->AddConstProperty("YIELDRATIO",.9);
   return mpt; 
 }
 
@@ -535,7 +540,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
 
   for (G4int i=0; i<ri_entries; i++) {
     rindex[i] = GXe_prop.RefractiveIndex(ri_energy[i]);
-    //   G4cout << ri_energy[i] << ", " << rindex[i] << G4endl;
+    G4cout << ri_energy[i] << ", " << rindex[i] << G4endl;
   }
 
   // Sampling from ~150 nm to 200 nm <----> from 6.20625 eV to 8.20625 eV

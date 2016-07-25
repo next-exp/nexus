@@ -9,6 +9,7 @@
 
 #include "MaterialsList.h"
 #include "XenonGasProperties.h"
+#include "ArgonGasProperties.h"
 
 #include <G4Material.hh>
 #include <G4Element.hh>
@@ -49,8 +50,7 @@ G4Material* MaterialsList::GXeEnriched(G4double pressure, G4double temperature)
 			 kStateGas, temperature, pressure);
     
     G4Element* Xe = new G4Element("GXeEnriched", "Xe", 6);
-    // Isotopic mass per mole taken from
-    // http://rushim.ru/books/spravochniki/handbook-chemistry-and-physics.pdf
+    
     G4Isotope* Xe129 = new G4Isotope("Xe129", 54, 129, XenonGasProperties::MassPerMole(129));
     G4Isotope* Xe130 = new G4Isotope("Xe130", 54, 130, XenonGasProperties::MassPerMole(130));
     G4Isotope* Xe131 = new G4Isotope("Xe131", 54, 131, XenonGasProperties::MassPerMole(131));
@@ -116,6 +116,27 @@ G4Material* MaterialsList::GXeDepleted(G4double pressure, G4double temperature)
 
   return mat;
 }
+
+G4Material* MaterialsList::GAr(G4double pressure, G4double temperature)
+{
+  G4String name = "GAr";
+  
+  G4Material* mat = G4Material::GetMaterial(name, false);
+    
+  if (mat == 0) {
+    G4NistManager* nist = G4NistManager::Instance();
+      
+    mat = new G4Material(name, ArgonGasProperties::Density(pressure, temperature), 1,
+			 kStateGas, temperature, pressure);
+    
+    G4Element* Ar = nist->FindOrBuildElement("Ar");
+  
+    mat->AddElement(Ar,1);
+  }
+
+  return mat;
+}
+
   
   
   

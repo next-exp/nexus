@@ -37,6 +37,10 @@ namespace nexus {
 			   G4double temperature=STP_Temperature);
     static G4Material* GXeDepleted(G4double pressure=STP_Pressure,
 				   G4double temperature=STP_Temperature);
+
+    // Argon
+    static G4Material* GAr(G4double pressure=STP_Pressure,
+			   G4double temperature=STP_Temperature);
     
     // Stainless Steel (grade 304L)
     static G4Material* Steel();
