@@ -35,8 +35,11 @@ namespace nexus {
   private:     
     G4GenericMessenger* _msg;
     G4double _pressure;
+    G4double _temperature;
     G4double _sc_yield;
+    G4String _gas;
     NextNewInnerElements* _inner_elements;
+   
    
   };
 
