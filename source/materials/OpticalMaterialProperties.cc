@@ -426,7 +426,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GAr(G4double sc_yield)
   G4double abslen[2] = {1.e8*m, 1.e8*m};
   mpt->AddProperty("ABSLENGTH", energy, abslen, 2);
 
-  G4double fano = 0.3;//An argon gas proportional scintillation counter with UV avalanche photodiode scintillation readout C.M.B. Monteiro, J.A.M. Lopes, P.C.P.S. Simoes, J.M.F. dos Santos, C.A.N. Conde
+  //G4double fano = 0.3;//An argon gas proportional scintillation counter with UV avalanche photodiode scintillation readout C.M.B. Monteiro, J.A.M. Lopes, P.C.P.S. Simoes, J.M.F. dos Santos, C.A.N. Conde
 
   mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
   mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
