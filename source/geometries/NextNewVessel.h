@@ -42,6 +42,9 @@ namespace nexus {
     G4double GetUPNozzleZPosition();
     G4double GetLATNozzleZPosition();
 
+    G4ThreeVector GetLatExtSourcePosition();
+    G4ThreeVector GetUpExtSourcePosition();
+
     /// Builder
     void Construct();
 
@@ -59,13 +62,15 @@ namespace nexus {
 
      // Dimensions of the source tubes
     G4double _port_tube_diam, _port_tube_thickness, _port_tube_window_thickn;
-    G4double _lat_port_tube_length;
-    G4double _up_port_tube_length, _axial_port_tube_length;
+    G4double _lat_port_tube_length, _lat_port_tube_out;
+    G4double _up_port_tube_length, _up_port_tube_out, _axial_port_tube_length;
     G4double _axial_port_tube_out, _axial_port_flange, _axial_distance_flange_endcap;
 
     // Position of the sources
     G4ThreeVector _lateral_port_source_pos;
-    G4ThreeVector _upper_port_source_pos;    
+    G4ThreeVector _upper_port_source_pos;
+    G4ThreeVector _lateral_port_source_pos_ext;
+    G4ThreeVector _upper_port_source_pos_ext; 
 
     G4double _pressure, _temperature;
 

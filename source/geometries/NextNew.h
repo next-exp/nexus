@@ -22,6 +22,7 @@ namespace nexus { class NextNewVessel; }
 namespace nexus { class NextNewIcs; }
 namespace nexus { class NextNewInnerElements; }
 namespace nexus {class BoxPointSampler;}
+namespace nexus {class CylinderPointSampler;}
 
 class G4LogicalVolume;
 class G4GenericMessenger;
@@ -45,6 +46,7 @@ namespace nexus {
     void Construct();
 
   private:
+    
     // Detector dimensions
     const G4double _lab_size; ///< Size of the air box containing the detector  
    
@@ -63,9 +65,13 @@ namespace nexus {
     NextNewInnerElements* _inner_elements;
     
     BoxPointSampler* _lab_gen; ///< Vertex generator
+    CylinderPointSampler* _source_gen_lat;
+    CylinderPointSampler* _source_gen_up;
 
     /// Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
+    G4GenericMessenger* _msg;
+
+
   };
   
 } // end namespace nexus

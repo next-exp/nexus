@@ -17,19 +17,21 @@
 #include "NextNewVessel.h"
 #include "NextNewIcs.h"
 #include "NextNewInnerElements.h"
+#include "Na22Source.h"
 #include "BoxPointSampler.h"
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
-
 #include <G4Material.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4VisAttributes.hh>
 #include <G4UserLimits.hh>
 #include <G4NistManager.hh>
+#include <G4RotationMatrix.hh>
+#include <G4Transform3D.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
@@ -42,7 +44,7 @@ namespace nexus {
   NextNew::NextNew():
     BaseGeometry(),
     // Lab dimensions
-    _lab_size (5. * m)
+    _lab_size (5. * m)   
     // Buffer gas dimensions
   {
     //Shielding
@@ -144,7 +146,33 @@ namespace nexus {
     new G4PVPlacement(0, position, vessel_logic, 
 		      "VESSEL", shielding_air_logic, false, 0, false);
     G4LogicalVolume* vessel_gas_logic = _vessel->GetInternalLogicalVolume();
-      
+
+    G4ThreeVector lat_pos = _vessel->GetLatExtSourcePosition(); // this is the position of the end of the port tube
+    G4RotationMatrix* lat_rot = new G4RotationMatrix();
+    lat_rot->rotateY(-pi/2.);
+    
+    Na22Source* na22 = new Na22Source();
+    na22->Construct();
+    G4LogicalVolume* na22_logic = na22->GetLogicalVolume();
+
+    // This is the position of the 0.1 mm thickness actual Na22 source.
+    G4ThreeVector lat_pos_na22 = G4ThreeVector(lat_pos.getX() + na22->GetSupportThickness()/2. - na22->GetSourceThickness()/2., lat_pos.getY(), lat_pos.getZ());
+
+    new G4PVPlacement(G4Transform3D(*lat_rot, lat_pos_na22), na22_logic, "NA22_SOURCE",
+		      shielding_air_logic, false, 0, true);
+
+    G4ThreeVector up_pos = _vessel->GetUpExtSourcePosition(); // this is the position of the end of the port tube
+    G4RotationMatrix* up_rot = new G4RotationMatrix();
+    up_rot->rotateX(pi/2.);
+
+    G4ThreeVector up_pos_na22 = G4ThreeVector(up_pos.getX(), up_pos.getY() + na22->GetSupportThickness()/2. - na22->GetSourceThickness()/2., up_pos.getZ());
+
+    new G4PVPlacement(G4Transform3D(*up_rot, up_pos_na22), na22_logic, "NA22_SOURCE",
+		      shielding_air_logic, false, 1, true);
+
+    G4VisAttributes light_brown_col = nexus::CopperBrown();
+    na22_logic->SetVisAttributes(light_brown_col);
+    
     //ICS
     _ics->SetLogicalVolume(vessel_gas_logic);
     _ics->SetNozzlesZPosition( _vessel->GetLATNozzleZPosition(),_vessel->GetUPNozzleZPosition());
@@ -161,8 +189,15 @@ namespace nexus {
     _lab_gen = 
       new BoxPointSampler(_lab_size - 1.*m, _lab_size - 1.*m, _lab_size  - 1.*m, 1.*m,G4ThreeVector(0.,0.,0.),0);
 
+    G4double source_diam = na22->GetSourceDiameter();
+    G4double source_thick = na22->GetSourceThickness();
+    _source_gen_lat = new CylinderPointSampler(source_diam/2., source_thick, 0., 0., lat_pos, lat_rot);
+    _source_gen_up = new CylinderPointSampler(source_diam/2., source_thick, 0., 0., up_pos, up_rot);
+    
 
   }
+
+ 
     
   G4ThreeVector NextNew::GenerateVertex(const G4String& region) const
   {
@@ -171,7 +206,12 @@ namespace nexus {
     if (region == "LAB") {
       vertex = _lab_gen->GenerateVertex("INSIDE");
     }
-    //LEAD CASTLE
+    else if (region == "SOURCE_PORT_ANODE_EXT") {
+      vertex =  _source_gen_lat->GenerateVertex("BODY_VOL");
+    }
+    else if (region == "SOURCE_PORT_UP_EXT") {
+      vertex =  _source_gen_up->GenerateVertex("BODY_VOL");
+    }
     else if ( (region == "SHIELDING_LEAD") || (region == "SHIELDING_STEEL") || 
 	      (region == "SHIELDING_GAS") || (region=="SHIELDING_STRUCT") ||
 	      (region == "EXTERNAL") || (region == "SOURCE_PORT_AXIAL") ) {
