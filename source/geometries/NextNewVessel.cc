@@ -460,7 +460,7 @@ void NextNewVessel::Construct()
     G4ThreeVector pos_axial_port(0.,0.,  - _endcap_nozzle_z_pos - _endcap_nozzle_high +  simulated_length/2.);
     
     new G4PVPlacement(0, pos_axial_port, axial_port_tube_logic,
-     		      "AXIAL_PORT", vessel_gas_logic, false, 0, true);
+     		      "AXIAL_PORT", vessel_gas_logic, false, 0, false);
 		      
 
     G4Tubs* axial_port_tube_air_solid =
@@ -482,14 +482,14 @@ void NextNewVessel::Construct()
   _axial_port_source_pos.setZ(- _endcap_nozzle_z_pos  - _endcap_nozzle_high + simulated_length - _port_tube_window_thickn);
   
 
-  G4cout << "*** Positions of internal sources ***" << G4endl;
-  G4cout << "Axial: " << _axial_port_source_pos << G4endl;
-  G4cout << "Lateral: " << _lateral_port_source_pos << G4endl;
-  G4cout << "Upper: " << _upper_port_source_pos << G4endl;
+  // G4cout << "*** Positions of internal sources ***" << G4endl;
+  // G4cout << "Axial: " << _axial_port_source_pos << G4endl;
+  // G4cout << "Lateral: " << _lateral_port_source_pos << G4endl;
+  // G4cout << "Upper: " << _upper_port_source_pos << G4endl;
 
-  G4cout << "*** Positions of external sources ***" << G4endl;
-  G4cout << "Lateral: " << _lateral_port_source_pos_ext << G4endl;
-  G4cout << "Upper: " << _upper_port_source_pos_ext << G4endl;
+  // G4cout << "*** Positions of external sources ***" << G4endl;
+  // G4cout << "Lateral: " << _lateral_port_source_pos_ext << G4endl;
+  // G4cout << "Upper: " << _upper_port_source_pos_ext << G4endl;
     
     // SETTING VISIBILITIES   //////////
     vessel_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
