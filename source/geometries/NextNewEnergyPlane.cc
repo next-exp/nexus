@@ -66,7 +66,6 @@ namespace nexus {
     _enclosure = new Enclosure();
     G4double enclosure_z_center = _enclosure->GetObjectCenter().z();
     _enclosure_z_pos = _energy_plane_z_pos - _carrier_plate_front_buffer_thickness - enclosure_z_center;
-   
   }
   void NextNewEnergyPlane::SetLogicalVolume(G4LogicalVolume* mother_logic)
   {
@@ -147,20 +146,22 @@ namespace nexus {
 			  "CARRIER_PLATE");
      
      
-    ///Placement
-    G4double carrier_plate_z_pos = 
-      _energy_plane_z_pos - _carrier_plate_thickness/2.;
-    
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,carrier_plate_z_pos), 
-		      carrier_plate_logic, "CARRIER_PLATE", 
-		      _mother_logic, false, 0, false);
-
-    
-   
     ///ENCLOSURES + PMT ///
     _enclosure->Construct();
     G4LogicalVolume* enclosure_logic = _enclosure->GetLogicalVolume();
     G4double enclosure_z_center = _enclosure->GetObjectCenter().z();// return G4ThreeVector(0., 0., _enclosure_length/2.);
+
+    ///Placement: the carrier plate skims the plane of the sapphire windows
+    
+    // G4double carrier_plate_z_pos = 
+    //   _energy_plane_z_pos - _carrier_plate_thickness/2.;
+    G4double carrier_plate_z_pos = 
+      _enclosure_z_pos + enclosure_z_center - _carrier_plate_thickness/2.;
+    
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,carrier_plate_z_pos), 
+		      carrier_plate_logic, "CARRIER_PLATE", 
+		      _mother_logic, false, 0, false);   
+    
 
     /// TPB coating on sapphire window
     G4Material* tpb = MaterialsList::TPB();
@@ -192,7 +193,7 @@ namespace nexus {
 			false, i, false);
       //std::cout<<"enclosure positions"<< _pmt_positions[i]<< _enclosure_z_pos<<std::endl;  
     }
-     
+  
    
     /////  SETTING VISIBILITIES   //////////
     if (_visibility) {

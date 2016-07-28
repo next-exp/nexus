@@ -67,8 +67,11 @@ namespace nexus {
     G4double _axial_port_tube_out, _axial_port_flange, _axial_distance_flange_endcap;
 
     // Position of the sources
+    // Internal ones, at the bottom of the tube ports
+    G4ThreeVector _axial_port_source_pos;
     G4ThreeVector _lateral_port_source_pos;
     G4ThreeVector _upper_port_source_pos;
+    // External ones, at the beginning of the tube ports
     G4ThreeVector _lateral_port_source_pos_ext;
     G4ThreeVector _upper_port_source_pos_ext; 
 

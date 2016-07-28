@@ -159,7 +159,7 @@ namespace nexus {
     G4ThreeVector lat_pos_na22 = G4ThreeVector(lat_pos.getX() + na22->GetSupportThickness()/2. - na22->GetSourceThickness()/2., lat_pos.getY(), lat_pos.getZ());
 
     new G4PVPlacement(G4Transform3D(*lat_rot, lat_pos_na22), na22_logic, "NA22_SOURCE",
-		      shielding_air_logic, false, 0, true);
+		      shielding_air_logic, false, 0, false);
 
     G4ThreeVector up_pos = _vessel->GetUpExtSourcePosition(); // this is the position of the end of the port tube
     G4RotationMatrix* up_rot = new G4RotationMatrix();
@@ -168,7 +168,7 @@ namespace nexus {
     G4ThreeVector up_pos_na22 = G4ThreeVector(up_pos.getX(), up_pos.getY() + na22->GetSupportThickness()/2. - na22->GetSourceThickness()/2., up_pos.getZ());
 
     new G4PVPlacement(G4Transform3D(*up_rot, up_pos_na22), na22_logic, "NA22_SOURCE",
-		      shielding_air_logic, false, 1, true);
+		      shielding_air_logic, false, 1, false);
 
     G4VisAttributes light_brown_col = nexus::CopperBrown();
     na22_logic->SetVisAttributes(light_brown_col);
@@ -206,15 +206,15 @@ namespace nexus {
     if (region == "LAB") {
       vertex = _lab_gen->GenerateVertex("INSIDE");
     }
-    else if (region == "SOURCE_PORT_ANODE_EXT") {
+    else if (region == "NA22_PORT_ANODE_EXT") {
       vertex =  _source_gen_lat->GenerateVertex("BODY_VOL");
     }
-    else if (region == "SOURCE_PORT_UP_EXT") {
+    else if (region == "NA22_PORT_UP_EXT") {
       vertex =  _source_gen_up->GenerateVertex("BODY_VOL");
     }
     else if ( (region == "SHIELDING_LEAD") || (region == "SHIELDING_STEEL") || 
 	      (region == "SHIELDING_GAS") || (region=="SHIELDING_STRUCT") ||
-	      (region == "EXTERNAL") || (region == "SOURCE_PORT_AXIAL") ) {
+	      (region == "EXTERNAL") || (region == "SOURCE_PORT_AXIAL_EXT") ) {
       vertex = _shielding->GenerateVertex(region);   
     }
     //PEDESTAL
@@ -235,7 +235,7 @@ namespace nexus {
     else if ( (region == "VESSEL") || 
 	      (region == "SOURCE_PORT_ANODE") ||
 	      (region == "SOURCE_PORT_UP") ||
-	      (region == "SOURCE_PORT_CATHODE")) {
+	      (region == "SOURCE_PORT_AXIAL")) {
       vertex = _vessel->GenerateVertex(region);
     }
     // ICS REGIONS

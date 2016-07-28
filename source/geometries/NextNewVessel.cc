@@ -97,7 +97,7 @@ namespace nexus {
     _axial_port_tube_length (777. * mm), // whole tube, according to drawings
     _axial_port_tube_out(30.*mm), // part of the tube which sticks out of the flange
     _axial_port_flange(20.*mm),
-    _axial_distance_flange_endcap(51.*cm), // distance from the end of the endcap and the beginning of the flange
+    _axial_distance_flange_endcap(51.*cm), // distance from the end of the endcap and the beginning of the last flange
 
     // Vessel gas
     _pressure(1. * bar),
@@ -393,10 +393,9 @@ void NextNewVessel::Construct()
 		    lateral_port_tube_air_logic, "LATERAL_PORT_AIR", 
 		    lateral_port_tube_logic, false, 0, false);
 
-  // The position of the source is assumed to be at the end of the tube, inside.
-  // To be changed for different configurations
+  // This position of the source is assumed to be at the bottom of the tube, inside.
   // G4cout << "Old pos: " << _lat_nozzle_x_pos  + _lat_nozzle_high/2. - (53.*mm - _lat_nozzle_flange_high) + _port_tube_window_thickn << G4endl;
-  _lateral_port_source_pos.setX(_lat_nozzle_x_pos  + _lat_nozzle_high/2. - simulated_length_lat + _port_tube_window_thickn);
+  _lateral_port_source_pos.setX(_lat_nozzle_x_pos  + _lat_nozzle_high - simulated_length_lat + _port_tube_window_thickn);
   _lateral_port_source_pos.setY(0.);
   _lateral_port_source_pos.setZ(_lat_nozzle_z_pos);
 
@@ -421,7 +420,7 @@ void NextNewVessel::Construct()
     G4ThreeVector pos_upper_port(0., _up_nozzle_y_pos + _up_nozzle_high/2. - simulated_length_up/2., 0.);
     
     new G4PVPlacement(G4Transform3D(*rot_up, pos_upper_port), upper_port_tube_logic,
-		      "UPPER_PORT", vessel_gas_logic, false, 0, true);
+		      "UPPER_PORT", vessel_gas_logic, false, 0, false);
 
     G4Tubs* upper_port_tube_air_solid =
     new G4Tubs("UPPER_PORT_AIR", 0., _port_tube_diam/2.,
@@ -434,12 +433,11 @@ void NextNewVessel::Construct()
   
   new G4PVPlacement(0,G4ThreeVector(0.,0.,-_port_tube_window_thickn/2.),
 		    upper_port_tube_air_logic, "UPPER_PORT_AIR", 
-		    upper_port_tube_logic, false, 0, true);
+		    upper_port_tube_logic, false, 0, false);
 
-  // The position of the source is assumed to be at the end of the tube, inside.
-  // To be changed for different configurations
+  // This position of the source is assumed to be at the bottom of the tube, inside.
   _upper_port_source_pos.setX(0.);
-  _upper_port_source_pos.setY(_up_nozzle_y_pos  + _up_nozzle_high/2. - (_up_port_tube_length - _up_nozzle_flange_high) + _port_tube_window_thickn);
+  _upper_port_source_pos.setY(_up_nozzle_y_pos  + _up_nozzle_high - simulated_length_up + _port_tube_window_thickn);
   _upper_port_source_pos.setZ(0.);
 
   // Source placed outside the flange, at the end of the port tube
@@ -447,8 +445,7 @@ void NextNewVessel::Construct()
   _upper_port_source_pos_ext.setY(_up_nozzle_y_pos  + _up_nozzle_high/2. + 2.*_up_nozzle_flange_high + _up_port_tube_out);
   _upper_port_source_pos_ext.setZ(0.);
 
-  // Endcap:  we decided to simulate only the part of the tube inside the the endcap nozzle
-  // and place the source outside the detector at the correct distance.
+  // ENDCAP
 
   G4double simulated_length =
     _axial_port_tube_length - _axial_port_tube_out - _axial_port_flange*2 -
@@ -463,7 +460,7 @@ void NextNewVessel::Construct()
     G4ThreeVector pos_axial_port(0.,0.,  - _endcap_nozzle_z_pos - _endcap_nozzle_high +  simulated_length/2.);
     
     new G4PVPlacement(0, pos_axial_port, axial_port_tube_logic,
-     		      "AXIAL_PORT", vessel_gas_logic, false, 0, false);
+     		      "AXIAL_PORT", vessel_gas_logic, false, 0, true);
 		      
 
     G4Tubs* axial_port_tube_air_solid =
@@ -478,8 +475,21 @@ void NextNewVessel::Construct()
   new G4PVPlacement(0,G4ThreeVector(0.,0., -_port_tube_window_thickn/2.),
                    axial_port_tube_air_logic, "AXIAL_PORT_AIR", 
                    axial_port_tube_logic, false, 0, false);
+
+  // This position of the source is assumed to be at the bottom of the tube, inside.
+  _axial_port_source_pos.setX(0.);
+  _axial_port_source_pos.setY(0.);
+  _axial_port_source_pos.setZ(- _endcap_nozzle_z_pos  - _endcap_nozzle_high + simulated_length - _port_tube_window_thickn);
   
-  
+
+  G4cout << "*** Positions of internal sources ***" << G4endl;
+  G4cout << "Axial: " << _axial_port_source_pos << G4endl;
+  G4cout << "Lateral: " << _lateral_port_source_pos << G4endl;
+  G4cout << "Upper: " << _upper_port_source_pos << G4endl;
+
+  G4cout << "*** Positions of external sources ***" << G4endl;
+  G4cout << "Lateral: " << _lateral_port_source_pos_ext << G4endl;
+  G4cout << "Upper: " << _upper_port_source_pos_ext << G4endl;
     
     // SETTING VISIBILITIES   //////////
     vessel_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
@@ -573,7 +583,7 @@ void NextNewVessel::Construct()
 	  // std::cout<<vertex<<std::endl;
 	} while (VertexVolume->GetName() != "VESSEL");
       }
-      //Vertex in ENDCAPCAPS
+      //Vertex in ENDCAPS
       else if (rand < (_perc_tube_vol+2*_perc_endcap_vol)){
 	G4VPhysicalVolume *VertexVolume;
 	do {
@@ -608,11 +618,11 @@ void NextNewVessel::Construct()
     else if (region =="SOURCE_PORT_UP"){ 
       vertex = _upper_port_source_pos;
     }
-    else if (region =="SOURCE_PORT_CATHODE"){ vertex = G4ThreeVector(_lat_nozzle_x_pos, 0.,-_lat_nozzle_z_pos);
-    }  
+    // else if (region =="SOURCE_PORT_CATHODE"){
+    //   vertex = G4ThreeVector(_lat_nozzle_x_pos, 0.,-_lat_nozzle_z_pos);
+    // }  
     else if (region =="SOURCE_PORT_AXIAL") { 
-      //vertex = _axial_port_source_pos; 
-      vertex = G4ThreeVector(0., 0., -_endcap_nozzle_z_pos);
+      vertex = _axial_port_source_pos; 
     }
     else {
       G4Exception("[NextNewVessel]", "GenerateVertex()", FatalException,
