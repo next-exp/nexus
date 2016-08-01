@@ -155,19 +155,21 @@ namespace nexus {
     na22->Construct();
     G4LogicalVolume* na22_logic = na22->GetLogicalVolume();
 
-    // This is the position of the 0.1 mm thickness actual Na22 source.
-    G4ThreeVector lat_pos_na22 = G4ThreeVector(lat_pos.getX() + na22->GetSupportThickness()/2. - na22->GetSourceThickness()/2., lat_pos.getY(), lat_pos.getZ());
+    // This is the position of the whole Na22 source + plastic support.
+    // G4ThreeVector lat_pos_na22 = G4ThreeVector(lat_pos.getX() + na22->GetSupportThickness()/2. - na22->GetSourceThickness()/2., lat_pos.getY(), lat_pos.getZ());
+    G4ThreeVector lat_pos_source = G4ThreeVector(lat_pos.getX() + na22->GetSupportThickness()/2., lat_pos.getY(), lat_pos.getZ());
 
-    new G4PVPlacement(G4Transform3D(*lat_rot, lat_pos_na22), na22_logic, "NA22_SOURCE",
+    new G4PVPlacement(G4Transform3D(*lat_rot, lat_pos_source), na22_logic, "NA22_SOURCE",
 		      shielding_air_logic, false, 0, false);
 
     G4ThreeVector up_pos = _vessel->GetUpExtSourcePosition(); // this is the position of the end of the port tube
     G4RotationMatrix* up_rot = new G4RotationMatrix();
     up_rot->rotateX(pi/2.);
 
-    G4ThreeVector up_pos_na22 = G4ThreeVector(up_pos.getX(), up_pos.getY() + na22->GetSupportThickness()/2. - na22->GetSourceThickness()/2., up_pos.getZ());
+    // G4ThreeVector up_pos_na22 = G4ThreeVector(up_pos.getX(), up_pos.getY() + na22->GetSupportThickness()/2. - na22->GetSourceThickness()/2., up_pos.getZ());
+    G4ThreeVector up_pos_source = G4ThreeVector(up_pos.getX(), up_pos.getY() + na22->GetSupportThickness()/2., up_pos.getZ());
 
-    new G4PVPlacement(G4Transform3D(*up_rot, up_pos_na22), na22_logic, "NA22_SOURCE",
+    new G4PVPlacement(G4Transform3D(*up_rot, up_pos_source), na22_logic, "NA22_SOURCE",
 		      shielding_air_logic, false, 1, false);
 
     G4VisAttributes light_brown_col = nexus::CopperBrown();
@@ -191,8 +193,10 @@ namespace nexus {
 
     G4double source_diam = na22->GetSourceDiameter();
     G4double source_thick = na22->GetSourceThickness();
-    _source_gen_lat = new CylinderPointSampler(source_diam/2., source_thick, 0., 0., lat_pos, lat_rot);
-    _source_gen_up = new CylinderPointSampler(source_diam/2., source_thick, 0., 0., up_pos, up_rot);
+    G4ThreeVector lat_pos_na22 = G4ThreeVector(lat_pos.getX() + na22->GetSourceThickness()/2., lat_pos.getY(), lat_pos.getZ());
+    G4ThreeVector up_pos_na22 = G4ThreeVector(up_pos.getX(), up_pos.getY() + na22->GetSourceThickness()/2., up_pos.getZ());
+    _source_gen_lat = new CylinderPointSampler(0., source_thick, source_diam/2., 0., lat_pos_na22, lat_rot);
+    _source_gen_up = new CylinderPointSampler(0., source_thick, source_diam/2., 0., up_pos_na22, up_rot);
     
 
   }

@@ -113,8 +113,7 @@ namespace nexus {
     /// 1) LATERAL and UPPER ports: to avoid volume subtractions, we first make the union of nozzle + (flange+cover) + external part of source tube, then we put together this volume with the vessel. After that, we put inside the vessel logical volume the volume of air which corresponds to the thickness of flange+cover+external part of source port. After that, we put inside the vessel gas volume the internal part of the source port and, inside it, the corresponding part of air.
     /// 2) AXIAL port: only the internal part of the source port is simulated, because in principle we will use this port only with internal sources, since it's far from the vessel.
     /// 3) All the XXXX_nozzle_flange_high and XXXX_nozzle_high are half the thickness of the solid volume. In the solid union between vessel and nozzle, the centre of the body of the nozzle is placed in the edge of the vessel, thus half of the body length is lost in the union and the real length of the nozzle is XXXX_nozzle_flange_high.
-    /// 4) Despite revising the geometry for hours, there's still a 50 mu overlap between the source prt (external part) and the Na22 source placed outside. We've decided to just shift the position of the source by half a mm, in order not to change the geometry in a relevant way and to get rid of overlaps at the same time.
-    /// 5) Bear in mind that visualizing this geometry could take to a crash of OpenGL, because of its complexity. Don't worry, geant4 tracking is being done correctly.
+    /// 4) Bear in mind that visualizing this geometry could take to a crash of OpenGL, because of its complexity. Don't worry, geant4 tracking is being done correctly.
 
 
     // Initializing the geometry navigator (used in vertex generation)
@@ -415,7 +414,7 @@ void NextNewVessel::Construct()
   _lateral_port_source_pos.setZ(_lat_nozzle_z_pos);
 
   // Source placed outside the flange, at the end of the port tube
-  _lateral_port_source_pos_ext.setX(_lat_nozzle_x_pos  + _lat_nozzle_high/2. + 2.*_lat_nozzle_flange_high + _lat_port_tube_out + 0.5*mm); // This 0.5 mm is because otherwise a volume overlap appears, not clear where from.
+  _lateral_port_source_pos_ext.setX(_lat_nozzle_x_pos  + _lat_nozzle_high/2. + 2.*_lat_nozzle_flange_high + _lat_port_tube_out); 
   _lateral_port_source_pos_ext.setY(0.);
   _lateral_port_source_pos_ext.setZ(_lat_nozzle_z_pos);
 
@@ -455,7 +454,7 @@ void NextNewVessel::Construct()
 
   // Source placed outside the flange, at the end of the port tube
   _upper_port_source_pos_ext.setX(0.);
-  _upper_port_source_pos_ext.setY(_up_nozzle_y_pos  + _up_nozzle_high/2. + 2.*_up_nozzle_flange_high + _up_port_tube_out+ 0.5*mm); // This 0.5 mm is because otherwise a volume overlap appears, not clear where from.
+  _upper_port_source_pos_ext.setY(_up_nozzle_y_pos  + _up_nozzle_high/2. + 2.*_up_nozzle_flange_high + _up_port_tube_out); 
   _upper_port_source_pos_ext.setZ(0.);
 
   // ENDCAP
