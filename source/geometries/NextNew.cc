@@ -192,9 +192,6 @@ namespace nexus {
     //AIR AROUND SHIELDING
     if (region == "LAB") {
       vertex = _lab_gen->GenerateVertex("INSIDE");
-
-      // This is the only vertex that must not be rotated and shifted
-      return vertex;
     }
     else if (region == "NA22_PORT_ANODE_EXT") {
       vertex =  _source_gen_lat->GenerateVertex("BODY_VOL");
