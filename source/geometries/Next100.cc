@@ -35,7 +35,8 @@ namespace nexus {
     _up_nozzle_ypos (20. * cm),
     _central_nozzle_ypos (0. * cm),
     _down_nozzle_ypos (-20. * cm),
-    _bottom_nozzle_ypos(-53. * cm)
+    _bottom_nozzle_ypos(-53. * cm),
+    rot_angle_(pi)
   {
 
   // The following methods must be invoked in this particular
@@ -89,30 +90,10 @@ namespace nexus {
     // (i.e., this is the volume that will be placed in the world)
     this->SetLogicalVolume(_lab_logic);
 
-    /*
-    // BUFFER GAS   ///////////////////////////////////////////////////////////////////////////////////
-    // This is a volume, initially made of air, defined to be the mother volume of Shielding and Vessel
-
-    G4Box* buffer_gas_solid = 
-      new G4Box("BUFFER_GAS", _buffer_gas_size/2., _buffer_gas_size/2., _buffer_gas_size/2.);
-    
-    _buffer_gas_logic = new G4LogicalVolume(buffer_gas_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "BUFFER_GAS");
-    ////////////////////////////////////////
-    ////Limit the uStepMax=Maximum step length, uTrakMax=Maximum total track length,
-    //uTimeMax= Maximum global time for a track, uEkinMin= Minimum remaining kinetic energy for a track
-    //uRangMin=	 Minimum remaining range for a track
-    _buffer_gas_logic->SetUserLimits(new G4UserLimits( DBL_MAX, DBL_MAX, DBL_MAX, 100.*keV, 0.));
-    _buffer_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
-
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), _buffer_gas_logic,
-						       "BUFFER_GAS", _lab_logic, false, 0);
-
-    */
+ 
     // SHIELDING
     _shielding->Construct();
     G4LogicalVolume* shielding_logic = _shielding->GetLogicalVolume();
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), shielding_logic,
-                     "LEAD_BOX", _lab_logic, false, 0);
    
     // VESSEL
     _vessel->Construct();
@@ -126,15 +107,22 @@ namespace nexus {
     // Internal Copper Shielding
     _ics->SetLogicalVolume(vessel_internal_logic);
     _ics->Construct();
+
+     // Inner Elements
+    _inner_elements->SetLogicalVolume(vessel_internal_logic);
+    _inner_elements->Construct();
+
+    displ_ = G4ThreeVector(0., 0., _inner_elements->GetELzCoord());
+
+    G4RotationMatrix rot;
+    rot.rotateY(rot_angle_);
+    
+    new G4PVPlacement(G4Transform3D(rot, displ_), shielding_logic,
+		      "LEAD_BOX", _lab_logic, false, 0);
    
     // G4LogicalVolume* ics_logic = _ics->GetLogicalVolume();
     // new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), ics_logic,
     // 		      "ICS", vessel_internal_logic, false, 0);
-    
-    // Inner Elements
-    _inner_elements->SetLogicalVolume(vessel_internal_logic);
-    _inner_elements->Construct();
-    SetELzCoord(_inner_elements->GetELzCoord());
 
     //// VERTEX GENERATORS   //
     _lab_gen = 
@@ -151,6 +139,8 @@ namespace nexus {
      //AIR AROUND SHIELDING
     if (region == "LAB") {
       vertex = _lab_gen->GenerateVertex("INSIDE");
+      // This is the only vertex that must not be rotated and shifted
+      return vertex;
     }
     // Shielding regions
     else if ((region == "SHIELDING_LEAD")  || 
@@ -197,6 +187,10 @@ namespace nexus {
       G4Exception("[Next100]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");     
     }
+
+    // First rotate, then shift
+    vertex.rotate(rot_angle_, G4ThreeVector(0., 1., 0.));
+    vertex = vertex + displ_;
     
     return vertex;
   }

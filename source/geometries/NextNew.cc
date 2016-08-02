@@ -44,7 +44,8 @@ namespace nexus {
   NextNew::NextNew():
     BaseGeometry(),
     // Lab dimensions
-    _lab_size (5. * m)   
+    _lab_size (5. * m),
+    rot_angle_(pi)
     // Buffer gas dimensions
   {
     //Shielding
@@ -95,38 +96,10 @@ namespace nexus {
     // Set this volume as the wrapper for the whole geometry 
     // (i.e., this is the volume that will be placed in the world)
     this->SetLogicalVolume(_lab_logic);
-
-    /* 
-    // BUFFER GAS   ///////////////////////////////////////////////////////////////////////////////////
-    // This is a volume, initially made of air, defined to be the mother volume of Shielding and Vessel
-
-    G4Box* buffer_gas_solid = 
-      new G4Box("BUFFER_GAS", _buffer_gas_size/2., _buffer_gas_size/2., _buffer_gas_size/2.);
-    //G4Material* _air= G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
-    //    _air->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(1. *bar, 303.*kelvin));
     
-    _buffer_gas_logic = new G4LogicalVolume(buffer_gas_solid,
-					    G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
-					    "BUFFER_GAS");
-    ////////////////////////////////////////
-    ////Limit the uStepMax=Maximum step length, uTrakMax=Maximum total track length,
-    //uTimeMax= Maximum global time for a track, uEkinMin= Minimum remaining kinetic energy for a track
-    //uRangMin=	 Minimum remaining range for a track
-    // _buffer_gas_logic->SetUserLimits(new G4UserLimits( _lab_size*1E6, _lab_size*1E6,1E12 *s,100.*keV,0.));
-    _buffer_gas_logic->SetUserLimits(new G4UserLimits( DBL_MAX, DBL_MAX, DBL_MAX,100.*keV,0.));
-   
-    // _buffer_gas_logic->SetVisAttributes(G4VisAttributes (G4Colour(.86, .86, .86)));
-    _buffer_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
-
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), _buffer_gas_logic,
-		      "BUFFER_GAS", _lab_logic, false, 0, false);
-    
-    */
     //SHIELDING
     _shielding->Construct();
     G4LogicalVolume* shielding_logic = _shielding->GetLogicalVolume();
-    new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),shielding_logic, "LEAD_BOX",
-		      _lab_logic, false, 0, false);
     
     //COPPER CASTLE 
     // _cu_castle->SetLogicalVolume(_buffer_gas_logic);
@@ -147,16 +120,27 @@ namespace nexus {
 		      "VESSEL", shielding_air_logic, false, 0, false);
     G4LogicalVolume* vessel_gas_logic = _vessel->GetInternalLogicalVolume();
 
+     //ICS
+    _ics->SetLogicalVolume(vessel_gas_logic);
+    _ics->SetNozzlesZPosition( _vessel->GetLATNozzleZPosition(),_vessel->GetUPNozzleZPosition());
+    _ics->Construct();
+
+   
+    //INNER ELEMENTS
+    _inner_elements->SetLogicalVolume(vessel_gas_logic);
+    _inner_elements->Construct();
+    
+    displ_ = G4ThreeVector(0., 0., _inner_elements->GetELzCoord());
+
     G4ThreeVector lat_pos = _vessel->GetLatExtSourcePosition(); // this is the position of the end of the port tube
     G4RotationMatrix* lat_rot = new G4RotationMatrix();
-    lat_rot->rotateY(-pi/2.);
+    lat_rot->rotateY(-pi/2);
     
     Na22Source* na22 = new Na22Source();
     na22->Construct();
     G4LogicalVolume* na22_logic = na22->GetLogicalVolume();
 
     // This is the position of the whole Na22 source + plastic support.
-    // G4ThreeVector lat_pos_na22 = G4ThreeVector(lat_pos.getX() + na22->GetSupportThickness()/2. - na22->GetSourceThickness()/2., lat_pos.getY(), lat_pos.getZ());
     G4ThreeVector lat_pos_source = G4ThreeVector(lat_pos.getX() + na22->GetSupportThickness()/2., lat_pos.getY(), lat_pos.getZ());
 
     new G4PVPlacement(G4Transform3D(*lat_rot, lat_pos_source), na22_logic, "NA22_SOURCE",
@@ -166,8 +150,7 @@ namespace nexus {
     G4RotationMatrix* up_rot = new G4RotationMatrix();
     up_rot->rotateX(pi/2.);
 
-    // G4ThreeVector up_pos_na22 = G4ThreeVector(up_pos.getX(), up_pos.getY() + na22->GetSupportThickness()/2. - na22->GetSourceThickness()/2., up_pos.getZ());
-    G4ThreeVector up_pos_source = G4ThreeVector(up_pos.getX(), up_pos.getY() + na22->GetSupportThickness()/2., up_pos.getZ());
+    G4ThreeVector up_pos_source = G4ThreeVector(up_pos.getX() , up_pos.getY() + na22->GetSupportThickness()/2., up_pos.getZ());
 
     new G4PVPlacement(G4Transform3D(*up_rot, up_pos_source), na22_logic, "NA22_SOURCE",
 		      shielding_air_logic, false, 1, false);
@@ -175,16 +158,13 @@ namespace nexus {
     G4VisAttributes light_brown_col = nexus::CopperBrown();
     na22_logic->SetVisAttributes(light_brown_col);
     
-    //ICS
-    _ics->SetLogicalVolume(vessel_gas_logic);
-    _ics->SetNozzlesZPosition( _vessel->GetLATNozzleZPosition(),_vessel->GetUPNozzleZPosition());
-    _ics->Construct();
-
    
-    //INNER ELEMENTS
-    _inner_elements->SetLogicalVolume(vessel_gas_logic);
-    _inner_elements->Construct();
-    SetELzCoord(_inner_elements->GetELzCoord());
+
+    // Placement of the shielding volume, rotated and translated to have a right-handed ref system with z = z drift.
+    G4RotationMatrix rot;
+    rot.rotateY(rot_angle_);
+    new G4PVPlacement(G4Transform3D(rot, displ_),shielding_logic, "LEAD_BOX",
+		      _lab_logic, false, 0, true);
 
 
     //// VERTEX GENERATORS   //
@@ -193,8 +173,11 @@ namespace nexus {
 
     G4double source_diam = na22->GetSourceDiameter();
     G4double source_thick = na22->GetSourceThickness();
-    G4ThreeVector lat_pos_na22 = G4ThreeVector(lat_pos.getX() + na22->GetSourceThickness()/2., lat_pos.getY(), lat_pos.getZ());
-    G4ThreeVector up_pos_na22 = G4ThreeVector(up_pos.getX(), up_pos.getY() + na22->GetSourceThickness()/2., up_pos.getZ());
+    G4ThreeVector lat_pos_na22 =
+      G4ThreeVector(lat_pos.getX() + na22->GetSourceThickness()/2., lat_pos.getY(), lat_pos.getZ());
+    G4ThreeVector up_pos_na22 =
+      G4ThreeVector(up_pos.getX(), up_pos.getY() + na22->GetSourceThickness()/2., up_pos.getZ());
+
     _source_gen_lat = new CylinderPointSampler(0., source_thick, source_diam/2., 0., lat_pos_na22, lat_rot);
     _source_gen_up = new CylinderPointSampler(0., source_thick, source_diam/2., 0., up_pos_na22, up_rot);
     
@@ -209,6 +192,9 @@ namespace nexus {
     //AIR AROUND SHIELDING
     if (region == "LAB") {
       vertex = _lab_gen->GenerateVertex("INSIDE");
+
+      // This is the only vertex that must not be rotated and shifted
+      return vertex;
     }
     else if (region == "NA22_PORT_ANODE_EXT") {
       vertex =  _source_gen_lat->GenerateVertex("BODY_VOL");
@@ -261,6 +247,11 @@ namespace nexus {
       G4Exception("[NextNew]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");     
     }
+
+    // First rotate, then shift
+    vertex.rotate(rot_angle_, G4ThreeVector(0., 1., 0.));
+    vertex = vertex + displ_;
+
     return vertex;
   }
   

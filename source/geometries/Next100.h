@@ -72,7 +72,11 @@ namespace nexus {
 
  
     /// Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
+    G4GenericMessenger* _msg;
+
+    // Rotation around Y and displacement of the whole geometry in the g4 system of reference
+    G4ThreeVector displ_;
+    G4double rot_angle_;
 
   };
 

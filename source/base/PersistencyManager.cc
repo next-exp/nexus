@@ -45,8 +45,8 @@ using namespace nexus;
 
 PersistencyManager::PersistencyManager(): 
   G4VPersistencyManager(), _msg(0), _historyFile("G4history.macro"), 
-  _ready(false), _store_evt(true),  event_type_("other"),_writer(0), _el_starting_z(-10.*mm),
-  _drift_z(false), _saved_evts(0)
+  _ready(false), _store_evt(true),  event_type_("other"),_writer(0),
+  _saved_evts(0)
 {
   _msg = new G4GenericMessenger(this, "/nexus/persistency/");
   _msg->DeclareMethod("outputFile", &PersistencyManager::OpenFile, "");
@@ -79,18 +79,6 @@ void PersistencyManager::Initialize()
   if (!current) current = new PersistencyManager();
 }
 
-void PersistencyManager::SetDriftCoord()
-{
-  DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
-  //
-  G4String _geom_name = detconst->GetGeometry()->GetLogicalVolume()->GetName();
-
-  const BaseGeometry*  _geom = detconst->GetGeometry();
-  if (_geom->GetDrift()) {
-    _el_starting_z = _geom->GetELzCoord();
-    _drift_z = true;
-  } 
-}
 
 void PersistencyManager::OpenFile(G4String filename)
 {
@@ -187,17 +175,12 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     ipart->SetPathLength(trj->GetTrackLength());
 
     G4ThreeVector xyz = trj->GetInitialPosition();
-    G4double pos_z = - xyz.z() + _el_starting_z; // do the shift to drift length coordinate
-    if (!_drift_z)  pos_z = xyz.z();
-
     G4double t = trj->GetInitialTime(); 
-    ipart->SetInitialVtx(gate::Vector4D(xyz.x(), xyz.y(), pos_z, t));
+    ipart->SetInitialVtx(gate::Vector4D(xyz.x(), xyz.y(), xyz.z(), t));
     
     xyz = trj->GetFinalPosition();
-    pos_z = - xyz.z() + _el_starting_z; // do the shift to drift length coordinate
-    if (!_drift_z)  pos_z = xyz.z();
     t = trj->GetFinalTime();
-    ipart->SetFinalVtx(gate::Vector4D(xyz.x(), xyz.y(), pos_z, t));
+    ipart->SetFinalVtx(gate::Vector4D(xyz.x(), xyz.y(), xyz.z(), t));
     
     G4String volume = trj->GetInitialVolume();
     ipart->SetInitialVol(volume);
@@ -209,10 +192,6 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     G4double energy = sqrt(mom.mag2() + mass*mass);
     ipart->SetInitialMom(mom.x(), mom.y(), mom.z(), energy);
     ipart->SetFinalMom(0, 0, 0, mass);
-
-    // if (trj->GetPDGEncoding() == 22 && energy > 0.799 &&
-    //  energy < 0.800 )
-    //   G4cout << "Event numb " << ievent->GetEventID() << G4endl;
 
     ievent->AddMCParticle(ipart);
   }
@@ -313,10 +292,7 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
     gate::MCHit* ghit = new gate::MCHit();
     ghit->SetLabel(sdname);
 
-    G4double hit_z = - xyz.z() + _el_starting_z; // do the shift to drift length coordinate
-    if (!_drift_z)  hit_z = xyz.z();
-
-    ghit->SetPosition(gate::Point3D(xyz.x(), xyz.y(), hit_z));
+    ghit->SetPosition(gate::Point3D(xyz.x(), xyz.y(), xyz.z()));
     ghit->SetTime(hit->GetTime());
     ghit->SetAmplitude(hit->GetEnergyDeposit());
     evt_energy += hit->GetEnergyDeposit();
@@ -362,10 +338,8 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     isnr->SetLabel(sdname);
     isnr->SetSensorID(hit->GetPmtID());
     G4ThreeVector xyz = hit->GetPosition();
-    G4double pos_z = - xyz.z() + _el_starting_z; // do the shift to drift length coordinate
-    if (!_drift_z)  pos_z = xyz.z();
 
-    isnr->SetPosition(gate::Point3D(xyz.x(), xyz.y(), pos_z));
+    isnr->SetPosition(gate::Point3D(xyz.x(), xyz.y(), xyz.z()));
     
     if (hit->GetPmtID()<1000) isnr->SetSensorType(gate::PMT);
     else isnr->SetSensorType(gate::SIPM);
