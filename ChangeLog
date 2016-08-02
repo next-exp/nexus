@@ -1,3 +1,10 @@
+tag v5_01_03 - 2 Aug 2016
+	- All ports in NEW simulated, along with their correspondent vertices
+	- Two Na22 sources placed in the NEW geometry, one in the lateral and the other one in the upper port
+	- Ar gas properties added
+	- Possibility of using Ar gas added to NEW geometry
+	- Cs137.mac macro added to stop Xe137 decay chain
+	
 tag v5_01_02 - 24 Jun 2016
 	- Bug corrected in the placement of pedestal volume
 	- Lab vertex generator added to the NEXT-100 geometry
