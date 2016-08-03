@@ -45,7 +45,7 @@ namespace nexus {
     BaseGeometry(),
     // Lab dimensions
     _lab_size (5. * m),
-    rot_angle_(pi)
+    _rot_angle(pi)
     // Buffer gas dimensions
   {
     //Shielding
@@ -87,8 +87,6 @@ namespace nexus {
       new G4Box("LAB", _lab_size/2., _lab_size/2., _lab_size/2.);
     
     _lab_logic = new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
-
-    this->SetDrift(true);
     
     //_lab_logic->SetVisAttributes(G4VisAttributes (G4Colour(.46, .46, .46)));
     _lab_logic->SetVisAttributes(G4VisAttributes::Invisible);
@@ -129,8 +127,7 @@ namespace nexus {
     //INNER ELEMENTS
     _inner_elements->SetLogicalVolume(vessel_gas_logic);
     _inner_elements->Construct();
-    
-    displ_ = G4ThreeVector(0., 0., _inner_elements->GetELzCoord());
+   
 
     G4ThreeVector lat_pos = _vessel->GetLatExtSourcePosition(); // this is the position of the end of the port tube
     G4RotationMatrix* lat_rot = new G4RotationMatrix();
@@ -161,9 +158,10 @@ namespace nexus {
    
 
     // Placement of the shielding volume, rotated and translated to have a right-handed ref system with z = z drift.
+    _displ = G4ThreeVector(0., 0., _inner_elements->GetELzCoord());
     G4RotationMatrix rot;
-    rot.rotateY(rot_angle_);
-    new G4PVPlacement(G4Transform3D(rot, displ_),shielding_logic, "LEAD_BOX",
+    rot.rotateY(_rot_angle);
+    new G4PVPlacement(G4Transform3D(rot, _displ),shielding_logic, "LEAD_BOX",
 		      _lab_logic, false, 0, true);
 
 
@@ -246,8 +244,8 @@ namespace nexus {
     }
 
     // First rotate, then shift
-    vertex.rotate(rot_angle_, G4ThreeVector(0., 1., 0.));
-    vertex = vertex + displ_;
+    vertex.rotate(_rot_angle, G4ThreeVector(0., 1., 0.));
+    vertex = vertex + _displ;
 
     return vertex;
   }

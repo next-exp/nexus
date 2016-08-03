@@ -75,8 +75,8 @@ namespace nexus {
     G4GenericMessenger* _msg;
 
     // Rotation around Y and displacement of the whole geometry in the g4 system of reference
-    G4ThreeVector displ_;
-    G4double rot_angle_;
+    G4ThreeVector _displ;
+    G4double _rot_angle;
 
   };
 

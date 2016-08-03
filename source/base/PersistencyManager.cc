@@ -248,7 +248,6 @@ void PersistencyManager::StoreHits(G4HCofThisEvent* hce, gate::Event* ievt)
         "Collection of hits '" + sdname + "/" + hcname
         + "' is of an unknown type and will not be stored.";
       G4Exception("StoreHits()", "[PersistencyManager]", JustWarning, msg);
-      return;
     }
   }
 }

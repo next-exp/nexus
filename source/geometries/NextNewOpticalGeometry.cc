@@ -34,7 +34,8 @@ NextNewOpticalGeometry::NextNewOpticalGeometry():
   _pressure(1. * bar),
   _temperature (300 * kelvin),
   _sc_yield(16670. * 1/MeV),
-  _gas("naturalXe")
+  _gas("naturalXe"),
+  _rot_angle(pi)
 {
  // Build the internal gas volume with all the objects that live there 
 
@@ -77,7 +78,7 @@ void NextNewOpticalGeometry::Construct()
   // AIR
   G4Material* air = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
 
-  G4double lab_size = 3.2*m;
+  G4double lab_size = 4.*m;
   G4Box* lab_solid = 
     new G4Box("LAB", lab_size/2., lab_size/2., lab_size/2.);    
   G4LogicalVolume* lab_logic = 
@@ -94,30 +95,38 @@ void NextNewOpticalGeometry::Construct()
   ///MOTHER VOLUME
   // Build a big box of gas which hosts the optical geometry
 
-   G4Material* gas_mat = nullptr;
+  G4Material* gas_mat = nullptr;
    
-    if (_gas == "naturalXe") {
-      gas_mat = MaterialsList::GXe(_pressure, _temperature);
-      gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
-    } else if (_gas == "enrichedXe") {
-      gas_mat =  MaterialsList::GXeEnriched(_pressure, _temperature);
-      gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
-    } else if  (_gas == "depletedXe") {
-      gas_mat =  MaterialsList::GXeDepleted(_pressure, _temperature);
-      gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
-    } else if (_gas == "Ar") {
-      gas_mat =  MaterialsList::GAr(_pressure, _temperature);
-      gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GAr(_sc_yield));
-    } else {
-      G4Exception("[NextNewOpticalGeometry]", "Construct()", FatalException,
-		  "Unknown kind of gas, valid options are: naturalXe, enrichedXe, depletedXe, Ar.");
-    }
+  if (_gas == "naturalXe") {
+    gas_mat = MaterialsList::GXe(_pressure, _temperature);
+    gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
+  } else if (_gas == "enrichedXe") {
+    gas_mat =  MaterialsList::GXeEnriched(_pressure, _temperature);
+    gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
+  } else if  (_gas == "depletedXe") {
+    gas_mat =  MaterialsList::GXeDepleted(_pressure, _temperature);
+    gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
+  } else if (_gas == "Ar") {
+    gas_mat =  MaterialsList::GAr(_pressure, _temperature);
+    gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GAr(_sc_yield));
+  } else {
+    G4Exception("[NextNewOpticalGeometry]", "Construct()", FatalException,
+		"Unknown kind of gas, valid options are: naturalXe, enrichedXe, depletedXe, Ar.");
+  }
 
   G4double gas_size = 3.*m;
   G4Box* gas_solid = new G4Box("GAS", gas_size/2., gas_size/2., gas_size/2.);
   G4LogicalVolume* gas_logic = new G4LogicalVolume(gas_solid, gas_mat, "GAS");
-  new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), gas_logic,
-		    "GAS", lab_logic, false, 0, false); 
+  
+  ///INNER ELEMENTS
+  _inner_elements->SetLogicalVolume(gas_logic);
+  _inner_elements->Construct();
+  
+  _displ = G4ThreeVector(0., 0., _inner_elements->GetELzCoord());
+  G4RotationMatrix rot;
+  rot.rotateY(_rot_angle);
+  new G4PVPlacement(G4Transform3D(rot, _displ), gas_logic,
+		    "GAS", lab_logic, false, 0, true); 
 
   // Set this volume as the wrapper for the whole geometry 
   // (i.e., this is the volume that will be placed in the world)
@@ -125,17 +134,14 @@ void NextNewOpticalGeometry::Construct()
 
   // Visibilities
   gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
-
-  ///INNER ELEMENTS
-  _inner_elements->SetLogicalVolume(gas_logic);
-  _inner_elements->Construct();
-  SetELzCoord(_inner_elements->GetELzCoord());
   
 }
  
 
 G4ThreeVector NextNewOpticalGeometry::GenerateVertex(const G4String& region) const
 {
-  G4ThreeVector vertex = _inner_elements->GenerateVertex(region);   
+  G4ThreeVector vertex = _inner_elements->GenerateVertex(region); 
+  vertex.rotate(_rot_angle, G4ThreeVector(0., 1., 0.));
+  vertex = vertex + _displ;  
   return vertex; 
 }

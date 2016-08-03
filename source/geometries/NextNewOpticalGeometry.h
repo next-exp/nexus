@@ -39,6 +39,10 @@ namespace nexus {
     G4double _sc_yield;
     G4String _gas;
     NextNewInnerElements* _inner_elements;
+
+    // Rotation around Y and displacement of the whole geometry in the g4 system of reference
+    G4ThreeVector _displ;
+    G4double _rot_angle;
    
    
   };

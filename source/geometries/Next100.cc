@@ -36,7 +36,7 @@ namespace nexus {
     _central_nozzle_ypos (0. * cm),
     _down_nozzle_ypos (-20. * cm),
     _bottom_nozzle_ypos(-53. * cm),
-    rot_angle_(pi)
+    _rot_angle(pi)
   {
 
   // The following methods must be invoked in this particular
@@ -84,8 +84,6 @@ namespace nexus {
     _lab_logic = new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
     _lab_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
-    this->SetDrift(true);
-
     // Set this volume as the wrapper for the whole geometry 
     // (i.e., this is the volume that will be placed in the world)
     this->SetLogicalVolume(_lab_logic);
@@ -112,12 +110,12 @@ namespace nexus {
     _inner_elements->SetLogicalVolume(vessel_internal_logic);
     _inner_elements->Construct();
 
-    displ_ = G4ThreeVector(0., 0., _inner_elements->GetELzCoord());
+    _displ = G4ThreeVector(0., 0., _inner_elements->GetELzCoord());
 
     G4RotationMatrix rot;
-    rot.rotateY(rot_angle_);
+    rot.rotateY(_rot_angle);
     
-    new G4PVPlacement(G4Transform3D(rot, displ_), shielding_logic,
+    new G4PVPlacement(G4Transform3D(rot, _displ), shielding_logic,
 		      "LEAD_BOX", _lab_logic, false, 0);
    
     // G4LogicalVolume* ics_logic = _ics->GetLogicalVolume();
@@ -187,8 +185,8 @@ namespace nexus {
     }
 
     // First rotate, then shift
-    vertex.rotate(rot_angle_, G4ThreeVector(0., 1., 0.));
-    vertex = vertex + displ_;
+    vertex.rotate(_rot_angle, G4ThreeVector(0., 1., 0.));
+    vertex = vertex + _displ;
     
     return vertex;
   }
