@@ -137,6 +137,50 @@ G4Material* MaterialsList::GAr(G4double pressure, G4double temperature)
   return mat;
 }
 
+G4Material* MaterialsList::GXeAr(G4double pressure, G4double temperature, G4double percXe)
+{
+  G4String name = "GXeAr";
+  
+  G4Material* mat = G4Material::GetMaterial(name, false);
+    
+  if (mat == 0) {
+    
+    mat = new G4Material(name,
+			 (1-(percXe/100.))*ArgonGasProperties::Density(pressure) +
+			 percXe/100.*XenonGasProperties::Density(pressure),
+			 2, kStateGas, temperature, pressure);
+    
+    G4Element* NaturalXe = new G4Element("GXeNatural", "Xe", 9);
+
+    G4Isotope* Xe124 = new G4Isotope("Xe124", 54, 124, XenonGasProperties::MassPerMole(124));
+    G4Isotope* Xe126 = new G4Isotope("Xe126", 54, 126, XenonGasProperties::MassPerMole(126));
+    G4Isotope* Xe128 = new G4Isotope("Xe128", 54, 128, XenonGasProperties::MassPerMole(128));
+    G4Isotope* Xe129 = new G4Isotope("Xe129", 54, 129, XenonGasProperties::MassPerMole(129));
+    G4Isotope* Xe130 = new G4Isotope("Xe130", 54, 130, XenonGasProperties::MassPerMole(130));
+    G4Isotope* Xe131 = new G4Isotope("Xe131", 54, 131, XenonGasProperties::MassPerMole(131));
+    G4Isotope* Xe132 = new G4Isotope("Xe132", 54, 132, XenonGasProperties::MassPerMole(132));
+    G4Isotope* Xe134 = new G4Isotope("Xe134", 54, 134, XenonGasProperties::MassPerMole(134));
+    G4Isotope* Xe136 = new G4Isotope("Xe136", 54, 136, XenonGasProperties::MassPerMole(136));
+
+    NaturalXe->AddIsotope(Xe124, 0.0952*perCent);
+    NaturalXe->AddIsotope(Xe126, 0.089*perCent);
+    NaturalXe->AddIsotope(Xe128, 1.9102*perCent);
+    NaturalXe->AddIsotope(Xe129, 26.4006*perCent);
+    NaturalXe->AddIsotope(Xe130, 4.071*perCent);
+    NaturalXe->AddIsotope(Xe131, 21.2324*perCent);
+    NaturalXe->AddIsotope(Xe132, 26.9086*perCent);
+    NaturalXe->AddIsotope(Xe134, 10.4357*perCent);
+    NaturalXe->AddIsotope(Xe136, 8.8573*perCent);
+
+    G4Element* NaturalAr  = new G4Element("Argon", "Ar", 18, 39.962383123*g/mole);
+       
+    mat->AddElement(NaturalAr, (100-percXe)*perCent);
+    mat->AddElement(NaturalXe, percXe*perCent);
+  }
+  
+    return mat;
+}
+
   
   
   

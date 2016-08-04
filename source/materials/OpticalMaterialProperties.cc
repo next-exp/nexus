@@ -426,27 +426,21 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GAr(G4double sc_yield)
   G4double abslen[2] = {1.e8*m, 1.e8*m};
   mpt->AddProperty("ABSLENGTH", energy, abslen, 2);
 
-  //G4double fano = 0.3;//An argon gas proportional scintillation counter with UV avalanche photodiode scintillation readout C.M.B. Monteiro, J.A.M. Lopes, P.C.P.S. Simoes, J.M.F. dos Santos, C.A.N. Conde
+//An argon gas proportional scintillation counter with UV avalanche photodiode scintillation readout C.M.B. Monteiro, J.A.M. Lopes, P.C.P.S. Simoes, J.M.F. dos Santos, C.A.N. Conde
 
   mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
   mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
   mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
   mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield);
   mpt->AddProperty("ELSPECTRUM", sc_energy, intensity, sc_entries);
-  mpt->AddConstProperty("FASTTIMECONSTANT",1.*ns);
-  mpt->AddConstProperty("SLOWTIMECONSTANT",45.*ns);
-  mpt->AddConstProperty("YIELDRATIO",.9);
-  
-  //mpt->AddConstProperty("RESOLUTIONSCALE",fano);
+  mpt->AddConstProperty("FASTTIMECONSTANT",6.*ns);
+  mpt->AddConstProperty("SLOWTIMECONSTANT",37.*ns);
+  mpt->AddConstProperty("YIELDRATIO",.52);
   mpt->AddConstProperty("RESOLUTIONSCALE", 1.0);
 
   // mpt->AddConstProperty("ELTIMECONSTANT", 1260.*ns);
   mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
   
-  //  G4double sc_yield = 13889/MeV;
-
-  //7mpt->AddConstProperty("FASTTIMECONSTANT",7.*ns);
-  //mpt->AddConstProperty("SLOWTIMECONSTANT",1260.*ns);
   return mpt; 
 }
 
