@@ -126,9 +126,6 @@ namespace nexus {
     //_dice_board_z_pos = support_plate_z_pos -_support_plate_thickness/2. -_z_kdb_displ +db_thickness/2.;
     _dice_board_z_pos = _tracking_plane_z_pos + db_thickness/2.;
     
-    //  G4PVPlacement* dice_board_physi;
-    const std::vector<std::pair<int, G4ThreeVector> > SiPM_positions = 
-      _kapton_dice_board->GetPositions();
     
     G4ThreeVector post;
     for (int i=0; i<_num_DBs; i++) {
@@ -136,20 +133,9 @@ namespace nexus {
       post.setZ(_dice_board_z_pos);
       new G4PVPlacement(0, post, dice_board_logic,
 			"DICE_BOARD", _mother_logic, false, i+1, false);
-      // Store the absolute positions of SiPMs in gas, for possible checks
-      for (unsigned int si=0; si< SiPM_positions.size(); si++) {
-	G4ThreeVector mypos =  SiPM_positions[si].second;
-	std::pair<int, G4ThreeVector> abs_pos;
-	abs_pos.first = (i+1)*1000+ SiPM_positions[si].first ;
-	//abs_pos.first = (_num_DBs - i)*1000+ SiPM_positions[si].first ;
-	abs_pos.second = 
-	  G4ThreeVector(post.getX()+mypos.getX(), post.getY()+mypos.getY(), post.getZ()+mypos.getZ());
-
-	_absSiPMpos.push_back(abs_pos);
-      }
     }
 
-    //   PrintAbsoluteSiPMPos();
+    /// PrintAbsoluteSiPMPos(G4ThreeVector(0., 0., 275.), pi);
     
     //PIGGY TAIL PLUG/////////////////////////////////////////////////////
     G4Box* plug_solid = new G4Box("DB_CONNECTOR", _plug_x/2., _plug_y/2., _plug_z/2.);
@@ -300,8 +286,29 @@ namespace nexus {
     }
   }
 
-  void NextNewTrackingPlane::PrintAbsoluteSiPMPos()
+  void NextNewTrackingPlane::PrintAbsoluteSiPMPos(G4ThreeVector displ, G4double rot_angle)
   {
+    // Print the absolute positions of SiPMs in gas, for possible checks
+    const std::vector<std::pair<int, G4ThreeVector> > SiPM_positions = 
+      _kapton_dice_board->GetPositions();
+    G4ThreeVector post;
+    for (int i=0; i<_num_DBs; i++) {
+      post = _DB_positions[i];
+      post.setZ(_dice_board_z_pos);
+      for (unsigned int si=0; si< SiPM_positions.size(); si++) {
+	G4ThreeVector mypos =  SiPM_positions[si].second;
+	std::pair<int, G4ThreeVector> abs_pos;
+	abs_pos.first = (i+1)*1000+ SiPM_positions[si].first ;
+	//	abs_pos.second =
+	G4ThreeVector pos_tot =
+	  G4ThreeVector(post.getX()+mypos.getX(), post.getY()+mypos.getY(), post.getZ()+mypos.getZ());
+	pos_tot.rotate(rot_angle, G4ThreeVector(0., 1., 0.));
+	pos_tot = pos_tot + displ;
+	abs_pos.second = pos_tot;
+		  
+	_absSiPMpos.push_back(abs_pos);
+      }
+    }
     G4cout << "----- Absolute position of SiPMs in gas volume -----" << G4endl;
     G4cout <<  G4endl;
     for (unsigned int i=0; i<_absSiPMpos.size(); i++) {

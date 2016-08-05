@@ -534,7 +534,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
 
   for (G4int i=0; i<ri_entries; i++) {
     rindex[i] = GXe_prop.RefractiveIndex(ri_energy[i]);
-    G4cout << ri_energy[i] << ", " << rindex[i] << G4endl;
+    //   G4cout << ri_energy[i] << ", " << rindex[i] << G4endl;
   }
 
   // Sampling from ~150 nm to 200 nm <----> from 6.20625 eV to 8.20625 eV

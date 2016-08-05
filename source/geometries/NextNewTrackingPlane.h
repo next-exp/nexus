@@ -46,9 +46,10 @@ namespace nexus {
     void Construct();
 
 
+
   private:
     void GenerateDBPositions();
-    void PrintAbsoluteSiPMPos();
+    void PrintAbsoluteSiPMPos(G4ThreeVector displ, G4double rot_angle);
 
   private:
 
