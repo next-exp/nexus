@@ -37,6 +37,7 @@ GeneratorFactory::~GeneratorFactory()
 #include "Kr83mGeneration.h"
 #include "SingleParticle2Pi.h"
 #include "MuonsGeneration.h"
+#include "NeutronGenerator.h"
 #include "ELTableGenerator.h"
 #include "ScintillationGenerator.h"
 
@@ -58,6 +59,8 @@ G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
   else if (_name == "2PI") p = new SingleParticle2Pi();
 
   else if (_name == "MUONS_GENERATION") p = new MuonsGeneration();
+
+  else if (_name == "NEUTRON_GENERATOR") p = new NeutronGenerator();
 
   else if (_name == "EL_TABLE_GENERATOR") p = new ELTableGenerator();
 
