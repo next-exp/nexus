@@ -42,8 +42,9 @@ NeutronGenerator::~NeutronGenerator()
 }
 
 void NeutronGenerator::GeneratePrimaryVertex(G4Event* event)
-{
-  // _particle_definition = G4IonTable::GetIonTable()->GetIon(_z, _a, 0.);
+{  
+  _particle_definition = G4ParticleTable::GetParticleTable()->
+    FindParticle("neutron");;
   
   if (!_particle_definition)
     G4Exception("SetParticleDefinition()", "[NeutronGenerator]",
@@ -55,7 +56,7 @@ void NeutronGenerator::GeneratePrimaryVertex(G4Event* event)
   G4double time = 0.;
   // Create a new vertex
   G4PrimaryVertex* vertex = new G4PrimaryVertex(position, time);
-  
+
   // Create the new primary particle and set it some properties
   G4PrimaryParticle* particle = 
     new G4PrimaryParticle(_particle_definition);

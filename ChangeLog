@@ -1,3 +1,7 @@
+tag v5_01_04 - 6 Sep 2016
+	- Change in reference system applied to NEW and NEXT-100, which implies a rotation of Pi around Y axis and z displacement. This implies that all x positions change to -x.
+	- Mixture Ar+Xe added as a material + optical properties of gaseous Ar updated
+	
 tag v5_01_03 - 2 Aug 2016
 	- All ports in NEW simulated, along with their correspondent vertices
 	- Two Na22 sources placed in the NEW geometry, one in the lateral and the other one in the upper port
