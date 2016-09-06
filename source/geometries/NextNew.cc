@@ -158,7 +158,8 @@ namespace nexus {
    
 
     // Placement of the shielding volume, rotated and translated to have a right-handed ref system with z = z drift.
-    _displ = G4ThreeVector(0., 0., _inner_elements->GetELzCoord());
+    // 0.1 * mm is added to avoid very small negative numbers in drift lengths
+    _displ = G4ThreeVector(0., 0., _inner_elements->GetELzCoord() + 0.1 * mm);
     G4RotationMatrix rot;
     rot.rotateY(_rot_angle);
     new G4PVPlacement(G4Transform3D(rot, _displ),shielding_logic, "LEAD_BOX",

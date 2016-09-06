@@ -98,7 +98,7 @@ namespace nexus {
     G4LogicalVolume* shielding_air_logic = _shielding->GetAirLogicalVolume();
     G4LogicalVolume* vessel_logic = _vessel->GetLogicalVolume();
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_logic,
-		      "VESSEL", shielding_air_logic, false, 0);
+ 		      "VESSEL", shielding_air_logic, false, 0);
     G4LogicalVolume* vessel_internal_logic = _vessel->GetInternalLogicalVolume();
     
     
@@ -110,7 +110,9 @@ namespace nexus {
     _inner_elements->SetLogicalVolume(vessel_internal_logic);
     _inner_elements->Construct();
 
-    _displ = G4ThreeVector(0., 0., _inner_elements->GetELzCoord());
+    // Placement of the shielding volume, rotated and translated to have a right-handed ref system with z = z drift.
+    // 0.1 * mm is added to avoid very small negative numbers in drift lengths
+    _displ = G4ThreeVector(0., 0., _inner_elements->GetELzCoord() + 0.1 * mm);
 
     G4RotationMatrix rot;
     rot.rotateY(_rot_angle);
