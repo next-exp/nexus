@@ -103,6 +103,7 @@ namespace nexus {
 
     // Gas being used
     G4String _gas;
+    G4double _Xe_perc;
 
    
 

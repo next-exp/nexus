@@ -104,7 +104,8 @@ namespace nexus {
     _temperature (300 * kelvin),
     _visibility(1),
     _sc_yield(16670. * 1/MeV),
-    _gas("naturalXe")
+    _gas("naturalXe"),
+    _Xe_perc(100.)
 
   {
     /// README
@@ -138,6 +139,7 @@ namespace nexus {
     sc_yield_cmd.SetUnitCategory("1/Energy");
 
     _msg->DeclareProperty("gas", _gas, "Gas being used");
+    _msg->DeclareProperty("XePercentage", _Xe_perc, "Percentage of xenon used in mixtures");
    
     
     
@@ -368,6 +370,9 @@ void NextNewVessel::Construct()
       vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
     } else if (_gas == "Ar") {
       vessel_gas_mat =  MaterialsList::GAr(_pressure, _temperature);
+      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GAr(_sc_yield));
+    } else if (_gas == "ArXe") {
+      vessel_gas_mat =  MaterialsList::GXeAr(_pressure, _temperature, _Xe_perc);
       vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GAr(_sc_yield));
     } else {
       G4Exception("[NextNewVessel]", "Construct()", FatalException,
