@@ -93,7 +93,14 @@ namespace nexus {
     // http://rushim.ru/books/spravochniki/handbook-chemistry-and-physics.pdf
     
     G4double mass_per_mole = 135.907220*g/mole;
-    if (a == 129) {
+    
+    if (a == 124) {
+      mass_per_mole = 123.9058958*g/mole;
+    } else if (a == 126) {
+      mass_per_mole = 125.904269*g/mole; 
+    } else if (a == 128) {
+      mass_per_mole = 127.9035304*g/mole;  
+    } else if (a == 129) {
       mass_per_mole = 128.9047795*g/mole;
     } else if (a == 130) {
       mass_per_mole = 129.9035079*g/mole;
