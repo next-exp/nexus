@@ -122,7 +122,7 @@ void NextNewOpticalGeometry::Construct()
   _inner_elements->SetLogicalVolume(gas_logic);
   _inner_elements->Construct();
   
-  _displ = G4ThreeVector(0., 0., _inner_elements->GetELzCoord() + 0.1 * mm);
+  _displ = G4ThreeVector(0., 0., _inner_elements->GetELzCoord());
   G4RotationMatrix rot;
   rot.rotateY(_rot_angle);
   new G4PVPlacement(G4Transform3D(rot, _displ), gas_logic,

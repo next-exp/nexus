@@ -174,6 +174,15 @@ namespace nexus {
     _pressure =    _gas->GetPressure();
     _temperature = _gas->GetTemperature();
 
+    G4double z = _el_gap_posz - _el_gap_length/2.;
+    // 0.1 * mm is added to avoid very small negative numbers in drift lengths
+    SetELzCoord(z + 0.1 * mm);
+
+    // 0.5 * mm is added because ie- in EL table generation must start inside the volume, not on border
+    z = z + .5*mm;
+    G4double max_radius = floor(_active_diam/2./_el_table_binning)*_el_table_binning;
+    CalculateELTableVertices(max_radius, _el_table_binning, z);
+
 
     // Field Cage
     _field_cage->SetMotherLogicalVolume(_mother_logic);
@@ -205,11 +214,7 @@ namespace nexus {
     _tracking_plane->SetLogicalVolume(_mother_logic);
     _tracking_plane->Construct();
 
-    G4double z = _el_gap_posz - _el_gap_length/2.;
-    SetELzCoord(z);
-    z = z + .5*mm;
-    G4double max_radius = floor(_active_diam/2./_el_table_binning)*_el_table_binning;
-    CalculateELTableVertices(max_radius, _el_table_binning, z);
+   
 
   }
 
@@ -247,13 +252,14 @@ namespace nexus {
  if (_elfield) {
     // Define EL electric field
     UniformElectricDriftField* el_field = new UniformElectricDriftField();
-    el_field->SetCathodePosition(_el_gap_posz - _el_gap_length/2.);
-    el_field->SetAnodePosition  (_el_gap_posz + _el_gap_length/2.);
+    el_field->SetCathodePosition(-(_el_gap_posz - _el_gap_length/2.) + GetELzCoord());
+    el_field->SetAnodePosition  (-(_el_gap_posz + _el_gap_length/2.) + GetELzCoord());
     el_field->SetDriftVelocity(2.5 * mm/microsecond);
     el_field->SetTransverseDiffusion(_ELtransv_diff);
     el_field->SetLongitudinalDiffusion(_ELlong_diff);
     XenonGasProperties xgp(_pressure, _temperature);
     el_field->SetLightYield(xgp.ELLightYield(_ELelectric_field));
+    G4cout << "EL yield: " << xgp.ELLightYield(_ELelectric_field)<< G4endl;
     G4Region* el_region = new G4Region("EL_REGION");
     el_region->SetUserInformation(el_field);
     el_region->AddRootLogicalVolume(el_gap_logic);
@@ -410,8 +416,8 @@ namespace nexus {
 
     //Define a drift field for this volume
     UniformElectricDriftField* field = new UniformElectricDriftField();
-    field->SetCathodePosition(active_posz - _active_length/2.);
-    field->SetAnodePosition(active_posz + _active_length/2.);
+    field->SetCathodePosition(-(active_posz - _active_length/2.) + GetELzCoord());
+    field->SetAnodePosition(-(active_posz + _active_length/2.) + GetELzCoord());
     field->SetDriftVelocity(1. * mm/microsecond);
     field->SetTransverseDiffusion(_drift_transv_diff);
     field->SetLongitudinalDiffusion(_drift_long_diff);  

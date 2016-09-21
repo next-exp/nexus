@@ -97,7 +97,11 @@ namespace nexus {
       _el_gap_z_pos + _el_gap_length/2. +  _anode_quartz_thickness/2.+ 0.1*mm; // 0.1 mm is needed because EL is produced only if the PostStepVolume is GAS material.
 
     _el_table_z = _el_gap_z_pos - _el_gap_length/2.;
-    SetELzCoord(_el_table_z);
+
+    // 0.1 * mm is added to avoid very small negative numbers in drift lengths
+    SetELzCoord(_el_table_z + 0.1 * mm);
+
+    // 0.5 * mm is added because ie- in EL table generation must start inside the volume, not on border
     _el_table_z = _el_table_z + .5*mm;
 
     // Define a new category
@@ -308,8 +312,8 @@ namespace nexus {
     // Define a drift field for this volume
     UniformElectricDriftField* field = new UniformElectricDriftField();
     // electrodes are at the end of active region
-    field->SetCathodePosition(active_posz - active_length/2.); 
-    field->SetAnodePosition(active_posz + active_length/2.);
+    field->SetCathodePosition(-(active_posz - active_length/2.) + GetELzCoord()); 
+    field->SetAnodePosition(-(active_posz + active_length/2.) + GetELzCoord());
     field->SetDriftVelocity(1. * mm/microsecond);
     field->SetTransverseDiffusion(_drift_transv_diff);
     field->SetLongitudinalDiffusion(_drift_long_diff);  
@@ -366,8 +370,8 @@ void NextNewFieldCage::BuildBuffer()
     if (_elfield) {
       // Define EL electric field
       UniformElectricDriftField* el_field = new UniformElectricDriftField();
-      el_field->SetCathodePosition(_el_gap_z_pos - _el_gap_length/2.);
-      el_field->SetAnodePosition  (_el_gap_z_pos + _el_gap_length/2.);
+      el_field->SetCathodePosition(-(_el_gap_z_pos - _el_gap_length/2.) + GetELzCoord());
+      el_field->SetAnodePosition(-(_el_gap_z_pos + _el_gap_length/2.) + GetELzCoord());
       el_field->SetDriftVelocity(2.5 * mm/microsecond);
       el_field->SetTransverseDiffusion(_ELtransv_diff);
       el_field->SetLongitudinalDiffusion(_ELlong_diff);
