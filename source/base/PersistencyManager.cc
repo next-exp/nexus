@@ -350,7 +350,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     
     const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
     std::map<G4double, G4int>::const_iterator it;
-    std::vector< std::pair<unsigned int,unsigned int> > data;
+    std::vector< std::pair<unsigned int,float> > data;
     G4double amplitude = 0.;
     
     for (it = wvfm.begin(); it != wvfm.end(); ++it) {

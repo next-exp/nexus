@@ -104,6 +104,12 @@ vars.AddVariables(
                  'Path to GATE installation.',
                  NULL_PATH),
 
+    ## HDF5
+
+    PathVariable('HDF5_LIB',
+                 'Path to HDF5 installation.',
+                 NULL_PATH),
+
     ## gsl
 
     PathVariable('GSL_DIR',
@@ -196,10 +202,10 @@ if not env['LIBPATH']:
         Abort('ROOT libraries could not be found.')
 
     ## GATE configuration --------------------------   -------
-
+    
     if env['GATE_DIR'] != NULL_PATH:
         env.PrependENVPath('PATH', env['GATE_DIR'])
-    
+
     env['GATE_DIR'] = os.environ['GATE_DIR']
     
     env.Append( CPPPATH = [env['GATE_DIR']] )
@@ -210,6 +216,15 @@ if not env['LIBPATH']:
         Abort('GATE headers not found.')
     
     env.Append(LIBS = ['GATE','GATEIO'])
+     
+    if env['HDF5_LIB'] != NULL_PATH:
+        env.PrependENVPath('PATH', env['HDF5_LIB'])
+      
+    try: 
+        env['HDF5_LIB'] = os.environ['HDF5_LIB']
+        env.Append( LIBPATH = [env['HDF5_LIB']] )
+        env.Append(LIBS = ['hdf5'])
+    except KeyError: pass
 
  #   if not conf.CheckLib(library='GATE', language='CXX', autoadd=0):
   #      Abort('GATE library not found.')
