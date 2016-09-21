@@ -1,3 +1,7 @@
+tag v5_01_07 - 21 Sep 2016
+	- Dependency on hdf5 added
+	- Fixed problem in full simulation, following latest change of coordinates
+	
 tag v5_01_06 - 13 Sep 2016
 	- Fix to previous tag
 	
