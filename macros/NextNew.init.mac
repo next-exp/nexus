@@ -18,10 +18,10 @@
 
 /Generator/RegisterGenerator ION_GUN
 
-/Actions/RegisterTrackingAction DEFAULT
+/Actions/RegisterTrackingAction VALIDATION
 /Actions/RegisterEventAction DEFAULT
 /Actions/RegisterSteppingAction DEFAULT
-/Actions/RegisterTrackingAction DEFAULT
+/Actions/RegisterRunAction DEFAULT
 
 
 /nexus/RegisterMacro macros/NextNew.config.mac
