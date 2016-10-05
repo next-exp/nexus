@@ -88,6 +88,7 @@ namespace nexus {
     SpherePointSampler*   _tracking_endcap_gen;
     SpherePointSampler*   _energy_endcap_gen;
     CylinderPointSampler* _flange_gen;
+    CylinderPointSampler* _na22_gen_lat;
 
     G4double _perc_endcap_vol;
     G4double _perc_tube_vol;

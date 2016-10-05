@@ -221,7 +221,8 @@ namespace nexus {
     else if ( (region == "VESSEL") || 
 	      (region == "SOURCE_PORT_ANODE") ||
 	      (region == "SOURCE_PORT_UP") ||
-	      (region == "SOURCE_PORT_AXIAL")) {
+	      (region == "SOURCE_PORT_AXIAL") ||
+	      (region == "NA22_PORT_ANODE") ){
       vertex = _vessel->GenerateVertex(region);
     }
     // ICS REGIONS

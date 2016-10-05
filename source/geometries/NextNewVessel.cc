@@ -392,6 +392,7 @@ void NextNewVessel::Construct()
     
     G4Tubs* lateral_port_tube_solid = new G4Tubs("LATERAL_PORT", 0., (_port_tube_diam/2.+_port_tube_thickness),
 						 simulated_length_lat/2., 0, twopi);
+    
     G4LogicalVolume* lateral_port_tube_logic =
     new G4LogicalVolume(lateral_port_tube_solid, MaterialsList::Steel316Ti(), "LATERAL_PORT");
 
@@ -412,6 +413,39 @@ void NextNewVessel::Construct()
   new G4PVPlacement(0,G4ThreeVector(0.,0.,-_port_tube_window_thickn/2.),
 		    lateral_port_tube_air_logic, "LATERAL_PORT_AIR", 
 		    lateral_port_tube_logic, false, 0, false);
+
+  // Screwed internal source
+  G4double piece_diam = 7. *mm;
+  G4double piece_length = 16. *mm;
+  G4Tubs* lateral_screw_tube_solid =
+    new G4Tubs("SCREW_PORT", 0., piece_diam/2., piece_length/2., 0, twopi);
+  G4LogicalVolume* lateral_screw_tube_logic =
+    new G4LogicalVolume(lateral_screw_tube_solid, MaterialsList::Steel316Ti(), "SCREW_PORT");
+
+  G4ThreeVector pos_screw_port(0., 0., -(simulated_length_lat - _port_tube_window_thickn)/2. +  piece_length/2.);
+  
+  new G4PVPlacement(0, pos_screw_port, lateral_screw_tube_logic,
+		    "SCREW_PORT", lateral_port_tube_air_logic, false, 0, true);
+
+  
+  G4double source_diam = 6. * mm;
+  G4double source_thickness = 2. * mm;
+   
+  G4Tubs* source_solid = 
+    new G4Tubs("SOURCE", 0., source_diam/2., source_thickness/2., 0., twopi);
+  G4Material* sodium22_mat = 
+    G4NistManager::Instance()->FindOrBuildMaterial("G4_Na");
+  G4LogicalVolume* source_logic = 
+    new G4LogicalVolume(source_solid, sodium22_mat, "NA22_INTERNAL");
+
+  G4double z_pos_screw_source = piece_length/2. - 0.5 * mm - source_thickness/2.;
+
+  G4ThreeVector pos_screw_source(0., 0., z_pos_screw_source);
+
+   new G4PVPlacement(0, pos_screw_source,
+		     source_logic, "NA22_INTERNAL", 
+		     lateral_screw_tube_logic, false, 0, true);
+
 
   // This position of the source is assumed to be at the bottom of the tube, inside.
   _lateral_port_source_pos.setX(_lat_nozzle_x_pos  + _lat_nozzle_high - simulated_length_lat + _port_tube_window_thickn);
@@ -520,8 +554,6 @@ void NextNewVessel::Construct()
       air_col.SetForceSolid(true);
       lateral_port_tube_air_logic->SetVisAttributes(air_col);
       upper_port_tube_air_logic->SetVisAttributes(air_col);
-      vessel_logic->SetVisAttributes(titanium_col);
-      // vessel_gas_logic->SetVisAttributes(air_col);
     } else {
       vessel_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
@@ -534,8 +566,12 @@ void NextNewVessel::Construct()
     //trick to avoid vertex the vessel_gas-vessel interface -1*mm thickness
     _tracking_endcap_gen = new SpherePointSampler(_endcap_in_rad+1*mm, _endcap_thickness-1*mm, tracking_endcap_pos, 0,
     						  0., twopi, 0., _endcap_theta);
-    _energy_endcap_gen = new SpherePointSampler(_endcap_in_rad+1*mm, _endcap_thickness-1*mm, energy_endcap_pos, 0,
-    						0., twopi, 180.*deg - _endcap_theta, _endcap_theta);
+    _energy_endcap_gen =
+      new SpherePointSampler(_endcap_in_rad+1*mm, _endcap_thickness-1*mm, energy_endcap_pos, 0,
+			     0., twopi, 180.*deg - _endcap_theta, _endcap_theta);
+    G4double gen_pos = _lat_nozzle_x_pos  + _lat_nozzle_high/2. - piece_length/2. - z_pos_screw_source;
+    _na22_gen_lat =
+      new CylinderPointSampler(0., source_thickness, source_diam/2., 0., G4ThreeVector(gen_pos, 0., _lat_nozzle_z_pos), rot_lat);
 
    
 
@@ -555,6 +591,7 @@ void NextNewVessel::Construct()
     delete _flange_gen;     
     delete _tracking_endcap_gen;
     delete _energy_endcap_gen;
+    delete _na22_gen_lat;
   }
 
  
@@ -640,6 +677,9 @@ void NextNewVessel::Construct()
     // }  
     else if (region =="SOURCE_PORT_AXIAL") { 
       vertex = _axial_port_source_pos; 
+    }
+    else if (region =="NA22_PORT_ANODE") { 
+      vertex =  _na22_gen_lat->GenerateVertex("BODY_VOL");
     }
     else {
       G4Exception("[NextNewVessel]", "GenerateVertex()", FatalException,
