@@ -163,7 +163,7 @@ namespace nexus {
     G4RotationMatrix rot;
     rot.rotateY(_rot_angle);
     new G4PVPlacement(G4Transform3D(rot, _displ),shielding_logic, "LEAD_BOX",
-		      _lab_logic, false, 0, true);
+		      _lab_logic, false, 0, false);
 
 
     //// VERTEX GENERATORS   //
@@ -222,7 +222,7 @@ namespace nexus {
 	      (region == "SOURCE_PORT_ANODE") ||
 	      (region == "SOURCE_PORT_UP") ||
 	      (region == "SOURCE_PORT_AXIAL") ||
-	      (region == "NA22_PORT_ANODE") ){
+	      (region == "INTERNAL_PORT_ANODE") ){
       vertex = _vessel->GenerateVertex(region);
     }
     // ICS REGIONS
