@@ -16,7 +16,7 @@
 /Geometry/NextNew/sc_yield 16670. 1/MeV
 /Geometry/NextNew/elfield false
 /Geometry/PmtR11410/SD_depth 4
-/Geometry/NextNew/teflon_masks true
+/Geometry/KDB/teflon_masks true
 
 # PHYSICS
 /control/execute macros/physics/IonizationElectron.mac

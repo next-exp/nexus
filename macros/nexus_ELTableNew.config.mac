@@ -18,7 +18,7 @@
 /Geometry/NextNew/el_table_binning 1. mm
 /Geometry/NextNew/el_table_point_id 0
 /Geometry/PmtR11410/SD_depth 4
-/Geometry/NextNew/teflon_masks true
+/Geometry/KDB/teflon_masks true
 
 /nexus/persistency/outputFile table.NEW.next 
 
