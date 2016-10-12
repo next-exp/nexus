@@ -88,6 +88,7 @@ namespace nexus {
     SpherePointSampler*   _tracking_endcap_gen;
     SpherePointSampler*   _energy_endcap_gen;
     CylinderPointSampler* _flange_gen;
+    CylinderPointSampler* _screw_gen_lat;
 
     G4double _perc_endcap_vol;
     G4double _perc_tube_vol;
@@ -104,6 +105,9 @@ namespace nexus {
     // Gas being used
     G4String _gas;
     G4double _Xe_perc;
+
+    // Radioactive source being used
+    G4String _source;
 
    
 
