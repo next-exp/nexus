@@ -11,6 +11,7 @@
 /Geometry/NextNew/pressure 15. bar
 /Geometry/NextNew/sc_yield 16670.  1/MeV
 /Geometry/NextNew/elfield false
+### For sodium source: Na, for thorium source: Th
 /Geometry/NextNew/source Na
 
 /Geometry/Next100/shielding_vis false

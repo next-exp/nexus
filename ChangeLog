@@ -1,3 +1,6 @@
+tag v5_01_09 -12 Oct 2016
+	- Possibility of using Na or Th source via configuration parameter
+	
 tag v5_01_08 - 05 Oct 2016
 	- Na22 internal source implemented according to drawings
 	
