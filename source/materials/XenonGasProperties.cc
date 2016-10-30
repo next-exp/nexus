@@ -40,15 +40,45 @@ namespace nexus {
   
   G4double XenonGasProperties::Density(G4double pressure)
   {
+    G4double density = 5.324*kg/m3;
+    const G4int n_pressures = 6;
 
-    // G4double data[50][1] =
-    //   {{ 1.0,  5.29074},
-    //    { 2.0, 10.63668},
-    //    { 3.0, 16.03932},
-    //    { 4.0, 21.50023},
-    //    { 5.0, 27.02107},
-    //   };
+    // These values are taken from O. Sifner and J. Klomfar, "Thermodynamic Properties of Xenon from the Triple Point to 800 K with Pressures up to 350 MPa", J. Phys. Chem. Ref. Data, Vol. 23, No. 1, 1994
+    // We assume T = 300 K and perform a linear interpolation between any pair of values.
 
+    G4double data[n_pressures][2] =
+      {{ 1.0*bar,  5.290*kg/m3},
+       { 5.0*bar, 27.01*kg/m3},
+       { 10.0*bar, 55.55*kg/m3},
+       { 20.0*bar, 118.36*kg/m3},
+       { 30.0*bar, 191.51*kg/m3},
+       { 40.0*bar, 280.40*kg/m3}
+      };
+
+    G4bool found = false;
+
+    for (G4int i=0; i<n_pressures-1; ++i) {
+      if  (pressure >= data[i][0] && pressure < data[i+1][0]) {
+	G4double x1 = data[i][0];
+	G4double x2 = data[i+1][0];
+	G4double y1 = data[i][1];
+	G4double y2 = data[i+1][1];
+	density = y1 + (y2-y1)*(pressure-x1)/(x2-x1);
+	found = true;
+	break;
+      } 
+    }
+
+    if (!found) {
+      if (pressure == data[n_pressures-1][0]) {
+	density = data[n_pressures-1][1];
+      } else {
+	G4Exception("[XenonGaseousProperties]", "Density()", FatalException,
+		    "Unknown xenon density for this pressure!"); 
+      }
+    }
+
+    
     // Ideal gas state equation P*V = n*R*T
     // assuming atmosphere = bar 
 
@@ -62,29 +92,30 @@ namespace nexus {
     // _density = 
     //   (_pressure/atmosphere)*131.29/(_temperature*82.058);
 
-    G4double density = 5.324*kg/m3;
     
-    if (pressure/bar > 0.9 && pressure/bar < 1.1)
-      density = 5.324*kg/m3;
-    else if (pressure/bar > 1.9 && pressure/bar < 2.1)
-      density = 10.7*kg/m3;
-    else if (pressure/bar > 4.9 && pressure/bar < 5.1)
-      density = 27.2*kg/m3;
-    else if (pressure/bar > 6.9 && pressure/bar < 7.1)
-      density = 38.5548*kg/m3;
-    else if (pressure/bar > 9.9 && pressure/bar < 10.1)
-      density = 55.587*kg/m3;
-    else if (pressure/bar > 14.9 && pressure/bar < 15.1)
-      density = 85.95 *kg/m3;
-    else if (pressure/bar > 19.9 && pressure/bar < 20.1)
-      density = 118.4*kg/m3;
-    else if (pressure/bar > 29.9 && pressure/bar < 30.1)
-      density = 193.6*kg/m3;
-    else if (pressure/bar > 39.9 && pressure/bar < 40.1)
-      density = 284.3*kg/m3;
-    else
-      G4Exception("[XenonGaseousProperties]", "Density()", FatalException,
-                  "Unknown xenon density for this pressure!");     
+    
+    // if (pressure/bar > 0.9 && pressure/bar < 1.1)
+    //   density = 5.324*kg/m3;
+    // else if (pressure/bar > 1.9 && pressure/bar < 2.1)
+    //   density = 10.7*kg/m3;
+    // else if (pressure/bar > 4.9 && pressure/bar < 5.1)
+    //   density = 27.2*kg/m3;
+    // else if (pressure/bar > 6.9 && pressure/bar < 7.1)
+    //   density = 38.5548*kg/m3;
+    // else if (pressure/bar > 9.9 && pressure/bar < 10.1)
+    //   density = 55.587*kg/m3;
+    // else if (pressure/bar > 14.9 && pressure/bar < 15.1)
+    //   density = 85.95 *kg/m3;
+    // else if (pressure/bar > 19.9 && pressure/bar < 20.1)
+    //   density = 118.4*kg/m3;
+    // else if (pressure/bar > 29.9 && pressure/bar < 30.1)
+    //   density = 193.6*kg/m3;
+    // else if (pressure/bar > 39.9 && pressure/bar < 40.1)
+    //   density = 284.3*kg/m3;
+    // else
+    //   G4Exception("[XenonGaseousProperties]", "Density()", FatalException,
+    //               "Unknown xenon density for this pressure!");  
+    
    
     return density;
   }
