@@ -1,3 +1,6 @@
+tag v5_01_10 -28 Oct 2016
+	- Pressure of 7 bar added to list
+	
 tag v5_01_09 -12 Oct 2016
 	- Possibility of using Na or Th source via configuration parameter
 	
