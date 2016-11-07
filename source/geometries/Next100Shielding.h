@@ -41,10 +41,14 @@ namespace nexus {
     /// Builder
     void Construct();
 
+    /// Retrieve dimensions
+    G4ThreeVector GetDimensions() const;
+
     
   private:
 
     // Dimensions
+    G4double _lead_x, _lead_y, _lead_z;
     G4double _shield_x, _shield_y, _shield_z;
     G4double  _beam_base_thickness, _lateral_z_separation, _roof_z_separation , _front_x_separation;
     G4double _lead_thickness, _steel_thickness;

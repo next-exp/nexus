@@ -78,11 +78,11 @@ namespace nexus {
     //   G4Box* shielding_box_solid = new G4Box("SHIELD_BOX", _shield_x/2., _shield_y/2., _shield_z/2.);
 
     // LEAD BOX   ///////////
-    G4double lead_x = _shield_x + 2. * _steel_thickness + 2. * _lead_thickness;
-    G4double lead_y = _shield_y + 2. * _steel_thickness + 2. * _lead_thickness;
-    G4double lead_z = _shield_z + 2. * _steel_thickness + 2. * _lead_thickness;
+    _lead_x = _shield_x + 2. * _steel_thickness + 2. * _lead_thickness;
+    _lead_y = _shield_y + 2. * _steel_thickness + 2. * _lead_thickness;
+    _lead_z = _shield_z + 2. * _steel_thickness + 2. * _lead_thickness;
 
-    G4Box* lead_box_solid = new G4Box("LEAD_BOX", lead_x/2., lead_y/2., lead_z/2.);
+    G4Box* lead_box_solid = new G4Box("LEAD_BOX", _lead_x/2., _lead_y/2., _lead_z/2.);
   
     G4LogicalVolume* lead_box_logic = new G4LogicalVolume(lead_box_solid,
 							  G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"),
@@ -96,7 +96,7 @@ namespace nexus {
     //   G4double frontz = front_beam_z - (_roof_z_separation+_lateral_z_separation/2.);
     G4double top_beam_y = _shield_y/2.+ _steel_thickness + _lead_thickness/2.; 
     
-    G4Box* roof_beam = new G4Box("STRUCT_BEAM",lead_x/2.,_beam_base_thickness/2.,lead_z/2.);
+    G4Box* roof_beam = new G4Box("STRUCT_BEAM",_lead_x/2.,_beam_base_thickness/2.,_lead_z/2.);
     G4Box* aux_box = new G4Box("AUX_box",_shield_x/2.+ _steel_thickness,_beam_base_thickness,_shield_z/2.+ _steel_thickness);
     G4SubtractionSolid* roof_beam_solid = new G4SubtractionSolid("STRUCT_BEAM",roof_beam,aux_box,0,G4ThreeVector(0.,0.,0.));
   
@@ -241,7 +241,7 @@ namespace nexus {
     _steel_gen = new BoxPointSampler(_shield_x, _shield_y, _shield_z, _steel_thickness, G4ThreeVector(0.,0.,0.), 0);
     G4double offset = 1.*cm;
     _external_gen = 
-      new BoxPointSampler(lead_x + offset, lead_y + offset, lead_z + offset,
+      new BoxPointSampler(_lead_x + offset, _lead_y + offset, _lead_z + offset,
 			  1.*mm, G4ThreeVector(0.,0.,0.), 0);
 
 
@@ -249,7 +249,7 @@ namespace nexus {
       new BoxPointSampler(_lead_thickness,_beam_base_thickness,_shield_z,0., 
 			  G4ThreeVector(0.,_shield_y/2.+_steel_thickness/2.,0.),0);
     _front_roof_gen = 
-      new BoxPointSampler(lead_x,_beam_base_thickness,_lead_thickness,0., 
+      new BoxPointSampler(_lead_x,_beam_base_thickness,_lead_thickness,0., 
 			  G4ThreeVector(0.,_shield_y/2.+_steel_thickness/2.,0.),0);
     // _struct_gen=;
     _struct_x_gen = new BoxPointSampler((_shield_x+2*_lead_thickness+2*_steel_thickness), _lead_thickness, _beam_base_thickness,0.,
@@ -274,7 +274,7 @@ namespace nexus {
     //std::cout<<"TOTAL STRUCTURE VOLUME "<<total_vol<<std::endl;
 
     _perc_roof_vol = roof_vol/total_vol; 
-    _perc_front_roof_vol = 2*(lead_x*_beam_base_thickness*_lead_thickness) /roof_vol;
+    _perc_front_roof_vol = 2*(_lead_x*_beam_base_thickness*_lead_thickness) /roof_vol;
     _perc_top_struct_vol = struct_top_vol /total_vol;
     _perc_struc_x_vol = 4*((_shield_x+2*_lead_thickness+2*_steel_thickness)*_lead_thickness*_beam_base_thickness)/struct_top_vol; 
 
@@ -302,6 +302,11 @@ namespace nexus {
   G4LogicalVolume* Next100Shielding::GetAirLogicalVolume() const
   {
     return _air_box_logic;
+  }
+
+  G4ThreeVector Next100Shielding::GetDimensions() const
+  {
+    return G4ThreeVector(_lead_x, _lead_y, _lead_z);
   }
 
   G4ThreeVector Next100Shielding::GenerateVertex(const G4String& region) const

@@ -19,6 +19,7 @@
 #include "NextNewInnerElements.h"
 #include "Na22Source.h"
 #include "BoxPointSampler.h"
+#include "MuonsPointSampler.h"
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
 
@@ -75,6 +76,8 @@ namespace nexus {
     delete _inner_elements;
     
     delete _lab_gen;
+
+    delete _muon_gen;
   }
 
  void NextNew::Construct()
@@ -179,6 +182,10 @@ namespace nexus {
 
     _source_gen_lat = new CylinderPointSampler(0., source_thick, source_diam/2., 0., lat_pos_na22, lat_rot);
     _source_gen_up = new CylinderPointSampler(0., source_thick, source_diam/2., 0., up_pos_na22, up_rot);
+
+    G4ThreeVector shielding_dim = _shielding->GetDimensions();
+
+    _muon_gen = new MuonsPointSampler(shielding_dim.x()/2. + 50.*cm, shielding_dim.y()/2. + 1.*cm, shielding_dim.z()/2. + 50.*cm);
     
 
   }
@@ -191,8 +198,9 @@ namespace nexus {
     //AIR AROUND SHIELDING
     if (region == "LAB") {
       vertex = _lab_gen->GenerateVertex("INSIDE");
-    }
-    else if (region == "NA22_PORT_ANODE_EXT") {
+    } else if (region == "MUONS") {
+      vertex = _muon_gen->GenerateVertex();
+    } else if (region == "NA22_PORT_ANODE_EXT") {
       vertex =  _source_gen_lat->GenerateVertex("BODY_VOL");
     }
     else if (region == "NA22_PORT_UP_EXT") {
