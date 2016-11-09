@@ -1,25 +1,26 @@
 ### --------------------------------------------------------
 ###  Next100: Configuration macro
-###  $Id: Next100.config.mac 8758 2013-06-15 11:12:45Z jmunoz $
+###  $Id: Next100.Neutron.config.mac 8758 2016-11-09 15:12:45Z minegui $
 ### --------------------------------------------------------
 
 
 ##### ACTIONS #####
 
 
-
 ##### JOB CONTROL #####
-/nexus/persistency/outputFile Next100.next
-## eventType options: bb0nu, bb2nu, background
+#/nexus/random_seed 0
 /nexus/persistency/eventType background
+/nexus/persistency/historyFile NEXT100.Neutron.pers.mac
+/nexus/persistency/outputFile Next100.Neutron.next
 
 
 
 ##### GEOMETRY #####
-/Geometry/Next100/elfield false
-#/Geometry/Next100/sc_yield 17000 1/MeV
 /Geometry/Next100/pressure 15. bar
-/Geometry/Next100/max_step_size 5. mm
+/Geometry/Next100/max_step_size 1. mm
+/Geometry/Next100/elfield false
+/Geometry/Next100/sc_yield 17000 1/MeV
+
 
 /Geometry/Next100/shielding_vis false
 /Geometry/Next100/vessel_vis false
@@ -28,7 +29,6 @@
 /Geometry/Next100/grids_vis false
 /Geometry/Next100/energy_plane_vis false
 /Geometry/Next100/tracking_plane_vis false
-/Geometry/SiPMSensl/SiPMSensl_vis false
 /Geometry/PmtR11410/SD_depth 3
 
 
@@ -37,9 +37,9 @@
 
 # Region options: EXTERNAL, SHIELDING_LEAD, SHIELDING_STEEL, SHIELDING_GAS, SHIELDING_STRUCT
 #                 VESSEL, VESSEL_FLANGES, VESSEL_TRACKING_ENDCAP, VESSEL_ENERGY_ENDCAP
-#		  ICS, DB_PLUG,
-#		  FIELD_CAGE, ACTIVE, CARRIER_PLATE, ENCLOSURE, ENCLOSURE_WINDOW, ENCLOSURE_PAD,
-#		  PMT_BODY, PMT, TRK_SUPPORT, DICE_BOARD, EL_TABLE
+#                 ICS, DB_PLUG,
+#                 FIELD_CAGE, ACTIVE, CARRIER_PLATE, ENCLOSURE, ENCLOSURE_WINDOW, ENCLOSURE_PAD,
+#                 PMT_BODY, PMT, TRK_SUPPORT, DICE_BOARD, EL_TABLE
 
 # Single Particle
 #/Generator/SingleParticle/particle e-
@@ -54,13 +54,19 @@
 #/Generator/Decay0Interface/region ACTIVE
 
 # Ion Gun for background decays
-/Generator/IonGun/atomic_number 83
-/Generator/IonGun/mass_number 214
-/Generator/IonGun/region FIELD_CAGE
+#/Generator/IonGun/atomic_number 83
+#/Generator/IonGun/mass_number 214
+#/Generator/IonGun/region FIELD_CAGE
+
+#Neutron generator for cosmogenics
+/Generator/NeutronGenerator/min_energy 100 MeV
+/Generator/NeutronGenerator/max_energy  100 MeV
+/Generator/NeutronGenerator/region EXTERNAL
 
 # ACTIONS
-/Actions/DefaultEventAction/energy_threshold 0.6 MeV
-/Actions/DefaultEventAction/max_energy 2.55 MeV
+#/Actions/ElSimEventAction/max_energy 3. MeV
+#/Actions/DefaultEventAction/energy_threshold 0. MeV
+#/Actions/DefaultEventAction/max_energy 3. MeV
 
 ## No full simulation
 /PhysicsList/Nexus/clustering          false
@@ -71,4 +77,3 @@
 /run/verbose 0
 /event/verbose 0
 /tracking/verbose 0
-
