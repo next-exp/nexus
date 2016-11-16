@@ -42,14 +42,6 @@ namespace nexus {
     /// Messenger for the definition of control commands
     G4GenericMessenger* _msg;
 
-    //Pet2boxes* module_;
-    // PetLYSObox* module_;
-
-    //   BaseGeometry* module_;
-    PetLXeCell* moduleLXe_;
-    PetLYSOCell* moduleLYSO_;
-
-    // PetLYSOCell* module_;
     PetLXeCell* module_;
 
     TFile* file_;
