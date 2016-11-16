@@ -58,8 +58,6 @@ namespace nexus {
 
   void Lab::Construct()
   {
-
-    
     // LAB /////////////////////////////////////////////////////////////
     // This is just a volume of air surrounding the detector so that
   // events can be generated on the outside.
