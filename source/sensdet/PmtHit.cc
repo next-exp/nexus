@@ -81,4 +81,8 @@ void PmtHit::Fill(G4double time, G4int counts)
   G4double time_bin = floor(time/_bin_size) * _bin_size;
   _histogram[time_bin] += counts;
 }
-  
+
+void PmtHit::FillWavelengths(G4double time, G4double wvl)
+{
+  _wavelengths[time] = wvl;
+}
