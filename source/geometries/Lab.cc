@@ -47,14 +47,7 @@ namespace nexus {
      // Which material are we using?
      _msg->DeclareProperty("det_type", type_, "type of detector");
 
-    //module_ = new Pet2boxes();
-    // module_ = new PetLYSObox();
-
-     //  module_ = new PetLYSOCell();
      module_ = new PetLXeCell();
-  
-     //   moduleLXe_ = new PetLXeCell();
-     //   moduleLYSO_ = new PetLYSOCell();
     
   }
 
@@ -85,8 +78,8 @@ namespace nexus {
     tree->SetBranchAddress("pz2", &pz2_);
     for (G4int i=0; i<tree->GetEntries(); ++i) {
       tree->GetEntry(i);
-      //      G4ThreeVector pos1(px1_, py1_, pz1_ );
-      //G4ThreeVector pos2(px2_, py2_, pz2_ );
+      // G4ThreeVector pos1(px1_, py1_, pz1_ );
+      // G4ThreeVector pos2(px2_, py2_, pz2_ );
       // New vertices (Jan 2016)
       G4ThreeVector pos1(px1_, py1_, - pz1_ - 100.);
       G4ThreeVector pos2(px2_, py2_, pz2_ + 100.);
@@ -95,16 +88,14 @@ namespace nexus {
  // 	   px2_ < 12. && px2_ > -12. && py2_ < 12. && py2_ > -12. &&  pz2_ > 100. && pz2_ < 150.) {
       if ( px1_ < 12. && px1_ > -12. && py1_ < 12. && py1_ > -12. &&  (-pz1_-100) < -100. && (- pz1_ - 100) > -150. &&
       	   px2_ < 12. && px2_ > -12. && py2_ < 12. && py2_ > -12. &&  (pz2_+100) > 100. && (pz2_+100) < 150.) {
-	   G4cout << px1_ << ", " << py1_ << ", " << pz1_  << G4endl;
-	   G4cout << px2_ << ", " << py2_ << ", " << pz2_  << G4endl;
+	   // G4cout << px1_ << ", " << py1_ << ", " << pz1_  << G4endl;
+	   // G4cout << px2_ << ", " << py2_ << ", " << pz2_  << G4endl;
 	std::pair<G4ThreeVector, G4ThreeVector> positions = std::make_pair(pos1, pos2);
-	//	G4cout << pos1 << ", " << pos2 << G4endl;
 	vertices_.push_back(positions);
       }
     }
     file_ ->Close();
     
-    //   G4cout << "Size of points: " << vertices_.size() << G4endl;
     // LAB /////////////////////////////////////////////////////////////
     // This is just a volume of air surrounding the detector so that
   // events (from calibration sources or cosmic rays) can be generated 
@@ -121,14 +112,6 @@ namespace nexus {
     // Set this volume as the wrapper for the whole geometry 
     // (i.e., this is the volume that will be placed in the world)
     this->SetLogicalVolume(lab_logic);
-    
-    // if (type_ == "LYSO" ) {
-    //   G4cout << "LYSO cell being instantiated" << G4endl;
-    //   module_ = moduleLYSO_;
-    // } else {
-    //   G4cout << "LXe cell being instantiated" << G4endl;
-    //   module_ = moduleLXe_;
-    // }
 
     module_->Construct();
 
@@ -156,7 +139,7 @@ namespace nexus {
     unsigned int i = starting_point_ + index_;
 
     if (i == (vertices_.size()-1)) {
-      G4Exception("[Pet2boxes]", "GenerateVertex()", 
+      G4Exception("[Lab]", "GenerateVertex()", 
 		  RunMustBeAborted, "Reached last event in vertices list.");
     }
 
@@ -165,7 +148,7 @@ namespace nexus {
       index_++;
     }
     catch (const std::out_of_range& oor) {
-      G4Exception("[Pet2boxes]", "GenerateVertex()", FatalErrorInArgument, "Point out of range.");
+      G4Exception("[Lab]", "GenerateVertex()", FatalErrorInArgument, "Point out of range.");
     }
     
     return vertices;

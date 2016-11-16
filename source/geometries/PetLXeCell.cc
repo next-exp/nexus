@@ -82,17 +82,8 @@ namespace nexus {
     pdb_ = new PetPlainDice();
 
     //G4cout << "VUV sensitive SiPM are being instantiated" << G4endl;
-    //sipm_ = new SiPMpetBlue;
-    //sipm_ = new SiPMpetVUV;
-    //sipm_ = new SiPMpetPlots;
-    // sipm_ = new Photocathode;
-
-    // sipmVUV_ = new SiPMpetVUV;
+  
     sipm_ = new SiPMpetTPB;
-    // sipmPlots_ = new SiPMpetPlots;
-    // sipmBlue_ = new SiPMpetBlue;
-
-   
 
   }
 
@@ -110,19 +101,6 @@ namespace nexus {
     pdb_->SetSize(z_size_, active_size_);
     pdb_->Construct();
     pdb_z_ = pdb_->GetDimensions().z();
-
-    // if (type_ == "TPB") {
-    //   G4cout << "TPB coated SiPM are being instantiated" << G4endl;
-    //   sipm_ = sipmTPB_;
-    // } else if (type_ == "plots") {
-    //   sipm_ = sipmPlots_;
-    // } else if (type_ == "blue") {
-    //   sipm_ = sipmBlue_;
-    // } else {
-    //   G4cout << "VUV sensitive SiPM are being instantiated" << G4endl;
-    //   sipm_ = sipmVUV_;
-    // }
-
 
     sipm_->Construct();
 
@@ -168,7 +146,6 @@ namespace nexus {
     G4double det_size2 = 
       z_size_+ 2.*sipm_->GetDimensions().z() + 2.*det_thickness_;
     G4Box* det_solid = 
-      //   new G4Box("WALL", det_size/2., det_size/2., det_size/2.);
       new G4Box("WALL", det_size/2., det_size/2., det_size2/2.);
     G4Material* steel = MaterialsList::Steel();
     
