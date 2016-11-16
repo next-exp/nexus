@@ -62,8 +62,12 @@ namespace nexus {
 
     /// Adds counts to a given time bin
     void Fill(G4double time, G4int counts=1);
+    
+    /// Adds arrival time and wavelength of a given detected photons
+    void FillWavelengths(G4double time, G4double wvl); 
 
     const std::map<G4double, G4int>& GetHistogram() const;
+    const std::map<G4double, G4double>& GetWavelengths() const;
         
   private:
     G4int _pmt_id;           ///< Detector ID number
@@ -71,7 +75,10 @@ namespace nexus {
     G4ThreeVector _position; ///< Detector position
 
     /// Sparse histogram with number of photons detected per time bin
-    std::map<G4double, G4int> _histogram; 
+    std::map<G4double, G4int> _histogram;
+
+    /// Map to save detected photons wavelengths
+    std::map<G4double, G4double> _wavelengths;
   };
 
 } // namespace nexus
@@ -101,6 +108,9 @@ namespace nexus {
 
   inline const std::map<G4double, G4int>& PmtHit::GetHistogram() const
   { return _histogram; }
+
+  inline const std::map<G4double, G4double>& PmtHit::GetWavelengths() const
+    { return _wavelengths; }
 
 } // namespace nexus
 
