@@ -14,8 +14,11 @@
 #include "PetPlainDice.h"
 #include "OpticalMaterialProperties.h"
 #include "BoxPointSampler.h"
+//#include "SiPMpetBlue.h"
 #include "SiPMpetVUV.h"
 #include "SiPMpetTPB.h"
+//#include "SiPMpetPlots.h"
+//#include "Photocathode.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -79,9 +82,15 @@ namespace nexus {
     pdb_ = new PetPlainDice();
 
     //G4cout << "VUV sensitive SiPM are being instantiated" << G4endl;
-    sipm_ = new SiPMpetVUV;
+    //sipm_ = new SiPMpetBlue;
+    //sipm_ = new SiPMpetVUV;
+    //sipm_ = new SiPMpetPlots;
+    // sipm_ = new Photocathode;
 
-
+    // sipmVUV_ = new SiPMpetVUV;
+    sipm_ = new SiPMpetTPB;
+    // sipmPlots_ = new SiPMpetPlots;
+    // sipmBlue_ = new SiPMpetBlue;
 
    
 
@@ -102,7 +111,18 @@ namespace nexus {
     pdb_->Construct();
     pdb_z_ = pdb_->GetDimensions().z();
 
-    
+    // if (type_ == "TPB") {
+    //   G4cout << "TPB coated SiPM are being instantiated" << G4endl;
+    //   sipm_ = sipmTPB_;
+    // } else if (type_ == "plots") {
+    //   sipm_ = sipmPlots_;
+    // } else if (type_ == "blue") {
+    //   sipm_ = sipmBlue_;
+    // } else {
+    //   G4cout << "VUV sensitive SiPM are being instantiated" << G4endl;
+    //   sipm_ = sipmVUV_;
+    // }
+
 
     sipm_->Construct();
 
@@ -127,8 +147,8 @@ namespace nexus {
     lXe_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
     if (phys_) {
       G4cout << "LXe used with optical properties" << G4endl;
-      // lXe_->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe());
-      lXe_->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe_window());
+      lXe_->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe());
+      //lXe_->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe_window());
     } else {
       G4cout << "LXe used with constant refraction index = 1.7" << G4endl;
       lXe_->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe_nconst());

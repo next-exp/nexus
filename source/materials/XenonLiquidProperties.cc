@@ -118,8 +118,9 @@ namespace nexus {
   void XenonLiquidProperties::Scintillation
   (G4int entries, G4double* energy, G4double* intensity)
   {
-    for (G4int i=0; i<entries; i++)
+    for (G4int i=0; i<entries; i++) {
       intensity[i] = Scintillation(energy[i]);
+    }
   }
   
   

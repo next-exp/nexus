@@ -18,6 +18,7 @@
 
 class G4GenericMessenger;
 namespace nexus {class Pet2boxes;}
+namespace nexus {class PetLYSObox;}
 namespace nexus {class PetLXeCell;}
 namespace nexus {class PetLYSOCell;}
 

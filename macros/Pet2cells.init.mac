@@ -18,4 +18,4 @@
 /Actions/RegisterTrackingAction ANALYSIS
 /Actions/RegisterSteppingAction ANALYSIS
 
-/nexus/RegisterMacro /data4/NEXT/users/paolafer/dev_area/nexus/petalx_new/macros/Pet2cells.config.mac
+/nexus/RegisterMacro macros/Pet2cells.config.mac
