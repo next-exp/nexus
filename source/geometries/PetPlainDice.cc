@@ -43,7 +43,6 @@ namespace nexus {
   {
     /// Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/PetPlainDice/", "Control commands of geometry Pet.");
-
     // xy size
     G4GenericMessenger::Command& xysize_cmd = 
       msg_->DeclareProperty("xy_size", xy_size_, "xy dimension");
@@ -51,8 +50,6 @@ namespace nexus {
     xysize_cmd.SetParameterName("xy_size", false);
     xysize_cmd.SetRange("xy_size>0.");
 
-    // msg_->DeclareProperty("columns", columns_, "Number of rows in SiPMs");
-    // msg_->DeclareProperty("rows", rows_, "Number of rows in SiPMs");
     msg_->DeclareProperty("reflectivity", refl_, "Reflectivity of dice boards");
     msg_->DeclareProperty("visibility", visibility_, "Dice Boards Visibility");
   }

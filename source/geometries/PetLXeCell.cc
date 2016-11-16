@@ -13,15 +13,14 @@
 #include "PetPlainDice.h"
 #include "OpticalMaterialProperties.h"
 #include "BoxPointSampler.h"
+//#include "SiPMpetBlue.h"
 #include "SiPMpetVUV.h"
 #include "Visibilities.h"
-
 //#include "SiPMpetBlue.h"
 //#include "SiPMpetTPB.h"
 //#include "SiPMpetPlots.h"
 //#include "Photocathode.h"
 //#include "PetKDBFixedPitch.h"
-
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
 #include <G4Material.hh>
