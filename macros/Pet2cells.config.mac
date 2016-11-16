@@ -1,7 +1,7 @@
 
 ### GEOMETRY
 /Geometry/Lab/starting_point 0
-/Geometry/Lab/file_name "/data4/NEXT/users/paolafer/dev_area/nexus/petalx_new/vertices_LXe_128_128_50.root"
+/Geometry/Lab/file_name "vertices_LXe_128_128_50.root"
 #/Geometry/Lab/det_type LXe
 /Geometry/PetLXeCell/z_size 5. cm
 /Geometry/PetLXeCell/max_step_size 1.0 mm

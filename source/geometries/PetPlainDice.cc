@@ -39,13 +39,15 @@ namespace nexus {
     columns_(8),
     visibility_ (1),
     ysize_(5.*cm),
-    xsize_(5.*cm)
+    xsize_(5.*cm),
+    refl_(0.95)
   {
     /// Messenger
-    msg_ = new G4GenericMessenger(this, "/Geometry/PetalX/", "Control commands of geometry Pet.");
+    msg_ = new G4GenericMessenger(this, "/Geometry/PetPlainDice/", "Control commands of geometry Pet.");
     msg_->DeclareProperty("plain_dice_vis", visibility_, "Kapton Dice Boards Visibility");
     msg_->DeclareProperty("plain_columns", columns_, "Number of rows in SiPMs");
     msg_->DeclareProperty("plain_rows", rows_, "Number of rows in SiPMs");
+    msg_->DeclareProperty("reflectivity", refl_, "Reflectivity of teflon panels");
   }
 
   PetPlainDice::~PetPlainDice()
@@ -63,33 +65,37 @@ namespace nexus {
    
 
     //   const G4double sipm_pitch = 6.2 * mm;
+    const G4double board_thickness = 0.3 * mm;
+    /*
      G4double sipm_pitch = ysize_/rows_;
     const G4double coating_thickness = 0.1 * micrometer;
-    const G4double board_thickness = 0.3 * mm;
+    
     //const G4double board_side_reduction = .5 * mm;
     const G4double board_side_reduction = 0. * mm;    
     // const G4double db_x = columns_ * sipm_pitch - 2. * board_side_reduction ;  
     // const G4double db_y =    rows_ * sipm_pitch - 2. * board_side_reduction ;
+    */
      const G4double db_x = xsize_ ;  
-    const G4double db_y =    rows_ * sipm_pitch - 2. * board_side_reduction ;
-    const G4double db_z = board_thickness;
+     //    const G4double db_y =    rows_ * sipm_pitch - 2. * board_side_reduction ;
+     const G4double db_y = ysize_;  
+     const G4double db_z = board_thickness;
 
     // Outer element volume  /////////////////////////////////////////////////// 
-    const G4double border = .5*mm;
+     //  const G4double border = .5*mm;
     const G4double out_x = db_x ;
     const G4double out_y = db_y;
-    const G4double out_z = db_z + 2.*border;
+    const G4double out_z = db_z;
 
     dimensions_.setX(out_x);
     dimensions_.setY(out_y);
     dimensions_.setZ(out_z);
 
-    G4Material* out_material = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
+    // G4Material* out_material = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
 
-    G4Box* out_solid = new G4Box("LXE_DICE", out_x/2., out_y/2., out_z/2.);
-    G4LogicalVolume* out_logic = 
-      new G4LogicalVolume(out_solid, out_material,  "LXE_DICE");
-    this->SetLogicalVolume(out_logic);
+    // G4Box* out_solid = new G4Box("LXE_DICE", out_x/2., out_y/2., out_z/2.);
+    // G4LogicalVolume* out_logic = 
+    //   new G4LogicalVolume(out_solid, out_material,  "LXE_DICE");
+   
 
 
     // KAPTON BOARD /////////////////////////////////////////////////
@@ -103,8 +109,9 @@ namespace nexus {
  
     G4LogicalVolume* board_logic = 
       new G4LogicalVolume(board_solid, teflon, "DICE_BOARD");
-    new G4PVPlacement(0, G4ThreeVector(0.,0., -border), board_logic,
-			"DICE_BOARD", out_logic, false, 0, true);
+    this->SetLogicalVolume(board_logic);
+    // new G4PVPlacement(0, G4ThreeVector(0.,0., -border), board_logic,
+    // 			"DICE_BOARD", out_logic, false, 0, true);
 
     // OPTICAL SURFACE FOR REFLECTION
     G4OpticalSurface* db_opsur = new G4OpticalSurface("DICE_BOARD");
@@ -113,14 +120,15 @@ namespace nexus {
     db_opsur->SetFinish(ground);
     db_opsur->SetSigmaAlpha(0.1);
    
+    G4cout << refl_ << G4endl;
     // db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
-    db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_LXe());
+    db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_LXe(refl_));
     
     new G4LogicalSkinSurface("DICE_BOARD", board_logic, db_opsur);
 
    
     // WLS COATING //////////////////////////////////////////////////
-    
+    /*      
     G4Box* coating_solid = 
       new G4Box("DB_WLS_COATING", db_x/2., db_y/2., coating_thickness/2.);
 
@@ -133,8 +141,8 @@ namespace nexus {
     G4double pos_z = db_z/2. - coating_thickness / 2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., pos_z), coating_logic,
     		      "DB_WLS_COATING", board_logic, false, 0, true);
-
-    
+    */
+   
    
 
     // SETTING VISIBILITIES   //////////

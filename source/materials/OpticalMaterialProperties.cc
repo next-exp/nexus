@@ -576,17 +576,24 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
 {
   XenonGasProperties GXe_prop(pressure, temperature);
   G4MaterialPropertiesTable* GXe_mpt = new G4MaterialPropertiesTable();
-
+  
   const G4int ri_entries = 9;
   G4double ri_energy[ri_entries] 
     = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 7*eV, 8*eV, 9*eV};
+
+  // G4int ri_entries = 15;
+  // G4double ri_energy[ri_entries] 
+  //   = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV, 7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV};
 
   G4double rindex[ri_entries];
 
   for (G4int i=0; i<ri_entries; i++) {
     rindex[i] = GXe_prop.RefractiveIndex(ri_energy[i]);
-    //  G4cout << ri_energy[i] << ", " << rindex[i] << G4endl;
+    // G4cout << ri_energy[i] << ", " << rindex[i] << G4endl;
   }
+  
+
+  
 
   // Sampling from ~150 nm to 200 nm <----> from 6.20625 eV to 8.20625 eV
   const G4int sc_entries = 500;
@@ -632,11 +639,13 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LXe()
   //      9.*eV, 9.2*eV, 9.4*eV, 9.6*eV, 9.8*eV, 10.*eV, 10.2*eV, 10.4*eV, 10.6*eV, 10.8*eV, 
   //      11.*eV, 11.2*eV, 11.4*eV, 11.6*eV, 11.8*eV, 12.*eV, 12.2*eV, 12.4*eV};
 
-  G4double rindex[ri_entries];
+ 
 
   // G4int ri_entries = 15;
   // G4double ri_energy[ri_entries] 
   //   = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV, 7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV};
+
+  G4double rindex[ri_entries];
 
   //  XenonGasProperties GXe_prop(10.*bar, STP_Temperature);
 
@@ -906,7 +915,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::PTFE()
 G4MaterialPropertiesTable* OpticalMaterialProperties::PTFE_LXe(G4double reflectivity)
 {
   G4MaterialPropertiesTable* teflon_mpt = new G4MaterialPropertiesTable();
-G4cout << "PTFE with LXe refl = " << reflectivity << G4endl;
+  G4cout << "PTFE with LXe refl = " << reflectivity << G4endl;
   const G4int REFL_NUMENTRIES = 2;
 
   G4double ENERGIES[REFL_NUMENTRIES] = {1.0*eV, 30.*eV};

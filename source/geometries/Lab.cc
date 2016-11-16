@@ -11,6 +11,7 @@
 
 #include "Pet2boxes.h"
 #include "PetLXeCell.h"
+//#include "PetLYSObox.h"
 #include "PetLYSOCell.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
@@ -94,8 +95,8 @@ namespace nexus {
  // 	   px2_ < 12. && px2_ > -12. && py2_ < 12. && py2_ > -12. &&  pz2_ > 100. && pz2_ < 150.) {
       if ( px1_ < 12. && px1_ > -12. && py1_ < 12. && py1_ > -12. &&  (-pz1_-100) < -100. && (- pz1_ - 100) > -150. &&
       	   px2_ < 12. && px2_ > -12. && py2_ < 12. && py2_ > -12. &&  (pz2_+100) > 100. && (pz2_+100) < 150.) {
-	//    G4cout << px1_ << ", " << py1_ << ", " << pz1_  << G4endl;
-	//    G4cout << px2_ << ", " << py2_ << ", " << pz2_  << G4endl;
+	   G4cout << px1_ << ", " << py1_ << ", " << pz1_  << G4endl;
+	   G4cout << px2_ << ", " << py2_ << ", " << pz2_  << G4endl;
 	std::pair<G4ThreeVector, G4ThreeVector> positions = std::make_pair(pos1, pos2);
 	//	G4cout << pos1 << ", " << pos2 << G4endl;
 	vertices_.push_back(positions);
