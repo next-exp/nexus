@@ -1,3 +1,11 @@
+tag v5_01_11 -23 Nov 2016
+	- NaI scintillator added to the NEW geometry as a sensitive
+	detector
+	- First event ID of a job can be passed as a configuration
+	parameter
+	- Muon generator surface added to NEW and NEXT100
+	- Neutron generator with fixed energy added.
+	
 tag v5_01_10 -28 Oct 2016
 	- Pressure of 7 bar added to list
 	
