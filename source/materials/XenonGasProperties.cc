@@ -23,7 +23,7 @@ namespace nexus {
   using namespace CLHEP; 
   
   XenonGasProperties::XenonGasProperties(G4double pressure,
-					 G4double temperature):
+					 G4double /*temperature*/):
     _pressure(pressure)
     //, _temperature(temperature)
   {

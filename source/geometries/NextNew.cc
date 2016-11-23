@@ -22,9 +22,11 @@
 #include "MuonsPointSampler.h"
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
+#include "IonizationSD.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
+#include <G4Tubs.hh>
 #include <G4Material.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
@@ -33,6 +35,7 @@
 #include <G4NistManager.hh>
 #include <G4RotationMatrix.hh>
 #include <G4Transform3D.hh>
+#include <G4SDManager.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
@@ -80,6 +83,44 @@ namespace nexus {
     delete _muon_gen;
   }
 
+  void NextNew::BuildExtScintillator(G4ThreeVector pos)
+{
+ 
+  
+  G4double dist_sc = 5.*cm;
+  G4double radius = 44.5/2.*mm;
+  G4double length = 38.7*mm;
+  
+  G4Tubs* sc_solid = new G4Tubs("NaI", 0., radius, length/2., 0., twopi);
+  G4Material* mat = 
+    G4NistManager::Instance()->FindOrBuildMaterial("G4_SODIUM_IODIDE");
+  G4LogicalVolume* sc_logic = new G4LogicalVolume(sc_solid, mat, "NaI");
+  sc_logic->SetUserLimits(new G4UserLimits(1.*mm));
+
+  G4RotationMatrix rot;
+  rot.rotateY(-pi/2.);
+
+  G4ThreeVector pos_scint = 
+    G4ThreeVector(pos.getX() + dist_sc, pos.getY(), pos.getZ()); 
+  new G4PVPlacement(G4Transform3D(rot, pos_scint), sc_logic, "NaI",
+		    _shielding_air_logic, false, 0, false);
+  G4VisAttributes * vis_blue = new G4VisAttributes;
+  vis_blue->SetColor(0., 0., 1.);
+  vis_blue->SetForceSolid(true);
+  sc_logic->SetVisAttributes(vis_blue);
+  
+
+  // NaI is defined as an ionization sensitive volume.
+  G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
+  G4String detname = "/NEXTNEW/NAI";
+  IonizationSD* ionisd = new IonizationSD(detname);
+  ionisd->IncludeInTotalEnergyDeposit(false);
+  sdmgr->AddNewDetector(ionisd);
+  sc_logic->SetSensitiveDetector(ionisd);
+  
+
+}
+
  void NextNew::Construct()
   {
     // LAB /////////////////////////////////////////////////////////////
@@ -106,10 +147,10 @@ namespace nexus {
     // _cu_castle->SetLogicalVolume(_buffer_gas_logic);
     // _cu_castle->Construct();
 
-    G4LogicalVolume* shielding_air_logic = _shielding->GetAirLogicalVolume();
+    _shielding_air_logic = _shielding->GetAirLogicalVolume();
   
     //PEDESTAL
-    _pedestal->SetLogicalVolume(shielding_air_logic);
+    _pedestal->SetLogicalVolume(_shielding_air_logic);
     _pedestal->Construct();
 
     
@@ -118,7 +159,7 @@ namespace nexus {
     G4LogicalVolume* vessel_logic = _vessel->GetLogicalVolume();
     G4ThreeVector position(0.,0.,0.); 
     new G4PVPlacement(0, position, vessel_logic, 
-		      "VESSEL", shielding_air_logic, false, 0, false);
+		      "VESSEL", _shielding_air_logic, false, 0, false);
     G4LogicalVolume* vessel_gas_logic = _vessel->GetInternalLogicalVolume();
 
      //ICS
@@ -144,7 +185,7 @@ namespace nexus {
     G4ThreeVector lat_pos_source = G4ThreeVector(lat_pos.getX() + na22->GetSupportThickness()/2., lat_pos.getY(), lat_pos.getZ());
 
     new G4PVPlacement(G4Transform3D(*lat_rot, lat_pos_source), na22_logic, "NA22_SOURCE",
-		      shielding_air_logic, false, 0, false);
+		      _shielding_air_logic, false, 0, false);
 
     G4ThreeVector up_pos = _vessel->GetUpExtSourcePosition(); // this is the position of the end of the port tube
     G4RotationMatrix* up_rot = new G4RotationMatrix();
@@ -153,19 +194,20 @@ namespace nexus {
     G4ThreeVector up_pos_source = G4ThreeVector(up_pos.getX() , up_pos.getY() + na22->GetSupportThickness()/2., up_pos.getZ());
 
     new G4PVPlacement(G4Transform3D(*up_rot, up_pos_source), na22_logic, "NA22_SOURCE",
-		      shielding_air_logic, false, 1, false);
+		      _shielding_air_logic, false, 1, false);
 
     G4VisAttributes light_brown_col = nexus::CopperBrown();
     na22_logic->SetVisAttributes(light_brown_col);
-    
-   
 
+    // Build NaI external scintillator
+    BuildExtScintillator(lat_pos);
+    
     // Placement of the shielding volume, rotated and translated to have a right-handed ref system with z = z drift.
    
     _displ = G4ThreeVector(0., 0., _inner_elements->GetELzCoord());
     G4RotationMatrix rot;
     rot.rotateY(_rot_angle);
-    new G4PVPlacement(G4Transform3D(rot, _displ),shielding_logic, "LEAD_BOX",
+    new G4PVPlacement(G4Transform3D(rot, _displ), shielding_logic, "LEAD_BOX",
 		      _lab_logic, false, 0, false);
 
 

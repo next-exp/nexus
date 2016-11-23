@@ -43,7 +43,7 @@ namespace nexus {
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
   private:
-    void BuildLab();
+    void BuildExtScintillator(G4ThreeVector pos);
     void Construct();
 
   private:
@@ -51,16 +51,16 @@ namespace nexus {
     // Detector dimensions
     const G4double _lab_size; ///< Size of the air box containing the detector  
    
-    G4double _pressure; ///< Pressure xenon gas
+    //   G4double _pressure; ///< Pressure xenon gas
 
     // Pointers to logical volumes
     G4LogicalVolume* _lab_logic;
-    G4LogicalVolume* _buffer_gas_logic;
+    G4LogicalVolume* _shielding_air_logic;
 
     //Detector parts
     Next100Shielding* _shielding;
     NextNewPedestal* _pedestal;
-    NextNewCuCastle* _cu_castle;
+    // NextNewCuCastle* _cu_castle;
     NextNewVessel* _vessel;   
     NextNewIcs* _ics;
     NextNewInnerElements* _inner_elements;
@@ -71,7 +71,7 @@ namespace nexus {
     MuonsPointSampler* _muon_gen; ///< Vertex generator for muons
 
     /// Messenger for the definition of control commands
-    G4GenericMessenger* _msg;
+    //  G4GenericMessenger* _msg;
 
     // Rotation around Y and displacement of the whole geometry in the g4 system of reference
     G4ThreeVector _displ;

@@ -32,7 +32,7 @@ namespace nexus {
     
     G4double _Theta;
     G4double _Phi;
-    G4VUserPrimaryVertexInformation* userInfo;
+    //G4VUserPrimaryVertexInformation* userInfo;
   };
 
   inline G4double AddUserInfoToPV::GetTheta()
