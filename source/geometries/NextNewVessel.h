@@ -73,7 +73,8 @@ namespace nexus {
     G4ThreeVector _upper_port_source_pos;
     // External ones, at the beginning of the tube ports
     G4ThreeVector _lateral_port_source_pos_ext;
-    G4ThreeVector _upper_port_source_pos_ext; 
+    G4ThreeVector _upper_port_source_pos_ext;
+    G4ThreeVector _axial_port_source_pos_ext; 
 
     G4double _pressure, _temperature;
 
