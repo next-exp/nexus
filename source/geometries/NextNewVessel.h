@@ -44,6 +44,7 @@ namespace nexus {
 
     G4ThreeVector GetLatExtSourcePosition();
     G4ThreeVector GetUpExtSourcePosition();
+    G4ThreeVector GetAxialExtSourcePosition();
 
     /// Builder
     void Construct();
@@ -109,6 +110,8 @@ namespace nexus {
 
     // Radioactive source being used
     G4String _source;
+    // Distance of the source piece from the bottom of the tube (0 meaning right in the inner end)
+    G4double _source_distance;
 
    
 

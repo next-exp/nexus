@@ -13,6 +13,8 @@
 /Geometry/NextNew/elfield false
 ### For sodium source: Na, for thorium source: Th
 /Geometry/NextNew/source Na
+### This is the distance from the bottom of the tube to the end of the capsule which contains the source 
+/Geometry/NextNew/source_distance 81. mm
 
 /Geometry/Next100/shielding_vis false
 /Geometry/NextNew/table_vis false
@@ -32,6 +34,7 @@
 /Generator/IonGun/atomic_number 11
 /Generator/IonGun/mass_number 22
 /Generator/IonGun/region  INTERNAL_PORT_ANODE
+
 
 # PHYSICS
 /PhysicsList/Nexus/clustering          false
