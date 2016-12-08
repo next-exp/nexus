@@ -36,6 +36,8 @@
 #include <G4RotationMatrix.hh>
 #include <G4Transform3D.hh>
 #include <G4SDManager.hh>
+#include <G4SubtractionSolid.hh>
+#include <G4UnionSolid.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
@@ -49,7 +51,8 @@ namespace nexus {
     BaseGeometry(),
     // Lab dimensions
     _lab_size (5. * m),
-    _rot_angle(pi)
+    _rot_angle(pi),
+    _lead_block(false)
     // Buffer gas dimensions
   {
     //Shielding
@@ -65,6 +68,10 @@ namespace nexus {
     _ics = new NextNewIcs();   
     //Inner elements
     _inner_elements = new NextNewInnerElements();
+
+    _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
+    _msg->DeclareProperty("lead_block", _lead_block, "Block of lead on the lateral port");
+    
   }
 
   NextNew::~NextNew()
@@ -104,10 +111,9 @@ namespace nexus {
     G4ThreeVector(pos.getX() + dist_sc, pos.getY(), pos.getZ()); 
   new G4PVPlacement(G4Transform3D(rot, pos_scint), sc_logic, "NaI",
 		    _shielding_air_logic, false, 0, false);
-  G4VisAttributes * vis_blue = new G4VisAttributes;
-  vis_blue->SetColor(0., 0., 1.);
-  vis_blue->SetForceSolid(true);
-  sc_logic->SetVisAttributes(vis_blue);
+  G4VisAttributes yellow_col = nexus::Yellow();
+  yellow_col.SetForceSolid(true);
+  sc_logic->SetVisAttributes(yellow_col);
   
 
   // NaI is defined as an ionization sensitive volume.
@@ -176,7 +182,9 @@ namespace nexus {
     G4ThreeVector lat_pos = _vessel->GetLatExtSourcePosition(); // this is the position of the end of the port tube
     G4RotationMatrix* lat_rot = new G4RotationMatrix();
     lat_rot->rotateY(-pi/2);
-    
+
+    /*
+   /// In principle we shouldn't use this source anymore, but never say never...
     Na22Source* na22 = new Na22Source();
     na22->Construct();
     G4LogicalVolume* na22_logic = na22->GetLogicalVolume();
@@ -185,7 +193,7 @@ namespace nexus {
     G4ThreeVector lat_pos_source = G4ThreeVector(lat_pos.getX() + na22->GetSupportThickness()/2., lat_pos.getY(), lat_pos.getZ());
 
     new G4PVPlacement(G4Transform3D(*lat_rot, lat_pos_source), na22_logic, "NA22_SOURCE",
-		      _shielding_air_logic, false, 0, false);
+    		      _shielding_air_logic, false, 0, false);
 
     G4ThreeVector up_pos = _vessel->GetUpExtSourcePosition(); // this is the position of the end of the port tube
     G4RotationMatrix* up_rot = new G4RotationMatrix();
@@ -198,11 +206,57 @@ namespace nexus {
 
     G4VisAttributes light_brown_col = nexus::CopperBrown();
     na22_logic->SetVisAttributes(light_brown_col);
-
+    */
     // Build NaI external scintillator
     BuildExtScintillator(lat_pos);
+
+    // Build a block of lead to shield the source
+    // G4Tubs* lead_solid = new G4Tubs("LEAD_BLOCK", 10.*mm/2. + 1.*mm, 75.*mm/2., 
+    // 		 30.*mm/2., 0., twopi);
+    // G4LogicalVolume* lead_logic = new G4LogicalVolume(lead_solid, 
+    // 			  G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"),
+    // 			  "LEAD_BLOCK_FULL");
+    // G4ThreeVector block_pos = G4ThreeVector(lat_pos.getX() - 15.*mm, lat_pos.getY(), lat_pos.getZ());
+
+    if (_lead_block) {
+
+      G4double lateral_nozzle_flange_diam = 75.*mm;
+      G4double lateral_nozzle_flange_length = 15.*mm;
+      G4double lateral_port_tube_diam = 10.*mm;
+      G4double lateral_port_tube_thick = 1.*mm;
+      G4double lateral_port_tube_out_length = 2.*lateral_nozzle_flange_length;
+      G4double offset_sub = 1.*mm;
+
+      // Outer piece of lead
+      G4Box* lead_out_solid = new G4Box("LEAD_BLOCK_OUT_FULL", 95./2.*mm, 95/2.*mm, (lateral_port_tube_out_length)/2.);
+      G4Tubs* lateral_port_tube_out_solid = 
+	new G4Tubs("LAT_PORT_TUBE_OUT", 0., (lateral_port_tube_diam + 2.*lateral_port_tube_thick)/2., (lateral_port_tube_out_length + offset_sub)/2., 0., twopi);
+      G4SubtractionSolid* lead_out_freddy_solid = new G4SubtractionSolid("LEAD_BLOCK_OUT", lead_out_solid, lateral_port_tube_out_solid, 0 , G4ThreeVector(0.,0.,0.));
+      G4LogicalVolume* lead_out_freddy_logic = new G4LogicalVolume(lead_out_freddy_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"), "LEAD_BLOCK");
+      G4ThreeVector block_out_pos = G4ThreeVector(lat_pos.getX() - (lateral_port_tube_out_length)/2., lat_pos.getY(), lat_pos.getZ());
+      new G4PVPlacement(G4Transform3D(*lat_rot, block_out_pos), lead_out_freddy_logic, "LEAD_BLOCK_OUT",
+			_shielding_air_logic, false, 0, false);
+
+      // Middle piece of lead
+      G4Box* lead_middle_solid = new G4Box("LEAD_BLOCK_MIDDLE_FULL", 95./2.*mm, 95/2.*mm,  lateral_nozzle_flange_length);
+      G4Tubs* lateral_port_tube_middle_solid = 
+	new G4Tubs("LAT_PORT_TUBE_MIDDLE", 0., lateral_nozzle_flange_diam/2., (2.*lateral_nozzle_flange_length + offset_sub)/2., 0., twopi);
+      G4SubtractionSolid* lead_middle_freddy_solid = new G4SubtractionSolid("LEAD_BLOCK_MIDDLE", lead_middle_solid, lateral_port_tube_middle_solid, 0 , G4ThreeVector(0.,0.,0.));
+      G4LogicalVolume* lead_middle_freddy_logic = new G4LogicalVolume(lead_middle_freddy_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"), "LEAD_BLOCK");
+      G4ThreeVector block_middle_pos = G4ThreeVector(lat_pos.getX() - lateral_port_tube_out_length - lateral_nozzle_flange_length, lat_pos.getY(), lat_pos.getZ());
+      new G4PVPlacement(G4Transform3D(*lat_rot, block_middle_pos), lead_middle_freddy_logic, "LEAD_BLOCK_MIDDLE",
+			_shielding_air_logic, false, 0, false);
     
-    // Placement of the shielding volume, rotated and translated to have a right-handed ref system with z = z drift.
+
+     
+      G4VisAttributes blue_col = nexus::Blue();
+      blue_col.SetForceSolid(true);
+      lead_out_freddy_logic->SetVisAttributes(blue_col);
+      lead_middle_freddy_logic->SetVisAttributes(blue_col);
+
+    }
+     
+     // Placement of the shielding volume, rotated and translated to have a right-handed ref system with z = z drift.
    
     _displ = G4ThreeVector(0., 0., _inner_elements->GetELzCoord());
     G4RotationMatrix rot;
@@ -215,20 +269,19 @@ namespace nexus {
     _lab_gen = 
       new BoxPointSampler(_lab_size - 1.*m, _lab_size - 1.*m, _lab_size  - 1.*m, 1.*m,G4ThreeVector(0.,0.,0.),0);
 
-    G4double source_diam = na22->GetSourceDiameter();
-    G4double source_thick = na22->GetSourceThickness();
-    G4ThreeVector lat_pos_na22 =
-      G4ThreeVector(lat_pos.getX() + na22->GetSourceThickness()/2., lat_pos.getY(), lat_pos.getZ());
-    G4ThreeVector up_pos_na22 =
-      G4ThreeVector(up_pos.getX(), up_pos.getY() + na22->GetSourceThickness()/2., up_pos.getZ());
+    // G4double source_diam = na22->GetSourceDiameter();
+    // G4double source_thick = na22->GetSourceThickness();
+    // G4ThreeVector lat_pos_na22 =
+    //   G4ThreeVector(lat_pos.getX() + na22->GetSourceThickness()/2., lat_pos.getY(), lat_pos.getZ());
+    // G4ThreeVector up_pos_na22 =
+    //   G4ThreeVector(up_pos.getX(), up_pos.getY() + na22->GetSourceThickness()/2., up_pos.getZ());
 
-    _source_gen_lat = new CylinderPointSampler(0., source_thick, source_diam/2., 0., lat_pos_na22, lat_rot);
-    _source_gen_up = new CylinderPointSampler(0., source_thick, source_diam/2., 0., up_pos_na22, up_rot);
+    // _source_gen_lat = new CylinderPointSampler(0., source_thick, source_diam/2., 0., lat_pos_na22, lat_rot);
+    // _source_gen_up = new CylinderPointSampler(0., source_thick, source_diam/2., 0., up_pos_na22, up_rot);
 
     G4ThreeVector shielding_dim = _shielding->GetDimensions();
 
     _muon_gen = new MuonsPointSampler(shielding_dim.x()/2. + 50.*cm, shielding_dim.y()/2. + 1.*cm, shielding_dim.z()/2. + 50.*cm);
-    
 
   }
 
@@ -242,14 +295,18 @@ namespace nexus {
       vertex = _lab_gen->GenerateVertex("INSIDE");
     } else if (region == "MUONS") {
       vertex = _muon_gen->GenerateVertex();
-    } else if (region == "NA22_PORT_ANODE_EXT") {
-      vertex =  _source_gen_lat->GenerateVertex("BODY_VOL");
     }
-    else if (region == "NA22_PORT_UP_EXT") {
-      vertex =  _source_gen_up->GenerateVertex("BODY_VOL");
-    }
+    // else if (region == "NA22_PORT_ANODE_EXT") {
+    //   vertex =  _source_gen_lat->GenerateVertex("BODY_VOL");
+    // }
+    // else if (region == "NA22_PORT_UP_EXT") {
+    //   vertex =  _source_gen_up->GenerateVertex("BODY_VOL");
+    // }
+    //  else if (region == "SCREW_ANODE_EXT") {
+    //   vertex =  _screw_gen_lat->GenerateVertex("BODY_VOL");
+    // }
     else if ( (region == "SHIELDING_LEAD") || (region == "SHIELDING_STEEL") || 
-	      (region == "SHIELDING_GAS") || (region=="SHIELDING_STRUCT") ||
+	      (region == "SHIELDING_GAS") || (region == "SHIELDING_STRUCT") ||
 	      (region == "EXTERNAL") || (region == "SOURCE_PORT_AXIAL_EXT") ) {
       vertex = _shielding->GenerateVertex(region);   
     }
@@ -282,11 +339,11 @@ namespace nexus {
     //INNER ELEMENTS
     else if ( (region == "CENTER") ||
 	      (region == "CARRIER_PLATE") || (region == "ENCLOSURE_BODY") || (region == "ENCLOSURE_WINDOW") || 
-	      (region=="OPTICAL_PAD") || (region == "PMT_BODY") || (region=="PMT_BASE") ||
-	      (region == "DRIFT_TUBE") || (region== "REFLECTOR_DRIFT") ||
-	      (region == "BUFFER_TUBE") || (region== "REFLECTOR_BUFFER") ||
+	      (region == "OPTICAL_PAD") || (region == "PMT_BODY") || (region == "PMT_BASE") ||
+	      (region == "DRIFT_TUBE") || (region == "REFLECTOR_DRIFT") ||
+	      (region == "BUFFER_TUBE") || (region == "REFLECTOR_BUFFER") ||
 	      (region == "ANODE_QUARTZ")||
-	      (region == "ACTIVE") || (region== "EL_TABLE") || (region == "AD_HOC") ||
+	      (region == "ACTIVE") || (region == "EL_TABLE") || (region == "AD_HOC") ||
 	      (region == "SUPPORT_PLATE") || (region == "DICE_BOARD") || (region == "DB_PLUG") ){
       vertex = _inner_elements->GenerateVertex(region);
     }

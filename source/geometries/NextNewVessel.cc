@@ -351,7 +351,7 @@ void NextNewVessel::Construct()
       new G4LogicalVolume(lateral_port_hole_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
 			  "LATERAL_PORT_AIR_EXT");
     new G4PVPlacement(G4Transform3D(*rot_lat, G4ThreeVector( _vessel_in_diam/2.+ _lat_nozzle_high + (2.*_lat_nozzle_flange_high + _lat_port_tube_out)/2. , 0., _lat_nozzle_z_pos)), lateral_port_hole_logic,
-		      "LATERAL_PORT_AIR_EXT", vessel_logic, false, 0, true);
+		      "LATERAL_PORT_AIR_EXT", vessel_logic, false, 0, false);
     
 
      G4Tubs* upper_port_hole_solid = 
@@ -407,7 +407,7 @@ void NextNewVessel::Construct()
     
      
     new G4PVPlacement(G4Transform3D(*rot_lat, pos_lateral_port), lateral_port_tube_logic,
-		      "LATERAL_PORT", vessel_gas_logic, false, 0, true);
+		      "LATERAL_PORT", vessel_gas_logic, false, 0, false);
 
     G4Tubs* lateral_port_tube_air_solid =
       new G4Tubs("LATERAL_PORT_AIR", 0., _port_tube_diam/2.,
@@ -420,7 +420,7 @@ void NextNewVessel::Construct()
   
   new G4PVPlacement(0,G4ThreeVector(0.,0., -_port_tube_window_thickn/2.),
 		    lateral_port_tube_air_logic, "LATERAL_PORT_AIR", 
-		    lateral_port_tube_logic, false, 0, true);
+		    lateral_port_tube_logic, false, 0, false);
 
   // Screwed internal source
   
@@ -454,18 +454,18 @@ void NextNewVessel::Construct()
       && _source_distance <= (simulated_length_lat - piece_length - _port_tube_window_thickn)) {
     pos_screw_source = G4ThreeVector(0., 0., (simulated_length_lat - _port_tube_window_thickn)/2. -  piece_length/2. - _source_distance);
     new G4PVPlacement(0, pos_screw_source, lateral_screw_tube_logic,
-		      "SCREW_SUPPORT", lateral_port_tube_air_logic, false, 0, true);
+		      "SCREW_SUPPORT", lateral_port_tube_air_logic, false, 0, false);
   } else if (_source_distance > (simulated_length_lat - piece_length - _port_tube_window_thickn)
 	     && _source_distance < (simulated_length_lat - _port_tube_window_thickn)) {
     // Put the source in the farthest position, inside the inner part of tube, since it cannot be placed between two volumes
     pos_screw_source = G4ThreeVector(0., 0., -(simulated_length_lat - _port_tube_window_thickn)/2.  + piece_length/2.);
     new G4PVPlacement(0, pos_screw_source, lateral_screw_tube_logic,
-		      "SCREW_SUPPORT", lateral_port_tube_air_logic, false, 0, true);
+		      "SCREW_SUPPORT", lateral_port_tube_air_logic, false, 0, false);
   } else if (_source_distance >= (simulated_length_lat - _port_tube_window_thickn)
 	     && _source_distance <= _lat_port_tube_length - _port_tube_window_thickn - piece_length) {
     pos_screw_source = G4ThreeVector(0., 0., -(2.*_lat_nozzle_flange_high + _lat_port_tube_out)/2. + (_lat_port_tube_length - _port_tube_window_thickn - _source_distance) - piece_length/2.);
     new G4PVPlacement(0,  pos_screw_source, lateral_screw_tube_logic,
-		      "SCREW_SUPPORT", lateral_port_hole_logic , false, 0, true);
+		      "SCREW_SUPPORT", lateral_port_hole_logic , false, 0, false);
   } else {
     G4Exception("[NextNewVessel]", "Construct()", FatalException,
 		"This position of the screw source in lateral port is not permitted, since it is outside the lateral port."); 
@@ -483,7 +483,7 @@ void NextNewVessel::Construct()
   G4ThreeVector pos_source(0., 0., z_pos_source);
   new G4PVPlacement(0, pos_source,
   		     source_logic, "SCREW_SOURCE", 
-  		     lateral_screw_tube_logic, false, 0, true);
+  		     lateral_screw_tube_logic, false, 0, false);
    
   
   // This position of the source is assumed to be at the bottom of the tube, inside.
@@ -549,7 +549,7 @@ void NextNewVessel::Construct()
   G4ThreeVector pos_axial_port(0.,0.,  - _endcap_nozzle_z_pos - _endcap_nozzle_high +  simulated_length/2.);
     
   new G4PVPlacement(0, pos_axial_port, axial_port_tube_logic,
-		    "AXIAL_PORT", vessel_gas_logic, false, 0, true);
+		    "AXIAL_PORT", vessel_gas_logic, false, 0, false);
 		      
 
   G4Tubs* axial_port_tube_air_solid =
@@ -563,7 +563,7 @@ void NextNewVessel::Construct()
   
   new G4PVPlacement(0,G4ThreeVector(0.,0., -_port_tube_window_thickn/2.),
 		    axial_port_tube_air_logic, "AXIAL_PORT_AIR", 
-		    axial_port_tube_logic, false, 0, true);
+		    axial_port_tube_logic, false, 0, false);
 
 
   G4Tubs* axial_port_collimator_solid =

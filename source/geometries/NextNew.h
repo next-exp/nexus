@@ -66,8 +66,8 @@ namespace nexus {
     NextNewInnerElements* _inner_elements;
     
     BoxPointSampler* _lab_gen; ///< Vertex generator
-    CylinderPointSampler* _source_gen_lat;
-    CylinderPointSampler* _source_gen_up;
+    /* CylinderPointSampler* _source_gen_lat; */
+    /* CylinderPointSampler* _source_gen_up; */
     MuonsPointSampler* _muon_gen; ///< Vertex generator for muons
 
     /// Messenger for the definition of control commands
@@ -77,6 +77,12 @@ namespace nexus {
     G4ThreeVector _displ;
     G4double _rot_angle;
 
+    // Messenger for the definition of control commands
+    G4GenericMessenger* _msg; 
+
+    // True if a block of lead on the lateral port placed to shield source
+    G4bool _lead_block;
+    
 
   };
   
