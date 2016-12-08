@@ -140,7 +140,12 @@ void NextNewOpticalGeometry::Construct()
 
 G4ThreeVector NextNewOpticalGeometry::GenerateVertex(const G4String& region) const
 {
-  G4ThreeVector vertex = _inner_elements->GenerateVertex(region); 
+  G4ThreeVector vertex = _inner_elements->GenerateVertex(region);
+
+  // AD_HOC is the only vertex that is not rotated and shifted because it is passed by the user
+  if  (region == "AD_HOC")
+    return vertex;
+  
   vertex.rotate(_rot_angle, G4ThreeVector(0., 1., 0.));
   vertex = vertex + _displ;  
   return vertex; 

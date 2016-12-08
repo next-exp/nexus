@@ -192,6 +192,10 @@ namespace nexus {
 		  "Unknown vertex generation region!");     
     }
 
+    // AD_HOC is the only vertex that is not rotated and shifted because it is passed by the user
+    if  (region == "AD_HOC")
+      return vertex;
+    
     // First rotate, then shift
     vertex.rotate(_rot_angle, G4ThreeVector(0., 1., 0.));
     vertex = vertex + _displ;
