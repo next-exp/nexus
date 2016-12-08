@@ -225,6 +225,8 @@ namespace nexus {
       G4double lateral_port_tube_diam = 10.*mm;
       G4double lateral_port_tube_thick = 1.*mm;
       G4double lateral_port_tube_out_length = 2.*lateral_nozzle_flange_length;
+      G4double lateral_nozzle_length = 39*mm; //not sure where this comes from
+      G4double lateral_nozzle_diam = 30.*mm + 2.*6.1*mm;
       G4double offset_sub = 1.*mm;
 
       // Outer piece of lead
@@ -246,6 +248,17 @@ namespace nexus {
       G4ThreeVector block_middle_pos = G4ThreeVector(lat_pos.getX() - lateral_port_tube_out_length - lateral_nozzle_flange_length, lat_pos.getY(), lat_pos.getZ());
       new G4PVPlacement(G4Transform3D(*lat_rot, block_middle_pos), lead_middle_freddy_logic, "LEAD_BLOCK_MIDDLE",
 			_shielding_air_logic, false, 0, false);
+
+      // Inner piece of lead
+      G4Box* lead_inner_solid = new G4Box("LEAD_BLOCK_INNER_FULL", 95./2.*mm, 95/2.*mm,  lateral_nozzle_length/2.);
+      G4Tubs* lateral_nozzle_solid = 
+	new G4Tubs("LAT_PORT_TUBE_INNER", 0., lateral_nozzle_diam/2., (lateral_nozzle_length + offset_sub)/2., 0., twopi);
+      G4SubtractionSolid* lead_inner_freddy_solid = new G4SubtractionSolid("LEAD_BLOCK_INNER", lead_inner_solid, lateral_nozzle_solid, 0 , G4ThreeVector(0.,0.,0.));
+      G4LogicalVolume* lead_inner_freddy_logic = new G4LogicalVolume(lead_inner_freddy_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"), "LEAD_BLOCK_INNER");
+      G4ThreeVector block_inner_pos =
+	G4ThreeVector(lat_pos.getX() - lateral_port_tube_out_length - 2.*lateral_nozzle_flange_length - lateral_nozzle_length/2., lat_pos.getY(), lat_pos.getZ());
+      new G4PVPlacement(G4Transform3D(*lat_rot, block_inner_pos), lead_inner_freddy_logic, "LEAD_BLOCK_INNER",
+			_shielding_air_logic, false, 0, true);
     
 
      
@@ -253,6 +266,7 @@ namespace nexus {
       blue_col.SetForceSolid(true);
       lead_out_freddy_logic->SetVisAttributes(blue_col);
       lead_middle_freddy_logic->SetVisAttributes(blue_col);
+      lead_inner_freddy_logic->SetVisAttributes(blue_col);
 
     }
      
@@ -352,6 +366,9 @@ namespace nexus {
 		  "Unknown vertex generation region!");     
     }
 
+    // AD_HOC is the only vertex that is not rotated and shifted because it is passed by the user
+    if  (region == "AD_HOC")
+      return vertex;
     // First rotate, then shift
     vertex.rotate(_rot_angle, G4ThreeVector(0., 1., 0.));
     vertex = vertex + _displ;
