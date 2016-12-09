@@ -220,53 +220,92 @@ namespace nexus {
 
     if (_lead_block) {
 
+      G4double lead_size_horizontal = 103.*mm;
+      G4double lead_size_vertical = 100.*mm;
+
       G4double lateral_nozzle_flange_diam = 75.*mm;
       G4double lateral_nozzle_flange_length = 15.*mm;
       G4double lateral_port_tube_diam = 10.*mm;
       G4double lateral_port_tube_thick = 1.*mm;
       G4double lateral_port_tube_out_length = 2.*lateral_nozzle_flange_length;
-      G4double lateral_nozzle_length = 39*mm; //not sure where this comes from
+      G4double lateral_nozzle_length = 51*mm/2.;
+
+      G4double middle_lead_thick = 50.4*mm;
+      G4double outer_and_middle_lead_thick = 75.3*mm;
+      
+      G4double inner_lead_thick = 16.*mm;
+      G4double screw_lead_thick = 5.*mm;
+      G4double nozzle_lead_thick = inner_lead_thick - 5.*mm;
+      
       G4double lateral_nozzle_diam = 30.*mm + 2.*6.1*mm;
       G4double offset_sub = 1.*mm;
 
-      // Outer piece of lead
-      G4Box* lead_out_solid = new G4Box("LEAD_BLOCK_OUT_FULL", 95./2.*mm, 95/2.*mm, (lateral_port_tube_out_length)/2.);
-      G4Tubs* lateral_port_tube_out_solid = 
-	new G4Tubs("LAT_PORT_TUBE_OUT", 0., (lateral_port_tube_diam + 2.*lateral_port_tube_thick)/2., (lateral_port_tube_out_length + offset_sub)/2., 0., twopi);
-      G4SubtractionSolid* lead_out_freddy_solid = new G4SubtractionSolid("LEAD_BLOCK_OUT", lead_out_solid, lateral_port_tube_out_solid, 0 , G4ThreeVector(0.,0.,0.));
-      G4LogicalVolume* lead_out_freddy_logic = new G4LogicalVolume(lead_out_freddy_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"), "LEAD_BLOCK");
-      G4ThreeVector block_out_pos = G4ThreeVector(lat_pos.getX() - (lateral_port_tube_out_length)/2., lat_pos.getY(), lat_pos.getZ());
-      new G4PVPlacement(G4Transform3D(*lat_rot, block_out_pos), lead_out_freddy_logic, "LEAD_BLOCK_OUT",
+      // Piece of lead around nozzle
+      G4Box* lead_nozzle_solid = new G4Box("LEAD_BLOCK_NOZZLE_FULL", lead_size_horizontal/2., lead_size_vertical/2.,  nozzle_lead_thick/2.);
+      G4Tubs* lateral_nozzle_solid = 
+       	new G4Tubs("NOZZLE_INNER", 0., lateral_nozzle_diam/2., (nozzle_lead_thick + offset_sub)/2., 0., twopi);    
+      G4SubtractionSolid* lead_nozzle_freddy_solid =
+	new G4SubtractionSolid("LEAD_BLOCK_NOZZLE", lead_nozzle_solid, lateral_nozzle_solid, 0 , G4ThreeVector(0.,0.,0.));
+      G4LogicalVolume* lead_nozzle_freddy_logic = new G4LogicalVolume(lead_nozzle_freddy_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"), "LEAD_BLOCK_NOZZLE");
+      G4ThreeVector block_nozzle_pos =
+	G4ThreeVector(lat_pos.getX() - lateral_port_tube_out_length - 2.*lateral_nozzle_flange_length - lateral_nozzle_length + nozzle_lead_thick/2., lat_pos.getY(), lat_pos.getZ());
+      new G4PVPlacement(G4Transform3D(*lat_rot, block_nozzle_pos), lead_nozzle_freddy_logic, "LEAD_BLOCK_NOZZLE",
 			_shielding_air_logic, false, 0, false);
 
-      // Middle piece of lead
-      G4Box* lead_middle_solid = new G4Box("LEAD_BLOCK_MIDDLE_FULL", 95./2.*mm, 95/2.*mm,  lateral_nozzle_flange_length);
+      // Piece of lead around screws
+      G4Box* lead_screw_flange_solid = new G4Box("LEAD_BLOCK_SCREW_FLANGE_FULL", lead_size_horizontal/2., lead_size_vertical/2.,  screw_lead_thick/2.);
+      G4Tubs* screw_flange_solid = 
+      	new G4Tubs("SCREW_FLANGE_INNER", 0., lateral_nozzle_flange_diam/2., (screw_lead_thick + offset_sub)/2., 0., twopi);      
+      G4SubtractionSolid* lead_screw_freddy_solid =
+       	new G4SubtractionSolid("LEAD_BLOCK_SCREW_FLANGE", lead_screw_flange_solid, screw_flange_solid, 0 , G4ThreeVector(0., 0., 0.));
+      G4LogicalVolume* lead_screw_freddy_logic =
+	new G4LogicalVolume(lead_screw_freddy_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"), "LEAD_BLOCK_SCREW_FLANGE");
+      G4ThreeVector block_screw_flange_pos =
+	G4ThreeVector(lat_pos.getX() - lateral_port_tube_out_length - 2.*lateral_nozzle_flange_length - lateral_nozzle_length +
+		      nozzle_lead_thick + screw_lead_thick/2., lat_pos.getY(), lat_pos.getZ());
+      new G4PVPlacement(G4Transform3D(*lat_rot, block_screw_flange_pos), lead_screw_freddy_logic, "LEAD_BLOCK_SCREW_FLANGE",
+			_shielding_air_logic, false, 0, false);
+
+       // Middle piece of lead
+      G4Box* lead_middle_solid = new G4Box("LEAD_BLOCK_MIDDLE_FULL", lead_size_horizontal/2., lead_size_vertical/2.,  middle_lead_thick/2.);
       G4Tubs* lateral_port_tube_middle_solid = 
-	new G4Tubs("LAT_PORT_TUBE_MIDDLE", 0., lateral_nozzle_flange_diam/2., (2.*lateral_nozzle_flange_length + offset_sub)/2., 0., twopi);
+	new G4Tubs("LAT_PORT_TUBE_MIDDLE", 0., lateral_nozzle_flange_diam/2., (middle_lead_thick + offset_sub)/2., 0., twopi);
       G4SubtractionSolid* lead_middle_freddy_solid = new G4SubtractionSolid("LEAD_BLOCK_MIDDLE", lead_middle_solid, lateral_port_tube_middle_solid, 0 , G4ThreeVector(0.,0.,0.));
       G4LogicalVolume* lead_middle_freddy_logic = new G4LogicalVolume(lead_middle_freddy_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"), "LEAD_BLOCK");
-      G4ThreeVector block_middle_pos = G4ThreeVector(lat_pos.getX() - lateral_port_tube_out_length - lateral_nozzle_flange_length, lat_pos.getY(), lat_pos.getZ());
+      G4ThreeVector block_middle_pos = G4ThreeVector(lat_pos.getX() - lateral_port_tube_out_length - 2.*lateral_nozzle_flange_length - lateral_nozzle_length
+						     + nozzle_lead_thick + screw_lead_thick + middle_lead_thick/2., lat_pos.getY(), lat_pos.getZ());
       new G4PVPlacement(G4Transform3D(*lat_rot, block_middle_pos), lead_middle_freddy_logic, "LEAD_BLOCK_MIDDLE",
 			_shielding_air_logic, false, 0, false);
 
-      // Inner piece of lead
-      G4Box* lead_inner_solid = new G4Box("LEAD_BLOCK_INNER_FULL", 95./2.*mm, 95/2.*mm,  lateral_nozzle_length/2.);
-      G4Tubs* lateral_nozzle_solid = 
-	new G4Tubs("LAT_PORT_TUBE_INNER", 0., lateral_nozzle_diam/2., (lateral_nozzle_length + offset_sub)/2., 0., twopi);
-      G4SubtractionSolid* lead_inner_freddy_solid = new G4SubtractionSolid("LEAD_BLOCK_INNER", lead_inner_solid, lateral_nozzle_solid, 0 , G4ThreeVector(0.,0.,0.));
-      G4LogicalVolume* lead_inner_freddy_logic = new G4LogicalVolume(lead_inner_freddy_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"), "LEAD_BLOCK_INNER");
-      G4ThreeVector block_inner_pos =
-	G4ThreeVector(lat_pos.getX() - lateral_port_tube_out_length - 2.*lateral_nozzle_flange_length - lateral_nozzle_length/2., lat_pos.getY(), lat_pos.getZ());
-      new G4PVPlacement(G4Transform3D(*lat_rot, block_inner_pos), lead_inner_freddy_logic, "LEAD_BLOCK_INNER",
-			_shielding_air_logic, false, 0, true);
-    
+     
+
+      // Outer piece of lead
+      G4double outer_lead_thick = outer_and_middle_lead_thick- middle_lead_thick;
+      G4Box* lead_out_solid = new G4Box("LEAD_BLOCK_OUT_FULL", lead_size_horizontal/2., lead_size_vertical/2., outer_lead_thick/2.);
+      G4Tubs* lateral_port_tube_out_solid = 
+      	new G4Tubs("LAT_PORT_TUBE_OUT", 0., (lateral_port_tube_diam + 2.*lateral_port_tube_thick)/2., (outer_lead_thick + offset_sub)/2., 0., twopi);
+      G4SubtractionSolid* lead_out_freddy_solid = new G4SubtractionSolid("LEAD_BLOCK_OUT", lead_out_solid, lateral_port_tube_out_solid, 0 , G4ThreeVector(0.,0.,0.));
+      G4LogicalVolume* lead_out_freddy_logic = new G4LogicalVolume(lead_out_freddy_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"), "LEAD_BLOCK");
+      G4ThreeVector block_out_pos = G4ThreeVector(lat_pos.getX() - lateral_port_tube_out_length - 2.*lateral_nozzle_flange_length - lateral_nozzle_length
+						     + nozzle_lead_thick + screw_lead_thick + middle_lead_thick + outer_lead_thick/2., lat_pos.getY(), lat_pos.getZ());
+      new G4PVPlacement(G4Transform3D(*lat_rot, block_out_pos), lead_out_freddy_logic, "LEAD_BLOCK_OUT",
+      			_shielding_air_logic, false, 0, false);
+      
+ 
 
      
       G4VisAttributes blue_col = nexus::Blue();
+      G4VisAttributes yel_col = nexus::Yellow();
+      G4VisAttributes red_col = nexus::Red();
+      G4VisAttributes green_col = nexus::LightGreen();
+      yel_col.SetForceSolid(true);
       blue_col.SetForceSolid(true);
-      lead_out_freddy_logic->SetVisAttributes(blue_col);
+      red_col.SetForceSolid(true);
+      green_col.SetForceSolid(true);
+      lead_out_freddy_logic->SetVisAttributes(green_col);
       lead_middle_freddy_logic->SetVisAttributes(blue_col);
-      lead_inner_freddy_logic->SetVisAttributes(blue_col);
+      lead_screw_freddy_logic->SetVisAttributes(red_col);
+      lead_nozzle_freddy_logic->SetVisAttributes(yel_col);
 
     }
      
