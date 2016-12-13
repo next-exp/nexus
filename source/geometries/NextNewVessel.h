@@ -59,7 +59,8 @@ namespace nexus {
     G4double _lat_nozzle_in_diam, _lat_nozzle_high, _lat_nozzle_thickness, _lat_nozzle_flange_diam, _lat_nozzle_flange_high;
     G4double _up_nozzle_in_diam, _up_nozzle_high, _up_nozzle_thickness, _up_nozzle_flange_diam, _up_nozzle_flange_high;
     G4double  _endcap_nozzle_in_diam, _endcap_nozzle_high, _endcap_nozzle_thickness, _endcap_nozzle_flange_diam, _endcap_nozzle_flange_high;
-    G4double  _lat_nozzle_z_pos, _lat_nozzle_x_pos,  _up_nozzle_y_pos, _up_nozzle_z_pos, _endcap_nozzle_z_pos;
+    G4double  _lat_nozzle_z_pos, _up_nozzle_z_pos, _endcap_nozzle_z_pos;
+    //_lat_nozzle_x_pos,  _up_nozzle_y_pos,
 
      // Dimensions of the source tubes
     G4double _port_tube_diam, _port_tube_thickness, _port_tube_window_thickn;
