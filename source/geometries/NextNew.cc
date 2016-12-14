@@ -225,11 +225,11 @@ namespace nexus {
 
       G4double vessel_out_diam = 664*mm;
       G4double lateral_nozzle_flange_diam = 75.*mm;
-      G4double lateral_nozzle_flange_length = 15.*mm;
+      //    G4double lateral_nozzle_flange_length = 15.*mm;
       G4double lateral_port_tube_diam = 10.*mm;
       G4double lateral_port_tube_thick = 1.*mm;
-      G4double lateral_port_tube_out_length = 30.*mm;
-      G4double lateral_nozzle_length = 51*mm;
+      //  G4double lateral_port_tube_out_length = 30.*mm;
+      // G4double lateral_nozzle_length = 51*mm;
 
       G4double middle_lead_thick = 50.4*mm;
       G4double outer_and_middle_lead_thick = 75.3*mm;
@@ -254,7 +254,7 @@ namespace nexus {
       G4ThreeVector block_nozzle_pos =
        	G4ThreeVector(vessel_out_diam/2. + nozzle_lead_thick/2., lat_pos.getY(), lat_pos.getZ());
       new G4PVPlacement(G4Transform3D(*lat_rot, block_nozzle_pos), lead_nozzle_freddy_logic, "LEAD_BLOCK_NOZZLE",
-			_shielding_air_logic, false, 0, true);
+			_shielding_air_logic, false, 0, false);
 
       // Piece of lead around screws
       G4Box* lead_screw_flange_solid = new G4Box("LEAD_BLOCK_SCREW_FLANGE_FULL", lead_size_horizontal/2., lead_size_vertical/2.,  screw_lead_thick/2.);
@@ -269,7 +269,7 @@ namespace nexus {
 	// 	      -lateral_nozzle_length+nozzle_lead_thick + screw_lead_thick/2., lat_pos.getY(), lat_pos.getZ());
 	G4ThreeVector(vessel_out_diam/2. + nozzle_lead_thick + screw_lead_thick/2., lat_pos.getY(), lat_pos.getZ());
       new G4PVPlacement(G4Transform3D(*lat_rot, block_screw_flange_pos),lead_screw_freddy_logic,"LEAD_BLOCK_SCREW_FLANGE",
-			_shielding_air_logic, false, 0, true);
+			_shielding_air_logic, false, 0, false);
 
        // Middle piece of lead
       G4Box* lead_middle_solid = new G4Box("LEAD_BLOCK_MIDDLE_FULL", lead_size_horizontal/2., lead_size_vertical/2.,  middle_lead_thick/2.);
@@ -282,7 +282,7 @@ namespace nexus {
 	// 	      + nozzle_lead_thick + screw_lead_thick + middle_lead_thick/2., lat_pos.getY(), lat_pos.getZ());
 	G4ThreeVector(vessel_out_diam/2. + nozzle_lead_thick + screw_lead_thick + middle_lead_thick/2., lat_pos.getY(), lat_pos.getZ());
       new G4PVPlacement(G4Transform3D(*lat_rot, block_middle_pos), lead_middle_freddy_logic, "LEAD_BLOCK_MIDDLE",
-			_shielding_air_logic, false, 0, true);
+			_shielding_air_logic, false, 0, false);
 
  
       // Outer piece of lead
@@ -298,7 +298,7 @@ namespace nexus {
 	// 	      + screw_lead_thick + middle_lead_thick + outer_lead_thick/2., lat_pos.getY(), lat_pos.getZ());
 	G4ThreeVector(vessel_out_diam/2. + nozzle_lead_thick + screw_lead_thick + middle_lead_thick + outer_lead_thick/2., lat_pos.getY(), lat_pos.getZ());
       new G4PVPlacement(G4Transform3D(*lat_rot, block_out_pos), lead_out_freddy_logic, "LEAD_BLOCK_OUT",
-      			_shielding_air_logic, false, 0, true);
+      			_shielding_air_logic, false, 0, false);
      
      
       G4VisAttributes blue_col = nexus::Blue();

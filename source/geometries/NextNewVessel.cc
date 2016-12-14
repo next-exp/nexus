@@ -209,7 +209,7 @@ void NextNewVessel::Construct()
     G4Tubs* endcap_nozzle_flange_solid =
       new G4Tubs("ENDCAP_NOZZLE_FLANGE_B", 0., _endcap_nozzle_flange_diam/2.,_endcap_nozzle_flange_high, 0., twopi);
     G4Tubs* endcap_nozzle_gas_solid =
-      new G4Tubs("ENDCAP_NOZZLE_GAS", 0., _endcap_nozzle_in_diam/2.-0.01*mm,_endcap_nozzle_high, 0., twopi);
+      new G4Tubs("ENDCAP_NOZZLE_GAS", 0., _endcap_nozzle_in_diam/2.,_endcap_nozzle_high, 0., twopi);
     // G4Tubs* axial_port_tube_out_solid_b = 
     //   new G4Tubs("AXIAL_PORT_TUBE_OUT", 0., (_port_tube_diam + _port_tube_thickness)/2., (_axial_port_tube_out+1.*mm)/2., 0., twopi);
     
@@ -277,7 +277,7 @@ void NextNewVessel::Construct()
     
     G4UnionSolid* endcap_nozzle_solid = new G4UnionSolid("ENDCAP_NOZZLE", endcap_nozzle_tube_solid,
 							 endcap_nozzle_flange_solid, 0,
-							 G4ThreeVector(0.,0.,_endcap_nozzle_high + _endcap_nozzle_flange_high));
+							 G4ThreeVector(0.,0.,_endcap_nozzle_high));
     // endcap_nozzle_solid = new G4UnionSolid("ENDCAP_NOZZLE", endcap_nozzle_solid,
     // 				       axial_port_tube_out_solid, 0,
     // 				       G4ThreeVector(0.,0., _endcap_nozzle_high + _endcap_nozzle_flange_high + (_axial_port_tube_out+1.*mm)/2.));
@@ -537,7 +537,7 @@ void NextNewVessel::Construct()
   // ENDCAP
 
   G4double simulated_length =
-    _axial_port_tube_length - _axial_port_tube_out - _axial_port_flange*2 -
+    _axial_port_tube_length - _axial_port_tube_out - 2.*_axial_port_flange -
     _axial_distance_flange_endcap + _endcap_nozzle_high;
   
   G4Tubs* axial_port_tube_solid =
@@ -601,10 +601,12 @@ void NextNewVessel::Construct()
   // G4cout << "Upper: " << _upper_port_source_pos_ext << G4endl;
     
     // SETTING VISIBILITIES   //////////
+    G4VisAttributes titanium_col = nexus::TitaniumGrey();
+      titanium_col.SetForceSolid(true);
+  lateral_port_tube_logic->SetVisAttributes(titanium_col);
     vessel_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
     if (_visibility) {
-      G4VisAttributes titanium_col = nexus::TitaniumGrey();
-      titanium_col.SetForceSolid(true);
+    
       vessel_logic->SetVisAttributes(titanium_col);
       lateral_port_tube_logic->SetVisAttributes(titanium_col);
       upper_port_tube_logic->SetVisAttributes(titanium_col);
