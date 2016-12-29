@@ -208,13 +208,13 @@ namespace nexus {
 
     // Energy Plane
     _energy_plane->SetLogicalVolume(_mother_logic);
+    _energy_plane->SetELzCoord(GetELzCoord());
     _energy_plane->Construct();
 
     // Tracking Plane
     _tracking_plane->SetLogicalVolume(_mother_logic);
+    _tracking_plane->SetELzCoord(GetELzCoord());
     _tracking_plane->Construct();
-
-   
 
   }
 

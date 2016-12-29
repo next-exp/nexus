@@ -55,13 +55,15 @@ namespace nexus {
     _pressure =    _gas->GetPressure();
     _temperature = _gas->GetTemperature();
     //INNER ELEMENTS
-    _energy_plane->SetLogicalVolume(_mother_logic);
-    _energy_plane->Construct();
     _field_cage->SetLogicalVolume(_mother_logic);
     _field_cage->Construct();
     SetELzCoord(_field_cage->GetELzCoord());
     _tracking_plane->SetLogicalVolume(_mother_logic);
+    _tracking_plane->SetELzCoord(_field_cage->GetELzCoord());
     _tracking_plane->Construct();
+    _energy_plane->SetLogicalVolume(_mother_logic);
+    _energy_plane->SetELzCoord(_field_cage->GetELzCoord());
+    _energy_plane->Construct();
   }
 
   NextNewInnerElements::~NextNewInnerElements()
