@@ -29,7 +29,7 @@ namespace nexus {
 
   /// This is a class to place all the components of the energy plane
 
-  class Next100EnergyPlane
+  class Next100EnergyPlane: public BaseGeometry
   {
 
   public:

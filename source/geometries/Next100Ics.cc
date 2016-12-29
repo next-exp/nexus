@@ -264,8 +264,14 @@ namespace nexus {
       else if  (rand < _perc_tracking_vol){
 	G4VPhysicalVolume *VertexVolume;
 	do {
-	  vertex = _tracking_gen->GenerateVertex("BODY_VOL");    // Tracking plane	  
-	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	  vertex = _tracking_gen->GenerateVertex("BODY_VOL");    // Tracking plane
+	  // To check its volume, one needs to rotate and shift the vertex
+	  // because the check is done using global coordinates
+	  G4ThreeVector glob_vtx(vertex);
+	  // First rotate, then shift
+	  glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
+	  glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
+	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
 	} while (VertexVolume->GetName() != "ICS_TRACKING");
       }
 
@@ -276,7 +282,13 @@ namespace nexus {
 	G4VPhysicalVolume *VertexVolume;
 	do {
 	  vertex = _energy_sph_gen->GenerateVertex("VOLUME");     // Energy plane, spherical section
-	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	  // To check its volume, one needs to rotate and shift the vertex
+	// because the check is done using global coordinates
+	G4ThreeVector glob_vtx(vertex);
+	// First rotate, then shift
+	glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
+	glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
+	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
 	} while (VertexVolume->GetName() != "ICS");
       }
     }

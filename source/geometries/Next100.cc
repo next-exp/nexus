@@ -103,15 +103,17 @@ namespace nexus {
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_logic,
  		      "VESSEL", shielding_air_logic, false, 0);
     G4LogicalVolume* vessel_internal_logic = _vessel->GetInternalLogicalVolume();
-    
+
+    // Inner Elements
+    _inner_elements->SetLogicalVolume(vessel_internal_logic);
+    _inner_elements->Construct();
+
+    _vessel->SetELzCoord(_inner_elements->GetELzCoord());
     
     // Internal Copper Shielding
     _ics->SetLogicalVolume(vessel_internal_logic);
-    _ics->Construct();
-
-     // Inner Elements
-    _inner_elements->SetLogicalVolume(vessel_internal_logic);
-    _inner_elements->Construct();
+    _ics->SetELzCoord(_inner_elements->GetELzCoord());
+    _ics->Construct();  
 
     // Placement of the shielding volume, rotated and translated to have a right-handed ref system with z = z drift.
     _displ = G4ThreeVector(0., 0., _inner_elements->GetELzCoord());
@@ -122,9 +124,6 @@ namespace nexus {
     new G4PVPlacement(G4Transform3D(rot, _displ), shielding_logic,
 		      "LEAD_BOX", _lab_logic, false, 0);
    
-    // G4LogicalVolume* ics_logic = _ics->GetLogicalVolume();
-    // new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), ics_logic,
-    // 		      "ICS", vessel_internal_logic, false, 0);
 
     //// VERTEX GENERATORS   //
     _lab_gen = 

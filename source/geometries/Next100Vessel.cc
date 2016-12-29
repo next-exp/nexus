@@ -348,14 +348,26 @@ namespace nexus {
 	G4VPhysicalVolume *VertexVolume;
 	do {
 	  vertex = _tracking_endcap_gen->GenerateVertex("VOLUME");  // Tracking endcap
-	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	  // To check its volume, one needs to rotate and shift the vertex
+	// because the check is done using global coordinates
+	G4ThreeVector glob_vtx(vertex);
+	// First rotate, then shift
+	glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
+	glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
+	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
 	} while (VertexVolume->GetName() != "VESSEL");
       }
       else if (rand > 1. - _perc_endcap_vol) {
 	G4VPhysicalVolume *VertexVolume;
 	do {
 	  vertex = _energy_endcap_gen->GenerateVertex("VOLUME");  // Energy endcap
-	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	  // To check its volume, one needs to rotate and shift the vertex
+	  // because the check is done using global coordinates
+	  G4ThreeVector glob_vtx(vertex);
+	  // First rotate, then shift
+	  glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
+	  glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
+	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
 	} while (VertexVolume->GetName() != "VESSEL");
       }
       else
@@ -375,7 +387,13 @@ namespace nexus {
       G4VPhysicalVolume *VertexVolume;
       do {
 	vertex = _tracking_endcap_gen->GenerateVertex("VOLUME");  // Tracking endcap
-	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	// To check its volume, one needs to rotate and shift the vertex
+	// because the check is done using global coordinates
+	G4ThreeVector glob_vtx(vertex);
+	// First rotate, then shift
+	glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
+	glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
+	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != "VESSEL");
     }
 
@@ -384,7 +402,13 @@ namespace nexus {
       G4VPhysicalVolume *VertexVolume;
       do {
 	vertex = _energy_endcap_gen->GenerateVertex("VOLUME");  // Energy endcap
-	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	// To check its volume, one needs to rotate and shift the vertex
+	// because the check is done using global coordinates
+	G4ThreeVector glob_vtx(vertex);
+	// First rotate, then shift
+	glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
+	glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
+	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != "VESSEL");
     }
      else {

@@ -117,14 +117,26 @@ namespace nexus {
       G4VPhysicalVolume *VertexVolume;
       do {
 	vertex = _cu_box_gen->GenerateVertex("WHOLE_VOL");
-	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	// To check its volume, one needs to rotate and shift the vertex
+	// because the check is done using global coordinates
+	G4ThreeVector glob_vtx(vertex);
+	// First rotate, then shift
+	glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
+	glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
+	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != "CU_CASTLE");
     }
     else if (region == "RN_CU_CASTLE") {
 	G4VPhysicalVolume *VertexVolume;
 	do {
-	  vertex = _cu_external_surf_gen->GenerateVertex("WHOLE_SURF");
-	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	  vertex = _cu_external_surf_gen->GenerateVertex("WHOLE_SURF");	
+	  // To check its volume, one needs to rotate and shift the vertex
+	  // because the check is done using global coordinates
+	  G4ThreeVector glob_vtx(vertex);
+	  // First rotate, then shift
+	  glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
+	  glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
+	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
 	} while (VertexVolume->GetName() != "CU_CASTLE");
       }
     else {

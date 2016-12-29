@@ -87,10 +87,12 @@ namespace nexus {
 
     
     //Making front buffer
+    
     G4Tubs* carrier_plate_front_buffer_solid =
       new G4Tubs("CARRIER_PLATE_FBUF_SOLID",0.,
 		 _carrier_plate_front_buffer_diam/2.,
 		 (_carrier_plate_front_buffer_thickness+1.*mm)/2.,0.,twopi);
+    
     G4SubtractionSolid* carrier_plate_solid = 
       new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_nh_solid,
 			     carrier_plate_front_buffer_solid, 0, 
@@ -107,6 +109,7 @@ namespace nexus {
 			       carrier_plate_pmt_hole_solid, 0, 
 			       _pmt_positions[i]);
     }
+
     //Making holes for XeGas flow
     G4Tubs* gas_hole_solid =
       new G4Tubs("GAS_HOLE", 0., _gas_hole_diam/2, 
@@ -116,7 +119,7 @@ namespace nexus {
 	new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_solid, 
 			       gas_hole_solid, 0, _gas_hole_positions[i]);
     }
-
+    
 
      
     // // Material is vacuum
@@ -132,6 +135,7 @@ namespace nexus {
     //		    carrier_plate_logic, false, 0, true);
 
     // Making hole for axial port
+    
     G4Tubs* axial_port_hole_solid = 
       new G4Tubs("AXIAL_PORT_HOLE", 0., _axial_port_hole_diam/2., 
 		 _carrier_plate_thickness/2., 0., twopi);
@@ -139,9 +143,9 @@ namespace nexus {
       new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_solid, axial_port_hole_solid, 
 			     0, G4ThreeVector(0., 0., - _carrier_plate_front_buffer_thickness - _axial_port_thickn));
     
-     
+    
     G4LogicalVolume* carrier_plate_logic = 
-      new G4LogicalVolume(carrier_plate_solid, 
+      new G4LogicalVolume(carrier_plate_solid,
 			  G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
 			  "CARRIER_PLATE");
      
@@ -179,7 +183,8 @@ namespace nexus {
     visattrib_blue->SetColor(0., 0., 1.);
     tpb_logic->SetVisAttributes(visattrib_blue);
        
-    // Placing the enclosures 
+    // Placing the enclosures
+    
     G4ThreeVector pos;
     G4ThreeVector tpb_pos;
     for (int i=0; i<_num_PMTs; i++) {
@@ -193,7 +198,7 @@ namespace nexus {
 			false, i, false);
       //std::cout<<"enclosure positions"<< _pmt_positions[i]<< _enclosure_z_pos<<std::endl;  
     }
-  
+    
    
     /////  SETTING VISIBILITIES   //////////
     if (_visibility) {
@@ -228,11 +233,17 @@ namespace nexus {
       
     /// Carrier Plate   // As it is full of holes, let's get sure vertexes are in the right volume
     if (region == "CARRIER_PLATE") {
-      G4VPhysicalVolume *VertexVolume;
+      G4VPhysicalVolume* VertexVolume;
       do {
 	vertex = _carrier_gen->GenerateVertex("INSIDE");
+	// To check its volume, you need to rotate and shift the vertex
+	// because the check is done using global coordinates
+	G4ThreeVector glob_vtx(vertex);
+	// First rotate, then shift
+	glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
+	glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
 	VertexVolume = 
-	  _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	  _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != "CARRIER_PLATE");
     }
     //Enclosures
@@ -339,5 +350,6 @@ namespace nexus {
       _gas_hole_positions.push_back(post); 
     }
   }
+
 
 }//end namespace nexus

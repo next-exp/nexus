@@ -27,7 +27,7 @@ class G4GenericMessenger;
 namespace nexus {
 
   /// This is a geometry formed by all the components of the tracking plane
-  class NextNewTrackingPlane
+  class NextNewTrackingPlane: public BaseGeometry
   {
 
   public:

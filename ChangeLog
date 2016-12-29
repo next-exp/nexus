@@ -1,3 +1,7 @@
+tag v5_01_13 -29 Dec 2016
+	- Bug fixed in the generation of those vertices where the volume check was made with the vertex in
+	the local reference system  and not in the global one. 
+	 
 tag v5_01_12 -16 Dec 2016
 	- Lead block added as a configurable parameter to shield the
 	lateral port.

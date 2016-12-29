@@ -135,7 +135,7 @@ namespace nexus {
 			"DICE_BOARD", _mother_logic, false, i+1, false);
     }
 
-    /// PrintAbsoluteSiPMPos(G4ThreeVector(0., 0., 275.), pi);
+    // PrintAbsoluteSiPMPos(G4ThreeVector(0., 0., 275.), pi);
     
     //PIGGY TAIL PLUG/////////////////////////////////////////////////////
     G4Box* plug_solid = new G4Box("DB_CONNECTOR", _plug_x/2., _plug_y/2., _plug_z/2.);
@@ -215,7 +215,13 @@ namespace nexus {
 	G4VPhysicalVolume *VertexVolume;
 	do {
 	  vertex = _support_body_gen->GenerateVertex("BODY_VOL");
-	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	  // To check its volume, one needs to rotate and shift the vertex
+	  // because the check is done using global coordinates
+	  G4ThreeVector glob_vtx(vertex);
+	  // First rotate, then shift
+	  glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
+	  glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
+	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
 	} while (VertexVolume->GetName() != "SUPPORT_PLATE");
       }
       // Generating in the flange

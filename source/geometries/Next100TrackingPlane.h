@@ -32,7 +32,7 @@ namespace nexus {
 
   /// This is a geometry formed by all the components of the tracking plane
 
-  class Next100TrackingPlane
+  class Next100TrackingPlane: public BaseGeometry
   {
 
   public:
