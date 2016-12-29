@@ -45,7 +45,7 @@ namespace nexus {
     _vessel_in_diam (64.0  * cm),
     _vessel_body_length (87. * cm),//body cylinder(without flanges)
     _vessel_tube_length (122.256 * cm),  //  870 body + 2. *( (50-10)bodyflange + (50-10)endcapflange + 96.28 endcap)
-    _vessel_thickness (1.2  * cm),
+    _vessel_thickness (1.2 * cm),
 
     // Flange dimensions (one cylinder = 1 on the _vessel_body side + 1 on the _endcap side)
     _flange_out_diam (82.0 * cm),//Flange inner radius = vessel inner radius + vessel thickness
@@ -71,7 +71,7 @@ namespace nexus {
     _up_nozzle_thickness (6.51*mm),
     _up_nozzle_flange_diam (130*mm),
     // _up_nozzle_flange_high (16.7*mm), // This is half the total thickness of the flange+cover
-    _up_nozzle_flange_high (19.85*mm), // This is half the total thickness of the flange+cover when the cover is the one with the source port
+    _up_nozzle_flange_high (19.85*mm), // This is half the total thickness of the flange+cover when the cover is the one with the source port //16.7 + 23
    
     _endcap_nozzle_in_diam (88.*mm),
     _endcap_nozzle_high (86.*mm),
@@ -305,7 +305,7 @@ void NextNewVessel::Construct()
      vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, up_nozzle_solid_with_tube,
 				     rot_up, G4ThreeVector(0., _vessel_in_diam/2., 0.));
      vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, up_nozzle_solid,
-				     rot_up, G4ThreeVector(0.,_vessel_in_diam/2.+3.8*cm, -_up_nozzle_z_pos)); //!!!!!!!
+				     rot_up, G4ThreeVector(0.,_vessel_in_diam/2., -_up_nozzle_z_pos)); 
      
     // Body + Tracking endcap + Energy endcap + Tracking flange + Energy flange + Lateral nozzles + Upper nozzles + Endcap nozzles
     vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, endcap_nozzle_solid,
@@ -357,7 +357,7 @@ void NextNewVessel::Construct()
 		      "LATERAL_PORT_AIR_EXT", vessel_logic, false, 0, false);
     
 
-     G4Tubs* upper_port_hole_solid = 
+    G4Tubs* upper_port_hole_solid = 
       new G4Tubs("UP_PORT_AIR_EXT", 0., _port_tube_diam/2., 
     		 (_up_nozzle_flange_high + _up_port_tube_out)/2., 0., twopi);
     G4LogicalVolume* upper_port_hole_logic =
@@ -365,6 +365,15 @@ void NextNewVessel::Construct()
 			  "UP_PORT_AIR_EXT");
     new G4PVPlacement(G4Transform3D(*rot_up, G4ThreeVector(0., _vessel_in_diam/2.+ _up_nozzle_high + (_up_nozzle_flange_high + _up_port_tube_out)/2. , 0.)), upper_port_hole_logic,
     		      "UP_PORT_AIR_EXT", vessel_logic, false, 0, false);
+
+    G4Tubs* axial_port_hole_solid = 
+      new G4Tubs("AXIAL_PORT_AIR_EXT", 0., _port_tube_diam/2., 
+    		 (_endcap_nozzle_flange_high)/2., 0., twopi);
+    G4LogicalVolume* axial_port_hole_logic =
+      new G4LogicalVolume(axial_port_hole_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
+			  "AXIAL_PORT_AIR_EXT");
+    // new G4PVPlacement(G4Transform3D(*rot_endcap, G4ThreeVector(0., _endcap_nozzle_z_pos + _endcap_nozzle_high + (_endcap_nozzle_flange_high)/2. , 0.)), axial_port_hole_logic,
+    // 		      "AXIAL_PORT_AIR_EXT", vessel_logic, false, 0, true);
     
     G4Material* vessel_gas_mat = nullptr;
    
@@ -704,7 +713,6 @@ void NextNewVessel::Construct()
   G4ThreeVector NextNewVessel::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);
-    
     // Vertex in the VESSEL volume
     if (region == "VESSEL") {
       G4double rand = G4UniformRand();
@@ -712,8 +720,14 @@ void NextNewVessel::Construct()
 	G4VPhysicalVolume *VertexVolume;
 	do {
 	  // std::cout<< "vessel tube \t"<< rand <<"\t"<< _perc_tube_vol << std::endl;      
-	  vertex = _body_gen->GenerateVertex("BODY_VOL");   
-	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	  vertex = _body_gen->GenerateVertex("BODY_VOL");
+	  // To check its volume, one needs to rotate and shift the vertex
+	  // because the check is done using global coordinates
+	  G4ThreeVector glob_vtx(vertex);
+	  // First rotate, then shift
+	  glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
+	  glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
+	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
 	  // std::cout<<vertex<<std::endl;
 	} while (VertexVolume->GetName() != "VESSEL");
       }
@@ -729,7 +743,13 @@ void NextNewVessel::Construct()
 	    //std::cout<< "energy endcap " << rand <<"\t"<< _perc_tube_vol+2*_perc_endcap_vol<< std::endl;
 	    vertex = _energy_endcap_gen->GenerateVertex("VOLUME");  // Energy endcap	
 	  }
-	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	  // To check its volume, one needs to rotate and shift the vertex
+	  // because the check is done using global coordinates
+	  G4ThreeVector glob_vtx(vertex);
+	  // First rotate, then shift
+	  glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
+	  glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
+	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
 	  //std::cout<<vertex<<std::endl;
 	} while (VertexVolume->GetName() != "VESSEL");
       }    
