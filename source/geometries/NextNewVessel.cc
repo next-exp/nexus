@@ -353,8 +353,9 @@ void NextNewVessel::Construct()
     G4LogicalVolume* lateral_port_hole_logic =
       new G4LogicalVolume(lateral_port_hole_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
 			  "LATERAL_PORT_AIR_EXT");
-    new G4PVPlacement(G4Transform3D(*rot_lat, G4ThreeVector( _vessel_in_diam/2.+ _lat_nozzle_high + (_lat_nozzle_flange_high + _lat_port_tube_out)/2. , 0., _lat_nozzle_z_pos)), lateral_port_hole_logic,
-		      "LATERAL_PORT_AIR_EXT", vessel_logic, false, 0, false);
+    new G4PVPlacement(G4Transform3D(*rot_lat,
+				    G4ThreeVector( _vessel_in_diam/2.+ _lat_nozzle_high + (_lat_nozzle_flange_high + _lat_port_tube_out)/2. , 0., _lat_nozzle_z_pos)),
+		      lateral_port_hole_logic, "LATERAL_PORT_AIR_EXT", vessel_logic, false, 0, false);
     
 
     G4Tubs* upper_port_hole_solid = 
@@ -372,8 +373,8 @@ void NextNewVessel::Construct()
     G4LogicalVolume* axial_port_hole_logic =
       new G4LogicalVolume(axial_port_hole_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
 			  "AXIAL_PORT_AIR_EXT");
-    // new G4PVPlacement(G4Transform3D(*rot_endcap, G4ThreeVector(0., _endcap_nozzle_z_pos + _endcap_nozzle_high + (_endcap_nozzle_flange_high)/2. , 0.)), axial_port_hole_logic,
-    // 		      "AXIAL_PORT_AIR_EXT", vessel_logic, false, 0, true);
+    new G4PVPlacement(G4Transform3D(*rot_endcap, G4ThreeVector(0., 0.,  _endcap_nozzle_z_pos + _endcap_nozzle_high + (_endcap_nozzle_flange_high)/2.)), axial_port_hole_logic,
+		      "AXIAL_PORT_AIR_EXT", vessel_logic, false, 0, false);
     
     G4Material* vessel_gas_mat = nullptr;
    
@@ -491,8 +492,8 @@ void NextNewVessel::Construct()
 
   G4ThreeVector pos_source(0., 0., z_pos_source);
   new G4PVPlacement(0, pos_source,
-  		     source_logic, "SCREW_SOURCE", 
-  		     lateral_screw_tube_logic, false, 0, false);
+		    source_logic, "SCREW_SOURCE", 
+		    lateral_screw_tube_logic, false, 0, false);
    
   
   // This position of the source is assumed to be at the bottom of the tube, inside.
@@ -506,9 +507,9 @@ void NextNewVessel::Construct()
   _lateral_port_source_pos_ext.setZ(_lat_nozzle_z_pos);
   
 
-   // Upper
+  // Upper
   G4double simulated_length_up =
-     _up_port_tube_length - _up_port_tube_out - _up_nozzle_flange_high;
+    _up_port_tube_length - _up_port_tube_out - _up_nozzle_flange_high;
  
   G4Tubs* upper_port_tube_solid = new G4Tubs("UPPER_PORT", 0., _port_tube_diam/2.+_port_tube_thickness,
 					     simulated_length_up/2., 0, twopi);
@@ -575,16 +576,16 @@ void NextNewVessel::Construct()
 		    axial_port_tube_logic, false, 0, false);
 
   /*
-  G4Tubs* axial_port_collimator_solid =
+    G4Tubs* axial_port_collimator_solid =
     new G4Tubs("AXIAL_PORT_COLLIMATOR", 2.5 * mm, _port_tube_diam/2.,
-	       (simulated_length - _port_tube_window_thickn)/2.,
-	       0, twopi);
-  G4LogicalVolume* axial_port_collimator_logic =
+    (simulated_length - _port_tube_window_thickn)/2.,
+    0, twopi);
+    G4LogicalVolume* axial_port_collimator_logic =
     new G4LogicalVolume(axial_port_collimator_solid, 
-			G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"), "AXIAL_PORT_COLLIMATOR");
-  new G4PVPlacement(0,G4ThreeVector(0., 0., 0.),
-   		    axial_port_collimator_logic, "AXIAL_PORT_COLLIMATOR", 
-		    axial_port_tube_air_logic, false, 0, true);
+    G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"), "AXIAL_PORT_COLLIMATOR");
+    new G4PVPlacement(0,G4ThreeVector(0., 0., 0.),
+    axial_port_collimator_logic, "AXIAL_PORT_COLLIMATOR", 
+    axial_port_tube_air_logic, false, 0, true);
   */
 
   // This position of the source is assumed to be at the bottom of the tube, inside.
@@ -592,7 +593,7 @@ void NextNewVessel::Construct()
   _axial_port_source_pos.setY(0.);
   _axial_port_source_pos.setZ(- _endcap_nozzle_z_pos  - _endcap_nozzle_high + simulated_length - _port_tube_window_thickn);
 
-   // This is the external position of the source.
+  // This is the external position of the source.
   _axial_port_source_pos_ext.setX(0.);
   _axial_port_source_pos_ext.setY(0.);
   _axial_port_source_pos_ext.setZ(-_endcap_nozzle_z_pos -_axial_distance_flange_endcap - 2.*_axial_port_flange - _axial_port_tube_out);
@@ -609,64 +610,64 @@ void NextNewVessel::Construct()
   // G4cout << "Lateral: " << _lateral_port_source_pos_ext << G4endl;
   // G4cout << "Upper: " << _upper_port_source_pos_ext << G4endl;
     
-    // SETTING VISIBILITIES   //////////
-    G4VisAttributes titanium_col = nexus::TitaniumGrey();
-      titanium_col.SetForceSolid(true);
+  // SETTING VISIBILITIES   //////////
+  G4VisAttributes titanium_col = nexus::TitaniumGrey();
+  titanium_col.SetForceSolid(true);
   lateral_port_tube_logic->SetVisAttributes(titanium_col);
-    vessel_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    if (_visibility) {
+  vessel_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  if (_visibility) {
     
-      vessel_logic->SetVisAttributes(titanium_col);
-      lateral_port_tube_logic->SetVisAttributes(titanium_col);
-      upper_port_tube_logic->SetVisAttributes(titanium_col);
-      G4VisAttributes air_col = nexus::Yellow();
-      air_col.SetForceSolid(true);
-      lateral_port_tube_air_logic->SetVisAttributes(air_col);
-      upper_port_tube_air_logic->SetVisAttributes(air_col);
-    } else {
-      vessel_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    }
+    vessel_logic->SetVisAttributes(titanium_col);
+    lateral_port_tube_logic->SetVisAttributes(titanium_col);
+    upper_port_tube_logic->SetVisAttributes(titanium_col);
+    G4VisAttributes air_col = nexus::Yellow();
+    air_col.SetForceSolid(true);
+    lateral_port_tube_air_logic->SetVisAttributes(air_col);
+    upper_port_tube_air_logic->SetVisAttributes(air_col);
+  } else {
+    vessel_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  }
 
 
-    //// VERTEX GENERATORS   //
-    _body_gen   = new CylinderPointSampler(_vessel_in_diam/2., _vessel_tube_length, _vessel_thickness, 0.);
-    _flange_gen = new CylinderPointSampler(vessel_out_diam/2., _flange_length,
-    					    _flange_out_diam/2.-vessel_out_diam/2., 0., G4ThreeVector(0.,0.,0.));
-    //trick to avoid vertex the vessel_gas-vessel interface -1*mm thickness
-    _tracking_endcap_gen = new SpherePointSampler(_endcap_in_rad+1*mm, _endcap_thickness-1*mm, tracking_endcap_pos, 0,
-    						  0., twopi, 0., _endcap_theta);
-    _energy_endcap_gen =
-      new SpherePointSampler(_endcap_in_rad+1*mm, _endcap_thickness-1*mm, energy_endcap_pos, 0,
-			     0., twopi, 180.*deg - _endcap_theta, _endcap_theta);
-    G4double gen_pos = 0.;
-    if (_source_distance >= 0.*mm && _source_distance <= (simulated_length_lat - piece_length - _port_tube_window_thickn)) {
-      gen_pos = _vessel_in_diam/2. + _lat_nozzle_high - simulated_length_lat + _port_tube_window_thickn + piece_length/2. - z_pos_source + _source_distance;
-    } else if (_source_distance > (simulated_length_lat - piece_length - _port_tube_window_thickn)
+  //// VERTEX GENERATORS   //
+  _body_gen   = new CylinderPointSampler(_vessel_in_diam/2., _vessel_tube_length, _vessel_thickness, 0.);
+  _flange_gen = new CylinderPointSampler(vessel_out_diam/2., _flange_length,
+					 _flange_out_diam/2.-vessel_out_diam/2., 0., G4ThreeVector(0.,0.,0.));
+  //trick to avoid vertex the vessel_gas-vessel interface -1*mm thickness
+  _tracking_endcap_gen = new SpherePointSampler(_endcap_in_rad+1*mm, _endcap_thickness-1*mm, tracking_endcap_pos, 0,
+						0., twopi, 0., _endcap_theta);
+  _energy_endcap_gen =
+    new SpherePointSampler(_endcap_in_rad+1*mm, _endcap_thickness-1*mm, energy_endcap_pos, 0,
+			   0., twopi, 180.*deg - _endcap_theta, _endcap_theta);
+  G4double gen_pos = 0.;
+  if (_source_distance >= 0.*mm && _source_distance <= (simulated_length_lat - piece_length - _port_tube_window_thickn)) {
+    gen_pos = _vessel_in_diam/2. + _lat_nozzle_high - simulated_length_lat + _port_tube_window_thickn + piece_length/2. - z_pos_source + _source_distance;
+  } else if (_source_distance > (simulated_length_lat - piece_length - _port_tube_window_thickn)
 	     && _source_distance < (simulated_length_lat - _port_tube_window_thickn)) {
-      gen_pos = _vessel_in_diam/2.  + _lat_nozzle_high - piece_length/2. - z_pos_source;
-    } else if (_source_distance >= (simulated_length_lat - _port_tube_window_thickn)
+    gen_pos = _vessel_in_diam/2.  + _lat_nozzle_high - piece_length/2. - z_pos_source;
+  } else if (_source_distance >= (simulated_length_lat - _port_tube_window_thickn)
 	     && _source_distance <= _lat_port_tube_length - _port_tube_window_thickn - piece_length) {
-      gen_pos = _vessel_in_diam/2.+ _lat_nozzle_high + (_lat_nozzle_flange_high + _lat_port_tube_out) - (_lat_port_tube_length - _port_tube_window_thickn - _source_distance) + piece_length/2. - z_pos_source;
-    } else {
-      G4Exception("[NextNewVessel]", "Construct()", FatalException,
-		  "This position of the screw source in lateral port is not permitted, since it is outside the lateral port."); 
-    }
-    //G4double gen_pos = _vessel_in_diam/2.+ _lat_nozzle_high - 39 * mm + 2. * mm + 0.5 * mm + 1. * mm;
-    // _lat_nozzle_x_pos  + _lat_nozzle_high/2. + 2.*_lat_nozzle_flange_high + _lat_port_tube_out - piece_length/2. - z_pos_source;
-    //G4double gen_pos = _vessel_in_diam/2.+ _lat_nozzle_high + (2.*_lat_nozzle_flange_high + _lat_port_tube_out) - piece_length/2. - z_pos_source;
+    gen_pos = _vessel_in_diam/2.+ _lat_nozzle_high + (_lat_nozzle_flange_high + _lat_port_tube_out) - (_lat_port_tube_length - _port_tube_window_thickn - _source_distance) + piece_length/2. - z_pos_source;
+  } else {
+    G4Exception("[NextNewVessel]", "Construct()", FatalException,
+		"This position of the screw source in lateral port is not permitted, since it is outside the lateral port."); 
+  }
+  //G4double gen_pos = _vessel_in_diam/2.+ _lat_nozzle_high - 39 * mm + 2. * mm + 0.5 * mm + 1. * mm;
+  // _lat_nozzle_x_pos  + _lat_nozzle_high/2. + 2.*_lat_nozzle_flange_high + _lat_port_tube_out - piece_length/2. - z_pos_source;
+  //G4double gen_pos = _vessel_in_diam/2.+ _lat_nozzle_high + (2.*_lat_nozzle_flange_high + _lat_port_tube_out) - piece_length/2. - z_pos_source;
     
-    _screw_gen_lat =
-      new CylinderPointSampler(0., source_thickness, source_diam/2., 0., G4ThreeVector(gen_pos, 0., _lat_nozzle_z_pos), rot_lat);
+  _screw_gen_lat =
+    new CylinderPointSampler(0., source_thickness, source_diam/2., 0., G4ThreeVector(gen_pos, 0., _lat_nozzle_z_pos), rot_lat);
    
 
-    /// Calculating some prob
-    G4double body_vol = vessel_tube_solid->GetCubicVolume() - vessel_gas_tube_solid->GetCubicVolume();
-    G4double flange_vol = vessel_flange_solid->GetCubicVolume();
-    G4double endcap_vol = vessel_tracking_endcap_solid->GetCubicVolume() - vessel_gas_tracking_endcap_solid->GetCubicVolume();
-    G4double vol_tot = body_vol+ 2*flange_vol+ 2*endcap_vol;
+  /// Calculating some prob
+  G4double body_vol = vessel_tube_solid->GetCubicVolume() - vessel_gas_tube_solid->GetCubicVolume();
+  G4double flange_vol = vessel_flange_solid->GetCubicVolume();
+  G4double endcap_vol = vessel_tracking_endcap_solid->GetCubicVolume() - vessel_gas_tracking_endcap_solid->GetCubicVolume();
+  G4double vol_tot = body_vol+ 2*flange_vol+ 2*endcap_vol;
   
-    _perc_tube_vol = body_vol/vol_tot; 
-    _perc_endcap_vol = endcap_vol /vol_tot;
+  _perc_tube_vol = body_vol/vol_tot; 
+  _perc_endcap_vol = endcap_vol /vol_tot;
   }
    
   NextNewVessel::~NextNewVessel()
