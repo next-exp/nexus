@@ -179,7 +179,8 @@ namespace nexus {
 			       G4ThreeVector(0., 0., support_plate_z_pos -_support_plate_thickness/2. +_support_plate_front_buffer_thickness/2.));
     _plug_gen =
       new BoxPointSampler(_plug_x, _plug_y, _plug_z,0.,
-			  G4ThreeVector(0.,0.,_dice_board_z_pos + _support_plate_front_buffer_thickness + _support_plate_thickness),0);
+			  G4ThreeVector(0.,0.,0.),0);
+			  //			  G4ThreeVector(0.,0.,_dice_board_z_pos + _support_plate_front_buffer_thickness + _support_plate_thickness),0);
 
      // Getting the support  volume over total
     G4double body_vol = 
@@ -247,8 +248,8 @@ namespace nexus {
       G4double rand = _num_DBs * G4UniformRand();
       G4ThreeVector db_pos = _DB_positions[int(rand)];
       vertex = ini_vertex + db_pos;
-      vertex.setY(vertex.y()- 10.*mm);
-      vertex.setZ(vertex.z() +_dice_board_z_pos);
+      vertex.setY(vertex.y() - 10.*mm);
+      vertex.setZ(vertex.z() +_dice_board_z_pos + _support_plate_front_buffer_thickness + _support_plate_thickness);
     }
     else {
       G4Exception("[NextNewTrackingPlane]", "GenerateVertex()", FatalException,

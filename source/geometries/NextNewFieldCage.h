@@ -90,6 +90,7 @@ namespace nexus {
     G4double _anode_quartz_thickness, _anode_quartz_diam; //_anode_quartz_transparency
     G4double _cathode_grid_transparency;
     G4double  _ito_transparency, _ito_thickness;
+    G4double _active_posz;
 
     // Transversal and longitudinal diffusions
     G4double _ELtransv_diff;

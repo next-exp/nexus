@@ -76,18 +76,15 @@ namespace nexus {
   G4ThreeVector NextNewInnerElements::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0.,0.,0.);
-    if (region == "CENTER") {
-      return vertex;
-    }
+ 
     // INNER ELEMENTS regions
-    else if ( (region == "CARRIER_PLATE") || (region == "ENCLOSURE_BODY") ||
+   if ( (region == "CARRIER_PLATE") || (region == "ENCLOSURE_BODY") ||
 	      (region == "ENCLOSURE_WINDOW") || (region=="OPTICAL_PAD") || 
 	      (region == "PMT_BODY")||(region=="PMT_BASE") ) {
       vertex = _energy_plane->GenerateVertex(region);
     }
-    else if ( (region == "DRIFT_TUBE") || (region== "REFLECTOR_DRIFT") ||
-	      (region == "BUFFER_TUBE") || (region== "REFLECTOR_BUFFER") ||
-	      (region == "ANODE_QUARTZ")||
+    else if ( (region == "DRIFT_TUBE") || (region == "BUFFER_TUBE") ||
+	      (region == "ANODE_QUARTZ") || (region== "CENTER") ||
 	      (region == "ACTIVE") || (region== "EL_TABLE") || (region == "AD_HOC")) {
       vertex=_field_cage->GenerateVertex(region);
     }

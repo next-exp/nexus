@@ -289,7 +289,7 @@ namespace nexus {
   {
     G4double active_length = 
       _cathode_gap/2. + _tube_length_drift + _dist_tube_el;
-    G4double active_posz = 
+    _active_posz = 
       -_dist_feedthroughs/2.  +  active_length/2.;
 
     G4Tubs* active_solid = 
@@ -300,7 +300,7 @@ namespace nexus {
     
     G4LogicalVolume* active_logic = 
       new G4LogicalVolume(active_solid, _gas, "ACTIVE");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., active_posz), active_logic, 
+    new G4PVPlacement(0, G4ThreeVector(0., 0., _active_posz), active_logic, 
 		      "ACTIVE", _mother_logic, false, 0, false);
 
     // Limit the step size in this volume for better tracking precision
@@ -312,8 +312,8 @@ namespace nexus {
     // Define a drift field for this volume
     UniformElectricDriftField* field = new UniformElectricDriftField();
     // electrodes are at the end of active region
-    field->SetCathodePosition(-(active_posz - active_length/2.) + GetELzCoord()); 
-    field->SetAnodePosition(-(active_posz + active_length/2.) + GetELzCoord());
+    field->SetCathodePosition(-(_active_posz - active_length/2.) + GetELzCoord()); 
+    field->SetAnodePosition(-(_active_posz + active_length/2.) + GetELzCoord());
     field->SetDriftVelocity(1. * mm/microsecond);
     field->SetTransverseDiffusion(_drift_transv_diff);
     field->SetLongitudinalDiffusion(_drift_long_diff);  
@@ -327,7 +327,7 @@ namespace nexus {
     _active_gen = 
       new CylinderPointSampler(0., active_length,
 			       _tube_in_diam/2.,
-			       0., G4ThreeVector (0., 0., active_posz));
+			       0., G4ThreeVector (0., 0., _active_posz));
   }
 
 void NextNewFieldCage::BuildBuffer()
@@ -616,7 +616,10 @@ void NextNewFieldCage::BuildBuffer()
   {
     G4ThreeVector vertex(0., 0., 0.);
 
-    if (region == "DRIFT_TUBE") {
+    if (region == "CENTER") {
+      vertex = G4ThreeVector(0., 0., _active_posz);
+    }
+    else if (region == "DRIFT_TUBE") {
       vertex = _drift_tube_gen->GenerateVertex("BODY_VOL");
     }
     else if (region == "HDPE_TUBE") {
