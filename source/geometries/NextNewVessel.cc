@@ -97,7 +97,7 @@ namespace nexus {
     // _axial_port_tube_length (727. * mm),
     _axial_port_tube_length (777. * mm), // whole tube, according to drawings
     _axial_port_tube_out (30.*mm), // part of the tube which sticks out of the last flange
-    _axial_port_flange (20.*mm),
+    _axial_port_flange (20.*mm), // refers to the last flange
     _axial_distance_flange_endcap(51.*cm), // distance from the end of the endcap and the beginning of the last flange
 
     // Vessel gas
@@ -209,9 +209,11 @@ void NextNewVessel::Construct()
     G4Tubs* endcap_nozzle_flange_solid =
       new G4Tubs("ENDCAP_NOZZLE_FLANGE_B", 0., _endcap_nozzle_flange_diam/2.,_endcap_nozzle_flange_high, 0., twopi);
     G4Tubs* endcap_nozzle_gas_solid =
-      new G4Tubs("ENDCAP_NOZZLE_GAS", 0., _endcap_nozzle_in_diam/2.,_endcap_nozzle_high, 0., twopi);
-    // G4Tubs* axial_port_tube_out_solid_b = 
-    //   new G4Tubs("AXIAL_PORT_TUBE_OUT", 0., (_port_tube_diam + _port_tube_thickness)/2., (_axial_port_tube_out+1.*mm)/2., 0., twopi);
+      new G4Tubs("ENDCAP_NOZZLE_GAS", 0., _endcap_nozzle_in_diam/2., _endcap_nozzle_high, 0., twopi);
+    G4double axial_port_tube_ext =
+      _axial_port_tube_out + 2.*_axial_port_flange + _axial_distance_flange_endcap - _endcap_nozzle_high - _endcap_nozzle_flange_high;
+    G4Tubs* endcap_port_tube_out_solid = 
+      new G4Tubs("AXIAL_PORT_TUBE_OUT", 0., (_port_tube_diam + 2.*_port_tube_thickness)/2., (axial_port_tube_ext+0.01*mm)/2., 0., twopi);
     
 
     /// Making holes in nozzle flanges for source ports
@@ -278,9 +280,9 @@ void NextNewVessel::Construct()
     G4UnionSolid* endcap_nozzle_solid = new G4UnionSolid("ENDCAP_NOZZLE", endcap_nozzle_tube_solid,
 							 endcap_nozzle_flange_solid, 0,
 							 G4ThreeVector(0.,0.,_endcap_nozzle_high));
-    // endcap_nozzle_solid = new G4UnionSolid("ENDCAP_NOZZLE", endcap_nozzle_solid,
-    // 				       axial_port_tube_out_solid, 0,
-    // 				       G4ThreeVector(0.,0., _endcap_nozzle_high + _endcap_nozzle_flange_high + (_axial_port_tube_out+1.*mm)/2.));
+    G4UnionSolid* endcap_nozzle_solid_with_tube =
+      new G4UnionSolid("ENDCAP_NOZZLE", endcap_nozzle_solid, endcap_port_tube_out_solid, 0,
+		       G4ThreeVector(0.,0., _endcap_nozzle_high + _endcap_nozzle_flange_high + (axial_port_tube_ext-0.01*mm)/2.));
     
     //Rotate the lateral nozzles 
     G4RotationMatrix* rot_lat = new G4RotationMatrix();
@@ -308,7 +310,7 @@ void NextNewVessel::Construct()
 				     rot_up, G4ThreeVector(0.,_vessel_in_diam/2., -_up_nozzle_z_pos)); 
      
     // Body + Tracking endcap + Energy endcap + Tracking flange + Energy flange + Lateral nozzles + Upper nozzles + Endcap nozzles
-    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, endcap_nozzle_solid,
+    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, endcap_nozzle_solid_with_tube,
      				    0, G4ThreeVector(0.,0.,_endcap_nozzle_z_pos));
     vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, endcap_nozzle_solid,
       				    rot_endcap, G4ThreeVector(0.,0.,-_endcap_nozzle_z_pos));
@@ -341,9 +343,8 @@ void NextNewVessel::Construct()
     
 
     //// LOGICS //////
-    G4LogicalVolume* vessel_logic = new G4LogicalVolume(vessel_solid,
-							MaterialsList::Steel316Ti(),
-							"VESSEL");
+    G4LogicalVolume* vessel_logic =
+      new G4LogicalVolume(vessel_solid,	MaterialsList::Steel316Ti(), "VESSEL");
     this->SetLogicalVolume(vessel_logic);
 
     // Place the port air inside the flanges end external tubes for lateral and upper
@@ -353,8 +354,7 @@ void NextNewVessel::Construct()
     G4LogicalVolume* lateral_port_hole_logic =
       new G4LogicalVolume(lateral_port_hole_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
 			  "LATERAL_PORT_AIR_EXT");
-    new G4PVPlacement(G4Transform3D(*rot_lat,
-				    G4ThreeVector( _vessel_in_diam/2.+ _lat_nozzle_high + (_lat_nozzle_flange_high + _lat_port_tube_out)/2. , 0., _lat_nozzle_z_pos)),
+    new G4PVPlacement(G4Transform3D(*rot_lat, G4ThreeVector(_vessel_in_diam/2.+_lat_nozzle_high+(_lat_nozzle_flange_high+_lat_port_tube_out)/2., 0., _lat_nozzle_z_pos)),
 		      lateral_port_hole_logic, "LATERAL_PORT_AIR_EXT", vessel_logic, false, 0, false);
     
 
@@ -369,11 +369,12 @@ void NextNewVessel::Construct()
 
     G4Tubs* axial_port_hole_solid = 
       new G4Tubs("AXIAL_PORT_AIR_EXT", 0., _port_tube_diam/2., 
-    		 (_endcap_nozzle_flange_high)/2., 0., twopi);
+    		 (_endcap_nozzle_flange_high + axial_port_tube_ext)/2., 0., twopi);
     G4LogicalVolume* axial_port_hole_logic =
       new G4LogicalVolume(axial_port_hole_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
 			  "AXIAL_PORT_AIR_EXT");
-    new G4PVPlacement(G4Transform3D(*rot_endcap, G4ThreeVector(0., 0.,  _endcap_nozzle_z_pos + _endcap_nozzle_high + (_endcap_nozzle_flange_high)/2.)), axial_port_hole_logic,
+    // new G4PVPlacement(G4Transform3D(*rot_endcap, G4ThreeVector(0., 0.,  _endcap_nozzle_z_pos + _endcap_nozzle_high + (_endcap_nozzle_flange_high)/2.)), axial_port_hole_logic,
+    new G4PVPlacement(G4Transform3D(*rot_endcap, G4ThreeVector(0., 0.,  _endcap_nozzle_z_pos + _endcap_nozzle_high + (_endcap_nozzle_flange_high + axial_port_tube_ext)/2.)), axial_port_hole_logic,
 		      "AXIAL_PORT_AIR_EXT", vessel_logic, false, 0, false);
     
     G4Material* vessel_gas_mat = nullptr;
