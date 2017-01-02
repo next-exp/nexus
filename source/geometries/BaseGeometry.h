@@ -45,6 +45,9 @@ namespace nexus {
 
     // Getter for the starting point of EL generation in z
     G4double GetELzCoord() const;
+
+    /// Setter for the starting point of EL generation in z
+    void SetELzCoord(G4double z);  
     
     /// Destructor
     virtual ~BaseGeometry();
@@ -62,9 +65,6 @@ namespace nexus {
 
     /// Sets the drift variable to true if a drift field exists
     void SetDrift(G4bool);
-
-    /// Setter for the starting point of EL generation in z
-    void SetELzCoord(G4double z);  
     
   private:
     /// Copy-constructor (hidden)
