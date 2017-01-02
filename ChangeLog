@@ -1,3 +1,10 @@
+tag v5_01_14 -2 Jan 2017
+	- Bug fixed in the generation of vertices of the DB_PLUG region.
+	- CENTER region in NEW is now the center of the active volume
+	- In NEW the calibration source is not placed by default
+	- Axial port tube for calibration sources simulated, together with
+	the air inside it.
+	
 tag v5_01_13 -29 Dec 2016
 	- Bug fixed in the generation of those vertices where the volume check was made with the vertex in
 	the local reference system  and not in the global one. 
