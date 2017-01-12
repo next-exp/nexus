@@ -98,11 +98,19 @@ G4Material* MaterialsList::GXeDepleted(G4double pressure, G4double temperature)
     G4Isotope* Xe134 = new G4Isotope("Xe134", 54, 134, XenonGasProperties::MassPerMole(134));
     G4Isotope* Xe136 = new G4Isotope("Xe136", 54, 136, XenonGasProperties::MassPerMole(136));
 
-    Xe->AddIsotope(Xe129, 27.11*perCent);
+    // Bottle number 9056852
+    // Xe->AddIsotope(Xe129, 27.11*perCent);
+    // Xe->AddIsotope(Xe131, 27.07*perCent);
+    // Xe->AddIsotope(Xe132, 28.18*perCent);
+    // Xe->AddIsotope(Xe134, 8.59*perCent);
+    // Xe->AddIsotope(Xe136, 2.87*perCent);
+
+    // Bottle number 9056842
+    Xe->AddIsotope(Xe129, 27.29*perCent);
     Xe->AddIsotope(Xe131, 27.07*perCent);
-    Xe->AddIsotope(Xe132, 28.18*perCent);
-    Xe->AddIsotope(Xe134, 8.59*perCent);
-    Xe->AddIsotope(Xe136, 2.87*perCent);
+    Xe->AddIsotope(Xe132, 28.31*perCent);
+    Xe->AddIsotope(Xe134, 8.61*perCent);
+    Xe->AddIsotope(Xe136, 2.55*perCent);
    
     
     // G4cout << Xe->GetNumberOfIsotopes() << G4endl;
