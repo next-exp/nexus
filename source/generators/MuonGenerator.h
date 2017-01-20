@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-///  \file   MuonsGeneration.h
+///  \file   MuonGenerator.h
 ///  \brief  Point Sampler for muons generation.
 ///  
 ///  \author   Neus Lopez March <neus.lopez@ific.uv.es>    
@@ -9,11 +9,12 @@
 ///  Copyright (c) 2015 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __MUONS_GENERATION__
-#define __MUONS_GENERATION__
+#ifndef __MUON_GENERATOR__
+#define __MUON_GENERATOR__
 
 #include <G4VPrimaryGenerator.hh>
-#include <TH1.h>
+#include <TH1F.h>
+#include <TH2F.h>
 #include <TFile.h>
 
 class G4GenericMessenger;
@@ -25,13 +26,13 @@ namespace nexus {
 
   class BaseGeometry;
   
-  class MuonsGeneration: public G4VPrimaryGenerator
+  class MuonGenerator: public G4VPrimaryGenerator
   {
   public:
     /// Constructor
-    MuonsGeneration();
+    MuonGenerator();
     /// Destructor
-    ~MuonsGeneration();
+    ~MuonGenerator();
     
     /// This method is invoked at the beginning of the event. It sets 
     /// a primary vertex (that is, a particle in a given position and time)
@@ -39,8 +40,6 @@ namespace nexus {
     void GeneratePrimaryVertex(G4Event*);
 
   private:
-
-    void SetParticleDefinition(G4String);
 
     /// Generate a random kinetic energy with flat probability in 
     //  the interval [energy_min, energy_max].
@@ -63,7 +62,13 @@ namespace nexus {
     G4double _momentum_X;
     G4double _momentum_Y;
     G4double _momentum_Z;
-
+    
+    TH1F* muon_phi_ ;
+    TH1F* muon_theta_;
+    TH1F* muon_phi_reco_ ;
+    TH1F* muon_theta_reco_;
+    TH2F* muon_;
+    TFile* out_file_;
     
   };
 

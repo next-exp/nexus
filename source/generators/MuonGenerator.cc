@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------- 
-//  \file   MuonsGeneration.cc
+//  \file   MuonGenerator.cc
 //  \brief  Point Sampler on the surface of a rectangular used for muon generation. 
 //          Control plots of the generation variables available.
 //
@@ -9,7 +9,7 @@
 //
 //  Copyright (c) 2015 NEXT Collaboration
 // ----------------------------------------------------------------------------
-#include "MuonsGeneration.h"
+#include "MuonGenerator.h"
 #include "DetectorConstruction.h"
 #include "BaseGeometry.h"
 #include <G4GenericMessenger.hh>
@@ -24,8 +24,10 @@
 #include "MuonsPointSampler.h"
 #include "AddUserInfoToPV.h"
 
-#include "TF1.h"
 #include <TFile.h>
+#include <TH1F.h>
+#include <TH2F.h>
+#include <TMath.h>
 
 #include "CLHEP/Units/SystemOfUnits.h"
 
@@ -33,79 +35,75 @@ using namespace nexus;
 using namespace CLHEP;
 
 
-MuonsGeneration::MuonsGeneration():
+MuonGenerator::MuonGenerator():
   G4VPrimaryGenerator(), _msg(0), _particle_definition(0),
-_energy_min(0.), _energy_max(0.), _geom(0), _momentum_X(0.),
+  _energy_min(0.), _energy_max(0.), _geom(0), _momentum_X(0.),
   _momentum_Y(0.), _momentum_Z(0.)
 {
-  _msg = new G4GenericMessenger(this, "/Generator/MuonsGeneration/",
-				"Control commands of muons-generation generator.");
-  
-  _msg->DeclareMethod("particle", &MuonsGeneration::SetParticleDefinition, 
-		      "Set particle to be generated.");
+  _msg = new G4GenericMessenger(this, "/Generator/MuonGenerator/",
+				"Control commands of muongenerator.");
   
   G4GenericMessenger::Command& min_energy =
-    _msg->DeclareProperty("min_energy", _energy_min, 
-			  "Set minimum kinetic energy of the particle.");
+    _msg->DeclareProperty("min_energy", _energy_min, "Set minimum kinetic energy of the particle.");
   min_energy.SetUnitCategory("Energy");
   min_energy.SetParameterName("min_energy", false);
   min_energy.SetRange("min_energy>0.");
   
   G4GenericMessenger::Command& max_energy =
-    _msg->DeclareProperty("max_energy", _energy_max, 
-			  "Set maximum kinetic energy of the particle");
+    _msg->DeclareProperty("max_energy", _energy_max, "Set maximum kinetic energy of the particle");
   max_energy.SetUnitCategory("Energy");
   
   _msg->DeclareProperty("region", _region, 
 			"Set the region of the geometry where the vertex will be generated.");
   
-  /// Temporary
-  _msg->DeclareProperty("momentum_X", _momentum_X,
-			"x coord of momentum");
-  _msg->DeclareProperty("momentum_Y", _momentum_Y,
-			"y coord of momentum");
-  _msg->DeclareProperty("momentum_Z", _momentum_Z,
-			"z coord of momentum");
+  _msg->DeclareProperty("momentum_X", _momentum_X,"x coord of momentum");
+  _msg->DeclareProperty("momentum_Y", _momentum_Y,"y coord of momentum");
+  _msg->DeclareProperty("momentum_Z", _momentum_Z,"z coord of momentum");
   
   
-  DetectorConstruction* detconst =
-    (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
+  DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
   _geom = detconst->GetGeometry();
   
+  muon_phi_ = new TH1F("Muon Phi distribution", "Muon distribution;Phi (ª);Entries", 400, 0., 400.); // 382.5=360+22.5
+  muon_phi_reco_ = new TH1F("Muon Phi distribution reco", "Muon reco distribution;Phi (ª);Entries", 400, 0., 400.); // 382.5=360+22.5
+     
+  muon_theta_ = new TH1F("Muon Theta distribution", "Muon distribution;Theta (º);Entries", 90, 0., 100.);
+  muon_theta_reco_ = new TH1F("Muon Theta distribution reco", "Muon reco distribution;Theta (º);Entries", 90, 0., 100.);
+  
+  muon_ = new TH2F("Muons", "Muons in LSC; LSC z;LSC x: Entries", 100, -1.,1., 100, -1.,1.);
+
 }
 
 
 
-MuonsGeneration::~MuonsGeneration()
+MuonGenerator::~MuonGenerator()
 {
+  std::cout<<"destructor  MuonGenerator "<<std::endl;
   delete _msg;
+  out_file_ = new TFile("MuonMonitor.root", "recreate");  
+  muon_phi_->Write();
+  muon_phi_reco_->Write();
+  muon_theta_->Write();
+  muon_theta_reco_->Write();
+  muon_->Write();
+  // TH2F *hspc = (TH2F*) muon_->DrawClone("SURF1 POL");
+  // hspc->Write();
+  out_file_->Close();
 }
 
-
-void MuonsGeneration::SetParticleDefinition(G4String particle_name)
+void MuonGenerator::GeneratePrimaryVertex(G4Event* event)
 {
-  _particle_definition = 
-    G4ParticleTable::GetParticleTable()->FindParticle(particle_name);
-  
+  _particle_definition = G4ParticleTable::GetParticleTable()->FindParticle("mu-");
   if (!_particle_definition)
-    G4Exception("SetParticleDefinition()", "[MuonsGeneration]",
-		FatalException, "User gave an unknown particle name.");
-}
+    G4Exception("SetParticleDefinition()", "[MuonGenerator]",
+                FatalException, " can not create a muon ");  
 
-
-
-void MuonsGeneration::GeneratePrimaryVertex(G4Event* event)
-{
-  
   // Generate an initial position for the particle using the geometry
   G4ThreeVector position = _geom->GenerateVertex(_region);
-  
   // Particle generated at start-of-event
   G4double time = 0.;
-  
   // Create a new vertex
   G4PrimaryVertex* vertex = new G4PrimaryVertex(position, time);
-  
   // Generate uniform random energy in [E_min, E_max]
   G4double kinetic_energy = RandomEnergy();
   
@@ -116,22 +114,59 @@ void MuonsGeneration::GeneratePrimaryVertex(G4Event* event)
   
   // Generate momentum direction in spherical coordinates
   G4double theta = GetTheta();
-  G4double phi = GetPhi();
+  G4double phi = GetPhi(); //180.+ added a Pi phase to correct the original data 
+                                 //from the muon detector to the NEXT orientation 
   
   G4double x, y, z;
   
   // NEXT axis convention (z<->y) and generate with -y! towards the detector.
-  x = sin(theta) * cos(phi);
-  y = -cos(theta);
-  z = sin(theta) * sin(phi);
+
+  // x = sin(theta*2.*TMath::Pi()/360.) * sin(phi*2.*TMath::Pi()/360.);
+  // z = sin(theta*2.*TMath::Pi()/360.) * cos(phi*2.*TMath::Pi()/360.);
+  // y = -cos(theta*2.*TMath::Pi()/360.);
+
+  x = sin(theta*2.*TMath::Pi()/360.) * cos(phi*2.*TMath::Pi()/360.);
+  y = cos(theta*2.*TMath::Pi()/360.); //180 - theta for the downgoing muons
+  z = sin(theta*2.*TMath::Pi()/360.) * sin(phi*2.*TMath::Pi()/360.);
+ 
+  // x = sin(theta*2.*TMath::Pi()/360.) * cos(phi*2.*TMath::Pi()/360.);
+  // y = cos(TMath::Pi()-theta*2.*TMath::Pi()/360.); //180 - theta for the downgoing muons
+  // z = sin(theta*2.*TMath::Pi()/360.) * sin(phi*2.*TMath::Pi()/360.+TMath::Pi()); //need of Pi phase in z for NEXT in LSC Ref. 
+ 
   G4ThreeVector _p_dir(x,y,z);  
   
   G4double px = pmod * _p_dir.x();
   G4double py = pmod * _p_dir.y();
   G4double pz = pmod * _p_dir.z();
   
-  //  std::cout<<"pmod in MuonsGeneration "<<pmod<<std::endl;
+  // std::cout<<"pmod in MuonsGeneration "<<pmod<<std::endl;
+  muon_phi_->Fill(phi);  
+  if (x>0. || z>0.) {
+    muon_phi_reco_->Fill((TMath::ATan(-z/x))*180./TMath::Pi());
+    //std::cout<<"ATan Phi MuonGenerator "<<TMath::ATan(-z/x)*180./TMath::Pi()<<std::endl;
+  } 
+ 
+  else if (x<0. || z>0.){
+    muon_phi_reco_->Fill(180.-(TMath::ATan(-z/x))*180./TMath::Pi()); 
+    //std::cout<<"ATan Phi MuonGenerator "<<180.-TMath::ATan(-z/x)*180./TMath::Pi()<<std::endl;
+  }
+
+  else if (x<0. || z<0.){
+    muon_phi_reco_->Fill(180.+(TMath::ATan(-z/x))*180./TMath::Pi()); 
+    //std::cout<<"ATan Phi MuonGenerator "<<180.+TMath::ATan(-z/x)*180./TMath::Pi()<<std::endl;
+  }
+  else {
+    muon_phi_reco_->Fill(360.-(TMath::ATan(-z/x))*180./TMath::Pi()); 
+    //std::cout<<"ATan Phi MuonGenerator "<<360.-TMath::ATan(-z/x)*180./TMath::Pi()<<std::endl;
+  }
   
+  muon_theta_->Fill(theta);  
+  muon_theta_reco_->Fill((TMath::ATan(std::sqrt(z*z+x*x)/y))*180./TMath::Pi());    
+  //std::cout<<"ATan Phi MuonGenerator "<<TMath::ATan(std::sqrt(z*z+x*x)/y)*180./TMath::Pi()<<std::endl;
+
+  // std::cout<<"(x,y,z) MuonGenerator "<<x<<" "<<y<<" "<<z<<" "<<std::endl;
+  muon_->Fill(z,x);
+
   // If user provides a momentum direction, this one is used
   if (_momentum_X != 0. || _momentum_Y != 0. || _momentum_Z != 0.) {
     // Normalize if needed
@@ -164,7 +199,7 @@ void MuonsGeneration::GeneratePrimaryVertex(G4Event* event)
   
 }
 
-G4double MuonsGeneration::RandomEnergy() const
+G4double MuonGenerator::RandomEnergy() const
 {
   if (_energy_max == _energy_min) 
     return _energy_min;
@@ -172,17 +207,55 @@ G4double MuonsGeneration::RandomEnergy() const
     return (G4UniformRand()*(_energy_max - _energy_min) + _energy_min);
 }
 
-G4double MuonsGeneration::GetPhi() 
+
+G4double MuonGenerator::GetTheta() 
 {
-  return ( twopi*G4UniformRand());
+  //From LSC muon flux measurements, rebined probabilities to 3 bin (0-30,30-60,60-90)º
+  //Could be generalized for new measurements :
+  G4double rand = G4UniformRand();
+  G4double rnd = 30.*G4UniformRand();
+  if (rand < 0.2874){ //0-30
+    return (rnd);
+  }
+  else  if (rand < 0.2874+0.6048){ //30-60
+    return (30. + rnd);
+  }
+  else {//60-90
+    return (60. + rnd);
+  } 
 }
 
-G4double MuonsGeneration::GetTheta() 
+G4double MuonGenerator::GetPhi() 
 {
-  TF1 *f1 = new TF1("f1","pow(cos(x),2)",0,pi/2);
-  G4double theta = f1->GetRandom();   
-  return ( theta );
-}
+  //From LSC muon flux measurements, rebined probabilities to 360º/8  (bins centered in 0,45,90,135,180,225,270,315)
+  //Could be generalized for new measurements :
+  G4double rand = G4UniformRand();
+  G4double rnd = 45.*G4UniformRand();
+  if (rand < 0.05){ //45
+    return (22.5+rnd);
+  }
+  else  if (rand < 0.05+0.0875){ //90
+    return (67.5 + rnd);
+  }
+  else  if (rand < 0.05+0.0875+0.225){ //135
+    return (112.5 + rnd);
+  }
+  else  if (rand < 0.05+0.0875+0.225+0.24375){ //180
+    return (157.5 + rnd);
+  }
+ else  if (rand < 0.05+0.0875+0.225+0.24375+0.1625){ //225
+    return (202.5 + rnd);
+  }
+  else  if (rand < 0.05+0.0875+0.225+0.24375+0.1625+0.08125){ //270
+    return (247.5 + rnd);
+  }
+  else  if (rand < 0.05+0.0875+0.225+0.24375+0.1625+0.08125+0.0625){ //315
+    return (292.5 + rnd);
+  }
+  else { //360==0
+    return (337.5 + rnd);
+  }
 
+}
 
 
