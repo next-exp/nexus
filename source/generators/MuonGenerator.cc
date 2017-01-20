@@ -24,11 +24,7 @@
 #include "MuonsPointSampler.h"
 #include "AddUserInfoToPV.h"
 
-#include <TFile.h>
-#include <TH1F.h>
-#include <TH2F.h>
 #include <TMath.h>
-
 #include "CLHEP/Units/SystemOfUnits.h"
 
 using namespace nexus;
@@ -64,31 +60,14 @@ MuonGenerator::MuonGenerator():
   DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
   _geom = detconst->GetGeometry();
   
-  muon_phi_ = new TH1F("Muon Phi distribution", "Muon distribution;Phi (ª);Entries", 400, 0., 400.); // 382.5=360+22.5
-  muon_phi_reco_ = new TH1F("Muon Phi distribution reco", "Muon reco distribution;Phi (ª);Entries", 400, 0., 400.); // 382.5=360+22.5
-     
-  muon_theta_ = new TH1F("Muon Theta distribution", "Muon distribution;Theta (º);Entries", 90, 0., 100.);
-  muon_theta_reco_ = new TH1F("Muon Theta distribution reco", "Muon reco distribution;Theta (º);Entries", 90, 0., 100.);
-  
-  muon_ = new TH2F("Muons", "Muons in LSC; LSC z;LSC x: Entries", 100, -1.,1., 100, -1.,1.);
-
 }
 
 
 
 MuonGenerator::~MuonGenerator()
 {
-  std::cout<<"destructor  MuonGenerator "<<std::endl;
+ 
   delete _msg;
-  out_file_ = new TFile("MuonMonitor.root", "recreate");  
-  muon_phi_->Write();
-  muon_phi_reco_->Write();
-  muon_theta_->Write();
-  muon_theta_reco_->Write();
-  muon_->Write();
-  // TH2F *hspc = (TH2F*) muon_->DrawClone("SURF1 POL");
-  // hspc->Write();
-  out_file_->Close();
 }
 
 void MuonGenerator::GeneratePrimaryVertex(G4Event* event)
@@ -114,24 +93,17 @@ void MuonGenerator::GeneratePrimaryVertex(G4Event* event)
   
   // Generate momentum direction in spherical coordinates
   G4double theta = GetTheta();
-  G4double phi = GetPhi(); //180.+ added a Pi phase to correct the original data 
+  G4double phi = 180.+ GetPhi(); // added a Pi phase to correct the original data 
                                  //from the muon detector to the NEXT orientation 
   
   G4double x, y, z;
   
-  // NEXT axis convention (z<->y) and generate with -y! towards the detector.
-
-  // x = sin(theta*2.*TMath::Pi()/360.) * sin(phi*2.*TMath::Pi()/360.);
-  // z = sin(theta*2.*TMath::Pi()/360.) * cos(phi*2.*TMath::Pi()/360.);
-  // y = -cos(theta*2.*TMath::Pi()/360.);
-
-  x = sin(theta*2.*TMath::Pi()/360.) * cos(phi*2.*TMath::Pi()/360.);
-  y = cos(theta*2.*TMath::Pi()/360.); //180 - theta for the downgoing muons
-  z = sin(theta*2.*TMath::Pi()/360.) * sin(phi*2.*TMath::Pi()/360.);
+  // NEXT axis convention (z<->y) and generate with -y! towards the detector 
+  // New NEXT axis convetion in LSC: add a Pi rotation in y and z traslation  
  
-  // x = sin(theta*2.*TMath::Pi()/360.) * cos(phi*2.*TMath::Pi()/360.);
-  // y = cos(TMath::Pi()-theta*2.*TMath::Pi()/360.); //180 - theta for the downgoing muons
-  // z = sin(theta*2.*TMath::Pi()/360.) * sin(phi*2.*TMath::Pi()/360.+TMath::Pi()); //need of Pi phase in z for NEXT in LSC Ref. 
+  x = sin(theta*2.*TMath::Pi()/360.) * cos(phi*2.*TMath::Pi()/360.);
+  y = cos(TMath::Pi()-theta*2.*TMath::Pi()/360.); //180 - theta for the downgoing muons
+  z = sin(theta*2.*TMath::Pi()/360.) * sin(phi*2.*TMath::Pi()/360.+TMath::Pi()); //need of Pi phase in z for NEXT in LSC Ref. 
  
   G4ThreeVector _p_dir(x,y,z);  
   
@@ -139,34 +111,7 @@ void MuonGenerator::GeneratePrimaryVertex(G4Event* event)
   G4double py = pmod * _p_dir.y();
   G4double pz = pmod * _p_dir.z();
   
-  // std::cout<<"pmod in MuonsGeneration "<<pmod<<std::endl;
-  muon_phi_->Fill(phi);  
-  if (x>0. || z>0.) {
-    muon_phi_reco_->Fill((TMath::ATan(-z/x))*180./TMath::Pi());
-    //std::cout<<"ATan Phi MuonGenerator "<<TMath::ATan(-z/x)*180./TMath::Pi()<<std::endl;
-  } 
  
-  else if (x<0. || z>0.){
-    muon_phi_reco_->Fill(180.-(TMath::ATan(-z/x))*180./TMath::Pi()); 
-    //std::cout<<"ATan Phi MuonGenerator "<<180.-TMath::ATan(-z/x)*180./TMath::Pi()<<std::endl;
-  }
-
-  else if (x<0. || z<0.){
-    muon_phi_reco_->Fill(180.+(TMath::ATan(-z/x))*180./TMath::Pi()); 
-    //std::cout<<"ATan Phi MuonGenerator "<<180.+TMath::ATan(-z/x)*180./TMath::Pi()<<std::endl;
-  }
-  else {
-    muon_phi_reco_->Fill(360.-(TMath::ATan(-z/x))*180./TMath::Pi()); 
-    //std::cout<<"ATan Phi MuonGenerator "<<360.-TMath::ATan(-z/x)*180./TMath::Pi()<<std::endl;
-  }
-  
-  muon_theta_->Fill(theta);  
-  muon_theta_reco_->Fill((TMath::ATan(std::sqrt(z*z+x*x)/y))*180./TMath::Pi());    
-  //std::cout<<"ATan Phi MuonGenerator "<<TMath::ATan(std::sqrt(z*z+x*x)/y)*180./TMath::Pi()<<std::endl;
-
-  // std::cout<<"(x,y,z) MuonGenerator "<<x<<" "<<y<<" "<<z<<" "<<std::endl;
-  muon_->Fill(z,x);
-
   // If user provides a momentum direction, this one is used
   if (_momentum_X != 0. || _momentum_Y != 0. || _momentum_Z != 0.) {
     // Normalize if needed

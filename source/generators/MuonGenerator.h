@@ -13,9 +13,6 @@
 #define __MUON_GENERATOR__
 
 #include <G4VPrimaryGenerator.hh>
-#include <TH1F.h>
-#include <TH2F.h>
-#include <TFile.h>
 
 class G4GenericMessenger;
 class G4Event;
@@ -62,14 +59,7 @@ namespace nexus {
     G4double _momentum_X;
     G4double _momentum_Y;
     G4double _momentum_Z;
-    
-    TH1F* muon_phi_ ;
-    TH1F* muon_theta_;
-    TH1F* muon_phi_reco_ ;
-    TH1F* muon_theta_reco_;
-    TH2F* muon_;
-    TFile* out_file_;
-    
+       
   };
 
 } // end namespace nexus

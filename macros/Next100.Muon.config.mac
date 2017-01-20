@@ -59,8 +59,8 @@
 #/Generator/IonGun/region FIELD_CAGE
 
 #Neutron generator for cosmogenics
-/Generator/MuonGenerator/min_energy 1 MeV
-/Generator/MuonGenerator/max_energy 1 MeV
+/Generator/MuonGenerator/min_energy 200 MeV
+/Generator/MuonGenerator/max_energy 200 MeV
 /Generator/MuonGenerator/region MUONS
 
 # ACTIONS

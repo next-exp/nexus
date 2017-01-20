@@ -8,8 +8,6 @@
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
 /PhysicsList/RegisterPhysics G4DecayPhysics
 /PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
-#/PhysicsList/RegisterPhysics G4HadronElasticPhysicsHP
-#/PhysicsList/RegisterPhysics G4HadronPhysicsQGSP_BERT_HP
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
@@ -27,7 +25,7 @@
 
 ### ACTIONS
 /Actions/RegisterRunAction DEFAULT
-/Actions/RegisterEventAction EL_SIM
+/Actions/RegisterEventAction DEFAULT
 /Actions/RegisterSteppingAction DEFAULT
 /Actions/RegisterTrackingAction DEFAULT
 
