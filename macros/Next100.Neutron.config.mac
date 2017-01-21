@@ -10,7 +10,7 @@
 ##### JOB CONTROL #####
 #/nexus/random_seed 0
 /nexus/persistency/eventType background
-/nexus/persistency/historyFile NEXT100.Neutron.pers.mac
+/nexus/persistency/historyFile Next100.Neutron.pers.mac
 /nexus/persistency/outputFile Next100.Neutron.next
 
 

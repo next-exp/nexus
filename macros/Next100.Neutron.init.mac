@@ -1,6 +1,6 @@
 ### --------------------------------------------------------
 ###  Next100: Initialization macro of nexus.
-###  $Id: Next100.Neutron.mac 8754 2016-11-09 15:15:13Z minegui $
+###  $Id: Next100.Neutron.init.mac 8754 2016-11-09 15:15:13Z minegui $
 ### --------------------------------------------------------
 
 
@@ -33,6 +33,6 @@
 
 
 ### EXTRA CONFIGURATION
-/nexus/RegisterDelayedMacro Xe137.mac
-/nexus/historyFile NEXT100.Neutron.pers.mac
-/nexus/RegisterMacro NEXT100.Neutron.config.mac
+/nexus/RegisterDelayedMacro macros/physics/Xe137.mac
+/nexus/historyFile Next100.Neutron.pers.mac
+/nexus/RegisterMacro macros/Next100.Neutron.config.mac

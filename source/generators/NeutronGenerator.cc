@@ -1,10 +1,10 @@
-// ---------------------------------------------------------------------------                                                                                                       
-//                                                                                                                                                                                   
-//  Author : Miquel Nebot Guinot <miquel.nebot@ific.uv.es>                                                                                                                           
-//  Created: Aug 2016                                                                                                                                                                
-//                                                                                                                                                                                   
-//  Copyright (c) 2016 NEXT Collaboration. All rights reserved.                                                                                                                      
-// ---------------------------------------------------------------------------                                                                                                       
+// ---------------------------------------------------------------------------             
+//                                                                                         
+//  Author : Miquel Nebot Guinot <miquel.nebot@ific.uv.es>                                     
+//  Created: Aug 2016                                                                       
+//                                                                                       
+//  Copyright (c) 2016 NEXT Collaboration. All rights reserved.                          
+// ---------------------------------------------------------------------------       
 
 #include "NeutronGenerator.h"
 
@@ -57,11 +57,11 @@ NeutronGenerator::~NeutronGenerator()
 void NeutronGenerator::GeneratePrimaryVertex(G4Event* event)
 {
   _particle_definition = G4ParticleTable::GetParticleTable()->
-    FindParticle("neutron");;
+    FindParticle("neutron");
 
   if (!_particle_definition)
     G4Exception("SetParticleDefinition()", "[NeutronGenerator]",
-                FatalException, " can not create neutron ");
+                FatalException, " can not create a neutron ");
   // Generate an initial position for the particle using the geometry                                                                                                                
   G4ThreeVector position = _geom->GenerateVertex(_region);
   // Particle generated at start-of-event                                                                                                                                            
