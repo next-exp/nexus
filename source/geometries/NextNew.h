@@ -24,6 +24,7 @@ namespace nexus { class NextNewInnerElements; }
 namespace nexus {class BoxPointSampler;}
 namespace nexus {class CylinderPointSampler;}
 namespace nexus {class MuonsPointSampler;}
+namespace nexus {class CalibrationSource;}
 
 class G4LogicalVolume;
 class G4GenericMessenger;
@@ -66,7 +67,7 @@ namespace nexus {
     NextNewInnerElements* _inner_elements;
     
     BoxPointSampler* _lab_gen; ///< Vertex generator
-    /* CylinderPointSampler* _source_gen_lat; */
+    CylinderPointSampler* _lat_source_gen;
     /* CylinderPointSampler* _source_gen_up; */
     MuonsPointSampler* _muon_gen; ///< Vertex generator for muons
 
@@ -80,10 +81,14 @@ namespace nexus {
     // Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
 
-    // True if a block of lead on the lateral port placed to shield source
-    G4bool _lead_block;
+    // Kind of block of lead on the lateral port placed to shield source
+    G4String _lead_block;
+    G4double _lead_thick;
     
-
+    // Incapsulated calibration source volume
+    CalibrationSource* _cal;
+    // Distance from the end of the lateral feedthrough to the source pos
+    //   G4double _ext_source_distance;
   };
   
 } // end namespace nexus

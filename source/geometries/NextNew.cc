@@ -22,6 +22,7 @@
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
 #include "IonizationSD.h"
+#include "CalibrationSource.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -51,7 +52,9 @@ namespace nexus {
     // Lab dimensions
     _lab_size (5. * m),
     _rot_angle(pi),
-    _lead_block(false)
+    _lead_block("NONE"),
+    _lead_thick(100.*mm)
+    //   _ext_source_distance(0.*mm)
     // Buffer gas dimensions
   {
     //Shielding
@@ -70,7 +73,11 @@ namespace nexus {
 
     _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
     _msg->DeclareProperty("lead_block", _lead_block, "Block of lead on the lateral port");
-    
+    _msg->DeclareProperty("lead_thickness", _lead_thick, "Thickness of lead with small feedthrough");
+    // _msg->DeclareProperty("ext_source_distance", _ext_source_distance, "Distance of the bottom of the 'screw' source from the bottom of the lateral port tube");  
+  
+    _cal = new CalibrationSource();
+    _cal->Construct();
   }
 
   NextNew::~NextNew()
@@ -207,9 +214,51 @@ namespace nexus {
     */
     
     // Build NaI external scintillator
-    BuildExtScintillator(lat_pos);
+    //    BuildExtScintillator(lat_pos);
 
-    if (_lead_block) {
+    G4ThreeVector source_pos;
+
+    if (_lead_block == "COLL") {
+
+      G4double diam = 2.*mm;
+      G4double offset_sub = 1.*mm;
+
+      G4Box* lead_coll_full_solid = 
+	new G4Box("LEAD_COLL", 100.*mm/2., 100.*mm/2.,  _lead_thick/2.);
+      G4Tubs* cylinder_coll_1_solid = 
+       	new G4Tubs("CYLINDER_COLL1", 0., diam/2., (_lead_thick + offset_sub)/2., 0., twopi); 
+      G4SubtractionSolid* lead_coll_1_solid =
+	new G4SubtractionSolid("LEAD_COLL1", lead_coll_full_solid, cylinder_coll_1_solid, 
+			       0 , G4ThreeVector(0.,0.,0.));
+      G4Tubs* cylinder_coll_2_solid = 
+       	new G4Tubs("CYLINDER_COLL2", 0., _cal->GetCapsuleDiameter()/2., 
+		   (_cal->GetCapsuleThickness() + offset_sub)/2., 0., twopi); 
+      G4SubtractionSolid* lead_coll_solid =
+	new G4SubtractionSolid("LEAD_COLL", lead_coll_1_solid, cylinder_coll_2_solid, 
+			       0 , G4ThreeVector(0.,0.,-_lead_thick/2. + (_cal->GetCapsuleThickness() - offset_sub)/2.));
+
+      G4LogicalVolume* lead_coll_logic =
+	new G4LogicalVolume(lead_coll_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"), "LEAD_COLL");
+      G4ThreeVector lead_coll_pos =
+	G4ThreeVector(lat_pos.getX() + _lead_thick/2., lat_pos.getY(), lat_pos.getZ());
+      new G4PVPlacement(G4Transform3D(*lat_rot, lead_coll_pos), lead_coll_logic, 
+			"LEAD_COLL", _shielding_air_logic, false, 0, true);
+
+      G4LogicalVolume* cal_logic = _cal->GetLogicalVolume();
+      source_pos =
+	G4ThreeVector(lat_pos.getX() + _lead_thick - _cal->GetCapsuleThickness()/2., lat_pos.getY(), lat_pos.getZ());
+      new G4PVPlacement(G4Transform3D(*lat_rot, source_pos), cal_logic,
+                        "SCREW_SUPPORT", _shielding_air_logic, false, 0, true);
+      
+      G4VisAttributes blue_col = nexus::Blue();
+      G4VisAttributes yel_col = nexus::Yellow();
+      //  yel_col.SetForceSolid(true);
+      //    blue_col.SetForceSolid(true);
+      lead_coll_logic->SetVisAttributes(yel_col);
+      cal_logic->SetVisAttributes(blue_col);
+     
+
+    } else if (_lead_block == "NOZZLE") {
 
       G4double lead_size_horizontal = 103.*mm;
       G4double lead_size_vertical = 100.*mm;
@@ -313,6 +362,11 @@ namespace nexus {
     _lab_gen = 
       new BoxPointSampler(_lab_size - 1.*m, _lab_size - 1.*m, _lab_size - 1.*m, 1.*m,G4ThreeVector(0.,0.,0.),0);
 
+    // this is the position of the source inside the capsule
+ 
+    G4ThreeVector gen_pos = source_pos - G4ThreeVector(_cal->GetSourceZpos(), 0., 0.);
+    _lat_source_gen = new CylinderPointSampler(0., _cal->GetSourceThickness(), _cal->GetSourceDiameter()/2., 0., gen_pos, lat_rot);
+
     // G4double source_diam = na22->GetSourceDiameter();
     // G4double source_thick = na22->GetSourceThickness();
     // G4ThreeVector lat_pos_na22 =
@@ -341,9 +395,9 @@ namespace nexus {
     } else if (region == "MUONS") {
       vertex = _muon_gen->GenerateVertex();
     }
-    // else if (region == "NA22_PORT_ANODE_EXT") {
-    //   vertex =  _source_gen_lat->GenerateVertex("BODY_VOL");
-    // }
+    else if (region == "EXTERNAL_PORT_ANODE") {
+      vertex =  _lat_source_gen->GenerateVertex("BODY_VOL");
+    }
     // else if (region == "NA22_PORT_UP_EXT") {
     //   vertex =  _source_gen_up->GenerateVertex("BODY_VOL");
     // }

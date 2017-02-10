@@ -12,9 +12,11 @@
 /Geometry/NextNew/sc_yield 16670.  1/MeV
 /Geometry/NextNew/elfield false
 ### For sodium source: Na, for thorium source: Th
+/Geometry/NextNew/source true
 /Geometry/CalibrationSource/source Na
-/Geometry/NextNew/lead_block COLL
-/Geometry/NextNew/lead_thickness 200. mm
+### This is the distance from the bottom of the tube to the end of the capsule which contains the source 
+/Geometry/NextNew/source_distance 81. mm
+/Geometry/NextNew/lead_block NOZZLE
 
 /Geometry/Next100/shielding_vis false
 /Geometry/NextNew/table_vis false
@@ -33,7 +35,7 @@
 
 /Generator/IonGun/atomic_number 11
 /Generator/IonGun/mass_number 22
-/Generator/IonGun/region  EXTERNAL_PORT_ANODE
+/Generator/IonGun/region  INTERNAL_PORT_ANODE
 
 
 # PHYSICS

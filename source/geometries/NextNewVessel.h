@@ -19,10 +19,11 @@
 
 #include <G4Navigator.hh>
 
-
 class G4GenericMessenger;
 
 namespace nexus {
+
+  class CalibrationSource;
 
   class NextNewVessel: public BaseGeometry
   {
@@ -109,11 +110,13 @@ namespace nexus {
     G4String _gas;
     G4double _Xe_perc;
 
-    // Radioactive source being used
-    G4String _source;
+    // Radioactive source being used or not
+    //  G4String _source;
+    G4bool _source;
     // Distance of the source piece from the bottom of the tube (0 meaning right in the inner end)
     G4double _source_distance;
 
+    CalibrationSource* _cal;
    
 
   };

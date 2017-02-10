@@ -11,6 +11,7 @@
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
+#include "CalibrationSource.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
@@ -107,7 +108,7 @@ namespace nexus {
     _sc_yield(16670. * 1/MeV),
     _gas("naturalXe"),
     _Xe_perc(100.),
-    _source("None"),
+    _source(false),
     _source_distance(0.*mm)
 
   {
@@ -146,6 +147,9 @@ namespace nexus {
 
     _msg->DeclareProperty("source", _source, "Radioactive source being used");
     _msg->DeclareProperty("source_distance", _source_distance, "Distance of the bottom of the 'screw' source from the bottom of the lateral port tube");  
+
+    _cal = new CalibrationSource();
+    _cal->Construct();
     
   }
 
@@ -435,29 +439,32 @@ void NextNewVessel::Construct()
 
   // Screwed internal source
 
-  if (_source != "None") {
+  if (_source) {
+
+    G4LogicalVolume* lateral_screw_tube_logic = _cal->GetLogicalVolume();
   
-    G4double piece_diam = 7. *mm;
-    G4double piece_length = 16. *mm;
-    G4Tubs* lateral_screw_tube_solid =
-      new G4Tubs("SCREW_SUPPORT", 0., piece_diam/2., piece_length/2., 0, twopi);
-    G4LogicalVolume* lateral_screw_tube_logic =
-      new G4LogicalVolume(lateral_screw_tube_solid,  G4NistManager::Instance()->FindOrBuildMaterial("G4_Al"), "SCREW_SUPPORT");
+    //   G4double piece_diam = cal.GetCapsuleDiameter(); // 7. *mm;
+    G4double piece_length = _cal->GetCapsuleThickness(); //16. *mm;
+    // G4Tubs* lateral_screw_tube_solid =
+    //   new G4Tubs("SCREW_SUPPORT", 0., piece_diam/2., piece_length/2., 0, twopi);
+    // G4LogicalVolume* lateral_screw_tube_logic =
+    //   new G4LogicalVolume(lateral_screw_tube_solid,  G4NistManager::Instance()->FindOrBuildMaterial("G4_Al"), "SCREW_SUPPORT");
   
-    G4double source_diam = 6. * mm;
-    G4double source_thickness = 2. * mm;
+    G4double source_diam = _cal->GetSourceDiameter(); // 6. * mm;
+    G4double source_thickness = _cal->GetSourceThickness(); // 2. * mm;
    
-    G4Tubs* source_solid = 
-      new G4Tubs("SCREW_SOURCE", 0., source_diam/2., source_thickness/2., 0., twopi);
+    // G4Tubs* source_solid = 
+    //   new G4Tubs("SCREW_SOURCE", 0., source_diam/2., source_thickness/2., 0., twopi);
 
-    G4String material = "G4_" + _source;
+    // G4String material = "G4_" + _source;
   
-    G4Material* source_mat = 
-      G4NistManager::Instance()->FindOrBuildMaterial(material);
-    G4LogicalVolume* source_logic = 
-      new G4LogicalVolume(source_solid, source_mat, "SCREW_SOURCE");
+    // G4Material* source_mat = 
+    //   G4NistManager::Instance()->FindOrBuildMaterial(material);
+    // G4LogicalVolume* source_logic = 
+    //   new G4LogicalVolume(source_solid, source_mat, "SCREW_SOURCE");
 
-    G4double z_pos_source = piece_length/2. - 0.5 * mm - source_thickness/2.;
+    //G4double z_pos_source = piece_length/2. - 0.5 * mm - source_thickness/2.;
+    G4double z_pos_source = _cal->GetSourceZpos();
 
 
     G4ThreeVector pos_screw_source(0., 0., 0.);
@@ -482,19 +489,10 @@ void NextNewVessel::Construct()
 		  "This position of the screw source in lateral port is not permitted, since it is outside the lateral port."); 
     }
 
-    // G4ThreeVector pos_screw_port(0., 0., (simulated_length_lat - _port_tube_window_thickn)/2. -  piece_length/2.);  
-    // new G4PVPlacement(0, pos_screw_port, lateral_screw_tube_logic,
-    // 		    "SCREW_PORT", lateral_port_tube_air_logic, false, 0, true);
-  
-
-    // G4ThreeVector outer_pos = G4ThreeVector(0., 0., -(2.*_lat_nozzle_flange_high + _lat_port_tube_out)/2. + piece_length/2.);
-    // new G4PVPlacement(0, outer_pos, lateral_screw_tube_logic,
-    // 		    "SCREW_PORT", lateral_port_hole_logic , false, 0, true);
-
-    G4ThreeVector pos_source(0., 0., z_pos_source);
-    new G4PVPlacement(0, pos_source,
-		      source_logic, "SCREW_SOURCE", 
-		      lateral_screw_tube_logic, false, 0, false);
+    // G4ThreeVector pos_source(0., 0., z_pos_source);
+    // new G4PVPlacement(0, pos_source,
+    // 		      source_logic, "SCREW_SOURCE", 
+    // 		      lateral_screw_tube_logic, false, 0, false);
 
     G4double gen_pos = 0.;
     if (_source_distance >= 0.*mm && _source_distance <= (simulated_length_lat - piece_length - _port_tube_window_thickn)) {
