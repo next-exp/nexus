@@ -198,7 +198,7 @@ if not env['LIBPATH']:
     if not conf.CheckCXXHeader('TObject.h'):
         Abort('ROOT headers could not be found.')
 
-    if not conf.CheckLib(library='Cint', language='CXX', autoadd=0):
+    if not conf.CheckLib(library='Core', language='CXX', autoadd=0):
         Abort('ROOT libraries could not be found.')
 
     ## GATE configuration --------------------------   -------
