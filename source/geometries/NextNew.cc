@@ -437,7 +437,7 @@ namespace nexus {
 	      (region == "CARRIER_PLATE") || (region == "ENCLOSURE_BODY") || (region == "ENCLOSURE_WINDOW") || 
 	      (region == "OPTICAL_PAD") || (region == "PMT_BODY") || (region == "PMT_BASE") ||
 	      (region == "DRIFT_TUBE") || (region == "BUFFER_TUBE") || (region == "ANODE_QUARTZ")||	     
-	      (region == "ACTIVE") || (region == "EL_TABLE") || (region == "AD_HOC") ||
+	      (region == "ACTIVE") || (region == "EL_TABLE") || (region == "AD_HOC") || (region == "CATHODE")||
 	      (region == "SUPPORT_PLATE") || (region == "DICE_BOARD") || (region == "DB_PLUG") ){
       vertex = _inner_elements->GenerateVertex(region);
     }

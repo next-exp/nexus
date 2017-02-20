@@ -96,6 +96,9 @@ namespace nexus {
     _pos_z_anode =  
       _el_gap_z_pos + _el_gap_length/2. +  _anode_quartz_thickness/2.+ 0.1*mm; // 0.1 mm is needed because EL is produced only if the PostStepVolume is GAS material.
 
+     // The centre of the feedthrough is the limit of the active volume. 
+    _pos_z_cathode = - _dist_feedthroughs/2. - _cathode_thickness/2.; 
+
     _el_table_z = _el_gap_z_pos - _el_gap_length/2.;
 
     // 0.1 * mm is added to avoid very small negative numbers in drift lengths
@@ -196,8 +199,7 @@ namespace nexus {
     delete _buffer_tube_gen;
     delete _active_gen;
     delete _anode_quartz_gen;
-
-   
+    delete _cathode_gen;   
   }
 
 
@@ -268,14 +270,13 @@ namespace nexus {
     fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _cathode_grid_transparency, _cathode_thickness));
     // Dimensions & position
     G4double grid_diam = _tube_in_diam;
-    // The centre of the feedthrough is the limit of the active volume. 
-    G4double posz = - _dist_feedthroughs/2. - _cathode_thickness/2.; 
+   
     // Building the grid
     G4Tubs* diel_grid_solid = 
       new G4Tubs("CATH_GRID", 0., grid_diam/2., _cathode_thickness/2., 0, twopi);
     G4LogicalVolume* diel_grid_logic = 
       new G4LogicalVolume(diel_grid_solid, fgrid_mat, "CATHODE_GRID");
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,posz), diel_grid_logic, 
+    new G4PVPlacement(0, G4ThreeVector(0., 0., _pos_z_cathode), diel_grid_logic, 
 		      "CATHODE_GRID", _mother_logic, false, 0, false);
     
     if (_visibility) {
@@ -607,9 +608,13 @@ void NextNewFieldCage::BuildBuffer()
       new CylinderPointSampler(_tube_in_diam/2., _buffer_tube_length, _tube_thickness,
     			       0., G4ThreeVector (0., 0., buffer_tube_z_pos));
 
-     _anode_quartz_gen = 
-      new CylinderPointSampler(0.,_anode_quartz_thickness,_anode_quartz_diam/2., 
+    _anode_quartz_gen = 
+      new CylinderPointSampler(0., _anode_quartz_thickness, _anode_quartz_diam/2., 
 			       0., G4ThreeVector (0., 0., _pos_z_anode));
+
+    _cathode_gen = 
+      new CylinderPointSampler(0., _cathode_thickness, _tube_in_diam/2., 
+			       0., G4ThreeVector (0., 0., _pos_z_cathode));
   }
 
   G4ThreeVector NextNewFieldCage::GenerateVertex(const G4String& region) const
@@ -633,6 +638,9 @@ void NextNewFieldCage::BuildBuffer()
     } 
     else if (region == "ANODE_QUARTZ") {
       vertex = _anode_quartz_gen->GenerateVertex("BODY_VOL");
+    }
+    else if (region == "CATHODE") {
+      vertex = _cathode_gen->GenerateVertex("BODY_VOL");
     } 
     else if (region == "AD_HOC") {
       vertex = G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);

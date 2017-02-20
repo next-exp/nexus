@@ -169,7 +169,8 @@ namespace nexus {
     }
 
     // Inner elements (photosensors' planes and field cage)
-    else if ((region == "FIELD_CAGE") || 
+    else if ((region == "FIELD_CAGE") ||
+             (region == "CATHODE") ||
 	     (region == "ACTIVE") ||
 	     (region == "ANODE_QUARTZ") ||
 	     (region == "CARRIER_PLATE") || 

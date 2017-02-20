@@ -227,6 +227,7 @@ namespace nexus {
     delete _tracking_plane;
     delete _active_gen;
     delete _anode_quartz_gen;
+    delete _cathode_gen;
   }
 
 
@@ -378,8 +379,13 @@ namespace nexus {
 
     G4LogicalVolume* diel_grid_logic = new G4LogicalVolume(diel_grid_solid, fgrid_mat, "CATH_GRID");
 
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,posz), diel_grid_logic, "CATH_GRID",
+    new G4PVPlacement(0, G4ThreeVector(0., 0., posz), diel_grid_logic, "CATH_GRID",
 		      _mother_logic, false, 0, false);
+
+    // Vertex generator
+     _cathode_gen = 
+      new CylinderPointSampler(0., _grid_thickn, grid_diam/2., 
+			       0., G4ThreeVector (0., 0., posz));
 
     /// Visibilities
     // Grid is white
@@ -466,7 +472,9 @@ void Next100InnerElements::BuildBuffer()
     if (region == "FIELD_CAGE") {
       vertex = _field_cage->GenerateVertex(region);
     }
-
+    else if (region == "CATHODE") {
+      vertex = _cathode_gen->GenerateVertex("BODY_VOL");
+    }
     // Active region
     else if (region == "ACTIVE") {
       vertex = _active_gen->GenerateVertex("BODY_VOL");

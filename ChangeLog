@@ -1,3 +1,9 @@
+tag v5_01_16 -20 Feb 2017
+	- Fast and slow components of scintillation in GXe changed to most
+	recent values
+	- Composition of depleted Xe changed to second bottle at LSC
+	(currently in use)
+	- Muon generator completed
 tag v5_01_15 -2 Jan 2017
 	- Header file missing 
 tag v5_01_14 -2 Jan 2017
