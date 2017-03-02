@@ -70,6 +70,8 @@ namespace nexus {
     //Messenger for configuration parameters
     G4GenericMessenger* _msg;
 
+    G4double _binning;
+
   };
 
 
