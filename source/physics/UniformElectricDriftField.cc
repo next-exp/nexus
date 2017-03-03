@@ -47,13 +47,13 @@ namespace nexus {
   {
     // If the origin is not between anode and cathode,
     // the charge carrier, obviously, doesn't move.
-    // G4cout << "Pos = " << xyzt[_axis] << G4endl;
+    //G4cout << "Pos = " << xyzt[_axis] << G4endl;
     if (!CheckCoordinate(xyzt[_axis]))
       return 0.;
 
     // Calculate drift time and distance to anode
     //G4double drift_length = _anode_pos - xyzt[_axis];
-    G4double drift_length = xyzt[_axis];
+    G4double drift_length = xyzt[_axis] - _anode_pos;
     G4double drift_time = drift_length / _drift_velocity;
     
     // Calculate longitudinal and transversal deviation due to diffusion
@@ -69,7 +69,6 @@ namespace nexus {
         position[i] = G4RandGauss::shoot(xyzt[i], transv_sigma);
       } 
       else { // Longitudinal coordinate
-	//	G4cout << "anode pos = " << _anode_pos << G4endl;
         position[i] = _anode_pos + _secmargin;
         G4double deltat = G4RandGauss::shoot(0, time_sigma);
         time = xyzt.t() + drift_time + deltat;

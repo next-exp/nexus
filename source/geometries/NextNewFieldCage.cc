@@ -104,8 +104,8 @@ namespace nexus {
     // 0.1 * mm is added to avoid very small negative numbers in drift lengths
     SetELzCoord(_el_table_z + 0.1 * mm);
 
-    // 0.5 * mm is added because ie- in EL table generation must start inside the volume, not on border
-    _el_table_z = _el_table_z + .5*mm;
+    // 0.2 * mm is added because ie- in EL table generation must start inside the volume, not on border
+    _el_table_z = _el_table_z + .2*mm;
 
     // Define a new category
     new G4UnitDefinition("kilovolt/cm","kV/cm","Electric field", kilovolt/cm);
@@ -232,6 +232,9 @@ namespace nexus {
     G4double max_radius = floor(_tube_in_diam/2./_el_table_binning)*_el_table_binning;
 
     CalculateELTableVertices(max_radius, _el_table_binning, _el_table_z);
+    // for (G4int i=0; i<_el_table_vertices.size(); ++i) {
+    //   std::cout << i << ": "<< _el_table_vertices[i] << std::endl;
+    // }
   }
 
 
