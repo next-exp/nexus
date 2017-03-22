@@ -72,7 +72,7 @@ MuonGenerator::~MuonGenerator()
 
 void MuonGenerator::GeneratePrimaryVertex(G4Event* event)
 {
-  _particle_definition = G4ParticleTable::GetParticleTable()->FindParticle("mu-");
+  _particle_definition = G4ParticleTable::GetParticleTable()->FindParticle(MuonCharge());
   if (!_particle_definition)
     G4Exception("SetParticleDefinition()", "[MuonGenerator]",
                 FatalException, " can not create a muon ");  
@@ -127,11 +127,11 @@ void MuonGenerator::GeneratePrimaryVertex(G4Event* event)
   G4PrimaryParticle* particle = 
     new G4PrimaryParticle(_particle_definition, px, py, pz);
   
-  // Set random polarization
-  if (_particle_definition == G4OpticalPhoton::Definition()) {
-    G4ThreeVector polarization = G4RandomDirection();
-    particle->SetPolarization(polarization);
-  }
+  // // Set random polarization
+  // if (_particle_definition == G4OpticalPhoton::Definition()) {
+  //   G4ThreeVector polarization = G4RandomDirection();
+  //   particle->SetPolarization(polarization);
+  // }
   
   // Add info to PrimaryVertex to be accessed from EventAction type class to make histos of variables generated here.
   AddUserInfoToPV *info = new AddUserInfoToPV(theta, phi);
@@ -150,6 +150,15 @@ G4double MuonGenerator::RandomEnergy() const
     return _energy_min;
   else
     return (G4UniformRand()*(_energy_max - _energy_min) + _energy_min);
+}
+
+G4String MuonGenerator::MuonCharge() const
+{
+  G4double rndCh = 2.3 *G4UniformRand(); //From PDG cosmic muons  mu+/mu- = 1.3
+  if (rndCh <1.3) 
+    return "mu+";
+  else
+    return "mu-";
 }
 
 

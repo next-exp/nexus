@@ -41,6 +41,7 @@ namespace nexus {
     /// Generate a random kinetic energy with flat probability in 
     //  the interval [energy_min, energy_max].
     G4double RandomEnergy() const;
+    G4String MuonCharge() const;
     G4double GetPhi();
     G4double GetTheta();    
 
