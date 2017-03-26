@@ -62,9 +62,9 @@ namespace nexus {
     _ring_width (10. * mm),
     _ring_thickness (3. * mm),
     _tpb_thickness(1.*micrometer),
-    _el_gap_length (5 * mm),
+    _el_gap_length (6 * mm),
     _grid_thickness (.1 * mm), //it's just fake dielectric
-     _el_grid_transparency (.88),
+    _el_grid_transparency (.88),
     _gate_transparency (.76),
     _anode_quartz_thickness (3 *mm),
     _anode_quartz_diam (522.*mm),  
@@ -228,10 +228,10 @@ namespace nexus {
     // Proper field cage and light tube
     BuildFieldCage();
 
-    //  G4double z = _el_gap_z_pos - _el_gap_length/2. + .5*mm;
     G4double max_radius = floor(_tube_in_diam/2./_el_table_binning)*_el_table_binning;
 
     CalculateELTableVertices(max_radius, _el_table_binning, _el_table_z);
+  
     // for (G4int i=0; i<_el_table_vertices.size(); ++i) {
     //   std::cout << i << ": "<< _el_table_vertices[i] << std::endl;
     // }
@@ -369,7 +369,7 @@ void NextNewFieldCage::BuildBuffer()
 		      "EL_GAP", _mother_logic, false, 0, false);
 
     // G4cout << "EL gap region starts in " << _el_gap_z_pos - _el_gap_length/2. << " and ends in " 
-    // 	   << _el_gap_z_pos + _el_gap_length/2. << G4endl;
+    //        << _el_gap_z_pos + _el_gap_length/2. << G4endl;
    
     if (_elfield) {
       // Define EL electric field
