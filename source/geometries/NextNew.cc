@@ -16,7 +16,7 @@
 #include "NextNewVessel.h"
 #include "NextNewIcs.h"
 #include "NextNewInnerElements.h"
-#include "Na22Source.h"
+//#include "Na22Source.h"
 #include "BoxPointSampler.h"
 #include "MuonsPointSampler.h"
 #include "OpticalMaterialProperties.h"
@@ -52,8 +52,9 @@ namespace nexus {
     // Lab dimensions
     _lab_size (5. * m),
     _rot_angle(pi),
-    _lead_block("NONE"),
-    _lead_thick(100.*mm)
+    _lead_block(false),
+    _lead_dist(0.*mm),
+    _dist_scint(20.*cm)
     //   _ext_source_distance(0.*mm)
     // Buffer gas dimensions
   {
@@ -73,9 +74,9 @@ namespace nexus {
 
     _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
     _msg->DeclareProperty("lead_block", _lead_block, "Block of lead on the lateral port");
-    _msg->DeclareProperty("lead_thickness", _lead_thick, "Thickness of lead with small feedthrough");
-    // _msg->DeclareProperty("ext_source_distance", _ext_source_distance, "Distance of the bottom of the 'screw' source from the bottom of the lateral port tube");  
-  
+    _msg->DeclareProperty("lead_distance", _lead_dist, "Distance between the two blocks of lead");
+    _msg->DeclareProperty("scint_distance", _dist_scint, "Distance between the end of the lateral port tube and the external scintillator");
+    
     _cal = new CalibrationSource();
     _cal->Construct();
   }
@@ -98,7 +99,7 @@ namespace nexus {
 
   void NextNew::BuildExtScintillator(G4ThreeVector pos)
 { 
-  G4double dist_sc = 5.*cm;
+  //G4double dist_sc = 5.*cm;
   G4double radius = 44.5/2.*mm;
   G4double length = 38.7*mm;
   
@@ -112,7 +113,7 @@ namespace nexus {
   rot.rotateY(-pi/2.);
 
   G4ThreeVector pos_scint = 
-    G4ThreeVector(pos.getX() + dist_sc, pos.getY(), pos.getZ()); 
+    G4ThreeVector(pos.getX() + length/2., pos.getY(), pos.getZ()); 
   new G4PVPlacement(G4Transform3D(rot, pos_scint), sc_logic, "NaI",
 		    _shielding_air_logic, false, 0, false);
   G4VisAttributes yellow_col = nexus::Yellow();
@@ -214,51 +215,15 @@ namespace nexus {
     */
     
     // Build NaI external scintillator
-    //    BuildExtScintillator(lat_pos);
+    BuildExtScintillator(G4ThreeVector(lat_pos.getX() + _dist_scint, lat_pos.getY(), lat_pos.getZ()));
 
     G4ThreeVector source_pos;
 
-    if (_lead_block == "COLL") {
+    if (_lead_block) {
 
-      G4double diam = 2.*mm;
       G4double offset_sub = 1.*mm;
 
-      G4Box* lead_coll_full_solid = 
-	new G4Box("LEAD_COLL", 100.*mm/2., 100.*mm/2.,  _lead_thick/2.);
-      G4Tubs* cylinder_coll_1_solid = 
-       	new G4Tubs("CYLINDER_COLL1", 0., diam/2., (_lead_thick + offset_sub)/2., 0., twopi); 
-      G4SubtractionSolid* lead_coll_1_solid =
-	new G4SubtractionSolid("LEAD_COLL1", lead_coll_full_solid, cylinder_coll_1_solid, 
-			       0 , G4ThreeVector(0.,0.,0.));
-      G4Tubs* cylinder_coll_2_solid = 
-       	new G4Tubs("CYLINDER_COLL2", 0., _cal->GetCapsuleDiameter()/2., 
-		   (_cal->GetCapsuleThickness() + offset_sub)/2., 0., twopi); 
-      G4SubtractionSolid* lead_coll_solid =
-	new G4SubtractionSolid("LEAD_COLL", lead_coll_1_solid, cylinder_coll_2_solid, 
-			       0 , G4ThreeVector(0.,0.,-_lead_thick/2. + (_cal->GetCapsuleThickness() - offset_sub)/2.));
-
-      G4LogicalVolume* lead_coll_logic =
-	new G4LogicalVolume(lead_coll_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"), "LEAD_COLL");
-      G4ThreeVector lead_coll_pos =
-	G4ThreeVector(lat_pos.getX() + _lead_thick/2., lat_pos.getY(), lat_pos.getZ());
-      new G4PVPlacement(G4Transform3D(*lat_rot, lead_coll_pos), lead_coll_logic, 
-			"LEAD_COLL", _shielding_air_logic, false, 0, true);
-
-      G4LogicalVolume* cal_logic = _cal->GetLogicalVolume();
-      source_pos =
-	G4ThreeVector(lat_pos.getX() + _lead_thick - _cal->GetCapsuleThickness()/2., lat_pos.getY(), lat_pos.getZ());
-      new G4PVPlacement(G4Transform3D(*lat_rot, source_pos), cal_logic,
-                        "SCREW_SUPPORT", _shielding_air_logic, false, 0, true);
-      
-      G4VisAttributes blue_col = nexus::Blue();
-      G4VisAttributes yel_col = nexus::Yellow();
-      //  yel_col.SetForceSolid(true);
-      //    blue_col.SetForceSolid(true);
-      lead_coll_logic->SetVisAttributes(yel_col);
-      cal_logic->SetVisAttributes(blue_col);
-     
-
-    } else if (_lead_block == "NOZZLE") {
+       // Freddy lead block around nozzle
 
       G4double lead_size_horizontal = 103.*mm;
       G4double lead_size_vertical = 100.*mm;
@@ -276,7 +241,7 @@ namespace nexus {
       G4double nozzle_lead_thick = inner_lead_thick - 5.*mm;
       
       G4double lateral_nozzle_diam = 30.*mm + 2.*3.*mm;
-      G4double offset_sub = 1.*mm;
+      // G4double offset_sub = 1.*mm;
 
       // Piece of lead around nozzle
       G4Box* lead_nozzle_solid = new G4Box("LEAD_BLOCK_NOZZLE_FULL", lead_size_horizontal/2., lead_size_vertical/2.,  nozzle_lead_thick/2.);
@@ -332,11 +297,69 @@ namespace nexus {
 	G4ThreeVector(vessel_out_diam/2. + nozzle_lead_thick + screw_lead_thick + middle_lead_thick + outer_lead_thick/2., lat_pos.getY(), lat_pos.getZ());
       new G4PVPlacement(G4Transform3D(*lat_rot, block_out_pos), lead_out_freddy_logic, "LEAD_BLOCK_OUT",
       			_shielding_air_logic, false, 0, false);
-     
-     
+      
+      // Jordi lead collimator block     
+      G4double diam = 5.*mm;     
+      G4double coll_thick = 50.*mm;
+      G4Box* lead_coll_full_solid = 
+	new G4Box("LEAD_COLL", 100.*mm/2., 100.*mm/2.,  coll_thick/2.);
+      G4Tubs* cylinder_coll_1_solid = 
+       	new G4Tubs("CYLINDER_COLL1", 0., diam/2., (coll_thick + offset_sub)/2., 0., twopi); 
+      G4SubtractionSolid* lead_coll_solid =
+	new G4SubtractionSolid("LEAD_COLL",
+                               lead_coll_full_solid, cylinder_coll_1_solid, 
+			       0 , G4ThreeVector(0.,0.,0.));
+      // G4Tubs* cylinder_coll_2_solid = 
+      //  	new G4Tubs("CYLINDER_COLL2", 0., _cal->GetCapsuleDiameter()/2., 
+      //   	   (_cal->GetCapsuleThickness() + offset_sub)/2., 0., twopi); 
+      // G4SubtractionSolid* lead_coll_solid =
+      //   new G4SubtractionSolid("LEAD_COLL", lead_coll_1_solid, cylinder_coll_2_solid, 
+      //   		       0 , G4ThreeVector(0.,0.,-_lead_thick/2. + (_cal->GetCapsuleThickness() - offset_sub)/2.));
+      G4LogicalVolume* lead_coll_logic =
+	new G4LogicalVolume(lead_coll_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"), "LEAD_COLL");
+      G4ThreeVector lead_coll_pos =
+	G4ThreeVector(block_out_pos.getX() + outer_lead_thick/2. + _lead_dist + coll_thick/2., lat_pos.getY(), lat_pos.getZ());
+      new G4PVPlacement(G4Transform3D(*lat_rot, lead_coll_pos), lead_coll_logic, 
+			"LEAD_COLL", _shielding_air_logic, false, 0, false);
+
+
+      // Jordi lead source block     
+      diam = 10.*mm;     
+      G4double source_thick = 48.*mm;
+      G4Box* lead_source_full_solid = 
+	new G4Box("LEAD_SOURCE", 100.*mm/2., 100.*mm/2.,  source_thick/2.);
+      G4Tubs* cylinder_coll_2_solid = 
+       	new G4Tubs("CYLINDER_COLL2", 0., diam/2., (source_thick + offset_sub)/2., 0., twopi); 
+      G4SubtractionSolid* lead_source_solid =
+	new G4SubtractionSolid("LEAD_SOURCE",
+                               lead_source_full_solid, cylinder_coll_2_solid, 
+			       0 , G4ThreeVector(0.,0.,0.));
+   
+      G4LogicalVolume* lead_source_logic =
+	new G4LogicalVolume(lead_source_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"), "LEAD_SOURCE");
+      G4ThreeVector lead_source_pos =
+	G4ThreeVector(lead_coll_pos.getX() + coll_thick/2. + source_thick/2., lat_pos.getY(), lat_pos.getZ());
+      new G4PVPlacement(G4Transform3D(*lat_rot, lead_source_pos),
+                        lead_source_logic, 
+			"LEAD_SOURCE", _shielding_air_logic, false, 0, false);
+      
+
+      G4LogicalVolume* cal_logic = _cal->GetLogicalVolume();
+      source_pos =
+	G4ThreeVector(lead_source_pos.getX() + source_thick/2. - _cal->GetCapsuleThickness()/2., lat_pos.getY(), lat_pos.getZ());
+      new G4PVPlacement(G4Transform3D(*lat_rot, source_pos), cal_logic,
+                        "SCREW_SUPPORT", _shielding_air_logic, false, 0, false);
+      
       G4VisAttributes blue_col = nexus::Blue();
       G4VisAttributes yel_col = nexus::Yellow();
       G4VisAttributes red_col = nexus::Red();
+      //  yel_col.SetForceSolid(true);
+      //  blue_col.SetForceSolid(true);
+      lead_coll_logic->SetVisAttributes(yel_col);
+      lead_source_logic->SetVisAttributes(red_col);
+      cal_logic->SetVisAttributes(blue_col);
+     
+  
       G4VisAttributes green_col = nexus::LightGreen();
       yel_col.SetForceSolid(true);
       blue_col.SetForceSolid(true);

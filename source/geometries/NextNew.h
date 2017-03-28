@@ -82,8 +82,9 @@ namespace nexus {
     G4GenericMessenger* _msg; 
 
     // Kind of block of lead on the lateral port placed to shield source
-    G4String _lead_block;
-    G4double _lead_thick;
+    G4bool _lead_block; ///< true if the two lead blocks inlateral port are placed as shielding
+    G4double _lead_dist; ///< distance between the two pieces of lead
+    G4double _dist_scint; ///< distance from the end of lateral port tube and scintillator
     
     // Incapsulated calibration source volume
     CalibrationSource* _cal;
