@@ -1,3 +1,12 @@
+tag v5_01_17 -4 Apr 2017
+	- Time binning of PMTs passed as a configuration parameter
+	- Fixed bug in the drift length calculation in the EL gap
+	- Ratio mu+/mu- added in muon generator
+	- Size of EL gap changed to 6 mm, according to the new configuration of the quartz plate
+	- Bug fixed in the simulation of the NEW axial port
+	- Na22 generator changed to include a probability of ~10% of not having beta+ decay
+	- First version of Jordi lead shielding + Freddy shielding added to the lateral port
+	
 tag v5_01_16 -20 Feb 2017
 	- Fast and slow components of scintillation in GXe changed to most
 	recent values

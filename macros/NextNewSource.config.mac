@@ -13,8 +13,7 @@
 /Geometry/NextNew/elfield false
 ### For sodium source: Na, for thorium source: Th
 /Geometry/CalibrationSource/source Na
-/Geometry/NextNew/lead_block COLL
-/Geometry/NextNew/lead_thickness 200. mm
+/Geometry/NextNew/lead_block true
 
 /Geometry/Next100/shielding_vis false
 /Geometry/NextNew/table_vis false
