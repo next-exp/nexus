@@ -62,7 +62,7 @@ namespace nexus {
     _source_z_pos = _capsule_thick/2. - 0.5 * mm - _source_thick/2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., _source_z_pos),
 		      source_logic, "SCREW_SOURCE", 
-		      screw_tube_logic, false, 0, true);
+		      screw_tube_logic, false, 0, false);
 
     
     G4VisAttributes vis_green = nexus::LightGreen();

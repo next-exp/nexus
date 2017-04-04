@@ -126,7 +126,7 @@ void NextNewOpticalGeometry::Construct()
   G4RotationMatrix rot;
   rot.rotateY(_rot_angle);
   new G4PVPlacement(G4Transform3D(rot, _displ), gas_logic,
-		    "GAS", lab_logic, false, 0, true); 
+		    "GAS", lab_logic, false, 0, false); 
 
   // Set this volume as the wrapper for the whole geometry 
   // (i.e., this is the volume that will be placed in the world)

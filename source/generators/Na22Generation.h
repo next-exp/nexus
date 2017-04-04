@@ -4,7 +4,6 @@
 #include <G4VPrimaryGenerator.hh>
 
 class G4Event;
-class G4ParticleDefinition;
 class G4GenericMessenger;
 
 namespace nexus {
@@ -37,23 +36,7 @@ namespace nexus {
     G4GenericMessenger* _msg;
     const BaseGeometry* _geom;
 
-    G4double _energy_min; ///< Minimum possible kinetic energy for annihilation particle
-    G4double _energy_max; ///< Maximum possible kinetic energy for annihilation particle
-    G4double _energy_min_dis; ///< Minimum possible kinetic energy for disexcitation gamma
-    G4double _energy_max_dis; ///< Maximum possible kinetic energy for disexcitation gamma
-    
-    G4String _solid_angle;
-    G4String _solid_angle_dis;
-
-    G4bool _direction_is_random;
-    G4bool _direction_dis_is_random;
-    G4ThreeVector _momentum_direction; 
-    G4ThreeVector _momentum_direction_dis; 
-
     G4String _region;
-    G4ParticleDefinition* _particle_dis_definition;
-    G4ParticleDefinition* _particle_definition;
-
     
   };
 
