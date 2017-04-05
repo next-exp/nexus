@@ -349,22 +349,35 @@ namespace nexus {
 	G4ThreeVector(lead_source_pos.getX() + source_thick/2. - _cal->GetCapsuleThickness()/2., lat_pos.getY(), lat_pos.getZ());
       new G4PVPlacement(G4Transform3D(*lat_rot, source_pos), cal_logic,
                         "SCREW_SUPPORT", _shielding_air_logic, false, 0, false);
+
+      // Aluminium protection behind the source
+
+      G4double alum_thick = 9. * mm;
+      G4Box* protection_solid = 
+	new G4Box("SOURCE_PROTECTION", 100.*mm/2., 100.*mm/2.,  alum_thick/2.);
+      G4LogicalVolume* alum_logic =
+	new G4LogicalVolume(protection_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Al"), "SOURCE_PROTECTION");
+       G4ThreeVector alum_pos =
+	G4ThreeVector(lead_source_pos.getX() + source_thick + alum_thick/2., lat_pos.getY(), lat_pos.getZ());
+      new G4PVPlacement(G4Transform3D(*lat_rot, alum_pos), alum_logic,
+                        "SOURCE_PROTECTION", _shielding_air_logic, false, 0, false);
       
       G4VisAttributes blue_col = nexus::Blue();
       G4VisAttributes yel_col = nexus::Yellow();
       G4VisAttributes red_col = nexus::Red();
+      G4VisAttributes green_col = nexus::LightGreen();
       //  yel_col.SetForceSolid(true);
       //  blue_col.SetForceSolid(true);
+      green_col.SetForceSolid(true);
       lead_coll_logic->SetVisAttributes(yel_col);
       lead_source_logic->SetVisAttributes(red_col);
       cal_logic->SetVisAttributes(blue_col);
+      alum_logic->SetVisAttributes(green_col);
      
-  
-      G4VisAttributes green_col = nexus::LightGreen();
+      
       yel_col.SetForceSolid(true);
       blue_col.SetForceSolid(true);
-      red_col.SetForceSolid(true);
-      green_col.SetForceSolid(true);
+      red_col.SetForceSolid(true);     
       lead_out_freddy_logic->SetVisAttributes(green_col);
       lead_middle_freddy_logic->SetVisAttributes(blue_col);
       lead_screw_freddy_logic->SetVisAttributes(red_col);
