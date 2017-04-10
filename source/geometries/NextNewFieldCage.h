@@ -110,7 +110,7 @@ namespace nexus {
     // Vertex generators
     CylinderPointSampler* _drift_tube_gen;
     CylinderPointSampler* _hdpe_tube_gen;
-    CylinderPointSampler* _buffer_tube_gen;
+    //    CylinderPointSampler* _buffer_tube_gen;
     CylinderPointSampler* _active_gen;
     CylinderPointSampler* _anode_quartz_gen;
     CylinderPointSampler* _cathode_gen;

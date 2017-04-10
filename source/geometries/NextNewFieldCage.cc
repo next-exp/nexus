@@ -196,7 +196,7 @@ namespace nexus {
   {
     delete _drift_tube_gen;
     delete _hdpe_tube_gen;
-    delete _buffer_tube_gen;
+    //  delete _buffer_tube_gen;
     delete _active_gen;
     delete _anode_quartz_gen;
     delete _cathode_gen;   
@@ -524,8 +524,9 @@ void NextNewFieldCage::BuildBuffer()
 
     // G4cout << "Light tube drift starts in " << drift_tube_z_pos - _tube_length_drift/2.  << 
     //   " and ends in " << drift_tube_z_pos + _tube_length_drift/2. << G4endl;
-    
-    //G4double tube_length_buffer = _buffer_length - _cathode_gap/2.;
+
+    // Buffer light tube removed because it's not there
+    /*
     G4double buffer_tube_z_pos = 
       - _dist_feedthroughs/2. - _cathode_gap/2. - _buffer_tube_length/2.;
     G4Tubs* buffer_tube_solid =
@@ -536,7 +537,7 @@ void NextNewFieldCage::BuildBuffer()
     new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_tube_z_pos), 
 		      buffer_tube_logic, "BUFFER_TUBE", _mother_logic, 
 		      false, 0, false);
-
+    */
   // G4cout << "Buffer tube drift starts in " << buffer_tube_z_pos - _buffer_tube_length/2.  << 
   //     " and ends in " << buffer_tube_z_pos + _buffer_tube_length/2. << G4endl;
 
@@ -548,7 +549,7 @@ void NextNewFieldCage::BuildBuffer()
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), 
 		      tpb_drift_logic, "DRIFT_TPB", drift_tube_logic, 
 		      false, 0, false);
-    
+    /*
     G4Tubs* tpb_buffer_solid =
       new G4Tubs("BUFFER_TPB", _tube_in_diam/2.,  _tube_in_diam/2. + _tpb_thickness,
     		 _buffer_tube_length/2., 0, twopi);    
@@ -557,7 +558,8 @@ void NextNewFieldCage::BuildBuffer()
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), 
 		      tpb_buffer_logic, "BUFFER_TPB", buffer_tube_logic, 
 		      false, 0, false);
-
+    */
+    
     /// OPTICAL SURFACE PROPERTIES    ////////
     G4OpticalSurface* reflector_opt_surf = new G4OpticalSurface("REFLECTOR");
     reflector_opt_surf->SetType(dielectric_metal);
@@ -567,29 +569,46 @@ void NextNewFieldCage::BuildBuffer()
     reflector_opt_surf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
     new G4LogicalSkinSurface("DRIFT_TUBE", drift_tube_logic, 
     			     reflector_opt_surf);
-    new G4LogicalSkinSurface("BUFFER_TUBE", buffer_tube_logic, 
-    			     reflector_opt_surf);
+    // new G4LogicalSkinSurface("BUFFER_TUBE", buffer_tube_logic, 
+    // 			     reflector_opt_surf);
+
+    // We set the reflectivity of HDPE to 50% for the moment
+    G4OpticalSurface* abs_opt_surf = new G4OpticalSurface("ABSORBER");
+    abs_opt_surf->SetType(dielectric_metal);
+    abs_opt_surf->SetModel(unified);
+    abs_opt_surf->SetFinish(ground);
+    abs_opt_surf->SetSigmaAlpha(0.1);
+    G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
+    const G4int REFL_NUMENTRIES = 6;
+    G4double ENERGIES[REFL_NUMENTRIES] = 
+      {1.0*eV, 2.8*eV, 4.*eV, 6.*eV, 7.2*eV, 30.*eV};
+    G4double REFLECTIVITY[REFL_NUMENTRIES] = {0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
+    mpt->AddProperty("REFLECTIVITY", ENERGIES, REFLECTIVITY, REFL_NUMENTRIES);
+
+    abs_opt_surf->SetMaterialPropertiesTable(mpt);
+    new G4LogicalSkinSurface("HDPE_TUBE", hdpe_tube_logic, 
+                             abs_opt_surf);
 
     /// SETTING VISIBILITIES   //////////
     if (_visibility) {
       G4VisAttributes tube_col = nexus::LightBlue();    
       tube_col.SetForceSolid(true);
       drift_tube_logic->SetVisAttributes(tube_col);
-      buffer_tube_logic->SetVisAttributes(tube_col);
+      //    buffer_tube_logic->SetVisAttributes(tube_col);
       G4VisAttributes hdpe_col = nexus::DarkGreen();    
       //     hdpe_col.SetForceSolid(true);
       hdpe_tube_logic->SetVisAttributes(hdpe_col);
       G4VisAttributes tpb_col = nexus::DarkGreen();
       tpb_drift_logic->SetVisAttributes(tpb_col);
-      tpb_buffer_logic->SetVisAttributes(tpb_col);
+      //   tpb_buffer_logic->SetVisAttributes(tpb_col);
       G4VisAttributes ring_col = nexus::White();
       ring_col.SetForceSolid(true);
       ring_logic->SetVisAttributes(ring_col);
     } else {
       drift_tube_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      buffer_tube_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      //  buffer_tube_logic->SetVisAttributes(G4VisAttributes::Invisible);
       tpb_drift_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      tpb_buffer_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      //  tpb_buffer_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
     /// VERTEX GENERATORS   //////////
@@ -607,9 +626,9 @@ void NextNewFieldCage::BuildBuffer()
       new CylinderPointSampler(_tube_in_diam/2., _tube_length_drift, _tube_thickness,
     			       0., G4ThreeVector (0., 0., drift_tube_z_pos));
     
-    _buffer_tube_gen  = 
-      new CylinderPointSampler(_tube_in_diam/2., _buffer_tube_length, _tube_thickness,
-    			       0., G4ThreeVector (0., 0., buffer_tube_z_pos));
+    // _buffer_tube_gen  = 
+    //   new CylinderPointSampler(_tube_in_diam/2., _buffer_tube_length, _tube_thickness,
+    // 			       0., G4ThreeVector (0., 0., buffer_tube_z_pos));
 
     _anode_quartz_gen = 
       new CylinderPointSampler(0., _anode_quartz_thickness, _anode_quartz_diam/2., 
@@ -633,9 +652,9 @@ void NextNewFieldCage::BuildBuffer()
     else if (region == "HDPE_TUBE") {
       vertex = _hdpe_tube_gen->GenerateVertex("BODY_VOL");
     }
-    else if (region == "BUFFER_TUBE") {
-      vertex = _buffer_tube_gen->GenerateVertex("BODY_VOL");
-    }
+    // else if (region == "BUFFER_TUBE") {
+    //   vertex = _buffer_tube_gen->GenerateVertex("BODY_VOL");
+    // }
     else if (region == "ACTIVE") {
       vertex = _active_gen->GenerateVertex("BODY_VOL");
     } 
