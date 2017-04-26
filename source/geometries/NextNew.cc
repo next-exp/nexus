@@ -122,8 +122,6 @@ namespace nexus {
  
   G4LogicalVolume* sc_logic = _naI->GetLogicalVolume();
 
-  G4double length = _naI->GetLength();
-
   G4ThreeVector pos_scint = 
     G4ThreeVector(pos.getX(), pos.getY(), pos.getZ()); 
   new G4PVPlacement(G4Transform3D(rot, pos_scint), sc_logic, "NaI",
@@ -251,12 +249,10 @@ namespace nexus {
       CollProtection coll_protection;
       coll_protection.Construct();
       G4LogicalVolume* coll_protection_logic = coll_protection.GetLogicalVolume();
-      G4double coll_protection_centre = coll_protection.GetAxisCentre();
 
       CollSupport coll_support;
       coll_support.Construct();
       G4LogicalVolume* coll_support_logic = coll_support.GetLogicalVolume();
-      G4double coll_support_centre = coll_support.GetAxisCentre();
 
       if (_calib_pos == "lateral") {
         

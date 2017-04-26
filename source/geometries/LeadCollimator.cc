@@ -32,7 +32,6 @@ namespace nexus {
       G4double lead_size_horizontal = 103.*mm;
       G4double lead_size_vertical = 100.*mm;
 
-      G4double vessel_out_diam = 664*mm;
       G4double lateral_nozzle_flange_diam = 75.*mm;
       G4double lateral_port_tube_diam = 10.*mm;
       G4double lateral_port_tube_thick = 1.*mm;
