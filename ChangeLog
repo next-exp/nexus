@@ -1,13 +1,22 @@
-tag v5_01_17 -4 Apr 2017
-	- Time binning of PMTs passed as a configuration parameter
-	- Fixed bug in the drift length calculation in the EL gap
-	- Ratio mu+/mu- added in muon generator
+tag v5_02_00 - 26 Apr 2017
+	- Buffer tube eliminated and reflectivity of hdpe set to 50%.
+	- Lead collimator and shielding and external scintillator
+	encapsulated as classes.
+	- Possibility of placing all the calibration system (lead
+	collimator, scintillator and source) in the lateral or axial port
+	via configuration parameters.
+	- Example of configuration files for calibration events added.
+	
+tag v5_01_17 - 4 Apr 2017
+	- Time binning of PMTs passed as a configuration parameter.
+	- Fixed bug in the drift length calculation in the EL gap.
+	- Ratio mu+/mu- added in muon generator.
 	- Size of EL gap changed to 6 mm, according to the new configuration of the quartz plate
 	- Bug fixed in the simulation of the NEW axial port
-	- Na22 generator changed to include a probability of ~10% of not having beta+ decay
-	- First version of Jordi lead shielding + Freddy shielding added to the lateral port
+	- Na22 generator changed to include a probability of ~10% of not having beta+ decay.
+	- First version of Jordi lead shielding + Freddy shielding added to the lateral port.
 	
-tag v5_01_16 -20 Feb 2017
+tag v5_01_16 - 20 Feb 2017
 	- Fast and slow components of scintillation in GXe changed to most
 	recent values
 	- Composition of depleted Xe changed to second bottle at LSC
@@ -22,11 +31,11 @@ tag v5_01_14 -2 Jan 2017
 	- Axial port tube for calibration sources simulated, together with
 	the air inside it.
 	
-tag v5_01_13 -29 Dec 2016
+tag v5_01_13 - 29 Dec 2016
 	- Bug fixed in the generation of those vertices where the volume check was made with the vertex in
 	the local reference system  and not in the global one. 
 	 
-tag v5_01_12 -16 Dec 2016
+tag v5_01_12 - 16 Dec 2016
 	- Lead block added as a configurable parameter to shield the
 	lateral port.
 	- Position of internal source configurable via parameter.
@@ -34,7 +43,7 @@ tag v5_01_12 -16 Dec 2016
 	- Fix in the AD_HOC region: the vertex must be in the drift length
 	reference system
 
-tag v5_01_11 -23 Nov 2016
+tag v5_01_11 - 23 Nov 2016
 	- NaI scintillator added to the NEW geometry as a sensitive
 	detector
 	- First event ID of a job can be passed as a configuration
@@ -42,10 +51,10 @@ tag v5_01_11 -23 Nov 2016
 	- Muon generator surface added to NEW and NEXT100
 	- Neutron generator with fixed energy added.
 	
-tag v5_01_10 -28 Oct 2016
+tag v5_01_10 - 28 Oct 2016
 	- Pressure of 7 bar added to list
 	
-tag v5_01_09 -12 Oct 2016
+tag v5_01_09 - 12 Oct 2016
 	- Possibility of using Na or Th source via configuration parameter
 	
 tag v5_01_08 - 05 Oct 2016

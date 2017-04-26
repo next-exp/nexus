@@ -23,6 +23,11 @@
 #include "Visibilities.h"
 #include "IonizationSD.h"
 #include "CalibrationSource.h"
+#include "NaIScintillator.h"
+#include "SurroundingAir.h"
+#include "LeadCollimator.h"
+#include "CollProtection.h"
+#include "CollSupport.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -54,7 +59,10 @@ namespace nexus {
     _rot_angle(pi),
     _lead_block(false),
     _lead_dist(0.*mm),
-    _dist_scint(20.*cm)
+    _ext_scint(false),
+    _calib_pos(""),
+    _dist_scint(25.*cm),
+    _lead_castle(true)
     //   _ext_source_distance(0.*mm)
     // Buffer gas dimensions
   {
@@ -75,10 +83,20 @@ namespace nexus {
     _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
     _msg->DeclareProperty("lead_block", _lead_block, "Block of lead on the lateral port");
     _msg->DeclareProperty("lead_distance", _lead_dist, "Distance between the two blocks of lead");
+    _msg->DeclareProperty("ext_scint", _ext_scint, "Placement of external NaI scintillator");
+    _msg->DeclareProperty("calib_pos", _calib_pos, "Where calibration source is placed (lateral/axial)");
     _msg->DeclareProperty("scint_distance", _dist_scint, "Distance between the end of the lateral port tube and the external scintillator");
+    _msg->DeclareProperty("lead_castle", _lead_castle, "Placement of lead castle");
     
     _cal = new CalibrationSource();
     _cal->Construct();
+
+    _naI = new NaIScintillator();
+    _naI->Construct();
+
+    _air = new SurroundingAir();
+
+    _coll = new LeadCollimator();
   }
 
   NextNew::~NextNew()
@@ -93,42 +111,23 @@ namespace nexus {
     delete _inner_elements;
     
     delete _lab_gen;
+    delete _lat_source_gen;
+    delete _axial_source_gen;
 
     delete _muon_gen;
   }
 
-  void NextNew::BuildExtScintillator(G4ThreeVector pos)
+  void NextNew::BuildExtScintillator(G4ThreeVector pos, const G4RotationMatrix& rot)
 { 
-  //G4double dist_sc = 5.*cm;
-  G4double radius = 44.5/2.*mm;
-  G4double length = 38.7*mm;
-  
-  G4Tubs* sc_solid = new G4Tubs("NaI", 0., radius, length/2., 0., twopi);
-  G4Material* mat = 
-    G4NistManager::Instance()->FindOrBuildMaterial("G4_SODIUM_IODIDE");
-  G4LogicalVolume* sc_logic = new G4LogicalVolume(sc_solid, mat, "NaI");
-  sc_logic->SetUserLimits(new G4UserLimits(1.*mm));
+ 
+  G4LogicalVolume* sc_logic = _naI->GetLogicalVolume();
 
-  G4RotationMatrix rot;
-  rot.rotateY(-pi/2.);
+  G4double length = _naI->GetLength();
 
   G4ThreeVector pos_scint = 
-    G4ThreeVector(pos.getX() + length/2., pos.getY(), pos.getZ()); 
+    G4ThreeVector(pos.getX(), pos.getY(), pos.getZ()); 
   new G4PVPlacement(G4Transform3D(rot, pos_scint), sc_logic, "NaI",
-		    _shielding_air_logic, false, 0, false);
-  G4VisAttributes yellow_col = nexus::Yellow();
-  yellow_col.SetForceSolid(true);
-  sc_logic->SetVisAttributes(yellow_col);
-  
-
-  // NaI is defined as an ionization sensitive volume.
-  G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
-  G4String detname = "/NEXTNEW/NAI";
-  IonizationSD* ionisd = new IonizationSD(detname);
-  ionisd->IncludeInTotalEnergyDeposit(false);
-  sdmgr->AddNewDetector(ionisd);
-  sc_logic->SetSensitiveDetector(ionisd);
-  
+		    _shielding_air_logic, false, 0, false);  
 
 }
 
@@ -148,12 +147,17 @@ namespace nexus {
     // Set this volume as the wrapper for the whole geometry 
     // (i.e., this is the volume that will be placed in the world)
     this->SetLogicalVolume(_lab_logic);
-    
-    //SHIELDING
-    _shielding->Construct();
-    G4LogicalVolume* shielding_logic = _shielding->GetLogicalVolume();
 
-    _shielding_air_logic = _shielding->GetAirLogicalVolume();
+    G4LogicalVolume* shielding_logic;
+    if (_lead_castle) {
+      //SHIELDING
+      _shielding->Construct();
+      shielding_logic = _shielding->GetLogicalVolume();
+      _shielding_air_logic = _shielding->GetAirLogicalVolume();
+    } else {
+      _air->Construct();
+      _shielding_air_logic = _air->GetLogicalVolume();
+    }
   
     //PEDESTAL
     _pedestal->SetLogicalVolume(_shielding_air_logic);
@@ -189,6 +193,10 @@ namespace nexus {
     G4RotationMatrix* lat_rot = new G4RotationMatrix();
     lat_rot->rotateY(-pi/2);
 
+    G4ThreeVector axial_pos = _vessel->GetAxialExtSourcePosition(); // this is the position of the end of the port tube
+    G4RotationMatrix* ax_rot = new G4RotationMatrix();
+    ax_rot->rotateY(2*pi);
+
     /*
    /// In principle we shouldn't use this source anymore, but never say never...
     Na22Source* na22 = new Na22Source();
@@ -215,193 +223,113 @@ namespace nexus {
     */
     
     // Build NaI external scintillator
-    BuildExtScintillator(G4ThreeVector(lat_pos.getX() + _dist_scint, lat_pos.getY(), lat_pos.getZ()));
+
+    if (_ext_scint) {
+      if (_calib_pos == "lateral") {
+        // G4RotationMatrix rot;
+        // rot.rotateY(-pi/2.);
+        BuildExtScintillator(G4ThreeVector(lat_pos.getX() + _naI->GetLength()/2. + _dist_scint,
+                                           lat_pos.getY(), lat_pos.getZ()), *lat_rot);
+      } else if (_calib_pos == "axial") {
+        //    G4RotationMatrix rot_ax;
+        BuildExtScintillator(G4ThreeVector(axial_pos.getX(), axial_pos.getY(),
+                                           axial_pos.getZ() - _dist_scint - _naI->GetLength()/2.), *ax_rot);
+      } else {
+         G4Exception("[NextNew]", "Construct()", FatalException,
+		  "The placement of external scintillator must be lateral or axial!");     
+      }
+    }
 
     G4ThreeVector source_pos;
 
     if (_lead_block) {
 
-      G4double offset_sub = 1.*mm;
+      _coll->Construct();
+      G4LogicalVolume* coll_logic = _coll->GetLogicalVolume();
+      G4double coll_centre = _coll->GetAxisCentre();
 
-       // Freddy lead block around nozzle
+      CollProtection coll_protection;
+      coll_protection.Construct();
+      G4LogicalVolume* coll_protection_logic = coll_protection.GetLogicalVolume();
+      G4double coll_protection_centre = coll_protection.GetAxisCentre();
 
-      G4double lead_size_horizontal = 103.*mm;
-      G4double lead_size_vertical = 100.*mm;
+      CollSupport coll_support;
+      coll_support.Construct();
+      G4LogicalVolume* coll_support_logic = coll_support.GetLogicalVolume();
+      G4double coll_support_centre = coll_support.GetAxisCentre();
 
-      G4double vessel_out_diam = 664*mm;
-      G4double lateral_nozzle_flange_diam = 75.*mm;
-      G4double lateral_port_tube_diam = 10.*mm;
-      G4double lateral_port_tube_thick = 1.*mm;
+      if (_calib_pos == "lateral") {
+        
+        G4double vessel_out_diam = 664*mm;
+        G4ThreeVector pos(vessel_out_diam/2. + coll_centre, lat_pos.getY(), lat_pos.getZ());
+        new G4PVPlacement(G4Transform3D(*lat_rot, pos), coll_logic, "LEAD_COLLIMATOR",
+                          _shielding_air_logic, false, 0, false);
 
-      G4double middle_lead_thick = 50.4*mm;
-      G4double outer_and_middle_lead_thick = 75.3*mm;
-      
-      G4double inner_lead_thick = 16.*mm;
-      G4double screw_lead_thick = 5.*mm;
-      G4double nozzle_lead_thick = inner_lead_thick - 5.*mm;
-      
-      G4double lateral_nozzle_diam = 30.*mm + 2.*3.*mm;
-      // G4double offset_sub = 1.*mm;
+        G4ThreeVector pos_protection(vessel_out_diam/2. + _coll->GetLength() + coll_protection.GetAxisCentre(),
+                                     lat_pos.getY(), lat_pos.getZ());
+        new G4PVPlacement(G4Transform3D(*lat_rot, pos_protection), coll_protection_logic, "SOURCE_PROTECTION",
+                          _shielding_air_logic, false, 0, false);
 
-      // Piece of lead around nozzle
-      G4Box* lead_nozzle_solid = new G4Box("LEAD_BLOCK_NOZZLE_FULL", lead_size_horizontal/2., lead_size_vertical/2.,  nozzle_lead_thick/2.);
-      G4Tubs* lateral_nozzle_solid = 
-       	new G4Tubs("NOZZLE_INNER", 0., lateral_nozzle_diam/2., (nozzle_lead_thick + offset_sub)/2., 0., twopi);    
-      G4SubtractionSolid* lead_nozzle_freddy_solid =
-	new G4SubtractionSolid("LEAD_BLOCK_NOZZLE", lead_nozzle_solid, lateral_nozzle_solid, 0 , G4ThreeVector(0.,0.,0.));
-      G4LogicalVolume* lead_nozzle_freddy_logic =
-	new G4LogicalVolume(lead_nozzle_freddy_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"), "LEAD_BLOCK_NOZZLE");
-      G4ThreeVector block_nozzle_pos =
-       	G4ThreeVector(vessel_out_diam/2. + nozzle_lead_thick/2., lat_pos.getY(), lat_pos.getZ());
-      new G4PVPlacement(G4Transform3D(*lat_rot, block_nozzle_pos), lead_nozzle_freddy_logic, "LEAD_BLOCK_NOZZLE",
-			_shielding_air_logic, false, 0, false);
+        G4LogicalVolume* cal_logic = _cal->GetLogicalVolume();
+        source_pos = G4ThreeVector(vessel_out_diam/2. + _coll->GetLength() - _cal->GetCapsuleThickness()/2.,
+                                   lat_pos.getY(), lat_pos.getZ());
+        new G4PVPlacement(G4Transform3D(*lat_rot, source_pos), cal_logic,
+                          "SCREW_SUPPORT", _shielding_air_logic, false, 0, false);
+        
+      } else if (_calib_pos == "axial") {
+        
+        G4ThreeVector pos(axial_pos.getX(), axial_pos.getY(), axial_pos.getZ() - coll_centre);
+        // new G4PVPlacement(0, pos, coll_logic, "LEAD_COLLIMATOR",
+        //                   _shielding_air_logic, false, 0, true);
+        G4ThreeVector pos_protection(axial_pos.getX(), axial_pos.getY(),
+                                     axial_pos.getZ() - _coll->GetLength() - coll_protection.GetAxisCentre());
+        new G4PVPlacement(0, pos_protection, coll_protection_logic, "SOURCE_PROTECTION",
+                          _shielding_air_logic, false, 0, false);
+        G4ThreeVector pos_support(axial_pos.getX(), axial_pos.getY() - coll_support.GetYDisplacement(),
+                                     axial_pos.getZ() + coll_support.GetAxisCentre());
+        new G4PVPlacement(0, pos_support, coll_support_logic, "SOURCE_SUPPORT",
+                          _shielding_air_logic, false, 0, false);
 
-      // Piece of lead around screws
-      G4Box* lead_screw_flange_solid = new G4Box("LEAD_BLOCK_SCREW_FLANGE_FULL", lead_size_horizontal/2., lead_size_vertical/2.,  screw_lead_thick/2.);
-      G4Tubs* screw_flange_solid = 
-      	new G4Tubs("SCREW_FLANGE_INNER", 0., lateral_nozzle_flange_diam/2., (screw_lead_thick + offset_sub)/2., 0., twopi);      
-      G4SubtractionSolid* lead_screw_freddy_solid =
-       	new G4SubtractionSolid("LEAD_BLOCK_SCREW_FLANGE", lead_screw_flange_solid, screw_flange_solid, 0 , G4ThreeVector(0., 0., 0.));
-      G4LogicalVolume* lead_screw_freddy_logic =
-	new G4LogicalVolume(lead_screw_freddy_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"), "LEAD_BLOCK_SCREW_FLANGE");
-      G4ThreeVector block_screw_flange_pos =
-	G4ThreeVector(vessel_out_diam/2. + nozzle_lead_thick + screw_lead_thick/2., lat_pos.getY(), lat_pos.getZ());
-      new G4PVPlacement(G4Transform3D(*lat_rot, block_screw_flange_pos),lead_screw_freddy_logic,"LEAD_BLOCK_SCREW_FLANGE",
-			_shielding_air_logic, false, 0, false);
-
-       // Middle piece of lead
-      G4Box* lead_middle_solid = new G4Box("LEAD_BLOCK_MIDDLE_FULL", lead_size_horizontal/2., lead_size_vertical/2.,  middle_lead_thick/2.);
-      G4Tubs* lateral_port_tube_middle_solid = 
-	new G4Tubs("LAT_PORT_TUBE_MIDDLE", 0., lateral_nozzle_flange_diam/2., (middle_lead_thick + offset_sub)/2., 0., twopi);
-      G4SubtractionSolid* lead_middle_freddy_solid =
-	new G4SubtractionSolid("LEAD_BLOCK_MIDDLE", lead_middle_solid, lateral_port_tube_middle_solid, 0 , G4ThreeVector(0.,0.,0.));
-      G4LogicalVolume* lead_middle_freddy_logic =
-	new G4LogicalVolume(lead_middle_freddy_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"), "LEAD_BLOCK");
-      G4ThreeVector block_middle_pos =
-	G4ThreeVector(vessel_out_diam/2. + nozzle_lead_thick + screw_lead_thick + middle_lead_thick/2., lat_pos.getY(), lat_pos.getZ());
-      new G4PVPlacement(G4Transform3D(*lat_rot, block_middle_pos), lead_middle_freddy_logic, "LEAD_BLOCK_MIDDLE",
-			_shielding_air_logic, false, 0, false);
-
- 
-      // Outer piece of lead
-      G4double outer_lead_thick = outer_and_middle_lead_thick- middle_lead_thick;
-      G4Box* lead_out_solid =
-	new G4Box("LEAD_BLOCK_OUT_FULL", lead_size_horizontal/2., lead_size_vertical/2., outer_lead_thick/2.);
-      G4Tubs* lateral_port_tube_out_solid = 
-      	new G4Tubs("LAT_PORT_TUBE_OUT", 0., (lateral_port_tube_diam + 2.*lateral_port_tube_thick)/2., (outer_lead_thick + offset_sub)/2., 0., twopi);
-      G4SubtractionSolid* lead_out_freddy_solid =
-	new G4SubtractionSolid("LEAD_BLOCK_OUT", lead_out_solid, lateral_port_tube_out_solid, 0 , G4ThreeVector(0.,0.,0.));
-      G4LogicalVolume* lead_out_freddy_logic =
-	new G4LogicalVolume(lead_out_freddy_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"), "LEAD_BLOCK");
-      G4ThreeVector block_out_pos =
-	G4ThreeVector(vessel_out_diam/2. + nozzle_lead_thick + screw_lead_thick + middle_lead_thick + outer_lead_thick/2., lat_pos.getY(), lat_pos.getZ());
-      new G4PVPlacement(G4Transform3D(*lat_rot, block_out_pos), lead_out_freddy_logic, "LEAD_BLOCK_OUT",
-      			_shielding_air_logic, false, 0, false);
-      
-      // Jordi lead collimator block     
-      G4double diam = 5.*mm;     
-      G4double coll_thick = 50.*mm;
-      G4Box* lead_coll_full_solid = 
-	new G4Box("LEAD_COLL", 100.*mm/2., 100.*mm/2.,  coll_thick/2.);
-      G4Tubs* cylinder_coll_1_solid = 
-       	new G4Tubs("CYLINDER_COLL1", 0., diam/2., (coll_thick + offset_sub)/2., 0., twopi); 
-      G4SubtractionSolid* lead_coll_solid =
-	new G4SubtractionSolid("LEAD_COLL",
-                               lead_coll_full_solid, cylinder_coll_1_solid, 
-			       0 , G4ThreeVector(0.,0.,0.));
-      // G4Tubs* cylinder_coll_2_solid = 
-      //  	new G4Tubs("CYLINDER_COLL2", 0., _cal->GetCapsuleDiameter()/2., 
-      //   	   (_cal->GetCapsuleThickness() + offset_sub)/2., 0., twopi); 
-      // G4SubtractionSolid* lead_coll_solid =
-      //   new G4SubtractionSolid("LEAD_COLL", lead_coll_1_solid, cylinder_coll_2_solid, 
-      //   		       0 , G4ThreeVector(0.,0.,-_lead_thick/2. + (_cal->GetCapsuleThickness() - offset_sub)/2.));
-      G4LogicalVolume* lead_coll_logic =
-	new G4LogicalVolume(lead_coll_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"), "LEAD_COLL");
-      G4ThreeVector lead_coll_pos =
-	G4ThreeVector(block_out_pos.getX() + outer_lead_thick/2. + _lead_dist + coll_thick/2., lat_pos.getY(), lat_pos.getZ());
-      new G4PVPlacement(G4Transform3D(*lat_rot, lead_coll_pos), lead_coll_logic, 
-			"LEAD_COLL", _shielding_air_logic, false, 0, false);
-
-
-      // Jordi lead source block     
-      diam = 10.*mm;     
-      G4double source_thick = 48.*mm;
-      G4Box* lead_source_full_solid = 
-	new G4Box("LEAD_SOURCE", 100.*mm/2., 100.*mm/2.,  source_thick/2.);
-      G4Tubs* cylinder_coll_2_solid = 
-       	new G4Tubs("CYLINDER_COLL2", 0., diam/2., (source_thick + offset_sub)/2., 0., twopi); 
-      G4SubtractionSolid* lead_source_solid =
-	new G4SubtractionSolid("LEAD_SOURCE",
-                               lead_source_full_solid, cylinder_coll_2_solid, 
-			       0 , G4ThreeVector(0.,0.,0.));
-   
-      G4LogicalVolume* lead_source_logic =
-	new G4LogicalVolume(lead_source_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"), "LEAD_SOURCE");
-      G4ThreeVector lead_source_pos =
-	G4ThreeVector(lead_coll_pos.getX() + coll_thick/2. + source_thick/2., lat_pos.getY(), lat_pos.getZ());
-      new G4PVPlacement(G4Transform3D(*lat_rot, lead_source_pos),
-                        lead_source_logic, 
-			"LEAD_SOURCE", _shielding_air_logic, false, 0, false);
-      
-
-      G4LogicalVolume* cal_logic = _cal->GetLogicalVolume();
-      source_pos =
-	G4ThreeVector(lead_source_pos.getX() + source_thick/2. - _cal->GetCapsuleThickness()/2., lat_pos.getY(), lat_pos.getZ());
-      new G4PVPlacement(G4Transform3D(*lat_rot, source_pos), cal_logic,
-                        "SCREW_SUPPORT", _shielding_air_logic, false, 0, false);
-
-      // Aluminium protection behind the source
-
-      G4double alum_thick = 9. * mm;
-      G4Box* protection_solid = 
-	new G4Box("SOURCE_PROTECTION", 100.*mm/2., 100.*mm/2.,  alum_thick/2.);
-      G4LogicalVolume* alum_logic =
-	new G4LogicalVolume(protection_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Al"), "SOURCE_PROTECTION");
-       G4ThreeVector alum_pos =
-	G4ThreeVector(lead_source_pos.getX() + source_thick + alum_thick/2., lat_pos.getY(), lat_pos.getZ());
-      new G4PVPlacement(G4Transform3D(*lat_rot, alum_pos), alum_logic,
-                        "SOURCE_PROTECTION", _shielding_air_logic, false, 0, false);
-      
-      G4VisAttributes blue_col = nexus::Blue();
-      G4VisAttributes yel_col = nexus::Yellow();
-      G4VisAttributes red_col = nexus::Red();
-      G4VisAttributes green_col = nexus::LightGreen();
-      //  yel_col.SetForceSolid(true);
-      //  blue_col.SetForceSolid(true);
-      green_col.SetForceSolid(true);
-      lead_coll_logic->SetVisAttributes(yel_col);
-      lead_source_logic->SetVisAttributes(red_col);
-      cal_logic->SetVisAttributes(blue_col);
-      alum_logic->SetVisAttributes(green_col);
-     
-      
-      yel_col.SetForceSolid(true);
-      blue_col.SetForceSolid(true);
-      red_col.SetForceSolid(true);     
-      lead_out_freddy_logic->SetVisAttributes(green_col);
-      lead_middle_freddy_logic->SetVisAttributes(blue_col);
-      lead_screw_freddy_logic->SetVisAttributes(red_col);
-      lead_nozzle_freddy_logic->SetVisAttributes(yel_col);
+        G4LogicalVolume* cal_logic = _cal->GetLogicalVolume();
+        source_pos = G4ThreeVector(axial_pos.getX(), axial_pos.getY(),
+                                   axial_pos.getZ() - _coll->GetLength() + _cal->GetCapsuleThickness()/2.);
+       
+        new G4PVPlacement(G4Transform3D(*ax_rot, source_pos), cal_logic,
+                          "SCREW_SUPPORT", _shielding_air_logic, false, 0, false);
+        
+      } else {
+        G4Exception("[NextNew]", "Construct()", FatalException,
+                    "The placement of lead collimator must be lateral or axial!");     
+      }
 
     }
-     
-     // Placement of the shielding volume, rotated and translated to have a right-handed ref system with z = z drift.
-   
+
+    
     _displ = G4ThreeVector(0., 0., _inner_elements->GetELzCoord());
     G4RotationMatrix rot;
     rot.rotateY(_rot_angle);
-    new G4PVPlacement(G4Transform3D(rot, _displ), shielding_logic, "LEAD_BOX",
-		      _lab_logic, false, 0, false);
+    if (_lead_castle) {
+      // Placement of the shielding volume, rotated and translated to have a right-handed ref system with z = z drift.
+      new G4PVPlacement(G4Transform3D(rot, _displ), shielding_logic, "LEAD_BOX",
+                        _lab_logic, false, 0, false);
+    } else {
+      new G4PVPlacement(G4Transform3D(rot, _displ), _shielding_air_logic, "AIR",
+                        _lab_logic, false, 0, false);
+    }
 
 
     //// VERTEX GENERATORS   //
     _lab_gen = 
       new BoxPointSampler(_lab_size - 1.*m, _lab_size - 1.*m, _lab_size - 1.*m, 1.*m,G4ThreeVector(0.,0.,0.),0);
 
-    // this is the position of the source inside the capsule
- 
-    G4ThreeVector gen_pos = source_pos - G4ThreeVector(_cal->GetSourceZpos(), 0., 0.);
-    _lat_source_gen = new CylinderPointSampler(0., _cal->GetSourceThickness(), _cal->GetSourceDiameter()/2., 0., gen_pos, lat_rot);
+    // this is the position of the source inside the capsule 
+    G4ThreeVector gen_pos_lat = source_pos - G4ThreeVector(_cal->GetSourceZpos(), 0., 0.);
+    G4ThreeVector gen_pos_axial = source_pos + G4ThreeVector(0, 0., _cal->GetSourceZpos());
+    _lat_source_gen = new CylinderPointSampler(0., _cal->GetSourceThickness(), _cal->GetSourceDiameter()/2.,
+                                               0., gen_pos_lat, lat_rot);
+
+    _axial_source_gen = new CylinderPointSampler(0., _cal->GetSourceThickness(), _cal->GetSourceDiameter()/2.,
+                                               0., gen_pos_axial, ax_rot);
 
     // G4double source_diam = na22->GetSourceDiameter();
     // G4double source_thick = na22->GetSourceThickness();
@@ -433,6 +361,9 @@ namespace nexus {
     }
     else if (region == "EXTERNAL_PORT_ANODE") {
       vertex =  _lat_source_gen->GenerateVertex("BODY_VOL");
+    }
+    else if (region == "EXTERNAL_PORT_AXIAL") {
+      vertex =  _axial_source_gen->GenerateVertex("BODY_VOL");
     }
     // else if (region == "NA22_PORT_UP_EXT") {
     //   vertex =  _source_gen_up->GenerateVertex("BODY_VOL");

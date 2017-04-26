@@ -14,6 +14,7 @@
 #define NEXTNEW_H
 
 #include "BaseGeometry.h"
+#include <G4RotationMatrix.hh>
 
 namespace nexus { class Next100Shielding; }
 namespace nexus { class NextNewPedestal; }
@@ -25,6 +26,9 @@ namespace nexus {class BoxPointSampler;}
 namespace nexus {class CylinderPointSampler;}
 namespace nexus {class MuonsPointSampler;}
 namespace nexus {class CalibrationSource;}
+namespace nexus {class NaIScintillator;}
+namespace nexus {class SurroundingAir;}
+namespace nexus {class LeadCollimator;}
 
 class G4LogicalVolume;
 class G4GenericMessenger;
@@ -44,7 +48,7 @@ namespace nexus {
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
   private:
-    void BuildExtScintillator(G4ThreeVector pos);
+    void BuildExtScintillator(G4ThreeVector pos, const G4RotationMatrix& rot);
     void Construct();
 
   private:
@@ -65,9 +69,13 @@ namespace nexus {
     NextNewVessel* _vessel;   
     NextNewIcs* _ics;
     NextNewInnerElements* _inner_elements;
+    NaIScintillator* _naI;
+    SurroundingAir* _air;
+    LeadCollimator* _coll;
     
     BoxPointSampler* _lab_gen; ///< Vertex generator
     CylinderPointSampler* _lat_source_gen;
+    CylinderPointSampler* _axial_source_gen;
     /* CylinderPointSampler* _source_gen_up; */
     MuonsPointSampler* _muon_gen; ///< Vertex generator for muons
 
@@ -84,12 +92,17 @@ namespace nexus {
     // Kind of block of lead on the lateral port placed to shield source
     G4bool _lead_block; ///< true if the two lead blocks inlateral port are placed as shielding
     G4double _lead_dist; ///< distance between the two pieces of lead
-    G4double _dist_scint; ///< distance from the end of lateral port tube and scintillator
+    G4bool _ext_scint; ///< true if external scintillator is placed
+    G4String _calib_pos; /// position of calibration source (lateral/axial)
+    G4double _dist_scint; ///< distance from the end of lateral/axial port tube and scintillator
     
     // Incapsulated calibration source volume
     CalibrationSource* _cal;
     // Distance from the end of the lateral feedthrough to the source pos
     //   G4double _ext_source_distance;
+
+    G4bool _lead_castle; ///< false if castle is open (e.g., lead collimator in axial port)
+    
   };
   
 } // end namespace nexus
