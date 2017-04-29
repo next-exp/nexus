@@ -1,6 +1,6 @@
 ### --------------------------------------------------------
 ### NextNew: Configuration macro for calibration source 
-### in lateral port inside lead collimator
+### in axial port inside inside the feedthrough
 ### --------------------------------------------------------
 
 
@@ -13,9 +13,11 @@
 /Geometry/NextNew/elfield false
 ### For sodium source: Na, for thorium source: Th
 /Geometry/CalibrationSource/source Na
-/Geometry/NextNew/lead_block true
-/Geometry/NextNew/ext_scint true
-/Geometry/NextNew/calib_port lateral
+/Geometry/NextNew/calib_port axial
+## In the axial port, source_distance can vary from 0. to 759 mm
+## In the lateral port, source_distance can vary from 0. to 81 mm
+/Geometry/NextNew/source_distance 280. mm
+## When the axial port is selected, the castle must be open
 /Geometry/NextNew/lead_castle false
 
 ## For visualization
@@ -39,7 +41,7 @@
 
 /Generator/IonGun/atomic_number 11
 /Generator/IonGun/mass_number 22
-/Generator/IonGun/region EXTERNAL_PORT_ANODE
+/Generator/IonGun/region INTERNAL_PORT_AXIAL
 
 
 # PHYSICS

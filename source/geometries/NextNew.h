@@ -93,7 +93,7 @@ namespace nexus {
     G4bool _lead_block; ///< true if the two lead blocks inlateral port are placed as shielding
     G4double _lead_dist; ///< distance between the two pieces of lead
     G4bool _ext_scint; ///< true if external scintillator is placed
-    G4String _calib_pos; /// position of calibration source (lateral/axial)
+    G4String _calib_port; /// position of calibration source (lateral/axial)
     G4double _dist_scint; ///< distance from the end of lateral/axial port tube and scintillator
     
     // Incapsulated calibration source volume

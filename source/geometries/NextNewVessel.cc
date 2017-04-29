@@ -108,18 +108,18 @@ namespace nexus {
     _sc_yield(16670. * 1/MeV),
     _gas("naturalXe"),
     _Xe_perc(100.),
-    _source(false),
-    _source_distance(0.*mm)
+    //   _source(false),
+    _source_distance(0.*mm),
+    _calib_port("")
 
   {
     /// README
     /// This is a quite complicated geometry. In order not to get crazy looking at it every few months,
     /// keep the following in mind:
-    /// 1) LATERAL and UPPER ports: to avoid volume subtractions, we first make the union of nozzle + (flange+cover) + external part of source tube, then we put together this volume with the vessel. After that, we put inside the vessel logical volume the volume of air which corresponds to the thickness of flange+cover+external part of source port. After that, we put inside the vessel gas volume the internal part of the source port and, inside it, the corresponding part of air.
-    /// 2) AXIAL port: only the internal part of the source port is simulated, because in principle we will use this port only with internal sources, since it's far from the vessel.
-    /// 3) All the XXXX_nozzle_flange_high and XXXX_nozzle_high are half the thickness of the solid volume. In the solid union between vessel and nozzle, the centre of the body of the nozzle is placed in the edge of the vessel, thus half of the body length is lost in the union and the real length of the nozzle is XXXX_nozzle_high.
-    /// 4) Bear in mind that visualizing this geometry could take to a crash of OpenGL, because of its complexity. Don't worry, geant4 tracking is being done correctly.
-    /// 5) The source that fits inside the tube with a screw is a piece of aluminum with a disk of 2 mm thickness, 6 mm diameter placed at 0.5 mm from the bottom of the piece
+    /// 1) LATERAL, UPPER and AXIAL ports: to avoid volume subtractions, we first make the union of nozzle + (flange+cover) + external part of source tube, then we put together this volume with the vessel. After that, we put inside the vessel logical volume the volume of air which corresponds to the thickness of flange+cover+external part of source port. After that, we put inside the vessel gas volume the internal part of the source port and, inside it, the corresponding part of air.
+    /// 2) All the XXXX_nozzle_flange_high and XXXX_nozzle_high are half the thickness of the solid volume. In the solid union between vessel and nozzle, the centre of the body of the nozzle is placed in the edge of the vessel, thus half of the body length is lost in the union and the real length of the nozzle is XXXX_nozzle_high.
+    /// 3) Bear in mind that visualizing this geometry could take to a crash of OpenGL, because of its complexity. Don't worry, geant4 tracking is being done correctly.
+    /// 4) The source that fits inside the tube with a screw is a piece of aluminum with a disk of 2 mm thickness, 6 mm diameter placed at 0.5 mm from the bottom of the piece
 
     // Initializing the geometry navigator (used in vertex generation)
     _geom_navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
@@ -145,8 +145,9 @@ namespace nexus {
     _msg->DeclareProperty("gas", _gas, "Gas being used");
     _msg->DeclareProperty("XePercentage", _Xe_perc, "Percentage of xenon used in mixtures");
 
-    _msg->DeclareProperty("source", _source, "Radioactive source being used");
-    _msg->DeclareProperty("source_distance", _source_distance, "Distance of the bottom of the 'screw' source from the bottom of the lateral port tube");  
+    // _msg->DeclareProperty("source", _source, "Radioactive source being used");
+    _msg->DeclareProperty("calib_port", _calib_port, "Calibration port being used");
+    _msg->DeclareProperty("source_distance", _source_distance, "Distance of the bottom of the 'screw' source from the bottom of the lateral/axial port tube");  
 
     _cal = new CalibrationSource();
     _cal->Construct();
@@ -442,34 +443,15 @@ void NextNewVessel::Construct()
 		    lateral_port_tube_logic, false, 0, false);
 
   // Screwed internal source
-
-  if (_source) {
+  if (_calib_port == "lateral") {
 
     G4LogicalVolume* lateral_screw_tube_logic = _cal->GetLogicalVolume();
-  
-    //   G4double piece_diam = cal.GetCapsuleDiameter(); // 7. *mm;
-    G4double piece_length = _cal->GetCapsuleThickness(); //16. *mm;
-    // G4Tubs* lateral_screw_tube_solid =
-    //   new G4Tubs("SCREW_SUPPORT", 0., piece_diam/2., piece_length/2., 0, twopi);
-    // G4LogicalVolume* lateral_screw_tube_logic =
-    //   new G4LogicalVolume(lateral_screw_tube_solid,  G4NistManager::Instance()->FindOrBuildMaterial("G4_Al"), "SCREW_SUPPORT");
-  
+ 
+    G4double piece_length = _cal->GetCapsuleThickness(); //16. *mm;  
     G4double source_diam = _cal->GetSourceDiameter(); // 6. * mm;
     G4double source_thickness = _cal->GetSourceThickness(); // 2. * mm;
    
-    // G4Tubs* source_solid = 
-    //   new G4Tubs("SCREW_SOURCE", 0., source_diam/2., source_thickness/2., 0., twopi);
-
-    // G4String material = "G4_" + _source;
-  
-    // G4Material* source_mat = 
-    //   G4NistManager::Instance()->FindOrBuildMaterial(material);
-    // G4LogicalVolume* source_logic = 
-    //   new G4LogicalVolume(source_solid, source_mat, "SCREW_SOURCE");
-
-    //G4double z_pos_source = piece_length/2. - 0.5 * mm - source_thickness/2.;
     G4double z_pos_source = _cal->GetSourceZpos();
-
 
     G4ThreeVector pos_screw_source(0., 0., 0.);
     if (_source_distance >= 0.*mm
@@ -493,11 +475,6 @@ void NextNewVessel::Construct()
 		  "This position of the screw source in lateral port is not permitted, since it is outside the lateral port."); 
     }
 
-    // G4ThreeVector pos_source(0., 0., z_pos_source);
-    // new G4PVPlacement(0, pos_source,
-    // 		      source_logic, "SCREW_SOURCE", 
-    // 		      lateral_screw_tube_logic, false, 0, false);
-
     G4double gen_pos = 0.;
     if (_source_distance >= 0.*mm && _source_distance <= (simulated_length_lat - piece_length - _port_tube_window_thickn)) {
       gen_pos = _vessel_in_diam/2. + _lat_nozzle_high - simulated_length_lat + _port_tube_window_thickn + piece_length/2. - z_pos_source + _source_distance;
@@ -509,11 +486,8 @@ void NextNewVessel::Construct()
       gen_pos = _vessel_in_diam/2.+ _lat_nozzle_high + (_lat_nozzle_flange_high + _lat_port_tube_out) - (_lat_port_tube_length - _port_tube_window_thickn - _source_distance) + piece_length/2. - z_pos_source;
     } else {
       G4Exception("[NextNewVessel]", "Construct()", FatalException,
-		  "This position of the screw source in lateral port is not permitted, since it is outside the lateral port."); 
+		  "This position of the screw source is not permitted, since it is outside the lateral port."); 
     }
-    //G4double gen_pos = _vessel_in_diam/2.+ _lat_nozzle_high - 39 * mm + 2. * mm + 0.5 * mm + 1. * mm;
-    // _lat_nozzle_x_pos  + _lat_nozzle_high/2. + 2.*_lat_nozzle_flange_high + _lat_port_tube_out - piece_length/2. - z_pos_source;
-    //G4double gen_pos = _vessel_in_diam/2.+ _lat_nozzle_high + (2.*_lat_nozzle_flange_high + _lat_port_tube_out) - piece_length/2. - z_pos_source;
     
     _screw_gen_lat =
       new CylinderPointSampler(0., source_thickness, source_diam/2., 0., G4ThreeVector(gen_pos, 0., _lat_nozzle_z_pos), rot_lat);
@@ -574,6 +548,7 @@ void NextNewVessel::Construct()
   G4double simulated_length =
     _axial_port_tube_length - _axial_port_tube_out - 2.*_axial_port_flange -
     _axial_distance_flange_endcap + _endcap_nozzle_high;
+
   
   G4Tubs* axial_port_tube_solid =
     new G4Tubs("AXIAL_PORT", 0., _port_tube_diam/2.+_port_tube_thickness,
@@ -599,6 +574,58 @@ void NextNewVessel::Construct()
   new G4PVPlacement(0,G4ThreeVector(0.,0., -_port_tube_window_thickn/2.),
 		    axial_port_tube_air_logic, "AXIAL_PORT_AIR", 
 		    axial_port_tube_logic, false, 0, false);
+
+  // Screwed internal source
+  if (_calib_port == "axial") {
+
+    G4LogicalVolume* axial_screw_tube_logic = _cal->GetLogicalVolume();
+ 
+    G4double piece_length = _cal->GetCapsuleThickness(); //16. *mm;  
+    G4double source_diam = _cal->GetSourceDiameter(); // 6. * mm;
+    G4double source_thickness = _cal->GetSourceThickness(); // 2. * mm;
+   
+    G4double z_pos_source = _cal->GetSourceZpos();
+
+    G4ThreeVector pos_screw_source(0., 0., 0.);
+    if (_source_distance >= 0.*mm
+	&& _source_distance <= (simulated_length - piece_length - _port_tube_window_thickn)) {
+      pos_screw_source = G4ThreeVector(0., 0., (simulated_length - _port_tube_window_thickn)/2. -  piece_length/2. - _source_distance);
+      new G4PVPlacement(0, pos_screw_source, axial_screw_tube_logic,
+			"SCREW_SUPPORT", axial_port_tube_air_logic, false, 0, false);
+    } else if (_source_distance > (simulated_length - piece_length - _port_tube_window_thickn)
+	       && _source_distance < (simulated_length - _port_tube_window_thickn)) {
+      // Put the source in the farthest position, inside the inner part of tube, since it cannot be placed between two volumes
+      pos_screw_source = G4ThreeVector(0., 0., -(simulated_length - _port_tube_window_thickn)/2.  + piece_length/2.);
+      new G4PVPlacement(0, pos_screw_source, axial_screw_tube_logic,
+			"SCREW_SUPPORT", axial_port_tube_air_logic, false, 0, false);
+    } else if (_source_distance >= (simulated_length - _port_tube_window_thickn)
+	       && _source_distance <= _axial_port_tube_length - _port_tube_window_thickn - piece_length) {  
+      pos_screw_source = G4ThreeVector(0., 0., (_endcap_nozzle_flange_high + axial_port_tube_ext)/2. - (_axial_port_tube_length - _port_tube_window_thickn - _source_distance) + piece_length/2.);
+      new G4PVPlacement(G4Transform3D(*rot_endcap,  pos_screw_source), axial_screw_tube_logic,
+        		"SCREW_SUPPORT", axial_port_hole_logic , false, 0, false);
+    } else {
+      G4Exception("[NextNewVessel]", "Construct()", FatalException,
+		  "This position of the screw source is not permitted, since it is outside the axial port."); 
+    }
+
+    G4double gen_pos = 0.;
+    if (_source_distance >= 0.*mm && _source_distance <= (simulated_length - piece_length - _port_tube_window_thickn)) {
+      gen_pos = - _endcap_nozzle_z_pos - _endcap_nozzle_high + simulated_length - _port_tube_window_thickn - piece_length/2. + z_pos_source - _source_distance;
+    } else if (_source_distance > (simulated_length - piece_length - _port_tube_window_thickn)
+	       && _source_distance < (simulated_length - _port_tube_window_thickn)) {
+      gen_pos = - _endcap_nozzle_z_pos - _endcap_nozzle_high + piece_length/2. + z_pos_source;
+    } else if (_source_distance >= (simulated_length - _port_tube_window_thickn)
+	       && _source_distance <= _axial_port_tube_length - _port_tube_window_thickn - piece_length) {
+      gen_pos = - _endcap_nozzle_z_pos - _endcap_nozzle_high -_endcap_nozzle_flange_high - axial_port_tube_ext + (_axial_port_tube_length - _port_tube_window_thickn - _source_distance) - piece_length/2. + z_pos_source;
+    } else {
+      G4Exception("[NextNewVessel]", "Construct()", FatalException,
+		  "This position of the screw source in axial port is not permitted, since it is outside the axial port."); 
+    }
+    
+    _screw_gen_axial =
+      new CylinderPointSampler(0., source_thickness, source_diam/2., 0., G4ThreeVector(0., 0., gen_pos), 0);
+
+  }
 
   /*
     G4Tubs* axial_port_collimator_solid =
@@ -684,6 +711,7 @@ void NextNewVessel::Construct()
     delete _tracking_endcap_gen;
     delete _energy_endcap_gen;
     delete _screw_gen_lat;
+    delete _screw_gen_axial;
   }
 
  
@@ -773,7 +801,8 @@ void NextNewVessel::Construct()
 	  //std::cout<< "flange energy \t"<<vertex.z() <<"\t"<<rand<< std::endl;
    	}
       }
-    }      
+    }
+    /// Vertex inside lateral feedthrough, most internal position 
     else if (region =="SOURCE_PORT_ANODE") { 
       vertex = _lateral_port_source_pos; 
     }
@@ -782,12 +811,18 @@ void NextNewVessel::Construct()
     }
     // else if (region =="SOURCE_PORT_CATHODE"){
     //   vertex = G4ThreeVector(_lat_nozzle_x_pos, 0.,-_lat_nozzle_z_pos);
-    // }  
+    // }
+    /// Vertex inside axial feedthrough, most internal position 
     else if (region =="SOURCE_PORT_AXIAL") { 
       vertex = _axial_port_source_pos; 
     }
+    /// Calibration source in capsule, placed at a variable position inside the lateral feedthrough
     else if (region =="INTERNAL_PORT_ANODE") { 
       vertex =  _screw_gen_lat->GenerateVertex("BODY_VOL");
+    }
+     /// Calibration source in capsule, placed at a variable position inside the axial feedthrough
+    else if (region =="INTERNAL_PORT_AXIAL") { 
+      vertex =  _screw_gen_axial->GenerateVertex("BODY_VOL");
     }
     else {
       G4Exception("[NextNewVessel]", "GenerateVertex()", FatalException,

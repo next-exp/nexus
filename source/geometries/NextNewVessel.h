@@ -93,6 +93,7 @@ namespace nexus {
     SpherePointSampler*   _energy_endcap_gen;
     CylinderPointSampler* _flange_gen;
     CylinderPointSampler* _screw_gen_lat;
+    CylinderPointSampler* _screw_gen_axial;
 
     G4double _perc_endcap_vol;
     G4double _perc_tube_vol;
@@ -111,12 +112,14 @@ namespace nexus {
     G4double _Xe_perc;
 
     // Radioactive source being used or not
-    //  G4String _source;
-    G4bool _source;
+    //   G4bool _source;
     // Distance of the source piece from the bottom of the tube (0 meaning right in the inner end)
     G4double _source_distance;
 
     CalibrationSource* _cal;
+
+    // Which calibration port we are using (lateral/axial)
+    G4String _calib_port;
    
 
   };

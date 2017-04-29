@@ -60,7 +60,7 @@ namespace nexus {
     _lead_block(false),
     _lead_dist(0.*mm),
     _ext_scint(false),
-    _calib_pos(""),
+    _calib_port(""),
     _dist_scint(25.*cm),
     _lead_castle(true)
     //   _ext_source_distance(0.*mm)
@@ -84,7 +84,7 @@ namespace nexus {
     _msg->DeclareProperty("lead_block", _lead_block, "Block of lead on the lateral port");
     _msg->DeclareProperty("lead_distance", _lead_dist, "Distance between the two blocks of lead");
     _msg->DeclareProperty("ext_scint", _ext_scint, "Placement of external NaI scintillator");
-    _msg->DeclareProperty("calib_pos", _calib_pos, "Where calibration source is placed (lateral/axial)");
+    _msg->DeclareProperty("calib_port", _calib_port, "Where calibration source is placed (lateral/axial)");
     _msg->DeclareProperty("scint_distance", _dist_scint, "Distance between the end of the lateral port tube and the external scintillator");
     _msg->DeclareProperty("lead_castle", _lead_castle, "Placement of lead castle");
     
@@ -223,12 +223,12 @@ namespace nexus {
     // Build NaI external scintillator
 
     if (_ext_scint) {
-      if (_calib_pos == "lateral") {
+      if (_calib_port == "lateral") {
         // G4RotationMatrix rot;
         // rot.rotateY(-pi/2.);
         BuildExtScintillator(G4ThreeVector(lat_pos.getX() + _naI->GetLength()/2. + _dist_scint,
                                            lat_pos.getY(), lat_pos.getZ()), *lat_rot);
-      } else if (_calib_pos == "axial") {
+      } else if (_calib_port == "axial") {
         //    G4RotationMatrix rot_ax;
         BuildExtScintillator(G4ThreeVector(axial_pos.getX(), axial_pos.getY(),
                                            axial_pos.getZ() - _dist_scint - _naI->GetLength()/2.), *ax_rot);
@@ -254,7 +254,7 @@ namespace nexus {
       coll_support.Construct();
       G4LogicalVolume* coll_support_logic = coll_support.GetLogicalVolume();
 
-      if (_calib_pos == "lateral") {
+      if (_calib_port == "lateral") {
         
         G4double vessel_out_diam = 664*mm;
         G4ThreeVector pos(vessel_out_diam/2. + coll_centre, lat_pos.getY(), lat_pos.getZ());
@@ -272,7 +272,7 @@ namespace nexus {
         new G4PVPlacement(G4Transform3D(*lat_rot, source_pos), cal_logic,
                           "SCREW_SUPPORT", _shielding_air_logic, false, 0, false);
         
-      } else if (_calib_pos == "axial") {
+      } else if (_calib_port == "axial") {
         
         G4ThreeVector pos(axial_pos.getX(), axial_pos.getY(), axial_pos.getZ() - coll_centre);
         // new G4PVPlacement(0, pos, coll_logic, "LEAD_COLLIMATOR",
@@ -355,11 +355,23 @@ namespace nexus {
     } else if (region == "MUONS") {
       vertex = _muon_gen->GenerateVertex();
     }
+    /// Calibration source in capsule, placed inside Jordi's lead,
+    /// at the end (lateral and axial ports).
     else if (region == "EXTERNAL_PORT_ANODE") {
-      vertex =  _lat_source_gen->GenerateVertex("BODY_VOL");
+      if (_lead_block) {
+        vertex =  _lat_source_gen->GenerateVertex("BODY_VOL");
+      } else {
+        G4Exception("[NextNew]", "GenerateVertex()", FatalException,
+                    "This vertex generation region must be used together with lead_block == true!"); 
+      }
     }
     else if (region == "EXTERNAL_PORT_AXIAL") {
-      vertex =  _axial_source_gen->GenerateVertex("BODY_VOL");
+      if (_lead_block) {
+        vertex =  _axial_source_gen->GenerateVertex("BODY_VOL");
+      } else {
+        G4Exception("[NextNew]", "GenerateVertex()", FatalException,
+                    "This vertex generation region must be used together with lead_block == true!"); 
+      }
     }
     // else if (region == "NA22_PORT_UP_EXT") {
     //   vertex =  _source_gen_up->GenerateVertex("BODY_VOL");
@@ -388,7 +400,8 @@ namespace nexus {
 	      (region == "SOURCE_PORT_ANODE") ||
 	      (region == "SOURCE_PORT_UP") ||
 	      (region == "SOURCE_PORT_AXIAL") ||
-	      (region == "INTERNAL_PORT_ANODE") ){
+	      (region == "INTERNAL_PORT_ANODE") ||
+              (region == "INTERNAL_PORT_AXIAL") ){
       vertex = _vessel->GenerateVertex(region);
     }
     // ICS REGIONS
