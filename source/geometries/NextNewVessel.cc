@@ -146,7 +146,7 @@ namespace nexus {
     _msg->DeclareProperty("XePercentage", _Xe_perc, "Percentage of xenon used in mixtures");
 
     // _msg->DeclareProperty("source", _source, "Radioactive source being used");
-    _msg->DeclareProperty("calib_port", _calib_port, "Calibration port being used");
+    _msg->DeclareProperty("internal_calib_port", _calib_port, "Calibration port being used");
     _msg->DeclareProperty("source_distance", _source_distance, "Distance of the bottom of the 'screw' source from the bottom of the lateral/axial port tube");  
 
     _cal = new CalibrationSource();

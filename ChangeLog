@@ -1,7 +1,12 @@
+tag v5_02_03 - 3 May 2017
+	- name clash of two different configuration parameters solved
+	
 tag v5_02_02 - 29 Apr 2017
 	- the position of a calibration source in axial port feedthrough is now configurable
+	
 tag v5_02_01 - 27 Apr 2017
 	- same as tag v5_02_00, small bug fixed in the dimensions of a piece of lead collimator 
+	
 tag v5_02_00 - 26 Apr 2017
 	- Buffer tube eliminated and reflectivity of hdpe set to 50%.
 	- Lead collimator and shielding and external scintillator
