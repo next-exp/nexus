@@ -275,8 +275,8 @@ namespace nexus {
       } else if (_calib_port == "axial") {
         
         G4ThreeVector pos(axial_pos.getX(), axial_pos.getY(), axial_pos.getZ() - coll_centre);
-        // new G4PVPlacement(0, pos, coll_logic, "LEAD_COLLIMATOR",
-        //                   _shielding_air_logic, false, 0, true);
+        new G4PVPlacement(0, pos, coll_logic, "LEAD_COLLIMATOR",
+                          _shielding_air_logic, false, 0, true);
         G4ThreeVector pos_protection(axial_pos.getX(), axial_pos.getY(),
                                      axial_pos.getZ() - _coll->GetLength() - coll_protection.GetAxisCentre());
         new G4PVPlacement(0, pos_protection, coll_protection_logic, "SOURCE_PROTECTION",

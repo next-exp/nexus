@@ -1,3 +1,11 @@
+tag v5_02_04 - 3 May 2017
+	- bug fixed in the placement of the lead collimator in the axial
+	port
+	- Redefinition of parameter for type of gas in the NEXT100 geometry to make
+	it equal to the NEW geometry
+	- update of the example macro of a source in the internal axial
+	port
+	
 tag v5_02_03 - 3 May 2017
 	- name clash of two different configuration parameters solved
 	

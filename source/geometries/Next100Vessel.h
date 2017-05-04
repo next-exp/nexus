@@ -82,8 +82,8 @@ namespace nexus {
     // Messenger for the definition of control commands
     G4GenericMessenger* _msg;
 
-    // Type of xenon being used
-    G4String _xenon;
+    // Type of gas being used
+    G4String _gas;
 
   };
 
