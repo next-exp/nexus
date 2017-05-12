@@ -125,7 +125,7 @@ namespace nexus {
   G4ThreeVector pos_scint = 
     G4ThreeVector(pos.getX(), pos.getY(), pos.getZ()); 
   new G4PVPlacement(G4Transform3D(rot, pos_scint), sc_logic, "NaI",
-		    _shielding_air_logic, false, 0, false);  
+		    _air_logic, false, 0, false);  
 
 }
 
@@ -151,14 +151,16 @@ namespace nexus {
       //SHIELDING
       _shielding->Construct();
       shielding_logic = _shielding->GetLogicalVolume();
-      _shielding_air_logic = _shielding->GetAirLogicalVolume();
+      // _shielding_air_logic = _shielding->GetAirLogicalVolume();
+      _air_logic = _shielding->GetAirLogicalVolume();
     } else {
       _air->Construct();
-      _shielding_air_logic = _air->GetLogicalVolume();
+      //_shielding_air_logic = _air->GetLogicalVolume();
+      _air_logic = _air->GetLogicalVolume();
     }
   
     //PEDESTAL
-    _pedestal->SetLogicalVolume(_shielding_air_logic);
+    _pedestal->SetLogicalVolume(_air_logic);
     _pedestal->Construct();
     
     //VESSEL
@@ -166,7 +168,7 @@ namespace nexus {
     G4LogicalVolume* vessel_logic = _vessel->GetLogicalVolume();
     G4ThreeVector position(0.,0.,0.); 
     new G4PVPlacement(0, position, vessel_logic, 
-		      "VESSEL", _shielding_air_logic, false, 0, false);
+		      "VESSEL", _air_logic, false, 0, false);
     G4LogicalVolume* vessel_gas_logic = _vessel->GetInternalLogicalVolume();
 
      //INNER ELEMENTS
@@ -194,7 +196,7 @@ namespace nexus {
     G4ThreeVector axial_pos = _vessel->GetAxialExtSourcePosition(); // this is the position of the end of the port tube
     G4RotationMatrix* ax_rot = new G4RotationMatrix();
     ax_rot->rotateY(2*pi);
-
+    
     /*
    /// In principle we shouldn't use this source anymore, but never say never...
     Na22Source* na22 = new Na22Source();
@@ -205,7 +207,7 @@ namespace nexus {
     G4ThreeVector lat_pos_source = G4ThreeVector(lat_pos.getX() + na22->GetSupportThickness()/2., lat_pos.getY(), lat_pos.getZ());
 
     new G4PVPlacement(G4Transform3D(*lat_rot, lat_pos_source), na22_logic, "NA22_SOURCE",
-    		      _shielding_air_logic, false, 0, false);
+    		      _air_logic, false, 0, false);
 
     G4ThreeVector up_pos = _vessel->GetUpExtSourcePosition(); // this is the position of the end of the port tube
     G4RotationMatrix* up_rot = new G4RotationMatrix();
@@ -214,7 +216,7 @@ namespace nexus {
     G4ThreeVector up_pos_source = G4ThreeVector(up_pos.getX() , up_pos.getY() + na22->GetSupportThickness()/2., up_pos.getZ());
 
     new G4PVPlacement(G4Transform3D(*up_rot, up_pos_source), na22_logic, "NA22_SOURCE",
-		      _shielding_air_logic, false, 1, false);
+		      _air_logic, false, 1, false);
 
     G4VisAttributes light_brown_col = nexus::CopperBrown();
     na22_logic->SetVisAttributes(light_brown_col);
@@ -259,39 +261,39 @@ namespace nexus {
         G4double vessel_out_diam = 664*mm;
         G4ThreeVector pos(vessel_out_diam/2. + coll_centre, lat_pos.getY(), lat_pos.getZ());
         new G4PVPlacement(G4Transform3D(*lat_rot, pos), coll_logic, "LEAD_COLLIMATOR",
-                          _shielding_air_logic, false, 0, false);
+                          _air_logic, false, 0, false);
 
         G4ThreeVector pos_protection(vessel_out_diam/2. + _coll->GetLength() + coll_protection.GetAxisCentre(),
                                      lat_pos.getY(), lat_pos.getZ());
         new G4PVPlacement(G4Transform3D(*lat_rot, pos_protection), coll_protection_logic, "SOURCE_PROTECTION",
-                          _shielding_air_logic, false, 0, false);
+                          _air_logic, false, 0, false);
 
         G4LogicalVolume* cal_logic = _cal->GetLogicalVolume();
         source_pos = G4ThreeVector(vessel_out_diam/2. + _coll->GetLength() - _cal->GetCapsuleThickness()/2.,
                                    lat_pos.getY(), lat_pos.getZ());
         new G4PVPlacement(G4Transform3D(*lat_rot, source_pos), cal_logic,
-                          "SCREW_SUPPORT", _shielding_air_logic, false, 0, false);
+                          "SCREW_SUPPORT", _air_logic, false, 0, false);
         
       } else if (_calib_port == "axial") {
         
         G4ThreeVector pos(axial_pos.getX(), axial_pos.getY(), axial_pos.getZ() - coll_centre);
-        new G4PVPlacement(0, pos, coll_logic, "LEAD_COLLIMATOR",
-                          _shielding_air_logic, false, 0, true);
+        // new G4PVPlacement(0, pos, coll_logic, "LEAD_COLLIMATOR",
+        //                   _air_logic, false, 0, true);
         G4ThreeVector pos_protection(axial_pos.getX(), axial_pos.getY(),
                                      axial_pos.getZ() - _coll->GetLength() - coll_protection.GetAxisCentre());
         new G4PVPlacement(0, pos_protection, coll_protection_logic, "SOURCE_PROTECTION",
-                          _shielding_air_logic, false, 0, false);
+                          _air_logic, false, 0, false);
         G4ThreeVector pos_support(axial_pos.getX(), axial_pos.getY() - coll_support.GetYDisplacement(),
                                      axial_pos.getZ() + coll_support.GetAxisCentre());
         new G4PVPlacement(0, pos_support, coll_support_logic, "SOURCE_SUPPORT",
-                          _shielding_air_logic, false, 0, false);
+                          _air_logic, false, 0, false);
 
         G4LogicalVolume* cal_logic = _cal->GetLogicalVolume();
         source_pos = G4ThreeVector(axial_pos.getX(), axial_pos.getY(),
                                    axial_pos.getZ() - _coll->GetLength() + _cal->GetCapsuleThickness()/2.);
        
         new G4PVPlacement(G4Transform3D(*ax_rot, source_pos), cal_logic,
-                          "SCREW_SUPPORT", _shielding_air_logic, false, 0, false);
+                          "SCREW_SUPPORT", _air_logic, false, 0, false);
         
       } else {
         G4Exception("[NextNew]", "Construct()", FatalException,
@@ -309,10 +311,9 @@ namespace nexus {
       new G4PVPlacement(G4Transform3D(rot, _displ), shielding_logic, "LEAD_BOX",
                         _lab_logic, false, 0, false);
     } else {
-      new G4PVPlacement(G4Transform3D(rot, _displ), _shielding_air_logic, "AIR",
+      new G4PVPlacement(G4Transform3D(rot, _displ), _air_logic, "AIR",
                         _lab_logic, false, 0, false);
     }
-
 
     //// VERTEX GENERATORS   //
     _lab_gen = 
@@ -349,6 +350,7 @@ namespace nexus {
   G4ThreeVector NextNew::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0.,0.,0.);
+    
     //AIR AROUND SHIELDING
     if (region == "LAB") {
       vertex = _lab_gen->GenerateVertex("INSIDE");
@@ -372,6 +374,14 @@ namespace nexus {
         G4Exception("[NextNew]", "GenerateVertex()", FatalException,
                     "This vertex generation region must be used together with lead_block == true!"); 
       }
+    }
+    // Vertex just outside the axial port
+    else if (region == "SOURCE_PORT_AXIAL_EXT") {
+      vertex = _vessel->GetAxialExtSourcePosition();
+    }
+    // Vertex just outside the lateral port
+    else if (region == "SOURCE_PORT_LATERAL_EXT") {
+      vertex = _vessel->GetLatExtSourcePosition();
     }
     // else if (region == "NA22_PORT_UP_EXT") {
     //   vertex =  _source_gen_up->GenerateVertex("BODY_VOL");

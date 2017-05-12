@@ -42,7 +42,7 @@ namespace nexus {
     // Shielding internal dimensions
     _shield_x (155.  * cm),
     _shield_y (225.6 * cm),
-    _shield_z (253.0 * cm),
+    _shield_z (258.5 * cm), // 253.0 * cm before May 12, 2017
 
     //Steel Structure
     _beam_base_thickness (4. *mm),
@@ -313,10 +313,7 @@ namespace nexus {
   {
     G4ThreeVector vertex(0., 0., 0.);
 
-    if (region == "SOURCE_PORT_AXIAL_EXT") {
-      vertex = G4ThreeVector(0., 0., - _shield_z/2. + 1.*mm); // The real position happens to be inside lead...
-                                                              // The dimensions of the simulated castle are not correct   
-    } else if (region == "SHIELDING_LEAD") {
+    if (region == "SHIELDING_LEAD") {
       G4VPhysicalVolume *VertexVolume;
       do {
 	vertex = _lead_gen->GenerateVertex("WHOLE_VOL");
