@@ -60,7 +60,8 @@ namespace nexus {
 
     // Pointers to logical volumes
     G4LogicalVolume* _lab_logic;
-    G4LogicalVolume* _shielding_air_logic;
+    //  G4LogicalVolume* _shielding_air_logic;
+    G4LogicalVolume* _air_logic;
 
     //Detector parts
     Next100Shielding* _shielding;
