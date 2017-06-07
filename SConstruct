@@ -20,7 +20,6 @@ import os
 import subprocess
 
 ## Geant4 version required by NEXUS
-
 NEXUS_G4VERSION_NUMBER = [1020, 1021, 1022]
 
 ## NEXUS source code directories
@@ -221,21 +220,10 @@ if not env['LIBPATH']:
         Abort('GATE headers not found.')
     
     env.Append(LIBS = ['GATE','GATEIO'])
-<<<<<<< HEAD
-<<<<<<< HEAD
 
     if env['HDF5_DIR'] != NULL_PATH:
         env.PrependENVPath('PATH', env['HDF5_DIR'])
-=======
-<<<<<<< HEAD
-=======
-
->>>>>>> Changes in petalo to use g4.10.02
-     
-    if env['HDF5_LIB'] != NULL_PATH:
-        env.PrependENVPath('PATH', env['HDF5_LIB'])
       
->>>>>>> petalx links now with GATE instead of irene. The PersistencyManager generates as output a GATE dst.
     try: 
         env['HDF5_LIB'] = os.environ['HDF5_LIB']
         env.Append( LIBPATH = [env['HDF5_LIB']] )
@@ -255,24 +243,10 @@ if not env['LIBPATH']:
         Abort('GSL headers not found.')
     
  #   env.Append(LIBS = ['gsl','gslcblas'])
-
-<<<<<<< HEAD
+ 
 #    if not conf.CheckLib(library='GSL', language='CXX', autoadd=0):
 #        Abort('GSL library not found.')
 
-<<<<<<< HEAD
-=======
-=======
-
-<<<<<<< HEAD
-=======
->>>>>>> Changes in petalo to use g4.10.02
-    if not conf.CheckLib(library='GATE', language='CXX', autoadd=0):
-        Abort('GATE library not found.')
-
- #   if not conf.CheckLib(library='GSL', language='CXX', autoadd=0):
-  #      Abort('GSL library not found.')
->>>>>>> petalx links now with GATE instead of irene. The PersistencyManager generates as output a GATE dst.
 ## ##################################################################
     env = conf.Finish()
 
