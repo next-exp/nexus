@@ -20,7 +20,6 @@ import os
 import subprocess
 
 ## Geant4 version required by NEXUS
-
 NEXUS_G4VERSION_NUMBER = [1020, 1021, 1022]
 
 ## NEXUS source code directories
@@ -221,6 +220,15 @@ if not env['LIBPATH']:
         Abort('GATE headers not found.')
     
     env.Append(LIBS = ['GATE','GATEIO'])
+     
+    if env['HDF5_LIB'] != NULL_PATH:
+        env.PrependENVPath('PATH', env['HDF5_LIB'])
+      
+    try: 
+        env['HDF5_LIB'] = os.environ['HDF5_LIB']
+        env.Append( LIBPATH = [env['HDF5_LIB']] )
+        env.Append(LIBS = ['hdf5'])
+    except KeyError: pass
 
     if env['HDF5_DIR'] != NULL_PATH:
         env.PrependENVPath('PATH', env['HDF5_DIR'])
