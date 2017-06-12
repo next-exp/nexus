@@ -45,6 +45,9 @@ namespace nexus {
     // Optical properties to be used for epoxy
     G4double _refr_index;
 
+    // PDE for the sensor
+    G4double _eff;
+
      // Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
 
