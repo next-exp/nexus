@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author:  <justo.martin-albo@ific.uv.es>
-//  Created: 2 March 2010
+//  Author:  
+//  Created: 
 //  
 //  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
 // ---------------------------------------------------------------------------- 
@@ -37,7 +37,7 @@ namespace nexus {
 
   {
     /// Messenger
-    _msg = new G4GenericMessenger(this, "/Geometry/PetalX/", "Control commands of geometry.");
+    _msg = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
     _msg->DeclareProperty("SiPMpet_vis", _visibility, "SiPMpet Visibility");
   }
   

@@ -2,7 +2,7 @@
 //  $Id$
 //
 //  Author:  
-//  Created: 2 March 2010
+//  Created: 
 //  
 //  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
 // ---------------------------------------------------------------------------- 
@@ -32,13 +32,16 @@ namespace nexus {
   using namespace CLHEP;
   
   SiPMpetVUV::SiPMpetVUV(): BaseGeometry(),
-			    _visibility(0), _refr_index(1)
+			    _visibility(0),
+			    _refr_index(1),
+			    _eff(1.)
 
   {
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
     _msg->DeclareProperty("SiPMpet_vis", _visibility, "SiPMpet Visibility");
     _msg->DeclareProperty("refr_index", _refr_index, "Refraction index for epoxy");
+    _msg->DeclareProperty("efficiency", _eff, "Efficiency of SiPM");
   }
   
   
@@ -145,10 +148,10 @@ namespace nexus {
     //                                   0.082, 0.081, 0.08, 
     //                                   0.08,  0.09, 0.092,
     //                                   0.108, 0.130};
-    G4double efficiency[entries]   = {1., 1., 1., 1., 
-                                      1., 1., 1., 
-                                      1., 1., 1.,
-                                      1., 1.};
+    G4double efficiency[entries]   = {_eff, _eff, _eff, 
+                                      _eff, _eff, _eff, 
+                                      _eff, _eff, _eff,
+                                      _eff, _eff};
     
     // G4double efficiency_red[entries];
     // for (G4int i=0; i<entries; ++i) {
