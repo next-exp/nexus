@@ -26,8 +26,7 @@ namespace nexus {
 
 
   DefaultEventAction::DefaultEventAction(): 
-    G4UserEventAction(), _nevt(0), _nupdate(10), _energy_threshold(0.), _energy_max(DBL_MAX),
-    _first_evt(true), _start_id(0)
+    G4UserEventAction(), _nevt(0), _nupdate(10), _energy_threshold(0.), _energy_max(DBL_MAX)
   {
     _msg = new G4GenericMessenger(this, "/Actions/DefaultEventAction/");
     
@@ -40,8 +39,6 @@ namespace nexus {
       _msg->DeclareProperty("max_energy", _energy_max, "Maximum deposited energy to save the event to file.");
     max_energy_cmd.SetParameterName("max_energy", true);
     max_energy_cmd.SetUnitCategory("Energy");
-
-    _msg->DeclareProperty("start_id", _nevt, "Starting event ID for this job.");
   }
   
   
@@ -52,18 +49,12 @@ namespace nexus {
   
   
   
-  void DefaultEventAction::BeginOfEventAction(const G4Event* /*event*/)
+  void DefaultEventAction::BeginOfEventAction(const G4Event* event)
   {
-   
-    if (_first_evt) {
-      _first_evt = false;
-      _start_id = _nevt;
-    }
-   
     // Print out event number info
-    if (((_nevt - _start_id) % _nupdate) == 0) {
-      G4cout << " >> Event no. " << _nevt - _start_id  << G4endl;
-      if ((_nevt - _start_id)  == (10 * _nupdate)) _nupdate *= 10;
+    if ((_nevt % _nupdate) == 0) {
+      G4cout << " >> Event no. " << _nevt  << G4endl;
+      if (_nevt  == (10 * _nupdate)) _nupdate *= 10;
     }
   }
 

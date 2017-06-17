@@ -81,7 +81,11 @@ namespace nexus {
     std::map<G4int, gate::MCParticle*> _iprtmap;
     std::map<G4int, gate::MCTrack*> _itrkmap;
 
-    G4int _saved_evts;
+    G4int _saved_evts; ///< number of events to be saved
+
+    G4int _nevt; ///< Event ID
+    G4int _start_id; ///< ID for the first event in file
+    G4bool _first_evt; ///< true only for the first event of the run
   };
 
 
