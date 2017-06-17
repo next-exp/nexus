@@ -46,12 +46,13 @@ using namespace nexus;
 PersistencyManager::PersistencyManager(): 
   G4VPersistencyManager(), _msg(0), _historyFile("G4history.macro"), 
   _ready(false), _store_evt(true),  event_type_("other"),_writer(0),
-  _saved_evts(0)
+  _saved_evts(0), _nevt(0), _first_evt(true)
 {
   _msg = new G4GenericMessenger(this, "/nexus/persistency/");
   _msg->DeclareMethod("outputFile", &PersistencyManager::OpenFile, "");
   _msg->DeclareProperty("historyFile", _historyFile, "Name of the file where the configuration information are stored");
   _msg->DeclareProperty("eventType", event_type_, "Type of event: bb0nu, bb2nu or background.");
+  _msg->DeclareProperty("start_id", _start_id, "Starting event ID for this job.");
 }
 
 
@@ -117,9 +118,16 @@ G4bool PersistencyManager::Store(const G4Event* event)
 
   _saved_evts++;
 
+  if (_first_evt) {
+    _first_evt = false;
+    _nevt = _start_id;
+  }
+
   // Create a new GATE event
   gate::Event ievt;
-  ievt.SetEventID(event->GetEventID());
+  // ievt.SetEventID(event->GetEventID());
+  ievt.SetEventID(_nevt);
+  _nevt++;
   if (event_type_ == "bb0nu") {
     ievt.SetMCEventType(gate::BB0NU);
   } else if (event_type_ == "bb2nu") {

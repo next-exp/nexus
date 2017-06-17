@@ -40,8 +40,6 @@ namespace nexus {
     G4int _nevt, _nupdate;
     G4double _energy_threshold;
     G4double _energy_max;
-    G4bool _first_evt;
-    G4int _start_id;
   };
   
 } // namespace nexus
