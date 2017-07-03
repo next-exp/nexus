@@ -372,7 +372,7 @@ void NextNewVessel::Construct()
       new G4LogicalVolume(upper_port_hole_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
 			  "UP_PORT_AIR_EXT");
     new G4PVPlacement(G4Transform3D(*rot_up, G4ThreeVector(0., _vessel_in_diam/2.+ _up_nozzle_high + (_up_nozzle_flange_high + _up_port_tube_out)/2. , 0.)), upper_port_hole_logic,
-    		      "UP_PORT_AIR_EXT", vessel_logic, false, 0, false);
+    		      "UP_PORT_AIR_EXT", vessel_logic, false, 0, true);
 
     G4Tubs* axial_port_hole_solid = 
       new G4Tubs("AXIAL_PORT_AIR_EXT", 0., _port_tube_diam/2., 
@@ -518,7 +518,7 @@ void NextNewVessel::Construct()
   G4ThreeVector pos_upper_port(0., _vessel_in_diam/2. + _up_nozzle_high - simulated_length_up/2., 0.);
   
   new G4PVPlacement(G4Transform3D(*rot_up, pos_upper_port), upper_port_tube_logic,
-   		    "UPPER_PORT", vessel_gas_logic, false, 0, false);
+   		    "UPPER_PORT", vessel_gas_logic, false, 0, true);
   
   G4Tubs* upper_port_tube_air_solid =
     new G4Tubs("UPPER_PORT_AIR", 0., _port_tube_diam/2.,
@@ -872,6 +872,10 @@ void NextNewVessel::Construct()
     /// Calibration source in capsule, placed at a variable position inside the lateral feedthrough
     else if (region =="INTERNAL_PORT_ANODE") { 
       vertex =  _screw_gen_lat->GenerateVertex("BODY_VOL");
+    }
+    /// Calibration source in capsule, placed at a variable position inside the upper feedthrough
+    else if (region =="INTERNAL_PORT_UPPER") { 
+      vertex =  _screw_gen_up->GenerateVertex("BODY_VOL");
     }
      /// Calibration source in capsule, placed at a variable position inside the axial feedthrough
     else if (region =="INTERNAL_PORT_AXIAL") { 
