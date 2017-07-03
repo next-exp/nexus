@@ -602,9 +602,9 @@ OpticalMaterialProperties::FakeGrid(G4double pressure, G4double temperature,
   FGrid_mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
   FGrid_mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield); 
   FGrid_mpt->AddConstProperty("RESOLUTIONSCALE", 1.0);
-  FGrid_mpt->AddConstProperty("FASTTIMECONSTANT",1.*ns);
-  FGrid_mpt->AddConstProperty("SLOWTIMECONSTANT",45.*ns);
-  FGrid_mpt->AddConstProperty("YIELDRATIO",.9);
+  FGrid_mpt->AddConstProperty("FASTTIMECONSTANT",4.5*ns);
+  FGrid_mpt->AddConstProperty("SLOWTIMECONSTANT",100.*ns);
+  FGrid_mpt->AddConstProperty("YIELDRATIO",.1);
   FGrid_mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
 
   return FGrid_mpt;

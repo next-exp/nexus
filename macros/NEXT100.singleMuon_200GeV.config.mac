@@ -2,7 +2,6 @@
 /Geometry/Next100/pressure 15. bar
 /Geometry/Next100/max_step_size 1. mm
 /Geometry/Next100/elfield false
-/Geometry/Next100/sc_yield 17000 1/MeV
 /Geometry/Next100/xenon_type enriched
 
 /Geometry/Next100/shielding_vis false

@@ -59,7 +59,7 @@ namespace nexus {
 					       G4double temperature=STP_Temperature, 
 					       G4double transparency=.9, 
 					       G4double thickness=1.*mm,
-					       G4int sc_yield=13889/MeV);
+					       G4int sc_yield=25510/MeV);
 
     static G4MaterialPropertiesTable* Glass();
     

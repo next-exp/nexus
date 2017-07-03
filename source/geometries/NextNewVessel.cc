@@ -105,7 +105,7 @@ namespace nexus {
     _pressure(1. * bar),
     _temperature (300 * kelvin),
     _visibility(1),
-    _sc_yield(16670. * 1/MeV),
+    _sc_yield(25510. * 1/MeV),
     _gas("naturalXe"),
     _Xe_perc(100.),
     //   _source(false),
@@ -532,6 +532,7 @@ void NextNewVessel::Construct()
   new G4PVPlacement(0,G4ThreeVector(0.,0.,-_port_tube_window_thickn/2.),
 		    upper_port_tube_air_logic, "UPPER_PORT_AIR", 
 		    upper_port_tube_logic, false, 0, false);
+
 
   // This position of the source is assumed to be at the bottom of the tube, inside.
   _upper_port_source_pos.setX(0.);
