@@ -9,7 +9,6 @@
 /tracking/verbose 1
 
 /Geometry/NextNew/pressure 7. bar
-/Geometry/NextNew/sc_yield 16670.  1/MeV
 /Geometry/NextNew/elfield false
 ### For sodium source: Na, for thorium source: Th
 /Geometry/CalibrationSource/source Na

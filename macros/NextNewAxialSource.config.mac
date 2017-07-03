@@ -6,16 +6,15 @@
 
 /run/verbose 0
 /event/verbose 0
-/tracking/verbose 1
+/tracking/verbose 0
 
 /Geometry/NextNew/pressure 7. bar
-/Geometry/NextNew/sc_yield 16670.  1/MeV
 /Geometry/NextNew/elfield false
 ### For sodium source: Na, for thorium source: Th
 /Geometry/CalibrationSource/source Na
 /Geometry/NextNew/lead_block true
 /Geometry/NextNew/ext_scint true
-/Geometry/NextNew/calib_pos axial
+/Geometry/NextNew/calib_port axial
 /Geometry/NextNew/lead_castle false
 
 ## For visualization

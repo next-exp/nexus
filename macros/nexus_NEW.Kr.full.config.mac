@@ -13,7 +13,7 @@
 
 # GEOMETRY
 /Geometry/NextNew/pressure 15. bar
-/Geometry/NextNew/sc_yield 16670. 1/MeV
+/Geometry/NextNew/sc_yield 25510. 1/MeV
 /Geometry/NextNew/elfield true
 /Geometry/PmtR11410/SD_depth 4
 

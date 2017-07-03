@@ -12,7 +12,6 @@
 
 /Geometry/NextNew/pressure 5. bar
 /Geometry/NextNew/max_step_size 1. mm
-/Geometry/NextNew/sc_yield 16670. 1/MeV
 /Geometry/NextNew/elfield false
 /Geometry/NextNew/gas Ar
 

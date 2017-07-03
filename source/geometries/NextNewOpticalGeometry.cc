@@ -33,7 +33,7 @@ NextNewOpticalGeometry::NextNewOpticalGeometry():
   BaseGeometry(),
   _pressure(1. * bar),
   _temperature (300 * kelvin),
-  _sc_yield(16670. * 1/MeV),
+  _sc_yield(25510. * 1/MeV),
   _gas("naturalXe"),
   _rot_angle(pi)
 {
