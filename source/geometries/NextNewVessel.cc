@@ -531,8 +531,60 @@ void NextNewVessel::Construct()
   
   new G4PVPlacement(0,G4ThreeVector(0.,0.,-_port_tube_window_thickn/2.),
 		    upper_port_tube_air_logic, "UPPER_PORT_AIR", 
-		    upper_port_tube_logic, false, 0, false);
+		    upper_port_tube_logic, false, 0, true);
 
+
+   // Screwed internal source
+  if (_calib_port == "upper") {
+
+    G4LogicalVolume* upper_screw_tube_logic = _cal->GetLogicalVolume();
+ 
+    G4double piece_length = _cal->GetCapsuleThickness(); //16. *mm;  
+    G4double source_diam = _cal->GetSourceDiameter(); // 6. * mm;
+    G4double source_thickness = _cal->GetSourceThickness(); // 2. * mm;
+   
+    G4double z_pos_source = _cal->GetSourceZpos();
+
+    G4ThreeVector pos_screw_source(0., 0., 0.);
+    if (_source_distance >= 0.*mm
+	&& _source_distance <= (simulated_length_up - piece_length - _port_tube_window_thickn)) {
+      pos_screw_source = G4ThreeVector(0., 0., (simulated_length_up - _port_tube_window_thickn)/2. -  piece_length/2. - _source_distance);
+      new G4PVPlacement(0, pos_screw_source, upper_screw_tube_logic,
+			"SCREW_SUPPORT", upper_port_tube_air_logic, false, 0, true);
+    } else if (_source_distance > (simulated_length_up - piece_length - _port_tube_window_thickn)
+	       && _source_distance < (simulated_length_up - _port_tube_window_thickn)) {
+      // Put the source in the farthest position, inside the inner part of tube, since it cannot be placed between two volumes
+      pos_screw_source = G4ThreeVector(0., 0., -(simulated_length_up - _port_tube_window_thickn)/2.  + piece_length/2.);
+      new G4PVPlacement(0, pos_screw_source, upper_screw_tube_logic,
+			"SCREW_SUPPORT", upper_port_tube_air_logic, false, 0, true);
+    } else if (_source_distance >= (simulated_length_up - _port_tube_window_thickn)
+	       && _source_distance <= _up_port_tube_length - _port_tube_window_thickn - piece_length) {
+      pos_screw_source = G4ThreeVector(0., 0., -(_up_nozzle_flange_high + _up_port_tube_out)/2. + (_up_port_tube_length - _port_tube_window_thickn - _source_distance) - piece_length/2.);
+      new G4PVPlacement(0,  pos_screw_source, upper_screw_tube_logic,
+			"SCREW_SUPPORT", upper_port_hole_logic , false, 0, true);
+    } else {
+      G4Exception("[NextNewVessel]", "Construct()", FatalException,
+		  "This position of the screw source in upper port is not permitted, since it is outside the upper port."); 
+    }
+
+    G4double gen_pos = 0.;
+    if (_source_distance >= 0.*mm && _source_distance <= (simulated_length_up - piece_length - _port_tube_window_thickn)) {
+      gen_pos = _vessel_in_diam/2. + _up_nozzle_high - simulated_length_up + _port_tube_window_thickn + piece_length/2. - z_pos_source + _source_distance;
+    } else if (_source_distance > (simulated_length_up - piece_length - _port_tube_window_thickn)
+	       && _source_distance < (simulated_length_up - _port_tube_window_thickn)) {
+      gen_pos = _vessel_in_diam/2.  + _up_nozzle_high - piece_length/2. - z_pos_source;
+    } else if (_source_distance >= (simulated_length_up - _port_tube_window_thickn)
+	       && _source_distance <= _up_port_tube_length - _port_tube_window_thickn - piece_length) {
+      gen_pos = _vessel_in_diam/2.+ _up_nozzle_high + (_up_nozzle_flange_high + _up_port_tube_out) - (_up_port_tube_length - _port_tube_window_thickn - _source_distance) + piece_length/2. - z_pos_source;
+    } else {
+      G4Exception("[NextNewVessel]", "Construct()", FatalException,
+		  "This position of the screw source is not permitted, since it is outside the upper port."); 
+    }
+    
+    _screw_gen_up =
+      new CylinderPointSampler(0., source_thickness, source_diam/2., 0., G4ThreeVector(0., gen_pos, 0.), rot_up);
+
+  }
 
   // This position of the source is assumed to be at the bottom of the tube, inside.
   _upper_port_source_pos.setX(0.);
