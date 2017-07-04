@@ -80,12 +80,15 @@ namespace nexus {
   {
     ////// INNER COPPER SHIELDING BARREL  ///////////
 
+    G4double displ = 7.*mm; //2.5 mm
+
     G4Tubs* ics_body_nh_solid = 
-      new G4Tubs("ICS_BODY", _body_out_diam/2. - _body_thickness,
-		 _body_out_diam/2.- 1*mm,_body_length/2., 0., twopi);
+      new G4Tubs("ICS_BODY", _body_out_diam/2. - _body_thickness - displ,
+		 _body_out_diam/2.- 1*mm - displ, _body_length/2., 0., twopi);
 
     G4Tubs* ics_tracking_tread_solid = 
-      new G4Tubs("ICS_TRACKING_TREAD", _body_out_diam/2. - _body_thickness - 2.*mm, _body_out_diam/2. - _body_thickness/2.,
+      new G4Tubs("ICS_TRACKING_TREAD", _body_out_diam/2. - _body_thickness - 2.*mm - displ,
+                 _body_out_diam/2. - _body_thickness/2. - displ,
 		 _tracking_tread_length/2., 0., twopi); // _tracking_tread_diam/2.,
 
     G4SubtractionSolid* ics_solid =
