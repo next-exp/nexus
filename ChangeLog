@@ -1,3 +1,6 @@
+tag v5_02_06 - 4 Jul 2017
+	- S1 scintillation yield default value changed.
+	
 tag v5_02_05 - 30 Jun 2017
 	- customizable starting event ID for each job added.
 	
