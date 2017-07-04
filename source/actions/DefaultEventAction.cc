@@ -49,7 +49,7 @@ namespace nexus {
   
   
   
-  void DefaultEventAction::BeginOfEventAction(const G4Event* event)
+  void DefaultEventAction::BeginOfEventAction(const G4Event* /*event*/)
   {
     // Print out event number info
     if ((_nevt % _nupdate) == 0) {
