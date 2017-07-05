@@ -16,7 +16,7 @@
 #include "NextNewVessel.h"
 #include "NextNewIcs.h"
 #include "NextNewInnerElements.h"
-//#include "Na22Source.h"
+#include "Na22Source.h"
 #include "BoxPointSampler.h"
 #include "MuonsPointSampler.h"
 #include "OpticalMaterialProperties.h"
@@ -197,17 +197,17 @@ namespace nexus {
     G4RotationMatrix* ax_rot = new G4RotationMatrix();
     ax_rot->rotateY(2*pi);
     
-    /*
+    
    /// In principle we shouldn't use this source anymore, but never say never...
     Na22Source* na22 = new Na22Source();
     na22->Construct();
     G4LogicalVolume* na22_logic = na22->GetLogicalVolume();
 
     // This is the position of the whole Na22 source + plastic support.
-    G4ThreeVector lat_pos_source = G4ThreeVector(lat_pos.getX() + na22->GetSupportThickness()/2., lat_pos.getY(), lat_pos.getZ());
+    // G4ThreeVector lat_pos_source = G4ThreeVector(lat_pos.getX() + na22->GetSupportThickness()/2., lat_pos.getY(), lat_pos.getZ());
 
-    new G4PVPlacement(G4Transform3D(*lat_rot, lat_pos_source), na22_logic, "NA22_SOURCE",
-    		      _air_logic, false, 0, false);
+    // new G4PVPlacement(G4Transform3D(*lat_rot, lat_pos_source), na22_logic, "NA22_SOURCE",
+    // 		      _air_logic, false, 0, false);
 
     G4ThreeVector up_pos = _vessel->GetUpExtSourcePosition(); // this is the position of the end of the port tube
     G4RotationMatrix* up_rot = new G4RotationMatrix();
@@ -220,7 +220,7 @@ namespace nexus {
 
     G4VisAttributes light_brown_col = nexus::CopperBrown();
     na22_logic->SetVisAttributes(light_brown_col);
-    */
+    
     
     // Build NaI external scintillator
 
@@ -328,15 +328,15 @@ namespace nexus {
     _axial_source_gen = new CylinderPointSampler(0., _cal->GetSourceThickness(), _cal->GetSourceDiameter()/2.,
                                                0., gen_pos_axial, ax_rot);
 
-    // G4double source_diam = na22->GetSourceDiameter();
-    // G4double source_thick = na22->GetSourceThickness();
+    G4double source_diam = na22->GetSourceDiameter();
+    G4double source_thick = na22->GetSourceThickness();
     // G4ThreeVector lat_pos_na22 =
     //   G4ThreeVector(lat_pos.getX() + na22->GetSourceThickness()/2., lat_pos.getY(), lat_pos.getZ());
-    // G4ThreeVector up_pos_na22 =
-    //   G4ThreeVector(up_pos.getX(), up_pos.getY() + na22->GetSourceThickness()/2., up_pos.getZ());
+    G4ThreeVector up_pos_na22 =
+      G4ThreeVector(up_pos.getX(), up_pos.getY() + na22->GetSourceThickness()/2., up_pos.getZ());
 
     // _source_gen_lat = new CylinderPointSampler(0., source_thick, source_diam/2., 0., lat_pos_na22, lat_rot);
-    // _source_gen_up = new CylinderPointSampler(0., source_thick, source_diam/2., 0., up_pos_na22, up_rot);
+    _source_gen_up = new CylinderPointSampler(0., source_thick, source_diam/2., 0., up_pos_na22, up_rot);
 
     G4ThreeVector shielding_dim = _shielding->GetDimensions();
 
@@ -383,9 +383,9 @@ namespace nexus {
     else if (region == "SOURCE_PORT_LATERAL_EXT") {
       vertex = _vessel->GetLatExtSourcePosition();
     }
-    // else if (region == "NA22_PORT_UP_EXT") {
-    //   vertex =  _source_gen_up->GenerateVertex("BODY_VOL");
-    // }
+    else if (region == "NA22_PORT_UP_EXT") {
+      vertex =  _source_gen_up->GenerateVertex("BODY_VOL");
+    }
     else if ( (region == "SHIELDING_LEAD") || (region == "SHIELDING_STEEL") || 
 	      (region == "SHIELDING_GAS") || (region == "SHIELDING_STRUCT") ||
 	      (region == "EXTERNAL") || (region == "SOURCE_PORT_AXIAL_EXT") ) {
