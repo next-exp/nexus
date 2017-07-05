@@ -37,7 +37,7 @@ namespace nexus {
     BaseGeometry(),
 
     // Body dimensions
-    _body_out_diam (64.0  * cm), // inner diameter of the vessel
+    _body_inner_diam (50.62 * cm), // inner diameter of the barrel. The design value is 50.72 cm, slightly changed to avoid overlaps
     _body_length  (68.4 * cm), /// nozzle to nozzle + flanges     ???????????
     _body_thickness (6.0 * cm),
 
@@ -80,16 +80,15 @@ namespace nexus {
   {
     ////// INNER COPPER SHIELDING BARREL  ///////////
 
-    G4double displ = 7.*mm; //2.5 mm
-
     G4Tubs* ics_body_nh_solid = 
-      new G4Tubs("ICS_BODY", _body_out_diam/2. - _body_thickness - displ,
-		 _body_out_diam/2.- 1*mm - displ, _body_length/2., 0., twopi);
+      new G4Tubs("ICS_BODY", _body_inner_diam/2.,
+		 _body_inner_diam/2. + _body_thickness, _body_length/2., 0., twopi);
 
     G4Tubs* ics_tracking_tread_solid = 
-      new G4Tubs("ICS_TRACKING_TREAD", _body_out_diam/2. - _body_thickness - 2.*mm - displ,
-                 _body_out_diam/2. - _body_thickness/2. - displ,
-		 _tracking_tread_length/2., 0., twopi); // _tracking_tread_diam/2.,
+      new G4Tubs("ICS_TRACKING_TREAD", _body_inner_diam/2. - 2.*mm,
+                 _body_inner_diam/2. + _body_thickness/2.,
+		 _tracking_tread_length/2., 0., twopi); 
+
 
     G4SubtractionSolid* ics_solid =
       new G4SubtractionSolid("ICS", ics_body_nh_solid, ics_tracking_tread_solid,

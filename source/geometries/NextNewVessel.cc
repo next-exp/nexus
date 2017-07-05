@@ -372,7 +372,7 @@ void NextNewVessel::Construct()
       new G4LogicalVolume(upper_port_hole_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
 			  "UP_PORT_AIR_EXT");
     new G4PVPlacement(G4Transform3D(*rot_up, G4ThreeVector(0., _vessel_in_diam/2.+ _up_nozzle_high + (_up_nozzle_flange_high + _up_port_tube_out)/2. , 0.)), upper_port_hole_logic,
-    		      "UP_PORT_AIR_EXT", vessel_logic, false, 0, true);
+    		      "UP_PORT_AIR_EXT", vessel_logic, false, 0, false);
 
     G4Tubs* axial_port_hole_solid = 
       new G4Tubs("AXIAL_PORT_AIR_EXT", 0., _port_tube_diam/2., 

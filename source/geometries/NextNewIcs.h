@@ -48,7 +48,7 @@ namespace nexus {
     // Mother Logical Volume of the ICS
     G4LogicalVolume* _mother_logic;
     // Dimensions
-    G4double _body_out_diam, _body_length, _body_thickness;
+    G4double _body_inner_diam, _body_length, _body_thickness;
     G4double _tracking_tread_diam, _tracking_tread_length;
    
     // Dimensions coming from outside  
