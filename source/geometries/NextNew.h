@@ -77,7 +77,7 @@ namespace nexus {
     BoxPointSampler* _lab_gen; ///< Vertex generator
     CylinderPointSampler* _lat_source_gen;
     CylinderPointSampler* _axial_source_gen;
-    /* CylinderPointSampler* _source_gen_up; */
+    CylinderPointSampler* _source_gen_up;
     MuonsPointSampler* _muon_gen; ///< Vertex generator for muons
 
     /// Messenger for the definition of control commands
