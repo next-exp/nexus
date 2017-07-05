@@ -411,7 +411,8 @@ namespace nexus {
 	      (region == "SOURCE_PORT_UP") ||
 	      (region == "SOURCE_PORT_AXIAL") ||
 	      (region == "INTERNAL_PORT_ANODE") ||
-              (region == "INTERNAL_PORT_AXIAL") ){
+              (region == "INTERNAL_PORT_UPPER") ||
+              (region == "INTERNAL_PORT_AXIAL")){
       vertex = _vessel->GenerateVertex(region);
     }
     // ICS REGIONS
