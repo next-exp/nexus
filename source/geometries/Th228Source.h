@@ -1,17 +1,17 @@
-#ifndef NA22_SOURCE_H
-#define NA22_SOURCE_H
+#ifndef TH228_SOURCE_H
+#define TH228_SOURCE_H
 
 #include "DiskSource.h"
 
 namespace nexus {
 
-  class Na22Source: public DiskSource {
+  class Th228Source: public DiskSource {
   public:
     /// Constructor
-    Na22Source();
+    Th228Source();
 
     /// Destructor
-    ~Na22Source();
+    ~Th228Source();
 
     void Construct();
    

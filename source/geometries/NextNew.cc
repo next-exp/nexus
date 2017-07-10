@@ -2,10 +2,11 @@
 //  $Id: NextNew.cc  $
 //
 //  Author:  Miquel Nebot Guinot <miquel.nebot@ific.uv.es>
-//           <jmunoz@ific.uv.es>, <justo.martin-albo@ific.uv.es>   
+//           <jmunoz@ific.uv.es>, <justo.martin-albo@ific.uv.es>  
+//           <paolafer@ific.uv.es>
 //  Created: Sept 2013
 //  
-//  Copyright (c) 2013 NEXT Collaboration
+//  Copyright (c) 2013-2017 NEXT Collaboration
 // ---------------------------------------------------------------------------- 
 
 #include "NextNew.h"
@@ -16,6 +17,8 @@
 #include "NextNewVessel.h"
 #include "NextNewIcs.h"
 #include "NextNewInnerElements.h"
+#include "DiskSource.h"
+#include "Th228Source.h"
 #include "Na22Source.h"
 #include "BoxPointSampler.h"
 #include "MuonsPointSampler.h"
@@ -62,7 +65,9 @@ namespace nexus {
     _ext_scint(false),
     _calib_port(""),
     _dist_scint(25.*cm),
-    _lead_castle(true)
+    _lead_castle(true),
+    _disk_source(false),
+    _source_mat("")
     //   _ext_source_distance(0.*mm)
     // Buffer gas dimensions
   {
@@ -84,9 +89,12 @@ namespace nexus {
     _msg->DeclareProperty("lead_block", _lead_block, "Block of lead on the lateral port");
     _msg->DeclareProperty("lead_distance", _lead_dist, "Distance between the two blocks of lead");
     _msg->DeclareProperty("ext_scint", _ext_scint, "Placement of external NaI scintillator");
-    _msg->DeclareProperty("calib_port", _calib_port, "Where calibration source is placed (lateral/axial)");
-    _msg->DeclareProperty("scint_distance", _dist_scint, "Distance between the end of the lateral port tube and the external scintillator");
+    _msg->DeclareProperty("calib_port", _calib_port, "Where calibration source is placed (lateral/axial/upper)");
+    _msg->DeclareProperty("scint_distance", _dist_scint, "Distance between the end of the port tube and the external scintillator");
     _msg->DeclareProperty("lead_castle", _lead_castle, "Placement of lead castle");
+    
+    _msg->DeclareProperty("disk_source", _disk_source, "External disk-shape calibration source");
+    _msg->DeclareProperty("source_material", _source_mat, "Kind of external disk-shape calibration source");
     
     _cal = new CalibrationSource();
     _cal->Construct();
@@ -193,34 +201,49 @@ namespace nexus {
     G4RotationMatrix* lat_rot = new G4RotationMatrix();
     lat_rot->rotateY(-pi/2);
 
+    G4ThreeVector up_pos = _vessel->GetUpExtSourcePosition(); // this is the position of the end of the port tube
+    G4RotationMatrix* up_rot = new G4RotationMatrix();
+    up_rot->rotateX(pi/2.);
+
     G4ThreeVector axial_pos = _vessel->GetAxialExtSourcePosition(); // this is the position of the end of the port tube
     G4RotationMatrix* ax_rot = new G4RotationMatrix();
     ax_rot->rotateY(2*pi);
     
     
-   /// In principle we shouldn't use this source anymore, but never say never...
-    Na22Source* na22 = new Na22Source();
-    na22->Construct();
-    G4LogicalVolume* na22_logic = na22->GetLogicalVolume();
+    if (_disk_source) {
+      if (_source_mat == "Na") {
+        _source = new Na22Source();
+      } else if (_source_mat == "Th") {
+        _source = new Th228Source();
+      } else {
+        G4Exception("[NextNew]", "Construct()", FatalException,
+                    "The material of disk source must be Na or Th!");   
+      }
 
-    // This is the position of the whole Na22 source + plastic support.
-    // G4ThreeVector lat_pos_source = G4ThreeVector(lat_pos.getX() + na22->GetSupportThickness()/2., lat_pos.getY(), lat_pos.getZ());
+      _source->Construct();
+      G4LogicalVolume* source_logic = _source->GetLogicalVolume();
 
-    // new G4PVPlacement(G4Transform3D(*lat_rot, lat_pos_source), na22_logic, "NA22_SOURCE",
-    // 		      _air_logic, false, 0, false);
+      // This is the position of the whole Na22 source + plastic support.
+      if (_calib_port == "lateral") {
+        G4ThreeVector lat_pos_source = G4ThreeVector(lat_pos.getX() + _source->GetSupportThickness()/2., lat_pos.getY(), lat_pos.getZ());
 
-    G4ThreeVector up_pos = _vessel->GetUpExtSourcePosition(); // this is the position of the end of the port tube
-    G4RotationMatrix* up_rot = new G4RotationMatrix();
-    up_rot->rotateX(pi/2.);
+        new G4PVPlacement(G4Transform3D(*lat_rot, lat_pos_source), source_logic, "SOURCE",
+                          _air_logic, false, 0, false);
+      } else if (_calib_port == "upper") {
 
-    G4ThreeVector up_pos_source = G4ThreeVector(up_pos.getX() , up_pos.getY() + na22->GetSupportThickness()/2., up_pos.getZ());
+        G4ThreeVector up_pos_source =
+          G4ThreeVector(up_pos.getX() , up_pos.getY() + _source->GetSupportThickness()/2., up_pos.getZ());
 
-    new G4PVPlacement(G4Transform3D(*up_rot, up_pos_source), na22_logic, "NA22_SOURCE",
-		      _air_logic, false, 1, false);
+        new G4PVPlacement(G4Transform3D(*up_rot, up_pos_source), source_logic, "SOURCE",
+                          _air_logic, false, 1, false);
+      } else {
+        G4Exception("[NextNew]", "Construct()", FatalException,
+                    "The placement of disk source must be lateral or upper!");   
+      }
 
-    G4VisAttributes light_brown_col = nexus::CopperBrown();
-    na22_logic->SetVisAttributes(light_brown_col);
-    
+      G4VisAttributes light_brown_col = nexus::CopperBrown();
+      source_logic->SetVisAttributes(light_brown_col);
+    }
     
     // Build NaI external scintillator
 
@@ -319,7 +342,7 @@ namespace nexus {
     _lab_gen = 
       new BoxPointSampler(_lab_size - 1.*m, _lab_size - 1.*m, _lab_size - 1.*m, 1.*m,G4ThreeVector(0.,0.,0.),0);
 
-    // this is the position of the source inside the capsule 
+    // These are the positions of the source inside the capsule 
     G4ThreeVector gen_pos_lat = source_pos - G4ThreeVector(_cal->GetSourceZpos(), 0., 0.);
     G4ThreeVector gen_pos_axial = source_pos + G4ThreeVector(0, 0., _cal->GetSourceZpos());
     _lat_source_gen = new CylinderPointSampler(0., _cal->GetSourceThickness(), _cal->GetSourceDiameter()/2.,
@@ -328,18 +351,19 @@ namespace nexus {
     _axial_source_gen = new CylinderPointSampler(0., _cal->GetSourceThickness(), _cal->GetSourceDiameter()/2.,
                                                0., gen_pos_axial, ax_rot);
 
-    G4double source_diam = na22->GetSourceDiameter();
-    G4double source_thick = na22->GetSourceThickness();
-    // G4ThreeVector lat_pos_na22 =
-    //   G4ThreeVector(lat_pos.getX() + na22->GetSourceThickness()/2., lat_pos.getY(), lat_pos.getZ());
-    G4ThreeVector up_pos_na22 =
-      G4ThreeVector(up_pos.getX(), up_pos.getY() + na22->GetSourceThickness()/2., up_pos.getZ());
-
-    // _source_gen_lat = new CylinderPointSampler(0., source_thick, source_diam/2., 0., lat_pos_na22, lat_rot);
-    _source_gen_up = new CylinderPointSampler(0., source_thick, source_diam/2., 0., up_pos_na22, up_rot);
-
+    // These are the vertices of the external disk source
+    if (_disk_source) {
+      G4double source_diam = _source->GetSourceDiameter();
+      G4double source_thick = _source->GetSourceThickness();
+      G4ThreeVector lat_pos_gen =
+        G4ThreeVector(lat_pos.getX() + _source->GetSourceThickness()/2., lat_pos.getY(), lat_pos.getZ());
+      G4ThreeVector up_pos_gen =
+        G4ThreeVector(up_pos.getX(), up_pos.getY() + _source->GetSourceThickness()/2., up_pos.getZ());
+      _source_gen_lat = new CylinderPointSampler(0., source_thick, source_diam/2., 0., lat_pos_gen, lat_rot);
+      _source_gen_up = new CylinderPointSampler(0., source_thick, source_diam/2., 0., up_pos_gen, up_rot);
+    }
+    
     G4ThreeVector shielding_dim = _shielding->GetDimensions();
-
     _muon_gen =
       new MuonsPointSampler(shielding_dim.x()/2. + 50.*cm, shielding_dim.y()/2. + 1.*cm, shielding_dim.z()/2. + 50.*cm);
 
@@ -383,12 +407,16 @@ namespace nexus {
     else if (region == "SOURCE_PORT_LATERAL_EXT") {
       vertex = _vessel->GetLatExtSourcePosition();
     }
-    else if (region == "NA22_PORT_UP_EXT") {
+    // Extended sources with tha shape of a disk outside port
+    else if (region == "SOURCE_PORT_LATERAL_DISK") {
+      vertex =  _source_gen_lat->GenerateVertex("BODY_VOL");
+    }
+    else if (region == "SOURCE_PORT_UP_DISK") {
       vertex =  _source_gen_up->GenerateVertex("BODY_VOL");
     }
     else if ( (region == "SHIELDING_LEAD") || (region == "SHIELDING_STEEL") || 
 	      (region == "SHIELDING_GAS") || (region == "SHIELDING_STRUCT") ||
-	      (region == "EXTERNAL") || (region == "SOURCE_PORT_AXIAL_EXT") ) {
+	      (region == "EXTERNAL") ) {
       vertex = _shielding->GenerateVertex(region);   
     }
     //PEDESTAL

@@ -29,6 +29,7 @@ namespace nexus {class CalibrationSource;}
 namespace nexus {class NaIScintillator;}
 namespace nexus {class SurroundingAir;}
 namespace nexus {class LeadCollimator;}
+namespace nexus {class DiskSource;}
 
 class G4LogicalVolume;
 class G4GenericMessenger;
@@ -78,6 +79,7 @@ namespace nexus {
     CylinderPointSampler* _lat_source_gen;
     CylinderPointSampler* _axial_source_gen;
     CylinderPointSampler* _source_gen_up;
+    CylinderPointSampler* _source_gen_lat;
     MuonsPointSampler* _muon_gen; ///< Vertex generator for muons
 
     /// Messenger for the definition of control commands
@@ -103,6 +105,10 @@ namespace nexus {
     //   G4double _ext_source_distance;
 
     G4bool _lead_castle; ///< false if castle is open (e.g., lead collimator in axial port)
+
+    G4bool _disk_source; ///< true if external disk-like calibration source
+    G4String _source_mat; ///< Kind of external disk-like calibration source (Na/Th so far)
+    DiskSource* _source;
     
   };
   

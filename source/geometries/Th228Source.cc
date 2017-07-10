@@ -1,4 +1,4 @@
-#include "Na22Source.h"
+#include "Th228Source.h"
 #include "MaterialsList.h"
 
 #include <G4Tubs.hh>
@@ -14,32 +14,30 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  Na22Source::Na22Source():
+  Th228Source::Th228Source():
     DiskSource()
   {
-    _source_diam = 3.*mm;
+    _source_diam = 5.*mm;
     _source_thick = .1*mm;
-    _support_diam = 25.33*mm;
-    _support_thick = 6.2*mm;
+    _support_diam = 12.7*mm;
+    _support_thick = 6.35*mm;
   }
   
-  Na22Source::~Na22Source()
+  Th228Source::~Th228Source()
   {
     
   }
   
-  void Na22Source::Construct()
+  void Th228Source::Construct()
   {
 
     ///Plastic support
-    // G4double support_thick = 6.2*mm;
-    // G4double support_diam = 25.33*mm;
     G4Tubs* support_solid = 
       new G4Tubs("SUPPORT", 0., _support_diam/2., _support_thick/2., 0., twopi);
 
     G4Material* plastic = MaterialsList::PS();
     G4LogicalVolume* support_logic = 
-      new G4LogicalVolume(support_solid, plastic, "NA22_SOURCE_SUPPORT");
+      new G4LogicalVolume(support_solid, plastic, "TH228_SOURCE_SUPPORT");
     
     this->SetLogicalVolume(support_logic);
     
@@ -48,12 +46,12 @@ namespace nexus {
     G4Tubs* source_solid = 
       new G4Tubs("SOURCE", 0., _source_diam/2., _source_thick/2., 0., twopi);
     G4Material* sodium22_mat = 
-      G4NistManager::Instance()->FindOrBuildMaterial("G4_Na");
+      G4NistManager::Instance()->FindOrBuildMaterial("G4_Th");
     G4LogicalVolume* source_logic = 
-      new G4LogicalVolume(source_solid, sodium22_mat, "NA22");
+      new G4LogicalVolume(source_solid, sodium22_mat, "TH228");
     
     new G4PVPlacement(0, G4ThreeVector(0., 0.,  _support_thick/2. - _source_thick/2.),
-		      source_logic, "NA22",
+		      source_logic, "TH228",
 		      support_logic, false, 0, false);
     G4VisAttributes * vis_green = new G4VisAttributes;
     vis_green->SetColor(0., 1., 0.);
@@ -66,22 +64,22 @@ namespace nexus {
   
   }
 
-  // G4double Na22Source::GetSourceDiameter()
+  // G4double Th228Source::GetSourceDiameter()
   // {
   //   return _source_diam;
   // }
 
-  // G4double Na22Source::GetSourceThickness()
+  // G4double Th228Source::GetSourceThickness()
   // {
   //   return _source_thick;
   // }
 
-  //  G4double Na22Source::GetSupportDiameter()
+  //  G4double Th228Source::GetSupportDiameter()
   // {
   //   return _support_diam;
   // }
 
-  // G4double Na22Source::GetSupportThickness()
+  // G4double Th228Source::GetSupportThickness()
   // {
   //   return _support_thick;
   // }
