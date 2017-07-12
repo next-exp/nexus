@@ -1,7 +1,7 @@
 ### --------------------------------------------------------
-### Example to run the muons Generator 
-### Author: Neus Lopez March <neus.lopez@ific.uv.es>    
-### date: 30 Jan 2014
+###  Example to run the muons generator 
+###  Author: Neus Lopez March <neus.lopez@ific.uv.es>    
+###  date: 30 Jan 2014
 ### --------------------------------------------------------
 
 /run/verbose 0
@@ -9,11 +9,9 @@
 /tracking/verbose 0
 
 # GENERATION
-/Generator/MuonsGeneration/particle mu-
-/Generator/MuonsGeneration/min_energy  4. GeV
-/Generator/MuonsGeneration/max_energy  4. GeV
-
-/Generator/MuonsGeneration/region MUONS    
+/Generator/MuonGenerator/min_energy  4. GeV
+/Generator/MuonGenerator/max_energy  4. GeV
+/Generator/MuonGenerator/region MUONS    
 
 # GEOMETRY
 /Geometry/Next1EL/elfield false
@@ -38,4 +36,4 @@
 /PhysicsList/Nexus/electroluminescence false
 
 # PHYSICS
-/nexus/persistency/outputFile MuonsExample_1.next
+/nexus/persistency/outputFile DEMO_muons.next

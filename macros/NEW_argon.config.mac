@@ -1,6 +1,8 @@
 ### --------------------------------------------------------
-###  NextNew: Configuration macro
-###  $Id: NextNew.config.mac 2013-09-09 13:13 minegui $
+###  Configuration macro for the NEW detector geometry
+###  This macro simulates Na22 decays in argon at 5 bar
+###  from one single vertex, at the most internal position
+###  of the axial feedthrough
 ### --------------------------------------------------------
 
 
@@ -29,5 +31,4 @@
 /PhysicsList/Nexus/drift               false
 /PhysicsList/Nexus/electroluminescence false
 
-/nexus/persistency/eventType background
-/nexus/persistency/outputFile NextNew.Na22_Ar.next
+/nexus/persistency/outputFile New.Na22_Ar.next

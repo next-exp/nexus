@@ -1,6 +1,6 @@
 ### --------------------------------------------------------
-###  Example 3: Configuration macro
-###  $Id: nexus_example3.config.mac 9053 2013-08-05 10:13:56Z jmalbos $
+###  This init macro simulates bb0nu decays
+###  in the NEW detector geometry
 ### --------------------------------------------------------
 
 /run/verbose 0
@@ -15,7 +15,7 @@
 /control/execute macros/physics/IonizationElectron.mac
 
 
-/nexus/persistency/outputFile ./bb0_GS_mode1_S1L1f.next
+/nexus/persistency/outputFile bb0_GS_mode1_S1L1f.next
 /nexus/persistency/historyFile myHistory.macro ## must be the same as /nexus/historyFile
 
 /nexus/random_seed 542862

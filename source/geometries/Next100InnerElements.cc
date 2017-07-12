@@ -260,7 +260,6 @@ namespace nexus {
     el_field->SetLongitudinalDiffusion(_ELlong_diff);
     XenonGasProperties xgp(_pressure, _temperature);
     el_field->SetLightYield(xgp.ELLightYield(_ELelectric_field));
-    G4cout << "EL yield: " << xgp.ELLightYield(_ELelectric_field)<< G4endl;
     G4Region* el_region = new G4Region("EL_REGION");
     el_region->SetUserInformation(el_field);
     el_region->AddRootLogicalVolume(el_gap_logic);

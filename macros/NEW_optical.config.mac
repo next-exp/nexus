@@ -1,8 +1,7 @@
 ### --------------------------------------------------------
-###  NextNew: Configuration macro
-###  $Id: NextNew.config.mac 2013-09-09 13:13 minegui $
+###  Configuration macro for the NEW detector geometry
+###  This macro simulates a 1 MeV electron in the active volume
 ### --------------------------------------------------------
-
 
 /run/verbose 0
 /event/verbose 0

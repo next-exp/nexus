@@ -1,13 +1,12 @@
 ### --------------------------------------------------------
-###  Next100: Configuration macro
-###  $Id: Next100.config.mac 8758 2013-06-15 11:12:45Z jmunoz $
+###  This init macro simulates tables of secondary scintillation light
+###  in the NEXT100 detector geometry
 ### --------------------------------------------------------
 
 ##### VERBOSITIES #####
 /run/verbose 0
 /event/verbose 0
 /tracking/verbose 0
-
 
 /Generator/ELTableGenerator/num_ie 10
 

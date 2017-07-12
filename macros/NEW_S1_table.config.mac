@@ -1,8 +1,7 @@
+### --------------------------------------------------------
+###  This macro simulates the S1 optical response of the NEW detector
+### --------------------------------------------------------
 
-### --------------------------------------------------------
-###  NextNew: Configuration macro
-###  $Id: nexus_NEW.S1.config.mac 10047 2015-01-23 17:07:30Z paola $
-### --------------------------------------------------------
 /run/verbose 0
 /event/verbose 0
 /tracking/verbose 0
@@ -18,6 +17,7 @@
 # GEOMETRY
 /Geometry/NextNewOpticalGeometry/pressure 15. bar
 /Geometry/PmtR11410/SD_depth 4
+/Geometry/KDB/teflon_masks true
 
 # PHYSICS
 /control/execute macros/physics/IonizationElectron.mac

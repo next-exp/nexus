@@ -1,7 +1,7 @@
-
 ### --------------------------------------------------------
-###  nexus_NEW.S1: Initialization macro of nexus.
-###  $Id: nexus_NEW.S1.init.mac 10047 2015-01-23 17:07:30Z paola $
+###  This init macro simulates tables of primary scintillation light
+###  in the NEW detector geometry
+###  $Id: NEW_S1_table.init.mac 10047 2015-01-23 17:07:30Z paola $
 ### -------------------------------------------------------
 
 
@@ -12,7 +12,7 @@
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
-/Geometry/RegisterGeometry NEXT100
+/Geometry/RegisterGeometry OPTICAL_GEOMETRY
 /Generator/RegisterGenerator S1GENERATOR
 
 /Actions/RegisterTrackingAction DEFAULT
@@ -20,4 +20,4 @@
 /Actions/RegisterRunAction DEFAULT
 /Actions/RegisterSteppingAction DEFAULT
 
-/nexus/RegisterMacro macros/nexus_S1TableNext100.config.mac
+/nexus/RegisterMacro macros/NEW_S1_table.config.mac

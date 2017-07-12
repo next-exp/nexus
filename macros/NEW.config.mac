@@ -1,6 +1,8 @@
 ### --------------------------------------------------------
-###  NextNew: Configuration macro
-###  $Id: NextNew.config.mac 2013-09-09 13:13 minegui $
+###  Configuration macro for the NEW detector geometry
+###  This macro simulates Bi-214 decays from the dice boards
+###  Author: Miquel Nebot Guinot <minegui@ific.uv.es>    
+###  date: 09 Sept 2013
 ### --------------------------------------------------------
 
 
@@ -11,10 +13,9 @@
 /control/execute macros/geometries/NextNew.mac
 
 
-
 /Generator/IonGun/atomic_number 83
 /Generator/IonGun/mass_number 214
-/Generator/IonGun/region  SOURCE_PORT_UP
+/Generator/IonGun/region DICE_BOARD
 
 # ACTIONS
 /Actions/DefaultEventAction/energy_threshold 0.6 MeV

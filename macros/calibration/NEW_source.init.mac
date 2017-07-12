@@ -3,9 +3,7 @@
 ###  $Id: NextNew.init.mac  2013-09-09 13:05 minegui $
 ### --------------------------------------------------------
 
-#Use NEXT_NEW to simulate the whole geometry
-#To simulate only the inner part of the detector use OPTICAL_GEOMETRY 
-#and macros/geometry/NextNewOpt.mac
+### This init macro simulates radioactive decays in the NEW detector geometry 
 
 ### PHYSICS
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -24,4 +22,4 @@
 /Actions/RegisterRunAction DEFAULT
 
 
-/nexus/RegisterMacro macros/NextNewSource.config.mac
+/nexus/RegisterMacro macros/calibration/NEW_disk_source.config.mac

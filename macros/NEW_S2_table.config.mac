@@ -1,7 +1,7 @@
-#######################################################################
-#### Secondary macro to generate look-up tables in the NEW detector ###
-### $Id $                                                                                             ###
-#######################################################################
+### --------------------------------------------------------
+###  This macro simulates tables of secondary scintillation light
+###  in the NEW detector geometry                                                                                       
+### --------------------------------------------------------
 
 
 /run/verbose 0 

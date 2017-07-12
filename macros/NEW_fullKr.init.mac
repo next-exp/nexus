@@ -1,10 +1,7 @@
 ### --------------------------------------------------------
-###  nexus_NEW.Kr: Initialization macro of nexus.
-###  $Id$
+### This init macro simulates Kr-83 decays in the NEW geometry
 ### --------------------------------------------------------
 
-#Use NEXT_NEW to simulate the hole geometry
-#Use OPTICAL_GEOMETRY to simulate only the inner part of the detector
 
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
 /PhysicsList/RegisterPhysics G4DecayPhysics
@@ -22,4 +19,4 @@
 /Actions/RegisterSteppingAction DEFAULT
 /Actions/RegisterRunAction DEFAULT
 
-/nexus/RegisterMacro macros/nexus_NEW.Kr.full.config.mac
+/nexus/RegisterMacro macros/NEW_fullKr.config.mac

@@ -1,0 +1,51 @@
+### --------------------------------------------------------
+###  Configuration macro for the NEW detector geometry
+###  This macro simulates decays from a Na22 calibration source
+###  in one of the ports inside the feedthrough, 
+###  at configurable distance from the bottom
+### --------------------------------------------------------
+
+
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+/Geometry/NextNew/pressure 7. bar
+/Geometry/NextNew/elfield false
+/Geometry/CalibrationSource/source Na
+## lateral/axial/upper
+/Geometry/NextNew/internal_calib_port axial
+## In the axial port, source_distance can vary from 0. to 759 mm
+## In the lateral port, source_distance can vary from 0. to 81 mm
+## In the upper port, source_distance can vary from 0. to 93 mm
+/Geometry/NextNew/source_distance 0. mm
+## When the axial port is selected, the castle must be open
+/Geometry/NextNew/lead_castle false
+
+## For visualization
+/Geometry/Next100/shielding_vis false
+/Geometry/NextNew/table_vis false
+/Geometry/NextNew/ics_vis false
+/Geometry/NextNew/energy_plane_vis false
+/Geometry/NextNew/enclosure_vis false
+/Geometry/NextNew/tracking_plane_vis false
+/Geometry/NextNew/field_cage_vis false
+/Geometry/NextNew/naI_vis true
+/Geometry/NextNew/vessel_vis false
+/Geometry/KDB/kdb_vis false
+/Geometry/SiPMSensl/SiPMSensl_vis false
+/Geometry/PmtR11410/PmtR11410_vis true
+/Geometry/PmtR11410/SD_depth 4
+
+/Generator/IonGun/atomic_number 11
+/Generator/IonGun/mass_number 22
+## ANODE/AXIAL/UPPER
+/Generator/IonGun/region INTERNAL_PORT_AXIAL
+
+
+# PHYSICS
+/PhysicsList/Nexus/clustering          false
+/PhysicsList/Nexus/drift               false
+/PhysicsList/Nexus/electroluminescence false
+
+/nexus/persistency/outputFile New.source.next

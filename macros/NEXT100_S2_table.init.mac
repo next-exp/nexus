@@ -1,5 +1,6 @@
 ### --------------------------------------------------------
-###  Next100: Initialization macro of nexus.
+###  This init macro simulates tables of secondary scintillation light
+###  in the NEXT100 detector geometry
 ###  $Id: Next100.init.mac 8754 2013-06-15 15:15:13Z jmunoz $
 ### --------------------------------------------------------
 
@@ -17,6 +18,6 @@
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterSteppingAction DEFAULT
 
-/nexus/RegisterMacro macros/nexus_ELTableNext100.config.mac
+/nexus/RegisterMacro macros/NEXT100_S2_table.config.mac
 
 /nexus/RegisterDelayedMacro macros/physics/EL_tables.mac 

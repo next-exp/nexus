@@ -3,9 +3,9 @@
 ###  $Id: NextNew.init.mac  2013-09-09 13:05 minegui $
 ### --------------------------------------------------------
 
-#Use NEXT_NEW to simulate the whole geometry
-#To simulate only the inner part of the detector use OPTICAL_GEOMETRY 
-#and macros/geometry/NextNewOpt.mac
+### This init macro simulates radioactive decays in the NEW detector geometry
+### Use NEXT_NEW to simulate the whole geometry.
+### To simulate only the inner part of the detector use OPTICAL_GEOMETRY.
 
 ### PHYSICS
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -18,10 +18,11 @@
 
 /Generator/RegisterGenerator ION_GUN
 
-/Actions/RegisterTrackingAction DEFAULT
+/Actions/RegisterTrackingAction VALIDATION
 /Actions/RegisterEventAction DEFAULT
 /Actions/RegisterSteppingAction DEFAULT
 /Actions/RegisterRunAction DEFAULT
 
 
-/nexus/RegisterMacro macros/NextNewAxialSource.config.mac
+/nexus/RegisterMacro macros/NEW.config.mac
+/nexus/RegisterDelayedMacro macros/physics/Bi214.mac

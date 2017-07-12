@@ -6,14 +6,12 @@
 
 /control/execute macros/physics/DefaultPhysicsList.mac
 
-/nexus/random_seed 1504001
-
 /Geometry/RegisterGeometry NEXT1_EL
-/Generator/RegisterGenerator MUONS_GENERATION
+/Generator/RegisterGenerator MUON_GENERATOR
 
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction MUONS
 /Actions/RegisterRunAction DEFAULT
-##/Actions/RegisterSteppingAction DEFAULT
+/Actions/RegisterSteppingAction DEFAULT
 
-/nexus/RegisterMacro macros/MuonsExample_1_config.mac
+/nexus/RegisterMacro macros/DEMO_muons.config.mac

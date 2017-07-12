@@ -1,6 +1,6 @@
 ### --------------------------------------------------------
-###  NextNew: Configuration macro
-###  $Id$
+###  This macro simulates Kr83 decays uniformly in the active volume and
+###  using the full simulation
 ### --------------------------------------------------------
 
 
@@ -16,5 +16,6 @@
 /Geometry/NextNew/sc_yield 25510. 1/MeV
 /Geometry/NextNew/elfield true
 /Geometry/PmtR11410/SD_depth 4
+/Geometry/KDB/teflon_masks true
 
 /nexus/persistency/outputFile output.next

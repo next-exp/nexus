@@ -1,7 +1,7 @@
 
 ### --------------------------------------------------------
-###  NextNew: Configuration macro
-###  $Id: nexus_NEW.S1.config.mac 10047 2015-01-23 17:07:30Z paola $
+###  This macro simulates tables of secondary scintillation light
+###  in the NEXT100 detector geometry
 ### --------------------------------------------------------
 /run/verbose 0
 /event/verbose 0
