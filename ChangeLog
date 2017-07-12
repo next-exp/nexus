@@ -1,3 +1,11 @@
+tag v5_02_07 - 12 Jul 2017
+	- Inner and outer radii of the copper shielding changed according
+	to real design (overlaps of volumes detected).
+	- Central upper port simulated in detail, following lateral and
+	axial ones.
+	- DEMO disk-shape calibration source geometry added
+	- Calibration source macros reorganized
+	
 tag v5_02_06 - 4 Jul 2017
 	- S1 scintillation yield default value changed.
 	
