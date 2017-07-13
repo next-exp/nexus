@@ -723,11 +723,6 @@ void NextNewFieldCage::BuildBuffer()
   {
     return G4ThreeVector(0., 0., _tube_z_pos);
   }
-
-  G4double NextNewFieldCage::GetActiveBorderZPos() const
-  {
-    return _pos_z_cathode + _cathode_thickness/2.;
-  }
   
 }//end namespace nexus
 

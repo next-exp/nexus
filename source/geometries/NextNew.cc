@@ -68,7 +68,7 @@ namespace nexus {
     _lead_castle(true),
     _disk_source(false),
     _source_mat(""),
-    _source_dist_from_cathode(15. * cm)
+    _source_dist_from_anode(15.*cm)
     //   _ext_source_distance(0.*mm)
     // Buffer gas dimensions
   {
@@ -96,6 +96,7 @@ namespace nexus {
     
     _msg->DeclareProperty("disk_source", _disk_source, "External disk-shape calibration source");
     _msg->DeclareProperty("source_material", _source_mat, "Kind of external disk-shape calibration source");
+    _msg->DeclareProperty("distance_from_anode", _source_dist_from_anode, "Distance of source from anode");
     
     _cal = new CalibrationSource();
     _cal->Construct();
@@ -238,8 +239,7 @@ namespace nexus {
                           _air_logic, false, 0, false);
       } else if (_calib_port == "random") {
         G4ThreeVector random_pos_source =
-          G4ThreeVector(up_pos.getX(), _vessel->GetOuterRadius() + _source->GetSupportThickness()/2., _inner_elements->GetActiveBorderZPos() + _source_dist_from_cathode);
-
+          G4ThreeVector(up_pos.getX(), _vessel->GetOuterRadius() + _source->GetSupportThickness()/2., _inner_elements->GetELzCoord() - _source_dist_from_anode);
         new G4PVPlacement(G4Transform3D(*up_rot, random_pos_source), source_logic, "SOURCE",
                           _air_logic, false, 0, true);
       } else {
@@ -366,7 +366,7 @@ namespace nexus {
       G4ThreeVector up_pos_gen =
         G4ThreeVector(up_pos.getX(), up_pos.getY() + _source->GetSourceThickness()/2., up_pos.getZ());
        G4ThreeVector random_pos_gen =
-        G4ThreeVector(up_pos.getX(), _vessel->GetOuterRadius() + _source->GetSourceThickness()/2., _inner_elements->GetActiveBorderZPos() + _source_dist_from_cathode);
+        G4ThreeVector(up_pos.getX(), _vessel->GetOuterRadius() + _source->GetSourceThickness()/2., _inner_elements->GetELzCoord() - _source_dist_from_anode);
       _source_gen_lat = new CylinderPointSampler(0., source_thick, source_diam/2., 0., lat_pos_gen, lat_rot);
       _source_gen_up = new CylinderPointSampler(0., source_thick, source_diam/2., 0., up_pos_gen, up_rot);
       _source_gen_random = new CylinderPointSampler(0., source_thick, source_diam/2., 0., random_pos_gen, up_rot);
