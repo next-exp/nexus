@@ -1,7 +1,8 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Authors: <miquel.nebot@ific.uv.es>, <jmunoz@ific.uv.es>, <justo.martin-albo@ific.uv.es>
+//  Authors: <miquel.nebot@ific.uv.es>, <jmunoz@ific.uv.es>,
+// <justo.martin-albo@ific.uv.es>, <paola.ferrario@ific.uv.es>
 //  Created: 9 Sept 2013
 //  
 //  Copyright (c) 2013 NEXT Collaboration
@@ -769,34 +770,39 @@ void NextNewVessel::Construct()
 
  
   
-  G4LogicalVolume* NextNewVessel::GetInternalLogicalVolume()
+  G4LogicalVolume* NextNewVessel::GetInternalLogicalVolume() const
   {
     return _internal_logic_vol;
   }
   
-  G4double NextNewVessel::GetUPNozzleZPosition()
+  G4double NextNewVessel::GetUPNozzleZPosition() const
   { 
     return _up_nozzle_z_pos;
   }
 
- G4double NextNewVessel::GetLATNozzleZPosition()
+ G4double NextNewVessel::GetLATNozzleZPosition() const
   { 
     return _lat_nozzle_z_pos;
   }
 
-  G4ThreeVector NextNewVessel::GetLatExtSourcePosition()
+  G4ThreeVector NextNewVessel::GetLatExtSourcePosition() const
   {
     return _lateral_port_source_pos_ext;
   }
 
-  G4ThreeVector NextNewVessel::GetUpExtSourcePosition()
+  G4ThreeVector NextNewVessel::GetUpExtSourcePosition() const
   {
     return _upper_port_source_pos_ext;
   }
 
-  G4ThreeVector NextNewVessel::GetAxialExtSourcePosition()
+  G4ThreeVector NextNewVessel::GetAxialExtSourcePosition() const
   {
     return _axial_port_source_pos_ext;
+  }
+
+  G4double NextNewVessel::GetOuterRadius() const
+  {
+    return _vessel_in_diam/2. + _vessel_thickness;
   }
 
   G4ThreeVector NextNewVessel::GenerateVertex(const G4String& region) const

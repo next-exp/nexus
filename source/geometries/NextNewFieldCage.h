@@ -44,6 +44,9 @@ namespace nexus {
     /// Gives the absolute position of the field cage ensemble
     G4ThreeVector GetPosition() const;
 
+    /// Gives the z position of the border of the active volume
+    G4double GetActiveBorderZPos() const;
+
     /// Builder
     void Construct();
 

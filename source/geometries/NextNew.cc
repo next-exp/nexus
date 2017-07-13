@@ -67,7 +67,8 @@ namespace nexus {
     _dist_scint(25.*cm),
     _lead_castle(true),
     _disk_source(false),
-    _source_mat("")
+    _source_mat(""),
+    _source_dist_from_cathode(15. * cm)
     //   _ext_source_distance(0.*mm)
     // Buffer gas dimensions
   {
@@ -223,19 +224,24 @@ namespace nexus {
       _source->Construct();
       G4LogicalVolume* source_logic = _source->GetLogicalVolume();
 
-      // This is the position of the whole Na22 source + plastic support.
+      // This is the position of the whole source + plastic support.
       if (_calib_port == "lateral") {
         G4ThreeVector lat_pos_source = G4ThreeVector(lat_pos.getX() + _source->GetSupportThickness()/2., lat_pos.getY(), lat_pos.getZ());
 
         new G4PVPlacement(G4Transform3D(*lat_rot, lat_pos_source), source_logic, "SOURCE",
                           _air_logic, false, 0, false);
       } else if (_calib_port == "upper") {
-
         G4ThreeVector up_pos_source =
           G4ThreeVector(up_pos.getX() , up_pos.getY() + _source->GetSupportThickness()/2., up_pos.getZ());
 
         new G4PVPlacement(G4Transform3D(*up_rot, up_pos_source), source_logic, "SOURCE",
-                          _air_logic, false, 1, false);
+                          _air_logic, false, 0, false);
+      } else if (_calib_port == "random") {
+        G4ThreeVector random_pos_source =
+          G4ThreeVector(up_pos.getX(), _vessel->GetOuterRadius() + _source->GetSupportThickness()/2., _inner_elements->GetActiveBorderZPos() + _source_dist_from_cathode);
+
+        new G4PVPlacement(G4Transform3D(*up_rot, random_pos_source), source_logic, "SOURCE",
+                          _air_logic, false, 0, true);
       } else {
         G4Exception("[NextNew]", "Construct()", FatalException,
                     "The placement of disk source must be lateral or upper!");   
@@ -359,8 +365,11 @@ namespace nexus {
         G4ThreeVector(lat_pos.getX() + _source->GetSourceThickness()/2., lat_pos.getY(), lat_pos.getZ());
       G4ThreeVector up_pos_gen =
         G4ThreeVector(up_pos.getX(), up_pos.getY() + _source->GetSourceThickness()/2., up_pos.getZ());
+       G4ThreeVector random_pos_gen =
+        G4ThreeVector(up_pos.getX(), _vessel->GetOuterRadius() + _source->GetSourceThickness()/2., _inner_elements->GetActiveBorderZPos() + _source_dist_from_cathode);
       _source_gen_lat = new CylinderPointSampler(0., source_thick, source_diam/2., 0., lat_pos_gen, lat_rot);
       _source_gen_up = new CylinderPointSampler(0., source_thick, source_diam/2., 0., up_pos_gen, up_rot);
+      _source_gen_random = new CylinderPointSampler(0., source_thick, source_diam/2., 0., random_pos_gen, up_rot);
     }
     
     G4ThreeVector shielding_dim = _shielding->GetDimensions();
@@ -413,6 +422,9 @@ namespace nexus {
     }
     else if (region == "SOURCE_PORT_UP_DISK") {
       vertex =  _source_gen_up->GenerateVertex("BODY_VOL");
+    }
+     else if (region == "SOURCE_DISK") {
+      vertex =  _source_gen_random->GenerateVertex("BODY_VOL");
     }
     else if ( (region == "SHIELDING_LEAD") || (region == "SHIELDING_STEEL") || 
 	      (region == "SHIELDING_GAS") || (region == "SHIELDING_STRUCT") ||

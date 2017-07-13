@@ -72,6 +72,11 @@ namespace nexus {
     delete _field_cage;    
     delete _tracking_plane;
   }
+
+  G4double NextNewInnerElements::GetActiveBorderZPos() const
+  {
+    return _field_cage->GetActiveBorderZPos();
+  }
   
   G4ThreeVector NextNewInnerElements::GenerateVertex(const G4String& region) const
   {

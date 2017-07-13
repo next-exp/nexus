@@ -80,6 +80,7 @@ namespace nexus {
     CylinderPointSampler* _axial_source_gen;
     CylinderPointSampler* _source_gen_up;
     CylinderPointSampler* _source_gen_lat;
+    CylinderPointSampler* _source_gen_random;
     MuonsPointSampler* _muon_gen; ///< Vertex generator for muons
 
     /// Messenger for the definition of control commands
@@ -109,6 +110,7 @@ namespace nexus {
     G4bool _disk_source; ///< true if external disk-like calibration source
     G4String _source_mat; ///< Kind of external disk-like calibration source (Na/Th so far)
     DiskSource* _source;
+    G4double _source_dist_from_cathode;
     
   };
   

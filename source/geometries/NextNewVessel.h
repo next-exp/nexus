@@ -2,7 +2,8 @@
 ///  \file   
 ///  \brief  
 ///
-///  \author   <miquel.nebot@ific.uv.es>, <jmunoz@ific.uv.es>, <justo.martin-albo@ific.uv.es>
+///  \author   <miquel.nebot@ific.uv.es>, <jmunoz@ific.uv.es>,
+/// <justo.martin-albo@ific.uv.es>, <paola.ferrario@ific.uv.es>
 ///  \date     9 Sept 2013
 ///  \version  $Id$
 ///
@@ -38,14 +39,16 @@ namespace nexus {
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
     /// Returns the logical volume of the inner object
-    G4LogicalVolume* GetInternalLogicalVolume();
+    G4LogicalVolume* GetInternalLogicalVolume() const;
 
-    G4double GetUPNozzleZPosition();
-    G4double GetLATNozzleZPosition();
+    G4double GetUPNozzleZPosition() const;
+    G4double GetLATNozzleZPosition() const;
 
-    G4ThreeVector GetLatExtSourcePosition();
-    G4ThreeVector GetUpExtSourcePosition();
-    G4ThreeVector GetAxialExtSourcePosition();
+    G4ThreeVector GetLatExtSourcePosition() const;
+    G4ThreeVector GetUpExtSourcePosition() const;
+    G4ThreeVector GetAxialExtSourcePosition() const;
+
+    G4double GetOuterRadius() const;
 
     /// Builder
     void Construct();
