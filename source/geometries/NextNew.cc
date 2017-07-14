@@ -88,15 +88,34 @@ namespace nexus {
 
     _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
     _msg->DeclareProperty("lead_block", _lead_block, "Block of lead on the lateral port");
-    _msg->DeclareProperty("lead_distance", _lead_dist, "Distance between the two blocks of lead");
+
+    G4GenericMessenger::Command& lead_dist_cmd = 
+      _msg->DeclareProperty("lead_distance", _lead_dist, 
+                          "Distance between the two blocks of lead");
+    lead_dist_cmd.SetUnitCategory("Length");
+    lead_dist_cmd.SetParameterName("lead_distance", false);
+    lead_dist_cmd.SetRange("lead_distance>0.");
+
     _msg->DeclareProperty("ext_scint", _ext_scint, "Placement of external NaI scintillator");
     _msg->DeclareProperty("calib_port", _calib_port, "Where calibration source is placed (lateral/axial/upper)");
-    _msg->DeclareProperty("scint_distance", _dist_scint, "Distance between the end of the port tube and the external scintillator");
+
+    G4GenericMessenger::Command& scint_dist_cmd = 
+      _msg->DeclareProperty("scint_distance", _dist_scint, 
+			    "Distance between the end of the port tube and the NaI scintillator");
+    scint_dist_cmd.SetUnitCategory("Length");
+    scint_dist_cmd.SetParameterName("scint_distance", false);
+    scint_dist_cmd.SetRange("scint_distance>0.");
+
     _msg->DeclareProperty("lead_castle", _lead_castle, "Placement of lead castle");
-    
     _msg->DeclareProperty("disk_source", _disk_source, "External disk-shape calibration source");
     _msg->DeclareProperty("source_material", _source_mat, "Kind of external disk-shape calibration source");
-    _msg->DeclareProperty("distance_from_anode", _source_dist_from_anode, "Distance of source from anode");
+    
+    G4GenericMessenger::Command& source_dist_cmd = 
+      _msg->DeclareProperty("distance_from_anode", _source_dist_from_anode, 
+			    "Distance of source from anode");
+    source_dist_cmd.SetUnitCategory("Length");
+    source_dist_cmd.SetParameterName("distance_from_anode", false);
+    source_dist_cmd.SetRange("distance_from_anode>0.");
     
     _cal = new CalibrationSource();
     _cal->Construct();
@@ -107,6 +126,7 @@ namespace nexus {
     _air = new SurroundingAir();
 
     _coll = new LeadCollimator();
+
   }
 
   NextNew::~NextNew()

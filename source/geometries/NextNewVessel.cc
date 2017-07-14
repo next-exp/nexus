@@ -148,7 +148,13 @@ namespace nexus {
 
     // _msg->DeclareProperty("source", _source, "Radioactive source being used");
     _msg->DeclareProperty("internal_calib_port", _calib_port, "Calibration port being used");
-    _msg->DeclareProperty("source_distance", _source_distance, "Distance of the bottom of the 'screw' source from the bottom of the lateral/axial port tube");  
+
+    G4GenericMessenger::Command& source_dist_cmd = 
+      _msg->DeclareProperty("source_distance", _source_distance, 
+			    "Distance of the bottom of the 'screw' source from the bottom of the lateral/axial/upper port tube");
+    source_dist_cmd.SetUnitCategory("Length");
+    source_dist_cmd.SetParameterName("source_distance", false);
+    source_dist_cmd.SetRange("source_distance>0.");
 
     _cal = new CalibrationSource();
     _cal->Construct();
