@@ -154,7 +154,7 @@ namespace nexus {
 			    "Distance of the bottom of the 'screw' source from the bottom of the lateral/axial/upper port tube");
     source_dist_cmd.SetUnitCategory("Length");
     source_dist_cmd.SetParameterName("source_distance", false);
-    source_dist_cmd.SetRange("source_distance>0.");
+    source_dist_cmd.SetRange("source_distance>=0.");
 
     _cal = new CalibrationSource();
     _cal->Construct();
