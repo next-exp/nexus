@@ -94,7 +94,7 @@ namespace nexus {
                           "Distance between the two blocks of lead");
     lead_dist_cmd.SetUnitCategory("Length");
     lead_dist_cmd.SetParameterName("lead_distance", false);
-    lead_dist_cmd.SetRange("lead_distance>0.");
+    lead_dist_cmd.SetRange("lead_distance>=0.");
 
     _msg->DeclareProperty("ext_scint", _ext_scint, "Placement of external NaI scintillator");
     _msg->DeclareProperty("calib_port", _calib_port, "Where calibration source is placed (lateral/axial/upper)");
@@ -104,7 +104,7 @@ namespace nexus {
 			    "Distance between the end of the port tube and the NaI scintillator");
     scint_dist_cmd.SetUnitCategory("Length");
     scint_dist_cmd.SetParameterName("scint_distance", false);
-    scint_dist_cmd.SetRange("scint_distance>0.");
+    scint_dist_cmd.SetRange("scint_distance>=0.");
 
     _msg->DeclareProperty("lead_castle", _lead_castle, "Placement of lead castle");
     _msg->DeclareProperty("disk_source", _disk_source, "External disk-shape calibration source");
@@ -115,7 +115,7 @@ namespace nexus {
 			    "Distance of source from anode");
     source_dist_cmd.SetUnitCategory("Length");
     source_dist_cmd.SetParameterName("distance_from_anode", false);
-    source_dist_cmd.SetRange("distance_from_anode>0.");
+    source_dist_cmd.SetRange("distance_from_anode>=0.");
     
     _cal = new CalibrationSource();
     _cal->Construct();
