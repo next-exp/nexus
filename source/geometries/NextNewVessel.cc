@@ -128,7 +128,6 @@ namespace nexus {
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
     _msg->DeclareProperty("vessel_vis", _visibility, "Vessel Visibility");
-    // _msg->DeclareProperty("xenon_type", _xenon, "Type of xenon being used");
 
     G4GenericMessenger::Command& pressure_cmd = _msg->DeclareProperty("pressure", _pressure, "Xenon pressure");
     pressure_cmd.SetUnitCategory("Pressure");
@@ -154,7 +153,7 @@ namespace nexus {
 			    "Distance of the bottom of the 'screw' source from the bottom of the lateral/axial/upper port tube");
     source_dist_cmd.SetUnitCategory("Length");
     source_dist_cmd.SetParameterName("source_distance", false);
-    source_dist_cmd.SetRange("source_distance>0.");
+    source_dist_cmd.SetRange("source_distance>=0.");
 
     _cal = new CalibrationSource();
     _cal->Construct();
