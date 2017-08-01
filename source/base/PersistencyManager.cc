@@ -46,7 +46,7 @@ using namespace nexus;
 PersistencyManager::PersistencyManager(): 
   G4VPersistencyManager(), _msg(0), _historyFile("G4history.macro"), 
   _ready(false), _store_evt(true),  event_type_("other"),_writer(0),
-  _saved_evts(0), _nevt(0), _first_evt(true)
+  _saved_evts(0), _nevt(0), _start_id(0), _first_evt(true)
 {
   _msg = new G4GenericMessenger(this, "/nexus/persistency/");
   _msg->DeclareMethod("outputFile", &PersistencyManager::OpenFile, "");
