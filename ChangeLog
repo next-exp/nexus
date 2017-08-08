@@ -1,3 +1,7 @@
+tag v5_02_09 - 8 Aug 2017
+	- bug in initialization of start ID fixed. 
+	- Generator of e+e- pair with customizable total kinetic energy added.
+	
 tag v5_02_08 - 30 Jul 2017
 	- Position of Th source on to the vessel and generator implemented
 	
