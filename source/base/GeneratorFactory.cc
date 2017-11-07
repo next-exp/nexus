@@ -40,6 +40,7 @@ GeneratorFactory::~GeneratorFactory()
 #include "NeutronGenerator.h"
 #include "ELTableGenerator.h"
 #include "ScintillationGenerator.h"
+#include "ElecPositronPair.h"
 
 
 G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
@@ -65,6 +66,8 @@ G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
   else if (_name == "EL_TABLE_GENERATOR") p = new ELTableGenerator();
 
   else if (_name == "S1GENERATOR") p = new ScintillationGenerator();
+
+  else if (_name == "E+E-PAIR") p = new ElecPositronPair();
 
   else {
     G4String err = "The user specified an unknown generator: " + _name;

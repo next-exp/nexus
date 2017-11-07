@@ -65,7 +65,7 @@ namespace nexus {
     _el_gap_length (6 * mm),
     _grid_thickness (.1 * mm), //it's just fake dielectric
     _el_grid_transparency (.88),
-    _gate_transparency (.76),
+    _gate_transparency (.84),
     _anode_quartz_thickness (3 *mm),
     _anode_quartz_diam (522.*mm),  
     _cathode_grid_transparency (.98),
