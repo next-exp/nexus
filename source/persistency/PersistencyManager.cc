@@ -243,7 +243,6 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     ipart->SetFinalMom(0, 0, 0, mass);
   //  std::cout << "After: "<< ipart->GetInitialVtx4D().GetT() << std::endl;
     ievent->AddMCParticle(ipart);
-<<<<<<< HEAD:source/persistency/PersistencyManager.cc
 
     if (_hdf5dump) {
       float ini_pos[4] = {(float)ini_xyz.x(), (float)ini_xyz.y(), (float)ini_xyz.z(), (float)ini_t};
@@ -262,10 +261,6 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
                                    &momentum[0], 3, kin_energy, trj->GetCreatorProcess().c_str());
     }
   }
-=======
-  
-}
->>>>>>> Type change in GATE waveforms:source/base/PersistencyManager.cc
 
 
   // We'll set now the family relationships.
@@ -439,11 +434,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     
     const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
     std::map<G4double, G4int>::const_iterator it;
-<<<<<<< HEAD:source/persistency/PersistencyManager.cc
     std::vector< std::pair<unsigned int, float> > data;
-=======
-    std::vector< std::pair<unsigned int,unsigned int> > data;
->>>>>>> Updating to working petalx version:source/base/PersistencyManager.cc
 
     G4double amplitude = 0.;
     
@@ -460,11 +451,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     }
     wf->SetData(data);
     isnr->SetAmplitude(amplitude);
-
-<<<<<<< HEAD:source/persistency/PersistencyManager.cc
     /*
-=======
->>>>>>> Changes in petalo to use g4.10.02:source/base/PersistencyManager.cc
     const std::map<G4double, G4double>&  wvls= hit->GetWavelengths();
     std::map<G4double, G4double>::const_iterator w;
 
@@ -488,11 +475,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 	count++;
       }
     }
-<<<<<<< HEAD:source/persistency/PersistencyManager.cc
     */
-=======
-
->>>>>>> Changes in petalo to use g4.10.02:source/base/PersistencyManager.cc
     ievt->AddMCSensHit(isnr);    
   }
 }
