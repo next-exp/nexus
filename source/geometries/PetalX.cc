@@ -41,7 +41,7 @@ namespace nexus {
     //    vacuum_thickn_(1.*mm),
     //   outer_wall_thickn_(3.*mm),
     det_thickness_(1.*mm),
-    //  det_size_(20.*cm),
+    det_size_(20.*cm),
     active_size_ (5.*cm),
     z_size_(4.*cm)
 

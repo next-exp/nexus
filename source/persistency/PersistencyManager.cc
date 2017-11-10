@@ -419,7 +419,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     
     const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
     std::map<G4double, G4int>::const_iterator it;
-    std::vector< std::pair<unsigned int,unsigned int> > data;
+    std::vector< std::pair<unsigned int, float> > data;
 
     G4double amplitude = 0.;
     
@@ -437,6 +437,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     wf->SetData(data);
     isnr->SetAmplitude(amplitude);
 
+    /*
     const std::map<G4double, G4double>&  wvls= hit->GetWavelengths();
     std::map<G4double, G4double>::const_iterator w;
 
@@ -460,7 +461,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 	count++;
       }
     }
-
+    */
     ievt->AddMCSensHit(isnr);    
   }
 }

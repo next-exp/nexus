@@ -41,7 +41,7 @@ GeneratorFactory::~GeneratorFactory()
 #include "ELTableGenerator.h"
 #include "ScintillationGenerator.h"
 #include "ElecPositronPair.h"
-
+#include "DoubleParticle.h"
 
 G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
 {
