@@ -45,8 +45,6 @@ namespace nexus {
    msg_->DeclareProperty("kdb_vis", visibility_, "Kapton Dice Boards Visibility");
    msg_->DeclareProperty("kdb_columns", columns_, "Number of rows in SiPMs");
    msg_->DeclareProperty("kdb_rows", rows_, "Number of rows in SiPMs");
-
-   sipm_ = new SiPMpet;
    
   }
 
@@ -183,7 +181,7 @@ namespace nexus {
 
     // SETTING VISIBILITIES   //////////
     // _visibility  = true;
-    if (_visibility) {
+    if (visibility_) {
       G4VisAttributes silicon_col(G4Colour(1., 1., 0.));
       silicon_col.SetForceSolid(true);
       sipm_logic->SetVisAttributes(silicon_col);
