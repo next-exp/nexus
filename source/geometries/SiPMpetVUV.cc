@@ -10,9 +10,10 @@
 #include "SiPMpetVUV.h"
 #include "PmtSD.h"
 #include "MaterialsList.h"
-#include <G4GenericMessenger.hh>
 #include "OpticalMaterialProperties.h"
+#include "Visibilities.h"
 
+#include <G4GenericMessenger.hh>
 #include <G4Box.hh>
 #include <G4LogicalVolume.hh>
 #include <G4VisAttributes.hh>
@@ -39,25 +40,14 @@ namespace nexus {
   {
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
-    _msg->DeclareProperty("SiPMpet_vis", _visibility, "SiPMpet Visibility");
+    _msg->DeclareProperty("visibility", _visibility, "SiPMpet Visibility");
     _msg->DeclareProperty("refr_index", _refr_index, "Refraction index for epoxy");
     _msg->DeclareProperty("efficiency", _eff, "Efficiency of SiPM");
   }
   
-  
-  
   SiPMpetVUV::~SiPMpetVUV()
   {
-  }
-
-
-
-  // G4ThreeVector SiPMpetVUV::GetDimensions() const
-  // {
-  //   return _dimensions;
-  // }
-  
-  
+  }  
   
   void SiPMpetVUV::Construct()
   {
@@ -74,20 +64,13 @@ namespace nexus {
     G4double sipm_y = 3. * mm;
     G4double sipm_z = 1.55 * mm;
     
-    SetDimensions(G4ThreeVector(sipm_x, sipm_y, sipm_z));
-
-    // _dimensions.setX(sipm_x);
-    // _dimensions.setY(sipm_y);
-    //  _dimensions.setZ(sipm_z);
-   
+    SetDimensions(G4ThreeVector(sipm_x, sipm_y, sipm_z));   
 
     G4Box* sipm_solid = new G4Box("SIPMpet", sipm_x/2., sipm_y/2., sipm_z/2);
 
     G4Material* epoxy = MaterialsList::Epoxy();
     G4cout << "Epoxy used with constant refraction index = " <<  _refr_index << G4endl;
     epoxy->SetMaterialPropertiesTable(OpticalMaterialProperties::EpoxyFixedRefr(_refr_index));
-    
-
     
     G4LogicalVolume* sipm_logic = 
       new G4LogicalVolume(sipm_solid, epoxy, "SIPMpet");
@@ -126,7 +109,7 @@ namespace nexus {
       new G4LogicalVolume(active_solid, silicon, "PHOTODIODES");
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., sipm_z/2. - active_depth/2. - .1*mm), active_logic,
-		      "PHOTODIODES", sipm_logic, false, 0, false);
+		      "PHOTODIODES", sipm_logic, false, 0, true);
     
     
     // OPTICAL SURFACES //////////////////////////////////////////////
@@ -144,20 +127,10 @@ namespace nexus {
 				      0., 0., 0.,
                                       0., 0., 0.,      
 				      0., 0.};
-    // G4double efficiency[entries]   = {0.092, 0.09, 0.086, 
-    //                                   0.082, 0.081, 0.08, 
-    //                                   0.08,  0.09, 0.092,
-    //                                   0.108, 0.130};
     G4double efficiency[entries]   = {_eff, _eff, _eff, 
                                       _eff, _eff, _eff, 
                                       _eff, _eff, _eff,
                                       _eff, _eff};
-    
-    // G4double efficiency_red[entries];
-    // for (G4int i=0; i<entries; ++i) {
-    //   efficiency_red[i] = efficiency[i];
-    // }
-
 
     
     G4MaterialPropertiesTable* sipm_mt = new G4MaterialPropertiesTable();
@@ -193,9 +166,9 @@ namespace nexus {
 
     // Visibilities
     if (_visibility) {
-      G4VisAttributes sipm_col(G4Colour(.40,.55,.55));
+      G4VisAttributes sipm_col = nexus::Yellow();
       sipm_logic->SetVisAttributes(sipm_col);
-      G4VisAttributes active_col(G4Colour(1.,1.,0.));
+      G4VisAttributes active_col = nexus::Blue();
       active_col.SetForceSolid(true);
       active_logic->SetVisAttributes(active_col);
     }

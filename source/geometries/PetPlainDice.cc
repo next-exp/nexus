@@ -1,16 +1,14 @@
 // ---------------------------------------------------------------------------
 //  $Id$
 // 
-//  Author:  <miquel.nebot@ific.uv.es>
-//  Created: 18 Sept 2013
+//  Author:  <paolafer@ific.uv.es>
+//  Created: 2015
 //
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+//  Copyright (c) 2015-2017 NEXT Collaboration. All rights reserved.
 // ---------------------------------------------------------------------------
 
 #include "PetPlainDice.h"
-
-#include "SiPMpetVUV.h"
-#include "PmtSD.h"
+#include "Visibilities.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 
@@ -40,14 +38,23 @@ namespace nexus {
     visibility_ (1),
     ysize_(5.*cm),
     xsize_(5.*cm),
+    xy_size_(5. * cm),
     refl_(0.95)
   {
     /// Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/PetPlainDice/", "Control commands of geometry Pet.");
-    msg_->DeclareProperty("plain_dice_vis", visibility_, "Kapton Dice Boards Visibility");
-    msg_->DeclareProperty("plain_columns", columns_, "Number of rows in SiPMs");
-    msg_->DeclareProperty("plain_rows", rows_, "Number of rows in SiPMs");
-    msg_->DeclareProperty("reflectivity", refl_, "Reflectivity of teflon panels");
+
+    // xy size
+    G4GenericMessenger::Command& xysize_cmd = 
+      msg_->DeclareProperty("xy_size", xy_size_, "xy dimension");
+    xysize_cmd.SetUnitCategory("Length");
+    xysize_cmd.SetParameterName("xy_size", false);
+    xysize_cmd.SetRange("xy_size>0.");
+
+    // msg_->DeclareProperty("columns", columns_, "Number of rows in SiPMs");
+    // msg_->DeclareProperty("rows", rows_, "Number of rows in SiPMs");
+    msg_->DeclareProperty("reflectivity", refl_, "Reflectivity of dice boards");
+    msg_->DeclareProperty("visibility", visibility_, "Dice Boards Visibility");
   }
 
   PetPlainDice::~PetPlainDice()
@@ -62,7 +69,8 @@ namespace nexus {
 
   void PetPlainDice::Construct()
   {
-   
+    xsize_ = xy_size_;
+    ysize_ = xy_size_;
 
     //   const G4double sipm_pitch = 6.2 * mm;
     const G4double board_thickness = 0.3 * mm;
@@ -102,13 +110,13 @@ namespace nexus {
 
     G4Box* board_solid = new G4Box("DICE_BOARD", db_x/2., db_y/2., db_z/2.);
  
-    // G4Material* kapton =
-    //   G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
-    G4Material* teflon = 
-      G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+    G4Material* kapton =
+      G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
+    //    G4Material* teflon = 
+    //G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
  
     G4LogicalVolume* board_logic = 
-      new G4LogicalVolume(board_solid, teflon, "DICE_BOARD");
+      new G4LogicalVolume(board_solid, kapton, "DICE_BOARD");
     this->SetLogicalVolume(board_logic);
     // new G4PVPlacement(0, G4ThreeVector(0.,0., -border), board_logic,
     // 			"DICE_BOARD", out_logic, false, 0, true);
@@ -120,7 +128,7 @@ namespace nexus {
     db_opsur->SetFinish(ground);
     db_opsur->SetSigmaAlpha(0.1);
    
-    G4cout << refl_ << G4endl;
+    // G4cout << refl_ << G4endl;
     // db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
     db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_LXe(refl_));
     
@@ -146,17 +154,12 @@ namespace nexus {
    
 
     // SETTING VISIBILITIES   //////////
-    // _visibility  = true;
     if (visibility_) {
-      /*
-      G4VisAttributes silicon_col(G4Colour(1., 1., 0.));
-      silicon_col.SetForceSolid(true);
-      sipm_logic->SetVisAttributes(silicon_col);
-      */
-      G4VisAttributes tpb_col(G4Colour(1., 1., 1.));
-      tpb_col.SetForceSolid(true);
-      //   coating_logic->SetVisAttributes(tpb_col);
       
+      G4VisAttributes dice_col = nexus::CopperBrown();
+      dice_col.SetForceSolid(true);
+      board_logic->SetVisAttributes(dice_col);
+         
     }
     else {
       //   coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
@@ -174,10 +177,6 @@ namespace nexus {
     return positions_;
   }
 
-  // void PetPlainDice::SetMaterial(G4Material& mat)
-  // {
-  //   _out_mat = mat;
-  // }
 
 
 } // end namespace nexus
