@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
 ///  \file   PetKDBFixedPitch.h
-///  \brief  Geometry of the Kapton Dice Boards used in the NEW detector.
+///  \brief  Geometry of the PETALO Dice Boards.
 ///
-///  \author  <miquel.nebot@ific.uv.es>
-///  \date    18 Sept 2013
+///  \author  <paolafer@ific.uv.es>
+///  \date    2015
 ///  \version $Id$
 //
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+///  Copyright (c) 2015-2017 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
 #ifndef PET_KDBFixedPitch_H
@@ -19,7 +19,6 @@
 
 class G4GenericMessenger;
 namespace nexus {class SiPMpetVUV;}
-namespace nexus {class SiPMpetTPB;}
 
 namespace nexus {
 
@@ -58,6 +57,9 @@ namespace nexus {
     // SiPM pitch
     G4double sipm_pitch_;
 
+    // Reflectivity of the board in LXe
+    G4double refl_;
+
     // xy dimensions
     G4double xysize_;
     
@@ -68,8 +70,7 @@ namespace nexus {
     // Outer material
     //G4Material* _out_mat;
 
-    // SiPMpetVUV* sipm_;
-     SiPMpetTPB* sipm_;
+    SiPMpetVUV* sipm_;
  
   };
 

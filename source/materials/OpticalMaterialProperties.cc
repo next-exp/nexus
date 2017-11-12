@@ -670,8 +670,8 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LXe()
   G4double intensity[sc_entries];
   LXe_prop.Scintillation(sc_entries, sc_energy, intensity);
   
-  G4double int2[ri_entries];
-  LXe_prop.Scintillation(ri_entries, ri_energy, int2);
+  // G4double int2[ri_entries];
+  //LXe_prop.Scintillation(ri_entries, ri_energy, int2);
 
   // for (G4int i=0; i<ri_entries; i++) {   
   //   G4cout << ri_energy[i] << ", " << rindex[i] << ", " << int2[i] << G4endl;

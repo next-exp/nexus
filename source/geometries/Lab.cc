@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
 //  $Id: Lab.cc 10054 2015-02-09 14:50:49Z paola $
 //
-//  Author:  <justo.martin-albo@ific.uv.es>
-//  Created: 29 August 2013
+//  Author:  <paolafer@ific.uv.es>
+//  Created: 2015
 //  
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+//  Copyright (c) 2015-2017 NEXT Collaboration. All rights reserved.
 // ---------------------------------------------------------------------------- 
 
 #include "Lab.h"
@@ -38,16 +38,12 @@ namespace nexus {
   using namespace CLHEP;
 
   Lab::Lab(): 
-    BaseGeometry(), _msg(0), type_("LXe")
+    BaseGeometry(), _msg(0)
   {
     _msg = new G4GenericMessenger(this, "/Geometry/Lab/", 
 				  "Control commands of geometry Lab.");
-    _msg->DeclareProperty("starting_point", starting_point_, "");
-    _msg->DeclareProperty("file_name", filename_, "");
-     // Which material are we using?
-     _msg->DeclareProperty("det_type", type_, "type of detector");
 
-     module_ = new PetLXeCell();
+    module_ = new PetLXeCell();
     
   }
 
@@ -62,44 +58,11 @@ namespace nexus {
 
   void Lab::Construct()
   {
-        // To read a TTree
-    
-    file_ = new TFile(filename_.c_str(),"READ");
-    G4cout << filename_.c_str() << G4endl;
-    
-    TTree* tree = dynamic_cast<TTree*>(file_->Get("tpg"));
 
-    
-    tree->SetBranchAddress("px1", &px1_);
-    tree->SetBranchAddress("py1", &py1_);
-    tree->SetBranchAddress("pz1", &pz1_);
-    tree->SetBranchAddress("px2", &px2_);
-    tree->SetBranchAddress("py2", &py2_);
-    tree->SetBranchAddress("pz2", &pz2_);
-    for (G4int i=0; i<tree->GetEntries(); ++i) {
-      tree->GetEntry(i);
-      // G4ThreeVector pos1(px1_, py1_, pz1_ );
-      // G4ThreeVector pos2(px2_, py2_, pz2_ );
-      // New vertices (Jan 2016)
-      G4ThreeVector pos1(px1_, py1_, - pz1_ - 100.);
-      G4ThreeVector pos2(px2_, py2_, pz2_ + 100.);
-     
- // if ( px1_ < 12. && px1_ > -12. && py1_ < 12. && py1_ > -12. &&  pz1_ < -100. && pz1_  > -150. &&
- // 	   px2_ < 12. && px2_ > -12. && py2_ < 12. && py2_ > -12. &&  pz2_ > 100. && pz2_ < 150.) {
-      if ( px1_ < 12. && px1_ > -12. && py1_ < 12. && py1_ > -12. &&  (-pz1_-100) < -100. && (- pz1_ - 100) > -150. &&
-      	   px2_ < 12. && px2_ > -12. && py2_ < 12. && py2_ > -12. &&  (pz2_+100) > 100. && (pz2_+100) < 150.) {
-	   // G4cout << px1_ << ", " << py1_ << ", " << pz1_  << G4endl;
-	   // G4cout << px2_ << ", " << py2_ << ", " << pz2_  << G4endl;
-	std::pair<G4ThreeVector, G4ThreeVector> positions = std::make_pair(pos1, pos2);
-	vertices_.push_back(positions);
-      }
-    }
-    file_ ->Close();
     
     // LAB /////////////////////////////////////////////////////////////
     // This is just a volume of air surrounding the detector so that
-  // events (from calibration sources or cosmic rays) can be generated 
-  // on the outside.
+  // events can be generated on the outside.
 
     G4double lab_size (2. * m);
     G4Box* lab_solid = 
@@ -114,45 +77,50 @@ namespace nexus {
     this->SetLogicalVolume(lab_logic);
 
     module_->Construct();
+    G4ThreeVector cell_dim = module_->GetDimensions();
 
     G4LogicalVolume* module_logic = module_->GetLogicalVolume();
-    new G4PVPlacement(0, G4ThreeVector(0.,0., -10.*cm - 2.5*cm), module_logic, "MODULE_0",
+    new G4PVPlacement(0, G4ThreeVector(0.,0., -10.*cm - cell_dim.z()/2.), module_logic, "MODULE_0",
         lab_logic, false, 0, true);
 
     G4RotationMatrix rot;
     rot.rotateY(pi);
-    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0.,0., 10.*cm + 2.5*cm)), module_logic, "MODULE_1",
-        lab_logic, false, 1, true);
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0.,0., 10.*cm + cell_dim.z()/2.)), module_logic,
+                      "MODULE_1", lab_logic, false, 1, true);
+
+    // Build walls of stainless steel, with low thickness 
+    G4double det_size = cell_dim.x();
+    G4double det_size_z = 1.*mm;
+    G4Box* det_solid = 
+      new G4Box("WALL", det_size/2., det_size/2., det_size_z/2.);
+    G4Material* steel = MaterialsList::Steel();
+    
+    G4LogicalVolume* det_logic = new G4LogicalVolume(det_solid, steel, "WALL");
+    //   det_logic_->SetVisAttributes(G4VisAttributes::Invisible);
+    
+    new G4PVPlacement(0, G4ThreeVector(0., 0., -10.*cm + det_size_z/2.), det_logic,
+         	      "WALL", lab_logic, false, 0, true);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 10.*cm - det_size_z/2.), det_logic,
+         	      "WALL", lab_logic, false, 1, true);
     
   }
 
 
 
-  G4ThreeVector Lab::GenerateVertex(const G4String& /*region*/) const
-  {   
-    return G4ThreeVector(0.,0.,0.);
-  }
-
-  std::pair<G4ThreeVector, G4ThreeVector> Lab::GenerateVertices(const G4String& /*region*/) const
+  G4ThreeVector Lab::GenerateVertex(const G4String& region) const
   {
-    std::pair<G4ThreeVector, G4ThreeVector> vertices;
-    unsigned int i = starting_point_ + index_;
-
-    if (i == (vertices_.size()-1)) {
-      G4Exception("[Lab]", "GenerateVertex()", 
-		  RunMustBeAborted, "Reached last event in vertices list.");
-    }
-
-    try {
-      vertices = vertices_.at(i);
-      index_++;
-    }
-    catch (const std::out_of_range& oor) {
-      G4Exception("[Lab]", "GenerateVertex()", FatalErrorInArgument, "Point out of range.");
-    }
+    G4ThreeVector vertex(0., 0., 0.);
     
-    return vertices;
+    if (region == "CENTER") {
+      vertex = G4ThreeVector(0.,0.,0.);
+    } else {
+       G4Exception("[Lab]", "GenerateVertex()", FatalException,
+		  "Unknown vertex generation region!");     
+    }
+
+     return vertex;
   }
+
   
 
 } // end namespace nexus

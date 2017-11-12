@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id: PetalX2.cc  $
+//  $Id: Pet2boxes.cc  $
 //
-//  Author:  <jmunoz@ific.uv.es>   
-//  Created: January 2014
+//  Author:  <paolafer@ific.uv.es>   
+//  Created: 2015
 //  
-//  Copyright (c) 2013 NEXT Collaboration
+//  Copyright (c) 2015-2017 NEXT Collaboration
 // ---------------------------------------------------------------------------- 
 
 #include "Pet2boxes.h"
@@ -42,8 +42,8 @@ namespace nexus {
     //   outer_wall_thickn_(3.*mm),
     det_thickness_(1.*mm),
     //  det_size_(20.*cm),
-    active_size_ (2.56*cm),
-    z_size_(3.*cm)
+    active_size_ (5.*cm),
+    z_size_(5.*cm)
 
   {
     // Messenger
@@ -172,11 +172,10 @@ namespace nexus {
 
     G4LogicalVolume* db_logic = db_->GetLogicalVolume();
     G4LogicalVolume* pdb_logic = pdb_->GetLogicalVolume();
-    //   G4double db_xsize = db.GetDimensions().x();
-    // G4double db_ysize = db.GetDimensions().y();
     G4double db_zsize = db_->GetDimensions().z();
     // G4cout << "dice board x = " << db_xsize << ", y = " 
     // 	   << db_ysize << ", z = " <<  db_zsize << std::endl;
+    
     G4double displ = active_size_/2. + db_zsize/2.;
     G4double displ2 = z_size_/2. + db_zsize/2.;
     

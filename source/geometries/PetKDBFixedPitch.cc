@@ -1,16 +1,15 @@
 // ---------------------------------------------------------------------------
 //  $Id$
 // 
-//  Author:  <miquel.nebot@ific.uv.es>
-//  Created: 18 Sept 2013
+//  Author:  <paolafer@ific.uv.es>
+//  Created: 2015
 //
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+//  Copyright (c) 2015-2017 NEXT Collaboration. All rights reserved.
 // ---------------------------------------------------------------------------
 
 #include "PetKDBFixedPitch.h"
 
 #include "SiPMpetVUV.h"
-#include "SiPMpetTPB.h"
 #include "PmtSD.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
@@ -38,14 +37,22 @@ namespace nexus {
     BaseGeometry(),
     visibility_ (0),
     sipm_pitch_(3.2*mm),
-    xysize_(2.56*cm)
+    refl_(0.97),
+    xysize_(5.*cm)
   {
     /// Messenger
-   msg_ = new G4GenericMessenger(this, "/Geometry/PetalX/", "Control commands of geometry Pet.");
-   msg_->DeclareProperty("kdb_vis", visibility_, "Kapton Dice Boards Visibility");
+   msg_ = new G4GenericMessenger(this, "/Geometry/PetSiPMboards/", "Control commands of PET geometry.");
+   msg_->DeclareProperty("kdb_vis", visibility_, "PET Kapton Dice Boards Visibility");
+   msg_->DeclareProperty("reflectivity", refl_, "Reflectivity of the board in LXe");
 
-   //sipm_ = new SiPMpetVUV;
-   sipm_ = new SiPMpetTPB;
+   G4GenericMessenger::Command& pitch_cmd = 
+       msg_->DeclareProperty("sipm_pitch", sipm_pitch_, "Distance between SiPMs");
+     pitch_cmd.SetUnitCategory("Length");
+     pitch_cmd.SetParameterName("sipm_pitch", false);
+     pitch_cmd.SetRange("sipm_pitch>0.");
+
+   sipm_ = new SiPMpetVUV;
+   //sipm_ = new SiPMpetTPB;
     
   }
 
@@ -65,13 +72,13 @@ namespace nexus {
 
   void PetKDBFixedPitch::Construct()
   {
-     sipm_->Construct();
+    sipm_->Construct();
     // const G4double sipm_pitch = 6.5 * mm;
     //   G4double sipm_pitch = xysize_/rows_;
     G4cout << "Pitch between SiPMs = " << sipm_pitch_/mm << " mm" << G4endl;
     G4int rows =  xysize_/sipm_pitch_;
     G4int columns = rows;
-    const G4double coating_thickness = 0.1 * micrometer;
+    //    const G4double coating_thickness = 0.1 * micrometer;
     const G4double board_thickness = 0.3 * mm;
     //const G4double board_side_reduction = .5 * mm;
     const G4double board_side_reduction = 0. * mm;  
@@ -97,8 +104,8 @@ namespace nexus {
     G4Material* out_material = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
     out_material->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe());
 
-    std::cout << "Border = " << border << G4endl;
-    std::cout << "LXe_volume, x: " << out_x << ", y: " << out_y << ", z: " << out_z << std::endl;
+    //   std::cout << "Border = " << border << G4endl;
+    //std::cout << "LXe_volume, x: " << out_x << ", y: " << out_y << ", z: " << out_z << std::endl;
     G4Box* out_solid = new G4Box("LXE_DICE", out_x/2., out_y/2., out_z/2.);
     G4LogicalVolume* out_logic = 
       new G4LogicalVolume(out_solid, out_material,  "LXE_DICE");
@@ -107,16 +114,16 @@ namespace nexus {
 
     // KAPTON BOARD /////////////////////////////////////////////////
 
-    std::cout << "db_x: " << db_x << ", db_y: " << db_y << ", db_z: " << db_z << std::endl;
+    //std::cout << "db_x: " << db_x << ", db_y: " << db_y << ", db_z: " << db_z << std::endl;
     G4Box* board_solid = new G4Box("DICE_BOARD", db_x/2., db_y/2., db_z/2.);
  
-    // G4Material* kapton =
-    //   G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
-    G4Material* teflon = 
-      G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+    G4Material* kapton =
+      G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
+    //    G4Material* teflon = 
+    //    G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
  
     G4LogicalVolume* board_logic = 
-      new G4LogicalVolume(board_solid, teflon, "DICE_BOARD");
+      new G4LogicalVolume(board_solid, kapton, "DICE_BOARD");
     new G4PVPlacement(0, G4ThreeVector(0.,0., -border), board_logic,
 			"DICE_BOARD", out_logic, false, 0, true);
 
@@ -128,25 +135,25 @@ namespace nexus {
     db_opsur->SetSigmaAlpha(0.1);
    
     //db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
-    db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_LXe());
+    db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_LXe(refl_));
     
     new G4LogicalSkinSurface("DICE_BOARD", board_logic, db_opsur);
 
    
     // WLS COATING //////////////////////////////////////////////////
     
-    G4Box* coating_solid = 
-      new G4Box("DB_WLS_COATING", db_x/2., db_y/2., coating_thickness/2.);
+    // G4Box* coating_solid = 
+    //   new G4Box("DB_WLS_COATING", db_x/2., db_y/2., coating_thickness/2.);
 
-    G4Material* TPB = MaterialsList::TPB();
-    TPB->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB_LXe());
+    // G4Material* TPB = MaterialsList::TPB();
+    // TPB->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB_LXe());
 
-    G4LogicalVolume* coating_logic =
-      new G4LogicalVolume(coating_solid, TPB, "DB_WLS_COATING");
+    // G4LogicalVolume* coating_logic =
+    //   new G4LogicalVolume(coating_solid, TPB, "DB_WLS_COATING");
 
-    G4double pos_z = db_z/2. - coating_thickness / 2.;
-    new G4PVPlacement(0, G4ThreeVector(0., 0., pos_z), coating_logic,
-    		      "DB_WLS_COATING", board_logic, false, 0, true);
+    // G4double pos_z = db_z/2. - coating_thickness / 2.;
+    // new G4PVPlacement(0, G4ThreeVector(0., 0., pos_z), coating_logic,
+    // 		      "DB_WLS_COATING", board_logic, false, 0, true);
     
 
     // SILICON PMs //////////////////////////////////////////////////
@@ -154,7 +161,7 @@ namespace nexus {
    
     G4LogicalVolume* sipm_logic = sipm_->GetLogicalVolume();
 
-    pos_z = db_z/2. - border+ (sipm_->GetDimensions().z())/2.;
+    G4double pos_z = db_z/2. - border+ (sipm_->GetDimensions().z())/2.;
     G4cout << "Pos of SiPM in LXe dice = " << pos_z << G4endl;
     G4double offset = sipm_pitch_/2. - board_side_reduction;
     G4int sipm_no = 0;
@@ -182,16 +189,6 @@ namespace nexus {
 
     //   G4cout << "SiPMs start at " << pos_z - sipm.GetDimensions().z()/2. << " and end at " << pos_z + sipm.GetDimensions().z()/2. << " in the ref system of LXe outer box " << G4endl;
 
-    /// OPTICAL SURFACES ////////////////////////////////////////////
-
-    // G4OpticalSurface* dboard_opsur = new G4OpticalSurface("DB");
-    // dboard_opsur->SetType(dielectric_metal);
-    // dboard_opsur->SetModel(unified);
-    // dboard_opsur->SetFinish(ground);
-    // dboard_opsur->SetSigmaAlpha(0.1);
-    // dboard_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
-    
-    // new G4LogicalSkinSurface("DB", board_logic, dboard_opsur);
 
     // SETTING VISIBILITIES   //////////
     // _visibility  = false;
@@ -218,11 +215,6 @@ namespace nexus {
   {
     return positions_;
   }
-
-  // void PetKDBFixedPitch::SetMaterial(G4Material& mat)
-  // {
-  //   _out_mat = mat;
-  // }
 
 
 } // end namespace nexus

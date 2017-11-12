@@ -56,6 +56,8 @@ namespace nexus {
     
     // x size
     G4double xsize_;
+
+    G4double xy_size_;
     
     // Messenger for the definition of control commands
     G4GenericMessenger* msg_;    
