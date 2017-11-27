@@ -1,3 +1,7 @@
+tag v5_02_10 - 27 Nov 2017
+	- transparency of the GATE mesh changed from 76% to 84%, according
+	to the actual measurements of the diameter of the wires.
+	
 tag v5_02_09 - 8 Aug 2017
 	- bug in initialization of start ID fixed. 
 	- Generator of e+e- pair with customizable total kinetic energy added.
