@@ -46,7 +46,6 @@
 using namespace nexus;
 
 
-
 PersistencyManager::PersistencyManager(G4String historyFile_init, G4String historyFile_conf): 
   G4VPersistencyManager(), _msg(0),
   _ready(false), _store_evt(true),  event_type_("other"), _writer(0),
