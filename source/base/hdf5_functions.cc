@@ -1,5 +1,15 @@
 #include "hdf5_functions.h"
 
+hsize_t createSensorDataType()
+{
+  //Create compound datatype for the table
+  hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (sns_data_t));
+  H5Tinsert (memtype, "sensor_id" , HOFFSET (sns_data_t, sensor_id) , H5T_NATIVE_INT);
+  H5Tinsert (memtype, "time_bin" , HOFFSET (sns_data_t, time_bin) , H5T_NATIVE_UINT64);
+  H5Tinsert (memtype, "charge" , HOFFSET (sns_data_t, charge) , H5T_NATIVE_FLOAT);
+  return memtype;
+}
+
 hsize_t createEventType()
 {
   //Create compound datatype for the table
@@ -9,20 +19,20 @@ hsize_t createEventType()
   return memtype;
 }
 
-// hid_t createRunType()
-// {
-//   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (runinfo_t));
-//   H5Tinsert (memtype, "run_number", HOFFSET (runinfo_t, run_number), H5T_NATIVE_INT);
-//   return memtype;
-// }
+hid_t createRunType()
+{
+  hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (runinfo_t));
+  H5Tinsert (memtype, "run_number", HOFFSET (runinfo_t, run_number), H5T_NATIVE_INT);
+  return memtype;
+}
 
-// hid_t createSensorType()
-// {
-//   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (sensor_t));
-//   H5Tinsert (memtype, "channel",  HOFFSET(sensor_t, channel) , H5T_NATIVE_INT);
-//   H5Tinsert (memtype, "sensorID", HOFFSET(sensor_t, sensorID), H5T_NATIVE_INT);
-//   return memtype;
-// }
+hid_t createSensorType()
+{
+  hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (sensor_t));
+  H5Tinsert (memtype, "channel",  HOFFSET(sensor_t, channel) , H5T_NATIVE_INT);
+  H5Tinsert (memtype, "sensorID", HOFFSET(sensor_t, sensorID), H5T_NATIVE_INT);
+  return memtype;
+}
 
 hid_t createTable(hid_t group, std::string& table_name, hsize_t memtype)
 {
@@ -54,21 +64,63 @@ hid_t createGroup(hid_t file, std::string& groupName)
   return wfgroup;
 }
 
-void writeEvent(evt_t * evtData, hid_t dataset, hid_t memtype, hsize_t evt_number)
+void writeSnsData(sns_data_t* snsData, hid_t dataset, hid_t memtype, hsize_t counter, unsigned int nsensors, unsigned int nsamples)
+{
+  hid_t memspace, file_space;
+  //Create memspace for one SiPM row
+  const hsize_t n_relevant_dims = 3;
+  hsize_t relevant_dims[n_relevant_dims] = {1, nsensors, nsamples};
+  hsize_t dims[1] = relevant_dims[0] * relevant_dims[1] * relevant_dims[2];
+  memspace = H5Screate_simple(1, dims, NULL);
+
+  //Extend SiPM dataset
+  dims[0] = counter+1;
+  H5Dset_extent(dataset, dims);
+
+  //Write SiPM waveforms
+  file_space = H5Dget_space(dataset);
+  hsize_t start[1] = {counter};
+  hsize_t count[1] = {1};
+  H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
+  H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, data);
+  H5Sclose(file_space);
+}
+
+void writeEvent(evt_t* evtData, hid_t dataset, hid_t memtype, hsize_t counter)
 {
   hid_t memspace, file_space;
   hsize_t dims[1] = {1};
   memspace = H5Screate_simple(1, dims, NULL);
 
-  //Extend PMT dataset
-  dims[0] = evt_number+1;
+  //Extend dataset
+  dims[0] = counter+1;
   H5Dset_extent(dataset, dims);
 
-  //Write PMT waveforms
+  //Write event info
   file_space = H5Dget_space(dataset);
-  hsize_t start[1] = {evt_number};
+  hsize_t start[1] = {counter};
   hsize_t count[1] = {1};
   H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
   H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, evtData);
   H5Sclose(file_space);
 }
+
+void writeRun(runinfo_t * runData, hid_t dataset, hid_t memtype, hsize_t evt_number)
+{
+  hid_t memspace, file_space;
+  hsize_t dims[1] = {1};
+  memspace = H5Screate_simple(1, dims, NULL);
+
+  //Extend SiPM dataset
+  dims[0] = evt_number+1;
+  H5Dset_extent(dataset, dims);
+
+  file_space = H5Dget_space(dataset);
+  hsize_t start[1] = {evt_number};
+  hsize_t count[1] = {1};
+  H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
+  H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, runData);
+  H5Sclose(file_space);
+}
+
+
