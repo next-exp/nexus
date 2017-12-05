@@ -121,7 +121,6 @@ void PersistencyManager::CloseFile()
   if (!_writer || !_writer->IsOpen()) return;
 
   _writer->Close();
-
   if (_hdf5dump) _h5writer->Close();
 }
 
@@ -143,7 +142,6 @@ G4bool PersistencyManager::Store(const G4Event* event)
 
   // Create a new GATE event
   gate::Event ievt;
-  // ievt.SetEventID(event->GetEventID());
   ievt.SetEventID(_nevt);
   if (_hdf5dump) {
     _event_info.first = _nevt;
@@ -493,6 +491,10 @@ G4bool PersistencyManager::Store(const G4Run*)
   grun.SetNumEvents((int)_saved_evts);
 
   _writer->WriteRunInfo(grun);
+
+  // if (_hdf5dump) {
+  //   _h5writer->WriteRunInfo(-1);
+  // }
 
   return true;
 }
