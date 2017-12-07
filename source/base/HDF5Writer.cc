@@ -1,5 +1,4 @@
 #include "HDF5Writer.h"
-#include "hdf5_functions.h"
 #include <sstream>
 #include <cstring>
 #include <stdlib.h>
@@ -56,17 +55,13 @@ void HDF5Writer::WriteEventInfo(unsigned int evt_number)
   //_ievt++;
 }
 
-void HDF5Writer::WriteSensorDataInfo(unsigned int id, const std::vector< std::pair<unsigned int, float> >& data)
+void HDF5Writer::WriteSensorDataInfo(unsigned int sensor_id, unsigned int time_bin, unsigned int charge)
 {
   sns_data_t snsData;
-  for (const auto& sample : data) {
-    snsData.sensor_id = id;
-    snsData.time_bin = sample.first;
-    snsData.charge = sample.second;
-  }
-  
+  snsData.sensor_id = sensor_id;
+  snsData.time_bin = time_bin;
+  snsData.charge = charge;
   writeSnsData(&snsData, _snsDataTable, _memtypeSnsData, _ievt);
-
   _ievt++;
 }
 
@@ -81,23 +76,3 @@ void HDF5Writer::WriteRunInfo(size_t run_number)
 
 }
 
-
-
-void HDF5Writer::CreateStructure()
-{
-  int total_sipms = 256;
-
-  //Create group
-  std::string groupName = std::string("/MCRD");
-  hid_t group = createGroup(_file, groupName);
-
-  //Create sipms array
-  std::string sipm_name = std::string("sipmMCRD");
-  _sipmrd = createWaveforms(group, sipm_name, total_sipms, sipmDatasize);
- 
-
-  if(extPmt.size() > 0){
-    std::string extPmt_name = std::string("extpmt");
-    _extpmtrd = createWaveform(group, extPmt_name, extPmtDatasize);
-  }
-}

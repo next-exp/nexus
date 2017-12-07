@@ -1,6 +1,8 @@
 #ifndef HDF5WRITER_H
 #define HDF5WRITER_H
 
+#include "hdf5_functions.h"
+
 #include <hdf5.h>
 #include <iostream>
 
@@ -23,7 +25,7 @@ namespace nexus {
     void WriteEventInfo(unsigned int evt_number);
 
     void WriteRunInfo(size_t run_number);
-    void WriteSensorDataInfo(unsigned int id, const std::vector< std::pair<unsigned int, float> >& data);
+    void WriteSensorDataInfo(unsigned int sensor_id, unsigned int time_bin, unsigned int charge);
 
   private:
     size_t _file; ///< HDF5 file
