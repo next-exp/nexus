@@ -140,6 +140,7 @@ G4bool PersistencyManager::Store(const G4Event* event)
     _nevt = _start_id;
   }
 
+  G4cout << "Event number " << _nevt << G4endl;
   // Create a new GATE event
   gate::Event ievt;
   ievt.SetEventID(_nevt);
@@ -426,7 +427,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 
       data.push_back(std::make_pair(time_bin, charge));
       amplitude = amplitude + (*it).second;
-
+      
       if (_hdf5dump) {
         _h5writer->WriteSensorDataInfo((unsigned int)hit->GetPmtID(), time_bin, charge);
       }

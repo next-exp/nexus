@@ -1,16 +1,18 @@
 #include "HDF5Writer.h"
+
 #include <sstream>
 #include <cstring>
 #include <stdlib.h>
 #include <vector>
 
 #include <stdint.h>
+#include <iostream>
 
 using namespace nexus;
 
 
 HDF5Writer::HDF5Writer():
-  _file(0), _ievt(0)
+  _file(0), _ievt(0), _ismp(0)
 {
 }
 
@@ -52,17 +54,17 @@ void HDF5Writer::WriteEventInfo(unsigned int evt_number)
   evtData.evt_number = evt_number;
   writeEvent(&evtData, _eventsTable, _memtypeEvt, _ievt);
 
-  //_ievt++;
+  _ievt++;
 }
 
-void HDF5Writer::WriteSensorDataInfo(unsigned int sensor_id, unsigned int time_bin, unsigned int charge)
+void HDF5Writer::WriteSensorDataInfo(int sensor_id, int time_bin, int charge)
 {
   sns_data_t snsData;
   snsData.sensor_id = sensor_id;
   snsData.time_bin = time_bin;
   snsData.charge = charge;
-  writeSnsData(&snsData, _snsDataTable, _memtypeSnsData, _ievt);
-  _ievt++;
+  writeSnsData(&snsData, _snsDataTable, _memtypeSnsData, _ismp);
+  _ismp++;
 }
 
 void HDF5Writer::WriteRunInfo(size_t run_number)

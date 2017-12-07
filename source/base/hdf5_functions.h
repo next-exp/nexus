@@ -19,8 +19,8 @@
 
   typedef struct{
     int sensor_id;
-    uint64_t time_bin;
-    float charge;
+    int time_bin;
+    int charge;
   } sns_data_t;
 
   hsize_t createSensorDataType();

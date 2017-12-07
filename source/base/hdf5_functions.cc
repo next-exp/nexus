@@ -5,8 +5,8 @@ hsize_t createSensorDataType()
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (sns_data_t));
   H5Tinsert (memtype, "sensor_id" , HOFFSET (sns_data_t, sensor_id) , H5T_NATIVE_INT);
-  H5Tinsert (memtype, "time_bin" , HOFFSET (sns_data_t, time_bin) , H5T_NATIVE_UINT64);
-  H5Tinsert (memtype, "charge" , HOFFSET (sns_data_t, charge) , H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "time_bin" , HOFFSET (sns_data_t, time_bin) , H5T_NATIVE_INT);
+  H5Tinsert (memtype, "charge" , HOFFSET (sns_data_t, charge) , H5T_NATIVE_INT);
   return memtype;
 }
 
@@ -67,7 +67,7 @@ hid_t createGroup(hid_t file, std::string& groupName)
 void writeSnsData(sns_data_t* snsData, hid_t dataset, hid_t memtype, hsize_t counter)
 {
   hid_t memspace, file_space;
-  //Create memspace for all the SiPM rows of one event
+  //Create memspace for one more SiPM row
   const hsize_t n_dims = 1;
   hsize_t dims[n_dims] = {1};
   memspace = H5Screate_simple(n_dims, dims, NULL);

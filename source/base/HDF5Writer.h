@@ -25,7 +25,7 @@ namespace nexus {
     void WriteEventInfo(unsigned int evt_number);
 
     void WriteRunInfo(size_t run_number);
-    void WriteSensorDataInfo(unsigned int sensor_id, unsigned int time_bin, unsigned int charge);
+    void WriteSensorDataInfo(int sensor_id, int time_bin, int charge);
 
   private:
     size_t _file; ///< HDF5 file
@@ -47,6 +47,7 @@ namespace nexus {
     size_t _snsDataTable;
 
     size_t _ievt; ///< counter for written events
+    size_t _ismp; ///< counter for written waveform samples
     
   };
   
