@@ -15,7 +15,7 @@ hsize_t createEventType()
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (evt_t));
   H5Tinsert (memtype, "evt_number", HOFFSET (evt_t, evt_number), H5T_NATIVE_INT);
-  H5Tinsert (memtype, "timestamp" , HOFFSET (evt_t, timestamp) , H5T_NATIVE_UINT64);
+  //H5Tinsert (memtype, "timestamp" , HOFFSET (evt_t, timestamp) , H5T_NATIVE_UINT64);
   return memtype;
 }
 
@@ -64,14 +64,13 @@ hid_t createGroup(hid_t file, std::string& groupName)
   return wfgroup;
 }
 
-void writeSnsData(sns_data_t* snsData, hid_t dataset, hid_t memtype, hsize_t counter, unsigned int nsensors, unsigned int nsamples)
+void writeSnsData(sns_data_t* snsData, hid_t dataset, hid_t memtype, hsize_t counter)
 {
   hid_t memspace, file_space;
-  //Create memspace for one SiPM row
-  const hsize_t n_relevant_dims = 3;
-  hsize_t relevant_dims[n_relevant_dims] = {1, nsensors, nsamples};
-  hsize_t dims[1] = relevant_dims[0] * relevant_dims[1] * relevant_dims[2];
-  memspace = H5Screate_simple(1, dims, NULL);
+  //Create memspace for all the SiPM rows of one event
+  const hsize_t n_dims = 1;
+  hsize_t dims[n_dims] = {1};
+  memspace = H5Screate_simple(n_dims, dims, NULL);
 
   //Extend SiPM dataset
   dims[0] = counter+1;
@@ -82,7 +81,7 @@ void writeSnsData(sns_data_t* snsData, hid_t dataset, hid_t memtype, hsize_t cou
   hsize_t start[1] = {counter};
   hsize_t count[1] = {1};
   H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
-  H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, data);
+  H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, &snsData);
   H5Sclose(file_space);
 }
 

@@ -4,7 +4,6 @@
 #include <hdf5.h>
 #include <iostream>
 
-
   typedef struct{
     int channel;
     int sensorID;
@@ -37,7 +36,7 @@
   // void WriteWaveform(short int * data, hid_t dataset, hsize_t nsamples, hsize_t evt);
   // hid_t createWaveform(hid_t group, std::string& dataset, hsize_t nsamples);
 
-  void writeSnsData(sns_data_t* snsData, hid_t dataset, hid_t memtype, hsize_t counter, unsigned int nsensors, unsigned int nsamples);
+  void writeSnsData(sns_data_t* snsData, hid_t dataset, hid_t memtype, hsize_t counter);
   void writeEvent(evt_t * evtData, hid_t dataset, hid_t memtype, hsize_t evt_number);
   void writeRun(runinfo_t * runData, hid_t dataset, hid_t memtype, hsize_t evt_number);
   // void writeSensor(sensor_t * sensorData, hid_t dataset, hid_t memtype, hsize_t sensor_number);
