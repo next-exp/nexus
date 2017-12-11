@@ -18,9 +18,9 @@
   } evt_t;
 
   typedef struct{
-    int sensor_id;
-    int time_bin;
-    int charge;
+    unsigned int sensor_id;
+    unsigned int time_bin;
+    unsigned int charge;
   } sns_data_t;
 
   hsize_t createSensorDataType();

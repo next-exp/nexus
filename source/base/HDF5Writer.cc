@@ -57,7 +57,7 @@ void HDF5Writer::WriteEventInfo(unsigned int evt_number)
   _ievt++;
 }
 
-void HDF5Writer::WriteSensorDataInfo(int sensor_id, int time_bin, int charge)
+void HDF5Writer::WriteSensorDataInfo(unsigned int sensor_id, unsigned int time_bin, unsigned int charge)
 {
   sns_data_t snsData;
   snsData.sensor_id = sensor_id;

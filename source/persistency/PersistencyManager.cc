@@ -427,7 +427,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 
       data.push_back(std::make_pair(time_bin, charge));
       amplitude = amplitude + (*it).second;
-      
+
       if (_hdf5dump) {
         _h5writer->WriteSensorDataInfo((unsigned int)hit->GetPmtID(), time_bin, charge);
       }
