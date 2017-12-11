@@ -109,6 +109,8 @@ namespace nexus {
     HDF5Writer* _h5writer;  ///< Event writer to hdf5 file
 >>>>>>> Trying to define the structure of the table:source/base/PersistencyManager.h
 
+    std::pair<G4int, G4double> event_info;
+
   };
 
 
