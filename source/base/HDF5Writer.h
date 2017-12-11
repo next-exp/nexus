@@ -22,11 +22,16 @@ namespace nexus {
     //! close file
     void Close();
 
-    void WriteEventInfo(unsigned int evt_number, float evt_energy);
+    void WriteEventInfo(int evt_number, float evt_energy);
     void WriteSensorDataInfo(unsigned int sensor_id, unsigned int time_bin, unsigned int charge);
-    void WriteHitInfo(int track_indx, int hit_indx, const float* hit_position, float hit_time, float hit_energy, const char* label);
-    void WriteParticleInfo(int track_indx, const char* particle_name, char primary, int pdg_code, const float* initial_vertex, const float* final_vertex, const char* initial_volume, const char* final_volume, const float* momentum, float energy);
+    void WriteHitInfo(int track_indx, int hit_indx, const float* hit_position, int size_position, float hit_time, float hit_energy, const char* label);
+    void WriteParticleInfo(int track_indx, const char* particle_name, char primary, const float* initial_vertex, int size_initial_vertex, const float* final_vertex, int size_final_vertex, const char* initial_volume, const char* final_volume, const float* momentum, int size_momentum, float kin_energy);
+    void WriteEventExtentInfo(int evt_number, unsigned int init_sns_data, unsigned int init_hit, unsigned int init_particle);
     //    void WriteRunInfo(size_t run_number);
+
+    size_t GetSnsDataIndex() const;
+    size_t GetHitIndex() const;
+    size_t GetParticleIndex() const;
     
   private:
     size_t _file; ///< HDF5 file
@@ -41,18 +46,25 @@ namespace nexus {
     size_t _snsDataTable;
     size_t _hitInfoTable;
     size_t _particleInfoTable;
+    size_t _evtExtentTable;
     
     size_t _memtypeEvt;
     size_t _memtypeSnsData;
     size_t _memtypeHitInfo;
     size_t _memtypeParticleInfo;
+    size_t _memtypeEventExtent;
 
     size_t _ievt; ///< counter for written events
     size_t _ismp; ///< counter for written waveform samples
     size_t _ihit; ///< counter for true information
     size_t _ipart; ///< counter for particle information
+    size_t _ievt_extent; ///< counter for extent info
     
   };
+
+  inline size_t HDF5Writer::GetSnsDataIndex() const {return _ismp;}
+  inline size_t HDF5Writer::GetHitIndex() const {return _ihit;}
+  inline size_t HDF5Writer::GetParticleIndex() const {return _ipart;}
   
 } // namespace nexus
 

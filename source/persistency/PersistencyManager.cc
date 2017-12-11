@@ -147,7 +147,7 @@ G4bool PersistencyManager::Store(const G4Event* event)
   if (_hdf5dump) {
     _event_info.first = _nevt;
   }
- 
+
   if (event_type_ == "bb0nu") {
     ievt.SetMCEventType(gate::BB0NU);
   } else if (event_type_ == "bb2nu") {
@@ -172,6 +172,8 @@ G4bool PersistencyManager::Store(const G4Event* event)
 
   // Add event to the tree
   _writer->Write(ievt);
+  _nevt++;
+
   _nevt++;
 
   TrajectoryMap::Clear();
@@ -208,6 +210,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     _iprtmap[trackid] = ipart;
 
     ipart->SetPathLength(trj->GetTrackLength());
+
     G4ThreeVector ini_xyz = trj->GetInitialPosition();
     G4double ini_t = trj->GetInitialTime(); 
     ipart->SetInitialVtx(gate::Vector4D(ini_xyz.x(), ini_xyz.y(), ini_xyz.z(), ini_t));

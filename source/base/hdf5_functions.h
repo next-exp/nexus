@@ -15,11 +15,10 @@
 
   typedef struct{
     int evt_number;
-    int init_sns_data;
-    int init_hit;
-    int init_particle;
-  
-  } evt_limit_t;
+    unsigned int init_sns_data;
+    unsigned int init_hit;
+    unsigned int init_particle;
+  } evt_extent_t;
 
   typedef struct{
     int evt_number;
@@ -45,19 +44,19 @@
 	int track_indx;
 	char particle_name[20];
         char primary;
-	int pdg_code;
 	float initial_vertex[4];
 	float final_vertex[4];
         char initial_volume[20];
         char final_volume[20];
-	float momentum[4];
-	float energy;
+	float momentum[3];
+	float kin_energy;
   } particle_info_t;
 
   hsize_t createEventType();
   hsize_t createSensorDataType();
   hsize_t createHitInfoType();
   hsize_t createParticleInfoType();
+  hsize_t createEventExtentType();
 //  hid_t createRunType();
 //  hid_t createSensorType();
   hid_t createTable(hid_t group, std::string& table_name, hsize_t memtype);
@@ -71,8 +70,9 @@
 
   void writeEvent(evt_t * evtData, hid_t dataset, hid_t memtype, hsize_t evt_number);
   void writeSnsData(sns_data_t* snsData, hid_t dataset, hid_t memtype, hsize_t counter);
-  void writeHitInfo(hit_info_t* hitInfo, hid_t dataset, hid_t memtype, hsize_t counter);
-  void writeParticleInfo(particle_info_t* particleInfo, hid_t dataset, hid_t memtype, hsize_t counter);
+  void writeHit(hit_info_t* hitInfo, hid_t dataset, hid_t memtype, hsize_t counter);
+  void writeParticle(particle_info_t* particleInfo, hid_t dataset, hid_t memtype, hsize_t counter);
+  void writeEventExtent(evt_extent_t* evtExtent, hid_t dataset, hid_t memtype, hsize_t counter);
 // void writeRun(runinfo_t * runData, hid_t dataset, hid_t memtype, hsize_t evt_number);
   // void writeSensor(sensor_t * sensorData, hid_t dataset, hid_t memtype, hsize_t sensor_number);
  
