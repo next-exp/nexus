@@ -40,6 +40,9 @@ hsize_t createHitInfoType()
 
 hsize_t createParticleInfoType()
 {
+  hsize_t point3d_dim[1] = {3};
+  hid_t point3d = H5Tarray_create(H5T_NATIVE_FLOAT, 1, point3d_dim);
+  
   hsize_t point_dim[1] = {4};
   hid_t point = H5Tarray_create(H5T_NATIVE_FLOAT, 1, point_dim);
   
@@ -51,13 +54,23 @@ hsize_t createParticleInfoType()
   H5Tinsert (memtype, "track_indx",HOFFSET (particle_info_t, track_indx),H5T_NATIVE_INT);
   H5Tinsert (memtype, "particle_name",HOFFSET (particle_info_t, particle_name),strtype);
   H5Tinsert (memtype, "primary",HOFFSET (particle_info_t, primary), H5T_NATIVE_CHAR);
-  H5Tinsert (memtype, "pdg_code",HOFFSET (particle_info_t, pdg_code),H5T_NATIVE_INT);
   H5Tinsert (memtype, "initial_vertex",HOFFSET (particle_info_t, initial_vertex), point);
   H5Tinsert (memtype, "final_vertex",HOFFSET (particle_info_t, final_vertex), point);
   H5Tinsert (memtype, "initial_volume",HOFFSET (particle_info_t, initial_volume),strtype);
   H5Tinsert (memtype, "final_volume",HOFFSET (particle_info_t, final_volume),strtype);
-  H5Tinsert (memtype, "momentum",HOFFSET (particle_info_t, momentum), point);
-  H5Tinsert (memtype, "energy",HOFFSET (particle_info_t, energy), H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "momentum",HOFFSET (particle_info_t, momentum), point3d);
+  H5Tinsert (memtype, "kin_energy",HOFFSET (particle_info_t, kin_energy), H5T_NATIVE_FLOAT);
+  return memtype;
+}
+
+hsize_t createEventExtentType()
+{
+  //Create compound datatype for the table
+  hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (evt_extent_t));
+  H5Tinsert (memtype, "evt_number", HOFFSET (evt_extent_t, evt_number), H5T_NATIVE_INT);
+  H5Tinsert (memtype, "init_sns_data" , HOFFSET (evt_extent_t, init_sns_data) , H5T_NATIVE_UINT);
+  H5Tinsert (memtype, "init_hit" , HOFFSET (evt_extent_t, init_hit) , H5T_NATIVE_UINT);
+  H5Tinsert (memtype, "init_particle" , HOFFSET (evt_extent_t, init_particle) , H5T_NATIVE_UINT);
   return memtype;
 }
 
@@ -91,9 +104,13 @@ hid_t createTable(hid_t group, std::string& table_name, hsize_t memtype)
   hsize_t chunk_dims[ndims] = {32768};
   H5Pset_chunk(plist, ndims, chunk_dims);
 
+  //Set compression
+  H5Pset_deflate (plist, 4);
+
   // Create dataset
   hid_t dataset = H5Dcreate(group, table_name.c_str(), memtype, file_space,
                             H5P_DEFAULT, plist, H5P_DEFAULT);
+                        
   return dataset;
 }
 
@@ -146,7 +163,7 @@ void writeSnsData(sns_data_t* snsData, hid_t dataset, hid_t memtype, hsize_t cou
   H5Sclose(file_space);
 }
 
-void writeHitInfo(hit_info_t* hitInfo, hid_t dataset, hid_t memtype, hsize_t counter)
+void writeHit(hit_info_t* hitInfo, hid_t dataset, hid_t memtype, hsize_t counter)
 {
   hid_t memspace, file_space;
  
@@ -165,7 +182,7 @@ void writeHitInfo(hit_info_t* hitInfo, hid_t dataset, hid_t memtype, hsize_t cou
   H5Sclose(file_space);
 }
 
-void writeParticleInfo(particle_info_t* particleInfo, hid_t dataset, hid_t memtype, hsize_t counter)
+void writeParticle(particle_info_t* particleInfo, hid_t dataset, hid_t memtype, hsize_t counter)
 {
   hid_t memspace, file_space;
  
@@ -181,6 +198,25 @@ void writeParticleInfo(particle_info_t* particleInfo, hid_t dataset, hid_t memty
   hsize_t count[1] = {1};
   H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
   H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, particleInfo);
+  H5Sclose(file_space);
+}
+
+void writeEventExtent(evt_extent_t* evtExtent, hid_t dataset, hid_t memtype, hsize_t counter)
+{
+  hid_t memspace, file_space;
+ 
+  const hsize_t n_dims = 1;
+  hsize_t dims[n_dims] = {1};
+  memspace = H5Screate_simple(n_dims, dims, NULL);
+
+  dims[0] = counter+1;
+  H5Dset_extent(dataset, dims);
+
+  file_space = H5Dget_space(dataset);
+  hsize_t start[1] = {counter};
+  hsize_t count[1] = {1};
+  H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
+  H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, evtExtent);
   H5Sclose(file_space);
 }
 
