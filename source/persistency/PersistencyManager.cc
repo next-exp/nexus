@@ -347,7 +347,7 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
     ghit->SetAmplitude(hit->GetEnergyDeposit());
     evt_energy += hit->GetEnergyDeposit();
     itrk->AddHit(ghit);
-    ievt->AddMCHit(ghit);      
+    ievt->AddMCHit(ghit);
   }
 
   if (sdname == "ACTIVE") {
@@ -367,6 +367,7 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
         float hit_pos[3] = {(float)pos.x(), (float)pos.y(), (float)pos.z()};
         _h5writer->WriteHitInfo(it->first, h, &hit_pos[0], 3, hit->GetTime(), hit->GetAmplitude(), hit->GetLabel().c_str());      
       }
+
     }
   }
 
