@@ -4,7 +4,7 @@
 #include <hdf5.h>
 #include <iostream>
 
-   typedef struct{ 
+  typedef struct{
      char param_key[100];
      char param_value[100];
    } run_info_t; 
@@ -50,22 +50,31 @@
         char creator_proc[20];
   } particle_info_t;
 
-  hsize_t createRunType();
   hsize_t createEventType();
   hsize_t createSensorDataType();
   hsize_t createHitInfoType();
   hsize_t createParticleInfoType();
   hsize_t createEventExtentType();
-
+//  hid_t createRunType();
+//  hid_t createSensorType();
   hid_t createTable(hid_t group, std::string& table_name, hsize_t memtype);
   hid_t createGroup(hid_t file, std::string& groupName);
 
-  void writeRun(run_info_t* runData, hid_t dataset, hid_t memtype, hsize_t counter);
-  void writeEvent(evt_t* evtData, hid_t dataset, hid_t memtype, hsize_t counter);
+  //  void WriteWaveforms(short int * data, hid_t dataset, hsize_t nsensors, hsize_t nsamples, hsize_t evt);
+  // hid_t createWaveforms(hid_t group, std::string& dataset, hsize_t nsensors, hsize_t nsamples);
+
+  // void WriteWaveform(short int * data, hid_t dataset, hsize_t nsamples, hsize_t evt);
+  // hid_t createWaveform(hid_t group, std::string& dataset, hsize_t nsamples);
+
+  void writeEvent(evt_t * evtData, hid_t dataset, hid_t memtype, hsize_t evt_number);
   void writeSnsData(sns_data_t* snsData, hid_t dataset, hid_t memtype, hsize_t counter);
   void writeHit(hit_info_t* hitInfo, hid_t dataset, hid_t memtype, hsize_t counter);
   void writeParticle(particle_info_t* particleInfo, hid_t dataset, hid_t memtype, hsize_t counter);
   void writeEventExtent(evt_extent_t* evtExtent, hid_t dataset, hid_t memtype, hsize_t counter);
+// void writeRun(runinfo_t * runData, hid_t dataset, hid_t memtype, hsize_t evt_number);
+  // void writeSensor(sensor_t * sensorData, hid_t dataset, hid_t memtype, hsize_t sensor_number);
+ 
 
 
 #endif
+

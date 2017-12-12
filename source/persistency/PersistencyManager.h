@@ -27,12 +27,7 @@ namespace gate { class MCTrack; }
 namespace gate { class RootWriter; }
 namespace gate { class Run; }
 
-<<<<<<< HEAD:source/persistency/PersistencyManager.h
 namespace nexus { class HDF5Writer; }
-=======
-namespace nexus {class HDF5Writer; }
-
->>>>>>> Trying to define the structure of the table:source/base/PersistencyManager.h
 
 namespace nexus {
 
@@ -98,16 +93,9 @@ namespace nexus {
     G4int _start_id; ///< ID for the first event in file
     G4bool _first_evt; ///< true only for the first event of the run
 
-<<<<<<< HEAD:source/persistency/PersistencyManager.h
     G4bool _hdf5dump; ///< if true write to hdf5 file
 
     HDF5Writer* _h5writer;  ///< Event writer to hdf5 file
-
-    std::pair<G4int, G4double> _event_info;
-=======
-    G4bool _hdf5dump; ///< if true, an hdf5 file is produced with the output
-    HDF5Writer* _h5writer;  ///< Event writer to hdf5 file
->>>>>>> Trying to define the structure of the table:source/base/PersistencyManager.h
 
     std::pair<G4int, G4double> _event_info;
 

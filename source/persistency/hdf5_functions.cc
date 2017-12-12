@@ -88,6 +88,21 @@ hsize_t createEventExtentType()
   return memtype;
 }
 
+// hid_t createRunType()
+// {
+//   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (runinfo_t));
+//   H5Tinsert (memtype, "run_number", HOFFSET (runinfo_t, run_number), H5T_NATIVE_INT);
+//   return memtype;
+// }
+
+// hid_t createSensorType()
+// {
+//   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (sensor_t));
+//   H5Tinsert (memtype, "channel",  HOFFSET(sensor_t, channel) , H5T_NATIVE_INT);
+//   H5Tinsert (memtype, "sensorID", HOFFSET(sensor_t, sensorID), H5T_NATIVE_INT);
+//   return memtype;
+// }
+
 hid_t createTable(hid_t group, std::string& table_name, hsize_t memtype)
 {
   //Create 1D dataspace (evt number). First dimension is unlimited (initially 0)
@@ -123,24 +138,6 @@ hid_t createGroup(hid_t file, std::string& groupName)
   return wfgroup;
 }
 
-void writeRun(run_info_t* runData, hid_t dataset, hid_t memtype, hsize_t counter)
-{
-  hid_t memspace, file_space;
-  hsize_t dims[1] = {1};
-  memspace = H5Screate_simple(1, dims, NULL);
-
-  //Extend dataset
-  dims[0] = counter+1;
-  H5Dset_extent(dataset, dims);
-
-  file_space = H5Dget_space(dataset);
-  hsize_t start[1] = {counter};
-  hsize_t count[1] = {1};
-  H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
-  H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, runData);
-  H5Sclose(file_space);
-}
-
 void writeEvent(evt_t* evtData, hid_t dataset, hid_t memtype, hsize_t counter)
 {
   hid_t memspace, file_space;
@@ -163,16 +160,16 @@ void writeEvent(evt_t* evtData, hid_t dataset, hid_t memtype, hsize_t counter)
 void writeSnsData(sns_data_t* snsData, hid_t dataset, hid_t memtype, hsize_t counter)
 {
   hid_t memspace, file_space;
-  //Create memspace for one more row
+  //Create memspace for one more SiPM row
   const hsize_t n_dims = 1;
   hsize_t dims[n_dims] = {1};
   memspace = H5Screate_simple(n_dims, dims, NULL);
 
-  //Extend dataset
+  //Extend SiPM dataset
   dims[0] = counter+1;
   H5Dset_extent(dataset, dims);
 
-  //Write waveforms
+  //Write SiPM waveforms
   file_space = H5Dget_space(dataset);
   hsize_t start[1] = {counter};
   hsize_t count[1] = {1};
@@ -237,3 +234,23 @@ void writeEventExtent(evt_extent_t* evtExtent, hid_t dataset, hid_t memtype, hsi
   H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, evtExtent);
   H5Sclose(file_space);
 }
+
+// void writeRun(runinfo_t * runData, hid_t dataset, hid_t memtype, hsize_t evt_number)
+// {
+//   hid_t memspace, file_space;
+//   hsize_t dims[1] = {1};
+//   memspace = H5Screate_simple(1, dims, NULL);
+
+//   //Extend SiPM dataset
+//   dims[0] = evt_number+1;
+//   H5Dset_extent(dataset, dims);
+
+//   file_space = H5Dget_space(dataset);
+//   hsize_t start[1] = {evt_number};
+//   hsize_t count[1] = {1};
+//   H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
+//   H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, runData);
+//   H5Sclose(file_space);
+// }
+
+
