@@ -50,6 +50,7 @@
         char final_volume[20];
 	float momentum[3];
 	float kin_energy;
+        char creator_proc[20];
   } particle_info_t;
 
   hsize_t createEventType();

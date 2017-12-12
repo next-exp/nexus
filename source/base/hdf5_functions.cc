@@ -60,6 +60,7 @@ hsize_t createParticleInfoType()
   H5Tinsert (memtype, "final_volume",HOFFSET (particle_info_t, final_volume),strtype);
   H5Tinsert (memtype, "momentum",HOFFSET (particle_info_t, momentum), point3d);
   H5Tinsert (memtype, "kin_energy",HOFFSET (particle_info_t, kin_energy), H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "creator_proc",HOFFSET (particle_info_t, creator_proc), strtype);
   return memtype;
 }
 
