@@ -95,7 +95,7 @@ void HDF5Writer::WriteHitInfo(int track_indx, int hit_indx, const float* hit_pos
   _ihit++;
 }
 
-void HDF5Writer::WriteParticleInfo(int track_indx, const char* particle_name, char primary, const float* initial_vertex, int size_initial_vertex, const float* final_vertex, int size_final_vertex, const char* initial_volume, const char* final_volume, const float* momentum, int size_momentum, float kin_energy)
+void HDF5Writer::WriteParticleInfo(int track_indx, const char* particle_name, char primary, const float* initial_vertex, int size_initial_vertex, const float* final_vertex, int size_final_vertex, const char* initial_volume, const char* final_volume, const float* momentum, int size_momentum, float kin_energy, const char* creator_proc)
 {
   particle_info_t trueInfo;
   trueInfo.track_indx = track_indx;
@@ -107,6 +107,7 @@ void HDF5Writer::WriteParticleInfo(int track_indx, const char* particle_name, ch
   strcpy(trueInfo.final_volume, final_volume);
   memcpy(trueInfo.momentum, momentum, sizeof(*momentum)*size_momentum);
   trueInfo.kin_energy = kin_energy;
+  strcpy(trueInfo.creator_proc, creator_proc);
   writeParticle(&trueInfo,  _particleInfoTable, _memtypeParticleInfo, _ipart);
   
   _ipart++;

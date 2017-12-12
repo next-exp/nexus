@@ -140,7 +140,6 @@ G4bool PersistencyManager::Store(const G4Event* event)
     _nevt = _start_id;
   }
 
-  G4cout << "Event number " << _nevt << G4endl;
   // Create a new GATE event
   gate::Event ievt;
   ievt.SetEventID(_nevt);
