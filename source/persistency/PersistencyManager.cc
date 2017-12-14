@@ -142,8 +142,7 @@ G4bool PersistencyManager::Store(const G4Event* event)
   if (_hdf5dump) {
     _event_info.first = _nevt;
   }
-  
-  _nevt++;
+ 
   if (event_type_ == "bb0nu") {
     ievt.SetMCEventType(gate::BB0NU);
   } else if (event_type_ == "bb2nu") {
@@ -434,7 +433,11 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 G4bool PersistencyManager::Store(const G4Run*)
 {
     
-    gate::Run grun = gate::Run(); 
+  gate::Run grun = gate::Run();
+
+  // Store the number of events to be processed 
+  NexusApp* app = (NexusApp*) G4RunManager::GetRunManager();
+  G4int num_events = app->GetNumberOfEventsToBeProcessed();
     
   std::ifstream history(_historyFile, std::ifstream::in);
   while (history.good()) {
@@ -445,21 +448,17 @@ G4bool PersistencyManager::Store(const G4Run*)
 
     if (key != "") {
       
-        grun.fstore(key,value);
-        
-        //gate::ParameterInfo* info = new gate::ParameterInfo(key.c_str());
-        //info->SetContent(value);
-      //_writer->WriteMetadata(info); 
+      grun.fstore(key,value);
+      if (_hdf5dump) {
+        _h5writer->WriteRunInfo(num_events, (unsigned int)_saved_evts, key.c_str(), value.c_str());
+      }
+      
     }
   } 
 
   history.close();
 
-  // Store the number of events to be processed 
-  NexusApp* app = (NexusApp*) G4RunManager::GetRunManager();
-  G4int num_events = app->GetNumberOfEventsToBeProcessed();
-
-   std::stringstream ss;
+  std::stringstream ss;
   ss << num_events;
 
   grun.store("num_events", ss.str());

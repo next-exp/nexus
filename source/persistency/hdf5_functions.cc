@@ -1,5 +1,19 @@
 #include "hdf5_functions.h"
 
+hsize_t createRunType()
+{
+  hid_t strtype = H5Tcopy(H5T_C_S1);
+  H5Tset_size (strtype, 100);
+  
+  //Create compound datatype for the table
+  hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (run_info_t));
+  H5Tinsert (memtype, "simulated_events", HOFFSET (run_info_t, simulated_events), H5T_NATIVE_UINT);
+  H5Tinsert (memtype, "saved_events", HOFFSET (run_info_t, saved_events), H5T_NATIVE_UINT);
+  H5Tinsert (memtype, "param_key" , HOFFSET (run_info_t, param_key), strtype);
+  H5Tinsert (memtype, "param_value" , HOFFSET (run_info_t, param_value), strtype);
+  return memtype;
+}
+
 hsize_t createEventType()
 {
   //Create compound datatype for the table
@@ -107,6 +121,24 @@ hid_t createGroup(hid_t file, std::string& groupName)
   wfgroup = H5Gcreate2(file, groupName.c_str(), H5P_DEFAULT, H5P_DEFAULT,
                        H5P_DEFAULT);
   return wfgroup;
+}
+
+void writeRun(run_info_t* runData, hid_t dataset, hid_t memtype, hsize_t counter)
+{
+  hid_t memspace, file_space;
+  hsize_t dims[1] = {1};
+  memspace = H5Screate_simple(1, dims, NULL);
+
+  //Extend dataset
+  dims[0] = counter+1;
+  H5Dset_extent(dataset, dims);
+
+  file_space = H5Dget_space(dataset);
+  hsize_t start[1] = {counter};
+  hsize_t count[1] = {1};
+  H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
+  H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, runData);
+  H5Sclose(file_space);
 }
 
 void writeEvent(evt_t* evtData, hid_t dataset, hid_t memtype, hsize_t counter)

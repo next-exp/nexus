@@ -12,7 +12,8 @@ using namespace nexus;
 
 
 HDF5Writer::HDF5Writer():
-  _file(0), _ievt(0), _ismp(0), _ihit(0), _ipart(0), _ievt_extent(0)
+  _file(0), _irun(0), _ievt(0), _ismp(0), _ihit(0),
+  _ipart(0), _ievt_extent(0)
 {
 }
 
@@ -30,9 +31,13 @@ void HDF5Writer::Open(std::string fileName)
   std::string group_name = "/Run";
   _group = createGroup(_file, group_name);
 
+  std::string run_table_name = "configuration";
+  _memtypeRun = createRunType();
+  _runTable = createTable(_group, run_table_name, _memtypeRun);
+
   std::string event_table_name = "events";
   _memtypeEvt = createEventType();
-  _eventsTable = createTable(_group,  event_table_name, _memtypeEvt);
+  _eventsTable = createTable(_group, event_table_name, _memtypeEvt);
 
   std::string sns_data_table_name = "waveforms";
   _memtypeSnsData = createSensorDataType();
@@ -57,6 +62,19 @@ void HDF5Writer::Close()
 {
   _isOpen=false;
   H5Fclose(_file);
+}
+
+void HDF5Writer::WriteRunInfo(unsigned int num_events, unsigned int saved_events, const char* param_key, const char* param_value)
+{
+
+  run_info_t runData;
+  runData.simulated_events = num_events;
+  runData.saved_events = saved_events;
+  strcpy(runData.param_key, param_key);
+  strcpy(runData.param_value, param_value);
+  writeRun(&runData, _runTable, _memtypeRun, _irun);
+
+  _irun++;
 }
 
 void HDF5Writer::WriteEventInfo(int evt_number, float evt_energy)
