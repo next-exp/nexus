@@ -10,7 +10,6 @@
 ##### JOB CONTROL #####
 #/nexus/random_seed 0
 /nexus/persistency/eventType background
-/nexus/persistency/historyFile Next100.Muon.pers.mac
 /nexus/persistency/outputFile Next100.Muon.next
 
 

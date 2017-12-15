@@ -44,15 +44,18 @@ using namespace nexus;
 
 
 
-PersistencyManager::PersistencyManager(): 
-  G4VPersistencyManager(), _msg(0), _historyFile("G4history.macro"), 
+PersistencyManager::PersistencyManager(G4String historyFile_init, G4String historyFile_conf): 
+  G4VPersistencyManager(), _msg(0),
   _ready(false), _store_evt(true),  event_type_("other"), _writer(0),
   _saved_evts(0), _nevt(0), _start_id(0), _first_evt(true), _hdf5dump(false),
   _h5writer(0)
 {
+
+  _historyFile_init = historyFile_init;
+  _historyFile_conf = historyFile_conf;
+
   _msg = new G4GenericMessenger(this, "/nexus/persistency/");
   _msg->DeclareMethod("outputFile", &PersistencyManager::OpenFile, "");
-  _msg->DeclareProperty("historyFile", _historyFile, "Name of the file where the configuration information are stored");
   _msg->DeclareProperty("eventType", event_type_, "Type of event: bb0nu, bb2nu or background.");
   _msg->DeclareProperty("start_id", _start_id, "Starting event ID for this job.");
   _msg->DeclareProperty("hdf5", _hdf5dump, "Generate hdf5 output.");
@@ -69,8 +72,9 @@ PersistencyManager::~PersistencyManager()
 
 
 
-void PersistencyManager::Initialize()
+void PersistencyManager::Initialize(G4String historyFile_init, G4String historyFile_conf)
 {
+
   // Get a pointer to the current singleton instance of the persistency
   // manager using the method of the base class
   PersistencyManager* current = dynamic_cast<PersistencyManager*>
@@ -81,7 +85,7 @@ void PersistencyManager::Initialize()
   // of another G4VPersistencyManager-derived was previously set, resulting
   // in the leak of that object since the pointer will no longer be
   // accessible.)
-  if (!current) current = new PersistencyManager();
+  if (!current) current = new PersistencyManager(historyFile_init, historyFile_conf);
 }
 
 
@@ -438,8 +442,23 @@ G4bool PersistencyManager::Store(const G4Run*)
   // Store the number of events to be processed 
   NexusApp* app = (NexusApp*) G4RunManager::GetRunManager();
   G4int num_events = app->GetNumberOfEventsToBeProcessed();
-    
-  std::ifstream history(_historyFile, std::ifstream::in);
+
+  SaveConfigurationInfo(_historyFile_init, num_events, grun);
+  SaveConfigurationInfo(_historyFile_conf, num_events, grun);
+
+  std::stringstream ss;
+  ss << num_events;
+
+  grun.store("num_events", ss.str());
+  grun.SetNumEvents((int)_saved_evts);
+  _writer->WriteRunInfo(grun);
+
+  return true;
+}
+
+void PersistencyManager::SaveConfigurationInfo(G4String file_name, G4int num_events, gate::Run& grun)
+{
+  std::ifstream history(file_name, std::ifstream::in);
   while (history.good()) {
 
     std::string key, value;
@@ -447,25 +466,13 @@ G4bool PersistencyManager::Store(const G4Run*)
     std::getline(history, value);
 
     if (key != "") {
-      
       grun.fstore(key,value);
       if (_hdf5dump) {
         _h5writer->WriteRunInfo(num_events, (unsigned int)_saved_evts, key.c_str(), value.c_str());
       }
-      
     }
-  } 
 
-  history.close();
-
-  std::stringstream ss;
-  ss << num_events;
-
-  grun.store("num_events", ss.str());
-
-  grun.SetNumEvents((int)_saved_evts);
+  }
   
-  _writer->WriteRunInfo(grun);
-
-  return true;
+  history.close();
 }

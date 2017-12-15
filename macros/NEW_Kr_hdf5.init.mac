@@ -19,4 +19,5 @@
 /Actions/RegisterSteppingAction DEFAULT
 /Actions/RegisterRunAction DEFAULT
 
+/nexus/historyFile history_conf
 /nexus/RegisterMacro macros/NEW_Kr_hdf5.config.mac
