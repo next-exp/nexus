@@ -131,14 +131,14 @@ void HDF5Writer::WriteParticleInfo(int track_indx, const char* particle_name, ch
   _ipart++;
 }
 
-void HDF5Writer::WriteEventExtentInfo(int evt_number, unsigned int init_sns_data, unsigned int init_hit, unsigned int init_particle)
+void HDF5Writer::WriteEventExtentInfo(int evt_number, unsigned int last_sns_data, unsigned int last_hit, unsigned int last_particle)
 {
   // Write event number 
   evt_extent_t evtData;
   evtData.evt_number = evt_number;
-  evtData.init_sns_data = init_sns_data;
-  evtData.init_hit = init_hit;
-  evtData.init_particle = init_particle;
+  evtData.last_sns_data = last_sns_data;
+  evtData.last_hit = last_hit;
+  evtData.last_particle = last_particle;
   writeEventExtent(&evtData, _evtExtentTable, _memtypeEventExtent, _ievt_extent);
 
   _ievt_extent++;

@@ -13,9 +13,9 @@
 
   typedef struct{
     int evt_number;
-    unsigned int init_sns_data;
-    unsigned int init_hit;
-    unsigned int init_particle;
+    unsigned int last_sns_data;
+    unsigned int last_hit;
+    unsigned int last_particle;
   } evt_extent_t;
 
   typedef struct{

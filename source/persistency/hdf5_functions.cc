@@ -83,9 +83,9 @@ hsize_t createEventExtentType()
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (evt_extent_t));
   H5Tinsert (memtype, "evt_number", HOFFSET (evt_extent_t, evt_number), H5T_NATIVE_INT);
-  H5Tinsert (memtype, "init_sns_data" , HOFFSET (evt_extent_t, init_sns_data) , H5T_NATIVE_UINT);
-  H5Tinsert (memtype, "init_hit" , HOFFSET (evt_extent_t, init_hit) , H5T_NATIVE_UINT);
-  H5Tinsert (memtype, "init_particle" , HOFFSET (evt_extent_t, init_particle) , H5T_NATIVE_UINT);
+  H5Tinsert (memtype, "last_sns_data" , HOFFSET (evt_extent_t, last_sns_data) , H5T_NATIVE_UINT);
+  H5Tinsert (memtype, "last_hit" , HOFFSET (evt_extent_t, last_hit) , H5T_NATIVE_UINT);
+  H5Tinsert (memtype, "last_particle" , HOFFSET (evt_extent_t, last_particle) , H5T_NATIVE_UINT);
   return memtype;
 }
 
