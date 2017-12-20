@@ -15,7 +15,7 @@
 ###  command-line (or the BUILDVARS_FILE) the system path to any
 ###  dependency.
 ### ------------------------------------------------------------------
-
+from __future__ import print_function
 import os
 import subprocess
 
@@ -43,8 +43,8 @@ NULL_PATH = '/dev/null'
 
 def Abort(message):
     """Outputs a message before exiting with an error."""
-    print 'scons: Build aborted.'
-    print 'scons:', message
+    print ('scons: Build aborted.')
+    print ('scons: {}'.format(message))
     Exit(1)
 
 def AssertG4Version(path):
@@ -64,10 +64,11 @@ def AssertG4Version(path):
     if version == '':
         Abort("Failed to establish Geant4 version.")
     else:
-        version = int(''.join(version.split('.')))
+        g4version = version.decode('utf-8').strip()
+        g4version = int(''.join(g4version.split('.')))
         msg = "Checking for Geant4 version..."
-        print msg, version
-        if not version in NEXUS_G4VERSION_NUMBER:
+        print (msg, g4version)
+        if not g4version in NEXUS_G4VERSION_NUMBER:
             msg = 'This version of NEXUS requires Geant4 version(s) ' \
                 + str(NEXUS_G4VERSION_NUMBER) 
             Abort(msg)
@@ -211,11 +212,14 @@ if not env['LIBPATH']:
     env.Append( CPPPATH = [env['GATE_DIR']] )
                                                           
     env.Append( LIBPATH = [env['GATE_DIR']+'/lib/'] )
+    
+    env.Append(LIBS = ['GATE','GATEIO'])
 
     if not conf.CheckCXXHeader('GATE/Event.h'):
         Abort('GATE headers not found.')
-    
-    env.Append(LIBS = ['GATE','GATEIO'])
+
+#    if not conf.CheckLib(library='GATE', language='CXX', autoadd=0):
+#        Abort('GATE library not found.')
      
     if env['HDF5_LIB'] != NULL_PATH:
         env.PrependENVPath('PATH', env['HDF5_LIB'])
@@ -226,8 +230,6 @@ if not env['LIBPATH']:
         env.Append(LIBS = ['hdf5'])
     except KeyError: pass
 
- #   if not conf.CheckLib(library='GATE', language='CXX', autoadd=0):
-  #      Abort('GATE library not found.')
 
     ## GSL configuration --------------------------   -------
     
@@ -242,9 +244,8 @@ if not env['LIBPATH']:
  #   env.Append(LIBS = ['gsl','gslcblas'])
 
 
-
- #   if not conf.CheckLib(library='GSL', language='CXX', autoadd=0):
-  #      Abort('GSL library not found.')
+#    if not conf.CheckLib(library='GSL', language='CXX', autoadd=0):
+#        Abort('GSL library not found.')
 ## ##################################################################
     env = conf.Finish()
 
