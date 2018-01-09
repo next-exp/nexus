@@ -65,9 +65,9 @@ namespace nexus {
     
   };
 
-  inline size_t HDF5Writer::GetSnsDataIndex() const {return _ismp;}
-  inline size_t HDF5Writer::GetHitIndex() const {return _ihit;}
-  inline size_t HDF5Writer::GetParticleIndex() const {return _ipart;}
+  inline size_t HDF5Writer::GetSnsDataIndex() const {return _ismp -1;}
+  inline size_t HDF5Writer::GetHitIndex() const {return _ihit -1;}
+  inline size_t HDF5Writer::GetParticleIndex() const {return _ipart -1;}
   
 } // namespace nexus
 
