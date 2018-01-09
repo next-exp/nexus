@@ -66,6 +66,7 @@ hsize_t createParticleInfoType()
   H5Tinsert (memtype, "track_indx",HOFFSET (particle_info_t, track_indx),H5T_NATIVE_INT);
   H5Tinsert (memtype, "particle_name",HOFFSET (particle_info_t, particle_name),strtype);
   H5Tinsert (memtype, "primary",HOFFSET (particle_info_t, primary), H5T_NATIVE_CHAR);
+  H5Tinsert (memtype, "mother_indx",HOFFSET (particle_info_t, mother_indx),H5T_NATIVE_INT);
   H5Tinsert (memtype, "initial_vertex",HOFFSET (particle_info_t, initial_vertex), point);
   H5Tinsert (memtype, "final_vertex",HOFFSET (particle_info_t, final_vertex), point);
   H5Tinsert (memtype, "initial_volume",HOFFSET (particle_info_t, initial_volume),strtype);

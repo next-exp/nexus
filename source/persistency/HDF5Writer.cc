@@ -117,7 +117,7 @@ void HDF5Writer::WriteParticleInfo(int track_indx, const char* particle_name, ch
   trueInfo.track_indx = track_indx;
   strcpy(trueInfo.particle_name, particle_name);
   trueInfo.primary = primary;
-  trueInfo.mother_id = mother_id;
+  trueInfo.mother_indx = mother_id;
   memcpy(trueInfo.initial_vertex, initial_vertex, sizeof(*initial_vertex)*size_initial_vertex);
   memcpy(trueInfo.final_vertex, final_vertex, sizeof(*final_vertex)*size_final_vertex);
   strcpy(trueInfo.initial_volume, initial_volume);
