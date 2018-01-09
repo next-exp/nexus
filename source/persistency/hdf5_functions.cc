@@ -7,8 +7,6 @@ hsize_t createRunType()
   
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (run_info_t));
-  H5Tinsert (memtype, "simulated_events", HOFFSET (run_info_t, simulated_events), H5T_NATIVE_UINT);
-  H5Tinsert (memtype, "saved_events", HOFFSET (run_info_t, saved_events), H5T_NATIVE_UINT);
   H5Tinsert (memtype, "param_key" , HOFFSET (run_info_t, param_key), strtype);
   H5Tinsert (memtype, "param_value" , HOFFSET (run_info_t, param_value), strtype);
   return memtype;

@@ -5,8 +5,6 @@
 #include <iostream>
 
    typedef struct{ 
-     unsigned int simulated_events;
-     unsigned int saved_events;
      char param_key[100];
      char param_value[100];
    } run_info_t; 
