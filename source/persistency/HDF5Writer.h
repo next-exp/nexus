@@ -22,11 +22,11 @@ namespace nexus {
     /// close file
     void Close();
 
-    void WriteRunInfo(unsigned int num_events, unsigned int saved_events, const char* param_key, const char* param_value);
+    void WriteRunInfo(const char* param_key, const char* param_value);
     void WriteEventInfo(int evt_number, float evt_energy);
     void WriteSensorDataInfo(unsigned int sensor_id, unsigned int time_bin, unsigned int charge);
     void WriteHitInfo(int track_indx, int hit_indx, const float* hit_position, int size_position, float hit_time, float hit_energy, const char* label);
-    void WriteParticleInfo(int track_indx, const char* particle_name, char primary, const float* initial_vertex, int size_initial_vertex, const float* final_vertex, int size_final_vertex, const char* initial_volume, const char* final_volume, const float* momentum, int size_momentum, float kin_energy, const char* creator_proc);
+    void WriteParticleInfo(int track_indx, const char* particle_name, char primary, int mother_id, const float* initial_vertex, int size_initial_vertex, const float* final_vertex, int size_final_vertex, const char* initial_volume, const char* final_volume, const float* momentum, int size_momentum, float kin_energy, const char* creator_proc);
     void WriteEventExtentInfo(int evt_number, unsigned int last_sns_data, unsigned int last_hit, unsigned int last_particle);
 
     size_t GetSnsDataIndex() const;

@@ -233,8 +233,13 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
       float momentum[3] = {(float)mom.x(), (float)mom.y(), (float)mom.z()};
       float kin_energy = energy - mass;
       char primary = 0;
-      if (!trj->GetParentID()) primary = 1;
-      _h5writer->WriteParticleInfo(trackid, trj->GetParticleName().c_str(), primary,
+      G4int mother_id = -1;
+      if (!trj->GetParentID()) {
+	primary = 1;
+      } else {
+	mother_id = trj->GetParentID();
+      }
+      _h5writer->WriteParticleInfo(trackid, trj->GetParticleName().c_str(), primary, mother_id,
                                    &ini_pos[0], 4, &final_pos[0], 4, ini_volume.c_str(), volume.c_str(),
                                    &momentum[0], 3, kin_energy, trj->GetCreatorProcess().c_str());
     }
@@ -443,8 +448,14 @@ G4bool PersistencyManager::Store(const G4Run*)
   NexusApp* app = (NexusApp*) G4RunManager::GetRunManager();
   G4int num_events = app->GetNumberOfEventsToBeProcessed();
 
-  SaveConfigurationInfo(_historyFile_init, num_events, grun);
-  SaveConfigurationInfo(_historyFile_conf, num_events, grun);
+  if (_hdf5dump) {
+    G4String key = "num_events";
+    _h5writer->WriteRunInfo(key,  std::to_string(num_events).c_str());
+    key = "saved_events";
+    _h5writer->WriteRunInfo(key,  std::to_string(_saved_evts).c_str());
+  }
+  SaveConfigurationInfo(_historyFile_init, grun);
+  SaveConfigurationInfo(_historyFile_conf, grun);
 
   std::stringstream ss;
   ss << num_events;
@@ -456,7 +467,7 @@ G4bool PersistencyManager::Store(const G4Run*)
   return true;
 }
 
-void PersistencyManager::SaveConfigurationInfo(G4String file_name, G4int num_events, gate::Run& grun)
+void PersistencyManager::SaveConfigurationInfo(G4String file_name, gate::Run& grun)
 {
   std::ifstream history(file_name, std::ifstream::in);
   while (history.good()) {
@@ -468,7 +479,7 @@ void PersistencyManager::SaveConfigurationInfo(G4String file_name, G4int num_eve
     if (key != "") {
       grun.fstore(key,value);
       if (_hdf5dump) {
-        _h5writer->WriteRunInfo(num_events, (unsigned int)_saved_evts, key.c_str(), value.c_str());
+        _h5writer->WriteRunInfo(key.c_str(), value.c_str());
       }
     }
 

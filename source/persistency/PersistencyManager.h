@@ -66,7 +66,7 @@ namespace nexus {
     void StoreIonizationHits(G4VHitsCollection*, gate::Event*);
     void StorePmtHits(G4VHitsCollection*, gate::Event*);
 
-    void SaveConfigurationInfo(G4String history, G4int num_events, gate::Run& grun);
+    void SaveConfigurationInfo(G4String history, gate::Run& grun);
 
 
   private:

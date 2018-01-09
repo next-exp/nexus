@@ -42,6 +42,7 @@
 	int track_indx;
 	char particle_name[20];
         char primary;
+	int mother_id;
 	float initial_vertex[4];
 	float final_vertex[4];
         char initial_volume[20];

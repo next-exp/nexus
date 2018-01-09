@@ -64,12 +64,10 @@ void HDF5Writer::Close()
   H5Fclose(_file);
 }
 
-void HDF5Writer::WriteRunInfo(unsigned int num_events, unsigned int saved_events, const char* param_key, const char* param_value)
+void HDF5Writer::WriteRunInfo(const char* param_key, const char* param_value)
 {
 
   run_info_t runData;
-  runData.simulated_events = num_events;
-  runData.saved_events = saved_events;
   strcpy(runData.param_key, param_key);
   strcpy(runData.param_value, param_value);
   writeRun(&runData, _runTable, _memtypeRun, _irun);
@@ -113,12 +111,13 @@ void HDF5Writer::WriteHitInfo(int track_indx, int hit_indx, const float* hit_pos
   _ihit++;
 }
 
-void HDF5Writer::WriteParticleInfo(int track_indx, const char* particle_name, char primary, const float* initial_vertex, int size_initial_vertex, const float* final_vertex, int size_final_vertex, const char* initial_volume, const char* final_volume, const float* momentum, int size_momentum, float kin_energy, const char* creator_proc)
+void HDF5Writer::WriteParticleInfo(int track_indx, const char* particle_name, char primary, int mother_id, const float* initial_vertex, int size_initial_vertex, const float* final_vertex, int size_final_vertex, const char* initial_volume, const char* final_volume, const float* momentum, int size_momentum, float kin_energy, const char* creator_proc)
 {
   particle_info_t trueInfo;
   trueInfo.track_indx = track_indx;
   strcpy(trueInfo.particle_name, particle_name);
   trueInfo.primary = primary;
+  trueInfo.mother_id = mother_id;
   memcpy(trueInfo.initial_vertex, initial_vertex, sizeof(*initial_vertex)*size_initial_vertex);
   memcpy(trueInfo.final_vertex, final_vertex, sizeof(*final_vertex)*size_final_vertex);
   strcpy(trueInfo.initial_volume, initial_volume);

@@ -68,8 +68,10 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), _historyFile("G4history
   G4String historyFile_init = init_macro;
   std::size_t pos = historyFile_init.rfind('/');
   historyFile_init = historyFile_init.substr(pos+1);
+  G4cout << historyFile_init << G4endl;
   pos = historyFile_init.find("init");
-  historyFile_init = historyFile_init.substr(0, pos - 4);
+  historyFile_init = historyFile_init.substr(0, pos - 1);
+  G4cout << historyFile_init << G4endl;
   historyFile_init += ".init.hist";
 
   BatchSession* batch = new BatchSession(init_macro.c_str(), historyFile_init.c_str());
