@@ -138,15 +138,3 @@ void HDF5Writer::WriteEventExtentInfo(int evt_number, unsigned int last_sns_data
   _ievt_extent++;
 }
 
-
-// void HDF5Writer::WriteRunInfo(size_t run_number)
-// {
-//   hsize_t memtype_run = createRunType();
-//   std::string run_name = std::string("runInfo");
-//   hid_t runinfo_table = createTable(_rinfoG, run_name, memtype_run);
-//   runinfo_t runinfo;
-//   runinfo.run_number = (int) run_number;
-//   writeRun(&runinfo, runinfo_table, memtype_run, 0);
-
-// }
-
