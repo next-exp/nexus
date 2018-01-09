@@ -25,7 +25,7 @@ using namespace nexus;
 
 
 
-NexusApp::NexusApp(G4String init_macro): G4RunManager(), _historyFile('G4history.macro')                                   
+NexusApp::NexusApp(G4String init_macro): G4RunManager(), _historyFile("G4history.macro")                                   
 {
 
   // Create and configure a generic messenger for the app
@@ -68,7 +68,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), _historyFile('G4history
   G4String historyFile_init = init_macro;
   std::size_t pos = historyFile_init.rfind('/');
   historyFile_init = historyFile_init.substr(pos+1);
-  pos = historyFile_init.find('init');
+  pos = historyFile_init.find("init");
   historyFile_init = historyFile_init.substr(0, pos - 4);
   historyFile_init += ".init.hist";
 
