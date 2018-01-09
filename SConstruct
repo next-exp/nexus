@@ -227,8 +227,8 @@ if not env['LIBPATH']:
         env['HDF5_LIB'] = os.environ['HDF5_LIB']
         env.Append( LIBPATH = [env['HDF5_LIB']] )
         env.Append(LIBS = ['hdf5'])
-	env['HDF5_INC'] = os.environ['HDF5_INC']
-	env.Append( CPPPATH = [env['HDF5_INC']] )
+        env['HDF5_INC'] = os.environ['HDF5_INC']
+        env.Append( CPPPATH = [env['HDF5_INC']] )
     except KeyError: pass
 
 
