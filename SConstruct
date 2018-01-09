@@ -108,7 +108,7 @@ vars.AddVariables(
 
     ## HDF5
 
-    PathVariable('HDF5_LIB',
+    PathVariable('HDF5_DIR',
                  'Path to HDF5 installation.',
                  NULL_PATH),
 
@@ -218,17 +218,17 @@ if not env['LIBPATH']:
 
     if not conf.CheckCXXHeader('GATE/Event.h'):
         Abort('GATE headers not found.')
+    
+    env.Append(LIBS = ['GATE','GATEIO'])
 
-#    if not conf.CheckLib(library='GATE', language='CXX', autoadd=0):
-#        Abort('GATE library not found.')
-     
-    if env['HDF5_LIB'] != NULL_PATH:
-        env.PrependENVPath('PATH', env['HDF5_LIB'])
-      
+    if env['HDF5_DIR'] != NULL_PATH:
+        env.PrependENVPath('PATH', env['HDF5_DIR'])
     try: 
         env['HDF5_LIB'] = os.environ['HDF5_LIB']
         env.Append( LIBPATH = [env['HDF5_LIB']] )
         env.Append(LIBS = ['hdf5'])
+	env['HDF5_INC'] = os.environ['HDF5_INC']
+	env.Append( CPPPATH = [env['HDF5_INC']] )
     except KeyError: pass
 
 
