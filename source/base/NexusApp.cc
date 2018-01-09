@@ -25,8 +25,9 @@ using namespace nexus;
 
 
 
-NexusApp::NexusApp(G4String init_macro): G4RunManager(), _historyFile("G4history.macro")
+NexusApp::NexusApp(G4String init_macro): G4RunManager(), _historyFile("G4history.macro")                                   
 {
+
   // Create and configure a generic messenger for the app
   _msg = new G4GenericMessenger(this, "/nexus/", "Nexus control commands.");
 
@@ -45,8 +46,8 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), _historyFile("G4history
     "Set a seed for the random number generator."); 
 
   // To customize the name of the G4history file
-  _msg->DeclareProperty("historyFile", _historyFile, 
-    "Set the name of the file to store executed commands."); 
+   _msg->DeclareProperty("historyFile", _historyFile,
+                         "Set the name of the file to store executed commands."); 
 
   /////////////////////////////////////////////////////////
 
@@ -64,7 +65,16 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), _historyFile("G4history
   physicsList = new G4GenericPhysicsList();
 
   // Process now the initialization macro
-  BatchSession* batch = new BatchSession(init_macro.c_str());
+  G4String historyFile_init = init_macro;
+  std::size_t pos = historyFile_init.rfind('/');
+  historyFile_init = historyFile_init.substr(pos+1);
+  G4cout << historyFile_init << G4endl;
+  pos = historyFile_init.find("init");
+  historyFile_init = historyFile_init.substr(0, pos - 1);
+  G4cout << historyFile_init << G4endl;
+  historyFile_init += ".init.hist";
+
+  BatchSession* batch = new BatchSession(init_macro.c_str(), historyFile_init.c_str());
   batch->SessionStart();
 
   // Set the physics list in the run manager
@@ -107,7 +117,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), _historyFile("G4history
   // number generator
   SetRandomSeed(-1);
   
-  PersistencyManager::Initialize();
+  PersistencyManager::Initialize(historyFile_init, _historyFile);
 }
 
 
@@ -145,13 +155,16 @@ void NexusApp::Initialize()
   // Execute all command macro files before initializing the app
   // so that all objects get configured
   // G4UImanager* UI = G4UImanager::GetUIpointer();
-  for (unsigned int i=0; i<_macros.size(); i++)
+
+  for (unsigned int i=0; i<_macros.size(); i++) {
     ExecuteMacroFile(_macros[i].data());
+  }
 
   G4RunManager::Initialize();
 
-  for (unsigned int j=0; j<_delayed.size(); j++)
+  for (unsigned int j=0; j<_delayed.size(); j++) {
     ExecuteMacroFile(_delayed[j].data());
+  }
 }
 
 
@@ -159,7 +172,7 @@ void NexusApp::Initialize()
 void NexusApp::ExecuteMacroFile(const char* filename)
 {
   G4UImanager* UI = G4UImanager::GetUIpointer();
-  G4UIsession* batchSession = new BatchSession(filename, UI->GetSession());
+  G4UIsession* batchSession = new BatchSession(filename, "", UI->GetSession());
   UI->SetSession(batchSession);
   G4UIsession* previousSession = UI->GetSession()->SessionStart();
   delete UI->GetSession();

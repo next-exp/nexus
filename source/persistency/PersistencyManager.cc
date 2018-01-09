@@ -16,6 +16,7 @@
 #include "NexusApp.h"
 #include "DetectorConstruction.h"
 #include "BaseGeometry.h"
+#include "HDF5Writer.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Event.hh>
@@ -43,16 +44,21 @@ using namespace nexus;
 
 
 
-PersistencyManager::PersistencyManager(): 
-  G4VPersistencyManager(), _msg(0), _historyFile("G4history.macro"), 
-  _ready(false), _store_evt(true),  event_type_("other"),_writer(0),
-  _saved_evts(0), _nevt(0), _start_id(0), _first_evt(true)
+PersistencyManager::PersistencyManager(G4String historyFile_init, G4String historyFile_conf): 
+  G4VPersistencyManager(), _msg(0),
+  _ready(false), _store_evt(true),  event_type_("other"), _writer(0),
+  _saved_evts(0), _nevt(0), _start_id(0), _first_evt(true), _hdf5dump(false),
+  _h5writer(0)
 {
+
+  _historyFile_init = historyFile_init;
+  _historyFile_conf = historyFile_conf;
+
   _msg = new G4GenericMessenger(this, "/nexus/persistency/");
   _msg->DeclareMethod("outputFile", &PersistencyManager::OpenFile, "");
-  _msg->DeclareProperty("historyFile", _historyFile, "Name of the file where the configuration information are stored");
   _msg->DeclareProperty("eventType", event_type_, "Type of event: bb0nu, bb2nu or background.");
   _msg->DeclareProperty("start_id", _start_id, "Starting event ID for this job.");
+  _msg->DeclareProperty("hdf5", _hdf5dump, "Generate hdf5 output.");
 }
 
 
@@ -61,12 +67,14 @@ PersistencyManager::~PersistencyManager()
 {
   delete _writer;
   delete _msg;
+  if (_hdf5dump) delete _h5writer;
 }
 
 
 
-void PersistencyManager::Initialize()
+void PersistencyManager::Initialize(G4String historyFile_init, G4String historyFile_conf)
 {
+
   // Get a pointer to the current singleton instance of the persistency
   // manager using the method of the base class
   PersistencyManager* current = dynamic_cast<PersistencyManager*>
@@ -77,7 +85,7 @@ void PersistencyManager::Initialize()
   // of another G4VPersistencyManager-derived was previously set, resulting
   // in the leak of that object since the pointer will no longer be
   // accessible.)
-  if (!current) current = new PersistencyManager();
+  if (!current) current = new PersistencyManager(historyFile_init, historyFile_conf);
 }
 
 
@@ -96,6 +104,12 @@ void PersistencyManager::OpenFile(G4String filename)
     G4Exception("OpenFile()", "[PersistencyManager]", 
       JustWarning, "An output file was previously opened.");
   }
+
+  if (_hdf5dump) {
+    _h5writer = new HDF5Writer();
+    G4String hdf5file = filename + ".h5";
+    _h5writer->Open(hdf5file);
+  }
 }
 
 
@@ -105,6 +119,8 @@ void PersistencyManager::CloseFile()
   if (!_writer || !_writer->IsOpen()) return;
 
   _writer->Close();
+
+  if (_hdf5dump) _h5writer->Close();
 }
 
 
@@ -127,7 +143,10 @@ G4bool PersistencyManager::Store(const G4Event* event)
   gate::Event ievt;
   // ievt.SetEventID(event->GetEventID());
   ievt.SetEventID(_nevt);
-  _nevt++;
+  if (_hdf5dump) {
+    _event_info.first = _nevt;
+  }
+ 
   if (event_type_ == "bb0nu") {
     ievt.SetMCEventType(gate::BB0NU);
   } else if (event_type_ == "bb2nu") {
@@ -142,12 +161,17 @@ G4bool PersistencyManager::Store(const G4Event* event)
   StoreTrajectories(event->GetTrajectoryContainer(), &ievt);
 
   StoreHits(event->GetHCofThisEvent(), &ievt);
-
+  if (_hdf5dump) {
+    //Save event-related information in hdf5 file
+    _h5writer->WriteEventInfo(_event_info.first, _event_info.second);
+    //Save relationships among tables
+    _h5writer->WriteEventExtentInfo(_nevt, _h5writer->GetSnsDataIndex(),
+                                    _h5writer->GetHitIndex(), _h5writer->GetParticleIndex());
+  }
 
   // Add event to the tree
-  //_evt = &ievt;
   _writer->Write(ievt);
-  //_evt = 0;
+  _nevt++;
 
   TrajectoryMap::Clear();
   StoreCurrentEvent(true);
@@ -182,17 +206,17 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
 
     ipart->SetPathLength(trj->GetTrackLength());
 
-    G4ThreeVector xyz = trj->GetInitialPosition();
-    G4double t = trj->GetInitialTime(); 
-    ipart->SetInitialVtx(gate::Vector4D(xyz.x(), xyz.y(), xyz.z(), t));
-    
-    xyz = trj->GetFinalPosition();
-    t = trj->GetFinalTime();
+    G4ThreeVector ini_xyz = trj->GetInitialPosition();
+    G4double ini_t = trj->GetInitialTime(); 
+    ipart->SetInitialVtx(gate::Vector4D(ini_xyz.x(), ini_xyz.y(), ini_xyz.z(), ini_t));
+
+    G4ThreeVector xyz = trj->GetFinalPosition();
+    G4double t = trj->GetFinalTime();
     ipart->SetFinalVtx(gate::Vector4D(xyz.x(), xyz.y(), xyz.z(), t));
     
-    G4String volume = trj->GetInitialVolume();
-    ipart->SetInitialVol(volume);
-    volume = trj->GetDecayVolume();
+    G4String ini_volume = trj->GetInitialVolume();
+    ipart->SetInitialVol(ini_volume);
+    G4String volume = trj->GetDecayVolume();
     ipart->SetFinalVol(volume);
 
     G4double mass = trj->GetParticleDefinition()->GetPDGMass();
@@ -202,6 +226,23 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     ipart->SetFinalMom(0, 0, 0, mass);
 
     ievent->AddMCParticle(ipart);
+
+    if (_hdf5dump) {
+      float ini_pos[4] = {(float)ini_xyz.x(), (float)ini_xyz.y(), (float)ini_xyz.z(), (float)ini_t};
+      float final_pos[4] = {(float)xyz.x(), (float)xyz.y(), (float)xyz.z(), (float)t};
+      float momentum[3] = {(float)mom.x(), (float)mom.y(), (float)mom.z()};
+      float kin_energy = energy - mass;
+      char primary = 0;
+      G4int mother_id = -1;
+      if (!trj->GetParentID()) {
+	primary = 1;
+      } else {
+	mother_id = trj->GetParentID();
+      }
+      _h5writer->WriteParticleInfo(trackid, trj->GetParticleName().c_str(), primary, mother_id,
+                                   &ini_pos[0], 4, &final_pos[0], 4, ini_volume.c_str(), volume.c_str(),
+                                   &momentum[0], 3, kin_energy, trj->GetCreatorProcess().c_str());
+    }
   }
 
   // We'll set now the family relationships.
@@ -309,6 +350,22 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
 
   if (sdname == "ACTIVE") {
     ievt->SetMCEnergy(evt_energy);
+    if (_hdf5dump) {
+      _event_info.second = evt_energy;
+    }
+  }
+
+  if (_hdf5dump) {
+    for (std::map<G4int, gate::MCTrack*>::iterator it=_itrkmap.begin(); it!=_itrkmap.end(); ++it) {
+      gate::MCTrack* mytrack = it->second;
+      const std::vector<gate::BHit*> myhits = mytrack->GetHits();
+      for (unsigned int h=0; h<myhits.size(); ++h) {
+        gate::BHit* hit = myhits[h];
+        gate::Point3D pos = hit->GetPosition();
+        float hit_pos[3] = {(float)pos.x(), (float)pos.y(), (float)pos.z()};
+        _h5writer->WriteHitInfo(it->first, h, &hit_pos[0], 3, hit->GetTime(), hit->GetAmplitude(), hit->GetLabel().c_str());      
+      }
+    }
   }
 
   for (unsigned int tr=0; tr<ievt->GetMCTracks().size(); ++tr) {
@@ -367,6 +424,10 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
       
       data.push_back(std::make_pair(time_bin, charge));
       amplitude = amplitude + (*it).second;
+
+      if (_hdf5dump) {
+        _h5writer->WriteSensorDataInfo((unsigned int)hit->GetPmtID(), time_bin, charge);
+      }
     }
     wf->SetData(data);
     isnr->SetAmplitude(amplitude);
@@ -381,9 +442,34 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 G4bool PersistencyManager::Store(const G4Run*)
 {
     
-    gate::Run grun = gate::Run(); 
-    
-  std::ifstream history(_historyFile, std::ifstream::in);
+  gate::Run grun = gate::Run();
+
+  // Store the number of events to be processed 
+  NexusApp* app = (NexusApp*) G4RunManager::GetRunManager();
+  G4int num_events = app->GetNumberOfEventsToBeProcessed();
+
+  if (_hdf5dump) {
+    G4String key = "num_events";
+    _h5writer->WriteRunInfo(key,  std::to_string(num_events).c_str());
+    key = "saved_events";
+    _h5writer->WriteRunInfo(key,  std::to_string(_saved_evts).c_str());
+  }
+  SaveConfigurationInfo(_historyFile_init, grun);
+  SaveConfigurationInfo(_historyFile_conf, grun);
+
+  std::stringstream ss;
+  ss << num_events;
+
+  grun.store("num_events", ss.str());
+  grun.SetNumEvents((int)_saved_evts);
+  _writer->WriteRunInfo(grun);
+
+  return true;
+}
+
+void PersistencyManager::SaveConfigurationInfo(G4String file_name, gate::Run& grun)
+{
+  std::ifstream history(file_name, std::ifstream::in);
   while (history.good()) {
 
     std::string key, value;
@@ -391,29 +477,13 @@ G4bool PersistencyManager::Store(const G4Run*)
     std::getline(history, value);
 
     if (key != "") {
-      
-        grun.fstore(key,value);
-        
-        //gate::ParameterInfo* info = new gate::ParameterInfo(key.c_str());
-        //info->SetContent(value);
-      //_writer->WriteMetadata(info); 
+      grun.fstore(key,value);
+      if (_hdf5dump) {
+        _h5writer->WriteRunInfo(key.c_str(), value.c_str());
+      }
     }
-  } 
 
-  history.close();
-
-  // Store the number of events to be processed 
-  NexusApp* app = (NexusApp*) G4RunManager::GetRunManager();
-  G4int num_events = app->GetNumberOfEventsToBeProcessed();
-
-   std::stringstream ss;
-  ss << num_events;
-
-  grun.store("num_events", ss.str());
-
-  grun.SetNumEvents((int)_saved_evts);
+  }
   
-  _writer->WriteRunInfo(grun);
-
-  return true;
+  history.close();
 }

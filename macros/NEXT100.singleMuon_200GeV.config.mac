@@ -50,5 +50,4 @@
 ### JOB CONTROL
 #/nexus/random_seed 0
 /nexus/persistency/eventType background
-/nexus/persistency/historyFile NEXT100.singleMuon_200GeV.pers.mac
 /nexus/persistency/outputFile NEXT100.singleMuon_200GeV.next

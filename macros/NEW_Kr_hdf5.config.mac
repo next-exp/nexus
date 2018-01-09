@@ -1,6 +1,7 @@
 ### --------------------------------------------------------
 ###  This macro simulates Kr83 decays uniformly in the active volume and
-###  using the full simulation
+###  using the full simulation. The output of the simulation is a GATE file
+###  and an hdf5 file.
 ### --------------------------------------------------------
 
 
@@ -13,12 +14,16 @@
 
 # GEOMETRY
 /Geometry/NextNew/pressure 15. bar
-#/Geometry/NextNew/sc_yield 25510. 1/MeV
-/Geometry/NextNew/sc_yield 1000. 1/MeV
-#/Geometry/NextNew/elfield true
 /Geometry/NextNew/elfield false
 /Geometry/PmtR11410/SD_depth 4
+/Geometry/PmtR11410/binning 1. nanosecond
 /Geometry/KDB/teflon_masks true
 
-/nexus/persistency/outputFile output.next
-/nexus/persistency/hdf5 true
+/PhysicsList/Nexus/clustering           false
+/PhysicsList/Nexus/drift                false
+/PhysicsList/Nexus/electroluminescence  false
+
+/nexus/persistency/hdf5 true # always BEFORE outputFile
+/nexus/persistency/outputFile output_hdf5.next
+
+/nexus/random_seed 14562

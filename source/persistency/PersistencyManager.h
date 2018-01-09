@@ -24,7 +24,9 @@ namespace gate { class Event; }
 namespace gate { class MCParticle; }
 namespace gate { class MCTrack; }
 namespace gate { class RootWriter; }
+namespace gate { class Run; }
 
+namespace nexus { class HDF5Writer; }
 
 namespace nexus {
 
@@ -35,7 +37,7 @@ namespace nexus {
   {
   public:
     /// Create the singleton instance of the persistency manager
-    static void Initialize();
+    static void Initialize(G4String historyFile_init, G4String historyFile_conf);
 
     /// Set whether to store or not the current event
     void StoreCurrentEvent(G4bool);
@@ -55,7 +57,7 @@ namespace nexus {
 
 
   private:
-    PersistencyManager();
+    PersistencyManager(G4String historyFile_init, G4String historyFile_conf);
     ~PersistencyManager();
     PersistencyManager(const PersistencyManager&);
 
@@ -64,11 +66,14 @@ namespace nexus {
     void StoreIonizationHits(G4VHitsCollection*, gate::Event*);
     void StorePmtHits(G4VHitsCollection*, gate::Event*);
 
+    void SaveConfigurationInfo(G4String history, gate::Run& grun);
+
 
   private:
     G4GenericMessenger* _msg; ///< User configuration messenger
 
-    G4String _historyFile;
+    G4String _historyFile_init;
+    G4String _historyFile_conf;
 
     G4bool _ready;     ///< Is the PersistencyManager ready to go?
     G4bool _store_evt; ///< Should we store the current event?
@@ -86,6 +91,11 @@ namespace nexus {
     G4int _nevt; ///< Event ID
     G4int _start_id; ///< ID for the first event in file
     G4bool _first_evt; ///< true only for the first event of the run
+    G4bool _hdf5dump; ///< if true write to hdf5 file
+
+    HDF5Writer* _h5writer;  ///< Event writer to hdf5 file
+
+    std::pair<G4int, G4double> _event_info;
   };
 
 

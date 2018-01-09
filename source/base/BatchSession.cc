@@ -42,8 +42,8 @@ static void Tokenize(const G4String& str, std::vector<G4String>& tokens)
 
 
 
-BatchSession::BatchSession(G4String filename, G4UIsession* previous_session):
-  G4UIsession(),  _opened(false), _prev(previous_session)
+BatchSession::BatchSession(G4String filename, G4String historyFile, G4UIsession* previous_session):
+  G4UIsession(),  _opened(false), _prev(previous_session), _history_opened(false)
 {
   _macrostream.open(filename.data(), std::ios::in);
 
@@ -56,13 +56,25 @@ BatchSession::BatchSession(G4String filename, G4UIsession* previous_session):
   }
   
   G4UImanager::GetUIpointer()-> SetSession(this);
+
+  if (historyFile != "") {
+    if (!_history_opened) {
+      G4cout << "Opening " <<  historyFile << G4endl;
+      _history.open(historyFile, std::ofstream::out);
+      _history_opened = true;
+    } else {
+      _history.open(historyFile, std::ofstream::app);
+    }
+  }
+
 }
 
 
 
 BatchSession::~BatchSession()
 {
-  if(_opened) _macrostream.close();
+  if (_opened) _macrostream.close();
+  if (_history_opened) _history.close();
 }
 
 
@@ -119,6 +131,9 @@ G4String BatchSession::ReadCommand()
       cmdtotal+= " ";
     }
 
+    if (_history_opened) {
+      _history << cmdline << G4endl;
+    }
     if(qcontinued) continue; // read the next line
 
     if(cmdtotal.size() != 0) break;
