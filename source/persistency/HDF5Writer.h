@@ -42,18 +42,21 @@ namespace nexus {
     size_t _group; ///< group for everything
     
     //Datasets
+    size_t _runTable;
     size_t _eventsTable;
     size_t _snsDataTable;
     size_t _hitInfoTable;
     size_t _particleInfoTable;
     size_t _evtExtentTable;
-    
+
+    size_t _memtypeRun;
     size_t _memtypeEvt;
     size_t _memtypeSnsData;
     size_t _memtypeHitInfo;
     size_t _memtypeParticleInfo;
     size_t _memtypeEventExtent;
 
+    size_t _irun; ///< counter for configuration parameters
     size_t _ievt; ///< counter for written events
     size_t _ismp; ///< counter for written waveform samples
     size_t _ihit; ///< counter for true information
