@@ -59,7 +59,6 @@ BatchSession::BatchSession(G4String filename, G4String historyFile, G4UIsession*
 
   if (historyFile != "") {
     if (!_history_opened) {
-      G4cout << "Opening " <<  historyFile << G4endl;
       _history.open(historyFile, std::ofstream::out);
       _history_opened = true;
     } else {
