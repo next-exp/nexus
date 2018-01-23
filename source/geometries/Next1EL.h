@@ -195,7 +195,7 @@ namespace nexus {
 
     G4double _pressure;
 
-    mutable G4int _idx_table;
+    mutable unsigned int _idx_table;
     mutable std::vector<G4ThreeVector> _table_vertices;   
 
     std::vector<G4ThreeVector> _pmt_positions;

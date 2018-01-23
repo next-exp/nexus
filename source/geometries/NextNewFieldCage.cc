@@ -672,7 +672,7 @@ void NextNewFieldCage::BuildBuffer()
       unsigned int i = _el_table_point_id + _el_table_index;
 
       if (i == (_el_table_vertices.size()-1)) {
-        G4Exception("[Next100InnerElements]", "GenerateVertex()", 
+        G4Exception("[NextNewFieldcage]", "GenerateVertex()", 
 		    RunMustBeAborted, "Reached last event in EL lookup table.");
       }
 
