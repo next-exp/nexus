@@ -34,5 +34,5 @@
 
 ### EXTRA CONFIGURATION
 /nexus/RegisterDelayedMacro macros/physics/Xe137.mac
-/nexus/historyFile Next100.Neutron.pers.mac
+/nexus/historyFile Next100.Neutron.config.history
 /nexus/RegisterMacro macros/Next100.Neutron.config.mac

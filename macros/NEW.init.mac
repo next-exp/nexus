@@ -23,6 +23,6 @@
 /Actions/RegisterSteppingAction DEFAULT
 /Actions/RegisterRunAction DEFAULT
 
-
+/nexus/historyFile NEW.config.history
 /nexus/RegisterMacro macros/NEW.config.mac
 /nexus/RegisterDelayedMacro macros/physics/Bi214.mac

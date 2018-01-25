@@ -12,8 +12,7 @@
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction DEFAULT
 
-/nexus/historyFile myHistory.macro
-
+/nexus/historyFile nexus_example3.config.history
 /nexus/RegisterMacro macros/nexus_example3.config.mac
 
 

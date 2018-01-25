@@ -20,4 +20,5 @@
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 ### EXTRA CONFIGURATION
+/nexus/historyFile MagBox.config.history
 /nexus/RegisterMacro macros/MagBox.config.mac

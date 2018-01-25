@@ -20,4 +20,5 @@
 /Actions/RegisterRunAction DEFAULT
 /Actions/RegisterSteppingAction DEFAULT
 
+/nexus/historyFile NEXT100_S1_table.config.history
 /nexus/RegisterMacro macros/NEXT100_S1_table.config.mac

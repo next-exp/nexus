@@ -70,7 +70,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), _historyFile("G4history
   historyFile_init = historyFile_init.substr(pos+1);
   pos = historyFile_init.find("init");
   historyFile_init = historyFile_init.substr(0, pos - 1);
-  historyFile_init += ".init.hist";
+  historyFile_init += ".init.history";
 
   BatchSession* batch = new BatchSession(init_macro.c_str(), historyFile_init.c_str());
   batch->SessionStart();

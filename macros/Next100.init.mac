@@ -18,6 +18,6 @@
 /Actions/RegisterSteppingAction DEFAULT
 /Actions/RegisterTrackingAction DEFAULT
 
-
+/nexus/historyFile Next100.config.history
 /nexus/RegisterMacro macros/Next100.config.mac
 /nexus/RegisterDelayedMacro macros/physics/Bi214.mac
