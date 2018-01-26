@@ -32,5 +32,4 @@
 
 ### EXTRA CONFIGURATION
 /nexus/RegisterDelayedMacro Xe137.mac
-/nexus/historyFile NEXT100.singleMuon_200GeV.config.history
 /nexus/RegisterMacro NEXT100.singleMuon_200GeV.config.mac

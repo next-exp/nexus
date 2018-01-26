@@ -19,5 +19,4 @@
 /Actions/RegisterStackingAction DEFAULT
 /Actions/RegisterRunAction DEFAULT
 
-/nexus/historyFile NEW_pair.config.history
 /nexus/RegisterMacro macros/NEW_pair.config.mac

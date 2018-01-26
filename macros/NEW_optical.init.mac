@@ -19,5 +19,4 @@
 /Actions/RegisterStackingAction DEFAULT
 /Actions/RegisterRunAction DEFAULT
 
-/nexus/historyFile NEW_optical.config.history
 /nexus/RegisterMacro macros/NEW_optical.config.mac

@@ -25,9 +25,8 @@ using namespace nexus;
 
 
 
-NexusApp::NexusApp(G4String init_macro): G4RunManager(), _historyFile("G4history.macro")                                   
+NexusApp::NexusApp(G4String init_macro): G4RunManager()
 {
-
   // Create and configure a generic messenger for the app
   _msg = new G4GenericMessenger(this, "/nexus/", "Nexus control commands.");
 
@@ -45,10 +44,6 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), _historyFile("G4history
   _msg->DeclareMethod("random_seed", &NexusApp::SetRandomSeed, 
     "Set a seed for the random number generator."); 
 
-  // To customize the name of the G4history file
-   _msg->DeclareProperty("historyFile", _historyFile,
-                         "Set the name of the file to store executed commands."); 
-
   /////////////////////////////////////////////////////////
 
   // We will set now the user initialization class instances 
@@ -65,12 +60,13 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), _historyFile("G4history
   physicsList = new G4GenericPhysicsList();
 
   // Process now the initialization macro
-  G4String historyFile_init = init_macro;
-  std::size_t pos = historyFile_init.rfind('/');
-  historyFile_init = historyFile_init.substr(pos+1);
-  pos = historyFile_init.find("init");
-  historyFile_init = historyFile_init.substr(0, pos - 1);
-  historyFile_init += ".init.history";
+  G4String historyFile = init_macro;
+  std::size_t pos = historyFile.rfind('/');
+  historyFile = historyFile.substr(pos+1);
+  pos = historyFile.find("init");
+  historyFile = historyFile.substr(0, pos - 1);
+
+  G4String historyFile_init = historyFile + ".init.history";
 
   BatchSession* batch = new BatchSession(init_macro.c_str(), historyFile_init.c_str());
   batch->SessionStart();
@@ -107,15 +103,16 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), _historyFile("G4history
   if (UI->GetCurrentValues("/Actions/RegisterSteppingAction") != "")
     this->SetUserAction(actfctr.CreateSteppingAction());
 
-  UI->StoreHistory(_historyFile.c_str());
+  G4String historyFile_config = historyFile + ".config.history";
+  UI->StoreHistory(historyFile_config.c_str());
 
   /////////////////////////////////////////////////////////
 
   // Set by default a random seed (system time) for the random
   // number generator
   SetRandomSeed(-1);
-  
-  PersistencyManager::Initialize(historyFile_init, _historyFile);
+
+  PersistencyManager::Initialize(historyFile_init, historyFile_config);
 }
 
 

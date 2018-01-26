@@ -14,5 +14,4 @@
 /Actions/RegisterRunAction DEFAULT
 /Actions/RegisterSteppingAction DEFAULT
 
-/nexus/historyFile DEMO_muons.config.history
 /nexus/RegisterMacro macros/DEMO_muons.config.mac

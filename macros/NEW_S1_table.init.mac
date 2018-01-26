@@ -20,5 +20,4 @@
 /Actions/RegisterRunAction DEFAULT
 /Actions/RegisterSteppingAction DEFAULT
 
-/nexus/historyFile NEW_S1_table.config.history
 /nexus/RegisterMacro macros/NEW_S1_table.config.mac

@@ -18,7 +18,6 @@
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterSteppingAction DEFAULT
 
-/nexus/historyFile NEXT100_S2_table.config.history
 /nexus/RegisterMacro macros/NEXT100_S2_table.config.mac
 
 /nexus/RegisterDelayedMacro macros/physics/EL_tables.mac 

@@ -32,5 +32,4 @@
 
 ### EXTRA CONFIGURATION
 /nexus/RegisterDelayedMacro macros/physics/Xe137.mac
-/nexus/historyFile Next100.Muon.config.history
 /nexus/RegisterMacro macros/Next100.Muon.config.mac
