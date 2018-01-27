@@ -42,14 +42,8 @@
 #include <iomanip>
 
 #include "CLHEP/Units/SystemOfUnits.h"
-<<<<<<< HEAD:source/persistency/PersistencyManager.cc
-=======
 
 using namespace nexus;
->>>>>>> Changes in petalo to use g4.10.02:source/base/PersistencyManager.cc
-
-using namespace nexus;
-
 
 PersistencyManager::PersistencyManager(G4String historyFile_init, G4String historyFile_conf): 
   G4VPersistencyManager(), _msg(0),
@@ -215,20 +209,11 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
 
     ipart->SetPathLength(trj->GetTrackLength());
 
-<<<<<<< HEAD:source/persistency/PersistencyManager.cc
     G4ThreeVector ini_xyz = trj->GetInitialPosition();
     G4double ini_t = trj->GetInitialTime(); 
     ipart->SetInitialVtx(gate::Vector4D(ini_xyz.x(), ini_xyz.y(), ini_xyz.z(), ini_t));
     G4ThreeVector xyz = trj->GetFinalPosition();
     G4double t = trj->GetFinalTime();
-=======
-    G4ThreeVector xyz = trj->GetInitialPosition();
-    G4double t = trj->GetInitialTime(); 
-    ipart->SetInitialVtx(gate::Vector4D(xyz.x(), xyz.y(), xyz.z(), t));
-
-    xyz = trj->GetFinalPosition();
-    t = trj->GetFinalTime();
->>>>>>> Type change in GATE waveforms:source/base/PersistencyManager.cc
     ipart->SetFinalVtx(gate::Vector4D(xyz.x(), xyz.y(), xyz.z(), t));
     
     G4String ini_volume = trj->GetInitialVolume();
@@ -241,7 +226,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     G4double energy = sqrt(mom.mag2() + mass*mass);
     ipart->SetInitialMom(mom.x(), mom.y(), mom.z(), energy);
     ipart->SetFinalMom(0, 0, 0, mass);
-  //  std::cout << "After: "<< ipart->GetInitialVtx4D().GetT() << std::endl;
+
     ievent->AddMCParticle(ipart);
 
     if (_hdf5dump) {
