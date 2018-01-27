@@ -1,0 +1,13 @@
+
+*.o
+.DS_Store
+.sconf
+.sconsign.dblite
+source/.DS_Store
+*.*~
+*.next
+*.h5
+*.root
+buildvars.scons
+nexus
+*.history
