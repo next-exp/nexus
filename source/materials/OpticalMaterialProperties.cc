@@ -320,7 +320,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Sapphire()
   const G4double wlmax = 1000. * nm;
   const G4double step  =   10. * nm;
 
-  G4int entries = G4int((wlmax-wlmin)/step);
+  const G4int entries = G4int((wlmax-wlmin)/step);
   
   G4double energy[entries];
   G4double rindex[entries];
@@ -382,9 +382,9 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::OptCoupler()
   //SellmeierEquation seqFS(BFS, CFS);//Fused Silica
 
 
-  G4double wlmin =  150. * nm;
-  G4double wlmax = 1000. * nm;
-  G4double step  =   10. * nm;
+  const G4double wlmin =  150. * nm;
+  const G4double wlmax = 1000. * nm;
+  const G4double step  =   10. * nm;
 
   const G4int entries = G4int((wlmax-wlmin)/step);
   

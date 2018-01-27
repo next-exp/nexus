@@ -55,8 +55,6 @@ namespace nexus {
     std::vector<G4String> _macros;
     std::vector<G4String> _delayed;
 
-    G4String _historyFile;
-    G4String _config_historyFile;
   };
 
   // INLINE DEFINITIONS ////////////////////////////////////

@@ -13,10 +13,8 @@
 
 # GEOMETRY
 /Geometry/NextNew/pressure 15. bar
-#/Geometry/NextNew/sc_yield 25510. 1/MeV
-/Geometry/NextNew/sc_yield 1000. 1/MeV
-#/Geometry/NextNew/elfield true
-/Geometry/NextNew/elfield false
+/Geometry/NextNew/sc_yield 25510. 1/MeV
+/Geometry/NextNew/elfield true
 /Geometry/PmtR11410/SD_depth 4
 /Geometry/KDB/teflon_masks true
 

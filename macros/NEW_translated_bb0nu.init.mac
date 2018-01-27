@@ -14,8 +14,6 @@
 /Actions/RegisterSteppingAction DEFAULT
 /Actions/RegisterRunAction DEFAULT
 
-/nexus/historyFile myHistory.macro
-
 /nexus/RegisterMacro macros/NEW_translated_bb0nu.config.mac
 
 
