@@ -59,6 +59,8 @@ namespace nexus {
 
     G4double active_z_dim_, active_xy_dim_;
 
+    BoxPointSampler* active_gen_;
+
   };
 
 } // end namespace nexus

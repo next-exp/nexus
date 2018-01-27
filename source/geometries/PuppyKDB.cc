@@ -32,7 +32,7 @@ namespace nexus {
   {
     /// Messenger
    msg_ = new G4GenericMessenger(this, "/Geometry/PuppyKDB/", "Control commands of PET geometry.");
-   msg_->DeclareProperty("kdb_vis", visibility_, "PET Kapton Dice Boards Visibility");
+   msg_->DeclareProperty("visibility", visibility_, "PET Kapton Dice Boards Visibility");
 
    sipm_ = new SiPMpet9mm2;
 

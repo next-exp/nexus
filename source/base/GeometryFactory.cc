@@ -39,7 +39,7 @@ GeometryFactory::~GeometryFactory()
 #include "NextNew.h"
 #include "MagBox.h"
 #include "FullRing.h"
-#include "PetaloTrapAlone.h"
+#include "PuppyCell.h"
 #include "PMT_QE_setup.h"
 #include "Lab_vertices.h"
 #include "Lab.h"
@@ -66,7 +66,7 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
 
   else if (_name == "FULLRING") p = new FullRing();
   
-  else if (_name == "TRAP") p = new PetaloTrapAlone();
+  else if (_name == "PUPPY") p = new PuppyCell();
 
   else if (_name == "VERTICES") p = new Lab_vertices();
 

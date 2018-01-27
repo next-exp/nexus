@@ -90,10 +90,10 @@ namespace nexus {
     det_logic_ = new G4LogicalVolume(det_solid, steel, "CF100");
     //det_logic_->SetVisAttributes(G4VisAttributes::Invisible);
 
-    G4RotationMatrix* rot = new G4RotationMatrix();
-    rot->rotateX(pi/2.);
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), det_logic_,
-		      "CF100", lab_logic_, false, 0, true);
+    G4RotationMatrix rot;
+    //    rot.rotateX(pi/2.);
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0.,0.,0.)), det_logic_,
+    		      "CF100", lab_logic_, false, 0, true);
   }
 
  void PuppyCell::BuildLXe()
@@ -122,8 +122,9 @@ namespace nexus {
     red_color.SetForceSolid(true);
     active_logic->SetVisAttributes(red_color);
 
-    G4double pos_y = - det_length_/2. + active_xy_dim_/2./2. ;
-    new G4PVPlacement(0, G4ThreeVector(0., pos_y, 0.), active_logic,
+    G4double db_zsize = db_->GetDimensions().z();
+    G4double pos_y = det_length_/2. - db_zsize - active_z_dim_/2.;
+    new G4PVPlacement(0, G4ThreeVector(0., 0, pos_y), active_logic,
 		      "ACTIVE", lXe_logic_, false, 0, true);
 
     // Set the ACTIVE volume as an ionization sensitive active
@@ -132,6 +133,10 @@ namespace nexus {
     G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
 
     active_logic->SetUserLimits(new G4UserLimits(max_step_size_));
+
+    active_gen_ = new BoxPointSampler(active_xy_dim_, active_xy_dim_, active_z_dim_, 0.,
+				      G4ThreeVector(0., 0., pos_y) ,0);
+
 
   }
 
@@ -160,20 +165,24 @@ namespace nexus {
     G4RotationMatrix rot;
 
     rot.rotateY(pi/2.);
-    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(-displ_xy, 0., 0.)), pdb_logic,
-		      "LXE_DICE", lXe_logic_, false, 2, true);
+    new G4PVPlacement(G4Transform3D(rot,
+                                    G4ThreeVector(-displ_xy, 0., det_length_/2. - db_zsize - active_xy_dim_/2.)),
+                      pdb_logic, "LXE_DICE", lXe_logic_, false, 2, true);
 
     //    rot.rotateY(-pi/2.);
-    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(displ_xy, 0., 0.)), pdb_logic,
-		      "LXE_DICE", lXe_logic_, false, 3, true);
+    new G4PVPlacement(G4Transform3D(rot,
+                                    G4ThreeVector(displ_xy, 0., det_length_/2. - db_zsize - active_xy_dim_/2.)),
+                      pdb_logic, "LXE_DICE", lXe_logic_, false, 3, true);
 
     rot.rotateZ(pi/2.);
-    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., displ_xy, 0.)), db_logic,
-    		      "LXE_DICE", lXe_logic_, false, 4, true);
+    new G4PVPlacement(G4Transform3D(rot,
+                                    G4ThreeVector(0., -displ_xy, det_length_/2. - db_zsize - active_xy_dim_/2.)),
+                      db_logic, "LXE_DICE", lXe_logic_, false, 4, true);
 
     rot.rotateZ(pi);
-    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., -displ_xy, 0.)), db_logic,
-    		      "LXE_DICE", lXe_logic_, false, 5, true);
+    new G4PVPlacement(G4Transform3D(rot,
+                                    G4ThreeVector(0., displ_xy, det_length_/2. - db_zsize - active_xy_dim_/2.)),
+                      db_logic, "LXE_DICE", lXe_logic_, false, 5, true);
 
   }
 
@@ -181,8 +190,8 @@ namespace nexus {
   {
     G4ThreeVector vertex(0.,0.,0.);
 
-    if (region == "OUTSIDE") {
-      vertex = G4ThreeVector(0., 0., -20.*cm);
+    if (region == "ACTIVE") {
+      vertex = active_gen_->GenerateVertex("INSIDE");
     } else if (region == "CENTER") {
       vertex = G4ThreeVector(0., 5.*mm, -5.*mm);
     }
