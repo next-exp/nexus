@@ -49,8 +49,8 @@ namespace nexus {
   void PuppyPlainDice::Construct()
   {
 
-    const G4double db_x =  xy_size_;
-    const G4double db_y =  xy_size_;
+    const G4double db_x =  xy_dim_;
+    const G4double db_y =  xy_dim_;
     const G4double board_thickness = 0.3 * mm;
 
     dimensions_.setX(db_x);
