@@ -1363,4 +1363,27 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeLYSO()
   return mpt;
 }
 
+G4MaterialPropertiesTable* OpticalMaterialProperties::ReflectantSurface(G4double reflectivity)
+{
+  G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
+  G4cout << "Surface reflectivity = " << reflectivity << G4endl;
+  const G4int REFL_NUMENTRIES = 2;
+
+  G4double ENERGIES[REFL_NUMENTRIES] = {1.0*eV, 30.*eV};
+  G4double REFLECTIVITY[REFL_NUMENTRIES] = {reflectivity, reflectivity};
+  G4double specularlobe[REFL_NUMENTRIES] = {0., 0.}; // specular reflection about the normal to a
+  //microfacet. Such a vector is chosen according to a gaussian distribution with
+  //sigma = SigmaAlhpa (in rad) and centered in the average normal.
+  G4double specularspike[REFL_NUMENTRIES] = {0., 0.}; // specular reflection about the average normal 
+  G4double backscatter[REFL_NUMENTRIES] = {0., 0.}; //180 degrees reflection
+  // 1 - the sum of these three last parameters is the percentage of Lambertian reflection
+
+  mpt->AddProperty("REFLECTIVITY", ENERGIES, REFLECTIVITY, REFL_NUMENTRIES);
+  mpt->AddProperty("SPECULARLOBECONSTANT",ENERGIES,specularlobe,REFL_NUMENTRIES);
+  mpt->AddProperty("SPECULARSPIKECONSTANT",ENERGIES,specularspike,REFL_NUMENTRIES);
+  mpt->AddProperty("BACKSCATTERCONSTANT",ENERGIES,backscatter,REFL_NUMENTRIES);
+
+  return mpt;
+}
+
 

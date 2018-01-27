@@ -85,6 +85,7 @@ namespace nexus {
     static G4MaterialPropertiesTable* LYSO();
     static G4MaterialPropertiesTable* LYSO_nconst();
     static G4MaterialPropertiesTable* FakeLYSO();
+    static G4MaterialPropertiesTable* ReflectantSurface(G4double reflectivity=0.95);
 
   
   private:
