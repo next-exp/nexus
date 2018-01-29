@@ -40,8 +40,8 @@ namespace nexus {
     det_length_(30.*cm),
     det_thickness_(1.*mm),
     max_step_size_(1.*mm),
-    active_z_dim_(50.*mm), // 52 mm + 0.5 mm each side
-    active_xy_dim_(50.*mm), // 52 mm + 0.5 mm each side
+    active_z_dim_(50.*mm),
+    active_xy_dim_(50.*mm),
     dice_offset_(0.5*mm)
   {
     // Messenger
