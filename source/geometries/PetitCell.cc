@@ -1,13 +1,13 @@
 // ----------------------------------------------------------------------------
-//  $Id: PuppyCell.cc  $
+//  $Id: PetitCell.cc  $
 //
 // ----------------------------------------------------------------------------
 
-#include "PuppyCell.h"
+#include "PetitCell.h"
 #include "MaterialsList.h"
 #include "IonizationSD.h"
-#include "PuppyKDB.h"
-#include "PuppyPlainDice.h"
+#include "PetitKDB.h"
+#include "PetitPlainDice.h"
 #include "OpticalMaterialProperties.h"
 #include "BoxPointSampler.h"
 #include "Visibilities.h"
@@ -31,7 +31,7 @@
 
 namespace nexus {
 
-  PuppyCell::PuppyCell():
+  PetitCell::PetitCell():
     BaseGeometry(),
     // Detector dimensions
     //    vacuum_thickn_(1.*mm),
@@ -45,21 +45,21 @@ namespace nexus {
     dice_offset_(0.5*mm)
   {
     // Messenger
-    msg_ = new G4GenericMessenger(this, "/Geometry/PuppyCell/",
-                                  "Control commands of geometry PuppyCell.");
+    msg_ = new G4GenericMessenger(this, "/Geometry/PetitCell/",
+                                  "Control commands of geometry PetitCell.");
 
-    db_ = new PuppyKDB();
-    pdb_ = new PuppyPlainDice();
+    db_ = new PetitKDB();
+    pdb_ = new PetitPlainDice();
 
   }
 
 
-  PuppyCell::~PuppyCell()
+  PetitCell::~PetitCell()
   {
   }
 
 
-  void PuppyCell::Construct()
+  void PetitCell::Construct()
   {
     // LAB. This is just a volume of air surrounding the detector
     G4double lab_size = 1.*m;
@@ -86,7 +86,7 @@ namespace nexus {
     BuildSiPMPlane();
   }
 
-  void PuppyCell::BuildDetector()
+  void PetitCell::BuildDetector()
   {
     G4double det_out_diam = det_in_diam_ + 2.*det_thickness_;
     G4Tubs* det_solid =
@@ -102,7 +102,7 @@ namespace nexus {
     		      "CF100", lab_logic_, false, 0, true);
   }
 
- void PuppyCell::BuildLXe()
+ void PetitCell::BuildLXe()
   {
     G4double lXe_diam = det_in_diam_;
     G4double lXe_length = det_length_;
@@ -115,7 +115,7 @@ namespace nexus {
 		      "LXE", det_logic_, false, 0, true);
   }
 
-  void PuppyCell::BuildActive()
+  void PetitCell::BuildActive()
   {
     G4Box* active_solid =
       new G4Box("ACTIVE", active_xy_dim_/2., active_xy_dim_/2., active_z_dim_/2.);
@@ -145,7 +145,7 @@ namespace nexus {
 
   }
 
-  void PuppyCell::BuildSiPMPlane()
+  void PetitCell::BuildSiPMPlane()
   {
 
     G4LogicalVolume* db_logic = db_->GetLogicalVolume();
@@ -188,7 +188,7 @@ namespace nexus {
 
   }
 
-  G4ThreeVector PuppyCell::GenerateVertex(const G4String& region) const
+  G4ThreeVector PetitCell::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0.,0.,0.);
 

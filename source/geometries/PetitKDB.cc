@@ -1,4 +1,4 @@
-#include "PuppyKDB.h"
+#include "PetitKDB.h"
 
 #include "SiPMpet9mm2.h"
 #include "PmtSD.h"
@@ -25,34 +25,34 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  PuppyKDB::PuppyKDB():
+  PetitKDB::PetitKDB():
     BaseGeometry(),
     visibility_ (0),
     xy_dim_(52.*mm)
   {
     /// Messenger
-   msg_ = new G4GenericMessenger(this, "/Geometry/PuppyKDB/", "Control commands of PET geometry.");
+   msg_ = new G4GenericMessenger(this, "/Geometry/PetitKDB/", "Control commands of PET geometry.");
    msg_->DeclareProperty("visibility", visibility_, "PET Kapton Dice Boards Visibility");
 
    sipm_ = new SiPMpet9mm2;
 
   }
 
-  PuppyKDB::~PuppyKDB()
+  PetitKDB::~PetitKDB()
   {
   }
 
-  // void PuppyKDB::SetPitchSize(G4double pitch)
+  // void PetitKDB::SetPitchSize(G4double pitch)
   // {
   //   sipm_pitch_ = pitch;
   // }
 
-  // void PuppyKDB::SetXYsize(G4double xysize)
+  // void PetitKDB::SetXYsize(G4double xysize)
   // {
   //   xysize_ = xysize;
   // }
 
-  void PuppyKDB::Construct()
+  void PetitKDB::Construct()
   {
     sipm_->Construct();
 
@@ -150,12 +150,12 @@ namespace nexus {
     }
   }
 
-  G4ThreeVector PuppyKDB::GetDimensions() const
+  G4ThreeVector PetitKDB::GetDimensions() const
   {
     return dimensions_;
   }
 
-  const std::vector<std::pair<int, G4ThreeVector> >& PuppyKDB::GetPositions()
+  const std::vector<std::pair<int, G4ThreeVector> >& PetitKDB::GetPositions()
   {
     return positions_;
   }

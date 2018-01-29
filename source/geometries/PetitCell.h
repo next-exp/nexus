@@ -1,5 +1,5 @@
-#ifndef PUPPYCELL_H
-#define PUPPYCELL_H
+#ifndef PETITCELL_H
+#define PETITCELL_H
 
 #include "BaseGeometry.h"
 #include "BoxPointSampler.h"
@@ -7,19 +7,19 @@
 class G4LogicalVolume;
 class G4GenericMessenger;
 class G4Material;
-namespace nexus {class PuppyKDB;}
-namespace nexus {class PuppyPlainDice;}
+namespace nexus {class PetitKDB;}
+namespace nexus {class PetitPlainDice;}
 namespace nexus {class BoxPointSampler;}
 
 namespace nexus {
 
-  class PuppyCell: public BaseGeometry {
+  class PetitCell: public BaseGeometry {
   public:
     /// Constructor
-    PuppyCell();
+    PetitCell();
 
     /// Destructor
-    ~PuppyCell();
+    ~PetitCell();
 
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
@@ -52,8 +52,8 @@ namespace nexus {
     G4GenericMessenger* msg_;
 
     // Dice class
-    PuppyKDB* db_;
-    PuppyPlainDice* pdb_;
+    PetitKDB* db_;
+    PetitPlainDice* pdb_;
 
     /// Thickness and xy dimension of KDB+SiPM in LXe volume
     G4double db_thickness_, db_lateral_dim_;

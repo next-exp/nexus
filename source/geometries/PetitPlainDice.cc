@@ -1,5 +1,4 @@
-
-#include "PuppyPlainDice.h"
+#include "PetitPlainDice.h"
 #include "Visibilities.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
@@ -23,7 +22,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  PuppyPlainDice::PuppyPlainDice():
+  PetitPlainDice::PetitPlainDice():
     BaseGeometry(),
     rows_(8),
     columns_(8),
@@ -32,22 +31,22 @@ namespace nexus {
     refl_(0.)
   {
     /// Messenger
-    msg_ = new G4GenericMessenger(this, "/Geometry/PuppyPlainDice/", "Control commands of geometry Puppy.");
+    msg_ = new G4GenericMessenger(this, "/Geometry/PetitPlainDice/", "Control commands of geometry Petit.");
     msg_->DeclareProperty("reflectivity", refl_, "Reflectivity of dice boards");
     msg_->DeclareProperty("visibility", visibility_, "Dice Boards Visibility");
   }
 
-  PuppyPlainDice::~PuppyPlainDice()
+  PetitPlainDice::~PetitPlainDice()
   {
   }
 
-  // void PuppyPlainDice::SetSize(G4double xsize, G4double ysize)
+  // void PetitPlainDice::SetSize(G4double xsize, G4double ysize)
   // {
   // xsize_ = xsize;
   // ysize_ = ysize;
   // }
 
-  void PuppyPlainDice::Construct()
+  void PetitPlainDice::Construct()
   {
 
     const G4double db_x =  xy_dim_;
@@ -90,12 +89,12 @@ namespace nexus {
     }
   }
 
-  G4ThreeVector PuppyPlainDice::GetDimensions() const
+  G4ThreeVector PetitPlainDice::GetDimensions() const
   {
     return dimensions_;
   }
 
-  // const std::vector<std::pair<int, G4ThreeVector> >& PuppyPlainDice::GetPositions()
+  // const std::vector<std::pair<int, G4ThreeVector> >& PetitPlainDice::GetPositions()
   // {
   //   return positions_;
   // }
