@@ -237,23 +237,3 @@ void writeEventExtent(evt_extent_t* evtExtent, hid_t dataset, hid_t memtype, hsi
   H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, evtExtent);
   H5Sclose(file_space);
 }
-
-// void writeRun(runinfo_t * runData, hid_t dataset, hid_t memtype, hsize_t evt_number)
-// {
-//   hid_t memspace, file_space;
-//   hsize_t dims[1] = {1};
-//   memspace = H5Screate_simple(1, dims, NULL);
-
-//   //Extend SiPM dataset
-//   dims[0] = evt_number+1;
-//   H5Dset_extent(dataset, dims);
-
-//   file_space = H5Dget_space(dataset);
-//   hsize_t start[1] = {evt_number};
-//   hsize_t count[1] = {1};
-//   H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
-//   H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, runData);
-//   H5Sclose(file_space);
-// }
-
-

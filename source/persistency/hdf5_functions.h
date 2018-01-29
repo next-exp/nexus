@@ -50,6 +50,7 @@
         char creator_proc[20];
   } particle_info_t;
 
+  hsize_t createRunType();
   hsize_t createEventType();
   hsize_t createSensorDataType();
   hsize_t createHitInfoType();
@@ -60,7 +61,7 @@
   hid_t createGroup(hid_t file, std::string& groupName);
 
   void writeRun(run_info_t* runData, hid_t dataset, hid_t memtype, hsize_t counter);
-  void writeEvent(evt_t * evtData, hid_t dataset, hid_t memtype, hsize_t evt_number);
+  void writeEvent(evt_t* evtData, hid_t dataset, hid_t memtype, hsize_t counter);
   void writeSnsData(sns_data_t* snsData, hid_t dataset, hid_t memtype, hsize_t counter);
   void writeHit(hit_info_t* hitInfo, hid_t dataset, hid_t memtype, hsize_t counter);
   void writeParticle(particle_info_t* particleInfo, hid_t dataset, hid_t memtype, hsize_t counter);
