@@ -69,7 +69,7 @@ AnalysisSteppingAction::~AnalysisSteppingAction()
    
    double first = 1000.*second ;
    
-   for (G4int i=0; i< times.size(); ++i) {
+   for (unsigned int i=0; i< times.size(); ++i) {
      if (times[i] < first) {
        first = times[i];
      }
@@ -77,7 +77,7 @@ AnalysisSteppingAction::~AnalysisSteppingAction()
    //G4cout << first/picosecond << G4endl;
    //std::vector<double> times_sub;
 
-   for (G4int i=0; i< times.size(); ++i) {
+   for (unsigned int i=0; i< times.size(); ++i) {
      //    times_sub.push_back(times[i] - first);
      hTV->Fill((times[i] - first)/picosecond, wavelengths[i]/mm*picosecond);
    }

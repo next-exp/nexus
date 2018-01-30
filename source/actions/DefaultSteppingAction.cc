@@ -30,7 +30,7 @@ DefaultSteppingAction::~DefaultSteppingAction()
 
 
 
-void DefaultSteppingAction::UserSteppingAction(const G4Step* step)
+void DefaultSteppingAction::UserSteppingAction(const G4Step* /*step*/)
 {
   /*
   G4ParticleDefinition* pdef = step->GetTrack()->GetDefinition();

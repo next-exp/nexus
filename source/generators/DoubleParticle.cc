@@ -117,7 +117,7 @@ void DoubleParticle::GeneratePrimaryVertex(G4Event* event)
 
   // Particle generated at start-of-event
   // G4cout << time1/picosecond << ", " << time2/picosecond << G4endl;
-  G4double time = 0.;
+  //G4double time = 0.;
 
   // Create a new vertex
   G4PrimaryVertex* vertex = new G4PrimaryVertex(pos1, time1);
