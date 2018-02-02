@@ -97,24 +97,24 @@ void HDF5Writer::WriteSensorDataInfo(unsigned int sensor_id, unsigned int time_b
   _ismp++;
 }
 
-void HDF5Writer::WriteHitInfo(int track_indx, int hit_indx, const float* hit_position, int size_position, float hit_time, float hit_energy, const char* label)
+void HDF5Writer::WriteHitInfo(int particle_indx, int hit_indx, const float* hit_position, int size_position, float hit_time, float hit_energy, const char* label)
 {
   hit_info_t trueInfo;
-  trueInfo.hit_indx = hit_indx;
   memcpy(trueInfo.hit_position, hit_position, sizeof(*hit_position)*size_position);
   trueInfo.hit_time = hit_time;
   trueInfo.hit_energy = hit_energy;
   strcpy(trueInfo.label, label);
-  trueInfo.track_indx = track_indx;
+  trueInfo.particle_indx = particle_indx;
+  trueInfo.hit_indx = hit_indx;
   writeHit(&trueInfo,  _hitInfoTable, _memtypeHitInfo, _ihit);
   
   _ihit++;
 }
 
-void HDF5Writer::WriteParticleInfo(int track_indx, const char* particle_name, char primary, int mother_id, const float* initial_vertex, int size_initial_vertex, const float* final_vertex, int size_final_vertex, const char* initial_volume, const char* final_volume, const float* momentum, int size_momentum, float kin_energy, const char* creator_proc)
+void HDF5Writer::WriteParticleInfo(int particle_indx, const char* particle_name, char primary, int mother_id, const float* initial_vertex, int size_initial_vertex, const float* final_vertex, int size_final_vertex, const char* initial_volume, const char* final_volume, const float* momentum, int size_momentum, float kin_energy, const char* creator_proc)
 {
   particle_info_t trueInfo;
-  trueInfo.track_indx = track_indx;
+  trueInfo.particle_indx = particle_indx;
   strcpy(trueInfo.particle_name, particle_name);
   trueInfo.primary = primary;
   trueInfo.mother_indx = mother_id;

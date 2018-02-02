@@ -28,16 +28,16 @@
   } sns_data_t;
 
   typedef struct{
-	int hit_indx;
 	float hit_position[3];
 	float hit_time;
 	float hit_energy;
         char label[20];
-        int track_indx;
+        int particle_indx;
+        int hit_indx;
   } hit_info_t;
 
   typedef struct{
-	int track_indx;
+	int particle_indx;
 	char particle_name[20];
         char primary;
 	int mother_indx;

@@ -161,6 +161,7 @@ G4bool PersistencyManager::Store(const G4Event* event)
   StoreTrajectories(event->GetTrajectoryContainer(), &ievt);
 
   StoreHits(event->GetHCofThisEvent(), &ievt);
+
   if (_hdf5dump) {
     //Save event-related information in hdf5 file
     _h5writer->WriteEventInfo(_event_info.first, _event_info.second);
@@ -195,7 +196,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[i]);
     if (!trj) continue;
 
-    // Create an gate particle to store the trajectory information
+    // Create a gate particle to store the trajectory information
     gate::MCParticle* ipart = new gate::MCParticle();
     ipart->SetPDG(trj->GetPDGEncoding());
     ipart->SetLabel(trj->GetParticleName());
@@ -233,7 +234,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
       float momentum[3] = {(float)mom.x(), (float)mom.y(), (float)mom.z()};
       float kin_energy = energy - mass;
       char primary = 0;
-      G4int mother_id = -1;
+      G4int mother_id = 0;
       if (!trj->GetParentID()) {
 	primary = 1;
       } else {
@@ -299,6 +300,26 @@ void PersistencyManager::StoreHits(G4HCofThisEvent* hce, gate::Event* ievt)
       G4Exception("StoreHits()", "[PersistencyManager]", JustWarning, msg);
     }
   }
+
+  for (unsigned int tr=0; tr<ievt->GetMCTracks().size(); ++tr) {
+    G4double tot_energy = 0.;
+    gate::MCTrack* mytrack =  ievt->GetMCTracks()[tr];
+    G4int particle_id = mytrack->GetParticle().GetID();
+    const std::vector<gate::BHit*> myhits = mytrack->GetHits();
+    for (unsigned int h=0; h<myhits.size(); ++h) {
+      gate::BHit* hit = myhits[h];
+      tot_energy +=hit->GetAmplitude();
+      myhits[h]->SetID(h);
+      if (_hdf5dump) {
+        gate::Point3D pos = hit->GetPosition();
+        float hit_pos[3] = {(float)pos.x(), (float)pos.y(), (float)pos.z()};
+        _h5writer->WriteHitInfo(particle_id, h, &hit_pos[0], 3, hit->GetTime(), hit->GetAmplitude(), hit->GetLabel().c_str());      
+      }
+    }
+    mytrack->SetExtremes(0, myhits.size()-1);
+    mytrack->SetEnergy(tot_energy);
+  }
+
 }
 
 
@@ -327,7 +348,7 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
     std::map<G4int, gate::MCTrack*>::iterator it = _itrkmap.find(trackid);
     if (it != _itrkmap.end()) {
       itrk = it->second;
-    } else {  
+    } else {
       itrk = new gate::MCTrack();
       itrk->SetLabel(sdname);
       _itrkmap[trackid] = itrk;
@@ -355,32 +376,6 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
     }
   }
 
-  if (_hdf5dump) {
-    for (std::map<G4int, gate::MCTrack*>::iterator it=_itrkmap.begin(); it!=_itrkmap.end(); ++it) {
-      gate::MCTrack* mytrack = it->second;
-      const std::vector<gate::BHit*> myhits = mytrack->GetHits();
-      for (unsigned int h=0; h<myhits.size(); ++h) {
-        gate::BHit* hit = myhits[h];
-        gate::Point3D pos = hit->GetPosition();
-        float hit_pos[3] = {(float)pos.x(), (float)pos.y(), (float)pos.z()};
-        _h5writer->WriteHitInfo(it->first, h, &hit_pos[0], 3, hit->GetTime(), hit->GetAmplitude(), hit->GetLabel().c_str());      
-      }
-    }
-  }
-
-  for (unsigned int tr=0; tr<ievt->GetMCTracks().size(); ++tr) {
-    G4double tot_energy = 0.;
-    gate::MCTrack* mytrack =  ievt->GetMCTracks()[tr];
-    const std::vector<gate::BHit*> myhits = mytrack->GetHits();
-    for (unsigned int h=0; h<myhits.size(); ++h) {
-      tot_energy += myhits[h]->GetAmplitude();
-      myhits[h]->SetID(h);
-    }
-    mytrack->SetExtremes(0, myhits.size()-1);
-    mytrack->SetEnergy(tot_energy);
-  }
-
-   
 }
 
 

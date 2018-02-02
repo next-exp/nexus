@@ -41,12 +41,12 @@ hsize_t createHitInfoType()
                         
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (hit_info_t));
-  H5Tinsert (memtype, "hit_indx",HOFFSET (hit_info_t, hit_indx), H5T_NATIVE_INT);
   H5Tinsert (memtype, "hit_position",HOFFSET (hit_info_t, hit_position), point3d);
   H5Tinsert (memtype, "hit_time",HOFFSET (hit_info_t, hit_time), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "hit_energy",HOFFSET (hit_info_t, hit_energy), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "label",HOFFSET (hit_info_t, label),strtype);
-  H5Tinsert (memtype, "track_indx",HOFFSET (hit_info_t, track_indx),H5T_NATIVE_INT);
+  H5Tinsert (memtype, "particle_indx",HOFFSET (hit_info_t, particle_indx),H5T_NATIVE_INT);
+  H5Tinsert (memtype, "hit_indx",HOFFSET (hit_info_t, hit_indx), H5T_NATIVE_INT);
   return memtype;
 }
 
@@ -63,7 +63,7 @@ hsize_t createParticleInfoType()
                         
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (particle_info_t));
-  H5Tinsert (memtype, "track_indx",HOFFSET (particle_info_t, track_indx),H5T_NATIVE_INT);
+  H5Tinsert (memtype, "particle_indx",HOFFSET (particle_info_t, particle_indx),H5T_NATIVE_INT);
   H5Tinsert (memtype, "particle_name",HOFFSET (particle_info_t, particle_name),strtype);
   H5Tinsert (memtype, "primary",HOFFSET (particle_info_t, primary), H5T_NATIVE_CHAR);
   H5Tinsert (memtype, "mother_indx",HOFFSET (particle_info_t, mother_indx),H5T_NATIVE_INT);
