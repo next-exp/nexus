@@ -388,7 +388,6 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 
   for (G4int i=0; i<hits->entries(); i++) {
 
-
     PmtHit* hit = dynamic_cast<PmtHit*>(hits->GetHit(i));
     if (!hit) continue;
     
@@ -427,8 +426,18 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     wf->SetData(data);
     isnr->SetAmplitude(amplitude);
 
-    // Add the sensor hit to the ate event
-    ievt->AddMCSensHit(isnr);    
+    // Add the sensor hit to the gate event
+    ievt->AddMCSensHit(isnr);
+
+    if (_hdf5dump) {
+      std::map<G4int, gate::Hit*>::iterator pos_it =
+        _sns_posmap.find(hit->GetPmtID());
+      if (pos_it == _sns_posmap.end()) {
+        _h5writer->WriteSensorPosInfo((unsigned int)hit->GetPmtID(), (float)xyz.x(), (float)xyz.y(), (float)xyz.z());
+        _sns_posmap[hit->GetPmtID()] = isnr;
+      }
+    }
+
   }
 }
 

@@ -25,6 +25,7 @@ namespace gate { class MCParticle; }
 namespace gate { class MCTrack; }
 namespace gate { class RootWriter; }
 namespace gate { class Run; }
+namespace gate { class Hit; }
 
 namespace nexus { class HDF5Writer; }
 
@@ -85,6 +86,7 @@ namespace nexus {
 
     std::map<G4int, gate::MCParticle*> _iprtmap;
     std::map<G4int, gate::MCTrack*> _itrkmap;
+    std::map<G4int, gate::Hit*> _sns_posmap;
 
     G4int _saved_evts; ///< number of events to be saved
 

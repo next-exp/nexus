@@ -13,7 +13,7 @@ using namespace nexus;
 
 HDF5Writer::HDF5Writer():
   _file(0), _irun(0), _ievt(0), _ismp(0), _ihit(0),
-  _ipart(0), _ievt_extent(0)
+  _ipart(0), _ievt_extent(0), _ipos(0)
 {
 }
 
@@ -54,6 +54,10 @@ void HDF5Writer::Open(std::string fileName)
   std::string evt_extent_table_name = "extents";
   _memtypeEventExtent = createEventExtentType();
   _evtExtentTable = createTable(_group, evt_extent_table_name, _memtypeEventExtent);
+
+  std::string sns_pos_table_name = "sensor_positions";
+  _memtypeSnsPos = createSensorPosType();
+  _snsPosTable = createTable(_group, sns_pos_table_name, _memtypeSnsPos);
   
   _isOpen = true;
 }
@@ -141,4 +145,40 @@ void HDF5Writer::WriteEventExtentInfo(int evt_number, unsigned int last_sns_data
   writeEventExtent(&evtData, _evtExtentTable, _memtypeEventExtent, _ievt_extent);
 
   _ievt_extent++;
+}
+
+void HDF5Writer::WriteSensorPosInfo(unsigned int sensor_id, float x, float y, float z)
+{
+  sns_pos_t snsPos;
+  snsPos.sensor_id = sensor_id;
+  snsPos.x = x;
+  snsPos.y = y;
+  snsPos.z = z;
+  writeSnsPos(&snsPos, _snsPosTable, _memtypeSnsPos, _ipos);
+
+  _ipos++;
+}
+
+size_t HDF5Writer::GetSnsDataIndex() const
+{
+  if (_ismp == 0)
+    return 0;
+  else
+    return _ismp - 1;
+}
+
+size_t HDF5Writer::GetHitIndex() const
+{
+  if (_ihit == 0)
+    return 0;
+  else
+    return _ihit - 1;
+}
+
+size_t HDF5Writer::GetParticleIndex() const
+{
+  if (_ipart == 0)
+    return 0;
+  else
+    return _ipart- 1;
 }
