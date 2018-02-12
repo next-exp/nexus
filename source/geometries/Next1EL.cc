@@ -22,6 +22,7 @@
 #include "NextElDB.h"
 #include "CylinderPointSampler.h"
 #include "MuonsPointSampler.h"
+#include "Visibilities.h"
 
 #include <G4Orb.hh>
 #include <G4Box.hh>
@@ -338,14 +339,9 @@ void Next1EL::BuildMuons()
 		    "MUONS", _lab_logic, false, 0, true);
 
    // visualization
-  G4VisAttributes * vis_red_neus = new G4VisAttributes;
-  vis_red_neus->SetColor(1., 0., 0.);
-  vis_red_neus->SetForceSolid(true);
-  muon_logic->SetVisAttributes(vis_red_neus);
-  //  muon_logic_ref->SetVisAttributes(vis_red_neus);
-  
-  
-  
+  G4VisAttributes muon_col = nexus::Red();
+  muon_col.SetForceSolid(true);
+  muon_logic->SetVisAttributes(muon_col);
 }
 
 
@@ -382,10 +378,9 @@ void Next1EL::BuildExtScintillator()
 
   new G4PVPlacement(G4Transform3D(rot, pos_source), source_logic, "SOURCE",
 		    _lab_logic, false, 0, true);
-  G4VisAttributes * vis_green = new G4VisAttributes;
-   vis_green->SetColor(0., 1., 0.);
-   vis_green->SetForceSolid(true);
-   source_logic->SetVisAttributes(vis_green);
+  G4VisAttributes source_col = nexus::LightGreen();
+  source_col.SetForceSolid(true);
+  source_logic->SetVisAttributes(source_col);
 
    G4RotationMatrix* rot2 = new  G4RotationMatrix();
    rot2->rotateY(-pi/2.);
@@ -409,10 +404,9 @@ void Next1EL::BuildExtScintillator()
   new G4PVPlacement(G4Transform3D(rot, pos_support), support_logic, 
 		    "SOURCE_SUPPORT",  _lab_logic, false, 0, true);
   
-   G4VisAttributes * vis_red = new G4VisAttributes;
-   vis_red->SetColor(1., 0., 0.);
-   vis_red->SetForceSolid(true);
-   support_logic->SetVisAttributes(vis_red);
+  G4VisAttributes support_col = nexus::Red();
+  support_col.SetForceSolid(true);
+  support_logic->SetVisAttributes(support_col);
    
   
   /// NaI scintillator behind
@@ -436,10 +430,9 @@ void Next1EL::BuildExtScintillator()
 		  _sideNa_pos.getZ()); 
   new G4PVPlacement(G4Transform3D(rot, pos_scint), sc_logic, "NaI",
 		    _lab_logic, false, 0, true);
-  G4VisAttributes * vis_blue = new G4VisAttributes;
-  vis_blue->SetColor(0., 0., 1.);
-  vis_blue->SetForceSolid(true);
-  sc_logic->SetVisAttributes(vis_blue);
+  G4VisAttributes naI_col = nexus::Blue();
+  naI_col.SetForceSolid(true);
+  sc_logic->SetVisAttributes(naI_col);
   
 
   // NaI is defined as an ionization sensitive volume.
