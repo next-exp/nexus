@@ -12,6 +12,5 @@
 /control/execute macros/physics/IonizationElectron.mac
 
 /nexus/persistency/outputFile nexus.next
-/nexus/persistency/historyFile myHistory.macro ## must be the same as /nexus/historyFile
 
 /nexus/random_seed -2

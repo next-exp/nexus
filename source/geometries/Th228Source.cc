@@ -1,5 +1,6 @@
 #include "Th228Source.h"
 #include "MaterialsList.h"
+#include "Visibilities.h"
 
 #include <G4Tubs.hh>
 #include <G4NistManager.hh>
@@ -53,12 +54,10 @@ namespace nexus {
     new G4PVPlacement(0, G4ThreeVector(0., 0.,  _support_thick/2. - _source_thick/2.),
 		      source_logic, "TH228",
 		      support_logic, false, 0, false);
-    G4VisAttributes * vis_green = new G4VisAttributes;
-    vis_green->SetColor(0., 1., 0.);
-    vis_green->SetForceSolid(true);
-    source_logic->SetVisAttributes(vis_green);
-
     
+    G4VisAttributes source_col = nexus::DarkGreen();
+    source_col.SetForceSolid(true);
+    source_logic->SetVisAttributes(source_col);
     
     return;
   

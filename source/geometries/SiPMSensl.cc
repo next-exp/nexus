@@ -33,12 +33,14 @@ namespace nexus {
   using namespace CLHEP;
   
   SiPMSensl::SiPMSensl(): BaseGeometry(),
-		    _visibility(1)
+                          _visibility(1),
+                          _binning(1.*microsecond)
 
   {
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/SiPMSensl/", "Control commands of geometry NextNew.");
     _msg->DeclareProperty("SiPMSensl_vis", _visibility, "SiPMSensl Visibility");
+    _msg->DeclareProperty("binning", _binning, "Sensitive detector time binning");
   }
   
   
@@ -187,7 +189,7 @@ namespace nexus {
       PmtSD* sipmsd = new PmtSD(sdname);
       sipmsd->SetDetectorVolumeDepth(0);
       sipmsd->SetDetectorNamingOrder(1000.);
-      sipmsd->SetTimeBinning(1.*microsecond);
+      sipmsd->SetTimeBinning(_binning);
       sipmsd->SetMotherVolumeDepth(1);
       
       G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);

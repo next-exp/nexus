@@ -12,6 +12,7 @@
 #include "PmtSD.h"
 #include "OpticalMaterialProperties.h"
 #include "MaterialsList.h"
+#include "Visibilities.h"
 
 #include <G4NistManager.hh>
 #include <G4Box.hh>
@@ -81,9 +82,9 @@ namespace nexus {
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., (_pmt_length-window_length)/2.),
 		      window_logic, "PMT_WINDOW", pmt_logic, false, 0, true);
-    G4VisAttributes * visattrib_blue = new G4VisAttributes;
-    visattrib_blue->SetColor(0., 0., 1.);
-    window_logic->SetVisAttributes(visattrib_blue);
+
+    G4VisAttributes wndw_col = nexus::Blue();
+    window_logic->SetVisAttributes(wndw_col);
     
     
     // PHOTOCATHODE //////////////////////////////////////////////////

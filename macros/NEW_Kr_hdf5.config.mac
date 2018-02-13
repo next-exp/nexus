@@ -16,8 +16,10 @@
 /Geometry/NextNew/pressure 15. bar
 /Geometry/NextNew/elfield false
 /Geometry/PmtR11410/SD_depth 4
-/Geometry/PmtR11410/binning 1. nanosecond
 /Geometry/KDB/teflon_masks true
+
+/Geometry/PmtR11410/binning 1. nanosecond
+/Geometry/SiPMSensl/binning 1. microsecond
 
 /PhysicsList/Nexus/clustering           false
 /PhysicsList/Nexus/drift                false

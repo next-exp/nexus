@@ -42,6 +42,9 @@ namespace nexus {
     // Visibility of the tracking plane
     G4bool _visibility;
 
+    // Time binning of sensors
+    G4double _binning;
+
      // Messenger for the definition of control commands
     G4GenericMessenger* _msg; 
 

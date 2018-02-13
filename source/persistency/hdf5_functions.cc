@@ -41,12 +41,12 @@ hsize_t createHitInfoType()
                         
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (hit_info_t));
-  H5Tinsert (memtype, "hit_indx",HOFFSET (hit_info_t, hit_indx), H5T_NATIVE_INT);
   H5Tinsert (memtype, "hit_position",HOFFSET (hit_info_t, hit_position), point3d);
   H5Tinsert (memtype, "hit_time",HOFFSET (hit_info_t, hit_time), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "hit_energy",HOFFSET (hit_info_t, hit_energy), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "label",HOFFSET (hit_info_t, label),strtype);
-  H5Tinsert (memtype, "track_indx",HOFFSET (hit_info_t, track_indx),H5T_NATIVE_INT);
+  H5Tinsert (memtype, "particle_indx",HOFFSET (hit_info_t, particle_indx),H5T_NATIVE_INT);
+  H5Tinsert (memtype, "hit_indx",HOFFSET (hit_info_t, hit_indx), H5T_NATIVE_INT);
   return memtype;
 }
 
@@ -63,7 +63,7 @@ hsize_t createParticleInfoType()
                         
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (particle_info_t));
-  H5Tinsert (memtype, "track_indx",HOFFSET (particle_info_t, track_indx),H5T_NATIVE_INT);
+  H5Tinsert (memtype, "particle_indx",HOFFSET (particle_info_t, particle_indx),H5T_NATIVE_INT);
   H5Tinsert (memtype, "particle_name",HOFFSET (particle_info_t, particle_name),strtype);
   H5Tinsert (memtype, "primary",HOFFSET (particle_info_t, primary), H5T_NATIVE_CHAR);
   H5Tinsert (memtype, "mother_indx",HOFFSET (particle_info_t, mother_indx),H5T_NATIVE_INT);
@@ -85,6 +85,17 @@ hsize_t createEventExtentType()
   H5Tinsert (memtype, "last_sns_data" , HOFFSET (evt_extent_t, last_sns_data) , H5T_NATIVE_UINT);
   H5Tinsert (memtype, "last_hit" , HOFFSET (evt_extent_t, last_hit) , H5T_NATIVE_UINT);
   H5Tinsert (memtype, "last_particle" , HOFFSET (evt_extent_t, last_particle) , H5T_NATIVE_UINT);
+  return memtype;
+}
+
+hsize_t createSensorPosType()
+{
+  //Create compound datatype for the table
+  hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (sns_pos_t));
+  H5Tinsert (memtype, "sensor_id" , HOFFSET (sns_pos_t, sensor_id) , H5T_NATIVE_UINT);
+  H5Tinsert (memtype, "x" , HOFFSET (sns_pos_t, x) , H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "y" , HOFFSET (sns_pos_t, y) , H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "z" , HOFFSET (sns_pos_t, z) , H5T_NATIVE_FLOAT);
   return memtype;
 }
 
@@ -235,5 +246,26 @@ void writeEventExtent(evt_extent_t* evtExtent, hid_t dataset, hid_t memtype, hsi
   hsize_t count[1] = {1};
   H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
   H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, evtExtent);
+  H5Sclose(file_space);
+}
+
+void writeSnsPos(sns_pos_t* snsPos, hid_t dataset, hid_t memtype, hsize_t counter)
+{
+  hid_t memspace, file_space;
+  //Create memspace for one more row
+  const hsize_t n_dims = 1;
+  hsize_t dims[n_dims] = {1};
+  memspace = H5Screate_simple(n_dims, dims, NULL);
+
+  //Extend dataset
+  dims[0] = counter+1;
+  H5Dset_extent(dataset, dims);
+
+  //Write waveforms
+  file_space = H5Dget_space(dataset);
+  hsize_t start[1] = {counter};
+  hsize_t count[1] = {1};
+  H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
+  H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, snsPos);
   H5Sclose(file_space);
 }

@@ -12,6 +12,7 @@
 #include "MaterialsList.h"
 #include <G4GenericMessenger.hh>
 #include "OpticalMaterialProperties.h"
+#include "Visibilities.h"
 
 #include <G4Box.hh>
 #include <G4LogicalVolume.hh>
@@ -176,12 +177,12 @@ namespace nexus {
 
     // Visibilities
     if (_visibility) {
-      G4VisAttributes sipm_col(G4Colour(.40,.55,.55));
+       G4VisAttributes sipm_col = nexus::DirtyWhite();
       sipm_logic->SetVisAttributes(sipm_col);
-      G4VisAttributes active_col(G4Colour(1.,1.,0.));
-      active_col.SetForceSolid(true);
-      active_logic->SetVisAttributes(active_col);
-      G4VisAttributes plastic_col(G4Colour(.5,.5,.7));
+      G4VisAttributes blue_col = nexus::Blue();
+      blue_col.SetForceSolid(true);
+      active_logic->SetVisAttributes(blue_col);
+      G4VisAttributes plastic_col = nexus::Lilla();
       plastic_col.SetForceSolid(true);
       plastic_logic->SetVisAttributes(plastic_col);
     }

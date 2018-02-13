@@ -155,13 +155,13 @@ namespace nexus {
     // VISIBILITIES //////////////////////////////////////////////////
     pmt_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
     if (_visibility) {
-      G4VisAttributes grey(G4Colour(.7, .7, .7));
-      grey.SetForceSolid(true);
-      pmt_logic->SetVisAttributes(grey);
+      G4VisAttributes pmt_col = nexus::LightGrey();
+      pmt_col.SetForceSolid(true);
+      pmt_logic->SetVisAttributes(pmt_col);
+      G4VisAttributes phot_col = nexus::Brown();
+      phot_col.SetForceSolid(true);
+      photocathode_logic->SetVisAttributes(phot_col);
       window_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      G4VisAttributes brown(G4Colour(.93, .87, .8));
-      brown.SetForceSolid(true);
-      photocathode_logic->SetVisAttributes(brown);
     } else {
       pmt_logic->SetVisAttributes(G4VisAttributes::Invisible);
       photocathode_logic->SetVisAttributes(G4VisAttributes::Invisible);
