@@ -480,8 +480,6 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
       }
     }
     */
-    ievt->AddMCSensHit(isnr);    
-
 
     // Add the sensor hit to the gate event
     ievt->AddMCSensHit(isnr);
