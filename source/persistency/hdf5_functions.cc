@@ -150,6 +150,7 @@ void writeRun(run_info_t* runData, hid_t dataset, hid_t memtype, hsize_t counter
   H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
   H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, runData);
   H5Sclose(file_space);
+  H5Sclose(memspace);
 }
 
 void writeEvent(evt_t* evtData, hid_t dataset, hid_t memtype, hsize_t counter)
@@ -169,6 +170,7 @@ void writeEvent(evt_t* evtData, hid_t dataset, hid_t memtype, hsize_t counter)
   H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
   H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, evtData);
   H5Sclose(file_space);
+  H5Sclose(memspace);
 }
 
 void writeSnsData(sns_data_t* snsData, hid_t dataset, hid_t memtype, hsize_t counter)
@@ -190,6 +192,7 @@ void writeSnsData(sns_data_t* snsData, hid_t dataset, hid_t memtype, hsize_t cou
   H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
   H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, snsData);
   H5Sclose(file_space);
+  H5Sclose(memspace);
 }
 
 void writeHit(hit_info_t* hitInfo, hid_t dataset, hid_t memtype, hsize_t counter)
@@ -209,6 +212,7 @@ void writeHit(hit_info_t* hitInfo, hid_t dataset, hid_t memtype, hsize_t counter
   H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
   H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, hitInfo);
   H5Sclose(file_space);
+  H5Sclose(memspace);
 }
 
 void writeParticle(particle_info_t* particleInfo, hid_t dataset, hid_t memtype, hsize_t counter)
@@ -228,6 +232,7 @@ void writeParticle(particle_info_t* particleInfo, hid_t dataset, hid_t memtype, 
   H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
   H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, particleInfo);
   H5Sclose(file_space);
+  H5Sclose(memspace);
 }
 
 void writeEventExtent(evt_extent_t* evtExtent, hid_t dataset, hid_t memtype, hsize_t counter)
@@ -247,6 +252,7 @@ void writeEventExtent(evt_extent_t* evtExtent, hid_t dataset, hid_t memtype, hsi
   H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
   H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, evtExtent);
   H5Sclose(file_space);
+  H5Sclose(memspace);
 }
 
 void writeSnsPos(sns_pos_t* snsPos, hid_t dataset, hid_t memtype, hsize_t counter)
@@ -268,4 +274,5 @@ void writeSnsPos(sns_pos_t* snsPos, hid_t dataset, hid_t memtype, hsize_t counte
   H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
   H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, snsPos);
   H5Sclose(file_space);
+  H5Sclose(memspace);
 }
