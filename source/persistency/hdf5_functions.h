@@ -4,9 +4,12 @@
 #include <hdf5.h>
 #include <iostream>
 
+#define CONFLEN 100
+#define STRLEN 20
+
   typedef struct{
-     char param_key[100];
-     char param_value[100];
+     char param_key[CONFLEN];
+     char param_value[CONFLEN];
    } run_info_t; 
 
   typedef struct{
@@ -31,23 +34,23 @@
 	float hit_position[3];
 	float hit_time;
 	float hit_energy;
-        char label[20];
+        char label[STRLEN];
         int particle_indx;
         int hit_indx;
   } hit_info_t;
 
   typedef struct{
 	int particle_indx;
-	char particle_name[20];
+	char particle_name[STRLEN];
         char primary;
 	int mother_indx;
 	float initial_vertex[4];
 	float final_vertex[4];
-        char initial_volume[20];
-        char final_volume[20];
+        char initial_volume[STRLEN];
+        char final_volume[STRLEN];
 	float momentum[3];
 	float kin_energy;
-        char creator_proc[20];
+        char creator_proc[STRLEN];
   } particle_info_t;
 
   typedef struct{
