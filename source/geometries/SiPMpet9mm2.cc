@@ -28,7 +28,7 @@ namespace nexus {
 			    visibility_(0),
 			    refr_index_(1.54),
                             eff_(1.),
-                            time_binning_(5.*picosecond)
+                            time_binning_(200.*nanosecond)
 
   {
     /// Messenger
