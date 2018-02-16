@@ -15,6 +15,7 @@
   typedef struct{
     int evt_number;
     unsigned int last_sns_data;
+    unsigned int last_sns_tof;
     unsigned int last_hit;
     unsigned int last_particle;
   } evt_extent_t;
@@ -29,6 +30,12 @@
     unsigned int time_bin;
     unsigned int charge;
   } sns_data_t;
+
+  typedef struct{
+    int sensor_id;
+    unsigned int time_bin;
+    unsigned int charge;
+  } sns_tof_t;
 
   typedef struct{
 	float hit_position[3];
@@ -63,6 +70,7 @@
   hsize_t createRunType();
   hsize_t createEventType();
   hsize_t createSensorDataType();
+  hsize_t createSensorTofType();
   hsize_t createHitInfoType();
   hsize_t createParticleInfoType();
   hsize_t createEventExtentType();
@@ -74,6 +82,7 @@
   void writeRun(run_info_t* runData, hid_t dataset, hid_t memtype, hsize_t counter);
   void writeEvent(evt_t* evtData, hid_t dataset, hid_t memtype, hsize_t counter);
   void writeSnsData(sns_data_t* snsData, hid_t dataset, hid_t memtype, hsize_t counter);
+  void writeSnsTof(sns_tof_t* snsTof, hid_t dataset, hid_t memtype, hsize_t counter);
   void writeHit(hit_info_t* hitInfo, hid_t dataset, hid_t memtype, hsize_t counter);
   void writeParticle(particle_info_t* particleInfo, hid_t dataset, hid_t memtype, hsize_t counter);
   void writeEventExtent(evt_extent_t* evtExtent, hid_t dataset, hid_t memtype, hsize_t counter);

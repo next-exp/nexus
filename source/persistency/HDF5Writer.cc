@@ -12,7 +12,8 @@ using namespace nexus;
 
 
 HDF5Writer::HDF5Writer():
-  _file(0), _irun(0), _ievt(0), _ismp(0), _ihit(0),
+  _file(0), _irun(0), _ievt(0), _ismp(0),
+  _ismp_tof(0), _ihit(0),
   _ipart(0), _ievt_extent(0), _ipos(0)
 {
 }
@@ -42,6 +43,10 @@ void HDF5Writer::Open(std::string fileName)
   std::string sns_data_table_name = "waveforms";
   _memtypeSnsData = createSensorDataType();
   _snsDataTable = createTable(_group, sns_data_table_name, _memtypeSnsData);
+
+  std::string sns_tof_table_name = "tof_waveforms";
+  _memtypeSnsTof = createSensorTofType();
+  _snsTofTable = createTable(_group, sns_tof_table_name, _memtypeSnsTof);
 
   std::string hit_info_table_name = "hits";
   _memtypeHitInfo = createHitInfoType();
@@ -103,6 +108,17 @@ void HDF5Writer::WriteSensorDataInfo(unsigned int sensor_id, unsigned int time_b
   _ismp++;
 }
 
+void HDF5Writer::WriteSensorTofInfo(int sensor_id, unsigned int time_bin, unsigned int charge)
+{
+  sns_tof_t snsTof;
+  snsTof.sensor_id = sensor_id;
+  snsTof.time_bin = time_bin;
+  snsTof.charge = charge;
+  writeSnsTof(&snsTof, _snsTofTable, _memtypeSnsTof, _ismp_tof);
+
+  _ismp_tof++;
+}
+
 void HDF5Writer::WriteHitInfo(int particle_indx, int hit_indx, const float* hit_position, int size_position, float hit_time, float hit_energy, const char* label)
 {
   hit_info_t trueInfo;
@@ -141,12 +157,13 @@ void HDF5Writer::WriteParticleInfo(int particle_indx, const char* particle_name,
   _ipart++;
 }
 
-void HDF5Writer::WriteEventExtentInfo(int evt_number, unsigned int last_sns_data, unsigned int last_hit, unsigned int last_particle)
+void HDF5Writer::WriteEventExtentInfo(int evt_number, unsigned int last_sns_data, unsigned int last_sns_tof, unsigned int last_hit, unsigned int last_particle)
 {
   // Write event number 
   evt_extent_t evtData;
   evtData.evt_number = evt_number;
   evtData.last_sns_data = last_sns_data;
+  evtData.last_sns_tof = last_sns_tof;
   evtData.last_hit = last_hit;
   evtData.last_particle = last_particle;
   writeEventExtent(&evtData, _evtExtentTable, _memtypeEventExtent, _ievt_extent);
@@ -172,6 +189,14 @@ size_t HDF5Writer::GetSnsDataIndex() const
     return 0;
   else
     return _ismp - 1;
+}
+
+size_t HDF5Writer::GetSnsTofIndex() const
+{
+  if (_ismp_tof == 0)
+    return 0;
+  else
+    return _ismp_tof - 1;
 }
 
 size_t HDF5Writer::GetHitIndex() const

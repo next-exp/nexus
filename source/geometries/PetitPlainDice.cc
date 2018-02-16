@@ -53,9 +53,7 @@ namespace nexus {
     const G4double db_y =  xy_dim_;
     const G4double board_thickness = 0.3 * mm;
 
-    dimensions_.setX(db_x);
-    dimensions_.setY(db_y);
-    dimensions_.setZ(board_thickness);
+    SetDimensions(G4ThreeVector(db_x, db_y, board_thickness));
 
     // KAPTON BOARD /////////////////////////////////////////////////
 
@@ -88,16 +86,6 @@ namespace nexus {
 
     }
   }
-
-  G4ThreeVector PetitPlainDice::GetDimensions() const
-  {
-    return dimensions_;
-  }
-
-  // const std::vector<std::pair<int, G4ThreeVector> >& PetitPlainDice::GetPositions()
-  // {
-  //   return positions_;
-  // }
 
 
 

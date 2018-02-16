@@ -1,5 +1,6 @@
 #include "SiPMpet9mm2.h"
 #include "PmtSD.h"
+#include "ToFSD.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
@@ -143,14 +144,12 @@ namespace nexus {
     G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
     
     if (!sdmgr->FindSensitiveDetector(sdname, false)) {
-      PmtSD* sipmsd = new PmtSD(sdname);
+      //PmtSD* sipmsd = new PmtSD(sdname);
+      ToFSD* sipmsd = new ToFSD(sdname);
       sipmsd->SetDetectorVolumeDepth(0);
       sipmsd->SetDetectorNamingOrder(1000.);
       sipmsd->SetTimeBinning(time_binning_);
-      //sipmsd->SetMotherVolumeDepth(1);
-      //     sipmsd->SetGrandMotherVolumeDepth(3);
-      sipmsd->SetMotherVolumeDepth(2);
-      //sipmsd->SetGrandMotherVolumeDepth(2);
+      sipmsd->SetMotherVolumeDepth(1);
       
       G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
       sipm_logic->SetSensitiveDetector(sipmsd);

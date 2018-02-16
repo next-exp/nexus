@@ -31,6 +31,16 @@ hsize_t createSensorDataType()
   return memtype;
 }
 
+hsize_t createSensorTofType()
+{
+  //Create compound datatype for the table
+  hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (sns_tof_t));
+  H5Tinsert (memtype, "sensor_id" , HOFFSET (sns_tof_t, sensor_id) , H5T_NATIVE_INT);
+  H5Tinsert (memtype, "time_bin" , HOFFSET (sns_tof_t, time_bin) , H5T_NATIVE_UINT);
+  H5Tinsert (memtype, "charge" , HOFFSET (sns_tof_t, charge) , H5T_NATIVE_UINT);
+  return memtype;
+}
+
 hsize_t createHitInfoType()
 {  
   hsize_t point3d_dim[1] = {3};
@@ -83,6 +93,7 @@ hsize_t createEventExtentType()
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (evt_extent_t));
   H5Tinsert (memtype, "evt_number", HOFFSET (evt_extent_t, evt_number), H5T_NATIVE_INT);
   H5Tinsert (memtype, "last_sns_data" , HOFFSET (evt_extent_t, last_sns_data) , H5T_NATIVE_UINT);
+  H5Tinsert (memtype, "last_sns_tof" , HOFFSET (evt_extent_t, last_sns_tof) , H5T_NATIVE_UINT);
   H5Tinsert (memtype, "last_hit" , HOFFSET (evt_extent_t, last_hit) , H5T_NATIVE_UINT);
   H5Tinsert (memtype, "last_particle" , HOFFSET (evt_extent_t, last_particle) , H5T_NATIVE_UINT);
   return memtype;
@@ -191,6 +202,28 @@ void writeSnsData(sns_data_t* snsData, hid_t dataset, hid_t memtype, hsize_t cou
   hsize_t count[1] = {1};
   H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
   H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, snsData);
+  H5Sclose(file_space);
+  H5Sclose(memspace);
+}
+
+void writeSnsTof(sns_tof_t* snsTof, hid_t dataset, hid_t memtype, hsize_t counter)
+{
+  hid_t memspace, file_space;
+  //Create memspace for one more SiPM row
+  const hsize_t n_dims = 1;
+  hsize_t dims[n_dims] = {1};
+  memspace = H5Screate_simple(n_dims, dims, NULL);
+
+  //Extend SiPM dataset
+  dims[0] = counter+1;
+  H5Dset_extent(dataset, dims);
+
+  //Write SiPM waveforms
+  file_space = H5Dget_space(dataset);
+  hsize_t start[1] = {counter};
+  hsize_t count[1] = {1};
+  H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
+  H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, snsTof);
   H5Sclose(file_space);
   H5Sclose(memspace);
 }

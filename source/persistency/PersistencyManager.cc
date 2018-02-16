@@ -165,7 +165,7 @@ G4bool PersistencyManager::Store(const G4Event* event)
     //Save event-related information in hdf5 file
     _h5writer->WriteEventInfo(_event_info.first, _event_info.second);
     //Save relationships among tables
-    _h5writer->WriteEventExtentInfo(_nevt, _h5writer->GetSnsDataIndex(),
+    _h5writer->WriteEventExtentInfo(_nevt, _h5writer->GetSnsDataIndex(), _h5writer->GetSnsTofIndex(),
                                     _h5writer->GetHitIndex(), _h5writer->GetParticleIndex());
   }
 
@@ -314,7 +314,7 @@ void PersistencyManager::StoreHits(G4HCofThisEvent* hce, gate::Event* ievt)
       if (_hdf5dump) {
         gate::Point3D pos = hit->GetPosition();
         float hit_pos[3] = {(float)pos.x(), (float)pos.y(), (float)pos.z()};
-        _h5writer->WriteHitInfo(particle_id, h, &hit_pos[0], 3, hit->GetTime(), hit->GetAmplitude(), hit->GetLabel().c_str());      
+        _h5writer->WriteHitInfo(particle_id, h, &hit_pos[0], 3, hit->GetTime(), hit->GetAmplitude(), hit->GetLabel().c_str());
       }
     }
     mytrack->SetExtremes(0, myhits.size()-1);
@@ -402,6 +402,7 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
     mytrack->SetExtremes(0, myhits.size()-1);
     mytrack->SetEnergy(tot_energy);
   }
+
 }
 
 
@@ -421,7 +422,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     gate::Hit* isnr = new gate::Hit();
     isnr->SetLabel(sdname);
  
-   isnr->SetSensorID(hit->GetPmtID());
+    isnr->SetSensorID(hit->GetPmtID());
     G4ThreeVector xyz = hit->GetPosition();
 
     isnr->SetPosition(gate::Point3D(xyz.x(), xyz.y(), xyz.z()));
@@ -440,6 +441,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     std::vector< std::pair<unsigned int, float> > data;
 
     G4double amplitude = 0.;
+    int count = 0;
     
     for (it = wvfm.begin(); it != wvfm.end(); ++it) {
       unsigned int time_bin = (unsigned int)((*it).first/binsize+0.5);
@@ -449,12 +451,17 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
       amplitude = amplitude + (*it).second;
 
       if (_hdf5dump) {
-        _h5writer->WriteSensorDataInfo((unsigned int)hit->GetPmtID(), time_bin, charge);
+        if (hit->GetPmtID() >= 0) {
+          _h5writer->WriteSensorDataInfo((unsigned int)hit->GetPmtID(), time_bin, charge);
+        } else if (count < 20) {
+          _h5writer->WriteSensorTofInfo(hit->GetPmtID(), time_bin, charge);
+          count++;
+        }
       }
     }
     wf->SetData(data);
     isnr->SetAmplitude(amplitude);
-    
+
     /*
     const std::map<G4double, G4double>&  wvls= hit->GetWavelengths();
     std::map<G4double, G4double>::const_iterator w;
@@ -484,14 +491,17 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     // Add the sensor hit to the gate event
     ievt->AddMCSensHit(isnr);
 
-    if (_hdf5dump) {
-      std::map<G4int, gate::Hit*>::iterator pos_it =
-        _sns_posmap.find(hit->GetPmtID());
-      if (pos_it == _sns_posmap.end()) {
-        _h5writer->WriteSensorPosInfo((unsigned int)hit->GetPmtID(), (float)xyz.x(), (float)xyz.y(), (float)xyz.z());
-        _sns_posmap[hit->GetPmtID()] = isnr;
+    if (hit->GetPmtID() >= 0) {
+      if (_hdf5dump) {
+        std::map<G4int, gate::Hit*>::iterator pos_it =
+          _sns_posmap.find(hit->GetPmtID());
+        if (pos_it == _sns_posmap.end()) {
+          _h5writer->WriteSensorPosInfo((unsigned int)hit->GetPmtID(), (float)xyz.x(), (float)xyz.y(), (float)xyz.z());
+          _sns_posmap[hit->GetPmtID()] = isnr;
+        }
       }
     }
+
   }
 }
 

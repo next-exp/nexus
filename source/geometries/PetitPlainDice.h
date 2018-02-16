@@ -23,7 +23,6 @@ namespace nexus {
     // Dimension setter
     // void SetSize(G4double xsize, G4double ysize);
 
-    G4ThreeVector GetDimensions() const;
     //    const std::vector<std::pair<int, G4ThreeVector> >& GetPositions();
 
     /// Builder
@@ -33,8 +32,7 @@ namespace nexus {
 
   private:
     G4int rows_, columns_;
-    //G4double _support_thickness;
-    G4ThreeVector dimensions_;
+
     //    std::vector<std::pair<int, G4ThreeVector> > positions_;
 
     // Visibility of the shielding
