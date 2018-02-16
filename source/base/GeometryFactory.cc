@@ -39,7 +39,8 @@ GeometryFactory::~GeometryFactory()
 #include "NextNew.h"
 #include "MagBox.h"
 #include "FullRing.h"
-#include "PetitCell.h"
+#include "Petit.h"
+#include "PetitModule.h"
 #include "PMT_QE_setup.h"
 #include "Lab_vertices.h"
 #include "Lab.h"
@@ -66,12 +67,14 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
 
   else if (_name == "FULLRING") p = new FullRing();
   
-  else if (_name == "PETIT") p = new PetitCell();
+  else if (_name == "PETIT") p = new Petit();
+    
+  else if (_name == "PETIT_MODULE") p = new PetitModule();
 
   else if (_name == "VERTICES") p = new Lab_vertices();
 
   else if (_name == "PETALO") p = new Lab();
-
+    
   else {
     G4String err = "The user selected an unknown geometry: " + _name;
     G4Exception("CreateGeometry", "[BaseGeometry]", FatalException, err);
