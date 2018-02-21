@@ -118,10 +118,8 @@ namespace nexus {
     source_dist_cmd.SetRange("distance_from_anode>=0.");
     
     _cal = new CalibrationSource();
-    _cal->Construct();
 
     _naI = new NaIScintillator();
-    _naI->Construct();
 
     _air = new SurroundingAir();
 
@@ -149,7 +147,7 @@ namespace nexus {
 
   void NextNew::BuildExtScintillator(G4ThreeVector pos, const G4RotationMatrix& rot)
 { 
- 
+  _naI->Construct();
   G4LogicalVolume* sc_logic = _naI->GetLogicalVolume();
 
   G4ThreeVector pos_scint = 
@@ -290,6 +288,8 @@ namespace nexus {
     }
 
     G4ThreeVector source_pos;
+
+    _cal->Construct();
 
     if (_lead_block) {
 
