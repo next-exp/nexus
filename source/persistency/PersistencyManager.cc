@@ -377,32 +377,6 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
     }
   }
 
-  if (_hdf5dump) {
-    for (std::map<G4int, gate::MCTrack*>::iterator it=_itrkmap.begin(); it!=_itrkmap.end(); ++it) {
-      gate::MCTrack* mytrack = it->second;
-      const std::vector<gate::BHit*> myhits = mytrack->GetHits();
-      for (unsigned int h=0; h<myhits.size(); ++h) {
-        gate::BHit* hit = myhits[h];
-        gate::Point3D pos = hit->GetPosition();
-        float hit_pos[3] = {(float)pos.x(), (float)pos.y(), (float)pos.z()};
-        _h5writer->WriteHitInfo(it->first, h, &hit_pos[0], 3, hit->GetTime(), hit->GetAmplitude(), hit->GetLabel().c_str());      
-      }
-
-    }
-  }
-
-  for (unsigned int tr=0; tr<ievt->GetMCTracks().size(); ++tr) {
-    G4double tot_energy = 0.;
-    gate::MCTrack* mytrack =  ievt->GetMCTracks()[tr];
-    const std::vector<gate::BHit*> myhits = mytrack->GetHits();
-    for (unsigned int h=0; h<myhits.size(); ++h) {
-      tot_energy += myhits[h]->GetAmplitude();
-      myhits[h]->SetID(h);
-    }
-    mytrack->SetExtremes(0, myhits.size()-1);
-    mytrack->SetEnergy(tot_energy);
-  }
-
 }
 
 
