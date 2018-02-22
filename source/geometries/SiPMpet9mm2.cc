@@ -149,7 +149,7 @@ namespace nexus {
       sipmsd->SetDetectorVolumeDepth(0);
       sipmsd->SetDetectorNamingOrder(1000.);
       sipmsd->SetTimeBinning(time_binning_);
-      sipmsd->SetMotherVolumeDepth(1);
+      sipmsd->SetMotherVolumeDepth(2); // for Petit + PetitModule geometry
       
       G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
       sipm_logic->SetSensitiveDetector(sipmsd);
