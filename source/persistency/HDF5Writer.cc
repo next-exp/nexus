@@ -28,7 +28,7 @@ void HDF5Writer::Open(std::string fileName)
   _file = H5Fcreate( fileName.c_str(), H5F_ACC_TRUNC,
                       H5P_DEFAULT, H5P_DEFAULT );
 
-  std::string group_name = "/Run";
+  std::string group_name = "/MC";
   _group = createGroup(_file, group_name);
 
   std::string run_table_name = "configuration";
