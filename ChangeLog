@@ -1,14 +1,22 @@
+tag p5_00_01 - 22 Feb 2018
+	- fix SiPMs numbering to make them start from 1000
+	- fix double writing of hits in hdf5 tables.
+
+tag p5_00_00 - 16 Feb 2018
+	- first tag for the PETALO branch
+	- the new Petit geometry has been added
+
 tag v5_02_10 - 27 Nov 2017
 	- transparency of the GATE mesh changed from 76% to 84%, according
 	to the actual measurements of the diameter of the wires.
-	
+
 tag v5_02_09 - 8 Aug 2017
-	- bug in initialization of start ID fixed. 
+	- bug in initialization of start ID fixed.
 	- Generator of e+e- pair with customizable total kinetic energy added.
-	
+
 tag v5_02_08 - 30 Jul 2017
 	- Position of Th source on to the vessel and generator implemented
-	
+
 tag v5_02_07 - 12 Jul 2017
 	- Inner and outer radii of the copper shielding changed according
 	to real design (overlaps of volumes detected).
@@ -16,13 +24,13 @@ tag v5_02_07 - 12 Jul 2017
 	axial ones.
 	- DEMO disk-shape calibration source geometry added
 	- Calibration source macros reorganized
-	
+
 tag v5_02_06 - 4 Jul 2017
 	- S1 scintillation yield default value changed.
-	
+
 tag v5_02_05 - 30 Jun 2017
 	- customizable starting event ID for each job added.
-	
+
 tag v5_02_04 - 17 May 2017
 	- bug fixed in the placement of the lead collimator in the axial
 	port
@@ -32,15 +40,15 @@ tag v5_02_04 - 17 May 2017
 	port
 	- Change of inner z size of lead castle, following recent
 	measurements at LSC
-	
+
 tag v5_02_03 - 3 May 2017
 	- name clash of two different configuration parameters solved
-	
+
 tag v5_02_02 - 29 Apr 2017
 	- the position of a calibration source in axial port feedthrough is now configurable
-	
+
 tag v5_02_01 - 27 Apr 2017
-	- same as tag v5_02_00, small bug fixed in the dimensions of a piece of lead collimator 
+	- same as tag v5_02_00, small bug fixed in the dimensions of a piece of lead collimator
 	
 tag v5_02_00 - 26 Apr 2017
 	- Buffer tube eliminated and reflectivity of hdpe set to 50%.
