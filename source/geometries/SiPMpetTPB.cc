@@ -40,9 +40,15 @@ namespace nexus {
     _msg = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
     _msg->DeclareProperty("SiPMpet_vis", _visibility, "SiPMpet Visibility");
     _msg->DeclareProperty("refr_index", _refr_index, "Refraction index for epoxy");
-    _msg->DeclareProperty("decay_time", _decay_time, "Decay time of TPB");
     //Are we using physical opt properties?
     _msg->DeclareProperty("physics", _phys, "physical optical properties");
+
+    G4GenericMessenger::Command& decay_time_cmd =
+      _msg->DeclareProperty("decay_time", _decay_time,
+			    "Time binning of SensL SiPM");
+    decay_time_cmd.SetUnitCategory("Decay time of TPB");
+    decay_time_cmd.SetParameterName("decay_time", false);
+    decay_time_cmd.SetRange("decay_time>0.");
   }
   
   
