@@ -56,7 +56,13 @@ namespace nexus {
     _msg = new G4GenericMessenger(this, "/Geometry/PmtR11410/", "Control commands of PmtR11410 geometry.");
     _msg->DeclareProperty("visibility", _visibility, "Hamamatsu R11410 PMTs visibility");
     _msg->DeclareProperty("SD_depth", _sd_depth, "Sensitive detector depth in volume being replicated");
-    _msg->DeclareProperty("binning", _binning, "Sensitive detector time binning");
+
+    G4GenericMessenger::Command& bin_cmd =
+      _msg->DeclareProperty("binning", _binning,
+			    "Time binning of R11410 PMT");
+    bin_cmd.SetUnitCategory("Time");
+    bin_cmd.SetParameterName("binning", false);
+    bin_cmd.SetRange("binning>0.");
   }
   
 
