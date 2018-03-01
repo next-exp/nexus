@@ -38,14 +38,27 @@ _nphotons(1000000)
   _msg->DeclareMethod("particle", &ScintillationGenerator::SetParticleDefinition, 
     "Set particle to be generated.");
   
-  G4GenericMessenger::Command& energy = _msg->DeclareProperty("energy", _energy,"Set kinetic energy of the particle.");
+  G4GenericMessenger::Command& energy =
+    _msg->DeclareProperty("energy", _energy,"Set kinetic energy of the particle.");
   energy.SetUnitCategory("Energy");
   energy.SetParameterName("energy", false);
   energy.SetRange("energy>0.");
 
-  _msg->DeclareProperty("xpos", _position_X, "Set x position");
-  _msg->DeclareProperty("ypos", _position_Y, "Set y position");
-  _msg->DeclareProperty("zpos", _position_Z, "Set z position");
+  G4GenericMessenger::Command&  xpos_cmd =
+    _msg->DeclareProperty("xpos", _position_X, "Set x position");
+  xpos_cmd.SetParameterName("xpos", true);
+  xpos_cmd.SetUnitCategory("Length");
+
+  G4GenericMessenger::Command&  ypos_cmd =
+    _msg->DeclareProperty("ypos", _position_Y, "Set y position");
+  ypos_cmd.SetParameterName("ypos", true);
+  ypos_cmd.SetUnitCategory("Length");
+
+  G4GenericMessenger::Command&  zpos_cmd =
+    _msg->DeclareProperty("zpos", _position_Z, "Set z position");
+  xpos_cmd.SetParameterName("zpos", true);
+  xpos_cmd.SetUnitCategory("Length");
+
   _msg->DeclareProperty("nphotons", _nphotons, "Set number of photons");
   
   DetectorConstruction* detconst = 

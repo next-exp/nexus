@@ -42,8 +42,13 @@ namespace nexus {
   {
     _msg = new G4GenericMessenger(this, "/Geometry/PMT_QE_setup/",
 				"Control commands of geometry PMT_QE_setup.");
-    _msg->DeclareProperty("z_dist", _z_dist,
-			"Distance of the generation point in z from the surface of the PMT window.");
+
+    G4GenericMessenger::Command& dist_cmd =
+      _msg->DeclareProperty("z_dist", _z_dist,
+			    "Distance of the generation point in z from the surface of the PMT window.");
+    dist_cmd.SetUnitCategory("Length");
+    dist_cmd.SetParameterName("z_dist", false);
+    dist_cmd.SetRange("z_dist>0.");
   }
 
 

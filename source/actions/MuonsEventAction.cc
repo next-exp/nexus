@@ -39,8 +39,9 @@ namespace nexus {
     _msg->DeclareProperty("stringHist", _stringHist, "");
     G4GenericMessenger::Command& thresh_cmd =
        _msg->DeclareProperty("energy_threshold", _energy_threshold, "");
-    thresh_cmd.SetParameterName("energy_threshold", true);
     thresh_cmd.SetUnitCategory("Energy");
+    thresh_cmd.SetParameterName("energy_threshold", true);
+    thresh_cmd.SetRange("energy_threshold>0.");
 
     //Muons Control plots
 

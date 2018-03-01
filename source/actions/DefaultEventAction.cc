@@ -31,14 +31,18 @@ namespace nexus {
     _msg = new G4GenericMessenger(this, "/Actions/DefaultEventAction/");
     
     G4GenericMessenger::Command& thresh_cmd =
-       _msg->DeclareProperty("energy_threshold", _energy_threshold, "Minimum deposited energy to save the event to file.");
+       _msg->DeclareProperty("energy_threshold", _energy_threshold,
+                             "Minimum deposited energy to save the event to file.");
     thresh_cmd.SetParameterName("energy_threshold", true);
     thresh_cmd.SetUnitCategory("Energy");
+    thresh_cmd.SetRange("energy_threshold>0.");
 
     G4GenericMessenger::Command& max_energy_cmd =
-      _msg->DeclareProperty("max_energy", _energy_max, "Maximum deposited energy to save the event to file.");
+      _msg->DeclareProperty("max_energy", _energy_max,
+                            "Maximum deposited energy to save the event to file.");
     max_energy_cmd.SetParameterName("max_energy", true);
     max_energy_cmd.SetUnitCategory("Energy");
+    max_energy_cmd.SetRange("max_energy>0.");
   }
   
   
