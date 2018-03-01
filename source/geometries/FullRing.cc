@@ -30,39 +30,22 @@ namespace nexus {
     BaseGeometry(),
     // Detector dimensions
     det_thickness_(0.*mm),
-    n_modules_(24),
-    z_size_(3.*cm),
-    ring_diameter_(25.*cm)
+    n_modules_(12),
+    r_dim_(5.*cm),
+    internal_diam_(20.*cm)
   {
      // Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/FullRing/", "Control commands of geometry FullRing.");
 
-    // z size
-     G4GenericMessenger::Command& zsize_cmd = 
-       msg_->DeclareProperty("z_size", z_size_, "z dimension");
-     zsize_cmd.SetUnitCategory("Length");
-     zsize_cmd.SetParameterName("z_size", false);
-     zsize_cmd.SetRange("z_size>0.");
+    module_ = new PetaloTrap();
+    //kdb_ = new PetKDBFixedPitch();
 
-     // Number of modules of the ring
-     msg_->DeclareProperty("n_modules", n_modules_, "number of modules");
-
-     // diameter of the ring
-     G4GenericMessenger::Command& diameter_cmd = 
-       msg_->DeclareProperty("ring_diameter", ring_diameter_, "ring diameter");
-     diameter_cmd.SetUnitCategory("Length");
-     diameter_cmd.SetParameterName("ring_diameter", false);
-     diameter_cmd.SetRange("ring_diameter>0.");
-
-     module_ = new PetaloTrap();
-     kdb_ = new PetKDBFixedPitch();
-
-     phantom_diam_ = 12.*cm;
-     phantom_length_ = 10.*cm;
-
-     cylindric_gen_ = 
-       new CylinderPointSampler(0., phantom_length_, phantom_diam_/2., 0., G4ThreeVector (0., 0., 0.));
-
+    phantom_diam_ = 12.*cm;
+    phantom_length_ = 10.*cm;
+    
+    cylindric_gen_ = 
+      new CylinderPointSampler(0., phantom_length_, phantom_diam_/2., 0., G4ThreeVector (0., 0., 0.));
+    
   }
 
   FullRing::~FullRing()
@@ -87,16 +70,16 @@ namespace nexus {
   {
 
     // Dimensions
-    G4double size1 = 2.*ring_diameter_/2.*tan(pi/n_modules_);
-    G4double size2 = size1 + 2.*z_size_*tan(pi/n_modules_);
-    G4cout << "Dimensions: "<< size1 << " and " << size2 << G4endl;
+    // G4double size1 = 2.*ring_diameter_/2.*tan(pi/n_modules_);
+    //G4double size2 = size1 + 2.*z_size_*tan(pi/n_modules_);
+    //G4cout << "Dimensions: "<< size1 << " and " << size2 << G4endl;
   
-    module_->SetParameters(size1, size2, z_size_);
+    // module_->SetParameters(size1, size2, z_size_);
     module_->Construct();
     G4LogicalVolume* module_logic = module_->GetLogicalVolume();
 
     G4double step = 2.*pi/n_modules_;
-    G4double radius = ring_diameter_/2.+z_size_/2.+det_thickness_;
+    G4double radius = internal_diam_/2.+r_dim_/2.+det_thickness_;
     G4ThreeVector position(0.,radius, 0.);
     G4RotationMatrix rot;
     rot.rotateX(-pi/2.);

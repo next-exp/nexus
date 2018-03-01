@@ -18,8 +18,8 @@
 class G4LogicalVolume;
 class G4GenericMessenger;
 class G4Material;
-namespace nexus{class PetKDBFixedPitch;}
-namespace nexus{class PetPlainDice;}
+
+namespace nexus{class PetitPlainDice;}
 namespace nexus {class BoxPointSampler;}
 
 namespace nexus {
@@ -34,7 +34,7 @@ namespace nexus {
 
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
-    void SetParameters(G4double size1, G4double size2, G4double z);
+    G4ThreeVector GetParameters() const;
 
     void Construct();
 
@@ -50,13 +50,10 @@ namespace nexus {
     G4LogicalVolume* lXe_logic_;
 
     // Detector dimensions
-    //   const G4double vacuum_thickn_; // thickness of vaccuum layer between walls
-    //  const G4double outer_wall_thickn_; // Thickness of the outer wall
-    const G4double det_thickness_; // Thickness of the walls of the detector
-    //   const G4double det_size_; /// Size of the detector
-    //   const G4double active_size_; /// Size of the LXe active volume   
+    //   const G4double active_size_; /// Size of the LXe active volume
+    const G4double internal_diam_; /// internal diameter of ring
  
-   G4int n_modules_;
+   G4int n_cells_;
    
     // ACTIVE gas Xenon
     G4Material* lXe_;
@@ -69,11 +66,11 @@ namespace nexus {
 
     G4double db_z_;
 
-    G4double z_size_;
+    G4double r_dim_; /// size of cells in radial dimension
     G4double ring_diameter_;
-    G4double size1_, size2_;
+    G4double dim_int_, dim_ext_;
 
-    PetKDBFixedPitch* db_;
+    PetitPlainDice* pdb_;
 
   };
   

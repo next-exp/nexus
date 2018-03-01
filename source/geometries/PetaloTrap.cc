@@ -12,11 +12,12 @@
 #include "IonizationSD.h"
 #include "OpticalMaterialProperties.h"
 #include "BoxPointSampler.h"
-#include "PetKDBFixedPitch.h"
+#include "PetitPlainDice.h"
+#include "Visibilities.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
-#include <G4Trap.hh>
+#include <G4Trd.hh>
 #include <G4Material.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
@@ -35,12 +36,15 @@ namespace nexus {
 
   PetaloTrap::PetaloTrap():
     BaseGeometry(),
-    // Detector dimensions
-    det_thickness_(1.*mm)
+    internal_diam_(20.*cm),
+    r_dim_(5.*cm),
+    n_cells_(12),
+    dim_int_(5.2*cm)
   {
     
     // Messenger
-    msg_ = new G4GenericMessenger(this, "/Geometry/PetaloTrap/", "Control commands of geometry PetaloTrap.");
+    msg_ = new G4GenericMessenger(this, "/Geometry/PetaloTrap/",
+                                  "Control commands of geometry PetaloTrap.");
     
     // Maximum Step Size
     G4GenericMessenger::Command& step_cmd = 
@@ -51,12 +55,12 @@ namespace nexus {
     step_cmd.SetRange("max_step_size>0.");
     
     // size1_ = 2.*ring_diameter_/2.*tan(pi/n_modules_);
-    // size2_ = size1_ + 2.*z_size_*tan(pi/n_modules_);
+    dim_ext_ = dim_int_ + 2.*r_dim_*tan(pi/n_cells_);
     // G4cout << size1_  << ", vs " << size2_ << G4endl;
 
     //  SetParameters(31.6312*mm, 40.2579*mm, 30.*mm);
 
-    db_ = new PetKDBFixedPitch();
+    pdb_ = new PetitPlainDice();
   }
 
 
@@ -69,30 +73,29 @@ namespace nexus {
 
   void PetaloTrap::Construct()
   {  
-    db_->SetXYsize(size1_);
-    db_->Construct();
+    pdb_->Construct();
 
-    G4double det_size1 = size1_;
-    G4double det_size2 = size2_;
-    G4cout << "Single module, dimensions: "<< det_size1  << ", vs " << det_size2 << G4endl;
-    G4Trap* det_solid = 
-      //   new G4Box("WALL", det_size/2., det_size/2., det_size/2.);
-      new G4Trap("TRAP", det_size1/2., det_size2/2., det_size1/2., det_size2/2., (z_size_)/2.);
+    const G4double thickness = 1. * mm;
+
+    G4Trd* det_solid =
+      new G4Trd("TRAP", dim_int_/2., dim_ext_/2., dim_int_/2., dim_ext_/2., r_dim_/2.);
    
-    G4Material* steel = MaterialsList::Steel();
+    G4Material* kapton =
+      G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
     
-    det_logic_ = new G4LogicalVolume(det_solid, steel, "TRAP");
+    det_logic_ = new G4LogicalVolume(det_solid, kapton, "TRAP");
 
     this->SetLogicalVolume(det_logic_);
     //   det_logic_->SetVisAttributes(G4VisAttributes::Invisible);    
 
-    G4Colour myColour(.6, .8, .79); 
-    G4VisAttributes grey_color(myColour); 
-    grey_color.SetForceSolid(true);
-    // det_logic_->SetVisAttributes(grey_color);
+    G4VisAttributes trap_color = nexus::LightGrey();
+    trap_color.SetForceSolid(true);
+    det_logic_->SetVisAttributes(trap_color);
 
-    G4Trap* lxe_solid = 
-      new G4Trap("ACTIVE", (size1_-2.*det_thickness_)/2., (size2_-2.*det_thickness_)/2., (size1_-2.*det_thickness_)/2., (size2_-2.*det_thickness_)/2., (z_size_-det_thickness_)/2.);
+    G4Trd* lxe_solid =
+      new G4Trd("ACTIVE", (dim_int_-2.*thickness)/2., (dim_ext_-2.*thickness)/2.,
+                (dim_int_-2.*thickness)/2., (dim_ext_-2.*thickness)/2.,
+                (r_dim_-thickness)/2.);
    
     G4Material* lXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
     lXe->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe());
@@ -100,11 +103,11 @@ namespace nexus {
     G4LogicalVolume* lxe_logic = new G4LogicalVolume(lxe_solid, lXe, "ACTIVE");
     // lxe_logic->SetVisAttributes(white_color);  
    
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,-det_thickness_/2.), lxe_logic,
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), lxe_logic,
 		  "ACTIVE", det_logic_, false, 0, true);
 
     // Set the ACTIVE volume as an ionization sensitive active
-    IonizationSD* ionisd = new IonizationSD("/PETALX/ACTIVE");
+    IonizationSD* ionisd = new IonizationSD("/PETALO/ACTIVE");
     lxe_logic->SetSensitiveDetector(ionisd);
     G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
 
@@ -122,19 +125,19 @@ namespace nexus {
 
  void PetaloTrap::BuildSiPMPlanes()
  {
-   G4double db_z = db_->GetDimensions().z();
+   // G4double db_z = db_->GetDimensions().z();
 
-   G4double displ = (z_size_-det_thickness_)/2. + db_z/2.;
+   // G4double displ = (z_size_-det_thickness_)/2. + db_z/2.;
 
-   G4LogicalVolume* db_logic = db_->GetLogicalVolume();
-   new G4PVPlacement(0, G4ThreeVector(0.,0., -displ), db_logic,
-		     "LXE_DICE", lXe_logic_, false, 0, true);
+   // G4LogicalVolume* db_logic = db_->GetLogicalVolume();
+   // new G4PVPlacement(0, G4ThreeVector(0.,0., -displ), db_logic,
+   //      	     "LXE_DICE", lXe_logic_, false, 0, true);
 
-   db_->SetXYsize( size2_);
-   db_->Construct();
-   db_logic = db_->GetLogicalVolume();
-   new G4PVPlacement(0, G4ThreeVector(0.,0., displ), db_logic,
-   		     "LXE_DICE", lXe_logic_, false, 1, true);
+   // db_->SetXYsize( size2_);
+   // db_->Construct();
+   // db_logic = db_->GetLogicalVolume();
+   // new G4PVPlacement(0, G4ThreeVector(0.,0., displ), db_logic,
+   // 		     "LXE_DICE", lXe_logic_, false, 1, true);
    
  }
 
@@ -225,11 +228,8 @@ namespace nexus {
 
   */
 
-  void PetaloTrap::SetParameters(G4double size1, G4double size2, G4double z)
-  {
-    size1_ = size1;
-    size2_ = size2;
-    z_size_ = z;
+  G4ThreeVector PetaloTrap::GetParameters() const {
+    return G4ThreeVector(dim_int_, dim_ext_, r_dim_);
   }
     
   G4ThreeVector PetaloTrap::GenerateVertex(const G4String& region) const

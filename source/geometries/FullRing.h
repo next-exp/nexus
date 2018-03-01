@@ -34,7 +34,7 @@ namespace nexus {
     /// Messenger for the definition of control commands
     G4GenericMessenger* msg_; 
 
-    G4double det_thickness_, n_modules_, z_size_, ring_diameter_;
+    G4double det_thickness_, n_modules_, r_dim_, internal_diam_;
 
     double phantom_diam_; 
     double phantom_length_;
