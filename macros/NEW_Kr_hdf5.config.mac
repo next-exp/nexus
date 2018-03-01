@@ -5,7 +5,7 @@
 ### --------------------------------------------------------
 
 
-/run/verbose 0
+/run/verbose 1
 /event/verbose 0
 /tracking/verbose 0
 
@@ -18,8 +18,8 @@
 /Geometry/PmtR11410/SD_depth 4
 /Geometry/KDB/teflon_masks true
 
-/Geometry/PmtR11410/binning 1. nanosecond
-/Geometry/SiPMSensl/binning 1. microsecond
+/Geometry/PmtR11410/time_binning 1. nanosecond
+/Geometry/SiPMSensl/time_binning 1. microsecond
 
 /PhysicsList/Nexus/clustering           false
 /PhysicsList/Nexus/drift                false

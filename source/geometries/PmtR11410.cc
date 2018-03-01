@@ -58,11 +58,11 @@ namespace nexus {
     _msg->DeclareProperty("SD_depth", _sd_depth, "Sensitive detector depth in volume being replicated");
 
     G4GenericMessenger::Command& bin_cmd =
-      _msg->DeclareProperty("binning", _binning,
+      _msg->DeclareProperty("time_binning", _binning,
 			    "Time binning of R11410 PMT");
     bin_cmd.SetUnitCategory("Time");
-    bin_cmd.SetParameterName("binning", false);
-    bin_cmd.SetRange("binning>0.");
+    bin_cmd.SetParameterName("time_binning", false);
+    bin_cmd.SetRange("time_binning>0.");
   }
   
 
