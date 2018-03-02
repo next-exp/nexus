@@ -56,8 +56,8 @@ _nphotons(1000000)
 
   G4GenericMessenger::Command&  zpos_cmd =
     _msg->DeclareProperty("zpos", _position_Z, "Set z position");
-  xpos_cmd.SetParameterName("zpos", true);
-  xpos_cmd.SetUnitCategory("Length");
+  zpos_cmd.SetParameterName("zpos", true);
+  zpos_cmd.SetUnitCategory("Length");
 
   _msg->DeclareProperty("nphotons", _nphotons, "Set number of photons");
   
