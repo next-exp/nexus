@@ -38,7 +38,8 @@ _nphotons(1000000)
   _msg->DeclareMethod("particle", &ScintillationGenerator::SetParticleDefinition, 
     "Set particle to be generated.");
   
-  G4GenericMessenger::Command& energy = _msg->DeclareProperty("energy", _energy,"Set kinetic energy of the particle.");
+  G4GenericMessenger::Command& energy =
+    _msg->DeclareProperty("energy", _energy,"Set kinetic energy of the particle.");
   energy.SetUnitCategory("Energy");
   energy.SetParameterName("energy", false);
   energy.SetRange("energy>0.");

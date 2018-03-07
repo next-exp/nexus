@@ -44,7 +44,7 @@ namespace nexus {
     _teflon_masks(false)
   {
     /// Messenger
-    _msg = new G4GenericMessenger(this, "/Geometry/KDB/", "Control commands of geometry NextNew.");
+    _msg = new G4GenericMessenger(this, "/Geometry/KDB/", "Control commands of kapton dice board geometry.");
     _msg->DeclareProperty("visibility", _visibility, "Kapton Dice Boards Visibility");
     _msg->DeclareProperty("teflon_masks", _teflon_masks, "True if teflon masks are placed in front of dices");
     _sipm = new SiPMSensl;

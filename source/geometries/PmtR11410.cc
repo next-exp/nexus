@@ -53,8 +53,8 @@ namespace nexus {
     _sd_depth(2),
     _binning(100.*nanosecond)
   {
-    _msg = new G4GenericMessenger(this, "/Geometry/PmtR11410/", "Control commands of geometry NextNew.");
-    _msg->DeclareProperty("PmtR11410_vis", _visibility, "NEW PMTs Visibility");
+    _msg = new G4GenericMessenger(this, "/Geometry/PmtR11410/", "Control commands of PmtR11410 geometry.");
+    _msg->DeclareProperty("PmtR11410_vis", _visibility, "Hamamatsu R11410 PMTs visibility");
     _msg->DeclareProperty("SD_depth", _sd_depth, "Sensitive detector depth in volume being replicated");
 
     G4GenericMessenger::Command& bin_cmd =

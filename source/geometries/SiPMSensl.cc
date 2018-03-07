@@ -38,7 +38,7 @@ namespace nexus {
 
   {
     /// Messenger
-    _msg = new G4GenericMessenger(this, "/Geometry/SiPMSensl/", "Control commands of geometry NextNew.");
+    _msg = new G4GenericMessenger(this, "/Geometry/SiPMSensl/", "Control commands of SiPMSensl geometry.");
     _msg->DeclareProperty("visibility", _visibility, "SiPMSensl Visibility");
 
     G4GenericMessenger::Command& bin_cmd =
