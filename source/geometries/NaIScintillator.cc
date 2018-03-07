@@ -17,8 +17,8 @@ namespace nexus {
 
   NaIScintillator::NaIScintillator(): _visibility(false), _length(38.7*mm)
   {
-    _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
-    _msg->DeclareProperty("naI_vis", _visibility, "Visibility of NaI scintillator");
+    _msg = new G4GenericMessenger(this, "/Geometry/NaIScintillator/", "Control commands of geometry NextNew.");
+    _msg->DeclareProperty("visibility", _visibility, "Visibility of NaI scintillator");
   }
 
   NaIScintillator::~NaIScintillator()

@@ -18,5 +18,4 @@
 /Geometry/PmtR11410/SD_depth 4
 /Geometry/KDB/teflon_masks true
 
-/nexus/persistency/outputFile output.next
-/nexus/persistency/hdf5 true
+/nexus/persistency/outputFile Kr83_full.next

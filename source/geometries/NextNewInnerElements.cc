@@ -35,12 +35,6 @@ namespace nexus {
     _energy_plane = new NextNewEnergyPlane();
     _field_cage = new NextNewFieldCage();
     _tracking_plane = new NextNewTrackingPlane();
-
-    /// Messenger
-    _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", 
-				  "Control commands of geometry NextNew.");
-    _msg->DeclareProperty("vis", _visibility, "Grids Visibility");
-
   }
    
   void NextNewInnerElements::SetLogicalVolume(G4LogicalVolume* mother_logic)
