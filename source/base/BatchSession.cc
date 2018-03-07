@@ -164,16 +164,16 @@ G4int BatchSession::ExecCommand(const G4String& command)
       break;
     case fCommandNotFound:
       msg = "Command not found: " + command;
-      G4Exception("[BatchSession]", "ExecCommand()", JustWarning, msg);
+      G4Exception("[BatchSession]", "ExecCommand()", FatalException, msg);
       break;
     case fIllegalApplicationState:
       msg = "Illegal application state: " + command;
-      G4Exception("[BatchSession]", "ExecCommand()", JustWarning, msg);
+      G4Exception("[BatchSession]", "ExecCommand()", FatalException, msg);
       break;
     default:
       G4int pn = rc%100;
       msg = "Illegal parameter: ";
-      G4Exception("[BatchSession]", "ExecCommand()", JustWarning, msg);
+      G4Exception("[BatchSession]", "ExecCommand()", FatalException, msg);
       G4cerr << "(" << pn << ") <" << command << ">" << G4endl;
   }
 
