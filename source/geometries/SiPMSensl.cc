@@ -39,14 +39,14 @@ namespace nexus {
   {
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/SiPMSensl/", "Control commands of geometry NextNew.");
-    _msg->DeclareProperty("SiPMSensl_vis", _visibility, "SiPMSensl Visibility");
+    _msg->DeclareProperty("visibility", _visibility, "SiPMSensl Visibility");
 
     G4GenericMessenger::Command& bin_cmd =
-      _msg->DeclareProperty("binning", _binning,
+      _msg->DeclareProperty("time_binning", _binning,
 			    "Time binning of SensL SiPM");
     bin_cmd.SetUnitCategory("Time");
-    bin_cmd.SetParameterName("binning", false);
-    bin_cmd.SetRange("binning>0.");
+    bin_cmd.SetParameterName("time_binning", false);
+    bin_cmd.SetRange("time_binning>0.");
   }
   
   

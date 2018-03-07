@@ -51,6 +51,8 @@ _phi_min(0.), _phi_max(0.)
     _msg->DeclareProperty("max_energy", _energy_max, 
       "Set maximum kinetic energy of the particle");
   max_energy.SetUnitCategory("Energy");
+  max_energy.SetParameterName("max_energy", false);
+  max_energy.SetRange("max_energy>0.");
 
   _msg->DeclareProperty("region", _region, 
     "Set the region of the geometry where the vertex will be generated.");
