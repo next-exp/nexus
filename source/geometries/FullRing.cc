@@ -13,6 +13,8 @@
 #include "CylinderPointSampler.h"
 #include "MaterialsList.h"
 #include "PetKDBFixedPitch.h"
+#include "OpticalMaterialProperties.h"
+
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
 #include <G4Tubs.hh>
@@ -21,6 +23,7 @@
 #include <G4PVPlacement.hh>
 #include <G4NistManager.hh>
 #include <G4VisAttributes.hh>
+#include <G4LogicalVolume.hh>
 
 #include <stdexcept>
 
@@ -32,7 +35,10 @@ namespace nexus {
     det_thickness_(0.*mm),
     n_modules_(12),
     r_dim_(5.*cm),
-    internal_diam_(20.*cm)
+    internal_diam_(21.5*cm),
+    cryo_width_(8.*cm),
+    cryo_thickn_(1.*mm),
+    n_cells_(12)
   {
      // Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/FullRing/", "Control commands of geometry FullRing.");
@@ -42,6 +48,8 @@ namespace nexus {
 
     phantom_diam_ = 12.*cm;
     phantom_length_ = 10.*cm;
+
+    external_diam_ = internal_diam_ + 2.*r_dim_*tan(pi/n_cells_);
     
     cylindric_gen_ = 
       new CylinderPointSampler(0., phantom_length_, phantom_diam_/2., 0., G4ThreeVector (0., 0., 0.));
@@ -50,10 +58,7 @@ namespace nexus {
 
   FullRing::~FullRing()
   {
-    const G4double int_diam_cryo = internal_diam_ - 2. * cm;
-    const G4double ext_diam_cryo = internal_diam_ + r_dim_ + 2. * cm;
 
-    // G4Tubs* cryostat_solid = new G4Tubs("CRYOSTAT", int_diam_cryo/2., ext_diam_cryo/2., );
   }
 
   void FullRing::Construct()
@@ -73,6 +78,27 @@ namespace nexus {
 
   void FullRing::BuildCryostat()
   {
+    const G4double int_diam_cryo = internal_diam_ - 2. * cm;
+    const G4double ext_diam_cryo = external_diam_ + 10. * cm;
+
+    G4Tubs* cryostat_solid =
+      new G4Tubs("CRYOSTAT", int_diam_cryo/2., ext_diam_cryo/2., cryo_width_/2., 0, twopi);
+    G4Material* steel = MaterialsList::Steel();
+    G4LogicalVolume* cryostat_logic =
+      new G4LogicalVolume(cryostat_solid, steel, "CRYOSTAT");
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), cryostat_logic,
+		      "CRYOSTAT", lab_logic_, false, 0, true);
+
+    G4Tubs* LXe_solid =
+      new G4Tubs("LXE", (int_diam_cryo + 2.*cryo_thickn_)/2., (ext_diam_cryo - 2.*cryo_thickn_)/2.,
+                 (cryo_width_ - 2.*cryo_thickn_)/2., 0, twopi);
+    G4Material* LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
+    LXe->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe());
+    LXe_logic_ =
+      new G4LogicalVolume(LXe_solid, steel, "LXE");
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), LXe_logic_,
+		      "LXE", cryostat_logic, false, 0, true);
+
   }
 
   void FullRing::BuildDetector()
@@ -94,7 +120,7 @@ namespace nexus {
     rot.rotateX(pi/2.);
     // The first must be positioned outside the loop
     new G4PVPlacement(G4Transform3D(rot, position), module_logic,
-		      "MODULE_1", lab_logic_, false, 1, true);
+		      "MODULE_1", LXe_logic_, false, 1, true);
 
     for (G4int i=2; i<=n_modules_;++i) {
       G4double angle = (i-1)*step;
@@ -103,7 +129,7 @@ namespace nexus {
       position.setY(radius*cos(angle));
       G4String vol_name = "MODULE_" + std::to_string(i);
       new G4PVPlacement(G4Transform3D(rot, position), module_logic,
-                        vol_name, lab_logic_, false, i, true);
+                        vol_name, LXe_logic_, false, i, true);
     }
   }
 
