@@ -28,7 +28,7 @@ namespace nexus {
  Back2backGammas::Back2backGammas() : _geom(0) 
   {
     /// For the moment, only random direction are allowed. To be fixes if needed
-     _msg = new G4GenericMessenger(this, "/Generator/Na22Generator/",
+     _msg = new G4GenericMessenger(this, "/Generator/Back2back/",
     "Control commands of Na22 generator.");
 
      _msg->DeclareProperty("region", _region, 
