@@ -94,16 +94,16 @@ namespace nexus {
     rot.rotateX(pi/2.);
     // The first must be positioned outside the loop
     new G4PVPlacement(G4Transform3D(rot, position), module_logic,
-		      "MODULE_0", lab_logic_, false, 0, true);
+		      "MODULE_1", lab_logic_, false, 1, true);
 
-    for (G4int i=1; i<n_modules_;++i) {
-      G4double angle = i*step;
+    for (G4int i=2; i<=n_modules_;++i) {
+      G4double angle = (i-1)*step;
       rot.rotateZ(step);
       position.setX(-radius*sin(angle));
       position.setY(radius*cos(angle));
       G4String vol_name = "MODULE_" + std::to_string(i);
       new G4PVPlacement(G4Transform3D(rot, position), module_logic,
-		      vol_name, lab_logic_, false, i, true);   
+                        vol_name, lab_logic_, false, i, true);
     }
   }
 
