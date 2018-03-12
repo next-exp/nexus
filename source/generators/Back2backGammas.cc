@@ -25,7 +25,8 @@ namespace nexus {
 
   using namespace CLHEP;
 
- Back2backGammas::Back2backGammas() : _geom(0) 
+  Back2backGammas::Back2backGammas() : _geom(0),
+                                       _window(1*second)
   {
     /// For the moment, only random direction are allowed. To be fixes if needed
      _msg = new G4GenericMessenger(this, "/Generator/Back2back/",
@@ -33,6 +34,13 @@ namespace nexus {
 
      _msg->DeclareProperty("region", _region, 
 			   "Set the region of the geometry where the vertex will be generated.");
+
+     G4GenericMessenger::Command& wndw_cmd
+       =_msg->DeclareProperty("window", _window,
+			      "Width of the time window.");
+     wndw_cmd.SetUnitCategory("Time");
+     wndw_cmd.SetParameterName("window", false);
+     wndw_cmd.SetRange("window>0.");
 
     DetectorConstruction* detconst = (DetectorConstruction*)
       G4RunManager::GetRunManager()->GetUserDetectorConstruction();
@@ -48,7 +56,7 @@ namespace nexus {
     // Ask the geometry to generate a position for the particle
 
     G4ThreeVector position = _geom->GenerateVertex(_region); 
-    G4double time = 0.;
+    G4double time = G4UniformRand()*_window;
     G4PrimaryVertex* vertex = 
         new G4PrimaryVertex(position, time);
 
@@ -84,6 +92,7 @@ namespace nexus {
     vertex->SetPrimary(particle2);
 
     evt->AddPrimaryVertex(vertex);
+
   }
 
 }
