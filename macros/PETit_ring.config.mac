@@ -1,0 +1,24 @@
+
+### GEOMETRY
+/Geometry/SiPMpet/visibility false
+
+### GENERATOR
+/Generator/Back2back/region CENTER
+
+### PHYSICS
+/PhysicsList/Nexus/clustering          false
+/PhysicsList/Nexus/drift               false
+/PhysicsList/Nexus/electroluminescence false
+/PhysicsList/Nexus/offScintillation false
+/PhysicsList/Nexus/offCherenkov false
+
+
+### VERBOSITIES
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+
+### OUTPUT FILE
+/nexus/persistency/hdf5 true
+/nexus/persistency/outputFile full_ring.next
