@@ -43,6 +43,7 @@ namespace nexus {
     internal_diam_(21.5*cm),
     thickness_(0.3*mm),
     n_cells_(12),
+    max_step_size_(1.*mm),
     r_dim_(5.*cm),
     dim_int_(5.2*cm)
   {
