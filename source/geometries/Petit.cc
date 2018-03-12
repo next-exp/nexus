@@ -35,13 +35,13 @@ namespace nexus {
     using namespace CLHEP;
 
     Petit::Petit():
-      BaseGeometry(), msg_(0),
+      BaseGeometry(),
       lab_side_(2.*m),
       dist_between_cells_(10.*cm)
 
     {
         msg_ = new G4GenericMessenger(this, "/Geometry/Petit/",
-                                      "Control commands of geometry PetitModule.");
+                                      "Control commands of geometry Petit.");
         
         G4GenericMessenger::Command& dist_cells_cmd =
         msg_->DeclareProperty("dist_between_cells", dist_between_cells_,
