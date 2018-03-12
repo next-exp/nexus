@@ -14,10 +14,11 @@
 #include "BoxPointSampler.h"
 #include "PetitPlainDice.h"
 #include "Visibilities.h"
+#include "SiPMpet9mm2.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
-#include <G4Trd.hh>
+#include <G4Trap.hh>
 #include <G4Material.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
@@ -31,12 +32,16 @@
 #include <G4SystemOfUnits.hh>
 #include <G4RotationMatrix.hh>
 
+#include <CLHEP/Units/SystemOfUnits.h>
+#include <CLHEP/Units/PhysicalConstants.h>
+
 
 namespace nexus {
 
   PetaloTrap::PetaloTrap():
     BaseGeometry(),
-    internal_diam_(20.*cm),
+    internal_diam_(21.5*cm),
+    thickness_(0.3*mm),
     r_dim_(5.*cm),
     n_cells_(12),
     dim_int_(5.2*cm)
@@ -61,6 +66,7 @@ namespace nexus {
     //  SetParameters(31.6312*mm, 40.2579*mm, 30.*mm);
 
     pdb_ = new PetitPlainDice();
+    sipm_ = new SiPMpet9mm2();
   }
 
 
@@ -75,45 +81,61 @@ namespace nexus {
   {  
     pdb_->Construct();
 
-    const G4double thickness = 1. * mm;
-
-    G4Trd* det_solid =
-      new G4Trd("TRAP", dim_int_/2., dim_ext_/2., dim_int_/2., dim_ext_/2., r_dim_/2.);
+    G4Trap* det_solid =
+      new G4Trap("CELL",
+                 (r_dim_ + 2.*thickness_)/2., 0.,
+                 0., (dim_int_ + 2.*thickness_)/2.,
+                 (dim_ext_ + 2.*thickness_)/2., (dim_ext_ + 2.*thickness_)/2.,
+                 0.,  (dim_int_ + 2.*thickness_)/2.,
+                 (dim_int_ + 2.*thickness_)/2., (dim_int_ + 2.*thickness_)/2.,
+                 0.);
+      // new G4Trd("TRAP", (dim_int_ + 2.*thickness_)/2., (dim_ext_ + 2.*thickness_)/2.,
+      //           (dim_int_ + 2.*thickness_)/2., (dim_ext_ + 2.*thickness_)/2.,
+      //           (r_dim_ + 2.*thickness_)/2.);
    
     G4Material* kapton =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
     
-    det_logic_ = new G4LogicalVolume(det_solid, kapton, "TRAP");
+    det_logic_ = new G4LogicalVolume(det_solid, kapton, "CELL");
 
     this->SetLogicalVolume(det_logic_);
     //   det_logic_->SetVisAttributes(G4VisAttributes::Invisible);    
 
     G4VisAttributes trap_color = nexus::LightGrey();
-    trap_color.SetForceSolid(true);
+    //trap_color.SetForceSolid(true);
     det_logic_->SetVisAttributes(trap_color);
 
-    G4Trd* lxe_solid =
-      new G4Trd("ACTIVE", (dim_int_-2.*thickness)/2., (dim_ext_-2.*thickness)/2.,
-                (dim_int_-2.*thickness)/2., (dim_ext_-2.*thickness)/2.,
-                (r_dim_-thickness)/2.);
+    G4Trap* lXe_solid =
+      new G4Trap("ACTIVE",
+                 r_dim_/2., 0.,
+                 0., dim_int_/2.,
+                 dim_ext_/2., dim_ext_/2.,
+                 0.,  dim_int_/2.,
+                 dim_int_/2., dim_int_/2.,
+                 0.);
+    // new G4Trap("ACTIVE", r_dim_, dim_int_, dim_ext_, dim_int_);
+
+    // G4Trd* lXe_solid =
+    //   new G4Trd("ACTIVE", (dim_int_)/2., (dim_ext_)/2.,
+    //             (dim_int_)/2., (dim_ext_)/2., (r_dim_)/2.);
    
     G4Material* lXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
     lXe->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe());
     
-    G4LogicalVolume* lxe_logic = new G4LogicalVolume(lxe_solid, lXe, "ACTIVE");
+    lXe_logic_ = new G4LogicalVolume(lXe_solid, lXe, "ACTIVE");
     // lxe_logic->SetVisAttributes(white_color);  
    
-    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), lxe_logic,
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), lXe_logic_,
 		  "ACTIVE", det_logic_, false, 0, true);
 
     // Set the ACTIVE volume as an ionization sensitive active
     IonizationSD* ionisd = new IonizationSD("/PETALO/ACTIVE");
-    lxe_logic->SetSensitiveDetector(ionisd);
+    lXe_logic_->SetSensitiveDetector(ionisd);
     G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
 
     // Limit the step size in ACTIVE volume for better tracking precision
     std::cout << "*** Maximum Step Size (mm): " << max_step_size_/mm << std::endl;
-    lxe_logic->SetUserLimits(new G4UserLimits(max_step_size_));
+    lXe_logic_->SetUserLimits(new G4UserLimits(max_step_size_));
 
     //   G4Colour otherColour(.6, .8, .79); 
     //   G4VisAttributes myAttr(otherColour); 
@@ -125,20 +147,45 @@ namespace nexus {
 
  void PetaloTrap::BuildSiPMPlanes()
  {
-   // G4double db_z = db_->GetDimensions().z();
+   sipm_->Construct();
+   G4LogicalVolume* sipm_logic = sipm_->GetLogicalVolume();
+   G4double sipm_lat_dim = sipm_->GetDimensions().getX();
+   G4double sipm_thickn = sipm_->GetDimensions().getZ();
+   G4double pos_z = - r_dim_/2. + thickness_ + sipm_thickn/2.;
+   G4double offset = sipm_lat_dim/2.;
+   G4double sipm_pitch = sipm_lat_dim;
+   G4int sipm_no = 0;
 
-   // G4double displ = (z_size_-det_thickness_)/2. + db_z/2.;
+    const G4int rows = 8;
+    const G4int columns = 8;
 
-   // G4LogicalVolume* db_logic = db_->GetLogicalVolume();
-   // new G4PVPlacement(0, G4ThreeVector(0.,0., -displ), db_logic,
-   //      	     "LXE_DICE", lXe_logic_, false, 0, true);
+    for (G4int i=0; i<rows; i++) {
+        G4double pos_x = - dim_int_/2. + offset + i*sipm_pitch;
+        for (G4int j=0; j<columns; j++) {
+            G4double pos_y = dim_int_/2. - offset - j*sipm_pitch;
+            //G4cout << pos_x << " (mm), " << pos_y << " (mm), " << pos_z << " (mm), " << G4endl;
+            new G4PVPlacement(0, G4ThreeVector(pos_x, pos_y, pos_z),
+                              sipm_logic, "SIPMpet", lXe_logic_, false, sipm_no, true);
+              sipm_no++;
+          }
+      }
 
-   // db_->SetXYsize( size2_);
-   // db_->Construct();
-   // db_logic = db_->GetLogicalVolume();
-   // new G4PVPlacement(0, G4ThreeVector(0.,0., displ), db_logic,
-   // 		     "LXE_DICE", lXe_logic_, false, 1, true);
-   
+
+    G4RotationMatrix rot;
+    rot.rotateY(pi);
+    pos_z = - pos_z;
+
+    for (G4int i=0; i<rows; i++) {
+      G4double pos_x = + dim_int_/2. - offset - i*sipm_pitch;
+      for (G4int j=0; j<columns; j++) {
+        G4double pos_y = dim_int_/2. - offset - j*sipm_pitch;
+        //G4cout << pos_x << " (mm), " << pos_y << " (mm), " << pos_z << " (mm), " << G4endl;
+        new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(pos_x, pos_y, pos_z)),
+                          sipm_logic, "SIPMpet", lXe_logic_, false, sipm_no, true);
+        sipm_no++;
+      }
+    }
+
  }
 
 

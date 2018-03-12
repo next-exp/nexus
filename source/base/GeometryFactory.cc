@@ -41,6 +41,7 @@ GeometryFactory::~GeometryFactory()
 #include "FullRing.h"
 #include "Petit.h"
 #include "PetitModule.h"
+#include "PetaloTrap.h"
 #include "PMT_QE_setup.h"
 #include "Lab_vertices.h"
 #include "Lab.h"
@@ -69,7 +70,7 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
   
   else if (_name == "PETIT") p = new Petit();
     
-  else if (_name == "PETIT_MODULE") p = new PetitModule();
+  else if (_name == "TRAP") p = new PetaloTrap();
 
   else if (_name == "VERTICES") p = new Lab_vertices();
 

@@ -21,6 +21,7 @@ class G4Material;
 
 namespace nexus{class PetitPlainDice;}
 namespace nexus {class BoxPointSampler;}
+namespace nexus {class SiPMpet9mm2;}
 
 namespace nexus {
 
@@ -52,6 +53,7 @@ namespace nexus {
     // Detector dimensions
     //   const G4double active_size_; /// Size of the LXe active volume
     const G4double internal_diam_; /// internal diameter of ring
+    const G4double thickness_; /// thickness of kapton boards
  
    G4int n_cells_;
    
@@ -71,6 +73,8 @@ namespace nexus {
     G4double dim_int_, dim_ext_;
 
     PetitPlainDice* pdb_;
+
+    SiPMpet9mm2* sipm_;
 
   };
   

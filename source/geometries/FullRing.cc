@@ -50,6 +50,10 @@ namespace nexus {
 
   FullRing::~FullRing()
   {
+    const G4double int_diam_cryo = internal_diam_ - 2. * cm;
+    const G4double ext_diam_cryo = internal_diam_ + r_dim_ + 2. * cm;
+
+    // G4Tubs* cryostat_solid = new G4Tubs("CRYOSTAT", int_diam_cryo/2., ext_diam_cryo/2., );
   }
 
   void FullRing::Construct()
@@ -62,8 +66,13 @@ namespace nexus {
       new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
     lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
     this->SetLogicalVolume(lab_logic_);
-  
+
+    BuildCryostat();
     BuildDetector();
+  }
+
+  void FullRing::BuildCryostat()
+  {
   }
 
   void FullRing::BuildDetector()
@@ -82,17 +91,17 @@ namespace nexus {
     G4double radius = internal_diam_/2.+r_dim_/2.+det_thickness_;
     G4ThreeVector position(0.,radius, 0.);
     G4RotationMatrix rot;
-    rot.rotateX(-pi/2.);
+    rot.rotateX(pi/2.);
     // The first must be positioned outside the loop
     new G4PVPlacement(G4Transform3D(rot, position), module_logic,
-		      "MODULE0", lab_logic_, false, 0, true);   
+		      "MODULE_0", lab_logic_, false, 0, true);
 
     for (G4int i=1; i<n_modules_;++i) {
       G4double angle = i*step;
       rot.rotateZ(step);
       position.setX(-radius*sin(angle));
       position.setY(radius*cos(angle));
-      G4String vol_name = "MODULE" + i;
+      G4String vol_name = "MODULE_" + std::to_string(i);
       new G4PVPlacement(G4Transform3D(rot, position), module_logic,
 		      vol_name, lab_logic_, false, i, true);   
     }
@@ -118,18 +127,9 @@ namespace nexus {
    
     G4ThreeVector vertex(0.,0.,0.);
 
-    // ACTIVE
-    // if (region == "ACTIVE") {
-    //   vertex = active_gen_->GenerateVertex(region);
-    // } else if (region == "OUTSIDE") {
-    //   vertex = G4ThreeVector(0., 0., -20.*cm);
-    // } else if (region == "CENTER") {
-    //   vertex = G4ThreeVector(0., 5.*mm, -5.*mm);
-    // } else if (region == "SURFACE") {
-    //   vertex = surf_gen_->GenerateVertex("Z_SURF");
-    // }
-
-    if (region == "PHANTOM") {
+    if (region == "CENTER") {
+      vertex = vertex;
+    } else if (region == "PHANTOM") {
       vertex = cylindric_gen_->GenerateVertex("BODY_VOL");
     } else {
       G4Exception("[FullRing]", "GenerateVertex()", FatalException,

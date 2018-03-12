@@ -22,6 +22,7 @@ namespace nexus {
 
     private:
     void Construct();
+    void BuildCryostat();
     void BuildDetector(); 
     void BuildPhantom();
     void BuildOneModule(); 
