@@ -49,7 +49,7 @@ namespace nexus {
     phantom_diam_ = 12.*cm;
     phantom_length_ = 10.*cm;
 
-    external_diam_ = internal_diam_ + 2.*r_dim_*tan(pi/n_cells_);
+    external_diam_ = internal_diam_ + r_dim_/cos(pi/n_cells_);
     
     cylindric_gen_ = 
       new CylinderPointSampler(0., phantom_length_, phantom_diam_/2., 0., G4ThreeVector (0., 0., 0.));

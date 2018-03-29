@@ -1,10 +1,8 @@
 // ----------------------------------------------------------------------------
 //  $Id: PetaloTrap.cc  $
 //
-//  Author:  <jmunoz@ific.uv.es>   
-//  Created: January 2014
 //  
-//  Copyright (c) 2013 NEXT Collaboration
+//  Copyright (c) 2018 NEXT Collaboration
 // ---------------------------------------------------------------------------- 
 
 #include "PetaloTrap.h"
@@ -25,8 +23,6 @@
 #include <G4VisAttributes.hh>
 #include <G4UserLimits.hh>
 #include <G4NistManager.hh>
-#include <G4UniformMagField.hh>
-#include <G4FieldManager.hh>
 #include <G4TransportationManager.hh>
 #include <G4SDManager.hh>
 #include <G4SystemOfUnits.hh>
@@ -34,6 +30,7 @@
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
+#include <math.h>
 
 
 namespace nexus {
@@ -44,7 +41,7 @@ namespace nexus {
     thickness_(0.3*mm),
     n_cells_(12),
     max_step_size_(1.*mm),
-    r_dim_(5.*cm),
+    r_dim_(5.2*cm),
     dim_int_(5.2*cm)
   {
     
@@ -59,12 +56,8 @@ namespace nexus {
     step_cmd.SetUnitCategory("Length");
     step_cmd.SetParameterName("max_step_size", false);
     step_cmd.SetRange("max_step_size>0.");
-    
-    // size1_ = 2.*ring_diameter_/2.*tan(pi/n_modules_);
-    dim_ext_ = dim_int_ + 2.*r_dim_*tan(pi/n_cells_);
-    // G4cout << size1_  << ", vs " << size2_ << G4endl;
 
-    //  SetParameters(31.6312*mm, 40.2579*mm, 30.*mm);
+    dim_ext_ = dim_int_ + 2.*r_dim_*tan(pi/n_cells_);
 
     pdb_ = new PetitPlainDice();
     sipm_ = new SiPMpet9mm2();
@@ -154,16 +147,21 @@ namespace nexus {
    G4double sipm_thickn = sipm_->GetDimensions().getZ();
    G4double pos_z = - r_dim_/2. + thickness_ + sipm_thickn/2.;
    G4double offset = sipm_lat_dim/2.;
+
    G4double sipm_pitch = sipm_lat_dim;
    G4int sipm_no = 0;
 
-    const G4int rows = 8;
-    const G4int columns = 8;
+   const G4int rows = 8;
+   const G4int columns = 8;
 
-    for (G4int i=0; i<rows; i++) {
-        G4double pos_x = - dim_int_/2. + offset + i*sipm_pitch;
-        for (G4int j=0; j<columns; j++) {
-            G4double pos_y = dim_int_/2. - offset - j*sipm_pitch;
+   const G4int rows_ext = 12;
+   G4double offset_ext = (dim_ext_/rows_ext - sipm_lat_dim) * 12 / 2.;
+
+   for (G4int i=0; i<rows_ext; i++) {
+     //G4double pos_x = - dim_int_/2. + offset + i*sipm_pitch;
+     G4double pos_x = - dim_ext_/2. + offset + offset_ext + i*sipm_pitch;
+     for (G4int j=0; j<columns; j++) {
+        G4double pos_y = dim_int_/2. - offset - j*sipm_pitch;
             //G4cout << pos_x << " (mm), " << pos_y << " (mm), " << pos_z << " (mm), " << G4endl;
             new G4PVPlacement(0, G4ThreeVector(pos_x, pos_y, pos_z),
                               sipm_logic, "SIPMpet", lXe_logic_, false, sipm_no, true);
