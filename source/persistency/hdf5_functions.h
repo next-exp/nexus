@@ -13,14 +13,14 @@
    } run_info_t; 
 
   typedef struct{
-    int64_t evt_number;
+    int32_t evt_number;
     uint64_t last_sns_data;
     uint64_t last_hit;
     uint64_t last_particle;
   } evt_extent_t;
 
   typedef struct{
-    int64_t evt_number;
+    int32_t evt_number;
     float evt_energy;
   } evt_t;
 
