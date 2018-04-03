@@ -13,20 +13,20 @@
    } run_info_t; 
 
   typedef struct{
-    long evt_number;
-    unsigned long last_sns_data;
-    unsigned long last_hit;
-    unsigned long last_particle;
+    int64_t evt_number;
+    uint64_t last_sns_data;
+    uint64_t last_hit;
+    uint64_t last_particle;
   } evt_extent_t;
 
   typedef struct{
-    int evt_number;
+    int64_t evt_number;
     float evt_energy;
   } evt_t;
 
   typedef struct{
     unsigned int sensor_id;
-    unsigned long time_bin;
+    uint64_t time_bin;
     unsigned int charge;
   } sns_data_t;
 
