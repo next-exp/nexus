@@ -1,21 +1,20 @@
-#ifndef QUAD_FBK_H
-#define QUAD_FBK_H
+#ifndef SIPM_pet_FBK_H
+#define SIPM_pet_FBK_H
 
 #include "BaseGeometry.h"
 #include <G4ThreeVector.hh>
 
 class G4GenericMessenger;
-namespace nexus {class SiPMpetFBK;}
 
 namespace nexus {
 
-  class QuadFBK: public BaseGeometry
+  class SiPMpetFBK: public BaseGeometry
   {
   public:
     /// Constructor
-    QuadFBK();
+    SiPMpetFBK();
     /// Destructor
-    ~QuadFBK();
+    ~SiPMpetFBK();
     
     /// Return dimensions of the SiPM
     //G4ThreeVector GetDimensions() const;
@@ -29,10 +28,16 @@ namespace nexus {
     // Visibility of the tracking plane
     G4bool visibility_;
 
-     // Messenger for the definition of control commands
-    G4GenericMessenger* msg_;
+    // Optical properties to be used for epoxy
+    G4double refr_index_;
 
-    SiPMpetFBK* sipm_;
+    // PDE for the sensor
+    G4double eff_;
+
+    G4double time_binning_;
+
+     // Messenger for the definition of control commands
+    G4GenericMessenger* msg_; 
 
   };
 

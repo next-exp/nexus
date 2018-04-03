@@ -174,26 +174,26 @@ namespace nexus {
     G4RotationMatrix rot;
     rot.rotateX(-pi/2.);
     
-    G4int copy_no = 1000;
+    G4int copy_no = 0;
     for (G4int j=0; j<lin_n_quad_per_cell_; j++) {
       // The first must be positioned outside the loop
       if (j!=0) rot.rotateZ(step);
       G4double z_dimension = -lat_dimension_cell_/2. + j * quad_pitch_;
       G4ThreeVector position(0., radius, z_dimension);
-      copy_no = copy_no + j;
       G4String vol_name = "QUAD_" + std::to_string(copy_no);
+      copy_no += 1;
       new G4PVPlacement(G4Transform3D(rot, position), quad_logic,
-                        vol_name, active_logic_, false, copy_no, false);
+                        vol_name, active_logic_, false, copy_no, true);
 
       for (G4int i=2; i<=n_quad_int; ++i) {
         G4double angle = (i-1)*step;
         rot.rotateZ(step);
         position.setX(-radius*sin(angle));
         position.setY(radius*cos(angle));
-        copy_no = copy_no + 1;
+        copy_no += 1;
         vol_name = "QUAD_" + std::to_string(copy_no);
         new G4PVPlacement(G4Transform3D(rot, position), quad_logic,
-                          vol_name, active_logic_, false, copy_no, false);
+                          vol_name, active_logic_, false, copy_no, true);
       }
     }
 
@@ -204,13 +204,13 @@ namespace nexus {
     rot.rotateZ(step);
     rot.rotateX(pi);
     
-    copy_no = 2000;
-    for (G4int j=0; j<2; j++) {
+    //copy_no = 2000;
+    for (G4int j=0; j<lin_n_quad_per_cell_; j++) {
       // The first must be positioned outside the loop
       if (j!=0) rot.rotateZ(step);
       G4double z_pos = -lat_dimension_cell_/2. + (j + 1./2.) * quad_pitch_;
       G4ThreeVector position(0., radius, z_pos);
-      copy_no = copy_no + j;
+      copy_no = copy_no + 1;
       G4String vol_name = "QUAD_" + std::to_string(copy_no);
       new G4PVPlacement(G4Transform3D(rot, position), quad_logic,
                         vol_name, active_logic_, false, copy_no, false);
