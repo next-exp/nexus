@@ -42,6 +42,7 @@ namespace nexus {
     G4int lin_n_quad_per_cell_; ///< linear number of quadsin a cell (the side, not the area)
     G4double quad_pitch_; ///< space between the centres of two quads in both dimensions
     G4double kapton_thickn_;
+    G4double depth_;
 
     G4double internal_radius_, external_radius_;
     G4double cryo_width_, cryo_thickn_;

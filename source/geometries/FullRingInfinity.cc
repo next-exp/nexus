@@ -39,6 +39,7 @@ namespace nexus {
     lin_n_quad_per_cell_(8),
     quad_pitch_(6.5*mm),
     kapton_thickn_(0.3*mm),
+    depth_(5.*cm),
     // r_dim_(5.*cm),
     //    internal_radius_(99.3127*mm),
     cryo_width_(8.*cm),
@@ -48,17 +49,16 @@ namespace nexus {
      // Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/FullRingInfinity/",
                                   "Control commands of geometry FullRingInfinity.");
+    G4GenericMessenger::Command& depth_cmd =
+      msg_->DeclareProperty("depth", depth_, "Dimension in DOI");
+    depth_cmd.SetUnitCategory("Length");
+    depth_cmd.SetParameterName("depth", false);
+    depth_cmd.SetRange("depth>0.");
 
     quad_ = new QuadFBK();
    
     phantom_diam_ = 12.*cm;
     phantom_length_ = 10.*cm;
-
-    internal_radius_ = n_cells_ * lin_n_quad_per_cell_ * quad_pitch_ / (2*pi);
-    G4int n_ext_cells = 1.5 * n_cells_;
-    external_radius_ = 1.5 * internal_radius_;
-
-    //G4cout << internal_radius_/cm << ", " << external_radius_/cm << ", " << G4endl;
     
     cylindric_gen_ = 
       new CylinderPointSampler(0., phantom_length_, phantom_diam_/2., 0., G4ThreeVector (0., 0., 0.));
@@ -80,6 +80,10 @@ namespace nexus {
       new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
     lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
     this->SetLogicalVolume(lab_logic_);
+
+    internal_radius_ = n_cells_ * lin_n_quad_per_cell_ * quad_pitch_ / (2*pi);
+    external_radius_ = internal_radius_ + depth_;
+    G4cout << internal_radius_/cm << ", " << external_radius_/cm << ", " << G4endl;
 
     BuildCryostat();
     BuildSensors();
@@ -183,7 +187,7 @@ namespace nexus {
       G4String vol_name = "QUAD_" + std::to_string(copy_no);
       copy_no += 1;
       new G4PVPlacement(G4Transform3D(rot, position), quad_logic,
-                        vol_name, active_logic_, false, copy_no, true);
+                        vol_name, active_logic_, false, copy_no, false);
 
       for (G4int i=2; i<=n_quad_int; ++i) {
         G4double angle = (i-1)*step;
@@ -193,7 +197,7 @@ namespace nexus {
         copy_no += 1;
         vol_name = "QUAD_" + std::to_string(copy_no);
         new G4PVPlacement(G4Transform3D(rot, position), quad_logic,
-                          vol_name, active_logic_, false, copy_no, true);
+                          vol_name, active_logic_, false, copy_no, false);
       }
     }
 
