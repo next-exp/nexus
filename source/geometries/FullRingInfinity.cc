@@ -8,6 +8,7 @@
 // ---------------------------------------------------------------------------- 
 
 #include "FullRingInfinity.h"
+#include "SiPMpetFBK.h"
 #include "QuadFBK.h"
 #include "CylinderPointSampler.h"
 #include "MaterialsList.h"
@@ -34,17 +35,17 @@ namespace nexus {
   FullRingInfinity::FullRingInfinity():
     BaseGeometry(),
     // Detector dimensions
-    lat_dimension_cell_(52.*mm),
+    lat_dimension_cell_(48.*mm), // 52.*mm for quads
     n_cells_(12),
+    lin_n_sipm_per_cell_(16),
     lin_n_quad_per_cell_(8),
     quad_pitch_(6.5*mm),
     kapton_thickn_(0.3*mm),
     depth_(5.*cm),
-    // r_dim_(5.*cm),
-    //    internal_radius_(99.3127*mm),
     cryo_width_(8.*cm),
     cryo_thickn_(1.*mm),
-    max_step_size_(1.*mm)
+    max_step_size_(1.*mm),
+    quad_arrangement_(false)
   {
      // Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/FullRingInfinity/",
@@ -55,6 +56,9 @@ namespace nexus {
     depth_cmd.SetParameterName("depth", false);
     depth_cmd.SetRange("depth>0.");
 
+    msg_->DeclareProperty("quad", quad_arrangement_, "Are SiPMs organized in quads?");
+
+    sipm_ = new SiPMpetFBK();
     quad_ = new QuadFBK();
    
     phantom_diam_ = 12.*cm;
@@ -86,7 +90,10 @@ namespace nexus {
     G4cout << internal_radius_/cm << ", " << external_radius_/cm << ", " << G4endl;
 
     BuildCryostat();
-    BuildSensors();
+    if (quad_arrangement_)
+      BuildQuadSensors();
+    else
+      BuildSensors();
   }
 
   void FullRingInfinity::BuildCryostat()
@@ -166,6 +173,82 @@ namespace nexus {
   {
 
     /// Build internal array first
+    sipm_->Construct();
+    G4LogicalVolume* sipm_logic = sipm_->GetLogicalVolume();
+    G4ThreeVector sipm_dim = sipm_->GetDimensions();
+    G4double sipm_pitch = sipm_dim.x() + 0.5 * mm;
+
+    G4int n_sipm_int = 2*pi*internal_radius_/sipm_pitch;
+    G4cout << "Number of sipms in internal: " <<  n_sipm_int *  lin_n_sipm_per_cell_<< G4endl;
+    G4double step = 2.*pi/n_sipm_int;
+    G4double radius = internal_radius_ + kapton_thickn_ + sipm_dim.z()/2.;
+
+    G4RotationMatrix rot;
+    rot.rotateX(-pi/2.);
+
+    G4int copy_no = 999;
+    for (G4int j=0; j<lin_n_sipm_per_cell_; j++) {
+      // The first must be positioned outside the loop
+      if (j!=0) rot.rotateZ(step);
+      G4double z_dimension = -lat_dimension_cell_/2. + (j + 1./2.) * sipm_pitch;
+      G4ThreeVector position(0., radius, z_dimension);
+      copy_no += 1;
+      G4String vol_name = "SIPM_" + std::to_string(copy_no);
+      new G4PVPlacement(G4Transform3D(rot, position), sipm_logic,
+                        vol_name, active_logic_, false, copy_no, false);
+
+      for (G4int i=2; i<=n_sipm_int; ++i) {
+        G4double angle = (i-1)*step;
+        rot.rotateZ(step);
+        position.setX(-radius*sin(angle));
+        position.setY(radius*cos(angle));
+        copy_no += 1;
+        vol_name = "SIPM_" + std::to_string(copy_no);
+        new G4PVPlacement(G4Transform3D(rot, position), sipm_logic,
+                          vol_name, active_logic_, false, copy_no, false);
+      }
+    }
+
+    sipm_pitch = sipm_dim.x() + .5*mm;
+    G4int n_sipm_ext = 2*pi*external_radius_/sipm_pitch;
+    G4cout << "Number of sipms in external: " <<  n_sipm_ext * lin_n_sipm_per_cell_ << G4endl;
+    step = 2.*pi/n_sipm_ext;
+    radius = external_radius_ - sipm_dim.z()/2.;
+
+    rot.rotateZ(step);
+    rot.rotateX(pi);
+
+    //copy_no = 2000;
+    for (G4int j=0; j<lin_n_sipm_per_cell_; j++) {
+      // The first must be positioned outside the loop
+      if (j!=0) rot.rotateZ(step);
+      G4double z_pos = -lat_dimension_cell_/2. + (j + 1./2.) * sipm_pitch;
+      G4ThreeVector position(0., radius, z_pos);
+      G4cout << position << G4endl;
+      copy_no = copy_no + 1;
+      G4String vol_name = "SIPM_" + std::to_string(copy_no);
+      new G4PVPlacement(G4Transform3D(rot, position), sipm_logic,
+                        vol_name, active_logic_, false, copy_no, false);
+
+      for (G4int i=2; i<=n_sipm_ext; ++i) {
+        G4double angle = (i-1)*step;
+        rot.rotateZ(step);
+        position.setX(-radius*sin(angle));
+        position.setY(radius*cos(angle));
+        G4cout << position << G4endl;
+        copy_no = copy_no + 1;
+        vol_name = "SIPM_" + std::to_string(copy_no);
+        new G4PVPlacement(G4Transform3D(rot, position), sipm_logic,
+                          vol_name, active_logic_, false, copy_no, false);
+      }
+    }
+
+  }
+
+  void FullRingInfinity::BuildQuadSensors()
+  {
+
+    /// Build internal array first
     quad_->Construct();
     G4LogicalVolume* quad_logic = quad_->GetLogicalVolume();
     G4ThreeVector quad_dim = quad_->GetDimensions();
@@ -182,12 +265,12 @@ namespace nexus {
     for (G4int j=0; j<lin_n_quad_per_cell_; j++) {
       // The first must be positioned outside the loop
       if (j!=0) rot.rotateZ(step);
-      G4double z_dimension = -lat_dimension_cell_/2. + j * quad_pitch_;
+      G4double z_dimension = -lat_dimension_cell_/2. + (j + 1./2.) * quad_pitch_;
       G4ThreeVector position(0., radius, z_dimension);
       G4String vol_name = "QUAD_" + std::to_string(copy_no);
       copy_no += 1;
       new G4PVPlacement(G4Transform3D(rot, position), quad_logic,
-                        vol_name, active_logic_, false, copy_no, false);
+                        vol_name, active_logic_, false, copy_no, true);
 
       for (G4int i=2; i<=n_quad_int; ++i) {
         G4double angle = (i-1)*step;
@@ -197,7 +280,7 @@ namespace nexus {
         copy_no += 1;
         vol_name = "QUAD_" + std::to_string(copy_no);
         new G4PVPlacement(G4Transform3D(rot, position), quad_logic,
-                          vol_name, active_logic_, false, copy_no, false);
+                          vol_name, active_logic_, false, copy_no, true);
       }
     }
 
@@ -217,7 +300,7 @@ namespace nexus {
       copy_no = copy_no + 1;
       G4String vol_name = "QUAD_" + std::to_string(copy_no);
       new G4PVPlacement(G4Transform3D(rot, position), quad_logic,
-                        vol_name, active_logic_, false, copy_no, false);
+                        vol_name, active_logic_, false, copy_no, true);
 
       for (G4int i=2; i<=n_quad_ext; ++i) {
         G4double angle = (i-1)*step;
@@ -227,7 +310,7 @@ namespace nexus {
         copy_no = copy_no + 1;
         vol_name = "QUAD_" + std::to_string(copy_no);
         new G4PVPlacement(G4Transform3D(rot, position), quad_logic,
-                          vol_name, active_logic_, false, copy_no, false);
+                          vol_name, active_logic_, false, copy_no, true);
       }
     }
     

@@ -1,4 +1,4 @@
-#include "SiPMpetFBK.h"
+#include "SiPMquadFBK.h"
 #include "PmtSD.h"
 #include "ToFSD.h"
 #include "MaterialsList.h"
@@ -24,7 +24,7 @@ namespace nexus {
 
   using namespace CLHEP;
   
-  SiPMpetFBK::SiPMpetFBK(): BaseGeometry(),
+  SiPMquadFBK::SiPMquadFBK(): BaseGeometry(),
 			    visibility_(0),
 			    refr_index_(1.54),
                             eff_(1.),
@@ -44,29 +44,29 @@ namespace nexus {
     time_cmd.SetRange("time_binning>0.");
   }
   
-  SiPMpetFBK::~SiPMpetFBK()
+  SiPMquadFBK::~SiPMquadFBK()
   {
   }  
   
-  void SiPMpetFBK::Construct()
+  void SiPMquadFBK::Construct()
   {
    
     // PACKAGE ///////////////////////////////////////////////////////
     G4double offset = 0.1 * mm;
     
-    G4double sipm_x = 3. * mm;
-    G4double sipm_y = 3. * mm;
+    G4double sipm_x = 5.9/2. * mm;
+    G4double sipm_y = 5.5/2. * mm;
     G4double sipm_z = 1 * mm; 
     
     SetDimensions(G4ThreeVector(sipm_x, sipm_y, sipm_z));   
 
-    G4Box* sipm_solid = new G4Box("SiPMpetFBK", sipm_x/2., sipm_y/2., sipm_z/2);
+    G4Box* sipm_solid = new G4Box("SiPMquadFBK", sipm_x/2., sipm_y/2., sipm_z/2);
 
     G4Material* epoxy = MaterialsList::Epoxy();
     epoxy->SetMaterialPropertiesTable(OpticalMaterialProperties::EpoxyFixedRefr(refr_index_));
 
     G4LogicalVolume* sipm_logic = 
-      new G4LogicalVolume(sipm_solid, epoxy, "SiPMpetFBK");
+      new G4LogicalVolume(sipm_solid, epoxy, "SiPMquadFBK");
 
     this->SetLogicalVolume(sipm_logic);
 
@@ -120,14 +120,16 @@ namespace nexus {
     
     // SENSITIVE DETECTOR ////////////////////////////////////////////
 
-    G4String sdname = "/SIPM/SiPMpetFBK";
+    G4String sdname = "/SIPM/SiPMquadFBK";
     G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
     
     if (!sdmgr->FindSensitiveDetector(sdname, false)) {
       //PmtSD* sipmsd = new PmtSD(sdname);
       ToFSD* sipmsd = new ToFSD(sdname);
       sipmsd->SetDetectorVolumeDepth(0);
+      sipmsd->SetDetectorNamingOrder(1000.);
       sipmsd->SetTimeBinning(time_binning_);
+      sipmsd->SetMotherVolumeDepth(1);
       
       G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
       sipm_logic->SetSensitiveDetector(sipmsd);
