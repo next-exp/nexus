@@ -40,9 +40,9 @@ namespace nexus {
     lat_dimension_cell_(48.*mm), // 52.*mm for quads
     sipm_pitch_(4.*mm),
     //n_cells_(12),
-    internal_radius_(10.*cm),
     lin_n_sipm_per_cell_(16),
     lin_n_quad_per_cell_(8),
+    internal_radius_(10.*cm),
     quad_pitch_(6.5*mm),
     kapton_thickn_(0.3*mm),
     depth_(5.*cm),
@@ -203,7 +203,7 @@ namespace nexus {
 
   void FullRingInfinity::BuildSensors()
   {
-    //sipm_->Construct();
+    sipm_->Construct();
     G4LogicalVolume* sipm_logic = sipm_->GetLogicalVolume();
     G4ThreeVector sipm_dim = sipm_->GetDimensions();
     //G4double sipm_pitch = sipm_dim.x() + 1. * mm;
