@@ -89,10 +89,6 @@ namespace nexus {
     lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
     this->SetLogicalVolume(lab_logic_);
 
-    sipm_->Construct();
-    G4LogicalVolume* sipm_logic = sipm_->GetLogicalVolume();
-    G4ThreeVector sipm_dim = sipm_->GetDimensions();
-
     lat_dimension_cell_ = sipm_pitch_ *  lin_n_sipm_per_cell_;
     G4cout << "Lateral dimensions = " << lat_dimension_cell_ << G4endl;
 
