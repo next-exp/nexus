@@ -27,6 +27,8 @@
 #include <G4LogicalVolume.hh>
 #include <G4UserLimits.hh>
 #include <G4SDManager.hh>
+#include <G4LogicalSkinSurface.hh>
+#include <G4OpticalSurface.hh>
 
 #include <stdexcept>
 
@@ -114,7 +116,7 @@ namespace nexus {
     G4double ext_offset = 1. * mm;
     G4Tubs* LXe_solid =
       new G4Tubs("LXE", internal_radius_ - kapton_thickn_, external_radius_ + ext_offset + kapton_thickn_,
-                 (cryo_width_ - 2.*cryo_thickn_)/2., 0, twopi);
+                 (lat_dimension_cell_ + 2.*kapton_thickn_)/2., 0, twopi);
     G4Material* LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
     LXe->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe());
     LXe_logic_ =
@@ -124,7 +126,7 @@ namespace nexus {
 
     G4Tubs* active_solid =
       new G4Tubs("ACTIVE", internal_radius_, external_radius_ + ext_offset,
-                 (cryo_width_ - 2.*cryo_thickn_)/2., 0, twopi);
+                 lat_dimension_cell_/2., 0, twopi);
     active_logic_ =
       new G4LogicalVolume(active_solid, LXe, "ACTIVE");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), active_logic_,
@@ -157,12 +159,33 @@ namespace nexus {
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), kapton_ext_logic,
     		      "KAPTON", LXe_logic_, false, 0, true);
 
+    G4Tubs* kapton_lat_solid =
+      new G4Tubs("KAPTON", internal_radius_ - kapton_thickn_, external_radius_ + ext_offset + kapton_thickn_,
+                 kapton_thickn_/2., 0, twopi);
+    G4LogicalVolume* kapton_lat_logic =
+      new G4LogicalVolume(kapton_lat_solid, kapton, "KAPTON");
+    G4double z_pos = lat_dimension_cell_/2. + kapton_thickn_/2.;
+    new G4PVPlacement(0, G4ThreeVector(0., 0., z_pos), kapton_lat_logic,
+    		      "KAPTON", LXe_logic_, false, 0, true);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., -z_pos), kapton_lat_logic,
+    		      "KAPTON", LXe_logic_, false, 1, true);
+
+    // OPTICAL SURFACE FOR REFLECTION
+    G4OpticalSurface* db_opsur = new G4OpticalSurface("BORDER");
+    db_opsur->SetType(dielectric_metal);
+    db_opsur->SetModel(unified);
+    db_opsur->SetFinish(ground);
+    db_opsur->SetSigmaAlpha(0.1);
+    db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::ReflectantSurface(0.));
+    new G4LogicalSkinSurface("BORDER", kapton_lat_logic, db_opsur);
+
     // G4cout << (external_radius_  - kapton_thickn_) / cm << G4endl;
 
     G4VisAttributes kapton_col = nexus::CopperBrown();
     kapton_col.SetForceSolid(true);
     kapton_int_logic->SetVisAttributes(kapton_col);
     kapton_ext_logic->SetVisAttributes(kapton_col);
+    kapton_lat_logic->SetVisAttributes(kapton_col);
     // G4VisAttributes active_col = nexus::Blue();
     // active_col.SetForceSolid(true);
     // active_logic->SetVisAttributes(active_col);
@@ -176,12 +199,13 @@ namespace nexus {
     sipm_->Construct();
     G4LogicalVolume* sipm_logic = sipm_->GetLogicalVolume();
     G4ThreeVector sipm_dim = sipm_->GetDimensions();
-    G4double sipm_pitch = sipm_dim.x() + 0.5 * mm;
+    //G4double sipm_pitch = sipm_dim.x() + 0.5 * mm;
+    G4double sipm_pitch = sipm_dim.x();
 
     G4int n_sipm_int = 2*pi*internal_radius_/sipm_pitch;
     G4cout << "Number of sipms in internal: " <<  n_sipm_int *  lin_n_sipm_per_cell_<< G4endl;
     G4double step = 2.*pi/n_sipm_int;
-    G4double radius = internal_radius_ + kapton_thickn_ + sipm_dim.z()/2.;
+    G4double radius = internal_radius_ + sipm_dim.z()/2.;
 
     G4RotationMatrix rot;
     rot.rotateX(-pi/2.);
@@ -209,8 +233,8 @@ namespace nexus {
       }
     }
 
-    sipm_pitch = sipm_dim.x() + .5*mm;
-    G4int n_sipm_ext = 2*pi*external_radius_/sipm_pitch;
+    G4double sipm_pitch_ext = sipm_dim.x() + 0.5 * mm;
+    G4int n_sipm_ext = 2*pi*external_radius_/sipm_pitch_ext;
     G4cout << "Number of sipms in external: " <<  n_sipm_ext * lin_n_sipm_per_cell_ << G4endl;
     step = 2.*pi/n_sipm_ext;
     radius = external_radius_ - sipm_dim.z()/2.;
@@ -224,7 +248,6 @@ namespace nexus {
       if (j!=0) rot.rotateZ(step);
       G4double z_pos = -lat_dimension_cell_/2. + (j + 1./2.) * sipm_pitch;
       G4ThreeVector position(0., radius, z_pos);
-      G4cout << position << G4endl;
       copy_no = copy_no + 1;
       G4String vol_name = "SIPM_" + std::to_string(copy_no);
       new G4PVPlacement(G4Transform3D(rot, position), sipm_logic,
@@ -235,7 +258,6 @@ namespace nexus {
         rot.rotateZ(step);
         position.setX(-radius*sin(angle));
         position.setY(radius*cos(angle));
-        G4cout << position << G4endl;
         copy_no = copy_no + 1;
         vol_name = "SIPM_" + std::to_string(copy_no);
         new G4PVPlacement(G4Transform3D(rot, position), sipm_logic,
