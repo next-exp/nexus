@@ -133,7 +133,6 @@ namespace nexus {
       sipm_logic->SetSensitiveDetector(sipmsd);
     }
 
-    G4cout << visibility_ << G4endl;
     // Visibilities
     if (visibility_) {
       G4VisAttributes sipm_col = nexus::Yellow();

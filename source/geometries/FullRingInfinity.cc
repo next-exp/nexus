@@ -38,7 +38,9 @@ namespace nexus {
     BaseGeometry(),
     // Detector dimensions
     lat_dimension_cell_(48.*mm), // 52.*mm for quads
-    n_cells_(12),
+    sipm_pitch_(4.*mm),
+    //n_cells_(12),
+    internal_radius_(10.*cm),
     lin_n_sipm_per_cell_(16),
     lin_n_quad_per_cell_(8),
     quad_pitch_(6.5*mm),
@@ -87,15 +89,25 @@ namespace nexus {
     lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
     this->SetLogicalVolume(lab_logic_);
 
-    internal_radius_ = n_cells_ * lin_n_quad_per_cell_ * quad_pitch_ / (2*pi);
-    external_radius_ = internal_radius_ + depth_;
-    G4cout << internal_radius_/cm << ", " << external_radius_/cm << ", " << G4endl;
+    sipm_->Construct();
+    G4LogicalVolume* sipm_logic = sipm_->GetLogicalVolume();
+    G4ThreeVector sipm_dim = sipm_->GetDimensions();
 
-    BuildCryostat();
-    if (quad_arrangement_)
+    lat_dimension_cell_ = sipm_pitch_ *  lin_n_sipm_per_cell_;
+    G4cout << "Lateral dimensions = " << lat_dimension_cell_ << G4endl;
+
+    if (quad_arrangement_) {
+      internal_radius_ = n_cells_ * lin_n_quad_per_cell_ * quad_pitch_ / (2*pi);
+      external_radius_ = internal_radius_ + depth_;
+      BuildCryostat();
       BuildQuadSensors();
-    else
+    } else {
+      external_radius_ = internal_radius_ + depth_;
+      G4cout << internal_radius_/mm << ", " << external_radius_/mm << ", " << G4endl;
+      BuildCryostat();
       BuildSensors();
+    }
+
   }
 
   void FullRingInfinity::BuildCryostat()
@@ -113,7 +125,8 @@ namespace nexus {
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), cryostat_logic,
 		      "CRYOSTAT", lab_logic_, false, 0, true);
 
-    G4double ext_offset = 1. * mm;
+
+    G4double ext_offset = 0. * mm;
     G4Tubs* LXe_solid =
       new G4Tubs("LXE", internal_radius_ - kapton_thickn_, external_radius_ + ext_offset + kapton_thickn_,
                  (lat_dimension_cell_ + 2.*kapton_thickn_)/2., 0, twopi);
@@ -194,15 +207,12 @@ namespace nexus {
 
   void FullRingInfinity::BuildSensors()
   {
-
-    /// Build internal array first
-    sipm_->Construct();
+    //sipm_->Construct();
     G4LogicalVolume* sipm_logic = sipm_->GetLogicalVolume();
     G4ThreeVector sipm_dim = sipm_->GetDimensions();
-    //G4double sipm_pitch = sipm_dim.x() + 0.5 * mm;
-    G4double sipm_pitch = sipm_dim.x();
+    //G4double sipm_pitch = sipm_dim.x() + 1. * mm;
 
-    G4int n_sipm_int = 2*pi*internal_radius_/sipm_pitch;
+    G4int n_sipm_int = 2*pi*internal_radius_/sipm_pitch_;
     G4cout << "Number of sipms in internal: " <<  n_sipm_int *  lin_n_sipm_per_cell_<< G4endl;
     G4double step = 2.*pi/n_sipm_int;
     G4double radius = internal_radius_ + sipm_dim.z()/2.;
@@ -214,7 +224,7 @@ namespace nexus {
     for (G4int j=0; j<lin_n_sipm_per_cell_; j++) {
       // The first must be positioned outside the loop
       if (j!=0) rot.rotateZ(step);
-      G4double z_dimension = -lat_dimension_cell_/2. + (j + 1./2.) * sipm_pitch;
+      G4double z_dimension = -lat_dimension_cell_/2. + (j + 1./2.) * sipm_pitch_;
       G4ThreeVector position(0., radius, z_dimension);
       copy_no += 1;
       G4String vol_name = "SIPM_" + std::to_string(copy_no);
@@ -233,11 +243,12 @@ namespace nexus {
       }
     }
 
-    G4double sipm_pitch_ext = sipm_dim.x() + 0.5 * mm;
-    G4int n_sipm_ext = 2*pi*external_radius_/sipm_pitch_ext;
+    //G4double sipm_pitch_ext = sipm_dim.x() + 0.5 * mm;
+    G4double offset = 0.1 * mm;
+    G4int n_sipm_ext = 2*pi*external_radius_/sipm_pitch_;
     G4cout << "Number of sipms in external: " <<  n_sipm_ext * lin_n_sipm_per_cell_ << G4endl;
     step = 2.*pi/n_sipm_ext;
-    radius = external_radius_ - sipm_dim.z()/2.;
+    radius = external_radius_ - sipm_dim.z()/2. - offset;
 
     rot.rotateZ(step);
     rot.rotateX(pi);
@@ -246,7 +257,7 @@ namespace nexus {
     for (G4int j=0; j<lin_n_sipm_per_cell_; j++) {
       // The first must be positioned outside the loop
       if (j!=0) rot.rotateZ(step);
-      G4double z_pos = -lat_dimension_cell_/2. + (j + 1./2.) * sipm_pitch;
+      G4double z_pos = -lat_dimension_cell_/2. + (j + 1./2.) * sipm_pitch_;
       G4ThreeVector position(0., radius, z_pos);
       copy_no = copy_no + 1;
       G4String vol_name = "SIPM_" + std::to_string(copy_no);
