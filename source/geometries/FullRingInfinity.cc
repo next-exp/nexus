@@ -60,6 +60,13 @@ namespace nexus {
     depth_cmd.SetParameterName("depth", false);
     depth_cmd.SetRange("depth>0.");
 
+    G4GenericMessenger::Command& pitch_cmd =
+      msg_->DeclareProperty("pitch", sipm_pitch_, "Pitch of SiPMs");
+    pitch_cmd.SetUnitCategory("Length");
+    pitch_cmd.SetParameterName("pitch", false);
+    pitch_cmd.SetRange("pitch>0.");
+
+    msg_->DeclareProperty("sipm_rows", lin_n_sipm_per_cell_, "Number of SiPM rows");
     msg_->DeclareProperty("quad", quad_arrangement_, "Are SiPMs organized in quads?");
 
     sipm_ = new SiPMpetFBK();
