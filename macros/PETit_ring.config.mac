@@ -1,7 +1,14 @@
 
 ### GEOMETRY
-/Geometry/SiPMpet/visibility false
+
+/Geometry/FullRingInfinity/depth 3. cm
+/Geometry/FullRingInfinity/pitch 6. mm
+/Geometry/FullRingInfinity/sipm_rows 10
+/Geometry/QuadFBK/visibility true
 /Geometry/SiPMpet/time_binning 15. picosecond
+/Geometry/SiPMpet/efficiency 0.2
+/Geometry/SiPMpet/visibility true
+
 
 ### GENERATOR
 /Generator/Back2back/region CENTER
@@ -19,7 +26,9 @@
 /event/verbose 0
 /tracking/verbose 0
 
+/nexus/random_seed 132313
 
 ### OUTPUT FILE
+/nexus/persistency/start_id 10
 /nexus/persistency/hdf5 true
 /nexus/persistency/outputFile full_ring.next
