@@ -46,7 +46,7 @@ namespace nexus {
     quad_pitch_(6.5*mm),
     kapton_thickn_(0.3*mm),
     depth_(5.*cm),
-    cryo_width_(8.*cm),
+    cryo_width_(12.*cm),
     cryo_thickn_(1.*mm),
     max_step_size_(1.*mm),
     quad_arrangement_(false)
