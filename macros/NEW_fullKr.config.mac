@@ -12,10 +12,14 @@
 /Generator/Kr83mGenerator/region ACTIVE
 
 # GEOMETRY
-/Geometry/NextNew/pressure 15. bar
+/Geometry/NextNew/pressure 7. bar
 /Geometry/NextNew/sc_yield 25510. 1/MeV
+/Geometry/NextNew/EL_field 10 kV/cm
 /Geometry/NextNew/elfield true
 /Geometry/PmtR11410/SD_depth 4
+/Geometry/PmtR11410/time_binning 100. nanosecond
+/Geometry/SiPMSensl/time_binning 1. microsecond
 /Geometry/KDB/teflon_masks true
 
-/nexus/persistency/outputFile Kr83_full.next
+/nexus/persistency/hdf5 true
+/nexus/persistency/outputFile Kr83_full_nexus_v5_03_01_ACTIVE_7bar_1evt.sim
