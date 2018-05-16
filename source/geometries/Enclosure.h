@@ -66,10 +66,12 @@ namespace nexus{
     CylinderPointSampler* _enclosure_pad_gen;
     CylinderPointSampler* _pmt_base_gen;
     CylinderPointSampler* _enclosure_surf_gen;
+    CylinderPointSampler* _enclosure_cap_surf_gen;
 
     
     G4double _body_perc;
     G4double _flange_perc;
+    G4double _int_surf_perc, _int_cap_surf_perc;
     
     // Geometry Navigator
     G4Navigator* _geom_navigator;

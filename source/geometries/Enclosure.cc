@@ -202,6 +202,10 @@ namespace nexus{
      _enclosure_surf_gen =
        new CylinderPointSampler(gas_diam/2., gas_length, 0., 0., G4ThreeVector (0., 0., gas_pos));
 
+     _enclosure_cap_surf_gen =
+       new CylinderPointSampler(0., 0.1 * micrometer, gas_diam/2., 0.,
+					       G4ThreeVector (0., 0., - gas_pos/2. + 0.05 * micrometer));
+
      
      // Getting the enclosure body volume over total
      G4double body_vol = 
@@ -221,6 +225,11 @@ namespace nexus{
      _flange_perc =  (flange_vol + body_vol) / total_vol;
      // std::cout<<"ENCLOSURE VOLUME: \t"<<total_vol<<std::endl;
      // std::cout<<"ENCLOSURE WINDOW  VOLUME: \t"<<enclosure_window_solid->GetCubicVolume()<<std::endl;
+     G4double enclosure_int_surf = 2. * pi * gas_diam/2. * gas_length;
+     G4double enclosure_int_cap_surf = pi * gas_diam/2. * gas_diam/2.;
+     G4double total_surf = enclosure_int_surf + enclosure_int_cap_surf;
+     _int_surf_perc = enclosure_int_surf / total_surf;
+     _int_cap_surf_perc = enclosure_int_cap_surf / total_surf;
 
    }
 
@@ -285,7 +294,13 @@ namespace nexus{
     }
     // Internal surface of enclosure
     else if (region == "INT_ENCLOSURE_SURF") {
-      vertex = _enclosure_surf_gen->GenerateVertex("BODY_SURF");
+      G4double rand1 = G4UniformRand();
+      if (rand1 < _int_surf_perc) {
+        vertex = _enclosure_surf_gen->GenerateVertex("BODY_SURF");
+      }
+      else {
+        vertex = _enclosure_cap_surf_gen->GenerateVertex("WHOLE_VOL");
+      }
     }
     // External surface of PMT
     else if (region == "PMT_SURF") {
