@@ -287,6 +287,7 @@ namespace nexus{
     else if (region == "INT_ENCLOSURE_SURF") {
       vertex = _enclosure_surf_gen->GenerateVertex("BODY_SURF");
     }
+    // External surface of PMT
     else if (region == "PMT_SURF") {
       vertex = _pmt->GenerateVertex(region);
       vertex.setZ(vertex.z() + _pmt_z_pos);
