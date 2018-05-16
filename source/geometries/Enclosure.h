@@ -65,6 +65,7 @@ namespace nexus{
     CylinderPointSampler* _enclosure_window_gen;
     CylinderPointSampler* _enclosure_pad_gen;
     CylinderPointSampler* _pmt_base_gen;
+    CylinderPointSampler* _enclosure_surf_gen;
 
     
     G4double _body_perc;

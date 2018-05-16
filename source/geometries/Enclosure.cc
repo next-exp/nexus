@@ -193,9 +193,14 @@ namespace nexus{
        new CylinderPointSampler(0., _enclosure_window_thickness,
 				_enclosure_window_diam/2., 0.,
 				G4ThreeVector (0., 0., _enclosure_length/2. - _enclosure_window_thickness/2.));
-     _enclosure_pad_gen = new CylinderPointSampler(0., _enclosure_pad_thickness, _enclosure_in_diam/2., 0., G4ThreeVector(0.,0.,pad_z_pos));
+     _enclosure_pad_gen =
+       new CylinderPointSampler(0., _enclosure_pad_thickness, _enclosure_in_diam/2., 0., G4ThreeVector(0.,0.,pad_z_pos));
 
-     _pmt_base_gen = new CylinderPointSampler(0., _pmt_base_thickness, _pmt_base_diam/2., 0., G4ThreeVector(0.,0., -_pmt_base_z +10.*mm ));//10mm fitting???
+     _pmt_base_gen =
+       new CylinderPointSampler(0., _pmt_base_thickness, _pmt_base_diam/2., 0., G4ThreeVector(0.,0., -_pmt_base_z +10.*mm ));//10mm fitting???
+
+     _enclosure_surf_gen =
+       new CylinderPointSampler(gas_diam/2., gas_length, 0., 0., G4ThreeVector (0., 0., gas_pos));
 
      
      // Getting the enclosure body volume over total
@@ -227,6 +232,7 @@ namespace nexus{
     delete _enclosure_window_gen;
     delete _enclosure_pad_gen;
     delete _pmt_base_gen;
+    delete _enclosure_surf_gen;
   }
 
   G4ThreeVector Enclosure::GetObjectCenter()
@@ -276,7 +282,15 @@ namespace nexus{
     else if (region == "PMT_BODY") {
       vertex = _pmt->GenerateVertex(region);
       vertex.setZ(vertex.z() + _pmt_z_pos);
-    }   
+    }
+    // Internal surface of enclosure
+    else if (region == "INT_ENCLOSURE_SURF") {
+      vertex = _enclosure_surf_gen->GenerateVertex("BODY_SURF");
+    }
+    else if (region == "PMT_SURF") {
+      vertex = _pmt->GenerateVertex(region);
+      vertex.setZ(vertex.z() + _pmt_z_pos);
+    }
     return vertex;
   }
 
