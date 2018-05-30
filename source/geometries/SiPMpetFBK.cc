@@ -128,7 +128,6 @@ namespace nexus {
       ToFSD* sipmsd = new ToFSD(sdname);
       sipmsd->SetDetectorVolumeDepth(0);
       sipmsd->SetTimeBinning(time_binning_);
-      
       G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
       sipm_logic->SetSensitiveDetector(sipmsd);
     }

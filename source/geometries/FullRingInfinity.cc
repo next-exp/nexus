@@ -9,7 +9,6 @@
 
 #include "FullRingInfinity.h"
 #include "SiPMpetFBK.h"
-#include "QuadFBK.h"
 #include "CylinderPointSampler.h"
 #include "MaterialsList.h"
 #include "IonizationSD.h"
@@ -43,13 +42,11 @@ namespace nexus {
     lin_n_sipm_per_cell_(16),
     lin_n_quad_per_cell_(8),
     internal_radius_(10.*cm),
-    quad_pitch_(6.5*mm),
     kapton_thickn_(0.3*mm),
     depth_(5.*cm),
     cryo_width_(12.*cm),
     cryo_thickn_(1.*mm),
-    max_step_size_(1.*mm),
-    quad_arrangement_(false)
+    max_step_size_(1.*mm)
   {
      // Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/FullRingInfinity/",
@@ -67,10 +64,8 @@ namespace nexus {
     pitch_cmd.SetRange("pitch>0.");
 
     msg_->DeclareProperty("sipm_rows", lin_n_sipm_per_cell_, "Number of SiPM rows");
-    msg_->DeclareProperty("quad", quad_arrangement_, "Are SiPMs organized in quads?");
 
     sipm_ = new SiPMpetFBK();
-    quad_ = new QuadFBK();
    
     phantom_diam_ = 12.*cm;
     phantom_length_ = 10.*cm;
@@ -97,19 +92,14 @@ namespace nexus {
     this->SetLogicalVolume(lab_logic_);
 
     lat_dimension_cell_ = sipm_pitch_ *  lin_n_sipm_per_cell_;
-    G4cout << "Lateral dimensions = " << lat_dimension_cell_ << G4endl;
+    G4cout << "Lateral dimensions (mm) = " << lat_dimension_cell_/mm << G4endl;
 
-    if (quad_arrangement_) {
-      internal_radius_ = n_cells_ * lin_n_quad_per_cell_ * quad_pitch_ / (2*pi);
-      external_radius_ = internal_radius_ + depth_;
-      BuildCryostat();
-      BuildQuadSensors();
-    } else {
-      external_radius_ = internal_radius_ + depth_;
-      G4cout << internal_radius_/mm << ", " << external_radius_/mm << ", " << G4endl;
-      BuildCryostat();
-      BuildSensors();
-    }
+
+     external_radius_ = internal_radius_ + depth_;
+     G4cout << "Radial dimensions (mm): "<< internal_radius_/mm << ", " << external_radius_/mm << G4endl;
+     BuildCryostat();
+     BuildSensors();
+
 
   }
 
@@ -211,6 +201,7 @@ namespace nexus {
   void FullRingInfinity::BuildSensors()
   {
     sipm_->Construct();
+
     G4LogicalVolume* sipm_logic = sipm_->GetLogicalVolume();
     G4ThreeVector sipm_dim = sipm_->GetDimensions();
     //G4double sipm_pitch = sipm_dim.x() + 1. * mm;
@@ -281,77 +272,6 @@ namespace nexus {
 
   }
 
-  void FullRingInfinity::BuildQuadSensors()
-  {
-
-    /// Build internal array first
-    quad_->Construct();
-    G4LogicalVolume* quad_logic = quad_->GetLogicalVolume();
-    G4ThreeVector quad_dim = quad_->GetDimensions();
-
-    G4int n_quad_int = 2*pi*internal_radius_/quad_pitch_;
-    G4cout << "Number of quads in internal: " <<  n_quad_int << G4endl;
-    G4double step = 2.*pi/n_quad_int;
-    G4double radius = internal_radius_ + kapton_thickn_ + quad_dim.z()/2.;
-  
-    G4RotationMatrix rot;
-    rot.rotateX(-pi/2.);
-    
-    G4int copy_no = 0;
-    for (G4int j=0; j<lin_n_quad_per_cell_; j++) {
-      // The first must be positioned outside the loop
-      if (j!=0) rot.rotateZ(step);
-      G4double z_dimension = -lat_dimension_cell_/2. + (j + 1./2.) * quad_pitch_;
-      G4ThreeVector position(0., radius, z_dimension);
-      G4String vol_name = "QUAD_" + std::to_string(copy_no);
-      copy_no += 1;
-      new G4PVPlacement(G4Transform3D(rot, position), quad_logic,
-                        vol_name, active_logic_, false, copy_no, true);
-
-      for (G4int i=2; i<=n_quad_int; ++i) {
-        G4double angle = (i-1)*step;
-        rot.rotateZ(step);
-        position.setX(-radius*sin(angle));
-        position.setY(radius*cos(angle));
-        copy_no += 1;
-        vol_name = "QUAD_" + std::to_string(copy_no);
-        new G4PVPlacement(G4Transform3D(rot, position), quad_logic,
-                          vol_name, active_logic_, false, copy_no, true);
-      }
-    }
-
-    G4int n_quad_ext = 2*pi*external_radius_/quad_pitch_;
-    step = 2.*pi/n_quad_ext;
-    radius = external_radius_ - quad_dim.z()/2.;
-    
-    rot.rotateZ(step);
-    rot.rotateX(pi);
-    
-    //copy_no = 2000;
-    for (G4int j=0; j<lin_n_quad_per_cell_; j++) {
-      // The first must be positioned outside the loop
-      if (j!=0) rot.rotateZ(step);
-      G4double z_pos = -lat_dimension_cell_/2. + (j + 1./2.) * quad_pitch_;
-      G4ThreeVector position(0., radius, z_pos);
-      copy_no = copy_no + 1;
-      G4String vol_name = "QUAD_" + std::to_string(copy_no);
-      new G4PVPlacement(G4Transform3D(rot, position), quad_logic,
-                        vol_name, active_logic_, false, copy_no, true);
-
-      for (G4int i=2; i<=n_quad_ext; ++i) {
-        G4double angle = (i-1)*step;
-        rot.rotateZ(step);
-        position.setX(-radius*sin(angle));
-        position.setY(radius*cos(angle));
-        copy_no = copy_no + 1;
-        vol_name = "QUAD_" + std::to_string(copy_no);
-        new G4PVPlacement(G4Transform3D(rot, position), quad_logic,
-                          vol_name, active_logic_, false, copy_no, true);
-      }
-    }
-    
-    
-  }
 
  void FullRingInfinity::BuildPhantom()
   {
