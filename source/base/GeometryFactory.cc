@@ -38,9 +38,10 @@ GeometryFactory::~GeometryFactory()
 #include "NextNewOpticalGeometry.h"
 #include "NextNew.h"
 #include "MagBox.h"
-#include "FullRing.h"
+#include "FullRingInfinity.h"
 #include "Petit.h"
 #include "PetitModule.h"
+#include "PetaloTrap.h"
 #include "PMT_QE_setup.h"
 #include "Lab_vertices.h"
 #include "Lab.h"
@@ -65,11 +66,11 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
 
   else if (_name == "PMT_QE_SETUP") p = new PMT_QE_setup();
 
-  else if (_name == "FULLRING") p = new FullRing();
+  else if (_name == "FULLRING") p = new FullRingInfinity();
   
   else if (_name == "PETIT") p = new Petit();
     
-  else if (_name == "PETIT_MODULE") p = new PetitModule();
+  else if (_name == "TRAP") p = new PetaloTrap();
 
   else if (_name == "VERTICES") p = new Lab_vertices();
 

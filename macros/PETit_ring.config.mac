@@ -1,0 +1,32 @@
+
+### GEOMETRY
+
+/Geometry/FullRingInfinity/depth 5. cm
+/Geometry/FullRingInfinity/pitch 4. mm
+/Geometry/FullRingInfinity/sipm_rows 16
+/Geometry/SiPMpet/efficiency 0.2
+/Geometry/SiPMpet/visibility true
+/Geometry/SiPMpet/time_binning 15. picosecond
+
+### GENERATOR
+/Generator/Back2back/region CENTER
+
+### PHYSICS
+/PhysicsList/Nexus/clustering          false
+/PhysicsList/Nexus/drift               false
+/PhysicsList/Nexus/electroluminescence false
+/PhysicsList/Nexus/offScintillation false
+/PhysicsList/Nexus/offCherenkov false
+
+
+### VERBOSITIES
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+/nexus/random_seed 132313
+
+### OUTPUT FILE
+/nexus/persistency/start_id 10
+/nexus/persistency/hdf5 true
+/nexus/persistency/outputFile full_ring_5cm.next
