@@ -42,7 +42,7 @@ namespace nexus {
     G4double sipm_pitch_;
     G4int n_cells_; ///< number of virtual cells of ~ 5 cm of side I want to fit in the ring
     G4int lin_n_sipm_per_cell_; ///< linear number of sipms in a cell (the side, not the area)
-    G4int lin_n_quad_per_cell_; ///< linear number of quads in a cell (the side, not the area)
+    G4int instr_faces_; ///< number of instrumented faces
     G4double kapton_thickn_;
     G4double depth_;
 
