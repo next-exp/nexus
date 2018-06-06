@@ -38,11 +38,10 @@ namespace nexus {
     // Detector dimensions
     lat_dimension_cell_(48.*mm), // 52.*mm for quads
     sipm_pitch_(4.*mm),
-    //n_cells_(12),
     lin_n_sipm_per_cell_(16),
-    lin_n_quad_per_cell_(8),
-    internal_radius_(10.*cm),
+    instr_faces_(2),
     kapton_thickn_(0.3*mm),
+    internal_radius_(10.*cm),
     depth_(5.*cm),
     cryo_width_(12.*cm),
     cryo_thickn_(1.*mm),
@@ -64,6 +63,7 @@ namespace nexus {
     pitch_cmd.SetRange("pitch>0.");
 
     msg_->DeclareProperty("sipm_rows", lin_n_sipm_per_cell_, "Number of SiPM rows");
+    msg_->DeclareProperty("instrumented_faces", instr_faces_, "Number of instrumented faces");
 
     sipm_ = new SiPMpetFBK();
    
@@ -184,6 +184,8 @@ namespace nexus {
     db_opsur->SetSigmaAlpha(0.1);
     db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::ReflectantSurface(0.));
     new G4LogicalSkinSurface("BORDER", kapton_lat_logic, db_opsur);
+    new G4LogicalSkinSurface("BORDER", kapton_int_logic, db_opsur);
+    new G4LogicalSkinSurface("BORDER", kapton_ext_logic, db_opsur);
 
     // G4cout << (external_radius_  - kapton_thickn_) / cm << G4endl;
 
@@ -207,7 +209,9 @@ namespace nexus {
     //G4double sipm_pitch = sipm_dim.x() + 1. * mm;
 
     G4int n_sipm_int = 2*pi*internal_radius_/sipm_pitch_;
-    G4cout << "Number of sipms in internal: " <<  n_sipm_int *  lin_n_sipm_per_cell_<< G4endl;
+    if (instr_faces_ == 2) {
+      G4cout << "Number of sipms in internal: " <<  n_sipm_int *  lin_n_sipm_per_cell_<< G4endl;
+    }
     G4double step = 2.*pi/n_sipm_int;
     G4double radius = internal_radius_ + sipm_dim.z()/2.;
 
@@ -222,8 +226,10 @@ namespace nexus {
       G4ThreeVector position(0., radius, z_dimension);
       copy_no += 1;
       G4String vol_name = "SIPM_" + std::to_string(copy_no);
-      new G4PVPlacement(G4Transform3D(rot, position), sipm_logic,
-                        vol_name, active_logic_, false, copy_no, false);
+      if (instr_faces_ == 2) {
+        new G4PVPlacement(G4Transform3D(rot, position), sipm_logic,
+                          vol_name, active_logic_, false, copy_no, false);
+      }
 
       for (G4int i=2; i<=n_sipm_int; ++i) {
         G4double angle = (i-1)*step;
@@ -232,8 +238,10 @@ namespace nexus {
         position.setY(radius*cos(angle));
         copy_no += 1;
         vol_name = "SIPM_" + std::to_string(copy_no);
-        new G4PVPlacement(G4Transform3D(rot, position), sipm_logic,
-                          vol_name, active_logic_, false, copy_no, false);
+        if (instr_faces_ == 2) {
+          new G4PVPlacement(G4Transform3D(rot, position), sipm_logic,
+                            vol_name, active_logic_, false, copy_no, false);
+        }
       }
     }
 
