@@ -195,6 +195,16 @@ namespace nexus {
     _front_cap_gen = new CylinderPointSampler(front_body_irad, _window_thickness+_photocathode_thickness, 0., 0.,
 					      G4ThreeVector (0., 0., _front_body_length/2. - _window_thickness/2. - _photocathode_thickness/2.));
 
+    // Surfaces
+    _front_surf_gen = new CylinderPointSampler(_front_body_diam/2., _front_body_length, 0., 0.,
+					       G4ThreeVector (0., 0., 0.));
+    _back_front_surf_gen = new CylinderPointSampler(_rear_body_diam/2., 0.1 * micrometer, (_front_body_diam - _rear_body_diam)/2., 0.,
+                                                    G4ThreeVector (0., 0., -_front_body_length/2. - 0.05 * micrometer));
+    _rear_surf_gen = new CylinderPointSampler(_rear_body_diam/2., _rear_body_length, 0., 0.,
+                                              G4ThreeVector (0., 0., - _front_body_length/2. - _rear_body_length/2.));
+    _rear_cap_surf_gen = new CylinderPointSampler(0., 0.1 * micrometer, _rear_body_diam/2., 0.,
+					       G4ThreeVector (0., 0., - _front_body_length/2. - _rear_body_length - 0.05 * micrometer));
+
 
 
     // Getting the enclosure body volume over total
@@ -202,9 +212,9 @@ namespace nexus {
     G4double medium_body_vol = _body_thickness * pi * (front_body_irad*front_body_irad - (_rear_body_diam/2.)*(_rear_body_diam/2.));
     G4double rear_body_vol   = (_rear_body_length+_body_thickness) * pi * ((_rear_body_diam/2.)*(_rear_body_diam/2.) - rear_body_irad*rear_body_irad);
     G4double rear_cap_vol    = _body_thickness * pi * rear_body_irad*rear_body_irad;   
-    G4double front_cap_vol    = (_window_thickness + _photocathode_thickness) * pi * front_body_irad*front_body_irad;
+    G4double front_cap_vol   = (_window_thickness + _photocathode_thickness) * pi * front_body_irad*front_body_irad;
     
-    G4double total_body_vol       = front_body_vol + medium_body_vol + rear_body_vol + rear_cap_vol; //without window
+    G4double total_body_vol  = front_body_vol + medium_body_vol + rear_body_vol + rear_cap_vol; //without window
     G4double total_vol       = front_body_vol + medium_body_vol + rear_body_vol + rear_cap_vol + front_cap_vol;
     _front_body_perc  = front_body_vol / total_body_vol;
     _fr_med_body_perc = (front_body_vol + medium_body_vol) / total_body_vol;
@@ -214,6 +224,17 @@ namespace nexus {
     _fr_med_perc = (front_body_vol + medium_body_vol) / total_vol;
     _fr_med_re_perc = (front_body_vol + medium_body_vol + rear_body_vol) / total_vol;
     _fr_med_re_cap_perc = (front_body_vol + medium_body_vol + rear_body_vol+ rear_cap_vol) / total_vol;
+
+    G4double front_body_surf = 2. * pi * (_front_body_diam/2.) * _front_body_length;
+    G4double back_front_surf = pi * ((_front_body_diam/2. * _front_body_diam/2.) - (_rear_body_diam/2. * _rear_body_diam/2.));
+    G4double rear_body_surf = 2. * pi * (_rear_body_diam/2.) * _rear_body_length;
+    G4double rear_cap_surf = pi * (_rear_body_diam/2. * _rear_body_diam/2.);
+
+    G4double total_surf = front_body_surf + back_front_surf + rear_body_surf + rear_cap_surf;
+    _front_surf_perc  = front_body_surf / total_surf;
+    _back_front_surf_perc = back_front_surf / total_surf;
+    _rear_surf_perc = rear_body_surf / total_surf;
+    _rear_cap_surf_perc = rear_cap_surf / total_surf;
   }  
   
 
@@ -259,6 +280,18 @@ namespace nexus {
         vertex = _rear_cap_gen->GenerateVertex("INSIDE");
       else
         vertex = _front_cap_gen->GenerateVertex("INSIDE");
+    }
+
+    if (region == "PMT_SURF") {
+      G4double rand1 = G4UniformRand();
+      if (rand1 < _front_surf_perc)
+        vertex = _front_surf_gen->GenerateVertex("BODY_SURF");
+      else if (rand1 < _back_front_surf_perc)
+        vertex = _back_front_surf_gen->GenerateVertex("WHOLE_VOL");
+      else if (rand1 < _rear_surf_perc)
+        vertex = _rear_surf_gen->GenerateVertex("BODY_SURF");
+      else
+        vertex = _rear_cap_surf_gen->GenerateVertex("WHOLE_VOL");
     }
 
     return vertex;

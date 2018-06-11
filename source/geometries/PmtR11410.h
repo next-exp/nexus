@@ -60,9 +60,14 @@ namespace nexus {
     CylinderPointSampler* _rear_body_gen;
     CylinderPointSampler* _rear_cap_gen;
     CylinderPointSampler* _front_cap_gen;
+    CylinderPointSampler* _front_surf_gen;
+    CylinderPointSampler* _back_front_surf_gen;
+    CylinderPointSampler* _rear_surf_gen;
+    CylinderPointSampler* _rear_cap_surf_gen;
 
     G4double _front_body_perc, _fr_med_body_perc, _fr_med_re_body_perc;
     G4double _front_perc, _fr_med_perc, _fr_med_re_perc, _fr_med_re_cap_perc;
+    G4double _front_surf_perc, _back_front_surf_perc, _rear_surf_perc, _rear_cap_surf_perc;
 
     G4bool _visibility;
     G4int _sd_depth;

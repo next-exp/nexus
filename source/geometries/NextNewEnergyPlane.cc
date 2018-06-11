@@ -273,14 +273,27 @@ namespace nexus {
       G4double rand = _num_PMTs * G4UniformRand();
       G4ThreeVector enclosure_pos = _pmt_positions[int(rand)];
       vertex = ini_vertex + enclosure_pos;
-
       vertex.setZ(vertex.z() + _enclosure_z_pos);
       // std::cout<<"vertx z energy plane  "<< vertex.z()<<std::endl;  
       // std::cout<<"vertx x energy plane  "<< vertex.x()<<std::endl;  
       // std::cout<<"vertx y energy plane  "<< vertex.y()<<std::endl;  
     }
-   
     else if (region== "PMT_BODY"){
+      G4ThreeVector ini_vertex = _enclosure->GenerateVertex(region);
+      G4double rand = _num_PMTs * G4UniformRand();
+      G4ThreeVector pmt_pos = _pmt_positions[int(rand)];
+      vertex = ini_vertex + pmt_pos;
+      vertex.setZ(vertex.z() + _enclosure_z_pos);
+    }
+    else if (region== "INT_ENCLOSURE_SURF"){
+      G4ThreeVector ini_vertex = _enclosure->GenerateVertex(region);
+      G4double rand = _num_PMTs * G4UniformRand();
+      G4ThreeVector enclosure_pos = _pmt_positions[int(rand)];
+      vertex = ini_vertex + enclosure_pos;
+      vertex.setZ(vertex.z() + _enclosure_z_pos);
+    }
+
+    else if (region== "PMT_SURF"){
       G4ThreeVector ini_vertex = _enclosure->GenerateVertex(region);
       G4double rand = _num_PMTs * G4UniformRand();
       G4ThreeVector pmt_pos = _pmt_positions[int(rand)];
@@ -289,7 +302,7 @@ namespace nexus {
     }
 
     else {
-      G4Exception("[NextNewCuCastle]", "GenerateVertex()", FatalException,
+      G4Exception("[NextNewEnergyPlane]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");     
     } 
    

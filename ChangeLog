@@ -6,6 +6,9 @@ tag p5_00_02 - 30 May 2018
  	- Full ring implemented.
 	- Number of rows and pitch of SiPMs made configurable.
 
+tag v5_03_03 - 16 May 2018
+	- Add vertex generators on PMT surface and internal enclosure surface.
+
 tag v5_03_02 - 23 Apr 2018
 	- Fix types to be able to store larger numbers.
 

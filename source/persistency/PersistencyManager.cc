@@ -66,9 +66,9 @@ PersistencyManager::PersistencyManager(G4String historyFile_init, G4String histo
 
 PersistencyManager::~PersistencyManager()
 {
-  delete _writer;
   delete _msg;
   if (_hdf5dump) delete _h5writer;
+  else delete _writer;
 }
 
 
@@ -92,24 +92,20 @@ void PersistencyManager::Initialize(G4String historyFile_init, G4String historyF
 
 void PersistencyManager::OpenFile(G4String filename)
 {
-  // If the output file was not set yet, do so
-  if (!_writer) {
-    _writer = new gate::RootWriter();
-    //_ready = (G4bool) _writer->Open(filename.data(), "RECREATE");
-    _writer->Open(filename.data(), "RECREATE");
-    //if (!_ready)
-    //  G4Exception("OpenFile()", "[PersistencyManager]", 
-    //    FatalException, "The path for the output file does not exist.");
-  }
-  else {
-    G4Exception("OpenFile()", "[PersistencyManager]", 
-      JustWarning, "An output file was previously opened.");
-  }
-
   if (_hdf5dump) {
     _h5writer = new HDF5Writer();
     G4String hdf5file = filename + ".h5";
     _h5writer->Open(hdf5file);
+    return;
+  }
+
+  // If the output file was not set yet, do so
+  if (!_writer) {
+    _writer = new gate::RootWriter();
+    _writer->Open(filename.data(), "RECREATE");
+  } else {
+    G4Exception("OpenFile()", "[PersistencyManager]", 
+      JustWarning, "An output file was previously opened.");
   }
 }
 
@@ -117,10 +113,14 @@ void PersistencyManager::OpenFile(G4String filename)
 
 void PersistencyManager::CloseFile()
 {
-  if (!_writer || !_writer->IsOpen()) return;
+  if (_hdf5dump) {
+    _h5writer->Close();
+    return;
+  }
 
+  if (!_writer || !_writer->IsOpen()) return;
   _writer->Close();
-  if (_hdf5dump) _h5writer->Close();
+
 }
 
 
@@ -167,10 +167,11 @@ G4bool PersistencyManager::Store(const G4Event* event)
     //Save relationships among tables
     _h5writer->WriteEventExtentInfo(_nevt, _h5writer->GetSnsDataIndex(), _h5writer->GetSnsTofIndex(),
                                     _h5writer->GetHitIndex(), _h5writer->GetParticleIndex());
+  } else {
+    // Add event to the tree
+    _writer->Write(ievt);
   }
 
-  // Add event to the tree
-  _writer->Write(ievt);
   _nevt++;
 
   TrajectoryMap::Clear();
@@ -498,12 +499,13 @@ G4bool PersistencyManager::Store(const G4Run*)
   SaveConfigurationInfo(_historyFile_init, grun);
   SaveConfigurationInfo(_historyFile_conf, grun);
 
-  std::stringstream ss;
-  ss << num_events;
-  
-  grun.store("num_events", ss.str());
-  grun.SetNumEvents((int)_saved_evts);
-  _writer->WriteRunInfo(grun);
+  if (!_hdf5dump) {
+    std::stringstream ss;
+    ss << num_events;
+    grun.store("num_events", ss.str());
+    grun.SetNumEvents((int)_saved_evts);
+    _writer->WriteRunInfo(grun);
+  }
 
   return true;
 }
@@ -518,9 +520,10 @@ void PersistencyManager::SaveConfigurationInfo(G4String file_name, gate::Run& gr
     std::getline(history, value);
 
     if (key != "") {
-      grun.fstore(key,value);
       if (_hdf5dump) {
         _h5writer->WriteRunInfo(key.c_str(), value.c_str());
+      } else {
+        grun.fstore(key,value);
       }
     }
 
