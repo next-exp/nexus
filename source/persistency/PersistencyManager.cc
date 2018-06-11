@@ -101,11 +101,7 @@ void PersistencyManager::OpenFile(G4String filename)
   // If the output file was not set yet, do so
   if (!_writer) {
     _writer = new gate::RootWriter();
-    //_ready = (G4bool) _writer->Open(filename.data(), "RECREATE");
     _writer->Open(filename.data(), "RECREATE");
-    //if (!_ready)
-    //  G4Exception("OpenFile()", "[PersistencyManager]", 
-    //    FatalException, "The path for the output file does not exist.");
   } else {
     G4Exception("OpenFile()", "[PersistencyManager]", 
       JustWarning, "An output file was previously opened.");
