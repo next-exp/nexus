@@ -75,7 +75,8 @@ namespace nexus {
     // INNER ELEMENTS regions
    if ( (region == "CARRIER_PLATE") || (region == "ENCLOSURE_BODY") ||
 	      (region == "ENCLOSURE_WINDOW") || (region=="OPTICAL_PAD") || 
-	      (region == "PMT_BODY")||(region=="PMT_BASE") ) {
+	      (region == "PMT_BODY")||(region=="PMT_BASE") ||
+              (region == "INT_ENCLOSURE_SURF") || (region == "PMT_SURF")) {
       vertex = _energy_plane->GenerateVertex(region);
     }
     else if ( (region == "DRIFT_TUBE") ||
