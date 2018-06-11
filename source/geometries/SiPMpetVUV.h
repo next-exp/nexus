@@ -49,7 +49,9 @@ namespace nexus {
     G4double _eff;
 
      // Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
+    G4GenericMessenger* _msg;
+
+    G4double _time_binning;
 
   };
 
