@@ -9,6 +9,7 @@
 
 #include "SiPMpetTPB.h"
 #include "PmtSD.h"
+#include "ToFSD.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
@@ -33,8 +34,11 @@ namespace nexus {
   using namespace CLHEP;
   
   SiPMpetTPB::SiPMpetTPB(): BaseGeometry(),
-			    _visibility(0), _refr_index(1.), _phys(1)
-
+			    _visibility(0),
+                            _refr_index(1.),
+                            _phys(1),
+                            _decay_time(2.2*nanosecond),
+                            _time_binning(1.*microsecond)
   {
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
@@ -49,6 +53,12 @@ namespace nexus {
     decay_time_cmd.SetUnitCategory("Decay time of TPB");
     decay_time_cmd.SetParameterName("decay_time", false);
     decay_time_cmd.SetRange("decay_time>0.");
+
+    G4GenericMessenger::Command& time_cmd =
+      _msg->DeclareProperty("time_binning", _time_binning, "Time binning for the sensor");
+    time_cmd.SetUnitCategory("Time");
+    time_cmd.SetParameterName("time_binning", false);
+    time_cmd.SetRange("time_binning>0.");
   }
   
   
@@ -220,10 +230,11 @@ namespace nexus {
     G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
     
     if (!sdmgr->FindSensitiveDetector(sdname, false)) {
-      PmtSD* sipmsd = new PmtSD(sdname);
+      //     PmtSD* sipmsd = new PmtSD(sdname);
+      ToFSD* sipmsd = new ToFSD(sdname);
       sipmsd->SetDetectorVolumeDepth(0);
       sipmsd->SetDetectorNamingOrder(1000.);
-      sipmsd->SetTimeBinning(25.*picosecond);
+      sipmsd->SetTimeBinning(_time_binning);
       //    sipmsd->SetMotherVolumeDepth(1);
       //      sipmsd->SetGrandMotherVolumeDepth(3);
       sipmsd->SetMotherVolumeDepth(2);

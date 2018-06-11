@@ -43,7 +43,9 @@ namespace nexus {
     G4bool _visibility;
 
      // Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
+    G4GenericMessenger* _msg;
+
+    G4double _time_binning;
 
 
 

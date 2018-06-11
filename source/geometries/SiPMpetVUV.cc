@@ -9,6 +9,7 @@
 
 #include "SiPMpetVUV.h"
 #include "PmtSD.h"
+#include "ToFSD.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
@@ -35,7 +36,8 @@ namespace nexus {
   SiPMpetVUV::SiPMpetVUV(): BaseGeometry(),
 			    _visibility(0),
 			    _refr_index(1),
-			    _eff(1.)
+			    _eff(1.),
+                            _time_binning(1.*microsecond)
 
   {
     /// Messenger
@@ -43,6 +45,12 @@ namespace nexus {
     _msg->DeclareProperty("visibility", _visibility, "SiPMpet Visibility");
     _msg->DeclareProperty("refr_index", _refr_index, "Refraction index for epoxy");
     _msg->DeclareProperty("efficiency", _eff, "Efficiency of SiPM");
+
+    G4GenericMessenger::Command& time_cmd =
+      _msg->DeclareProperty("time_binning", _time_binning, "Time binning for the sensor");
+    time_cmd.SetUnitCategory("Time");
+    time_cmd.SetParameterName("time_binning", false);
+    time_cmd.SetRange("time_binning>0.");
   }
   
   SiPMpetVUV::~SiPMpetVUV()
