@@ -1,3 +1,6 @@
+tag v5_03_04 - 12 June 2018
+	- Saving hdf5 or GATE files become alternative.
+
 tag v5_03_03 - 16 May 2018
 	- Add vertex generators on PMT surface and internal enclosure surface.
 
