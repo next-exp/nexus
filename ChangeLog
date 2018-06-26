@@ -1,3 +1,7 @@
+tag v5_03_05 - 26 June 2018
+	- New volume added between the tracking plane endcap and the
+	shielding, to account for radioactive materials in the spaceship.
+
 tag v5_03_04 - 12 June 2018
 	- Saving hdf5 or GATE files become alternative.
 

@@ -810,6 +810,11 @@ void NextNewVessel::Construct()
     return _vessel_in_diam/2. + _vessel_thickness;
   }
 
+   G4double NextNewVessel::GetLength() const
+  {
+    return _vessel_tube_length;
+  }
+
   G4ThreeVector NextNewVessel::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);
