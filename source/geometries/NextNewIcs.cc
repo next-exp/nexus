@@ -154,14 +154,13 @@ namespace nexus {
 					   G4ThreeVector(0.,0.,-_body_length/2.+_tracking_tread_length/2.) );
 		 
     // Calculating some probs
-    // G4double body_vol = 
-    //   (_body_length-_tracking_tread_length)*pi*
-    //   ((_body_out_diam/2.)*(_body_out_diam/2.)-(_body_out_diam/2.-_body_thickness)*(_body_out_diam/2. - _body_thickness));
-    // G4double tread_vol = 
-    //   (_tracking_tread_length)*pi*((_body_out_diam/2.)*(_body_out_diam/2.)-(_tracking_tread_diam/2.)*( _tracking_tread_diam/2.));
-    // G4double total_vol = body_vol + tread_vol;
-    // _body_perc = body_vol/total_vol;
-    //    std::cout<<"ICS VOLUME:\t"<<total_vol<<std::endl;
+    G4double body_vol =
+      (_body_length-_tracking_tread_length)*pi*
+      ((_body_inner_diam/2.+_body_thickness)*(_body_inner_diam/2.+_body_thickness)-(_body_inner_diam/2.)*(_body_inner_diam/2.));
+    G4double tread_vol =
+      (_tracking_tread_length)*pi*((_body_inner_diam/2.+_body_thickness)*(_body_inner_diam/2.+_body_thickness)-(_tracking_tread_diam/2.)*( _tracking_tread_diam/2.));
+    G4double total_vol = body_vol + tread_vol;
+    _body_perc = body_vol/total_vol;
   }
 
   NextNewIcs::~NextNewIcs()
