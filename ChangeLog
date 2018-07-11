@@ -1,5 +1,7 @@
 tag v5_03_07 - 11 Jul 2018
         - Bug fixed for the generation of the ICS volume.
+	- Position of dice board connectors (DB_PLUG volume) moved far
+	away from the copper.
 
 tag v5_03_06 - 5 July 2018
 	- Fix bug for generation in the HDPE_TUBE volume.
