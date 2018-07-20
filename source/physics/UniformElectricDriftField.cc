@@ -12,6 +12,7 @@
 
 #include <Randomize.hh>
 
+#include <math.h>
 #include "CLHEP/Units/SystemOfUnits.h"
 
 
@@ -47,13 +48,11 @@ namespace nexus {
   {
     // If the origin is not between anode and cathode,
     // the charge carrier, obviously, doesn't move.
-    //G4cout << "Pos = " << xyzt[_axis] << G4endl;
     if (!CheckCoordinate(xyzt[_axis]))
       return 0.;
 
     // Calculate drift time and distance to anode
-    //G4double drift_length = _anode_pos - xyzt[_axis];
-    G4double drift_length = xyzt[_axis] - _anode_pos;
+    G4double drift_length = fabs(xyzt[_axis] - _anode_pos);
     G4double drift_time = drift_length / _drift_velocity;
     
     // Calculate longitudinal and transversal deviation due to diffusion
