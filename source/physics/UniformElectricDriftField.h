@@ -92,7 +92,6 @@ namespace nexus {
 
     SegmentPointSampler* _rnd;
 
-    static const G4double _secmargin;
   };
 
   

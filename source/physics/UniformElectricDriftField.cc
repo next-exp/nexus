@@ -19,9 +19,6 @@
 namespace nexus {
   
   using namespace CLHEP;
-
-  const G4double UniformElectricDriftField::_secmargin = -1. * micrometer;
-
   
 
   UniformElectricDriftField::UniformElectricDriftField
@@ -51,6 +48,10 @@ namespace nexus {
     if (!CheckCoordinate(xyzt[_axis]))
       return 0.;
 
+    // Set the offset according to relative anode-cathode pos
+    G4double secmargin = -1. * micrometer;
+    if (_anode_pos > _cathode_pos) secmargin = -secmargin;
+
     // Calculate drift time and distance to anode
     G4double drift_length = fabs(xyzt[_axis] - _anode_pos);
     G4double drift_time = drift_length / _drift_velocity;
@@ -68,7 +69,7 @@ namespace nexus {
         position[i] = G4RandGauss::shoot(xyzt[i], transv_sigma);
       } 
       else { // Longitudinal coordinate
-        position[i] = _anode_pos + _secmargin;
+        position[i] = _anode_pos + secmargin;
         G4double deltat = G4RandGauss::shoot(0, time_sigma);
         time = xyzt.t() + drift_time + deltat;
         if (time < 0.) time = xyzt.t() + drift_time;
