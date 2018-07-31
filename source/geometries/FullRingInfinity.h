@@ -46,7 +46,7 @@ namespace nexus {
     G4double kapton_thickn_;
     G4double depth_;
 
-    G4double internal_radius_, external_radius_;
+    G4double inner_radius_, external_radius_;
     G4double cryo_width_, cryo_thickn_;
 
     G4double phantom_diam_; 

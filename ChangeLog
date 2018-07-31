@@ -1,3 +1,6 @@
+tag p5_00_04 - 31 July 2018
+ 	- Inner radius added as configuration parameter.
+
 tag p5_00_03 - 6 June 2018
  	- Possibility of having one or two instrumented faces added, via
 	configuration parameter.
