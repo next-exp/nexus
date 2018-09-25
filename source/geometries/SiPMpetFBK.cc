@@ -28,7 +28,8 @@ namespace nexus {
 			    visibility_(0),
 			    refr_index_(1.54),
                             eff_(1.),
-                            time_binning_(200.*nanosecond)
+                            time_binning_(200.*nanosecond),
+                            sipm_size_(3.*mm)
 
   {
     /// Messenger
@@ -42,6 +43,12 @@ namespace nexus {
     time_cmd.SetUnitCategory("Time");
     time_cmd.SetParameterName("time_binning", false);
     time_cmd.SetRange("time_binning>0.");
+
+    G4GenericMessenger::Command& size_cmd =
+      msg_->DeclareProperty("size", sipm_size_, "Size of SiPMs");
+    size_cmd.SetUnitCategory("Length");
+    size_cmd.SetParameterName("size", false);
+    size_cmd.SetRange("size>0.");
   }
   
   SiPMpetFBK::~SiPMpetFBK()
@@ -54,8 +61,8 @@ namespace nexus {
     // PACKAGE ///////////////////////////////////////////////////////
     G4double offset = 0.1 * mm;
     
-    G4double sipm_x = 3. * mm;
-    G4double sipm_y = 3. * mm;
+    G4double sipm_x = sipm_size_;
+    G4double sipm_y = sipm_size_;
     G4double sipm_z = 1 * mm; 
     
     SetDimensions(G4ThreeVector(sipm_x, sipm_y, sipm_z));   
