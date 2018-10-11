@@ -30,6 +30,8 @@ namespace nexus {class NaIScintillator;}
 namespace nexus {class SurroundingAir;}
 namespace nexus {class LeadCollimator;}
 namespace nexus {class DiskSource;}
+namespace nexus {class ExtraVessel;}
+
 
 class G4LogicalVolume;
 class G4GenericMessenger;
@@ -74,6 +76,7 @@ namespace nexus {
     NaIScintillator* _naI;
     SurroundingAir* _air;
     LeadCollimator* _coll;
+    ExtraVessel* _extra;
     
     BoxPointSampler* _lab_gen; ///< Vertex generator
     CylinderPointSampler* _lat_source_gen;
@@ -111,6 +114,9 @@ namespace nexus {
     G4String _source_mat; ///< Kind of external disk-like calibration source (Na/Th so far)
     DiskSource* _source;
     G4double _source_dist_from_anode;
+
+    G4RotationMatrix* _extra_rot; ///< rotation of the external elements outside the vessel, behind the tracking plane
+    G4ThreeVector _extra_pos; ///< position of the external elements outside the vessel, behind the tracking plane
     
   };
   

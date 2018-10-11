@@ -97,6 +97,9 @@ namespace nexus {
     //LYSO
     static G4Material* LYSO();
 
+    // FR4
+    static G4Material* FR4();
+
     // Fake dielectric (to be deprecated)
     static G4Material* FakeDielectric(G4Material*, G4String);
 

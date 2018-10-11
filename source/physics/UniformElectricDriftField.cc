@@ -12,15 +12,13 @@
 
 #include <Randomize.hh>
 
+#include <math.h>
 #include "CLHEP/Units/SystemOfUnits.h"
 
 
 namespace nexus {
   
   using namespace CLHEP;
-
-  const G4double UniformElectricDriftField::_secmargin = -1. * micrometer;
-
   
 
   UniformElectricDriftField::UniformElectricDriftField
@@ -47,13 +45,15 @@ namespace nexus {
   {
     // If the origin is not between anode and cathode,
     // the charge carrier, obviously, doesn't move.
-    //G4cout << "Pos = " << xyzt[_axis] << G4endl;
     if (!CheckCoordinate(xyzt[_axis]))
       return 0.;
 
+    // Set the offset according to relative anode-cathode pos
+    G4double secmargin = -1. * micrometer;
+    if (_anode_pos > _cathode_pos) secmargin = -secmargin;
+
     // Calculate drift time and distance to anode
-    //G4double drift_length = _anode_pos - xyzt[_axis];
-    G4double drift_length = xyzt[_axis] - _anode_pos;
+    G4double drift_length = fabs(xyzt[_axis] - _anode_pos);
     G4double drift_time = drift_length / _drift_velocity;
     
     // Calculate longitudinal and transversal deviation due to diffusion
@@ -69,7 +69,7 @@ namespace nexus {
         position[i] = G4RandGauss::shoot(xyzt[i], transv_sigma);
       } 
       else { // Longitudinal coordinate
-        position[i] = _anode_pos + _secmargin;
+        position[i] = _anode_pos + secmargin;
         G4double deltat = G4RandGauss::shoot(0, time_sigma);
         time = xyzt.t() + drift_time + deltat;
         if (time < 0.) time = xyzt.t() + drift_time;

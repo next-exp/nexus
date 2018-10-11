@@ -565,6 +565,32 @@ G4Material* MaterialsList::LYSO()
   return mat;
 }
 
+G4Material* MaterialsList::FR4()
+{
+  // Material widely used for printed circuit boards
+
+  G4String name = "FR4";
+  G4Material* mat = G4Material::GetMaterial(name, false);
+
+  if (mat == 0) {
+
+    G4NistManager* nist = G4NistManager::Instance();
+    G4double density = 1.850*g/cm3;
+
+    mat = new G4Material(name, density, 3, kStateSolid);
+
+    G4Element* H = nist->FindOrBuildElement("H");
+    G4Element* C = nist->FindOrBuildElement("C");
+    G4Element* O = nist->FindOrBuildElement("O");
+
+    mat->AddElement(H, 12);
+    mat->AddElement(C, 18);
+    mat->AddElement(O,  3);
+  }
+
+  return mat;
+}
+
 
 G4Material* MaterialsList::CopyMaterial(G4Material* original, G4String newname)
 {

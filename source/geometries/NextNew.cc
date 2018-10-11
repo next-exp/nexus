@@ -31,6 +31,7 @@
 #include "LeadCollimator.h"
 #include "CollProtection.h"
 #include "CollSupport.h"
+#include "ExtraVessel.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -125,6 +126,8 @@ namespace nexus {
 
     _coll = new LeadCollimator();
 
+    _extra = new ExtraVessel();
+
   }
 
   NextNew::~NextNew()
@@ -211,6 +214,16 @@ namespace nexus {
     _ics->SetNozzlesZPosition( _vessel->GetLATNozzleZPosition(),_vessel->GetUPNozzleZPosition());
     _ics->SetELzCoord(_inner_elements->GetELzCoord());
     _ics->Construct();
+
+    //ELEMENTS BEHIND THE TRACKING PLANE, OUTSIDE THE VESSEL
+    _extra->Construct();
+    G4LogicalVolume* extra_logic = _extra->GetLogicalVolume();
+
+    _extra_rot = new G4RotationMatrix();
+    _extra_rot->rotateX(pi/2);
+    _extra_pos = G4ThreeVector(0., 15.*cm, _vessel->GetLength()/2. + 40.*cm);
+    new G4PVPlacement(G4Transform3D(*_extra_rot, _extra_pos), extra_logic,
+		      "EXTRA_VESSEL", _air_logic, false, 0, true);
 
     //COPPER CASTLE 
     // _cu_castle->SetLogicalVolume(_buffer_gas_logic);
@@ -436,7 +449,7 @@ namespace nexus {
     else if (region == "SOURCE_PORT_LATERAL_EXT") {
       vertex = _vessel->GetLatExtSourcePosition();
     }
-    // Extended sources with tha shape of a disk outside port
+    // Extended sources with the shape of a disk outside port
     else if (region == "SOURCE_PORT_LATERAL_DISK") {
       vertex =  _source_gen_lat->GenerateVertex("BODY_VOL");
     }
@@ -455,6 +468,13 @@ namespace nexus {
     else if (region == "PEDESTAL") {
       vertex = _pedestal->GenerateVertex(region);
     }
+    // EXTRA ELEMENTS
+    else if (region == "EXTRA_VESSEL") {
+      G4ThreeVector ini_vertex = _extra->GenerateVertex(region);
+      ini_vertex.rotate(pi/2., G4ThreeVector(1., 0., 0.));
+      vertex = ini_vertex + _extra_pos;
+    }
+
     //  //COPPER CASTLE
    // else if (region == "CU_CASTLE"){
    //   vertex = _cu_castle->GenerateVertex(region);
@@ -482,8 +502,9 @@ namespace nexus {
     //INNER ELEMENTS
     else if ( (region == "CENTER") ||
 	      (region == "CARRIER_PLATE") || (region == "ENCLOSURE_BODY") || (region == "ENCLOSURE_WINDOW") ||  
-	      (region == "OPTICAL_PAD") || (region == "PMT_BODY") || (region == "PMT_BASE") || (region == "INT_ENCLOSURE_SURF") ||
-	      (region == "PMT_SURF") || (region == "DRIFT_TUBE") || (region == "ANODE_QUARTZ")||	     
+	      (region == "OPTICAL_PAD") || (region == "PMT_BODY") || (region == "PMT_BASE") ||
+              (region == "INT_ENCLOSURE_SURF") || (region == "PMT_SURF") || (region == "DRIFT_TUBE") ||
+              (region == "ANODE_QUARTZ")|| (region == "HDPE_TUBE") ||
 	      (region == "ACTIVE") || (region == "EL_TABLE") || (region == "AD_HOC") || (region == "CATHODE")||
 	      (region == "SUPPORT_PLATE") || (region == "DICE_BOARD") || (region == "DB_PLUG") ){
       vertex = _inner_elements->GenerateVertex(region);
