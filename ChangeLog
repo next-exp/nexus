@@ -1,4 +1,4 @@
-tag p5_00_05 - 11 Oct 2018
+tag p5_00_06 - 11 Oct 2018
     - Reserve more space for configuration parameters in hdf5 file.
 	- Eliminate overlap checks.
 
@@ -10,7 +10,7 @@ tag p5_00_05 - 25 Sept 2018
 
 tag p5_00_04 - 31 July 2018
  	- Inner radius added as configuration parameter.
- 	
+
 tag v5_03_07 - 11 Jul 2018
         - Bug fixed for the generation of the ICS volume.
 	- Position of dice board connectors (DB_PLUG volume) moved far
