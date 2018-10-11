@@ -212,6 +212,7 @@ namespace nexus {
 
     G4LogicalVolume* sipm_logic = sipm_->GetLogicalVolume();
     G4ThreeVector sipm_dim = sipm_->GetDimensions();
+    G4cout << "SiPM size = " << sipm_dim << G4endl;
     //G4double sipm_pitch = sipm_dim.x() + 1. * mm;
 
     G4int n_sipm_int = 2*pi*inner_radius_/sipm_pitch_;
@@ -270,7 +271,7 @@ namespace nexus {
       copy_no = copy_no + 1;
       G4String vol_name = "SIPM_" + std::to_string(copy_no);
       new G4PVPlacement(G4Transform3D(rot, position), sipm_logic,
-                        vol_name, active_logic_, false, copy_no, true);
+                        vol_name, active_logic_, false, copy_no, false);
 
       for (G4int i=2; i<=n_sipm_ext; ++i) {
         G4double angle = (i-1)*step;
@@ -280,7 +281,7 @@ namespace nexus {
         copy_no = copy_no + 1;
         vol_name = "SIPM_" + std::to_string(copy_no);
         new G4PVPlacement(G4Transform3D(rot, position), sipm_logic,
-                          vol_name, active_logic_, false, copy_no, true);
+                          vol_name, active_logic_, false, copy_no, false);
       }
     }
 

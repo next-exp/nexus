@@ -41,7 +41,6 @@ namespace nexus {
     _support_plate_front_buffer_thickness (1. * cm),
     _support_plate_tread_diam (54.56 *cm), //sup_diam-2* 42.2mm from drawings
     _support_plate_tread_thickness (6. * cm), //sup_thik/2
-
     _tracking_plane_z_pos (284.1 *mm),
     //    _tracking_plane_z_pos (28.905 *cm),//_el_gap_z_pos (25.5 *cm) From drawings + _el_gap(1.4)/2 + _el_grid_thickness + _el_to_
     //    _dice_board_z_pos (282.25*mm), // its surface must be 2 mm away from the end of the anode plate --> pos_z_anode + anode_thickness/2. + 2.*mm = 284.1 *mm + half of DB thick
@@ -49,8 +48,9 @@ namespace nexus {
     _cable_hole_width (45 * mm),
     _cable_hole_high (8 * mm),
     _plug_x (40. *mm),
-    _plug_y (4. *mm), //two union conectores   
+    _plug_y (4. *mm), //two union connectors
     _plug_z (6. *mm),
+    _plug_distance_from_copper(21. * cm),
 
     // SiPMs per Dice Board
     _SiPM_rows (8),
@@ -145,7 +145,8 @@ namespace nexus {
     for (int i=0; i<_num_DBs; i++) {
       positn = _DB_positions[i];
       positn.setY(positn.y()- 10.*mm);
-      positn.setZ(_dice_board_z_pos + _support_plate_front_buffer_thickness + _support_plate_thickness);
+      positn.setZ(_dice_board_z_pos + _support_plate_front_buffer_thickness
+                  + _support_plate_thickness + _plug_distance_from_copper);
       new G4PVPlacement(0, positn, plug_logic,"DB_PLUG",
 			_mother_logic, false, i+1, false);
     }
@@ -176,7 +177,8 @@ namespace nexus {
     _support_buffer_gen  =
       new CylinderPointSampler(_support_plate_front_buffer_diam/2., _support_plate_front_buffer_thickness/2.,
 			       (_support_plate_tread_diam-_support_plate_front_buffer_diam)/2., 0., 
-			       G4ThreeVector(0., 0., support_plate_z_pos -_support_plate_thickness/2. +_support_plate_front_buffer_thickness/2.));
+			       G4ThreeVector(0., 0., support_plate_z_pos -_support_plate_thickness/2.
+                                             +_support_plate_front_buffer_thickness/2.));
     _plug_gen =
       new BoxPointSampler(_plug_x, _plug_y, _plug_z,0.,
 			  G4ThreeVector(0.,0.,0.),0);
@@ -249,7 +251,8 @@ namespace nexus {
       G4ThreeVector db_pos = _DB_positions[int(rand)];
       vertex = ini_vertex + db_pos;
       vertex.setY(vertex.y() - 10.*mm);
-      vertex.setZ(vertex.z() +_dice_board_z_pos + _support_plate_front_buffer_thickness + _support_plate_thickness);
+      vertex.setZ(vertex.z() +_dice_board_z_pos + _support_plate_front_buffer_thickness
+                  + _support_plate_thickness + _plug_distance_from_copper);
     }
     else {
       G4Exception("[NextNewTrackingPlane]", "GenerateVertex()", FatalException,

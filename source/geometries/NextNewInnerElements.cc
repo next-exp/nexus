@@ -79,7 +79,7 @@ namespace nexus {
               (region == "INT_ENCLOSURE_SURF") || (region == "PMT_SURF")) {
       vertex = _energy_plane->GenerateVertex(region);
     }
-    else if ( (region == "DRIFT_TUBE") ||
+   else if ( (region == "DRIFT_TUBE") || (region == "HDPE_TUBE") ||
 	      (region == "ANODE_QUARTZ") || (region== "CENTER") || (region == "CATHODE") || 
 	      (region == "ACTIVE") || (region== "EL_TABLE") || (region == "AD_HOC")) {
       vertex=_field_cage->GenerateVertex(region);

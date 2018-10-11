@@ -1,8 +1,30 @@
+tag p5_00_05 - 11 Oct 2018
+    - Reserve more space for configuration parameters in hdf5 file.
+	- Eliminate overlap checks.
+
+tag v5_03_08 - 11 Oct 2018
+    - Reserve more space for configuration parameters in hdf5 file.
+
 tag p5_00_05 - 25 Sept 2018
  	- SiPM size added as configuration parameter.
 
 tag p5_00_04 - 31 July 2018
  	- Inner radius added as configuration parameter.
+ 	
+tag v5_03_07 - 11 Jul 2018
+        - Bug fixed for the generation of the ICS volume.
+	- Position of dice board connectors (DB_PLUG volume) moved far
+	away from the copper.
+
+tag v5_03_06 - 5 July 2018
+	- Fix bug for generation in the HDPE_TUBE volume.
+
+tag v5_03_05 - 26 June 2018
+	- New volume added between the tracking plane endcap and the
+	shielding, to account for radioactive materials in the spaceship.
+
+tag v5_03_04 - 12 June 2018
+	- Saving hdf5 or GATE files become alternative.
 
 tag p5_00_03 - 6 June 2018
  	- Possibility of having one or two instrumented faces added, via

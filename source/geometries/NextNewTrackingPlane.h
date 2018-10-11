@@ -64,6 +64,7 @@ namespace nexus {
     //  G4double _el_gap_z_edge, _z_kdb_displ;////????????
     const G4double _cable_hole_width, _cable_hole_high;
     const G4double _plug_x,_plug_y,_plug_z;
+    const G4double _plug_distance_from_copper;
 
     const G4int _SiPM_rows, _SiPM_columns;
     const G4int _DB_columns, _num_DBs, _dice_side, _dice_gap;

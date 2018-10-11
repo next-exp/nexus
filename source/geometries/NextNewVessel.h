@@ -49,6 +49,7 @@ namespace nexus {
     G4ThreeVector GetAxialExtSourcePosition() const;
 
     G4double GetOuterRadius() const;
+    G4double GetLength() const;
 
     /// Builder
     void Construct();

@@ -2,13 +2,14 @@
 ### GEOMETRY
 
 /Geometry/FullRingInfinity/depth 3. cm
-/Geometry/FullRingInfinity/pitch 4. mm
+/Geometry/FullRingInfinity/pitch 5. mm
 /Geometry/FullRingInfinity/inner_radius 150. mm
 /Geometry/FullRingInfinity/sipm_rows 16
 /Geometry/FullRingInfinity/instrumented_faces 1
 /Geometry/SiPMpet/efficiency 0.2
 /Geometry/SiPMpet/visibility true
 /Geometry/SiPMpet/time_binning 1. microsecond
+/Geometry/SiPMpet/size 3. mm
 
 ### GENERATOR
 /Generator/Back2back/region CENTER
