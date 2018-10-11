@@ -1,3 +1,6 @@
+tag v5_03_08 - 11 Oct 2018
+        - Reserve more space for configuration parameters in hdf5 file.
+
 tag v5_03_07 - 11 Jul 2018
         - Bug fixed for the generation of the ICS volume.
 	- Position of dice board connectors (DB_PLUG volume) moved far

@@ -4,7 +4,7 @@
 #include <hdf5.h>
 #include <iostream>
 
-#define CONFLEN 100
+#define CONFLEN 300
 #define STRLEN 20
 
   typedef struct{
