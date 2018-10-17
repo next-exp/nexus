@@ -1,0 +1,16 @@
+### --------------------------------------------------------
+###  This init macro simulates bb0nu decays
+###  in the NEW detector geometry
+### --------------------------------------------------------
+
+/control/execute macros/physics/DefaultPhysicsList.mac
+
+/Geometry/RegisterGeometry NEXT_NEW
+
+/Generator/RegisterGenerator ECEC
+
+/Actions/RegisterTrackingAction DEFAULT
+/Actions/RegisterEventAction DEFAULT
+/Actions/RegisterRunAction DEFAULT
+
+/nexus/RegisterMacro macros/NEW_2nuECEC.config.mac

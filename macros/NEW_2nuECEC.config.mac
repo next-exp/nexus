@@ -1,0 +1,21 @@
+### --------------------------------------------------------
+###  This init macro simulates bb0nu decays
+###  in the NEW detector geometry
+### --------------------------------------------------------
+
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+/Generator/ECEC/region CENTER
+/Generator/ECEC/atomic_number 52
+/Generator/ECEC/shell K
+
+/Geometry/NextNew/pressure 10. bar
+/Geometry/NextNew/elfield false
+
+/control/execute macros/physics/IonizationElectron.mac
+
+/nexus/persistency/outputFile new_ecec_test.next
+
+/nexus/random_seed 542862
