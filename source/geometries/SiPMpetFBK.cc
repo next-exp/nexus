@@ -29,7 +29,9 @@ namespace nexus {
 			    refr_index_(1.54),
                             eff_(1.),
                             time_binning_(200.*nanosecond),
-                            sipm_size_(3.*mm)
+                            sipm_size_(3.*mm),
+			    mother_depth_(0),
+                            naming_order_(0)
 
   {
     /// Messenger
@@ -37,6 +39,9 @@ namespace nexus {
     msg_->DeclareProperty("visibility", visibility_, "SiPMpet Visibility");
     msg_->DeclareProperty("refr_index", refr_index_, "Refraction index for epoxy");
     msg_->DeclareProperty("efficiency", eff_, "Efficiency of SiPM");
+
+    msg_->DeclareProperty("mother_depth", mother_depth_, "Depth of sipm in its mother, being replicated");
+    msg_->DeclareProperty("naming_order", naming_order_, "To start numbering at different place than zero.");
     
     G4GenericMessenger::Command& time_cmd = 
       msg_->DeclareProperty("time_binning", time_binning_, "Time binning for the sensor");
@@ -63,7 +68,7 @@ namespace nexus {
     
     G4double sipm_x = sipm_size_;
     G4double sipm_y = sipm_size_;
-    G4double sipm_z = 1 * mm; 
+    G4double sipm_z = 0.6 * mm;
     
     SetDimensions(G4ThreeVector(sipm_x, sipm_y, sipm_z));   
 
@@ -133,7 +138,8 @@ namespace nexus {
     if (!sdmgr->FindSensitiveDetector(sdname, false)) {
       //PmtSD* sipmsd = new PmtSD(sdname);
       ToFSD* sipmsd = new ToFSD(sdname);
-      sipmsd->SetDetectorVolumeDepth(0);
+      sipmsd->SetDetectorNamingOrder(naming_order_);
+      sipmsd->SetMotherVolumeDepth(mother_depth_);
       sipmsd->SetTimeBinning(time_binning_);
       G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
       sipm_logic->SetSensitiveDetector(sipmsd);
