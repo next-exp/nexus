@@ -1,0 +1,30 @@
+
+### GEOMETRY
+
+/Geometry/FullRingTiles/depth 3. cm
+/Geometry/FullRingTiles/inner_radius 165. mm
+/Geometry/FullRingTiles/tile_rows 2
+/Geometry/FullRingTiles/instrumented_faces 1
+/Geometry/SiPMpet/efficiency 0.2
+/Geometry/SiPMpet/visibility true
+/Geometry/SiPMpet/mother_depth 2
+/Geometry/SiPMpet/naming_order 1000
+/Geometry/Tile/visibility true
+/Geometry/SiPMpet/time_binning 1. microsecond
+/Geometry/SiPMpet/size 3. mm
+
+### GENERATOR
+/Generator/Back2back/region CENTER
+
+
+### VERBOSITIES
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+/nexus/random_seed 132313
+
+### OUTPUT FILE
+/nexus/persistency/start_id 10
+/nexus/persistency/hdf5 true
+/nexus/persistency/outputFile full_ring_3cm.next
