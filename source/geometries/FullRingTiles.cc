@@ -42,8 +42,8 @@ namespace nexus {
     n_tile_rows_(2),
     instr_faces_(1),
     kapton_thickn_(0.3*mm),
-    inner_radius_(16*cm),
     depth_(3.*cm),
+    inner_radius_(165*cm),
     cryo_width_(12.*cm),
     cryo_thickn_(1.*mm),
     max_step_size_(1.*mm)
@@ -125,7 +125,7 @@ namespace nexus {
 		      "CRYOSTAT", lab_logic_, false, 0, true);
 
 
-    G4double ext_offset = 3. * mm;
+    G4double ext_offset = 4. * mm;
     G4Tubs* LXe_solid =
       new G4Tubs("LXE", inner_radius_ - kapton_thickn_, external_radius_ + ext_offset + kapton_thickn_,
                  (lat_dimension_cell_ + 2.*kapton_thickn_)/2., 0, twopi);
@@ -208,32 +208,54 @@ namespace nexus {
 
   void FullRingTiles::BuildSensors()
   {
-    G4int n_tiles_per_row = 2*pi*external_radius_/tile_dim_.x();
-    G4cout << "Number of SiPMs: " <<  n_tiles_per_row * n_tile_rows_ * 32 << G4endl;
-    G4double step = 2.*pi/n_tiles_per_row;
+    G4double batch_sep = 1. * mm;
+    G4double tile_sep = 0.050 * mm;
+    G4double block_size = 2 * tile_dim_.x() + tile_sep + batch_sep;
+    G4int n_batches_per_row = 2 * pi * external_radius_ / block_size;
+    G4cout << "Number of SiPMs: " <<  n_batches_per_row * 2 * n_tile_rows_ * 32 << G4endl;
+    G4double step = 2.*pi/n_batches_per_row;
 
-    G4double radius = external_radius_ + 2. * mm - tile_dim_.z()/2. ;
+    G4double radius = external_radius_ + tile_dim_.z()/2. ;
     
     G4RotationMatrix rot;
     rot.rotateX(pi/2.);
 
     G4int copy_no = 1;
+    //
     for (G4int j=0; j<n_tile_rows_; j++) {
       // The first must be positioned outside the loop
       if (j!=0) rot.rotateZ(step);
       G4double z_pos = -lat_dimension_cell_/2. + (j + 1./2.) * tile_dim_.y();
-      G4ThreeVector position(0., radius, z_pos);
+      G4double x_pos = tile_sep/2. + tile_dim_.x()/2;
+      G4double y_pos = radius;
+      G4ThreeVector position(x_pos, y_pos, z_pos);
       G4String vol_name = "TILE_" + std::to_string(copy_no);
       new G4PVPlacement(G4Transform3D(rot, position), tile_logic_,
      			vol_name, active_logic_, false, copy_no, true);
       copy_no += 1;
-      
-      for (G4int i=1; i<n_tiles_per_row; ++i) {
+      x_pos = - tile_sep/2. - tile_dim_.x()/2;
+      position.setX(x_pos);
+      vol_name = "TILE_" + std::to_string(copy_no);
+      new G4PVPlacement(G4Transform3D(rot, position), tile_logic_,
+      			vol_name, active_logic_, false, copy_no, true);
+      copy_no += 1;
+
+      for (G4int i=1; i<n_batches_per_row; ++i) {
          G4double angle = i*step;
          rot.rotateZ(step);
-         position.setX(-radius*sin(angle));
-         position.setY(radius*cos(angle));
-         G4String vol_name = "TILE_" + std::to_string(copy_no);
+	 x_pos = -radius*sin(angle) + (tile_dim_.x() + tile_sep)/2 * cos(angle);
+	 y_pos = radius*cos(angle) + (tile_dim_.x() + tile_sep)/2 * sin(angle);
+         position.setX(x_pos);
+         position.setY(y_pos);
+         vol_name = "TILE_" + std::to_string(copy_no);
+         new G4PVPlacement(G4Transform3D(rot, position), tile_logic_,
+                           vol_name, active_logic_, false, copy_no, true);
+	 copy_no += 1;
+	 x_pos = -radius*sin(angle) - (tile_dim_.x() + tile_sep)/2 * cos(angle);
+	 y_pos = radius*cos(angle) - (tile_dim_.x() + tile_sep)/2 * sin(angle);
+         position.setX(x_pos);
+         position.setY(y_pos);
+         vol_name = "TILE_" + std::to_string(copy_no);
          new G4PVPlacement(G4Transform3D(rot, position), tile_logic_,
                            vol_name, active_logic_, false, copy_no, true);
 	 copy_no += 1;
