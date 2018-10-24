@@ -8,8 +8,8 @@
 ///  Copyright (c) 2014 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXTNEW_CU_CASTLE__
-#define __NEXTNEW_CU_CASTLE__
+#ifndef __NEXTNEW_MINI_CASTLE__
+#define __NEXTNEW_MINI_CASTLE__
 
 #include "BaseGeometry.h"
 #include "BoxPointSampler.h"
@@ -21,14 +21,14 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class NextNewCuCastle: public BaseGeometry
+  class NextNewMiniCastle: public BaseGeometry
   {
   public:
     /// Constructor
-    NextNewCuCastle();
+    NextNewMiniCastle();
 
     /// Destructor
-    ~NextNewCuCastle();
+    ~NextNewMiniCastle();
 
     /// Sets the Logical Volume where Radon tube will be placed
     void SetLogicalVolume(G4LogicalVolume* mother_logic);
@@ -50,8 +50,8 @@ namespace nexus {
     G4bool _visibility;
 
     // Vertex generators
-    BoxPointSampler* _cu_box_gen;
-    BoxPointSampler*  _cu_external_surf_gen;   
+    BoxPointSampler* _mini_castle_box_gen;
+    BoxPointSampler* _mini_castle_external_surf_gen;
     // Geometry Navigator
     G4Navigator* _geom_navigator;
 
