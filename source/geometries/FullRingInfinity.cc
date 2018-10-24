@@ -41,8 +41,8 @@ namespace nexus {
     lin_n_sipm_per_cell_(16),
     instr_faces_(2),
     kapton_thickn_(0.3*mm),
-    inner_radius_(15.*cm),
     depth_(5.*cm),
+    inner_radius_(15.*cm),
     cryo_width_(12.*cm),
     cryo_thickn_(1.*mm),
     max_step_size_(1.*mm)
