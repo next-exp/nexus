@@ -1,9 +1,12 @@
+tag p5_00_07 - 24 Oct 2018
+        - Add tile and ring with tiles geometries.
+
 tag p5_00_06 - 11 Oct 2018
-    - Reserve more space for configuration parameters in hdf5 file.
+        - Reserve more space for configuration parameters in hdf5 file.
 	- Eliminate overlap checks.
 
 tag v5_03_08 - 11 Oct 2018
-    - Reserve more space for configuration parameters in hdf5 file.
+        - Reserve more space for configuration parameters in hdf5 file.
 
 tag p5_00_05 - 25 Sept 2018
  	- SiPM size added as configuration parameter.
