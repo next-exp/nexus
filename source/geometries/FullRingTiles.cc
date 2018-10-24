@@ -215,7 +215,8 @@ namespace nexus {
     G4cout << "Number of SiPMs: " <<  n_batches_per_row * 2 * n_tile_rows_ * 32 << G4endl;
     G4double step = 2.*pi/n_batches_per_row;
 
-    G4double radius = external_radius_ + tile_dim_.z()/2. ;
+    // The external radius distance must be at the level of the SiPM surfaces
+    G4double radius = external_radius_ + tile_dim_.z()/2. - 1.2 * mm;
     
     G4RotationMatrix rot;
     rot.rotateX(pi/2.);
@@ -231,13 +232,13 @@ namespace nexus {
       G4ThreeVector position(x_pos, y_pos, z_pos);
       G4String vol_name = "TILE_" + std::to_string(copy_no);
       new G4PVPlacement(G4Transform3D(rot, position), tile_logic_,
-     			vol_name, active_logic_, false, copy_no, true);
+     			vol_name, active_logic_, false, copy_no, false);
       copy_no += 1;
       x_pos = - tile_sep/2. - tile_dim_.x()/2;
       position.setX(x_pos);
       vol_name = "TILE_" + std::to_string(copy_no);
       new G4PVPlacement(G4Transform3D(rot, position), tile_logic_,
-      			vol_name, active_logic_, false, copy_no, true);
+      			vol_name, active_logic_, false, copy_no, false);
       copy_no += 1;
 
       for (G4int i=1; i<n_batches_per_row; ++i) {
@@ -249,7 +250,7 @@ namespace nexus {
          position.setY(y_pos);
          vol_name = "TILE_" + std::to_string(copy_no);
          new G4PVPlacement(G4Transform3D(rot, position), tile_logic_,
-                           vol_name, active_logic_, false, copy_no, true);
+                           vol_name, active_logic_, false, copy_no, false);
 	 copy_no += 1;
 	 x_pos = -radius*sin(angle) - (tile_dim_.x() + tile_sep)/2 * cos(angle);
 	 y_pos = radius*cos(angle) - (tile_dim_.x() + tile_sep)/2 * sin(angle);
@@ -257,7 +258,7 @@ namespace nexus {
          position.setY(y_pos);
          vol_name = "TILE_" + std::to_string(copy_no);
          new G4PVPlacement(G4Transform3D(rot, position), tile_logic_,
-                           vol_name, active_logic_, false, copy_no, true);
+                           vol_name, active_logic_, false, copy_no, false);
 	 copy_no += 1;
        }
     }
