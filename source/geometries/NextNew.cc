@@ -69,7 +69,8 @@ namespace nexus {
     _lead_castle(true),
     _disk_source(false),
     _source_mat(""),
-    _source_dist_from_anode(15.*cm)
+    _source_dist_from_anode(15.*cm),
+    _pedestal_pos(-600.*mm)
     //   _ext_source_distance(0.*mm)
     // Buffer gas dimensions
   {
@@ -192,7 +193,15 @@ namespace nexus {
   
     //PEDESTAL
     _pedestal->SetLogicalVolume(_air_logic);
+    _pedestal->SetPosition(_pedestal_pos);
     _pedestal->Construct();
+
+    //MINI LEAD CASTLE
+    _mini_castle->SetLogicalVolume(_air_logic);
+    _mini_castle->SetELzCoord(_inner_elements->GetELzCoord());
+    G4double ped_y_size = _pedestal->GetDimensions().y();
+    _mini_castle->SetPedestalSurfacePosition(_pedestal_pos + ped_y_size/2.);
+    _mini_castle->Construct();
     
     //VESSEL
     _vessel->Construct();
@@ -225,10 +234,6 @@ namespace nexus {
     new G4PVPlacement(G4Transform3D(*_extra_rot, _extra_pos), extra_logic,
 		      "EXTRA_VESSEL", _air_logic, false, 0, true);
 
-    //MINI LEAD CASTLE
-    _mini_castle->SetLogicalVolume(_air_logic);
-    _mini_castle->SetELzCoord(_inner_elements->GetELzCoord());
-    _mini_castle->Construct();
 
     G4ThreeVector lat_pos = _vessel->GetLatExtSourcePosition(); // this is the position of the end of the port tube
     G4RotationMatrix* lat_rot = new G4RotationMatrix();

@@ -39,6 +39,10 @@ namespace nexus {
     /// Builder
     void Construct();
 
+    /// The position of the surface of the pedestal is needed
+    /// for the castle to lay on it.
+    void SetPedestalSurfacePosition(G4double ped_surf_pos);
+
 
   private:
     // Mother Logical Volume of the ICS
@@ -56,7 +60,9 @@ namespace nexus {
     G4Navigator* _geom_navigator;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
+    G4GenericMessenger* _msg;
+
+    G4double _pedestal_surf_y;
 
   };
 

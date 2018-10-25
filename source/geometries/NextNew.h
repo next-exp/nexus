@@ -117,7 +117,8 @@ namespace nexus {
 
     G4RotationMatrix* _extra_rot; ///< rotation of the external elements outside the vessel, behind the tracking plane
     G4ThreeVector _extra_pos; ///< position of the external elements outside the vessel, behind the tracking plane
-    
+
+    G4double _pedestal_pos;
   };
   
 } // end namespace nexus

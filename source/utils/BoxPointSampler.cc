@@ -16,10 +16,10 @@ namespace nexus {
 
   BoxPointSampler::BoxPointSampler(G4double inner_x,
                                    G4double inner_y, 
-                        				   G4double inner_z,
-                        				   G4double thickness, 
-				                           G4ThreeVector origin,
-				                           G4RotationMatrix* rotation):
+                        	   G4double inner_z,
+                        	   G4double thickness,
+				   G4ThreeVector origin,
+				   G4RotationMatrix* rotation):
     _inner_x(inner_x), _inner_y(inner_y), _inner_z(inner_z),
     _thickness(thickness), _origin(origin), _rotation(rotation)
   {
