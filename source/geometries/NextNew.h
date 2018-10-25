@@ -18,7 +18,7 @@
 
 namespace nexus { class Next100Shielding; }
 namespace nexus { class NextNewPedestal; }
-namespace nexus { class NextNewCuCastle; }
+namespace nexus { class NextNewMiniCastle; }
 namespace nexus { class NextNewVessel; }
 namespace nexus { class NextNewIcs; }
 namespace nexus { class NextNewInnerElements; }
@@ -69,7 +69,7 @@ namespace nexus {
     //Detector parts
     Next100Shielding* _shielding;
     NextNewPedestal* _pedestal;
-    // NextNewCuCastle* _cu_castle;
+    NextNewMiniCastle* _mini_castle;
     NextNewVessel* _vessel;   
     NextNewIcs* _ics;
     NextNewInnerElements* _inner_elements;
@@ -117,7 +117,8 @@ namespace nexus {
 
     G4RotationMatrix* _extra_rot; ///< rotation of the external elements outside the vessel, behind the tracking plane
     G4ThreeVector _extra_pos; ///< position of the external elements outside the vessel, behind the tracking plane
-    
+
+    G4double _pedestal_pos;
   };
   
 } // end namespace nexus

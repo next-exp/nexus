@@ -1,3 +1,6 @@
+tag v5_03_09 - 25 Oct 2018
+        - Add mini lead castle to the NEW geometry.
+
 tag v5_03_08 - 11 Oct 2018
         - Reserve more space for configuration parameters in hdf5 file.
 

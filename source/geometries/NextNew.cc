@@ -13,7 +13,7 @@
 
 #include "Next100Shielding.h"
 #include "NextNewPedestal.h"
-//#include "NextNewCuCastle.h"
+#include "NextNewMiniCastle.h"
 #include "NextNewVessel.h"
 #include "NextNewIcs.h"
 #include "NextNewInnerElements.h"
@@ -69,7 +69,8 @@ namespace nexus {
     _lead_castle(true),
     _disk_source(false),
     _source_mat(""),
-    _source_dist_from_anode(15.*cm)
+    _source_dist_from_anode(15.*cm),
+    _pedestal_pos(-568.*mm)
     //   _ext_source_distance(0.*mm)
     // Buffer gas dimensions
   {
@@ -77,8 +78,8 @@ namespace nexus {
     _shielding = new Next100Shielding();
     //Pedestal
     _pedestal = new NextNewPedestal();
-    //Copper Castle
-    // _cu_castle = new NextNewCuCastle();
+    // Mini lead castle
+    _mini_castle = new NextNewMiniCastle();
     
     //Vessel
     _vessel = new NextNewVessel();
@@ -135,7 +136,7 @@ namespace nexus {
     //deletes
     delete _shielding;
     delete _pedestal;
-    // delete _cu_castle;
+    delete _mini_castle;
    
     delete _vessel;
     delete _ics;
@@ -189,10 +190,6 @@ namespace nexus {
       //_shielding_air_logic = _air->GetLogicalVolume();
       _air_logic = _air->GetLogicalVolume();
     }
-  
-    //PEDESTAL
-    _pedestal->SetLogicalVolume(_air_logic);
-    _pedestal->Construct();
     
     //VESSEL
     _vessel->Construct();
@@ -209,6 +206,7 @@ namespace nexus {
     _shielding->SetELzCoord(_inner_elements->GetELzCoord());
     _vessel->SetELzCoord(_inner_elements->GetELzCoord());
 
+
      //ICS
     _ics->SetLogicalVolume(vessel_gas_logic);
     _ics->SetNozzlesZPosition( _vessel->GetLATNozzleZPosition(),_vessel->GetUPNozzleZPosition());
@@ -223,12 +221,20 @@ namespace nexus {
     _extra_rot->rotateX(pi/2);
     _extra_pos = G4ThreeVector(0., 15.*cm, _vessel->GetLength()/2. + 40.*cm);
     new G4PVPlacement(G4Transform3D(*_extra_rot, _extra_pos), extra_logic,
-		      "EXTRA_VESSEL", _air_logic, false, 0, true);
+		      "EXTRA_VESSEL", _air_logic, false, 0, false);
 
-    //COPPER CASTLE 
-    // _cu_castle->SetLogicalVolume(_buffer_gas_logic);
-    // _cu_castle->SetELzCoord(_inner_elements->GetELzCoord());
-    // _cu_castle->Construct();
+    //PEDESTAL
+    _pedestal->SetLogicalVolume(_air_logic);
+    _pedestal->SetPosition(_pedestal_pos);
+    _pedestal->Construct();
+
+    //MINI LEAD CASTLE
+    _mini_castle->SetLogicalVolume(_air_logic);
+    _mini_castle->SetELzCoord(_inner_elements->GetELzCoord());
+    G4double ped_y_size = _pedestal->GetDimensions().y();
+    _mini_castle->SetPedestalSurfacePosition(_pedestal_pos + ped_y_size/2.);
+    _mini_castle->Construct();
+
 
     G4ThreeVector lat_pos = _vessel->GetLatExtSourcePosition(); // this is the position of the end of the port tube
     G4RotationMatrix* lat_rot = new G4RotationMatrix();
@@ -475,15 +481,15 @@ namespace nexus {
       vertex = ini_vertex + _extra_pos;
     }
 
-    //  //COPPER CASTLE
-   // else if (region == "CU_CASTLE"){
-   //   vertex = _cu_castle->GenerateVertex(region);
-   //}
-   //  //RADON 
-   //  //on the inner lead surface (SHIELDING_GAS) and on the outer copper castle surface (RN_CU_CASTLE)
-   // else if (region == "RN_CU_CASTLE") {
-   //   vertex = _cu_castle->GenerateVertex(region);
-   //  }
+    //  MINI CASTLE
+    else if (region == "MINI_CASTLE"){
+      vertex = _mini_castle->GenerateVertex(region);
+    }
+    //RADON
+    //on the inner lead surface (SHIELDING_GAS) and on the outer mini lead castle surface (RN_MINI_CASTLE)
+    else if (region == "RN_MINI_CASTLE") {
+      vertex = _mini_castle->GenerateVertex(region);
+    }
 
     //VESSEL REGIONS
     else if ( (region == "VESSEL") || 
