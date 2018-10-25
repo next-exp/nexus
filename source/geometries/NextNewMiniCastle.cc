@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Authors: <miquel.nebot@ific.uv.es>
+//  Authors: <miquel.nebot@ific.uv.es>, <paola.ferrario@dipc.org>
 //  Created: 3 Feb 2014
 //
 //  Copyright (c) 2014 NEXT Collaboration
@@ -34,20 +34,16 @@ namespace nexus {
   NextNewMiniCastle::NextNewMiniCastle():
     BaseGeometry(),
     // Body dimensions
-    _x (1447. *mm),
-    _y (1062. *mm),
-    _z (1494. *mm),
-    _thickness (50. *mm),
-    _visibility(0),
-    _pedestal_surf_y(-600.*mm)
+    _x (1447.*mm),
+    _y (1150.*mm),
+    _z (1494.*mm),
+    _thickness (50.*mm),
+    _open_space_z(78*mm),
+    _pedestal_surf_y(-560.5 * mm)
 
   {
     /// Initializing the geometry navigator (used in vertex generation)
     _geom_navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
-
-    /// Messenger
-    _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
-    _msg->DeclareProperty("mini_castle_vis", _visibility, "Mini Castle Visibility");
   }
 
   void NextNewMiniCastle::SetLogicalVolume(G4LogicalVolume* mother_logic)
@@ -59,33 +55,58 @@ namespace nexus {
   {
     ////// LEAD MINI CASTLE ///////////
     G4Box* x_wall_solid = new G4Box("X_WALL_SOLID", _thickness/2., _y/2., _z/2.);
-    G4Box* y_wall_solid = new G4Box("Y_WALL_SOLID", _x/2., _thickness/2., _z/2.);
+    G4Box* y_wall_solid_up = new G4Box("Y_WALL_SOLID_UP", _x/2., _thickness/2., _z/2.);
+    G4Box* y_wall_solid_down = new G4Box("Y_WALL_SOLID_DOWN", (_x-2.*_open_space_z-2.*_thickness)/2., _thickness/2., _z/2.);
     G4Box* z_wall_nh_solid = new G4Box("Z_WALL_NH_SOLID", _x/2., _y/2., _thickness/2.);
+
+    G4double x_opening_pmts = 525.*mm;
+    G4double x_opening_sipms = 725.*mm;
+    G4double y_opening = 488.*mm;
+    G4double base_opening_dist = 300.*mm;
+    G4double x_crack = 12.5*mm;
     G4Box* z_opening_pmts =
-      new G4Box("Z_OP_PMTS", 525/2.*mm, 488/2.*mm,(_thickness+1*mm)/2.);
+      new G4Box("Z_OP_PMTS", x_opening_pmts/2., y_opening/2.,(_thickness+1*mm)/2.);
     G4Box* z_opening_sipms =
-      new G4Box("Z_OP_SIPMS", 725./2.*mm, 488./2.*mm,(_thickness+1*mm)/2.);
+      new G4Box("Z_OP_SIPMS", x_opening_sipms/2., y_opening/2.,(_thickness+1*mm)/2.);
+    G4Box* z_crack = new G4Box("Z_CRACK", 12.5*mm/2., base_opening_dist/2., (_thickness+1.*mm)/2.);
+
     G4SubtractionSolid* z_wall_solid_pmts =
       new G4SubtractionSolid("Z_WALL_SOLID_PMTs", z_wall_nh_solid, z_opening_pmts, 0,
-			     G4ThreeVector(0., 0., 0.));
+    			     G4ThreeVector(0., -_y/2. + _thickness + base_opening_dist + y_opening/2., 0.));
+    z_wall_solid_pmts =
+      new G4SubtractionSolid("Z_WALL_SOLID_PMTs", z_wall_solid_pmts, z_crack, 0,
+     			     G4ThreeVector(-x_opening_pmts/2. + x_crack/2., -_y/2. + _thickness + base_opening_dist/2., 0.));
+
+    z_wall_solid_pmts =
+      new G4SubtractionSolid("Z_WALL_SOLID_PMTs", z_wall_solid_pmts, z_crack, 0,
+     			     G4ThreeVector(x_opening_pmts/2. + x_crack/2., -_y/2. + _thickness + base_opening_dist/2., 0.));
+
     G4SubtractionSolid* z_wall_solid_sipms =
       new G4SubtractionSolid("Z_WALL_SOLID_SiPMs", z_wall_nh_solid, z_opening_sipms, 0,
-			     G4ThreeVector(0., 0., 0.));
+			     G4ThreeVector(0., -_y/2. + _thickness + base_opening_dist + y_opening/2., 0.));
+
+    z_wall_solid_sipms =
+      new G4SubtractionSolid("Z_WALL_SOLID_SiPMs", z_wall_solid_sipms, z_crack, 0,
+     			     G4ThreeVector(-x_opening_sipms/2. + x_crack/2., -_y/2. + _thickness + base_opening_dist/2., 0.));
+
+    z_wall_solid_sipms =
+      new G4SubtractionSolid("Z_WALL_SOLID_SiPMs", z_wall_solid_sipms, z_crack, 0,
+     			     G4ThreeVector(x_opening_sipms/2. + x_crack/2., -_y/2. + _thickness + base_opening_dist/2., 0.));
 
     G4UnionSolid* castle_solid =
-      new G4UnionSolid("MINI_CASTLE", y_wall_solid, x_wall_solid, 0,
+      new G4UnionSolid("MINI_CASTLE", y_wall_solid_up, x_wall_solid, 0,
 		       G4ThreeVector(_x/2.-_thickness/2., -_y/2.+_thickness/2., 0.));
     castle_solid =
       new G4UnionSolid("MINI_CASTLE", castle_solid, x_wall_solid,0,
-    		       G4ThreeVector(-_x/2.+_thickness/2., -_y/2.+_thickness/2., 0.));
+      		       G4ThreeVector(-_x/2.+_thickness/2., -_y/2.+_thickness/2., 0.));
 
     castle_solid =
-      new G4UnionSolid("MINI_CASTLE", castle_solid, y_wall_solid, 0,
+      new G4UnionSolid("MINI_CASTLE", castle_solid, y_wall_solid_down, 0,
      		       G4ThreeVector(0., -_y+_thickness,0.));
 
     castle_solid =
       new G4UnionSolid("MINI_CASTLE", castle_solid, z_wall_solid_pmts, 0,
-     		       G4ThreeVector(0., -_y/2.+_thickness/2., -_z/2.+_thickness/2.));
+      		       G4ThreeVector(0., -_y/2.+_thickness/2., -_z/2.+_thickness/2.));
     castle_solid =
       new G4UnionSolid("MINI_CASTLE", castle_solid, z_wall_solid_sipms, 0,
      		       G4ThreeVector(0., -_y/2.+_thickness/2., _z/2.-_thickness/2.));
@@ -94,19 +115,12 @@ namespace nexus {
       new G4LogicalVolume (castle_solid,
 			   G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"),"CASTLE");
 
+    castle_logic->SetVisAttributes(G4VisAttributes::Invisible);
+
     G4double y_pos = _pedestal_surf_y + _y -_thickness/2.;
-    G4cout << y_pos << G4endl;
     new G4PVPlacement(0, G4ThreeVector(0., y_pos, 0.), castle_logic,
 		      "MINI_CASTLE", _mother_logic, false, 0, true);
 
-    // SETTING VISIBILITIES   //////////
-    if (_visibility) {
-      G4VisAttributes lead_col = nexus::DarkGrey();
-      lead_col.SetForceSolid(true);
-      castle_logic->SetVisAttributes(lead_col);
-    } else {
-      castle_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    }
 
     // VERTEX GENERATORS   //////////
     _mini_castle_box_gen =
@@ -116,9 +130,9 @@ namespace nexus {
       new BoxPointSampler(_x-0.5*mm, _y-0.5*mm, _z-0.5*mm, 0 * mm, G4ThreeVector(0., _thickness, 0.), 0);
 
     // Calculating some probs
-    G4double castle_vol = castle_solid->GetCubicVolume();
-    G4double inner_vol= (_x-2*_thickness)*(_y-2*_thickness)*(_z-2*_thickness);
-    std::cout<<"MINI CASTLE VOLUME:\t"<<castle_vol<<"\t INNER VOLUME:\t"<<inner_vol<<std::endl;
+    //G4double castle_vol = castle_solid->GetCubicVolume();
+    //G4double inner_vol= (_x-2*_thickness)*(_y-2*_thickness)*(_z-2*_thickness);
+    //std::cout<<"MINI CASTLE VOLUME:\t"<<castle_vol<<"\t INNER VOLUME:\t"<<inner_vol<<std::endl;
 
   }
 

@@ -45,23 +45,20 @@ namespace nexus {
 
 
   private:
-    // Mother Logical Volume of the ICS
+    // Mother logical volume
     G4LogicalVolume* _mother_logic;
+
     // Dimensions
-    G4double  _x, _y, _z, _thickness;
-   
-    // Visibility of the shielding
-    G4bool _visibility;
+    G4double  _x, _y, _z, _thickness, _open_space_z;
 
     // Vertex generators
     BoxPointSampler* _mini_castle_box_gen;
     BoxPointSampler* _mini_castle_external_surf_gen;
+    
     // Geometry Navigator
     G4Navigator* _geom_navigator;
 
-    // Messenger for the definition of control commands
-    G4GenericMessenger* _msg;
-
+    // Position of the pedestal surface in y
     G4double _pedestal_surf_y;
 
   };
