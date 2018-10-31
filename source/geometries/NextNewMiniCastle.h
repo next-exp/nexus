@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 ///  \file   
 ///  \brief    Copper castle inside the shielding lead 
-///  \author   <miquel.nebot@ific.uv.es>,
+///  \author   <miquel.nebot@ific.uv.es>, <paola.ferrario@dipc.org>
 ///  \date     3 Feb 2014
 ///  \version  $Id$
 ///
@@ -50,10 +50,12 @@ namespace nexus {
 
     // Dimensions
     G4double  _x, _y, _z, _thickness, _open_space_z;
+    G4double _steel_thickn;
 
     // Vertex generators
     BoxPointSampler* _mini_castle_box_gen;
     BoxPointSampler* _mini_castle_external_surf_gen;
+    BoxPointSampler* _steel_box_gen;
     
     // Geometry Navigator
     G4Navigator* _geom_navigator;
