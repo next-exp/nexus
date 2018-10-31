@@ -9,6 +9,7 @@
 
 #include "NextNewMiniCastle.h"
 #include "Visibilities.h"
+#include "MaterialsList.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4SubtractionSolid.hh>
@@ -39,6 +40,7 @@ namespace nexus {
     _z (1494.*mm),
     _thickness (50.*mm),
     _open_space_z(78*mm),
+    _steel_thickn(2*mm),
     _pedestal_surf_y(-560.5 * mm)
 
   {
@@ -56,7 +58,8 @@ namespace nexus {
     ////// LEAD MINI CASTLE ///////////
     G4Box* x_wall_solid = new G4Box("X_WALL_SOLID", _thickness/2., _y/2., _z/2.);
     G4Box* y_wall_solid_up = new G4Box("Y_WALL_SOLID_UP", _x/2., _thickness/2., _z/2.);
-    G4Box* y_wall_solid_down = new G4Box("Y_WALL_SOLID_DOWN", (_x-2.*_open_space_z-2.*_thickness)/2., _thickness/2., _z/2.);
+    G4Box* y_wall_solid_down =
+      new G4Box("Y_WALL_SOLID_DOWN", (_x-2.*_open_space_z-2.*_thickness)/2., _thickness/2., _z/2.);
     G4Box* z_wall_nh_solid = new G4Box("Z_WALL_NH_SOLID", _x/2., _y/2., _thickness/2.);
 
     G4double x_opening_pmts = 525.*mm;
@@ -73,6 +76,7 @@ namespace nexus {
     G4SubtractionSolid* z_wall_solid_pmts =
       new G4SubtractionSolid("Z_WALL_SOLID_PMTs", z_wall_nh_solid, z_opening_pmts, 0,
     			     G4ThreeVector(0., -_y/2. + _thickness + base_opening_dist + y_opening/2., 0.));
+
     z_wall_solid_pmts =
       new G4SubtractionSolid("Z_WALL_SOLID_PMTs", z_wall_solid_pmts, z_crack, 0,
      			     G4ThreeVector(-x_opening_pmts/2. + x_crack/2., -_y/2. + _thickness + base_opening_dist/2., 0.));
@@ -92,6 +96,7 @@ namespace nexus {
     z_wall_solid_sipms =
       new G4SubtractionSolid("Z_WALL_SOLID_SiPMs", z_wall_solid_sipms, z_crack, 0,
      			     G4ThreeVector(x_opening_sipms/2. + x_crack/2., -_y/2. + _thickness + base_opening_dist/2., 0.));
+
 
     G4UnionSolid* castle_solid =
       new G4UnionSolid("MINI_CASTLE", y_wall_solid_up, x_wall_solid, 0,
@@ -115,11 +120,52 @@ namespace nexus {
       new G4LogicalVolume (castle_solid,
 			   G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"),"CASTLE");
 
-    castle_logic->SetVisAttributes(G4VisAttributes::Invisible);
-
     G4double y_pos = _pedestal_surf_y + _y -_thickness/2.;
     new G4PVPlacement(0, G4ThreeVector(0., y_pos, 0.), castle_logic,
-		      "MINI_CASTLE", _mother_logic, false, 0, true);
+    		      "MINI_CASTLE", _mother_logic, false, 0, false);
+
+    // STEEL SUPPORT STRUCTURE //
+    G4double steel_x = _x-2*_thickness;
+    G4double steel_y = _y-2*_thickness;
+    G4double steel_z = _z-2*_thickness;
+
+    G4Box* x_steel_solid =
+      new G4Box("X_STEEL_SOLID", _steel_thickn/2., steel_y/2., steel_z/2.);
+    G4Box* y_steel_solid_up =
+      new G4Box("Y_STEEL_SOLID_UP", steel_x/2., _steel_thickn/2., steel_z/2.);
+    G4Box* z_steel_nh_solid =
+      new G4Box("Z_STEEL_NH_SOLID", steel_x/2., steel_y/2., _steel_thickn/2.);
+
+    G4SubtractionSolid* z_steel_solid_pmts =
+      new G4SubtractionSolid("Z_STEEL_SOLID_PMTs", z_steel_nh_solid, z_opening_pmts, 0,
+    			     G4ThreeVector(0., -steel_y/2. + base_opening_dist + y_opening/2., 0.));
+
+    G4SubtractionSolid* z_steel_solid_sipms =
+      new G4SubtractionSolid("Z_STEEL_SOLID_SiPMs", z_steel_nh_solid, z_opening_sipms, 0,
+			     G4ThreeVector(0., -steel_y/2. + base_opening_dist + y_opening/2., 0.));
+
+    G4UnionSolid* steel_solid =
+      new G4UnionSolid("MINI_CASTLE_STEEL", y_steel_solid_up, x_steel_solid, 0,
+		       G4ThreeVector(steel_x/2.-_steel_thickn/2., -steel_y/2.+_steel_thickn/2., 0.));
+    steel_solid =
+      new G4UnionSolid("MINI_CASTLE_STEEL", steel_solid, x_steel_solid,0,
+       		       G4ThreeVector(-steel_x/2.+_steel_thickn/2., -steel_y/2.+_steel_thickn/2., 0.));
+
+    steel_solid =
+      new G4UnionSolid("MINI_CASTLE_STEEL", steel_solid, z_steel_solid_pmts, 0,
+       		       G4ThreeVector(0., -steel_y/2.+_steel_thickn/2., -steel_z/2.+_steel_thickn/2.));
+    steel_solid =
+      new G4UnionSolid("MINI_CASTLE_STEEL", steel_solid, z_steel_solid_sipms, 0,
+      		       G4ThreeVector(0., -steel_y/2.+_steel_thickn/2., steel_z/2.-_steel_thickn/2.));
+
+    G4LogicalVolume* steel_logic =
+      new G4LogicalVolume (steel_solid, MaterialsList::Steel(), "MINI_CASTLE_STEEL");
+
+    y_pos = _pedestal_surf_y + _y -_thickness - _steel_thickn/2.;
+    new G4PVPlacement(0, G4ThreeVector(0., y_pos, 0.), steel_logic,
+		      "MINI_CASTLE_STEEL", _mother_logic, false, 0, false);
+
+    steel_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
 
     // VERTEX GENERATORS   //////////
@@ -128,6 +174,10 @@ namespace nexus {
 			  _thickness, G4ThreeVector(0.,_thickness,0.), 0);
     _mini_castle_external_surf_gen =
       new BoxPointSampler(_x-0.5*mm, _y-0.5*mm, _z-0.5*mm, 0 * mm, G4ThreeVector(0., _thickness, 0.), 0);
+    _steel_box_gen =
+      new BoxPointSampler(steel_x-2.*_steel_thickn, steel_y-2.*_steel_thickn, steel_z-2.*_steel_thickn,
+			  _steel_thickn, G4ThreeVector(0.,_steel_thickn,0.), 0);
+
 
     // Calculating some probs
     //G4double castle_vol = castle_solid->GetCubicVolume();
@@ -171,6 +221,19 @@ namespace nexus {
 	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
 	} while (VertexVolume->GetName() != "MINI_CASTLE");
       }
+    else if (region == "MINI_CASTLE_STEEL") {
+      G4VPhysicalVolume *VertexVolume;
+      do {
+	vertex = _steel_box_gen->GenerateVertex("WHOLE_VOL");
+	// To check its volume, one needs to rotate and shift the vertex
+	// because the check is done using global coordinates
+	G4ThreeVector glob_vtx(vertex);
+	// First rotate, then shift
+	glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
+	glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
+	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+      } while (VertexVolume->GetName() != "MINI_CASTLE_STEEL");
+    }
     else {
       G4Exception("[NextNewMiniCastle]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");

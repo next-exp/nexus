@@ -481,16 +481,12 @@ namespace nexus {
       vertex = ini_vertex + _extra_pos;
     }
 
-    //  MINI CASTLE
-    else if (region == "MINI_CASTLE"){
+    //  MINI CASTLE and RADON
+    // on the inner lead surface (SHIELDING_GAS) and on the outer mini lead castle surface (RN_MINI_CASTLE)
+    else if (region == "MINI_CASTLE" || region == "RN_MINI_CASTLE"
+	     || (region == "MINI_CASTLE_STEEL")){
       vertex = _mini_castle->GenerateVertex(region);
     }
-    //RADON
-    //on the inner lead surface (SHIELDING_GAS) and on the outer mini lead castle surface (RN_MINI_CASTLE)
-    else if (region == "RN_MINI_CASTLE") {
-      vertex = _mini_castle->GenerateVertex(region);
-    }
-
     //VESSEL REGIONS
     else if ( (region == "VESSEL") || 
 	      (region == "SOURCE_PORT_ANODE") ||
