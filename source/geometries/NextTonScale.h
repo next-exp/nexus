@@ -12,8 +12,9 @@
 
 class G4GenericMessenger;
 
-
 namespace nexus {
+
+  class CylinderPointSampler;
 
   class NextTonScale: public BaseGeometry
   {
@@ -35,11 +36,14 @@ namespace nexus {
 
   private:
     G4GenericMessenger* msg_;
+
     G4double gas_density_;
     G4double active_diam_, active_length_;
     G4double fcage_thickn_, ics_thickn_, vessel_thickn_;
     G4double endcap_hollow_;
     G4double water_thickn_;
+
+    CylinderPointSampler* rnd_;
   };
 
 } // namespace nexus
