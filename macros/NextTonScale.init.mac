@@ -1,0 +1,10 @@
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+
+/Geometry/RegisterGeometry TON_SCALE
+
+/Generator/RegisterGenerator SINGLE_PARTICLE
+
+/Actions/RegisterTrackingAction DEFAULT
+/Actions/RegisterEventAction DEFAULT
+/Actions/RegisterSteppingAction DEFAULT
+/Actions/RegisterRunAction DEFAULT
