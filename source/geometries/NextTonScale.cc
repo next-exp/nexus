@@ -23,7 +23,7 @@ using namespace nexus;
 NextTonScale::NextTonScale():
   BaseGeometry(),
   msg_(nullptr),
-  gas_density_(50.*kg/m3),
+  gas_density_(88.*kg/m3),
   active_diam_(300.*cm), active_length_(300.*cm),
   fcage_thickn_(1.*cm), ics_thickn_(20.*cm), vessel_thickn_(10.*cm),
   endcap_hollow_(20.*cm),
@@ -32,6 +32,13 @@ NextTonScale::NextTonScale():
 {
   msg_ = new G4GenericMessenger(this, "/Geometry/NextTonScale/",
                                 "Control commands of the NextTonScale geometry.");
+
+  G4GenericMessenger::Command& gas_density_cmd =
+    msg_->DeclareProperty("gas_density", gas_density_,
+                          "Density of the xenon gas.");
+  gas_density_cmd.SetUnitCategory("Volumic Mass");
+  gas_density_cmd.SetParameterName("gas_density", false);
+  gas_density_cmd.SetRange("gas_density>=0.");
 
   G4GenericMessenger::Command& active_diam_cmd =
     msg_->DeclareProperty("active_diam", active_diam_,
@@ -61,6 +68,12 @@ NextTonScale::NextTonScale():
   ics_thickn_cmd.SetParameterName("ics_thickn", false);
   ics_thickn_cmd.SetRange("ics_thickn>=0.");
 
+  G4GenericMessenger::Command& water_thickn_cmd =
+    msg_->DeclareProperty("water_thickn", water_thickn_,
+                          "Thickness of the water shield.");
+  water_thickn_cmd.SetUnitCategory("Length");
+  water_thickn_cmd.SetParameterName("water_thickn", false);
+  water_thickn_cmd.SetRange("water_thickn>=0.");
 }
 
 
