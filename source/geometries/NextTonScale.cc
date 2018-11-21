@@ -7,6 +7,7 @@
 #include "NextTonScale.h"
 
 #include "CylinderPointSampler.h"
+#include "IonizationSD.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -16,6 +17,8 @@
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4VisAttributes.hh>
+#include <G4UserLimits.hh>
+#include <G4SDManager.hh>
 
 using namespace nexus;
 
@@ -284,13 +287,37 @@ G4LogicalVolume* NextTonScale::ConstructFieldCage(G4LogicalVolume* mother_logic_
     G4NistManager::Instance()->FindOrBuildMaterial("G4_POLYETHYLENE");
 
   G4Tubs* fcage_solid_vol =
-    new G4Tubs(fcage_name, 0., fcage_diam/2., fcage_length/2., 0., 360.*deg);
+    new G4Tubs(fcage_name, active_diam_/2., fcage_diam/2., fcage_length/2.,
+               0., 360.*deg);
 
   G4LogicalVolume* fcage_logic_vol =
     new G4LogicalVolume(fcage_solid_vol, fcage_material, fcage_name);
 
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), fcage_logic_vol,
                     fcage_name, mother_logic_vol, false, 0, true);
+
+  // ACTIVE ////////////////////////////////////////////////
+
+  G4String active_name = "ACTIVE";
+
+  G4Tubs* active_solid_vol =
+    new G4Tubs(active_name, 0., active_diam_/2., active_length_/2., 0., 360.*deg);
+
+  G4LogicalVolume* active_logic_vol =
+    new G4LogicalVolume(active_solid_vol, mother_logic_vol->GetMaterial(),
+                        active_name);
+
+  new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), active_logic_vol,
+                    active_name, mother_logic_vol, false, 0, true);
+
+  // Limit the step size in this volume for better tracking precision
+  active_logic_vol->SetUserLimits(new G4UserLimits(1.*mm));
+  // Set the volume as an ionization sensitive detector
+  IonizationSD* ionisd = new IonizationSD("/NEXTNEW/ACTIVE");
+  active_logic_vol->SetSensitiveDetector(ionisd);
+  G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
+
+  //////////////////////////////////////////////////////////
 
   return nullptr;
 }
