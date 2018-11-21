@@ -28,7 +28,7 @@ NextTonScale::NextTonScale():
   msg_(nullptr),
   gas_density_(88.*kg/m3),
   active_diam_(300.*cm), active_length_(300.*cm),
-  fcage_thickn_(1.*cm), ics_thickn_(20.*cm), vessel_thickn_(10.*cm),
+  fcage_thickn_(1.*cm), ics_thickn_(12.*cm), vessel_thickn_(2.*cm),
   endcap_hollow_(20.*cm),
   water_thickn_(3.*m),
   rnd_(nullptr)
@@ -71,12 +71,38 @@ NextTonScale::NextTonScale():
   ics_thickn_cmd.SetParameterName("ics_thickn", false);
   ics_thickn_cmd.SetRange("ics_thickn>=0.");
 
+  G4GenericMessenger::Command& vessel_thickn_cmd =
+    msg_->DeclareProperty("vessel_thickn", vessel_thickn_,
+                        "Thickness of the vessel.");
+  vessel_thickn_cmd.SetUnitCategory("Length");
+  vessel_thickn_cmd.SetParameterName("vessel_thickn", false);
+  vessel_thickn_cmd.SetRange("vessel_thickn>=0.");
+
   G4GenericMessenger::Command& water_thickn_cmd =
     msg_->DeclareProperty("water_thickn", water_thickn_,
                           "Thickness of the water shield.");
   water_thickn_cmd.SetUnitCategory("Length");
   water_thickn_cmd.SetParameterName("water_thickn", false);
   water_thickn_cmd.SetRange("water_thickn>=0.");
+
+  // Specific vertex in case region to shoot from is AD_HOC
+  G4GenericMessenger::Command& specific_vertex_X_cmd =
+    msg_->DeclareProperty("specific_vertex_X", specific_vertex_X_,
+      "If region is AD_HOC, x coord where particles are generated");
+  specific_vertex_X_cmd.SetParameterName("specific_vertex_X", true);
+  specific_vertex_X_cmd.SetUnitCategory("Length");
+
+  G4GenericMessenger::Command& specific_vertex_Y_cmd =
+    msg_->DeclareProperty("specific_vertex_Y", specific_vertex_Y_,
+      "If region is AD_HOC, y coord where particles are generated");
+  specific_vertex_Y_cmd.SetParameterName("specific_vertex_Y", true);
+  specific_vertex_Y_cmd.SetUnitCategory("Length");
+
+  G4GenericMessenger::Command& specific_vertex_Z_cmd =
+    msg_->DeclareProperty("specific_vertex_Z", specific_vertex_Z_,
+      "If region is AD_HOC, z coord where particles are generated");
+  specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
+  specific_vertex_Z_cmd.SetUnitCategory("Length");
 }
 
 
@@ -327,7 +353,10 @@ G4ThreeVector NextTonScale::GenerateVertex(const G4String& region) const
 {
   G4ThreeVector vertex;
 
-  if (region == "ACTIVE") {
+  if (region == "AD_HOC") {
+    vertex = G4ThreeVector(specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_);
+  }
+  else if (region == "ACTIVE") {
     vertex = rnd_->GenerateVertex("INSIDE");
   }
   else if (region == "READOUT_PLANES") {

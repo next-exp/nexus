@@ -43,6 +43,8 @@ namespace nexus {
     G4double endcap_hollow_;
     G4double water_thickn_;
 
+    G4double specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_;
+
     CylinderPointSampler* rnd_;
   };
 
