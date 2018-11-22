@@ -9,16 +9,28 @@
 
 ### GENERATOR
 # Single Particle
-/Generator/SingleParticle/particle nu_e
-/Generator/SingleParticle/min_energy 1. GeV
-/Generator/SingleParticle/max_energy 1. GeV
-/Generator/SingleParticle/region AD_HOC
-/Geometry/NextTonScale/specific_vertex_X 0. mm
-/Geometry/NextTonScale/specific_vertex_Y -10000. mm
-/Geometry/NextTonScale/specific_vertex_Z 0. mm
-/Generator/SingleParticle/momentum_X 0.
-/Generator/SingleParticle/momentum_Y 1.
-/Generator/SingleParticle/momentum_Z 0.
+#/Generator/SingleParticle/region AD_HOC
+#/Geometry/NextTonScale/specific_vertex_X 0. mm
+#/Geometry/NextTonScale/specific_vertex_Y -10000. mm
+#/Geometry/NextTonScale/specific_vertex_Z 0. mm
+#/Generator/SingleParticle/particle nu_e
+#/Generator/SingleParticle/min_energy 1. GeV
+#/Generator/SingleParticle/max_energy 1. GeV
+#/Generator/SingleParticle/momentum_X 0.
+#/Generator/SingleParticle/momentum_Y 1.
+#/Generator/SingleParticle/momentum_Z 0.
+
+# Ion Gun for background decays ... (Bi214: Z=83, A=214), (Tl208: Z=81, A=208)
+#/Generator/IonGun/region READOUT_PLANES
+#/Generator/IonGun/atomic_number 83
+#/Generator/IonGun/mass_number 214
+
+# Decay0 interface for BB decays ... (BB0nu: DecayMode 1), (BB2nu: DecayMode 4)
+/Generator/Decay0Interface/region ACTIVE
+/Generator/Decay0Interface/inputFile none
+/Generator/Decay0Interface/Xe136DecayMode 1
+/Generator/Decay0Interface/EnergyThreshold 0. keV
+/Generator/Decay0Interface/Ba136FinalState 0
 
 
 ### ACTIONS
@@ -35,7 +47,7 @@
 /control/verbose 0
 /run/verbose 0
 /event/verbose 0
-/tracking/verbose 1
+/tracking/verbose 0
 
 
 ### JOB CONTROL

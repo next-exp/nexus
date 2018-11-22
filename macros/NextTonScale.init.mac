@@ -3,7 +3,9 @@
 
 
 ### GENERATOR
-/Generator/RegisterGenerator SINGLE_PARTICLE
+#/Generator/RegisterGenerator SINGLE_PARTICLE
+#/Generator/RegisterGenerator ION_GUN
+/Generator/RegisterGenerator DECAY0
 
 
 ### ACTIONS
@@ -29,4 +31,5 @@
 
 ### EXTRA CONFIGURATION
 /nexus/RegisterMacro ./macros/NextTonScale.config.mac
+/nexus/RegisterDelayedMacro macros/physics/Bi214.mac
 
