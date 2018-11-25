@@ -43,9 +43,20 @@ namespace nexus {
     G4double endcap_hollow_;
     G4double water_thickn_;
 
+    G4double vessel_diam_, vessel_length_; 
+    G4double ics_diam_, ics_length_;
+    G4double fcage_diam_, fcage_length_;
+    G4double gas_diam_, gas_length_;
+
     G4double specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_;
 
-    CylinderPointSampler* rnd_;
+    //CylinderPointSampler* rnd_;
+    CylinderPointSampler* active_gen_;
+    CylinderPointSampler* field_cage_gen_;
+    CylinderPointSampler* ics_gen_;
+    CylinderPointSampler* vessel_gen_;
+    CylinderPointSampler* readout_plane_gen_;
+    CylinderPointSampler* outer_plane_gen_;
   };
 
 } // namespace nexus
