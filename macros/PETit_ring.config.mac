@@ -2,10 +2,11 @@
 ### GEOMETRY
 
 /Geometry/FullRingInfinity/depth 3. cm
-/Geometry/FullRingInfinity/pitch 5. mm
-/Geometry/FullRingInfinity/inner_radius 150. mm
-/Geometry/FullRingInfinity/sipm_rows 16
+/Geometry/FullRingInfinity/pitch 3.5 mm
+/Geometry/FullRingInfinity/inner_radius 165. mm
+/Geometry/FullRingInfinity/sipm_rows 48
 /Geometry/FullRingInfinity/instrumented_faces 1
+/Geometry/FullRingInfinity/cryostat_width 18 cm
 /Geometry/SiPMpet/efficiency 0.2
 /Geometry/SiPMpet/visibility true
 /Geometry/SiPMpet/time_binning 1. microsecond
