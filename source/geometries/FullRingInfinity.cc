@@ -68,6 +68,12 @@ namespace nexus {
     inner_r_cmd.SetParameterName("inner_radius", false);
     inner_r_cmd.SetRange("inner_radius>0.");
 
+    G4GenericMessenger::Command& cryo_width_cmd =
+      msg_->DeclareProperty("cryostat_width", cryo_width_, "Width of cryostat in z");
+    cryo_width_cmd.SetUnitCategory("Length");
+    cryo_width_cmd.SetParameterName("cryostat_width", false);
+    cryo_width_cmd.SetRange("cryostat_width>0.");
+
     msg_->DeclareProperty("sipm_rows", lin_n_sipm_per_cell_, "Number of SiPM rows");
     msg_->DeclareProperty("instrumented_faces", instr_faces_, "Number of instrumented faces");
 
@@ -263,6 +269,10 @@ namespace nexus {
     rot.rotateX(pi);
 
     //copy_no = 2000;
+    if (instr_faces_ == 1) {
+      copy_no = 999;
+    }
+
     for (G4int j=0; j<lin_n_sipm_per_cell_; j++) {
       // The first must be positioned outside the loop
       if (j!=0) rot.rotateZ(step);
@@ -272,7 +282,6 @@ namespace nexus {
       G4String vol_name = "SIPM_" + std::to_string(copy_no);
       new G4PVPlacement(G4Transform3D(rot, position), sipm_logic,
                         vol_name, active_logic_, false, copy_no, false);
-
       for (G4int i=2; i<=n_sipm_ext; ++i) {
         G4double angle = (i-1)*step;
         rot.rotateZ(step);
