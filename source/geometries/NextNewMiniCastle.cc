@@ -190,6 +190,7 @@ namespace nexus {
   {
     delete _mini_castle_box_gen;
     delete _mini_castle_external_surf_gen;
+    delete _steel_box_gen;
   }
 
   G4ThreeVector NextNewMiniCastle::GenerateVertex(const G4String& region) const

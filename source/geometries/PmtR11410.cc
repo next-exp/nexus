@@ -241,6 +241,15 @@ namespace nexus {
 
   PmtR11410::~PmtR11410()
   {
+    delete _front_body_gen;
+    delete _medium_body_gen;
+    delete _rear_body_gen;
+    delete _rear_cap_gen;
+    delete _front_cap_gen;
+    delete _front_surf_gen;
+    delete _back_front_surf_gen;
+    delete _rear_surf_gen;
+    delete _rear_cap_surf_gen;
   }
 
 
