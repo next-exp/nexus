@@ -32,4 +32,3 @@
 ### EXTRA CONFIGURATION
 /nexus/RegisterMacro ./macros/NextTonScale.config.mac
 /nexus/RegisterDelayedMacro macros/physics/Bi214.mac
-

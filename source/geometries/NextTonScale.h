@@ -11,6 +11,7 @@
 #include "BaseGeometry.h"
 
 class G4GenericMessenger;
+class G4Material;
 
 namespace nexus {
 
@@ -21,11 +22,11 @@ namespace nexus {
   public:
     // Constructor
     NextTonScale();
+
     // Destructor
     virtual ~NextTonScale();
 
     virtual void Construct();
-
     virtual G4ThreeVector GenerateVertex(const G4String&) const;
 
   private:
@@ -36,21 +37,18 @@ namespace nexus {
 
   private:
     G4GenericMessenger* msg_;
+    G4Material* xenon_gas_;
 
+    // Geometry Parameters
     G4double gas_density_;
     G4double active_diam_, active_length_;
     G4double fcage_thickn_, ics_thickn_, vessel_thickn_;
     G4double endcap_hollow_;
     G4double water_thickn_;
 
-    G4double vessel_diam_, vessel_length_; 
-    G4double ics_diam_, ics_length_;
-    G4double fcage_diam_, fcage_length_;
-    G4double gas_diam_, gas_length_;
-
+    // Vertex Generators
     G4double specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_;
 
-    //CylinderPointSampler* rnd_;
     CylinderPointSampler* active_gen_;
     CylinderPointSampler* field_cage_gen_;
     CylinderPointSampler* ics_gen_;

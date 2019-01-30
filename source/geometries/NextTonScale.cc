@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------------
 
 #include "NextTonScale.h"
+#include "MaterialsList.h"
 
 #include "CylinderPointSampler.h"
 #include "IonizationSD.h"
@@ -31,7 +32,6 @@ NextTonScale::NextTonScale():
   fcage_thickn_(1.*cm), ics_thickn_(12.*cm), vessel_thickn_(2.*cm),
   endcap_hollow_(20.*cm),
   water_thickn_(3.*m)
-//  rnd_(nullptr)
 {
   msg_ = new G4GenericMessenger(this, "/Geometry/NextTonScale/",
                                 "Control commands of the NextTonScale geometry.");
@@ -45,35 +45,35 @@ NextTonScale::NextTonScale():
 
   G4GenericMessenger::Command& active_diam_cmd =
     msg_->DeclareProperty("active_diam", active_diam_,
-                        "Diameter of the active diameter of the detector.");
+                          "Diameter of the active diameter of the detector.");
   active_diam_cmd.SetUnitCategory("Length");
   active_diam_cmd.SetParameterName("active_diam", false);
   active_diam_cmd.SetRange("active_diam>=0.");
 
   G4GenericMessenger::Command& active_length_cmd =
     msg_->DeclareProperty("active_length", active_length_,
-                        "Length of the active diameter of the detector.");
+                          "Length of the active diameter of the detector.");
   active_length_cmd.SetUnitCategory("Length");
   active_length_cmd.SetParameterName("active_length", false);
   active_length_cmd.SetRange("active_length>=0.");
 
   G4GenericMessenger::Command& fcage_thickn_cmd =
     msg_->DeclareProperty("fcage_thickn", fcage_thickn_,
-                        "Thickness of the field cage of the detector.");
+                          "Thickness of the field cage of the detector.");
   fcage_thickn_cmd.SetUnitCategory("Length");
   fcage_thickn_cmd.SetParameterName("fcage_thickn", false);
   fcage_thickn_cmd.SetRange("fcage_thickn>=0.");
 
   G4GenericMessenger::Command& ics_thickn_cmd =
     msg_->DeclareProperty("ics_thickn", ics_thickn_,
-                        "Thickness of the inner copper shield.");
+                          "Thickness of the inner copper shield.");
   ics_thickn_cmd.SetUnitCategory("Length");
   ics_thickn_cmd.SetParameterName("ics_thickn", false);
   ics_thickn_cmd.SetRange("ics_thickn>=0.");
 
   G4GenericMessenger::Command& vessel_thickn_cmd =
     msg_->DeclareProperty("vessel_thickn", vessel_thickn_,
-                        "Thickness of the vessel.");
+                          "Thickness of the vessel.");
   vessel_thickn_cmd.SetUnitCategory("Length");
   vessel_thickn_cmd.SetParameterName("vessel_thickn", false);
   vessel_thickn_cmd.SetRange("vessel_thickn>=0.");
@@ -120,9 +120,14 @@ NextTonScale::~NextTonScale()
 
 void NextTonScale::Construct()
 {
+  // Materials definition /////////////////////////////////
+  //xenon_gas_ = MaterialsList::GXe(15. * bar, 300. * kelvin);
+  xenon_gas_ = new G4Material("GXe", gas_density_, 1, kStateGas);
+  G4Element* Xe = G4NistManager::Instance()->FindOrBuildElement("Xe");
+  xenon_gas_->AddElement(Xe,1);
+
   // LAB ///////////////////////////////////////////////////
   // Volume of air that contains all other detector volumes.
-
   G4String lab_name = "LAB";
 
   // Calculate the maximum span of the detector
@@ -157,35 +162,12 @@ void NextTonScale::Construct()
   mother_logic_vol = ConstructVessel(mother_logic_vol);
   mother_logic_vol = ConstructInnerShield(mother_logic_vol);
   mother_logic_vol = ConstructFieldCage(mother_logic_vol);
-
-
-  /// Construct Vertex generators
-    //rnd_ = new CylinderPointSampler(active_diam_/2., active_length_/2.,
-  //                                fcage_thickn_, 0.);
-  active_gen_ = new CylinderPointSampler(0., active_length_, active_diam_/2., 0.);
-
-  field_cage_gen_ = new CylinderPointSampler(active_diam_/2., active_length_,
-    fcage_thickn_, 0.);
-
-  ics_gen_    = new CylinderPointSampler(fcage_diam_/2., fcage_length_,
-    ics_thickn_, ics_thickn_);
-
-  vessel_gen_ = new CylinderPointSampler(ics_diam_/2., gas_length_, 
-    vessel_thickn_, vessel_thickn_);
-
-  G4double readout_thickness = 0.1;
-  readout_plane_gen_ = new CylinderPointSampler(0., readout_thickness, active_diam_/2.,
-    0., G4ThreeVector(0., 0., -(active_length_/2.-readout_thickness/2.)));
-
-  outer_plane_gen_ = new CylinderPointSampler(0., readout_thickness, ics_diam_/2.,
-    0., G4ThreeVector(0., 0., -(ics_length_/2.+readout_thickness/2.)));
 }
 
 
 G4LogicalVolume* NextTonScale::ConstructWaterTank(G4LogicalVolume* mother_logic_vol)
 {
   // TANK //////////////////////////////////////////////////
-
   G4String tank_name = "WATER_TANK";
 
   G4double tank_thickn = 10.*cm;
@@ -197,12 +179,12 @@ G4LogicalVolume* NextTonScale::ConstructWaterTank(G4LogicalVolume* mother_logic_
   G4Material* tank_material =
     G4NistManager::Instance()->FindOrBuildMaterial("G4_STAINLESS-STEEL");
 
-  G4Tubs* tank_solid_vol = new G4Tubs(tank_name, 0., tank_diam/2.+tank_thickn,
-                                                 tank_height/2.+tank_thickn,
-                                                 0., 360.*deg);
+  G4Tubs* tank_solid_vol = new G4Tubs(tank_name, 0., tank_diam/2.,
+                                      tank_height/2., 0., 360.*deg);
 
   G4LogicalVolume* tank_logic_vol =
     new G4LogicalVolume(tank_solid_vol, tank_material, tank_name);
+  tank_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
 
   G4RotationMatrix* rotation = new G4RotationMatrix();
   rotation->rotateX(90.*deg);
@@ -210,28 +192,27 @@ G4LogicalVolume* NextTonScale::ConstructWaterTank(G4LogicalVolume* mother_logic_
   new G4PVPlacement(rotation, G4ThreeVector(0.,0.,0.), tank_logic_vol,
                     tank_name, mother_logic_vol, false, 0, true);
 
-  // WATER /////////////////////////////////////////////////
 
+  // WATER /////////////////////////////////////////////////
   G4String water_name = "WATER";
 
-  G4double water_diam   = tank_diam - 2.*tank_thickn;
+  G4double water_diam   = tank_diam   - 2.*tank_thickn;
   G4double water_height = tank_height - 2.*tank_thickn;
 
   G4Material* water_material =
     G4NistManager::Instance()->FindOrBuildMaterial("G4_WATER");
 
   G4Tubs* water_solid_vol = new G4Tubs(water_name, 0., water_diam/2.,
-                                                   water_height/2.,
-                                                   0., 360.*deg);
+                                       water_height/2., 0., 360.*deg);
 
   G4LogicalVolume* water_logic_vol =
     new G4LogicalVolume(water_solid_vol, water_material, water_name);
+  water_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
 
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), water_logic_vol,
                     water_name, tank_logic_vol, false, 0, true);
 
   //////////////////////////////////////////////////////////
-
   return water_logic_vol;
 }
 
@@ -239,19 +220,18 @@ G4LogicalVolume* NextTonScale::ConstructWaterTank(G4LogicalVolume* mother_logic_
 G4LogicalVolume* NextTonScale::ConstructVessel(G4LogicalVolume* mother_logic_vol)
 {
   // PRESSURE VESSEL ///////////////////////////////////////
-
   G4String vessel_name = "VESSEL";
 
-  vessel_diam_   = active_diam_ + 2.*fcage_thickn_ + 
-                   2.*ics_thickn_ + 2.*vessel_thickn_;
-  vessel_length_ = active_length_ + 2.*ics_thickn_ +
-                   2.*endcap_hollow_ + 2.*vessel_thickn_;
+  G4double vessel_diam   = active_diam_ + 2.*fcage_thickn_ +
+                           2.*ics_thickn_ + 2.*vessel_thickn_;
+  G4double vessel_length = active_length_ + 2.*ics_thickn_ +
+                           2.*endcap_hollow_ + 2.*vessel_thickn_;
 
   G4Material* vessel_material =
     G4NistManager::Instance()->FindOrBuildMaterial("G4_STAINLESS-STEEL");
 
-  G4Tubs* vessel_solid_vol =
-    new G4Tubs(vessel_name, 0., vessel_diam_/2., vessel_length_/2., 0., 360.*deg);
+  G4Tubs* vessel_solid_vol = new G4Tubs(vessel_name, 0., vessel_diam/2.,
+                                        vessel_length/2., 0., 360.*deg);
 
   G4LogicalVolume* vessel_logic_vol =
     new G4LogicalVolume(vessel_solid_vol, vessel_material, vessel_name);
@@ -262,29 +242,28 @@ G4LogicalVolume* NextTonScale::ConstructVessel(G4LogicalVolume* mother_logic_vol
   new G4PVPlacement(rotation, G4ThreeVector(0.,0.,0.), vessel_logic_vol,
                     vessel_name, mother_logic_vol, false, 0, true);
 
-  // GAS ///////////////////////////////////////////////////
 
+  // GAS ///////////////////////////////////////////////////
   G4String gas_name = "GAS";
 
-  gas_diam_   = vessel_diam_ - 2.*vessel_thickn_;
-  gas_length_ = vessel_length_ - 2.*vessel_thickn_;
+  G4double gas_diam   = vessel_diam   - 2.*vessel_thickn_;
+  G4double gas_length = vessel_length - 2.*vessel_thickn_;
 
-  G4Material* gas_material =
-    new G4Material("GXe", gas_density_,
-                   G4NistManager::Instance()->FindOrBuildMaterial("G4_Xe"),
-                   kStateGas);
-
-  G4Tubs* gas_solid_vol =
-    new G4Tubs(gas_name, 0., gas_diam_/2., gas_length_/2., 0., 360.*deg);
+  G4Tubs* gas_solid_vol =  new G4Tubs(gas_name, 0., gas_diam/2.,
+                                      gas_length/2., 0., 360.*deg);
 
   G4LogicalVolume* gas_logic_vol =
-    new G4LogicalVolume(gas_solid_vol, gas_material, gas_name);
+    new G4LogicalVolume(gas_solid_vol, xenon_gas_, gas_name);
 
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), gas_logic_vol,
                     gas_name, vessel_logic_vol, false, 0, true);
 
-  //////////////////////////////////////////////////////////
 
+  // VERTEX GENERATORS /////////////////////////////////////
+  vessel_gen_ = new CylinderPointSampler(gas_diam/2., gas_length,
+                                         vessel_thickn_, vessel_thickn_);
+
+  //////////////////////////////////////////////////////////
   return gas_logic_vol;
 }
 
@@ -292,53 +271,59 @@ G4LogicalVolume* NextTonScale::ConstructVessel(G4LogicalVolume* mother_logic_vol
 G4LogicalVolume* NextTonScale::ConstructInnerShield(G4LogicalVolume* mother_logic_vol)
 {
   // INNER SHIELD //////////////////////////////////////////
-
   G4String ics_name = "INNER_SHIELD";
 
-  ics_diam_   = active_diam_ + 2.*fcage_thickn_ + 2.*ics_thickn_;
-  ics_length_ = active_length_ + 2.*ics_thickn_;
+  G4double ics_diam   = active_diam_   + 2.*fcage_thickn_ + 2.*ics_thickn_;
+  G4double ics_length = active_length_ + 2.*ics_thickn_;
 
   G4Material* ics_material =
     G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
 
-  G4Tubs* ics_cyl =
-    new G4Tubs("INNER_SHIELD_CYL", 0., ics_diam_/2., ics_length_/2., 0., 360.*deg);
-  G4Tubs* ics_void =
-    new G4Tubs("INNER_SHIELD_VOID", 0., ics_diam_/2. - ics_thickn_,
-                                        ics_length_/2. - ics_thickn_,
-                                        0., 360.*deg);
-  G4SubtractionSolid* ics_solid_vol =
-    new G4SubtractionSolid(ics_name, ics_cyl, ics_void);
+  // G4Tubs* ics_cyl =
+  //   new G4Tubs("INNER_SHIELD_CYL", 0., ics_diam/2., ics_length/2., 0., 360.*deg);
+  // G4Tubs* ics_void =
+  //   new G4Tubs("INNER_SHIELD_VOID", 0., ics_diam/2. - ics_thickn_,
+  //              ics_length/2. - ics_thickn_, 0., 360.*deg);
+  // G4SubtractionSolid* ics_solid_vol =
+  //   new G4SubtractionSolid(ics_name, ics_cyl, ics_void);
+
+  G4Tubs* ics_solid_vol =  new G4Tubs(ics_name, 0., ics_diam/2.,
+                                      ics_length/2., 0., 360.*deg);
 
   G4LogicalVolume* ics_logic_vol =
     new G4LogicalVolume(ics_solid_vol, ics_material, ics_name);
 
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), ics_logic_vol,
-                      ics_name, mother_logic_vol, false, 0, true);
+                    ics_name, mother_logic_vol, false, 0, true);
 
-  // Vertex generator
-  ics_gen_ = new CylinderPointSampler(0., ics_length_, ics_diam_/2., 0.);
+  // VERTEX GENERATORS //////////////////////////////////////
+  ics_gen_ = new CylinderPointSampler(ics_diam/2. - ics_thickn_,
+                                      ics_length - 2*ics_thickn_,
+                                      ics_thickn_, ics_thickn_);
+
+  G4double outer_readout_thickness = 0.1 * mm;
+  outer_plane_gen_ = new CylinderPointSampler(0., outer_readout_thickness,
+     ics_diam/2., 0., G4ThreeVector(0., 0., -(ics_length/2.+outer_readout_thickness/2.)));
 
   //////////////////////////////////////////////////////////
-
-  return mother_logic_vol;
+  //return mother_logic_vol;
+  return ics_logic_vol;
 }
 
 
 G4LogicalVolume* NextTonScale::ConstructFieldCage(G4LogicalVolume* mother_logic_vol)
 {
   // FIELD CAGE ////////////////////////////////////////////
-
   G4String fcage_name = "FIELD_CAGE";
 
-  fcage_diam_   = active_diam_ + 2.*fcage_thickn_;
-  fcage_length_ = active_length_;
+  G4double fcage_diam   = active_diam_ + 2.*fcage_thickn_;
+  G4double fcage_length = active_length_;
 
   G4Material* fcage_material =
     G4NistManager::Instance()->FindOrBuildMaterial("G4_POLYETHYLENE");
 
   G4Tubs* fcage_solid_vol =
-    new G4Tubs(fcage_name, active_diam_/2., fcage_diam_/2., fcage_length_/2.,
+    new G4Tubs(fcage_name, active_diam_/2., fcage_diam/2., fcage_length/2.,
                0., 360.*deg);
 
   G4LogicalVolume* fcage_logic_vol =
@@ -347,19 +332,15 @@ G4LogicalVolume* NextTonScale::ConstructFieldCage(G4LogicalVolume* mother_logic_
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), fcage_logic_vol,
                     fcage_name, mother_logic_vol, false, 0, true);
 
-  // ACTIVE ////////////////////////////////////////////////
 
+  // ACTIVE ////////////////////////////////////////////////
   G4String active_name = "ACTIVE";
 
   G4Tubs* active_solid_vol =
     new G4Tubs(active_name, 0., active_diam_/2., active_length_/2., 0., 360.*deg);
 
   G4LogicalVolume* active_logic_vol =
-    new G4LogicalVolume(active_solid_vol, mother_logic_vol->GetMaterial(),
-                        active_name);
-
-  new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), active_logic_vol,
-                    active_name, mother_logic_vol, false, 0, true);
+    new G4LogicalVolume(active_solid_vol, xenon_gas_, active_name);
 
   // Limit the step size in this volume for better tracking precision
   active_logic_vol->SetUserLimits(new G4UserLimits(1.*mm));
@@ -368,8 +349,23 @@ G4LogicalVolume* NextTonScale::ConstructFieldCage(G4LogicalVolume* mother_logic_
   active_logic_vol->SetSensitiveDetector(ionisd);
   G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
 
-  //////////////////////////////////////////////////////////
+  new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), active_logic_vol,
+                    active_name, mother_logic_vol, false, 0, true);
 
+
+  // VERTEX GENERATORS //////////////////////////////////////
+  field_cage_gen_ = new CylinderPointSampler(active_diam_/2., active_length_,
+                                             fcage_thickn_, 0.);
+
+  active_gen_ = new CylinderPointSampler(0., active_length_,
+                                         active_diam_/2., 0.);
+
+  G4double inner_readout_thickness = 0.1 * mm;
+  readout_plane_gen_ =
+    new CylinderPointSampler(0., inner_readout_thickness, active_diam_/2., 0.,
+      G4ThreeVector(0., 0., -(active_length_/2.-inner_readout_thickness/2.)));
+
+  //////////////////////////////////////////////////////////
   return nullptr;
 }
 

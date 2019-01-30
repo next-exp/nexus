@@ -1,19 +1,19 @@
 ### GEOMETRY
-/Geometry/NextTonScale/active_diam 200. cm
+/Geometry/NextTonScale/active_diam   200. cm
 /Geometry/NextTonScale/active_length 200. cm
-/Geometry/NextTonScale/fcage_thickn 1. cm
-/Geometry/NextTonScale/ics_thickn 12. cm
-/Geometry/NextTonScale/vessel_thickn 2. cm
-/Geometry/NextTonScale/gas_density 89. kg/m3
+/Geometry/NextTonScale/fcage_thickn    1. cm
+/Geometry/NextTonScale/ics_thickn     12. cm
+/Geometry/NextTonScale/vessel_thickn   2. cm
+/Geometry/NextTonScale/gas_density    89. kg/m3
 
 
 ### GENERATOR
 # Single Particle
 #/Generator/SingleParticle/region AD_HOC
 #/Geometry/NextTonScale/specific_vertex_X 0. mm
-#/Geometry/NextTonScale/specific_vertex_Y -10000. mm
+#/Geometry/NextTonScale/specific_vertex_Y 0. mm
 #/Geometry/NextTonScale/specific_vertex_Z 0. mm
-#/Generator/SingleParticle/particle nu_e
+#/Generator/SingleParticle/particle geantino
 #/Generator/SingleParticle/min_energy 1. GeV
 #/Generator/SingleParticle/max_energy 1. GeV
 #/Generator/SingleParticle/momentum_X 0.
@@ -51,7 +51,7 @@
 
 
 ### JOB CONTROL
-/nexus/random_seed 1
+/nexus/random_seed -1
 /nexus/persistency/hdf5 true
 /nexus/persistency/start_id 0
 /nexus/persistency/outputFile NextTon.next
