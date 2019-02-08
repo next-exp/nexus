@@ -1,11 +1,12 @@
 // -----------------------------------------------------------------------------
 // File   : NextTonScale.cc
 // Author : Justo Martin-Albo
-// Date   : July 2019
+// Date   : January 2019
 // -----------------------------------------------------------------------------
 
 #include "NextTonScale.h"
 #include "MaterialsList.h"
+#include "Visibilities.h"
 
 #include "CylinderPointSampler.h"
 #include "IonizationSD.h"
@@ -31,7 +32,11 @@ NextTonScale::NextTonScale():
   active_diam_(300.*cm), active_length_(300.*cm),
   fcage_thickn_(1.*cm), ics_thickn_(12.*cm), vessel_thickn_(2.*cm),
   endcap_hollow_(20.*cm),
-  water_thickn_(3.*m)
+  water_thickn_(3.*m),
+  tank_visibility_(0),
+  vessel_visibility_(1),
+  ics_visibility_(1),
+  fcage_visibility_(1)
 {
   msg_ = new G4GenericMessenger(this, "/Geometry/NextTonScale/",
                                 "Control commands of the NextTonScale geometry.");
@@ -103,6 +108,23 @@ NextTonScale::NextTonScale():
       "If region is AD_HOC, z coord where particles are generated");
   specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
   specific_vertex_Z_cmd.SetUnitCategory("Length");
+
+  // Geometry Visibilities
+  G4GenericMessenger::Command& tank_visibility_cmd =
+    msg_->DeclareProperty("tank_visibility", tank_visibility_, "Water Tank Visibility");
+  tank_visibility_cmd.SetParameterName("tank_visibility", true);
+
+  G4GenericMessenger::Command& vessel_visibility_cmd =
+    msg_->DeclareProperty("vessel_visibility", vessel_visibility_, "Vessel Visibility");
+  vessel_visibility_cmd.SetParameterName("vessel_visibility", true);
+
+  G4GenericMessenger::Command& ics_visibility_cmd =
+    msg_->DeclareProperty("ics_visibility", ics_visibility_, "ICS Visibility");
+  ics_visibility_cmd.SetParameterName("ics_visibility", true);
+
+  G4GenericMessenger::Command& fcage_visibility_cmd =
+    msg_->DeclareProperty("fcage_visibility", fcage_visibility_, "Field Cage Visibility");
+  fcage_visibility_cmd.SetParameterName("fcage_visibility", false);
 }
 
 
@@ -122,7 +144,7 @@ void NextTonScale::Construct()
 {
   // Materials definition /////////////////////////////////
   //xenon_gas_ = MaterialsList::GXe(15. * bar, 300. * kelvin);
-  xenon_gas_ = new G4Material("GXe", gas_density_, 1, kStateGas);
+  xenon_gas_ = new G4Material("denseXe", gas_density_, 1, kStateGas);
   G4Element* Xe = G4NistManager::Instance()->FindOrBuildElement("Xe");
   xenon_gas_->AddElement(Xe,1);
 
@@ -184,7 +206,12 @@ G4LogicalVolume* NextTonScale::ConstructWaterTank(G4LogicalVolume* mother_logic_
 
   G4LogicalVolume* tank_logic_vol =
     new G4LogicalVolume(tank_solid_vol, tank_material, tank_name);
-  tank_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+
+  // Setting tank visibility
+  if (tank_visibility_)
+    tank_logic_vol->SetVisAttributes(nexus::DarkGrey());
+  else
+    tank_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
 
   G4RotationMatrix* rotation = new G4RotationMatrix();
   rotation->rotateX(90.*deg);
@@ -239,6 +266,12 @@ G4LogicalVolume* NextTonScale::ConstructVessel(G4LogicalVolume* mother_logic_vol
   G4RotationMatrix* rotation = new G4RotationMatrix();
   rotation->rotateX(90.*deg);
 
+  // Setting vessel visibility
+  if (vessel_visibility_)
+    vessel_logic_vol->SetVisAttributes(nexus::TitaniumGrey());
+  else
+    vessel_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+
   new G4PVPlacement(rotation, G4ThreeVector(0.,0.,0.), vessel_logic_vol,
                     vessel_name, mother_logic_vol, false, 0, true);
 
@@ -254,6 +287,8 @@ G4LogicalVolume* NextTonScale::ConstructVessel(G4LogicalVolume* mother_logic_vol
 
   G4LogicalVolume* gas_logic_vol =
     new G4LogicalVolume(gas_solid_vol, xenon_gas_, gas_name);
+
+  gas_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
 
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), gas_logic_vol,
                     gas_name, vessel_logic_vol, false, 0, true);
@@ -279,19 +314,17 @@ G4LogicalVolume* NextTonScale::ConstructInnerShield(G4LogicalVolume* mother_logi
   G4Material* ics_material =
     G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
 
-  // G4Tubs* ics_cyl =
-  //   new G4Tubs("INNER_SHIELD_CYL", 0., ics_diam/2., ics_length/2., 0., 360.*deg);
-  // G4Tubs* ics_void =
-  //   new G4Tubs("INNER_SHIELD_VOID", 0., ics_diam/2. - ics_thickn_,
-  //              ics_length/2. - ics_thickn_, 0., 360.*deg);
-  // G4SubtractionSolid* ics_solid_vol =
-  //   new G4SubtractionSolid(ics_name, ics_cyl, ics_void);
-
   G4Tubs* ics_solid_vol =  new G4Tubs(ics_name, 0., ics_diam/2.,
                                       ics_length/2., 0., 360.*deg);
 
   G4LogicalVolume* ics_logic_vol =
     new G4LogicalVolume(ics_solid_vol, ics_material, ics_name);
+
+  // Setting ics visibility
+  if (ics_visibility_)
+    ics_logic_vol->SetVisAttributes(nexus::CopperBrown());
+  else
+    ics_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
 
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), ics_logic_vol,
                     ics_name, mother_logic_vol, false, 0, true);
@@ -301,6 +334,9 @@ G4LogicalVolume* NextTonScale::ConstructInnerShield(G4LogicalVolume* mother_logi
                                       ics_length - 2*ics_thickn_,
                                       ics_thickn_, ics_thickn_);
 
+  // The outer_readout vertex generator is a vertex generator from
+  // a virtual volume placed at -Z next to the outer plane of the ICS endcap
+  // It is used to generate backgound associated with the electronics of readout planes.
   G4double outer_readout_thickness = 0.1 * mm;
   outer_plane_gen_ = new CylinderPointSampler(0., outer_readout_thickness,
      ics_diam/2., 0., G4ThreeVector(0., 0., -(ics_length/2.+outer_readout_thickness/2.)));
@@ -329,6 +365,12 @@ G4LogicalVolume* NextTonScale::ConstructFieldCage(G4LogicalVolume* mother_logic_
   G4LogicalVolume* fcage_logic_vol =
     new G4LogicalVolume(fcage_solid_vol, fcage_material, fcage_name);
 
+  // Setting field cage visibility
+  if (fcage_visibility_)
+    fcage_logic_vol->SetVisAttributes(nexus::LightBlue());
+  else
+    fcage_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), fcage_logic_vol,
                     fcage_name, mother_logic_vol, false, 0, true);
 
@@ -341,6 +383,8 @@ G4LogicalVolume* NextTonScale::ConstructFieldCage(G4LogicalVolume* mother_logic_
 
   G4LogicalVolume* active_logic_vol =
     new G4LogicalVolume(active_solid_vol, xenon_gas_, active_name);
+
+  active_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
 
   // Limit the step size in this volume for better tracking precision
   active_logic_vol->SetUserLimits(new G4UserLimits(1.*mm));
@@ -360,6 +404,9 @@ G4LogicalVolume* NextTonScale::ConstructFieldCage(G4LogicalVolume* mother_logic_
   active_gen_ = new CylinderPointSampler(0., active_length_,
                                          active_diam_/2., 0.);
 
+  // The inner_readout vertex generator is a vertex generator from
+  // a virtual volume placed at -Z next to the inner plane of the ICS endcap
+  // It is used to generate backgound associated with the readout planes.
   G4double inner_readout_thickness = 0.1 * mm;
   readout_plane_gen_ =
     new CylinderPointSampler(0., inner_readout_thickness, active_diam_/2., 0.,

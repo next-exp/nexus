@@ -6,6 +6,10 @@
 /Geometry/NextTonScale/vessel_thickn   2. cm
 /Geometry/NextTonScale/gas_density    89. kg/m3
 
+/Geometry/NextTonScale/tank_visibility   false
+/Geometry/NextTonScale/vessel_visibility true
+/Geometry/NextTonScale/ics_visibility    true
+/Geometry/NextTonScale/fcage_visibility  true
 
 ### GENERATOR
 # Single Particle
@@ -21,16 +25,16 @@
 #/Generator/SingleParticle/momentum_Z 0.
 
 # Ion Gun for background decays ... (Bi214: Z=83, A=214), (Tl208: Z=81, A=208)
-#/Generator/IonGun/region READOUT_PLANES
-#/Generator/IonGun/atomic_number 83
-#/Generator/IonGun/mass_number 214
+/Generator/IonGun/region INNER_SHIELDING
+/Generator/IonGun/atomic_number 81
+/Generator/IonGun/mass_number 208
 
 # Decay0 interface for BB decays ... (BB0nu: DecayMode 1), (BB2nu: DecayMode 4)
-/Generator/Decay0Interface/region ACTIVE
-/Generator/Decay0Interface/inputFile none
-/Generator/Decay0Interface/Xe136DecayMode 1
-/Generator/Decay0Interface/EnergyThreshold 0. keV
-/Generator/Decay0Interface/Ba136FinalState 0
+#/Generator/Decay0Interface/region ACTIVE
+#/Generator/Decay0Interface/inputFile none
+#/Generator/Decay0Interface/Xe136DecayMode 1
+#/Generator/Decay0Interface/EnergyThreshold 0. keV
+#/Generator/Decay0Interface/Ba136FinalState 0
 
 
 ### ACTIONS
@@ -51,7 +55,7 @@
 
 
 ### JOB CONTROL
-/nexus/random_seed -1
+/nexus/random_seed 0
 /nexus/persistency/hdf5 true
 /nexus/persistency/start_id 0
-/nexus/persistency/outputFile NextTon.next
+/nexus/persistency/outputFile NextTon.Tl208.INNER_SHIELDING.next

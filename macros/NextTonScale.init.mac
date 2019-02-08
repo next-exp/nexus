@@ -4,12 +4,12 @@
 
 ### GENERATOR
 #/Generator/RegisterGenerator SINGLE_PARTICLE
-#/Generator/RegisterGenerator ION_GUN
-/Generator/RegisterGenerator DECAY0
+/Generator/RegisterGenerator ION_GUN
+#/Generator/RegisterGenerator DECAY0
 
 
 ### ACTIONS
-/Actions/RegisterTrackingAction DEFAULT
+/Actions/RegisterTrackingAction VALIDATION
 /Actions/RegisterEventAction DEFAULT
 /Actions/RegisterSteppingAction DEFAULT
 /Actions/RegisterRunAction DEFAULT
@@ -31,4 +31,4 @@
 
 ### EXTRA CONFIGURATION
 /nexus/RegisterMacro ./macros/NextTonScale.config.mac
-/nexus/RegisterDelayedMacro macros/physics/Bi214.mac
+#/nexus/RegisterDelayedMacro macros/physics/Bi214.mac

@@ -2,7 +2,7 @@
 // File   : NextTonScale.h
 // Info   : Detector geometry for ton-scale sensitivity studies.
 // Author : Justo Martin-Albo
-// Date   : July 2019
+// Date   : January 2019
 // -----------------------------------------------------------------------------
 
 #ifndef NEXT_TON_SCALE_H
@@ -37,6 +37,7 @@ namespace nexus {
 
   private:
     G4GenericMessenger* msg_;
+
     G4Material* xenon_gas_;
 
     // Geometry Parameters
@@ -55,6 +56,12 @@ namespace nexus {
     CylinderPointSampler* vessel_gen_;
     CylinderPointSampler* readout_plane_gen_;
     CylinderPointSampler* outer_plane_gen_;
+
+    // Visibilities
+    G4bool tank_visibility_;
+    G4bool vessel_visibility_;
+    G4bool ics_visibility_;
+    G4bool fcage_visibility_;
   };
 
 } // namespace nexus
