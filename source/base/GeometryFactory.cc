@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author : <justo.martin-albo@ific.uv.es>    
+//  Author : <justo.martin-albo@ific.uv.es>
 //  Created: 13 March 2013
 //
 //  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
@@ -38,6 +38,7 @@ GeometryFactory::~GeometryFactory()
 #include "NextNewOpticalGeometry.h"
 #include "NextNew.h"
 #include "MagBox.h"
+#include "NextTonScale.h"
 
 BaseGeometry* GeometryFactory::CreateGeometry() const
 {
@@ -46,7 +47,7 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
   if      (_name == "XE_SPHERE") p = new XeSphere();
 
   else if (_name == "CYLINDRIC_CHAMBER") p = new CylindricChamber();
-  
+
   else if (_name == "NEXT1_EL") p = new Next1EL();
 
   else if (_name == "NEXT100") p = new Next100();
@@ -57,6 +58,8 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
 
   else if (_name == "MAG_BOX") p = new MagBox();
 
+  else if (_name == "TON_SCALE") p = new NextTonScale();
+
   else {
     G4String err = "The user selected an unknown geometry: " + _name;
     G4Exception("CreateGeometry", "[BaseGeometry]", FatalException, err);
@@ -64,5 +67,3 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
 
   return p;
 }
-
-
