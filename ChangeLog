@@ -1,3 +1,6 @@
+tag v5_03_12 - 27 Feb 2019
+        - Add new geometry for tonne studies.
+
 tag v5_03_11 - 28 Jan 2019
         - Fix bug in vertex generation for specific configurations.
 
