@@ -472,7 +472,7 @@ void Next100InnerElements::BuildBuffer()
     G4double xenon_posz = (_buffer_length * buffer_posz + _active_length * _active_posz) / (_buffer_length + _active_length);
     _xenon_gen =
       new CylinderPointSampler(0., _buffer_length + _active_length,
-			       _tube_in_diam/2.,
+			       _active_diam/2.,
 			       0., G4ThreeVector (0., 0., xenon_posz));
 
   }
