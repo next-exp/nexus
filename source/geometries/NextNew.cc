@@ -503,12 +503,26 @@ namespace nexus {
     }
     //INNER ELEMENTS
     else if ( (region == "CENTER") ||
-	      (region == "CARRIER_PLATE") || (region == "ENCLOSURE_BODY") || (region == "ENCLOSURE_WINDOW") ||  
-	      (region == "OPTICAL_PAD") || (region == "PMT_BODY") || (region == "PMT_BASE") ||
-              (region == "INT_ENCLOSURE_SURF") || (region == "PMT_SURF") || (region == "DRIFT_TUBE") ||
-              (region == "ANODE_QUARTZ")|| (region == "HDPE_TUBE") ||
-	      (region == "ACTIVE") || (region == "EL_TABLE") || (region == "AD_HOC") || (region == "CATHODE")||
-	      (region == "SUPPORT_PLATE") || (region == "DICE_BOARD") || (region == "DB_PLUG") ){
+	      (region == "CARRIER_PLATE") ||
+	      (region == "ENCLOSURE_BODY") ||
+	      (region == "ENCLOSURE_WINDOW") ||  
+	      (region == "OPTICAL_PAD") ||
+	      (region == "PMT_BODY") ||
+	      (region == "PMT_BASE") ||
+              (region == "INT_ENCLOSURE_SURF") ||
+	      (region == "PMT_SURF") ||
+	      (region == "DRIFT_TUBE") ||
+              (region == "ANODE_QUARTZ")||
+	      (region == "HDPE_TUBE") ||
+	      (region == "XENON") ||
+	      (region == "ACTIVE") ||
+	      (region == "BUFFER") ||
+	      (region == "EL_TABLE") ||
+	      (region == "AD_HOC") ||
+	      (region == "CATHODE")||
+	      (region == "SUPPORT_PLATE") ||
+	      (region == "DICE_BOARD") ||
+	      (region == "DB_PLUG") ){
       vertex = _inner_elements->GenerateVertex(region);
     }
     else {

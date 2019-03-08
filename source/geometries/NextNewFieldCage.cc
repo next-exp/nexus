@@ -198,6 +198,8 @@ namespace nexus {
     delete _hdpe_tube_gen;
     //  delete _buffer_tube_gen;
     delete _active_gen;
+    delete _buffer_gen;
+    delete _xenon_gen;
     delete _anode_quartz_gen;
     delete _cathode_gen;   
   }
@@ -291,14 +293,14 @@ namespace nexus {
 
   void NextNewFieldCage::BuildActive()
   {
-    G4double active_length = 
+    _active_length = 
       _cathode_gap/2. + _tube_length_drift + _dist_tube_el;
     _active_posz = 
-      -_dist_feedthroughs/2.  +  active_length/2.;
+      -_dist_feedthroughs/2.  +  _active_length/2.;
 
     G4Tubs* active_solid = 
       new G4Tubs("ACTIVE",  0., _tube_in_diam/2., 
-		 active_length/2., 0, twopi);
+		 _active_length/2., 0, twopi);
     // G4cout << "Active starts in " <<  active_posz  -  active_length/2. << " and ends in " 
     // 	   << active_posz +  active_length/2. << G4endl;
     
@@ -316,8 +318,8 @@ namespace nexus {
     // Define a drift field for this volume
     UniformElectricDriftField* field = new UniformElectricDriftField();
     // electrodes are at the end of active region
-    field->SetCathodePosition(-(_active_posz - active_length/2.) + GetELzCoord()); 
-    field->SetAnodePosition(-(_active_posz + active_length/2.) + GetELzCoord());
+    field->SetCathodePosition(-(_active_posz - _active_length/2.) + GetELzCoord()); 
+    field->SetAnodePosition(-(_active_posz + _active_length/2.) + GetELzCoord());
     field->SetDriftVelocity(1. * mm/microsecond);
     field->SetTransverseDiffusion(_drift_transv_diff);
     field->SetLongitudinalDiffusion(_drift_long_diff);  
@@ -329,7 +331,7 @@ namespace nexus {
     active_logic->SetVisAttributes(G4VisAttributes::Invisible);
     // VERTEX GENERATOR
     _active_gen = 
-      new CylinderPointSampler(0., active_length,
+      new CylinderPointSampler(0., _active_length,
 			       _tube_in_diam/2.,
 			       0., G4ThreeVector (0., 0., _active_posz));
   }
@@ -355,6 +357,19 @@ void NextNewFieldCage::BuildBuffer()
     buffsd->IncludeInTotalEnergyDeposit(false);
     buffer_logic->SetSensitiveDetector(buffsd);
     G4SDManager::GetSDMpointer()->AddNewDetector(buffsd);
+
+    // VERTEX GENERATOR
+    _buffer_gen = 
+      new CylinderPointSampler(0., _buffer_length,
+			       _tube_in_diam/2.,
+			       0., G4ThreeVector (0., 0., buffer_posz));
+
+    // VERTEX GENERATOR FOR ALL XENON
+    G4double xenon_posz = (_buffer_length * buffer_posz + _active_length * _active_posz) / (_buffer_length + _active_length);
+    _xenon_gen =
+      new CylinderPointSampler(0., _buffer_length + _active_length,
+			       _tube_in_diam/2.,
+			       0., G4ThreeVector (0., 0., xenon_posz));
   }
 
   void NextNewFieldCage::BuildELRegion()
@@ -655,6 +670,12 @@ void NextNewFieldCage::BuildBuffer()
     // else if (region == "BUFFER_TUBE") {
     //   vertex = _buffer_tube_gen->GenerateVertex("BODY_VOL");
     // }
+    else if (region == "XENON") {
+      vertex = _xenon_gen->GenerateVertex("BODY_VOL");
+    }
+    else if (region == "BUFFER") {
+      vertex = _buffer_gen->GenerateVertex("BODY_VOL");
+    }
     else if (region == "ACTIVE") {
       vertex = _active_gen->GenerateVertex("BODY_VOL");
     } 

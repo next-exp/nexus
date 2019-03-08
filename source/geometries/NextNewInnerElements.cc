@@ -79,10 +79,17 @@ namespace nexus {
               (region == "INT_ENCLOSURE_SURF") || (region == "PMT_SURF")) {
       vertex = _energy_plane->GenerateVertex(region);
     }
-   else if ( (region == "DRIFT_TUBE") || (region == "HDPE_TUBE") ||
-	      (region == "ANODE_QUARTZ") || (region== "CENTER") || (region == "CATHODE") || 
-	      (region == "ACTIVE") || (region== "EL_TABLE") || (region == "AD_HOC")) {
-      vertex=_field_cage->GenerateVertex(region);
+   else if ( (region == "DRIFT_TUBE") ||
+	     (region == "HDPE_TUBE") ||
+	     (region == "ANODE_QUARTZ") ||
+	     (region == "CENTER") ||
+	     (region == "CATHODE") ||
+	     (region == "XENON") ||
+	     (region == "ACTIVE") ||
+	     (region == "BUFFER") ||
+	     (region== "EL_TABLE") ||
+	     (region == "AD_HOC")) {
+      vertex = _field_cage->GenerateVertex(region);
     }
     else if ( (region == "SUPPORT_PLATE") || (region == "DICE_BOARD")|| (region == "DB_PLUG") ) {
       vertex = _tracking_plane->GenerateVertex(region);

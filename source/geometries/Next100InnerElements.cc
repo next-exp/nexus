@@ -226,6 +226,7 @@ namespace nexus {
     delete _energy_plane;
     delete _tracking_plane;
     delete _active_gen;
+    delete _buffer_gen;
     delete _anode_quartz_gen;
     delete _cathode_gen;
   }
@@ -399,7 +400,7 @@ namespace nexus {
   void Next100InnerElements::BuildActive()
   {
     //    G4double active_posz = _el_grid_ref_z - _grid_thickn/2. - _active_length/2.;
-    G4double active_posz = _el_gap_posz - _el_gap_length/2. - _active_length/2.;
+    _active_posz = _el_gap_posz - _el_gap_length/2. - _active_length/2.;
 
     // G4cout << "ACTIVE starts in " << active_posz - _active_length/2.
     // 	   << " and ends in " << active_posz + _active_length/2. << G4endl;
@@ -408,7 +409,7 @@ namespace nexus {
 
     G4LogicalVolume* active_logic = new G4LogicalVolume(active_solid, _gas, "ACTIVE");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., active_posz), active_logic,
+    new G4PVPlacement(0, G4ThreeVector(0., 0., _active_posz), active_logic,
 		      "ACTIVE", _mother_logic, false, 0, false);
 
     // Limit the step size in this volume for better tracking precision
@@ -421,8 +422,8 @@ namespace nexus {
 
     //Define a drift field for this volume
     UniformElectricDriftField* field = new UniformElectricDriftField();
-    field->SetCathodePosition(-(active_posz - _active_length/2.) + GetELzCoord());
-    field->SetAnodePosition(-(active_posz + _active_length/2.) + GetELzCoord());
+    field->SetCathodePosition(-(_active_posz - _active_length/2.) + GetELzCoord());
+    field->SetAnodePosition(-(_active_posz + _active_length/2.) + GetELzCoord());
     field->SetDriftVelocity(1. * mm/microsecond);
     field->SetTransverseDiffusion(_drift_transv_diff);
     field->SetLongitudinalDiffusion(_drift_long_diff);  
@@ -436,8 +437,8 @@ namespace nexus {
 
 
     // VERTEX GENERATOR
-    _active_gen  = new CylinderPointSampler(0., _active_length, _active_diam/2.,
-					    0., G4ThreeVector (0., 0., active_posz));
+    _active_gen = new CylinderPointSampler(0., _active_length, _active_diam/2.,
+					   0., G4ThreeVector (0., 0., _active_posz));
   }
 
 void Next100InnerElements::BuildBuffer()
@@ -459,7 +460,19 @@ void Next100InnerElements::BuildBuffer()
     IonizationSD* buffsd = new IonizationSD("/NEXT100/BUFFER");
     buffsd->IncludeInTotalEnergyDeposit(false);
     buffer_logic->SetSensitiveDetector(buffsd);
-    G4SDManager::GetSDMpointer()->AddNewDetector(buffsd); ;
+    G4SDManager::GetSDMpointer()->AddNewDetector(buffsd);
+
+    // VERTEX GENERATOR
+    _buffer_gen =
+      new CylinderPointSampler(0., _buffer_length, _active_diam/2.,
+			       0., G4ThreeVector (0., 0., buffer_posz));
+
+    // VERTEX GENERATOR FOR ALL XENON
+    G4double xenon_posz = (_buffer_length * buffer_posz + _active_length * _active_posz) / (_buffer_length + _active_length);
+    _xenon_gen =
+      new CylinderPointSampler(0., _buffer_length + _active_length,
+			       _tube_in_diam/2.,
+			       0., G4ThreeVector (0., 0., xenon_posz));
 
   }
 
@@ -474,9 +487,17 @@ void Next100InnerElements::BuildBuffer()
     else if (region == "CATHODE") {
       vertex = _cathode_gen->GenerateVertex("BODY_VOL");
     }
+    //All xenon
+    else if (region == "XENON") {
+      vertex = _xenon_gen->GenerateVertex("BODY_VOL");
+    }
     // Active region
     else if (region == "ACTIVE") {
       vertex = _active_gen->GenerateVertex("BODY_VOL");
+    }
+    // Buffer
+    else if (region == "BUFFER") {
+      vertex = _buffer_gen->GenerateVertex("BODY_VOL");
     }
     // Anode plate
     else if (region == "ANODE_QUARTZ") {
