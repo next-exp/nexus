@@ -3,9 +3,9 @@
 //
 //  Authors: <jmunoz@ific.uv.es>
 //  Created: 2 Mar 2012
-//  
+//
 //  Copyright (c) 2012-2015 NEXT Collaboration
-// ---------------------------------------------------------------------------- 
+// ----------------------------------------------------------------------------
 
 #include "Next100InnerElements.h"
 
@@ -59,7 +59,7 @@ namespace nexus {
     _drift_transv_diff (1. * mm/sqrt(cm)),
     _drift_long_diff (.3 * mm/sqrt(cm)),
     _anode_quartz_thickness (3 *mm),
-    _anode_quartz_diam (110.*cm), 
+    _anode_quartz_diam (110.*cm),
     _tpb_thickness (1.*micrometer),
     _ito_transparency (.90),
     _ito_thickness (_grid_thickn),
@@ -71,7 +71,7 @@ namespace nexus {
     _el_gap_posz = (160.*cm / 2.) - _trk_displ;
 
     _cathode_pos_z = _el_gap_posz - _el_gap_length/2. - _active_length - _grid_thickn/2. ;
-    _buffer_length = 
+    _buffer_length =
        _cathode_pos_z - _grid_thickn/2. - _windows_end_z , // from the end of the cathode to surface of sapphire windows // It's 129.9 mm
 
     // Field Cage
@@ -91,8 +91,8 @@ namespace nexus {
     _msg = new G4GenericMessenger(this, "/Geometry/Next100/", "Control commands of geometry Next100.");
 
     _msg->DeclareProperty("grids_vis", _grids_visibility, "Grids Visibility");
-    
-    G4GenericMessenger::Command& step_cmd = 
+
+    G4GenericMessenger::Command& step_cmd =
       _msg->DeclareProperty("max_step_size", _max_step_size, "Maximum Step Size");
     step_cmd.SetUnitCategory("Length");
     step_cmd.SetParameterName("max_step_size", false);
@@ -148,8 +148,8 @@ namespace nexus {
     El_field_cmd.SetUnitCategory("Electric field");
 
      // Calculate vertices for EL table generation
-    G4GenericMessenger::Command& pitch_cmd = 
-      _msg->DeclareProperty("el_table_binning", _el_table_binning, 
+    G4GenericMessenger::Command& pitch_cmd =
+      _msg->DeclareProperty("el_table_binning", _el_table_binning,
 			    "Binning of EL lookup tables.");
     pitch_cmd.SetUnitCategory("Length");
     pitch_cmd.SetParameterName("el_table_binning", false);
@@ -199,9 +199,9 @@ namespace nexus {
 
     // Cathode Grid
     BuildCathodeGrid();
-  
+
     // ACTIVE region
-    BuildActive(); 
+    BuildActive();
 
     // Buffer region
     BuildBuffer();
@@ -225,6 +225,7 @@ namespace nexus {
     delete _field_cage;
     delete _energy_plane;
     delete _tracking_plane;
+    delete _xenon_gen;
     delete _active_gen;
     delete _buffer_gen;
     delete _anode_quartz_gen;
@@ -239,10 +240,10 @@ namespace nexus {
     /// EL GAP
     G4double el_gap_diam = _active_diam;
 
-    G4Tubs* el_gap_solid = 
+    G4Tubs* el_gap_solid =
       new G4Tubs("EL_GAP", 0., el_gap_diam/2., _el_gap_length/2., 0, twopi);
 
-    G4LogicalVolume* el_gap_logic = 
+    G4LogicalVolume* el_gap_logic =
       new G4LogicalVolume(el_gap_solid, _gas, "EL_GAP");
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., _el_gap_posz), el_gap_logic,
@@ -269,20 +270,20 @@ namespace nexus {
     /// EL GRIDS
     G4Material* fgrid_mat = MaterialsList::FakeDielectric(_gas, "el_grid_mat");
     fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _el_grid_transparency, _grid_thickn));
- 
-    // Dimensions & position: the grids are simulated inside the EL gap. 
+
+    // Dimensions & position: the grids are simulated inside the EL gap.
     // Their thickness is symbolic.
     G4double grid_diam = _active_diam;
-    
+
     G4double posz1 = - _el_gap_length/2. + _grid_thickn/2.;
     //   G4double posz2 =  _el_gap_length/2. - _grid_thickn/2.;
 
     _el_grid_ref_z = posz1;
 
-    G4Tubs* diel_grid_solid = 
+    G4Tubs* diel_grid_solid =
       new G4Tubs("EL_GRID", 0., grid_diam/2., _grid_thickn/2., 0, twopi);
 
-    G4LogicalVolume* diel_grid_logic = 
+    G4LogicalVolume* diel_grid_logic =
       new G4LogicalVolume(diel_grid_solid, fgrid_mat, "EL_GRID");
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,posz1), diel_grid_logic, "EL_GRID_1",
@@ -310,41 +311,41 @@ namespace nexus {
     // TPB coating
     G4Material* tpb = MaterialsList::TPB();
     tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB(_pressure, _temperature));
-     //ITO coating  
+     //ITO coating
     G4Material* ito = MaterialsList::ITO();
     ito->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeFusedSilica(_ito_transparency, _ito_thickness));
-  
+
     G4Tubs* anode_solid =
       new G4Tubs("ANODE_PLATE", 0., _anode_quartz_diam/2. , _anode_quartz_thickness/2., 0, twopi);
-    G4LogicalVolume* anode_logic = 
+    G4LogicalVolume* anode_logic =
       new G4LogicalVolume(anode_solid, quartz, "ANODE_PLATE");
 
     G4double pos_anode_z = _el_gap_posz + _el_gap_length/2. + _anode_quartz_thickness/2. + 0.1*mm; // 0.1 mm is needed because EL is produced only if the PostStepVolume is GAS material.
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., pos_anode_z), anode_logic, 
+    new G4PVPlacement(0, G4ThreeVector(0., 0., pos_anode_z), anode_logic,
  		      "ANODE_PLATE", _mother_logic, false, 0, false);
-   
-    // G4cout << "Anode plate starts in " << _pos_z_anode - _anode_quartz_thickness/2. << " and ends in " << 
+
+    // G4cout << "Anode plate starts in " << _pos_z_anode - _anode_quartz_thickness/2. << " and ends in " <<
     //   _pos_z_anode + _anode_quartz_thickness/2. << G4endl;
 
     G4Tubs* tpb_anode_solid =
       new G4Tubs("TPB_ANODE", 0., _anode_quartz_diam/2. , _tpb_thickness/2., 0, twopi);
-    G4LogicalVolume* tpb_anode_logic = 
+    G4LogicalVolume* tpb_anode_logic =
       new G4LogicalVolume(tpb_anode_solid, tpb, "TPB_ANODE");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., -_anode_quartz_thickness/2.+_tpb_thickness/2.), tpb_anode_logic, 
- 		      "TPB_ANODE", anode_logic, false, 0, false);  
+    new G4PVPlacement(0, G4ThreeVector(0., 0., -_anode_quartz_thickness/2.+_tpb_thickness/2.), tpb_anode_logic,
+ 		      "TPB_ANODE", anode_logic, false, 0, false);
 
     G4Tubs* ito_anode_solid =
       new G4Tubs("ITO_ANODE", 0., _anode_quartz_diam/2. , _ito_thickness/2., 0, twopi);
-    G4LogicalVolume* ito_anode_logic = 
+    G4LogicalVolume* ito_anode_logic =
       new G4LogicalVolume(ito_anode_solid, ito, "ITO_ANODE");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., +_anode_quartz_thickness/2.- _ito_thickness/2.), ito_anode_logic, 
+    new G4PVPlacement(0, G4ThreeVector(0., 0., +_anode_quartz_thickness/2.- _ito_thickness/2.), ito_anode_logic,
   			"ITO_ANODE", anode_logic, false, 0, false);
 
-    _anode_quartz_gen = 
-      new CylinderPointSampler(0.,_anode_quartz_thickness,_anode_quartz_diam/2., 
+    _anode_quartz_gen =
+      new CylinderPointSampler(0.,_anode_quartz_thickness,_anode_quartz_diam/2.,
 			       0., G4ThreeVector (0., 0., pos_anode_z));
-     
+
     if (_grids_visibility) {
       G4VisAttributes anode_col = nexus::Red();
       anode_col.SetForceSolid(true);
@@ -356,7 +357,7 @@ namespace nexus {
       anode_logic->SetVisAttributes(G4VisAttributes::Invisible);
       tpb_anode_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
-   
+
   }
 
 
@@ -364,14 +365,14 @@ namespace nexus {
   {
 
     G4Material* fgrid_mat = MaterialsList::FakeDielectric(_gas, "cath_grid_mat");
-    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, 
+    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature,
 									      _cath_grid_transparency, _grid_thickn));
 
     // Dimensions & position
     G4double grid_diam = _active_diam;
     // G4double posz = _el_grid_ref_z - _grid_thickn - _active_length;
     G4double posz = _el_gap_posz - _el_gap_length/2. - _active_length - _grid_thickn/2. ;
-   
+
     //G4cout << G4endl << "Cathode Grid posz: " << posz/cm << G4endl;
 
     // Building the grid
@@ -383,8 +384,8 @@ namespace nexus {
 		      _mother_logic, false, 0, false);
 
     // Vertex generator
-     _cathode_gen = 
-      new CylinderPointSampler(0., _grid_thickn, grid_diam/2., 
+     _cathode_gen =
+      new CylinderPointSampler(0., _grid_thickn, grid_diam/2.,
 			       0., G4ThreeVector (0., 0., posz));
 
     /// Visibilities
@@ -414,7 +415,7 @@ namespace nexus {
 
     // Limit the step size in this volume for better tracking precision
     active_logic->SetUserLimits(new G4UserLimits(_max_step_size));
-  
+
     // Set the volume as an ionization sensitive detector
     IonizationSD* ionisd = new IonizationSD("/NEXT100/ACTIVE");
     active_logic->SetSensitiveDetector(ionisd);
@@ -426,7 +427,7 @@ namespace nexus {
     field->SetAnodePosition(-(_active_posz + _active_length/2.) + GetELzCoord());
     field->SetDriftVelocity(1. * mm/microsecond);
     field->SetTransverseDiffusion(_drift_transv_diff);
-    field->SetLongitudinalDiffusion(_drift_long_diff);  
+    field->SetLongitudinalDiffusion(_drift_long_diff);
     G4Region* drift_region = new G4Region("DRIFT");
     drift_region->SetUserInformation(field);
     drift_region->AddRootLogicalVolume(active_logic);
@@ -445,15 +446,15 @@ void Next100InnerElements::BuildBuffer()
   {
 
     G4double buffer_posz =_el_gap_posz - _el_gap_length/2. - _active_length - _grid_thickn - _buffer_length/2.;
-    G4Tubs* buffer_solid = 
-      new G4Tubs("BUFFER",  0., _active_diam/2., 
+    G4Tubs* buffer_solid =
+      new G4Tubs("BUFFER",  0., _active_diam/2.,
 		 _buffer_length /2., 0, twopi);
 
-    // G4cout << "Buffer (gas) starts in " << buffer_posz - _buffer_length/2. << " and ends in " 
+    // G4cout << "Buffer (gas) starts in " << buffer_posz - _buffer_length/2. << " and ends in "
     // 	   << buffer_posz + _buffer_length/2. << G4endl;
-    G4LogicalVolume* buffer_logic = 
+    G4LogicalVolume* buffer_logic =
       new G4LogicalVolume(buffer_solid, _gas, "BUFFER");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_posz), buffer_logic, 
+    new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_posz), buffer_logic,
 		      "BUFFER", _mother_logic, false, 0, false);
 
      // Set the volume as an ionization sensitive detector
@@ -502,10 +503,10 @@ void Next100InnerElements::BuildBuffer()
     // Anode plate
     else if (region == "ANODE_QUARTZ") {
       vertex = _anode_quartz_gen->GenerateVertex("BODY_VOL");
-    } 
+    }
 
     // Energy Plane regions
-    else if ((region == "CARRIER_PLATE") || 
+    else if ((region == "CARRIER_PLATE") ||
              (region == "ENCLOSURE") ||
              (region == "ENCLOSURE_WINDOW") ||
              (region == "ENCLOSURE_PAD") ||
@@ -516,13 +517,13 @@ void Next100InnerElements::BuildBuffer()
     }
 
     // Tracking Plane regions
-    else if ((region == "TRK_SUPPORT") || 
+    else if ((region == "TRK_SUPPORT") ||
              (region == "DICE_BOARD")) {
       vertex = _tracking_plane->GenerateVertex(region);
-    } 
+    }
     // Vertex decided by user
     else if (region == "AD_HOC") {
-      vertex = 
+      vertex =
 	G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
     }
 
@@ -535,7 +536,7 @@ void Next100InnerElements::BuildBuffer()
       unsigned int i = _el_table_point_id + _el_table_index;
 
       if (i == (_table_vertices.size()-1)) {
-        G4Exception("[Next100InnerElements]", "GenerateVertex()", 
+        G4Exception("[Next100InnerElements]", "GenerateVertex()",
           RunMustBeAborted, "Reached last event in EL lookup table.");
       }
 
@@ -548,17 +549,17 @@ void Next100InnerElements::BuildBuffer()
       }
     }
     else {
-      G4Exception("[Next100InnerElements]", "GenerateVertex()", FatalException, 
-        "Unknown vertex generation region!");     
+      G4Exception("[Next100InnerElements]", "GenerateVertex()", FatalException,
+        "Unknown vertex generation region!");
     }
 
     return vertex;
   }
 
 
-  void Next100InnerElements::CalculateELTableVertices(G4double radius, G4double binning, G4double z)		
-  { 
-    // Calculate the xyz positions of the points of an EL lookup table 
+  void Next100InnerElements::CalculateELTableVertices(G4double radius, G4double binning, G4double z)
+  {
+    // Calculate the xyz positions of the points of an EL lookup table
     // (arranged as a square grid) given a certain binning
 
     G4ThreeVector xyz(0., 0., z);
@@ -581,5 +582,5 @@ void Next100InnerElements::BuildBuffer()
 
     }
   }
-  
+
 } // end namespace nexus

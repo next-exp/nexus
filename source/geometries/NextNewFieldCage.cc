@@ -3,9 +3,9 @@
 //
 //  Authors: <miquel.nebot@ific.uv.es>
 //  Created: 12 Sept 2013
-//  
+//
 //  Copyright (c) 2013-2015 NEXT Collaboration
-// ---------------------------------------------------------------------------- 
+// ----------------------------------------------------------------------------
 
 #include "NextNewFieldCage.h"
 
@@ -43,7 +43,7 @@ using namespace CLHEP;
 namespace nexus {
 
 
-  NextNewFieldCage::NextNewFieldCage(): 
+  NextNewFieldCage::NextNewFieldCage():
     BaseGeometry(),
     // Field cage dimensions
     _dist_feedthroughs(514. * mm), //distance between the centres of the feedthroughs
@@ -52,7 +52,7 @@ namespace nexus {
     _windows_end_z (-386.999 * mm), // position in gas where the sapphire windows end. To be read from NextNewEnergyPlane.cc
     _tube_in_diam (396. * mm), // at Nov 19, 432.*mm
     _tube_length_drift (507.*mm), // at Nov 19, 508. * mm
-    _tube_thickness (2.0 * cm),  
+    _tube_thickness (2.0 * cm),
     _dist_tube_el (15.*mm),
     _hdpe_length (632. * mm),
     _hdpe_in_diam (452. * mm),
@@ -67,7 +67,7 @@ namespace nexus {
     _el_grid_transparency (.88),
     _gate_transparency (.84),
     _anode_quartz_thickness (3 *mm),
-    _anode_quartz_diam (522.*mm),  
+    _anode_quartz_diam (522.*mm),
     _cathode_grid_transparency (.98),
     _ito_transparency (.90),
     _ito_thickness (_grid_thickness),
@@ -87,17 +87,17 @@ namespace nexus {
     _el_table_index(0),
     _el_table_binning(5.*mm)
   {
-    // Derived dimensions 
-    _buffer_length = 
+    // Derived dimensions
+    _buffer_length =
       - _dist_feedthroughs/2. - _cathode_thickness - _windows_end_z , // from the end of the cathode to surface of sapphire windows // It's 129.9 mm
- 
-    _el_gap_z_pos = 
+
+    _el_gap_z_pos =
       -_dist_feedthroughs/2. + _cathode_gap/2. +  _tube_length_drift + _dist_tube_el + _el_gap_length/2.;
-    _pos_z_anode =  
+    _pos_z_anode =
       _el_gap_z_pos + _el_gap_length/2. +  _anode_quartz_thickness/2.+ 0.1*mm; // 0.1 mm is needed because EL is produced only if the PostStepVolume is GAS material.
 
-     // The centre of the feedthrough is the limit of the active volume. 
-    _pos_z_cathode = - _dist_feedthroughs/2. - _cathode_thickness/2.; 
+     // The centre of the feedthrough is the limit of the active volume.
+    _pos_z_cathode = - _dist_feedthroughs/2. - _cathode_thickness/2.;
 
     _el_table_z = _el_gap_z_pos - _el_gap_length/2.;
 
@@ -112,16 +112,16 @@ namespace nexus {
     new G4UnitDefinition("mm/sqrt(cm)","mm/sqrt(cm)","Diffusion", mm/sqrt(cm));
 
     /// Messenger
-    _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", 
+    _msg = new G4GenericMessenger(this, "/Geometry/NextNew/",
 				  "Control commands of geometry NextNew.");
-    
-    _msg->DeclareProperty("field_cage_vis", _visibility, 
-			  "Field Cage Visibility");    
+
+    _msg->DeclareProperty("field_cage_vis", _visibility,
+			  "Field Cage Visibility");
     _msg->DeclareProperty("elfield", _elfield,
 			  "True if the EL field is on (full simulation), false if it's not (parametrized simulation.");
-    
-    G4GenericMessenger::Command& step_cmd = 
-      _msg->DeclareProperty("max_step_size", _max_step_size, 
+
+    G4GenericMessenger::Command& step_cmd =
+      _msg->DeclareProperty("max_step_size", _max_step_size,
 			    "Maximum Step Size");
     step_cmd.SetUnitCategory("Length");
     step_cmd.SetParameterName("max_step_size", false);
@@ -172,10 +172,10 @@ namespace nexus {
 			    "Electric field in the EL region");
     El_field_cmd.SetParameterName("EL_field", true);
     El_field_cmd.SetUnitCategory("Electric field");
-    
+
     // Calculate vertices for EL table generation
-    G4GenericMessenger::Command& pitch_cmd = 
-      _msg->DeclareProperty("el_table_binning", _el_table_binning, 
+    G4GenericMessenger::Command& pitch_cmd =
+      _msg->DeclareProperty("el_table_binning", _el_table_binning,
 			    "Pitch for EL generation");
     pitch_cmd.SetUnitCategory("Length");
     pitch_cmd.SetParameterName("el_table_binning", false);
@@ -183,8 +183,8 @@ namespace nexus {
 
     _msg->DeclareProperty("el_table_point_id", _el_table_point_id, "");
 
-     G4GenericMessenger::Command& eltable_z_cmd = 
-      _msg->DeclareProperty("el_table_z", _el_table_z, 
+     G4GenericMessenger::Command& eltable_z_cmd =
+      _msg->DeclareProperty("el_table_z", _el_table_z,
 			    "Z coordinate for EL generation");
     eltable_z_cmd.SetUnitCategory("Length");
     eltable_z_cmd.SetParameterName("el_table_z", false);
@@ -201,7 +201,7 @@ namespace nexus {
     delete _buffer_gen;
     delete _xenon_gen;
     delete _anode_quartz_gen;
-    delete _cathode_gen;   
+    delete _cathode_gen;
   }
 
 
@@ -220,7 +220,7 @@ namespace nexus {
     BuildCathodeGrid();
     // Build the different parts
      // ACTIVE region
-    BuildActive(); 
+    BuildActive();
     // Buffer region
     BuildBuffer();
     // EL Region
@@ -233,7 +233,7 @@ namespace nexus {
     G4double max_radius = floor(_tube_in_diam/2./_el_table_binning)*_el_table_binning;
 
     CalculateELTableVertices(max_radius, _el_table_binning, _el_table_z);
-  
+
     // for (G4int i=0; i<_el_table_vertices.size(); ++i) {
     //   std::cout << i << ": "<< _el_table_vertices[i] << std::endl;
     // }
@@ -245,19 +245,19 @@ namespace nexus {
     _gas = _mother_logic->GetMaterial();
     _pressure =    _gas->GetPressure();
     _temperature = _gas->GetTemperature();
-   
+
     // High density polyethylene for the field cage
     _hdpe = MaterialsList::HDPE();
 
     // Copper for field rings
     _copper = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
     // Teflon for the light tube
-    _teflon = 
+    _teflon =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
     // TPB coating
     _tpb = MaterialsList::TPB();
     _tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB(_pressure, _temperature));
-    //ITO coating  
+    //ITO coating
     _ito = MaterialsList::ITO();
     _ito->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeFusedSilica(_ito_transparency, _ito_thickness));
 
@@ -265,25 +265,25 @@ namespace nexus {
     _quartz =  MaterialsList::FusedSilica();
     _quartz->SetMaterialPropertiesTable(OpticalMaterialProperties::FusedSilica());
   }
-  
-  
+
+
   void NextNewFieldCage::BuildCathodeGrid()
   {
-    ///// CATHODE ////// 
-    G4Material* fgrid_mat = 
+    ///// CATHODE //////
+    G4Material* fgrid_mat =
       MaterialsList::FakeDielectric(_gas, "cath_grid_mat");
     fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _cathode_grid_transparency, _cathode_thickness));
     // Dimensions & position
     G4double grid_diam = _tube_in_diam;
-   
+
     // Building the grid
-    G4Tubs* diel_grid_solid = 
+    G4Tubs* diel_grid_solid =
       new G4Tubs("CATH_GRID", 0., grid_diam/2., _cathode_thickness/2., 0, twopi);
-    G4LogicalVolume* diel_grid_logic = 
+    G4LogicalVolume* diel_grid_logic =
       new G4LogicalVolume(diel_grid_solid, fgrid_mat, "CATHODE_GRID");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., _pos_z_cathode), diel_grid_logic, 
+    new G4PVPlacement(0, G4ThreeVector(0., 0., _pos_z_cathode), diel_grid_logic,
 		      "CATHODE_GRID", _mother_logic, false, 0, false);
-    
+
     if (_visibility) {
       G4VisAttributes cathode_col = nexus::Red();
       diel_grid_logic->SetVisAttributes(cathode_col);
@@ -293,20 +293,20 @@ namespace nexus {
 
   void NextNewFieldCage::BuildActive()
   {
-    _active_length = 
+    _active_length =
       _cathode_gap/2. + _tube_length_drift + _dist_tube_el;
-    _active_posz = 
+    _active_posz =
       -_dist_feedthroughs/2.  +  _active_length/2.;
 
-    G4Tubs* active_solid = 
-      new G4Tubs("ACTIVE",  0., _tube_in_diam/2., 
+    G4Tubs* active_solid =
+      new G4Tubs("ACTIVE",  0., _tube_in_diam/2.,
 		 _active_length/2., 0, twopi);
-    // G4cout << "Active starts in " <<  active_posz  -  active_length/2. << " and ends in " 
+    // G4cout << "Active starts in " <<  active_posz  -  active_length/2. << " and ends in "
     // 	   << active_posz +  active_length/2. << G4endl;
-    
-    G4LogicalVolume* active_logic = 
+
+    G4LogicalVolume* active_logic =
       new G4LogicalVolume(active_solid, _gas, "ACTIVE");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., _active_posz), active_logic, 
+    new G4PVPlacement(0, G4ThreeVector(0., 0., _active_posz), active_logic,
 		      "ACTIVE", _mother_logic, false, 0, false);
 
     // Limit the step size in this volume for better tracking precision
@@ -318,19 +318,19 @@ namespace nexus {
     // Define a drift field for this volume
     UniformElectricDriftField* field = new UniformElectricDriftField();
     // electrodes are at the end of active region
-    field->SetCathodePosition(-(_active_posz - _active_length/2.) + GetELzCoord()); 
+    field->SetCathodePosition(-(_active_posz - _active_length/2.) + GetELzCoord());
     field->SetAnodePosition(-(_active_posz + _active_length/2.) + GetELzCoord());
     field->SetDriftVelocity(1. * mm/microsecond);
     field->SetTransverseDiffusion(_drift_transv_diff);
-    field->SetLongitudinalDiffusion(_drift_long_diff);  
+    field->SetLongitudinalDiffusion(_drift_long_diff);
     G4Region* drift_region = new G4Region("DRIFT");
     drift_region->SetUserInformation(field);
     drift_region->AddRootLogicalVolume(active_logic);
-  
+
     /// Visibilities
     active_logic->SetVisAttributes(G4VisAttributes::Invisible);
     // VERTEX GENERATOR
-    _active_gen = 
+    _active_gen =
       new CylinderPointSampler(0., _active_length,
 			       _tube_in_diam/2.,
 			       0., G4ThreeVector (0., 0., _active_posz));
@@ -339,17 +339,17 @@ namespace nexus {
 void NextNewFieldCage::BuildBuffer()
   {
     //G4double length = _buffer_length - _cathode_gap/2.;
-    G4double buffer_posz = 
+    G4double buffer_posz =
       -_dist_feedthroughs/2.  - _cathode_thickness -  _buffer_length/2.;
-    G4Tubs* buffer_solid = 
-      new G4Tubs("BUFFER",  0., _tube_in_diam/2., 
+    G4Tubs* buffer_solid =
+      new G4Tubs("BUFFER",  0., _tube_in_diam/2.,
 		 _buffer_length /2., 0, twopi);
 
-    // G4cout << "Buffer (gas) starts in " << buffer_posz - _buffer_length/2. << " and ends in " 
+    // G4cout << "Buffer (gas) starts in " << buffer_posz - _buffer_length/2. << " and ends in "
     // 	   << buffer_posz + _buffer_length/2. << G4endl;
-    G4LogicalVolume* buffer_logic = 
+    G4LogicalVolume* buffer_logic =
       new G4LogicalVolume(buffer_solid, _gas, "BUFFER");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_posz), buffer_logic, 
+    new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_posz), buffer_logic,
 		      "BUFFER", _mother_logic, false, 0, false);
 
      // Set the volume as an ionization sensitive detector
@@ -359,7 +359,7 @@ void NextNewFieldCage::BuildBuffer()
     G4SDManager::GetSDMpointer()->AddNewDetector(buffsd);
 
     // VERTEX GENERATOR
-    _buffer_gen = 
+    _buffer_gen =
       new CylinderPointSampler(0., _buffer_length,
 			       _tube_in_diam/2.,
 			       0., G4ThreeVector (0., 0., buffer_posz));
@@ -375,17 +375,17 @@ void NextNewFieldCage::BuildBuffer()
   void NextNewFieldCage::BuildELRegion()
   {
     ///// EL GAP /////
-    G4double el_gap_diam = _tube_in_diam + 5.*mm;  
-    G4Tubs* el_gap_solid = 
-      new G4Tubs("EL_GAP", 0., el_gap_diam/2., _el_gap_length/2., 0, twopi);   
-    G4LogicalVolume* el_gap_logic = 
-      new G4LogicalVolume(el_gap_solid, _gas, "EL_GAP");  
+    G4double el_gap_diam = _tube_in_diam + 5.*mm;
+    G4Tubs* el_gap_solid =
+      new G4Tubs("EL_GAP", 0., el_gap_diam/2., _el_gap_length/2., 0, twopi);
+    G4LogicalVolume* el_gap_logic =
+      new G4LogicalVolume(el_gap_solid, _gas, "EL_GAP");
     new G4PVPlacement(0, G4ThreeVector(0., 0., _el_gap_z_pos), el_gap_logic,
 		      "EL_GAP", _mother_logic, false, 0, false);
 
-    // G4cout << "EL gap region starts in " << _el_gap_z_pos - _el_gap_length/2. << " and ends in " 
+    // G4cout << "EL gap region starts in " << _el_gap_z_pos - _el_gap_length/2. << " and ends in "
     //        << _el_gap_z_pos + _el_gap_length/2. << G4endl;
-   
+
     if (_elfield) {
       // Define EL electric field
       UniformElectricDriftField* el_field = new UniformElectricDriftField();
@@ -395,7 +395,7 @@ void NextNewFieldCage::BuildBuffer()
       el_field->SetTransverseDiffusion(_ELtransv_diff);
       el_field->SetLongitudinalDiffusion(_ELlong_diff);
       XenonGasProperties xgp(_pressure, _temperature);
-      el_field->SetLightYield(xgp.ELLightYield(_ELelectric_field)); 
+      el_field->SetLightYield(xgp.ELLightYield(_ELelectric_field));
       G4Region* el_region = new G4Region("EL_REGION");
       el_region->SetUserInformation(el_field);
       el_region->AddRootLogicalVolume(el_gap_logic);
@@ -403,27 +403,27 @@ void NextNewFieldCage::BuildBuffer()
 
     ///// EL GRIDS /////
 
-    G4Material* fgrid_mat = 
+    G4Material* fgrid_mat =
       MaterialsList::FakeDielectric(_gas, "el_grid_anode_mat");
     fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _el_grid_transparency, _grid_thickness));
 
-    G4Material* fgate_mat = 
+    G4Material* fgate_mat =
       MaterialsList::FakeDielectric(_gas, "el_grid_gate_mat");
     fgate_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _gate_transparency, _grid_thickness));
-    
-    // Dimensions & position: the grids are simulated inside the EL gap. 
+
+    // Dimensions & position: the grids are simulated inside the EL gap.
     // Their thickness is symbolic.
     G4double grid_diam = _tube_in_diam; // _active_diam;
     G4double poszInner =  - _el_gap_length/2. + _grid_thickness/2.;
-   
-    G4Tubs* diel_grid_solid = 
+
+    G4Tubs* diel_grid_solid =
       new G4Tubs("EL_GRID", 0., grid_diam/2., _grid_thickness/2., 0, twopi);
 
-    G4LogicalVolume* gate_logic = 
+    G4LogicalVolume* gate_logic =
       new G4LogicalVolume(diel_grid_solid, fgate_mat, "EL_GRID_GATE");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., poszInner), gate_logic, 
-		      "EL_GRID_GATE", el_gap_logic, false, 0, false);  
+    new G4PVPlacement(0, G4ThreeVector(0., 0., poszInner), gate_logic,
+		      "EL_GRID_GATE", el_gap_logic, false, 0, false);
 
     /// Visibilities
     if (_visibility) {
@@ -432,43 +432,43 @@ void NextNewFieldCage::BuildBuffer()
       el_gap_logic->SetVisAttributes(gap_col);
       G4VisAttributes gate_col = nexus::LightBlue();
       //    gate_col.SetForceSolid(true);
-      gate_logic->SetVisAttributes(gate_col); 
-    } 
-    else {         
+      gate_logic->SetVisAttributes(gate_col);
+    }
+    else {
       gate_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
   }
 
   void NextNewFieldCage::BuildAnodeGrid()
   {
-    G4double anode_diam = _anode_quartz_diam; 
-  
-    ///// ANODE ////// 
-    
+    G4double anode_diam = _anode_quartz_diam;
+
+    ///// ANODE //////
+
     G4Tubs* anode_quartz_solid =
       new G4Tubs("QUARTZ_ANODE", 0., anode_diam/2. , _anode_quartz_thickness/2., 0, twopi);
-    G4LogicalVolume* anode_logic = 
+    G4LogicalVolume* anode_logic =
       new G4LogicalVolume(anode_quartz_solid, _quartz, "EL_QUARTZ_ANODE");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., _pos_z_anode), anode_logic, 
+    new G4PVPlacement(0, G4ThreeVector(0., 0., _pos_z_anode), anode_logic,
 		      "EL_QUARTZ_ANODE", _mother_logic, false, 0, false);
-   
-    // G4cout << "Anode plate starts in " << _pos_z_anode - _anode_quartz_thickness/2. << " and ends in " << 
+
+    // G4cout << "Anode plate starts in " << _pos_z_anode - _anode_quartz_thickness/2. << " and ends in " <<
     //   _pos_z_anode + _anode_quartz_thickness/2. << G4endl;
 
     G4Tubs* tpb_anode_solid =
       new G4Tubs("TPB_ANODE", 0., anode_diam/2. , _tpb_thickness/2., 0, twopi);
-    G4LogicalVolume* tpb_anode_logic = 
+    G4LogicalVolume* tpb_anode_logic =
       new G4LogicalVolume(tpb_anode_solid, _tpb, "TPB_ANODE");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., -_anode_quartz_thickness/2.+_tpb_thickness/2.), tpb_anode_logic, 
-		      "TPB_ANODE", anode_logic, false, 0, false);  
+    new G4PVPlacement(0, G4ThreeVector(0., 0., -_anode_quartz_thickness/2.+_tpb_thickness/2.), tpb_anode_logic,
+		      "TPB_ANODE", anode_logic, false, 0, false);
 
     G4Tubs* ito_anode_solid =
       new G4Tubs("ITO_ANODE", 0., anode_diam/2. , _ito_thickness/2., 0, twopi);
-    G4LogicalVolume* ito_anode_logic = 
+    G4LogicalVolume* ito_anode_logic =
       new G4LogicalVolume(ito_anode_solid, _ito, "ITO_ANODE");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., +_anode_quartz_thickness/2.- _ito_thickness/2.), ito_anode_logic, 
+    new G4PVPlacement(0, G4ThreeVector(0., 0., +_anode_quartz_thickness/2.- _ito_thickness/2.), ito_anode_logic,
   			"ITO_ANODE", anode_logic, false, 0, false);
-     
+
     if (_visibility) {
       G4VisAttributes anode_col = nexus::Red();
       anode_col.SetForceSolid(true);
@@ -480,7 +480,7 @@ void NextNewFieldCage::BuildBuffer()
       anode_logic->SetVisAttributes(G4VisAttributes::Invisible);
       tpb_anode_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
-   
+
   }
 
 
@@ -488,19 +488,19 @@ void NextNewFieldCage::BuildBuffer()
    {
 
      // High density polyethylene tube to support copper rings
-     G4double hdpe_tube_z_pos =  
+     G4double hdpe_tube_z_pos =
        _el_gap_z_pos -_el_gap_length/2. - _dist_tube_el - _hdpe_ledge - _hdpe_length/2.;
 
      G4Tubs* hdpe_tube_solid =
       new G4Tubs("HDPE_TUBE", _hdpe_in_diam/2.,
     		 _hdpe_out_diam/2., _hdpe_length/2., 0, twopi);
-     G4LogicalVolume* hdpe_tube_logic = 
+     G4LogicalVolume* hdpe_tube_logic =
       new G4LogicalVolume(hdpe_tube_solid, _hdpe, "HDPE_TUBE");
-     new G4PVPlacement(0, G4ThreeVector(0., 0., hdpe_tube_z_pos), 
-		      hdpe_tube_logic, "HDPE_TUBE", _mother_logic, 
+     new G4PVPlacement(0, G4ThreeVector(0., 0., hdpe_tube_z_pos),
+		      hdpe_tube_logic, "HDPE_TUBE", _mother_logic,
 		       false, 0, false);
 
-     // G4cout << "Hdpe tube starts in " << hdpe_tube_z_pos - _hdpe_length/2.  << 
+     // G4cout << "Hdpe tube starts in " << hdpe_tube_z_pos - _hdpe_length/2.  <<
      //   " and ends in " << hdpe_tube_z_pos + _hdpe_length/2. << G4endl;
 
      // Copper rings
@@ -516,14 +516,14 @@ void NextNewFieldCage::BuildBuffer()
      G4double pitch = _ring_width + separation;
      G4double posz = hdpe_tube_z_pos + _hdpe_length/2. - _ring_width/2. + separation;
 
-     for (G4int i=0; i<num_rings; i++) {       
+     for (G4int i=0; i<num_rings; i++) {
        new G4PVPlacement(0, G4ThreeVector(0., 0., posz), ring_logic,
 			 "FIELD_RING", _mother_logic, false, i, false);
        posz = posz - pitch;
      }
-    
+
      // Light  tube
-     G4double drift_tube_z_pos =  
+     G4double drift_tube_z_pos =
        _el_gap_z_pos -_el_gap_length/2. - _dist_tube_el - _tube_length_drift/2.;
 
     G4Tubs* drift_tube_solid =
@@ -531,50 +531,50 @@ void NextNewFieldCage::BuildBuffer()
     		 _tube_in_diam/2. + _tube_thickness, _tube_length_drift/2., 0, twopi);
     //  G4double fieldcagevol= drift_tube_solid->GetCubicVolume();
     // std::cout<<"FIELD CAGE VOLUME:\t"<<fieldcagevol<<std::endl;
-    G4LogicalVolume* drift_tube_logic = 
+    G4LogicalVolume* drift_tube_logic =
       new G4LogicalVolume(drift_tube_solid, _teflon, "DRIFT_TUBE");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., drift_tube_z_pos), 
-		      drift_tube_logic, "DRIFT_TUBE", _mother_logic, 
+    new G4PVPlacement(0, G4ThreeVector(0., 0., drift_tube_z_pos),
+		      drift_tube_logic, "DRIFT_TUBE", _mother_logic,
 		      false, 0, false);
 
-    // G4cout << "Light tube drift starts in " << drift_tube_z_pos - _tube_length_drift/2.  << 
+    // G4cout << "Light tube drift starts in " << drift_tube_z_pos - _tube_length_drift/2.  <<
     //   " and ends in " << drift_tube_z_pos + _tube_length_drift/2. << G4endl;
 
     // Buffer light tube removed because it's not there
     /*
-    G4double buffer_tube_z_pos = 
+    G4double buffer_tube_z_pos =
       - _dist_feedthroughs/2. - _cathode_gap/2. - _buffer_tube_length/2.;
     G4Tubs* buffer_tube_solid =
       new G4Tubs("BUFFER_TUBE", _tube_in_diam/2.,
-    		 _tube_in_diam/2. + _tube_thickness, _buffer_tube_length/2., 0, twopi);   
-    G4LogicalVolume* buffer_tube_logic = 
+    		 _tube_in_diam/2. + _tube_thickness, _buffer_tube_length/2., 0, twopi);
+    G4LogicalVolume* buffer_tube_logic =
       new G4LogicalVolume(buffer_tube_solid, _teflon, "BUFFER_TUBE");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_tube_z_pos), 
-		      buffer_tube_logic, "BUFFER_TUBE", _mother_logic, 
+    new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_tube_z_pos),
+		      buffer_tube_logic, "BUFFER_TUBE", _mother_logic,
 		      false, 0, false);
     */
-  // G4cout << "Buffer tube drift starts in " << buffer_tube_z_pos - _buffer_tube_length/2.  << 
+  // G4cout << "Buffer tube drift starts in " << buffer_tube_z_pos - _buffer_tube_length/2.  <<
   //     " and ends in " << buffer_tube_z_pos + _buffer_tube_length/2. << G4endl;
 
     G4Tubs* tpb_drift_solid =
       new G4Tubs("DRIFT_TPB", _tube_in_diam/2., _tube_in_diam/2. + _tpb_thickness,
-    		 _tube_length_drift/2., 0, twopi);   
-    G4LogicalVolume* tpb_drift_logic = 
+    		 _tube_length_drift/2., 0, twopi);
+    G4LogicalVolume* tpb_drift_logic =
       new G4LogicalVolume(tpb_drift_solid, _tpb, "DRIFT_TPB");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), 
-		      tpb_drift_logic, "DRIFT_TPB", drift_tube_logic, 
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.),
+		      tpb_drift_logic, "DRIFT_TPB", drift_tube_logic,
 		      false, 0, false);
     /*
     G4Tubs* tpb_buffer_solid =
       new G4Tubs("BUFFER_TPB", _tube_in_diam/2.,  _tube_in_diam/2. + _tpb_thickness,
-    		 _buffer_tube_length/2., 0, twopi);    
-    G4LogicalVolume* tpb_buffer_logic = 
-      new G4LogicalVolume(tpb_buffer_solid, _tpb, "BUFFER_TPB"); 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), 
-		      tpb_buffer_logic, "BUFFER_TPB", buffer_tube_logic, 
+    		 _buffer_tube_length/2., 0, twopi);
+    G4LogicalVolume* tpb_buffer_logic =
+      new G4LogicalVolume(tpb_buffer_solid, _tpb, "BUFFER_TPB");
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.),
+		      tpb_buffer_logic, "BUFFER_TPB", buffer_tube_logic,
 		      false, 0, false);
     */
-    
+
     /// OPTICAL SURFACE PROPERTIES    ////////
     G4OpticalSurface* reflector_opt_surf = new G4OpticalSurface("REFLECTOR");
     reflector_opt_surf->SetType(dielectric_metal);
@@ -582,9 +582,9 @@ void NextNewFieldCage::BuildBuffer()
     reflector_opt_surf->SetFinish(ground);
     reflector_opt_surf->SetSigmaAlpha(0.1);
     reflector_opt_surf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
-    new G4LogicalSkinSurface("DRIFT_TUBE", drift_tube_logic, 
+    new G4LogicalSkinSurface("DRIFT_TUBE", drift_tube_logic,
     			     reflector_opt_surf);
-    // new G4LogicalSkinSurface("BUFFER_TUBE", buffer_tube_logic, 
+    // new G4LogicalSkinSurface("BUFFER_TUBE", buffer_tube_logic,
     // 			     reflector_opt_surf);
 
     // We set the reflectivity of HDPE to 50% for the moment
@@ -595,22 +595,22 @@ void NextNewFieldCage::BuildBuffer()
     abs_opt_surf->SetSigmaAlpha(0.1);
     G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
     const G4int REFL_NUMENTRIES = 6;
-    G4double ENERGIES[REFL_NUMENTRIES] = 
+    G4double ENERGIES[REFL_NUMENTRIES] =
       {1.0*eV, 2.8*eV, 4.*eV, 6.*eV, 7.2*eV, 30.*eV};
     G4double REFLECTIVITY[REFL_NUMENTRIES] = {0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
     mpt->AddProperty("REFLECTIVITY", ENERGIES, REFLECTIVITY, REFL_NUMENTRIES);
 
     abs_opt_surf->SetMaterialPropertiesTable(mpt);
-    new G4LogicalSkinSurface("HDPE_TUBE", hdpe_tube_logic, 
+    new G4LogicalSkinSurface("HDPE_TUBE", hdpe_tube_logic,
                              abs_opt_surf);
 
     /// SETTING VISIBILITIES   //////////
     if (_visibility) {
-      G4VisAttributes tube_col = nexus::LightBlue();    
+      G4VisAttributes tube_col = nexus::LightBlue();
       tube_col.SetForceSolid(true);
       drift_tube_logic->SetVisAttributes(tube_col);
       //    buffer_tube_logic->SetVisAttributes(tube_col);
-      G4VisAttributes hdpe_col = nexus::DarkGreen();    
+      G4VisAttributes hdpe_col = nexus::DarkGreen();
       //     hdpe_col.SetForceSolid(true);
       hdpe_tube_logic->SetVisAttributes(hdpe_col);
       G4VisAttributes tpb_col = nexus::DarkGreen();
@@ -627,30 +627,30 @@ void NextNewFieldCage::BuildBuffer()
     }
 
     /// VERTEX GENERATORS   //////////
-    _hdpe_tube_gen  = 
-      new CylinderPointSampler(_hdpe_in_diam/2., 
+    _hdpe_tube_gen  =
+      new CylinderPointSampler(_hdpe_in_diam/2.,
     			       _hdpe_length,  _hdpe_out_diam/2. - _hdpe_in_diam/2.,
     			       0., G4ThreeVector (0., 0., hdpe_tube_z_pos));
 
     // G4double posz = hdpe_tube_z_pos + _hdpe_length/2. - _ring_width/2. + separation;
-    // _ring_gen = 
-    //   new CylinderPointSampler(ring_in_diam,_ring_width, ring_out_diam/2., 
+    // _ring_gen =
+    //   new CylinderPointSampler(ring_in_diam,_ring_width, ring_out_diam/2.,
     // 			       0., G4ThreeVector (0., 0., _pos_z_anode));
-    
-    _drift_tube_gen  = 
+
+    _drift_tube_gen  =
       new CylinderPointSampler(_tube_in_diam/2., _tube_length_drift, _tube_thickness,
     			       0., G4ThreeVector (0., 0., drift_tube_z_pos));
-    
-    // _buffer_tube_gen  = 
+
+    // _buffer_tube_gen  =
     //   new CylinderPointSampler(_tube_in_diam/2., _buffer_tube_length, _tube_thickness,
     // 			       0., G4ThreeVector (0., 0., buffer_tube_z_pos));
 
-    _anode_quartz_gen = 
-      new CylinderPointSampler(0., _anode_quartz_thickness, _anode_quartz_diam/2., 
+    _anode_quartz_gen =
+      new CylinderPointSampler(0., _anode_quartz_thickness, _anode_quartz_diam/2.,
 			       0., G4ThreeVector (0., 0., _pos_z_anode));
 
-    _cathode_gen = 
-      new CylinderPointSampler(0., _cathode_thickness, _tube_in_diam/2., 
+    _cathode_gen =
+      new CylinderPointSampler(0., _cathode_thickness, _tube_in_diam/2.,
 			       0., G4ThreeVector (0., 0., _pos_z_cathode));
   }
 
@@ -678,13 +678,13 @@ void NextNewFieldCage::BuildBuffer()
     }
     else if (region == "ACTIVE") {
       vertex = _active_gen->GenerateVertex("BODY_VOL");
-    } 
+    }
     else if (region == "ANODE_QUARTZ") {
       vertex = _anode_quartz_gen->GenerateVertex("BODY_VOL");
     }
     else if (region == "CATHODE") {
       vertex = _cathode_gen->GenerateVertex("BODY_VOL");
-    } 
+    }
     else if (region == "AD_HOC") {
       vertex = G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
     }
@@ -693,7 +693,7 @@ void NextNewFieldCage::BuildBuffer()
       unsigned int i = _el_table_point_id + _el_table_index;
 
       if (i == (_el_table_vertices.size()-1)) {
-        G4Exception("[NextNewFieldcage]", "GenerateVertex()", 
+        G4Exception("[NextNewFieldcage]", "GenerateVertex()",
 		    RunMustBeAborted, "Reached last event in EL lookup table.");
       }
 
@@ -707,16 +707,16 @@ void NextNewFieldCage::BuildBuffer()
     }
     else {
       G4Exception("[NextNewFieldCage]", "GenerateVertex()", FatalException,
-		  "Unknown vertex generation region!");     
-    } 
-   
+		  "Unknown vertex generation region!");
+    }
+
     return vertex;
   }
 
 
   void NextNewFieldCage::CalculateELTableVertices(G4double radius, G4double binning, G4double z)
   {
-    // Calculate the xyz positions of the points of an EL lookup table 
+    // Calculate the xyz positions of the points of an EL lookup table
     // (arranged as a square grid) given a certain binning
 
     G4ThreeVector xyz(0.,0.,z);
@@ -744,6 +744,5 @@ void NextNewFieldCage::BuildBuffer()
   {
     return G4ThreeVector(0., 0., _tube_z_pos);
   }
-  
-}//end namespace nexus
 
+}//end namespace nexus

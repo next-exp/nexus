@@ -3,9 +3,9 @@
 //
 //  Authors: <miquel.nebot@ific.uv.es>
 //  Created: 18 Sept 2013
-//  
+//
 //  Copyright (c) 2013 NEXT Collaboration
-// ---------------------------------------------------------------------------- 
+// ----------------------------------------------------------------------------
 
 #include "NextNewInnerElements.h"
 #include "NextNewEnergyPlane.h"
@@ -31,12 +31,12 @@ namespace nexus {
   NextNewInnerElements::NextNewInnerElements():
     BaseGeometry()
   {
-    // Build the internal objects that live there 
+    // Build the internal objects that live there
     _energy_plane = new NextNewEnergyPlane();
     _field_cage = new NextNewFieldCage();
     _tracking_plane = new NextNewTrackingPlane();
   }
-   
+
   void NextNewInnerElements::SetLogicalVolume(G4LogicalVolume* mother_logic)
   {
     _mother_logic = mother_logic;
@@ -63,18 +63,18 @@ namespace nexus {
   NextNewInnerElements::~NextNewInnerElements()
   {
     delete _energy_plane;
-    delete _field_cage;    
+    delete _field_cage;
     delete _tracking_plane;
   }
 
-  
+
   G4ThreeVector NextNewInnerElements::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0.,0.,0.);
- 
+
     // INNER ELEMENTS regions
    if ( (region == "CARRIER_PLATE") || (region == "ENCLOSURE_BODY") ||
-	      (region == "ENCLOSURE_WINDOW") || (region=="OPTICAL_PAD") || 
+	      (region == "ENCLOSURE_WINDOW") || (region=="OPTICAL_PAD") ||
 	      (region == "PMT_BODY")||(region=="PMT_BASE") ||
               (region == "INT_ENCLOSURE_SURF") || (region == "PMT_SURF")) {
       vertex = _energy_plane->GenerateVertex(region);
@@ -96,8 +96,8 @@ namespace nexus {
     }
     else {
       G4Exception("[NextNewInnerElements]", "GenerateVertex()", FatalException,
-		  "Unknown vertex generation region!");     
-    } 
+		  "Unknown vertex generation region!");
+    }
     return vertex;
   }
 }//end namespace nexus
