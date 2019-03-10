@@ -89,7 +89,7 @@ namespace nexus {
   {
     // Derived dimensions
     _buffer_length =
-      - _dist_feedthroughs/2. - _cathode_thickness - _windows_end_z , // from the end of the cathode to surface of sapphire windows // It's 129.9 mm
+      - _dist_feedthroughs/2. - _cathode_thickness - _windows_end_z;// from the end of the cathode to surface of sapphire windows // It's 129.9 mm
 
     _el_gap_z_pos =
       -_dist_feedthroughs/2. + _cathode_gap/2. +  _tube_length_drift + _dist_tube_el + _el_gap_length/2.;

@@ -70,9 +70,9 @@ namespace nexus {
   {
     _el_gap_posz = (160.*cm / 2.) - _trk_displ;
 
-    _cathode_pos_z = _el_gap_posz - _el_gap_length/2. - _active_length - _grid_thickn/2. ;
+    _cathode_pos_z = _el_gap_posz - _el_gap_length/2. - _active_length - _grid_thickn/2.;
     _buffer_length =
-       _cathode_pos_z - _grid_thickn/2. - _windows_end_z , // from the end of the cathode to surface of sapphire windows // It's 129.9 mm
+      _cathode_pos_z - _grid_thickn/2. - _windows_end_z; // from the end of the cathode to surface of sapphire windows // It's 129.9 mm
 
     // Field Cage
     _field_cage = new Next100FieldCage();
