@@ -31,6 +31,7 @@
 #include <G4SDManager.hh>
 #include <G4RunManager.hh>
 #include <G4UnitsTable.hh>
+#include <G4TransportationManager.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
@@ -490,7 +491,16 @@ void Next100InnerElements::BuildBuffer()
     }
     //All xenon
     else if (region == "XENON") {
-      vertex = _xenon_gen->GenerateVertex("BODY_VOL");
+      G4Navigator *geom_navigator =
+	G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
+      G4String volume_name;
+      do {
+	vertex = _xenon_gen->GenerateVertex("BODY_VOL");
+	G4ThreeVector glob_vtx(vertex);
+	_xenon_gen->GetGlobalPosition(glob_vtx, GetELzCoord());
+	volume_name =
+	  geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false)->GetName();
+      } while (volume_name == "CATH_GRID");
     }
     // Active region
     else if (region == "ACTIVE") {

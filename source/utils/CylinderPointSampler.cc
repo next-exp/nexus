@@ -226,5 +226,15 @@ namespace nexus {
     return real_pos;
   }
 
+  void
+  CylinderPointSampler::GetGlobalPosition(G4ThreeVector& vertex,
+					  G4double global_origin)
+  {
+    // Rotates and translates into G4 global
+    // coordinates, needed for volume checks.
+    vertex.rotate(pi, G4ThreeVector(0., 1., 0.));
+
+    vertex += G4ThreeVector(0., 0., global_origin);
+  }
 
 } // end namespace nexus

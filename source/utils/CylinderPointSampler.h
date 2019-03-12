@@ -34,6 +34,11 @@ namespace nexus {
     /// Returns vertex within region <region> of the chamber
     G4ThreeVector GenerateVertex(const G4String& region);
 
+    /// Returns the global (without rotation and translation)
+    /// vertex. Useful for volume checks.
+    void GetGlobalPosition(G4ThreeVector& vertex,
+			   G4double global_origin);
+
   private:
     G4double GetRadius(G4double inner, G4double outer);
     G4double GetPhi();
