@@ -13,6 +13,8 @@
 class G4GenericMessenger;
 class G4Material;
 
+namespace nexus {class MuonsPointSampler;}
+
 namespace nexus {
 
   class CylinderPointSampler;
@@ -56,6 +58,8 @@ namespace nexus {
     CylinderPointSampler* vessel_gen_;
     CylinderPointSampler* readout_plane_gen_;
     CylinderPointSampler* outer_plane_gen_;
+
+    MuonsPointSampler* muon_gen_;
 
     // Visibilities
     G4bool tank_visibility_;

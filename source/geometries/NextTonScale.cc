@@ -9,6 +9,7 @@
 #include "Visibilities.h"
 
 #include "CylinderPointSampler.h"
+#include "MuonsPointSampler.h"
 #include "IonizationSD.h"
 
 #include <G4GenericMessenger.hh>
@@ -218,6 +219,10 @@ G4LogicalVolume* NextTonScale::ConstructWaterTank(G4LogicalVolume* mother_logic_
 
   new G4PVPlacement(rotation, G4ThreeVector(0.,0.,0.), tank_logic_vol,
                     tank_name, mother_logic_vol, false, 0, true);
+
+  muon_gen_ = new MuonsPointSampler(tank_diam/2. + 50. * cm,
+				    tank_height/2. + 1. * cm,
+				    tank_diam/2. + 50. * cm);
 
 
   // WATER /////////////////////////////////////////////////
@@ -441,6 +446,9 @@ G4ThreeVector NextTonScale::GenerateVertex(const G4String& region) const
   }
   else if (region == "VESSEL") {
     vertex = vessel_gen_->GenerateVertex("WHOLE_VOL");
+  }
+  else if (region == "MUONS") {
+    muon_gen_->GenerateVertex();
   }
   else {
     G4cerr << "Unknown detector region " << region << "."
