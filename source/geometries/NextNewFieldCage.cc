@@ -678,7 +678,7 @@ void NextNewFieldCage::BuildBuffer()
       do {
 	vertex = _xenon_gen->GenerateVertex("BODY_VOL");
 	G4ThreeVector glob_vtx(vertex);
-	_xenon_gen->GetGlobalPosition(glob_vtx, GetELzCoord());
+	CalculateGlobalPos(glob_vtx);
 	volume_name =
 	  geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false)->GetName();
       } while (volume_name == "CATH_GRID");
