@@ -469,10 +469,10 @@ void Next100InnerElements::BuildBuffer()
 			       0., G4ThreeVector (0., 0., buffer_posz));
 
     // VERTEX GENERATOR FOR ALL XENON
-    G4double xenon_posz = (_buffer_length * buffer_posz + _active_length * _active_posz) / (_buffer_length + _active_length);
+    G4double xenon_posz = (_buffer_length * buffer_posz + _active_length * _active_posz + _grid_thickn * _cathode_pos_z) / (_buffer_length + _active_length + _grid_thickn);
+    G4double xenon_len = _buffer_length + _active_length + _grid_thickn;
     _xenon_gen =
-      new CylinderPointSampler(0., _buffer_length + _active_length,
-			       _active_diam/2.,
+      new CylinderPointSampler(0., xenon_len, _active_diam/2.,
 			       0., G4ThreeVector (0., 0., xenon_posz));
 
   }
