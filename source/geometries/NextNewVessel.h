@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
-///  \file   
-///  \brief  
+///  \file
+///  \brief
 ///
 ///  \author   <miquel.nebot@ific.uv.es>, <jmunoz@ific.uv.es>,
 /// <justo.martin-albo@ific.uv.es>, <paola.ferrario@ific.uv.es>
@@ -59,7 +59,7 @@ namespace nexus {
     //Dimensions
     G4double  _vessel_in_diam, _vessel_body_length, _vessel_tube_length, _vessel_thickness;
     G4double _flange_out_diam, _flange_length, _flange_z_pos;
-    G4double _endcap_in_rad, _endcap_theta, _endcap_thickness, _endcap_in_z_width;  
+    G4double _endcap_in_rad, _endcap_theta, _endcap_thickness, _endcap_in_z_width;
 
     G4double _lat_nozzle_in_diam, _lat_nozzle_high, _lat_nozzle_thickness, _lat_nozzle_flange_diam, _lat_nozzle_flange_high;
     G4double _up_nozzle_in_diam, _up_nozzle_high, _up_nozzle_thickness, _up_nozzle_flange_diam, _up_nozzle_flange_high;
@@ -81,7 +81,7 @@ namespace nexus {
     // External ones, at the beginning of the tube ports
     G4ThreeVector _lateral_port_source_pos_ext;
     G4ThreeVector _upper_port_source_pos_ext;
-    G4ThreeVector _axial_port_source_pos_ext; 
+    G4ThreeVector _axial_port_source_pos_ext;
 
     G4double _pressure, _temperature;
 
@@ -102,12 +102,12 @@ namespace nexus {
 
     G4double _perc_endcap_vol;
     G4double _perc_tube_vol;
-    
+
     // Geometry Navigator
     G4Navigator* _geom_navigator;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
+    G4GenericMessenger* _msg;
 
     // Primary scintillation yield
     G4double _sc_yield;
@@ -125,11 +125,10 @@ namespace nexus {
 
     // Which calibration port we are using (lateral/axial)
     G4String _calib_port;
-   
+
 
   };
 
 } // end namespace nexus
 
 #endif
- 

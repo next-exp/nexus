@@ -43,6 +43,7 @@ namespace nexus {
     G4Material* xenon_gas_;
 
     // Geometry Parameters
+    G4String gas_;
     G4double gas_density_;
     G4double active_diam_, active_length_;
     G4double fcage_thickn_, ics_thickn_, vessel_thickn_;
