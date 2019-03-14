@@ -470,7 +470,14 @@ void Next100InnerElements::BuildBuffer()
 			       0., G4ThreeVector (0., 0., buffer_posz));
 
     // VERTEX GENERATOR FOR ALL XENON
-    G4double xenon_posz = (_buffer_length * buffer_posz + _active_length * _active_posz + _grid_thickn * _cathode_pos_z) / (_buffer_length + _active_length + _grid_thickn);
+    G4double xenon_posz = (_buffer_length * buffer_posz +
+			   _active_length * _active_posz +
+			   _grid_thickn * _cathode_pos_z +
+			   _grid_thickn * _el_grid_ref_z +
+			   _el_gap_length * _el_gap_posz) / (_buffer_length +
+							     _active_length +
+							     2 * _grid_thickn +
+							     _el_gap_length);
     G4double xenon_len = _buffer_length + _active_length + _grid_thickn;
     _xenon_gen =
       new CylinderPointSampler(0., xenon_len, _active_diam/2.,
@@ -500,7 +507,7 @@ void Next100InnerElements::BuildBuffer()
 	CalculateGlobalPos(glob_vtx);
 	volume_name =
 	  geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false)->GetName();
-      } while (volume_name == "CATH_GRID");
+      } while (volume_name == "CATH_GRID" || volume_name == "EL_GRID");
     }
     // Active region
     else if (region == "ACTIVE") {

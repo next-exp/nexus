@@ -366,8 +366,18 @@ void NextNewFieldCage::BuildBuffer()
 			       0., G4ThreeVector (0., 0., buffer_posz));
 
     // VERTEX GENERATOR FOR ALL XENON
-    G4double xenon_posz = (_buffer_length * buffer_posz + _active_length * _active_posz + _cathode_thickness * _pos_z_cathode) / (_buffer_length + _active_length + _cathode_thickness);
-    G4double xenon_len = _buffer_length + _active_length + _cathode_thickness;
+    G4double pos_el = _el_gap_z_pos / 2. + _grid_thickness / 2.;
+    G4double xenon_posz = (_buffer_length * buffer_posz +
+			   _active_length * _active_posz +
+			   _cathode_thickness * _pos_z_cathode +
+			   _el_gap_length * _el_gap_z_pos +
+			   _grid_thickness * pos_el) / (_buffer_length +
+							_active_length +
+							_cathode_thickness +
+							_el_gap_length +
+							_grid_thickness);
+    G4double xenon_len = _buffer_length + _active_length
+      + _cathode_thickness + _grid_thickness + _el_gap_length;
     _xenon_gen =
       new CylinderPointSampler(0., xenon_len, _tube_in_diam/2.,
 			       0., G4ThreeVector (0., 0., xenon_posz));
@@ -681,7 +691,7 @@ void NextNewFieldCage::BuildBuffer()
 	CalculateGlobalPos(glob_vtx);
 	volume_name =
 	  geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false)->GetName();
-      } while (volume_name == "CATH_GRID");
+      } while (volume_name == "CATH_GRID" || volume_name == "EL_GRID_GATE");
     }
     else if (region == "BUFFER") {
       vertex = _buffer_gen->GenerateVertex("BODY_VOL");
