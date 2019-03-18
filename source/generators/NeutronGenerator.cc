@@ -1,10 +1,14 @@
-// ---------------------------------------------------------------------------             
-//                                                                                         
-//  Author : Miquel Nebot Guinot <miquel.nebot@ific.uv.es>                                     
-//  Created: Aug 2016                                                                       
-//                                                                                       
-//  Copyright (c) 2016 NEXT Collaboration. All rights reserved.                          
-// ---------------------------------------------------------------------------       
+// ---------------------------------------------------------------------------
+//
+//  Author : Miquel Nebot Guinot <miquel.nebot@ific.uv.es>
+//           A. Laing
+//
+//  Created : Aug 2016
+//  Modified: March 2019
+//
+//  Copyright (c) 2016 NEXT Collaboration. All rights reserved.
+// ---------------------------------------------------------------------------
+
 
 #include "NeutronGenerator.h"
 

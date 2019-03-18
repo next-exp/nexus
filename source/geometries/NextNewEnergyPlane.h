@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
-///  \file   
-///  \brief  
+///  \file
+///  \brief
 ///
 ///  \author   <miquel.nebot@ific.uv.es>
 ///  \date     13 Sept 2013
@@ -28,7 +28,7 @@ class G4GenericMessenger;
 namespace nexus {
 
   /// This is a class to place all the components of the energy plane
-  class NextNewEnergyPlane: public BaseGeometry 
+  class NextNewEnergyPlane: public BaseGeometry
   {
 
   public:
@@ -67,12 +67,12 @@ namespace nexus {
 
     const G4double _axial_port_hole_diam,  _axial_port_thickn;
 
-   
+
     Enclosure*  _enclosure;
     G4double _enclosure_z_pos;
     std::vector<G4ThreeVector> _pmt_positions;
     std::vector<G4ThreeVector> _gas_hole_positions;
-     
+
     // Visibility of the energy  plane
     G4bool _visibility;
 
@@ -82,7 +82,7 @@ namespace nexus {
     // Geometry Navigator
     G4Navigator* _geom_navigator;
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg;   
+    G4GenericMessenger* _msg;
   };
 
 } //end namespace nexus

@@ -226,5 +226,4 @@ namespace nexus {
     return real_pos;
   }
 
-
 } // end namespace nexus
