@@ -9,6 +9,7 @@
 #include "Visibilities.h"
 
 #include "CylinderPointSampler.h"
+#include "MuonsPointSampler.h"
 #include "IonizationSD.h"
 
 #include <G4GenericMessenger.hh>
@@ -28,6 +29,7 @@ using namespace nexus;
 NextTonScale::NextTonScale():
   BaseGeometry(),
   msg_(nullptr),
+  gas_("naturalXe"),
   gas_density_(88.*kg/m3),
   active_diam_(300.*cm), active_length_(300.*cm),
   fcage_thickn_(1.*cm), ics_thickn_(12.*cm), vessel_thickn_(2.*cm),
@@ -40,6 +42,8 @@ NextTonScale::NextTonScale():
 {
   msg_ = new G4GenericMessenger(this, "/Geometry/NextTonScale/",
                                 "Control commands of the NextTonScale geometry.");
+
+  msg_->DeclareProperty("gas", gas_, "Gas being used");
 
   G4GenericMessenger::Command& gas_density_cmd =
     msg_->DeclareProperty("gas_density", gas_density_,
@@ -144,9 +148,19 @@ void NextTonScale::Construct()
 {
   // Materials definition /////////////////////////////////
   //xenon_gas_ = MaterialsList::GXe(15. * bar, 300. * kelvin);
-  xenon_gas_ = new G4Material("denseXe", gas_density_, 1, kStateGas);
-  G4Element* Xe = G4NistManager::Instance()->FindOrBuildElement("Xe");
-  xenon_gas_->AddElement(Xe,1);
+  if (gas_ == "naturalXe"){
+    xenon_gas_ = MaterialsList::GXe_bydensity(gas_density_);
+  // xenon_gas_ = new G4Material("denseXe", gas_density_, 1, kStateGas);
+  // G4Element* Xe = G4NistManager::Instance()->FindOrBuildElement("Xe");
+  // xenon_gas_->AddElement(Xe,1);
+  } else if (gas_ == "enrichedXe"){
+    xenon_gas_ = MaterialsList::GXeEnriched_bydensity(gas_density_);
+  } else if (gas_ == "depletedXe"){
+    xenon_gas_ = MaterialsList::GXeDepleted_bydensity(gas_density_);
+  } else {
+    G4Exception("[NextTonScale]", "Construct()", FatalException,
+		"Unknown kind of gas, valid options are:naturalXe, enrichedXe, depletedXe");
+  }
 
   // LAB ///////////////////////////////////////////////////
   // Volume of air that contains all other detector volumes.
@@ -218,6 +232,10 @@ G4LogicalVolume* NextTonScale::ConstructWaterTank(G4LogicalVolume* mother_logic_
 
   new G4PVPlacement(rotation, G4ThreeVector(0.,0.,0.), tank_logic_vol,
                     tank_name, mother_logic_vol, false, 0, true);
+
+  muon_gen_ = new MuonsPointSampler(tank_diam/2. + 50. * cm,
+				    tank_height/2. + 1. * cm,
+				    tank_diam/2. + 50. * cm);
 
 
   // WATER /////////////////////////////////////////////////
@@ -441,6 +459,9 @@ G4ThreeVector NextTonScale::GenerateVertex(const G4String& region) const
   }
   else if (region == "VESSEL") {
     vertex = vessel_gen_->GenerateVertex("WHOLE_VOL");
+  }
+  else if (region == "MUONS") {
+    vertex = muon_gen_->GenerateVertex();
   }
   else {
     G4cerr << "Unknown detector region " << region << "."
