@@ -461,7 +461,7 @@ G4ThreeVector NextTonScale::GenerateVertex(const G4String& region) const
     vertex = vessel_gen_->GenerateVertex("WHOLE_VOL");
   }
   else if (region == "MUONS") {
-    muon_gen_->GenerateVertex();
+    vertex = muon_gen_->GenerateVertex();
   }
   else {
     G4cerr << "Unknown detector region " << region << "."
