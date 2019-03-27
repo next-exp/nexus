@@ -77,6 +77,22 @@ namespace nexus {
     msg_->DeclareProperty("sipm_rows", lin_n_sipm_per_cell_, "Number of SiPM rows");
     msg_->DeclareProperty("instrumented_faces", instr_faces_, "Number of instrumented faces");
 
+    G4GenericMessenger::Command&  specific_vertex_X_cmd =
+      msg_->DeclareProperty("specific_vertex_X", _specific_vertex_X,
+                            "If region is AD_HOC, x coord where particles are generated");
+    specific_vertex_X_cmd.SetParameterName("specific_vertex_X", true);
+    specific_vertex_X_cmd.SetUnitCategory("Length");
+    G4GenericMessenger::Command&  specific_vertex_Y_cmd =
+      msg_->DeclareProperty("specific_vertex_Y", _specific_vertex_Y,
+                            "If region is AD_HOC, y coord where particles are generated");
+    specific_vertex_Y_cmd.SetParameterName("specific_vertex_Y", true);
+    specific_vertex_Y_cmd.SetUnitCategory("Length");
+    G4GenericMessenger::Command&  specific_vertex_Z_cmd =
+      msg_->DeclareProperty("specific_vertex_Z", _specific_vertex_Z,
+                            "If region is AD_HOC, z coord where particles are generated");
+    specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
+    specific_vertex_Z_cmd.SetUnitCategory("Length");
+
     sipm_ = new SiPMpetFBK();
    
     phantom_diam_ = 12.*cm;
@@ -319,6 +335,8 @@ namespace nexus {
 
     if (region == "CENTER") {
       vertex = vertex;
+    } else if (region == "AD_HOC") {
+      vertex = G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
     } else if (region == "PHANTOM") {
       vertex = cylindric_gen_->GenerateVertex("BODY_VOL");
     } else {
