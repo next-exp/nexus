@@ -56,6 +56,10 @@ namespace nexus {
 
     CylinderPointSampler* cylindric_gen_;
 
+    G4double _specific_vertex_X;
+    G4double _specific_vertex_Y;
+    G4double _specific_vertex_Z;
+
   };
 }
 #endif
