@@ -31,11 +31,12 @@ namespace nexus {
     /// Destructor
     ~GeneratorFactory();
     /// Returns an instance of the chosen generator
-    G4VPrimaryGenerator* CreateGenerator() const;
+    G4VPrimaryGenerator* CreateGenerator();
 
   private:
     G4GenericMessenger* _msg; ///< Pointer to the messenger
     G4String _name; ///< Name of the chosen primary generator
+    G4VPrimaryGenerator* _p;
   };
 
 } // end namespace nexus

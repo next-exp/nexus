@@ -55,6 +55,8 @@ namespace nexus {
     std::vector<G4String> _macros;
     std::vector<G4String> _delayed;
 
+    GeneratorFactory* _genfctr;
+
   };
 
   // INLINE DEFINITIONS ////////////////////////////////////

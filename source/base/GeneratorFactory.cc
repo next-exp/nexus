@@ -25,6 +25,7 @@ GeneratorFactory::GeneratorFactory(): _msg(0)
 GeneratorFactory::~GeneratorFactory()
 {
   delete _msg;
+  delete _p;
 }
 
 
@@ -44,35 +45,35 @@ GeneratorFactory::~GeneratorFactory()
 #include "DoubleParticle.h"
 #include "Back2backGammas.h"
 
-G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
+G4VPrimaryGenerator* GeneratorFactory::CreateGenerator()
 {
-  G4VPrimaryGenerator* p = 0;
+  //G4VPrimaryGenerator* p = 0;
   
-  if (_name == "SINGLE_PARTICLE") p = new SingleParticle();
+  if (_name == "SINGLE_PARTICLE") _p = new SingleParticle();
 
-  else if (_name == "DECAY0") p = new Decay0Interface();
+  else if (_name == "DECAY0") _p = new Decay0Interface();
 
-  else if (_name == "ION_GUN") p = new IonGun();
+  else if (_name == "ION_GUN") _p = new IonGun();
 
-  else if (_name == "NA22") p = new Na22Generation();
+  else if (_name == "NA22") _p = new Na22Generation();
 
-  else if (_name == "Kr83m") p = new Kr83mGeneration();
+  else if (_name == "Kr83m") _p = new Kr83mGeneration();
 
-  else if (_name == "2PI") p = new SingleParticle2Pi();
+  else if (_name == "2PI") _p = new SingleParticle2Pi();
 
-  else if (_name == "MUON_GENERATOR") p = new MuonGenerator();
+  else if (_name == "MUON_GENERATOR") _p = new MuonGenerator();
 
-  else if (_name == "NEUTRON_GENERATOR") p = new NeutronGenerator();
+  else if (_name == "NEUTRON_GENERATOR") _p = new NeutronGenerator();
 
-  else if (_name == "EL_TABLE_GENERATOR") p = new ELTableGenerator();
+  else if (_name == "EL_TABLE_GENERATOR") _p = new ELTableGenerator();
 
-  else if (_name == "S1GENERATOR") p = new ScintillationGenerator();
+  else if (_name == "S1GENERATOR") _p = new ScintillationGenerator();
 
-  else if (_name == "E+E-PAIR") p = new ElecPositronPair();
+  else if (_name == "E+E-PAIR") _p = new ElecPositronPair();
 
-  else if (_name == "DOUBLE_PARTICLE") p = new DoubleParticle();
+  else if (_name == "DOUBLE_PARTICLE") _p = new DoubleParticle();
 
-  else if (_name == "BACK2BACK") p = new Back2backGammas();
+  else if (_name == "BACK2BACK") _p = new Back2backGammas();
 
   else {
     G4String err = "The user specified an unknown generator: " + _name;
@@ -80,7 +81,7 @@ G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
         FatalException, err);
   }
 
-  return p;
+  return _p;
 }
 
 

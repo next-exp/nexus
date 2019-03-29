@@ -55,7 +55,8 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
   // by the time we process the initialization macro.
 
   GeometryFactory  geomfctr;
-  GeneratorFactory genfctr;
+  //GeneratorFactory genfctr;
+  _genfctr = new GeneratorFactory();
   ActionsFactory   actfctr;
 
   // The physics lists are handled with Geant4's own 'factory'
@@ -88,7 +89,8 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
 
   // Set the primary generation instance in the run manager
   PrimaryGeneration* pg = new PrimaryGeneration();
-  pg->SetGenerator(genfctr.CreateGenerator());
+  //pg->SetGenerator(genfctr.CreateGenerator());
+  pg->SetGenerator(_genfctr->CreateGenerator());
   this->SetUserAction(pg);
 
   // Set the user action instances, if any, in the run manager
@@ -132,6 +134,7 @@ NexusApp::~NexusApp()
   current->CloseFile();
 
   delete _msg;
+  delete _genfctr;
 }
 
 
