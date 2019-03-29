@@ -6,6 +6,9 @@
 class G4Event;
 class G4GenericMessenger;
 
+class TFile;
+class TH1F;
+
 namespace nexus {
 
   class BaseGeometry;
@@ -19,7 +22,8 @@ namespace nexus {
   /// Each particle energy is generated with flat random probability
   /// between E_min and E_max.
   /// If a direction of generation is not specified, the user should choose a fraction 
-  /// of solid angle inside whom a direction will be randomly generation. See nexus_example5.config.
+  /// of solid angle inside which a direction will be randomly generation.
+  /// See nexus_example5.config.
   
   class Back2backGammas: public G4VPrimaryGenerator
   {
@@ -37,6 +41,15 @@ namespace nexus {
     const BaseGeometry* _geom;
 
     G4String _region;
+
+    G4double _costheta_min;
+    G4double _costheta_max;
+    G4double _phi_min;
+    G4double _phi_max;
+
+    TH1F*  theta_angle_;
+    TH1F*  phi_angle_;
+    TFile* out_file_;
   };
 
 }// end namespace nexus
