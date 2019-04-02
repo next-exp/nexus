@@ -1,3 +1,6 @@
+tag p5_00_11 - 2 Apr 2019
+        - Add LXe scintillation generator to produce look-up tables.
+
 tag p5_00_10 - 29 March 2019
         - Make generation angles configurable, to speed up simulations.
 
