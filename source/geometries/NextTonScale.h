@@ -59,6 +59,7 @@ namespace nexus {
     CylinderPointSampler* vessel_gen_;
     CylinderPointSampler* readout_plane_gen_;
     CylinderPointSampler* outer_plane_gen_;
+    CylinderPointSampler* external_gen_;
 
     MuonsPointSampler* muon_gen_;
 

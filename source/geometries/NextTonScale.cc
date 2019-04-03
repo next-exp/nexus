@@ -141,6 +141,8 @@ NextTonScale::~NextTonScale()
   delete vessel_gen_;
   delete readout_plane_gen_;
   delete outer_plane_gen_;
+  delete external_gen_;
+  delete muon_gen_;
 }
 
 
@@ -236,6 +238,11 @@ G4LogicalVolume* NextTonScale::ConstructWaterTank(G4LogicalVolume* mother_logic_
   muon_gen_ = new MuonsPointSampler(tank_diam/2. + 50. * cm,
 				    tank_height/2. + 1. * cm,
 				    tank_diam/2. + 50. * cm);
+
+  // Primarily for neutron generation
+  external_gen_ = new CylinderPointSampler(tank_diam/2. + 1 * cm,
+					   tank_height + 1 * cm,
+					   1 * mm, 1 * mm);
 
 
   // WATER /////////////////////////////////////////////////
@@ -462,6 +469,9 @@ G4ThreeVector NextTonScale::GenerateVertex(const G4String& region) const
   }
   else if (region == "MUONS") {
     vertex = muon_gen_->GenerateVertex();
+  }
+  else if (region == "EXTERNAL") {
+    vertex = external_gen_->GenerateVertex("WHOLE_VOL");
   }
   else {
     G4cerr << "Unknown detector region " << region << "."
