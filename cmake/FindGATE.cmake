@@ -19,7 +19,7 @@
 ## You should not need to set these in the vast majority of cases.
 ##
 
-find_path(GATE_INCLUDE_DIR NAMES GATE HINTS ${GATE_ROOT_DIR}/include)
+find_path(GATE_INCLUDE_DIR NAMES GATE HINTS ${GATE_ROOT_DIR} ${GATE_ROOT_DIR}/include)
 mark_as_advanced(GATE_INCLUDE_DIR)
 
 find_library(GATE_LIBRARY NAMES GATE HINTS ${GATE_ROOT_DIR}/lib)
