@@ -242,7 +242,9 @@ G4LogicalVolume* NextTonScale::ConstructWaterTank(G4LogicalVolume* mother_logic_
   // Primarily for neutron generation
   external_gen_ = new CylinderPointSampler(tank_diam/2. + 1 * cm,
 					   tank_height + 1 * cm,
-					   1 * mm, 1 * mm);
+					   1 * mm, 1 * mm,
+					   G4ThreeVector(0.,0.,0.),
+					   rotation);
 
 
   // WATER /////////////////////////////////////////////////
