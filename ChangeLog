@@ -1,3 +1,6 @@
+tag p5_01_00 - 3 May 2019
+	- Fix rotation of SiPMs in the external face.
+
 tag p5_00_11 - 2 Apr 2019
         - Add LXe scintillation generator to produce look-up tables.
 

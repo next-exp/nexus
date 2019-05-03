@@ -278,11 +278,12 @@ namespace nexus {
     G4double offset = 0.1 * mm;
     G4int n_sipm_ext = 2*pi*external_radius_/sipm_pitch_;
     G4cout << "Number of sipms in external face: " <<  n_sipm_ext * lin_n_sipm_per_cell_ << G4endl;
-    step = 2.*pi/n_sipm_ext;
     radius = external_radius_ - sipm_dim.z()/2. - offset;
 
     rot.rotateZ(step);
     rot.rotateX(pi);
+
+    step = 2.*pi/n_sipm_ext;
 
     //copy_no = 2000;
     if (instr_faces_ == 1) {
