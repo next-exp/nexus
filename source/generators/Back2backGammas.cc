@@ -28,7 +28,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  Back2backGammas::Back2backGammas() : _geom(0), _costheta_min(0.), _costheta_max(pi),
+  Back2backGammas::Back2backGammas() : _geom(0), _costheta_min(-1.), _costheta_max(1.),
 				       _phi_min(0.), _phi_max(2.*pi)
   {
     G4cout << "Limits = " << std::numeric_limits<unsigned int>::max() << G4endl;
@@ -93,7 +93,7 @@ namespace nexus {
     G4double py = pmod * momentum_direction.y();
     G4double pz = pmod * momentum_direction.z();
 
-    if (_costheta_min != 0. || _costheta_max != pi || _phi_min != 0. || _phi_max != 2.*pi) {
+    if (_costheta_min != -1. || _costheta_max != 1. || _phi_min != 0. || _phi_max != 2.*pi) {
       G4bool mom_dir = false;
       while (mom_dir == false) {
 	G4double cosTheta  = 2.*G4UniformRand()-1.;
