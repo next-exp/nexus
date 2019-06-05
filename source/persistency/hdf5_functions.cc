@@ -3,7 +3,7 @@
 hsize_t createRunType()
 {
   hid_t strtype = H5Tcopy(H5T_C_S1);
-  H5Tset_size (strtype, 100);
+  H5Tset_size (strtype, CONFLEN);
   
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (run_info_t));
@@ -37,7 +37,7 @@ hsize_t createHitInfoType()
   hid_t point3d = H5Tarray_create(H5T_NATIVE_FLOAT, 1, point3d_dim);
   
   hid_t strtype = H5Tcopy(H5T_C_S1);
-  H5Tset_size (strtype, 20);
+  H5Tset_size (strtype, STRLEN);
                         
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (hit_info_t));
@@ -59,7 +59,7 @@ hsize_t createParticleInfoType()
   hid_t point = H5Tarray_create(H5T_NATIVE_FLOAT, 1, point_dim);
   
   hid_t strtype = H5Tcopy(H5T_C_S1);
-  H5Tset_size (strtype, 20);
+  H5Tset_size (strtype, STRLEN);
                         
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (particle_info_t));
