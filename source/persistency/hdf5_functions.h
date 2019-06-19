@@ -10,54 +10,68 @@
   typedef struct{
      char param_key[CONFLEN];
      char param_value[CONFLEN];
-   } run_info_t; 
+   } run_info_t;
+
+  // typedef struct{
+  //   int32_t evt_number;
+  //   uint64_t last_sns_data;
+  //   uint64_t last_sns_tof;
+  //   uint64_t last_hit;
+  //   uint64_t last_particle;
+  // } evt_extent_t;
 
   typedef struct{
-    int32_t evt_number;
-    uint64_t last_sns_data;
-    uint64_t last_sns_tof;
-    uint64_t last_hit;
-    uint64_t last_particle;
-  } evt_extent_t;
-
-  typedef struct{
-    int32_t evt_number;
+    int32_t evt_id;
     float evt_energy;
   } evt_t;
 
   typedef struct{
+    int32_t evt_id;
     unsigned int sensor_id;
     uint64_t time_bin;
     unsigned int charge;
   } sns_data_t;
 
   typedef struct{
+    int32_t evt_id;
     int sensor_id;
     unsigned int time_bin;
     unsigned int charge;
   } sns_tof_t;
 
   typedef struct{
-	float hit_position[3];
-	float hit_time;
-	float hit_energy;
-        char label[STRLEN];
-        int particle_indx;
-        int hit_indx;
+    int32_t evt_id;
+    float hit_pos_x;
+    float hit_pos_y;
+    float hit_pos_z;
+    float hit_time;
+    float hit_energy;
+    char label[STRLEN];
+    int particle_id;
+    int hit_id;
   } hit_info_t;
 
   typedef struct{
-	int particle_indx;
-	char particle_name[STRLEN];
-        char primary;
-	int mother_indx;
-	float initial_vertex[4];
-	float final_vertex[4];
-        char initial_volume[STRLEN];
-        char final_volume[STRLEN];
-	float momentum[3];
-	float kin_energy;
-        char creator_proc[STRLEN];
+    int32_t evt_id;
+    int particle_id;
+    char particle_name[STRLEN];
+    char primary;
+    int mother_id;
+    float initial_vertex_x;
+    float initial_vertex_y;
+    float initial_vertex_z;
+    float initial_vertex_t;
+    float final_vertex_x;
+    float final_vertex_y;
+    float final_vertex_z;
+    float final_vertex_t;
+    char initial_volume[STRLEN];
+    char final_volume[STRLEN];
+    float momentum_x;
+    float momentum_y;
+    float momentum_z;
+    float kin_energy;
+    char creator_proc[STRLEN];
   } particle_info_t;
 
   typedef struct{
@@ -73,7 +87,7 @@
   hsize_t createSensorTofType();
   hsize_t createHitInfoType();
   hsize_t createParticleInfoType();
-  hsize_t createEventExtentType();
+// hsize_t createEventExtentType();
   hsize_t createSensorPosType();
 
   hid_t createTable(hid_t group, std::string& table_name, hsize_t memtype);
@@ -85,9 +99,8 @@
   void writeSnsTof(sns_tof_t* snsTof, hid_t dataset, hid_t memtype, hsize_t counter);
   void writeHit(hit_info_t* hitInfo, hid_t dataset, hid_t memtype, hsize_t counter);
   void writeParticle(particle_info_t* particleInfo, hid_t dataset, hid_t memtype, hsize_t counter);
-  void writeEventExtent(evt_extent_t* evtExtent, hid_t dataset, hid_t memtype, hsize_t counter);
+//  void writeEventExtent(evt_extent_t* evtExtent, hid_t dataset, hid_t memtype, hsize_t counter);
   void writeSnsPos(sns_pos_t* snsPos, hid_t dataset, hid_t memtype, hsize_t counter);
 
 
 #endif
-
