@@ -1,0 +1,37 @@
+### GEOMETRY
+/Geometry/NextTonScale/active_diam    200. cm
+/Geometry/NextTonScale/active_length  200. cm
+/Geometry/NextTonScale/fcage_thickn   1. cm
+/Geometry/NextTonScale/ics_thickn     12. cm
+/Geometry/NextTonScale/vessel_thickn  2. cm
+/Geometry/NextTonScale/gas_density    89. kg/m3
+/Geometry/NextTonScale/gas            enrichedXe
+
+### GENERATOR
+/Generator/MuonAngleGenerator/region EXTERNAL
+/Generator/MuonAngleGenerator/min_energy 200 GeV
+/Generator/MuonAngleGenerator/max_energy 250 GeV
+/Generator/MuonAngleGenerator/angles_on false
+
+### ACTIONS
+/Actions/DefaultEventAction/energy_threshold 0.01 MeV
+
+
+### PHYSICS (For fast Simulation)
+/PhysicsList/Nexus/clustering           false
+/PhysicsList/Nexus/drift                false
+/PhysicsList/Nexus/electroluminescence  false
+
+
+### VERBOSITIES
+/control/verbose 0
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+
+### JOB CONTROL
+/nexus/random_seed 17392
+/nexus/persistency/hdf5 true
+/nexus/persistency/start_id 0
+/nexus/persistency/outputFile TonMuons_vertical_example.next

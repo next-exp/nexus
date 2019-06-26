@@ -61,7 +61,8 @@ namespace nexus {
     G4GenericMessenger* _msg;
 
     G4ParticleDefinition* _particle_definition;
-
+    
+    G4bool _angular_generation; ///< Distribution or all downwards
     G4double _axis_rotation; ///< Angle between North and +z
     G4RotationMatrix *_rPhi; ///< Rotation to adjust axes
 

@@ -23,8 +23,8 @@ using namespace CLHEP;
 
 MuonAngleGenerator::MuonAngleGenerator():
   G4VPrimaryGenerator(), _msg(0), _particle_definition(0),
-  _rPhi(NULL), _energy_min(0.), _energy_max(0.),
-  _distribution(0), _geom(0), _geom_solid(0)
+  _angular_generation(true), _rPhi(NULL), _energy_min(0.),
+  _energy_max(0.), _distribution(0), _geom(0), _geom_solid(0)
 {
   _msg = new G4GenericMessenger(this, "/Generator/MuonAngleGenerator/",
 				"Control commands of muongenerator.");
@@ -44,11 +44,14 @@ MuonAngleGenerator::MuonAngleGenerator():
   _msg->DeclareProperty("region", _region,
 			"Set the region of the geometry where the vertex will be generated.");
 
+  _msg->DeclareProperty("angles_on", _angular_generation,
+			"Distribute muon directions according to file?");
+
   _msg->DeclareProperty("angle_file", _ang_file,
 			"Name of the file containing angular distribution.");
   _msg->DeclareProperty("angle_dist", _dist_name,
 			"Name of the angular distribution histogram.");
-
+  
   G4GenericMessenger::Command& rotation =
     _msg->DeclareProperty("azimuth_rotation", _axis_rotation,
 			  "Angle between north and nexus z in anticlockwise");
@@ -92,7 +95,7 @@ void MuonAngleGenerator::SetupAngles()
 void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
 {
 
-  if (_rPhi == NULL)
+  if (_angular_generation && _rPhi == NULL)
     SetupAngles();
 
   _particle_definition =
@@ -110,10 +113,12 @@ void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
   G4double pmod   = std::sqrt(energy*energy - mass*mass);
 
   G4ThreeVector position = _geom->GenerateVertex(_region);
-  G4ThreeVector p_dir(0., 0., 0.);
-  GetDirection(p_dir);
-  while ( !CheckOverlap(position, p_dir) )
-    position = _geom->GenerateVertex(_region);
+  G4ThreeVector p_dir(0., -1., 0.);
+  if (_angular_generation){
+    GetDirection(p_dir);
+    while ( !CheckOverlap(position, p_dir) )
+      position = _geom->GenerateVertex(_region);
+  }
 
   G4double px = pmod * p_dir.x();
   G4double py = pmod * p_dir.y();
