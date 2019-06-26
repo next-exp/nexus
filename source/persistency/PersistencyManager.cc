@@ -142,9 +142,6 @@ G4bool PersistencyManager::Store(const G4Event* event)
   // Create a new GATE event
   gate::Event ievt;
   ievt.SetEventID(_nevt);
-  if (_hdf5dump) {
-    _event_info.first = _nevt;
-  }
 
   if (event_type_ == "bb0nu") {
     ievt.SetMCEventType(gate::BB0NU);
@@ -161,13 +158,7 @@ G4bool PersistencyManager::Store(const G4Event* event)
 
   StoreHits(event->GetHCofThisEvent(), &ievt);
 
-  if (_hdf5dump) {
-    //Save event-related information in hdf5 file
-    _h5writer->WriteEventInfo(_event_info.first, _event_info.second);
-    //Save relationships among tables
-    // _h5writer->WriteEventExtentInfo(_nevt, _h5writer->GetSnsDataIndex(), _h5writer->GetSnsTofIndex(),
-    //                                _h5writer->GetHitIndex(), _h5writer->GetParticleIndex());
-  } else {
+  if (!_hdf5dump){
     // Add event to the tree
     _writer->Write(ievt);
   }
@@ -384,9 +375,6 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
 
   if (sdname == "ACTIVE") {
     ievt->SetMCEnergy(evt_energy);
-    if (_hdf5dump) {
-      _event_info.second = evt_energy;
-    }
   }
 
 }
