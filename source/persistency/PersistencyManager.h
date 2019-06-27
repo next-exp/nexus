@@ -99,6 +99,8 @@ namespace nexus {
 
     HDF5Writer* _h5writer;  ///< Event writer to hdf5 file
 
+    G4double _bin_size, _tof_bin_size;
+
   };
 
 

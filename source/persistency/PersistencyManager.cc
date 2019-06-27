@@ -410,6 +410,12 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     double binsize = hit->GetBinSize();
     wf->SetSampWidth(binsize);
 
+    if (hit->GetPmtID()>=1000) {
+      _bin_size = binsize;
+    } else if (hit->GetPmtID()<0) {
+      _tof_bin_size = binsize;
+    }
+
     const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
     std::map<G4double, G4int>::const_iterator it;
     std::vector< std::pair<unsigned int, float> > data;
@@ -491,9 +497,13 @@ G4bool PersistencyManager::Store(const G4Run*)
 
   if (_hdf5dump) {
     G4String key = "num_events";
-    _h5writer->WriteRunInfo(key,  std::to_string(num_events).c_str());
+    _h5writer->WriteRunInfo(key, std::to_string(num_events).c_str());
     key = "saved_events";
-    _h5writer->WriteRunInfo(key,  std::to_string(_saved_evts).c_str());
+    _h5writer->WriteRunInfo(key, std::to_string(_saved_evts).c_str());
+    key = "bin_size";
+    _h5writer->WriteRunInfo(key, (std::to_string(_bin_size/microsecond)+" mus").c_str());
+    key = "tof_bin_size";
+    _h5writer->WriteRunInfo(key, (std::to_string(_tof_bin_size/picosecond)+" ps").c_str());
   }
   SaveConfigurationInfo(_historyFile_init, grun);
   SaveConfigurationInfo(_historyFile_conf, grun);

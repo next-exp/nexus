@@ -67,7 +67,6 @@ void HDF5Writer::Close()
 
 void HDF5Writer::WriteRunInfo(const char* param_key, const char* param_value)
 {
-
   run_info_t runData;
   memset(runData.param_key,   0, CONFLEN);
   memset(runData.param_value, 0, CONFLEN);
