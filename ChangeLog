@@ -1,3 +1,6 @@
+tag p6_00_00 - 3 Jul 2019
+	- Change persistency to pure pandas dataframes.
+
 tag p5_01_00 - 3 May 2019
 	- Fix rotation of SiPMs in the external face.
 
@@ -318,6 +321,3 @@ tag 4.03.08 - 18 Sept 2014
 
 tag 4.03.03 - 5 Mar 2014
 	-Next1EL.cc: back to using the most recent simulation of TPB wavelength shifting.
-
-
-
