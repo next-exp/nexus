@@ -1,0 +1,34 @@
+### GEOMETRY
+/Geometry/RegisterGeometry TON_SCALE
+
+
+### GENERATOR
+#/Generator/RegisterGenerator SINGLE_PARTICLE
+/Generator/RegisterGenerator ION_GUN
+#/Generator/RegisterGenerator DECAY0
+
+
+### ACTIONS
+/Actions/RegisterTrackingAction VALIDATION
+/Actions/RegisterEventAction DEFAULT
+/Actions/RegisterSteppingAction DEFAULT
+/Actions/RegisterRunAction DEFAULT
+
+
+### PHYSICS
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics G4EmExtraPhysics
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+/PhysicsList/RegisterPhysics G4HadronElasticPhysicsHP
+/PhysicsList/RegisterPhysics G4HadronPhysicsQGSP_BERT_HP
+/PhysicsList/RegisterPhysics G4StoppingPhysics
+/PhysicsList/RegisterPhysics G4IonPhysics
+#/PhysicsList/RegisterPhysics G4OpticalPhysics
+/PhysicsList/RegisterPhysics NexusPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
+
+
+### EXTRA CONFIGURATION
+/nexus/RegisterMacro ./macros/NextTonScale.config.mac
+#/nexus/RegisterDelayedMacro macros/physics/Bi214.mac

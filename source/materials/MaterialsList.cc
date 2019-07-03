@@ -16,41 +16,64 @@
 #include <G4NistManager.hh>
 
 using namespace nexus;
-  
-  
+
+
 G4Material* MaterialsList::GXe(G4double pressure, G4double temperature)
 {
+  G4Material* mat = GXe_bydensity(XenonGasProperties::Density(pressure),
+				  temperature, pressure);
+
+  return mat;
+}
+
+
+G4Material* MaterialsList::GXe_bydensity(G4double density,
+					 G4double temperature,
+					 G4double pressure)
+{
   G4String name = "GXe";
-  
+
   G4Material* mat = G4Material::GetMaterial(name, false);
-    
+
   if (mat == 0) {
     G4NistManager* nist = G4NistManager::Instance();
-      
-    mat = new G4Material(name, XenonGasProperties::Density(pressure), 1,
+
+    mat = new G4Material(name, density, 1,
 			 kStateGas, temperature, pressure);
-    
+
     G4Element* Xe = nist->FindOrBuildElement("Xe");
-  
+
     mat->AddElement(Xe,1);
   }
 
   return mat;
 }
 
+
 G4Material* MaterialsList::GXeEnriched(G4double pressure, G4double temperature)
 {
+  G4double gas_density = XenonGasProperties::Density(pressure);
+  G4Material* mat = GXeEnriched_bydensity(gas_density, temperature, pressure);
+
+  return mat;
+}
+
+
+G4Material* MaterialsList::GXeEnriched_bydensity(G4double density,
+						 G4double temperature,
+						 G4double pressure)
+{
   G4String name = "GXeEnriched";
-  
+
   G4Material* mat = G4Material::GetMaterial(name, false);
-    
+
   if (mat == 0) {
-      
-    mat = new G4Material(name, XenonGasProperties::Density(pressure), 1,
+
+    mat = new G4Material(name, density, 1,
 			 kStateGas, temperature, pressure);
-    
+
     G4Element* Xe = new G4Element("GXeEnriched", "Xe", 6);
-    
+
     G4Isotope* Xe129 = new G4Isotope("Xe129", 54, 129, XenonGasProperties::MassPerMole(129));
     G4Isotope* Xe130 = new G4Isotope("Xe130", 54, 130, XenonGasProperties::MassPerMole(130));
     G4Isotope* Xe131 = new G4Isotope("Xe131", 54, 131, XenonGasProperties::MassPerMole(131));
@@ -64,14 +87,14 @@ G4Material* MaterialsList::GXeEnriched(G4double pressure, G4double temperature)
     Xe->AddIsotope(Xe132, 0.708251*perCent);
     Xe->AddIsotope(Xe134, 8.6645*perCent);
     Xe->AddIsotope(Xe136, 90.2616*perCent);
-   
-    
+
+
     // G4cout << Xe->GetNumberOfIsotopes() << G4endl;
     // G4cout << Xe->GetIsotopeVector()->size() << G4endl;
     // for (G4int i=0; i< Xe->GetNumberOfIsotopes(); ++i) {
     //   G4cout << Xe->GetIsotope(i)->GetName() << G4endl;
     // }
-    
+
     mat->AddElement(Xe,1);
   }
 
@@ -80,18 +103,29 @@ G4Material* MaterialsList::GXeEnriched(G4double pressure, G4double temperature)
 
 G4Material* MaterialsList::GXeDepleted(G4double pressure, G4double temperature)
 {
+  G4double gas_density = XenonGasProperties::Density(pressure);
+  G4Material* mat = GXeDepleted_bydensity(gas_density, temperature, pressure);
+
+  return mat;
+}
+
+
+G4Material* MaterialsList::GXeDepleted_bydensity(G4double density,
+						 G4double temperature,
+						 G4double pressure)
+{
   G4String name = "GXeDepleted";
-  
+
   G4Material* mat = G4Material::GetMaterial(name, false);
-    
+
   if (mat == 0) {
-      
-    mat = new G4Material(name, XenonGasProperties::Density(pressure), 1,
+
+    mat = new G4Material(name, density, 1,
 			 kStateGas, temperature, pressure);
 
-    
+
     G4Element* Xe = new G4Element("GXeDepleted", "Xe", 5);
-   
+
     G4Isotope* Xe129 = new G4Isotope("Xe129", 54, 129, XenonGasProperties::MassPerMole(129));
     G4Isotope* Xe131 = new G4Isotope("Xe131", 54, 131, XenonGasProperties::MassPerMole(131));
     G4Isotope* Xe132 = new G4Isotope("Xe132", 54, 132, XenonGasProperties::MassPerMole(132));
@@ -111,14 +145,14 @@ G4Material* MaterialsList::GXeDepleted(G4double pressure, G4double temperature)
     Xe->AddIsotope(Xe132, 28.31*perCent);
     Xe->AddIsotope(Xe134, 8.61*perCent);
     Xe->AddIsotope(Xe136, 2.55*perCent);
-   
-    
+
+
     // G4cout << Xe->GetNumberOfIsotopes() << G4endl;
     // G4cout << Xe->GetIsotopeVector()->size() << G4endl;
     // for (G4int i=0; i< Xe->GetNumberOfIsotopes(); ++i) {
     //   G4cout << Xe->GetIsotope(i)->GetName() << G4endl;
     // }
-    
+
     mat->AddElement(Xe,1);
   }
 
@@ -128,17 +162,17 @@ G4Material* MaterialsList::GXeDepleted(G4double pressure, G4double temperature)
 G4Material* MaterialsList::GAr(G4double pressure, G4double temperature)
 {
   G4String name = "GAr";
-  
+
   G4Material* mat = G4Material::GetMaterial(name, false);
-    
+
   if (mat == 0) {
     G4NistManager* nist = G4NistManager::Instance();
-      
+
     mat = new G4Material(name, ArgonGasProperties::Density(pressure), 1,
 			 kStateGas, temperature, pressure);
-    
+
     G4Element* Ar = nist->FindOrBuildElement("Ar");
-  
+
     mat->AddElement(Ar,1);
   }
 
@@ -148,16 +182,16 @@ G4Material* MaterialsList::GAr(G4double pressure, G4double temperature)
 G4Material* MaterialsList::GXeAr(G4double pressure, G4double temperature, G4double percXe)
 {
   G4String name = "GXeAr";
-  
+
   G4Material* mat = G4Material::GetMaterial(name, false);
-    
+
   if (mat == 0) {
-    
+
     mat = new G4Material(name,
 			 (1-(percXe/100.))*ArgonGasProperties::Density(pressure) +
 			 percXe/100.*XenonGasProperties::Density(pressure),
 			 2, kStateGas, temperature, pressure);
-    
+
     G4Element* NaturalXe = new G4Element("GXeNatural", "Xe", 9);
 
     G4Isotope* Xe124 = new G4Isotope("Xe124", 54, 124, XenonGasProperties::MassPerMole(124));
@@ -181,31 +215,31 @@ G4Material* MaterialsList::GXeAr(G4double pressure, G4double temperature, G4doub
     NaturalXe->AddIsotope(Xe136, 8.8573*perCent);
 
     G4Element* NaturalAr  = new G4Element("Argon", "Ar", 18, 39.962383123*g/mole);
-       
+
     mat->AddElement(NaturalAr, (100-percXe)*perCent);
     mat->AddElement(NaturalXe, percXe*perCent);
   }
-  
+
     return mat;
 }
 
-  
-  
-  
+
+
+
 G4Material* MaterialsList::Steel()
 {
   // Composition ranges correspond to stainless steel grade 304L
-  
+
   G4String name = "Steel";
 
   G4Material* mat = G4Material::GetMaterial(name, false);
-    
+
   if (mat == 0) {
-    
+
     mat = new G4Material(name, 8000*kg/m3, 4);
 
     G4NistManager* nist = G4NistManager::Instance();
-    
+
     G4Element* Fe = nist->FindOrBuildElement("Fe");
     mat->AddElement(Fe, 0.66);
 
@@ -214,11 +248,11 @@ G4Material* MaterialsList::Steel()
 
     G4Element* Mn = nist->FindOrBuildElement("Mn");
     mat->AddElement(Mn, 0.02);
-    
+
     G4Element* Ni = nist->FindOrBuildElement("Ni");
     mat->AddElement(Ni, 0.12);
   }
-    
+
   return mat;
 }
 
@@ -232,7 +266,7 @@ G4Material* MaterialsList::Steel316Ti()
 
   if (!mat) {
     mat = new G4Material(name, 8000*kg/m3, 6);
-    
+
     G4NistManager* nist = G4NistManager::Instance();
 
     G4Element* Fe = nist->FindOrBuildElement("Fe");
@@ -246,14 +280,14 @@ G4Material* MaterialsList::Steel316Ti()
 
     G4Element* Mo = nist->FindOrBuildElement("Mo");
     mat->AddElement(Mo, 0.03);
-    
+
     G4Element* Si = nist->FindOrBuildElement("Si");
     mat->AddElement(Si, 0.007);
-    
+
     G4Element* Ti = nist->FindOrBuildElement("Ti");
     mat->AddElement(Ti, 0.007);
   }
-  
+
   return mat;
 }
 
@@ -264,7 +298,7 @@ G4Material* MaterialsList::Epoxy()
   G4String name = "Epoxy";
 
   G4Material* mat = G4Material::GetMaterial(name, false);
-    
+
   if (mat == 0) {
     G4NistManager* nist = G4NistManager::Instance();
 
@@ -301,12 +335,12 @@ G4Material* MaterialsList::Kovar()
     mat->AddElement(Ni, 29);
     mat->AddElement(Co, 17);
   }
-  
+
   return mat;
 }
 
-  
-  
+
+
 G4Material* MaterialsList::PEEK()
 {
   G4String name = "PEEK";
@@ -333,7 +367,7 @@ G4Material* MaterialsList::PEEK()
 
 G4Material* MaterialsList::Sapphire()
 {
-  G4Material* mat = 
+  G4Material* mat =
     G4NistManager::Instance()->FindOrBuildMaterial("G4_ALUMINUM_OXIDE");
 
   return mat;
@@ -348,8 +382,8 @@ G4Material* MaterialsList::FusedSilica()
   return mat;
 }
 
-  
-  
+
+
 G4Material* MaterialsList::PS() // polystyrene
 {
   G4String name = "PS";
@@ -373,9 +407,9 @@ G4Material* MaterialsList::PS() // polystyrene
 
   return mat;
 }
-  
-  
-  
+
+
+
 G4Material* MaterialsList::TPB()
 {
   G4String name = "TPB"; // Tetraphenyl butadiene
@@ -384,7 +418,7 @@ G4Material* MaterialsList::TPB()
 
   if (mat == 0) {
     G4NistManager* nist = G4NistManager::Instance();
-      
+
     G4Element* H = nist->FindOrBuildElement("H");
     G4Element* C = nist->FindOrBuildElement("C");
 
@@ -392,20 +426,20 @@ G4Material* MaterialsList::TPB()
     mat->AddElement(H, 22);
     mat->AddElement(C, 28);
   }
-    
+
   return mat;
 }
-  
-  
+
+
 G4Material* MaterialsList::ITO()
 {
-  G4String name = "ITO"; 
+  G4String name = "ITO";
 
   G4Material* mat = G4Material::GetMaterial(name, false);
 
   if (mat == 0) {
     G4NistManager* nist = G4NistManager::Instance();
-      
+
     G4Element* In = nist->FindOrBuildElement("In");
     G4Element* O = nist->FindOrBuildElement("O");
 
@@ -413,7 +447,7 @@ G4Material* MaterialsList::ITO()
     mat->AddElement(In, 2);
     mat->AddElement(O, 3);
   }
-    
+
   return mat;
 
 }
@@ -421,13 +455,13 @@ G4Material* MaterialsList::ITO()
 
 G4Material* MaterialsList::PVT()
 {
-  G4String name = "PVT"; // 
+  G4String name = "PVT"; //
 
   G4Material* mat = G4Material::GetMaterial(name, false);
 
   if (mat == 0) {
     G4NistManager* nist = G4NistManager::Instance();
-      
+
     G4Element* H = nist->FindOrBuildElement("H");
     G4Element* C = nist->FindOrBuildElement("C");
 
@@ -435,7 +469,7 @@ G4Material* MaterialsList::PVT()
     mat->AddElement(H, 4);
     mat->AddElement(C, 2);
   }
-    
+
   return mat;
 
 }
@@ -443,13 +477,13 @@ G4Material* MaterialsList::PVT()
 
 G4Material* MaterialsList::Kevlar()
 {
-  G4String name = "Kevlar"; // 
+  G4String name = "Kevlar"; //
 
   G4Material* mat = G4Material::GetMaterial(name, false);
 
   if (mat == 0) {
     G4NistManager* nist = G4NistManager::Instance();
-      
+
     G4Element* H = nist->FindOrBuildElement("H");
     G4Element* C = nist->FindOrBuildElement("C");
     G4Element* N = nist->FindOrBuildElement("N");
@@ -461,7 +495,7 @@ G4Material* MaterialsList::Kevlar()
     mat->AddElement(O, 2);
     mat->AddElement(N, 2);
   }
-    
+
   return mat;
 
 }
@@ -470,12 +504,12 @@ G4Material* MaterialsList::Kevlar()
 
 G4Material* MaterialsList::HDPE()
 {
-  G4String name = "HDPE"; 
+  G4String name = "HDPE";
 
   G4Material* mat = G4Material::GetMaterial(name, false);
 
   if (mat == 0) {
-    G4NistManager* nist = G4NistManager::Instance();    
+    G4NistManager* nist = G4NistManager::Instance();
 
     G4Element* H = nist->FindOrBuildElement("H");
     G4Element* C = nist->FindOrBuildElement("C");
@@ -484,7 +518,7 @@ G4Material* MaterialsList::HDPE()
     mat->AddElement(H, 4);
     mat->AddElement(C, 2);
   }
-    
+
   return mat;
 
 }
@@ -493,12 +527,12 @@ G4Material* MaterialsList::HDPE()
 
 G4Material* MaterialsList::OpticalSilicone()
 {
-  G4String name = "OpticalSilicone"; 
+  G4String name = "OpticalSilicone";
 
   G4Material* mat = G4Material::GetMaterial(name, false);
 
   if (mat == 0) {
-    G4NistManager* nist = G4NistManager::Instance();    
+    G4NistManager* nist = G4NistManager::Instance();
 
     G4Element* H = nist->FindOrBuildElement("H");
     G4Element* C = nist->FindOrBuildElement("C");
@@ -515,12 +549,12 @@ G4Material* MaterialsList::OpticalSilicone()
 G4Material* MaterialsList::SeF6(G4double pressure, G4double temperature)
 {
   // Composition ranges correspond to Selenium Hexafluoride
-  
+
   G4String name = "SeF6";
   G4Material* mat = G4Material::GetMaterial(name, false);
-    
+
   if (mat == 0) {
-    
+
     G4NistManager* nist = G4NistManager::Instance();
     G4double density = 7.887*kg/m3;
 
@@ -529,13 +563,13 @@ G4Material* MaterialsList::SeF6(G4double pressure, G4double temperature)
     else
       G4cout  << "[MaterialsList] Pressure " << pressure/bar
               << " bar not recognized for SeF6! ... Assuming 1bar. " << G4endl;
-    
+
     mat = new G4Material(name, density, 2, kStateGas, temperature, pressure);
     G4Element* Se = nist->FindOrBuildElement("Se");
     mat->AddElement(Se, 1);
     G4Element* F = nist->FindOrBuildElement("F");
     mat->AddElement(F, 6);
-  }    
+  }
 
   return mat;
 }
@@ -595,7 +629,7 @@ G4Material* MaterialsList::FR4()
 G4Material* MaterialsList::CopyMaterial(G4Material* original, G4String newname)
 {
   G4Material* newmat = G4Material::GetMaterial(newname, false);
-  
+
   if (newmat == 0) {
     G4double z = original->GetZ();
     G4double a = original->GetA();
@@ -603,8 +637,8 @@ G4Material* MaterialsList::CopyMaterial(G4Material* original, G4String newname)
     G4State state = original->GetState();
     G4double temperature = original->GetTemperature();
     G4double pressure = original->GetPressure();
-    
-    newmat = 
+
+    newmat =
       new G4Material(newname, z, a, density, state, temperature, pressure);
   }
 

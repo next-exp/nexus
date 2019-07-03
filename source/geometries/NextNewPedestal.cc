@@ -63,7 +63,7 @@ namespace nexus {
     // SETTING VISIBILITIES   //////////
     if (_visibility) {
       G4VisAttributes steel_col = nexus::LightGrey();
-      //   steel_col.SetForceSolid(true);
+      steel_col.SetForceSolid(true);
       table_logic->SetVisAttributes(steel_col);
     }
     else {
@@ -96,5 +96,16 @@ namespace nexus {
     } 
     return vertex;
   }
+
+  void NextNewPedestal::SetPosition(G4double pos)
+  {
+    _y_pos = pos;
+  }
+
+  G4ThreeVector NextNewPedestal::GetDimensions() const
+  {
+    return G4ThreeVector(_table_x, _table_y, _table_z);
+  }
+
 
 } //end namespace nexus

@@ -13,6 +13,18 @@ tag p5_00_09 - 27 March 2019
 tag p5_00_08 - 10 Jan 2019
         - Make cryostat width in z configurable.
 
+tag v5_03_12 - 27 Feb 2019
+        - Add new geometry for tonne studies.
+
+tag v5_03_11 - 28 Jan 2019
+        - Fix bug in vertex generation for specific configurations.
+
+tag v5_03_10 - 31 Oct 2018
+        - Add steel support structure to mini lead castle.
+
+tag v5_03_09 - 25 Oct 2018
+        - Add mini lead castle to the NEW geometry.
+
 tag p5_00_07 - 24 Oct 2018
         - Add tile and ring with tiles geometries.
 

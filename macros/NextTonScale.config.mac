@@ -1,0 +1,61 @@
+### GEOMETRY
+/Geometry/NextTonScale/active_diam   200. cm
+/Geometry/NextTonScale/active_length 200. cm
+/Geometry/NextTonScale/fcage_thickn    1. cm
+/Geometry/NextTonScale/ics_thickn     12. cm
+/Geometry/NextTonScale/vessel_thickn   2. cm
+/Geometry/NextTonScale/gas_density    89. kg/m3
+
+/Geometry/NextTonScale/tank_visibility   false
+/Geometry/NextTonScale/vessel_visibility true
+/Geometry/NextTonScale/ics_visibility    true
+/Geometry/NextTonScale/fcage_visibility  true
+
+### GENERATOR
+# Single Particle
+#/Generator/SingleParticle/region AD_HOC
+#/Geometry/NextTonScale/specific_vertex_X 0. mm
+#/Geometry/NextTonScale/specific_vertex_Y 0. mm
+#/Geometry/NextTonScale/specific_vertex_Z 0. mm
+#/Generator/SingleParticle/particle geantino
+#/Generator/SingleParticle/min_energy 1. GeV
+#/Generator/SingleParticle/max_energy 1. GeV
+#/Generator/SingleParticle/momentum_X 0.
+#/Generator/SingleParticle/momentum_Y 1.
+#/Generator/SingleParticle/momentum_Z 0.
+
+# Ion Gun for background decays ... (Bi214: Z=83, A=214), (Tl208: Z=81, A=208)
+/Generator/IonGun/region INNER_SHIELDING
+/Generator/IonGun/atomic_number 81
+/Generator/IonGun/mass_number 208
+
+# Decay0 interface for BB decays ... (BB0nu: DecayMode 1), (BB2nu: DecayMode 4)
+#/Generator/Decay0Interface/region ACTIVE
+#/Generator/Decay0Interface/inputFile none
+#/Generator/Decay0Interface/Xe136DecayMode 1
+#/Generator/Decay0Interface/EnergyThreshold 0. keV
+#/Generator/Decay0Interface/Ba136FinalState 0
+
+
+### ACTIONS
+/Actions/DefaultEventAction/energy_threshold 2.3 MeV
+
+
+### PHYSICS (For fast Simulation)
+/PhysicsList/Nexus/clustering           false
+/PhysicsList/Nexus/drift                false
+/PhysicsList/Nexus/electroluminescence  false
+
+
+### VERBOSITIES
+/control/verbose 0
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+
+### JOB CONTROL
+/nexus/random_seed 0
+/nexus/persistency/hdf5 true
+/nexus/persistency/start_id 0
+/nexus/persistency/outputFile NextTon.Tl208.INNER_SHIELDING.next

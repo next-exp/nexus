@@ -30,7 +30,7 @@ namespace nexus {
     /// Destructor
     ~NextNewPedestal();
 
-    /// Sets the Logical Volume where ICS will be placed
+    /// Sets the logical volume where the pedestal will be placed
     void SetLogicalVolume(G4LogicalVolume* mother_logic);
 
     /// Generate a vertex within a given region of the geometry
@@ -39,6 +39,9 @@ namespace nexus {
     /// Builder
     void Construct();
 
+    /// Setters and getters
+    void SetPosition(G4double pos);
+    G4ThreeVector GetDimensions() const;
 
   private:
     // Mother Logical Volume of the ICS

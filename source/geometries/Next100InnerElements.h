@@ -75,6 +75,7 @@ namespace nexus {
     
     G4double _active_diam;
     G4double _active_length;
+    G4double _active_posz;
     G4double _windows_end_z;
     G4double _trk_displ, _ener_displ; // Displacement of tracking / energy zones
     G4double _el_gap_length;
@@ -116,6 +117,8 @@ namespace nexus {
 
     // Vertex Generators
     CylinderPointSampler* _active_gen;
+    CylinderPointSampler* _buffer_gen;
+    CylinderPointSampler* _xenon_gen;
     CylinderPointSampler* _anode_quartz_gen;
     CylinderPointSampler* _cathode_gen;
 

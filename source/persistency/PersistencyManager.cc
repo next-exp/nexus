@@ -48,7 +48,7 @@ using namespace nexus;
 PersistencyManager::PersistencyManager(G4String historyFile_init, G4String historyFile_conf):
   G4VPersistencyManager(), _msg(0),
   _ready(false), _store_evt(true),  event_type_("other"), _writer(0),
-  _saved_evts(0), _nevt(0), _start_id(0), _first_evt(true), _hdf5dump(false),
+  _saved_evts(0), _interacting_evts(0), _nevt(0), _start_id(0), _first_evt(true), _hdf5dump(false),
   _h5writer(0)
 {
 
@@ -127,12 +127,17 @@ void PersistencyManager::CloseFile()
 
 G4bool PersistencyManager::Store(const G4Event* event)
 {
+  if (_interacting_evt) {
+    _interacting_evts++;
+  }
+
   if (!_store_evt) {
     TrajectoryMap::Clear();
     return false;
   }
 
   _saved_evts++;
+
 
   if (_first_evt) {
     _first_evt = false;
@@ -504,15 +509,16 @@ G4bool PersistencyManager::Store(const G4Run*)
     _h5writer->WriteRunInfo(key, (std::to_string(_bin_size/microsecond)+" mus").c_str());
     key = "tof_bin_size";
     _h5writer->WriteRunInfo(key, (std::to_string(_tof_bin_size/picosecond)+" ps").c_str());
+    key = "interacting_events";
+    _h5writer->WriteRunInfo(key,  std::to_string(_interacting_evts).c_str())
   }
   SaveConfigurationInfo(_historyFile_init, grun);
   SaveConfigurationInfo(_historyFile_conf, grun);
 
   if (!_hdf5dump) {
-    std::stringstream ss;
-    ss << num_events;
-    grun.store("num_events", ss.str());
+    grun.store("num_events", (int)num_events);
     grun.SetNumEvents((int)_saved_evts);
+    grun.store("interacting_events", (int)_interacting_evts);
     _writer->WriteRunInfo(grun);
   }
 

@@ -43,6 +43,7 @@ namespace nexus {
 
     /// Set whether to store or not the current event
     void StoreCurrentEvent(G4bool);
+    void InteractingEvent(G4bool);
 
     ///
     virtual G4bool Store(const G4Event*);
@@ -79,6 +80,7 @@ namespace nexus {
 
     G4bool _ready;     ///< Is the PersistencyManager ready to go?
     G4bool _store_evt; ///< Should we store the current event?
+    G4bool _interacting_evt; ///< Has the current event interacted in ACTIVE?
 
     G4String event_type_; ///< event type: bb0nu, bb2nu, background or not set
 
@@ -90,6 +92,7 @@ namespace nexus {
     std::map<G4int, gate::Hit*> _sns_posmap;
 
     G4int _saved_evts; ///< number of events to be saved
+    G4int _interacting_evts; ///< number of events interacting in ACTIVE
 
     G4int _nevt; ///< Event ID
     G4int _start_id; ///< ID for the first event in file
@@ -108,6 +111,8 @@ namespace nexus {
 
   inline void PersistencyManager::StoreCurrentEvent(G4bool sce)
   { _store_evt = sce; }
+  inline void PersistencyManager::InteractingEvent(G4bool ie)
+  { _interacting_evt = ie; }
   inline G4bool PersistencyManager::Store(const G4VPhysicalVolume*)
   { return false; }
   inline G4bool PersistencyManager::Retrieve(G4Event*&)

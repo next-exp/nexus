@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
 ///  \file   MaterialsList.cc
 ///  \brief  Definition of common materials.
-///  
+///
 ///  \author   J Martin-Albo <jmalbos@ific.uv.es>
 ///  \date     27 Mar 2009
-///  \version  $Id$     
+///  \version  $Id$
 ///
 ///  Copyright (c) 2009-2011 NEXT Collaboration
 // ----------------------------------------------------------------------------
@@ -38,13 +38,24 @@ namespace nexus {
     static G4Material* GXeDepleted(G4double pressure=STP_Pressure,
 				   G4double temperature=STP_Temperature);
 
+    // Gaseous xenon set by density rather than temperature (maybe temp.)
+    static G4Material* GXe_bydensity(G4double density,
+				     G4double temperature=STP_Temperature,
+				     G4double pressure=STP_Pressure);
+    static G4Material* GXeEnriched_bydensity(G4double density,
+					     G4double temperature=STP_Temperature,
+					     G4double pressure=STP_Pressure);
+    static G4Material* GXeDepleted_bydensity(G4double density,
+					     G4double temperature=STP_Temperature,
+					     G4double pressure=STP_Pressure);
+
     // Argon
     static G4Material* GAr(G4double pressure=STP_Pressure,
 			   G4double temperature=STP_Temperature);
     // Mixture Xe+Ar
     static G4Material* GXeAr(G4double pressure=STP_Pressure,
 			     G4double temperature=STP_Temperature, G4double percXe=0.);
-    
+
     // Stainless Steel (grade 304L)
     static G4Material* Steel();
 
@@ -80,7 +91,7 @@ namespace nexus {
 
     // PVT (Polyvinyltoluene)
     static G4Material* PVT();
-    
+
     // KEVLAR (-NH-C6H4-NH-CO-C6H4-CO-)*n
     static G4Material* Kevlar();
 
@@ -106,7 +117,7 @@ namespace nexus {
     ///
     static G4Material* CopyMaterial(G4Material*, G4String);
 
-    
+
   private:
     /// Constructor (hidden)
     MaterialsList();

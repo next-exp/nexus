@@ -92,6 +92,9 @@ namespace nexus {
  
       // if (edep > _energy_threshold) pm->StoreCurrentEvent(true);
       // else pm->StoreCurrentEvent(false);
+      if (!event->IsAborted() && edep>0) {
+	pm->InteractingEvent(true);
+      }
       if (!event->IsAborted() && edep > _energy_threshold && edep < _energy_max) {
 	pm->StoreCurrentEvent(true);
       } else {

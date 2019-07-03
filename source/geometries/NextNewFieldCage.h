@@ -91,8 +91,9 @@ namespace nexus {
     G4double _cathode_grid_transparency;
     G4double  _ito_transparency, _ito_thickness;
     G4double _active_posz;
+    G4double _active_length;
 
-    // Transversal and longitudinal diffusions
+    // Transverse and longitudinal diffusions
     G4double _ELtransv_diff;
     G4double _ELlong_diff;
     G4double _drift_transv_diff;
@@ -110,7 +111,9 @@ namespace nexus {
     // Vertex generators
     CylinderPointSampler* _drift_tube_gen;
     CylinderPointSampler* _hdpe_tube_gen;
-    //    CylinderPointSampler* _buffer_tube_gen;
+    /* CylinderPointSampler* _buffer_tube_gen; */
+    CylinderPointSampler* _xenon_gen;
+    CylinderPointSampler* _buffer_gen;
     CylinderPointSampler* _active_gen;
     CylinderPointSampler* _anode_quartz_gen;
     CylinderPointSampler* _cathode_gen;

@@ -41,7 +41,7 @@ Trajectory::Trajectory(const G4Track* track):
   _initial_momentum = track->GetMomentum();
   _initial_position = track->GetVertexPosition();
   _initial_time = track->GetGlobalTime();
-  _initial_volume = track->GetLogicalVolumeAtVertex()->GetName();
+  _initial_volume = track->GetVolume()->GetName();
 
   _trjpoints = new TrajectoryPointContainer();
 

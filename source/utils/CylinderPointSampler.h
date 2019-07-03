@@ -17,7 +17,7 @@
 
 
 namespace nexus {
-  
+
   /// Generator of random positions in a cylinder
 
   class CylinderPointSampler
@@ -55,7 +55,7 @@ namespace nexus {
     G4RotationMatrix* _rotation; ///< Rotation of the cylinder (if any)
 
   };
-  
+
 } // namespace nexus
 
 #endif
