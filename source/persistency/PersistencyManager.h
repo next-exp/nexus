@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 ///  \file   PersistencyManager.h
-///  \brief  
-/// 
+///  \brief
+///
 ///  \author   <justo.martin-albo@ific.uv.es>
 ///  \date     13 March 2013
 ///  \version  $Id$
@@ -44,7 +44,7 @@ namespace nexus {
     /// Set whether to store or not the current event
     void StoreCurrentEvent(G4bool);
 
-    /// 
+    ///
     virtual G4bool Store(const G4Event*);
     virtual G4bool Store(const G4Run*);
     virtual G4bool Store(const G4VPhysicalVolume*);
@@ -99,7 +99,8 @@ namespace nexus {
 
     HDF5Writer* _h5writer;  ///< Event writer to hdf5 file
 
-    std::pair<G4int, G4double> _event_info;
+    G4double _bin_size, _tof_bin_size;
+
   };
 
 
@@ -109,11 +110,11 @@ namespace nexus {
   { _store_evt = sce; }
   inline G4bool PersistencyManager::Store(const G4VPhysicalVolume*)
   { return false; }
-  inline G4bool PersistencyManager::Retrieve(G4Event*&) 
+  inline G4bool PersistencyManager::Retrieve(G4Event*&)
   { return false; }
-  inline G4bool PersistencyManager::Retrieve(G4Run*&) 
+  inline G4bool PersistencyManager::Retrieve(G4Run*&)
   { return false; }
-  inline G4bool PersistencyManager::Retrieve(G4VPhysicalVolume*&) 
+  inline G4bool PersistencyManager::Retrieve(G4VPhysicalVolume*&)
   { return false; }
 
 } // namespace nexus
