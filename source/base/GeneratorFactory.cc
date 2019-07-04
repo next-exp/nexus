@@ -62,7 +62,7 @@ G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
 
   else if (_name == "MUON_GENERATOR") p = new MuonGenerator();
 
-  else if (_name == "MUONA_GENERATOR") p = new MuonAngleGenerator();
+  else if (_name == "LABMUON_GENERATOR") p = new MuonAngleGenerator();
 
   else if (_name == "NEUTRON_GENERATOR") p = new NeutronGenerator();
 

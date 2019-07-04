@@ -2,7 +2,7 @@
 /Geometry/RegisterGeometry TON_SCALE
 
 ### GENERATOR
-/Generator/RegisterGenerator MUONA_GENERATOR
+/Generator/RegisterGenerator LABMUON_GENERATOR
 
 ### ACTIONS
 /Actions/RegisterTrackingAction DEFAULT
