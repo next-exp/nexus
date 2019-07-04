@@ -8,7 +8,7 @@
 /Geometry/NextTonScale/gas            enrichedXe
 
 ### GENERATOR
-/Generator/MuonAngleGenerator/region EXTERNAL
+/Generator/MuonAngleGenerator/region MUONS
 /Generator/MuonAngleGenerator/min_energy 200 GeV
 /Generator/MuonAngleGenerator/max_energy 250 GeV
 /Generator/MuonAngleGenerator/angles_on false
