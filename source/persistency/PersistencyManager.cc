@@ -510,7 +510,7 @@ G4bool PersistencyManager::Store(const G4Run*)
     key = "tof_bin_size";
     _h5writer->WriteRunInfo(key, (std::to_string(_tof_bin_size/picosecond)+" ps").c_str());
     key = "interacting_events";
-    _h5writer->WriteRunInfo(key,  std::to_string(_interacting_evts).c_str())
+    _h5writer->WriteRunInfo(key,  std::to_string(_interacting_evts).c_str());
   }
   SaveConfigurationInfo(_historyFile_init, grun);
   SaveConfigurationInfo(_historyFile_conf, grun);
