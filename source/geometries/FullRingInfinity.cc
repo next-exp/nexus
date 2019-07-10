@@ -1,15 +1,15 @@
 // ----------------------------------------------------------------------------
 //  $Id: FullRingInfinity.cc  $
 //
-//  Author:  <paolafer@ific.uv.es>   
+//  Author:  <paolafer@ific.uv.es>
 //  Created: March 2018
-//  
+//
 //  Copyright (c) 2015 NEXT Collaboration
-// ---------------------------------------------------------------------------- 
+// ----------------------------------------------------------------------------
 
 #include "FullRingInfinity.h"
 #include "SiPMpetFBK.h"
-#include "CylinderPointSampler.h"
+#include "SpherePointSampler.h"
 #include "MaterialsList.h"
 #include "IonizationSD.h"
 #include "OpticalMaterialProperties.h"
@@ -18,6 +18,7 @@
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
 #include <G4Tubs.hh>
+#include <G4Orb.hh>
 #include <G4Material.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
@@ -94,13 +95,6 @@ namespace nexus {
     specific_vertex_Z_cmd.SetUnitCategory("Length");
 
     sipm_ = new SiPMpetFBK();
-   
-    phantom_diam_ = 12.*cm;
-    phantom_length_ = 10.*cm;
-    
-    cylindric_gen_ = 
-      new CylinderPointSampler(0., phantom_length_, phantom_diam_/2., 0., G4ThreeVector (0., 0., 0.));
-    
   }
 
   FullRingInfinity::~FullRingInfinity()
@@ -109,12 +103,12 @@ namespace nexus {
   }
 
   void FullRingInfinity::Construct()
-  { 
+  {
     // LAB. This is just a volume of air surrounding the detector
-    G4double lab_size = 1.*m;
+    G4double lab_size = 10.*m;
     G4Box* lab_solid = new G4Box("LAB", lab_size/2., lab_size/2., lab_size/2.);
-    
-    lab_logic_ = 
+
+    lab_logic_ =
       new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
     lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
     this->SetLogicalVolume(lab_logic_);
@@ -123,11 +117,11 @@ namespace nexus {
     G4cout << "Lateral dimensions (mm) = " << lat_dimension_cell_/mm << G4endl;
 
 
-     external_radius_ = inner_radius_ + depth_;
-     G4cout << "Radial dimensions (mm): "<< inner_radius_/mm << ", " << external_radius_/mm << G4endl;
-     BuildCryostat();
-     BuildSensors();
-
+    external_radius_ = inner_radius_ + depth_;
+    G4cout << "Radial dimensions (mm): "<< inner_radius_/mm << ", " << external_radius_/mm << G4endl;
+    BuildCryostat();
+    BuildSensors();
+    BuildPhantom();
 
   }
 
@@ -136,7 +130,7 @@ namespace nexus {
     const G4double space_for_elec = 2. * cm;
     const G4double int_radius_cryo = inner_radius_ - cryo_thickn_ - space_for_elec;
     const G4double ext_radius_cryo = external_radius_ + cryo_thickn_ + space_for_elec;
-   
+
 
     G4Tubs* cryostat_solid =
       new G4Tubs("CRYOSTAT", int_radius_cryo, ext_radius_cryo, cryo_width_/2., 0, twopi);
@@ -176,10 +170,10 @@ namespace nexus {
 
     G4Material* kapton =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
-        
+
     G4Tubs* kapton_int_solid =
       new G4Tubs("KAPTON", inner_radius_ - kapton_thickn_, inner_radius_,
-                 lat_dimension_cell_/2., 0, twopi);    
+                 lat_dimension_cell_/2., 0, twopi);
     G4LogicalVolume* kapton_int_logic =
       new G4LogicalVolume(kapton_int_solid, kapton, "KAPTON");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), kapton_int_logic,
@@ -187,7 +181,7 @@ namespace nexus {
 
     G4Tubs* kapton_ext_solid =
       new G4Tubs("KAPTON", external_radius_ + ext_offset, external_radius_ + ext_offset + kapton_thickn_,
-                 lat_dimension_cell_/2., 0, twopi);    
+                 lat_dimension_cell_/2., 0, twopi);
     G4LogicalVolume* kapton_ext_logic =
       new G4LogicalVolume(kapton_ext_solid, kapton, "KAPTON");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), kapton_ext_logic,
@@ -316,22 +310,24 @@ namespace nexus {
 
  void FullRingInfinity::BuildPhantom()
   {
-     
+    phantom_diam_ = 6.*cm;
 
-    G4Tubs* phantom_solid = new G4Tubs("PHANTOM",  0., phantom_diam_/2., 
-                 phantom_length_/2., 0, twopi);
-    G4LogicalVolume* phantom_logic =  
+    G4Orb* phantom_solid = new G4Orb("PHANTOM",  phantom_diam_/2.);
+    G4LogicalVolume* phantom_logic =
       new G4LogicalVolume(phantom_solid, MaterialsList::PEEK(), "PHANTOM");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), phantom_logic,
-		       "PAHNTOM", lab_logic_, false, 0, true);   
+    G4ThreeVector phantom_origin = G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
+    new G4PVPlacement(0, phantom_origin, phantom_logic, "PHANTOM", lab_logic_, false, 0, true);
 
- 
+    spheric_gen_ =
+      new SpherePointSampler(0., phantom_diam_/2, phantom_origin);
+
+
   }
-  
+
 
   G4ThreeVector FullRingInfinity::GenerateVertex(const G4String& region) const
   {
-   
+
     G4ThreeVector vertex(0.,0.,0.);
 
     if (region == "CENTER") {
@@ -339,12 +335,12 @@ namespace nexus {
     } else if (region == "AD_HOC") {
       vertex = G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
     } else if (region == "PHANTOM") {
-      vertex = cylindric_gen_->GenerateVertex("BODY_VOL");
+      vertex = spheric_gen_->GenerateVertex("VOLUME");
     } else {
       G4Exception("[FullRingInfinity]", "GenerateVertex()", FatalException,
-                  "Unknown vertex generation region!");     
+                  "Unknown vertex generation region!");
     }
-    
+
     return vertex;
   }
 

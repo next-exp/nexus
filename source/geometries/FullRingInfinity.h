@@ -7,7 +7,7 @@ class G4GenericMessenger;
 class G4LogicalVolume;
 namespace nexus {
   class SiPMpetFBK;
-  class CylinderPointSampler;
+  class SpherePointSampler;
 }
 
 namespace nexus {
@@ -26,17 +26,17 @@ namespace nexus {
     void Construct();
     void BuildCryostat();
     void BuildQuadSensors();
-    void BuildSensors(); 
-    void BuildPhantom(); 
+    void BuildSensors();
+    void BuildPhantom();
 
     SiPMpetFBK* sipm_;
-    
+
     G4LogicalVolume* lab_logic_;
     G4LogicalVolume* LXe_logic_;
     G4LogicalVolume* active_logic_;
 
     /// Messenger for the definition of control commands
-    G4GenericMessenger* msg_; 
+    G4GenericMessenger* msg_;
 
     G4double lat_dimension_cell_;
     G4double sipm_pitch_;
@@ -49,12 +49,12 @@ namespace nexus {
     G4double inner_radius_, external_radius_;
     G4double cryo_width_, cryo_thickn_;
 
-    G4double phantom_diam_; 
+    G4double phantom_diam_;
     G4double phantom_length_;
 
     G4double max_step_size_;
 
-    CylinderPointSampler* cylindric_gen_;
+    SpherePointSampler* spheric_gen_;
 
     G4double _specific_vertex_X;
     G4double _specific_vertex_Y;
