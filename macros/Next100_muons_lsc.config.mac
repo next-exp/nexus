@@ -8,7 +8,7 @@
 /Generator/MuonAngleGenerator/min_energy 200 GeV
 /Generator/MuonAngleGenerator/max_energy 250 GeV
 /Generator/MuonAngleGenerator/azimuth_rotation 150 deg
-/Generator/MuonAngleGenerator/angle_file macros/MuonAnaAllRuns.root
+/Generator/MuonAngleGenerator/angle_file histos/MuonAnaAllRuns.root
 /Generator/MuonAngleGenerator/angle_dist za
 
 ### ACTIONS
