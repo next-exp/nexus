@@ -44,6 +44,7 @@ void NexusStepLimiterBuilder::ConstructParticle()
 
 void NexusStepLimiterBuilder::ConstructProcess()
 {
+  auto aParticleIterator = GetParticleIterator();
   aParticleIterator->reset();
 
   while ((*aParticleIterator)()) {
@@ -68,6 +69,3 @@ void NexusStepLimiterBuilder::ConstructProcess()
 
   }
 }
-
-
-

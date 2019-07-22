@@ -26,14 +26,14 @@
 
 namespace nexus {
 
-  /// Macro that allows the use of this physics constructor 
+  /// Macro that allows the use of this physics constructor
   /// with the generic physics list
   G4_DECLARE_PHYSCONSTR_FACTORY(NexusPhysics);
 
 
 
-  NexusPhysics::NexusPhysics(): 
-    G4VPhysicsConstructor("NexusPhysics"), 
+  NexusPhysics::NexusPhysics():
+    G4VPhysicsConstructor("NexusPhysics"),
     _clustering(true), _drift(true), _electroluminescence(true)
   {
     _msg = new G4GenericMessenger(this, "/PhysicsList/Nexus/",
@@ -48,33 +48,33 @@ namespace nexus {
     _msg->DeclareProperty("electroluminescence", _electroluminescence,
       "Switch on/off the electroluminescence.");
   }
-  
-  
-  
+
+
+
   NexusPhysics::~NexusPhysics()
   {
     delete _msg;
   }
-  
-  
-  
+
+
+
   void NexusPhysics::ConstructParticle()
   {
     IonizationElectron::Definition();
     G4OpticalPhoton::Definition();
     //G4OpticalPhoton::OpticalPhotonDefinition();
   }
-  
-  
-  
+
+
+
   void NexusPhysics::ConstructProcess()
   {
     G4ProcessManager* pmanager = 0;
-    
+
     // Add our own wavelength shifting process for the optical photon
     pmanager = G4OpticalPhoton::Definition()->GetProcessManager();
     if (!pmanager) {
-      G4Exception("ConstructProcess()", "[NexusPhysics]", FatalException, 
+      G4Exception("ConstructProcess()", "[NexusPhysics]", FatalException,
         "G4OpticalPhoton without a process manager.");
     }
     WavelengthShifting* wls = new WavelengthShifting();
@@ -82,7 +82,7 @@ namespace nexus {
 
     pmanager = IonizationElectron::Definition()->GetProcessManager();
     if (!pmanager) {
-      G4Exception("ConstructProcess()", "[NexusPhysics]", FatalException, 
+      G4Exception("ConstructProcess()", "[NexusPhysics]", FatalException,
         "Ionization electron without a process manager.");
     }
 
@@ -107,11 +107,12 @@ namespace nexus {
 
 
     // Add clustering to all pertinent particles
-    
+
     if (_clustering) {
 
       IonizationClustering* clust = new IonizationClustering();
 
+      auto aParticleIterator = GetParticleIterator();
       aParticleIterator->reset();
       while ((*aParticleIterator)()) {
         G4ParticleDefinition* particle = aParticleIterator->value();
