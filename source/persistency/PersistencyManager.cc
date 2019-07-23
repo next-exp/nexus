@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author : <justo.martin-albo@ific.uv.es>    
+//  Author : <justo.martin-albo@ific.uv.es>
 //  Created: 15 March 2013
 //
 //  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
@@ -46,9 +46,9 @@ using namespace nexus;
 
 PersistencyManager::PersistencyManager(G4String historyFile_init, G4String historyFile_conf):
   G4VPersistencyManager(), _msg(0),
-  _ready(false), _store_evt(true),  event_type_("other"), _writer(0),
-  _saved_evts(0), _interacting_evts(0), _nevt(0), _start_id(0), _first_evt(true), _hdf5dump(false),
-  _h5writer(0)
+  _ready(false), _store_evt(true), _interacting_evt(false),
+  event_type_("other"), _writer(0), _saved_evts(0), _interacting_evts(0),
+  _nevt(0), _start_id(0), _first_evt(true), _hdf5dump(false), _h5writer(0)
 {
 
   _historyFile_init = historyFile_init;
@@ -103,7 +103,7 @@ void PersistencyManager::OpenFile(G4String filename)
     _writer = new gate::RootWriter();
     _writer->Open(filename.data(), "RECREATE");
   } else {
-    G4Exception("OpenFile()", "[PersistencyManager]", 
+    G4Exception("OpenFile()", "[PersistencyManager]",
       JustWarning, "An output file was previously opened.");
   }
 }
@@ -150,7 +150,7 @@ G4bool PersistencyManager::Store(const G4Event* event)
   if (_hdf5dump) {
     _event_info.first = _nevt;
   }
- 
+
   if (event_type_ == "bb0nu") {
     ievt.SetMCEventType(gate::BB0NU);
   } else if (event_type_ == "bb2nu") {
@@ -205,7 +205,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     gate::MCParticle* ipart = new gate::MCParticle();
     ipart->SetPDG(trj->GetPDGEncoding());
     ipart->SetLabel(trj->GetParticleName());
-    
+
     G4int trackid = trj->GetTrackID();
     ipart->SetID(trj->GetTrackID());
     _iprtmap[trackid] = ipart;
@@ -213,13 +213,13 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     ipart->SetPathLength(trj->GetTrackLength());
 
     G4ThreeVector ini_xyz = trj->GetInitialPosition();
-    G4double ini_t = trj->GetInitialTime(); 
+    G4double ini_t = trj->GetInitialTime();
     ipart->SetInitialVtx(gate::Vector4D(ini_xyz.x(), ini_xyz.y(), ini_xyz.z(), ini_t));
 
     G4ThreeVector xyz = trj->GetFinalPosition();
     G4double t = trj->GetFinalTime();
     ipart->SetFinalVtx(gate::Vector4D(xyz.x(), xyz.y(), xyz.z(), t));
-    
+
     G4String ini_volume = trj->GetInitialVolume();
     ipart->SetInitialVol(ini_volume);
     G4String volume = trj->GetDecayVolume();
@@ -276,7 +276,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
 
 void PersistencyManager::StoreHits(G4HCofThisEvent* hce, gate::Event* ievt)
 {
-  if (!hce) return; 
+  if (!hce) return;
 
   G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
   G4HCtable* hct = sdmgr->GetHCtable();
@@ -284,7 +284,7 @@ void PersistencyManager::StoreHits(G4HCofThisEvent* hce, gate::Event* ievt)
   // Loop through the hits collections
   for (int i=0; i<hct->entries(); i++) {
 
-    // Collection are identified univocally (in principle) using 
+    // Collection are identified univocally (in principle) using
     // their id number, and this can be obtained using the collection
     // and sensitive detector names.
     G4String hcname = hct->GetHCname(i);
@@ -299,7 +299,7 @@ void PersistencyManager::StoreHits(G4HCofThisEvent* hce, gate::Event* ievt)
     else if (hcname == PmtSD::GetCollectionUniqueName())
       StorePmtHits(hits, ievt);
     else {
-      G4String msg = 
+      G4String msg =
         "Collection of hits '" + sdname + "/" + hcname
         + "' is of an unknown type and will not be stored.";
       G4Exception("StoreHits()", "[PersistencyManager]", JustWarning, msg);
@@ -318,7 +318,7 @@ void PersistencyManager::StoreHits(G4HCofThisEvent* hce, gate::Event* ievt)
       if (_hdf5dump) {
         gate::Point3D pos = hit->GetPosition();
         float hit_pos[3] = {(float)pos.x(), (float)pos.y(), (float)pos.z()};
-        _h5writer->WriteHitInfo(particle_id, h, &hit_pos[0], 3, hit->GetTime(), hit->GetAmplitude(), hit->GetLabel().c_str());      
+        _h5writer->WriteHitInfo(particle_id, h, &hit_pos[0], 3, hit->GetTime(), hit->GetAmplitude(), hit->GetLabel().c_str());
       }
     }
     mytrack->SetExtremes(0, myhits.size()-1);
@@ -329,10 +329,10 @@ void PersistencyManager::StoreHits(G4HCofThisEvent* hce, gate::Event* ievt)
 
 
 
-void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc, 
+void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
                                              gate::Event* ievt)
 {
-  IonizationHitsCollection* hits = 
+  IonizationHitsCollection* hits =
     dynamic_cast<IonizationHitsCollection*>(hc);
   if (!hits) return;
 
@@ -342,7 +342,7 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
   std::string sdname = hits->GetSDname();
 
   for (G4int i=0; i<hits->entries(); i++) {
-    
+
     IonizationHit* hit = dynamic_cast<IonizationHit*>(hits->GetHit(i));
     if (!hit) continue;
 
@@ -371,7 +371,7 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
     ghit->SetAmplitude(hit->GetEnergyDeposit());
     evt_energy += hit->GetEnergyDeposit();
     itrk->AddHit(ghit);
-    ievt->AddMCHit(ghit);      
+    ievt->AddMCHit(ghit);
   }
 
   if (sdname == "ACTIVE") {
@@ -385,7 +385,7 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
 
 
 
-void PersistencyManager::StorePmtHits(G4VHitsCollection* hc, 
+void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
                                       gate::Event* ievt)
 {
   PmtHitsCollection* hits = dynamic_cast<PmtHitsCollection*>(hc);
@@ -395,7 +395,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 
     PmtHit* hit = dynamic_cast<PmtHit*>(hits->GetHit(i));
     if (!hit) continue;
-    
+
     std::string sdname = hits->GetSDname();
     gate::Hit* isnr = new gate::Hit();
     isnr->SetLabel(sdname);
@@ -403,7 +403,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     G4ThreeVector xyz = hit->GetPosition();
 
     isnr->SetPosition(gate::Point3D(xyz.x(), xyz.y(), xyz.z()));
-    
+
     if (hit->GetPmtID()<1000) isnr->SetSensorType(gate::PMT);
     else isnr->SetSensorType(gate::SIPM);
 
@@ -411,16 +411,16 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     isnr->SetWaveform(wf);
     double binsize = hit->GetBinSize();
     wf->SetSampWidth(binsize);
-    
+
     const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
     std::map<G4double, G4int>::const_iterator it;
     std::vector< std::pair<unsigned int,float> > data;
     G4double amplitude = 0.;
-    
+
     for (it = wvfm.begin(); it != wvfm.end(); ++it) {
       unsigned int time_bin = (unsigned int)((*it).first/binsize+0.5);
       unsigned int charge = (unsigned int)((*it).second+0.5);
-      
+
       data.push_back(std::make_pair(time_bin, charge));
       amplitude = amplitude + (*it).second;
 
@@ -450,10 +450,10 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 
 G4bool PersistencyManager::Store(const G4Run*)
 {
-    
+
   gate::Run grun = gate::Run();
 
-  // Store the number of events to be processed 
+  // Store the number of events to be processed
   NexusApp* app = (NexusApp*) G4RunManager::GetRunManager();
   G4int num_events = app->GetNumberOfEventsToBeProcessed();
 
@@ -496,6 +496,6 @@ void PersistencyManager::SaveConfigurationInfo(G4String file_name, gate::Run& gr
     }
 
   }
-  
+
   history.close();
 }
