@@ -1,8 +1,9 @@
 tag v5_04_00 - 22 Jul 2019
-        - First version to be used with geant4.10.5. It won't cwork with previous versions of g4.
+        - First version to be used with geant4.10.5. It won't work with previous versions of g4.
 	- Add vertex generator in BUFFER region.
 	- Add muon generators.
 	- Add possibility of building using CMake.
+	- Fixes bug in the counter of interacting events.
 
 tag v5_03_12 - 27 Feb 2019
         - Add new geometry for tonne studies.
