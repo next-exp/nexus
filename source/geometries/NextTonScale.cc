@@ -36,6 +36,7 @@ NextTonScale::NextTonScale():
   fcage_thickn_(1.*cm),
   active_diam_(300.*cm), active_length_(300.*cm),
   cathode_thickn_(.2*mm), anode_thickn_(1.5*cm), readout_gap_(5.*mm),
+  xe_perc_(100.), helium_mass_num_(4),
   tank_vis_(true), vessel_vis_(true), ics_vis_(true),
   fcage_vis_(true), cathode_vis_(true), anode_vis_(true), readout_vis_(true),
   specific_vertex_X_(0.), specific_vertex_Y_(0.), specific_vertex_Z_(0.),
@@ -449,6 +450,9 @@ void NextTonScale::DefineGas()
     xenon_gas_ = MaterialsList::GXeEnriched(gas_pressure_, gas_temperature_);
   else if (gas_ == "depletedXe")
     xenon_gas_ = MaterialsList::GXeDepleted(gas_pressure_, gas_temperature_);
+  else if (gas_ == "XeHe")
+    xenon_gas_ = MaterialsList::GXeHe(gas_pressure_, gas_temperature_,
+				      xe_perc_, helium_mass_num_);
   else
     G4Exception("[NextTonScale]", "DefineGas()", FatalException,
     "Unknown xenon gas type. Valid options are naturalXe, enrichedXe or depletedXe.");
@@ -536,6 +540,19 @@ void NextTonScale::DefineConfigurationParameters()
       "If region is AD_HOC, z coord where particles are generated");
   specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
   specific_vertex_Z_cmd.SetUnitCategory("Length");
+
+  // Percentage xenon for mixtures /////////////////////////
+  G4GenericMessenger::Command& Xe_percent_cmd =
+    msg_->DeclareProperty("XePercentage", xe_perc_,
+                          "Percent of the gas that is Xenon.");
+  Xe_percent_cmd.SetParameterName("xe_perc", false);
+  Xe_percent_cmd.SetRange("xe_perc<=100.");
+
+  G4GenericMessenger::Command& type_helium_cmd =
+    msg_->DeclareProperty("helium_A", helium_mass_num_,
+			  "Mass number for helium used, 3 or 4");
+  type_helium_cmd.SetParameterName("helium_A", false);
+
 
   // Geometry visibilities /////////////////////////////////
 
