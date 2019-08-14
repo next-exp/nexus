@@ -22,14 +22,20 @@ using namespace nexus;
 
 AnalysisSteppingAction::AnalysisSteppingAction(): G4UserSteppingAction()
 {
-  det = 0;
 }
 
 
 
 AnalysisSteppingAction::~AnalysisSteppingAction()
 {
-  G4cout << "Detected photons = " << det << G4endl;
+  G4double total_counts = 0;
+  detectorCounts::iterator it = my_counts.begin();
+  while (it != my_counts.end()) {
+    G4cout << "Detector " << it->first << ": " << it->second << " counts" << G4endl;
+    total_counts += it->second;
+    it ++;
+  }
+  G4cout << "TOTAL COUNTS: " << total_counts << G4endl;
 }
 
 
@@ -76,7 +82,12 @@ void AnalysisSteppingAction::UserSteppingAction(const G4Step* step)
 
   if (step->GetPostStepPoint()->GetStepStatus() == fGeomBoundary) {
     if (boundary->GetStatus() == Detection ){
-      det +=  1;
+      G4String detector_name = step->GetPostStepPoint()->GetTouchableHandle()->GetVolume()->GetName();
+      //G4cout << "##### Sensitive Volume: " << detector_name << G4endl;
+
+      detectorCounts::iterator it = my_counts.find(detector_name);
+      if (it != my_counts.end()) my_counts[it->first] += 1;
+      else my_counts[detector_name] = 1;
     }
   }
 

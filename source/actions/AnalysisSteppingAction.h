@@ -33,7 +33,8 @@ namespace nexus {
     virtual void UserSteppingAction(const G4Step*);
 
   private:
-    G4int det;
+    typedef std::map<G4String, int> detectorCounts;
+    detectorCounts my_counts;
   };
 
 } // namespace nexus
