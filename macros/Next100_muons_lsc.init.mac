@@ -1,11 +1,9 @@
 ### GEOMETRY
-/Geometry/RegisterGeometry TON_SCALE
+/Geometry/RegisterGeometry NEXT100
 
 
 ### GENERATOR
-/Generator/RegisterGenerator SINGLE_PARTICLE
-#/Generator/RegisterGenerator ION_GUN
-#/Generator/RegisterGenerator DECAY0
+/Generator/RegisterGenerator LABMUON_GENERATOR
 
 
 ### ACTIONS
@@ -27,7 +25,7 @@
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
+/physics_lists/em/MuonNuclear true
 
-### EXTRA CONFIGURATION
-/nexus/RegisterMacro ./macros/NextTonScale.config.mac
-#/nexus/RegisterDelayedMacro macros/physics/Bi214.mac
+/nexus/RegisterDelayedMacro macros/Xe137.mac
+/nexus/RegisterMacro macros/Next100_muons_lsc.config.mac

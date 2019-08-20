@@ -47,9 +47,9 @@ using namespace nexus;
 
 PersistencyManager::PersistencyManager(G4String historyFile_init, G4String historyFile_conf):
   G4VPersistencyManager(), _msg(0),
-  _ready(false), _store_evt(true),  event_type_("other"), _writer(0),
-  _saved_evts(0), _interacting_evts(0), _nevt(0), _start_id(0), _first_evt(true), _hdf5dump(false),
-  _h5writer(0)
+  _ready(false), _store_evt(true), _interacting_evt(false),
+  event_type_("other"), _writer(0), _saved_evts(0), _interacting_evts(0),
+  _nevt(0), _start_id(0), _first_evt(true), _hdf5dump(false), _h5writer(0)
 {
 
   _historyFile_init = historyFile_init;
@@ -148,6 +148,11 @@ G4bool PersistencyManager::Store(const G4Event* event)
   gate::Event ievt;
   ievt.SetEventID(_nevt);
 
+  if (_hdf5dump) {
+    _event_info.first = _nevt;
+  }
+
+
   if (event_type_ == "bb0nu") {
     ievt.SetMCEventType(gate::BB0NU);
   } else if (event_type_ == "bb2nu") {
@@ -197,7 +202,6 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
     gate::MCParticle* ipart = new gate::MCParticle();
     ipart->SetPDG(trj->GetPDGEncoding());
     ipart->SetLabel(trj->GetParticleName());
-
 
     G4int trackid = trj->GetTrackID();
     ipart->SetID(trj->GetTrackID());
@@ -323,6 +327,7 @@ void PersistencyManager::StoreHits(G4HCofThisEvent* hce, gate::Event* ievt)
 				hit_pos[0], hit_pos[1], hit_pos[2],
 				hit->GetTime(), hit->GetAmplitude(),
 				hit->GetLabel().c_str());
+
       }
     }
     mytrack->SetExtremes(0, myhits.size()-1);
@@ -406,7 +411,6 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 
     isnr->SetPosition(gate::Point3D(xyz.x(), xyz.y(), xyz.z()));
 
-
     if (hit->GetPmtID()<1000) isnr->SetSensorType(gate::PMT);
     else isnr->SetSensorType(gate::SIPM);
 
@@ -426,8 +430,8 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     std::vector< std::pair<unsigned int, float> > data;
 
     G4double amplitude = 0.;
-    int count = 0;
 
+    int count = 0;
     for (it = wvfm.begin(); it != wvfm.end(); ++it) {
       unsigned int time_bin = (unsigned int)((*it).first/binsize+0.5);
       unsigned int charge = (unsigned int)((*it).second+0.5);
@@ -494,6 +498,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 
 G4bool PersistencyManager::Store(const G4Run*)
 {
+
   gate::Run grun = gate::Run();
 
   // Store the number of events to be processed

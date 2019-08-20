@@ -30,7 +30,6 @@ using namespace CLHEP;
 
 
 AnalysisSteppingAction::AnalysisSteppingAction(): G4UserSteppingAction(), file_no_(0)
-{
 
   _msg = new G4GenericMessenger(this, "/Actions/AnalysisSteppingAction/");
   _msg->DeclareProperty("file_number", file_no_, "");
@@ -55,13 +54,13 @@ AnalysisSteppingAction::AnalysisSteppingAction(): G4UserSteppingAction(), file_n
   hTV = new TH2F("PhVelTime", "Velocity vs arrival time of detected photons", 1000, 0, 1000, 1000., 0, 0.4);
   hTV->GetYaxis()->SetTitle("velocity (mm/ps)");
   hTV->GetXaxis()->SetTitle("time (ps)");
-
 }
 
 
 
 AnalysisSteppingAction::~AnalysisSteppingAction()
 {
+
 
   G4cout << "Detected photons = " << detected << G4endl;
   G4cout << "Non detected photons = " << not_det << G4endl;
@@ -93,7 +92,14 @@ AnalysisSteppingAction::~AnalysisSteppingAction()
    hTV->Write();
    histo_file->Close();
  
-
+  G4double total_counts = 0;
+  detectorCounts::iterator it = my_counts.begin();
+  while (it != my_counts.end()) {
+    G4cout << "Detector " << it->first << ": " << it->second << " counts" << G4endl;
+    total_counts += it->second;
+    it ++;
+  }
+  G4cout << "TOTAL COUNTS: " << total_counts << G4endl;
 }
 
 
@@ -153,6 +159,14 @@ void AnalysisSteppingAction::UserSteppingAction(const G4Step* step)
       }
     
       //	G4cout << "check: " << velocity << ", " << track_velocity << G4endl;
+
+    if (boundary->GetStatus() == Detection ){
+      G4String detector_name = step->GetPostStepPoint()->GetTouchableHandle()->GetVolume()->GetName();
+      //G4cout << "##### Sensitive Volume: " << detector_name << G4endl;
+
+      detectorCounts::iterator it = my_counts.find(detector_name);
+      if (it != my_counts.end()) my_counts[it->first] += 1;
+      else my_counts[detector_name] = 1;
     }
 
   return;

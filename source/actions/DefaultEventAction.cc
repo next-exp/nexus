@@ -25,11 +25,11 @@
 namespace nexus {
 
 
-  DefaultEventAction::DefaultEventAction(): 
+  DefaultEventAction::DefaultEventAction():
     G4UserEventAction(), _nevt(0), _nupdate(10), _energy_threshold(0.), _energy_max(DBL_MAX)
   {
     _msg = new G4GenericMessenger(this, "/Actions/DefaultEventAction/");
-    
+
     G4GenericMessenger::Command& thresh_cmd =
        _msg->DeclareProperty("energy_threshold", _energy_threshold,
                              "Minimum deposited energy to save the event to file.");
@@ -44,15 +44,15 @@ namespace nexus {
     max_energy_cmd.SetUnitCategory("Energy");
     max_energy_cmd.SetRange("max_energy>0.");
   }
-  
-  
-  
+
+
+
   DefaultEventAction::~DefaultEventAction()
   {
   }
-  
-  
-  
+
+
+
   void DefaultEventAction::BeginOfEventAction(const G4Event* /*event*/)
   {
     // Print out event number info
@@ -68,7 +68,7 @@ namespace nexus {
   {
     _nevt++;
 
-    // Determine whether total energy deposit in ionization sensitive 
+    // Determine whether total energy deposit in ionization sensitive
     // detectors is above threshold
     if (_energy_threshold >= 0.) {
 
@@ -89,11 +89,13 @@ namespace nexus {
 
       PersistencyManager* pm = dynamic_cast<PersistencyManager*>
         (G4VPersistencyManager::GetPersistencyManager());
- 
+
       // if (edep > _energy_threshold) pm->StoreCurrentEvent(true);
       // else pm->StoreCurrentEvent(false);
       if (!event->IsAborted() && edep>0) {
 	pm->InteractingEvent(true);
+      } else {
+	pm->InteractingEvent(false);
       }
       if (!event->IsAborted() && edep > _energy_threshold && edep < _energy_max) {
 	pm->StoreCurrentEvent(true);

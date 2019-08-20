@@ -293,6 +293,10 @@ namespace nexus {
       G4String vol_name = "SIPM_" + std::to_string(copy_no);
       new G4PVPlacement(G4Transform3D(rot, position), sipm_logic,
                         vol_name, active_logic_, false, copy_no, false);
+      // G4cout << "INSERT INTO ChannelMatrixP7R410Z1950mm (MinRun, MaxRun, SensorID, PhiNumber, ZNumber) VALUES (0, 100000, "
+      //	     << copy_no << ", 0, " << j << ");" << G4endl;
+      //G4cout << "INSERT INTO ChannelPositionP7R410Z1950mm (MinRun, MaxRun, SensorID, X, Y, Z) VALUES (0, 100000, "
+      //	       << copy_no << ", " << position.getX() << ", " << position.getY() << ", " << position.getZ() << ");" << G4endl;
       for (G4int i=2; i<=n_sipm_ext; ++i) {
         G4double angle = (i-1)*step;
         rot.rotateZ(step);
@@ -302,6 +306,10 @@ namespace nexus {
         vol_name = "SIPM_" + std::to_string(copy_no);
         new G4PVPlacement(G4Transform3D(rot, position), sipm_logic,
                           vol_name, active_logic_, false, copy_no, false);
+	//	G4cout << "INSERT INTO ChannelMatrixP7R410Z1950mm (MinRun, MaxRun, SensorID, PhiNumber, ZNumber) VALUES (0, 100000, "
+	//       << copy_no << ", " << i-1 << ", " << j << ");" << G4endl;
+	//	G4cout << "INSERT INTO ChannelPositionP7R410Z1950mm (MinRun, MaxRun, SensorID, X, Y, Z) VALUES (0, 100000, "
+	//	       << copy_no << ", " << position.getX() << ", " << position.getY() << ", " << position.getZ() << ");" << G4endl;
       }
     }
 

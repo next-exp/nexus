@@ -38,6 +38,7 @@ GeneratorFactory::~GeneratorFactory()
 #include "Kr83mGeneration.h"
 #include "SingleParticle2Pi.h"
 #include "MuonGenerator.h"
+#include "MuonAngleGenerator.h"
 #include "NeutronGenerator.h"
 #include "ELTableGenerator.h"
 #include "ScintillationGenerator.h"
@@ -69,8 +70,12 @@ G4VPrimaryGenerator* GeneratorFactory::CreateGenerator()
   else if (_name == "EL_TABLE_GENERATOR") _p = new ELTableGenerator();
 
   else if (_name == "S1GENERATOR") _p = new ScintillationGenerator();
-
+  
   else if (_name == "LXE_SCINTILLATION") _p = new LXeScintillationGenerator();
+
+  else if (_name == "LABMUON_GENERATOR") p = new MuonAngleGenerator();
+
+  else if (_name == "NEUTRON_GENERATOR") p = new NeutronGenerator();
 
   else if (_name == "E+E-PAIR") _p = new ElecPositronPair();
 

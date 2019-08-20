@@ -6,6 +6,7 @@
 
 #define CONFLEN 300
 #define STRLEN 20
+#define PROCLEN 100
 
   typedef struct{
      char param_key[CONFLEN];
@@ -38,7 +39,7 @@
     int hit_id;
   } hit_info_t;
 
-  typedef struct{
+typedef struct{
     int32_t event_id;
     int particle_id;
     char name[STRLEN];

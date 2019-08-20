@@ -34,6 +34,7 @@ namespace nexus {
     virtual void UserSteppingAction(const G4Step*);
 
   private:
+
     G4int detected;
     G4int not_det;
 
@@ -48,6 +49,8 @@ namespace nexus {
     G4GenericMessenger* _msg;
     G4int file_no_;
 
+    typedef std::map<G4String, int> detectorCounts;
+    detectorCounts my_counts;
   };
 
 } // namespace nexus
