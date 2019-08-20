@@ -73,9 +73,9 @@ G4VPrimaryGenerator* GeneratorFactory::CreateGenerator()
   
   else if (_name == "LXE_SCINTILLATION") _p = new LXeScintillationGenerator();
 
-  else if (_name == "LABMUON_GENERATOR") p = new MuonAngleGenerator();
+  else if (_name == "LABMUON_GENERATOR") _p = new MuonAngleGenerator();
 
-  else if (_name == "NEUTRON_GENERATOR") p = new NeutronGenerator();
+  else if (_name == "NEUTRON_GENERATOR") _p = new NeutronGenerator();
 
   else if (_name == "E+E-PAIR") _p = new ElecPositronPair();
 

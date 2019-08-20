@@ -14,6 +14,7 @@
 #include <G4OpticalPhoton.hh>
 #include <G4OpBoundaryProcess.hh>
 #include <G4Electron.hh>
+#include <G4GenericMessenger.hh>
 
 #include "CLHEP/Units/SystemOfUnits.h"
 #include "CLHEP/Units/PhysicalConstants.h"
@@ -29,8 +30,8 @@ using namespace nexus;
 using namespace CLHEP;
 
 
-AnalysisSteppingAction::AnalysisSteppingAction(): G4UserSteppingAction(), file_no_(0)
-
+AnalysisSteppingAction::AnalysisSteppingAction(): G4UserSteppingAction(), file_no_(0) 
+{
   _msg = new G4GenericMessenger(this, "/Actions/AnalysisSteppingAction/");
   _msg->DeclareProperty("file_number", file_no_, "");
   
@@ -154,20 +155,21 @@ void AnalysisSteppingAction::UserSteppingAction(const G4Step* step)
 	hCherLambdaDet->Fill(h_Planck*c_light/step->GetTrack()->GetKineticEnergy()/nanometer);
 	times.push_back(step->GetDeltaTime());
 	wavelengths.push_back(distance/ step->GetDeltaTime());
+
+	G4String detector_name = step->GetPostStepPoint()->GetTouchableHandle()->GetVolume()->GetName();
+	//G4cout << "##### Sensitive Volume: " << detector_name << G4endl;
+	
+	detectorCounts::iterator it = my_counts.find(detector_name);
+	if (it != my_counts.end()) my_counts[it->first] += 1;
+	else my_counts[detector_name] = 1;
       } else {
 	not_det = not_det + 1;
       }
     
       //	G4cout << "check: " << velocity << ", " << track_velocity << G4endl;
 
-    if (boundary->GetStatus() == Detection ){
-      G4String detector_name = step->GetPostStepPoint()->GetTouchableHandle()->GetVolume()->GetName();
-      //G4cout << "##### Sensitive Volume: " << detector_name << G4endl;
 
-      detectorCounts::iterator it = my_counts.find(detector_name);
-      if (it != my_counts.end()) my_counts[it->first] += 1;
-      else my_counts[detector_name] = 1;
-    }
+  }
 
   return;
 }

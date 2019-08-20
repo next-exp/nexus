@@ -148,9 +148,6 @@ G4bool PersistencyManager::Store(const G4Event* event)
   gate::Event ievt;
   ievt.SetEventID(_nevt);
 
-  if (_hdf5dump) {
-    _event_info.first = _nevt;
-  }
 
 
   if (event_type_ == "bb0nu") {
