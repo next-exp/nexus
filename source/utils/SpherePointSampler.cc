@@ -12,6 +12,8 @@
 #include <G4RotationMatrix.hh>
 #include <Randomize.hh>
 
+#include <math.h>
+
 
 namespace nexus {
 
@@ -98,7 +100,7 @@ namespace nexus {
   G4double SpherePointSampler::GetRadius(G4double inner, G4double outer)
   {
     G4double rand = G4UniformRand();
-    G4double r = sqrt( (1.-rand) * inner*inner + rand * outer*outer);
+    G4double r = cbrt( (1.-rand) * inner*inner*inner + rand * outer*outer*outer);
     return r;
   }
 
