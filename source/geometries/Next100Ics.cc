@@ -272,7 +272,7 @@ namespace nexus {
 	  glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
 	  glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
 	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
-	} while (VertexVolume->GetName() != "ICS_TRACKING");
+	} while (VertexVolume->GetName() != "ICS");
       }
 
       else if  (rand < _perc_energy_cyl_vol)
