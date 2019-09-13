@@ -35,7 +35,7 @@ NextTonScale::NextTonScale():
   vessel_thickn_(1.5*mm), ics_thickn_(12.*cm), endcap_hollow_(20.*cm),
   fcage_thickn_(1.*cm),
   active_diam_(300.*cm), active_length_(300.*cm),
-  cathode_thickn_(5.*mm), anode_thickn_(1.5*cm), readout_gap_(5.*mm),
+  cathode_thickn_(.2*mm), anode_thickn_(1.5*cm), readout_gap_(5.*mm),
   tank_vis_(true), vessel_vis_(true), ics_vis_(true),
   fcage_vis_(true), cathode_vis_(true), anode_vis_(true), readout_vis_(true),
   specific_vertex_X_(0.), specific_vertex_Y_(0.), specific_vertex_Z_(0.),
@@ -307,11 +307,14 @@ G4LogicalVolume* NextTonScale::ConstructFieldCageAndReadout(G4LogicalVolume* mot
   G4String cathode_name = "CATHODE";
   G4double cathode_diam = active_diam_;
 
+  G4Material* cathode_mat =
+    G4NistManager::Instance()->FindOrBuildMaterial("G4_STAINLESS-STEEL");
+
   G4Tubs* cathode_solid_vol =
     new G4Tubs(cathode_name, 0., cathode_diam/2., cathode_thickn_/2., 0., 360.*deg);
 
   G4LogicalVolume* cathode_logic_vol =
-    new G4LogicalVolume(cathode_solid_vol, xenon_gas_, cathode_name);
+    new G4LogicalVolume(cathode_solid_vol, cathode_mat, cathode_name);
 
   if (cathode_vis_) cathode_logic_vol->SetVisAttributes(nexus::CopperBrown());
   else cathode_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
@@ -387,7 +390,7 @@ G4LogicalVolume* NextTonScale::ConstructFieldCageAndReadout(G4LogicalVolume* mot
   cathode_gen_ = new CylinderPointSampler(0.,
                                           cathode_thickn_,
                                           cathode_diam/2.,
-                                          0.);
+                                          cathode_thickn_/2.);
 
   //////////////////////////////////////////////////////////
 
@@ -409,7 +412,7 @@ G4ThreeVector NextTonScale::GenerateVertex(const G4String& region) const
     vertex = field_cage_gen_->GenerateVertex("BODY_VOL");
   }
   else if (region == "CATHODE") {
-    vertex = cathode_gen_->GenerateVertex("BODY_VOL");
+    vertex = cathode_gen_->GenerateVertex("ENDCAP_VOL");
   }
   else if (region == "READOUT_PLANE") {
     vertex = readout_plane_gen_->GenerateVertex("BODY_VOL");
