@@ -1,5 +1,12 @@
+tag v5_06_00 - 14 Sept 2019
+	- Fix in tonne geometry implementing the central cathode as a thin SSteel foil.
+	- Fix radius sampler in SpherePointSampler
+
+tag v5_05_00 - 12 Sept 2019
+	- Added a simplified version of Next-Tonne detector geometry.
+
 tag v5_04_00 - 22 Jul 2019
-        - First version to be used with geant4.10.5. It won't work with previous versions of g4.
+    	- First version to be used with geant4.10.5. It won't work with previous versions of g4.
 	- Add vertex generator in BUFFER region.
 	- Add muon generators.
 	- Add possibility of building using CMake.
