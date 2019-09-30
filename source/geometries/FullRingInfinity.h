@@ -28,6 +28,9 @@ namespace nexus {
     void BuildQuadSensors();
     void BuildSensors();
     void BuildPhantom();
+    void BuildPointfile(G4String pointFile);
+    G4int binarySearchPt(G4int low, G4int high, G4double rnd) const;
+    G4ThreeVector RandomPointVertex() const;
 
     SiPMpetFBK* sipm_;
 
@@ -59,6 +62,11 @@ namespace nexus {
     G4double _specific_vertex_X;
     G4double _specific_vertex_Y;
     G4double _specific_vertex_Z;
+
+    // Variables for the point generator.
+    G4int pt_Nx_, pt_Ny_, pt_Nz_;
+    G4float pt_Lx_, pt_Ly_, pt_Lz_;
+    G4float *pt_;
 
   };
 }
