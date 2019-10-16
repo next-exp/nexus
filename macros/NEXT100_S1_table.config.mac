@@ -8,11 +8,7 @@
 /tracking/verbose 0
 
 # GENERATION
-/Generator/S1generator/particle opticalphoton
-/Generator/S1generator/energy 7.20625 eV
-/Generator/S1generator/xpos 0.0
-/Generator/S1generator/ypos 10.0
-/Generator/S1generator/zpos 0.0
+/Generator/S1generator/region ACTIVE
 /Generator/S1generator/nphotons 100000
 
 # GEOMETRY

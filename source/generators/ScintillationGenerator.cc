@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 //  $Id: ScintillationGenerator.cc 9593 2014-02-13 16:38:56Z paola $
 //
-//  Author : J Martin-Albo <jmalbos@ific.uv.es>    
+//  Author : J Martin-Albo <jmalbos@ific.uv.es>
 //  Created: 27 Mar 2009
 //
 //  Copyright (c) 2009, 2010 NEXT Collaboration
@@ -11,6 +11,7 @@
 
 #include "DetectorConstruction.h"
 #include "BaseGeometry.h"
+#include "OpticalMaterialProperties.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4ParticleDefinition.hh>
@@ -28,40 +29,17 @@ using namespace CLHEP;
 
 
 ScintillationGenerator::ScintillationGenerator() :
-  G4VPrimaryGenerator(), _msg(0), _particle_definition(G4OpticalPhoton::Definition()),
-_geom(0), _position_X(0.),_position_Y(0.), _position_Z(0.),
-_nphotons(1000000)
+  G4VPrimaryGenerator(), _msg(0), _geom(0), _nphotons(1000000)
 {
   _msg = new G4GenericMessenger(this, "/Generator/S1generator/",
     "Control commands of scintillation generator.");
 
-  _msg->DeclareMethod("particle", &ScintillationGenerator::SetParticleDefinition, 
-    "Set particle to be generated.");
-  
-  G4GenericMessenger::Command& energy =
-    _msg->DeclareProperty("energy", _energy,"Set kinetic energy of the particle.");
-  energy.SetUnitCategory("Energy");
-  energy.SetParameterName("energy", false);
-  energy.SetRange("energy>0.");
-
-  G4GenericMessenger::Command&  xpos_cmd =
-    _msg->DeclareProperty("xpos", _position_X, "Set x position");
-  xpos_cmd.SetParameterName("xpos", true);
-  xpos_cmd.SetUnitCategory("Length");
-
-  G4GenericMessenger::Command&  ypos_cmd =
-    _msg->DeclareProperty("ypos", _position_Y, "Set y position");
-  ypos_cmd.SetParameterName("ypos", true);
-  ypos_cmd.SetUnitCategory("Length");
-
-  G4GenericMessenger::Command&  zpos_cmd =
-    _msg->DeclareProperty("zpos", _position_Z, "Set z position");
-  zpos_cmd.SetParameterName("zpos", true);
-  zpos_cmd.SetUnitCategory("Length");
+  _msg->DeclareProperty("region", _region,
+                           "Set the region of the geometry where the vertex will be generated.");
 
   _msg->DeclareProperty("nphotons", _nphotons, "Set number of photons");
-  
-  DetectorConstruction* detconst = 
+
+  DetectorConstruction* detconst =
     (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
   _geom = detconst->GetGeometry();
 }
@@ -71,43 +49,60 @@ ScintillationGenerator::~ScintillationGenerator()
   delete _msg;
 }
 
-void ScintillationGenerator::SetParticleDefinition(G4String particle_name)
-{
-  _particle_definition = G4ParticleTable::GetParticleTable()->FindParticle(particle_name);
-
-  if (!_particle_definition)
-    G4Exception("SetParticleDefinition()", "[S1gen]",  FatalException, "User gave an unknown particle name.");
-}
-
 void ScintillationGenerator::GeneratePrimaryVertex(G4Event* event)
 {
+  G4ParticleDefinition* particle_definition = G4OpticalPhoton::Definition();
   // Generate an initial position for the particle using the geometry and set time to 0.
-  G4ThreeVector position = G4ThreeVector( _position_X, _position_Y, _position_Z );
+  G4ThreeVector position = _geom->GenerateVertex(_region);
   G4double time = 0.;
-  
+
+  // Energy is sampled from integral (like it is
+  // done in G4Scintillation)
+  G4MaterialPropertiesTable* mpt = OpticalMaterialProperties::GXe();
+  // Using fast or slow component here is irrelevant, since we're not using time
+  // and they're are the same in energy.
+  G4MaterialPropertyVector* spectrum = mpt->GetProperty("FASTCOMPONENT");
+  G4PhysicsOrderedFreeVector* spectrum_integral =
+    new G4PhysicsOrderedFreeVector();
+  ComputeCumulativeDistribution(*spectrum, *spectrum_integral);
+  G4double sc_max = spectrum_integral->GetMaxValue();
+
   // Create a new vertex
   G4PrimaryVertex* vertex = new G4PrimaryVertex(position, time);
-  
+
   for ( G4int i = 0; i<_nphotons; i++)
     {
       // Generate random direction by default
       G4ThreeVector _momentum_direction = G4RandomDirection();
-      G4double pmod = GetEnergy();
+      // Determine photon energy
+      G4double sc_value = G4UniformRand()*sc_max;
+      G4double pmod = spectrum_integral->GetEnergy(sc_value);
       G4double px = pmod * _momentum_direction.x();
       G4double py = pmod * _momentum_direction.y();
       G4double pz = pmod * _momentum_direction.z();
-      
+
       // Create the new primary particle and set it some properties
-      G4PrimaryParticle* particle = new G4PrimaryParticle(_particle_definition, px, py, pz);
-      
+      G4PrimaryParticle* particle = new G4PrimaryParticle(particle_definition, px, py, pz);
+
       G4ThreeVector polarization = G4RandomDirection();
       particle->SetPolarization(polarization);
-      
+
       // Add particle to the vertex and this to the event
       vertex->SetPrimary(particle);
     }
   event->AddPrimaryVertex(vertex);
 }
 
-void ScintillationGenerator::SetEnergy(double e) { _energy = e; }
-G4double ScintillationGenerator::GetEnergy() { return _energy; }
+void ScintillationGenerator::ComputeCumulativeDistribution(
+  const G4PhysicsOrderedFreeVector& pdf, G4PhysicsOrderedFreeVector& cdf)
+{
+  G4double sum = 0.;
+  cdf.InsertValues(pdf.Energy(0), sum);
+
+  for (unsigned int i=1; i<pdf.GetVectorLength(); ++i) {
+    G4double area =
+      0.5 * (pdf.Energy(i) - pdf.Energy(i-1)) * (pdf[i] + pdf[i-1]);
+    sum = sum + area;
+    cdf.InsertValues(pdf.Energy(i), sum);
+  }
+}
