@@ -424,6 +424,76 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
         }
       }
     }
+  }
+
+  for (G4int s_id: sensor_ids){
+    std::string sdname = hits->GetSDname();
+    gate::Hit* isnr = new gate::Hit();
+    isnr->SetLabel(sdname);
+    isnr->SetSensorID(s_id);
+
+    PmtHit* hit = mapOfHits[s_id];
+    G4ThreeVector xyz = hit->GetPosition();
+    isnr->SetPosition(gate::Point3D(xyz.x(), xyz.y(), xyz.z()));
+
+    if (hit->GetPmtID()<1000) isnr->SetSensorType(gate::PMT);
+    else isnr->SetSensorType(gate::SIPM);
+
+    gate::Waveform* wf = new gate::Waveform();
+    isnr->SetWaveform(wf);
+    double binsize = hit->GetBinSize();
+    wf->SetSampWidth(binsize);
+
+    if (hit->GetPmtID()>=1000) {
+      _bin_size = binsize;
+    } else if (hit->GetPmtID()<0) {
+      _tof_bin_size = binsize;
+    }
+
+    const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
+    std::map<G4double, G4int>::const_iterator it;
+    std::vector< std::pair<unsigned int, float> > data;
+
+    G4double amplitude = 0.;
+    for (it = wvfm.begin(); it != wvfm.end(); ++it) {
+      amplitude = amplitude + (*it).second;
+      unsigned int time_bin = (unsigned int)((*it).first/binsize+0.5);
+      unsigned int charge = (unsigned int)((*it).second+0.5);
+      data.push_back(std::make_pair(time_bin, charge));
+      _h5writer->WriteSensorDataInfo(_nevt, (unsigned int)hit->GetPmtID(), time_bin, charge);
+    }
+
+    // Add the sensor hit to the gate event
+    wf->SetData(data);
+    isnr->SetAmplitude(amplitude);
+
+    ievt->AddMCSensHit(isnr);
+    if (hit->GetPmtID() >= 0) {
+      if (_hdf5dump) {
+        std::map<G4int, gate::Hit*>::iterator pos_it =
+        _sns_posmap.find(hit->GetPmtID());
+        if (pos_it == _sns_posmap.end()) {
+          _h5writer->WriteSensorPosInfo((unsigned int)hit->GetPmtID(), (float)xyz.x(), (float)xyz.y(), (float)xyz.z());
+          _sns_posmap[hit->GetPmtID()] = isnr;
+        }
+      }
+    }
+
+    // TOF
+    PmtHit* hitTof = mapOfHits[-s_id];
+    const std::map<G4double, G4int>& wvfmTof = hitTof->GetHistogram();
+    std::vector< std::pair<unsigned int, float> > dataTof;
+
+    int count = 0;
+    for (it = wvfmTof.begin(); it != wvfmTof.end(); ++it) {
+      if (count < 20){
+        unsigned int time_bin = (unsigned int)((*it).first/binsize+0.5);
+        unsigned int charge = (unsigned int)((*it).second+0.5);
+        dataTof.push_back(std::make_pair(time_bin, charge));
+        _h5writer->WriteSensorTofInfo(_nevt, hitTof->GetPmtID(), time_bin, charge);
+        count++;
+      }
+    }
 
     /*
     const std::map<G4double, G4double>&  wvls= hit->GetWavelengths();
@@ -450,21 +520,6 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
       }
     }
     */
-
-    // Add the sensor hit to the gate event
-    ievt->AddMCSensHit(isnr);
-
-    if (hit->GetPmtID() >= 0) {
-      if (_hdf5dump) {
-        std::map<G4int, gate::Hit*>::iterator pos_it =
-          _sns_posmap.find(hit->GetPmtID());
-        if (pos_it == _sns_posmap.end()) {
-          _h5writer->WriteSensorPosInfo((unsigned int)hit->GetPmtID(), (float)xyz.x(), (float)xyz.y(), (float)xyz.z());
-          _sns_posmap[hit->GetPmtID()] = isnr;
-        }
-      }
-    }
-
   }
 }
 
