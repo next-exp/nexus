@@ -483,15 +483,15 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
     // TOF
     PmtHit* hitTof = mapOfHits[-s_id];
     const std::map<G4double, G4int>& wvfmTof = hitTof->GetHistogram();
-    std::vector< std::pair<unsigned int, float> > dataTof;
+
+    double binsize_tof = hitTof->GetBinSize();
 
     int count = 0;
     for (it = wvfmTof.begin(); it != wvfmTof.end(); ++it) {
       if (count < 20){
-        unsigned int time_bin = (unsigned int)((*it).first/binsize+0.5);
-        unsigned int charge = (unsigned int)((*it).second+0.5);
-        dataTof.push_back(std::make_pair(time_bin, charge));
-        _h5writer->WriteSensorTofInfo(_nevt, hitTof->GetPmtID(), time_bin, charge);
+        unsigned int time_bin_tof = (unsigned int)((*it).first/binsize_tof+0.5);
+        unsigned int charge_tof = (unsigned int)((*it).second+0.5);
+        _h5writer->WriteSensorTofInfo(_nevt, hitTof->GetPmtID(), time_bin_tof, charge_tof);
         count++;
       }
     }
