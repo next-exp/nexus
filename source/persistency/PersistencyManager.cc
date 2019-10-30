@@ -49,7 +49,7 @@ PersistencyManager::PersistencyManager(G4String historyFile_init, G4String histo
   G4VPersistencyManager(), _msg(0),
   _ready(false), _store_evt(true), _interacting_evt(false),
   event_type_("other"), _writer(0), _saved_evts(0), _interacting_evts(0),
-  _nevt(0), _start_id(0), _first_evt(true), _hdf5dump(false), _h5writer(0)
+  _nevt(0), _start_id(0), _first_evt(true), _hdf5dump(false), _thr_charge(0), _h5writer(0)
 {
 
   _historyFile_init = historyFile_init;
@@ -60,6 +60,7 @@ PersistencyManager::PersistencyManager(G4String historyFile_init, G4String histo
   _msg->DeclareProperty("eventType", event_type_, "Type of event: bb0nu, bb2nu or background.");
   _msg->DeclareProperty("start_id", _start_id, "Starting event ID for this job.");
   _msg->DeclareProperty("hdf5", _hdf5dump, "Generate hdf5 output.");
+  _msg->DeclareProperty("thr_charge", _thr_charge, "Threshold for the charge saved in file.");
 }
 
 
@@ -418,7 +419,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
           G4int sens_id;
           sens_id = hit->GetPmtID();
           
-          if (amplitude > 2){
+          if (amplitude > _thr_charge){
             sensor_ids.push_back(sens_id);
           }
         }
