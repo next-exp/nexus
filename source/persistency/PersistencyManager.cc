@@ -391,62 +391,39 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc,
 void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
                                       gate::Event* ievt)
 {
+  std::map<int, PmtHit*> mapOfHits;
+
   PmtHitsCollection* hits = dynamic_cast<PmtHitsCollection*>(hc);
   if (!hits) return;
 
+  std::vector<int > sensor_ids;
   for (G4int i=0; i<hits->entries(); i++) {
 
     PmtHit* hit = dynamic_cast<PmtHit*>(hits->GetHit(i));
     if (!hit) continue;
 
-    std::string sdname = hits->GetSDname();
-    gate::Hit* isnr = new gate::Hit();
-    isnr->SetLabel(sdname);
-
-    isnr->SetSensorID(hit->GetPmtID());
-    G4ThreeVector xyz = hit->GetPosition();
-
-    isnr->SetPosition(gate::Point3D(xyz.x(), xyz.y(), xyz.z()));
-
-    if (hit->GetPmtID()<1000) isnr->SetSensorType(gate::PMT);
-    else isnr->SetSensorType(gate::SIPM);
-
-    gate::Waveform* wf = new gate::Waveform();
-    isnr->SetWaveform(wf);
-    double binsize = hit->GetBinSize();
-    wf->SetSampWidth(binsize);
-
-    if (hit->GetPmtID()>=1000) {
-      _bin_size = binsize;
-    } else if (hit->GetPmtID()<0) {
-      _tof_bin_size = binsize;
-    }
+    int s_id  = hit->GetPmtID();
+    mapOfHits[s_id] = hit;
 
     const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
     std::map<G4double, G4int>::const_iterator it;
-    std::vector< std::pair<unsigned int, float> > data;
 
     G4double amplitude = 0.;
 
-    int count = 0;
     for (it = wvfm.begin(); it != wvfm.end(); ++it) {
-      unsigned int time_bin = (unsigned int)((*it).first/binsize+0.5);
-      unsigned int charge = (unsigned int)((*it).second+0.5);
-
-      data.push_back(std::make_pair(time_bin, charge));
       amplitude = amplitude + (*it).second;
 
       if (_hdf5dump) {
         if (hit->GetPmtID() >= 0) {
-          _h5writer->WriteSensorDataInfo(_nevt, (unsigned int)hit->GetPmtID(), time_bin, charge);
-        } else if (count < 20) {
-          _h5writer->WriteSensorTofInfo(_nevt, hit->GetPmtID(), time_bin, charge);
-          count++;
+          G4int sens_id;
+          sens_id = hit->GetPmtID();
+          
+          if (amplitude > 2){
+            sensor_ids.push_back(sens_id);
+          }
         }
       }
     }
-    wf->SetData(data);
-    isnr->SetAmplitude(amplitude);
 
     /*
     const std::map<G4double, G4double>&  wvls= hit->GetWavelengths();
