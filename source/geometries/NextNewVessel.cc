@@ -439,10 +439,10 @@ void NextNewVessel::Construct()
 
     // G4ThreeVector pos_lateral_port(_lat_nozzle_x_pos  + _lat_nozzle_high/2. - simulated_length_lat/2.,  0., _lat_nozzle_z_pos);
     G4ThreeVector pos_lateral_port(_vessel_in_diam/2.  + _lat_nozzle_high - simulated_length_lat/2.,  0., _lat_nozzle_z_pos);
-    
+
     new G4PVPlacement(G4Transform3D(*rot_lat, pos_lateral_port), lateral_port_tube_logic,
 		      "LATERAL_PORT", vessel_gas_logic, false, 0, false);
-    
+
     G4Tubs* lateral_port_tube_air_solid =
       new G4Tubs("LATERAL_PORT_AIR", 0., _port_tube_diam/2.,
 		 (simulated_length_lat  - _port_tube_window_thickn)/2.,
