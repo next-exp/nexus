@@ -68,17 +68,17 @@ void NeutronGenerator::GeneratePrimaryVertex(G4Event* event)
   if (!_particle_definition)
     G4Exception("SetParticleDefinition()", "[NeutronGenerator]",
                 FatalException, " can not create a neutron ");
-  // Generate an initial position for the particle using the geometry                                                                                                                
+  // Generate an initial position for the particle using the geometry
   G4ThreeVector position = _geom->GenerateVertex(_region);
-  // Particle generated at start-of-event                                                                                                                                            
+  // Particle generated at start-of-event
   G4double time = 0.;
-  // Create a new vertex                                                                                                                                                             
+  // Create a new vertex
   G4PrimaryVertex* vertex = new G4PrimaryVertex(position, time);
-  // Generate uniform random energy in [E_min, E_max]                                                                                                                                
+  // Generate uniform random energy in [E_min, E_max]
   G4double kinetic_energy = RandomEnergy();
-  // Generate random direction by default                                                                                                                                            
+  // Generate random direction by default
   G4ThreeVector _momentum_direction = G4RandomDirection();
-  // Calculate cartesian components of momentum                                                                                                                                      
+  // Calculate cartesian components of momentum
   G4double mass   = _particle_definition->GetPDGMass();
   G4double energy = kinetic_energy + mass;
   G4double pmod = std::sqrt(energy*energy - mass*mass);
@@ -87,11 +87,11 @@ void NeutronGenerator::GeneratePrimaryVertex(G4Event* event)
   G4double pz = pmod * _momentum_direction.z();
 
 
-  // Create the new primary particle and set it some properties                                                                                                                      
+  // Create the new primary particle and set it some properties
   G4PrimaryParticle* particle =
     new G4PrimaryParticle(_particle_definition,px,py,pz);
 
-  // Add particle to the vertex and this to the event                                                                                                                                
+  // Add particle to the vertex and this to the event
   vertex->SetPrimary(particle);
   event->AddPrimaryVertex(vertex);
 }
@@ -103,6 +103,3 @@ G4double NeutronGenerator::RandomEnergy() const
   else
     return (G4UniformRand()*(_energy_max - _energy_min) + _energy_min);
 }
-
-
-

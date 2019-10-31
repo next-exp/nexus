@@ -216,7 +216,6 @@ namespace nexus {
   {
     // Define materials to be used
     DefineMaterials();
-
      // Cathode Grid
     BuildCathodeGrid();
     // Build the different parts
