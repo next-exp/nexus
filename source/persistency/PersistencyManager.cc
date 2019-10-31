@@ -413,16 +413,13 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 
     for (it = wvfm.begin(); it != wvfm.end(); ++it) {
       amplitude = amplitude + (*it).second;
+    }
+    if (hit->GetPmtID() >= 0) {
+      G4int sens_id;
+      sens_id = hit->GetPmtID();
 
-      if (_hdf5dump) {
-        if (hit->GetPmtID() >= 0) {
-          G4int sens_id;
-          sens_id = hit->GetPmtID();
-          
-          if (amplitude > _thr_charge){
-            sensor_ids.push_back(sens_id);
-          }
-        }
+      if (amplitude > _thr_charge){
+        sensor_ids.push_back(sens_id);
       }
     }
   }
@@ -461,7 +458,9 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
       unsigned int time_bin = (unsigned int)((*it).first/binsize+0.5);
       unsigned int charge = (unsigned int)((*it).second+0.5);
       data.push_back(std::make_pair(time_bin, charge));
-      _h5writer->WriteSensorDataInfo(_nevt, (unsigned int)hit->GetPmtID(), time_bin, charge);
+      if (_hdf5dump) {
+        _h5writer->WriteSensorDataInfo(_nevt, (unsigned int)hit->GetPmtID(), time_bin, charge);
+      }
     }
 
     // Add the sensor hit to the gate event
@@ -488,11 +487,13 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 
     int count = 0;
     for (it = wvfmTof.begin(); it != wvfmTof.end(); ++it) {
-      if (count < 20){
-        unsigned int time_bin_tof = (unsigned int)((*it).first/binsize_tof+0.5);
-        unsigned int charge_tof = (unsigned int)((*it).second+0.5);
-        _h5writer->WriteSensorTofInfo(_nevt, hitTof->GetPmtID(), time_bin_tof, charge_tof);
-        count++;
+      if (_hdf5dump) {
+        if (count < 20){
+          unsigned int time_bin_tof = (unsigned int)((*it).first/binsize_tof+0.5);
+          unsigned int charge_tof = (unsigned int)((*it).second+0.5);
+          _h5writer->WriteSensorTofInfo(_nevt, hitTof->GetPmtID(), time_bin_tof, charge_tof);
+          count++;
+        }
       }
     }
 
