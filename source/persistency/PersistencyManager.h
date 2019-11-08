@@ -13,8 +13,7 @@
 #define PERSISTENCY_MANAGER_H
 
 #include <G4VPersistencyManager.hh>
-#include <map>
-
+#include <vector>
 
 class G4GenericMessenger;
 class G4TrajectoryContainer;
@@ -77,8 +76,7 @@ namespace nexus {
 
     G4String event_type_; ///< event type: bb0nu, bb2nu, background or not set
 
-    std::map<G4int, G4int> _iprtmap;
-    std::map<G4int, G4int> _sns_posmap;
+    std::vector<G4int> _sns_posvec;
 
     G4int _saved_evts; ///< number of events to be saved
     G4int _interacting_evts; ///< number of events interacting in ACTIVE

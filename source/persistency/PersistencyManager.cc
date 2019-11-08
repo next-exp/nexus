@@ -145,16 +145,12 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc) //,
   // If the pointer is null, no trajectories were stored in this event
   if (!tc) return;
 
-  // Reset the map of gate::Particles
-  _iprtmap.clear();
-
   // Loop through the trajectories stored in the container
   for (G4int i=0; i<tc->entries(); ++i) {
     Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[i]);
     if (!trj) continue;
 
     G4int trackid = trj->GetTrackID();
-    _iprtmap[trackid] = trackid;
 
     G4ThreeVector ini_xyz = trj->GetInitialPosition();
     G4double ini_t = trj->GetInitialTime();
@@ -218,7 +214,7 @@ void PersistencyManager::StoreHits(G4HCofThisEvent* hce)//, gate::Event* ievt)
       }
     }
     else if (hcname == PmtSD::GetCollectionUniqueName())
-      StorePmtHits(hits); //, ievt);
+      StorePmtHits(hits);
     else {
       G4String msg =
         "Collection of hits '" + sdname + "/" + hcname
@@ -258,12 +254,12 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
 
 void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
 {
-  std::map<int, PmtHit*> mapOfHits;
+  std::map<G4int, PmtHit*> mapOfHits;
 
   PmtHitsCollection* hits = dynamic_cast<PmtHitsCollection*>(hc);
   if (!hits) return;
 
-  std::vector<int > sensor_ids;
+  std::vector<G4int > sensor_ids;
   for (G4int i=0; i<hits->entries(); i++) {
 
     PmtHit* hit = dynamic_cast<PmtHit*>(hits->GetHit(i));
@@ -317,11 +313,11 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
     }
 
     if (hit->GetPmtID() >= 0) {
-      std::map<G4int, G4int>::iterator pos_it =
-	_sns_posmap.find(hit->GetPmtID());
-      if (pos_it == _sns_posmap.end()) {
+      std::vector<G4int>::iterator pos_it =
+	std::find(_sns_posvec.begin(), _sns_posvec.end(), hit->GetPmtID());
+      if (pos_it == _sns_posvec.end()) {
 	_h5writer->WriteSensorPosInfo((unsigned int)hit->GetPmtID(), (float)xyz.x(), (float)xyz.y(), (float)xyz.z());
-	_sns_posmap[hit->GetPmtID()] = hit->GetPmtID();
+	_sns_posvec.push_back(hit->GetPmtID());
       }
     }
 
