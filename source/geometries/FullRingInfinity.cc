@@ -29,6 +29,7 @@
 #include <G4SDManager.hh>
 #include <G4LogicalSkinSurface.hh>
 #include <G4OpticalSurface.hh>
+#include <Randomize.hh>
 
 #include <stdexcept>
 
@@ -94,12 +95,15 @@ namespace nexus {
     specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
     specific_vertex_Z_cmd.SetUnitCategory("Length");
 
+    // Read in the point distribution.
+    msg_->DeclareMethod("pointFile", &FullRingInfinity::BuildPointfile, "Location of file containing distribution of event generation points.");
+
     sipm_ = new SiPMpetFBK();
   }
 
   FullRingInfinity::~FullRingInfinity()
   {
-
+    delete [] pt_;
   }
 
   void FullRingInfinity::Construct()
@@ -344,12 +348,93 @@ namespace nexus {
       vertex = G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
     } else if (region == "PHANTOM") {
       vertex = spheric_gen_->GenerateVertex("VOLUME");
+    } 
+      else if (region == "CUSTOM") {
+      vertex = RandomPointVertex();
     } else {
       G4Exception("[FullRingInfinity]", "GenerateVertex()", FatalException,
                   "Unknown vertex generation region!");
     }
 
     return vertex;
+  }
+
+  G4int FullRingInfinity::binarySearchPt(G4int low, G4int high, G4double rnd) const {
+
+    // Error
+    if(high < 0 || low >= pt_Nx_*pt_Ny_*pt_Nz_) return -1;
+
+    // Return the element before the first element greater than rnd.
+    if(pt_[low] > rnd)   return low-1;
+
+    G4int mid = (low + high)/2;
+    if(pt_[mid] <= rnd)
+      return binarySearchPt(mid+1, high, rnd);
+    return binarySearchPt(low, mid-1, rnd);
+  }
+
+  // Generates a vertex corresponding to a random point from the custom volume.
+  G4ThreeVector FullRingInfinity::RandomPointVertex() const
+  {
+    // Select the index in the cumulative distribution.
+    G4double rnd = G4UniformRand();
+    G4int ipt = binarySearchPt(0, pt_Nx_*pt_Ny_*pt_Nz_-1, rnd);
+    
+    if(ipt < 0) {
+      std::cerr << "ERROR: random point vertex selection failed." << std::endl;
+      return G4ThreeVector(0,0,0);
+    }
+    //G4int jpt = 0;
+    //while(pt_[jpt] < rnd) jpt++;
+    //jpt -= 1;
+    //if(ipt != jpt) std::cout << "WARNING: algorithms don't match i = " << ipt << ", j = " << jpt << "***" << std::endl;
+
+    // Compute the vertex.
+    G4int nx = ipt / (pt_Ny_*pt_Nz_);
+    G4int ny = (ipt / pt_Nz_) % pt_Ny_;
+    G4int nz = ipt % pt_Nz_;
+    G4double x = pt_Lx_ * ( ((G4double) nx) / pt_Nx_ - 0.5);
+    G4double y = pt_Ly_ * ( ((G4double) ny) / pt_Ny_ - 0.5);
+    G4double z = pt_Lz_ * ( ((G4double) nz) / pt_Nz_ - 0.5);
+
+    G4double xrnd = G4UniformRand()-0.5;
+    G4double yrnd = G4UniformRand()-0.5;
+    G4double zrnd = G4UniformRand()-0.5;
+    
+    //std::cout << "Generated at point (" << x << ", " << y << ", " << z << "), index " << ipt << std::endl;
+    return G4ThreeVector(x+xrnd,y+yrnd,z+zrnd);
+  }
+
+  void FullRingInfinity::BuildPointfile(G4String pointFile)
+  {
+
+    int Nx, Ny, Nz;
+    float Lx, Ly, Lz;
+
+    // Open the file containing the point distribution.
+    std::ifstream is;
+    is.open(pointFile, std::ifstream::binary);
+
+    // Read the header.
+    is.read(reinterpret_cast<char*>(&Nx),sizeof(int)); is.read(reinterpret_cast<char*>(&Ny),sizeof(int)); is.read(reinterpret_cast<char*>(&Nz),sizeof(int));
+    is.read(reinterpret_cast<char*>(&Lx),sizeof(float)); is.read(reinterpret_cast<char*>(&Ly),sizeof(float)); is.read(reinterpret_cast<char*>(&Lz),sizeof(float));
+    pt_Nx_ = Nx; pt_Ny_ = Ny; pt_Nz_ = Nz;
+    pt_Lx_ = Lx; pt_Ly_ = Ly; pt_Lz_ = Lz;
+
+    // Read the distribution.
+    int i = 0;
+    float f;
+    int length = pt_Nx_ * pt_Ny_ * pt_Nz_;
+    pt_ = new G4float[length];
+    while (is.read(reinterpret_cast<char*>(&f), sizeof(float))) {
+        pt_[i] = f;
+        i++;
+    }
+
+    is.close();
+
+    std::cout << "Read distribution of (" << pt_Nx_ << ", " << pt_Ny_ << ", " << pt_Nz_ << "); Len (" << pt_Lx_
+         << ", " << pt_Ly_ << ", " << pt_Lz_ << "); with total elements = " << length << ", and first two = " << pt_[0] << " , " << pt_[1] << std::endl;
   }
 
 }

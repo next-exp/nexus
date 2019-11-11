@@ -25,6 +25,8 @@
 #include <G4VisAttributes.hh>
 #include <G4LogicalVolume.hh>
 
+#include <iostream>
+#include <fstream>
 #include <stdexcept>
 
 namespace nexus {
@@ -42,6 +44,7 @@ namespace nexus {
   {
      // Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/FullRing/", "Control commands of geometry FullRing.");
+    msg_->DeclareMethod("pointFile", &FullRing::BuildPointfile, "Location of file containing distribution of event generation points.");
 
     module_ = new PetaloTrap();
     //kdb_ = new PetKDBFixedPitch();
@@ -58,7 +61,7 @@ namespace nexus {
 
   FullRing::~FullRing()
   {
-
+    delete [] pt_;
   }
 
   void FullRing::Construct()
@@ -133,7 +136,7 @@ namespace nexus {
     }
   }
 
- void FullRing::BuildPhantom()
+  void FullRing::BuildPhantom()
   {
      
 
@@ -163,6 +166,39 @@ namespace nexus {
     }
     
     return vertex;
+  }
+
+  void FullRing::BuildPointfile(G4String pointFile)
+  {
+
+    int Nx, Ny, Nz;
+    float Lx, Ly, Lz;
+    float *pt;
+
+    // Open the file containing the point distribution.
+    std::ifstream is;
+    is.open(pointFile, std::ifstream::binary);
+
+    // Read the header.
+    is.read(reinterpret_cast<char*>(&Nx),sizeof(int)); is.read(reinterpret_cast<char*>(&Ny),sizeof(int)); is.read(reinterpret_cast<char*>(&Nz),sizeof(int));
+    is.read(reinterpret_cast<char*>(&Lx),sizeof(float)); is.read(reinterpret_cast<char*>(&Ly),sizeof(float)); is.read(reinterpret_cast<char*>(&Lz),sizeof(float));
+    pt_Nx_ = Nx; pt_Ny_ = Ny; pt_Nz_ = Nz;
+    pt_Lx_ = Lx; pt_Ly_ = Ly; pt_Lz_ = Lz;
+
+    // Read the distribution.
+    int i = 0;
+    float f;
+    int length = pt_Nx_ * pt_Ny_ * pt_Nz_;
+    pt = new float[length];
+    while (is.read(reinterpret_cast<char*>(&f), sizeof(float)))
+        pt[i] = f;
+        i++;
+    pt_ = pt;
+
+    is.close();
+
+    std::cout << "Read distribution of (" << pt_Nx_ << ", " << pt_Ny_ << ", " << pt_Nz_ << "); Len (" << pt_Lx_ 
+         << ", " << pt_Ly_ << ", " << pt_Lz_ << "); and first two:" << pt_[0] << " : " << pt[1] << std::endl;
   }
 
 }

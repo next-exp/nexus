@@ -28,6 +28,7 @@ namespace nexus {
     void BuildDetector(); 
     void BuildPhantom();
     void BuildOneModule(); 
+    void BuildPointfile(G4String pointFile);
 
     PetaloTrap* module_;
     PetKDBFixedPitch* kdb_;
@@ -48,6 +49,11 @@ namespace nexus {
     CylinderPointSampler* cylindric_gen_;
 
     G4LogicalVolume* LXe_logic_;
+
+    // Variables for the point generator.
+    G4int pt_Nx_, pt_Ny_, pt_Nz_;
+    G4float pt_Lx_, pt_Ly_, pt_Lz_;
+    G4float *pt_;
 
   };
 }

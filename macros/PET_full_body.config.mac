@@ -11,13 +11,16 @@
 /Geometry/FullRingInfinity/specific_vertex_Y 0. cm
 /Geometry/FullRingInfinity/specific_vertex_Z 0. cm
 
+/Geometry/FullRingInfinity/pointFile /home/jrenner/production/petalo/phantoms/phantom_cylinder.dat
+
 /Geometry/SiPMpet/efficiency 0.2
 /Geometry/SiPMpet/visibility true
 /Geometry/SiPMpet/time_binning 1. microsecond
 /Geometry/SiPMpet/size 6. mm
 
+
 ### GENERATOR
-/Generator/Back2back/region PHANTOM
+/Generator/Back2back/region CUSTOM
 
 ### PHYSICS
 /PhysicsList/Nexus/clustering          false
@@ -26,15 +29,16 @@
 /PhysicsList/Nexus/offScintillation false
 /PhysicsList/Nexus/offCherenkov false
 
+/Actions/DefaultEventAction/energy_threshold 1.02 MeV
 
 ### VERBOSITIES
 /run/verbose 1
 /event/verbose 0
 /tracking/verbose 0
 
-/nexus/random_seed 132313
+/nexus/random_seed 132312
 
 ### OUTPUT FILE
-/nexus/persistency/start_id 10
+/nexus/persistency/start_id 0
 /nexus/persistency/hdf5 true
 /nexus/persistency/outputFile full_body.pet
