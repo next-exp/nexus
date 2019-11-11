@@ -92,6 +92,7 @@ namespace nexus {
 
     G4int _saved_evts; ///< number of events to be saved
     G4int _interacting_evts; ///< number of events interacting in ACTIVE
+    G4double _pmt_bin_size, _sipm_bin_size; ///< bin width of sensors
 
     G4int _nevt; ///< Event ID
     G4int _start_id; ///< ID for the first event in file

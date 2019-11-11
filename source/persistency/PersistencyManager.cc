@@ -48,6 +48,7 @@ PersistencyManager::PersistencyManager(G4String historyFile_init, G4String histo
   G4VPersistencyManager(), _msg(0),
   _ready(false), _store_evt(true), _interacting_evt(false),
   event_type_("other"), _writer(0), _saved_evts(0), _interacting_evts(0),
+  _pmt_bin_size(-1), _sipm_bin_size(-1),
   _nevt(0), _start_id(0), _first_evt(true), _hdf5dump(false), _h5writer(0)
 {
 
@@ -404,13 +405,18 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc,
 
     isnr->SetPosition(gate::Point3D(xyz.x(), xyz.y(), xyz.z()));
 
-    if (hit->GetPmtID()<1000) isnr->SetSensorType(gate::PMT);
-    else isnr->SetSensorType(gate::SIPM);
-
     gate::Waveform* wf = new gate::Waveform();
     isnr->SetWaveform(wf);
     double binsize = hit->GetBinSize();
     wf->SetSampWidth(binsize);
+
+    if (hit->GetPmtID()<1000) {
+      isnr->SetSensorType(gate::PMT);
+      _pmt_bin_size = binsize;
+    } else {
+      isnr->SetSensorType(gate::SIPM);
+      _sipm_bin_size = binsize;
+    }
 
     const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
     std::map<G4double, G4int>::const_iterator it;
@@ -464,6 +470,11 @@ G4bool PersistencyManager::Store(const G4Run*)
     _h5writer->WriteRunInfo(key,  std::to_string(_saved_evts).c_str());
     key = "interacting_events";
     _h5writer->WriteRunInfo(key,  std::to_string(_interacting_evts).c_str());
+    key = "Pmt_time_binning";
+    _h5writer->WriteRunInfo(key, (std::to_string(_pmt_bin_size/microsecond)+" mus").c_str());
+    key = "SiPM_time_binning";
+    _h5writer->WriteRunInfo(key, (std::to_string(_sipm_bin_size/microsecond)+" mus").c_str());
+
   }
   SaveConfigurationInfo(_historyFile_init, grun);
   SaveConfigurationInfo(_historyFile_conf, grun);
@@ -472,6 +483,8 @@ G4bool PersistencyManager::Store(const G4Run*)
     grun.store("num_events", (int)num_events);
     grun.SetNumEvents((int)_saved_evts);
     grun.store("interacting_events", (int)_interacting_evts);
+    grun.store("Pmt_time_binning", (std::to_string(_pmt_bin_size/microsecond)+" mus").c_str());
+    grun.store("SiPM_time_binning", (std::to_string(_sipm_bin_size/microsecond)+" mus").c_str());
     _writer->WriteRunInfo(grun);
   }
 
