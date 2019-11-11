@@ -396,9 +396,13 @@ namespace nexus {
     G4double x = pt_Lx_ * ( ((G4double) nx) / pt_Nx_ - 0.5);
     G4double y = pt_Ly_ * ( ((G4double) ny) / pt_Ny_ - 0.5);
     G4double z = pt_Lz_ * ( ((G4double) nz) / pt_Nz_ - 0.5);
+
+    G4double xrnd = G4UniformRand()-0.5;
+    G4double yrnd = G4UniformRand()-0.5;
+    G4double zrnd = G4UniformRand()-0.5;
     
     //std::cout << "Generated at point (" << x << ", " << y << ", " << z << "), index " << ipt << std::endl;
-    return G4ThreeVector(x,y,z);
+    return G4ThreeVector(x+xrnd,y+yrnd,z+zrnd);
   }
 
   void FullRingInfinity::BuildPointfile(G4String pointFile)
