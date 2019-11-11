@@ -26,8 +26,8 @@
 /PhysicsList/Nexus/clustering          false
 /PhysicsList/Nexus/drift               false
 /PhysicsList/Nexus/electroluminescence false
-/PhysicsList/Nexus/offScintillation true
-/PhysicsList/Nexus/offCherenkov true
+/PhysicsList/Nexus/offScintillation false
+/PhysicsList/Nexus/offCherenkov false
 
 /Actions/DefaultEventAction/energy_threshold 1.02 MeV
 
