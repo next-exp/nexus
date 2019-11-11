@@ -72,7 +72,7 @@ namespace nexus {
     _visibility(0),
     _gas("naturalXe"),
     _helium_mass_num(4),
-    _Xe_perc(100.)
+    _xe_perc(100.)
   {
 
     /// Needed External variables
@@ -92,7 +92,7 @@ namespace nexus {
 
     _msg->DeclareProperty("vessel_vis", _visibility, "Vessel Visibility");
     _msg->DeclareProperty("gas", _gas, "Gas being used");
-    _msg->DeclareProperty("XePercentage", _Xe_perc,
+    _msg->DeclareProperty("XePercentage", _xe_perc,
 			  "Percentage of xenon used in mixtures");
     _msg->DeclareProperty("helium_A", _helium_mass_num,
 			  "Mass number for helium used, 3 or 4");
@@ -236,7 +236,7 @@ namespace nexus {
       vessel_gas_mat =  MaterialsList::GXeDepleted(_pressure, _temperature);
     } else if  (_gas == "XeHe") {
       vessel_gas_mat = MaterialsList::GXeHe(_pressure, 300. * kelvin,
-					    _Xe_perc, _helium_mass_num);
+					    _xe_perc, _helium_mass_num);
     } else {
       G4Exception("[Next100Vessel]", "Construct()", FatalException,
 		  "Unknown kind of xenon, valid options are: natural, enriched, depleted, or XeHe.");     
