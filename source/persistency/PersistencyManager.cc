@@ -27,8 +27,6 @@
 #include <G4RunManager.hh>
 #include <G4Run.hh>
 
-#include <TList.h>
-
 #include <string>
 #include <sstream>
 #include <iostream>
