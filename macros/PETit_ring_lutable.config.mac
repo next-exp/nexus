@@ -38,5 +38,4 @@
 
 ### OUTPUT FILE
 /nexus/persistency/start_id 10
-/nexus/persistency/hdf5 true
-/nexus/persistency/outputFile full_ring_3cm.next
+/nexus/persistency/outputFile full_ring_lut.pet
