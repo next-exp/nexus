@@ -481,8 +481,8 @@ G4bool PersistencyManager::Store(const G4Run*)
     grun.store("num_events", (int)num_events);
     grun.SetNumEvents((int)_saved_evts);
     grun.store("interacting_events", (int)_interacting_evts);
-    grun.store("Pmt_time_binning", (std::to_string(_pmt_bin_size/microsecond)+" mus").c_str());
-    grun.store("SiPM_time_binning", (std::to_string(_sipm_bin_size/microsecond)+" mus").c_str());
+    grun.store("Pmt_time_binning", (float)_pmt_bin_size);
+    grun.store("SiPM_time_binning", (float)_sipm_bin_size);
     _writer->WriteRunInfo(grun);
   }
 
