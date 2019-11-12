@@ -108,7 +108,8 @@ namespace nexus {
     _visibility(1),
     _sc_yield(25510. * 1/MeV),
     _gas("naturalXe"),
-    _Xe_perc(100.),
+    _xe_perc(100.),
+    _helium_mass_num(4),
     //   _source(false),
     _source_distance(0.*mm),
     _calib_port("")
@@ -143,7 +144,10 @@ namespace nexus {
     sc_yield_cmd.SetUnitCategory("1/Energy");
 
     _msg->DeclareProperty("gas", _gas, "Gas being used");
-    _msg->DeclareProperty("XePercentage", _Xe_perc, "Percentage of xenon used in mixtures");
+    _msg->DeclareProperty("XePercentage", _xe_perc,
+			  "Percentage of xenon used in mixtures");
+    _msg->DeclareProperty("helium_A", _helium_mass_num,
+			  "Mass number for helium used, 3 or 4");
 
     // _msg->DeclareProperty("source", _source, "Radioactive source being used");
     _msg->DeclareProperty("internal_calib_port", _calib_port, "Calibration port being used");
@@ -405,11 +409,15 @@ void NextNewVessel::Construct()
       vessel_gas_mat =  MaterialsList::GAr(_pressure, _temperature);
       vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GAr(_sc_yield));
     } else if (_gas == "ArXe") {
-      vessel_gas_mat =  MaterialsList::GXeAr(_pressure, _temperature, _Xe_perc);
+      vessel_gas_mat =  MaterialsList::GXeAr(_pressure, _temperature, _xe_perc);
       vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GAr(_sc_yield));
+    } else if (_gas == "XeHe") {
+      vessel_gas_mat =  MaterialsList::GXeHe(_pressure, _temperature,
+					     _xe_perc, _helium_mass_num);
+      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
     } else {
       G4Exception("[NextNewVessel]", "Construct()", FatalException,
-		  "Unknown kind of gas, valid options are: naturalXe, enrichedXe, depletedXe, Ar.");
+		  "Unknown kind of gas, valid options are: naturalXe, enrichedXe, depletedXe, Ar, ArXe, XeHe.");
     }
 
     G4LogicalVolume* vessel_gas_logic = new G4LogicalVolume(vessel_gas_solid, vessel_gas_mat,"VESSEL_GAS");

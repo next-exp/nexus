@@ -56,6 +56,13 @@ namespace nexus {
     static G4Material* GXeAr(G4double pressure=STP_Pressure,
 			     G4double temperature=STP_Temperature, G4double percXe=0.);
 
+    // Mixture Xe+He                                                                   
+    static G4Material* GXeHe(G4double pressure=STP_Pressure,
+                             G4double temperature=STP_Temperature,
+			     G4double percXe=98,
+			     G4int mass_num=4);
+
+    
     // Stainless Steel (grade 304L)
     static G4Material* Steel();
 

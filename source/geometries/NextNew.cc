@@ -202,10 +202,8 @@ namespace nexus {
      //INNER ELEMENTS
     _inner_elements->SetLogicalVolume(vessel_gas_logic);
     _inner_elements->Construct();
-
     _shielding->SetELzCoord(_inner_elements->GetELzCoord());
     _vessel->SetELzCoord(_inner_elements->GetELzCoord());
-
 
      //ICS
     _ics->SetLogicalVolume(vessel_gas_logic);

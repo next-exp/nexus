@@ -53,6 +53,7 @@ namespace nexus {
     G4double vessel_thickn_, ics_thickn_, endcap_hollow_;
     G4double fcage_thickn_, active_diam_, active_length_;
     G4double cathode_thickn_, anode_thickn_, readout_gap_;
+    G4double xe_perc_, helium_mass_num_;
 
     G4bool tank_vis_, vessel_vis_, ics_vis_,
            fcage_vis_, cathode_vis_, anode_vis_, readout_vis_;
