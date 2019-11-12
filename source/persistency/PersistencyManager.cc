@@ -27,8 +27,6 @@
 #include <G4RunManager.hh>
 #include <G4Run.hh>
 
-#include <TList.h>
-
 #include <GATE/Run.h>
 #include <GATE/Event.h>
 #include <GATE/Particle.h>
