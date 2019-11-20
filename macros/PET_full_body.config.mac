@@ -39,6 +39,8 @@
 /nexus/random_seed 132312
 
 ### OUTPUT FILE
+
 /nexus/persistency/start_id 0
-/nexus/persistency/hdf5 true
+/nexus/persistency/sns_only false
+/nexus/persistency/tof_pe_number 20
 /nexus/persistency/outputFile full_body.pet

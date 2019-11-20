@@ -25,7 +25,7 @@ namespace nexus {
     void WriteRunInfo(const char* param_key, const char* param_value);
     void WriteSensorDataInfo(int evt_number, unsigned int sensor_id, unsigned int time_bin, unsigned int charge);
     void WriteSensorTofInfo(int evt_number, int sensor_id, unsigned int time_bin, unsigned int charge);
-    void WriteHitInfo(int evt_number, int particle_indx, int hit_indx, float hit_position_x, float hit_position_y, float hit_position_z, float hit_time, float hit_energy, const char* label);
+    void WriteHitInfo(int evt_number, int particle_indx, float hit_position_x, float hit_position_y, float hit_position_z, float hit_time, float hit_energy, const char* label);
     void WriteParticleInfo(int evt_number, int particle_indx, const char* particle_name, char primary, int mother_id, float initial_vertex_x, float initial_vertex_y, float initial_vertex_z, float initial_vertex_t, float final_vertex_x, float final_vertex_y, float final_vertex_z, float final_vertex_t, const char* initial_volume, const char* final_volume, float momentum_x, float momentum_y, float momentum_z, float kin_energy, const char* creator_proc);
     void WriteSensorPosInfo(unsigned int sensor_id, float x, float y, float z);
 

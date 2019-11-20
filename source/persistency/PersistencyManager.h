@@ -13,20 +13,12 @@
 #define PERSISTENCY_MANAGER_H
 
 #include <G4VPersistencyManager.hh>
-#include <map>
-
+#include <vector>
 
 class G4GenericMessenger;
 class G4TrajectoryContainer;
 class G4HCofThisEvent;
 class G4VHitsCollection;
-
-namespace gate { class Event; }
-namespace gate { class MCParticle; }
-namespace gate { class MCTrack; }
-namespace gate { class RootWriter; }
-namespace gate { class Run; }
-namespace gate { class Hit; }
 
 namespace nexus { class HDF5Writer; }
 
@@ -64,12 +56,12 @@ namespace nexus {
     ~PersistencyManager();
     PersistencyManager(const PersistencyManager&);
 
-    void StoreTrajectories(G4TrajectoryContainer*, gate::Event*);
-    void StoreHits(G4HCofThisEvent*, gate::Event*);
-    void StoreIonizationHits(G4VHitsCollection*, gate::Event*);
-    void StorePmtHits(G4VHitsCollection*, gate::Event*);
+    void StoreTrajectories(G4TrajectoryContainer*);
+    void StoreHits(G4HCofThisEvent*);
+    void StoreIonizationHits(G4VHitsCollection*);
+    void StorePmtHits(G4VHitsCollection*);
 
-    void SaveConfigurationInfo(G4String history, gate::Run& grun);
+    void SaveConfigurationInfo(G4String history);
 
 
   private:
@@ -84,12 +76,7 @@ namespace nexus {
 
     G4String event_type_; ///< event type: bb0nu, bb2nu, background or not set
 
-    // gate::Event* _evt;         ///< Persistent gate event
-    gate::RootWriter* _writer; ///< Event writer to ROOT file
-
-    std::map<G4int, gate::MCParticle*> _iprtmap;
-    std::map<G4int, gate::MCTrack*> _itrkmap;
-    std::map<G4int, gate::Hit*> _sns_posmap;
+    std::vector<G4int> _sns_posvec;
 
     G4int _saved_evts; ///< number of events to be saved
     G4int _interacting_evts; ///< number of events interacting in ACTIVE
@@ -98,9 +85,9 @@ namespace nexus {
     G4int _start_id; ///< ID for the first event in file
     G4bool _first_evt; ///< true only for the first event of the run
 
-    G4bool _hdf5dump; ///< if true write to hdf5 file
-
     G4int _thr_charge;
+    G4int _tof_pe_number;
+    G4bool _sns_only;
     HDF5Writer* _h5writer;  ///< Event writer to hdf5 file
 
     G4double _bin_size, _tof_bin_size;

@@ -8,7 +8,7 @@
 /Geometry/FullRingInfinity/instrumented_faces 1
 /Geometry/FullRingInfinity/cryostat_width 18 cm
 /Geometry/FullRingInfinity/specific_vertex_X 0. cm
-/Geometry/FullRingInfinity/specific_vertex_Y 5. cm
+/Geometry/FullRingInfinity/specific_vertex_Y 0. cm
 /Geometry/FullRingInfinity/specific_vertex_Z 0. cm
 
 /Geometry/SiPMpet/efficiency 0.2
@@ -18,8 +18,8 @@
 
 ### GENERATOR
 /Generator/Back2back/region AD_HOC
-/Generator/Back2back/min_costheta -0.608696
-/Generator/Back2back/max_costheta 0.608696
+#/Generator/Back2back/min_costheta -0.608696
+#/Generator/Back2back/max_costheta 0.608696
 
 ### PHYSICS
 /PhysicsList/Nexus/clustering          false
@@ -38,5 +38,6 @@
 
 ### OUTPUT FILE
 /nexus/persistency/start_id 10
-/nexus/persistency/hdf5 true
-/nexus/persistency/outputFile full_ring_3cm.next
+/nexus/persistency/sns_only true
+/nexus/persistency/tof_pe_number 1000000
+/nexus/persistency/outputFile petit_ring.pet

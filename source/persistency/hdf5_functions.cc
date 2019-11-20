@@ -52,7 +52,6 @@ hsize_t createHitInfoType()
   H5Tinsert (memtype, "energy",HOFFSET (hit_info_t, energy), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "label",HOFFSET (hit_info_t, label),strtype);
   H5Tinsert (memtype, "particle_id",HOFFSET (hit_info_t, particle_id),H5T_NATIVE_INT);
-  H5Tinsert (memtype, "hit_id",HOFFSET (hit_info_t, hit_id), H5T_NATIVE_INT);
   return memtype;
 }
 

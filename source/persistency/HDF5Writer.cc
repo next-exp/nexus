@@ -101,12 +101,11 @@ void HDF5Writer::WriteSensorTofInfo(int evt_number, int sensor_id, unsigned int 
   _ismp_tof++;
 }
 
-void HDF5Writer::WriteHitInfo(int evt_number, int particle_indx, int hit_indx, float hit_position_x, float hit_position_y, float hit_position_z, float hit_time, float hit_energy, const char* label)
+void HDF5Writer::WriteHitInfo(int evt_number, int particle_indx, float hit_position_x, float hit_position_y, float hit_position_z, float hit_time, float hit_energy, const char* label)
 {
   hit_info_t trueInfo;
   trueInfo.event_id = evt_number;
   memset(trueInfo.label, 0, STRLEN);
-  //memcpy(trueInfo.hit_position, hit_position, sizeof(*hit_position)*size_position);
   trueInfo.x = hit_position_x;
   trueInfo.y = hit_position_y;
   trueInfo.z = hit_position_z;
@@ -114,7 +113,6 @@ void HDF5Writer::WriteHitInfo(int evt_number, int particle_indx, int hit_indx, f
   trueInfo.energy = hit_energy;
   strcpy(trueInfo.label, label);
   trueInfo.particle_id = particle_indx;
-  trueInfo.hit_id = hit_indx;
   writeHit(&trueInfo,  _hitInfoTable, _memtypeHitInfo, _ihit);
 
   _ihit++;
@@ -137,8 +135,6 @@ void HDF5Writer::WriteParticleInfo(int evt_number, int particle_indx, const char
   trueInfo.final_y = final_vertex_y;
   trueInfo.final_z = final_vertex_z;
   trueInfo.final_t = final_vertex_t;
-  // memcpy(trueInfo.initial_vertex, initial_vertex, sizeof(*initial_vertex)*size_initial_vertex);
-  //  memcpy(trueInfo.final_vertex, final_vertex, sizeof(*final_vertex)*size_final_vertex);
   memset(trueInfo.initial_volume, 0, STRLEN);
   strcpy(trueInfo.initial_volume, initial_volume);
   memset(trueInfo.final_volume, 0, STRLEN);
@@ -146,7 +142,6 @@ void HDF5Writer::WriteParticleInfo(int evt_number, int particle_indx, const char
   trueInfo.initial_momentum_x = momentum_x;
   trueInfo.initial_momentum_y = momentum_y;
   trueInfo.initial_momentum_z = momentum_z;
-  //  memcpy(trueInfo.momentum, momentum, sizeof(*momentum)*size_momentum);
   trueInfo.kin_energy = kin_energy;
   memset(trueInfo.creator_proc, 0, STRLEN);
   strcpy(trueInfo.creator_proc, creator_proc);

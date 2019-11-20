@@ -36,7 +36,6 @@
     float energy;
     char label[STRLEN];
     int particle_id;
-    int hit_id;
   } hit_info_t;
 
 typedef struct{

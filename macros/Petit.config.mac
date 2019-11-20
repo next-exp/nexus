@@ -28,7 +28,6 @@
 
 
 ### OUTPUT FILE
-/nexus/persistency/hdf5 true
 /nexus/persistency/outputFile prueba_petit_100.pet
 
 
