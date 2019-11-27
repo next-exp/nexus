@@ -59,7 +59,7 @@ namespace nexus {
     _hdpe_in_diam (452. * mm),
     _hdpe_out_diam (490. * mm),
     _hdpe_ledge (12. * mm),
-    _buffer_tube_length (110. * mm),
+    //_buffer_tube_length (110. * mm),
     _ring_width (10. * mm),
     _ring_thickness (3. * mm),
     _tpb_thickness(1.*micrometer),

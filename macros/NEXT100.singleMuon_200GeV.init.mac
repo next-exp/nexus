@@ -31,5 +31,5 @@
 
 
 ### EXTRA CONFIGURATION
-/nexus/RegisterDelayedMacro Xe137.mac
-/nexus/RegisterMacro NEXT100.singleMuon_200GeV.config.mac
+/nexus/RegisterDelayedMacro macros/physics/Xe137.mac
+/nexus/RegisterMacro macros/NEXT100.singleMuon_200GeV.config.mac

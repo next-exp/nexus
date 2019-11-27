@@ -82,7 +82,7 @@ namespace nexus {
     G4double _windows_end_z, _buffer_length;
     G4double _tube_in_diam, _tube_length_drift, _tube_thickness, _dist_tube_el; //_tube_length_buff 
     G4double _hdpe_length, _hdpe_in_diam, _hdpe_out_diam, _hdpe_ledge;
-    G4double _buffer_tube_length;
+    //G4double _buffer_tube_length;
     G4double  _ring_width, _ring_thickness, _tube_z_pos;
     G4double _tpb_thickness;
     G4double _el_gap_z_pos, _pos_z_anode, _pos_z_cathode, _el_gap_length, _grid_thickness;
