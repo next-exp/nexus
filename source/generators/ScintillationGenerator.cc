@@ -31,13 +31,15 @@ using namespace CLHEP;
 ScintillationGenerator::ScintillationGenerator() :
   G4VPrimaryGenerator(), _msg(0), _geom(0), _nphotons(1000000)
 {
-  _msg = new G4GenericMessenger(this, "/Generator/S1generator/",
+  _msg = new G4GenericMessenger(this, "/Generator/ScintGenerator/",
     "Control commands of scintillation generator.");
 
   _msg->DeclareProperty("region", _region,
                            "Set the region of the geometry where the vertex will be generated.");
 
   _msg->DeclareProperty("nphotons", _nphotons, "Set number of photons");
+
+  _geom_navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
 
   DetectorConstruction* detconst =
     (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
@@ -56,12 +58,15 @@ void ScintillationGenerator::GeneratePrimaryVertex(G4Event* event)
   G4ThreeVector position = _geom->GenerateVertex(_region);
   G4double time = 0.;
 
-  // Energy is sampled from integral (like it is
-  // done in G4Scintillation)
-  G4MaterialPropertiesTable* mpt = OpticalMaterialProperties::GXe();
+  // Energy is sampled from integral (like it is done in G4Scintillation)
+
+  G4VPhysicalVolume* vol = _geom_navigator->LocateGlobalPointAndSetup(position, 0, false);
+  G4Material* mat = vol->GetLogicalVolume()->GetMaterial();
+  G4MaterialPropertiesTable* mpt = mat->GetMaterialPropertiesTable();
   // Using fast or slow component here is irrelevant, since we're not using time
   // and they're are the same in energy.
   G4MaterialPropertyVector* spectrum = mpt->GetProperty("FASTCOMPONENT");
+
   G4PhysicsOrderedFreeVector* spectrum_integral =
     new G4PhysicsOrderedFreeVector();
   ComputeCumulativeDistribution(*spectrum, *spectrum_integral);

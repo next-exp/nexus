@@ -13,6 +13,8 @@
 #define __SCINTILLATIONGENERATOR__
 
 #include <G4VPrimaryGenerator.hh>
+#include <G4Navigator.hh>
+#include <G4TransportationManager.hh>
 
 class G4GenericMessenger;
 class G4Event;
@@ -47,6 +49,7 @@ namespace nexus {
                                        G4PhysicsOrderedFreeVector&);
 
     G4GenericMessenger* _msg;
+    G4Navigator* _geom_navigator; ///< Geometry Navigator
     const BaseGeometry* _geom; ///< Pointer to the detector geometry
 
     G4String _region;
