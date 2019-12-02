@@ -42,7 +42,6 @@ GeneratorFactory::~GeneratorFactory()
 #include "NeutronGenerator.h"
 #include "ELTableGenerator.h"
 #include "ScintillationGenerator.h"
-#include "LXeScintillationGenerator.h"
 #include "ElecPositronPair.h"
 #include "DoubleParticle.h"
 #include "Back2backGammas.h"
@@ -69,9 +68,7 @@ G4VPrimaryGenerator* GeneratorFactory::CreateGenerator()
 
   else if (_name == "EL_TABLE_GENERATOR") _p = new ELTableGenerator();
 
-  else if (_name == "S1GENERATOR") _p = new ScintillationGenerator();
-  
-  else if (_name == "LXE_SCINTILLATION") _p = new LXeScintillationGenerator();
+  else if (_name == "SCINT_GENERATOR") _p = new ScintillationGenerator();
 
   else if (_name == "LABMUON_GENERATOR") _p = new MuonAngleGenerator();
 

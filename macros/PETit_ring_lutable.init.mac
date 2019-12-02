@@ -10,7 +10,7 @@
 /Geometry/RegisterGeometry FULLRING
 
 ### GENERATOR
-/Generator/RegisterGenerator LXE_SCINTILLATION
+/Generator/RegisterGenerator SCINT_GENERATOR
 
 ### ACTIONS
 /Actions/RegisterRunAction DEFAULT

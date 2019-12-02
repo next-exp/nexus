@@ -7,12 +7,8 @@
 /tracking/verbose 0
 
 # GENERATION
-/Generator/S1generator/particle opticalphoton
-/Generator/S1generator/energy 7.20625 eV
-/Generator/S1generator/xpos 0.0
-/Generator/S1generator/ypos 0.0
-/Generator/S1generator/zpos 0.0
-/Generator/S1generator/nphotons 100000
+/Generator/ScintGenerator/region ACTIVE
+/Generator/ScintGenerator/nphotons 1000
 
 # GEOMETRY
 /Geometry/NextNewOpticalGeometry/pressure 15. bar
