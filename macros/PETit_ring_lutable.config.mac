@@ -8,7 +8,7 @@
 /Geometry/FullRingInfinity/instrumented_faces 1
 /Geometry/FullRingInfinity/cryostat_width 18 cm
 /Geometry/FullRingInfinity/specific_vertex_X 0. cm
-/Geometry/FullRingInfinity/specific_vertex_Y 166. cm
+/Geometry/FullRingInfinity/specific_vertex_Y 166. mm
 /Geometry/FullRingInfinity/specific_vertex_Z 0. cm
 
 /Geometry/SiPMpet/efficiency 0.2
@@ -18,8 +18,8 @@
 
 
 ### GENERATION
-/Generator/LXeScintGenerator/region AD_HOC
-/Generator/LXeScintGenerator/nphotons 100000
+/Generator/ScintGenerator/region AD_HOC
+/Generator/ScintGenerator/nphotons 100000
 
 ### PHYSICS
 /PhysicsList/Nexus/clustering          false
