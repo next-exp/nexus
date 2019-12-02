@@ -122,8 +122,8 @@ namespace nexus {
 
 
     // VERTEX GENERATORS   //////////
-    _body_gen  = new CylinderPointSampler(_tube_diam/2., _tube_length, _tube_thickn + _refl_thickn,
-					  0., G4ThreeVector (0., 0., _tube_zpos));
+    _body_gen  = new CylinderPointSampler(_tube_diam/2. + _tpb_thickn, _tube_length, _tube_thickn - _tpb_thickn,
+                                          0., G4ThreeVector (0., 0., _tube_zpos));
 
   }
 
