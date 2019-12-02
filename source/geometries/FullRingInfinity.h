@@ -63,6 +63,8 @@ namespace nexus {
     G4double _specific_vertex_Y;
     G4double _specific_vertex_Z;
 
+    G4bool phantom_;
+
     // Variables for the point generator.
     G4int pt_Nx_, pt_Ny_, pt_Nz_;
     G4float pt_Lx_, pt_Ly_, pt_Lz_;
