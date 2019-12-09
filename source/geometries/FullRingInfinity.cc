@@ -47,7 +47,8 @@ namespace nexus {
     inner_radius_(15.*cm),
     cryo_width_(12.*cm),
     cryo_thickn_(1.*mm),
-    max_step_size_(1.*mm)
+    max_step_size_(1.*mm),
+    phantom_(false)
   {
      // Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/FullRingInfinity/",
@@ -78,6 +79,7 @@ namespace nexus {
 
     msg_->DeclareProperty("sipm_rows", lin_n_sipm_per_cell_, "Number of SiPM rows");
     msg_->DeclareProperty("instrumented_faces", instr_faces_, "Number of instrumented faces");
+    msg_->DeclareProperty("phantom", phantom_, "True if spherical physical phantom is used");
 
     G4GenericMessenger::Command&  specific_vertex_X_cmd =
       msg_->DeclareProperty("specific_vertex_X", _specific_vertex_X,
@@ -125,7 +127,10 @@ namespace nexus {
     G4cout << "Radial dimensions (mm): "<< inner_radius_/mm << ", " << external_radius_/mm << G4endl;
     BuildCryostat();
     BuildSensors();
-    BuildPhantom();
+
+    if (phantom_) {
+      BuildPhantom();
+    }
 
   }
 
@@ -327,7 +332,8 @@ namespace nexus {
     G4Orb* phantom_solid = new G4Orb("PHANTOM",  phantom_diam_/2.);
     G4LogicalVolume* phantom_logic =
       new G4LogicalVolume(phantom_solid, MaterialsList::PEEK(), "PHANTOM");
-    G4ThreeVector phantom_origin = G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
+    G4ThreeVector phantom_origin =
+      G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
     new G4PVPlacement(0, phantom_origin, phantom_logic, "PHANTOM", lab_logic_, false, 0, true);
 
     spheric_gen_ =
