@@ -55,6 +55,7 @@ namespace nexus {
     void BuildELRegion();
     void BuildFieldCage(); 
     void BuildAnodeGrid();
+    void BuildTrackingFrames();
     
 
     /// Calculates the vertices for the EL table generation
@@ -115,6 +116,7 @@ namespace nexus {
     CylinderPointSampler* _active_gen;
     CylinderPointSampler* _anode_quartz_gen;
     CylinderPointSampler* _cathode_gen;
+    CylinderPointSampler* _tracking_frames_gen;
 
     G4double _specific_vertex_X;
     G4double _specific_vertex_Y;

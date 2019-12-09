@@ -202,6 +202,7 @@ namespace nexus {
     delete _xenon_gen;
     delete _anode_quartz_gen;
     delete _cathode_gen;
+    delete _tracking_frames_gen;
   }
 
 
@@ -228,6 +229,8 @@ namespace nexus {
     BuildAnodeGrid();
     // Proper field cage and light tube
     BuildFieldCage();
+    // Tracking Frames
+    BuildTrackingFrames();
 
     G4double max_radius = floor(_tube_in_diam/2./_el_table_binning)*_el_table_binning;
 
@@ -493,65 +496,67 @@ void NextNewFieldCage::BuildBuffer()
   }
 
 
-   void NextNewFieldCage::BuildFieldCage()
-   {
+  void NextNewFieldCage::BuildFieldCage()
+  {
 
-     // High density polyethylene tube to support copper rings
-     G4double hdpe_tube_z_pos =
-       _el_gap_z_pos -_el_gap_length/2. - _dist_tube_el - _hdpe_ledge - _hdpe_length/2.;
+    // High density polyethylene tube to support copper rings
+    G4double hdpe_tube_z_pos =
+      _el_gap_z_pos -_el_gap_length/2. - _dist_tube_el - _hdpe_ledge - _hdpe_length/2.;
 
-     G4Tubs* hdpe_tube_solid =
+    G4Tubs* hdpe_tube_solid =
       new G4Tubs("HDPE_TUBE", _hdpe_in_diam/2.,
-    		 _hdpe_out_diam/2., _hdpe_length/2., 0, twopi);
-     G4LogicalVolume* hdpe_tube_logic =
-      new G4LogicalVolume(hdpe_tube_solid, _hdpe, "HDPE_TUBE");
-     new G4PVPlacement(0, G4ThreeVector(0., 0., hdpe_tube_z_pos),
-		      hdpe_tube_logic, "HDPE_TUBE", _mother_logic,
-		       false, 0, false);
-     // G4cout << "Hdpe tube starts in " << hdpe_tube_z_pos - _hdpe_length/2.  <<
-     //   " and ends in " << hdpe_tube_z_pos + _hdpe_length/2. << G4endl;
+                 _hdpe_out_diam/2., _hdpe_length/2., 0, twopi);
 
-     // Copper rings
-     G4double ring_in_diam = _hdpe_in_diam - 2. * _ring_thickness;
-     G4double ring_out_diam =_hdpe_in_diam;
-     G4Tubs* ring_solid = new G4Tubs("FIELD_RING", ring_in_diam/2.,
-				     ring_out_diam/2., _ring_width/2., 0, twopi);
-     G4LogicalVolume* ring_logic =
-       new G4LogicalVolume(ring_solid, _copper, "FIELD_RING");
+    G4LogicalVolume* hdpe_tube_logic = new G4LogicalVolume(hdpe_tube_solid,
+                                                           _hdpe, "HDPE_TUBE");
 
-     G4int num_rings = 42;
-     G4double separation = 1.80 * mm;
-     G4double pitch = _ring_width + separation;
-     G4double posz = hdpe_tube_z_pos + _hdpe_length/2. - _ring_width/2. + separation;
+    new G4PVPlacement(0, G4ThreeVector(0., 0., hdpe_tube_z_pos), hdpe_tube_logic,
+                                       "HDPE_TUBE", _mother_logic, false, 0, false);
+    // G4cout << "Hdpe tube starts in " << hdpe_tube_z_pos - _hdpe_length/2.  <<
+    //   " and ends in " << hdpe_tube_z_pos + _hdpe_length/2. << G4endl;
 
-     for (G4int i=0; i<num_rings; i++) {
-       new G4PVPlacement(0, G4ThreeVector(0., 0., posz), ring_logic,
-			 "FIELD_RING", _mother_logic, false, i, false);
-       posz = posz - pitch;
-     }
+    // Copper rings
+    G4double ring_in_diam = _hdpe_in_diam - 2. * _ring_thickness;
+    G4double ring_out_diam =_hdpe_in_diam;
+    G4Tubs* ring_solid = new G4Tubs("FIELD_RING", ring_in_diam/2., ring_out_diam/2.,
+                                    _ring_width/2., 0, twopi);
 
-     // Light  tube
-     G4double drift_tube_z_pos =
-       _el_gap_z_pos -_el_gap_length/2. - _dist_tube_el - _tube_length_drift/2.;
+    G4LogicalVolume* ring_logic = new G4LogicalVolume(ring_solid, _copper, "FIELD_RING");
+
+    G4int num_rings = 42;
+    G4double separation = 1.80 * mm;
+    G4double pitch = _ring_width + separation;
+    G4double posz = hdpe_tube_z_pos + _hdpe_length/2. - _ring_width/2. + separation;
+
+    for (G4int i=0; i<num_rings; i++) {
+      new G4PVPlacement(0, G4ThreeVector(0., 0., posz), ring_logic,
+                        "FIELD_RING", _mother_logic, false, i, false);
+      posz = posz - pitch;
+    }
+
+    // Light  tube
+    G4double drift_tube_z_pos =
+      _el_gap_z_pos -_el_gap_length/2. - _dist_tube_el - _tube_length_drift/2.;
 
     G4Tubs* drift_tube_solid =
       new G4Tubs("DRIFT_TUBE", _tube_in_diam/2., _tube_in_diam/2. + _tube_thickness,
                  _tube_length_drift/2., 0, twopi);
-    //  G4double fieldcagevol= drift_tube_solid->GetCubicVolume();
+    // G4double fieldcagevol= drift_tube_solid->GetCubicVolume();
     // std::cout<<"FIELD CAGE VOLUME:\t"<<fieldcagevol<<std::endl;
 
-    G4LogicalVolume* drift_tube_logic =
-      new G4LogicalVolume(drift_tube_solid, _teflon, "DRIFT_TUBE");
+    G4LogicalVolume* drift_tube_logic = new G4LogicalVolume(drift_tube_solid,
+                                                            _teflon, "DRIFT_TUBE");
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., drift_tube_z_pos),
-		      drift_tube_logic, "DRIFT_TUBE", _mother_logic,
-		      false, 0, false);
+                      drift_tube_logic, "DRIFT_TUBE", _mother_logic,
+                      false, 0, false);
     // G4cout << "Light tube drift starts in " << drift_tube_z_pos - _tube_length_drift/2.  <<
     //   " and ends in " << drift_tube_z_pos + _tube_length_drift/2. << G4endl;
 
     G4Tubs* tpb_drift_solid =
       new G4Tubs("DRIFT_TPB", _tube_in_diam/2., _tube_in_diam/2. + _tpb_thickness,
                  _tube_length_drift/2., 0, twopi);
+      
     G4LogicalVolume* tpb_drift_logic =
       new G4LogicalVolume(tpb_drift_solid, _tpb, "DRIFT_TPB");
 
@@ -628,6 +633,50 @@ void NextNewFieldCage::BuildBuffer()
                                0., G4ThreeVector (0., 0., _pos_z_cathode));
   }
 
+
+  void NextNewFieldCage::BuildTrackingFrames()
+  {
+    // Tracking Frames are the responsible of fixing the ANODE and GATE to the copper structure
+    // They are 2 different rings made of stainless steel, and very similar in size and placement.
+    // In the area were there rings live, there is another HDPE structure that somehow shields
+    // different parts of the detector.
+    // In current implementation the HDPE is not implemented, and only one of the 2 S-Steel rings
+    // is simulated with a very close size to both of them.
+    
+    // Dimensions
+    G4double frame_length =  10. * mm;
+    G4double frame_thickn =  16. * mm;
+    G4double frame_in_rad = 250. * mm;
+    G4double frame_posz   = _pos_z_anode - 8. * mm;
+
+    // Construction
+    G4Tubs* tracking_frame_solid = new G4Tubs("TRACKING_FRAMES", frame_in_rad,
+                                              frame_in_rad + frame_thickn,
+                                              frame_length/2., 0, twopi);
+
+    G4LogicalVolume* tracking_frame_logic = new G4LogicalVolume(tracking_frame_solid,
+                                                                MaterialsList::Steel316Ti(),
+                                                                "TRACKING_FRAMES");
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., frame_posz), tracking_frame_logic,
+                      "TRACKING_FRAMES", _mother_logic, false, 0, false);
+
+    // Visibility
+    if (_visibility) {
+      G4VisAttributes frame_col = nexus::DarkGrey();
+      frame_col.SetForceSolid(true);
+      tracking_frame_logic->SetVisAttributes(frame_col);
+    } else {
+      tracking_frame_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
+
+    // Vertex generator
+    _tracking_frames_gen = new CylinderPointSampler(frame_in_rad, frame_length, frame_thickn,
+                                                    0., G4ThreeVector (0., 0., frame_posz));
+  }
+
+
+  // Vertex Generator
   G4ThreeVector NextNewFieldCage::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);
@@ -643,14 +692,14 @@ void NextNewFieldCage::BuildBuffer()
     }
     else if (region == "XENON") {
       G4Navigator *geom_navigator =
-	G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
+        G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
       G4String volume_name;
       do {
-	vertex = _xenon_gen->GenerateVertex("BODY_VOL");
-	G4ThreeVector glob_vtx(vertex);
-	CalculateGlobalPos(glob_vtx);
-	volume_name =
-	  geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false)->GetName();
+        vertex = _xenon_gen->GenerateVertex("BODY_VOL");
+        G4ThreeVector glob_vtx(vertex);
+        CalculateGlobalPos(glob_vtx);
+        volume_name =
+          geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false)->GetName();
       } while (volume_name == "CATH_GRID" || volume_name == "EL_GRID_GATE");
     }
     else if (region == "BUFFER") {
@@ -665,18 +714,18 @@ void NextNewFieldCage::BuildBuffer()
     else if (region == "CATHODE") {
       vertex = _cathode_gen->GenerateVertex("BODY_VOL");
     }
+    else if (region == "TRACKING_FRAMES") {
+      vertex = _tracking_frames_gen->GenerateVertex("BODY_VOL");
+    }
     else if (region == "AD_HOC") {
       vertex = G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
     }
     else if (region == "EL_TABLE") {
-
       unsigned int i = _el_table_point_id + _el_table_index;
-
       if (i == (_el_table_vertices.size()-1)) {
         G4Exception("[NextNewFieldcage]", "GenerateVertex()",
 		    RunMustBeAborted, "Reached last event in EL lookup table.");
       }
-
       try {
         vertex = _el_table_vertices.at(i);
         _el_table_index++;
@@ -685,6 +734,7 @@ void NextNewFieldCage::BuildBuffer()
         G4Exception("[NextNewFieldCage]", "GenerateVertex()", FatalErrorInArgument, "EL lookup table point out of range.");
       }
     }
+
     else {
       G4Exception("[NextNewFieldCage]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");

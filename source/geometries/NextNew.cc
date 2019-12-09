@@ -496,7 +496,7 @@ namespace nexus {
       vertex = _vessel->GenerateVertex(region);
     }
     // ICS REGIONS
-    else if (region == "ICS"){
+    else if (region == "ICS") {
       vertex = _ics->GenerateVertex(region);
     }
     //INNER ELEMENTS
@@ -518,6 +518,7 @@ namespace nexus {
              (region == "EL_TABLE") ||
              (region == "AD_HOC") ||
              (region == "CATHODE")||
+	     (region == "TRACKING_FRAMES") ||
              (region == "SUPPORT_PLATE") ||
              (region == "DICE_BOARD") ||
              (region == "DB_PLUG")) {
@@ -531,6 +532,7 @@ namespace nexus {
     // AD_HOC is the only vertex that is not rotated and shifted because it is passed by the user
     if  (region == "AD_HOC")
       return vertex;
+
     // First rotate, then shift
     vertex.rotate(_rot_angle, G4ThreeVector(0., 1., 0.));
     vertex = vertex + _displ;

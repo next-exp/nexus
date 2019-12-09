@@ -76,14 +76,15 @@ namespace nexus {
    if ( (region == "CARRIER_PLATE") || (region == "ENCLOSURE_BODY") ||
 	      (region == "ENCLOSURE_WINDOW") || (region=="OPTICAL_PAD") ||
 	      (region == "PMT_BODY")||(region=="PMT_BASE") ||
-              (region == "INT_ENCLOSURE_SURF") || (region == "PMT_SURF")) {
+        (region == "INT_ENCLOSURE_SURF") || (region == "PMT_SURF")) {
       vertex = _energy_plane->GenerateVertex(region);
     }
    else if ( (region == "DRIFT_TUBE") ||
 	     (region == "HDPE_TUBE") ||
 	     (region == "ANODE_QUARTZ") ||
 	     (region == "CENTER") ||
-	     (region == "CATHODE") ||
+       (region == "CATHODE") ||
+       (region == "TRACKING_FRAMES") ||
 	     (region == "XENON") ||
 	     (region == "ACTIVE") ||
 	     (region == "BUFFER") ||
