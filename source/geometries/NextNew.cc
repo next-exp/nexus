@@ -150,7 +150,7 @@ namespace nexus {
   }
 
   void NextNew::BuildExtScintillator(G4ThreeVector pos, const G4RotationMatrix& rot)
-{
+  {
   _naI->Construct();
   G4LogicalVolume* sc_logic = _naI->GetLogicalVolume();
 
@@ -158,10 +158,9 @@ namespace nexus {
     G4ThreeVector(pos.getX(), pos.getY(), pos.getZ());
   new G4PVPlacement(G4Transform3D(rot, pos_scint), sc_logic, "NaI",
 		    _air_logic, false, 0, false);
+  }
 
-}
-
- void NextNew::Construct()
+  void NextNew::Construct()
   {
     // LAB /////////////////////////////////////////////////////////////
     // This is just a volume of air surrounding the detector so that events
@@ -464,8 +463,8 @@ namespace nexus {
       vertex =  _source_gen_random->GenerateVertex("BODY_VOL");
     }
     else if ( (region == "SHIELDING_LEAD") || (region == "SHIELDING_STEEL") ||
-	      (region == "SHIELDING_GAS") || (region == "SHIELDING_STRUCT") ||
-	      (region == "EXTERNAL") ) {
+	          (region == "INNER_AIR")      || (region == "SHIELDING_STRUCT") ||
+	          (region == "EXTERNAL") ) {
       vertex = _shielding->GenerateVertex(region);
     }
     //PEDESTAL
@@ -481,18 +480,19 @@ namespace nexus {
 
     //  MINI CASTLE and RADON
     // on the inner lead surface (SHIELDING_GAS) and on the outer mini lead castle surface (RN_MINI_CASTLE)
-    else if (region == "MINI_CASTLE" || region == "RN_MINI_CASTLE"
-	     || (region == "MINI_CASTLE_STEEL")){
+    else if ((region == "MINI_CASTLE") ||
+             (region == "RN_MINI_CASTLE") ||
+             (region == "MINI_CASTLE_STEEL")) {
       vertex = _mini_castle->GenerateVertex(region);
     }
     //VESSEL REGIONS
-    else if ( (region == "VESSEL") ||
-	      (region == "SOURCE_PORT_ANODE") ||
-	      (region == "SOURCE_PORT_UP") ||
-	      (region == "SOURCE_PORT_AXIAL") ||
-	      (region == "INTERNAL_PORT_ANODE") ||
-              (region == "INTERNAL_PORT_UPPER") ||
-              (region == "INTERNAL_PORT_AXIAL")){
+    else if ((region == "VESSEL") ||
+             (region == "SOURCE_PORT_ANODE") ||
+             (region == "SOURCE_PORT_UP") ||
+             (region == "SOURCE_PORT_AXIAL") ||
+             (region == "INTERNAL_PORT_ANODE") ||
+             (region == "INTERNAL_PORT_UPPER") ||
+             (region == "INTERNAL_PORT_AXIAL")){
       vertex = _vessel->GenerateVertex(region);
     }
     // ICS REGIONS
@@ -500,27 +500,27 @@ namespace nexus {
       vertex = _ics->GenerateVertex(region);
     }
     //INNER ELEMENTS
-    else if ( (region == "CENTER") ||
-	      (region == "CARRIER_PLATE") ||
-	      (region == "ENCLOSURE_BODY") ||
-	      (region == "ENCLOSURE_WINDOW") ||
-	      (region == "OPTICAL_PAD") ||
-	      (region == "PMT_BODY") ||
-	      (region == "PMT_BASE") ||
-              (region == "INT_ENCLOSURE_SURF") ||
-	      (region == "PMT_SURF") ||
-	      (region == "DRIFT_TUBE") ||
-              (region == "ANODE_QUARTZ")||
-	      (region == "HDPE_TUBE") ||
-	      (region == "XENON") ||
-	      (region == "ACTIVE") ||
-	      (region == "BUFFER") ||
-	      (region == "EL_TABLE") ||
-	      (region == "AD_HOC") ||
-	      (region == "CATHODE")||
-	      (region == "SUPPORT_PLATE") ||
-	      (region == "DICE_BOARD") ||
-	      (region == "DB_PLUG") ){
+    else if ((region == "CENTER") ||
+             (region == "CARRIER_PLATE") ||
+             (region == "ENCLOSURE_BODY") ||
+             (region == "ENCLOSURE_WINDOW") ||
+             (region == "OPTICAL_PAD") ||
+             (region == "PMT_BODY") ||
+             (region == "PMT_BASE") ||
+             (region == "INT_ENCLOSURE_SURF") ||
+             (region == "PMT_SURF") ||
+             (region == "DRIFT_TUBE") ||
+             (region == "ANODE_QUARTZ")||
+             (region == "HDPE_TUBE") ||
+             (region == "XENON") ||
+             (region == "ACTIVE") ||
+             (region == "BUFFER") ||
+             (region == "EL_TABLE") ||
+             (region == "AD_HOC") ||
+             (region == "CATHODE")||
+             (region == "SUPPORT_PLATE") ||
+             (region == "DICE_BOARD") ||
+             (region == "DB_PLUG")) {
       vertex = _inner_elements->GenerateVertex(region);
     }
     else {

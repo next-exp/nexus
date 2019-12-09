@@ -58,8 +58,9 @@ namespace nexus {
 
     // Vertex generators
     BoxPointSampler* _lead_gen;
-    BoxPointSampler* _steel_gen;
     BoxPointSampler* _external_gen;
+    BoxPointSampler* _steel_gen;
+    BoxPointSampler* _inner_air_gen;
     BoxPointSampler* _lat_roof_gen;
     BoxPointSampler* _front_roof_gen;
     BoxPointSampler* _struct_x_gen;
