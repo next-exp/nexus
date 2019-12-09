@@ -161,6 +161,7 @@ namespace nexus {
     //   _energy_plane_z_pos - _carrier_plate_thickness/2.;
     G4double carrier_plate_z_pos =
       _enclosure_z_pos + enclosure_z_center - _carrier_plate_thickness/2.;
+    //G4cout << "***** " << _enclosure_z_pos << "  " << _carrier_plate_thickness << G4endl;
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,carrier_plate_z_pos),
 		      carrier_plate_logic, "CARRIER_PLATE",

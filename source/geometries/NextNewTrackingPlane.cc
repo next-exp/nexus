@@ -155,6 +155,7 @@ namespace nexus {
    //// SETTING VISIBILITIES   //////////    
     if (_visibility) {
       G4VisAttributes light_brown_col = nexus::CopperBrown();
+      light_brown_col.SetForceSolid(true);
       support_plate_logic->SetVisAttributes(light_brown_col);
       G4VisAttributes dirty_white_col =nexus::DirtyWhite();
       dirty_white_col.SetForceSolid(true);
@@ -169,20 +170,21 @@ namespace nexus {
     // VERTEX GENERATORS   //////////
     _support_body_gen  =
       new CylinderPointSampler(0., _support_plate_thickness-_support_plate_front_buffer_thickness,
-			       _support_plate_tread_diam/2., 0., G4ThreeVector(0., 0., support_plate_z_pos));
+			                         _support_plate_tread_diam/2., 0.,
+                               G4ThreeVector(0., 0., support_plate_z_pos));
     _support_flange_gen  =
       new CylinderPointSampler(_support_plate_tread_diam/2., _support_plate_thickness/2.,
-			       (_support_plate_diam - _support_plate_tread_diam)/2., 0., 
-			       G4ThreeVector(0., 0., support_plate_z_pos+_support_plate_thickness/4.));
+			                         (_support_plate_diam - _support_plate_tread_diam)/2., 0., 
+                               G4ThreeVector(0., 0., support_plate_z_pos+_support_plate_thickness/4.));
     _support_buffer_gen  =
-      new CylinderPointSampler(_support_plate_front_buffer_diam/2., _support_plate_front_buffer_thickness/2.,
-			       (_support_plate_tread_diam-_support_plate_front_buffer_diam)/2., 0., 
-			       G4ThreeVector(0., 0., support_plate_z_pos -_support_plate_thickness/2.
-                                             +_support_plate_front_buffer_thickness/2.));
+      new CylinderPointSampler(_support_plate_front_buffer_diam/2.,
+                               _support_plate_front_buffer_thickness/2.,
+                               (_support_plate_tread_diam-_support_plate_front_buffer_diam)/2.,
+                               0., G4ThreeVector(0., 0., support_plate_z_pos -_support_plate_thickness/2.
+                               +_support_plate_front_buffer_thickness/2.));
     _plug_gen =
-      new BoxPointSampler(_plug_x, _plug_y, _plug_z,0.,
-			  G4ThreeVector(0.,0.,0.),0);
-			  //			  G4ThreeVector(0.,0.,_dice_board_z_pos + _support_plate_front_buffer_thickness + _support_plate_thickness),0);
+      new BoxPointSampler(_plug_x, _plug_y, _plug_z,0., G4ThreeVector(0.,0.,0.),0);
+			  // G4ThreeVector(0.,0.,_dice_board_z_pos + _support_plate_front_buffer_thickness + _support_plate_thickness),0);
 
      // Getting the support  volume over total
     G4double body_vol = 
@@ -207,25 +209,25 @@ namespace nexus {
 
   G4ThreeVector NextNewTrackingPlane::GenerateVertex(const G4String& region) const
   {
-
     G4ThreeVector vertex(0., 0., 0.);
+
     // Support Plate
     if (region == "SUPPORT_PLATE") {
       G4double rand1 = G4UniformRand();
       //Generating in the body
       if (rand1 < _body_perc) {
-	// As it is full of holes, let's get sure vertexes are in the right volume
-	G4VPhysicalVolume *VertexVolume;
-	do {
-	  vertex = _support_body_gen->GenerateVertex("BODY_VOL");
-	  // To check its volume, one needs to rotate and shift the vertex
-	  // because the check is done using global coordinates
-	  G4ThreeVector glob_vtx(vertex);
-	  // First rotate, then shift
-	  glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
-	  glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
-	  VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
-	} while (VertexVolume->GetName() != "SUPPORT_PLATE");
+        // As it is full of holes, let's get sure vertexes are in the right volume
+        G4VPhysicalVolume *VertexVolume;
+        do {
+          vertex = _support_body_gen->GenerateVertex("BODY_VOL");
+          // To check its volume, one needs to rotate and shift the vertex
+          // because the check is done using global coordinates
+          G4ThreeVector glob_vtx(vertex);
+          // First rotate, then shift
+          glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
+          glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
+          VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+        } while (VertexVolume->GetName() != "SUPPORT_PLATE");
       }
       // Generating in the flange
       else if (rand1 < _flange_perc){
@@ -236,6 +238,7 @@ namespace nexus {
        	vertex = _support_buffer_gen->GenerateVertex("BODY_VOL");
       }
     } 
+
     // Dice Boards
     else if (region == "DICE_BOARD") {
       G4ThreeVector ini_vertex = _kapton_dice_board->GenerateVertex(region);
@@ -244,6 +247,7 @@ namespace nexus {
       vertex = ini_vertex + db_pos;
       vertex.setZ(vertex.z() +_dice_board_z_pos);     
     }
+
     // PIGGY TAIL PLUG
     else if (region == "DB_PLUG") {
       G4ThreeVector ini_vertex = _plug_gen->GenerateVertex("INSIDE");
@@ -254,6 +258,7 @@ namespace nexus {
       vertex.setZ(vertex.z() +_dice_board_z_pos + _support_plate_front_buffer_thickness
                   + _support_plate_thickness + _plug_distance_from_copper);
     }
+
     else {
       G4Exception("[NextNewTrackingPlane]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");     
