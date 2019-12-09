@@ -41,7 +41,8 @@ PersistencyManager::PersistencyManager(G4String historyFile_init, G4String histo
   _ready(false), _store_evt(true), _interacting_evt(false),
   event_type_("other"),  _saved_evts(0), _interacting_evts(0),
   _nevt(0), _start_id(0), _first_evt(true),  _thr_charge(0),
-  _tof_pe_number(20), _sns_only(false), _h5writer(0)
+  _tof_pe_number(20), _sns_only(false), _save_tot_charge(true),
+  _h5writer(0)
 {
 
   _historyFile_init = historyFile_init;
@@ -54,6 +55,7 @@ PersistencyManager::PersistencyManager(G4String historyFile_init, G4String histo
   _msg->DeclareProperty("thr_charge", _thr_charge, "Threshold for the charge saved in file.");
   _msg->DeclareProperty("tof_pe_number", _tof_pe_number, "Number of pes saved in tof table per sensor.");
   _msg->DeclareProperty("sns_only", _sns_only, "If true, no true information is saved.");
+  _msg->DeclareProperty("save_tot_charge", _save_tot_charge, "If true, total charge is saved.");
 }
 
 
@@ -302,12 +304,14 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
     std::vector< std::pair<unsigned int, float> > data;
 
     G4double amplitude = 0.;
-    for (it = wvfm.begin(); it != wvfm.end(); ++it) {
-      amplitude = amplitude + (*it).second;
-      unsigned int time_bin = (unsigned int)((*it).first/binsize+0.5);
-      unsigned int charge = (unsigned int)((*it).second+0.5);
-      data.push_back(std::make_pair(time_bin, charge));
-      _h5writer->WriteSensorDataInfo(_nevt, (unsigned int)hit->GetPmtID(), time_bin, charge);
+    if (_save_tot_charge == true) {
+      for (it = wvfm.begin(); it != wvfm.end(); ++it) {
+        amplitude = amplitude + (*it).second;
+        unsigned int time_bin = (unsigned int)((*it).first/binsize+0.5);
+        unsigned int charge = (unsigned int)((*it).second+0.5);
+        data.push_back(std::make_pair(time_bin, charge));
+        _h5writer->WriteSensorDataInfo(_nevt, (unsigned int)hit->GetPmtID(), time_bin, charge);
+      }
     }
 
     if (hit->GetPmtID() >= 0) {

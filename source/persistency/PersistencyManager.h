@@ -88,6 +88,7 @@ namespace nexus {
     G4int _thr_charge;
     G4int _tof_pe_number;
     G4bool _sns_only;
+    G4bool _save_tot_charge;
     HDF5Writer* _h5writer;  ///< Event writer to hdf5 file
 
     G4double _bin_size, _tof_bin_size;
