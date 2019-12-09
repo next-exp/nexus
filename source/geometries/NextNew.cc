@@ -206,7 +206,7 @@ namespace nexus {
 
      //ICS
     _ics->SetLogicalVolume(vessel_gas_logic);
-    _ics->SetNozzlesZPosition( _vessel->GetLATNozzleZPosition(),_vessel->GetUPNozzleZPosition());
+    _ics->SetNozzlesZPosition(_vessel->GetLATNozzleZPosition(), _vessel->GetUPNozzleZPosition());
     _ics->SetELzCoord(_inner_elements->GetELzCoord());
     _ics->Construct();
 

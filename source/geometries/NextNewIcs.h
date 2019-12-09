@@ -25,8 +25,7 @@ namespace nexus {
   {
   public:
     /// Constructor
-    NextNewIcs();/*const G4double lat_nozzle_z_pos,
-		   const G4double up_nozzle_z_pos );*/
+    NextNewIcs();
 
     /// Destructor
     ~NextNewIcs();
@@ -48,12 +47,12 @@ namespace nexus {
     // Mother Logical Volume of the ICS
     G4LogicalVolume* _mother_logic;
     // Dimensions
-    G4double _body_inner_diam, _body_length, _body_thickness;
+    G4double _body_inner_diam, _body_length, _body_thickness, _body_zpos;
     G4double _tracking_tread_diam, _tracking_tread_length;
    
     // Dimensions coming from outside  
     G4double  _lat_nozzle_in_diam, _lat_nozzle_x_pos, _lat_nozzle_z_pos;
-    G4double  _up_nozzle_in_diam, _up_nozzle_y_pos, _up_nozzle_z_pos;
+    G4double  _up_small_nozzle_in_diam, _up_big_nozzle_in_diam, _up_nozzle_y_pos, _up_nozzle_z_pos;
 
     // Visibility of the shielding
     G4bool _visibility;

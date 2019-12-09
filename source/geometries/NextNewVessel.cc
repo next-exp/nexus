@@ -84,7 +84,7 @@ namespace nexus {
     _lat_nozzle_z_pos (120*mm),
     //   _lat_nozzle_x_pos (_vessel_in_diam/2. +_lat_nozzle_high),
     //  _up_nozzle_y_pos (_vessel_in_diam/2. +_up_nozzle_high),
-    _up_nozzle_z_pos ( 277. *mm),//anode_nozzle_zpos = -cathode_nozzle_zpos
+    _up_nozzle_z_pos ( 257. *mm),//anode_nozzle_zpos = -cathode_nozzle_zpos
     _endcap_nozzle_z_pos (_vessel_tube_length/2. + _endcap_in_z_width), //bodylegth/2 + 300mm????
 
     _port_tube_diam (10. * mm),

@@ -461,8 +461,8 @@ void NextNewFieldCage::BuildBuffer()
       new G4LogicalVolume(anode_quartz_solid, _quartz, "EL_QUARTZ_ANODE");
     new G4PVPlacement(0, G4ThreeVector(0., 0., _pos_z_anode), anode_logic,
 		      "EL_QUARTZ_ANODE", _mother_logic, false, 0, false);
-    // G4cout << "Anode plate starts in " << _pos_z_anode - _anode_quartz_thickness/2. << " and ends in " <<
-    //   _pos_z_anode + _anode_quartz_thickness/2. << G4endl;
+    //G4cout << "Anode plate starts in " << _pos_z_anode - _anode_quartz_thickness/2. << " and ends in " <<
+    //  _pos_z_anode + _anode_quartz_thickness/2. << G4endl;
 
     G4Tubs* tpb_anode_solid =
       new G4Tubs("TPB_ANODE", 0., anode_diam/2. , _tpb_thickness/2., 0, twopi);
