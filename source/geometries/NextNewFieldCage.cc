@@ -342,7 +342,7 @@ void NextNewFieldCage::BuildBuffer()
     G4double buffer_posz =
       -_dist_feedthroughs/2.  - _cathode_thickness -  _buffer_length/2.;
     G4Tubs* buffer_solid =
-      new G4Tubs("BUFFER",  0., _tube_in_diam/2.,
+      new G4Tubs("BUFFER",  0., _hdpe_in_diam/2.,
 		 _buffer_length /2., 0, twopi);
 
     // G4cout << "Buffer (gas) starts in " << buffer_posz - _buffer_length/2. << " and ends in "
@@ -361,7 +361,7 @@ void NextNewFieldCage::BuildBuffer()
     // VERTEX GENERATOR
     _buffer_gen =
       new CylinderPointSampler(0., _buffer_length,
-			       _tube_in_diam/2.,
+			       _hdpe_in_diam/2.,
 			       0., G4ThreeVector (0., 0., buffer_posz));
 
     // VERTEX GENERATOR FOR ALL XENON
