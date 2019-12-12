@@ -105,10 +105,10 @@ namespace nexus{
        new G4Tubs("ENCLOSURE_GAS", 0., gas_diam/2., gas_length/2., 0., twopi);
      G4LogicalVolume* enclosure_gas_logic = 
        new G4LogicalVolume(enclosure_gas_solid, vacuum, "ENCLOSURE_GAS");
-     G4double gas_pos = 
+     _gas_pos =
        (_enclosure_endcap_thickness/2-_enclosure_window_thickness-
      	_enclosure_pad_thickness)/2;
-     new G4PVPlacement(0,G4ThreeVector(0.,0.,gas_pos), enclosure_gas_logic,
+     new G4PVPlacement(0,G4ThreeVector(0.,0.,_gas_pos), enclosure_gas_logic,
 		       "ENCLOSURE_GAS", enclosure_logic, false, 0, false);
 
      // Adding the sapphire window
@@ -200,11 +200,11 @@ namespace nexus{
        new CylinderPointSampler(0., _pmt_base_thickness, _pmt_base_diam/2., 0., G4ThreeVector(0.,0., -_pmt_base_z +10.*mm ));//10mm fitting???
 
      _enclosure_surf_gen =
-       new CylinderPointSampler(gas_diam/2., gas_length, 0., 0., G4ThreeVector (0., 0., gas_pos));
+       new CylinderPointSampler(gas_diam/2., gas_length, 0., 0., G4ThreeVector (0., 0., _gas_pos));
 
      _enclosure_cap_surf_gen =
        new CylinderPointSampler(0., 0.1 * micrometer, gas_diam/2., 0.,
-					       G4ThreeVector (0., 0., - gas_pos/2. + 0.05 * micrometer));
+					       G4ThreeVector (0., 0., - _gas_pos/2. + 0.05 * micrometer));
 
      
      // Getting the enclosure body volume over total
@@ -290,7 +290,7 @@ namespace nexus{
     //PMTs bodies 
     else if (region == "PMT_BODY") {
       vertex = _pmt->GenerateVertex(region);
-      vertex.setZ(vertex.z() + _pmt_z_pos);
+      vertex.setZ(vertex.z() + _pmt_z_pos + _gas_pos);
     }
     // Internal surface of enclosure
     else if (region == "INT_ENCLOSURE_SURF") {

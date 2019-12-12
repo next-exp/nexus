@@ -53,7 +53,7 @@ namespace nexus{
     const G4double _pmt_base_diam, _pmt_base_thickness,_pmt_base_z;
 
     PmtR11410*  _pmt;
-    G4double _pmt_z_pos, _window_z_pos;
+    G4double _pmt_z_pos, _window_z_pos, _gas_pos;
 
     // Visibility of the tracking plane
     G4bool _visibility;
