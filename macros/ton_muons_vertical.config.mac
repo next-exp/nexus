@@ -4,7 +4,7 @@
 /Geometry/NextTonScale/fcage_thickn   1. cm
 /Geometry/NextTonScale/ics_thickn     12. cm
 /Geometry/NextTonScale/vessel_thickn  2. cm
-/Geometry/NextTonScale/gas_density    89. kg/m3
+/Geometry/NextTonScale/gas_pressure   15 bar
 /Geometry/NextTonScale/gas            enrichedXe
 
 ### GENERATOR

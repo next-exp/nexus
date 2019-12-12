@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-///  \file    NextNewInnerElements 
+///  \file    NextNewInnerElements
 ///  \brief   This class constructs the inner elements of Next-New:
 ///           Energy plane, field cage and tracking plane.
 ///  \author   <miquel.nebot@ific.uv.es>
@@ -18,8 +18,8 @@
 class G4LogicalVolume;
 class G4Material;
 class G4GenericMessenger;
-namespace nexus { class NextNewEnergyPlane; } 
-namespace nexus { class NextNewFieldCage; } 
+namespace nexus { class NextNewEnergyPlane; }
+namespace nexus { class NextNewFieldCage; }
 namespace nexus { class NextNewTrackingPlane; }
 
 namespace nexus {
@@ -32,7 +32,7 @@ namespace nexus {
     NextNewInnerElements();
     // Destructor
     ~NextNewInnerElements();
-    
+
     // Sets the Logical Volume where Inner Elements will be placed
     void SetLogicalVolume(G4LogicalVolume* mother_logic);
 
@@ -47,26 +47,25 @@ namespace nexus {
     void Construct();
 
   private:
-    
+
     G4LogicalVolume* _mother_logic;
     G4Material* _gas;
     G4double _pressure;
     G4double _temperature;
 
     // Detector parts
-    NextNewEnergyPlane*   _energy_plane;    
+    NextNewEnergyPlane*   _energy_plane;
     NextNewFieldCage*     _field_cage;
     NextNewTrackingPlane* _tracking_plane;
 
     // Visibilities
-    G4bool _visibility;
+    //G4bool _visibility;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
-  
+    //G4GenericMessenger* _msg;
+
   };
 
 } // end namespace nexus
 
 #endif
-    
