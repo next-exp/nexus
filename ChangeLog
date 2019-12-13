@@ -1,3 +1,8 @@
+tag v5_07_00 - 13 Dec 2019
+	- Fix several bugs in the vertex generators of both NEW and NEXT-100.
+	- Add emission spectrum for scintillation generator.
+	- Add helium-xenon mixture gas option.
+
 tag v5_06_00 - 14 Sept 2019
 	- Fix in tonne geometry implementing the central cathode as a thin SSteel foil.
 	- Fix radius sampler in SpherePointSampler
