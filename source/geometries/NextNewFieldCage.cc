@@ -280,7 +280,7 @@ namespace nexus {
 
     // Building the grid
     G4Tubs* diel_grid_solid =
-      new G4Tubs("CATH_GRID", 0., grid_diam/2., _cathode_thickness/2., 0, twopi);
+      new G4Tubs("CATHODE_GRID", 0., grid_diam/2., _cathode_thickness/2., 0, twopi);
     G4LogicalVolume* diel_grid_logic =
       new G4LogicalVolume(diel_grid_solid, fgrid_mat, "CATHODE_GRID");
     new G4PVPlacement(0, G4ThreeVector(0., 0., _pos_z_cathode), diel_grid_logic,
@@ -695,12 +695,12 @@ void NextNewFieldCage::BuildBuffer()
         G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
       G4String volume_name;
       do {
-        vertex = _xenon_gen->GenerateVertex("BODY_VOL");
-        G4ThreeVector glob_vtx(vertex);
-        CalculateGlobalPos(glob_vtx);
-        volume_name =
-          geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false)->GetName();
-      } while (volume_name == "CATH_GRID" || volume_name == "EL_GRID_GATE");
+	vertex = _xenon_gen->GenerateVertex("BODY_VOL");
+	G4ThreeVector glob_vtx(vertex);
+	CalculateGlobalPos(glob_vtx);
+	volume_name =
+	  geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false)->GetName();
+      } while (volume_name == "CATHODE_GRID" || volume_name == "EL_GRID_GATE");
     }
     else if (region == "BUFFER") {
       vertex = _buffer_gen->GenerateVertex("BODY_VOL");

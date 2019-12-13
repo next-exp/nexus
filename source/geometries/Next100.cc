@@ -108,6 +108,7 @@ namespace nexus {
     _inner_elements->SetLogicalVolume(vessel_internal_logic);
     _inner_elements->Construct();
 
+    _shielding->SetELzCoord(_inner_elements->GetELzCoord());
     _vessel->SetELzCoord(_inner_elements->GetELzCoord());
 
     // Internal Copper Shielding
