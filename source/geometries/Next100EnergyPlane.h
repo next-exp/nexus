@@ -61,15 +61,16 @@ namespace nexus {
     // Dimensions
     const G4int _num_PMTs;
     const G4double _end_of_sapphire_posz;
-    const G4double _copper_plate_thickness, _copper_plate_diam,
-      _copper_plate_central_hole_diam;
+    const G4double _copper_plate_thickness, _copper_plate_diam;
+    const G4double _copper_plate_central_hole_diam;
+    G4double _copper_plate_posz;
     const G4double _hut_thickn, _hut_vacuum_length;
     const G4double _hut_length_short, _hut_length_medium, _hut_length_long;
     const G4double _hole_diam;
     
     //const G4double _enclosure_length, _enclosure_diam;
     //const G4double _enclosure_flange_length;
-    G4double _vacuum_length;
+    G4double _vacuum_length, _vacuum_posz;
     const G4double _sapphire_window_thickness,_sapphire_window_diam;
     const G4double _optical_pad_thickness;
     //const G4double _pmt_base_diam, _pmt_base_thickness;

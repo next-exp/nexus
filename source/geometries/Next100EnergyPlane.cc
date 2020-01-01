@@ -162,8 +162,8 @@ namespace nexus {
 			  G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
 			  "COPPER_PLATE");
 
-    G4double copper_plate_posz = _end_of_sapphire_posz + _copper_plate_thickness/2.;
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,copper_plate_posz), copper_plate_logic,
+    _copper_plate_posz = _end_of_sapphire_posz + _copper_plate_thickness/2.;
+    new G4PVPlacement(0, G4ThreeVector(0., 0., _copper_plate_posz), copper_plate_logic,
 		      "COPPER_PLATE", _mother_logic, false, 0, false);
 
 
@@ -230,7 +230,7 @@ namespace nexus {
     G4LogicalVolume* pmt_logic = _pmt->GetLogicalVolume();
     G4double pmt_rel_posz = _pmt->GetRelPosition().z();
     _pmt_zpos = pad_posz + _optical_pad_thickness/2. + pmt_rel_posz;
-    G4ThreeVector pmt_pos =  G4ThreeVector(0., 0., _pmt_zpos);
+    G4ThreeVector pmt_pos = G4ThreeVector(0., 0., _pmt_zpos);
 
     _pmt_rot = new G4RotationMatrix();
     _rot_angle = pi;
@@ -239,11 +239,11 @@ namespace nexus {
 		      "PMT", vacuum_logic, false, 0, true);
 
     // Placing the encapsulating volume with all internal components in place
-    G4double vacuum_posz =  - _copper_plate_thickness/2  + _vacuum_length/2.;
+    _vacuum_posz = - _copper_plate_thickness/2  + _vacuum_length/2.;
     G4ThreeVector pos;
     for (int i=0; i<_num_PMTs; i++) {
       pos = _pmt_positions[i];
-      pos.setZ(vacuum_posz);
+      pos.setZ(_vacuum_posz);
       new G4PVPlacement(0, pos, vacuum_logic, "VACUUM", copper_plate_logic, false, i, true);
     }
 
@@ -280,7 +280,7 @@ namespace nexus {
       _copper_plate_thickness + _hut_vacuum_length + _hut_length_long;
     _copper_gen =
       new CylinderPointSampler(_copper_plate_diam/2., full_copper_length, 0., 0.,
-			       G4ThreeVector (0., 0., copper_plate_posz + _copper_plate_thickness/2. + _hut_vacuum_length + _hut_length_long - full_copper_length/2.));
+			       G4ThreeVector (0., 0., _copper_plate_posz + _copper_plate_thickness/2. + _hut_vacuum_length + _hut_length_long - full_copper_length/2.));
 
     //   _enclosure_flange_gen =
     //new CylinderPointSampler(_enclosure_window_diam/2., _enclosure_flange_length/2.,
@@ -349,13 +349,13 @@ namespace nexus {
     }
 
     // PMTs
-    else  if (region == "PMT" ) {
+    else  if (region == "PMT" || region == "PMT_BODY") {
       G4ThreeVector ini_vertex = _pmt->GenerateVertex(region);
       ini_vertex.rotate(_rot_angle, G4ThreeVector(0., 1., 0.));
       G4double rand = _num_PMTs * G4UniformRand();
       G4ThreeVector pmt_pos = _pmt_positions[int(rand)];
       vertex = ini_vertex + pmt_pos;
-      G4double z_translation = _end_of_sapphire_posz + _vacuum_length/2. + _pmt_zpos;
+      G4double z_translation = _copper_plate_posz + _vacuum_posz + _pmt_zpos;
       vertex.setZ(vertex.z() + z_translation);
     }
 
