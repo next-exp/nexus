@@ -209,7 +209,7 @@ namespace nexus {
 
     // Energy Plane
     _energy_plane->SetLogicalVolume(_mother_logic);
-    _energy_plane->SetELzCoord(GetELzCoord());
+    //_energy_plane->SetELzCoord(GetELzCoord());
     _energy_plane->Construct();
 
     // Tracking Plane
@@ -527,13 +527,10 @@ void Next100InnerElements::BuildBuffer()
     }
 
     // Energy Plane regions
-    else if ((region == "CARRIER_PLATE") ||
-             (region == "ENCLOSURE") ||
-             (region == "ENCLOSURE_WINDOW") ||
-             (region == "ENCLOSURE_PAD") ||
-             (region == "PMT_BODY")||
-	     (region == "PMT")||
-	     (region == "PMT_BASE") ) {
+    else if ((region == "COPPER_PLATE") ||
+             (region == "SAPPHIRE_WINDOW") ||
+             (region == "OPTICAL_PAD") ||
+	     (region == "PMT")) {
       vertex = _energy_plane->GenerateVertex(region);
     }
 
