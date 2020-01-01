@@ -530,7 +530,8 @@ void Next100InnerElements::BuildBuffer()
     else if ((region == "COPPER_PLATE") ||
              (region == "SAPPHIRE_WINDOW") ||
              (region == "OPTICAL_PAD") ||
-	     (region == "PMT")) {
+	     (region == "PMT") ||
+             (region == "PMT_BODY")) {
       vertex = _energy_plane->GenerateVertex(region);
     }
 
