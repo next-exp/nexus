@@ -180,8 +180,7 @@ namespace nexus {
     G4Material* sapphire = MaterialsList::Sapphire();
     sapphire->SetMaterialPropertiesTable(OpticalMaterialProperties::Sapphire());
     G4Material* tpb = MaterialsList::TPB();
-    // ADD CORRECT MAT PROPERTIES
-    // tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+    tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
     G4Material* vacuum =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
     vacuum->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
