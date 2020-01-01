@@ -176,10 +176,10 @@ namespace nexus {
 	     (region == "ACTIVE") ||
 	     (region == "BUFFER") ||
 	     (region == "ANODE_QUARTZ") ||
-	     (region == "CARRIER_PLATE") ||
+	     (region == "COPPER_PLATE") ||
 	     (region == "ENCLOSURE") ||
-	     (region == "ENCLOSURE_WINDOW") ||
-	     (region == "ENCLOSURE_PAD") ||
+	     (region == "SAPPHIRE_WINDOW") ||
+	     (region == "OPTICAL_PAD") ||
 	     (region == "PMT_BODY") ||
 	     (region == "PMT") ||
 	     (region == "PMT_BASE") ||

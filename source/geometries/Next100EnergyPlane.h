@@ -14,11 +14,10 @@
 
 #include <vector>
 #include <G4Navigator.hh>
-#include <G4TransportationManager.hh>
+#include <G4RotationMatrix.hh>
 
 #include "CylinderPointSampler.h"
 #include "PmtR11410.h"
-
 
 class G4Material;
 class G4LogicalVolume;
@@ -59,19 +58,28 @@ namespace nexus {
 
     // Dimensions
     const G4int _num_PMTs;
-    const G4double _energy_plane_posz;
-    const G4double _carrier_plate_thickness, _carrier_plate_diam, _carrier_plate_central_hole_diam;
-    const G4double _enclosure_length, _enclosure_diam;
-    const G4double _enclosure_flange_length;
-    const G4double _enclosure_window_thickness,_enclosure_window_diam;
-    const G4double _enclosure_pad_thickness;
-    const G4double _pmt_base_diam, _pmt_base_thickness;
+    const G4double _end_of_sapphire_posz;
+    const G4double _copper_plate_thickness, _copper_plate_diam,
+      _copper_plate_central_hole_diam;
+    const G4double _hut_thickn, _hut_vacuum_length;
+    const G4double _hut_length_short, _hut_length_medium, _hut_length_long;
+    const G4double _hole_diam;
+    
+    //const G4double _enclosure_length, _enclosure_diam;
+    //const G4double _enclosure_flange_length;
+    G4double _vacuum_length;
+    const G4double _sapphire_window_thickness,_sapphire_window_diam;
+    const G4double _optical_pad_thickness;
+    //const G4double _pmt_base_diam, _pmt_base_thickness;
     const G4double _tpb_thickness;
     // const G4double _pmts_pitch;
 
     PmtR11410*  _pmt;
     std::vector<G4ThreeVector> _pmt_positions;
+    std::vector<G4ThreeVector> _short_hut_pos, _medium_hut_pos, _long_hut_pos;
     G4double _pmt_zpos;
+    G4RotationMatrix* _pmt_rot;
+    G4double _rot_angle;
 
 
     // Visibility of the tracking plane
@@ -79,11 +87,10 @@ namespace nexus {
 
 
     // Vertex generators
-    CylinderPointSampler* _carrier_gen;
-    CylinderPointSampler* _enclosure_flange_gen;
-    CylinderPointSampler* _enclosure_window_gen;
-    CylinderPointSampler* _enclosure_pad_gen;
-    CylinderPointSampler* _pmt_base_gen;
+    CylinderPointSampler* _copper_gen;
+    //CylinderPointSampler* _enclosure_flange_gen;
+    CylinderPointSampler* _sapphire_window_gen;
+    CylinderPointSampler* _optical_pad_gen;
 
     //  G4double _enclosure_body_perc;
     
