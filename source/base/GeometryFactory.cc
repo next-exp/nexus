@@ -55,7 +55,7 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
 
   else if (_name == "NEXT100_OPT") p = new Next100OpticalGeometry();
 
-  else if (_name == "OPTICAL_GEOMETRY") p = new NextNewOpticalGeometry();
+  else if (_name == "NEXT_NEW_OPT") p = new NextNewOpticalGeometry();
 
   else if (_name == "NEXT_NEW") p = new NextNew();
 
