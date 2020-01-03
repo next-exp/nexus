@@ -205,12 +205,6 @@ namespace nexus {
     new G4PVPlacement(0, G4ThreeVector(0., 0., _copper_plate_posz), copper_plate_logic,
 		      "COPPER_PLATE", _mother_logic, false, 0, false);
 
-    if (_verbosity) {
-      G4cout << "Copper plate starts in z = " << _copper_plate_posz - _copper_plate_thickness/2.
-	     << " mm and ends in z = " << _copper_plate_posz + _copper_plate_thickness/2.
-	     << G4endl;
-    }
-
 
 
     /// Assign optical properties to materials ///
@@ -318,6 +312,17 @@ namespace nexus {
       pos = _pmt_positions[i];
       pos.setZ(_vacuum_posz);
       new G4PVPlacement(0, pos, vacuum_logic, "HOLE", _mother_logic, false, i, false);
+    }
+
+
+    if (_verbosity) {
+      G4cout << "Copper plate starts in z = " << _copper_plate_posz - _copper_plate_thickness/2.
+	     << " mm and ends in z = " << _copper_plate_posz + _copper_plate_thickness/2.
+	     << G4endl;
+      G4cout << "Sapphire windows starts in z = "
+	     << _vacuum_posz + window_posz - _sapphire_window_thickness/2.
+	     << " mm and ends in z = " << _vacuum_posz + window_posz + _sapphire_window_thickness/2.
+	     << G4endl;
     }
 
     //////////////////////////////
