@@ -69,6 +69,7 @@ namespace nexus {
     const G4double _hole_length_front, _hole_length_rear;
     const G4double _sapphire_window_thickn, _optical_pad_thickn, _tpb_thickn;
     const G4double _pmt_stand_out;
+    const G4double _internal_pmt_base_diam, _internal_pmt_base_thickn;
 
     // Visibility of the energy plane
     G4bool _visibility, _verbosity;

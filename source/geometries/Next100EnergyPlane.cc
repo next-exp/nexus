@@ -63,6 +63,8 @@ namespace nexus {
     //_pmt_base_thickn (5. *mm),
     _tpb_thickn (1.*micrometer),
     _pmt_stand_out (2. * mm), // length that PMTs stand oput of copper, in the front
+    _internal_pmt_base_diam (54. * mm),
+    _internal_pmt_base_thickn (0.2 * mm),
     //   _pmts_pitch (11.0 * cm),
     _visibility(0),
     _verbosity(0)
@@ -223,15 +225,10 @@ namespace nexus {
 
     G4Tubs* vacuum_front_solid =
       new G4Tubs("HOLE_FRONT", 0., _hole_diam_front/2., _hole_length_front/2., 0., twopi);
-    // G4Tubs* vacuum_rear_solid =
-    //   new G4Tubs("HOLE_REAR", 0., _hole_diam_rear/2., (_hole_length_rear + offset)/2., 0., twopi);
     transl_z = _hole_length_front/2. + _hole_length_rear/2 - offset/2.;
     G4UnionSolid* vacuum_solid =
       	new G4UnionSolid("HOLE", vacuum_front_solid, hole_rear_solid,
 			 0, G4ThreeVector(0., 0., transl_z));
-
-    // G4Tubs* hole_hut_solid =
-    //  new G4Tubs("HOLE_HUT", 0., _hut_int_diam/2., (_hut_hole_length + offset)/2., 0., twopi);
     transl_z = _hole_length_front/2. + _hole_length_rear + _hut_hole_length/2. - offset/2.;
     vacuum_solid =
       	new G4UnionSolid("HOLE", vacuum_solid, hole_hut_solid,
@@ -244,9 +241,6 @@ namespace nexus {
       new G4UnionSolid("HOLE", vacuum_solid, stand_out_solid, 0, G4ThreeVector(0., 0., transl_z));
     G4LogicalVolume* vacuum_logic = new G4LogicalVolume(vacuum_solid, vacuum, "HOLE");
 
-
-    //   G4double vacuum_length =
-    //     stand_out_length + _hole_length_front + _hole_length_rear + _hut_hole_length;
 
     // Adding the sapphire window
     G4Tubs* sapphire_window_solid =
@@ -298,11 +292,17 @@ namespace nexus {
 		      "PMT", vacuum_logic, false, 0, false);
 
     // Adding the part of the PMT bases with pins and resistors
-    // G4Tubs* internal_pmt_base_solid =
-    //   new G4Tubs("OPTICAL_PAD", 0., _hole_diam_front/2., _optical_pad_thickn/2., 0., twopi);
+    G4Tubs* internal_pmt_base_solid =
+      new G4Tubs("INT_PMT_BASE", 0., _internal_pmt_base_diam/2.,
+		 _internal_pmt_base_thickn/2., 0., twopi);
 
-    // G4LogicalVolume* optical_pad_logic =
-    //   new G4LogicalVolume(optical_pad_solid, optical_coupler, "OPTICAL_PAD");
+    G4LogicalVolume* internal_pmt_base_logic =
+      new G4LogicalVolume(internal_pmt_base_solid,
+			  G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON"),
+			  "INT_PMT_BASE");
+    G4double int_pmt_base_posz = _hole_length_front/2. + _hole_length_rear + _hut_hole_length/2.;
+    new G4PVPlacement(0, G4ThreeVector(0., 0., int_pmt_base_posz), internal_pmt_base_logic,
+     		      "INT_PMT_BASE", vacuum_logic, false, 0, false);
 
 
     // Placing the encapsulating volume with all internal components in place
@@ -329,7 +329,7 @@ namespace nexus {
     ///  SETTING VISIBILITIES  ///
     //////////////////////////////
 
-    //vacuum_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    vacuum_logic->SetVisAttributes(G4VisAttributes::Invisible);
     if (_visibility) {
       G4VisAttributes copper_col = CopperBrown();
       //copper_col.SetForceSolid(true);
@@ -343,9 +343,12 @@ namespace nexus {
       G4VisAttributes tpb_col = nexus::LightBlue();
       tpb_col.SetForceSolid(true);
       tpb_logic->SetVisAttributes(tpb_col);
-      G4VisAttributes vacuum_col = Red();
-      vacuum_col.SetForceSolid(true);
-      vacuum_logic->SetVisAttributes(vacuum_col);
+      G4VisAttributes pmt_base_col = Yellow();
+      pmt_base_col.SetForceSolid(true);
+      internal_pmt_base_logic->SetVisAttributes(pmt_base_col);
+      //G4VisAttributes vacuum_col = Red();
+      //vacuum_col.SetForceSolid(true);
+      // vacuum_logic->SetVisAttributes(vacuum_col);
     } else {
       copper_plate_logic->SetVisAttributes(G4VisAttributes::Invisible);
       sapphire_window_logic->SetVisAttributes(G4VisAttributes::Invisible);
