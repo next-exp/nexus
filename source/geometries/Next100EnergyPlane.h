@@ -97,6 +97,7 @@ namespace nexus {
     //CylinderPointSampler* _enclosure_flange_gen;
     CylinderPointSampler* _sapphire_window_gen;
     CylinderPointSampler* _optical_pad_gen;
+    CylinderPointSampler* _internal_pmt_base_gen;
 
   };
 

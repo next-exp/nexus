@@ -364,24 +364,26 @@ namespace nexus {
       _copper_plate_thickn + _hut_hole_length + _hut_length_long;
     _copper_gen =
       new CylinderPointSampler(_copper_plate_diam/2., full_copper_length, 0., 0.,
-			       G4ThreeVector (0., 0., _copper_plate_posz +
-					      _copper_plate_thickn/2. + _hut_hole_length +
-					      _hut_length_long - full_copper_length/2.));
+			       G4ThreeVector(0., 0., _copper_plate_posz +
+					     _copper_plate_thickn/2. + _hut_hole_length +
+					     _hut_length_long - full_copper_length/2.));
 
     //   _enclosure_flange_gen =
     //new CylinderPointSampler(_enclosure_window_diam/2., _enclosure_flange_length/2.,
     //			       _enclosure_diam/2.-_enclosure_window_diam/2., 0.,
-    //			      G4ThreeVector (0., 0., _energy_plane_posz - _enclosure_flange_length/2.));
+    //			      G4ThreeVector(0., 0., _energy_plane_posz - _enclosure_flange_length/2.));
 
     _sapphire_window_gen =
       new CylinderPointSampler(_hole_diam_front/2., _sapphire_window_thickn, 0., 0.,
-			       G4ThreeVector (0., 0.,
-					      _end_of_sapphire_posz + _sapphire_window_thickn/2.));
+			       G4ThreeVector(0., 0., _vacuum_posz + window_posz));
 
     _optical_pad_gen =
       new CylinderPointSampler(_hole_diam_front/2., _optical_pad_thickn, 0., 0.,
-			       G4ThreeVector (0., 0., _end_of_sapphire_posz +
-					      _sapphire_window_thickn + _optical_pad_thickn/2.));
+			       G4ThreeVector(0., 0., _vacuum_posz + pad_posz));
+
+    _internal_pmt_base_gen =
+      new CylinderPointSampler(_internal_pmt_base_diam/2., _internal_pmt_base_thickn, 0., 0.,
+			       G4ThreeVector(0.,0., _vacuum_posz + int_pmt_base_posz));
 
   }
 
@@ -445,6 +447,14 @@ namespace nexus {
       vertex = ini_vertex + pmt_pos;
       G4double z_translation = _vacuum_posz + _pmt_zpos;
       vertex.setZ(vertex.z() + z_translation);
+    }
+
+    // PMT bases - internal part
+    else if (region == "INTERNAL_PMT_BASE") {
+      vertex = _internal_pmt_base_gen->GenerateVertex("INSIDE");
+      G4double rand = _num_PMTs * G4UniformRand();
+      G4ThreeVector pmt_base_pos = _pmt_positions[int(rand)];
+      vertex += pmt_base_pos;
     }
 
     else {
