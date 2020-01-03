@@ -182,7 +182,7 @@ namespace nexus {
 	     (region == "OPTICAL_PAD") ||
 	     (region == "PMT_BODY") ||
 	     (region == "PMT") ||
-	     (region == "PMT_BASE") ||
+	     (region == "INTERNAL_PMT_BASE") ||
 	     (region == "TRK_SUPPORT") ||
 	     (region == "DICE_BOARD") ||
 	     (region == "AD_HOC") ||
