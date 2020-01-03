@@ -22,15 +22,15 @@ using namespace nexus;
 G4Material* MaterialsList::GXe(G4double pressure, G4double temperature)
 {
   G4Material* mat = GXe_bydensity(XenonGasProperties::Density(pressure),
-				  temperature, pressure);
+                                  temperature, pressure);
 
   return mat;
 }
 
 
 G4Material* MaterialsList::GXe_bydensity(G4double density,
-					 G4double temperature,
-					 G4double pressure)
+                                         G4double temperature,
+                                         G4double pressure)
 {
   G4String name = "GXe";
 
@@ -490,9 +490,7 @@ G4Material* MaterialsList::ITO()
     mat->AddElement(In, 2);
     mat->AddElement(O, 3);
   }
-
   return mat;
-
 }
 
 
@@ -544,7 +542,6 @@ G4Material* MaterialsList::Kevlar()
 }
 
 
-
 G4Material* MaterialsList::HDPE()
 {
   G4String name = "HDPE";
@@ -565,7 +562,6 @@ G4Material* MaterialsList::HDPE()
   return mat;
 
 }
-
 
 
 G4Material* MaterialsList::OpticalSilicone()
@@ -617,6 +613,7 @@ G4Material* MaterialsList::SeF6(G4double pressure, G4double temperature)
   return mat;
 }
 
+
 G4Material* MaterialsList::FR4()
 {
   // Material widely used for printed circuit boards
@@ -642,7 +639,6 @@ G4Material* MaterialsList::FR4()
 
   return mat;
 }
-
 
 
 
@@ -680,8 +676,124 @@ G4Material* MaterialsList::CopyMaterial(G4Material* original, G4String newname)
 }
 
 
-
 G4Material* MaterialsList::FakeDielectric(G4Material* model_mat, G4String name)
 {
   return CopyMaterial(model_mat, name);
 }
+
+
+
+G4Material* MaterialsList::TPH()
+{
+  G4String name = "TPH"; // p - terphenyl 
+
+  G4Material* mat = G4Material::GetMaterial(name, false);
+
+  if (mat == 0) {
+    G4NistManager* nist = G4NistManager::Instance();
+
+    G4Element* H = nist->FindOrBuildElement("H");
+    G4Element* C = nist->FindOrBuildElement("C");
+
+    mat = new G4Material(name, 1.24*g/cm3, 2, kStateSolid);
+    mat->AddElement(H, 14);
+    mat->AddElement(C, 18);
+  }
+  
+  return mat;
+}
+
+
+// WLS EJ-280
+G4Material* MaterialsList::EJ280()
+{
+  G4String name = "EJ280"; // 
+
+  G4Material* mat = G4Material::GetMaterial(name, false);
+
+  if (mat == 0) {
+    G4NistManager* nist = G4NistManager::Instance();
+
+    // The base is Polyvinyltoluene
+    // Linear formula: [CH2CH(C6H4CH3)]n
+    G4Element* H = nist->FindOrBuildElement("H");
+    G4Element* C = nist->FindOrBuildElement("C");
+
+    mat = new G4Material(name, 1.023*g/cm3, 2, kStateSolid);
+    mat->AddElement(H, 10);
+    mat->AddElement(C, 9);
+  }
+  
+  return mat;
+}
+
+
+// Pethylene (cladding material)
+G4Material* MaterialsList::Pethylene()
+{
+  G4String name = "Pethylene"; // 
+
+  G4Material* mat = G4Material::GetMaterial(name, false);
+
+  if (mat == 0) {
+    G4NistManager* nist = G4NistManager::Instance();
+
+    G4Element* H = nist->FindOrBuildElement("H");
+    G4Element* C = nist->FindOrBuildElement("C");
+
+    mat = new G4Material(name, 1.200 * g/cm3, 2, kStateSolid);
+    mat->AddElement(H, 4);
+    mat->AddElement(C, 2);
+  }
+  
+  return mat;
+}
+
+
+// FPethylene (fluorinated polyethylene - cladding material)
+G4Material* MaterialsList::FPethylene()
+{
+  G4String name = "FPethylene"; // 
+
+  G4Material* mat = G4Material::GetMaterial(name, false);
+
+  if (mat == 0) {
+    G4NistManager* nist = G4NistManager::Instance();
+
+    G4Element* H = nist->FindOrBuildElement("H");
+    G4Element* C = nist->FindOrBuildElement("C");
+
+    mat = new G4Material(name, 1.400 * g/cm3, 2, kStateSolid);
+    mat->AddElement(H, 4);
+    mat->AddElement(C, 2);
+  }
+  
+  return mat;
+}
+
+
+
+// PMMA == PolyMethylmethacrylate (cladding)
+G4Material* MaterialsList::PMMA()
+{
+  G4String name = "PMMA"; // 
+
+  G4Material* mat = G4Material::GetMaterial(name, false);
+
+  if (mat == 0) {
+    G4NistManager* nist = G4NistManager::Instance();
+
+    G4Element* H = nist->FindOrBuildElement("H");
+    G4Element* C = nist->FindOrBuildElement("C");
+    G4Element* O = nist->FindOrBuildElement("O");
+
+    mat = new G4Material(name, 1.190 * g/cm3, 3, kStateSolid);
+    mat->AddElement(H, 8);
+    mat->AddElement(C, 5);
+    mat->AddElement(O, 2);
+  }
+  
+  return mat;
+}
+
+

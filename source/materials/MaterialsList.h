@@ -115,6 +115,18 @@ namespace nexus {
     // FR4
     static G4Material* FR4();
 
+    // WLS EJ-280
+    static G4Material* EJ280();
+
+    // Pethylene (cladding)
+    static G4Material* Pethylene();
+
+    // FPethylene Fluorated Phethylene (cladding)
+    static G4Material* FPethylene();
+
+    // PolyMethylmethacrylate (cladding)
+    static G4Material* PMMA();
+
     // Fake dielectric (to be deprecated)
     static G4Material* FakeDielectric(G4Material*, G4String);
 
