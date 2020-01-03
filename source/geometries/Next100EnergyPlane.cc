@@ -68,6 +68,17 @@ namespace nexus {
     _visibility(0),
     _verbosity(0)
   {
+    /// HOW THIS GEOMETRY IS BUILT ///
+    /// 1. Holes for the gas flow are created in the copper plate.
+    /// 2. The copper huts, which provide shielding behind the PMTs, are glued to the copper plate.
+    /// 3. Since the sapphire windows that protect the PMTs and part of the PMTs themselves stand out
+    /// the copper plate, holes are made in the copper volume to host the elements related with the PMTs.
+    /// 4. A vacuum volume that encapsulates the sapphire window, the optical pad, the PMT
+    /// and the internal part of the base is made; this volume fits exactly the hole
+    /// previously done in the copper.
+    /// 5. This volume is replicated by the number of the PMts and placed in the gas volume,
+    /// inside the holes excavated in the copper.
+
 
     /// Initializing the geometry navigator (used in vertex generation)
     _geom_navigator =
