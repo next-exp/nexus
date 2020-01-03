@@ -61,13 +61,13 @@ namespace nexus {
     // Dimensions
     const G4int _num_PMTs;
     const G4double _end_of_sapphire_posz;
-    const G4double _copper_plate_thickness, _copper_plate_diam;
+    const G4double _copper_plate_thickn, _copper_plate_diam;
     const G4double _copper_plate_central_hole_diam;
     const G4double _hut_int_diam, _hut_thickn, _hut_hole_length;
     const G4double _hut_length_short, _hut_length_medium, _hut_length_long;
     const G4double _hole_diam_front, _hole_diam_rear;
     const G4double _hole_length_front, _hole_length_rear;
-    const G4double _sapphire_window_thickness, _optical_pad_thickness, _tpb_thickness;
+    const G4double _sapphire_window_thickn, _optical_pad_thickn, _tpb_thickn;
     const G4double _pmt_stand_out;
 
     // Visibility of the energy plane
@@ -84,7 +84,7 @@ namespace nexus {
 
     G4double _copper_plate_posz;
     G4double _vacuum_posz;
-    //const G4double _pmt_base_diam, _pmt_base_thickness;
+    //const G4double _pmt_base_diam, _pmt_base_thickn;
     std::vector<G4ThreeVector> _pmt_positions;
     std::vector<G4ThreeVector> _short_hut_pos, _medium_hut_pos, _long_hut_pos;
     G4double _pmt_zpos;
