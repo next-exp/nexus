@@ -10,11 +10,13 @@
 /run/verbose 2
 /tracking/verbose 2
 
-
 ### Create an empty scene and a scene handles (OpenGL)
 /vis/scene/create
 /vis/open OGLIX
 /vis/viewer/create ! ! 900
+
+### Setting drawing style to "wireframe" / "surface"
+/vis/viewer/set/style wireframe
 
 ### Draw scene (isometric view)
 /vis/viewer/set/viewpointThetaPhi
@@ -28,13 +30,16 @@
 ### Zoom up/down of view
 #/vis/viewer/zoom 1.4
 
-### Setting drawing style to "wireframe" ( /surface)
-#/vis/viewer/set/style wireframe
-
-#/vis/viewer/flush
+### Create an empty scene and add the detector geometry
+/vis/drawVolume
 
 ### Drawing the tracks (if chosen in user actions)
 # (if too many tracks cause core dump => storeTrajectory 0)
-/tracking/storeTrajectory 1
-/vis/scene/add/trajectories 1
-/vis/scene/endOfEventAction accumulate 100
+/tracking/storeTrajectory 2
+
+# Add trajectories to the current scene
+/vis/scene/add/trajectories smooth
+
+# Requests viewer to accumulate hits, tracks, etc. at end of event.
+# detector remains: "accumulate" or "refresh"
+/vis/scene/endOfEventAction accumulate
