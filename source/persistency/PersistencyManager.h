@@ -86,7 +86,6 @@ namespace nexus {
     G4bool _first_evt; ///< true only for the first event of the run
 
     G4int _thr_charge;
-    G4int _tof_pe_number;
     G4int _tof_time;
     G4bool _sns_only;
     G4bool _save_tot_charge;
