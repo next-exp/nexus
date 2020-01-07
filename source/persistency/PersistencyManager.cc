@@ -41,7 +41,7 @@ PersistencyManager::PersistencyManager(G4String historyFile_init, G4String histo
   _ready(false), _store_evt(true), _interacting_evt(false),
   event_type_("other"),  _saved_evts(0), _interacting_evts(0),
   _nevt(0), _start_id(0), _first_evt(true), _thr_charge(0),
-  _tof_time(5.*nanosecond), _sns_only(false), _save_tot_charge(true), _h5writer(0)
+  _tof_time(50.*nanosecond), _sns_only(false), _save_tot_charge(true), _h5writer(0)
 {
 
   _historyFile_init = historyFile_init;
