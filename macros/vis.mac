@@ -34,12 +34,19 @@
 /vis/drawVolume
 
 ### Drawing the tracks (if chosen in user actions)
-# (if too many tracks cause core dump => storeTrajectory 0)
+# Parameter (omittable) (default=0):
+# 0 : Don't Store trajectories. (if too many tracks cause core dump, use this option)
+# 1 : Choose G4Trajectory as default.
+# 2 : Choose G4SmoothTrajectory as default.
+# 3 : Choose G4RichTrajectory as default.
+# 4 : Choose G4RichTrajectory with auxiliary points as default.
 /tracking/storeTrajectory 2
 
 # Add trajectories to the current scene
+# Parameter (omittable). Options: "smooth", "rich"
 /vis/scene/add/trajectories smooth
 
 # Requests viewer to accumulate hits, tracks, etc. at end of event.
-# detector remains: "accumulate" or "refresh"
+# 1st param (omittable): "accumulate" or "refresh"
+# 2nd param (omittable): <integer> (default = 100)
 /vis/scene/endOfEventAction accumulate
