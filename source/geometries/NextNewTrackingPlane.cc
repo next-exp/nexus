@@ -124,7 +124,7 @@ namespace nexus {
     G4double db_thickness =_kdb_dimensions.z();
     ////Dice Boards placement
     //_dice_board_z_pos = support_plate_z_pos -_support_plate_thickness/2. -_z_kdb_displ +db_thickness/2.;
-    _dice_board_z_pos = _tracking_plane_z_pos + db_thickness/2.;
+    _dice_board_z_pos = _tracking_plane_z_pos + db_thickness/2. + 3. * mm;
     
     G4ThreeVector post;
     for (int i=0; i<_num_DBs; i++) {
