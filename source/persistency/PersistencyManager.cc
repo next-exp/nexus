@@ -41,7 +41,7 @@ PersistencyManager::PersistencyManager(G4String historyFile_init, G4String histo
   _ready(false), _store_evt(true), _interacting_evt(false),
   event_type_("other"),  _saved_evts(0), _interacting_evts(0),
   _nevt(0), _start_id(0), _first_evt(true), _thr_charge(0),
-  _tof_time(5), _sns_only(false), _save_tot_charge(true), _h5writer(0)
+  _tof_time(5.*nanosecond), _sns_only(false), _save_tot_charge(true), _h5writer(0)
 {
 
   _historyFile_init = historyFile_init;
@@ -52,9 +52,14 @@ PersistencyManager::PersistencyManager(G4String historyFile_init, G4String histo
   _msg->DeclareProperty("eventType", event_type_, "Type of event: bb0nu, bb2nu or background.");
   _msg->DeclareProperty("start_id", _start_id, "Starting event ID for this job.");
   _msg->DeclareProperty("thr_charge", _thr_charge, "Threshold for the charge saved in file.");
-  _msg->DeclareProperty("tof_time", _tof_time, "Time in microseconds saved in tof table per sensor.");
   _msg->DeclareProperty("sns_only", _sns_only, "If true, no true information is saved.");
   _msg->DeclareProperty("save_tot_charge", _save_tot_charge, "If true, total charge is saved.");
+
+  G4GenericMessenger::Command& time_cmd =
+    _msg->DeclareProperty("tof_time", _tof_time, "Time saved in tof table per sensor");
+    time_cmd.SetUnitCategory("Time");
+    time_cmd.SetParameterName("tof_time", false);
+    time_cmd.SetRange("tof_time>0.");
 }
 
 
