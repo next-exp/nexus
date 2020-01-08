@@ -51,11 +51,10 @@ namespace nexus {
   private:
 
     void DefineMaterials();
-    // void BuildCathodeGrid();
+    void BuildCathodeGrid();
     void BuildActive();
     void BuildBuffer();
     void BuildELRegion();
-    // void BuildAnodeGrid();
     void BuildFieldCage();
 
     void CalculateELTableVertices(G4double, G4double, G4double);
@@ -64,7 +63,7 @@ namespace nexus {
     const G4double _active_diam, _active_length;
     G4double _drift_transv_diff, _drift_long_diff;
     G4double _max_step_size, _buffer_length;
-    const G4double _grid_thickn;
+    const G4double _cath_grid_transparency, _grid_thickn;
     const G4double _teflon_drift_length, _teflon_buffer_length, _teflon_thickn;
     const G4int _npanels;
     const G4double _tpb_thickn, _el_gap_length;
