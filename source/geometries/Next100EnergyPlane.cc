@@ -20,8 +20,8 @@
 #include <G4Tubs.hh>
 #include <G4SubtractionSolid.hh>
 #include <G4UnionSolid.hh>
-//#include <G4OpticalSurface.hh>
-//#include <G4LogicalSkinSurface.hh>
+#include <G4OpticalSurface.hh>
+#include <G4LogicalSkinSurface.hh>
 #include <G4NistManager.hh>
 #include <G4VPhysicalVolume.hh>
 #include <G4TransportationManager.hh>
@@ -70,14 +70,16 @@ namespace nexus {
   {
     /// HOW THIS GEOMETRY IS BUILT ///
     /// 1. Holes for the gas flow are created in the copper plate.
-    /// 2. The copper huts, which provide shielding behind the PMTs, are glued to the copper plate.
-    /// 3. Since the sapphire windows that protect the PMTs and part of the PMTs themselves stand out
-    /// the copper plate, holes are made in the copper volume to host the elements related with the PMTs.
+    /// 2. The copper huts, which provide shielding behind the PMTs,
+    ///    are glued to the copper plate.
+    /// 3. Since the sapphire windows that protect the PMTs and part of the
+    ///    PMTs themselves stand out the copper plate, holes are made in the copper volume
+    ///    to host the elements related with the PMTs.
     /// 4. A vacuum volume that encapsulates the sapphire window, the optical pad, the PMT
-    /// and the internal part of the base is made; this volume fits exactly the hole
-    /// previously done in the copper.
-    /// 5. This volume is replicated by the number of the PMts and placed in the gas volume,
-    /// inside the holes excavated in the copper.
+    ///    and the internal part of the base is made; this volume fits exactly the hole
+    ///    previously done in the copper.
+    /// 5. This volume is replicated by the number of the PMts and placed
+    ///    in the gas volume, inside the holes excavated in the copper.
 
 
     /// Initializing the geometry navigator (used in vertex generation)
@@ -294,6 +296,13 @@ namespace nexus {
     G4double tpb_posz = - _sapphire_window_thickn/2. + _tpb_thickn/2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., tpb_posz), tpb_logic,
      		      "SAPPHIRE_WNDW_TPB", sapphire_window_logic, false, 0, false);
+
+
+    /// Optical surface on TPB to model roughness ///
+    G4OpticalSurface* owls_Surf =
+      new G4OpticalSurface("oWLS_Surf", glisur, ground, dielectric_dielectric, .01);
+
+    new G4LogicalSkinSurface("oWLS_sapphire_surf", tpb_logic, owls_Surf);
 
     /// Optical pad ///
     G4Tubs* optical_pad_solid =
