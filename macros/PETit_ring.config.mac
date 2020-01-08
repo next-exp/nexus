@@ -39,5 +39,5 @@
 ### OUTPUT FILE
 /nexus/persistency/start_id 10
 /nexus/persistency/sns_only true
-/nexus/persistency/tof_pe_number 1000000
+/nexus/persistency/tof_time 50. nanosecond
 /nexus/persistency/outputFile petit_ring.pet
