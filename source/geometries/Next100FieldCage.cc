@@ -46,6 +46,7 @@ namespace nexus {
     _drift_long_diff(.3 * mm/sqrt(cm)),
     _max_step_size(1. * mm),
     _buffer_length (282. * mm), // distance between cathode and sapphire window surfaces
+    _cath_grid_transparency (.98), // to check
     _grid_thickn (.1 * mm),
     _teflon_drift_length (1159.6 * mm), // to check with final design
     _teflon_buffer_length (282. * mm), // to check with final design
@@ -120,16 +121,12 @@ namespace nexus {
   {
     // Define materials to be used
     DefineMaterials();
-    //BuildCathodeGrid();
+    // Build the different parts of the field cagse
+    BuildCathodeGrid();
     BuildELRegion();
     BuildActive();
     BuildBuffer();
     BuildFieldCage();
-
-    // Anode mesh
-    //  BuildAnodeGrid();
-    // Proper field cage and light tube
-    //  BuildLightTube();
   }
 
 
@@ -337,6 +334,42 @@ namespace nexus {
     // G4VisAttributes active_col = nexus::Yellow();
     // active_col.SetForceSolid(true);
     // buffer_logic->SetVisAttributes(active_col);
+
+  }
+
+
+    void Next100FieldCage::BuildCathodeGrid()
+  {
+
+    G4Material* fgrid_mat = MaterialsList::FakeDielectric(_gas, "cath_grid_mat");
+    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _cath_grid_transparency, _grid_thickn));
+
+    G4double grid_diam = _active_diam; // to check
+    G4double cathode_grid_zpos = _active_zpos + _active_length/2. + _grid_thickn/2. ;
+
+    if (_verbosity) {
+      G4cout << G4endl << "Cathode grid pos z: " << cathode_grid_zpos << G4endl;
+    }
+
+    G4Tubs* diel_grid_solid =
+      new G4Tubs("CATH_GRID", 0., grid_diam/2., _grid_thickn/2., 0, twopi);
+
+    G4LogicalVolume* diel_grid_logic =
+      new G4LogicalVolume(diel_grid_solid, fgrid_mat, "CATH_GRID");
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., cathode_grid_zpos), diel_grid_logic,
+		      "CATH_GRID", _mother_logic, false, 0, false);
+
+    // Vertex generator
+  // _cathode_gen =
+  //    new CylinderPointSampler(0., _grid_thickn, grid_diam/2.,
+  //			       0., G4ThreeVector (0., 0., posz));
+
+    /// Visibilities
+    // Grid is white
+    if (!_visibility) {
+      diel_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
 
   }
 
