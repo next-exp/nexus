@@ -48,10 +48,11 @@ namespace nexus {
     _buffer_length (282. * mm), // distance between cathode and sapphire window surfaces
     _cath_grid_transparency (.98), // to check
     _grid_thickn (.1 * mm),
-    _teflon_drift_length (1159.6 * mm), // to check with final design
-    _teflon_buffer_length (282. * mm), // to check with final design
+    _cathode_gap (1. * cm),
+    _teflon_drift_length (1152.6 * mm), // to check with final design
+    _teflon_buffer_length (277. * mm), // to check with final design
     _teflon_thickn (5 * mm),
-    _npanels (18),
+    _n_panels (18),
     _tpb_thickn (1 * micrometer),
     _el_gap_length (1. * cm),
     _ELtransv_diff (0. * mm/sqrt(cm)),
@@ -59,12 +60,16 @@ namespace nexus {
     _ELelectric_field (34.5*kilovolt/cm),
     _el_grid_transparency (.88), // to check
     _elfield(0),
+    _el_table_binning(1.*mm),
+    _el_table_point_id(-1),
+    _el_table_index(0),
     _visibility (1),
     _verbosity (0)
   {
 
     /// Calculate derived positions
-    _active_zpos = _active_length/2.;
+    _active_zpos = _active_length/2. + 0.01 * mm;
+    _el_gap_diam = _active_diam + 2. * cm; // TO CHECK
     _el_gap_zpos = _active_zpos - _active_length/2. - _el_gap_length/2.;
 
     // Define new categories
@@ -108,6 +113,15 @@ namespace nexus {
     El_field_cmd.SetParameterName("EL_field", true);
     El_field_cmd.SetUnitCategory("Electric field");
 
+    G4GenericMessenger::Command& pitch_cmd =
+      _msg->DeclareProperty("el_table_binning", _el_table_binning,
+			    "Binning of EL lookup tables.");
+    pitch_cmd.SetUnitCategory("Length");
+    pitch_cmd.SetParameterName("el_table_binning", false);
+    pitch_cmd.SetRange("el_table_binning>0.");
+
+    _msg->DeclareProperty("el_table_point_id", _el_table_point_id, "");
+
 
   }
 
@@ -127,6 +141,13 @@ namespace nexus {
     BuildActive();
     BuildBuffer();
     BuildFieldCage();
+
+    // Calculate EL table vertices
+    G4double z = _el_gap_zpos + _el_gap_length/2.;
+    // 0.1 * mm is added because ie- in EL table generation must start inside the volume, not on border
+    z = z + .1*mm;
+    G4double max_radius = floor(_el_gap_diam/2./_el_table_binning)*_el_table_binning;
+    CalculateELTableVertices(max_radius, _el_table_binning, z);
   }
 
 
@@ -150,9 +171,6 @@ namespace nexus {
     _tpb = MaterialsList::TPB();
     _tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
 
-    //ITO coating
-    //  _ito = MaterialsList::ITO();
-    // _ito->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeFusedSilica(_ito_transparency, _ito_thickness));
   }
 
 
@@ -168,7 +186,7 @@ namespace nexus {
     G4double router[2] = {_active_diam/2., _active_diam/2.};
 
     G4Polyhedra* active_solid =
-      new G4Polyhedra("ACTIVE", 0., twopi, 18, 2, zplane, rinner, router);
+      new G4Polyhedra("ACTIVE", 0., twopi, _n_panels, 2, zplane, rinner, router);
 
     G4LogicalVolume* active_logic = new G4LogicalVolume(active_solid, _gas, "ACTIVE");
 
@@ -211,10 +229,8 @@ namespace nexus {
    void Next100FieldCage::BuildELRegion()
   {
     /// EL GAP
-    G4double el_gap_diam = _active_diam; // TO CHECK
-
     G4Tubs* el_gap_solid =
-      new G4Tubs("EL_GAP", 0., el_gap_diam/2., _el_gap_length/2., 0, twopi);
+      new G4Tubs("EL_GAP", 0., _el_gap_diam/2., _el_gap_length/2., 0, twopi);
 
     G4LogicalVolume* el_gap_logic =
       new G4LogicalVolume(el_gap_solid, _gas, "EL_GAP");
@@ -248,7 +264,6 @@ namespace nexus {
 
     // Dimensions & position: the grids are simulated inside the EL gap.
     // Their thickness is symbolic.
-    G4double grid_diam = _active_diam; // TO CHECK
 
     G4double posz1 = _el_gap_length/2. - _grid_thickn/2.;
     G4double posz2 = -_el_gap_length/2. + _grid_thickn/2.;
@@ -256,7 +271,7 @@ namespace nexus {
     // _el_grid_ref_z = posz1;
 
     G4Tubs* diel_grid_solid =
-      new G4Tubs("EL_GRID", 0., grid_diam/2., _grid_thickn/2., 0, twopi);
+      new G4Tubs("EL_GRID", 0., _el_gap_diam/2., _grid_thickn/2., 0, twopi);
 
     G4LogicalVolume* diel_grid_logic =
       new G4LogicalVolume(diel_grid_solid, fgrid_mat, "EL_GRID");
@@ -292,7 +307,7 @@ namespace nexus {
     G4double router[2] = {_active_diam/2., _active_diam/2.};
 
     G4Polyhedra* buffer_solid =
-      new G4Polyhedra("BUFFER", 0., twopi, 18, 2, zplane, rinner, router);
+      new G4Polyhedra("BUFFER", 0., twopi, _n_panels, 2, zplane, rinner, router);
 
     if (_verbosity) {
       G4cout << "Buffer (gas) starts in " << buffer_zpos - _buffer_length/2.
@@ -378,7 +393,8 @@ namespace nexus {
   {
 
     /// DRIFT PART ///
-    G4double teflon_drift_zpos = _active_zpos; //  to check with final design
+    G4double teflon_drift_zpos = _active_zpos - _active_length/2. + 2.*mm
+      + _teflon_drift_length/2.; //  to check with final design
 
     // Position of z planes
     G4double zplane[2] = {-_teflon_drift_length/2., _teflon_drift_length/2.};
@@ -389,7 +405,7 @@ namespace nexus {
       {(_active_diam + 2.*_teflon_thickn)/2., (_active_diam + 2.*_teflon_thickn)/2.};
 
     G4Polyhedra* teflon_drift_solid =
-      new G4Polyhedra("LIGHT_TUBE_DRIFT", 0., twopi, 18, 2, zplane, rinner, router);
+      new G4Polyhedra("LIGHT_TUBE_DRIFT", 0., twopi, _n_panels, 2, zplane, rinner, router);
 
     G4LogicalVolume* teflon_drift_logic =
       new G4LogicalVolume(teflon_drift_solid, _teflon, "LIGHT_TUBE_DRIFT");
@@ -403,7 +419,7 @@ namespace nexus {
       {(_active_diam + 2.*_tpb_thickn)/2., (_active_diam + 2.*_tpb_thickn)/2.};
 
     G4Polyhedra* tpb_solid =
-      new  G4Polyhedra("DRIFT_TPB", 0., twopi, 18, 2, zplane, rinner, router_tpb);
+      new  G4Polyhedra("DRIFT_TPB", 0., twopi, _n_panels, 2, zplane, rinner, router_tpb);
     G4LogicalVolume* tpb_logic =
       new G4LogicalVolume(tpb_solid, _tpb, "DRIFT_TPB");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), tpb_logic,
@@ -411,15 +427,15 @@ namespace nexus {
 
     /// BUFFER PART ///
 
-    G4double teflon_buffer_zpos =
-      _active_zpos + _active_length/2. + _grid_thickn + _buffer_length/2; // TO CHECK
+    G4double teflon_buffer_zpos = teflon_drift_zpos + _teflon_drift_length/2.
+      + _cathode_gap + _buffer_length/2; // TO CHECK
 
     G4double zplane_buff[2] = {-_teflon_buffer_length/2., _teflon_buffer_length/2.};
     G4double router_buff[2] =
       {(_active_diam + 2.*_teflon_thickn)/2., (_active_diam + 2.*_teflon_thickn)/2.};
 
     G4Polyhedra* teflon_buffer_solid =
-      new G4Polyhedra("LIGHT_TUBE_BUFFER", 0., twopi, 18, 2,
+      new G4Polyhedra("LIGHT_TUBE_BUFFER", 0., twopi, _n_panels, 2,
 		      zplane_buff, rinner, router_buff);
 
     G4LogicalVolume* teflon_buffer_logic =
@@ -433,7 +449,7 @@ namespace nexus {
       {(_active_diam + 2.*_tpb_thickn)/2., (_active_diam + 2.*_tpb_thickn)/2.};
 
     G4Polyhedra* tpb_buffer_solid =
-      new  G4Polyhedra("BUFFER_TPB", 0., twopi, 18, 2,
+      new  G4Polyhedra("BUFFER_TPB", 0., twopi, _n_panels, 2,
 		       zplane_buff, rinner, router_tpb_buff);
     G4LogicalVolume* tpb_buffer_logic =
       new G4LogicalVolume(tpb_buffer_solid, _tpb, "BUFFER_TPB");
@@ -489,17 +505,59 @@ namespace nexus {
   {
     G4ThreeVector vertex(0., 0., 0.);
 
-    // Vertex in the plastic cylinder
-    // if (region == "FIELD_CAGE") {
-    //   vertex = _body_gen->GenerateVertex("BODY_VOL");
-    // }
-    // else {
-    //   G4Exception("[Next100FieldCage]", "GenerateVertex()", FatalException,
-    // 		  "Unknown vertex generation region!");
-    // }
+    if (region == "FIELD_CAGE") {
+      return vertex;
+    } else if (region == "EL_TABLE") {
+
+      unsigned int i = _el_table_point_id + _el_table_index;
+
+      if (i == (_table_vertices.size()-1)) {
+        G4Exception("[Next100FieldCage]", "GenerateVertex()",
+          RunMustBeAborted, "Reached last event in EL lookup table.");
+      }
+
+      try {
+        vertex = _table_vertices.at(i);
+        _el_table_index++;
+      }
+      catch (const std::out_of_range& oor) {
+        G4Exception("[Next100FieldCage]", "GenerateVertex()", FatalErrorInArgument, "EL lookup table point out of range.");
+      }
+    }
+    else {
+      G4Exception("[Next100FieldCage]", "GenerateVertex()", FatalException,
+        "Unknown vertex generation region!");
+    }
 
     return vertex;
 
+  }
+
+
+    void Next100FieldCage::CalculateELTableVertices(G4double radius, G4double binning, G4double z)
+  {
+    // Calculate the xyz positions of the points of an EL lookup table
+    // (arranged as a square grid) given a certain binning
+
+    G4ThreeVector xyz(0., 0., z);
+
+    G4int imax = floor(2*radius/binning); // maximum bin number (minus 1)
+
+    for (int i=0; i<imax+1; i++) { // Loop through the x bins
+
+      xyz.setX(-radius + i * binning); // x position
+
+      for (int j=0; j<imax+1; j++) { // Loop through the y bins
+
+        xyz.setY(-radius + j * binning); // y position
+
+        // Store the point if it is inside the active volume defined by the
+        // field cage (of circular cross section). Discard it otherwise.
+        if (sqrt(xyz.x()*xyz.x()+xyz.y()*xyz.y()) <= radius)
+          _table_vertices.push_back(xyz);
+      }
+
+    }
   }
 
 

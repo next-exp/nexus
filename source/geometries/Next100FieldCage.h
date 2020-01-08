@@ -15,6 +15,8 @@
 #include "BaseGeometry.h"
 #include "CylinderPointSampler.h"
 
+#include <vector>
+
 
 class G4Material;
 class G4LogicalVolume;
@@ -63,9 +65,9 @@ namespace nexus {
     const G4double _active_diam, _active_length;
     G4double _drift_transv_diff, _drift_long_diff;
     G4double _max_step_size, _buffer_length;
-    const G4double _cath_grid_transparency, _grid_thickn;
+    const G4double _cath_grid_transparency, _grid_thickn, _cathode_gap;
     const G4double _teflon_drift_length, _teflon_buffer_length, _teflon_thickn;
-    const G4int _npanels;
+    const G4int _n_panels;
     const G4double _tpb_thickn, _el_gap_length;
 
     G4double _ELtransv_diff; ///< transversal diffusion in the EL gap
@@ -73,12 +75,19 @@ namespace nexus {
     G4double _ELelectric_field; ///< electric field in the EL region
     const G4double _el_grid_transparency;
     G4bool _elfield;
+
+    // Variables for the EL table generation
+    G4double _el_table_binning; ///< Binning of EL lookup table
+    G4int _el_table_point_id; ///< Id of the EL point to be simulated
+    mutable G4int _el_table_index; ///< Index for EL lookup table generation
+    mutable std::vector<G4ThreeVector> _table_vertices;
+
     // Visibility of the geometry
     G4bool _visibility;
     // Verbosity of the geometry
     G4bool _verbosity;
 
-    G4double _active_zpos, _el_gap_zpos;
+    G4double _active_zpos, _el_gap_diam, _el_gap_zpos;
 
 
     // Vertex generators
@@ -97,7 +106,6 @@ namespace nexus {
     // Pointers to materials definition
     G4Material* _hdpe;
     G4Material* _tpb;
-    G4Material* _ito;
     G4Material* _teflon;
     G4Material* _copper;
 
