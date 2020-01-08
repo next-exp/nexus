@@ -13,6 +13,7 @@
 #include "IonizationSD.h"
 #include "OpticalMaterialProperties.h"
 #include "UniformElectricDriftField.h"
+#include "XenonGasProperties.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4PVPlacement.hh>
@@ -41,6 +42,9 @@ namespace nexus {
     // Field cage dimensions
     _active_diam (984 * mm), // distance between the centers of two opposite panels
     _active_length (1159.6 * mm), // distance between gate and cathode
+    _drift_transv_diff(1. * mm/sqrt(cm)),
+    _drift_long_diff(.3 * mm/sqrt(cm)),
+    _max_step_size(1. * mm),
     _buffer_length (282. * mm), // distance between cathode and sapphire window surfaces
     _grid_thickn (.1 * mm),
     _teflon_drift_length (1159.6 * mm), // to check with final design
@@ -48,13 +52,21 @@ namespace nexus {
     _teflon_thickn (5 * mm),
     _npanels (18),
     _tpb_thickn (1 * micrometer),
-    _drift_transv_diff(1. * mm/sqrt(cm)),
-    _drift_long_diff(.3 * mm/sqrt(cm)),
+    _el_gap_length (1. * cm),
+    _ELtransv_diff (0. * mm/sqrt(cm)),
+    _ELlong_diff (0. * mm/sqrt(cm)),
+    _ELelectric_field (34.5*kilovolt/cm),
+    _el_grid_transparency (.88), // to check
+    _elfield(0),
     _visibility (1),
     _verbosity (0)
   {
 
-    // Definenew categories
+    /// Calculate derived positions
+    _active_zpos = _active_length/2.;
+    _el_gap_zpos = _active_zpos - _active_length/2. - _el_gap_length/2.;
+
+    // Define new categories
     new G4UnitDefinition("kilovolt/cm","kV/cm","Electric field", kilovolt/cm);
     new G4UnitDefinition("mm/sqrt(cm)","mm/sqrt(cm)","Diffusion", mm/sqrt(cm));
 
@@ -76,6 +88,26 @@ namespace nexus {
     drift_long_diff_cmd.SetParameterName("drift_long_diff", true);
     drift_long_diff_cmd.SetUnitCategory("Diffusion");
 
+    G4GenericMessenger::Command&  ELtransv_diff_cmd =
+      _msg->DeclareProperty("ELtransv_diff", _ELtransv_diff,
+			    "Tranvsersal diffusion in the EL region");
+    ELtransv_diff_cmd.SetParameterName("ELtransv_diff", true);
+    ELtransv_diff_cmd.SetUnitCategory("Diffusion");
+
+    G4GenericMessenger::Command&  ELlong_diff_cmd =
+      _msg->DeclareProperty("ELlong_diff", _ELlong_diff,
+			    "Longitudinal diffusion in the EL region");
+    ELlong_diff_cmd.SetParameterName("ELlong_diff", true);
+    ELlong_diff_cmd.SetUnitCategory("Diffusion");
+
+
+    G4GenericMessenger::Command& El_field_cmd =
+      _msg->DeclareProperty("EL_field", _ELelectric_field,
+			    "Electric field in the EL region");
+    El_field_cmd.SetParameterName("EL_field", true);
+    El_field_cmd.SetUnitCategory("Electric field");
+
+
   }
 
   void Next100FieldCage::SetMotherLogicalVolume(G4LogicalVolume* mother_logic)
@@ -88,14 +120,12 @@ namespace nexus {
   {
     // Define materials to be used
     DefineMaterials();
-    //  BuildCathodeGrid();
+    //BuildCathodeGrid();
+    BuildELRegion();
     BuildActive();
     BuildBuffer();
     BuildFieldCage();
 
-
-    // EL region
-    //   BuildELRegion();
     // Anode mesh
     //  BuildAnodeGrid();
     // Proper field cage and light tube
@@ -128,10 +158,10 @@ namespace nexus {
     // _ito->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeFusedSilica(_ito_transparency, _ito_thickness));
   }
 
-  void Next100FieldCage::BuildActive()
+
+    void Next100FieldCage::BuildActive()
   {
     /// ACTIVE ///
-    _active_zpos = _active_length/2.;
 
     // Position of z planes
     G4double zplane[2] = {-_active_length/2., _active_length/2.};
@@ -180,6 +210,77 @@ namespace nexus {
     //					  G4ThreeVector(0., 0., _active_zpos));
   }
 
+
+   void Next100FieldCage::BuildELRegion()
+  {
+    /// EL GAP
+    G4double el_gap_diam = _active_diam; // TO CHECK
+
+    G4Tubs* el_gap_solid =
+      new G4Tubs("EL_GAP", 0., el_gap_diam/2., _el_gap_length/2., 0, twopi);
+
+    G4LogicalVolume* el_gap_logic =
+      new G4LogicalVolume(el_gap_solid, _gas, "EL_GAP");
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., _el_gap_zpos), el_gap_logic,
+		      "EL_GAP", _mother_logic, false, 0);
+
+    if (_verbosity) {
+      G4cout << "EL GAP starts in " << _el_gap_zpos - _el_gap_length/2.
+	     << " and ends in " << _el_gap_zpos + _el_gap_length/2. << G4endl;
+    }
+
+    if (_elfield) {
+      // Define EL electric field
+      UniformElectricDriftField* el_field = new UniformElectricDriftField();
+      el_field->SetCathodePosition(_el_gap_zpos + _el_gap_length/2.);
+      el_field->SetAnodePosition  (_el_gap_zpos - _el_gap_length/2.);
+      el_field->SetDriftVelocity(2.5 * mm/microsecond);
+      el_field->SetTransverseDiffusion(_ELtransv_diff);
+      el_field->SetLongitudinalDiffusion(_ELlong_diff);
+      XenonGasProperties xgp(_pressure, _temperature);
+      el_field->SetLightYield(xgp.ELLightYield(_ELelectric_field));
+      G4Region* el_region = new G4Region("EL_REGION");
+      el_region->SetUserInformation(el_field);
+      el_region->AddRootLogicalVolume(el_gap_logic);
+    }
+
+    /// EL GRIDS
+    G4Material* fgrid_mat = MaterialsList::FakeDielectric(_gas, "el_grid_mat");
+    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _el_grid_transparency, _grid_thickn));
+
+    // Dimensions & position: the grids are simulated inside the EL gap.
+    // Their thickness is symbolic.
+    G4double grid_diam = _active_diam; // TO CHECK
+
+    G4double posz1 = _el_gap_length/2. - _grid_thickn/2.;
+    G4double posz2 = -_el_gap_length/2. + _grid_thickn/2.;
+
+    // _el_grid_ref_z = posz1;
+
+    G4Tubs* diel_grid_solid =
+      new G4Tubs("EL_GRID", 0., grid_diam/2., _grid_thickn/2., 0, twopi);
+
+    G4LogicalVolume* diel_grid_logic =
+      new G4LogicalVolume(diel_grid_solid, fgrid_mat, "EL_GRID");
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., posz1), diel_grid_logic, "EL_GRID_1",
+		      el_gap_logic, false, 0, false);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., posz2), diel_grid_logic, "EL_GRID_2",
+     		      el_gap_logic, false, 1, false);
+
+    /// Visibilities
+    if (_visibility) {
+      G4VisAttributes light_blue = nexus::LightBlue();
+      light_blue.SetForceSolid(true);
+      el_gap_logic->SetVisAttributes(light_blue);
+    } else {
+      el_gap_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      diel_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
+  }
+
+
   void Next100FieldCage::BuildBuffer()
   {
 
@@ -196,8 +297,12 @@ namespace nexus {
     G4Polyhedra* buffer_solid =
       new G4Polyhedra("BUFFER", 0., twopi, 18, 2, zplane, rinner, router);
 
-    // G4cout << "Buffer (gas) starts in " << buffer_posz - _buffer_length/2. << " and ends in "
-    // 	   << buffer_posz + _buffer_length/2. << G4endl;
+    if (_verbosity) {
+      G4cout << "Buffer (gas) starts in " << buffer_zpos - _buffer_length/2.
+	     << " and ends in "
+	     << buffer_zpos + _buffer_length/2. << G4endl;
+      }
+
     G4LogicalVolume* buffer_logic = new G4LogicalVolume(buffer_solid, _gas, "BUFFER");
     new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_zpos), buffer_logic,
 		      "BUFFER", _mother_logic, false, 0, false);
@@ -318,10 +423,10 @@ namespace nexus {
 
 
     // SETTING VISIBILITIES   //////////
-G4cout << _visibility << G4endl;
+
     if (_visibility) {
-      G4VisAttributes light_blue = nexus::LightBlue();
-      G4VisAttributes blue = nexus::Blue();
+      G4VisAttributes light_blue = nexus::LightGreen();
+      G4VisAttributes blue = nexus::DarkGreen();
       blue.SetForceSolid(true);
       light_blue.SetForceSolid(true);
       teflon_drift_logic->SetVisAttributes(light_blue);

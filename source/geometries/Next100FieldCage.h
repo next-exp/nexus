@@ -54,26 +54,32 @@ namespace nexus {
     // void BuildCathodeGrid();
     void BuildActive();
     void BuildBuffer();
-    // void BuildELRegion();
+    void BuildELRegion();
     // void BuildAnodeGrid();
     void BuildFieldCage();
 
     void CalculateELTableVertices(G4double, G4double, G4double);
 
     // Dimensions
-    const G4double _active_diam, _active_length, _buffer_length;
+    const G4double _active_diam, _active_length;
+    G4double _drift_transv_diff, _drift_long_diff;
+    G4double _max_step_size, _buffer_length;
     const G4double _grid_thickn;
     const G4double _teflon_drift_length, _teflon_buffer_length, _teflon_thickn;
     const G4int _npanels;
-    const G4double _tpb_thickn;
-    G4double _drift_transv_diff, _drift_long_diff;
-    G4double _active_zpos;
+    const G4double _tpb_thickn, _el_gap_length;
 
-
+    G4double _ELtransv_diff; ///< transversal diffusion in the EL gap
+    G4double _ELlong_diff; ///< longitudinal diffusion in the EL gap
+    G4double _ELelectric_field; ///< electric field in the EL region
+    const G4double _el_grid_transparency;
+    G4bool _elfield;
     // Visibility of the geometry
     G4bool _visibility;
     // Verbosity of the geometry
     G4bool _verbosity;
+
+    G4double _active_zpos, _el_gap_zpos;
 
 
     // Vertex generators
@@ -95,8 +101,6 @@ namespace nexus {
     G4Material* _ito;
     G4Material* _teflon;
     G4Material* _copper;
-
-    G4double _max_step_size;
 
   };
 
