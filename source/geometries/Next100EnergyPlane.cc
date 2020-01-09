@@ -392,6 +392,7 @@ namespace nexus {
       sapphire_window_logic->SetVisAttributes(G4VisAttributes::Invisible);
       optical_pad_logic->SetVisAttributes(G4VisAttributes::Invisible);
       tpb_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      internal_pmt_base_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
     //////////////////////////
