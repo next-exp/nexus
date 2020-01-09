@@ -117,11 +117,14 @@ namespace nexus {
 	     (region == "EXTERNAL_PMT_BASE")) {
       vertex = _energy_plane->GenerateVertex(region);
     }
-
     // Tracking Plane regions
     else if ((region == "TRK_SUPPORT") ||
              (region == "DICE_BOARD")) {
       vertex = _tracking_plane->GenerateVertex(region);
+    }
+    else {
+      G4Exception("[Next100InnerElements]", "GenerateVertex()", FatalException,
+        "Unknown vertex generation region!");
     }
 
     return vertex;
