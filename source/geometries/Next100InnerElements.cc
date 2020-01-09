@@ -531,7 +531,9 @@ void Next100InnerElements::BuildBuffer()
              (region == "SAPPHIRE_WINDOW") ||
              (region == "OPTICAL_PAD") ||
 	     (region == "PMT") ||
-             (region == "PMT_BODY")) {
+             (region == "PMT_BODY") ||
+	     (region == "INTERNAL_PMT_BASE") ||
+	     (region == "EXTERNAL_PMT_BASE")) {
       vertex = _energy_plane->GenerateVertex(region);
     }
 

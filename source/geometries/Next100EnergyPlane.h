@@ -63,11 +63,12 @@ namespace nexus {
     const G4double _end_of_sapphire_posz;
     const G4double _copper_plate_thickn, _copper_plate_diam;
     const G4double _gas_hole_diam;
-    const G4double _hole_up_posx, _hole_up_posy;
-    const G4double _hole_lat1_posx, _hole_lat1_posy;
-    const G4double _hole_lat2_posx, _hole_lat2_posy;
+    // const G4double _hole_up_posx, _hole_up_posy;
+    // const G4double _hole_lat1_posx, _hole_lat1_posy;
+    // const G4double _hole_lat2_posx, _hole_lat2_posy;
     const G4double _hut_int_diam, _hut_thickn, _hut_hole_length;
-    const G4double _hut_length_short, _hut_length_medium, _hut_length_long;
+    const G4double _hut_length_long, _hut_length_medium, _hut_length_short;
+    const G4int _last_hut_long, _last_hut_medium;
     const G4double _hole_diam_front, _hole_diam_rear;
     const G4double _hole_length_front, _hole_length_rear;
     const G4double _sapphire_window_thickn, _optical_pad_thickn, _tpb_thickn;
@@ -88,7 +89,6 @@ namespace nexus {
 
     G4double _copper_plate_posz;
     G4double _vacuum_posz;
-    //const G4double _pmt_base_diam, _pmt_base_thickn;
     std::vector<G4ThreeVector> _pmt_positions;
     std::vector<G4ThreeVector> _short_hut_pos, _medium_hut_pos, _long_hut_pos;
     G4double _pmt_zpos;
@@ -97,10 +97,10 @@ namespace nexus {
 
     // Vertex generators
     CylinderPointSampler* _copper_gen;
-    //CylinderPointSampler* _enclosure_flange_gen;
     CylinderPointSampler* _sapphire_window_gen;
     CylinderPointSampler* _optical_pad_gen;
     CylinderPointSampler* _internal_pmt_base_gen;
+    CylinderPointSampler* _external_pmt_base_gen;
 
   };
 
