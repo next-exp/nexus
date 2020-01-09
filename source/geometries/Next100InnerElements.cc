@@ -101,7 +101,8 @@ namespace nexus {
     G4ThreeVector vertex(0.,0.,0.);
 
     // Field Cage region
-    if ((region == "ACTIVE") ||
+    if ((region == "CENTER") ||
+	(region == "ACTIVE") ||
 	(region == "BUFFER") ||
 	(region == "CATHODE_GRID") ||
 	(region == "LIGHT_TUBE_DRIFT") ||

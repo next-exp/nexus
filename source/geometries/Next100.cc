@@ -180,7 +180,8 @@ namespace nexus {
       vertex = _ics->GenerateVertex(region);
     }
     // Inner elements (photosensors' planes and field cage)
-    else if ((region == "ACTIVE") ||
+    else if ((region == "CENTER") ||
+	     (region == "ACTIVE") ||
 	     (region == "BUFFER") ||
 	     (region == "CATHODE_GRID") ||
 	     (region == "LIGHT_TUBE_DRIFT") ||

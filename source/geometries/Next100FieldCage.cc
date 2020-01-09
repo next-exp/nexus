@@ -70,7 +70,7 @@ namespace nexus {
   {
 
     /// Calculate derived positions
-    _active_zpos = _active_length/2. + 0.01 * mm;
+    _active_zpos = _active_length/2.;
     _el_gap_diam = _active_diam + 2. * cm; // TO CHECK
     _el_gap_zpos = _active_zpos - _active_length/2. - _el_gap_length/2.;
     _active_ext_radius = _active_diam/2. / cos(pi/_n_panels);
@@ -519,7 +519,10 @@ namespace nexus {
   {
     G4ThreeVector vertex(0., 0., 0.);
 
-    if (region == "ACTIVE") {
+    if (region == "CENTER") {
+      vertex = G4ThreeVector(0., 0., _active_zpos);
+    }
+    else if (region == "ACTIVE") {
       G4VPhysicalVolume *VertexVolume;
       do {
     	vertex = _active_gen->GenerateVertex("BODY_VOL");
