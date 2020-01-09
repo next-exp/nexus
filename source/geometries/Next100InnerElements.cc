@@ -103,6 +103,7 @@ namespace nexus {
     // Field Cage region
     if ((region == "ACTIVE") ||
 	(region == "BUFFER") ||
+	(region == "CATHODE_GRID") ||
 	(region == "LIGHT_TUBE_DRIFT") ||
 	(region == "LIGHT_TUBE_BUFFER")) {
       vertex = _field_cage->GenerateVertex(region);

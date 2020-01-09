@@ -95,6 +95,7 @@ namespace nexus {
     CylinderPointSampler* _buffer_gen;
     CylinderPointSampler* _teflon_drift_gen;
     CylinderPointSampler* _teflon_buffer_gen;
+    CylinderPointSampler* _cathode_gen;
 
     // Geometry Navigator
     G4Navigator* _geom_navigator;
