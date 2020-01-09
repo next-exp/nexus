@@ -37,7 +37,6 @@ namespace nexus {
   Next100EnergyPlane::Next100EnergyPlane():
 
     _num_PMTs (60),
-    _end_of_sapphire_posz (0 * mm), // Place holder - to be changed to real value
     // Copper Plate dimensions
     _copper_plate_thickn (120 * mm),
     _copper_plate_diam (1340. * mm),
@@ -100,7 +99,6 @@ namespace nexus {
   }
 
 
-
   void Next100EnergyPlane::SetLogicalVolume(G4LogicalVolume* mother_logic)
   {
     _mother_logic = mother_logic;
@@ -109,6 +107,11 @@ namespace nexus {
     _temperature  = _gas->GetTemperature();
   }
 
+
+  void Next100EnergyPlane::SetSapphireSurfaceZPos(G4double z)
+  {
+    _end_of_sapphire_posz = z;
+  }
 
 
   void Next100EnergyPlane::Construct()
@@ -438,7 +441,6 @@ namespace nexus {
   }
 
 
-
   G4ThreeVector Next100EnergyPlane::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);
@@ -510,7 +512,6 @@ namespace nexus {
 
     return vertex;
   }
-
 
 
   void Next100EnergyPlane::GeneratePositions()
