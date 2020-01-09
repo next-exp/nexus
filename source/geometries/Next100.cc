@@ -184,11 +184,10 @@ namespace nexus {
 	     (region == "ACTIVE") ||
 	     (region == "BUFFER") ||
 	     (region == "CATHODE_GRID") ||
+	     (region == "XENON") ||
 	     (region == "LIGHT_TUBE_DRIFT") ||
 	     (region == "LIGHT_TUBE_BUFFER") ||
-	     (region == "XENON") ||
-	     (region == "ANODE_QUARTZ") ||
-	     (region == "ENERGY_COPPER_PLATE") ||
+	     (region == "CARRIER_PLATE") ||
 	     (region == "ENCLOSURE") ||
 	     (region == "SAPPHIRE_WINDOW") ||
 	     (region == "OPTICAL_PAD") ||

@@ -73,6 +73,7 @@ namespace nexus {
     _active_zpos = _active_length/2.;
     _el_gap_diam = _active_diam + 2. * cm; // TO CHECK
     _el_gap_zpos = _active_zpos - _active_length/2. - _el_gap_length/2.;
+    _cathode_grid_zpos = _active_zpos + _active_length/2. + _grid_thickn/2. ;
     _active_ext_radius = _active_diam/2. / cos(pi/_n_panels);
 
     // Define new categories
@@ -146,8 +147,8 @@ namespace nexus {
     BuildCathodeGrid();
     BuildELRegion();
     BuildActive();
-    BuildBuffer();
     BuildFieldCage();
+    BuildBuffer();
 
     // Calculate EL table vertices
     G4double z = _el_gap_zpos + _el_gap_length/2.;
@@ -297,8 +298,39 @@ namespace nexus {
     }
   }
 
+    void Next100FieldCage::BuildCathodeGrid()
+  {
+    G4Material* fgrid_mat = MaterialsList::FakeDielectric(_gas, "cath_grid_mat");
+    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _cath_grid_transparency, _grid_thickn));
 
-  void Next100FieldCage::BuildBuffer()
+    G4double grid_diam = _el_gap_diam; // to check
+
+    if (_verbosity) {
+      G4cout << G4endl << "Cathode grid pos z: " << _cathode_grid_zpos << G4endl;
+    }
+
+    G4Tubs* diel_grid_solid =
+      new G4Tubs("CATHODE_GRID", 0., grid_diam/2., _grid_thickn/2., 0, twopi);
+
+    G4LogicalVolume* diel_grid_logic =
+      new G4LogicalVolume(diel_grid_solid, fgrid_mat, "CATHODE_GRID");
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., _cathode_grid_zpos), diel_grid_logic,
+		      "CATHODE_GRID", _mother_logic, false, 0, false);
+
+    // Vertex generator
+    _cathode_gen =
+      new CylinderPointSampler(0., _grid_thickn, grid_diam/2.,
+  			       0., G4ThreeVector (0., 0., _cathode_grid_zpos));
+
+    /// Visibilities
+    // Grid is white
+    if (!_visibility) {
+      diel_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
+  }
+
+    void Next100FieldCage::BuildBuffer()
   {
     G4double buffer_zpos =
       _active_zpos + _active_length/2. + _grid_thickn + _buffer_length/2.;
@@ -333,19 +365,16 @@ namespace nexus {
     _buffer_gen = new CylinderPointSampler(0., _buffer_length, _active_ext_radius, 0.,
 					   G4ThreeVector(0., 0., buffer_zpos));
 
-    // // VERTEX GENERATOR FOR ALL XENON
-    // G4double xenon_posz = (_buffer_length * buffer_posz +
-    // 			   _active_length * _active_posz +
-    // 			   _grid_thickn * _cathode_pos_z +
-    // 			   _grid_thickn * _el_grid_ref_z +
-    // 			   _el_gap_length * _el_gap_posz) / (_buffer_length +
-    // 							     _active_length +
-    // 							     2 * _grid_thickn +
-    // 							     _el_gap_length);
-    // G4double xenon_len = _buffer_length + _active_length + _grid_thickn;
-    // _xenon_gen =
-    //   new CylinderPointSampler(0., xenon_len, _active_diam/2.,
-    // 			       0., G4ThreeVector (0., 0., xenon_posz));
+    // Vertex generator for all xenon
+    G4double xenon_length =
+      _el_gap_length + _active_length + _grid_thickn + _buffer_length ;
+    G4double xenon_zpos = (_el_gap_length * _el_gap_zpos +
+     			   _active_length * _active_zpos +
+     			   _grid_thickn * _cathode_grid_zpos +
+     			   _buffer_length * buffer_zpos) / xenon_length;
+    _xenon_gen =
+      new CylinderPointSampler(0., xenon_length, _active_ext_radius,
+     			       0., G4ThreeVector (0., 0., xenon_zpos));
 
 
     buffer_logic->SetVisAttributes(G4VisAttributes::Invisible);
@@ -354,40 +383,6 @@ namespace nexus {
     // active_col.SetForceSolid(true);
     // buffer_logic->SetVisAttributes(active_col);
 
-  }
-
-
-    void Next100FieldCage::BuildCathodeGrid()
-  {
-    G4Material* fgrid_mat = MaterialsList::FakeDielectric(_gas, "cath_grid_mat");
-    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _cath_grid_transparency, _grid_thickn));
-
-    G4double grid_diam = _el_gap_diam; // to check
-    G4double cathode_grid_zpos = _active_zpos + _active_length/2. + _grid_thickn/2. ;
-
-    if (_verbosity) {
-      G4cout << G4endl << "Cathode grid pos z: " << cathode_grid_zpos << G4endl;
-    }
-
-    G4Tubs* diel_grid_solid =
-      new G4Tubs("CATHODE_GRID", 0., grid_diam/2., _grid_thickn/2., 0, twopi);
-
-    G4LogicalVolume* diel_grid_logic =
-      new G4LogicalVolume(diel_grid_solid, fgrid_mat, "CATHODE_GRID");
-
-    new G4PVPlacement(0, G4ThreeVector(0., 0., cathode_grid_zpos), diel_grid_logic,
-		      "CATHODE_GRID", _mother_logic, false, 0, false);
-
-    // Vertex generator
-    _cathode_gen =
-      new CylinderPointSampler(0., _grid_thickn, grid_diam/2.,
-  			       0., G4ThreeVector (0., 0., cathode_grid_zpos));
-
-    /// Visibilities
-    // Grid is white
-    if (!_visibility) {
-      diel_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    }
   }
 
 
@@ -503,7 +498,6 @@ namespace nexus {
   }
 
 
-
   Next100FieldCage::~Next100FieldCage()
   {
    delete _active_gen;
@@ -538,6 +532,15 @@ namespace nexus {
     }
     else if (region == "CATHODE_GRID") {
       vertex = _cathode_gen->GenerateVertex("BODY_VOL");
+    }
+    else if (region == "XENON") {
+      G4VPhysicalVolume *VertexVolume;
+      do {
+    	vertex = _xenon_gen->GenerateVertex("BODY_VOL");
+    	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+      } while (VertexVolume->GetName() != "ACTIVE" &&
+	       VertexVolume->GetName() != "BUFFER" &&
+	       VertexVolume->GetName() != "EL_GAP");
     }
     else if (region == "LIGHT_TUBE_DRIFT") {
       G4VPhysicalVolume *VertexVolume;

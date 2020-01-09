@@ -87,7 +87,8 @@ namespace nexus {
     // Verbosity of the geometry
     G4bool _verbosity;
 
-    G4double _active_zpos, _el_gap_diam, _el_gap_zpos, _active_ext_radius;
+    G4double _active_zpos, _el_gap_diam, _el_gap_zpos, _cathode_grid_zpos;
+    G4double _active_ext_radius;
 
 
     // Vertex generators
@@ -96,6 +97,7 @@ namespace nexus {
     CylinderPointSampler* _teflon_drift_gen;
     CylinderPointSampler* _teflon_buffer_gen;
     CylinderPointSampler* _cathode_gen;
+    CylinderPointSampler* _xenon_gen;
 
     // Geometry Navigator
     G4Navigator* _geom_navigator;
