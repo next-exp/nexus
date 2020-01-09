@@ -37,24 +37,26 @@ namespace nexus {
   Next100EnergyPlane::Next100EnergyPlane():
 
     _num_PMTs (60),
-    _end_of_sapphire_posz (1000 * mm), // Place holder - to be changed to real value
+    _end_of_sapphire_posz (0 * mm), // Place holder - to be changed to real value
     // Copper Plate dimensions
     _copper_plate_thickn (120 * mm),
     _copper_plate_diam (1340. * mm),
     _gas_hole_diam (12. * mm),
-    _hole_up_posx (-62.5 * mm),
-    _hole_up_posy (515. * mm),
-    _hole_lat1_posx (477 * mm),
-    _hole_lat1_posy (-203.8 * mm),
-    _hole_lat2_posx (-415 * mm),
-    _hole_lat2_posy (-311.2 * mm),
+    // _hole_up_posx (-62.5 * mm),
+    // _hole_up_posy (515. * mm),
+    // _hole_lat1_posx (477 * mm),
+    // _hole_lat1_posy (-203.8 * mm),
+    // _hole_lat2_posx (-415 * mm),
+    // _hole_lat2_posy (-311.2 * mm),
     // Hut dimensions
     _hut_int_diam (76. * mm),
     _hut_thickn (5. * mm),
     _hut_hole_length (45. * mm),
-    _hut_length_short (70. * mm),
-    _hut_length_medium (100. * mm),
     _hut_length_long (120. * mm),
+    _hut_length_medium (100. * mm),
+    _hut_length_short (70. * mm),
+    _last_hut_long (17),
+    _last_hut_medium (35),
     _hole_diam_front (84. * mm),
     _hole_diam_rear (65. * mm),
     _hole_length_front (41.75 * mm),// average between 37 mm of front and 46.5 mm of front+medium
@@ -69,7 +71,7 @@ namespace nexus {
     _verbosity(0)
   {
     /// HOW THIS GEOMETRY IS BUILT ///
-    /// 1. Holes for the gas flow are created in the copper plate.
+    /// 1. Central hole for the gas flow is created in the copper plate.
     /// 2. The copper huts, which provide shielding behind the PMTs,
     ///    are glued to the copper plate.
     /// 3. Since the sapphire windows that protect the PMTs and part of the
@@ -127,21 +129,21 @@ namespace nexus {
       new G4SubtractionSolid("COPPER_PLATE", copper_plate_origin_solid,
     			     copper_plate_gas_hole_solid, 0, gas_hole_pos);
 
-    gas_hole_pos.setX(_hole_up_posx);
-    gas_hole_pos.setY(_hole_up_posy);
-    copper_plate_hole_solid =
-      new G4SubtractionSolid("COPPER_PLATE", copper_plate_hole_solid,
-    			     copper_plate_gas_hole_solid, 0, gas_hole_pos);
-    gas_hole_pos.setX(_hole_lat1_posx);
-    gas_hole_pos.setY(_hole_lat1_posy);
-    copper_plate_hole_solid =
-      new G4SubtractionSolid("COPPER_PLATE", copper_plate_hole_solid,
-    			     copper_plate_gas_hole_solid, 0, gas_hole_pos);
-    gas_hole_pos.setX(_hole_lat2_posx);
-    gas_hole_pos.setY(_hole_lat2_posy);
-    copper_plate_hole_solid =
-      new G4SubtractionSolid("COPPER_PLATE", copper_plate_hole_solid,
-    			     copper_plate_gas_hole_solid, 0, gas_hole_pos);
+    // gas_hole_pos.setX(_hole_up_posx);
+    // gas_hole_pos.setY(_hole_up_posy);
+    // copper_plate_hole_solid =
+    //   new G4SubtractionSolid("COPPER_PLATE", copper_plate_hole_solid,
+    // 			     copper_plate_gas_hole_solid, 0, gas_hole_pos);
+    // gas_hole_pos.setX(_hole_lat1_posx);
+    // gas_hole_pos.setY(_hole_lat1_posy);
+    // copper_plate_hole_solid =
+    //   new G4SubtractionSolid("COPPER_PLATE", copper_plate_hole_solid,
+    // 			     copper_plate_gas_hole_solid, 0, gas_hole_pos);
+    // gas_hole_pos.setX(_hole_lat2_posx);
+    // gas_hole_pos.setY(_hole_lat2_posy);
+    // copper_plate_hole_solid =
+    //   new G4SubtractionSolid("COPPER_PLATE", copper_plate_hole_solid,
+    // 			     copper_plate_gas_hole_solid, 0, gas_hole_pos);
 
 
     /// Glue together the different kinds of huts to the copper plate ///
@@ -405,11 +407,6 @@ namespace nexus {
 					     _copper_plate_thickn/2. + _hut_hole_length +
 					     _hut_length_long - full_copper_length/2.));
 
-    //   _enclosure_flange_gen =
-    //new CylinderPointSampler(_enclosure_window_diam/2., _enclosure_flange_length/2.,
-    //			       _enclosure_diam/2.-_enclosure_window_diam/2., 0.,
-    //		       G4ThreeVector(0., 0., _energy_plane_posz - _enclosure_flange_length/2.));
-
     _sapphire_window_gen =
       new CylinderPointSampler(_hole_diam_front/2., _sapphire_window_thickn, 0., 0.,
 			       G4ThreeVector(0., 0., _vacuum_posz + window_posz));
@@ -420,7 +417,11 @@ namespace nexus {
 
     _internal_pmt_base_gen =
       new CylinderPointSampler(_internal_pmt_base_diam/2., _internal_pmt_base_thickn, 0., 0.,
-			       G4ThreeVector(0.,0., _vacuum_posz + int_pmt_base_posz));
+			       G4ThreeVector(0., 0., _vacuum_posz + int_pmt_base_posz));
+
+    _external_pmt_base_gen =
+      new CylinderPointSampler((_hut_int_diam + 2.*_hut_thickn)/2., 0.1*mm, 0., 0.,
+			       G4ThreeVector(0.,0.,_vacuum_posz+int_pmt_base_posz+_hut_hole_length/2.));
 
   }
 
@@ -428,10 +429,10 @@ namespace nexus {
   Next100EnergyPlane::~Next100EnergyPlane()
   {
     delete _copper_gen;
-    //delete _enclosure_flange_gen;
     delete _sapphire_window_gen;
     delete _optical_pad_gen;
     delete _internal_pmt_base_gen;
+    delete _external_pmt_base_gen;
   }
 
 
@@ -449,16 +450,6 @@ namespace nexus {
     	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
       } while (VertexVolume->GetName() != "COPPER_PLATE");
     }
-
-    // // Enclosure flange
-    // else if (region == "ENCLOSURE") {
-    //   vertex = _enclosure_flange_gen->GenerateVertex("WHOLE_VOL");
-    //   // Translating the vertex to a random enclosure
-    //   G4double rand2 = _num_PMTs * G4UniformRand();
-    //   G4ThreeVector enclosure_pos = _pmt_positions[int(rand2)];
-    //   vertex += enclosure_pos;
-    //   //      G4cout << vertex<<G4endl;
-    // }
 
     // Sapphire windows
     else if (region == "SAPPHIRE_WINDOW") {
@@ -492,6 +483,21 @@ namespace nexus {
       vertex = _internal_pmt_base_gen->GenerateVertex("INSIDE");
       G4double rand = _num_PMTs * G4UniformRand();
       G4ThreeVector pmt_base_pos = _pmt_positions[int(rand)];
+      vertex += pmt_base_pos;
+    }
+
+    // PMT bases - external part
+    else if (region == "EXTERNAL_PMT_BASE") {
+      vertex = _external_pmt_base_gen->GenerateVertex("INSIDE");
+      G4double rand = _num_PMTs * G4UniformRand();
+      G4ThreeVector pmt_base_pos = _pmt_positions[int(rand)];
+      if (int(rand) <= _last_hut_long) {
+	pmt_base_pos.setZ(_hut_length_long + 0.1*mm);
+      } else if (int(rand) <= _last_hut_medium) {
+	pmt_base_pos.setZ(_hut_length_medium + 0.1*mm);
+      } else {
+	pmt_base_pos.setZ(_hut_length_short + 0.1*mm);
+      }
       vertex += pmt_base_pos;
     }
 
@@ -547,11 +553,12 @@ namespace nexus {
     }
 
     _long_hut_pos =
-      std::vector<G4ThreeVector>(_pmt_positions.begin(), _pmt_positions.begin()+18);
+      std::vector<G4ThreeVector>(_pmt_positions.begin(), _pmt_positions.begin()+_last_hut_long+1);
     _medium_hut_pos =
-      std::vector<G4ThreeVector>(_pmt_positions.begin()+18, _pmt_positions.begin()+36);
+      std::vector<G4ThreeVector>(_pmt_positions.begin()+_last_hut_long+1,
+				 _pmt_positions.begin()+ _last_hut_medium+1);
     _short_hut_pos =
-      std::vector<G4ThreeVector>(_pmt_positions.begin()+36, _pmt_positions.end());
+      std::vector<G4ThreeVector>(_pmt_positions.begin()+_last_hut_medium+1, _pmt_positions.end());
 
     // Checking
     if (total_positions != _num_PMTs) {
