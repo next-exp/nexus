@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Authors: <jmunoz@ific.uv.es>
+//  Authors: <jmunoz@ific.uv.es>, <paola.ferrario@dipc.org>
 //  Created: 2 Mar 2012
 //
-//  Copyright (c) 2012-2015 NEXT Collaboration
+//  Copyright (c) 2012-2020 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "Next100InnerElements.h"
@@ -45,8 +45,6 @@ namespace nexus {
 
   Next100InnerElements::Next100InnerElements(): BaseGeometry()
   {
-
-
     // Field Cage
     _field_cage = new Next100FieldCage();
 
@@ -58,16 +56,13 @@ namespace nexus {
 
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/Next100/", "Control commands of geometry Next100.");
-
   }
-
 
 
   void Next100InnerElements::SetLogicalVolume(G4LogicalVolume* mother_logic)
   {
     _mother_logic = mother_logic;
   }
-
 
 
   void Next100InnerElements::Construct()
@@ -93,7 +88,6 @@ namespace nexus {
   }
 
 
-
   Next100InnerElements::~Next100InnerElements()
   {
     delete _field_cage;
@@ -102,15 +96,15 @@ namespace nexus {
   }
 
 
-
-
-
   G4ThreeVector Next100InnerElements::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0.,0.,0.);
 
     // Field Cage region
-    if (region == "FIELD_CAGE") {
+    if ((region == "ACTIVE") ||
+	(region == "BUFFER") ||
+	(region == "LIGHT_TUBE_DRIFT") ||
+	(region == "LIGHT_TUBE_BUFFER")) {
       vertex = _field_cage->GenerateVertex(region);
     }
     // Energy Plane regions
@@ -129,8 +123,6 @@ namespace nexus {
              (region == "DICE_BOARD")) {
       vertex = _tracking_plane->GenerateVertex(region);
     }
-
-
 
     return vertex;
   }

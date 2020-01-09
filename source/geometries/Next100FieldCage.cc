@@ -14,6 +14,7 @@
 #include "OpticalMaterialProperties.h"
 #include "UniformElectricDriftField.h"
 #include "XenonGasProperties.h"
+#include "CylinderPointSampler.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4PVPlacement.hh>
@@ -28,6 +29,7 @@
 #include <G4UserLimits.hh>
 #include <G4SDManager.hh>
 #include <G4UnitsTable.hh>
+#include <G4TransportationManager.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
@@ -71,10 +73,15 @@ namespace nexus {
     _active_zpos = _active_length/2. + 0.01 * mm;
     _el_gap_diam = _active_diam + 2. * cm; // TO CHECK
     _el_gap_zpos = _active_zpos - _active_length/2. - _el_gap_length/2.;
+    _active_ext_radius = _active_diam/2. / cos(pi/_n_panels);
 
     // Define new categories
     new G4UnitDefinition("kilovolt/cm","kV/cm","Electric field", kilovolt/cm);
     new G4UnitDefinition("mm/sqrt(cm)","mm/sqrt(cm)","Diffusion", mm/sqrt(cm));
+
+    /// Initializing the geometry navigator (used in vertex generation)
+    _geom_navigator =
+      G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
 
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/Next100/",
@@ -221,8 +228,8 @@ namespace nexus {
     // active_logic->SetVisAttributes(active_col);
 
     // Vertex generator
-    //  _active_gen = new HexagonPointSampler(_active_diam/2., _active_length, 0.,
-    //					  G4ThreeVector(0., 0., _active_zpos));
+    _active_gen = new CylinderPointSampler(0., _active_length, _active_ext_radius, 0.,
+					   G4ThreeVector(0., 0., _active_zpos));
   }
 
 
@@ -295,7 +302,6 @@ namespace nexus {
 
   void Next100FieldCage::BuildBuffer()
   {
-
     G4double buffer_zpos =
       _active_zpos + _active_length/2. + _grid_thickn + _buffer_length/2.;
 
@@ -325,9 +331,9 @@ namespace nexus {
     buffer_logic->SetSensitiveDetector(buffsd);
     G4SDManager::GetSDMpointer()->AddNewDetector(buffsd);
 
-    //  _buffer_gen =
-    //   new CylinderPointSampler(0., _buffer_length, _active_diam/2.,
-    // 			       0., G4ThreeVector (0., 0., buffer_posz));
+    // Vertex generator
+    _buffer_gen = new CylinderPointSampler(0., _buffer_length, _active_ext_radius, 0.,
+					   G4ThreeVector(0., 0., buffer_zpos));
 
     // // VERTEX GENERATOR FOR ALL XENON
     // G4double xenon_posz = (_buffer_length * buffer_posz +
@@ -488,16 +494,27 @@ namespace nexus {
     }
 
 
-    // // VERTEX GENERATORS   //////////
-    // _body_gen  = new CylinderPointSampler(_tube_diam/2. + _tpb_thickn, _tube_length, _tube_thickn - _tpb_thickn,
-    //                                       0., G4ThreeVector (0., 0., _tube_zpos));
+    //// VERTEX GENERATORS   ////
+    G4double teflon_ext_radius =
+      (_active_diam + 2.*_teflon_thickn)/2. / cos(pi/_n_panels);
+    _teflon_drift_gen  =
+      new CylinderPointSampler(_active_diam/2., _teflon_drift_length,
+			       teflon_ext_radius - _active_diam/2.,
+			       0., G4ThreeVector (0., 0., teflon_drift_zpos));
+    _teflon_buffer_gen  =
+      new CylinderPointSampler(_active_diam/2., _teflon_buffer_length,
+			       teflon_ext_radius - _active_diam/2.,
+			       0., G4ThreeVector (0., 0., teflon_buffer_zpos));
   }
 
 
 
   Next100FieldCage::~Next100FieldCage()
   {
-    //delete _body_gen;
+   delete _active_gen;
+   delete _buffer_gen;
+   delete _teflon_drift_gen;
+   delete _teflon_buffer_gen;
   }
 
 
@@ -506,17 +523,40 @@ namespace nexus {
   {
     G4ThreeVector vertex(0., 0., 0.);
 
-    if (region == "FIELD_CAGE") {
-      return vertex;
-    } else if (region == "EL_TABLE") {
-
+    if (region == "ACTIVE") {
+      G4VPhysicalVolume *VertexVolume;
+      do {
+    	vertex = _active_gen->GenerateVertex("BODY_VOL");
+    	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+      } while (VertexVolume->GetName() != region);
+    }
+    else if (region == "BUFFER") {
+      G4VPhysicalVolume *VertexVolume;
+      do {
+    	vertex = _buffer_gen->GenerateVertex("BODY_VOL");
+    	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+      } while (VertexVolume->GetName() != region);
+    }
+    else if (region == "LIGHT_TUBE_DRIFT") {
+      G4VPhysicalVolume *VertexVolume;
+      do {
+    	vertex = _teflon_drift_gen->GenerateVertex("BODY_VOL");
+    	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+      } while (VertexVolume->GetName() != region);
+    }
+    else if (region == "LIGHT_TUBE_BUFFER") {
+      G4VPhysicalVolume *VertexVolume;
+      do {
+    	vertex = _teflon_buffer_gen->GenerateVertex("BODY_VOL");
+    	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+      } while (VertexVolume->GetName() != region);
+    }
+    else if (region == "EL_TABLE") {
       unsigned int i = _el_table_point_id + _el_table_index;
-
       if (i == (_table_vertices.size()-1)) {
         G4Exception("[Next100FieldCage]", "GenerateVertex()",
           RunMustBeAborted, "Reached last event in EL lookup table.");
       }
-
       try {
         vertex = _table_vertices.at(i);
         _el_table_index++;
@@ -525,6 +565,7 @@ namespace nexus {
         G4Exception("[Next100FieldCage]", "GenerateVertex()", FatalErrorInArgument, "EL lookup table point out of range.");
       }
     }
+
     else {
       G4Exception("[Next100FieldCage]", "GenerateVertex()", FatalException,
         "Unknown vertex generation region!");
