@@ -2,7 +2,7 @@
 ///  \file
 ///  \brief
 ///
-///  \author   <paola.ferrario@dipc.org>
+///  \author   <jmunoz@ific.uv.es>, <paola.ferrario@dipc.org>
 ///  \date     1 Mar 2012
 ///  \version  $Id$
 ///
@@ -13,17 +13,17 @@
 #define __NEXT100_FIELDCAGE__
 
 #include "BaseGeometry.h"
-#include "CylinderPointSampler.h"
 
+#include <G4Navigator.hh>
 #include <vector>
-
 
 class G4Material;
 class G4LogicalVolume;
 class G4GenericMessenger;
 
-
 namespace nexus {
+
+  class CylinderPointSampler;
 
   /// This is a geometry formed by the reflector tube and
   /// TPB layer if needed
@@ -87,12 +87,17 @@ namespace nexus {
     // Verbosity of the geometry
     G4bool _verbosity;
 
-    G4double _active_zpos, _el_gap_diam, _el_gap_zpos;
+    G4double _active_zpos, _el_gap_diam, _el_gap_zpos, _active_ext_radius;
 
 
     // Vertex generators
-    //CylinderPointSampler* _active_gen;
+    CylinderPointSampler* _active_gen;
+    CylinderPointSampler* _buffer_gen;
+    CylinderPointSampler* _teflon_drift_gen;
+    CylinderPointSampler* _teflon_buffer_gen;
 
+    // Geometry Navigator
+    G4Navigator* _geom_navigator;
 
     // Messenger for the definition of control commands
     G4GenericMessenger* _msg;
