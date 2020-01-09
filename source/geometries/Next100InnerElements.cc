@@ -209,7 +209,7 @@ namespace nexus {
 
     // Energy Plane
     _energy_plane->SetLogicalVolume(_mother_logic);
-    //_energy_plane->SetELzCoord(GetELzCoord());
+    _energy_plane->SetSapphireSurfaceZPos(1000. * mm); // placeholder, to be changed after field cage implementation.
     _energy_plane->Construct();
 
     // Tracking Plane
