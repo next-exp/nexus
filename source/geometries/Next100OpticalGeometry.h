@@ -49,6 +49,12 @@ namespace nexus {
     G4double _pressure;
     G4double _temperature;
     G4double _sc_yield;
+
+    // Vertex decided by user
+    G4double _specific_vertex_X;
+    G4double _specific_vertex_Y;
+    G4double _specific_vertex_Z;
+
     G4String _gas;
 
     Next100InnerElements* _inner_elements;

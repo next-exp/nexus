@@ -52,6 +52,22 @@ namespace nexus {
     sc_yield_cmd.SetParameterName("sc_yield", true);
     sc_yield_cmd.SetUnitCategory("1/Energy");
 
+    G4GenericMessenger::Command&  specific_vertex_X_cmd =
+      _msg->DeclareProperty("specific_vertex_X", _specific_vertex_X,
+                            "If region is AD_HOC, x coord of primary particles");
+    specific_vertex_X_cmd.SetParameterName("specific_vertex_X", true);
+    specific_vertex_X_cmd.SetUnitCategory("Length");
+    G4GenericMessenger::Command&  specific_vertex_Y_cmd =
+      _msg->DeclareProperty("specific_vertex_Y", _specific_vertex_Y,
+                            "If region is AD_HOC, y coord of primary particles");
+    specific_vertex_Y_cmd.SetParameterName("specific_vertex_Y", true);
+    specific_vertex_Y_cmd.SetUnitCategory("Length");
+    G4GenericMessenger::Command&  specific_vertex_Z_cmd =
+      _msg->DeclareProperty("specific_vertex_Z", _specific_vertex_Z,
+                            "If region is AD_HOC, z coord of primary particles");
+    specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
+    specific_vertex_Z_cmd.SetUnitCategory("Length");
+
     _msg->DeclareProperty("gas", _gas, "Gas being used");
 
 
@@ -130,7 +146,14 @@ namespace nexus {
 
   G4ThreeVector Next100OpticalGeometry::GenerateVertex(const G4String& region) const
   {
-    G4ThreeVector vertex = _inner_elements->GenerateVertex(region);
+    G4ThreeVector vertex(0.,0.,0.);
+    if (region == "AD_HOC") {
+      vertex =
+	G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
+    }
+    else {
+      vertex = _inner_elements->GenerateVertex(region);
+    }
 
     return vertex;
   }
