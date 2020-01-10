@@ -39,9 +39,28 @@ namespace nexus {
     _bottom_nozzle_ypos(-53. * cm)
   {
 
+    _msg = new G4GenericMessenger(this, "/Geometry/Next100/",
+				  "Control commands of geometry Next100.");
+
+    G4GenericMessenger::Command&  specific_vertex_X_cmd =
+      _msg->DeclareProperty("specific_vertex_X", _specific_vertex_X,
+                            "If region is AD_HOC, x coord of primary particles");
+    specific_vertex_X_cmd.SetParameterName("specific_vertex_X", true);
+    specific_vertex_X_cmd.SetUnitCategory("Length");
+    G4GenericMessenger::Command&  specific_vertex_Y_cmd =
+      _msg->DeclareProperty("specific_vertex_Y", _specific_vertex_Y,
+                            "If region is AD_HOC, y coord of primary particles");
+    specific_vertex_Y_cmd.SetParameterName("specific_vertex_Y", true);
+    specific_vertex_Y_cmd.SetUnitCategory("Length");
+    G4GenericMessenger::Command&  specific_vertex_Z_cmd =
+      _msg->DeclareProperty("specific_vertex_Z", _specific_vertex_Z,
+                            "If region is AD_HOC, z coord of primary particles");
+    specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
+    specific_vertex_Z_cmd.SetUnitCategory("Length");
+
+
   // The following methods must be invoked in this particular
   // order since some of them depend on the previous ones
-
 
   // Shielding
   _shielding = new Next100Shielding();
@@ -148,7 +167,6 @@ namespace nexus {
 	       (region == "SHIELDING_STRUCT") ) {
       vertex = _shielding->GenerateVertex(region);
     }
-
     // Vessel regions
     else if ((region == "VESSEL") ||
 	     (region == "VESSEL_FLANGES") ||
@@ -156,19 +174,18 @@ namespace nexus {
 	     (region == "VESSEL_ENERGY_ENDCAP")) {
       vertex = _vessel->GenerateVertex(region);
     }
-
     // Inner copper shielding
     else if ((region == "ICS") ||
 	     (region == "DB_PLUG")) {
       vertex = _ics->GenerateVertex(region);
     }
-
     // Inner elements (photosensors' planes and field cage)
-    else if ((region == "FIELD_CAGE") ||
+    else if ((region == "ACTIVE") ||
+	     (region == "BUFFER") ||
+	     (region == "LIGHT_TUBE_DRIFT") ||
+	     (region == "LIGHT_TUBE_BUFFER") ||
              (region == "CATHODE") ||
 	     (region == "XENON") ||
-	     (region == "ACTIVE") ||
-	     (region == "BUFFER") ||
 	     (region == "ANODE_QUARTZ") ||
 	     (region == "ENERGY_COPPER_PLATE") ||
 	     (region == "ENCLOSURE") ||
@@ -180,10 +197,13 @@ namespace nexus {
 	     (region == "EXTERNAL_PMT_BASE") ||
 	     (region == "TRK_SUPPORT") ||
 	     (region == "DICE_BOARD") ||
-	     (region == "AD_HOC") ||
 	     (region == "AXIAL_PORT") ||
 	     (region == "EL_TABLE") ) {
       vertex = _inner_elements->GenerateVertex(region);
+    }
+    else if (region == "AD_HOC") {
+      vertex =
+	G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
     }
     else {
       G4Exception("[Next100]", "GenerateVertex()", FatalException,

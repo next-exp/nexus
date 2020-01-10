@@ -54,7 +54,6 @@ namespace nexus {
     const G4double _nozzle_ext_diam;
     const G4double _up_nozzle_ypos, _central_nozzle_ypos, _down_nozzle_ypos, _bottom_nozzle_ypos;
 
-
     // Pointers to logical volumes
     G4LogicalVolume* _lab_logic;
     G4LogicalVolume* _buffer_gas_logic;
@@ -67,7 +66,6 @@ namespace nexus {
 
     BoxPointSampler* _lab_gen; ///< Vertex generator
     MuonsPointSampler* _muon_gen; ///< Vertex generator for muons
-
 
     /// Messenger for the definition of control commands
     G4GenericMessenger* _msg;
