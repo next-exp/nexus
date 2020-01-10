@@ -337,9 +337,9 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
     for (it = wvfmTof.begin(); it != wvfmTof.end(); ++it) {
 
       if (((*it).first) <= _tof_time){
-    unsigned int time_bin_tof = (unsigned int)((*it).first/binsize_tof+0.5);
-    unsigned int charge_tof = (unsigned int)((*it).second+0.5);
-    _h5writer->WriteSensorTofInfo(_nevt, hitTof->GetPmtID(), time_bin_tof, charge_tof);
+        unsigned int time_bin_tof = (unsigned int)((*it).first/binsize_tof+0.5);
+        unsigned int charge_tof = (unsigned int)((*it).second+0.5);
+        _h5writer->WriteSensorTofInfo(_nevt, hitTof->GetPmtID(), time_bin_tof, charge_tof);
       }
     }
 
