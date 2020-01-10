@@ -527,7 +527,7 @@ void Next100InnerElements::BuildBuffer()
     }
 
     // Energy Plane regions
-    else if ((region == "COPPER_PLATE") ||
+    else if ((region == "ENERGY_COPPER_PLATE") ||
              (region == "SAPPHIRE_WINDOW") ||
              (region == "OPTICAL_PAD") ||
 	     (region == "PMT") ||

@@ -176,7 +176,7 @@ namespace nexus {
 	     (region == "ACTIVE") ||
 	     (region == "BUFFER") ||
 	     (region == "ANODE_QUARTZ") ||
-	     (region == "COPPER_PLATE") ||
+	     (region == "ENERGY_COPPER_PLATE") ||
 	     (region == "ENCLOSURE") ||
 	     (region == "SAPPHIRE_WINDOW") ||
 	     (region == "OPTICAL_PAD") ||
