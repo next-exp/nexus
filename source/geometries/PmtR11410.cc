@@ -53,9 +53,11 @@ namespace nexus {
     _sd_depth(2),
     _binning(100.*nanosecond)
   {
-    _msg = new G4GenericMessenger(this, "/Geometry/PmtR11410/", "Control commands of PmtR11410 geometry.");
+    _msg = new G4GenericMessenger(this, "/Geometry/PmtR11410/",
+				  "Control commands of PmtR11410 geometry.");
     _msg->DeclareProperty("visibility", _visibility, "Hamamatsu R11410 PMTs visibility");
-    _msg->DeclareProperty("SD_depth", _sd_depth, "Sensitive detector depth in volume being replicated");
+    _msg->DeclareProperty("SD_depth", _sd_depth,
+			  "Sensitive detector depth in volume being replicated");
 
     G4GenericMessenger::Command& bin_cmd =
       _msg->DeclareProperty("time_binning", _binning,
@@ -137,10 +139,12 @@ namespace nexus {
     // PMT PHOTOCATHODE  /////////////////////////////////////////////
 
     G4Tubs* photocathode_solid =
-      new G4Tubs("PMT_PHOTOCATHODE", 0, _photocathode_diam/2., _photocathode_thickness/2., 0., twopi);
+      new G4Tubs("PMT_PHOTOCATHODE", 0, _photocathode_diam/2., _photocathode_thickness/2.,
+		 0., twopi);
 
     G4Material* aluminum = G4NistManager::Instance()->FindOrBuildMaterial("G4_Al");	
-    G4LogicalVolume* photocathode_logic = new G4LogicalVolume(photocathode_solid, aluminum, "PMT_PHOTOCATHODE");
+    G4LogicalVolume* photocathode_logic =
+      new G4LogicalVolume(photocathode_solid, aluminum, "PMT_PHOTOCATHODE");
 
     G4double photocathode_posz = window_posz - _window_thickness/2. - _photocathode_thickness/2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., photocathode_posz), photocathode_logic,
@@ -179,56 +183,87 @@ namespace nexus {
     G4double front_body_irad = _front_body_diam/2. - _body_thickness;
     G4double rear_body_irad  = _rear_body_diam/2. - _body_thickness;
 
-    _front_body_gen = new CylinderPointSampler(front_body_irad, _front_body_length, _body_thickness, 0.,
-					       G4ThreeVector (0., 0., 0.));
+    _front_body_gen =
+      new CylinderPointSampler(front_body_irad, _front_body_length, _body_thickness, 0.,
+			       G4ThreeVector (0., 0., 0.));
 
-    _medium_body_gen = new CylinderPointSampler(_rear_body_diam/2., _body_thickness, front_body_irad - _rear_body_diam/2., 0.,
-						G4ThreeVector (0., 0., -_front_body_length/2. + _body_thickness/2.));
+    _medium_body_gen =
+      new CylinderPointSampler(_rear_body_diam/2., _body_thickness,
+			       front_body_irad - _rear_body_diam/2., 0.,
+			       G4ThreeVector(0., 0., -_front_body_length/2. + _body_thickness/2.));
 
-    _rear_body_gen = new CylinderPointSampler(rear_body_irad, _rear_body_length+_body_thickness, _body_thickness, 0.,
-					      G4ThreeVector (0., 0., -_front_body_length/2. - _rear_body_length/2. + _body_thickness/2.));
+    _rear_body_gen =
+      new CylinderPointSampler(rear_body_irad, _rear_body_length + _body_thickness,
+			       _body_thickness, 0., G4ThreeVector(0., 0.,
+								  -_front_body_length/2.
+								  - _rear_body_length/2.
+								  + _body_thickness/2.));
 
-    _rear_cap_gen = new CylinderPointSampler(rear_body_irad, _body_thickness, 0., 0.,
-					     G4ThreeVector (0., 0., -_front_body_length/2. - _rear_body_length + _body_thickness/2.));
+    _rear_cap_gen =
+      new CylinderPointSampler(rear_body_irad, _body_thickness, 0., 0.,
+			       G4ThreeVector (0., 0., -_front_body_length/2.
+					      - _rear_body_length + _body_thickness/2.));
 
     ///Front cap of the pmt: frame+window+photocathode
-    _front_cap_gen = new CylinderPointSampler(front_body_irad, _window_thickness+_photocathode_thickness, 0., 0.,
-					      G4ThreeVector (0., 0., _front_body_length/2. - _window_thickness/2. - _photocathode_thickness/2.));
+    _front_cap_gen =
+      new CylinderPointSampler(front_body_irad, _window_thickness + _photocathode_thickness,
+			       0., 0., G4ThreeVector (0., 0.,
+						      _front_body_length/2.
+						      - _window_thickness/2.
+						      - _photocathode_thickness/2.));
 
     // Surfaces
-    _front_surf_gen = new CylinderPointSampler(_front_body_diam/2., _front_body_length, 0., 0.,
-					       G4ThreeVector (0., 0., 0.));
-    _back_front_surf_gen = new CylinderPointSampler(_rear_body_diam/2., 0.1 * micrometer, (_front_body_diam - _rear_body_diam)/2., 0.,
-                                                    G4ThreeVector (0., 0., -_front_body_length/2. - 0.05 * micrometer));
-    _rear_surf_gen = new CylinderPointSampler(_rear_body_diam/2., _rear_body_length, 0., 0.,
-                                              G4ThreeVector (0., 0., - _front_body_length/2. - _rear_body_length/2.));
-    _rear_cap_surf_gen = new CylinderPointSampler(0., 0.1 * micrometer, _rear_body_diam/2., 0.,
-					       G4ThreeVector (0., 0., - _front_body_length/2. - _rear_body_length - 0.05 * micrometer));
-
+    _front_surf_gen =
+      new CylinderPointSampler(_front_body_diam/2., _front_body_length, 0., 0.,
+			       G4ThreeVector (0., 0., 0.));
+    _back_front_surf_gen =
+      new CylinderPointSampler(_rear_body_diam/2., 0.1 * micrometer,
+			       (_front_body_diam - _rear_body_diam)/2., 0.,
+			       G4ThreeVector (0., 0., -_front_body_length/2.
+					      - 0.05 * micrometer));
+    _rear_surf_gen =
+      new CylinderPointSampler(_rear_body_diam/2., _rear_body_length, 0., 0.,
+			       G4ThreeVector (0., 0., - _front_body_length/2.
+					      - _rear_body_length/2.));
+    _rear_cap_surf_gen =
+      new CylinderPointSampler(0., 0.1 * micrometer, _rear_body_diam/2., 0.,
+			       G4ThreeVector (0., 0., - _front_body_length/2.
+					      - _rear_body_length - 0.05 * micrometer));
 
 
     // Getting the enclosure body volume over total
-    G4double front_body_vol  = _front_body_length * pi * ((_front_body_diam/2.)*(_front_body_diam/2.) - front_body_irad*front_body_irad);
-    G4double medium_body_vol = _body_thickness * pi * (front_body_irad*front_body_irad - (_rear_body_diam/2.)*(_rear_body_diam/2.));
-    G4double rear_body_vol   = (_rear_body_length+_body_thickness) * pi * ((_rear_body_diam/2.)*(_rear_body_diam/2.) - rear_body_irad*rear_body_irad);
+    G4double front_body_vol  =
+      _front_body_length * pi * ((_front_body_diam/2.)*(_front_body_diam/2.)
+				 - front_body_irad*front_body_irad);
+    G4double medium_body_vol =
+      _body_thickness * pi * (front_body_irad*front_body_irad
+			      - (_rear_body_diam/2.)*(_rear_body_diam/2.));
+    G4double rear_body_vol   =
+      (_rear_body_length+_body_thickness) * pi * ((_rear_body_diam/2.)*(_rear_body_diam/2.)
+						  - rear_body_irad*rear_body_irad);
     G4double rear_cap_vol    = _body_thickness * pi * rear_body_irad*rear_body_irad;   
-    G4double front_cap_vol   = (_window_thickness + _photocathode_thickness) * pi * front_body_irad*front_body_irad;
+    G4double front_cap_vol   =
+      (_window_thickness + _photocathode_thickness) * pi * front_body_irad*front_body_irad;
     
-    G4double total_body_vol  = front_body_vol + medium_body_vol + rear_body_vol + rear_cap_vol; //without window
-    G4double total_vol       = front_body_vol + medium_body_vol + rear_body_vol + rear_cap_vol + front_cap_vol;
-    _front_body_perc  = front_body_vol / total_body_vol;
-    _fr_med_body_perc = (front_body_vol + medium_body_vol) / total_body_vol;
+    G4double total_body_vol  =
+      front_body_vol + medium_body_vol + rear_body_vol + rear_cap_vol; //without window
+    G4double total_vol       =
+      front_body_vol + medium_body_vol + rear_body_vol + rear_cap_vol + front_cap_vol;
+    _front_body_perc     = front_body_vol / total_body_vol;
+    _fr_med_body_perc    = (front_body_vol + medium_body_vol) / total_body_vol;
     _fr_med_re_body_perc = (front_body_vol + medium_body_vol + rear_body_vol) / total_body_vol;
  
-    _front_perc  = front_body_vol / total_vol;
-    _fr_med_perc = (front_body_vol + medium_body_vol) / total_vol;
-    _fr_med_re_perc = (front_body_vol + medium_body_vol + rear_body_vol) / total_vol;
-    _fr_med_re_cap_perc = (front_body_vol + medium_body_vol + rear_body_vol+ rear_cap_vol) / total_vol;
+    _front_perc         = front_body_vol / total_vol;
+    _fr_med_perc        = (front_body_vol + medium_body_vol) / total_vol;
+    _fr_med_re_perc     = (front_body_vol + medium_body_vol + rear_body_vol) / total_vol;
+    _fr_med_re_cap_perc =
+      (front_body_vol + medium_body_vol + rear_body_vol+ rear_cap_vol) / total_vol;
 
     G4double front_body_surf = 2. * pi * (_front_body_diam/2.) * _front_body_length;
-    G4double back_front_surf = pi * ((_front_body_diam/2. * _front_body_diam/2.) - (_rear_body_diam/2. * _rear_body_diam/2.));
-    G4double rear_body_surf = 2. * pi * (_rear_body_diam/2.) * _rear_body_length;
-    G4double rear_cap_surf = pi * (_rear_body_diam/2. * _rear_body_diam/2.);
+    G4double back_front_surf =
+      pi * ((_front_body_diam/2. * _front_body_diam/2.) - (_rear_body_diam/2. * _rear_body_diam/2.));
+    G4double rear_body_surf  = 2. * pi * (_rear_body_diam/2.) * _rear_body_length;
+    G4double rear_cap_surf   = pi * (_rear_body_diam/2. * _rear_body_diam/2.);
 
     G4double total_surf = front_body_surf + back_front_surf + rear_body_surf + rear_cap_surf;
     _front_surf_perc  = front_body_surf / total_surf;
@@ -308,7 +343,6 @@ namespace nexus {
 	3.09960482523 *eV, 3.17908187203 *eV,  3.2627419213 *eV,   3.35092413538 *eV, 
 	3.44400536137 *eV, 3.54240551455 *eV,  3.64659391204 *eV,  3.75709675786 *eV, 
 	3.87450603154 *eV, 3.99949009707 *eV,  4.13280643364 *eV,  4.27531700032 *eV, 
-
 	4.42800689319 *eV, 4.59200714849 *eV,  4.76862280805 *eV,  4.95936772037 *eV, 
 	5.16600804205 *eV, 5.39061708736 *eV,  5.63564513678 *eV,  5.90400919092 *eV, 
 	6.19920965046 *eV, 6.358163744063561 *eV, 6.525483842591549 *eV, 6.7018482707697 *eV, 
@@ -387,7 +421,8 @@ namespace nexus {
     phcath_mpt->AddProperty("EFFICIENCY", ENERGIES, EFFICIENCY, entries);
     phcath_mpt->AddProperty("REFLECTIVITY", ENERGIES, REFLECTIVITY, entries);
     
-    G4OpticalSurface* opt_surf = new G4OpticalSurface("PHOTOCATHODE", unified, polished, dielectric_metal);
+    G4OpticalSurface* opt_surf =
+      new G4OpticalSurface("PHOTOCATHODE", unified, polished, dielectric_metal);
     opt_surf->SetMaterialPropertiesTable(phcath_mpt);
 
     return opt_surf;
