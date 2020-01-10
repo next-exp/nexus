@@ -291,18 +291,6 @@ namespace nexus {
         vertex = _front_cap_gen->GenerateVertex("INSIDE");
     }
 
-    if (region == "PMT_SURF") {
-      G4double rand1 = G4UniformRand();
-      if (rand1 < _front_surf_perc)
-        vertex = _front_surf_gen->GenerateVertex("BODY_SURF");
-      else if (rand1 < _back_front_surf_perc)
-        vertex = _back_front_surf_gen->GenerateVertex("WHOLE_VOL");
-      else if (rand1 < _rear_surf_perc)
-        vertex = _rear_surf_gen->GenerateVertex("BODY_SURF");
-      else
-        vertex = _rear_cap_surf_gen->GenerateVertex("WHOLE_VOL");
-    }
-
     return vertex;
   }
 
