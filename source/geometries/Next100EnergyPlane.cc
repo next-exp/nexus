@@ -453,7 +453,7 @@ namespace nexus {
       do {
     	vertex = _copper_gen->GenerateVertex("INSIDE");
     	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
-      } while (VertexVolume->GetName() != "ENERGY_COPPER_PLATE");
+      } while (VertexVolume->GetName() != region);
     }
 
     // Sapphire windows
