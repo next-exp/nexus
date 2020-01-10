@@ -300,10 +300,10 @@ namespace nexus {
 
 
     /// Optical surface on TPB to model roughness ///
-    G4OpticalSurface* owls_Surf =
-      new G4OpticalSurface("oWLS_Surf", glisur, ground, dielectric_dielectric, .01);
+    G4OpticalSurface* tpb_surf =
+      new G4OpticalSurface("tpb_sapphire_surf", glisur, ground, dielectric_dielectric, .01);
 
-    new G4LogicalSkinSurface("oWLS_sapphire_surf", tpb_logic, owls_Surf);
+    new G4LogicalSkinSurface("tpb_sapphire_surf", tpb_logic, tpb_surf);
 
 
     /// Optical pad ///
