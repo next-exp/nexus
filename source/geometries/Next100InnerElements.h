@@ -28,8 +28,8 @@ namespace nexus {
   class Next100TrackingPlane;
 
 
-  /// This is a geometry placer that encloses from the FIELD CAGE to inside
-  /// covering the ACTIVE region, EL gap and its grids, the cathode grid ...
+  /// This is a geometry placer that encloses the energy and tracking planes and
+  /// the field cage, including all internal elements such as active and buffer volumes.
 
   class Next100InnerElements : public BaseGeometry
   {
@@ -67,10 +67,8 @@ namespace nexus {
     Next100EnergyPlane*   _energy_plane;
     Next100TrackingPlane* _tracking_plane;
 
-
     // Messenger for the definition of control commands
     G4GenericMessenger* _msg;
-
 
   };
 
