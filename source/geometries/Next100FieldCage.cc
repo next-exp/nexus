@@ -279,9 +279,9 @@ namespace nexus {
     G4LogicalVolume* diel_grid_logic =
       new G4LogicalVolume(diel_grid_solid, fgrid_mat, "EL_GRID");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., posz1), diel_grid_logic, "EL_GRID_ANODE",
+    new G4PVPlacement(0, G4ThreeVector(0., 0., posz1), diel_grid_logic, "EL_GRID_GATE",
 		      el_gap_logic, false, 0, false);
-    new G4PVPlacement(0, G4ThreeVector(0., 0., posz2), diel_grid_logic, "EL_GRID_GATE",
+    new G4PVPlacement(0, G4ThreeVector(0., 0., posz2), diel_grid_logic, "EL_GRID_ANODE",
      		      el_gap_logic, false, 1, false);
 
 
