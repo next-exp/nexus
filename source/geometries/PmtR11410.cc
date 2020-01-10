@@ -160,6 +160,7 @@ namespace nexus {
 
     // VISIBILITIES //////////////////////////////////////////////////
     pmt_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    window_logic->SetVisAttributes(G4VisAttributes::Invisible);
     if (_visibility) {
       G4VisAttributes pmt_col = nexus::LightGrey();
       pmt_col.SetForceSolid(true);
@@ -167,7 +168,6 @@ namespace nexus {
       G4VisAttributes phot_col = nexus::Brown();
       phot_col.SetForceSolid(true);
       photocathode_logic->SetVisAttributes(phot_col);
-      window_logic->SetVisAttributes(G4VisAttributes::Invisible);
     } else {
       pmt_logic->SetVisAttributes(G4VisAttributes::Invisible);
       photocathode_logic->SetVisAttributes(G4VisAttributes::Invisible);
