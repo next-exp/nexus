@@ -187,8 +187,7 @@ namespace nexus {
 	     (region == "XENON") ||
 	     (region == "LIGHT_TUBE_DRIFT") ||
 	     (region == "LIGHT_TUBE_BUFFER") ||
-	     (region == "CARRIER_PLATE") ||
-	     (region == "ENCLOSURE") ||
+	     (region == "ENERGY_COPPER_PLATE") ||
 	     (region == "SAPPHIRE_WINDOW") ||
 	     (region == "OPTICAL_PAD") ||
 	     (region == "PMT_BODY") ||
