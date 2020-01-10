@@ -36,8 +36,7 @@ namespace nexus {
     _up_nozzle_ypos (20. * cm),
     _central_nozzle_ypos (0. * cm),
     _down_nozzle_ypos (-20. * cm),
-    _bottom_nozzle_ypos(-53. * cm),
-    _rot_angle(pi)
+    _bottom_nozzle_ypos(-53. * cm)
   {
 
   // The following methods must be invoked in this particular
@@ -84,7 +83,9 @@ namespace nexus {
     G4Box* lab_solid =
       new G4Box("LAB", _lab_size/2., _lab_size/2., _lab_size/2.);
 
-    _lab_logic = new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
+    _lab_logic =
+      new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
+			  "LAB");
     _lab_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
     // Set this volume as the wrapper for the whole geometry
@@ -108,30 +109,23 @@ namespace nexus {
     _inner_elements->SetLogicalVolume(vessel_internal_logic);
     _inner_elements->Construct();
 
-    _shielding->SetELzCoord(_inner_elements->GetELzCoord());
-    _vessel->SetELzCoord(_inner_elements->GetELzCoord());
-
     // Internal Copper Shielding
     _ics->SetLogicalVolume(vessel_internal_logic);
-    _ics->SetELzCoord(_inner_elements->GetELzCoord());
     _ics->Construct();
 
-    // Placement of the shielding volume, rotated and translated to have a right-handed ref system with z = z drift.
-    _displ = G4ThreeVector(0., 0., _inner_elements->GetELzCoord());
-
-    G4RotationMatrix rot;
-    rot.rotateY(_rot_angle);
-
-    new G4PVPlacement(G4Transform3D(rot, _displ), shielding_logic,
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), shielding_logic,
 		      "LEAD_BOX", _lab_logic, false, 0);
 
 
     //// VERTEX GENERATORS   //
     _lab_gen =
-      new BoxPointSampler(_lab_size - 1.*m, _lab_size - 1.*m, _lab_size  - 1.*m, 1.*m,G4ThreeVector(0.,0.,0.),0);
+      new BoxPointSampler(_lab_size - 1.*m, _lab_size - 1.*m, _lab_size  - 1.*m,
+			  1.*m,G4ThreeVector(0.,0.,0.),0);
 
     G4ThreeVector shielding_dim = _shielding->GetDimensions();
-    _muon_gen = new MuonsPointSampler(shielding_dim.x()/2. + 50.*cm, shielding_dim.y()/2. + 1.*cm, shielding_dim.z()/2. + 50.*cm);
+    _muon_gen = new MuonsPointSampler(shielding_dim.x()/2. + 50.*cm,
+				      shielding_dim.y()/2. + 1.*cm,
+				      shielding_dim.z()/2. + 50.*cm);
 
   }
 
@@ -141,17 +135,17 @@ namespace nexus {
   {
     G4ThreeVector vertex(0.,0.,0.);
 
-     //AIR AROUND SHIELDING
+    // Air around shielding
     if (region == "LAB") {
       vertex = _lab_gen->GenerateVertex("INSIDE");
     } else if (region == "MUONS") {
       vertex = _muon_gen->GenerateVertex();
     // Shielding regions
     } else if ((region == "SHIELDING_LEAD")  ||
-    	(region == "SHIELDING_STEEL") ||
-		(region == "EXTERNAL")        ||
-		(region == "INNER_AIR")   ||
-		(region == "SHIELDING_STRUCT") ) {
+	       (region == "SHIELDING_STEEL") ||
+	       (region == "EXTERNAL") ||
+	       (region == "INNER_AIR") ||
+	       (region == "SHIELDING_STRUCT") ) {
       vertex = _shielding->GenerateVertex(region);
     }
 
@@ -195,14 +189,6 @@ namespace nexus {
       G4Exception("[Next100]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");
     }
-
-    // AD_HOC is the only vertex that is not rotated and shifted because it is passed by the user
-    if  (region == "AD_HOC")
-      return vertex;
-
-    // First rotate, then shift
-    vertex.rotate(_rot_angle, G4ThreeVector(0., 1., 0.));
-    vertex = vertex + _displ;
 
     return vertex;
   }
