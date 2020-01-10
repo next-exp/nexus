@@ -88,8 +88,8 @@ namespace nexus {
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/Next100/",
 				  "Control commands of geometry Next100.");
-    _msg->DeclareProperty("energy_plane_vis", _visibility, "Energy Plane Visibility");
-    _msg->DeclareProperty("verbosity", _verbosity, "Energy Plane verbosity");
+    _msg->DeclareProperty("energy_plane_vis", _visibility, "Energy Plane visibility");
+    _msg->DeclareProperty("energy_plane_verbosity", _verbosity, "Energy Plane verbosity");
 
     /// The PMT
     _pmt = new PmtR11410();
