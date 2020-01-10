@@ -341,6 +341,9 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
         unsigned int charge_tof = (unsigned int)((*it).second+0.5);
         _h5writer->WriteSensorTofInfo(_nevt, hitTof->GetPmtID(), time_bin_tof, charge_tof);
       }
+      else {
+        break;
+      }
     }
 
     /*
