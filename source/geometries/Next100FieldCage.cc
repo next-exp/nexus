@@ -41,12 +41,11 @@ namespace nexus {
 
   Next100FieldCage::Next100FieldCage():
     BaseGeometry(),
-    // Field cage dimensions
     _active_diam (984 * mm), // distance between the centers of two opposite panels
     _active_length (1159.6 * mm), // distance between gate and cathode
-    _drift_transv_diff(1. * mm/sqrt(cm)),
-    _drift_long_diff(.3 * mm/sqrt(cm)),
-    _max_step_size(1. * mm),
+    _drift_transv_diff (1. * mm/sqrt(cm)),
+    _drift_long_diff (.3 * mm/sqrt(cm)),
+    _max_step_size (1. * mm),
     _buffer_length (282. * mm),//distance between cathode and sapphire window surfaces
     _cath_grid_transparency (.98), // to check
     _grid_thickn (.1 * mm),
@@ -61,10 +60,10 @@ namespace nexus {
     _ELlong_diff (0. * mm/sqrt(cm)),
     _ELelectric_field (34.5*kilovolt/cm),
     _el_grid_transparency (.88), // to check
-    _elfield(0),
-    _el_table_binning(1.*mm),
-    _el_table_point_id(-1),
-    _el_table_index(0),
+    _elfield (0),
+    _el_table_binning (1.*mm),
+    _el_table_point_id (-1),
+    _el_table_index (0),
     _visibility (1),
     _verbosity (0)
   {
@@ -280,9 +279,9 @@ namespace nexus {
     G4LogicalVolume* diel_grid_logic =
       new G4LogicalVolume(diel_grid_solid, fgrid_mat, "EL_GRID");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., posz1), diel_grid_logic, "EL_GRID_1",
+    new G4PVPlacement(0, G4ThreeVector(0., 0., posz1), diel_grid_logic, "EL_GRID_ANODE",
 		      el_gap_logic, false, 0, false);
-    new G4PVPlacement(0, G4ThreeVector(0., 0., posz2), diel_grid_logic, "EL_GRID_2",
+    new G4PVPlacement(0, G4ThreeVector(0., 0., posz2), diel_grid_logic, "EL_GRID_GATE",
      		      el_gap_logic, false, 1, false);
 
 

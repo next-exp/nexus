@@ -55,7 +55,8 @@ namespace nexus {
     _tracking_plane = new Next100TrackingPlane();
 
     /// Messenger
-    _msg = new G4GenericMessenger(this, "/Geometry/Next100/", "Control commands of geometry Next100.");
+    _msg = new G4GenericMessenger(this, "/Geometry/Next100/",
+				  "Control commands of geometry Next100.");
   }
 
 
@@ -67,7 +68,7 @@ namespace nexus {
 
   void Next100InnerElements::Construct()
   {
-    // Reading material
+    // Reading mother material
     _gas = _mother_logic->GetMaterial();
     _pressure =    _gas->GetPressure();
     _temperature = _gas->GetTemperature();
@@ -100,7 +101,7 @@ namespace nexus {
   {
     G4ThreeVector vertex(0.,0.,0.);
 
-    // Field Cage region
+    // Field Cage regions
     if ((region == "CENTER") ||
 	(region == "ACTIVE") ||
 	(region == "BUFFER") ||
@@ -132,8 +133,5 @@ namespace nexus {
 
     return vertex;
   }
-
-
-
 
 } // end namespace nexus
