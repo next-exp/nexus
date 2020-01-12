@@ -3,9 +3,9 @@
 //
 //  Authors: <justo.martin-albo@ific.uv.es>, <jmunoz@ific.uv.es>
 //  Created: 21 Nov 2011
-//  
+//
 //  Copyright (c) 2011 NEXT Collaboration
-// ---------------------------------------------------------------------------- 
+// ----------------------------------------------------------------------------
 
 #include "Next100Vessel.h"
 #include "MaterialsList.h"
@@ -33,7 +33,7 @@
 namespace nexus {
 
   using namespace CLHEP;
-  
+
   Next100Vessel::Next100Vessel(const G4double nozzle_ext_diam,
 			       const G4double up_nozzle_ypos,
 			       const G4double central_nozzle_ypos,
@@ -46,6 +46,7 @@ namespace nexus {
     _vessel_body_length (160 * cm),
     _vessel_length (181.74 * cm),  // Vessel length = 160 cm (from body) + 2. * 10.87cm (from endcaps)
     _vessel_thickness (1.  * cm),
+    _distance_gate_body_end (50. * mm), // to be checked wiith designs
 
     // Endcaps dimensions
     _endcap_in_rad (108.94 * cm),
@@ -104,14 +105,14 @@ namespace nexus {
 
     new G4UnitDefinition("1/MeV","1/MeV", "1/Energy", 1/MeV);
 
-    G4GenericMessenger::Command& sc_yield_cmd = 
+    G4GenericMessenger::Command& sc_yield_cmd =
       _msg->DeclareProperty("sc_yield", _sc_yield,
 			    "Set scintillation yield for GXe. It is in photons/MeV");
     sc_yield_cmd.SetParameterName("sc_yield", true);
     sc_yield_cmd.SetUnitCategory("1/Energy");
 
   }
-  
+
 
 
   void Next100Vessel::Construct()
@@ -205,7 +206,7 @@ namespace nexus {
     // Body gas + Tracking endcap gas
     G4UnionSolid* vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_body_solid,
 						      vessel_gas_tracking_endcap_solid, 0, tracking_endcap_pos);
-    
+
     // Body gas + Tracking endcap gas + Energy endcap gas
     vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid,
 					vessel_gas_energy_endcap_solid, 0, energy_endcap_pos);
@@ -227,7 +228,7 @@ namespace nexus {
 							"VESSEL");
     this->SetLogicalVolume(vessel_logic);
 
-    G4Material* vessel_gas_mat = nullptr;    
+    G4Material* vessel_gas_mat = nullptr;
     if (_gas == "naturalXe") {
       vessel_gas_mat = MaterialsList::GXe(_pressure, _temperature);
     } else if (_gas == "enrichedXe") {
@@ -239,13 +240,14 @@ namespace nexus {
 					    _xe_perc, _helium_mass_num);
     } else {
       G4Exception("[Next100Vessel]", "Construct()", FatalException,
-		  "Unknown kind of xenon, valid options are: natural, enriched, depleted, or XeHe.");     
+		  "Unknown kind of xenon, valid options are: natural, enriched, depleted, or XeHe.");
     }
-    
+
     vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
 
     G4LogicalVolume* vessel_gas_logic = new G4LogicalVolume(vessel_gas_solid, vessel_gas_mat, "VESSEL_GAS");
     _internal_logic_vol = vessel_gas_logic;
+    SetELzCoord(-_vessel_length/2. + _distance_gate_body_end);
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_gas_logic,
 		      "VESSEL_GAS", vessel_logic, false, 0);
@@ -266,7 +268,7 @@ namespace nexus {
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,vacuum_manifold_zpos), vacuum_manifold_logic,
 		      "VACUUM_MANIFOLD", vessel_gas_logic, false, 0);
-    
+
 
     G4double vacuum_manifold_gas_rad = vacuum_manifold_rad - _vessel_thickness;
     G4double vacuum_manifold_gas_length = vacuum_manifold_length - 2. * _vessel_thickness;
@@ -280,7 +282,7 @@ namespace nexus {
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vacuum_manifold_gas_logic,
 		      "VACUUM_MANIFOLD_GAS", vacuum_manifold_logic, false, 0);
-    
+
 
 
     // SETTING VISIBILITIES   //////////
@@ -324,7 +326,7 @@ namespace nexus {
     _perc_endcap_vol = endcap_vol / (body_vol + 2. * endcap_vol);
 
   }
-  
+
 
 
   Next100Vessel::~Next100Vessel()
@@ -335,7 +337,7 @@ namespace nexus {
     delete _tracking_flange_gen;
     delete _energy_flange_gen;
   }
-  
+
 
 
 
@@ -422,7 +424,7 @@ namespace nexus {
     }
      else {
       G4Exception("[Next100Vessel]", "GenerateVertex()", FatalException,
-		  "Unknown vertex generation region!");     
+		  "Unknown vertex generation region!");
     }
 
     return vertex;
