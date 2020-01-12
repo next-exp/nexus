@@ -96,7 +96,7 @@ namespace nexus {
   }
 
 
-  void Next100EnergyPlane::SetLogicalVolume(G4LogicalVolume* mother_logic)
+  void Next100EnergyPlane::SetMotherLogicalVolume(G4LogicalVolume* mother_logic)
   {
     _mother_logic = mother_logic;
     _gas          = _mother_logic->GetMaterial();

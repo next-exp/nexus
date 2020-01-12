@@ -83,7 +83,7 @@ namespace nexus {
     _field_cage->Construct();
 
     // Energy Plane
-    _energy_plane->SetLogicalVolume(_mother_logic);
+    _energy_plane->SetMotherLogicalVolume(_mother_logic);
     _energy_plane->SetELzCoord(gate_zpos);
     _energy_plane->SetSapphireSurfaceZPos(_gate_sapphire_wdw_distance); // to check
     _energy_plane->Construct();
