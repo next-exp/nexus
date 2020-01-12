@@ -234,7 +234,8 @@ namespace nexus {
 
     G4double stand_out_length =
       _sapphire_window_thickn + _optical_pad_thickn + _pmt_stand_out;
-    _copper_plate_posz = _end_of_sapphire_posz + stand_out_length + _copper_plate_thickn/2.;
+    _copper_plate_posz =
+      GetELzCoord() + _end_of_sapphire_posz + stand_out_length + _copper_plate_thickn/2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., _copper_plate_posz), copper_plate_logic,
 		      "ENERGY_COPPER_PLATE", _mother_logic, false, 0, false);
 
