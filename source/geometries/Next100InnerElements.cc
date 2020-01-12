@@ -43,7 +43,9 @@ using namespace CLHEP;
 namespace nexus {
 
 
-  Next100InnerElements::Next100InnerElements(): BaseGeometry()
+  Next100InnerElements::Next100InnerElements():
+    BaseGeometry(),
+    _gate_sapphire_wdw_distance (1441.7 * mm) // should be active length + cathode thickness + buffer length
   {
     // Field Cage
     _field_cage = new Next100FieldCage();
@@ -77,18 +79,18 @@ namespace nexus {
 
     // Field Cage
     _field_cage->SetMotherLogicalVolume(_mother_logic);
-    _field_cage->SetELzCoord(GetELzCoord());
+    _field_cage->SetELzCoord(gate_zpos);
     _field_cage->Construct();
 
     // Energy Plane
     _energy_plane->SetLogicalVolume(_mother_logic);
-    _energy_plane->SetELzCoord(GetELzCoord());
-    _energy_plane->SetSapphireSurfaceZPos(1441.6 * mm); // to check
+    _energy_plane->SetELzCoord(gate_zpos);
+    _energy_plane->SetSapphireSurfaceZPos(_gate_sapphire_wdw_distance); // to check
     _energy_plane->Construct();
 
     // Tracking Plane
     _tracking_plane->SetLogicalVolume(_mother_logic);
-    _tracking_plane->SetELzCoord(GetELzCoord());
+    _tracking_plane->SetELzCoord(gate_zpos);
     _tracking_plane->Construct();
   }
 
