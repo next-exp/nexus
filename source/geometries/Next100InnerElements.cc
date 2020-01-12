@@ -68,6 +68,8 @@ namespace nexus {
 
   void Next100InnerElements::Construct()
   {
+    // Position in Z of the beginning of the drift region
+    G4double gate_zpos = GetELzCoord();
     // Reading mother material
     _gas = _mother_logic->GetMaterial();
     _pressure =    _gas->GetPressure();
@@ -75,17 +77,19 @@ namespace nexus {
 
     // Field Cage
     _field_cage->SetMotherLogicalVolume(_mother_logic);
+    _tracking_plane->SetELzCoord(gate_zpos);
     _field_cage->Construct();
 
     // Energy Plane
     _energy_plane->SetLogicalVolume(_mother_logic);
-    _energy_plane->SetSapphireSurfaceZPos(1000. * mm); // placeholder, to be changed after field cage implementation.
+    _energy_plane->SetELzCoord(gate_zpos);
+    _energy_plane->SetSapphireSurfaceZPos(1450. * mm); // placeholder, to be changed after field cage implementation.
     _energy_plane->Construct();
 
     // Tracking Plane
-    _tracking_plane->SetLogicalVolume(_mother_logic);
-    _tracking_plane->SetELzCoord(GetELzCoord());
-    _tracking_plane->Construct();
+    // _tracking_plane->SetLogicalVolume(_mother_logic);
+    // _tracking_plane->SetELzCoord(gate_zpos);
+    // _tracking_plane->Construct();
   }
 
 

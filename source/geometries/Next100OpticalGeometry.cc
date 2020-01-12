@@ -130,6 +130,7 @@ namespace nexus {
 
   ///INNER ELEMENTS
   _inner_elements->SetLogicalVolume(gas_logic);
+  _inner_elements->SetELzCoord(0.*mm);
   _inner_elements->Construct();
 
   // Visibilities

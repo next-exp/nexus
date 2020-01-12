@@ -68,7 +68,7 @@ namespace nexus {
     _verbosity (0)
   {
     /// Calculate derived positions
-    _active_zpos = _active_length/2.;
+    _active_zpos = GetELzCoord() + _active_length/2.;
     _el_gap_diam = _active_diam + 2. * cm; // TO CHECK
     _el_gap_zpos = _active_zpos - _active_length/2. - _el_gap_length/2.;
     _cathode_grid_zpos = _active_zpos + _active_length/2. + _grid_thickn/2. ;
@@ -270,7 +270,7 @@ namespace nexus {
     /// Dimensions & position: the grids are simulated inside the EL gap.
     /// Their thickness is symbolic.
 
-    G4double posz1 = _el_gap_length/2. - _grid_thickn/2.;
+    G4double posz1 =  _el_gap_length/2. - _grid_thickn/2.;
     G4double posz2 = -_el_gap_length/2. + _grid_thickn/2.;
 
     G4Tubs* diel_grid_solid =

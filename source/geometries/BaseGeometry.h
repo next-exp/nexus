@@ -110,6 +110,7 @@ namespace nexus {
 
   inline void BaseGeometry::SetELzCoord(G4double z) {_el_z = z;}
 
+  // This methods is to be used only in the Next1EL and NEW geometries
   inline void BaseGeometry::CalculateGlobalPos(G4ThreeVector& vertex) const
   {
     // Rotates and translates into G4 global
