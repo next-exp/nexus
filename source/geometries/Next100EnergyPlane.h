@@ -39,7 +39,7 @@ namespace nexus {
     ~Next100EnergyPlane();
 
     /// Sets the Logical Volume where Inner Elements will be placed
-    void SetLogicalVolume(G4LogicalVolume* mother_logic);
+    void SetMotherLogicalVolume(G4LogicalVolume* mother_logic);
 
     /// Sets the z position of the surface of the sapphire windows
     void SetSapphireSurfaceZPos(G4double z);
