@@ -290,7 +290,7 @@ namespace nexus {
       G4VisAttributes light_blue = nexus::LightBlue();
       light_blue.SetForceSolid(true);
       el_gap_logic->SetVisAttributes(light_blue);
-      G4VisAttributes dark_red = nexus::DarkRed();
+      G4VisAttributes dark_red = nexus::LightGrey();
       dark_red.SetForceSolid(true);
       diel_grid_logic->SetVisAttributes(dark_red);
     } else {
