@@ -21,8 +21,6 @@ namespace nexus {
   { G4Colour myColour; G4Colour::GetColour("white", myColour); G4VisAttributes myAttr(myColour); return myAttr;}
   inline G4VisAttributes Red()
   { G4Colour myColour(1., 0., 0.); G4VisAttributes myAttr(myColour); return myAttr;}
-  inline G4VisAttributes DarkRed()
-  { G4Colour myColour(.88, .87, .86); G4VisAttributes myAttr(myColour); return myAttr;}
   inline G4VisAttributes BloodRed()
   { G4Colour myColour(.55, .09, .09); G4VisAttributes myAttr(myColour); return myAttr;}
   inline G4VisAttributes DarkGreen()

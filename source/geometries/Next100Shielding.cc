@@ -217,8 +217,8 @@ namespace nexus {
     if (_visibility) {
       G4VisAttributes dark_grey_col = nexus::DarkGrey();
       lead_box_logic->SetVisAttributes(dark_grey_col);
-      G4VisAttributes dark_red_col = nexus::DarkRed();
-      steel_box_logic->SetVisAttributes(dark_red_col);
+      G4VisAttributes grey_col = nexus::LightGrey();
+      steel_box_logic->SetVisAttributes(grey_col);
       G4VisAttributes antiox_col = nexus::BloodRed();
       //  antiox.SetForceSolid(true);
       roof_logic->SetVisAttributes(antiox_col);
