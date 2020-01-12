@@ -442,7 +442,7 @@ namespace nexus {
 
     /// BUFFER PART ///
     G4double teflon_buffer_zpos = teflon_drift_zpos + _teflon_drift_length/2.
-      + _cathode_gap + _buffer_length/2; // TO CHECK
+      + _cathode_gap + _teflon_buffer_length/2; // TO CHECK
 
     G4double zplane_buff[2] = {-_teflon_buffer_length/2., _teflon_buffer_length/2.};
     G4double router_buff[2] =
