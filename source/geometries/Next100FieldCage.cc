@@ -489,12 +489,12 @@ namespace nexus {
 
     // Visibilities
     if (_visibility) {
-      G4VisAttributes light_blue = nexus::LightGreen();
-      G4VisAttributes blue = nexus::DarkGreen();
-      blue.SetForceSolid(true);
-      light_blue.SetForceSolid(true);
-      teflon_drift_logic->SetVisAttributes(light_blue);
-      teflon_buffer_logic->SetVisAttributes(blue);
+      G4VisAttributes light_green = nexus::LightGreen();
+      G4VisAttributes green = nexus::DarkGreen();
+      //green.SetForceSolid(true);
+      //light_green.SetForceSolid(true);
+      teflon_drift_logic->SetVisAttributes(light_green);
+      teflon_buffer_logic->SetVisAttributes(green);
     }
     else {
       teflon_drift_logic->SetVisAttributes(G4VisAttributes::Invisible);
