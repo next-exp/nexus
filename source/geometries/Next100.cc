@@ -121,10 +121,9 @@ namespace nexus {
     G4LogicalVolume* shielding_air_logic = _shielding->GetAirLogicalVolume();
     G4LogicalVolume* vessel_logic = _vessel->GetLogicalVolume();
     G4double gate_zpos_in_vessel  = _vessel->GetELzCoord();
-    // new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), vessel_logic,
-    // 		      "VESSEL", shielding_air_logic, false, 0);
-    new G4PVPlacement(0, G4ThreeVector(0., 0., -gate_zpos_in_vessel), vessel_logic,
-     		      "VESSEL", _lab_logic, false, 0);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), vessel_logic,
+    		      "VESSEL", shielding_air_logic, false, 0);
+
     G4LogicalVolume* vessel_internal_logic = _vessel->GetInternalLogicalVolume();
 
     // Inner Elements
@@ -133,17 +132,17 @@ namespace nexus {
     _inner_elements->Construct();
 
     // Internal Copper Shielding
-    //_ics->SetLogicalVolume(vessel_internal_logic);
-    //_ics->Construct();
+    _ics->SetLogicalVolume(vessel_internal_logic);
+    _ics->Construct();
 
-    // new G4PVPlacement(0, G4ThreeVector(0., 0., gate_zpos_in_vessel), shielding_logic,
-    // 		      "LEAD_BOX", _lab_logic, false, 0);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., -gate_zpos_in_vessel), shielding_logic,
+     		      "LEAD_BOX", _lab_logic, false, 0);
 
 
     //// VERTEX GENERATORS   //
     _lab_gen =
       new BoxPointSampler(_lab_size - 1.*m, _lab_size - 1.*m, _lab_size  - 1.*m,
-			  1.*m,G4ThreeVector(0.,0.,0.),0);
+			  1.*m,G4ThreeVector(0., 0., 0.), 0);
 
     G4ThreeVector shielding_dim = _shielding->GetDimensions();
     _muon_gen = new MuonsPointSampler(shielding_dim.x()/2. + 50.*cm,
