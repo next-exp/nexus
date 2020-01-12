@@ -46,7 +46,7 @@ namespace nexus {
     _vessel_body_length (160 * cm),
     _vessel_length (181.74 * cm),  // Vessel length = 160 cm (from body) + 2. * 10.87cm (from endcaps)
     _vessel_thickness (1.  * cm),
-    _distance_gate_body_end (50. * mm), // to be checked with designs
+    _distance_gate_body_end (110. * mm), // to be checked with designs
 
     // Endcaps dimensions
     _endcap_in_rad (108.94 * cm),
