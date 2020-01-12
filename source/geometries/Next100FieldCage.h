@@ -62,19 +62,23 @@ namespace nexus {
     void CalculateELTableVertices(G4double, G4double, G4double);
 
     // Dimensions
-    const G4double _active_diam, _active_length;
-    G4double _drift_transv_diff, _drift_long_diff;
-    G4double _max_step_size, _buffer_length;
-    const G4double _cath_grid_transparency, _grid_thickn, _cathode_gap;
+    const G4double _active_diam, _active_length, _buffer_length;
+    const G4double _grid_thickn, _cathode_gap;
     const G4double _teflon_drift_length, _teflon_buffer_length, _teflon_thickn;
     const G4int _n_panels;
     const G4double _tpb_thickn, _el_gap_length;
-
+    // Diffusion constants
+    G4double _drift_transv_diff, _drift_long_diff;
     G4double _ELtransv_diff; ///< transversal diffusion in the EL gap
     G4double _ELlong_diff; ///< longitudinal diffusion in the EL gap
-    G4double _ELelectric_field; ///< electric field in the EL region
-    const G4double _el_grid_transparency;
+    // Electric field
     G4bool _elfield;
+    G4double _ELelectric_field; ///< electric field in the EL region
+    // Transparencies of grids
+    const G4double _cath_grid_transparency, _el_grid_transparency;
+
+    //Step size
+    G4double _max_step_size;
 
     // Variables for the EL table generation
     G4double _el_table_binning; ///< Binning of EL lookup table
