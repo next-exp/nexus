@@ -77,19 +77,19 @@ namespace nexus {
 
     // Field Cage
     _field_cage->SetMotherLogicalVolume(_mother_logic);
-    _tracking_plane->SetELzCoord(gate_zpos);
+    _field_cage->SetELzCoord(GetELzCoord());
     _field_cage->Construct();
 
     // Energy Plane
     _energy_plane->SetLogicalVolume(_mother_logic);
-    _energy_plane->SetELzCoord(gate_zpos);
-    _energy_plane->SetSapphireSurfaceZPos(1450. * mm); // placeholder, to be changed after field cage implementation.
+    _energy_plane->SetELzCoord(GetELzCoord());
+    _energy_plane->SetSapphireSurfaceZPos(1441.6 * mm); // to check
     _energy_plane->Construct();
 
     // Tracking Plane
-    // _tracking_plane->SetLogicalVolume(_mother_logic);
-    // _tracking_plane->SetELzCoord(gate_zpos);
-    // _tracking_plane->Construct();
+    _tracking_plane->SetLogicalVolume(_mother_logic);
+    _tracking_plane->SetELzCoord(GetELzCoord());
+    _tracking_plane->Construct();
   }
 
 

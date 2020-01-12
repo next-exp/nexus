@@ -120,20 +120,24 @@ namespace nexus {
     _vessel->Construct();
     G4LogicalVolume* shielding_air_logic = _shielding->GetAirLogicalVolume();
     G4LogicalVolume* vessel_logic = _vessel->GetLogicalVolume();
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_logic,
- 		      "VESSEL", shielding_air_logic, false, 0);
+    G4double gate_zpos_in_vessel  = _vessel->GetELzCoord();
+    // new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), vessel_logic,
+    // 		      "VESSEL", shielding_air_logic, false, 0);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., -gate_zpos_in_vessel), vessel_logic,
+     		      "VESSEL", _lab_logic, false, 0);
     G4LogicalVolume* vessel_internal_logic = _vessel->GetInternalLogicalVolume();
 
     // Inner Elements
     _inner_elements->SetLogicalVolume(vessel_internal_logic);
+    _inner_elements->SetELzCoord(gate_zpos_in_vessel);
     _inner_elements->Construct();
 
     // Internal Copper Shielding
-    _ics->SetLogicalVolume(vessel_internal_logic);
-    _ics->Construct();
+    //_ics->SetLogicalVolume(vessel_internal_logic);
+    //_ics->Construct();
 
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), shielding_logic,
-		      "LEAD_BOX", _lab_logic, false, 0);
+    // new G4PVPlacement(0, G4ThreeVector(0., 0., gate_zpos_in_vessel), shielding_logic,
+    // 		      "LEAD_BOX", _lab_logic, false, 0);
 
 
     //// VERTEX GENERATORS   //
