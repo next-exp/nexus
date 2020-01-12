@@ -67,13 +67,6 @@ namespace nexus {
     _visibility (1),
     _verbosity (0)
   {
-    /// Calculate derived positions
-    _active_zpos = GetELzCoord() + _active_length/2.;
-    _el_gap_diam = _active_diam + 2. * cm; // TO CHECK
-    _el_gap_zpos = _active_zpos - _active_length/2. - _el_gap_length/2.;
-    _cathode_grid_zpos = _active_zpos + _active_length/2. + _grid_thickn/2. ;
-    _active_ext_radius = _active_diam/2. / cos(pi/_n_panels);
-
     /// Define new categories
     new G4UnitDefinition("kilovolt/cm","kV/cm","Electric field", kilovolt/cm);
     new G4UnitDefinition("mm/sqrt(cm)","mm/sqrt(cm)","Diffusion", mm/sqrt(cm));
@@ -136,6 +129,13 @@ namespace nexus {
 
   void Next100FieldCage::Construct()
   {
+    /// Calculate derived positions
+    _active_zpos = GetELzCoord() + _active_length/2.;
+    _el_gap_diam = _active_diam + 2. * cm; // TO CHECK
+    _el_gap_zpos = _active_zpos - _active_length/2. - _el_gap_length/2.;
+    _cathode_grid_zpos = _active_zpos + _active_length/2. + _grid_thickn/2. ;
+    _active_ext_radius = _active_diam/2. / cos(pi/_n_panels);
+
     /// Define materials to be used
     DefineMaterials();
     /// Build the different parts of the field cagse

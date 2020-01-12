@@ -46,7 +46,7 @@ namespace nexus {
     _vessel_body_length (160 * cm),
     _vessel_length (181.74 * cm),  // Vessel length = 160 cm (from body) + 2. * 10.87cm (from endcaps)
     _vessel_thickness (1.  * cm),
-    _distance_gate_body_end (50. * mm), // to be checked wiith designs
+    _distance_gate_body_end (50. * mm), // to be checked with designs
 
     // Endcaps dimensions
     _endcap_in_rad (108.94 * cm),
@@ -247,7 +247,7 @@ namespace nexus {
 
     G4LogicalVolume* vessel_gas_logic = new G4LogicalVolume(vessel_gas_solid, vessel_gas_mat, "VESSEL_GAS");
     _internal_logic_vol = vessel_gas_logic;
-    SetELzCoord(-_vessel_length/2. + _distance_gate_body_end);
+    SetELzCoord(-_vessel_body_length/2. + _distance_gate_body_end);
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_gas_logic,
 		      "VESSEL_GAS", vessel_logic, false, 0);
