@@ -41,13 +41,10 @@ namespace nexus {
 
   Next100FieldCage::Next100FieldCage():
     BaseGeometry(),
+    // Dimensions
     _active_diam (984 * mm), // distance between the centers of two opposite panels
     _active_length (1159.6 * mm), // distance between gate and cathode
-    _drift_transv_diff (1. * mm/sqrt(cm)),
-    _drift_long_diff (.3 * mm/sqrt(cm)),
-    _max_step_size (1. * mm),
     _buffer_length (282. * mm),//distance between cathode and sapphire window surfaces
-    _cath_grid_transparency (.98), // to check
     _grid_thickn (.1 * mm),
     _cathode_gap (1. * cm),
     _teflon_drift_length (1152.6 * mm), // to check with final design
@@ -56,11 +53,18 @@ namespace nexus {
     _n_panels (18),
     _tpb_thickn (1 * micrometer),
     _el_gap_length (1. * cm),
+    // Diffusion constants
+    _drift_transv_diff (1. * mm/sqrt(cm)),
+    _drift_long_diff (.3 * mm/sqrt(cm)),
     _ELtransv_diff (0. * mm/sqrt(cm)),
     _ELlong_diff (0. * mm/sqrt(cm)),
-    _ELelectric_field (34.5*kilovolt/cm),
-    _el_grid_transparency (.88), // to check
+    // EL electric field
     _elfield (0),
+    _ELelectric_field (34.5*kilovolt/cm),
+    _cath_grid_transparency (.98), // to check
+    _el_grid_transparency (.88), // to check
+    _max_step_size (1. * mm),
+    // EL table generation
     _el_table_binning (1.*mm),
     _el_table_point_id (-1),
     _el_table_index (0),
