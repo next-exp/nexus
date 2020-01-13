@@ -453,12 +453,12 @@ namespace nexus {
     G4double router_tpb[2] =
       {(_active_diam + 2.*_tpb_thickn)/2., (_active_diam + 2.*_tpb_thickn)/2.};
 
-    G4Polyhedra* tpb_solid =
+    G4Polyhedra* tpb_drift_solid =
       new  G4Polyhedra("DRIFT_TPB", 0., twopi, _n_panels, 2,
 		       zplane, rinner, router_tpb);
-    G4LogicalVolume* tpb_logic =
-      new G4LogicalVolume(tpb_solid, _tpb, "DRIFT_TPB");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), tpb_logic,
+    G4LogicalVolume* tpb_drift_logic =
+      new G4LogicalVolume(tpb_drift_solid, _tpb, "DRIFT_TPB");
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), tpb_drift_logic,
   		      "DRIFT_TPB", teflon_drift_logic, false, 0, false);
 
 
@@ -506,7 +506,7 @@ namespace nexus {
     /// Optical surface on TPB to model roughness ///
     G4OpticalSurface* owls_Surf =
       new G4OpticalSurface("oWLS_Surf", glisur, ground, dielectric_metal, .01);
-    new G4LogicalSkinSurface("oWLS_teflon_surf", tpb_logic, owls_Surf);
+    new G4LogicalSkinSurface("oWLS_teflon_surf", tpb_drift_logic, owls_Surf);
     new G4LogicalSkinSurface("oWLS_teflon_surf", tpb_buffer_logic, owls_Surf);
 
 
