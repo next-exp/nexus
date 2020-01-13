@@ -535,10 +535,15 @@ namespace nexus {
       //light_green.SetForceSolid(true);
       teflon_drift_logic->SetVisAttributes(light_green);
       teflon_buffer_logic->SetVisAttributes(green);
+      G4VisAttributes red = nexus::Red();
+      tpb_drift_logic->SetVisAttributes(red);;
+      tpb_buffer_logic->SetVisAttributes(red);;
     }
     else {
       teflon_drift_logic->SetVisAttributes(G4VisAttributes::Invisible);
       teflon_buffer_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      tpb_drift_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      tpb_buffer_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
   }
 
