@@ -111,7 +111,6 @@ namespace nexus {
     if ((region == "CENTER") ||
 	(region == "ACTIVE") ||
 	(region == "BUFFER") ||
-	(region == "CATHODE_GRID") ||
 	(region == "XENON") ||
 	(region == "LIGHT_TUBE")) {
       vertex = _field_cage->GenerateVertex(region);

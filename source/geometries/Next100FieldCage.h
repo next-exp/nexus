@@ -99,7 +99,6 @@ namespace nexus {
     CylinderPointSampler* _active_gen;
     CylinderPointSampler* _buffer_gen;
     CylinderPointSampler* _teflon_gen;
-    CylinderPointSampler* _cathode_gen;
     CylinderPointSampler* _xenon_gen;
 
     // Geometry Navigator
