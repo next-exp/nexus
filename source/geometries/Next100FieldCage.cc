@@ -111,11 +111,20 @@ namespace nexus {
     ELlong_diff_cmd.SetParameterName("ELlong_diff", true);
     ELlong_diff_cmd.SetUnitCategory("Diffusion");
 
+    _msg->DeclareProperty("elfield", _elfield,
+			  "True if the EL field is on (full simulation), false if it's not (parametrized simulation.");
+
     G4GenericMessenger::Command& El_field_cmd =
       _msg->DeclareProperty("EL_field", _ELelectric_field,
 			    "Electric field in the EL region");
     El_field_cmd.SetParameterName("EL_field", true);
     El_field_cmd.SetUnitCategory("Electric field");
+
+    G4GenericMessenger::Command& step_cmd =
+      _msg->DeclareProperty("max_step_size", _max_step_size, "Maximum Step Size");
+    step_cmd.SetUnitCategory("Length");
+    step_cmd.SetParameterName("max_step_size", false);
+    step_cmd.SetRange("max_step_size>0.");
 
     G4GenericMessenger::Command& pitch_cmd =
       _msg->DeclareProperty("el_table_binning", _el_table_binning,
