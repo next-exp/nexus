@@ -340,12 +340,6 @@ namespace nexus {
 		      false, 0, false);
 
 
-    /// Vertex generator
-    _cathode_gen =
-      new CylinderPointSampler(0., _grid_thickn, grid_diam/2.,
-  			       0., G4ThreeVector (0., 0., _cathode_grid_zpos));
-
-
     /// Visibilities
     if (_visibility) {
       G4VisAttributes grey = nexus::LightGrey();
@@ -554,7 +548,7 @@ namespace nexus {
   {
    delete _active_gen;
    delete _buffer_gen;
-   delete _cathode_gen;
+   delete _xenon_gen;
    delete _teflon_gen;
   }
 
@@ -592,9 +586,6 @@ namespace nexus {
     	VertexVolume =
 	  _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != region);
-    }
-    else if (region == "CATHODE_GRID") {
-      vertex = _cathode_gen->GenerateVertex("BODY_VOL");
     }
     else if (region == "XENON") {
       G4VPhysicalVolume *VertexVolume;

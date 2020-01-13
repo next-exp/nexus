@@ -186,7 +186,6 @@ namespace nexus {
     else if ((region == "CENTER") ||
 	     (region == "ACTIVE") ||
 	     (region == "BUFFER") ||
-	     (region == "CATHODE_GRID") ||
 	     (region == "XENON") ||
 	     (region == "LIGHT_TUBE") ||
 	     (region == "ENERGY_COPPER_PLATE") ||
