@@ -347,8 +347,10 @@ namespace nexus {
 
 
     /// Visibilities
-    // Grid is white
-    if (!_visibility) {
+    if (_visibility) {
+      G4VisAttributes grey = nexus::LightGrey();
+      diel_grid_logic->SetVisAttributes(grey);
+    } else {
       diel_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
