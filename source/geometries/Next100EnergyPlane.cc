@@ -72,11 +72,11 @@ namespace nexus {
     /// 2. The copper huts, which provide shielding behind the PMTs,
     ///    are glued to the copper plate.
     /// 3. Since the sapphire windows that protect the PMTs and part of the
-    ///    PMTs themselves stand out the copper plate, holes are made in the copper volume
-    ///    to host the elements related with the PMTs.
-    /// 4. A vacuum volume that encapsulates the sapphire window, the optical pad, the PMT
-    ///    and the internal part of the base is made; this volume fits exactly the hole
-    ///    previously done in the copper.
+    ///    PMTs themselves stand out the copper plate, holes are made in the
+    ///    copper volume to host the elements related with the PMTs.
+    /// 4. A vacuum volume that encapsulates the sapphire window, the optical pad,
+    ///    the PMT and the internal part of the base is made;
+    ///    this volume fits exactly the hole previously done in the copper.
     /// 5. This volume is replicated by the number of the PMts and placed
     ///    in the gas volume, inside the holes excavated in the copper.
 
@@ -88,8 +88,10 @@ namespace nexus {
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/Next100/",
 				  "Control commands of geometry Next100.");
-    _msg->DeclareProperty("energy_plane_vis", _visibility, "Energy Plane visibility");
-    _msg->DeclareProperty("energy_plane_verbosity", _verbosity, "Energy Plane verbosity");
+    _msg->DeclareProperty("energy_plane_vis", _visibility,
+			  "Energy Plane visibility");
+    _msg->DeclareProperty("energy_plane_verbosity", _verbosity,
+			  "Energy Plane verbosity");
 
     /// The PMT
     _pmt = new PmtR11410();
@@ -160,14 +162,14 @@ namespace nexus {
     hut_pos = _short_hut_pos[0];
     hut_pos.setZ(transl_z);
     G4UnionSolid* copper_plate_hut_solid =
-      	new G4UnionSolid("ENERGY_COPPER_PLATE", copper_plate_hole_solid, short_hut_solid,
-      			 0, hut_pos);
+      	new G4UnionSolid("ENERGY_COPPER_PLATE", copper_plate_hole_solid,
+			 short_hut_solid, 0, hut_pos);
     for (unsigned int i=1; i<_short_hut_pos.size(); i++) {
       hut_pos = _short_hut_pos[i];
       hut_pos.setZ(transl_z);
       copper_plate_hut_solid =
-      	new G4UnionSolid("ENERGY_COPPER_PLATE", copper_plate_hut_solid, short_hut_solid,
-      			 0, hut_pos);
+      	new G4UnionSolid("ENERGY_COPPER_PLATE", copper_plate_hut_solid,
+			 short_hut_solid, 0, hut_pos);
     }
 
     hut_length = _hut_hole_length + _hut_length_medium;
@@ -178,8 +180,8 @@ namespace nexus {
       hut_pos = _medium_hut_pos[i];
       hut_pos.setZ(transl_z);
       copper_plate_hut_solid =
-      	new G4UnionSolid("ENERGY_COPPER_PLATE", copper_plate_hut_solid, medium_hut_solid,
-      			 0, hut_pos);
+      	new G4UnionSolid("ENERGY_COPPER_PLATE", copper_plate_hut_solid,
+			 medium_hut_solid, 0, hut_pos);
     }
 
     hut_length = _hut_hole_length + _hut_length_long;
@@ -190,26 +192,28 @@ namespace nexus {
       hut_pos = _long_hut_pos[i];
       hut_pos.setZ(transl_z);
       copper_plate_hut_solid =
-      	new G4UnionSolid("ENERGY_COPPER_PLATE", copper_plate_hut_solid, long_hut_solid,
-      			 0, hut_pos);
+      	new G4UnionSolid("ENERGY_COPPER_PLATE", copper_plate_hut_solid,
+			 long_hut_solid, 0, hut_pos);
     }
 
 
     /// Holes in copper ///
     G4Tubs* hole_front_solid =
-      new G4Tubs("HOLE_FRONT", 0., _hole_diam_front/2., (_hole_length_front + offset)/2.,
-		 0., twopi);
+      new G4Tubs("HOLE_FRONT", 0., _hole_diam_front/2.,
+		 (_hole_length_front + offset)/2., 0., twopi);
     G4Tubs* hole_rear_solid =
-      new G4Tubs("HOLE_REAR", 0., _hole_diam_rear/2., (_hole_length_rear + offset)/2.,
-		 0., twopi);
+      new G4Tubs("HOLE_REAR", 0., _hole_diam_rear/2.,
+		 (_hole_length_rear + offset)/2., 0., twopi);
     transl_z = (_hole_length_front + offset)/2. + _hole_length_rear/2 - offset/2.;
     G4UnionSolid* hole_solid =
       	new G4UnionSolid("HOLE", hole_front_solid, hole_rear_solid,
 			 0, G4ThreeVector(0., 0., transl_z));
 
     G4Tubs* hole_hut_solid =
-      new G4Tubs("HOLE_HUT", 0., _hut_int_diam/2., (_hut_hole_length + offset)/2., 0., twopi);
-    transl_z = (_hole_length_front + offset)/2. + _hole_length_rear + _hut_hole_length/2.
+      new G4Tubs("HOLE_HUT", 0., _hut_int_diam/2., (_hut_hole_length + offset)/2.,
+		 0., twopi);
+    transl_z =
+      (_hole_length_front + offset)/2. + _hole_length_rear + _hut_hole_length/2.
       - offset/2.;
     hole_solid =
       	new G4UnionSolid("HOLE", hole_solid, hole_hut_solid,
@@ -219,15 +223,16 @@ namespace nexus {
     transl_z = - _copper_plate_thickn/2. + _hole_length_front/2. - offset/2.;
     hole_pos.setZ(transl_z);
     G4SubtractionSolid* copper_plate_solid =
-      new G4SubtractionSolid("ENERGY_COPPER_PLATE", copper_plate_hut_solid, hole_solid,
-			     0, hole_pos);;
+      new G4SubtractionSolid("ENERGY_COPPER_PLATE", copper_plate_hut_solid,
+			     hole_solid, 0, hole_pos);;
 
     for (G4int i=1; i<_num_PMTs; i++) {
       hole_pos = _pmt_positions[i];
       hole_pos.setZ(transl_z);
       copper_plate_solid =
-	new G4SubtractionSolid("ENERGY_COPPER_PLATE", copper_plate_solid, hole_solid,
-			       0, hole_pos);
+	new G4SubtractionSolid("ENERGY_COPPER_PLATE", copper_plate_solid,
+			       hole_solid, 0, hole_pos);
+
     }
 
     G4LogicalVolume* copper_plate_logic =
@@ -238,9 +243,11 @@ namespace nexus {
     G4double stand_out_length =
       _sapphire_window_thickn + _optical_pad_thickn + _pmt_stand_out;
     _copper_plate_posz =
-      GetELzCoord() + _end_of_sapphire_posz + stand_out_length + _copper_plate_thickn/2.;
-    new G4PVPlacement(0, G4ThreeVector(0., 0., _copper_plate_posz), copper_plate_logic,
-		      "ENERGY_COPPER_PLATE", _mother_logic, false, 0, false);
+      GetELzCoord() + _end_of_sapphire_posz + stand_out_length +
+      _copper_plate_thickn/2.;
+    new G4PVPlacement(0, G4ThreeVector(0., 0., _copper_plate_posz),
+		      copper_plate_logic, "ENERGY_COPPER_PLATE", _mother_logic,
+		      false, 0, false);
 
 
     /// Assign optical properties to materials ///
@@ -262,25 +269,28 @@ namespace nexus {
     G4UnionSolid* vacuum_solid =
       	new G4UnionSolid("HOLE", vacuum_front_solid, hole_rear_solid,
 			 0, G4ThreeVector(0., 0., transl_z));
-    transl_z = _hole_length_front/2. + _hole_length_rear + _hut_hole_length/2. - offset/2.;
+    transl_z =
+      _hole_length_front/2. + _hole_length_rear + _hut_hole_length/2. - offset/2.;
     vacuum_solid =
       	new G4UnionSolid("HOLE", vacuum_solid, hole_hut_solid,
 			 0, G4ThreeVector(0., 0., transl_z));
 
     G4Tubs* stand_out_solid =
-      new G4Tubs("STAND_OUT", 0., _hole_diam_front/2., (stand_out_length + offset)/2.,
-		 0., twopi);
+      new G4Tubs("STAND_OUT", 0., _hole_diam_front/2.,
+		 (stand_out_length + offset)/2., 0., twopi);
+
     transl_z = - _hole_length_front/2. - stand_out_length/2 + offset/2.;
     vacuum_solid =
       new G4UnionSolid("HOLE", vacuum_solid, stand_out_solid, 0,
 		       G4ThreeVector(0., 0., transl_z));
-    G4LogicalVolume* vacuum_logic = new G4LogicalVolume(vacuum_solid, vacuum, "HOLE");
+    G4LogicalVolume* vacuum_logic =
+      new G4LogicalVolume(vacuum_solid, vacuum, "HOLE");
 
 
     /// Sapphire window ///
     G4Tubs* sapphire_window_solid =
-      new G4Tubs("SAPPHIRE_WINDOW", 0., _hole_diam_front/2., _sapphire_window_thickn/2.,
-		 0., twopi);
+      new G4Tubs("SAPPHIRE_WINDOW", 0., _hole_diam_front/2.,
+		 _sapphire_window_thickn/2., 0., twopi);
 
     G4LogicalVolume* sapphire_window_logic =
       new G4LogicalVolume(sapphire_window_solid, sapphire, "SAPPHIRE_WINDOW");
@@ -304,14 +314,16 @@ namespace nexus {
 
     /// Optical surface on TPB to model roughness ///
     G4OpticalSurface* tpb_surf =
-      new G4OpticalSurface("tpb_sapphire_surf", glisur, ground, dielectric_dielectric, .01);
+      new G4OpticalSurface("tpb_sapphire_surf",
+			   glisur, ground, dielectric_dielectric, .01);
 
     new G4LogicalSkinSurface("tpb_sapphire_surf", tpb_logic, tpb_surf);
 
 
     /// Optical pad ///
     G4Tubs* optical_pad_solid =
-      new G4Tubs("OPTICAL_PAD", 0., _hole_diam_front/2., _optical_pad_thickn/2., 0., twopi);
+      new G4Tubs("OPTICAL_PAD", 0., _hole_diam_front/2., _optical_pad_thickn/2.,
+		 0., twopi);
 
     G4LogicalVolume* optical_pad_logic =
       new G4LogicalVolume(optical_pad_solid, optical_coupler, "OPTICAL_PAD");
@@ -347,12 +359,14 @@ namespace nexus {
 			  "INTERNAL_PMT_BASE");
     G4double int_pmt_base_posz =
       _hole_length_front/2. + _hole_length_rear + _hut_hole_length/2.;
-    new G4PVPlacement(0, G4ThreeVector(0., 0., int_pmt_base_posz), internal_pmt_base_logic,
-     		      "INTERNAL_PMT_BASE", vacuum_logic, false, 0, false);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., int_pmt_base_posz),
+		      internal_pmt_base_logic, "INTERNAL_PMT_BASE", vacuum_logic,
+		      false, 0, false);
 
 
     /// Placing the encapsulating volume with all internal components in place ///
-    _vacuum_posz = _copper_plate_posz - _copper_plate_thickn/2  + _hole_length_front/2.;
+    _vacuum_posz =
+      _copper_plate_posz - _copper_plate_thickn/2  + _hole_length_front/2.;
     G4ThreeVector pos;
     for (int i=0; i<_num_PMTs; i++) {
       pos = _pmt_positions[i];
@@ -362,8 +376,10 @@ namespace nexus {
 
 
     if (_verbosity) {
-      G4cout << "Copper plate starts in z = " << _copper_plate_posz - _copper_plate_thickn/2.
-	     << " mm and ends in z = " << _copper_plate_posz + _copper_plate_thickn/2.
+      G4cout << "Copper plate starts in z = "
+	     << _copper_plate_posz - _copper_plate_thickn/2.
+	     << " mm and ends in z = "
+	     << _copper_plate_posz + _copper_plate_thickn/2.
 	     << G4endl;
       G4cout << "Sapphire windows starts in z = "
 	     << _vacuum_posz + window_posz - _sapphire_window_thickn/2.
@@ -413,11 +429,14 @@ namespace nexus {
     _copper_gen =
       new CylinderPointSampler(_copper_plate_diam/2., full_copper_length, 0., 0.,
       			       G4ThreeVector(0., 0., _copper_plate_posz +
-      					     _copper_plate_thickn/2. + _hut_hole_length +
-      					     _hut_length_long - full_copper_length/2.));
+      					     _copper_plate_thickn/2. +
+					     _hut_hole_length +
+      					     _hut_length_long -
+					     full_copper_length/2.));
 
     _sapphire_window_gen =
-      new CylinderPointSampler(_hole_diam_front/2., _sapphire_window_thickn, 0., 0.,
+      new CylinderPointSampler(_hole_diam_front/2., _sapphire_window_thickn,
+			       0., 0.,
 			       G4ThreeVector(0., 0., _vacuum_posz + window_posz));
 
     _optical_pad_gen =
@@ -425,12 +444,15 @@ namespace nexus {
 			       G4ThreeVector(0., 0., _vacuum_posz + pad_posz));
 
     _internal_pmt_base_gen =
-      new CylinderPointSampler(_internal_pmt_base_diam/2., _internal_pmt_base_thickn, 0., 0.,
-			       G4ThreeVector(0., 0., _vacuum_posz + int_pmt_base_posz));
+      new CylinderPointSampler(_internal_pmt_base_diam/2.,
+			       _internal_pmt_base_thickn, 0., 0.,
+			       G4ThreeVector(0., 0., _vacuum_posz +
+					     int_pmt_base_posz));
 
     _external_pmt_base_gen =
       new CylinderPointSampler((_hut_int_diam + 2.*_hut_thickn)/2., 0.1*mm, 0., 0.,
-			       G4ThreeVector(0.,0.,_vacuum_posz + int_pmt_base_posz +
+			       G4ThreeVector(0., 0., _vacuum_posz +
+					     int_pmt_base_posz +
 					     _hut_hole_length/2.));
   }
 
@@ -455,7 +477,13 @@ namespace nexus {
       G4VPhysicalVolume *VertexVolume;
       do {
     	vertex = _copper_gen->GenerateVertex("INSIDE");
-    	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	// To check that the vertex is in the correct volume, one needs
+	// to place it in the global reference system,
+	// because the check is done using global coordinates
+	G4ThreeVector glob_vtx(vertex);
+	glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+    	VertexVolume =
+	  _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != region);
     }
 

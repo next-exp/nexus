@@ -120,7 +120,7 @@ namespace nexus {
     _vessel->Construct();
     G4LogicalVolume* shielding_air_logic = _shielding->GetAirLogicalVolume();
     G4LogicalVolume* vessel_logic = _vessel->GetLogicalVolume();
-    G4double gate_zpos_in_vessel  = _vessel->GetELzCoord();
+    _gate_zpos_in_vessel = _vessel->GetELzCoord();
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), vessel_logic,
     		      "VESSEL", shielding_air_logic, false, 0);
 
@@ -128,14 +128,14 @@ namespace nexus {
 
     // Inner Elements
     _inner_elements->SetLogicalVolume(vessel_internal_logic);
-    _inner_elements->SetELzCoord(gate_zpos_in_vessel);
+    _inner_elements->SetELzCoord(_gate_zpos_in_vessel);
     _inner_elements->Construct();
 
     // Internal Copper Shielding
     _ics->SetLogicalVolume(vessel_internal_logic);
     _ics->Construct();
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., -gate_zpos_in_vessel), shielding_logic,
+    new G4PVPlacement(0, G4ThreeVector(0., 0., -_gate_zpos_in_vessel), shielding_logic,
      		      "LEAD_BOX", _lab_logic, false, 0);
 
 
@@ -204,13 +204,18 @@ namespace nexus {
       vertex = _inner_elements->GenerateVertex(region);
     }
     else if (region == "AD_HOC") {
+      // AD_HOC does not need to be shifted because it is passed by the user
       vertex =
 	G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
+      return vertex;
     }
     else {
       G4Exception("[Next100]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");
     }
+
+    G4ThreeVector displacement = G4ThreeVector(0., 0., -_gate_zpos_in_vessel);
+    vertex = vertex + displacement;
 
     return vertex;
   }
