@@ -98,8 +98,7 @@ namespace nexus {
     // Vertex generators
     CylinderPointSampler* _active_gen;
     CylinderPointSampler* _buffer_gen;
-    CylinderPointSampler* _teflon_drift_gen;
-    CylinderPointSampler* _teflon_buffer_gen;
+    CylinderPointSampler* _teflon_gen;
     CylinderPointSampler* _cathode_gen;
     CylinderPointSampler* _xenon_gen;
 

@@ -188,8 +188,7 @@ namespace nexus {
 	     (region == "BUFFER") ||
 	     (region == "CATHODE_GRID") ||
 	     (region == "XENON") ||
-	     (region == "LIGHT_TUBE_DRIFT") ||
-	     (region == "LIGHT_TUBE_BUFFER") ||
+	     (region == "LIGHT_TUBE") ||
 	     (region == "ENERGY_COPPER_PLATE") ||
 	     (region == "SAPPHIRE_WINDOW") ||
 	     (region == "OPTICAL_PAD") ||

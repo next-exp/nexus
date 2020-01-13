@@ -510,6 +510,23 @@ namespace nexus {
     new G4LogicalSkinSurface("oWLS_teflon_surf", tpb_buffer_logic, owls_Surf);
 
 
+    // Vertex generator
+    G4double teflon_ext_radius =
+      (_active_diam + 2.*_teflon_thickn)/2. / cos(pi/_n_panels);
+    G4double full_teflon_length =
+      _teflon_drift_length + _cathode_gap + _teflon_buffer_length;
+    G4double cathode_gap_zpos =
+      teflon_drift_zpos + _teflon_drift_length/2. + _cathode_gap/2.;
+    G4double teflon_zpos =
+      (_teflon_drift_length * teflon_drift_zpos + _cathode_gap * cathode_gap_zpos +
+       _teflon_buffer_length * teflon_buffer_zpos) / full_teflon_length;
+
+    _teflon_gen  =
+      new CylinderPointSampler(_active_diam/2., full_teflon_length,
+			       teflon_ext_radius - _active_diam/2.,
+			       0., G4ThreeVector (0., 0., teflon_zpos));
+
+
     // Visibilities
     if (_visibility) {
       G4VisAttributes light_green = nexus::LightGreen();
@@ -523,19 +540,6 @@ namespace nexus {
       teflon_drift_logic->SetVisAttributes(G4VisAttributes::Invisible);
       teflon_buffer_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
-
-
-    // Vertex generators
-    G4double teflon_ext_radius =
-      (_active_diam + 2.*_teflon_thickn)/2. / cos(pi/_n_panels);
-    _teflon_drift_gen  =
-      new CylinderPointSampler(_active_diam/2., _teflon_drift_length,
-			       teflon_ext_radius - _active_diam/2.,
-			       0., G4ThreeVector (0., 0., teflon_drift_zpos));
-    _teflon_buffer_gen  =
-      new CylinderPointSampler(_active_diam/2., _teflon_buffer_length,
-			       teflon_ext_radius - _active_diam/2.,
-			       0., G4ThreeVector (0., 0., teflon_buffer_zpos));
   }
 
 
@@ -544,8 +548,7 @@ namespace nexus {
    delete _active_gen;
    delete _buffer_gen;
    delete _cathode_gen;
-   delete _teflon_drift_gen;
-   delete _teflon_buffer_gen;
+   delete _teflon_gen;
   }
 
 
@@ -601,10 +604,10 @@ namespace nexus {
 	       VertexVolume->GetName() != "BUFFER" &&
 	       VertexVolume->GetName() != "EL_GAP");
     }
-    else if (region == "LIGHT_TUBE_DRIFT") {
+    else if (region == "LIGHT_TUBE") {
       G4VPhysicalVolume *VertexVolume;
       do {
-    	vertex = _teflon_drift_gen->GenerateVertex("BODY_VOL");
+    	vertex = _teflon_gen->GenerateVertex("BODY_VOL");
 	// To check that the vertex is in the correct volume, one needs
 	// to place it in the global reference system,
 	// because the check is done using global coordinates
@@ -612,21 +615,8 @@ namespace nexus {
 	glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
     	VertexVolume =
 	  _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
-      } while (VertexVolume->GetName() != region);
-    }
-    else if (region == "LIGHT_TUBE_BUFFER") {
-      G4VPhysicalVolume *VertexVolume;
-      do {
-    	vertex = _teflon_buffer_gen->GenerateVertex("BODY_VOL");
-	// To check that the vertex is in the correct volume, one needs
-	// to place it in the global reference system,
-	// because the check is done using global coordinates
-	G4ThreeVector glob_vtx(vertex);
-	glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
-    	VertexVolume =
-	  _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
-	//	G4cout << VertexVolume->GetName() << G4endl;
-      } while (VertexVolume->GetName() != region);
+      } while (VertexVolume->GetName() != "LIGHT_TUBE_DRIFT" &&
+	       VertexVolume->GetName() != "LIGHT_TUBE_BUFFER");
     }
     else if (region == "EL_TABLE") {
       unsigned int i = _el_table_point_id + _el_table_index;
