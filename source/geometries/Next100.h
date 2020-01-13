@@ -74,6 +74,9 @@ namespace nexus {
     G4double _specific_vertex_X;
     G4double _specific_vertex_Y;
     G4double _specific_vertex_Z;
+
+    /// Position of gate in its mother volume
+    G4double _gate_zpos_in_vessel;
   };
 
 } // end namespace nexus

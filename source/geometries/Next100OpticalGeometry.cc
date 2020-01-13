@@ -125,12 +125,13 @@ namespace nexus {
   G4Box* gas_solid = new G4Box("GAS", gas_size/2., gas_size/2., gas_size/2.);
   G4LogicalVolume* gas_logic = new G4LogicalVolume(gas_solid, gas_mat, "GAS");
 
-  new G4PVPlacement(0, G4ThreeVector(0, 0, 0), gas_logic, "GAS", lab_logic,
-		    false, 0, false);
+  _gate_zpos_in_gas = 0. * mm;
+  new G4PVPlacement(0, G4ThreeVector(0, 0, -_gate_zpos_in_gas), gas_logic,
+		    "GAS", lab_logic, false, 0, false);
 
   ///INNER ELEMENTS
   _inner_elements->SetLogicalVolume(gas_logic);
-  _inner_elements->SetELzCoord(0.*mm);
+  _inner_elements->SetELzCoord(_gate_zpos_in_gas);
   _inner_elements->Construct();
 
   // Visibilities
@@ -149,13 +150,17 @@ namespace nexus {
   {
     G4ThreeVector vertex(0.,0.,0.);
     if (region == "AD_HOC") {
+      // AD_HOC does not need to be shifted because it is passed by the user
       vertex =
 	G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
+      return vertex;
     }
     else {
       vertex = _inner_elements->GenerateVertex(region);
     }
 
+    G4ThreeVector displacement = G4ThreeVector(0., 0., -_gate_zpos_in_gas);
+    vertex = vertex + displacement;
     return vertex;
   }
 

@@ -1,3 +1,4 @@
+
 // ----------------------------------------------------------------------------
 //  $Id$
 //
@@ -83,7 +84,8 @@ namespace nexus {
     _msg = new G4GenericMessenger(this, "/Geometry/Next100/",
 				  "Control commands of geometry Next100.");
     _msg->DeclareProperty("field_cage_vis", _visibility, "Field Cage Visibility");
-    _msg->DeclareProperty("field_cage_verbosity", _verbosity, "Field Cage Verbosity");
+    _msg->DeclareProperty("field_cage_verbosity", _verbosity,
+			  "Field Cage Verbosity");
 
     G4GenericMessenger::Command& drift_transv_diff_cmd =
       _msg->DeclareProperty("drift_transv_diff", _drift_transv_diff,
@@ -153,7 +155,8 @@ namespace nexus {
     G4double z = _el_gap_zpos + _el_gap_length/2.;
     /// 0.1*mm is added because ie- in EL table generation must start inside volume, not on border
     z = z + .1*mm;
-    G4double max_radius = floor(_el_gap_diam/2./_el_table_binning)*_el_table_binning;
+    G4double max_radius =
+      floor(_el_gap_diam/2./_el_table_binning)*_el_table_binning;
     CalculateELTableVertices(max_radius, _el_table_binning, z);
   }
 
@@ -193,7 +196,8 @@ namespace nexus {
     G4Polyhedra* active_solid =
       new G4Polyhedra("ACTIVE", 0., twopi, _n_panels, 2, zplane, rinner, router);
 
-    G4LogicalVolume* active_logic = new G4LogicalVolume(active_solid, _gas, "ACTIVE");
+    G4LogicalVolume* active_logic =
+      new G4LogicalVolume(active_solid, _gas, "ACTIVE");
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., _active_zpos), active_logic,
 		      "ACTIVE", _mother_logic, false, 0, false);
@@ -222,8 +226,9 @@ namespace nexus {
 
 
     /// Vertex generator
-    _active_gen = new CylinderPointSampler(0., _active_length, _active_ext_radius, 0.,
-					   G4ThreeVector(0., 0., _active_zpos));
+    _active_gen =
+      new CylinderPointSampler(0., _active_length, _active_ext_radius, 0.,
+			       G4ThreeVector(0., 0., _active_zpos));
 
 
     /// Visibilities
@@ -265,10 +270,7 @@ namespace nexus {
 
     /// EL grids
     G4Material* fgrid_mat = MaterialsList::FakeDielectric(_gas, "el_grid_mat");
-    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure,
-									      _temperature,
-									      _el_grid_transparency,
-									      _grid_thickn));
+    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _el_grid_transparency, _grid_thickn));
 
 
     /// Dimensions & position: the grids are simulated inside the EL gap.
@@ -283,10 +285,10 @@ namespace nexus {
     G4LogicalVolume* diel_grid_logic =
       new G4LogicalVolume(diel_grid_solid, fgrid_mat, "EL_GRID");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., posz1), diel_grid_logic, "EL_GRID_GATE",
-		      el_gap_logic, false, 0, false);
-    new G4PVPlacement(0, G4ThreeVector(0., 0., posz2), diel_grid_logic, "EL_GRID_ANODE",
-     		      el_gap_logic, false, 1, false);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., posz1), diel_grid_logic,
+		      "EL_GRID_GATE", el_gap_logic, false, 0, false);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., posz2), diel_grid_logic,
+		      "EL_GRID_ANODE", el_gap_logic, false, 1, false);
 
 
     /// Visibilities
@@ -324,8 +326,9 @@ namespace nexus {
     G4LogicalVolume* diel_grid_logic =
       new G4LogicalVolume(diel_grid_solid, fgrid_mat, "CATHODE_GRID");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., _cathode_grid_zpos), diel_grid_logic,
-		      "CATHODE_GRID", _mother_logic, false, 0, false);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., _cathode_grid_zpos),
+		      diel_grid_logic, "CATHODE_GRID", _mother_logic,
+		      false, 0, false);
 
 
     /// Vertex generator
@@ -335,8 +338,9 @@ namespace nexus {
 
 
     /// Visibilities
+    // Grid is white
     if (!_visibility) {
-      diel_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);// Grid is white
+      diel_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
 
@@ -363,7 +367,8 @@ namespace nexus {
     G4Polyhedra* buffer_solid =
       new G4Polyhedra("BUFFER", 0., twopi, _n_panels, 2, zplane, rinner, router);
 
-    G4LogicalVolume* buffer_logic = new G4LogicalVolume(buffer_solid, _gas, "BUFFER");
+    G4LogicalVolume* buffer_logic =
+      new G4LogicalVolume(buffer_solid, _gas, "BUFFER");
     new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_zpos), buffer_logic,
 		      "BUFFER", _mother_logic, false, 0, false);
 
@@ -376,8 +381,9 @@ namespace nexus {
 
 
     /// Vertex generator
-    _buffer_gen = new CylinderPointSampler(0., _buffer_length, _active_ext_radius, 0.,
-					   G4ThreeVector(0., 0., buffer_zpos));
+    _buffer_gen =
+      new CylinderPointSampler(0., _buffer_length, _active_ext_radius, 0.,
+			       G4ThreeVector(0., 0., buffer_zpos));
 
     /// Vertex generator for all xenon
     G4double xenon_length =
@@ -423,13 +429,15 @@ namespace nexus {
       {(_active_diam + 2.*_teflon_thickn)/2., (_active_diam + 2.*_teflon_thickn)/2.};
 
     G4Polyhedra* teflon_drift_solid =
-      new G4Polyhedra("LIGHT_TUBE_DRIFT", 0., twopi, _n_panels, 2, zplane, rinner, router);
+      new G4Polyhedra("LIGHT_TUBE_DRIFT", 0., twopi, _n_panels, 2,
+		      zplane, rinner, router);
 
     G4LogicalVolume* teflon_drift_logic =
       new G4LogicalVolume(teflon_drift_solid, _teflon, "LIGHT_TUBE_DRIFT");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., teflon_drift_zpos), teflon_drift_logic,
-		      "LIGHT_TUBE_DRIFT", _mother_logic, false, 0, false);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., teflon_drift_zpos),
+		      teflon_drift_logic, "LIGHT_TUBE_DRIFT", _mother_logic,
+		      false, 0, false);
 
 
     /// TPB on teflon surface
@@ -437,7 +445,8 @@ namespace nexus {
       {(_active_diam + 2.*_tpb_thickn)/2., (_active_diam + 2.*_tpb_thickn)/2.};
 
     G4Polyhedra* tpb_solid =
-      new  G4Polyhedra("DRIFT_TPB", 0., twopi, _n_panels, 2, zplane, rinner, router_tpb);
+      new  G4Polyhedra("DRIFT_TPB", 0., twopi, _n_panels, 2,
+		       zplane, rinner, router_tpb);
     G4LogicalVolume* tpb_logic =
       new G4LogicalVolume(tpb_solid, _tpb, "DRIFT_TPB");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), tpb_logic,
@@ -459,8 +468,9 @@ namespace nexus {
     G4LogicalVolume* teflon_buffer_logic =
       new G4LogicalVolume(teflon_buffer_solid, _teflon, "LIGHT_TUBE_BUFFER");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., teflon_buffer_zpos), teflon_buffer_logic,
-		      "LIGHT_TUBE_BUFFER", _mother_logic, false, 0, false);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., teflon_buffer_zpos),
+		      teflon_buffer_logic, "LIGHT_TUBE_BUFFER", _mother_logic,
+		      false, 0, false);
 
 
     /// TPB on teflon surface
@@ -542,14 +552,26 @@ namespace nexus {
       G4VPhysicalVolume *VertexVolume;
       do {
     	vertex = _active_gen->GenerateVertex("BODY_VOL");
-    	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	// To check that the vertex is in the correct volume, one needs
+	// to place it in the global reference system,
+	// because the check is done using global coordinates
+	G4ThreeVector glob_vtx(vertex);
+	glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+    	VertexVolume =
+	  _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != region);
     }
     else if (region == "BUFFER") {
       G4VPhysicalVolume *VertexVolume;
       do {
     	vertex = _buffer_gen->GenerateVertex("BODY_VOL");
-    	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	// To check that the vertex is in the correct volume, one needs
+	// to place it in the global reference system,
+	// because the check is done using global coordinates
+	G4ThreeVector glob_vtx(vertex);
+	glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+    	VertexVolume =
+	  _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != region);
     }
     else if (region == "CATHODE_GRID") {
@@ -559,7 +581,13 @@ namespace nexus {
       G4VPhysicalVolume *VertexVolume;
       do {
     	vertex = _xenon_gen->GenerateVertex("BODY_VOL");
-    	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	// To check that the vertex is in the correct volume, one needs
+	// to place it in the global reference system,
+	// because the check is done using global coordinates
+	G4ThreeVector glob_vtx(vertex);
+	glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+    	VertexVolume =
+	  _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != "ACTIVE" &&
 	       VertexVolume->GetName() != "BUFFER" &&
 	       VertexVolume->GetName() != "EL_GAP");
@@ -568,14 +596,27 @@ namespace nexus {
       G4VPhysicalVolume *VertexVolume;
       do {
     	vertex = _teflon_drift_gen->GenerateVertex("BODY_VOL");
-    	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	// To check that the vertex is in the correct volume, one needs
+	// to place it in the global reference system,
+	// because the check is done using global coordinates
+	G4ThreeVector glob_vtx(vertex);
+	glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+    	VertexVolume =
+	  _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != region);
     }
     else if (region == "LIGHT_TUBE_BUFFER") {
       G4VPhysicalVolume *VertexVolume;
       do {
     	vertex = _teflon_buffer_gen->GenerateVertex("BODY_VOL");
-    	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+	// To check that the vertex is in the correct volume, one needs
+	// to place it in the global reference system,
+	// because the check is done using global coordinates
+	G4ThreeVector glob_vtx(vertex);
+	glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+    	VertexVolume =
+	  _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+	//	G4cout << VertexVolume->GetName() << G4endl;
       } while (VertexVolume->GetName() != region);
     }
     else if (region == "EL_TABLE") {

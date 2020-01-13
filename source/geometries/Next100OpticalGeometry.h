@@ -59,6 +59,9 @@ namespace nexus {
 
     Next100InnerElements* _inner_elements;
 
+    // Relative position of the gate in its mother volume
+    G4double _gate_zpos_in_gas;
+
   };
 
 } // end namespace nexus
