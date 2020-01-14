@@ -500,10 +500,11 @@ namespace nexus {
 
 
     /// Optical surface on TPB to model roughness ///
-    G4OpticalSurface* owls_Surf =
-      new G4OpticalSurface("oWLS_Surf", glisur, ground, dielectric_metal, .01);
-    new G4LogicalSkinSurface("oWLS_teflon_surf", tpb_drift_logic, owls_Surf);
-    new G4LogicalSkinSurface("oWLS_teflon_surf", tpb_buffer_logic, owls_Surf);
+    G4OpticalSurface* tpb_teflon_surf =
+      new G4OpticalSurface("tpb_teflon_surf", glisur, ground,
+			   dielectric_metal, .01);
+    new G4LogicalSkinSurface("tpb_teflon_surf", tpb_drift_logic, tpb_teflon_surf);
+    new G4LogicalSkinSurface("tpb_teflon_surf", tpb_buffer_logic, tpb_teflon_surf);
 
 
     // Vertex generator
