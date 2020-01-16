@@ -15,7 +15,7 @@
 #include "OpticalMaterialProperties.h"
 #include "UniformElectricDriftField.h"
 #include "XenonGasProperties.h"
-#include "CylinderPointSampler.h"
+#include "CylinderPointSampler2020.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4PVPlacement.hh>
@@ -235,9 +235,9 @@ namespace nexus {
 
 
     /// Vertex generator
-    _active_gen =
-      new CylinderPointSampler(0., _active_length, _active_ext_radius, 0.,
-			       G4ThreeVector(0., 0., _active_zpos));
+    _active_gen = new CylinderPointSampler2020(0., _active_diam/2., _active_length/2.,
+                                               0., twopi, nullptr,
+                                               G4ThreeVector(0., 0., _active_zpos));
 
 
     /// Visibilities
@@ -386,9 +386,9 @@ namespace nexus {
 
 
     /// Vertex generator
-    _buffer_gen =
-      new CylinderPointSampler(0., _buffer_length, _active_ext_radius, 0.,
-			       G4ThreeVector(0., 0., buffer_zpos));
+    _buffer_gen = new CylinderPointSampler2020(0., _active_ext_radius, _buffer_length/2.,
+                                               0., twopi, nullptr,
+                                               G4ThreeVector(0., 0., buffer_zpos));
 
     /// Vertex generator for all xenon
     G4double xenon_length =
@@ -397,10 +397,9 @@ namespace nexus {
      			   _active_length * _active_zpos +
      			   _grid_thickn * _cathode_grid_zpos +
      			   _buffer_length * buffer_zpos) / xenon_length;
-    _xenon_gen =
-      new CylinderPointSampler(0., xenon_length, _active_ext_radius,
-     			       0., G4ThreeVector (0., 0., xenon_zpos));
-
+    _xenon_gen = new CylinderPointSampler2020(0., _active_ext_radius, xenon_length,
+                                              0., twopi, nullptr,
+                                              G4ThreeVector(0., 0., xenon_zpos));
 
     /// Visibilities
     buffer_logic->SetVisAttributes(G4VisAttributes::Invisible);
@@ -518,10 +517,9 @@ namespace nexus {
       (_teflon_drift_length * teflon_drift_zpos + _cathode_gap * cathode_gap_zpos +
        _teflon_buffer_length * teflon_buffer_zpos) / full_teflon_length;
 
-    _teflon_gen  =
-      new CylinderPointSampler(_active_diam/2., full_teflon_length,
-			       teflon_ext_radius - _active_diam/2.,
-			       0., G4ThreeVector (0., 0., teflon_zpos));
+    _teflon_gen = new CylinderPointSampler2020(_active_diam/2., teflon_ext_radius,
+                                               full_teflon_length/2., 0., twopi,
+                                               nullptr, G4ThreeVector (0., 0., teflon_zpos));
 
 
     // Visibilities
@@ -562,61 +560,56 @@ namespace nexus {
     if (region == "CENTER") {
       vertex = G4ThreeVector(0., 0., _active_zpos);
     }
+
     else if (region == "ACTIVE") {
       G4VPhysicalVolume *VertexVolume;
       do {
-    	vertex = _active_gen->GenerateVertex("BODY_VOL");
-	// To check that the vertex is in the correct volume, one needs
-	// to place it in the global reference system,
-	// because the check is done using global coordinates
-	G4ThreeVector glob_vtx(vertex);
-	glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
-    	VertexVolume =
-	  _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+        vertex = _active_gen->GenerateVertex("VOLUME");
+        G4ThreeVector glob_vtx(vertex);
+        glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+        VertexVolume =
+          _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != region);
     }
+
     else if (region == "BUFFER") {
       G4VPhysicalVolume *VertexVolume;
       do {
-    	vertex = _buffer_gen->GenerateVertex("BODY_VOL");
-	// To check that the vertex is in the correct volume, one needs
-	// to place it in the global reference system,
-	// because the check is done using global coordinates
-	G4ThreeVector glob_vtx(vertex);
-	glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
-    	VertexVolume =
-	  _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+        vertex = _buffer_gen->GenerateVertex("VOLUME");
+        G4ThreeVector glob_vtx(vertex);
+        glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+        VertexVolume =
+          _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != region);
     }
+
     else if (region == "XENON") {
       G4VPhysicalVolume *VertexVolume;
       do {
-    	vertex = _xenon_gen->GenerateVertex("BODY_VOL");
-	// To check that the vertex is in the correct volume, one needs
-	// to place it in the global reference system,
-	// because the check is done using global coordinates
-	G4ThreeVector glob_vtx(vertex);
-	glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
-    	VertexVolume =
-	  _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
-      } while (VertexVolume->GetName() != "ACTIVE" &&
-	       VertexVolume->GetName() != "BUFFER" &&
-	       VertexVolume->GetName() != "EL_GAP");
+        vertex = _xenon_gen->GenerateVertex("VOLUME");
+        G4ThreeVector glob_vtx(vertex);
+        glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+        VertexVolume =
+          _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+      } while (
+        VertexVolume->GetName() != "ACTIVE" &&
+        VertexVolume->GetName() != "BUFFER" &&
+        VertexVolume->GetName() != "EL_GAP");
     }
+
     else if (region == "LIGHT_TUBE") {
       G4VPhysicalVolume *VertexVolume;
       do {
-    	vertex = _teflon_gen->GenerateVertex("BODY_VOL");
-	// To check that the vertex is in the correct volume, one needs
-	// to place it in the global reference system,
-	// because the check is done using global coordinates
-	G4ThreeVector glob_vtx(vertex);
-	glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
-    	VertexVolume =
-	  _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
-      } while (VertexVolume->GetName() != "LIGHT_TUBE_DRIFT" &&
-	       VertexVolume->GetName() != "LIGHT_TUBE_BUFFER");
+    	vertex = _teflon_gen->GenerateVertex("VOLUME");
+      G4ThreeVector glob_vtx(vertex);
+      glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+      VertexVolume =
+        _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+      } while (
+        VertexVolume->GetName() != "LIGHT_TUBE_DRIFT" &&
+        VertexVolume->GetName() != "LIGHT_TUBE_BUFFER" );
     }
+
     else if (region == "EL_TABLE") {
       unsigned int i = _el_table_point_id + _el_table_index;
       if (i == (_table_vertices.size()-1)) {
