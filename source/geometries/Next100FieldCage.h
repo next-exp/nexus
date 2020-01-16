@@ -23,7 +23,7 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class CylinderPointSampler;
+  class CylinderPointSampler2020;
 
   /// This is a geometry formed by the reflector tube and
   /// TPB layer if needed
@@ -96,10 +96,10 @@ namespace nexus {
 
 
     // Vertex generators
-    CylinderPointSampler* _active_gen;
-    CylinderPointSampler* _buffer_gen;
-    CylinderPointSampler* _teflon_gen;
-    CylinderPointSampler* _xenon_gen;
+    CylinderPointSampler2020* _active_gen;
+    CylinderPointSampler2020* _buffer_gen;
+    CylinderPointSampler2020* _teflon_gen;
+    CylinderPointSampler2020* _xenon_gen;
 
     // Geometry Navigator
     G4Navigator* _geom_navigator;

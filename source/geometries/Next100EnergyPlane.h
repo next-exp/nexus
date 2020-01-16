@@ -16,7 +16,7 @@
 #include <G4Navigator.hh>
 #include <G4RotationMatrix.hh>
 
-#include "CylinderPointSampler.h"
+#include "CylinderPointSampler2020.h"
 #include "PmtR11410.h"
 
 class G4Material;
@@ -97,11 +97,11 @@ namespace nexus {
     G4double _rot_angle;
 
     // Vertex generators
-    CylinderPointSampler* _copper_gen;
-    CylinderPointSampler* _sapphire_window_gen;
-    CylinderPointSampler* _optical_pad_gen;
-    CylinderPointSampler* _internal_pmt_base_gen;
-    CylinderPointSampler* _external_pmt_base_gen;
+    CylinderPointSampler2020* _copper_gen;
+    CylinderPointSampler2020* _sapphire_window_gen;
+    CylinderPointSampler2020* _optical_pad_gen;
+    CylinderPointSampler2020* _internal_pmt_base_gen;
+    CylinderPointSampler2020* _external_pmt_base_gen;
 
   };
 
