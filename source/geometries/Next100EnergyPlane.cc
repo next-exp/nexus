@@ -294,8 +294,10 @@ namespace nexus {
 
     G4double window_posz = -_hole_length_front/2. - stand_out_length +
                            _sapphire_window_thickn/2.;
-    new G4PVPlacement(0, G4ThreeVector(0., 0., window_posz), sapphire_window_logic,
-                      "SAPPHIRE_WINDOW", vacuum_logic, false, 0, false);
+
+    G4VPhysicalVolume* sapphire_window_phys =
+      new G4PVPlacement(0, G4ThreeVector(0., 0., window_posz), sapphire_window_logic,
+                        "SAPPHIRE_WINDOW", vacuum_logic, false, 0, false);
 
 
     /// TPB coating on sapphire window ///
@@ -328,8 +330,9 @@ namespace nexus {
 
     G4double pad_posz = window_posz + _sapphire_window_thickn/2. +
       _optical_pad_thickn/2.;
-    new G4PVPlacement(0, G4ThreeVector(0., 0., pad_posz), optical_pad_logic,
-     		      "OPTICAL_PAD", vacuum_logic, false, 0, false);
+    G4VPhysicalVolume* optical_pad_phys =
+      new G4PVPlacement(0, G4ThreeVector(0., 0., pad_posz), optical_pad_logic,
+                        "OPTICAL_PAD", vacuum_logic, false, 0, false);
 
 
     /// PMT ///
@@ -357,10 +360,10 @@ namespace nexus {
 			  "INTERNAL_PMT_BASE");
     G4double int_pmt_base_posz =
       _hole_length_front/2. + _hole_length_rear + _hut_hole_length/2.;
-    new G4PVPlacement(0, G4ThreeVector(0., 0., int_pmt_base_posz),
-		      internal_pmt_base_logic, "INTERNAL_PMT_BASE", vacuum_logic,
-		      false, 0, false);
-
+    G4VPhysicalVolume* internal_pmt_base_phys =
+      new G4PVPlacement(0, G4ThreeVector(0., 0., int_pmt_base_posz),
+                        internal_pmt_base_logic, "INTERNAL_PMT_BASE",
+                        vacuum_logic, false, 0, false);
 
     /// Placing the encapsulating volume with all internal components in place ///
     _vacuum_posz =
@@ -427,24 +430,16 @@ namespace nexus {
     G4double full_copper_posz   = _copper_plate_posz + _copper_plate_thickn/2. +
                                   _hut_hole_length   + _hut_length_long -
                                   full_copper_length/2.;
-    _copper_gen =new CylinderPointSampler2020(0., _copper_plate_diam/2., full_copper_length/2.,
-                                              0., twopi, nullptr,
-                                              G4ThreeVector(0., 0., full_copper_posz));
-
-    _sapphire_window_gen =
-      new CylinderPointSampler2020(0., _hole_diam_front/2., _sapphire_window_thickn/2.,
+    _copper_gen = 
+      new CylinderPointSampler2020(0., _copper_plate_diam/2., full_copper_length/2.,
                                    0., twopi, nullptr,
-                                   G4ThreeVector(0., 0., _vacuum_posz + window_posz));
+                                   G4ThreeVector(0., 0., full_copper_posz));
 
-    _optical_pad_gen =
-      new CylinderPointSampler2020(0., _hole_diam_front/2., _optical_pad_thickn/2.,
-                                   0., twopi, nullptr,
-                                   G4ThreeVector(0., 0., _vacuum_posz + pad_posz));
+    _sapphire_window_gen   = new CylinderPointSampler2020(sapphire_window_phys);
 
-    _internal_pmt_base_gen =
-      new CylinderPointSampler2020(0., _internal_pmt_base_diam/2.,
-                                   _internal_pmt_base_thickn/2., 0., twopi, nullptr,
-                                   G4ThreeVector(0., 0., _vacuum_posz + int_pmt_base_posz));
+    _optical_pad_gen       = new CylinderPointSampler2020(optical_pad_phys);
+
+    _internal_pmt_base_gen = new CylinderPointSampler2020(internal_pmt_base_phys);
 
     _external_pmt_base_gen =
       new CylinderPointSampler2020(0., (_hut_int_diam + 2.*_hut_thickn)/2., 0.1*mm,
@@ -487,6 +482,8 @@ namespace nexus {
       G4double rand = _num_PMTs * G4UniformRand();
       G4ThreeVector sapphire_pos = _pmt_positions[int(rand)];
       vertex += sapphire_pos;
+      G4double z_translation = _vacuum_posz;
+      vertex.setZ(vertex.z() + z_translation);
     }
 
     // Optical pads
@@ -495,6 +492,8 @@ namespace nexus {
       G4double rand = _num_PMTs * G4UniformRand();
       G4ThreeVector optical_pad_pos = _pmt_positions[int(rand)];
       vertex += optical_pad_pos;
+      G4double z_translation = _vacuum_posz;
+      vertex.setZ(vertex.z() + z_translation);
     }
 
     // PMTs (What to do with them ?? Should we update to the new vertex generators??)
@@ -514,6 +513,8 @@ namespace nexus {
       G4double rand = _num_PMTs * G4UniformRand();
       G4ThreeVector pmt_base_pos = _pmt_positions[int(rand)];
       vertex += pmt_base_pos;
+      G4double z_translation = _vacuum_posz;
+      vertex.setZ(vertex.z() + z_translation);
     }
 
     // PMT bases - external part
