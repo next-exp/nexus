@@ -31,38 +31,33 @@ namespace nexus {
 
   using namespace CLHEP;
   
-  NextNewIcs::NextNewIcs():/*const G4double lat_nozzle_z_pos,
-			     const G4double up_nozzle_z_pos ):*/
-
+  NextNewIcs::NextNewIcs():
     BaseGeometry(),
 
     // Body dimensions
     _body_inner_diam (50.62 * cm), // inner diameter of the barrel. The design value is 50.72 cm, slightly changed to avoid overlaps
-    _body_length  (68.4 * cm), /// nozzle to nozzle + flanges     ???????????
-    _body_thickness (6.0 * cm),
+    _body_length     (72.8 * cm),
+    _body_thickness  (6.0 * cm),
+    _body_zpos       (2.2 * cm),
 
     // Tracking plane tread dimensions 
-    _tracking_tread_diam (55. * cm), //_support_plate_tread_diam from TP +.5
-    _tracking_tread_length (84.1 * mm), //_support_plate_tread_thickness + _el_tot_zone 
+//    _tracking_tread_diam   (55. * cm),  // _support_plate_tread_diam from TP + .5
+    _tracking_tread_diam   (57.6 * cm),  // _support_plate_tread_diam from TP + .5
+    _tracking_tread_length (84.1 * mm), // _support_plate_tread_thickness + _el_tot_zone 
 
-   
-    _lat_nozzle_in_diam  (5.*mm),//lat_nozzle_in_diam; before 30 mm
-    _lat_nozzle_x_pos (_body_inner_diam/2. +_body_thickness/2.),// lat_cathode_nozzle_xpos;
-    _up_nozzle_in_diam (5.*mm), //up_nozzle_in_diam; before 60 mm
-    _up_nozzle_y_pos (_lat_nozzle_x_pos)
+    _lat_nozzle_in_diam (5. * mm),                                  // lat_nozzle_in_diam; before 30 mm
+    _lat_nozzle_x_pos   (_body_inner_diam/2. + _body_thickness/2.), // lat_cathode_nozzle_xpos;
+    _up_small_nozzle_in_diam  ( 5. * mm),      // The upper central nozzle
+    _up_big_nozzle_in_diam    (62. * mm),      // The upper anode & cathode nozzles
+    _up_nozzle_y_pos    (_lat_nozzle_x_pos)
     
   {
-    // /// Needed External variables   
-    // _lat_nozzle_z_pos = lat_nozzle_z_pos;
-    // _up_nozzle_z_pos = up_nozzle_z_pos;
-      
     // Initializing the geometry navigator (used in vertex generation)
     _geom_navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
     
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry Next100.");
-    _msg->DeclareProperty("ics_vis", _visibility, "ICS Visibility");
-    
+    _msg->DeclareProperty("ics_vis", _visibility, "ICS Visibility");    
   }
    
   void NextNewIcs::SetLogicalVolume(G4LogicalVolume* mother_logic)
@@ -73,67 +68,71 @@ namespace nexus {
   void NextNewIcs::SetNozzlesZPosition(const G4double lat_nozzle_z_pos, const G4double up_nozzle_z_pos)
   {
     _lat_nozzle_z_pos = lat_nozzle_z_pos;
-    _up_nozzle_z_pos = up_nozzle_z_pos;
+    _up_nozzle_z_pos  = up_nozzle_z_pos;
   }
 
   void NextNewIcs::Construct()
   {
     ////// INNER COPPER SHIELDING BARREL  ///////////
-
     G4Tubs* ics_body_nh_solid = 
       new G4Tubs("ICS_BODY", _body_inner_diam/2.,
-		 _body_inner_diam/2. + _body_thickness, _body_length/2., 0., twopi);
+                 _body_inner_diam/2. + _body_thickness,
+                 _body_length/2., 0., twopi);
 
     G4Tubs* ics_tracking_tread_solid = 
-      new G4Tubs("ICS_TRACKING_TREAD", _body_inner_diam/2. - 2.*mm,
-                 _body_inner_diam/2. + _body_thickness/2.,
-		 _tracking_tread_length/2., 0., twopi); 
-
+      new G4Tubs("ICS_TRACKING_TREAD", _body_inner_diam/2. - 2. * mm,
+                 _tracking_tread_diam/2., _tracking_tread_length/2., 0., twopi);
 
     G4SubtractionSolid* ics_solid =
-      new G4SubtractionSolid("ICS", ics_body_nh_solid, ics_tracking_tread_solid,
-			     0, G4ThreeVector(0., 0., _body_length/2. -_tracking_tread_length/2.));
+      new G4SubtractionSolid("ICS", ics_body_nh_solid, ics_tracking_tread_solid, 0,
+                             G4ThreeVector(0., 0., _body_length/2. -_tracking_tread_length/2.));
        
-    // NOZZLES HOLES //
+    // LATERAL NOZZLES HOLES
     G4Tubs* lateral_nozzle_hole_solid = 
-      new G4Tubs("LAT_NOZZLE_HOLE", 0., _lat_nozzle_in_diam/2., _body_thickness/2.+2.*mm, 0., twopi);
+      new G4Tubs("LAT_NOZZLE_HOLE", 0., _lat_nozzle_in_diam/2.,
+                 _body_thickness/2. + 2.*mm, 0., twopi);
     
-    //Rotate the nozzles holes
+    // Rotate the nozzles holes
     G4RotationMatrix* roty = new G4RotationMatrix();
     roty->rotateY(pi/2.);
     
-    //Lateral anode nozzle  
-    ics_solid = new G4SubtractionSolid("ICS", ics_solid, lateral_nozzle_hole_solid, 
-   				       roty, G4ThreeVector(_lat_nozzle_x_pos, 0., -_lat_nozzle_z_pos) );
-    //Lateral cathode nozzle
-    ics_solid = new G4SubtractionSolid("ICS", ics_solid, lateral_nozzle_hole_solid, 
-   				       roty, G4ThreeVector(_lat_nozzle_x_pos, 0., _lat_nozzle_z_pos) );
+    // Lateral anode nozzle  
+    ics_solid = new G4SubtractionSolid("ICS", ics_solid, lateral_nozzle_hole_solid, roty,
+   				                             G4ThreeVector(_lat_nozzle_x_pos, 0., 50. * mm - _lat_nozzle_z_pos));
+    // Lateral cathode nozzle
+    ics_solid = new G4SubtractionSolid("ICS", ics_solid, lateral_nozzle_hole_solid, roty,
+   				                             G4ThreeVector(_lat_nozzle_x_pos, 0., 50. * mm + _lat_nozzle_z_pos));
     
-    G4Tubs* up_nozzle_hole_solid =
-      new G4Tubs("UP_NOZZLE_HOLE", 0., _up_nozzle_in_diam/2., _body_thickness/2.+5.*mm, 0., twopi);
+    // UPPER NOZZLES HOLES
+    G4Tubs* up_small_nozzle_hole_solid =
+      new G4Tubs("UP_SMALL_NOZZLE_HOLE", 0., _up_small_nozzle_in_diam/2.,
+                 _body_thickness/2. + 5. * mm, 0., twopi);
     
-    //Rotate the nozzles holes to vertical
+    G4Tubs* up_big_nozzle_hole_solid =
+      new G4Tubs("UP_BIG_NOZZLE_HOLE", 0., _up_big_nozzle_in_diam/2.,
+                 _body_thickness/2. + 5. * mm, 0., twopi);
+    
+    // Rotate the nozzles holes to vertical
     G4RotationMatrix* rotx = new G4RotationMatrix();
     rotx->rotateX(pi/2.);
     
-    //Upper anode nozzle
-    ics_solid = new G4SubtractionSolid("ICS", ics_solid, up_nozzle_hole_solid,
-				       rotx, G4ThreeVector( 0., _up_nozzle_y_pos, -_up_nozzle_z_pos) );
-    //Upper central nozzle
-    ics_solid = new G4SubtractionSolid("ICS", ics_solid, up_nozzle_hole_solid,
-				       rotx, G4ThreeVector( 0., _up_nozzle_y_pos, 0.) );
-
-    //Upper cathode nozzle
-    ics_solid = new G4SubtractionSolid("ICS", ics_solid, up_nozzle_hole_solid,
-				       rotx, G4ThreeVector( 0., _up_nozzle_y_pos, _up_nozzle_z_pos) );
+    // Upper anode nozzle
+    ics_solid = new G4SubtractionSolid("ICS", ics_solid, up_big_nozzle_hole_solid, rotx,
+				                               G4ThreeVector( 0., _up_nozzle_y_pos, 50. * mm -_up_nozzle_z_pos));
+    // Upper central nozzle
+    ics_solid = new G4SubtractionSolid("ICS", ics_solid, up_small_nozzle_hole_solid, rotx,
+				                               G4ThreeVector( 0., _up_nozzle_y_pos, 50. * mm));
+    // Upper cathode nozzle
+    ics_solid = new G4SubtractionSolid("ICS", ics_solid, up_big_nozzle_hole_solid, rotx,
+				                               G4ThreeVector( 0., _up_nozzle_y_pos, 50. * mm +_up_nozzle_z_pos));
 
     
-    G4LogicalVolume* ics_logic = new G4LogicalVolume(ics_solid,
-     						     G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"), "ICS");
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), ics_logic, "ICS", _mother_logic, false, 0, false);
-   
-    //this->SetLogicalVolume(ics_logic);
+    G4LogicalVolume* ics_logic =
+      new G4LogicalVolume(ics_solid,
+     						          G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"), "ICS");
 
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,-_body_zpos), ics_logic, "ICS", _mother_logic, false, 0, false);
+   
 
     // SETTING VISIBILITIES   //////////
     if (_visibility) {
@@ -147,18 +146,21 @@ namespace nexus {
 
 
     // VERTEX GENERATORS   //////////
-    _body_gen = new CylinderPointSampler( _body_inner_diam/2., _body_length-_tracking_tread_length,
-					  _body_thickness, 0., G4ThreeVector(0., 0., _tracking_tread_length) );
-    _tread_gen = new CylinderPointSampler( _tracking_tread_diam/2., _tracking_tread_length,
-					   _body_inner_diam/2.+_tracking_tread_diam/2., 0., 
-					   G4ThreeVector(0.,0.,-_body_length/2.+_tracking_tread_length/2.) );
+    _body_gen = new CylinderPointSampler(_body_inner_diam/2.,
+                                         _body_length-_tracking_tread_length,
+                                         _body_thickness, 0.,
+                                         G4ThreeVector(0., 0., -_body_zpos - _tracking_tread_length/2.));
+
+    G4double body_outer_diam = _body_inner_diam + 2 * _body_thickness;
+    _tread_gen = new CylinderPointSampler(_tracking_tread_diam/2., _tracking_tread_length,
+                                          (body_outer_diam - _tracking_tread_diam)/2., 0.,
+                                          G4ThreeVector(0.,0., -_body_zpos + _body_length/2. - _tracking_tread_length/2.));
 		 
     // Calculating some probs
-    G4double body_vol =
-      (_body_length-_tracking_tread_length)*pi*
-      ((_body_inner_diam/2.+_body_thickness)*(_body_inner_diam/2.+_body_thickness)-(_body_inner_diam/2.)*(_body_inner_diam/2.));
-    G4double tread_vol =
-      (_tracking_tread_length)*pi*((_body_inner_diam/2.+_body_thickness)*(_body_inner_diam/2.+_body_thickness)-(_tracking_tread_diam/2.)*( _tracking_tread_diam/2.));
+    G4double body_vol = (_body_length-_tracking_tread_length) * pi *
+      (pow(_body_inner_diam/2.+_body_thickness, 2) - pow(_body_inner_diam/2., 2));
+    G4double tread_vol = _tracking_tread_length * pi *
+      (pow(_body_inner_diam/2.+_body_thickness, 2) - pow(_tracking_tread_diam/2., 2));
     G4double total_vol = body_vol + tread_vol;
     _body_perc = body_vol/total_vol;
   }
@@ -184,22 +186,29 @@ namespace nexus {
         G4VPhysicalVolume *VertexVolume;
         do {
           vertex = _body_gen->GenerateVertex("BODY_VOL");
-	  // To check its volume, one needs to rotate and shift the vertex
-	  // because the check is done using global coordinates
-	  G4ThreeVector glob_vtx(vertex);
-	  // First rotate, then shift
-	  glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
-	  glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
+          // To check its volume, one needs to rotate and shift the vertex
+          // because the check is done using global coordinates
+          G4ThreeVector glob_vtx(vertex);
+          // First rotate, then shift
+          glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
+          glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
           VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
         } while (VertexVolume->GetName() != "ICS");
       }
       // Generating in the tread
       else {
-        vertex = _tread_gen->GenerateVertex("BODY_VOL");
+        G4VPhysicalVolume *VertexVolume;
+        do {
+          vertex = _tread_gen->GenerateVertex("BODY_VOL");
+          G4ThreeVector glob_vtx(vertex);
+          glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
+          glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
+          VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+        } while (VertexVolume->GetName() != "ICS");
       }     
     } else {
       G4Exception("[NextNewIcs]", "GenerateVertex()", FatalException,
-		   "Unknown Region!");    
+		   "Unknown Region!"); 
     }
     return vertex;
   }

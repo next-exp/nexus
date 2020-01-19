@@ -11,7 +11,7 @@
 /Generator/ScintGenerator/nphotons 1000
 
 # GEOMETRY
-/Geometry/NextNewOpticalGeometry/pressure 15. bar
+/Geometry/NextNewOpticalGeometry/pressure 10. bar
 /Geometry/PmtR11410/SD_depth 4
 /Geometry/KDB/teflon_masks true
 

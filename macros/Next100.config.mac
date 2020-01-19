@@ -4,10 +4,6 @@
 ### --------------------------------------------------------
 
 
-##### ACTIONS #####
-
-
-
 ##### JOB CONTROL #####
 /nexus/persistency/outputFile Next100.next
 ## eventType options: bb0nu, bb2nu, background
@@ -34,11 +30,11 @@
 
 ##### GENERATOR #####
 
-# Region options: EXTERNAL, SHIELDING_LEAD, SHIELDING_STEEL, SHIELDING_GAS, SHIELDING_STRUCT
+# Region options: EXTERNAL, SHIELDING_LEAD, SHIELDING_STEEL, SHIELDING_STRUCT, INNER_AIR
 #                 VESSEL, VESSEL_FLANGES, VESSEL_TRACKING_ENDCAP, VESSEL_ENERGY_ENDCAP
-#		  	    ICS, DB_PLUG,
-#			    	   FIELD_CAGE, ACTIVE, CARRIER_PLATE, ENCLOSURE, ENCLOSURE_WINDOW, ENCLOSURE_PAD,
-#				   	         PMT_BODY, PMT, TRK_SUPPORT, DICE_BOARD, EL_TABLE
+#                 ICS, DB_PLUG,
+#                 FIELD_CAGE, ACTIVE, CARRIER_PLATE, ENCLOSURE, ENCLOSURE_WINDOW, ENCLOSURE_PAD,
+#                 PMT_BODY, PMT, TRK_SUPPORT, DICE_BOARD, EL_TABLE
 
 # Single Particle
 #/Generator/SingleParticle/particle e-

@@ -1,8 +1,20 @@
+tag v5_07_00 - 13 Dec 2019
+	- Fix several bugs in the vertex generators of both NEW and NEXT-100.
+	- Add emission spectrum for scintillation generator.
+	- Add helium-xenon mixture gas option.
+
+tag v5_06_00 - 14 Sept 2019
+	- Fix in tonne geometry implementing the central cathode as a thin SSteel foil.
+	- Fix radius sampler in SpherePointSampler
+
 tag p6_00_02 - 13 Sep 2019
 	- Fix bug in spherical vertex generator.
 
+tag v5_05_00 - 12 Sept 2019
+	- Added a simplified version of Next-Tonne detector geometry.
+
 tag v5_04_00 - 22 Jul 2019
-        - First version to be used with geant4.10.5. It won't work with previous versions of g4.
+    	- First version to be used with geant4.10.5. It won't work with previous versions of g4.
 	- Add vertex generator in BUFFER region.
 	- Add muon generators.
 	- Add possibility of building using CMake.

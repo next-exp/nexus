@@ -236,13 +236,20 @@ namespace nexus {
 
     // Creating the vertex generators   //////////
     //_lead_gen  = new BoxPointSampler(steel_x, steel_y, steel_z, _lead_thickness, G4ThreeVector(0.,0.,0.), 0);
-    _lead_gen  = 
-      new BoxPointSampler(steel_x, steel_y, steel_z, 5.*cm, G4ThreeVector(0.,0.,0.), 0);
-    _steel_gen = new BoxPointSampler(_shield_x, _shield_y, _shield_z, _steel_thickness, G4ThreeVector(0.,0.,0.), 0);
-    G4double offset = 1.*cm;
-    _external_gen = 
-      new BoxPointSampler(_lead_x + offset, _lead_y + offset, _lead_z + offset,
-			  1.*mm, G4ThreeVector(0.,0.,0.), 0);
+    // Only shooting from the innest 5 cm. 
+    _lead_gen  = new BoxPointSampler(steel_x, steel_y, steel_z, 5.*cm, G4ThreeVector(0.,0.,0.), 0);
+
+    G4double ext_offset = 1. * cm;
+    _external_gen = new BoxPointSampler(_lead_x + ext_offset, _lead_y + ext_offset, _lead_z + ext_offset,
+                                        1. * mm, G4ThreeVector(0.,0.,0.), 0);
+
+
+    _steel_gen = new BoxPointSampler(_shield_x, _shield_y, _shield_z, _steel_thickness,
+                                     G4ThreeVector(0.,0.,0.), 0);
+
+    G4double inn_offset = .5 * cm;
+    _inner_air_gen = new BoxPointSampler(_shield_x - inn_offset, _shield_y - inn_offset, _shield_z - inn_offset,
+                                         1. * mm, G4ThreeVector(0.,0.,0.), 0);
 
 
     _lat_roof_gen = 
@@ -289,8 +296,9 @@ namespace nexus {
   Next100Shielding::~Next100Shielding()
   {
     delete _lead_gen;
-    delete _steel_gen;
     delete _external_gen;
+    delete _steel_gen;
+    delete _inner_air_gen;
     delete _lat_roof_gen;
     delete _front_roof_gen;
     delete _struct_x_gen;
@@ -328,21 +336,11 @@ namespace nexus {
     }
 
     else if (region == "SHIELDING_STEEL") {
-      G4VPhysicalVolume *VertexVolume;
-      do {
-	vertex = _steel_gen->GenerateVertex("WHOLE_VOL");
-	// To check its volume, one needs to rotate and shift the vertex
-	// because the check is done using global coordinates
-	G4ThreeVector glob_vtx(vertex);
-	// First rotate, then shift
-	glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
-	glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
-	VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
-      } while (VertexVolume->GetName() != "STEEL_BOX");
+      vertex = _steel_gen->GenerateVertex("WHOLE_VOL");
     }
 
-    else if (region == "SHIELDING_GAS") {
-      vertex = _steel_gen->GenerateVertex("WHOLE_SURF");
+    else if (region == "INNER_AIR") {
+      vertex = _inner_air_gen->GenerateVertex("WHOLE_VOL");
     }
 
     else if (region == "EXTERNAL") {

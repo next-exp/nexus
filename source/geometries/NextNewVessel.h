@@ -114,7 +114,8 @@ namespace nexus {
 
     // Gas being used
     G4String _gas;
-    G4double _Xe_perc;
+    G4double _xe_perc;
+    G4int _helium_mass_num;
 
     // Radioactive source being used or not
     //   G4bool _source;

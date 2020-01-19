@@ -108,6 +108,7 @@ namespace nexus {
     _inner_elements->SetLogicalVolume(vessel_internal_logic);
     _inner_elements->Construct();
 
+    _shielding->SetELzCoord(_inner_elements->GetELzCoord());
     _vessel->SetELzCoord(_inner_elements->GetELzCoord());
 
     // Internal Copper Shielding
@@ -149,7 +150,7 @@ namespace nexus {
     } else if ((region == "SHIELDING_LEAD")  ||
     	(region == "SHIELDING_STEEL") ||
 		(region == "EXTERNAL")        ||
-		(region == "SHIELDING_GAS")   ||
+		(region == "INNER_AIR")   ||
 		(region == "SHIELDING_STRUCT") ) {
       vertex = _shielding->GenerateVertex(region);
     }

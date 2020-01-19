@@ -57,6 +57,7 @@ void ScintillationGenerator::GeneratePrimaryVertex(G4Event* event)
   // Generate an initial position for the particle using the geometry and set time to 0.
   G4ThreeVector position = _geom->GenerateVertex(_region);
   G4double time = 0.;
+
   // Energy is sampled from integral (like it is done in G4Scintillation)
 
   G4VPhysicalVolume* vol = _geom_navigator->LocateGlobalPointAndSetup(position, 0, false);

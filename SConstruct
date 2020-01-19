@@ -256,7 +256,7 @@ vars.Save(BUILDVARS_FILE, env)
 ## ###################################################################
 ## BUILDING NEXUS
 
-SRCDIR = ['source/' + dir for dir in SRCDIR]
+SRCDIR  = ['source/' + dir for dir in SRCDIR]
 
 env.Append(CPPPATH = SRCDIR)
 
@@ -268,5 +268,16 @@ env['CXXCOMSTR']  = "Compiling $SOURCE"
 env['LINKCOMSTR'] = "Linking $TARGET"
 
 nexus = env.Program('nexus', ['source/nexus.cc']+src)
+
+TSTDIR = ['utils',
+	  'example']
+TSTDIR = ['source/tests/' + dir for dir in TSTDIR]
+
+tst = []
+for d in TSTDIR:
+    tst += Glob(d+'/*.cc')
+
+env.Append(CPPPATH = ['source/tests'])
+nexus_test = env.Program('nexus-test', ['source/nexus-test.cc']+tst+src)
 
 Clean(nexus, 'buildvars.scons')

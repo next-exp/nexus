@@ -277,7 +277,6 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
     double binsize = hit->GetBinSize();
 
     G4double amplitude = 0.;
-
     for (it = wvfm.begin(); it != wvfm.end(); ++it) {
       amplitude = amplitude + (*it).second;
     }

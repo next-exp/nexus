@@ -140,7 +140,7 @@ namespace nexus {
 
     // SETTING VISIBILITIES   //////////
     if (visibility_) {
-      G4VisAttributes board_col = nexus::DirtyWhite;
+      G4VisAttributes board_col = nexus::DirtyWhite();
       board_col.SetForceSolid(true);
       board_logic->SetVisAttributes(board_col);
     }

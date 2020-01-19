@@ -84,6 +84,8 @@ namespace nexus {
 
     // Type of gas being used
     G4String _gas;
+    G4int _helium_mass_num;
+    G4double _xe_perc;
 
   };
 

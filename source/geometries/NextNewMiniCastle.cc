@@ -171,12 +171,13 @@ namespace nexus {
     // VERTEX GENERATORS   //////////
     _mini_castle_box_gen =
       new BoxPointSampler(_x-2.*_thickness, _y-2.*_thickness, _z-2.*_thickness,
-			  _thickness, G4ThreeVector(0.,_thickness,0.), 0);
+			  _thickness, G4ThreeVector(0., _pedestal_surf_y + _y/2., 0.), 0);
+
     _mini_castle_external_surf_gen =
       new BoxPointSampler(_x-0.5*mm, _y-0.5*mm, _z-0.5*mm, 0 * mm, G4ThreeVector(0., _thickness, 0.), 0);
     _steel_box_gen =
       new BoxPointSampler(steel_x-2.*_steel_thickn, steel_y-2.*_steel_thickn, steel_z-2.*_steel_thickn,
-			  _steel_thickn, G4ThreeVector(0.,_steel_thickn,0.), 0);
+			  _steel_thickn, G4ThreeVector(0., _pedestal_surf_y + _y/2., 0.), 0);
 
 
     // Calculating some probs

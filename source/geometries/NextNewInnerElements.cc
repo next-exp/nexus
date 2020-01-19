@@ -73,25 +73,26 @@ namespace nexus {
     G4ThreeVector vertex(0.,0.,0.);
 
     // INNER ELEMENTS regions
-   if ( (region == "CARRIER_PLATE") || (region == "ENCLOSURE_BODY") ||
-	      (region == "ENCLOSURE_WINDOW") || (region=="OPTICAL_PAD") ||
-	      (region == "PMT_BODY")||(region=="PMT_BASE") ||
-              (region == "INT_ENCLOSURE_SURF") || (region == "PMT_SURF")) {
+    if ( (region == "CARRIER_PLATE")      || (region == "ENCLOSURE_BODY") ||
+         (region == "ENCLOSURE_WINDOW")   || (region == "OPTICAL_PAD") ||
+         (region == "PMT_BODY")           || (region == "PMT_BASE") ||
+         (region == "INT_ENCLOSURE_SURF") || (region == "PMT_SURF")) {
       vertex = _energy_plane->GenerateVertex(region);
     }
-   else if ( (region == "DRIFT_TUBE") ||
-	     (region == "HDPE_TUBE") ||
-	     (region == "ANODE_QUARTZ") ||
-	     (region == "CENTER") ||
-	     (region == "CATHODE") ||
-	     (region == "XENON") ||
-	     (region == "ACTIVE") ||
-	     (region == "BUFFER") ||
-	     (region== "EL_TABLE") ||
-	     (region == "AD_HOC")) {
+    else if ( (region == "DRIFT_TUBE") ||
+              (region == "HDPE_TUBE") ||
+              (region == "ANODE_QUARTZ") ||
+              (region == "CENTER") ||
+              (region == "CATHODE") ||
+              (region == "TRACKING_FRAMES") ||
+              (region == "XENON") ||
+              (region == "ACTIVE") ||
+              (region == "BUFFER") ||
+              (region == "EL_TABLE") ||
+              (region == "AD_HOC")) {
       vertex = _field_cage->GenerateVertex(region);
     }
-    else if ( (region == "SUPPORT_PLATE") || (region == "DICE_BOARD")|| (region == "DB_PLUG") ) {
+    else if ( (region == "SUPPORT_PLATE") || (region == "DICE_BOARD") || (region == "DB_PLUG") ) {
       vertex = _tracking_plane->GenerateVertex(region);
     }
     else {

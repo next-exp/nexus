@@ -16,6 +16,5 @@
 
 
 /nexus/persistency/outputFile bb0_GS_mode1_S1L1f.next
-/nexus/persistency/historyFile myHistory.macro ## must be the same as /nexus/historyFile
 
 /nexus/random_seed 542862

@@ -10,6 +10,7 @@
 #include "MaterialsList.h"
 #include "XenonGasProperties.h"
 #include "ArgonGasProperties.h"
+#include "HeliumGasProperties.h"
 
 #include <G4Material.hh>
 #include <G4Element.hh>
@@ -89,11 +90,6 @@ G4Material* MaterialsList::GXeEnriched_bydensity(G4double density,
     Xe->AddIsotope(Xe136, 90.2616*perCent);
 
 
-    // G4cout << Xe->GetNumberOfIsotopes() << G4endl;
-    // G4cout << Xe->GetIsotopeVector()->size() << G4endl;
-    // for (G4int i=0; i< Xe->GetNumberOfIsotopes(); ++i) {
-    //   G4cout << Xe->GetIsotope(i)->GetName() << G4endl;
-    // }
 
     mat->AddElement(Xe,1);
   }
@@ -132,12 +128,6 @@ G4Material* MaterialsList::GXeDepleted_bydensity(G4double density,
     G4Isotope* Xe134 = new G4Isotope("Xe134", 54, 134, XenonGasProperties::MassPerMole(134));
     G4Isotope* Xe136 = new G4Isotope("Xe136", 54, 136, XenonGasProperties::MassPerMole(136));
 
-    // Bottle number 9056852
-    // Xe->AddIsotope(Xe129, 27.11*perCent);
-    // Xe->AddIsotope(Xe131, 27.07*perCent);
-    // Xe->AddIsotope(Xe132, 28.18*perCent);
-    // Xe->AddIsotope(Xe134, 8.59*perCent);
-    // Xe->AddIsotope(Xe136, 2.87*perCent);
 
     // Bottle number 9056842
     Xe->AddIsotope(Xe129, 27.29*perCent);
@@ -147,11 +137,6 @@ G4Material* MaterialsList::GXeDepleted_bydensity(G4double density,
     Xe->AddIsotope(Xe136, 2.55*perCent);
 
 
-    // G4cout << Xe->GetNumberOfIsotopes() << G4endl;
-    // G4cout << Xe->GetIsotopeVector()->size() << G4endl;
-    // for (G4int i=0; i< Xe->GetNumberOfIsotopes(); ++i) {
-    //   G4cout << Xe->GetIsotope(i)->GetName() << G4endl;
-    // }
 
     mat->AddElement(Xe,1);
   }
@@ -222,6 +207,64 @@ G4Material* MaterialsList::GXeAr(G4double pressure, G4double temperature, G4doub
 
     return mat;
 }
+
+
+
+
+G4Material* MaterialsList::GXeHe(G4double pressure,
+				 G4double temperature,
+				 G4double percXe, G4int mass_num)
+{
+  G4String name = "GXeHe";
+
+  G4Material* mat = G4Material::GetMaterial(name, false);
+
+  if (mat == 0) {
+
+    G4double prop_xe = percXe * perCent;
+    G4double prop_he = 1. - prop_xe;
+
+    mat = new G4Material(name,
+			 prop_xe * XenonGasProperties::Density(pressure)
+			 + prop_he * HeliumGasProperties::Density(pressure),
+			 2, kStateGas, temperature, pressure);
+
+
+    G4Element* enrichedXe = new G4Element("GXeEnriched", "enrichedXe", 6);
+    G4Isotope* Xe129 = new G4Isotope("Xe129", 54, 129,
+				     XenonGasProperties::MassPerMole(129));
+    G4Isotope* Xe130 = new G4Isotope("Xe130", 54, 130,
+				     XenonGasProperties::MassPerMole(130));
+    G4Isotope* Xe131 = new G4Isotope("Xe131", 54, 131,
+				     XenonGasProperties::MassPerMole(131));
+    G4Isotope* Xe132 = new G4Isotope("Xe132", 54, 132,
+				     XenonGasProperties::MassPerMole(132));
+    G4Isotope* Xe134 = new G4Isotope("Xe134", 54, 134,
+				     XenonGasProperties::MassPerMole(134));
+    G4Isotope* Xe136 = new G4Isotope("Xe136", 54, 136,
+				     XenonGasProperties::MassPerMole(136));
+
+    enrichedXe->AddIsotope(Xe129, 0.0656392*perCent);
+    enrichedXe->AddIsotope(Xe130, 0.0656392*perCent);
+    enrichedXe->AddIsotope(Xe131, 0.234361*perCent);
+    enrichedXe->AddIsotope(Xe132, 0.708251*perCent);
+    enrichedXe->AddIsotope(Xe134, 8.6645*perCent);
+    enrichedXe->AddIsotope(Xe136, 90.2616*perCent);
+
+    G4Element * Helium = new G4Element("Helium", "Helium", 1);
+    G4Isotope * He     = new G4Isotope("He", 2, mass_num,
+				       HeliumGasProperties::MassPerMole(mass_num));
+    Helium->AddIsotope(He, 100 * perCent);
+
+    mat->AddElement(Helium, prop_he);
+    mat->AddElement(enrichedXe, prop_xe);
+
+
+  }
+
+    return mat;
+}
+
 
 
 
@@ -631,15 +674,29 @@ G4Material* MaterialsList::CopyMaterial(G4Material* original, G4String newname)
   G4Material* newmat = G4Material::GetMaterial(newname, false);
 
   if (newmat == 0) {
-    G4double z = original->GetZ();
-    G4double a = original->GetA();
     G4double density = original->GetDensity();
     G4State state = original->GetState();
     G4double temperature = original->GetTemperature();
     G4double pressure = original->GetPressure();
 
-    newmat =
-      new G4Material(newname, z, a, density, state, temperature, pressure);
+    G4int n_elem = original->GetNumberOfElements();
+    if (n_elem == 1){
+      G4double z = original->GetZ();
+      G4double a = original->GetA();
+      newmat =
+	new G4Material(newname, z, a, density, state, temperature, pressure);
+    } else {
+      // Gas mixture
+      const G4double * fractions = original->GetFractionVector();
+      newmat =
+	new G4Material(newname, density, n_elem, state, temperature, pressure);
+      for (G4int i = 0; i < n_elem; ++i)
+	newmat->AddElement(new G4Element(original->GetElement(i)->GetName(),
+					 original->GetElement(i)->GetSymbol(),
+					 original->GetElement(i)->GetZ(),
+					 original->GetElement(i)->GetA()),
+			   fractions[i]);
+    }
   }
 
   return newmat;

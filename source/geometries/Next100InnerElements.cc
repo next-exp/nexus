@@ -343,9 +343,13 @@ namespace nexus {
     new G4PVPlacement(0, G4ThreeVector(0., 0., +_anode_quartz_thickness/2.- _ito_thickness/2.), ito_anode_logic,
   			"ITO_ANODE", anode_logic, false, 0, false);
 
+
+    G4double only_quartz_thickn = _anode_quartz_thickness - _tpb_thickness - _ito_thickness;
+    G4double only_quartz_z_pos  = pos_anode_z + _anode_quartz_thickness/2. - _ito_thickness - only_quartz_thickn /2.;
     _anode_quartz_gen =
-      new CylinderPointSampler(0.,_anode_quartz_thickness,_anode_quartz_diam/2.,
-			       0., G4ThreeVector (0., 0., pos_anode_z));
+      new CylinderPointSampler(0., only_quartz_thickn, _anode_quartz_diam/2.,
+                               0., G4ThreeVector (0., 0., only_quartz_z_pos));
+
 
     if (_grids_visibility) {
       G4VisAttributes anode_col = nexus::Red();
