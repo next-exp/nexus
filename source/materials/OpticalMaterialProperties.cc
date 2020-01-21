@@ -115,7 +115,6 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FusedSilica()
       .22 * cm,    .215 * cm,  .00005*cm,
     .00005* cm
   };
-
   assert(sizeof(absLength) == sizeof(abs_energy));
   mpt->AddProperty("ABSLENGTH", abs_energy, absLength, abs_entries);
 
@@ -1451,7 +1450,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::XXX()
   mpt->AddProperty("WLSABSLENGTH", WLS_abs_energy, WLS_absLength,  2);
 
   // WLS EMISSION SPECTRUM
-  G4double WLS_emi_energy[] = {optPhotMinE_, optPhotMaxE_};
+  G4double WLS_emi_energy[]  = {optPhotMinE_, optPhotMaxE_};
   G4double WLS_emiSpectrum[] = {1.0, 1.0};
   mpt->AddProperty("WLSCOMPONENT",  WLS_emi_energy, WLS_emiSpectrum, 2);
 
