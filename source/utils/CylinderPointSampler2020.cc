@@ -82,7 +82,7 @@ namespace nexus {
     }
 
     // Generating from the INNER surface
-    else if (region == "INNER_SURF") {
+    else if (region == "INNER_SURFACE") {
       G4double phi = GetPhi();
       G4double rad = _minRad;
       x = rad * cos(phi);
@@ -91,7 +91,7 @@ namespace nexus {
     }
 
     // Generating from the OUTER surface
-    else if (region == "OUTER_SURF") {
+    else if (region == "OUTER_SURFACE") {
       G4double phi = GetPhi();
       G4double rad = _maxRad;
       x = rad * cos(phi);
