@@ -1,0 +1,234 @@
+// -----------------------------------------------------------------------------
+// File   : NextFlex.cc
+// Info   : NEXT Parametrized Detector geometry for performance studies.
+// Author : Javier Muñoz Vidal
+// Date   : January 2020
+// -----------------------------------------------------------------------------
+
+#include "NextFlex.h"
+#include "NextFlexFieldCage.h"
+//#include "NextFlexEnergyPlane.h"
+//#include "NextFlexTrackingPlane.h"
+
+#include "MaterialsList.h"
+#include "OpticalMaterialProperties.h"
+#include "XenonGasProperties.h"
+
+#include <G4GenericMessenger.hh>
+#include <G4LogicalVolume.hh>
+#include <G4Box.hh>
+#include <G4PVPlacement.hh>
+#include <G4Material.hh>
+#include <G4VisAttributes.hh>
+#include <G4SDManager.hh>
+#include <G4RunManager.hh>
+#include <G4UnitsTable.hh>
+
+
+using namespace nexus;
+
+NextFlex::NextFlex():
+  BaseGeometry(),
+  _verbosity         (false),
+  _msg               (nullptr),
+  _gas_name          ("enrichedXe"),
+  _gas_pressure      (15.  * bar),
+  _gas_temperature   (300. * kelvin),
+  _adhoc_x           (0.),              // Vertex-X in case of AD_HOC region
+  _adhoc_y           (0.),              // Vertex-Y in case of AD_HOC region
+  _adhoc_z           (0.)               // Vertex-Z in case of AD_HOC region
+{
+  
+  // Messenger
+  _msg = new G4GenericMessenger(this, "/Geometry/NextFlex/",
+                                "Control commands of geometry Next100.");
+
+  // Parametrized dimensions
+  DefineConfigurationParameters();
+
+  // Field Cage
+  _field_cage = new NextFlexFieldCage();
+
+  // Energy Plane
+  //_energy_plane = new NextFlexEnergyPlane();
+
+  // Tracking Plane
+  //_tracking_plane = new NextFlexTrackingPlane();
+}
+
+
+NextFlex::~NextFlex()
+{
+  delete _msg;
+  delete _field_cage;
+  //delete _energy_plane;
+  //delete _tracking_plane;
+}
+
+
+void NextFlex::DefineConfigurationParameters()
+{
+  // Verbosity
+  _msg->DeclareProperty("verbosity", _verbosity, "Verbosity");
+
+  // Gas properties
+  _msg->DeclareProperty("gas", _gas_name, "Xenon gas type.");
+
+  G4GenericMessenger::Command& gas_pressure_cmd =
+    _msg->DeclareProperty("gas_pressure", _gas_pressure,
+                          "Pressure of the xenon gas.");
+  gas_pressure_cmd.SetUnitCategory("Pressure");
+  gas_pressure_cmd.SetParameterName("gas_pressure", false);
+  gas_pressure_cmd.SetRange("gas_pressure>0.");
+
+  G4GenericMessenger::Command& gas_temperature_cmd =
+    _msg->DeclareProperty("gas_temperature", _gas_temperature,
+                          "Temperature of the xenon gas.");
+  gas_temperature_cmd.SetUnitCategory("Temperature");
+  gas_temperature_cmd.SetParameterName("gas_temperature", false);
+  gas_temperature_cmd.SetRange("gas_temperature>0.");
+
+  // Specific vertex in case region to shoot from is AD_HOC
+  G4GenericMessenger::Command& _adhoc_x_cmd =
+    _msg->DeclareProperty("specific_vertex_X", _adhoc_x,
+      "If region is AD_HOC, x coord where particles are generated");
+  _adhoc_x_cmd.SetParameterName("specific_vertex_X", true);
+  _adhoc_x_cmd.SetUnitCategory("Length");
+
+  G4GenericMessenger::Command& _adhoc_y_cmd =
+    _msg->DeclareProperty("specific_vertex_Y", _adhoc_y,
+      "If region is AD_HOC, y coord where particles are generated");
+  _adhoc_y_cmd.SetParameterName("specific_vertex_Y", true);
+  _adhoc_y_cmd.SetUnitCategory("Length");
+
+  G4GenericMessenger::Command& _adhoc_z_cmd =
+    _msg->DeclareProperty("specific_vertex_Z", _adhoc_z,
+      "If region is AD_HOC, z coord where particles are generated");
+  _adhoc_z_cmd.SetParameterName("specific_vertex_Z", true);
+  _adhoc_z_cmd.SetUnitCategory("Length");
+
+}
+
+
+void NextFlex::DefineMaterials()
+{
+  // Defining the gas xenon
+  if (_gas_name == "naturalXe")
+    _xenon_gas = MaterialsList::GXe(_gas_pressure, _gas_temperature);
+
+  else if (_gas_name == "enrichedXe")
+    _xenon_gas = MaterialsList::GXeEnriched(_gas_pressure, _gas_temperature);
+
+  else if (_gas_name == "depletedXe")
+    _xenon_gas = MaterialsList::GXeDepleted(_gas_pressure, _gas_temperature);
+
+  else
+    G4Exception("[NextParam]", "DefineMaterials()", FatalException,
+    "Unknown xenon gas type. Valid options are naturalXe, enrichedXe or depletedXe.");
+  _xenon_gas->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_gas_pressure,
+                                                                        _gas_temperature,
+                                                                        25510 * (1./MeV)));
+}
+
+
+void NextFlex::Construct()
+{
+
+  // Verbosity
+  if(_verbosity) {
+    G4cout << G4endl << "***** Verbosing NEXT Parametrized geometry *****";
+    G4cout << G4endl << G4endl;
+  }
+
+  // Getting volumes dimensions based on parameters.
+  //ComputeDimensions();
+
+  // Define materials.
+  DefineMaterials();
+
+
+  // The lab
+  G4String lab_name = "LABORATORY";
+  G4double lab_size = 50. * m;
+
+  G4Box* lab_solid_vol = new G4Box(lab_name, lab_size/2.,
+                                   lab_size/2., lab_size/2.);
+
+  G4LogicalVolume* lab_logic_vol = new G4LogicalVolume(lab_solid_vol,
+                                                       _xenon_gas, lab_name);
+
+  BaseGeometry::SetLogicalVolume(lab_logic_vol);
+
+  lab_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+
+
+  // The gas
+  G4String gas_name = "GAS";
+  G4double gas_size = 20. * m;
+
+  G4Box* gas_solid_vol = new G4Box(gas_name, gas_size/2.,
+                                   gas_size/2., gas_size/2.);
+
+  G4LogicalVolume* gas_logic_vol = new G4LogicalVolume(gas_solid_vol,
+                                                       _xenon_gas, gas_name);
+
+  gas_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+
+  G4VPhysicalVolume* gas_phys_vol =  
+    new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), gas_logic_vol,
+                      gas_name, lab_logic_vol, false, 0, true);
+
+
+  // The Field Cage
+  _field_cage->SetMotherLogicalVolume(gas_logic_vol);
+  _field_cage->Construct();
+
+  // Energy Plane
+  //_energy_plane->SetMotherLogicalVolume(_mother_logic);
+  //_energy_plane->Construct();
+
+  // Tracking Plane
+  //_tracking_plane->SetLogicalVolume(_mother_logic);
+  //_tracking_plane->Construct();
+}
+
+
+G4ThreeVector NextFlex::GenerateVertex(const G4String& region) const
+{
+  G4ThreeVector vertex;
+
+  if (region == "AD_HOC") {
+    vertex = G4ThreeVector(_adhoc_x, _adhoc_y, _adhoc_z);
+  }
+
+  // Field Cage regions
+  else if (
+    (region == "ACTIVE") ||
+    (region == "BUFFER") ||
+    (region == "EL_GAP") ||
+    (region == "LIGHT_TUBE")) {
+    vertex = _field_cage->GenerateVertex(region);
+  }
+
+  // Energy Plane regions
+  //else if (
+  //  (region == "ENERGY_COPPER_PLATE") ||
+  //  (region == "SAPPHIRE_WINDOW") ||
+  //  (region == "PMT_BODY")) {
+  //  vertex = _energy_plane->GenerateVertex(region);
+  //}
+
+  // Tracking Plane regions
+  //else if (
+  //  (region == "TRK_SUPPORT") ||
+  //  (region == "DICE_BOARD")) {
+  //  vertex = _tracking_plane->GenerateVertex(region);
+  //}
+
+  else {
+    G4Exception("[NextFlex]", "GenerateVertex()", FatalException,
+      "Unknown vertex generation region!");
+  }
+
+  return vertex;
+}
