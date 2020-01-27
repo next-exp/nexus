@@ -1,11 +1,9 @@
-// ----------------------------------------------------------------------------
-//  $Id$
+// -----------------------------------------------------------------------------
+//  nexus | CylinderPointSampler2020.cc
 //
-//  Author : Javier Muñoz Vidal <jmunoz@ific.uv.es>
-//  Created: 14 January 2020
-//
-//  Copyright (c) 2009-2020 NEXT Collaboration. All rights reserved.
-// ----------------------------------------------------------------------------
+//  * Author: <jmunoz@ific.uv.es>
+//  * Creation date: 14 January 2020
+// -----------------------------------------------------------------------------
 
 #include "CylinderPointSampler2020.h"
 
@@ -13,16 +11,11 @@
 #include <G4LogicalVolume.hh>
 #include <G4Tubs.hh>
 #include <G4VSolid.hh>
-
+#include <G4PhysicalConstants.hh>
 #include <Randomize.hh>
-
-#include "CLHEP/Units/PhysicalConstants.h"
 
 
 namespace nexus {
-
-  using namespace CLHEP;
-
 
   // Constructor following Geant4 dimensions convention
   CylinderPointSampler2020::CylinderPointSampler2020 (
@@ -46,7 +39,7 @@ namespace nexus {
     _rotation(physVolume->GetObjectRotation()),
     _origin(physVolume->GetObjectTranslation())
   {
-    G4Tubs* solidVolume = (G4Tubs*) physVolume->GetLogicalVolume()->GetSolid();
+    G4Tubs* solidVolume = dynamic_cast<G4Tubs*> (physVolume->GetLogicalVolume()->GetSolid());
     _minRad     = solidVolume->GetRMin();
     _maxRad     = solidVolume->GetRMax();
     _halfLength = solidVolume->GetDz();
