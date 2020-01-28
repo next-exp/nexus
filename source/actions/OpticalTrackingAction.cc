@@ -63,6 +63,7 @@ void OpticalTrackingAction::PostUserTrackingAction(const G4Track* track)
   trj->SetFinalPosition(track->GetPosition());
   trj->SetFinalTime(track->GetGlobalTime());
   trj->SetTrackLength(track->GetTrackLength());
+  trj->SetFinalMomentum(track->GetMomentum());
 
   // In case of optical photons
   if (track->GetDefinition() == G4OpticalPhoton::Definition()) {

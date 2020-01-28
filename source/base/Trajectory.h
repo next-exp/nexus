@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 ///  \file   Trajectory.h
 ///  \brief  Record of a track used by the persistency mechanism.
-/// 
+///
 ///  \author   <justo.martin-albo@ific.uv.es>
 ///  \date     26 March 2013
 ///  \version  $Id$
@@ -25,8 +25,8 @@ namespace nexus {
   typedef std::vector<G4VTrajectoryPoint*> TrajectoryPointContainer;
 
 
-  /// Record of a track used by the persistency mechanism. 
-  /// It stores basic information of the particle and its path through 
+  /// Record of a track used by the persistency mechanism.
+  /// It stores basic information of the particle and its path through
   /// the geometry. A number of its properties are copied from the track
   /// in construction and cannot be modified.
 
@@ -49,7 +49,7 @@ namespace nexus {
 
   public:
 
-    /// Return pointer to the particle definition 
+    /// Return pointer to the particle definition
     /// associated to the track
     G4ParticleDefinition* GetParticleDefinition();
     /// Return name of the particle
@@ -69,12 +69,15 @@ namespace nexus {
 
     // Return initial three-momentum
     G4ThreeVector GetInitialMomentum() const;
-    // Return initial position (creation vertex) 
+    // Return initial position (creation vertex)
     // in global coordinates
     G4ThreeVector GetInitialPosition() const;
     // Return creation time with respect to
     // the start-of-event time
     G4double GetInitialTime() const;
+
+    G4ThreeVector GetFinalMomentum() const;
+    void SetFinalMomentum(const G4ThreeVector&);
 
     G4ThreeVector GetFinalPosition() const;
     void SetFinalPosition(const G4ThreeVector&);
@@ -87,13 +90,13 @@ namespace nexus {
 
     G4double GetEnergyDeposit() const;
     void SetEnergyDeposit(G4double);
-  
+
     G4String GetInitialVolume() const;
 
     G4String GetDecayVolume() const;
     void SetDecayVolume(G4String);
 
-    
+
     // Trajectory points
 
     /// Return the number of trajectory points
@@ -113,7 +116,7 @@ namespace nexus {
     /// The default constructor is private. A trajectory can
     /// only be constructed associated to a track.
     Trajectory();
- 
+
 
   private:
     G4ParticleDefinition* _pdef; //< Pointer to the particle definition
@@ -122,6 +125,7 @@ namespace nexus {
     G4int _parentId;  ///< Identification number of the parent particle
 
     G4ThreeVector _initial_momentum;
+    G4ThreeVector _final_momentum;
 
     G4ThreeVector _initial_position;
     G4ThreeVector _final_position;
@@ -179,6 +183,12 @@ inline G4int nexus::Trajectory::GetTrackID() const
 inline G4int nexus::Trajectory::GetParentID() const
 { return _parentId; }
 
+inline G4ThreeVector nexus::Trajectory::GetFinalMomentum() const
+{ return _final_momentum; }
+
+inline void nexus::Trajectory::SetFinalMomentum(const G4ThreeVector& m)
+{ _final_momentum = m; }
+
 inline G4ThreeVector nexus::Trajectory::GetInitialPosition() const
 { return _initial_position; }
 
@@ -217,4 +227,4 @@ inline G4String nexus::Trajectory::GetDecayVolume() const
 inline void nexus::Trajectory::SetDecayVolume(G4String dv)
 { _decay_volume = dv; }
 
-#endif  
+#endif

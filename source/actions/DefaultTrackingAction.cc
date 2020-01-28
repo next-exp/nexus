@@ -76,4 +76,5 @@ void DefaultTrackingAction::PostUserTrackingAction(const G4Track* track)
   trj->SetFinalTime(track->GetGlobalTime());
   trj->SetTrackLength(track->GetTrackLength());
   trj->SetDecayVolume(track->GetVolume()->GetName());
+  trj->SetFinalMomentum(track->GetMomentum());
 }
