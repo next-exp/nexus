@@ -91,7 +91,7 @@ namespace nexus {
 
     HDF5Writer* _h5writer;  ///< Event writer to hdf5 file
 
-    std::map<G4int, std::vector<nexus::IonizationHit*> > _hit_map;
+    std::map<G4int, std::vector<G4int>* > _hit_map;
     std::vector<G4int> _sns_posvec;
 
     std::pair<G4int, G4double> _event_info;

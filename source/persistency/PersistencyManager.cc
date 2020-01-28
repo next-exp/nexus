@@ -260,20 +260,20 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
 
     G4int trackid = hit->GetTrackID();
 
-    std::vector<IonizationHit*> ihits;
-
-    std::map<G4int, std::vector<nexus::IonizationHit*> >::iterator it =  _hit_map.find(trackid);
+    std::vector<G4int>* ihits = nullptr;
+    std::map<G4int, std::vector<G4int>* >::iterator it = _hit_map.find(trackid);
     if (it != _hit_map.end()) {
       ihits = it->second;
     } else {
-      //ihits = std::vector<nexus::IonizationHt*>;
+       ihits = new std::vector<G4int>;
       _hit_map[trackid] = ihits;
     }
 
-    ihits.push_back(hit);
+    ihits->push_back(1);
+
 
     G4ThreeVector xyz = hit->GetPosition();
-    _h5writer->WriteHitInfo(_nevt, trackid,  ihits.size() - 1,
+    _h5writer->WriteHitInfo(_nevt, trackid,  ihits->size() - 1,
 			    xyz[0], xyz[1], xyz[2],
 			    hit->GetTime(), hit->GetEnergyDeposit(),
 			    sdname.c_str());
