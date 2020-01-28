@@ -122,26 +122,17 @@ G4bool PersistencyManager::Store(const G4Event* event)
     _nevt = _start_id;
   }
 
-  _event_info.first = _nevt;
-
-
-  // if (event_type_ == "bb0nu") {
-  //   ievt.SetMCEventType(gate::BB0NU);
-  // } else if (event_type_ == "bb2nu") {
-  //   ievt.SetMCEventType(gate::BB2NU);
-  // } else if (event_type_ == "background") {
-  //   ievt.SetMCEventType(gate::BKG);
-  // } else {
-  //   ievt.SetMCEventType(gate::NOETYPE);
-  // }
+  event_info_.evt_id = _nevt;
+  event_info_.evt_type = event_type_;
 
   // Store the trajectories of the event
   StoreTrajectories(event->GetTrajectoryContainer());
 
+  // Store ionization hits and sensor hits
   StoreHits(event->GetHCofThisEvent());
 
   //Save event-related information in hdf5 file
-  // _h5writer->WriteEventInfo(_event_info.first, _event_info.second);
+  _h5writer->WriteEventInfo(event_info_.evt_id, event_info_.evt_energy, event_info_.evt_type);
 
   _nevt++;
 
@@ -271,21 +262,18 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
 
     ihits->push_back(1);
 
-
     G4ThreeVector xyz = hit->GetPosition();
     _h5writer->WriteHitInfo(_nevt, trackid,  ihits->size() - 1,
 			    xyz[0], xyz[1], xyz[2],
 			    hit->GetTime(), hit->GetEnergyDeposit(),
 			    sdname.c_str());
 
-
-    //    evt_energy += hit->GetEnergyDeposit();
+    evt_energy += hit->GetEnergyDeposit();
   }
 
-  //  if (sdname == "ACTIVE") {
-      // _event_info.second = evt_energy;
-  // }
-
+  if (sdname == "ACTIVE") {
+    event_info_.evt_energy = evt_energy;
+  }
 }
 
 

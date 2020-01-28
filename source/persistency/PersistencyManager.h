@@ -29,6 +29,12 @@ namespace nexus {
 
 namespace nexus {
 
+  struct event_info {
+    G4int evt_id;
+    G4double evt_energy;
+    G4String evt_type;
+  };
+
 
   /// TODO. CLASS DESCRIPTION
 
@@ -94,7 +100,7 @@ namespace nexus {
     std::map<G4int, std::vector<G4int>* > _hit_map;
     std::vector<G4int> _sns_posvec;
 
-    std::pair<G4int, G4double> _event_info;
+    event_info event_info_;
   };
 
 
