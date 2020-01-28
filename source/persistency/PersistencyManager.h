@@ -85,7 +85,7 @@ namespace nexus {
     G4bool _store_evt; ///< Should we store the current event?
     G4bool _interacting_evt; ///< Has the current event interacted in ACTIVE?
 
-    G4String event_type_; ///< event type: bb0nu, bb2nu, background or not set
+    G4String _event_type; ///< event type: bb0nu, bb2nu, background or not set
 
     G4int _saved_evts; ///< number of events to be saved
     G4int _interacting_evts; ///< number of events interacting in ACTIVE
@@ -100,7 +100,7 @@ namespace nexus {
     std::map<G4int, std::vector<G4int>* > _hit_map;
     std::vector<G4int> _sns_posvec;
 
-    event_info event_info_;
+    event_info _event_info;
   };
 
 
