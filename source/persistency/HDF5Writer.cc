@@ -51,7 +51,7 @@ void HDF5Writer::Open(std::string fileName)
   _memtypeParticleInfo = createParticleInfoType();
   _particleInfoTable = createTable(_group, particle_info_table_name, _memtypeParticleInfo);
 
-  std::string sns_pos_table_name = "sensor_positions";
+  std::string sns_pos_table_name = "sns_positions";
   _memtypeSnsPos = createSensorPosType();
   _snsPosTable = createTable(_group, sns_pos_table_name, _memtypeSnsPos);
 
