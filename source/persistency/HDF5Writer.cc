@@ -35,9 +35,9 @@ void HDF5Writer::Open(std::string fileName)
   _memtypeRun = createRunType();
   _runTable = createTable(_group, run_table_name, _memtypeRun);
 
-  //std::string event_table_name = "events";
-  //_memtypeEvt = createEventType();
-  //_eventsTable = createTable(_group, event_table_name, _memtypeEvt);
+  std::string event_table_name = "events";
+  _memtypeEvt = createEventType();
+  _eventsTable = createTable(_group, event_table_name, _memtypeEvt);
 
   std::string sns_data_table_name = "sns_response";
   _memtypeSnsData = createSensorDataType();
@@ -66,7 +66,6 @@ void HDF5Writer::Close()
 
 void HDF5Writer::WriteRunInfo(const char* param_key, const char* param_value)
 {
-
   run_info_t runData;
   memset(runData.param_key,   0, CONFLEN);
   memset(runData.param_value, 0, CONFLEN);
@@ -77,16 +76,17 @@ void HDF5Writer::WriteRunInfo(const char* param_key, const char* param_value)
   _irun++;
 }
 
-//void HDF5Writer::WriteEventInfo(int evt_number, float evt_energy)
-//{
-//  // Write event number
-//  evt_t evtData;
-//  evtData.evt_number = evt_number;
-//  evtData.evt_energy = evt_energy;
-//  writeEvent(&evtData, _eventsTable, _memtypeEvt, _ievt);
-//
-//  _ievt++;
-//}
+void HDF5Writer::WriteEventInfo(int evt_number, float evt_energy, const char* evt_type)
+{
+  evt_t evtData;
+  evtData.evt_number = evt_number;
+  evtData.evt_energy = evt_energy;
+  memset(evtData.evt_type, 0, STRLEN);
+  strcpy(evtData.evt_type, evt_type);
+  writeEvent(&evtData, _eventsTable, _memtypeEvt, _ievt);
+
+ _ievt++;
+}
 
 void HDF5Writer::WriteSensorDataInfo(int evt_number, unsigned int sensor_id, unsigned int time_bin, unsigned int charge)
 {
@@ -104,12 +104,12 @@ void HDF5Writer::WriteHitInfo(int evt_number, int particle_indx, int hit_indx, f
 {
   hit_info_t trueInfo;
   trueInfo.event_id = evt_number;
-  memset(trueInfo.label, 0, STRLEN);
   trueInfo.x = hit_position_x;
   trueInfo.y = hit_position_y;
   trueInfo.z = hit_position_z;
   trueInfo.time = hit_time;
   trueInfo.energy = hit_energy;
+  memset(trueInfo.label, 0, STRLEN);
   strcpy(trueInfo.label, label);
   trueInfo.particle_id = particle_indx;
   trueInfo.hit_id = hit_indx;
