@@ -38,7 +38,7 @@ using namespace nexus;
 PersistencyManager::PersistencyManager(G4String historyFile_init, G4String historyFile_conf):
   G4VPersistencyManager(), _msg(0),
   _ready(false), _store_evt(true), _interacting_evt(false),
-  event_type_("other"), _saved_evts(0), _interacting_evts(0),
+  _event_type("other"), _saved_evts(0), _interacting_evts(0),
   _pmt_bin_size(-1), _sipm_bin_size(-1),
   _nevt(0), _start_id(0), _first_evt(true), _h5writer(0)
 {
@@ -48,7 +48,7 @@ PersistencyManager::PersistencyManager(G4String historyFile_init, G4String histo
 
   _msg = new G4GenericMessenger(this, "/nexus/persistency/");
   _msg->DeclareMethod("outputFile", &PersistencyManager::OpenFile, "");
-  _msg->DeclareProperty("eventType", event_type_, "Type of event: bb0nu, bb2nu or background.");
+  _msg->DeclareProperty("eventType", _event_type, "Type of event: bb0nu, bb2nu or background.");
   _msg->DeclareProperty("start_id", _start_id, "Starting event ID for this job.");
 }
 
@@ -122,8 +122,8 @@ G4bool PersistencyManager::Store(const G4Event* event)
     _nevt = _start_id;
   }
 
-  event_info_.evt_id = _nevt;
-  event_info_.evt_type = event_type_;
+  _event_info.evt_id = _nevt;
+  _event_info.evt_type = _event_type;
 
   // Store the trajectories of the event
   StoreTrajectories(event->GetTrajectoryContainer());
@@ -132,7 +132,7 @@ G4bool PersistencyManager::Store(const G4Event* event)
   StoreHits(event->GetHCofThisEvent());
 
   //Save event-related information in hdf5 file
-  _h5writer->WriteEventInfo(event_info_.evt_id, event_info_.evt_energy, event_info_.evt_type);
+  _h5writer->WriteEventInfo(_event_info.evt_id, _event_info.evt_energy, _event_info.evt_type);
 
   _nevt++;
 
@@ -272,7 +272,7 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
   }
 
   if (sdname == "ACTIVE") {
-    event_info_.evt_energy = evt_energy;
+    _event_info.evt_energy = evt_energy;
   }
 }
 
