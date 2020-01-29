@@ -49,3 +49,19 @@ def test_hdf5_structure():
          assert 'length'             in pcolumns
          assert 'creator_proc'       in pcolumns
          assert 'final_proc'         in pcolumns
+
+
+def test_tot_energy_equal_sum_of_hit_energy():
+
+    command = './nexus -b -n 1 pytest/test_macros/NEW_optical.init.mac'
+    os.system(command)
+
+    output_file = 'pytest/NEW_electron_sim.h5'
+
+    events = pd.read_hdf(output_file, 'MC/events')
+    total_dep_energy = events.evt_energy.sum()
+
+    hits = pd.read_hdf(output_file, 'MC/hits')
+    total_hit_energy = hits[hits.label == "ACTIVE"].energy.sum()
+
+    assert total_dep_energy == total_hit_energy

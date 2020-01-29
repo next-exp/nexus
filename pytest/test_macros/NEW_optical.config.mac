@@ -1,0 +1,27 @@
+### --------------------------------------------------------
+###  Configuration macro for the NEW detector geometry
+###  This macro simulates a 1 MeV electron in the active volume
+### --------------------------------------------------------
+
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+# Geometry
+/Geometry/NextNew/elfield 0
+/Geometry/NextNew/max_step_size 1. mm
+/Geometry/NextNewOpticalGeometry/pressure 15. bar
+/Geometry/NextNew/field_cage_vis true
+/Geometry/PmtR11410/SD_depth 4
+
+### Generation
+/Generator/SingleParticle/particle e-
+/Generator/SingleParticle/min_energy 1. MeV
+/Generator/SingleParticle/max_energy 1. MeV
+/Generator/SingleParticle/region ACTIVE
+
+/PhysicsList/Nexus/clustering          false
+/PhysicsList/Nexus/drift               false
+/PhysicsList/Nexus/electroluminescence false
+
+/nexus/persistency/outputFile pytest/NEW_electron_sim
