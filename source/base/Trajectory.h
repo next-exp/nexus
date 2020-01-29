@@ -93,8 +93,12 @@ namespace nexus {
 
     G4String GetInitialVolume() const;
 
-    G4String GetDecayVolume() const;
-    void SetDecayVolume(G4String);
+    G4String GetFinalVolume() const;
+    void SetFinalVolume(G4String);
+
+    // Return name of the track killer process
+    G4String GetFinalProcess() const;
+    void SetFinalProcess(G4String);
 
 
     // Trajectory points
@@ -137,9 +141,10 @@ namespace nexus {
     G4double _edep;
 
     G4String _creator_process;
+    G4String _final_process;
 
     G4String _initial_volume;
-    G4String _decay_volume;
+    G4String _final_volume;
 
     G4bool _record_trjpoints;
 
@@ -218,13 +223,19 @@ inline void nexus::Trajectory::SetEnergyDeposit(G4double e) { _edep = e; }
 inline G4String nexus::Trajectory::GetCreatorProcess() const
 { return _creator_process; }
 
+inline G4String nexus::Trajectory::GetFinalProcess() const
+{ return _final_process; }
+
+inline void nexus::Trajectory::SetFinalProcess(G4String fp)
+{ _final_process = fp; }
+
 inline G4String nexus::Trajectory::GetInitialVolume() const
 { return _initial_volume; }
 
-inline G4String nexus::Trajectory::GetDecayVolume() const
-{ return _decay_volume; }
+inline G4String nexus::Trajectory::GetFinalVolume() const
+{ return _final_volume; }
 
-inline void nexus::Trajectory::SetDecayVolume(G4String dv)
-{ _decay_volume = dv; }
+inline void nexus::Trajectory::SetFinalVolume(G4String fv)
+{ _final_volume = fv; }
 
 #endif

@@ -89,7 +89,9 @@ hsize_t createParticleInfoType()
   H5Tinsert (memtype, "final_momentum_y", HOFFSET (particle_info_t, final_momentum_y), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "final_momentum_z", HOFFSET (particle_info_t, final_momentum_z), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "kin_energy", HOFFSET (particle_info_t, kin_energy), H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "length", HOFFSET (particle_info_t, length), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "creator_proc", HOFFSET (particle_info_t, creator_proc), proc_strtype);
+  H5Tinsert (memtype, "final_proc", HOFFSET (particle_info_t, final_proc), proc_strtype);
   return memtype;
 }
 
