@@ -62,6 +62,5 @@
 
 ### JOB CONTROL
 /nexus/random_seed 1
-/nexus/persistency/hdf5 true
 /nexus/persistency/start_id 0
 /nexus/persistency/outputFile NextTon.Tl208.INNER_SHIELDING.next
