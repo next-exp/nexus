@@ -1,0 +1,24 @@
+### --------------------------------------------------------
+###  This macro simulates Kr83 decays uniformly in the active volume and
+###  using the full simulation
+### --------------------------------------------------------
+
+
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+# GENERATION
+/Generator/Kr83mGenerator/region ACTIVE
+
+# GEOMETRY
+/Geometry/NextNew/pressure 10. bar
+/Geometry/NextNew/sc_yield 10000. 1/MeV
+/Geometry/NextNew/EL_field 10 kV/cm
+/Geometry/NextNew/elfield true
+/Geometry/PmtR11410/SD_depth 4
+/Geometry/PmtR11410/time_binning 100. nanosecond
+/Geometry/SiPMSensl/time_binning 1. microsecond
+/Geometry/KDB/teflon_masks true
+
+/nexus/persistency/outputFile pytest/Kr83_full_sim
