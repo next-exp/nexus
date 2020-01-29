@@ -61,7 +61,9 @@
 	float final_momentum_y;
 	float final_momentum_z;
 	float kin_energy;
+	float length;
         char creator_proc[PROCLEN];
+	char final_proc[PROCLEN];
   } particle_info_t;
 
   typedef struct{

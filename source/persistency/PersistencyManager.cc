@@ -156,7 +156,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
 
     G4int trackid = trj->GetTrackID();
 
-    //ipart->SetPathLength(trj->GetTrackLength());
+    G4double length = trj->GetTrackLength();
 
     G4ThreeVector ini_xyz = trj->GetInitialPosition();
     G4double ini_t = trj->GetInitialTime();
@@ -165,7 +165,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
     G4double final_t = trj->GetFinalTime();
 
     G4String ini_volume = trj->GetInitialVolume();
-    G4String final_volume = trj->GetDecayVolume();
+    G4String final_volume = trj->GetFinalVolume();
 
     G4double mass = trj->GetParticleDefinition()->GetPDGMass();
     G4ThreeVector ini_mom = trj->GetInitialMomentum();
@@ -191,7 +191,8 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
 				 ini_volume.c_str(), final_volume.c_str(),
 				 ini_momentum[0], ini_momentum[1], ini_momentum[2],
 				 final_momentum[0], final_momentum[1], final_momentum[2],
-				 kin_energy, trj->GetCreatorProcess().c_str());
+				 kin_energy, length, trj->GetCreatorProcess().c_str(),
+				 trj->GetFinalProcess().c_str());
 
   }
 }
