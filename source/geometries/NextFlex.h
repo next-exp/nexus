@@ -1,8 +1,9 @@
 // -----------------------------------------------------------------------------
-// File   : NextFlex.h
-// Info   : NEXT Parametrized Detector geometry for performance studies.
-// Author : Javier Muñoz Vidal
-// Date   : January 2020
+//  nexus | NextFlex.h
+//
+//  * Info          : NEXT-Flex Detector geometry for performance studies.
+//  * Author        : <jmunoz@ific.uv.es>
+//  * Creation date : January 2020
 // -----------------------------------------------------------------------------
 
 #ifndef NEXT_FLEX_H
@@ -20,7 +21,7 @@ class G4GenericMessenger;
 namespace nexus {
 
   class NextFlexFieldCage;
-  //class NextFlexEnergyPlane;
+  class NextFlexEnergyPlane;
   //class NextFlexTrackingPlane;
 
   // This is a geometry placer that encloses:
@@ -69,7 +70,7 @@ namespace nexus {
 
     // Detector parts
     NextFlexFieldCage*     _field_cage;
-    //NextFlexEnergyPlane*   _energy_plane;
+    NextFlexEnergyPlane*   _energy_plane;
     //NextFlexTrackingPlane* _tracking_plane;
 
     // AD-HOC vertex

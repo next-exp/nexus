@@ -1,13 +1,14 @@
 // -----------------------------------------------------------------------------
-// File   : NextFlex.cc
-// Info   : NEXT Parametrized Detector geometry for performance studies.
-// Author : Javier Muñoz Vidal
-// Date   : January 2020
+//  nexus | NextFlex.cc
+//
+//  * Info          : NEXT-Flex Detector geometry for performance studies.
+//  * Author        : <jmunoz@ific.uv.es>
+//  * Creation date : January 2020
 // -----------------------------------------------------------------------------
 
 #include "NextFlex.h"
 #include "NextFlexFieldCage.h"
-//#include "NextFlexEnergyPlane.h"
+#include "NextFlexEnergyPlane.h"
 //#include "NextFlexTrackingPlane.h"
 
 #include "MaterialsList.h"
@@ -50,7 +51,7 @@ NextFlex::NextFlex():
   _field_cage = new NextFlexFieldCage();
 
   // Energy Plane
-  //_energy_plane = new NextFlexEnergyPlane();
+  _energy_plane = new NextFlexEnergyPlane();
 
   // Tracking Plane
   //_tracking_plane = new NextFlexTrackingPlane();
@@ -61,7 +62,7 @@ NextFlex::~NextFlex()
 {
   delete _msg;
   delete _field_cage;
-  //delete _energy_plane;
+  delete _energy_plane;
   //delete _tracking_plane;
 }
 
@@ -136,8 +137,7 @@ void NextFlex::Construct()
 
   // Verbosity
   if(_verbosity) {
-    G4cout << G4endl << "***** Verbosing NEXT Parametrized geometry *****";
-    G4cout << G4endl << G4endl;
+    G4cout << G4endl << "***** Verbosing NEXT Parametrized geometry *****" << G4endl;
   }
 
   // Getting volumes dimensions based on parameters.
@@ -174,9 +174,8 @@ void NextFlex::Construct()
 
   gas_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
 
-  G4VPhysicalVolume* gas_phys_vol =  
-    new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), gas_logic_vol,
-                      gas_name, lab_logic_vol, false, 0, true);
+  new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), gas_logic_vol,
+                    gas_name, lab_logic_vol, false, 0, true);
 
 
   // The Field Cage
@@ -184,12 +183,17 @@ void NextFlex::Construct()
   _field_cage->Construct();
 
   // Energy Plane
-  //_energy_plane->SetMotherLogicalVolume(_mother_logic);
-  //_energy_plane->Construct();
+  _energy_plane->SetMotherLogicalVolume(gas_logic_vol);
+  _energy_plane->SetDiameter(_field_cage->Get_ACTIVE_diam());
+  _energy_plane->SetOriginZ(_field_cage->Get_BUFFER_finalZ());
+  _energy_plane->Construct();
 
   // Tracking Plane
-  //_tracking_plane->SetLogicalVolume(_mother_logic);
+  //_tracking_plane->SetLogicalVolume(gas_logic_vol);
   //_tracking_plane->Construct();
+
+  // Verbosity
+  if(_verbosity) G4cout << G4endl;
 }
 
 
@@ -211,12 +215,11 @@ G4ThreeVector NextFlex::GenerateVertex(const G4String& region) const
   }
 
   // Energy Plane regions
-  //else if (
-  //  (region == "ENERGY_COPPER_PLATE") ||
-  //  (region == "SAPPHIRE_WINDOW") ||
-  //  (region == "PMT_BODY")) {
-  //  vertex = _energy_plane->GenerateVertex(region);
-  //}
+  else if (
+    (region == "EP_COPPER") ||
+    (region == "EP_WINDOWS")) {
+    vertex = _energy_plane->GenerateVertex(region);
+  }
 
   // Tracking Plane regions
   //else if (

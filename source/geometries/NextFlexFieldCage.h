@@ -1,8 +1,9 @@
 // -----------------------------------------------------------------------------
-// File   : NextFlexFieldCage.h
-// Info   : NEXT Field Cage geometry for performance studies.
-// Author : Javier Muñoz Vidal
-// Date   : January 2020
+//  nexus | NextFlexFieldCage.h
+//
+//  * Info:         : NEXT-Flex Field Cage geometry for performance studies.
+//  * Author        : <jmunoz@ific.uv.es>
+//  * Creation date : January 2020
 // -----------------------------------------------------------------------------
 
 #ifndef NEXT_FLEX_FIELD_CAGE_H
@@ -34,6 +35,12 @@ namespace nexus {
 
     // Sets as mother volume of all the elements the volume where the class is placed
     void SetMotherLogicalVolume(G4LogicalVolume* mother_logic);
+
+    // Returns the ACTIVE diameter
+    G4double Get_ACTIVE_diam();
+
+    // Returns the posZ where the BUFFER ends
+    G4double Get_BUFFER_finalZ();
 
 
   private:
@@ -81,6 +88,7 @@ namespace nexus {
 
     // BUFFER
     G4double _buffer_length;
+    G4double _buffer_finalZ;
 
     // EL_GAP
     G4double _el_gap_length;
@@ -100,6 +108,14 @@ namespace nexus {
 
 
   }; // class NextFlexFieldCage
+
+  inline void NextFlexFieldCage::SetMotherLogicalVolume(G4LogicalVolume* mother_logic)
+    { _mother_logic = mother_logic; }
+
+  inline G4double NextFlexFieldCage::Get_ACTIVE_diam()   { return _active_diam;   }
+
+  inline G4double NextFlexFieldCage::Get_BUFFER_finalZ() { return _buffer_finalZ; }
+
 
 } // namespace nexus
 

@@ -1,8 +1,9 @@
 // -----------------------------------------------------------------------------
-// File   : NextFlexFieldCage.cc
-// Info   : NEXT Field Cage geometry for performance studies.
-// Author : Javier Muñoz Vidal
-// Date   : January 2020
+//  nexus | NextFlexFieldCage.cc
+//
+//  * Info:         : NEXT-Flex Field Cage geometry for performance studies.
+//  * Author        : <jmunoz@ific.uv.es>
+//  * Creation date : January 2020
 // -----------------------------------------------------------------------------
 
 #include "NextFlexFieldCage.h"
@@ -71,26 +72,20 @@ NextFlexFieldCage::NextFlexFieldCage():
 }
 
 
-void NextFlexFieldCage::SetMotherLogicalVolume(G4LogicalVolume* mother_logic)
-{
-  _mother_logic = mother_logic;
-}
-
-
 NextFlexFieldCage::~NextFlexFieldCage()
 {
   delete _msg;
 
   delete _active_gen;
-  //delete _buffer_gen;
-  //delete _el_gap_gen;
+  delete _buffer_gen;
+  delete _el_gap_gen;
 }
 
 
 void NextFlexFieldCage::DefineConfigurationParameters()
 {
   // Verbosity
-  _msg->DeclareProperty("verbosity", _verbosity, "Verbosity");
+  _msg->DeclareProperty("fc_verbosity", _verbosity, "Verbosity");
 
   // Visibility
   _msg->DeclareProperty("fc_visibility", _visibility, "FIELD_CAGE Visibility");
@@ -152,6 +147,16 @@ void NextFlexFieldCage::DefineConfigurationParameters()
                           "Longitudinal diffusion in the EL region");
   el_long_diff_cmd.SetParameterName("el_long_diff", true);
   el_long_diff_cmd.SetUnitCategory("Diffusion");
+
+  //// Fibers dimensions
+  //G4GenericMessenger::Command& fiber_thickness_cmd =
+  //  _msg->DeclareProperty("ep_fiber_thickness", _fiber_thickness,
+  //                        "Thickness of the EP square fibers.");
+  //fiber_thickness_cmd.SetUnitCategory("Length");
+  //fiber_thickness_cmd.SetParameterName("ep_fiber_thickness", false);
+  //fiber_thickness_cmd.SetRange("ep_fiber_thickness>=0.");
+
+
 }
 
 
@@ -167,10 +172,7 @@ void NextFlexFieldCage::DefineMaterials()
 void NextFlexFieldCage::Construct()
 {
   // Verbosity
-  if(_verbosity) {
-    G4cout << G4endl << "***** Verbosing NEXT Parametrized geometry *****";
-    G4cout << G4endl << G4endl;
-  }
+  if(_verbosity) G4cout << G4endl << "*** NEXT-Flex Field Cage ..." << G4endl;
 
   // Getting volumes dimensions based on parameters.
   //ComputeDimensions();
@@ -227,8 +229,8 @@ void NextFlexFieldCage::BuildActive()
   // Limit the step size in this volume for better tracking precision
   active_logic->SetUserLimits(new G4UserLimits(1.*mm));
   
-  // Set the volume as an ionization sensitive detector
-  IonizationSD* active_sd = new IonizationSD("/NEXT_PARAM/ACTIVE");
+  // Set the ACTIVE volume as an ionization sensitive detector
+  IonizationSD* active_sd = new IonizationSD("/NEXT_FLEX/ACTIVE");
   active_logic->SetSensitiveDetector(active_sd);
   G4SDManager::GetSDMpointer()->AddNewDetector(active_sd);  
 }
@@ -260,7 +262,6 @@ void NextFlexFieldCage::BuildCathode()
 
   // Verbosity
   if (_verbosity) G4cout << "* CATHODE Z position: " << cathode_posZ << G4endl;
-
 }
 
 
@@ -270,6 +271,7 @@ void NextFlexFieldCage::BuildBuffer()
 
   G4double buffer_diam = _active_diam;
   G4double buffer_posZ = _active_length + _cathode_thickn + _buffer_length/2.;
+  _buffer_finalZ = buffer_posZ + _buffer_length/2.;
 
   G4Tubs* buffer_solid =
     new G4Tubs(buffer_name, 0., buffer_diam/2., _buffer_length/2., 0, twopi);
@@ -286,6 +288,12 @@ void NextFlexFieldCage::BuildBuffer()
 
   // Vertex generator
   _buffer_gen = new CylinderPointSampler2020(buffer_phys);
+
+  // Set the BUFFER volume as an ionization sensitive detector
+  IonizationSD* buffer_sd = new IonizationSD("/NEXT_FLEX/BUFFER");
+  buffer_sd->IncludeInTotalEnergyDeposit(false);
+  buffer_logic->SetSensitiveDetector(buffer_sd);
+  G4SDManager::GetSDMpointer()->AddNewDetector(buffer_sd);  
 
   // Verbosity
   if (_verbosity) {
@@ -391,7 +399,6 @@ void NextFlexFieldCage::BuildELgap()
 
   // Verbosity
   if (_verbosity) G4cout << "* ANODE Z position: " << el_gap_posZ + anode_posZ << G4endl;
-
 }
 
 
