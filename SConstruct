@@ -100,12 +100,6 @@ vars.AddVariables(
                  'Path to ROOT installation.',
                  NULL_PATH),
 
-    ## GATE
-
-    PathVariable('GATE_DIR',
-                 'Path to GATE installation.',
-                 NULL_PATH),
-
     ## HDF5
 
     PathVariable('HDF5_DIR',
@@ -203,23 +197,6 @@ if not env['LIBPATH']:
     if not conf.CheckLib(library='Core', language='CXX', autoadd=0):
         Abort('ROOT libraries could not be found.')
 
-    ## GATE configuration --------------------------   -------
-    
-    if env['GATE_DIR'] != NULL_PATH:
-        env.PrependENVPath('PATH', env['GATE_DIR'])
-
-    env['GATE_DIR'] = os.environ['GATE_DIR']
-    
-    env.Append( CPPPATH = [env['GATE_DIR']] )
-                                                          
-    env.Append( LIBPATH = [env['GATE_DIR']+'/lib/'] )
-    
-    env.Append(LIBS = ['GATE','GATEIO'])
-
-    if not conf.CheckCXXHeader('GATE/Event.h'):
-        Abort('GATE headers not found.')
-    
-    env.Append(LIBS = ['GATE','GATEIO'])
 
     if env['HDF5_DIR'] != NULL_PATH:
         env.PrependENVPath('PATH', env['HDF5_DIR'])
