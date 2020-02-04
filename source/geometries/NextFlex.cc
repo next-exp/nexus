@@ -210,7 +210,8 @@ G4ThreeVector NextFlex::GenerateVertex(const G4String& region) const
     (region == "ACTIVE") ||
     (region == "BUFFER") ||
     (region == "EL_GAP") ||
-    (region == "LIGHT_TUBE")) {
+    (region == "LIGHT_TUBE") ||
+    (region == "FIBER_CORE")) {
     vertex = _field_cage->GenerateVertex(region);
   }
 

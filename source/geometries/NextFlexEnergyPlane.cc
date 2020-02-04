@@ -57,8 +57,8 @@ NextFlexEnergyPlane::NextFlexEnergyPlane():
   DefineConfigurationParameters();
 
   // Hard-wired dimensions & components
-  _teflon_thickness =   5. * mm;
-  _wls_thickness    = 100. * um;     // XXXXXXXX To be checked
+  _teflon_thickness = 5. * mm;
+  _wls_thickness    = 1. * um;       // XXXXXXXX To be checked
 
   _pmt                = new PmtR11410();
   _num_pmts           = 60;          // It must be the number of PMTs in NEXT100
@@ -406,7 +406,7 @@ void NextFlexEnergyPlane::BuildPMTs()
     pmt_hole_pos = _pmt_positions[i];
     pmt_hole_pos.setZ(_pmt_hole_posZ);
     new G4PVPlacement(nullptr, pmt_hole_pos, pmt_hole_logic, pmt_hole_name,
-                      _mother_logic, false, i, _verbosity);
+                      _mother_logic, false, i, false);
   }
 }
 

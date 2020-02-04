@@ -11,12 +11,17 @@
 /Geometry/NextFlex/drift_long_diff    .3 mm/sqrt(cm)
 
 # FIELD CAGE
-/Geometry/NextFlex/buffer_length   282. mm
-/Geometry/NextFlex/el_gap_length   10.  mm
-/Geometry/NextFlex/el_field_on     true
-/Geometry/NextFlex/el_field_int    34.5 kilovolt/cm
-/Geometry/NextFlex/el_transv_diff  0. mm/sqrt(cm)
-/Geometry/NextFlex/el_long_diff    0. mm/sqrt(cm)
+/Geometry/NextFlex/buffer_length     282. mm
+/Geometry/NextFlex/el_gap_length     10.  mm
+/Geometry/NextFlex/el_field_on       true
+/Geometry/NextFlex/el_field_int      34.5 kilovolt/cm
+/Geometry/NextFlex/el_transv_diff    0. mm/sqrt(cm)
+/Geometry/NextFlex/el_long_diff      0. mm/sqrt(cm)
+/Geometry/NextFlex/fc_wls_mat        TPB
+/Geometry/NextFlex/fc_with_fibers    true
+/Geometry/NextFlex/fiber_mat         EJ280
+/Geometry/NextFlex/fiber_claddings   2
+/Geometry/NextFlex/fiber_sensor_pde  1.
 
 # ENERGY PLANE
 /Geometry/NextFlex/ep_with_PMTs         true
