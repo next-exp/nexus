@@ -11,17 +11,19 @@
 /Geometry/NextFlex/drift_long_diff    .3 mm/sqrt(cm)
 
 # FIELD CAGE
-/Geometry/NextFlex/buffer_length     282. mm
-/Geometry/NextFlex/el_gap_length     10.  mm
-/Geometry/NextFlex/el_field_on       true
-/Geometry/NextFlex/el_field_int      34.5 kilovolt/cm
-/Geometry/NextFlex/el_transv_diff    0. mm/sqrt(cm)
-/Geometry/NextFlex/el_long_diff      0. mm/sqrt(cm)
-/Geometry/NextFlex/fc_wls_mat        TPB
-/Geometry/NextFlex/fc_with_fibers    true
-/Geometry/NextFlex/fiber_mat         EJ280
-/Geometry/NextFlex/fiber_claddings   2
-/Geometry/NextFlex/fiber_sensor_pde  1.
+/Geometry/NextFlex/buffer_length    282. mm
+/Geometry/NextFlex/el_gap_length    10.  mm
+/Geometry/NextFlex/el_field_on      true
+/Geometry/NextFlex/el_field_int     34.5 kilovolt/cm
+/Geometry/NextFlex/el_transv_diff   0. mm/sqrt(cm)
+/Geometry/NextFlex/el_long_diff     0. mm/sqrt(cm)
+/Geometry/NextFlex/fc_wls_mat       TPB
+/Geometry/NextFlex/fc_with_fibers   true
+/Geometry/NextFlex/fiber_mat        EJ280
+/Geometry/NextFlex/fiber_claddings  2
+
+/Geometry/NextFlex/fiber_sensor_pde           1.
+/Geometry/NextFlex/fiber_sensor_time_binning  100. ns
 
 # ENERGY PLANE
 /Geometry/NextFlex/ep_with_PMTs         true
@@ -29,65 +31,78 @@
 /Geometry/NextFlex/ep_copper_thickness  12. cm
 /Geometry/NextFlex/ep_wls_mat           TPB
 /Geometry/PmtR11410/SD_depth            3
+/Geometry/PmtR11410/time_binning        100. ns
+
+# TRACKING PLANE
+/Geometry/NextFlex/tp_copper_thickness   12. cm
+/Geometry/NextFlex/tp_wls_mat            TPB
+/Geometry/NextFlex/tp_sipm_size          1.  mm
+/Geometry/NextFlex/tp_sipm_pitchX        15. mm
+/Geometry/NextFlex/tp_sipm_pitchY        15. mm
+/Geometry/NextFlex/tp_sipm_time_binning  1.  us
 
 # ICS
-#/Geometry/NextFlex/ics_thickness  12. cm
+/Geometry/NextFlex/ics_thickness  12. cm
 
 # VERBOSITY
-/Geometry/NextFlex/verbosity    true
-/Geometry/NextFlex/fc_verbosity true
-/Geometry/NextFlex/ep_verbosity true
+/Geometry/NextFlex/verbosity     true
+/Geometry/NextFlex/fc_verbosity  true
+/Geometry/NextFlex/ep_verbosity  true
+/Geometry/NextFlex/tp_verbosity  true
 
 # VISIBILITIES
-/Geometry/NextFlex/fc_visibility true
-/Geometry/NextFlex/ep_visibility true
-/Geometry/PmtR11410/visibility   true
+/Geometry/NextFlex/fc_visibility  true
+/Geometry/NextFlex/ep_visibility  true
+/Geometry/PmtR11410/visibility    true
+/Geometry/NextFlex/tp_visibility  true
+/Geometry/NextFlex/ics_visibility true
 
 
 ### GENERATOR
 # S1 generator
-#/Generator/S1generator/region AD_HOC
+#/Generator/S1generator/region        AD_HOC
 #/Geometry/NextFlex/specific_vertex_X 0. mm
 #/Geometry/NextFlex/specific_vertex_Y 0. mm
 #/Geometry/NextFlex/specific_vertex_Z 0. mm
-#/Generator/S1generator/nphotons 25510
+## (Kripton: 1046, 1MeV: 25510, Qbb: 62704)
+#/Generator/S1generator/nphotons      25510
 
 # Single Particle
-/Generator/SingleParticle/region AD_HOC
-/Geometry/NextFlex/specific_vertex_X 125. mm
-/Geometry/NextFlex/specific_vertex_Y 0. mm
-/Geometry/NextFlex/specific_vertex_Z 100. mm
-#/Generator/SingleParticle/particle geantino
-#/Generator/SingleParticle/particle e-
-#/Generator/SingleParticle/particle alpha
-#/Generator/SingleParticle/min_energy 0.001 MeV
-#/Generator/SingleParticle/max_energy 0.001 MeV
-/Generator/SingleParticle/particle opticalphoton
-/Generator/SingleParticle/min_energy 7.20625 eV
-/Generator/SingleParticle/max_energy 7.20625 eV
-#/Generator/SingleParticle/min_energy 2.8 eV
-#/Generator/SingleParticle/max_energy 2.8 eV
-/Generator/SingleParticle/momentum_X 0.
-/Generator/SingleParticle/momentum_Y 0.
-/Generator/SingleParticle/momentum_Z 0.
+/Generator/SingleParticle/region      AD_HOC
+/Geometry/NextFlex/specific_vertex_X  125. mm
+/Geometry/NextFlex/specific_vertex_Y  0. mm
+/Geometry/NextFlex/specific_vertex_Z  100. mm
+#/Generator/SingleParticle/particle    geantino
+#/Generator/SingleParticle/particle    e-
+#/Generator/SingleParticle/particle    alpha
+#/Generator/SingleParticle/min_energy  0.001 MeV
+#/Generator/SingleParticle/max_energy  0.001 MeV
+/Generator/SingleParticle/particle    opticalphoton
+/Generator/SingleParticle/min_energy  7.20625 eV
+/Generator/SingleParticle/max_energy  7.20625 eV
+#/Generator/SingleParticle/min_energy  2.8 eV
+#/Generator/SingleParticle/max_energy  2.8 eV
+/Generator/SingleParticle/momentum_X  0.
+/Generator/SingleParticle/momentum_Y  0.
+/Generator/SingleParticle/momentum_Z  0.
 
 
 ### PHYSICS
 #/process/optical/scintillation/setTrackSecondariesFirst true
-/PhysicsList/Nexus/clustering false
-/PhysicsList/Nexus/drift false
+/PhysicsList/Nexus/clustering          false
+/PhysicsList/Nexus/drift               false
 /PhysicsList/Nexus/electroluminescence false
 
 
 ### VERBOSITY
-/control/verbose 0
-/run/verbose 0
-/event/verbose 0
+/control/verbose  0
+/run/verbose      0
+/event/verbose    0
 /tracking/verbose 0
 
 
 ### CONTROL
-/nexus/random_seed -1
-/nexus/persistency/hdf5 true
-/nexus/persistency/start_id 0
-/nexus/persistency/outputFile tst.NextFlex.next
+/nexus/random_seed             -1
+/nexus/persistency/hdf5        true
+/nexus/persistency/start_id    0
+/nexus/persistency/outputFile  tst.NextFlex.next

@@ -26,7 +26,6 @@
 #include <G4LogicalVolume.hh>
 #include <G4NistManager.hh>
 #include <G4Material.hh>
-#include <G4SDManager.hh>
 #include <G4VisAttributes.hh>
 #include <G4PVPlacement.hh>
 #include <G4OpticalSurface.hh>
@@ -51,7 +50,7 @@ NextFlexEnergyPlane::NextFlexEnergyPlane():
 
   // Messenger
   _msg = new G4GenericMessenger(this, "/Geometry/NextFlex/",
-                                "Control commands of the NextParam geometry.");
+                                "Control commands of the NextFlex geometry.");
 
   // Parametrized dimensions
   DefineConfigurationParameters();
@@ -97,8 +96,8 @@ void NextFlexEnergyPlane::DefineConfigurationParameters()
   G4GenericMessenger::Command& copper_thickness_cmd =
     _msg->DeclareProperty("ep_copper_thickness", _copper_thickness,
                           "Thickness of the EP Copper plate.");
-  copper_thickness_cmd.SetUnitCategory("Length");
   copper_thickness_cmd.SetParameterName("ep_copper_thickness", false);
+  copper_thickness_cmd.SetUnitCategory("Length");
   copper_thickness_cmd.SetRange("ep_copper_thickness>=0.");
 
   // UV shifting material
@@ -193,6 +192,7 @@ void NextFlexEnergyPlane::BuildCopper()
   G4String copper_name = "EP_COPPER";
 
   G4double copper_posZ = _copper_iniZ + _copper_thickness/2.;
+  _copper_finZ = _copper_iniZ + _copper_thickness;
 
   G4Tubs* copper_solid =
     new G4Tubs(copper_name, 0., _diameter/2., _copper_thickness/2., 0, twopi);
@@ -209,8 +209,8 @@ void NextFlexEnergyPlane::BuildCopper()
                     copper_name, _mother_logic, false, 0, _verbosity);
 
   // Visibility
-  //copper_logic->SetVisAttributes(G4VisAttributes::Invisible);
-  copper_logic->SetVisAttributes(nexus::CopperBrown());
+  if (_visibility) copper_logic->SetVisAttributes(nexus::CopperBrown());
+  else             copper_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
   // Vertex generator
   //_copper_gen = new CylinderPointSampler2020(copper_phys);
@@ -220,8 +220,8 @@ void NextFlexEnergyPlane::BuildCopper()
 
   // Verbosity
   if (_verbosity) {
-    G4cout << "* Copper Z positions: " << _copper_iniZ
-           << " to " << _copper_iniZ + _copper_thickness << G4endl;
+    G4cout << "* EP Copper Z positions: " << _copper_iniZ
+           << " to " << _copper_finZ << G4endl;
   }
 }
 
@@ -288,7 +288,7 @@ void NextFlexEnergyPlane::BuildTeflon()
 
   /// Verbosity ///
   if (_verbosity) {
-    G4cout << "* Teflon Z positions: " << _teflon_iniZ
+    G4cout << "* EP Teflon Z positions: " << _teflon_iniZ
            << " to " << _teflon_iniZ + _teflon_thickness << G4endl;
   } 
 }
@@ -402,11 +402,11 @@ void NextFlexEnergyPlane::BuildPMTs()
   /// Placing the encapsulating volumes ///
   _pmt_hole_posZ = _copper_iniZ + pmt_hole_length/2.;
   G4ThreeVector pmt_hole_pos;
-  for (int i=0; i < _num_pmts; i++) {
-    pmt_hole_pos = _pmt_positions[i];
+  for (int pmt_id=0; pmt_id < _num_pmts; pmt_id++) {
+    pmt_hole_pos = _pmt_positions[pmt_id];
     pmt_hole_pos.setZ(_pmt_hole_posZ);
     new G4PVPlacement(nullptr, pmt_hole_pos, pmt_hole_logic, pmt_hole_name,
-                      _mother_logic, false, i, false);
+                      _mother_logic, false, _first_sensor_id + pmt_id, false);
   }
 }
 

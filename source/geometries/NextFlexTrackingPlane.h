@@ -1,19 +1,19 @@
 // -----------------------------------------------------------------------------
-//  nexus | NextFlexEnergyPlane.h
+//  nexus | NextFlexTrackingPlane.h
 //
-//  * Info:         : NEXT-Flex Energy Plane geometry for performance studies.
+//  * Info:         : NEXT-Flex Tracking Plane geometry for performance studies.
 //  * Author        : <jmunoz@ific.uv.es>
 //  * Creation date : January 2020
 // -----------------------------------------------------------------------------
 
-#ifndef NEXT_FLEX_ENERGY_PLANE_H
-#define NEXT_FLEX_ENERGY_PLANE_H
+#ifndef NEXT_FLEX_TRACKING_PLANE_H
+#define NEXT_FLEX_TRACKING_PLANE_H
 
 #include <G4ThreeVector.hh>
 #include <vector>
 
 #include "BaseGeometry.h"
-#include "PmtR11410.h"
+
 
 class G4LogicalVolume;
 class G4Material;
@@ -27,13 +27,13 @@ namespace nexus {
 
   class CylinderPointSampler2020;
 
-  class NextFlexEnergyPlane: public BaseGeometry {
+  class NextFlexTrackingPlane: public BaseGeometry {
 
   public:
 
-    NextFlexEnergyPlane();
+    NextFlexTrackingPlane();
 
-    virtual ~NextFlexEnergyPlane();
+    virtual ~NextFlexTrackingPlane();
 
     virtual void Construct();
     
@@ -45,13 +45,13 @@ namespace nexus {
     // Setting the diameter of EP. It is set equal to ACTIVE's.
     void SetDiameter(G4double diam);
 
-    // Setting the origin Z, where the whole Energy Plane starts
+    // Setting the origin Z, where the whole Energy Plane starts (to the left == z<0)
     void SetOriginZ(G4double posZ);
 
-    // Returns the final Z of the Tracking Plane (== Final Z of copper plate)
-    G4double Get_EP_finZ();
+    // Returns the initial Z of the Energy Plane (== Initial Z of copper plate)
+    G4double Get_TP_iniZ();
 
-    // Setting the First Energy Plane PMT ID
+    // Setting the First Tracking Plane SiPM ID
     void SetFirstSensorID(const G4int first_id);
 
 
@@ -66,16 +66,16 @@ namespace nexus {
     // Computes derived dimensions
     void ComputeDimensions();
 
-    // It generates PMT XY positions
-    void GeneratePMTpositions();
+    // It generates SiPM XY positions
+    void GenerateSiPMpositions();
 
     // Make the PMT corresponding holes in the solid volume passed.
-    G4SubtractionSolid* MakePMTholes(G4Tubs* the_solid);
+    G4SubtractionSolid* MakeSiPMholes(G4Tubs* the_solid);
 
     // Different builders
     void BuildCopper();
     void BuildTeflon();
-    void BuildPMTs();
+    void BuildSiPMs();
 
   private:
 
@@ -94,16 +94,12 @@ namespace nexus {
    // Geometry Navigator
     G4Navigator* _geom_navigator;
 
-    // Energy Plane Configuration
-    G4bool _ep_with_PMTs;    // PMTs arranged ala NEXT100
-    G4bool _ep_with_teflon;  // Teflon mask to reflect light
-
     // Materials & Components
     G4Material* _xenon_gas;
     G4Material* _copper_mat;
     G4Material* _teflon_mat;
-    G4Material* _sapphire_mat;
-    G4Material* _optical_pad_mat;
+    G4Material* _SiPM_case_mat;
+    G4Material* _SiPM_mat;
 
     G4String    _wls_matName;
     G4Material* _wls_mat;
@@ -111,44 +107,46 @@ namespace nexus {
     // Dimensions & Positions
     G4double _originZ;
     G4double _diameter;
+    G4double _SiPM_ANODE_dist;
 
-    G4double _copper_iniZ;
-    G4double _copper_finZ;
-    G4double _teflon_iniZ;
+    G4double _SiPM_size;
+    G4double _SiPM_thickness;
+    G4double _SiPM_case_thickness;
+    G4double _SiPM_pitchX;
+    G4double _SiPM_pitchY;
+    G4double _SiPM_bin;
+    G4double _num_SiPMs;
+    G4double _SiPM_iniZ;
+
+    std::vector<G4ThreeVector> _SiPM_positions;
 
     G4double _copper_thickness;
+    G4double _copper_iniZ;
+
     G4double _teflon_thickness;
+    G4double _teflon_iniZ;
+    
     G4double _wls_thickness;
-
-    PmtR11410*                 _pmt;
-    G4int                      _num_pmts;
-    std::vector<G4ThreeVector> _pmt_positions;
-    G4double                   _pmt_hole_diameter;
-    G4double                   _pmt_hole_posZ;
-
-    G4double _window_thickness;
-    G4double _optical_pad_thickness;
 
     // Sensor IDs
     G4int _first_sensor_id;
 
     // Vertex generators
     CylinderPointSampler2020* _copper_gen;
-    CylinderPointSampler2020* _window_gen;
 
-  }; // class NextFlexEnergyPlane
+  }; // class NextFlexTrackingPlane
 
 
-  inline void NextFlexEnergyPlane::SetMotherLogicalVolume(G4LogicalVolume* mother_logic)
+  inline void NextFlexTrackingPlane::SetMotherLogicalVolume(G4LogicalVolume* mother_logic)
     { _mother_logic = mother_logic; }
 
-  inline void NextFlexEnergyPlane::SetOriginZ(G4double posZ)  { _originZ = posZ;  }
+  inline void NextFlexTrackingPlane::SetOriginZ(G4double posZ)  { _originZ = posZ;  }
 
-  inline void NextFlexEnergyPlane::SetDiameter(G4double diam) { _diameter = diam; }
+  inline void NextFlexTrackingPlane::SetDiameter(G4double diam) { _diameter = diam; }
 
-  inline G4double NextFlexEnergyPlane::Get_EP_finZ() { return _copper_finZ; }
+  inline G4double NextFlexTrackingPlane::Get_TP_iniZ() { return _copper_iniZ; }
 
-  inline void NextFlexEnergyPlane::SetFirstSensorID(const G4int first_id)
+  inline void NextFlexTrackingPlane::SetFirstSensorID(const G4int first_id)
     { _first_sensor_id = first_id; }
 
 } // namespace nexus

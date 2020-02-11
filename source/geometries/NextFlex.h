@@ -22,7 +22,8 @@ namespace nexus {
 
   class NextFlexFieldCage;
   class NextFlexEnergyPlane;
-  //class NextFlexTrackingPlane;
+  class NextFlexTrackingPlane;
+  class CylinderPointSampler2020;
 
   // This is a geometry placer that encloses:
   // The FIELD_CAGE     (Including ACTIVE, BUFFER, EL_GAP & LIGHT_TUBE)
@@ -54,11 +55,21 @@ namespace nexus {
     // Defines materials needed
     void DefineMaterials();
 
+    // Different builders
+    void BuildICS(G4LogicalVolume* mother_logic);
 
   private:
 
+    const G4int FIRST_ENERGY_SENSOR_ID      =     0;
+    const G4int FIRST_TRACKING_SENSOR_ID    =  1000;
+    const G4int FIRST_LEFT_FIBER_SENSOR_ID  = 10000;
+    const G4int FIRST_RIGHT_FIBER_SENSOR_ID = 20000;
+
     // Verbosity of the geometry
     G4bool _verbosity;
+
+    // Visibility of the geometry
+    G4bool _ics_visibility;
 
     // Messenger for the definition of control commands
     G4GenericMessenger* _msg;
@@ -67,11 +78,18 @@ namespace nexus {
     G4String    _gas_name;
     G4double    _gas_pressure, _gas_temperature;
     G4Material* _xenon_gas;
+    G4Material* _copper_mat;
+
+    // Dimensions
+    G4double    _ics_thickness;
 
     // Detector parts
     NextFlexFieldCage*     _field_cage;
     NextFlexEnergyPlane*   _energy_plane;
-    //NextFlexTrackingPlane* _tracking_plane;
+    NextFlexTrackingPlane* _tracking_plane;
+
+    // Vertex generators
+    CylinderPointSampler2020* _copper_gen;
 
     // AD-HOC vertex
     G4double _adhoc_x, _adhoc_y, _adhoc_z;
