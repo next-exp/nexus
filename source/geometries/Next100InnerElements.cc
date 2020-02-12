@@ -54,7 +54,7 @@ namespace nexus {
     _energy_plane = new Next100EnergyPlane();
 
     // Tracking Plane
-    _tracking_plane = new Next100TrackingPlane();
+    //_tracking_plane = new Next100TrackingPlane();
 
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/Next100/",
@@ -88,9 +88,8 @@ namespace nexus {
     _energy_plane->SetSapphireSurfaceZPos(_gate_sapphire_wdw_distance); // to check
     _energy_plane->Construct();
 
-    // Tracking Plane
-    _tracking_plane->SetLogicalVolume(_mother_logic);
-    _tracking_plane->SetELzCoord(gate_zpos);
+    // Tracking plane
+    _tracking_plane = new Next100TrackingPlane(_mother_logic);
     _tracking_plane->Construct();
   }
 
