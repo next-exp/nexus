@@ -338,6 +338,9 @@ G4Material* MaterialsList::Steel316Ti()
 
 G4Material* MaterialsList::Epoxy()
 {
+  // Definition taken from the Geant4 advanced example "Composite Calorimeter"
+  // (Geant4/examples/advanced/composite_calorimeter/dataglobal/material.cms).
+
   G4String name = "Epoxy";
 
   G4Material* mat = G4Material::GetMaterial(name, false);
@@ -566,6 +569,9 @@ G4Material* MaterialsList::HDPE()
 
 G4Material* MaterialsList::OpticalSilicone()
 {
+  // Silicone resin with a methyl group
+  // (https://en.wikipedia.org/wiki/Silicone_resin)
+
   G4String name = "OpticalSilicone";
 
   G4Material* mat = G4Material::GetMaterial(name, false);
@@ -573,12 +579,16 @@ G4Material* MaterialsList::OpticalSilicone()
   if (mat == 0) {
     G4NistManager* nist = G4NistManager::Instance();
 
-    G4Element* H = nist->FindOrBuildElement("H");
-    G4Element* C = nist->FindOrBuildElement("C");
+    G4Element* H  = nist->FindOrBuildElement("H");
+    G4Element* C  = nist->FindOrBuildElement("C");
+    G4Element* O  = nist->FindOrBuildElement("O");
+    G4Element* Si = nist->FindOrBuildElement("Si");
 
-    mat = new G4Material(name, 1.060 *g/cm3, 2, kStateSolid);
-    mat->AddElement(H, 6);
-    mat->AddElement(C, 2);
+    mat = new G4Material(name, 1.05*g/cm3, 4, kStateSolid);
+    mat->AddElement(H,  3);
+    mat->AddElement(C,  1);
+    mat->AddElement(Si, 1);
+    mat->AddElement(O,  1);
   }
 
   return mat;
@@ -616,7 +626,9 @@ G4Material* MaterialsList::SeF6(G4double pressure, G4double temperature)
 
 G4Material* MaterialsList::FR4()
 {
-  // Material widely used for printed circuit boards
+  // FR-4 is a composite material widely used for printed circuits boards.
+  // It consists of woven fiberglass cloth with an epoxy resin binder that is
+  // flame resistant. Typical proportions are 60% fused silica and 40% epoxy.
 
   G4String name = "FR4";
   G4Material* mat = G4Material::GetMaterial(name, false);
@@ -626,20 +638,13 @@ G4Material* MaterialsList::FR4()
     G4NistManager* nist = G4NistManager::Instance();
     G4double density = 1.850*g/cm3;
 
-    mat = new G4Material(name, density, 3, kStateSolid);
-
-    G4Element* H = nist->FindOrBuildElement("H");
-    G4Element* C = nist->FindOrBuildElement("C");
-    G4Element* O = nist->FindOrBuildElement("O");
-
-    mat->AddElement(H, 12);
-    mat->AddElement(C, 18);
-    mat->AddElement(O,  3);
+    mat = new G4Material(name, density, 2, kStateSolid);
+    mat->AddMaterial(MaterialsList::FusedSilica(), 0.60);
+    mat->AddMaterial(MaterialsList::Epoxy(),       0.40);
   }
 
   return mat;
 }
-
 
 
 G4Material* MaterialsList::CopyMaterial(G4Material* original, G4String newname)
