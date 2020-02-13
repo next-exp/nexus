@@ -1,15 +1,13 @@
-// ----------------------------------------------------------------------------
-///  \file   OpticalMaterialProperties.h
-///  \brief  Optical properties of most used materials.
-///  
-///  \author  <justo.martin-albo@ific.uv.es>
-///           <francesc.monrabal4@ific.uv.es>
-///           <paola.ferrario@ific.uv.es>
-///  \date    27 Mar 2009
-///  \version $Id$
-///
-///  Copyright (c) 2009, 2010, 2011 NEXT Collaboration
-// ----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+//  nexus | OpticalMaterialProperties.h
+//
+//  * Info:         : NEXT-Flex Field Cage geometry for performance studies.
+//  * Author        : <jmunoz@ific.uv.es>
+//  *                 <paola.ferrario@ific.uv.es>
+//  *                 <justo.martin-albo@ific.uv.es>
+//  * Creation date : February 2020
+//  * Description   : Optical properties of most used materials.
+// -----------------------------------------------------------------------------
 
 #ifndef __OPTICAL_MATERIAL_PROPERTIES__
 #define __OPTICAL_MATERIAL_PROPERTIES__
@@ -62,16 +60,16 @@ namespace nexus {
                                                G4double thickness=1.*mm,
                                                G4int sc_yield=25510/MeV);
     
-    static G4MaterialPropertiesTable* TPB(G4double pressure=10.*bar,
-                                          G4double temperature=STP_Temperature);
+//    static G4MaterialPropertiesTable* TPB(G4double pressure=10.*bar,
+//                                          G4double temperature=STP_Temperature);
 
-    static G4MaterialPropertiesTable* NewTPB();
+    static G4MaterialPropertiesTable* TPB();
 
     static G4MaterialPropertiesTable* TPH();
 
     static G4MaterialPropertiesTable* PTFE();
 
-    static G4MaterialPropertiesTable* PTFE_with_TPB();
+//    static G4MaterialPropertiesTable* PTFE_with_TPB();
 
     static G4MaterialPropertiesTable* EJ280();
 

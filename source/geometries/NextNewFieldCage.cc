@@ -258,7 +258,7 @@ namespace nexus {
       G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
     // TPB coating
     _tpb = MaterialsList::TPB();
-    _tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB(_pressure, _temperature));
+    _tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
     //ITO coating
     _ito = MaterialsList::ITO();
     _ito->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeFusedSilica(_ito_transparency, _ito_thickness));
@@ -570,7 +570,7 @@ void NextNewFieldCage::BuildBuffer()
     reflector_opt_surf->SetModel(unified);
     reflector_opt_surf->SetFinish(ground);
     reflector_opt_surf->SetSigmaAlpha(0.1);
-    reflector_opt_surf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
+    reflector_opt_surf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
     new G4LogicalSkinSurface("DRIFT_TUBE", drift_tube_logic,
     			     reflector_opt_surf);
 

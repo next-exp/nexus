@@ -311,7 +311,7 @@ namespace nexus {
     quartz->SetMaterialPropertiesTable(OpticalMaterialProperties::FusedSilica());
     // TPB coating
     G4Material* tpb = MaterialsList::TPB();
-    tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB(_pressure, _temperature));
+    tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
      //ITO coating
     G4Material* ito = MaterialsList::ITO();
     ito->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeFusedSilica(_ito_transparency, _ito_thickness));

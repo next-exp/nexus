@@ -78,9 +78,6 @@ namespace nexus {
   void Next100EnergyPlane::SetLogicalVolume(G4LogicalVolume* mother_logic)
   {
     _mother_logic = mother_logic;
-    _gas = _mother_logic->GetMaterial();
-    _pressure =    _gas->GetPressure();
-    _temperature = _gas->GetTemperature();
   }
 
 
@@ -174,17 +171,13 @@ namespace nexus {
     new G4PVPlacement(0, G4ThreeVector(0.,0.,pad_posz), enclosure_pad_logic,
 		      "ENCLOSURE_PAD", enclosure_gas_logic, false, 0, false);
 
-    /// TPB coating on sapphire window
+    // TPB coating on sapphire window
     G4Material* tpb = MaterialsList::TPB();
-    tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB(_pressure, _temperature));
-    // G4cout << "P and T on sapphire windows TPB: " << _pressure << 
-    //   ", " << _temperature << G4endl;
+    tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
     G4Tubs* tpb_solid = new G4Tubs("ENCLOSURE_TPB", 0., _enclosure_window_diam/2, 
-				   _tpb_thickness/2., 0., twopi);
+                                   _tpb_thickness/2., 0., twopi);
     G4LogicalVolume* tpb_logic = 
       new G4LogicalVolume(tpb_solid, tpb, "ENCLOSURE_TPB");
-
-      
 
     // Adding the PMT
     _pmt->Construct();
