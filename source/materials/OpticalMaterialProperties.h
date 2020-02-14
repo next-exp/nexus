@@ -60,16 +60,11 @@ namespace nexus {
                                                G4double thickness=1.*mm,
                                                G4int sc_yield=25510/MeV);
     
-//    static G4MaterialPropertiesTable* TPB(G4double pressure=10.*bar,
-//                                          G4double temperature=STP_Temperature);
-
     static G4MaterialPropertiesTable* TPB();
 
     static G4MaterialPropertiesTable* TPH();
 
     static G4MaterialPropertiesTable* PTFE();
-
-//    static G4MaterialPropertiesTable* PTFE_with_TPB();
 
     static G4MaterialPropertiesTable* EJ280();
 
@@ -88,6 +83,10 @@ namespace nexus {
     static constexpr G4double optPhotMinE_ =  0.2  * eV;
     static constexpr G4double optPhotMaxE_ = 11.5  * eV;
     static constexpr G4double noAbsLength_ = 1.e8  * m;
+
+    // Constant that allows to convert nm to eV:
+    // nm_to_eV_ / wavelength (nm) = energy (eV)
+    static constexpr G4double nm_to_eV_ = h_Planck * c_light * 1.e6;
 
 
   private:
