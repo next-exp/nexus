@@ -22,10 +22,12 @@
 #include <G4VisAttributes.hh>
 #include <G4Material.hh>
 #include <G4LogicalVolume.hh>
+#include <G4VPhysicalVolume.hh>
 #include <G4Tubs.hh>
 #include <G4Polyhedra.hh>
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
+#include <G4LogicalBorderSurface.hh>
 #include <G4NistManager.hh>
 #include <G4UserLimits.hh>
 #include <G4SDManager.hh>
@@ -139,6 +141,11 @@ namespace nexus {
   void Next100FieldCage::SetMotherLogicalVolume(G4LogicalVolume* mother_logic)
   {
     _mother_logic = mother_logic;
+  }
+
+  void Next100FieldCage::SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys)
+  {
+    _mother_phys = mother_phys;
   }
 
 
@@ -453,8 +460,9 @@ namespace nexus {
 		       zplane, rinner, router_tpb);
     G4LogicalVolume* tpb_drift_logic =
       new G4LogicalVolume(tpb_drift_solid, _tpb, "DRIFT_TPB");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), tpb_drift_logic,
-  		      "DRIFT_TPB", teflon_drift_logic, false, 0, false);
+    G4VPhysicalVolume* tpb_drift_phys =
+      new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), tpb_drift_logic,
+                        "DRIFT_TPB", teflon_drift_logic, false, 0, false);
 
 
     /// BUFFER PART ///
@@ -486,24 +494,33 @@ namespace nexus {
 		       zplane_buff, rinner, router_tpb_buff);
     G4LogicalVolume* tpb_buffer_logic =
       new G4LogicalVolume(tpb_buffer_solid, _tpb, "BUFFER_TPB");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), tpb_buffer_logic,
-  		      "BUFFER_TPB", teflon_buffer_logic, false, 0, false);
+    G4VPhysicalVolume* tpb_buffer_phys =
+      new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), tpb_buffer_logic,
+                        "BUFFER_TPB", teflon_buffer_logic, false, 0, false);
 
 
     /// Optical surface on teflon ///
     G4OpticalSurface* refl_Surf =
       new G4OpticalSurface("refl_Surf", unified, ground, dielectric_metal, .01);
-    refl_Surf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
+    refl_Surf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
     new G4LogicalSkinSurface("refl_teflon_surf", teflon_drift_logic, refl_Surf);
     new G4LogicalSkinSurface("refl_teflon_surf", teflon_buffer_logic, refl_Surf);
 
 
-    /// Optical surface on TPB to model roughness ///
-    G4OpticalSurface* tpb_teflon_surf =
-      new G4OpticalSurface("tpb_teflon_surf", glisur, ground,
-			   dielectric_metal, .01);
-    new G4LogicalSkinSurface("tpb_teflon_surf", tpb_drift_logic, tpb_teflon_surf);
-    new G4LogicalSkinSurface("tpb_teflon_surf", tpb_buffer_logic, tpb_teflon_surf);
+    /// Optical surface between xenon and TPB to model roughness ///
+    G4OpticalSurface* gas_tpb_teflon_surf =
+      new G4OpticalSurface("gas_tpb_teflon_surf", glisur, ground,
+			   dielectric_dielectric, .01);
+
+
+    new G4LogicalBorderSurface("gas_tpb_teflon_surf", tpb_drift_phys, _mother_phys,
+                               gas_tpb_teflon_surf);
+    new G4LogicalBorderSurface("gas_tpb_teflon_surf", _mother_phys, tpb_drift_phys,
+                               gas_tpb_teflon_surf);
+    new G4LogicalBorderSurface("gas_tpb_teflon_surf", tpb_buffer_phys, _mother_phys,
+                               gas_tpb_teflon_surf);
+    new G4LogicalBorderSurface("gas_tpb_teflon_surf", _mother_phys, tpb_buffer_phys,
+                               gas_tpb_teflon_surf);
 
 
     // Vertex generator

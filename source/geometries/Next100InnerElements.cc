@@ -22,6 +22,7 @@
 
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
+#include <G4VPhysicalVolume.hh>
 #include <G4Tubs.hh>
 #include <G4PVPlacement.hh>
 #include <G4Material.hh>
@@ -67,6 +68,11 @@ namespace nexus {
     _mother_logic = mother_logic;
   }
 
+  void Next100InnerElements::SetPhysicalVolume(G4VPhysicalVolume* mother_phys)
+  {
+    _mother_phys = mother_phys;
+  }
+
 
   void Next100InnerElements::Construct()
   {
@@ -79,6 +85,7 @@ namespace nexus {
 
     // Field Cage
     _field_cage->SetMotherLogicalVolume(_mother_logic);
+    _field_cage->SetMotherPhysicalVolume(_mother_phys);
     _field_cage->SetELzCoord(gate_zpos);
     _field_cage->Construct();
 

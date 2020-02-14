@@ -58,8 +58,6 @@ namespace nexus {
 
     // Mother Logical Volume of the whole Energy PLane
     G4LogicalVolume* _mother_logic;
-    G4Material* _gas;
-    G4double _pressure, _temperature;
 
     // Dimensions
     const G4int _num_PMTs;

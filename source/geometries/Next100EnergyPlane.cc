@@ -101,9 +101,6 @@ namespace nexus {
   void Next100EnergyPlane::SetMotherLogicalVolume(G4LogicalVolume* mother_logic)
   {
     _mother_logic = mother_logic;
-    _gas          = _mother_logic->GetMaterial();
-    _pressure     = _gas->GetPressure();
-    _temperature  = _gas->GetTemperature();
   }
 
 
@@ -260,7 +257,6 @@ namespace nexus {
     vacuum->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
     G4Material* optical_coupler = MaterialsList::OpticalSilicone();
     optical_coupler->SetMaterialPropertiesTable(OpticalMaterialProperties::OptCoupler());
-
 
     /// Vacuum volume that encapsulates all elements related to PMTs. ///
     G4Tubs* vacuum_front_solid =

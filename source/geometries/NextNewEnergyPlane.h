@@ -48,8 +48,6 @@ namespace nexus {
     void Construct();
 
   private:
-    G4Material* _gas;
-    G4double _pressure, _temperature;
 
     void GeneratePMTsPositions();
     void GenerateGasHolePositions();

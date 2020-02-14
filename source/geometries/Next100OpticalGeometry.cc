@@ -14,6 +14,7 @@
 
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
+#include <G4VPhysicalVolume.hh>
 #include <G4Box.hh>
 #include <G4PVPlacement.hh>
 #include <G4Material.hh>
@@ -126,11 +127,13 @@ namespace nexus {
   G4LogicalVolume* gas_logic = new G4LogicalVolume(gas_solid, gas_mat, "GAS");
 
   _gate_zpos_in_gas = 0. * mm;
-  new G4PVPlacement(0, G4ThreeVector(0, 0, -_gate_zpos_in_gas), gas_logic,
-		    "GAS", lab_logic, false, 0, false);
+  G4VPhysicalVolume* gas_phys =
+    new G4PVPlacement(0, G4ThreeVector(0, 0, -_gate_zpos_in_gas), gas_logic,
+                      "GAS", lab_logic, false, 0, false);
 
   ///INNER ELEMENTS
   _inner_elements->SetLogicalVolume(gas_logic);
+  _inner_elements->SetPhysicalVolume(gas_phys);
   _inner_elements->SetELzCoord(_gate_zpos_in_gas);
   _inner_elements->Construct();
 

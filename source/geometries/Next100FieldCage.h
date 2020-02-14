@@ -19,6 +19,7 @@
 
 class G4Material;
 class G4LogicalVolume;
+class G4VPhysicalVolume;
 class G4GenericMessenger;
 
 namespace nexus {
@@ -49,6 +50,7 @@ namespace nexus {
 
     /// Sets as mother volume of all the elements the volume where the class is placed
     void SetMotherLogicalVolume(G4LogicalVolume* mother_logic);
+    void SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys);
 
   private:
 
@@ -109,6 +111,7 @@ namespace nexus {
 
     // Logical volume where the class is placed
     G4LogicalVolume* _mother_logic;
+    G4VPhysicalVolume* _mother_phys;
     G4Material* _gas;
     G4double _pressure;
     G4double _temperature;
