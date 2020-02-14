@@ -81,12 +81,8 @@ namespace nexus {
 		      "FC_REFLECTOR", field_cage_logic, false, 0);
 
     //Cover  the internal reflector with TPB
-    G4Material* gas = _mother_logic->GetMaterial();
-    G4double pressure =    gas->GetPressure();
-    G4double temperature = gas->GetTemperature();
-
     G4Material* tpb = MaterialsList::TPB();
-    tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB(pressure, temperature));
+    tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
     G4Tubs* tpb_solid = 
       new G4Tubs("REFLECTOR_TPB", _tube_diam/2., _tube_diam/2.  + _tpb_thickn,
 		 _tube_length/2., 0, twopi);
@@ -102,7 +98,7 @@ namespace nexus {
     reflector_opsur->SetModel(unified);
     reflector_opsur->SetFinish(ground);
     reflector_opsur->SetSigmaAlpha(0.1);
-    reflector_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
+    reflector_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
     new G4LogicalSkinSurface("FC_REFLECTOR", reflector_logic, reflector_opsur);
 
 
