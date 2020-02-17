@@ -13,7 +13,10 @@
 #include "XenonGasProperties.h"
 #include "XenonGasProperties.h"
 #include "SellmeierEquation.h"
+
 #include <G4MaterialPropertiesTable.hh>
+
+#include <assert.h>
 
 using namespace nexus;
 using namespace CLHEP;
