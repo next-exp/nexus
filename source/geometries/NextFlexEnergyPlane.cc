@@ -148,7 +148,7 @@ void NextFlexEnergyPlane::DefineMaterials()
   }
   else if (_wls_matName == "TPB") {
     _wls_mat = MaterialsList::TPB();
-    _wls_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::NewTPB());
+    _wls_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
   }
   else if (_wls_matName == "TPH") {
     _wls_mat = MaterialsList::TPH();
