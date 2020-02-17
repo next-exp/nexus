@@ -87,8 +87,8 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FusedSilica()
       + B_2*pow(lambda,2)/(pow(lambda,2)-C_2)
       + B_3*pow(lambda,2)/(pow(lambda,2)-C_3);
     rIndex[i] = sqrt(n2);
-    G4cout << "* FusedSilica rIndex:  " << std::setw(5) << ri_energy[i]/eV
-           << " eV -> " << rIndex[i] << G4endl;
+    // G4cout << "* FusedSilica rIndex:  " << std::setw(5) << ri_energy[i]/eV
+    //       << " eV -> " << rIndex[i] << G4endl;
   }
   assert(sizeof(rIndex) == sizeof(ri_energy));
   mpt->AddProperty("RINDEX", ri_energy, rIndex, ri_entries);
@@ -636,8 +636,6 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB()
     optPhotMaxE_
   };
   const G4int WLS_abs_entries = sizeof(WLS_abs_energy) / sizeof(G4double);
-
-  for (G4int i=0; i < WLS_abs_entries; i++)  G4cout << WLS_abs_energy[i] << G4endl;
 
 
   G4double WLS_absLength[] = {
