@@ -1,12 +1,11 @@
 // -----------------------------------------------------------------------------
 //  nexus | OpticalMaterialProperties.cc
 //
-//  * Info:         : NEXT-Flex Field Cage geometry for performance studies.
+//  * Info:         : Optical properties of relevant materials.
 //  * Author        : <jmunoz@ific.uv.es>
-//  *                 <paola.ferrario@ific.uv.es>
+//  *                 <paola.ferrario@dipc.org>
 //  *                 <justo.martin-albo@ific.uv.es>
 //  * Creation date : February 2020
-//  * Description   : Optical properties of most used materials.
 // -----------------------------------------------------------------------------
 
 #include "OpticalMaterialProperties.h"
