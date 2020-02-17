@@ -145,7 +145,7 @@ namespace nexus {
       dboard_opsur->SetModel(unified);
       dboard_opsur->SetFinish(ground);
       dboard_opsur->SetSigmaAlpha(0.1);
-      dboard_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
+      dboard_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
       
       new G4LogicalSkinSurface("KDB", board_logic, dboard_opsur);
     }

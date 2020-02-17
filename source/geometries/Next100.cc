@@ -14,6 +14,7 @@
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
 #include <G4LogicalVolume.hh>
+#include <G4VPhysicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4VisAttributes.hh>
 #include <G4NistManager.hh>
@@ -125,9 +126,11 @@ namespace nexus {
     		      "VESSEL", shielding_air_logic, false, 0);
 
     G4LogicalVolume* vessel_internal_logic = _vessel->GetInternalLogicalVolume();
+    G4VPhysicalVolume* vessel_internal_phys = _vessel->GetInternalPhysicalVolume();
 
     // Inner Elements
     _inner_elements->SetLogicalVolume(vessel_internal_logic);
+    _inner_elements->SetPhysicalVolume(vessel_internal_phys);
     _inner_elements->SetELzCoord(_gate_zpos_in_vessel);
     _inner_elements->Construct();
 

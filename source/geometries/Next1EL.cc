@@ -994,17 +994,12 @@ void Next1EL::BuildFieldCage()
   }
 
   // OPTICAL SURFACES ////////////////////////////////////////////////
-
   G4OpticalSurface* ltubeup_opsur = new G4OpticalSurface("LIGHT_TUBE_UP");
   ltubeup_opsur->SetType(dielectric_metal);
   ltubeup_opsur->SetModel(unified);
   ltubeup_opsur->SetFinish(ground);
   ltubeup_opsur->SetSigmaAlpha(0.1);
-  if (_tpb_coating) {
-    ltubeup_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
-  } else {
-    ltubeup_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
-  }
+  ltubeup_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
 
   G4OpticalSurface* ltubebt_opsur = new G4OpticalSurface("LIGHT_TUBE_BOTTOM");
   ltubebt_opsur->SetType(dielectric_metal);
@@ -1013,9 +1008,8 @@ void Next1EL::BuildFieldCage()
   ltubebt_opsur->SetSigmaAlpha(0.1);
   ltubebt_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
 
-  new G4LogicalSkinSurface("LIGHT_TUBE_UP", ltube_up_logic, ltubeup_opsur);
+  new G4LogicalSkinSurface("LIGHT_TUBE_UP",     ltube_up_logic, ltubeup_opsur);
   new G4LogicalSkinSurface("LIGHT_TUBE_BOTTOM", ltube_bt_logic, ltubebt_opsur);
-
 }
   
   

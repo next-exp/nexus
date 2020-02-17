@@ -40,85 +40,47 @@ namespace nexus {
   
   G4double XenonGasProperties::Density(G4double pressure)
   {
-    G4double density = 5.324*kg/m3;
-    const G4int n_pressures = 6;
+    G4double density = 5.324 * kg/m3;
 
     // These values are taken from O. Sifner and J. Klomfar, "Thermodynamic Properties of Xenon from the Triple Point to 800 K with Pressures up to 350 MPa", J. Phys. Chem. Ref. Data, Vol. 23, No. 1, 1994
     // We assume T = 300 K and perform a linear interpolation between any pair of values.
-
+    const G4int n_pressures = 6;
     G4double data[n_pressures][2] =
-      {{ 1.0*bar,  5.290*kg/m3},
-       { 5.0*bar, 27.01*kg/m3},
-       { 10.0*bar, 55.55*kg/m3},
-       { 20.0*bar, 118.36*kg/m3},
-       { 30.0*bar, 191.51*kg/m3},
-       { 40.0*bar, 280.40*kg/m3}
+      {{  1.0 * bar,   5.29 * kg/m3},
+       {  5.0 * bar,  27.01 * kg/m3},
+       { 10.0 * bar,  55.55 * kg/m3},
+       { 20.0 * bar, 118.36 * kg/m3},
+       { 30.0 * bar, 191.51 * kg/m3},
+       { 40.0 * bar, 280.40 * kg/m3}
       };
 
     G4bool found = false;
 
     for (G4int i=0; i<n_pressures-1; ++i) {
       if  (pressure >= data[i][0] && pressure < data[i+1][0]) {
-	G4double x1 = data[i][0];
-	G4double x2 = data[i+1][0];
-	G4double y1 = data[i][1];
-	G4double y2 = data[i+1][1];
-	density = y1 + (y2-y1)*(pressure-x1)/(x2-x1);
-	found = true;
-	break;
+        G4double x1 = data[i][0];
+        G4double x2 = data[i+1][0];
+        G4double y1 = data[i][1];
+        G4double y2 = data[i+1][1];
+        density = y1 + (y2-y1)*(pressure-x1)/(x2-x1);
+        found = true;
+        break;
       } 
     }
 
     if (!found) {
       if (pressure == data[n_pressures-1][0]) {
-	density = data[n_pressures-1][1];
-      } else {
-	G4Exception("[XenonGaseousProperties]", "Density()", FatalException,
+        density = data[n_pressures-1][1];
+      }
+      else {
+        G4Exception("[XenonGaseousProperties]", "Density()", FatalException,
 		    "Unknown xenon density for this pressure!"); 
       }
     }
-
-    
-    // Ideal gas state equation P*V = n*R*T
-    // assuming atmosphere = bar 
-
-    // values for R
-    //  8.3145 J mol-1 K-1
-    //  0.0831451 L bar K-1 mol-1
-    //  82.058 cm3 atm mol-1 K-1
-    // value for molar mass: 131.29 g/mol
-
-    // Warning: this is a dimensionless value.
-    // _density = 
-    //   (_pressure/atmosphere)*131.29/(_temperature*82.058);
-
-    
-    
-    // if (pressure/bar > 0.9 && pressure/bar < 1.1)
-    //   density = 5.324*kg/m3;
-    // else if (pressure/bar > 1.9 && pressure/bar < 2.1)
-    //   density = 10.7*kg/m3;
-    // else if (pressure/bar > 4.9 && pressure/bar < 5.1)
-    //   density = 27.2*kg/m3;
-    // else if (pressure/bar > 6.9 && pressure/bar < 7.1)
-    //   density = 38.5548*kg/m3;
-    // else if (pressure/bar > 9.9 && pressure/bar < 10.1)
-    //   density = 55.587*kg/m3;
-    // else if (pressure/bar > 14.9 && pressure/bar < 15.1)
-    //   density = 85.95 *kg/m3;
-    // else if (pressure/bar > 19.9 && pressure/bar < 20.1)
-    //   density = 118.4*kg/m3;
-    // else if (pressure/bar > 29.9 && pressure/bar < 30.1)
-    //   density = 193.6*kg/m3;
-    // else if (pressure/bar > 39.9 && pressure/bar < 40.1)
-    //   density = 284.3*kg/m3;
-    // else
-    //   G4Exception("[XenonGaseousProperties]", "Density()", FatalException,
-    //               "Unknown xenon density for this pressure!");  
-    
-   
     return density;
   }
+
+
 
   G4double XenonGasProperties::MassPerMole(G4int a)
   {
@@ -213,19 +175,24 @@ namespace nexus {
     // Physical review A, Volume 9, Number 2, 
     // February 1974. Koehler, Ferderber, Redhead and Ebert.
     // Pressure must be in atm = bar
+    // XXX Check if there is some newest results.
 
-    G4double pressure = _pressure/atmosphere;
+    G4double pressure = _pressure / atmosphere;
 
-    G4double Wavelength_peak = (0.05 * pressure + 169.45)*nm;
-    G4double Wavelength_sigma = 
-        2.*sqrt(2*log(2)) * (-0.117 * pressure + 15.42)*nm;
+    G4double Wavelength_peak  = (0.05 * pressure + 169.45) * nm;
 
-    G4double Energy_peak = (h_Planck*c_light/Wavelength_peak);
-    G4double Energy_sigma = (h_Planck*c_light*Wavelength_sigma/pow(Wavelength_peak,2));
-    // G4double bin = 6*Energy_sigma/500;
+    G4double Wavelength_sigma = 0.;
+    if (pressure < 4.) 
+      Wavelength_sigma = 14.3 * nm;
+    else
+      Wavelength_sigma = (-0.117 * pressure + 15.16) * nm / (2.*sqrt(2*log(2)));
 
-    G4double intensity = 
-	  exp(-pow(Energy_peak/eV-energy/eV,2)/(2*pow(Energy_sigma/eV, 2)))/(Energy_sigma/eV*sqrt(pi*2.));
+    G4double Energy_peak  = (h_Planck * c_light / Wavelength_peak);
+    G4double Energy_sigma = (h_Planck * c_light * Wavelength_sigma / pow(Wavelength_peak,2));
+
+    G4double intensity = exp(-pow(Energy_peak/eV-energy/eV,2) /
+                         (2*pow(Energy_sigma/eV, 2))) /
+                         (Energy_sigma/eV*sqrt(pi*2.));
 
     return intensity;
   }
@@ -246,10 +213,11 @@ namespace nexus {
     // Empirical formula taken from
     // C.M.B. Monteiro et al., JINST 2 (2007) P05001.
 
-    // Y/x = (a E/p + b) p,
+    // Y/x = (a E/p - b) p,
     // where Y/x is the number of photons per unit lenght (cm),
     // E is the electric field strength, p is the pressure, and a and b
     // are empirically determined constants:
+    
     const G4double a = 140. / kilovolt;
     const G4double b = 116. / (bar*cm);
 

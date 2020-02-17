@@ -249,8 +249,11 @@ namespace nexus {
     _internal_logic_vol = vessel_gas_logic;
     SetELzCoord(-_vessel_body_length/2. + _distance_gate_body_end);
 
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_gas_logic,
-		      "VESSEL_GAS", vessel_logic, false, 0);
+    _internal_phys_vol =
+      new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_gas_logic,
+                        "VESSEL_GAS", vessel_logic, false, 0);
+
+
 
 
     //// Vacuum Manifold
@@ -339,11 +342,15 @@ namespace nexus {
   }
 
 
-
-
   G4LogicalVolume* Next100Vessel::GetInternalLogicalVolume()
   {
     return _internal_logic_vol;
+  }
+
+
+  G4VPhysicalVolume* Next100Vessel::GetInternalPhysicalVolume()
+  {
+    return _internal_phys_vol;
   }
 
 
