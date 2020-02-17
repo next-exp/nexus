@@ -172,10 +172,6 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
     G4double energy = sqrt(ini_mom.mag2() + mass*mass);
     G4ThreeVector final_mom = trj->GetFinalMomentum();
 
-    float ini_pos[4] = {(float)ini_xyz.x(), (float)ini_xyz.y(), (float)ini_xyz.z(), (float)ini_t};
-    float final_pos[4] = {(float)final_xyz.x(), (float)final_xyz.y(), (float)final_xyz.z(), (float)final_t};
-    float ini_momentum[3] = {(float)ini_mom.x(), (float)ini_mom.y(), (float)ini_mom.z()};
-    float final_momentum[3] = {(float)final_mom.x(), (float)final_mom.y(), (float)final_mom.z()};
     float kin_energy = energy - mass;
     char primary = 0;
     G4int mother_id = 0;
@@ -186,12 +182,16 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
     }
     _h5writer->WriteParticleInfo(_nevt, trackid, trj->GetParticleName().c_str(),
 				 primary, mother_id,
-				 ini_pos[0], ini_pos[1], ini_pos[2], ini_pos[3],
-				 final_pos[0], final_pos[1], final_pos[2], final_pos[3],
+				 (float)ini_xyz.x(), (float)ini_xyz.y(),
+                                 (float)ini_xyz.z(), (float)ini_t,
+				 (float)final_xyz.x(), (float)final_xyz.y(),
+                                 (float)final_xyz.z(), (float)final_t,
 				 ini_volume.c_str(), final_volume.c_str(),
-				 ini_momentum[0], ini_momentum[1], ini_momentum[2],
-				 final_momentum[0], final_momentum[1], final_momentum[2],
-				 kin_energy, length, trj->GetCreatorProcess().c_str(),
+				 (float)ini_mom.x(), (float)ini_mom.y(),
+                                 (float)ini_mom.z(), (float)final_mom.x(),
+                                 (float)final_mom.y(), (float)final_mom.z()
+				 kin_energy, length,
+                                 trj->GetCreatorProcess().c_str(),
 				 trj->GetFinalProcess().c_str());
 
   }
