@@ -35,7 +35,8 @@ using namespace nexus;
 
 
 
-PersistencyManager::PersistencyManager(G4String historyFile_init, G4String historyFile_conf):
+PersistencyManager::PersistencyManager(G4String historyFile_init,
+                                       G4String historyFile_conf):
   G4VPersistencyManager(), _msg(0),
   _ready(false), _store_evt(true), _interacting_evt(false),
   _event_type("other"), _saved_evts(0), _interacting_evts(0),
@@ -62,7 +63,8 @@ PersistencyManager::~PersistencyManager()
 
 
 
-void PersistencyManager::Initialize(G4String historyFile_init, G4String historyFile_conf)
+void PersistencyManager::Initialize(G4String historyFile_init,
+                                    G4String historyFile_conf)
 {
 
   // Get a pointer to the current singleton instance of the persistency
@@ -75,7 +77,8 @@ void PersistencyManager::Initialize(G4String historyFile_init, G4String historyF
   // of another G4VPersistencyManager-derived was previously set, resulting
   // in the leak of that object since the pointer will no longer be
   // accessible.)
-  if (!current) current = new PersistencyManager(historyFile_init, historyFile_conf);
+  if (!current) current =
+                  new PersistencyManager(historyFile_init, historyFile_conf);
 }
 
 
@@ -132,7 +135,8 @@ G4bool PersistencyManager::Store(const G4Event* event)
   StoreHits(event->GetHCofThisEvent());
 
   //Save event-related information in hdf5 file
-  _h5writer->WriteEventInfo(_event_info.evt_id, _event_info.evt_energy, _event_info.evt_type);
+  _h5writer->WriteEventInfo(_event_info.evt_id, _event_info.evt_energy,
+                            _event_info.evt_type);
 
   _nevt++;
 
@@ -189,7 +193,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
 				 ini_volume.c_str(), final_volume.c_str(),
 				 (float)ini_mom.x(), (float)ini_mom.y(),
                                  (float)ini_mom.z(), (float)final_mom.x(),
-                                 (float)final_mom.y(), (float)final_mom.z()
+                                 (float)final_mom.y(), (float)final_mom.z(),
 				 kin_energy, length,
                                  trj->GetCreatorProcess().c_str(),
 				 trj->GetFinalProcess().c_str());
@@ -311,13 +315,15 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
       data.push_back(std::make_pair(time_bin, charge));
       amplitude = amplitude + (*it).second;
 
-      _h5writer->WriteSensorDataInfo(_nevt, (unsigned int)hit->GetPmtID(), time_bin, charge);
+      _h5writer->WriteSensorDataInfo(_nevt, (unsigned int)hit->GetPmtID(),
+                                     time_bin, charge);
     }
 
     std::vector<G4int>::iterator pos_it =
       std::find(_sns_posvec.begin(), _sns_posvec.end(), hit->GetPmtID());
     if (pos_it == _sns_posvec.end()) {
-      _h5writer->WriteSensorPosInfo((unsigned int)hit->GetPmtID(), (float)xyz.x(), (float)xyz.y(), (float)xyz.z());
+      _h5writer->WriteSensorPosInfo((unsigned int)hit->GetPmtID(), (float)xyz.x(),
+                                    (float)xyz.y(), (float)xyz.z());
       _sns_posvec.push_back(hit->GetPmtID());
     }
 
