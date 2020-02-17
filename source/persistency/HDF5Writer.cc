@@ -85,7 +85,7 @@ void HDF5Writer::WriteEventInfo(int evt_number, float evt_energy, const char* ev
   strcpy(evtData.evt_type, evt_type);
   writeEvent(&evtData, _eventsTable, _memtypeEvt, _ievt);
 
- _ievt++;
+  _ievt++;
 }
 
 void HDF5Writer::WriteSensorDataInfo(int evt_number, unsigned int sensor_id, unsigned int time_bin, unsigned int charge)
