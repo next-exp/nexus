@@ -647,34 +647,33 @@ G4Material* MaterialsList::FR4()
 }
 
 
-G4Material* MaterialsList::CopyMaterial(G4Material* original, G4String newname)
+G4Material* MaterialsList::CopyMaterial(G4Material* original, const G4String& newname)
 {
   G4Material* newmat = G4Material::GetMaterial(newname, false);
 
   if (newmat == 0) {
-    G4double density = original->GetDensity();
-    G4State state = original->GetState();
-    G4double temperature = original->GetTemperature();
-    G4double pressure = original->GetPressure();
 
-    G4int n_elem = original->GetNumberOfElements();
-    if (n_elem == 1){
+    G4double density     = original->GetDensity();
+    G4double temperature = original->GetTemperature();
+    G4double pressure    = original->GetPressure();
+    G4State  state       = original->GetState();
+    G4int    n_elem      = original->GetNumberOfElements();
+
+    if (n_elem == 1) {
       G4double z = original->GetZ();
       G4double a = original->GetA();
-      newmat =
-	new G4Material(newname, z, a, density, state, temperature, pressure);
-    } else {
-      // Gas mixture
-      const G4double * fractions = original->GetFractionVector();
-      newmat =
-	new G4Material(newname, density, n_elem, state, temperature, pressure);
-      for (G4int i = 0; i < n_elem; ++i)
-	newmat->AddElement(new G4Element(original->GetElement(i)->GetName(),
-					 original->GetElement(i)->GetSymbol(),
-					 original->GetElement(i)->GetZ(),
-					 original->GetElement(i)->GetA()),
-			   fractions[i]);
+      newmat = new G4Material(newname, z, a, density, state, temperature, pressure);
     }
+    else {
+      const G4double* fractions = original->GetFractionVector();
+      newmat = new G4Material(newname, density, n_elem, state, temperature, pressure);
+      for (G4int i = 0; i < n_elem; ++i)
+	     newmat->AddElement(new G4Element(original->GetElement(i)->GetName(),
+					                              original->GetElement(i)->GetSymbol(),
+					                              original->GetElement(i)->GetZ(),
+					                              original->GetElement(i)->GetA()),
+			                                  fractions[i]);
+      }
   }
 
   return newmat;

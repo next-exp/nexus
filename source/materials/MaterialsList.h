@@ -56,13 +56,13 @@ namespace nexus {
     static G4Material* GXeAr(G4double pressure=STP_Pressure,
 			     G4double temperature=STP_Temperature, G4double percXe=0.);
 
-    // Mixture Xe+He                                                                   
+    // Mixture Xe+He
     static G4Material* GXeHe(G4double pressure=STP_Pressure,
                              G4double temperature=STP_Temperature,
 			     G4double percXe=98,
 			     G4int mass_num=4);
 
-    
+
     // Stainless Steel (grade 304L)
     static G4Material* Steel();
 
@@ -131,7 +131,7 @@ namespace nexus {
     static G4Material* FakeDielectric(G4Material*, G4String);
 
     ///
-    static G4Material* CopyMaterial(G4Material*, G4String);
+    static G4Material* CopyMaterial(G4Material*, const G4String&);
 
 
   private:
