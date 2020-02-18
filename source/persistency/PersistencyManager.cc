@@ -220,9 +220,9 @@ void PersistencyManager::StoreHits(G4HCofThisEvent* hce)
 
     if (hcname == IonizationSD::GetCollectionUniqueName())
       StoreIonizationHits(hits);
-    else if (hcname == PmtSD::GetCollectionUniqueName())
+    else if (hcname == PmtSD::GetCollectionUniqueName()) {
       StorePmtHits(hits);
-    else {
+    } else {
       G4String msg =
         "Collection of hits '" + sdname + "/" + hcname
         + "' is of an unknown type and will not be stored.";
@@ -279,20 +279,18 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
   PmtHitsCollection* hits = dynamic_cast<PmtHitsCollection*>(hc);
   if (!hits) return;
 
+  std::string sdname = hits->GetSDname();
+  PmtHit* first_hit = dynamic_cast<PmtHit*>(hits->GetHit(0));
+  G4double bin_size = first_hit->GetBinSize();
+  _sensdet_bin[sdname] = bin_size;
+
   for (G4int i=0; i<hits->entries(); i++) {
 
     PmtHit* hit = dynamic_cast<PmtHit*>(hits->GetHit(i));
     if (!hit) continue;
 
-    std::string sdname = hits->GetSDname();
     G4ThreeVector xyz = hit->GetPosition();
-    double binsize = hit->GetBinSize();
-
-    if (hit->GetPmtID()<1000) {
-      _pmt_bin_size = binsize;
-    } else {
-      _sipm_bin_size = binsize;
-    }
+    G4double binsize = hit->GetBinSize();
 
     const std::map<G4double, G4int>& wvfm = hit->GetHistogram();
     std::map<G4double, G4int>::const_iterator it;
@@ -322,7 +320,6 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
 }
 
 
-
 G4bool PersistencyManager::Store(const G4Run*)
 {
   // Store the event type
@@ -339,10 +336,12 @@ G4bool PersistencyManager::Store(const G4Run*)
   _h5writer->WriteRunInfo(key,  std::to_string(_saved_evts).c_str());
   key = "interacting_events";
   _h5writer->WriteRunInfo(key,  std::to_string(_interacting_evts).c_str());
-  key = "Pmt_time_binning";
-  _h5writer->WriteRunInfo(key, (std::to_string(_pmt_bin_size/microsecond)+" mus").c_str());
-  key = "SiPM_time_binning";
-  _h5writer->WriteRunInfo(key, (std::to_string(_sipm_bin_size/microsecond)+" mus").c_str());
+
+  std::map<G4String, G4double>::const_iterator it;
+  for (it = _sensdet_bin.begin(); it != _sensdet_bin.end(); ++it) {
+    _h5writer->WriteRunInfo((it->first + "_binning").c_str(),
+                           (std::to_string(it->second/microsecond)+" mus").c_str());
+  }
 
   SaveConfigurationInfo(_historyFile_init);
   SaveConfigurationInfo(_historyFile_conf);
