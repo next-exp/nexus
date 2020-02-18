@@ -49,8 +49,10 @@ PersistencyManager::PersistencyManager(G4String historyFile_init,
 
   _msg = new G4GenericMessenger(this, "/nexus/persistency/");
   _msg->DeclareMethod("outputFile", &PersistencyManager::OpenFile, "");
-  _msg->DeclareProperty("eventType", _event_type, "Type of event: bb0nu, bb2nu or background.");
-  _msg->DeclareProperty("start_id", _start_id, "Starting event ID for this job.");
+  _msg->DeclareProperty("eventType", _event_type,
+                        "Type of event: bb0nu, bb2nu or background.");
+  _msg->DeclareProperty("start_id", _start_id,
+                        "Starting event ID for this job.");
 }
 
 
@@ -334,11 +336,15 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
 
 G4bool PersistencyManager::Store(const G4Run*)
 {
+  // Store the event type
+  G4String key = "event_type";
+  _h5writer->WriteRunInfo(key, _event_type.c_str());
+
   // Store the number of events to be processed
   NexusApp* app = (NexusApp*) G4RunManager::GetRunManager();
   G4int num_events = app->GetNumberOfEventsToBeProcessed();
 
-  G4String key = "num_events";
+  key = "num_events";
   _h5writer->WriteRunInfo(key,  std::to_string(num_events).c_str());
   key = "saved_events";
   _h5writer->WriteRunInfo(key,  std::to_string(_saved_evts).c_str());
