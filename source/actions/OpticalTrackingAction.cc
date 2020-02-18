@@ -65,11 +65,16 @@ void OpticalTrackingAction::PostUserTrackingAction(const G4Track* track)
   trj->SetTrackLength(track->GetTrackLength());
   trj->SetFinalMomentum(track->GetMomentum());
 
-  if (track->GetDefinition() == G4OpticalPhoton::Definition())
-    trj->SetFinalVolume(track->GetNextVolume()->GetName());
-  else
-    trj->SetFinalVolume(track->GetVolume()->GetName());
-
+  // In case of optical photons
+  if (track->GetDefinition() == G4OpticalPhoton::Definition()) {
+    // If optical-photon has no NextVolume (escaping from the world)
+    // Assign current volume as the dacay one 
+    if (track->GetNextVolume()) trj->SetDecayVolume(track->GetNextVolume()->GetName());
+    else                        trj->SetDecayVolume(track->GetVolume()->GetName());
+  }
+  // Final Volume of non optical photons
+  else trj->SetDecayVolume(track->GetVolume()->GetName());
+  
   // Record last process of the track
   G4String final_process = track->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
   trj->SetFinalProcess(final_process);
