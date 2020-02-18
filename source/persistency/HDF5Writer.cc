@@ -12,7 +12,7 @@ using namespace nexus;
 
 
 HDF5Writer::HDF5Writer():
-  _file(0), _irun(0), _ievt(0), _ismp(0), _ihit(0),
+  _file(0), _irun(0), _ismp(0), _ihit(0),
   _ipart(0), _ipos(0)
 {
 }
@@ -34,10 +34,6 @@ void HDF5Writer::Open(std::string fileName)
   std::string run_table_name = "configuration";
   _memtypeRun = createRunType();
   _runTable = createTable(_group, run_table_name, _memtypeRun);
-
-  std::string event_table_name = "events";
-  _memtypeEvt = createEventType();
-  _eventsTable = createTable(_group, event_table_name, _memtypeEvt);
 
   std::string sns_data_table_name = "sns_response";
   _memtypeSnsData = createSensorDataType();
@@ -76,17 +72,6 @@ void HDF5Writer::WriteRunInfo(const char* param_key, const char* param_value)
   _irun++;
 }
 
-void HDF5Writer::WriteEventInfo(int evt_number, float evt_energy, const char* evt_type)
-{
-  evt_t evtData;
-  evtData.evt_number = evt_number;
-  evtData.evt_energy = evt_energy;
-  memset(evtData.evt_type, 0, STRLEN);
-  strcpy(evtData.evt_type, evt_type);
-  writeEvent(&evtData, _eventsTable, _memtypeEvt, _ievt);
-
-  _ievt++;
-}
 
 void HDF5Writer::WriteSensorDataInfo(int evt_number, unsigned int sensor_id, unsigned int time_bin, unsigned int charge)
 {

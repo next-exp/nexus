@@ -12,18 +12,6 @@ hsize_t createRunType()
   return memtype;
 }
 
-hsize_t createEventType()
-{
-  hid_t strtype = H5Tcopy(H5T_C_S1);
-  H5Tset_size (strtype, STRLEN);
-
-  //Create compound datatype for the table
-  hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (evt_t));
-  H5Tinsert (memtype, "evt_number", HOFFSET (evt_t, evt_number), H5T_NATIVE_INT32);
-  H5Tinsert (memtype, "evt_energy", HOFFSET (evt_t, evt_energy), H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "evt_type", HOFFSET (evt_t, evt_type), strtype);
-  return memtype;
-}
 
 hsize_t createSensorDataType()
 {
@@ -161,25 +149,6 @@ void writeRun(run_info_t* runData, hid_t dataset, hid_t memtype, hsize_t counter
   H5Sclose(memspace);
 }
 
-void writeEvent(evt_t* evtData, hid_t dataset, hid_t memtype, hsize_t counter)
-{
-  hid_t memspace, file_space;
-  hsize_t dims[1] = {1};
-  memspace = H5Screate_simple(1, dims, NULL);
-
-  //Extend dataset
-  dims[0] = counter+1;
-  H5Dset_extent(dataset, dims);
-
-  //Write event info
-  file_space = H5Dget_space(dataset);
-  hsize_t start[1] = {counter};
-  hsize_t count[1] = {1};
-  H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
-  H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, evtData);
-  H5Sclose(file_space);
-  H5Sclose(memspace);
-}
 
 void writeSnsData(sns_data_t* snsData, hid_t dataset, hid_t memtype, hsize_t counter)
 {
