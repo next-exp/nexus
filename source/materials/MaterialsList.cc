@@ -689,7 +689,7 @@ G4Material* MaterialsList::FakeDielectric(G4Material* model_mat, G4String name)
 
 G4Material* MaterialsList::TPH()
 {
-  G4String name = "TPH"; // p - terphenyl 
+  G4String name = "TPH"; // p - terphenyl
 
   G4Material* mat = G4Material::GetMaterial(name, false);
 
@@ -703,7 +703,7 @@ G4Material* MaterialsList::TPH()
     mat->AddElement(H, 14);
     mat->AddElement(C, 18);
   }
-  
+
   return mat;
 }
 
@@ -711,7 +711,7 @@ G4Material* MaterialsList::TPH()
 // WLS EJ-280
 G4Material* MaterialsList::EJ280()
 {
-  G4String name = "EJ280"; // 
+  G4String name = "EJ280"; //
 
   G4Material* mat = G4Material::GetMaterial(name, false);
 
@@ -727,7 +727,7 @@ G4Material* MaterialsList::EJ280()
     mat->AddElement(H, 10);
     mat->AddElement(C, 9);
   }
-  
+
   return mat;
 }
 
@@ -735,7 +735,7 @@ G4Material* MaterialsList::EJ280()
 // Pethylene (cladding material)
 G4Material* MaterialsList::Pethylene()
 {
-  G4String name = "Pethylene"; // 
+  G4String name = "Pethylene"; //
 
   G4Material* mat = G4Material::GetMaterial(name, false);
 
@@ -749,7 +749,7 @@ G4Material* MaterialsList::Pethylene()
     mat->AddElement(H, 4);
     mat->AddElement(C, 2);
   }
-  
+
   return mat;
 }
 
@@ -757,7 +757,7 @@ G4Material* MaterialsList::Pethylene()
 // FPethylene (fluorinated polyethylene - cladding material)
 G4Material* MaterialsList::FPethylene()
 {
-  G4String name = "FPethylene"; // 
+  G4String name = "FPethylene"; //
 
   G4Material* mat = G4Material::GetMaterial(name, false);
 
@@ -771,7 +771,7 @@ G4Material* MaterialsList::FPethylene()
     mat->AddElement(H, 4);
     mat->AddElement(C, 2);
   }
-  
+
   return mat;
 }
 
@@ -780,7 +780,7 @@ G4Material* MaterialsList::FPethylene()
 // PMMA == PolyMethylmethacrylate (cladding)
 G4Material* MaterialsList::PMMA()
 {
-  G4String name = "PMMA"; // 
+  G4String name = "PMMA"; //
 
   G4Material* mat = G4Material::GetMaterial(name, false);
 
@@ -796,8 +796,6 @@ G4Material* MaterialsList::PMMA()
     mat->AddElement(C, 5);
     mat->AddElement(O, 2);
   }
-  
+
   return mat;
 }
-
-

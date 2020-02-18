@@ -9,6 +9,9 @@
 #define GENERIC_PHOTOSENSOR_H
 
 #include "BaseGeometry.h"
+#include <G4MaterialPropertyVector.hh>
+
+class G4Material;
 
 
 namespace nexus {
@@ -31,8 +34,14 @@ namespace nexus {
     G4double GetHeight()    const;
     G4double GetThickness() const;
 
+    //void SetRefractiveIndex(G4MaterialPropertyVector*);
+
+  private:
+    //void SetDefaultOpticalProperties();
+
   private:
     G4double width_, height_, thickness_;
+    G4Material* window_mat_;
   };
 
   inline G4double GenericPhotosensor::GetWidth() const { return width_; }

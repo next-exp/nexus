@@ -20,7 +20,7 @@ using namespace nexus;
 Next100TrackingPlane::Next100TrackingPlane(G4LogicalVolume* mother_volume):
   BaseGeometry(),
   copper_plate_diameter_       (1340.*mm),
-  copper_plate_thickness_      ( 120.*mm), 
+  copper_plate_thickness_      ( 120.*mm),
   distance_gate_tracking_plane_(  25.*mm),
   distance_board_board_        (   1.*mm),
   mother_volume_(mother_volume)
@@ -46,6 +46,11 @@ void Next100TrackingPlane::Construct()
   G4LogicalVolume* sipm_board_logic_vol = sipm_board_geom.GetLogicalVolume();
 
   G4double zpos = - distance_gate_tracking_plane_ - sipm_board_geom.GetThickness()/2.;
+
+  // -------------------------------------------------------
+  // TODO. Review sensor numbering scheme once HDF5 output
+  //       tables are fixed.
+  // -------------------------------------------------------
 
   // Central block of 4x8 boards.
 

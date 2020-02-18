@@ -9,6 +9,7 @@
 
 #include "MaterialsList.h"
 #include "PmtSD.h"
+#include "OpticalMaterialProperties.h"
 
 #include <G4Box.hh>
 #include <G4LogicalVolume.hh>
@@ -23,7 +24,9 @@ using namespace nexus;
 
 
 GenericPhotosensor::GenericPhotosensor(G4double width, G4double height):
-  BaseGeometry(), width_(width), height_(height), thickness_(2.*mm)
+  BaseGeometry(),
+  width_(width), height_(height), thickness_(2.*mm),
+  window_mat_(nullptr)
 {
 }
 
@@ -57,8 +60,16 @@ void GenericPhotosensor::Construct()
 
   G4Box* window_solid_vol = new G4Box(name, width_/2., height_/2., window_thickness/2.);
 
+  // We use a duplicate of 'optical silicone' as material for the window.
+  // This way, we make sure that the optical properties of the window (which are
+  // attached to its material) do not affect other elements of the geometry or
+  // are modified unconsciously by a user.
+  window_mat_ = MaterialsList::CopyMaterial(MaterialsList::OpticalSilicone(),
+                                            "GENERIC_PHOTOSENSOR_WINDOW_MATERIAL");
+  window_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
+
   G4LogicalVolume* window_logic_vol =
-    new G4LogicalVolume(window_solid_vol, MaterialsList::OpticalSilicone(), name);
+    new G4LogicalVolume(window_solid_vol, window_mat_, name);
 
   G4double zpos = height_/2. - window_thickness/2.;
 
@@ -83,7 +94,10 @@ void GenericPhotosensor::Construct()
 
   // OPTICAL PROPERTIES //////////////////////////////////////////////
 
-  // TODO: Review after the MR with the updated optical properties is approved.
+  // -------------------------------------------------------
+  // TODO: Review this section once we confirm the
+  //       correctness of the new optical model.
+  // -------------------------------------------------------
 
   G4double energy[2]       = {1.0*eV, 4.0*eV};
   G4double reflectivity[2] = {0.0,    0.0};
@@ -115,6 +129,23 @@ void GenericPhotosensor::Construct()
     encasing_logic_vol->SetSensitiveDetector(sensdet);
   }
 }
+
+
+// void GenericPhotosensor::SetDefaultOpticalProperties()
+// {
+//   G4MaterialPropertiesTable* window_mpt = new G4MaterialPropertiesTable();
+//
+//   G4double energy[2] = {1.0*eV, 10.*eV};
+//   G4double rindex[2] = {1.0, 1.0};
+//
+//   window_mpt->AddProperty("RINDEX", energy, rindex, 2);
+// }
+//
+//
+// void GenericPhotosensor::SetRefractiveIndex(G4MaterialPropertyVector* mpv)
+// {
+//   window_mat_->GetMaterialPropertiesTable()->AddProperty("RINDEX", mpv);
+// }
 
 
 G4ThreeVector GenericPhotosensor::GenerateVertex(const G4String&) const

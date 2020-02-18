@@ -52,8 +52,13 @@ void Next100SiPMBoard::Construct()
 
   BaseGeometry::SetLogicalVolume(board_logic_vol);
 
-  // TODO: Review the following after MR with updated optical properties
-  G4OpticalSurface* board_opsurf = new G4OpticalSurface("SIPM_BOARD_OPSURF");
+  // -------------------------------------------------------
+  // TODO: Review this section once we confirm the
+  //       correctness of the new optical model.
+  // -------------------------------------------------------
+
+  G4OpticalSurface* board_opsurf =
+    new G4OpticalSurface("SIPM_BOARD_OPSURF", unified, ground, dielectric_metal);
   board_opsurf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
   new G4LogicalSkinSurface("SIPM_BOARD_OPSURF", board_logic_vol, board_opsurf);
 
@@ -64,6 +69,8 @@ void Next100SiPMBoard::Construct()
 
   G4Box* wls_solid_vol = new G4Box(name, size_/2., size_/2., wls_thickness/2.);
 
+  MaterialsList::TPB()->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
+
   G4LogicalVolume* wls_logic_vol =
     new G4LogicalVolume(wls_solid_vol, MaterialsList::TPB(), name);
 
@@ -72,10 +79,10 @@ void Next100SiPMBoard::Construct()
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,zpos), wls_logic_vol,
                     name, board_logic_vol, false, 0, true);
 
-  // TODO: Review this after MR with updated optical properties
-  G4OpticalSurface* wls_opsurf = new G4OpticalSurface("SIPM_BOARD_WLS_OPSURF");
-  wls_opsurf->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
-  new G4LogicalSkinSurface("SIPM_BOARD_WLS_OPSURF", wls_logic_vol, wls_opsurf);
+  // -------------------------------------------------------
+  // TODO: Review this section once we confirm the
+  //       correctness of the new optical model.
+  // -------------------------------------------------------
 
   // SILICON PHOTOMULTIPLIERS ////////////////////////////////////////
 
