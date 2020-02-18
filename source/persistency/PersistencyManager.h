@@ -90,6 +90,8 @@ namespace nexus {
 
     std::map<G4int, std::vector<G4int>* > _hit_map;
     std::vector<G4int> _sns_posvec;
+
+    std::map<G4String, G4double> _sensdet_bin;
   };
 
 
