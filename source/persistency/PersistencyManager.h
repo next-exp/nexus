@@ -29,15 +29,6 @@ namespace nexus {
 
 namespace nexus {
 
-  struct event_info {
-    G4int evt_id;
-    G4double evt_energy;
-    G4String evt_type;
-  };
-
-
-  /// TODO. CLASS DESCRIPTION
-
   class PersistencyManager: public G4VPersistencyManager
   {
   public:
@@ -99,8 +90,6 @@ namespace nexus {
 
     std::map<G4int, std::vector<G4int>* > _hit_map;
     std::vector<G4int> _sns_posvec;
-
-    event_info _event_info;
   };
 
 

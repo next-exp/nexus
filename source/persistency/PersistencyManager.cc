@@ -127,18 +127,11 @@ G4bool PersistencyManager::Store(const G4Event* event)
     _nevt = _start_id;
   }
 
-  _event_info.evt_id = _nevt;
-  _event_info.evt_type = _event_type;
-
   // Store the trajectories of the event
   StoreTrajectories(event->GetTrajectoryContainer());
 
   // Store ionization hits and sensor hits
   StoreHits(event->GetHCofThisEvent());
-
-  //Save event-related information in hdf5 file
-  _h5writer->WriteEventInfo(_event_info.evt_id, _event_info.evt_energy,
-                            _event_info.evt_type);
 
   _nevt++;
 
@@ -276,10 +269,6 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
 			    sdname.c_str());
 
     evt_energy += hit->GetEnergyDeposit();
-  }
-
-  if (sdname == "ACTIVE") {
-    _event_info.evt_energy = evt_energy;
   }
 }
 
