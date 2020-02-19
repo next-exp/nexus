@@ -8,8 +8,8 @@
 /tracking/verbose 0
 
 # GENERATION
-/Generator/S1generator/region ACTIVE
-/Generator/S1generator/nphotons 100000
+/Generator/ScintGenerator/region ACTIVE
+/Generator/ScintGenerator/nphotons 100000
 
 # GEOMETRY
 /Geometry/Next100/pressure 15. bar
