@@ -32,6 +32,5 @@
 
 ### JOB CONTROL
 /nexus/random_seed 17392
-/nexus/persistency/hdf5 true
 /nexus/persistency/start_id 0
 /nexus/persistency/outputFile TonMuons_vertical_example.next

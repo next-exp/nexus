@@ -9,7 +9,6 @@
 
 ##### JOB CONTROL #####
 #/nexus/random_seed 0
-/nexus/persistency/hdf5 true
 /nexus/persistency/eventType background
 /nexus/persistency/outputFile Next100.Neutron.next
 
