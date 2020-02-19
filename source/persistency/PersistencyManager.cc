@@ -280,9 +280,17 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
   if (!hits) return;
 
   std::string sdname = hits->GetSDname();
-  PmtHit* first_hit = dynamic_cast<PmtHit*>(hits->GetHit(0));
-  G4double bin_size = first_hit->GetBinSize();
-  _sensdet_bin[sdname] = bin_size;
+
+  std::map<G4String, G4double>::const_iterator sensdet_it = _sensdet_bin.find(sdname);
+  if (sensdet_it == _sensdet_bin.end()) {
+    for (G4int j=0; j<hits->entries(); j++) {
+      PmtHit* hit = dynamic_cast<PmtHit*>(hits->GetHit(j));
+      if (!hit) continue;
+      G4double bin_size = hit->GetBinSize();
+      _sensdet_bin[sdname] = bin_size;
+      break;
+    }
+  }
 
   for (G4int i=0; i<hits->entries(); i++) {
 
