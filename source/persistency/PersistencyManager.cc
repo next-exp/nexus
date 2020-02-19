@@ -319,8 +319,8 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
     std::vector<G4int>::iterator pos_it =
       std::find(_sns_posvec.begin(), _sns_posvec.end(), hit->GetPmtID());
     if (pos_it == _sns_posvec.end()) {
-      _h5writer->WriteSensorPosInfo((unsigned int)hit->GetPmtID(), (float)xyz.x(),
-                                    (float)xyz.y(), (float)xyz.z());
+      _h5writer->WriteSensorPosInfo((unsigned int)hit->GetPmtID(), sdname.c_str(),
+				    (float)xyz.x(), (float)xyz.y(), (float)xyz.z());
       _sns_posvec.push_back(hit->GetPmtID());
     }
 

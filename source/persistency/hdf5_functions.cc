@@ -68,8 +68,8 @@ hsize_t createParticleInfoType()
   H5Tinsert (memtype, "final_y", HOFFSET (particle_info_t, final_y), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "final_z", HOFFSET (particle_info_t, final_z), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "final_t", HOFFSET (particle_info_t, final_t), H5T_NATIVE_FLOAT);
-  H5Tinsert (memtype, "initial_volume", HOFFSET (particle_info_t, initial_volume),strtype);
-  H5Tinsert (memtype, "final_volume", HOFFSET (particle_info_t, final_volume),strtype);
+  H5Tinsert (memtype, "initial_volume", HOFFSET (particle_info_t, initial_volume), strtype);
+  H5Tinsert (memtype, "final_volume", HOFFSET (particle_info_t, final_volume), strtype);
   H5Tinsert (memtype, "initial_momentum_x", HOFFSET (particle_info_t, initial_momentum_x), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "initial_momentum_y", HOFFSET (particle_info_t, initial_momentum_y), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "initial_momentum_z", HOFFSET (particle_info_t, initial_momentum_z), H5T_NATIVE_FLOAT);
@@ -86,9 +86,13 @@ hsize_t createParticleInfoType()
 
 hsize_t createSensorPosType()
 {
+  hid_t strtype = H5Tcopy(H5T_C_S1);
+  H5Tset_size (strtype, STRLEN);
+
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (sns_pos_t));
   H5Tinsert (memtype, "sensor_id", HOFFSET (sns_pos_t, sensor_id), H5T_NATIVE_UINT);
+  H5Tinsert (memtype, "sensor_name", HOFFSET (sns_pos_t, sensor_name), strtype);
   H5Tinsert (memtype, "x", HOFFSET (sns_pos_t, x), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "y", HOFFSET (sns_pos_t, y), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "z", HOFFSET (sns_pos_t, z), H5T_NATIVE_FLOAT);
