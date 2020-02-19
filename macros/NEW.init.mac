@@ -3,7 +3,7 @@
 ###  $Id: NextNew.init.mac  2013-09-09 13:05 minegui $
 ### --------------------------------------------------------
 
-### This init macro simulates radioactive decays in the NEW detector geometry
+### This macro simulates radioactive decays in the NEW detector geometry
 ### Use NEXT_NEW to simulate the whole geometry.
 ### To simulate only the inner part of the detector use OPTICAL_GEOMETRY.
 
@@ -20,7 +20,6 @@
 
 /Actions/RegisterTrackingAction VALIDATION
 /Actions/RegisterEventAction DEFAULT
-/Actions/RegisterSteppingAction DEFAULT
 /Actions/RegisterRunAction DEFAULT
 
 /nexus/RegisterMacro macros/NEW.config.mac

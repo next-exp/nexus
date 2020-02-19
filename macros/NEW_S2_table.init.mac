@@ -13,7 +13,6 @@
 
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction EL_SIM
-/Actions/RegisterSteppingAction DEFAULT 
 /Actions/RegisterRunAction DEFAULT 
 
 /nexus/RegisterMacro macros/NEW_S2_table.config.mac 

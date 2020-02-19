@@ -16,7 +16,6 @@
 /Actions/RegisterRunAction DEFAULT
 /Actions/RegisterEventAction EL_SIM
 /Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterSteppingAction DEFAULT
 
 /nexus/RegisterMacro macros/NEXT100_S2_table.config.mac
 

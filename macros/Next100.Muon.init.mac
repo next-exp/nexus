@@ -1,5 +1,5 @@
 ### --------------------------------------------------------
-###  Next100: Initialization macro of nexus.
+###  This macro simulates muons from a surface on top of the lead castle 
 ###  $Id: Next100.Muon.init.mac 8754 2017-11-01 10:05:13Z minegui $
 ### --------------------------------------------------------
 
@@ -26,7 +26,6 @@
 ### ACTIONS
 /Actions/RegisterRunAction DEFAULT
 /Actions/RegisterEventAction DEFAULT
-/Actions/RegisterSteppingAction DEFAULT
 /Actions/RegisterTrackingAction DEFAULT
 
 
