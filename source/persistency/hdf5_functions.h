@@ -62,6 +62,7 @@
 
   typedef struct{
     unsigned int sensor_id;
+    char sensor_name[STRLEN];
     float x;
     float y;
     float z;
