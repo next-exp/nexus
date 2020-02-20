@@ -3,6 +3,9 @@
 /Geometry/Next100/max_step_size 1. mm
 /Geometry/Next100/elfield false
 /Geometry/Next100/gas enrichedXe
+/Geometry/Next100/specific_vertex_X 0. mm
+/Geometry/Next100/specific_vertex_Y 2400. mm
+/Geometry/Next100/specific_vertex_Z 0. mm
 
 /Geometry/Next100/shielding_vis false
 /Geometry/Next100/vessel_vis false
@@ -20,9 +23,6 @@
 /Generator/SingleParticle/min_energy 200. GeV
 /Generator/SingleParticle/max_energy 200. GeV
 /Generator/SingleParticle/region AD_HOC
-/Geometry/Next100/specific_vertex_X 0. mm
-/Geometry/Next100/specific_vertex_Y 2400. mm
-/Geometry/Next100/specific_vertex_Z 0. mm
 /Generator/SingleParticle/momentum_X 0.
 /Generator/SingleParticle/momentum_Y -1.
 /Generator/SingleParticle/momentum_Z 0.

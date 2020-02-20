@@ -23,4 +23,5 @@
 /Actions/RegisterRunAction DEFAULT
 
 /nexus/RegisterMacro macros/NEW.config.mac
+# this delayed macro is necessary only when Bi-214 is simulated
 /nexus/RegisterDelayedMacro macros/physics/Bi214.mac

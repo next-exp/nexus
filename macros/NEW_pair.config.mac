@@ -1,6 +1,7 @@
 ### --------------------------------------------------------
 ###  Configuration macro for the NEW detector geometry
-###  This macro simulates a 1 MeV electron in the active volume
+###  This macro simulates an e+e- pair whose total kinetic energy
+###  is 1592 keV, in the active volume
 ### --------------------------------------------------------
 
 /run/verbose 0

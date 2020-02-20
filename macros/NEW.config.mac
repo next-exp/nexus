@@ -1,7 +1,7 @@
 ### --------------------------------------------------------
 ###  Configuration macro for the NEW detector geometry
 ###  This macro simulates Bi-214 decays from the dice boards
-###  Author: Miquel Nebot Guinot <minegui@ific.uv.es>    
+###  Author: Miquel Nebot Guinot <minegui@ific.uv.es>
 ###  date: 09 Sept 2013
 ### --------------------------------------------------------
 
@@ -10,7 +10,10 @@
 /event/verbose 0
 /tracking/verbose 0
 
-/control/execute macros/geometries/NextNew.mac
+/Geometry/NextNew/pressure 10. bar
+/Geometry/NextNew/elfield false
+
+/control/execute macros/geometries/NEWDefaultVisibility.mac
 
 
 /Generator/IonGun/atomic_number 83
