@@ -634,11 +634,7 @@ G4Material* MaterialsList::FR4()
   G4Material* mat = G4Material::GetMaterial(name, false);
 
   if (mat == 0) {
-
-    G4NistManager* nist = G4NistManager::Instance();
-    G4double density = 1.850*g/cm3;
-
-    mat = new G4Material(name, density, 2, kStateSolid);
+    mat = new G4Material(name, 1.850*g/cm3, 2, kStateSolid);
     mat->AddMaterial(MaterialsList::FusedSilica(), 0.60);
     mat->AddMaterial(MaterialsList::Epoxy(),       0.40);
   }
