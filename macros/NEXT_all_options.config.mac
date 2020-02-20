@@ -1,0 +1,73 @@
+### ------------------------------------------------------------
+###  This macro shows the most relevant options that can be used.
+###  For each parameters all the options are commented, except
+###  for one.
+### ------------------------------------------------------------
+
+
+##### GEOMETRY #####
+/Geometry/Next100/elfield false
+/Geometry/Next100/pressure 15. bar
+/Geometry/Next100/max_step_size 1. mm
+
+/Geometry/Next100/shielding_vis false
+/Geometry/Next100/vessel_vis false
+/Geometry/Next100/ics_vis false
+/Geometry/Next100/field_cage_vis false
+/Geometry/Next100/energy_plane_vis false
+#/Geometry/PmtR11410/SD_depth 3
+
+
+##### GENERATOR #####
+
+# Possible regions for NEXT100: LAB, EXTERNAL, SHIELDING_LEAD, SHIELDING_STEEL,
+#                             SHIELDING_STRUCT, INNER_AIR, VESSEL, VESSEL_FLANGES,
+#                             VESSEL_TRACKING_ENDCAP, VESSEL_ENERGY_ENDCAP, ICS,
+#                             DB_PLUG, CENTER, ACTIVE, BUFFER, XENON, LIGHT_TUBE,
+#                             ENERGY_COPPER_PLATE, INTERNAL_PMT_BASE,
+#                             EXTERNAL_PMT_BASE, SAPPHIRE_WINDOW, OPTICAL_PAD,
+#                             PMT_BODY, PMT, EL_TABLE, AXIAL_PORT, AD_HOC
+
+
+# Ion Gun for background decays
+/Generator/IonGun/atomic_number 83
+/Generator/IonGun/mass_number 214
+/Generator/IonGun/region SAPPHIRE_WINDOW
+
+# Single Particle
+#/Generator/SingleParticle/particle e-
+#/Generator/SingleParticle/min_energy 1.0 MeV
+#/Generator/SingleParticle/max_energy 2.0 MeV
+#/Generator/SingleParticle/region DICE_BOARD
+#/Generator/SingleParticle/momentum_X 0.
+#/Generator/SingleParticle/momentum_Y 0.
+#/Generator/SingleParticle/momentum_Z 1.
+
+# Decay0 Interface for bb0nu/bb2nu decays
+#/Generator/Decay0Interface/inputFile /data4/NEXT/NEXTNEW/decay0/Xe136_bb0nu/Xe136_bb0nu_decay0.0.txt
+#/Generator/Decay0Interface/region ACTIVE
+
+# Kr83
+#/Generator/Kr83mGenerator/region ACTIVE
+
+
+# ACTIONS
+/Actions/DefaultEventAction/energy_threshold 0.6 MeV
+/Actions/DefaultEventAction/max_energy 2.55 MeV
+
+
+## If fast simulation
+/PhysicsList/Nexus/clustering          false
+/PhysicsList/Nexus/drift               false
+/PhysicsList/Nexus/electroluminescence false
+
+
+##### JOB CONTROL #####
+/nexus/persistency/outputFile Next100.next
+/nexus/persistency/eventType background # bb0nu, bb2nu...
+
+
+##### VERBOSITIES #####
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
