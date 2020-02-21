@@ -20,7 +20,7 @@
 
 ##### GENERATOR #####
 
-# Possible regions for NEXT100: LAB, EXTERNAL, SHIELDING_LEAD, SHIELDING_STEEL,
+# Some of possible regions for NEXT100: LAB, EXTERNAL, SHIELDING_LEAD, SHIELDING_STEEL,
 #                             SHIELDING_STRUCT, INNER_AIR, VESSEL, VESSEL_FLANGES,
 #                             VESSEL_TRACKING_ENDCAP, VESSEL_ENERGY_ENDCAP, ICS,
 #                             DB_PLUG, CENTER, ACTIVE, BUFFER, XENON, LIGHT_TUBE,
@@ -29,7 +29,7 @@
 #                             PMT_BODY, PMT, EL_TABLE, AXIAL_PORT, AD_HOC
 
 
-# Ion Gun for background decays
+# Ion Gun for background decays - (Bi214: Z=83, A=214), (Tl208: Z=81, A=208)
 /Generator/IonGun/atomic_number 83
 /Generator/IonGun/mass_number 214
 /Generator/IonGun/region SAPPHIRE_WINDOW
@@ -43,9 +43,15 @@
 #/Generator/SingleParticle/momentum_Y 0.
 #/Generator/SingleParticle/momentum_Z 1.
 
-# Decay0 Interface for bb0nu/bb2nu decays
-#/Generator/Decay0Interface/inputFile /data4/NEXT/NEXTNEW/decay0/Xe136_bb0nu/Xe136_bb0nu_decay0.0.txt
+# Decay0 Interface for bb0nu/bb2nu decays - (BB0nu: Xe136DecayMode 1), (BB2nu: Xe136DecayMode 4)
 #/Generator/Decay0Interface/region ACTIVE
+# use electron momenta extracted with the DECAY0 software
+#/Generator/Decay0Interface/inputFile /data4/NEXT/NEXTNEW/decay0/Xe136_bb0nu/Xe136_bb0nu_decay0.0.txt
+# use C++ translation of DECAY0
+#/Generator/Decay0Interface/inputFile none
+#/Generator/Decay0Interface/Xe136DecayMode 1
+#/Generator/Decay0Interface/EnergyThreshold 0. keV
+#/Generator/Decay0Interface/Ba136FinalState 0
 
 # Kr83
 #/Generator/Kr83mGenerator/region ACTIVE

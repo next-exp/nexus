@@ -1,6 +1,6 @@
-###
+### --------------------------------------------------------------------------
 ### This macro simulates individual particles in the NEXT tonne-scale geometry
-###
+### --------------------------------------------------------------------------
 
 ### GEOMETRY
 /Geometry/RegisterGeometry TON_SCALE
@@ -30,4 +30,4 @@
 
 
 ### EXTRA CONFIGURATION
-/nexus/RegisterMacro ./macros/NextTonScale.config.mac
+/nexus/RegisterMacro macros/NextTonScale.config.mac
