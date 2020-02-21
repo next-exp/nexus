@@ -7,7 +7,6 @@
 ### ACTIONS
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction DEFAULT
-/Actions/RegisterSteppingAction DEFAULT
 /Actions/RegisterRunAction DEFAULT
 
 
@@ -25,5 +24,5 @@
 
 /physics_lists/em/MuonNuclear true
 
-/nexus/RegisterDelayedMacro macros/Xe137.mac
+/nexus/RegisterDelayedMacro macros/physics/Xe137.mac
 /nexus/RegisterMacro macros/ton_muons_vertical.config.mac

@@ -1,7 +1,8 @@
-### --------------------------------------------------------
+### -----------------------------------------------------------
 ###  Example 1: Configuration macro
-###  $Id$
-### --------------------------------------------------------
+###  This macros simulates an individual electron in a sphere
+###  filled with xenon
+### -----------------------------------------------------------
 
 /control/execute macros/geometries/XeSphere.mac
 
