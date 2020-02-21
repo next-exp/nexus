@@ -1,0 +1,15 @@
+### ------------------------------------------------------------------------
+###  Config macro that set default visibilities for the NEXT-WHITE geometry.
+### ------------------------------------------------------------------------
+
+/Geometry/Next100/shielding_vis false
+/Geometry/NextNew/table_vis false
+/Geometry/NextNew/ics_vis false
+/Geometry/NextNew/vessel_vis true
+/Geometry/NextNew/energy_plane_vis true
+/Geometry/NextNew/enclosure_vis true
+/Geometry/NextNew/tracking_plane_vis true
+/Geometry/KDB/visibility false
+/Geometry/SiPMSensl/visibility false
+/Geometry/PmtR11410/visibility true
+/Geometry/NextNew/field_cage_vis false
