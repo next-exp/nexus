@@ -30,6 +30,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <string>
 
 using namespace nexus;
 
@@ -367,7 +368,9 @@ void PersistencyManager::SaveConfigurationInfo(G4String file_name)
     std::getline(history, value);
 
     if (key != "") {
-      _h5writer->WriteRunInfo(key.c_str(), value.c_str());
+      auto found = key.find("binning");
+      if (found == std::string::npos)
+	_h5writer->WriteRunInfo(key.c_str(), value.c_str());
     }
 
   }
