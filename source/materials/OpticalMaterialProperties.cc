@@ -84,7 +84,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FusedSilica()
       + B_2*pow(lambda,2)/(pow(lambda,2)-C_2)
       + B_3*pow(lambda,2)/(pow(lambda,2)-C_3);
     rIndex[i] = sqrt(n2);
-    // G4cout << "* FusedSilica rIndex:  " << std::setw(5) << ri_energy[i]/eV
+    //G4cout << "* FusedSilica rIndex:  " << std::setw(5) << ri_energy[i]/eV
     //       << " eV -> " << rIndex[i] << G4endl;
   }
   assert(sizeof(rIndex) == sizeof(ri_energy));
@@ -115,6 +115,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FusedSilica()
       .22 * cm,    .215 * cm,  .00005*cm,
     .00005* cm
   };
+
   assert(sizeof(absLength) == sizeof(abs_energy));
   mpt->AddProperty("ABSLENGTH", abs_energy, absLength, abs_entries);
 
@@ -382,7 +383,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Sapphire()
   for (int i=0; i<ri_entries; i++) {
     ri_energy[i] = optPhotMinE_ + i * eWidth;
   }
-
+ 
   G4double rIndex[ri_entries];
   for (int i=0; i<ri_entries; i++) {
     rIndex[i] = seq.RefractiveIndex(h_Planck*c_light/ri_energy[i]);
@@ -1450,7 +1451,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::XXX()
   mpt->AddProperty("WLSABSLENGTH", WLS_abs_energy, WLS_absLength,  2);
 
   // WLS EMISSION SPECTRUM
-  G4double WLS_emi_energy[]  = {optPhotMinE_, optPhotMaxE_};
+  G4double WLS_emi_energy[] = {optPhotMinE_, optPhotMaxE_};
   G4double WLS_emiSpectrum[] = {1.0, 1.0};
   mpt->AddProperty("WLSCOMPONENT",  WLS_emi_energy, WLS_emiSpectrum, 2);
 
@@ -1462,3 +1463,4 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::XXX()
 
   return mpt;
 }
+
