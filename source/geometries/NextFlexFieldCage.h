@@ -13,6 +13,7 @@
 #include "BaseGeometry.h"
 
 class G4LogicalVolume;
+class G4VPhysicalVolume;
 class G4Material;
 class G4GenericMessenger;
 
@@ -48,6 +49,9 @@ namespace nexus {
     // Returns the outer radius of the Field Cage (= Light Tube outer radius)
     G4double Get_FC_outer_rad();
 
+    // Returns the BUFFER physical volume
+    G4VPhysicalVolume* Get_BUFFER_phys();
+
     // Setting the First Left Sensor ID (of the fibers barrel).
     void SetFirstLeftSensorID(const G4int first_id);
 
@@ -79,6 +83,9 @@ namespace nexus {
 
     // Logical volume where the class is placed
     G4LogicalVolume* _mother_logic;
+
+    // Physical volume of BUFFER
+    G4VPhysicalVolume* _buffer_phys;
 
     // Verbosity of the geometry
     G4bool _verbosity;
@@ -166,6 +173,9 @@ namespace nexus {
 
   inline void NextFlexFieldCage::SetMotherLogicalVolume(G4LogicalVolume* mother_logic)
     { _mother_logic = mother_logic; }
+
+  inline G4VPhysicalVolume* NextFlexFieldCage::Get_BUFFER_phys()
+    { return _buffer_phys; }
 
   inline G4double NextFlexFieldCage::Get_ACTIVE_diam()   { return _active_diam; }
 

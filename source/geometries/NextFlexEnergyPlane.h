@@ -16,6 +16,7 @@
 #include "PmtR11410.h"
 
 class G4LogicalVolume;
+class G4VPhysicalVolume;
 class G4Material;
 class G4GenericMessenger;
 class G4Tubs;
@@ -41,6 +42,9 @@ namespace nexus {
 
     // Sets as mother volume of all the elements the volume where the class is placed
     void SetMotherLogicalVolume(G4LogicalVolume* mother_logic);
+
+    // Sets the neighbouring gas
+    void SetNeighGasPhysicalVolume(G4VPhysicalVolume* neigh_gas_phys);
 
     // Setting the diameter of EP. It is set equal to ACTIVE's.
     void SetDiameter(G4double diam);
@@ -81,6 +85,9 @@ namespace nexus {
 
     // Logical volume where the class is placed
     G4LogicalVolume* _mother_logic;
+
+    // Physical volume of the neighbouring gas
+    G4VPhysicalVolume* _neigh_gas_phys;
 
     // Verbosity of the geometry
     G4bool _verbosity;
@@ -141,6 +148,9 @@ namespace nexus {
 
   inline void NextFlexEnergyPlane::SetMotherLogicalVolume(G4LogicalVolume* mother_logic)
     { _mother_logic = mother_logic; }
+
+  inline void NextFlexEnergyPlane::SetNeighGasPhysicalVolume(G4VPhysicalVolume* neigh_gas_phys)
+    { _neigh_gas_phys = neigh_gas_phys; }
 
   inline void NextFlexEnergyPlane::SetOriginZ(G4double posZ)  { _originZ = posZ;  }
 

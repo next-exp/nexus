@@ -400,7 +400,7 @@ void NextFlexFieldCage::BuildBuffer()
   G4LogicalVolume* buffer_logic =
     new G4LogicalVolume(buffer_solid, _xenon_gas, buffer_name);
 
-  G4VPhysicalVolume* buffer_phys =
+  _buffer_phys =
     new G4PVPlacement(nullptr, G4ThreeVector(0., 0., buffer_posZ), buffer_logic,
                       buffer_name, _mother_logic, false, 0, _verbosity);
 
@@ -408,7 +408,7 @@ void NextFlexFieldCage::BuildBuffer()
   buffer_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
   // Vertex generator
-  _buffer_gen = new CylinderPointSampler2020(buffer_phys);
+  _buffer_gen = new CylinderPointSampler2020(_buffer_phys);
 
   // Set the BUFFER volume as an ionization sensitive detector
   IonizationSD* buffer_sd = new IonizationSD("/NEXT_FLEX/BUFFER");

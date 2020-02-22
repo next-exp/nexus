@@ -67,8 +67,8 @@ NextFlex::~NextFlex()
 {
   delete _msg;
   delete _field_cage;
-  delete _energy_plane;
   delete _tracking_plane;
+//  delete _energy_plane;    // XXXX It causes the error: pointer being freed was not allocated
 }
 
 
@@ -201,6 +201,7 @@ void NextFlex::Construct()
 
   // Energy Plane
   _energy_plane->SetMotherLogicalVolume(gas_logic_vol);
+  _energy_plane->SetNeighGasPhysicalVolume(_field_cage->Get_BUFFER_phys());
   _energy_plane->SetDiameter(_field_cage->Get_ACTIVE_diam());
   _energy_plane->SetOriginZ(_field_cage->Get_BUFFER_finalZ());
   _energy_plane->SetFirstSensorID(FIRST_ENERGY_SENSOR_ID);

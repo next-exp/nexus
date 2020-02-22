@@ -30,6 +30,7 @@
 #include <G4PVPlacement.hh>
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
+#include <G4LogicalBorderSurface.hh>
 #include <G4UserLimits.hh>
 #include <Randomize.hh>
 
@@ -131,7 +132,7 @@ void NextFlexEnergyPlane::DefineMaterials()
 
   // Teflon
   _teflon_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
-  _teflon_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+  //_teflon_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
 
   // Sapphire
   _sapphire_mat = MaterialsList::Sapphire();
@@ -255,6 +256,14 @@ void NextFlexEnergyPlane::BuildTeflon()
   }
   else teflon_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
+  // Adding the optical surface
+  G4OpticalSurface* teflon_optSurf = 
+    new G4OpticalSurface(teflon_name, unified, ground, dielectric_metal);
+
+  teflon_optSurf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+
+  new G4LogicalSkinSurface(teflon_name, teflon_logic, teflon_optSurf);
+
 
   /// The UV wavelength Shifter in TEFLON ///
   G4String teflon_wls_name = "EP_TEFLON_WLS";
@@ -271,20 +280,23 @@ void NextFlexEnergyPlane::BuildTeflon()
   G4LogicalVolume* teflon_wls_logic =
     new G4LogicalVolume(teflon_wls_solid, _wls_mat, teflon_wls_name);
 
-  //G4VPhysicalVolume* teflon_wls_phys =
-  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., teflon_wls_posZ), teflon_wls_logic,
-                    teflon_wls_name, teflon_logic, false, 0, _verbosity);
+  G4VPhysicalVolume* teflon_wls_phys =
+    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., teflon_wls_posZ), teflon_wls_logic,
+                      teflon_wls_name, teflon_logic, false, 0, _verbosity);
 
   // Visibility
   teflon_wls_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
   // Optical surface
-  G4OpticalSurface* teflon_wls_optSurf = new G4OpticalSurface("teflon_wls_optSurf",
-                                                          glisur, ground,
-                                                          dielectric_dielectric, .01);
+  G4OpticalSurface* teflon_wls_optSurf =
+    new G4OpticalSurface("teflon_wls_optSurf", glisur, ground,
+                         dielectric_dielectric, .01);
+  teflon_wls_optSurf->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
 
-  new G4LogicalSkinSurface(teflon_wls_name, teflon_wls_logic, teflon_wls_optSurf);
-
+  new G4LogicalBorderSurface("teflon_WLS_GAS_surf", teflon_wls_phys,
+                             _neigh_gas_phys, teflon_wls_optSurf);
+  new G4LogicalBorderSurface("GAS_teflon_WLS_surf", _neigh_gas_phys,
+                             teflon_wls_phys, teflon_wls_optSurf);
 
   /// Verbosity ///
   if (_verbosity) {
