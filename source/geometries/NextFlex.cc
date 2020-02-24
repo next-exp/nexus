@@ -68,7 +68,7 @@ NextFlex::~NextFlex()
   delete _msg;
   delete _field_cage;
   delete _tracking_plane;
-//  delete _energy_plane;    // XXXX It causes the error: pointer being freed was not allocated
+  //delete _energy_plane;    // XXXX It causes the error: pointer being freed was not allocated
 }
 
 

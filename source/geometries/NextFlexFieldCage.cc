@@ -28,6 +28,7 @@
 #include <G4PVPlacement.hh>
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
+#include <G4LogicalBorderSurface.hh>
 #include <G4UserLimits.hh>
 #include <G4Transform3D.hh>
 
@@ -228,7 +229,7 @@ void NextFlexFieldCage::DefineMaterials()
 
   // Teflon
   _teflon_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
-  _teflon_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+  //_teflon_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
 
   // UV shifting material
   if (_wls_matName == "NONE") {
@@ -317,7 +318,8 @@ void NextFlexFieldCage::BuildActive()
   G4LogicalVolume* active_logic =
     new G4LogicalVolume(active_solid, _xenon_gas, active_name);
 
-  G4VPhysicalVolume* active_phys =
+  //G4VPhysicalVolume* active_phys =
+  _active_phys =
     new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,_active_length/2.),
                       active_logic, active_name, _mother_logic,
                       false, 0, _verbosity);
@@ -337,7 +339,7 @@ void NextFlexFieldCage::BuildActive()
   active_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
   // Vertex generator
-  _active_gen = new CylinderPointSampler2020(active_phys);
+  _active_gen = new CylinderPointSampler2020(_active_phys);
 
   // Limit the step size in this volume for better tracking precision
   active_logic->SetUserLimits(new G4UserLimits(1.*mm));
@@ -550,6 +552,13 @@ void NextFlexFieldCage::BuildLightTube()
     new G4PVPlacement(nullptr, G4ThreeVector(0., 0., light_tube_posZ), light_tube_logic,
                       light_tube_name, _mother_logic, false, 0, _verbosity);
 
+  // Adding the optical surface
+  G4OpticalSurface* light_tube_optSurf = 
+    new G4OpticalSurface(light_tube_name, unified, ground, dielectric_metal);
+  light_tube_optSurf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+
+  new G4LogicalSkinSurface(light_tube_name, light_tube_logic, light_tube_optSurf);
+
   // Visibility
   if (_visibility) {
     G4VisAttributes light_blue_col = nexus::LightBlue();
@@ -578,9 +587,9 @@ void NextFlexFieldCage::BuildLightTube()
     G4LogicalVolume* light_tube_wls_logic =
       new G4LogicalVolume(light_tube_wls_solid, _wls_mat, light_tube_wls_name);
   
-    //G4VPhysicalVolume* light_tube_wls_phys =
-    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., 0.), light_tube_wls_logic,
-                      light_tube_wls_name, light_tube_logic, false, 0, _verbosity);
+    G4VPhysicalVolume* light_tube_wls_phys =
+      new G4PVPlacement(nullptr, G4ThreeVector(0., 0., 0.), light_tube_wls_logic,
+                        light_tube_wls_name, light_tube_logic, false, 0, _verbosity);
   
     // Visibility
     light_tube_wls_logic->SetVisAttributes(G4VisAttributes::Invisible);
@@ -589,9 +598,22 @@ void NextFlexFieldCage::BuildLightTube()
     G4OpticalSurface* light_tube_wls_optSurf =
       new G4OpticalSurface("light_tube_wls_optSurf", glisur, ground,
                            dielectric_dielectric, .01);
-  
-    new G4LogicalSkinSurface(light_tube_wls_name, light_tube_wls_logic,
-                             light_tube_wls_optSurf);
+    light_tube_wls_optSurf->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+
+    //new G4LogicalSkinSurface(light_tube_wls_name, light_tube_wls_logic,
+    //                         light_tube_wls_optSurf);
+
+    // Border Surface with ACTIVE
+    new G4LogicalBorderSurface("LIGHT_TUBE_WLS_ACTIVE_surf", light_tube_wls_phys,
+                               _active_phys, light_tube_wls_optSurf);
+    new G4LogicalBorderSurface("ACTIVE_LIGHT_TUBE_WLS_surf", _active_phys,
+                               light_tube_wls_phys, light_tube_wls_optSurf);
+
+    // Border Surface with BUFFER
+    new G4LogicalBorderSurface("LIGHT_TUBE_WLS_BUFFER_surf", light_tube_wls_phys,
+                               _buffer_phys, light_tube_wls_optSurf);
+    new G4LogicalBorderSurface("BUFFER_LIGHT_TUBE_WLS_surf", _buffer_phys,
+                               light_tube_wls_phys, light_tube_wls_optSurf);
   }
 
   /// Verbosity ///

@@ -84,7 +84,8 @@ namespace nexus {
     // Logical volume where the class is placed
     G4LogicalVolume* _mother_logic;
 
-    // Physical volume of BUFFER
+    // Physical volumes
+    G4VPhysicalVolume* _active_phys;
     G4VPhysicalVolume* _buffer_phys;
 
     // Verbosity of the geometry
