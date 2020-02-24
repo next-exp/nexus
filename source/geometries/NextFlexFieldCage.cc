@@ -598,10 +598,6 @@ void NextFlexFieldCage::BuildLightTube()
     G4OpticalSurface* light_tube_wls_optSurf =
       new G4OpticalSurface("light_tube_wls_optSurf", glisur, ground,
                            dielectric_dielectric, .01);
-    light_tube_wls_optSurf->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
-
-    //new G4LogicalSkinSurface(light_tube_wls_name, light_tube_wls_logic,
-    //                         light_tube_wls_optSurf);
 
     // Border Surface with ACTIVE
     new G4LogicalBorderSurface("LIGHT_TUBE_WLS_ACTIVE_surf", light_tube_wls_phys,

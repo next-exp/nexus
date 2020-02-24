@@ -301,7 +301,6 @@ void NextFlexTrackingPlane::BuildTeflon()
   G4OpticalSurface* teflon_wls_optSurf =
     new G4OpticalSurface("teflon_wls_optSurf", glisur, ground,
                          dielectric_dielectric, .01);
-  teflon_wls_optSurf->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
 
   new G4LogicalBorderSurface("teflon_WLS_GAS_surf", teflon_wls_phys,
                              _neigh_gas_phys, teflon_wls_optSurf);
