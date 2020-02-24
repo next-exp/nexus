@@ -33,6 +33,7 @@
 #include <G4PVPlacement.hh>
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
+#include <G4LogicalBorderSurface.hh>
 #include <G4UserLimits.hh>
 #include <Randomize.hh>
 
@@ -134,9 +135,7 @@ void NextFlexTrackingPlane::DefineConfigurationParameters()
 
 void NextFlexTrackingPlane::ComputeDimensions()
 {
-  _SiPM_iniZ   = _originZ - _SiPM_ANODE_dist - _SiPM_case_thickness;
-
-  _teflon_iniZ = _SiPM_iniZ - _teflon_thickness;
+  _teflon_iniZ = _originZ - _SiPM_ANODE_dist - _teflon_thickness;
 
   _copper_iniZ = _teflon_iniZ - _copper_thickness;
 
@@ -162,7 +161,7 @@ void NextFlexTrackingPlane::DefineMaterials()
 
   // Teflon
   _teflon_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
-  _teflon_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+  //_teflon_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
 
   // UV shifting material
   if (_wls_matName == "NONE") {
@@ -252,20 +251,28 @@ void NextFlexTrackingPlane::BuildTeflon()
   //teflon_solid = dynamic_cast<G4Tubs*> (MakeSiPMholes(teflon_solid));
   //teflon_solid = (G4Tubs*) MakeSiPMholes(teflon_solid);
 
-  G4LogicalVolume* teflon_logic =
+//  G4LogicalVolume* teflon_logic =
+  _teflon_logic =
     new G4LogicalVolume(teflon_solid, _teflon_mat, teflon_name);
 
   //G4VPhysicalVolume* teflon_phys =
-  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., teflon_posZ), teflon_logic,
+  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., teflon_posZ), _teflon_logic,
                     teflon_name, _mother_logic, false, 0, _verbosity);
 
   // Visibility
   if (_visibility) {
     G4VisAttributes light_blue_col = nexus::LightBlue();
     //light_blue_col.SetForceSolid(true);
-    teflon_logic->SetVisAttributes(light_blue_col);
+    _teflon_logic->SetVisAttributes(light_blue_col);
   }
-  else teflon_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  else _teflon_logic->SetVisAttributes(G4VisAttributes::Invisible);
+
+  // Adding the optical surface
+  G4OpticalSurface* teflon_optSurf = 
+    new G4OpticalSurface(teflon_name, unified, ground, dielectric_metal);
+  teflon_optSurf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+
+  new G4LogicalSkinSurface(teflon_name, _teflon_logic, teflon_optSurf);
 
 
   /// The UV wavelength Shifter in TEFLON ///
@@ -283,19 +290,23 @@ void NextFlexTrackingPlane::BuildTeflon()
   G4LogicalVolume* teflon_wls_logic =
     new G4LogicalVolume(teflon_wls_solid, _wls_mat, teflon_wls_name);
 
-  //G4VPhysicalVolume* teflon_wls_phys =
-  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., teflon_wls_posZ), teflon_wls_logic,
-                    teflon_wls_name, teflon_logic, false, 0, _verbosity);
+  G4VPhysicalVolume* teflon_wls_phys =
+    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., teflon_wls_posZ), teflon_wls_logic,
+                      teflon_wls_name, _teflon_logic, false, 0, _verbosity);
 
   // Visibility
   teflon_wls_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
   // Optical surface
-  G4OpticalSurface* teflon_wls_optSurf = new G4OpticalSurface("teflon_wls_optSurf",
-                                                              glisur, ground,
-                                                              dielectric_dielectric, .01);
+  G4OpticalSurface* teflon_wls_optSurf =
+    new G4OpticalSurface("teflon_wls_optSurf", glisur, ground,
+                         dielectric_dielectric, .01);
+  teflon_wls_optSurf->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
 
-  new G4LogicalSkinSurface(teflon_wls_name, teflon_wls_logic, teflon_wls_optSurf);
+  new G4LogicalBorderSurface("teflon_WLS_GAS_surf", teflon_wls_phys,
+                             _neigh_gas_phys, teflon_wls_optSurf);
+  new G4LogicalBorderSurface("GAS_teflon_WLS_surf", _neigh_gas_phys,
+                             teflon_wls_phys, teflon_wls_optSurf);
 
 
   /// Verbosity ///
@@ -311,7 +322,19 @@ void NextFlexTrackingPlane::BuildSiPMs()
   /// TP SiPM case ///
   G4String tp_SiPM_case_name = "TP_SiPM_CASE";
 
-  G4double tp_SiPM_case_posZ = _SiPM_iniZ + _SiPM_case_thickness/2.;
+  G4double tp_SiPM_case_posZ = _teflon_thickness / 2. - _SiPM_case_thickness/2.;
+
+/////////
+  // XXX Add to _SiPM_case_mat the refraction index of TPB
+  // and check if something changes
+//  G4MaterialPropertiesTable* SiPM_case_optProp = new G4MaterialPropertiesTable();
+//  const G4int rIndex_numEntries = 2;
+//  G4double rIndex_energies[rIndex_numEntries] = {0.2 * eV, 12. * eV};
+//  G4double rIndex[rIndex_numEntries]      = {1.67    , 1.67};
+//  SiPM_case_optProp->AddProperty("RINDEX", rIndex_energies,
+//                                 rIndex, rIndex_numEntries);
+//  _SiPM_case_mat->SetMaterialPropertiesTable(SiPM_case_optProp);
+////////////
 
   G4Box* tp_SiPM_case_solid =
     new G4Box(tp_SiPM_case_name, _SiPM_size/2., _SiPM_size/2., _SiPM_case_thickness/2.);
@@ -357,8 +380,6 @@ void NextFlexTrackingPlane::BuildSiPMs()
   G4String tp_SiPM_name = "TP_SiPM";
 
   // Distance between wls and photosensor of SiPMs to avoid contiguous Skin Optical Surfaces.
-  // Check if this affect the overall detection efficiency of SiPMs as refractive index of SiPM case
-  // could be considered twice.
   G4double gap_wls_phot = 5 * um;
 
   G4double tp_SiPM_posZ = _SiPM_case_thickness/2. - _wls_thickness
@@ -377,8 +398,7 @@ void NextFlexTrackingPlane::BuildSiPMs()
   // Visibility
   tp_SiPM_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
-  /// SiPM Optical properties
-  // (Same than SIPMSensl used in NEW)
+  /// SiPM Optical properties (Same than SIPMSensl used in NEW)
   G4MaterialPropertiesTable* tp_SiPM_optProp = new G4MaterialPropertiesTable();
 
   const G4int entries = 21;
@@ -431,15 +451,17 @@ void NextFlexTrackingPlane::BuildSiPMs()
     G4ThreeVector tp_SiPM_case_pos = _SiPM_positions[i];
     tp_SiPM_case_pos.setZ(tp_SiPM_case_posZ);
     G4int sipm_id = _first_sensor_id + i;
+//    new G4PVPlacement(nullptr, tp_SiPM_case_pos, tp_SiPM_case_logic, tp_SiPM_case_name,
+//                      _mother_logic, true, sipm_id, false);
     new G4PVPlacement(nullptr, tp_SiPM_case_pos, tp_SiPM_case_logic, tp_SiPM_case_name,
-                      _mother_logic, true, sipm_id, false);
+                      _teflon_logic, true, sipm_id, false);
   }
 
 
   /// Verbosity ///
   if (_verbosity) {
-    G4cout << "* SiPM Z positions: " << _SiPM_iniZ
-           << " to " << _SiPM_iniZ + _SiPM_case_thickness << G4endl;
+    G4cout << "* SiPM Z positions: " << _teflon_iniZ + _teflon_thickness - _SiPM_case_thickness
+           << " to " << _teflon_iniZ + _teflon_thickness << G4endl;
   }
 }
 

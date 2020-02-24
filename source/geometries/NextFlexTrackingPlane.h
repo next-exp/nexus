@@ -16,6 +16,7 @@
 
 
 class G4LogicalVolume;
+class G4VPhysicalVolume;
 class G4Material;
 class G4GenericMessenger;
 class G4Tubs;
@@ -41,6 +42,9 @@ namespace nexus {
 
     // Sets as mother volume of all the elements the volume where the class is placed
     void SetMotherLogicalVolume(G4LogicalVolume* mother_logic);
+
+    // Sets the neighbouring gas
+    void SetNeighGasPhysicalVolume(G4VPhysicalVolume* neigh_gas_phys);
 
     // Setting the diameter of EP. It is set equal to ACTIVE's.
     void SetDiameter(G4double diam);
@@ -82,6 +86,12 @@ namespace nexus {
     // Logical volume where the class is placed
     G4LogicalVolume* _mother_logic;
 
+    // Logical volume of teflon endcap where SiPMs are placed
+    G4LogicalVolume* _teflon_logic;
+
+    // Physical volume of the neighbouring gas
+    G4VPhysicalVolume* _neigh_gas_phys;
+
     // Verbosity of the geometry
     G4bool _verbosity;
 
@@ -116,7 +126,6 @@ namespace nexus {
     G4double _SiPM_pitchY;
     G4double _SiPM_bin;
     G4double _num_SiPMs;
-    G4double _SiPM_iniZ;
 
     std::vector<G4ThreeVector> _SiPM_positions;
 
@@ -139,6 +148,9 @@ namespace nexus {
 
   inline void NextFlexTrackingPlane::SetMotherLogicalVolume(G4LogicalVolume* mother_logic)
     { _mother_logic = mother_logic; }
+
+  inline void NextFlexTrackingPlane::SetNeighGasPhysicalVolume(G4VPhysicalVolume* neigh_gas_phys)
+    { _neigh_gas_phys = neigh_gas_phys; }
 
   inline void NextFlexTrackingPlane::SetOriginZ(G4double posZ)  { _originZ = posZ;  }
 

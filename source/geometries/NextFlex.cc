@@ -189,8 +189,9 @@ void NextFlex::Construct()
 
   gas_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
 
-  new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), gas_logic_vol,
-                    gas_name, lab_logic_vol, false, 0, true);
+  G4VPhysicalVolume* gas_phys_vol =
+    new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), gas_logic_vol,
+                      gas_name, lab_logic_vol, false, 0, true);
 
 
   // The Field Cage
@@ -209,6 +210,7 @@ void NextFlex::Construct()
 
   // Tracking Plane
   _tracking_plane->SetMotherLogicalVolume(gas_logic_vol);
+  _tracking_plane->SetNeighGasPhysicalVolume(gas_phys_vol);
   _tracking_plane->SetDiameter(_field_cage->Get_ACTIVE_diam());
   _tracking_plane->SetOriginZ(_field_cage->Get_EL_GAP_iniZ());
   _tracking_plane->SetFirstSensorID(FIRST_TRACKING_SENSOR_ID);
