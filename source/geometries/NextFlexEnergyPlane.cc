@@ -77,7 +77,7 @@ NextFlexEnergyPlane::~NextFlexEnergyPlane()
 {
   delete _msg;
   delete _copper_gen;
-  delete _window_gen;
+  if (_ep_with_PMTs) delete _window_gen;
 }
 
 
