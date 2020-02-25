@@ -52,6 +52,7 @@ namespace nexus {
     pt_Lx_(0.),
     pt_Ly_(0.),
     pt_Lz_(0.),
+    sensitivity_(false),
     sensitivity_index_(0),
     sensitivity_binning_(1*mm)
 
@@ -113,8 +114,10 @@ namespace nexus {
     table_cmd.SetParameterName("sensitivity_binning", false);
     table_cmd.SetRange("sensitivity_binning>0.");
 
-    msg_->DeclareProperty("sensitivity_point_id", sensitivity_point_id_, "");
-
+    msg_->DeclareProperty("sensitivity", sensitivity_,
+			  "True if sensitivity map is being run");
+    msg_->DeclareProperty("sensitivity_point_id", sensitivity_point_id_, 
+			  "Starting point for sensitivity run");
 
     sipm_ = new SiPMpetFBK();
   }
@@ -144,10 +147,12 @@ namespace nexus {
     BuildCryostat();
     BuildSensors();
 
-    if (phantom_) {
+    if (phantom_)
       BuildPhantom();
-    }
+    
 
+    if (sensitivity_)
+      CalculateSensitivityVertices(sensitivity_binning_);
   }
 
   void FullRingInfinity::BuildCryostat()
@@ -371,29 +376,29 @@ namespace nexus {
     } else if (region == "PHANTOM") {
       vertex = spheric_gen_->GenerateVertex("VOLUME");
     } else if (region == "CUSTOM") {
+      G4cout << "Generating random" << G4endl;
       vertex = RandomPointVertex();
-    } // else if (region == "SENSITIVITY") {
-    //   unsigned int i = sensitivity_point_id_ + sensitivity_index_;
+    } else if (region == "SENSITIVITY") {
+      unsigned int i = sensitivity_point_id_ + sensitivity_index_;
 
-    //   if (i == (sensitivity_vertices_.size()-1)) {
-    //     G4Exception("[FullRingInfinity]", "GenerateVertex()",
-    // 		    RunMustBeAborted, "Reached last event in scintillation lookup table.");
-    //   }
+      if (i == (sensitivity_vertices_.size()-1)) {
+        G4Exception("[FullRingInfinity]", "GenerateVertex()",
+    		    RunMustBeAborted, "Reached last event in scintillation lookup table.");
+      }
 
-    //   try {
-    //     vertex = sensitivity_vertices_.at(i);
-    //     sensitivity_index_++;
-    //   }
-    //   catch (const std::out_of_range& oor) {
-    //     G4Exception("[FullRingInfinity]", "GenerateVertex()", FatalErrorInArgument, "Sensitivity point out of range.");
-    //   }
+      try {
+        vertex = sensitivity_vertices_.at(i);
+        sensitivity_index_++;
+      }
+      catch (const std::out_of_range& oor) {
+        G4Exception("[FullRingInfinity]", "GenerateVertex()", FatalErrorInArgument, "Sensitivity point out of range.");
+      }
 
-    // }
-    else {
+    } else {
       G4Exception("[FullRingInfinity]", "GenerateVertex()", FatalException,
                   "Unknown vertex generation region!");
     }
-
+    return vertex;
   }
 
   G4int FullRingInfinity::binarySearchPt(G4int low, G4int high, G4double rnd) const {
@@ -444,7 +449,6 @@ namespace nexus {
 
   void FullRingInfinity::BuildPointfile(G4String pointFile)
   {
-
     int Nx, Ny, Nz;
     float Lx, Ly, Lz;
 
@@ -481,28 +485,28 @@ namespace nexus {
   }
 
   void FullRingInfinity::CalculateSensitivityVertices(G4double binning)
-{
-  if ((pt_Lx_ == 0) & (pt_Ly_ == 0) & (pt_Lz_ == 0)) {
-    G4Exception("[FullRingInfinity]", "CalculateSensitivityVertices()", FatalException,
-		"Image hasn't been loaded!");
-  }
-
-  G4int i_max = floor(pt_Lx_/binning);
-  G4int j_max = floor(pt_Ly_/binning);
-  G4int k_max = floor(pt_Lz_/binning);
-
-  for (G4int i=0; i<i_max; i++) {
-    G4double x = -pt_Lx_/2. + i*binning;
-    for (G4int j=0; j<j_max; j++) {
-      G4double y = -pt_Ly_/2. + j*binning;
-      for (G4int k=0; k<k_max; k++) {
-	G4double z = -pt_Lz_/2. + k*binning;
-	G4ThreeVector point(x, y, z);
-	//	sensitivity_vertices_.push_back(point);
+  {
+    if ((pt_Lx_ == 0) & (pt_Ly_ == 0) & (pt_Lz_ == 0)) {
+      G4Exception("[FullRingInfinity]", "CalculateSensitivityVertices()", 
+		  FatalException, "Image hasn't been loaded!");
+    }
+    
+    G4int i_max = floor(pt_Lx_/binning);
+    G4int j_max = floor(pt_Ly_/binning);
+    G4int k_max = floor(pt_Lz_/binning);
+    
+    for (G4int i=0; i<i_max; i++) {
+      G4double x = -pt_Lx_/2. + i*binning;
+      for (G4int j=0; j<j_max; j++) {
+	G4double y = -pt_Ly_/2. + j*binning;
+	for (G4int k=0; k<k_max; k++) {
+	  G4double z = -pt_Lz_/2. + k*binning;
+	  G4ThreeVector point(x, y, z);
+	  sensitivity_vertices_.push_back(point);
+	}
       }
     }
+   
   }
-
-}
 
 }
