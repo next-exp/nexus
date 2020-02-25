@@ -132,7 +132,6 @@ void NextFlexEnergyPlane::DefineMaterials()
 
   // Teflon
   _teflon_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
-  //_teflon_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
 
   // Sapphire
   _sapphire_mat = MaterialsList::Sapphire();

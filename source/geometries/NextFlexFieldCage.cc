@@ -229,7 +229,6 @@ void NextFlexFieldCage::DefineMaterials()
 
   // Teflon
   _teflon_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
-  //_teflon_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
 
   // UV shifting material
   if (_wls_matName == "NONE") {
@@ -444,6 +443,7 @@ void NextFlexFieldCage::BuildELgap()
 
   // Define EL electric field
   XenonGasProperties xgp(_gas_pressure, _gas_temperature);
+  G4double yield_per_cm = xgp.ELLightYield(_el_field_int);
   if (_el_field_on) {
     UniformElectricDriftField* el_field = new UniformElectricDriftField();
     el_field->SetCathodePosition(el_gap_posZ + _el_gap_length/2.);
@@ -451,7 +451,7 @@ void NextFlexFieldCage::BuildELgap()
     el_field->SetDriftVelocity  (2.5 * mm/microsecond);
     el_field->SetTransverseDiffusion(_el_transv_diff);
     el_field->SetLongitudinalDiffusion(_el_long_diff);
-    el_field->SetLightYield(xgp.ELLightYield(_el_field_int));
+    el_field->SetLightYield(yield_per_cm);
     G4Region* el_region = new G4Region("EL_REGION");
     el_region->SetUserInformation(el_field);
     el_region->AddRootLogicalVolume(el_gap_logic);
@@ -469,9 +469,11 @@ void NextFlexFieldCage::BuildELgap()
     G4cout << "* EL_GAP Z positions: " << el_gap_posZ - _el_gap_length/2. <<
               " to " << el_gap_posZ + _el_gap_length/2. << G4endl;
 
-    if (_el_field_on)
-      G4cout << "* EL field intensity: " << _el_field_int <<
-                "  ->  EL Light yield: " << xgp.ELLightYield(_el_field_int) << G4endl;
+    if (_el_field_on) {
+      G4cout << "* EL field intensity (kV/cm): " << _el_field_int / (kilovolt/cm)
+             << "  ->  EL Light yield (photons/ie-/cm): " << yield_per_cm << G4endl;
+      G4cout << "* EL Light yield (photons/ie-): " << yield_per_cm * (_el_gap_length/cm) << G4endl;
+    }
     else
       G4cout << "* EL field OFF" << G4endl;
   }

@@ -161,7 +161,6 @@ void NextFlexTrackingPlane::DefineMaterials()
 
   // Teflon
   _teflon_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
-  //_teflon_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
 
   // UV shifting material
   if (_wls_matName == "NONE") {
