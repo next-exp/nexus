@@ -3,6 +3,8 @@
 
 #include "BaseGeometry.h"
 
+#include <G4ThreeVector.hh>
+
 class G4GenericMessenger;
 class G4LogicalVolume;
 namespace nexus {
@@ -31,6 +33,7 @@ namespace nexus {
     void BuildPointfile(G4String pointFile);
     G4int binarySearchPt(G4int low, G4int high, G4double rnd) const;
     G4ThreeVector RandomPointVertex() const;
+    void CalculateSensitivityVertices(G4double binning);
 
     SiPMpetFBK* sipm_;
 
@@ -59,9 +62,9 @@ namespace nexus {
 
     SpherePointSampler* spheric_gen_;
 
-    G4double _specific_vertex_X;
-    G4double _specific_vertex_Y;
-    G4double _specific_vertex_Z;
+    G4double specific_vertex_X_;
+    G4double specific_vertex_Y_;
+    G4double specific_vertex_Z_;
 
     G4bool phantom_;
 
@@ -69,6 +72,13 @@ namespace nexus {
     G4int pt_Nx_, pt_Ny_, pt_Nz_;
     G4float pt_Lx_, pt_Ly_, pt_Lz_;
     G4float *pt_;
+
+    G4int sensitivity_point_id_;
+    mutable G4int sensitivity_index_;
+    mutable std::vector<G4ThreeVector> sensitivity_vertices_;
+    G4double sensitivity_binning_;
+
+
 
   };
 }
