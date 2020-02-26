@@ -376,7 +376,6 @@ namespace nexus {
     } else if (region == "PHANTOM") {
       vertex = spheric_gen_->GenerateVertex("VOLUME");
     } else if (region == "CUSTOM") {
-      G4cout << "Generating random" << G4endl;
       vertex = RandomPointVertex();
     } else if (region == "SENSITIVITY") {
       unsigned int i = sensitivity_point_id_ + sensitivity_index_;

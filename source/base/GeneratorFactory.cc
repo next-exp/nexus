@@ -45,6 +45,7 @@ GeneratorFactory::~GeneratorFactory()
 #include "ElecPositronPair.h"
 #include "DoubleParticle.h"
 #include "Back2backGammas.h"
+#include "SensMap.h"
 
 G4VPrimaryGenerator* GeneratorFactory::CreateGenerator()
 {
@@ -79,6 +80,8 @@ G4VPrimaryGenerator* GeneratorFactory::CreateGenerator()
   else if (_name == "DOUBLE_PARTICLE") _p = new DoubleParticle();
 
   else if (_name == "BACK2BACK") _p = new Back2backGammas();
+
+  else if (_name == "SENSMAP") _p = new SensMap();
 
   else {
     G4String err = "The user specified an unknown generator: " + _name;
