@@ -256,9 +256,13 @@ void NextFlexFieldCage::DefineMaterials()
     _fiber_mat = MaterialsList::EJ280();   // Same base material than EJ280
     _fiber_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::EJ286());
   }
+  else if (_fiber_matName == "Y11") {
+    _fiber_mat = MaterialsList::Y11();
+    _fiber_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::Y11());
+  }
   else {
     G4Exception("[NextParam]", "FieldCage::DefineMaterials()", FatalException,
-    "Unknown inner WLS material. Valid options are EJ280 or EJ286.");
+    "Unknown inner WLS material. Valid options are EJ280, EJ286 or Y11.");
   }
 
   // Fiber cladding materials (inner: PMMA  outer: FPethylene)
@@ -443,7 +447,7 @@ void NextFlexFieldCage::BuildELgap()
 
   // Define EL electric field
   XenonGasProperties xgp(_gas_pressure, _gas_temperature);
-  G4double yield_per_cm = xgp.ELLightYield(_el_field_int);
+  G4double yield = xgp.ELLightYield(_el_field_int);
   if (_el_field_on) {
     UniformElectricDriftField* el_field = new UniformElectricDriftField();
     el_field->SetCathodePosition(el_gap_posZ + _el_gap_length/2.);
@@ -451,7 +455,7 @@ void NextFlexFieldCage::BuildELgap()
     el_field->SetDriftVelocity  (2.5 * mm/microsecond);
     el_field->SetTransverseDiffusion(_el_transv_diff);
     el_field->SetLongitudinalDiffusion(_el_long_diff);
-    el_field->SetLightYield(yield_per_cm);
+    el_field->SetLightYield(yield);
     G4Region* el_region = new G4Region("EL_REGION");
     el_region->SetUserInformation(el_field);
     el_region->AddRootLogicalVolume(el_gap_logic);
@@ -471,8 +475,8 @@ void NextFlexFieldCage::BuildELgap()
 
     if (_el_field_on) {
       G4cout << "* EL field intensity (kV/cm): " << _el_field_int / (kilovolt/cm)
-             << "  ->  EL Light yield (photons/ie-/cm): " << yield_per_cm << G4endl;
-      G4cout << "* EL Light yield (photons/ie-): " << yield_per_cm * (_el_gap_length/cm) << G4endl;
+             << "  ->  EL Light yield (photons/ie-/cm): " << yield / (1/cm) << G4endl;
+      G4cout << "* EL Light yield (photons/ie-): " << yield * _el_gap_length << G4endl;
     }
     else
       G4cout << "* EL field OFF" << G4endl;
@@ -914,12 +918,13 @@ void NextFlexFieldCage::BuildFiberSensors()
   }
 
   /// Verbosity
-  if (_verbosity)
+  if (_verbosity) {
     G4cout << "* Num fiber sensors     : " << num_fiber_sensors  << G4endl;
     G4cout << "* Num fiber sectors     : " << _num_fiber_sectors << G4endl;
     G4cout << "* Num fibers / sector   : ";
     G4cout << 1. * num_fiber_sensors / _num_fiber_sectors << G4endl;
     G4cout << "* Fiber sector phi (deg): " << fiber_sector_phi / deg << G4endl;  
+  }
 }
 
 
