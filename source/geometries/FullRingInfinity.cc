@@ -116,7 +116,7 @@ namespace nexus {
 
     msg_->DeclareProperty("sensitivity", sensitivity_,
 			  "True if sensitivity map is being run");
-    msg_->DeclareProperty("sensitivity_point_id", sensitivity_point_id_, 
+    msg_->DeclareProperty("sensitivity_point_id", sensitivity_point_id_,
 			  "Starting point for sensitivity run");
 
     sipm_ = new SiPMpetFBK();
@@ -149,7 +149,7 @@ namespace nexus {
 
     if (phantom_)
       BuildPhantom();
-    
+
 
     if (sensitivity_)
       CalculateSensitivityVertices(sensitivity_binning_);
@@ -485,15 +485,10 @@ namespace nexus {
 
   void FullRingInfinity::CalculateSensitivityVertices(G4double binning)
   {
-    if ((pt_Lx_ == 0) & (pt_Ly_ == 0) & (pt_Lz_ == 0)) {
-      G4Exception("[FullRingInfinity]", "CalculateSensitivityVertices()", 
-		  FatalException, "Image hasn't been loaded!");
-    }
-    
-    G4int i_max = floor(pt_Lx_/binning);
-    G4int j_max = floor(pt_Ly_/binning);
-    G4int k_max = floor(pt_Lz_/binning);
-    
+    G4int i_max = floor(inner_radius_/binning);
+    G4int j_max = floor(inner_radius_/binning);
+    G4int k_max = floor(lat_dimension_cell_/binning);
+
     for (G4int i=0; i<i_max; i++) {
       G4double x = -pt_Lx_/2. + i*binning;
       for (G4int j=0; j<j_max; j++) {
@@ -505,7 +500,7 @@ namespace nexus {
 	}
       }
     }
-   
+
   }
 
 }
