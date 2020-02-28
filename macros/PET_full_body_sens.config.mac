@@ -8,6 +8,8 @@
 /Geometry/FullRingInfinity/cryostat_width 200 cm
 /Geometry/FullRingInfinity/sensitivity true
 /Geometry/FullRingInfinity/sensitivity_binning 1. mm
+/Geometry/FullRingInfinity/sens_z_min -973. mm
+/Geometry/FullRingInfinity/sens_z_max -900. mm
 
 /Geometry/SiPMpet/efficiency 0.2
 /Geometry/SiPMpet/visibility true
