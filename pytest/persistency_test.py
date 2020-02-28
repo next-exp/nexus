@@ -18,6 +18,7 @@ output_file = 'pytest/NEXT100_electron_full.h5'
 
 
 def test_hdf5_structure():
+     """ Check that the hdf5 table structure is the correct one."""
 
      with tb.open_file(output_file) as h5out:
 
@@ -79,6 +80,10 @@ def test_hdf5_structure():
 
 
 def test_particle_ids_of_hits_exist_in_particle_table():
+    """
+    Check that the particle IDs of the hits are also contained
+    in the particle table.
+    """
 
    # command = './nexus -b -n 1 pytest/test_macros/NEW_optical.init.mac'
    # os.system(command)
@@ -100,7 +105,7 @@ def test_particle_ids_of_hits_exist_in_particle_table():
 
 
 def test_hit_labels():
-
+     """Check that there is at least one hit in the ACTIVE volume """
      hits = pd.read_hdf(output_file, 'MC/hits')
      hit_labels = hits.label.unique()
 
@@ -108,7 +113,7 @@ def test_hit_labels():
 
 
 def test_primary_always_exists():
-
+     """Check that there is at least one primary particle """
      particles = pd.read_hdf(output_file, 'MC/particles')
      primary   = particles.primary.unique()
 
@@ -116,7 +121,7 @@ def test_primary_always_exists():
 
 
 def test_sensor_binning_is_saved():
-
+     """Check that the sensor binning is saved in the configuration table. """
      conf = pd.read_hdf(output_file, 'MC/configuration')
      parameters = conf.param_key.values
 
