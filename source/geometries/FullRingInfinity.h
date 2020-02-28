@@ -2,6 +2,7 @@
 #define FULLRINGINF_
 
 #include "BaseGeometry.h"
+#include <vector>
 
 class G4GenericMessenger;
 class G4LogicalVolume;
@@ -31,6 +32,7 @@ namespace nexus {
     void BuildPointfile(G4String pointFile);
     G4int binarySearchPt(G4int low, G4int high, G4double rnd) const;
     G4ThreeVector RandomPointVertex() const;
+    void CalculateSensitivityVertices(G4double binning);
 
     SiPMpetFBK* sipm_;
 
@@ -41,10 +43,9 @@ namespace nexus {
     /// Messenger for the definition of control commands
     G4GenericMessenger* msg_;
 
-    G4double lat_dimension_cell_;
+    G4double axial_length_;
     G4double sipm_pitch_;
-    G4int n_cells_; ///< number of virtual cells of ~ 5 cm of side I want to fit in the ring
-    G4int lin_n_sipm_per_cell_; ///< linear number of sipms in a cell (the side, not the area)
+    G4int n_sipm_rows_;
     G4int instr_faces_; ///< number of instrumented faces
     G4double kapton_thickn_;
     G4double depth_;
@@ -59,9 +60,9 @@ namespace nexus {
 
     SpherePointSampler* spheric_gen_;
 
-    G4double _specific_vertex_X;
-    G4double _specific_vertex_Y;
-    G4double _specific_vertex_Z;
+    G4double specific_vertex_X_;
+    G4double specific_vertex_Y_;
+    G4double specific_vertex_Z_;
 
     G4bool phantom_;
 
@@ -69,6 +70,15 @@ namespace nexus {
     G4int pt_Nx_, pt_Ny_, pt_Nz_;
     G4float pt_Lx_, pt_Ly_, pt_Lz_;
     G4float *pt_;
+
+    G4bool sensitivity_;
+    G4int sensitivity_point_id_;
+    mutable G4int sensitivity_index_;
+    mutable std::vector<G4ThreeVector> sensitivity_vertices_;
+    G4double sensitivity_binning_;
+    G4double sens_z_min_, sens_z_max_;
+
+
 
   };
 }

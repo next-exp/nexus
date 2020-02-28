@@ -38,9 +38,8 @@ namespace nexus {
   FullRingInfinity::FullRingInfinity():
     BaseGeometry(),
     // Detector dimensions
-    lat_dimension_cell_(48.*mm), // 52.*mm for quads
     sipm_pitch_(4.*mm),
-    lin_n_sipm_per_cell_(16),
+    n_sipm_rows_(16),
     instr_faces_(2),
     kapton_thickn_(0.3*mm),
     depth_(5.*cm),
@@ -48,7 +47,14 @@ namespace nexus {
     cryo_width_(12.*cm),
     cryo_thickn_(1.*mm),
     max_step_size_(1.*mm),
-    phantom_(false)
+    phantom_(false),
+    pt_Lx_(0.),
+    pt_Ly_(0.),
+    pt_Lz_(0.),
+    sensitivity_(false),
+    sensitivity_index_(0),
+    sensitivity_binning_(1*mm)
+
   {
      // Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/FullRingInfinity/",
@@ -77,28 +83,53 @@ namespace nexus {
     cryo_width_cmd.SetParameterName("cryostat_width", false);
     cryo_width_cmd.SetRange("cryostat_width>0.");
 
-    msg_->DeclareProperty("sipm_rows", lin_n_sipm_per_cell_, "Number of SiPM rows");
+    msg_->DeclareProperty("sipm_rows", n_sipm_rows_, "Number of SiPM rows");
     msg_->DeclareProperty("instrumented_faces", instr_faces_, "Number of instrumented faces");
     msg_->DeclareProperty("phantom", phantom_, "True if spherical physical phantom is used");
 
     G4GenericMessenger::Command&  specific_vertex_X_cmd =
-      msg_->DeclareProperty("specific_vertex_X", _specific_vertex_X,
+      msg_->DeclareProperty("specific_vertex_X", specific_vertex_X_,
                             "If region is AD_HOC, x coord where particles are generated");
     specific_vertex_X_cmd.SetParameterName("specific_vertex_X", true);
     specific_vertex_X_cmd.SetUnitCategory("Length");
     G4GenericMessenger::Command&  specific_vertex_Y_cmd =
-      msg_->DeclareProperty("specific_vertex_Y", _specific_vertex_Y,
+      msg_->DeclareProperty("specific_vertex_Y", specific_vertex_Y_,
                             "If region is AD_HOC, y coord where particles are generated");
     specific_vertex_Y_cmd.SetParameterName("specific_vertex_Y", true);
     specific_vertex_Y_cmd.SetUnitCategory("Length");
     G4GenericMessenger::Command&  specific_vertex_Z_cmd =
-      msg_->DeclareProperty("specific_vertex_Z", _specific_vertex_Z,
+      msg_->DeclareProperty("specific_vertex_Z", specific_vertex_Z_,
                             "If region is AD_HOC, z coord where particles are generated");
     specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
     specific_vertex_Z_cmd.SetUnitCategory("Length");
 
     // Read in the point distribution.
     msg_->DeclareMethod("pointFile", &FullRingInfinity::BuildPointfile, "Location of file containing distribution of event generation points.");
+
+    G4GenericMessenger::Command& table_cmd =
+      msg_->DeclareProperty("sensitivity_binning", sensitivity_binning_,
+                            "Pitch for sensitivity point generation");
+    table_cmd.SetUnitCategory("Length");
+    table_cmd.SetParameterName("sensitivity_binning", false);
+    table_cmd.SetRange("sensitivity_binning>0.");
+
+    msg_->DeclareProperty("sensitivity", sensitivity_,
+			  "True if sensitivity map is being run");
+    msg_->DeclareProperty("sensitivity_point_id", sensitivity_point_id_,
+			  "Starting point for sensitivity run");
+
+    G4GenericMessenger::Command& sns_z_min_cmd =
+      msg_->DeclareProperty("sens_z_min", sens_z_min_,
+                            "Minimum z for sensitivity map");
+    sns_z_min_cmd.SetUnitCategory("Length");
+    sns_z_min_cmd.SetParameterName("sens_z_min", false);
+
+    G4GenericMessenger::Command& sns_z_max_cmd =
+      msg_->DeclareProperty("sens_z_max", sens_z_max_,
+                            "Maxmimum z for sensitivity map");
+    sns_z_max_cmd.SetUnitCategory("Length");
+    sns_z_max_cmd.SetParameterName("sens_z_max", false);
+
 
     sipm_ = new SiPMpetFBK();
   }
@@ -119,8 +150,8 @@ namespace nexus {
     lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
     this->SetLogicalVolume(lab_logic_);
 
-    lat_dimension_cell_ = sipm_pitch_ *  lin_n_sipm_per_cell_;
-    G4cout << "Lateral dimensions (mm) = " << lat_dimension_cell_/mm << G4endl;
+    axial_length_ = sipm_pitch_ *  n_sipm_rows_;
+    G4cout << "Axial dimensions (mm) = " << axial_length_/mm << G4endl;
 
 
     external_radius_ = inner_radius_ + depth_;
@@ -128,10 +159,12 @@ namespace nexus {
     BuildCryostat();
     BuildSensors();
 
-    if (phantom_) {
+    if (phantom_)
       BuildPhantom();
-    }
 
+
+    if (sensitivity_)
+      CalculateSensitivityVertices(sensitivity_binning_);
   }
 
   void FullRingInfinity::BuildCryostat()
@@ -153,7 +186,7 @@ namespace nexus {
     G4double ext_offset = 0. * mm;
     G4Tubs* LXe_solid =
       new G4Tubs("LXE", inner_radius_ - kapton_thickn_, external_radius_ + ext_offset + kapton_thickn_,
-                 (lat_dimension_cell_ + 2.*kapton_thickn_)/2., 0, twopi);
+                 (axial_length_ + 2.*kapton_thickn_)/2., 0, twopi);
     G4Material* LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
     LXe->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe());
     LXe_logic_ =
@@ -163,7 +196,7 @@ namespace nexus {
 
     G4Tubs* active_solid =
       new G4Tubs("ACTIVE", inner_radius_, external_radius_ + ext_offset,
-                 lat_dimension_cell_/2., 0, twopi);
+                 axial_length_/2., 0, twopi);
     active_logic_ =
       new G4LogicalVolume(active_solid, LXe, "ACTIVE");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), active_logic_,
@@ -182,7 +215,7 @@ namespace nexus {
 
     G4Tubs* kapton_int_solid =
       new G4Tubs("KAPTON", inner_radius_ - kapton_thickn_, inner_radius_,
-                 lat_dimension_cell_/2., 0, twopi);
+                 axial_length_/2., 0, twopi);
     G4LogicalVolume* kapton_int_logic =
       new G4LogicalVolume(kapton_int_solid, kapton, "KAPTON");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), kapton_int_logic,
@@ -190,7 +223,7 @@ namespace nexus {
 
     G4Tubs* kapton_ext_solid =
       new G4Tubs("KAPTON", external_radius_ + ext_offset, external_radius_ + ext_offset + kapton_thickn_,
-                 lat_dimension_cell_/2., 0, twopi);
+                 axial_length_/2., 0, twopi);
     G4LogicalVolume* kapton_ext_logic =
       new G4LogicalVolume(kapton_ext_solid, kapton, "KAPTON");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), kapton_ext_logic,
@@ -201,7 +234,7 @@ namespace nexus {
                  kapton_thickn_/2., 0, twopi);
     G4LogicalVolume* kapton_lat_logic =
       new G4LogicalVolume(kapton_lat_solid, kapton, "KAPTON");
-    G4double z_pos = lat_dimension_cell_/2. + kapton_thickn_/2.;
+    G4double z_pos = axial_length_/2. + kapton_thickn_/2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., z_pos), kapton_lat_logic,
     		      "KAPTON", LXe_logic_, false, 0, true);
     new G4PVPlacement(0, G4ThreeVector(0., 0., -z_pos), kapton_lat_logic,
@@ -242,7 +275,7 @@ namespace nexus {
 
     G4int n_sipm_int = 2*pi*inner_radius_/sipm_pitch_;
     if (instr_faces_ == 2) {
-      G4cout << "Number of sipms in inner face: " <<  n_sipm_int *  lin_n_sipm_per_cell_<< G4endl;
+      G4cout << "Number of sipms in inner face: " <<  n_sipm_int *  n_sipm_rows_<< G4endl;
     }
     G4double step = 2.*pi/n_sipm_int;
     G4double radius = inner_radius_ + sipm_dim.z()/2.;
@@ -251,10 +284,10 @@ namespace nexus {
     rot.rotateX(-pi/2.);
 
     G4int copy_no = 999;
-    for (G4int j=0; j<lin_n_sipm_per_cell_; j++) {
+    for (G4int j=0; j<n_sipm_rows_; j++) {
       // The first must be positioned outside the loop
       if (j!=0) rot.rotateZ(step);
-      G4double z_dimension = -lat_dimension_cell_/2. + (j + 1./2.) * sipm_pitch_;
+      G4double z_dimension = -axial_length_/2. + (j + 1./2.) * sipm_pitch_;
       G4ThreeVector position(0., radius, z_dimension);
       copy_no += 1;
       G4String vol_name = "SIPM_" + std::to_string(copy_no);
@@ -280,7 +313,7 @@ namespace nexus {
     //G4double sipm_pitch_ext = sipm_dim.x() + 0.5 * mm;
     G4double offset = 0.1 * mm;
     G4int n_sipm_ext = 2*pi*external_radius_/sipm_pitch_;
-    G4cout << "Number of sipms in external face: " <<  n_sipm_ext * lin_n_sipm_per_cell_ << G4endl;
+    G4cout << "Number of sipms in external face: " <<  n_sipm_ext * n_sipm_rows_ << G4endl;
     radius = external_radius_ - sipm_dim.z()/2. - offset;
 
     rot.rotateZ(step);
@@ -293,10 +326,10 @@ namespace nexus {
       copy_no = 999;
     }
 
-    for (G4int j=0; j<lin_n_sipm_per_cell_; j++) {
+    for (G4int j=0; j<n_sipm_rows_; j++) {
       // The first must be positioned outside the loop
       if (j!=0) rot.rotateZ(step);
-      G4double z_pos = -lat_dimension_cell_/2. + (j + 1./2.) * sipm_pitch_;
+      G4double z_pos = -axial_length_/2. + (j + 1./2.) * sipm_pitch_;
       G4ThreeVector position(0., radius, z_pos);
       copy_no = copy_no + 1;
       G4String vol_name = "SIPM_" + std::to_string(copy_no);
@@ -333,7 +366,7 @@ namespace nexus {
     G4LogicalVolume* phantom_logic =
       new G4LogicalVolume(phantom_solid, MaterialsList::PEEK(), "PHANTOM");
     G4ThreeVector phantom_origin =
-      G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
+      G4ThreeVector(specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_);
     new G4PVPlacement(0, phantom_origin, phantom_logic, "PHANTOM", lab_logic_, false, 0, true);
 
     spheric_gen_ =
@@ -351,17 +384,31 @@ namespace nexus {
     if (region == "CENTER") {
       return vertex;
     } else if (region == "AD_HOC") {
-      vertex = G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
+      vertex = G4ThreeVector(specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_);
     } else if (region == "PHANTOM") {
       vertex = spheric_gen_->GenerateVertex("VOLUME");
-    } 
-      else if (region == "CUSTOM") {
+    } else if (region == "CUSTOM") {
       vertex = RandomPointVertex();
+    } else if (region == "SENSITIVITY") {
+      unsigned int i = sensitivity_point_id_ + sensitivity_index_;
+
+      if (i == (sensitivity_vertices_.size()-1)) {
+        G4Exception("[FullRingInfinity]", "GenerateVertex()",
+    		    RunMustBeAborted, "Reached last event in scintillation lookup table.");
+      }
+
+      try {
+        vertex = sensitivity_vertices_.at(i);
+        sensitivity_index_++;
+      }
+      catch (const std::out_of_range& oor) {
+        G4Exception("[FullRingInfinity]", "GenerateVertex()", FatalErrorInArgument, "Sensitivity point out of range.");
+      }
+
     } else {
       G4Exception("[FullRingInfinity]", "GenerateVertex()", FatalException,
                   "Unknown vertex generation region!");
     }
-
     return vertex;
   }
 
@@ -385,7 +432,7 @@ namespace nexus {
     // Select the index in the cumulative distribution.
     G4double rnd = G4UniformRand();
     G4int ipt = binarySearchPt(0, pt_Nx_*pt_Ny_*pt_Nz_-1, rnd);
-    
+
     if(ipt < 0) {
       std::cerr << "ERROR: random point vertex selection failed." << std::endl;
       return G4ThreeVector(0,0,0);
@@ -406,14 +453,13 @@ namespace nexus {
     G4double xrnd = G4UniformRand()-0.5;
     G4double yrnd = G4UniformRand()-0.5;
     G4double zrnd = G4UniformRand()-0.5;
-    
+
     //std::cout << "Generated at point (" << x << ", " << y << ", " << z << "), index " << ipt << std::endl;
     return G4ThreeVector(x+xrnd,y+yrnd,z+zrnd);
   }
 
   void FullRingInfinity::BuildPointfile(G4String pointFile)
   {
-
     int Nx, Ny, Nz;
     float Lx, Ly, Lz;
 
@@ -422,8 +468,12 @@ namespace nexus {
     is.open(pointFile, std::ifstream::binary);
 
     // Read the header.
-    is.read(reinterpret_cast<char*>(&Nx),sizeof(int)); is.read(reinterpret_cast<char*>(&Ny),sizeof(int)); is.read(reinterpret_cast<char*>(&Nz),sizeof(int));
-    is.read(reinterpret_cast<char*>(&Lx),sizeof(float)); is.read(reinterpret_cast<char*>(&Ly),sizeof(float)); is.read(reinterpret_cast<char*>(&Lz),sizeof(float));
+    is.read(reinterpret_cast<char*>(&Nx),sizeof(int));
+    is.read(reinterpret_cast<char*>(&Ny),sizeof(int));
+    is.read(reinterpret_cast<char*>(&Nz),sizeof(int));
+    is.read(reinterpret_cast<char*>(&Lx),sizeof(float));
+    is.read(reinterpret_cast<char*>(&Ly),sizeof(float));
+    is.read(reinterpret_cast<char*>(&Lz),sizeof(float));
     pt_Nx_ = Nx; pt_Ny_ = Ny; pt_Nz_ = Nz;
     pt_Lx_ = Lx; pt_Ly_ = Ly; pt_Lz_ = Lz;
 
@@ -439,8 +489,33 @@ namespace nexus {
 
     is.close();
 
-    std::cout << "Read distribution of (" << pt_Nx_ << ", " << pt_Ny_ << ", " << pt_Nz_ << "); Len (" << pt_Lx_
-         << ", " << pt_Ly_ << ", " << pt_Lz_ << "); with total elements = " << length << ", and first two = " << pt_[0] << " , " << pt_[1] << std::endl;
+    std::cout << "Read distribution of (" << pt_Nx_ << ", " << pt_Ny_ << ", " << pt_Nz_
+	      << "); Len (" << pt_Lx_ << ", " << pt_Ly_ << ", " << pt_Lz_
+	      << "); with total elements = " << length << ", and first two = "
+	      << pt_[0] << " , " << pt_[1] << std::endl;
+  }
+
+  void FullRingInfinity::CalculateSensitivityVertices(G4double binning)
+  {
+    G4double x_dim = 2. * inner_radius_;
+    G4double y_dim = 2. * inner_radius_;
+
+    G4int i_max = floor(x_dim/binning);
+    G4int j_max = floor(y_dim/binning);
+    G4int k_max = floor((sens_z_max_ - sens_z_min_)/binning);
+
+    for (G4int i=0; i<i_max; i++) {
+      G4double x = -x_dim/2. + i*binning;
+      for (G4int j=0; j<j_max; j++) {
+	G4double y = -y_dim/2. + j*binning;
+	for (G4int k=0; k<k_max; k++) {
+	  G4double z = sens_z_min_ + k*binning;
+	  G4ThreeVector point(x, y, z);
+	  sensitivity_vertices_.push_back(point);
+	}
+      }
+    }
+
   }
 
 }

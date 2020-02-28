@@ -1,0 +1,42 @@
+### GEOMETRY
+
+/Geometry/FullRingInfinity/depth 3. cm
+/Geometry/FullRingInfinity/pitch 7. mm
+/Geometry/FullRingInfinity/inner_radius 380. mm
+/Geometry/FullRingInfinity/sipm_rows 278
+/Geometry/FullRingInfinity/instrumented_faces 1
+/Geometry/FullRingInfinity/cryostat_width 200 cm
+/Geometry/FullRingInfinity/sensitivity true
+/Geometry/FullRingInfinity/sensitivity_binning 1. mm
+/Geometry/FullRingInfinity/sens_z_min -973. mm
+/Geometry/FullRingInfinity/sens_z_max -900. mm
+
+/Geometry/SiPMpet/efficiency 0.2
+/Geometry/SiPMpet/visibility true
+/Geometry/SiPMpet/time_binning 1. microsecond
+/Geometry/SiPMpet/size 6. mm
+
+
+### GENERATOR
+/Generator/SensMap/num_gammas 1000
+
+### PHYSICS
+/PhysicsList/Nexus/clustering          false
+/PhysicsList/Nexus/drift               false
+/PhysicsList/Nexus/electroluminescence false
+/PhysicsList/Nexus/offScintillation false
+/PhysicsList/Nexus/offCherenkov false
+
+/Actions/DefaultEventAction/energy_threshold 0.511 MeV
+
+### VERBOSITIES
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+/nexus/random_seed 132312
+
+### OUTPUT FILE
+
+/nexus/persistency/start_id 0
+/nexus/persistency/outputFile full_body_sens.pet
