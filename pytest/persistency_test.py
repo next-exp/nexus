@@ -1,7 +1,7 @@
 import pytest
 
 import os
-#import subprocess
+import subprocess
 import pandas as pd
 import tables as tb
 import numpy as np
@@ -9,18 +9,15 @@ import numpy as np
 
 def test_hdf5_structure():
 
-     command = './nexus -b -n 1 pytest/test_macros/NEW_optical.init.mac'
-     os.system(command)
+     #command = './nexus -b -n 1 pytest/test_macros/NEW_optical.init.mac'
+     #os.system(command)
 
-     #my_env = os.environ.copy()
-     #command = ['./nexus', '-b', '-n', '1', 'pytest/test_macros/NEW_optical.init.mac']
-     #p = subprocess.Popen(command, env=my_env)
-     #try:
-     #     p.wait(timeout=120)
-     #except TimeoutExpired:
-     #     exit()
+     my_env = os.environ.copy()
+     command = ['./nexus', '-b', '-n', '1', 'pytest/test_macros/NEXT100_optical.init.mac']
+     p = subprocess.Popen(command, env=my_env)
+     p.wait()
 
-     output_file = 'pytest/NEW_electron_sim.h5'
+     output_file = 'pytest/NEXT100_electron_full.h5'
 
      with tb.open_file(output_file) as h5out:
 
@@ -30,8 +27,8 @@ def test_hdf5_structure():
          assert 'sns_response'  in h5out.root.MC
          assert 'configuration' in h5out.root.MC
 
-         particles = h5out.root.MC.particles
-         pcolumns  = particles.colnames
+
+         pcolumns = h5out.root.MC.particles.colnames
 
          assert 'event_id'           in pcolumns
          assert 'particle_id'        in pcolumns
@@ -60,10 +57,36 @@ def test_hdf5_structure():
          assert 'final_proc'         in pcolumns
 
 
+         hcolumns = h5out.root.MC.hits.colnames
+
+         assert 'event_id'    in hcolumns
+         assert 'x'           in hcolumns
+         assert 'y'           in hcolumns
+         assert 'z'           in hcolumns
+         assert 'time'        in hcolumns
+         assert 'energy'      in hcolumns
+         assert 'label'       in hcolumns
+         assert 'particle_id' in hcolumns
+         assert 'hit_id'      in hcolumns
+
+
+         scolumns = h5out.root.MC.sns_response.colnames
+
+         assert 'event_id'  in scolumns
+         assert 'sensor_id' in scolumns
+         assert 'time_bin'  in scolumns
+         assert 'charge'    in scolumns
+
+
 def test_particle_ids_of_hits_exist_in_particle_table():
 
-    command = './nexus -b -n 1 pytest/test_macros/NEW_optical.init.mac'
-    os.system(command)
+   # command = './nexus -b -n 1 pytest/test_macros/NEW_optical.init.mac'
+   # os.system(command)
+
+    my_env = os.environ.copy()
+    command = ['./nexus', '-b', '-n', '1', 'pytest/test_macros/NEW_optical.init.mac']
+    p = subprocess.Popen(command, env=my_env)
+    p.wait()
 
     output_file = 'pytest/NEW_electron_sim.h5'
 
