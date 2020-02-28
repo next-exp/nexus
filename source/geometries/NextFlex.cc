@@ -32,6 +32,7 @@
 
 using namespace nexus;
 
+
 NextFlex::NextFlex():
   BaseGeometry(),
   _verbosity         (false),
@@ -63,6 +64,7 @@ NextFlex::NextFlex():
 }
 
 
+
 NextFlex::~NextFlex()
 {
   delete _msg;
@@ -70,6 +72,7 @@ NextFlex::~NextFlex()
   delete _tracking_plane;
   delete _energy_plane;
 }
+
 
 
 void NextFlex::DefineConfigurationParameters()
@@ -122,8 +125,8 @@ void NextFlex::DefineConfigurationParameters()
   ics_thickness_cmd.SetRange("ics_thickness>=0.");
 
   _msg->DeclareProperty("ics_visibility", _ics_visibility, "ICS Visibility");
-
 }
+
 
 
 void NextFlex::DefineMaterials()
@@ -144,10 +147,12 @@ void NextFlex::DefineMaterials()
   else
     G4Exception("[NextParam]", "DefineMaterials()", FatalException,
     "Unknown xenon gas type. Valid options are naturalXe, enrichedXe or depletedXe.");
+
   _xenon_gas->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_gas_pressure,
                                                                         _gas_temperature,
                                                                         25510 * (1./MeV)));
 }
+
 
 
 void NextFlex::Construct()
@@ -177,7 +182,7 @@ void NextFlex::Construct()
   lab_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
 
 
-  // The gas
+  // The Gas
   G4String gas_name = "GAS";
   G4double gas_size = 20. * m;
 
@@ -192,7 +197,6 @@ void NextFlex::Construct()
   G4VPhysicalVolume* gas_phys_vol =
     new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), gas_logic_vol,
                       gas_name, lab_logic_vol, false, 0, true);
-
 
   // The Field Cage
   _field_cage->SetMotherLogicalVolume(gas_logic_vol);
@@ -222,6 +226,7 @@ void NextFlex::Construct()
   // Verbosity
   if(_verbosity) G4cout << G4endl;
 }
+
 
 
 void NextFlex::BuildICS(G4LogicalVolume* mother_logic) {

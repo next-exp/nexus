@@ -73,12 +73,14 @@ NextFlexEnergyPlane::NextFlexEnergyPlane():
 }
 
 
+
 NextFlexEnergyPlane::~NextFlexEnergyPlane()
 {
   delete _msg;
   delete _copper_gen;
   if (_ep_with_PMTs) delete _window_gen;
 }
+
 
 
 void NextFlexEnergyPlane::DefineConfigurationParameters()
@@ -107,6 +109,7 @@ void NextFlexEnergyPlane::DefineConfigurationParameters()
 }
 
 
+
 void NextFlexEnergyPlane::ComputeDimensions()
 {
   _copper_iniZ = _originZ;
@@ -120,6 +123,7 @@ void NextFlexEnergyPlane::ComputeDimensions()
   // If there are PMTs generate their positions
   if (_ep_with_PMTs) GeneratePMTpositions();
 }
+
 
 
 void NextFlexEnergyPlane::DefineMaterials()
@@ -161,6 +165,7 @@ void NextFlexEnergyPlane::DefineMaterials()
 }
 
 
+
 void NextFlexEnergyPlane::Construct()
 {
   // Verbosity
@@ -185,6 +190,7 @@ void NextFlexEnergyPlane::Construct()
   // PMTs
   if (_ep_with_PMTs) { BuildPMTs(); }
 }
+
 
 
 void NextFlexEnergyPlane::BuildCopper()
@@ -224,6 +230,7 @@ void NextFlexEnergyPlane::BuildCopper()
            << " to " << _copper_finZ << G4endl;
   }
 }
+
 
 
 void NextFlexEnergyPlane::BuildTeflon()
@@ -302,6 +309,7 @@ void NextFlexEnergyPlane::BuildTeflon()
            << " to " << _teflon_iniZ + _teflon_thickness << G4endl;
   } 
 }
+
 
 
 void NextFlexEnergyPlane::BuildPMTs()
@@ -421,6 +429,7 @@ void NextFlexEnergyPlane::BuildPMTs()
 }
 
 
+
 // Function that computes and stores the XY positions of PMTs in the copper plate
 void NextFlexEnergyPlane::GeneratePMTpositions()
 {
@@ -470,6 +479,7 @@ void NextFlexEnergyPlane::GeneratePMTpositions()
 
   if (_verbosity) G4cout << "* Total num PMTs: " << _pmt_positions.size() << G4endl;
 }
+
 
 
 // Function that makes PMT holes to the solid passed by parameter

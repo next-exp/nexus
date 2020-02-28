@@ -92,6 +92,7 @@ NextFlexFieldCage::NextFlexFieldCage():
 }
 
 
+
 NextFlexFieldCage::~NextFlexFieldCage()
 {
   delete _msg;
@@ -102,6 +103,7 @@ NextFlexFieldCage::~NextFlexFieldCage()
   delete _light_tube_gen;
   delete _fiber_gen;
 }
+
 
 
 void NextFlexFieldCage::DefineConfigurationParameters()
@@ -201,6 +203,7 @@ void NextFlexFieldCage::DefineConfigurationParameters()
 }
 
 
+
 void NextFlexFieldCage::ComputeDimensions()
 {
   // The field cage goes along the whole field cage
@@ -217,6 +220,7 @@ void NextFlexFieldCage::ComputeDimensions()
     _light_tube_inner_rad += _fiber_light_tube_gap;
   }
 }
+
 
 
 void NextFlexFieldCage::DefineMaterials()
@@ -273,12 +277,14 @@ void NextFlexFieldCage::DefineMaterials()
   _iClad_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::PMMA());
 
   // Fiber sensor case material
-  _fiber_sensor_case_mat = MaterialsList::Epoxy();
-  _fiber_sensor_case_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GlassEpoxy());
+  _fiber_sensor_case_mat = MaterialsList::CopyMaterial(MaterialsList::Epoxy(), "FC_Epoxy");
+  //_fiber_sensor_case_mat = MaterialsList::Epoxy();
+  //_fiber_sensor_case_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GlassEpoxy());
 
   // Fiber sensor material
   _fiber_sensor_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_Si");
 }
+
 
 
 void NextFlexFieldCage::Construct()
@@ -309,6 +315,7 @@ void NextFlexFieldCage::Construct()
     BuildFiberSensors();
   }
 }
+
 
 
 void NextFlexFieldCage::BuildActive()
@@ -360,6 +367,7 @@ void NextFlexFieldCage::BuildActive()
 }
 
 
+
 void NextFlexFieldCage::BuildCathode()
 {
   G4String cathode_name = "CATHODE";
@@ -389,6 +397,7 @@ void NextFlexFieldCage::BuildCathode()
     G4cout << "* CATHODE Z positions: " << cathode_posZ - _cathode_thickness/2. <<
               " to " << cathode_posZ + _cathode_thickness/2. << G4endl;
 }
+
 
 
 void NextFlexFieldCage::BuildBuffer()
@@ -428,8 +437,10 @@ void NextFlexFieldCage::BuildBuffer()
 }
 
 
+
 void NextFlexFieldCage::BuildELgap()
 {
+  /// EL_GAP ///
   G4String el_gap_name = "EL_GAP";
 
   G4double el_gap_diam = _active_diam;
@@ -483,7 +494,7 @@ void NextFlexFieldCage::BuildELgap()
   }
 
 
-  // GATE //
+  /// GATE ///
   G4String gate_name = "GATE";
 
   G4Material* gate_mat = MaterialsList::FakeDielectric(_xenon_gas, "gate_mat");
@@ -509,7 +520,7 @@ void NextFlexFieldCage::BuildELgap()
   if (_verbosity) G4cout << "* GATE Z position: " << el_gap_posZ + gate_posZ << G4endl;
 
 
-  // ANODE //
+  /// ANODE ///
   G4String anode_name = "ANODE";
 
   G4Material* anode_mat = MaterialsList::FakeDielectric(_xenon_gas, "anode_mat");
@@ -534,6 +545,7 @@ void NextFlexFieldCage::BuildELgap()
   // Verbosity
   if (_verbosity) G4cout << "* ANODE Z position: " << el_gap_posZ + anode_posZ << G4endl;
 }
+
 
 
 void NextFlexFieldCage::BuildLightTube()
@@ -626,6 +638,7 @@ void NextFlexFieldCage::BuildLightTube()
               " to " << light_tube_iniZ + _fc_length << G4endl;
   } 
 }
+
 
 
 void NextFlexFieldCage::BuildFibers()
@@ -789,6 +802,7 @@ void NextFlexFieldCage::BuildFibers()
 }
 
 
+
 void NextFlexFieldCage::BuildFiberSensors()
 {
   G4double fiber_sensor_inner_rad  = _fiber_inner_rad;
@@ -809,6 +823,13 @@ void NextFlexFieldCage::BuildFiberSensors()
   G4double case_left_posZ  = _fiber_iniZ - case_thickness/2.;
   G4double case_right_posZ = _fiber_finZ + case_thickness/2.;
 
+  // Add to _fiber_sensor_case_mat the refraction index of fiber_core (neighbor material)
+  G4MaterialPropertiesTable* fiber_sensor_case_optProp = new G4MaterialPropertiesTable();
+  fiber_sensor_case_optProp->AddProperty("RINDEX",
+    _fiber_mat->GetMaterialPropertiesTable()->GetProperty("RINDEX"));
+  _fiber_sensor_case_mat->SetMaterialPropertiesTable(fiber_sensor_case_optProp);
+
+  // Building the Fiber Sensor case
   G4Tubs* case_solid =
     new G4Tubs(case_name, fiber_sensor_inner_rad, fiber_sensor_outer_rad,
                case_thickness/2., 0., fiber_sector_phi);
@@ -926,6 +947,7 @@ void NextFlexFieldCage::BuildFiberSensors()
     G4cout << "* Fiber sector phi (deg): " << fiber_sector_phi / deg << G4endl;  
   }
 }
+
 
 
 G4ThreeVector NextFlexFieldCage::GenerateVertex(const G4String& region) const

@@ -75,11 +75,13 @@ NextFlexTrackingPlane::NextFlexTrackingPlane():
 }
 
 
+
 NextFlexTrackingPlane::~NextFlexTrackingPlane()
 {
   delete _msg;
   delete _copper_gen;
 }
+
 
 
 void NextFlexTrackingPlane::DefineConfigurationParameters()
@@ -133,6 +135,7 @@ void NextFlexTrackingPlane::DefineConfigurationParameters()
 }
 
 
+
 void NextFlexTrackingPlane::ComputeDimensions()
 {
   _teflon_iniZ = _originZ - _SiPM_ANODE_dist - _teflon_thickness;
@@ -144,6 +147,7 @@ void NextFlexTrackingPlane::ComputeDimensions()
 }
 
 
+
 void NextFlexTrackingPlane::DefineMaterials()
 {
   // Xenon
@@ -153,11 +157,12 @@ void NextFlexTrackingPlane::DefineMaterials()
   _copper_mat    = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
 
   // SiPM case
-  _SiPM_case_mat = MaterialsList::Epoxy();
-  _SiPM_case_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GlassEpoxy());
+  //_SiPM_case_mat = MaterialsList::Epoxy();
+  _SiPM_case_mat = MaterialsList::CopyMaterial(MaterialsList::Epoxy(), "TP_Epoxy");
+  //_SiPM_case_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GlassEpoxy());
 
   // SiPM
-  _SiPM_mat      = G4NistManager::Instance()->FindOrBuildMaterial("G4_Si");
+  _SiPM_mat   = G4NistManager::Instance()->FindOrBuildMaterial("G4_Si");
 
   // Teflon
   _teflon_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
@@ -179,6 +184,7 @@ void NextFlexTrackingPlane::DefineMaterials()
                 "Unknown UV shifting material. Valid options are NONE, TPB or TPH.");
   }
 }
+
 
 
 void NextFlexTrackingPlane::Construct()
@@ -203,6 +209,7 @@ void NextFlexTrackingPlane::Construct()
   // SiPMs
   BuildSiPMs();
 }
+
 
 
 void NextFlexTrackingPlane::BuildCopper()
@@ -234,6 +241,7 @@ void NextFlexTrackingPlane::BuildCopper()
            << " to " << _copper_iniZ + _copper_thickness << G4endl;
   }
 }
+
 
 
 void NextFlexTrackingPlane::BuildTeflon()
@@ -315,6 +323,7 @@ void NextFlexTrackingPlane::BuildTeflon()
 }
 
 
+
 void NextFlexTrackingPlane::BuildSiPMs()
 {
   /// TP SiPM case ///
@@ -322,18 +331,13 @@ void NextFlexTrackingPlane::BuildSiPMs()
 
   G4double tp_SiPM_case_posZ = _teflon_thickness / 2. - _SiPM_case_thickness/2.;
 
-/////////
-  // XXX Add to _SiPM_case_mat the refraction index of TPB
-  // and check if something changes
-//  G4MaterialPropertiesTable* SiPM_case_optProp = new G4MaterialPropertiesTable();
-//  const G4int rIndex_numEntries = 2;
-//  G4double rIndex_energies[rIndex_numEntries] = {0.2 * eV, 12. * eV};
-//  G4double rIndex[rIndex_numEntries]      = {1.67    , 1.67};
-//  SiPM_case_optProp->AddProperty("RINDEX", rIndex_energies,
-//                                 rIndex, rIndex_numEntries);
-//  _SiPM_case_mat->SetMaterialPropertiesTable(SiPM_case_optProp);
-////////////
+  // Add to _SiPM_case_mat the refraction index of TPB (neighbor material)
+  G4MaterialPropertiesTable* SiPM_case_optProp = new G4MaterialPropertiesTable();
+  SiPM_case_optProp->AddProperty("RINDEX",
+    _wls_mat->GetMaterialPropertiesTable()->GetProperty("RINDEX"));
+  _SiPM_case_mat->SetMaterialPropertiesTable(SiPM_case_optProp);
 
+  // Building the TP SiPM case
   G4Box* tp_SiPM_case_solid =
     new G4Box(tp_SiPM_case_name, _SiPM_size/2., _SiPM_size/2., _SiPM_case_thickness/2.);
 
@@ -349,7 +353,7 @@ void NextFlexTrackingPlane::BuildSiPMs()
   else tp_SiPM_case_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
 
-  /// The UV wavelength Shifter in SiPMs ///
+  /// The UV wavelength Shifter in TP SiPMs ///
   G4String tp_SiPM_wls_name = "TP_SiPM_WLS";
 
   G4double tp_SiPM_wls_posZ = _SiPM_case_thickness/2. - _wls_thickness/2.;
@@ -449,8 +453,6 @@ void NextFlexTrackingPlane::BuildSiPMs()
     G4ThreeVector tp_SiPM_case_pos = _SiPM_positions[i];
     tp_SiPM_case_pos.setZ(tp_SiPM_case_posZ);
     G4int sipm_id = _first_sensor_id + i;
-//    new G4PVPlacement(nullptr, tp_SiPM_case_pos, tp_SiPM_case_logic, tp_SiPM_case_name,
-//                      _mother_logic, true, sipm_id, false);
     new G4PVPlacement(nullptr, tp_SiPM_case_pos, tp_SiPM_case_logic, tp_SiPM_case_name,
                       _teflon_logic, true, sipm_id, false);
   }
@@ -462,6 +464,7 @@ void NextFlexTrackingPlane::BuildSiPMs()
            << " to " << _teflon_iniZ + _teflon_thickness << G4endl;
   }
 }
+
 
 
 // Function that computes and stores the XY positions of SiPMs in the copper plate
@@ -497,6 +500,7 @@ void NextFlexTrackingPlane::GenerateSiPMpositions()
     G4cout << "* Total num SiPMs    : " << _num_SiPMs  << G4endl;
   }
 }
+
 
 
 // Function that makes PMT holes to the solid passed by parameter
