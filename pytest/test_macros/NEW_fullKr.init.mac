@@ -16,7 +16,6 @@
 
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction DEFAULT
-/Actions/RegisterSteppingAction DEFAULT
 /Actions/RegisterRunAction DEFAULT
 
 /nexus/RegisterMacro pytest/test_macros/NEW_fullKr.config.mac

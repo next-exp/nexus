@@ -1,28 +1,37 @@
 import pytest
 
 import os
+#import subprocess
 import pandas as pd
 import tables as tb
+import numpy as np
 
 
 def test_hdf5_structure():
 
-     command = './nexus -b -n 1 pytest/test_macros/NEW_fullKr.init.mac'
+     command = './nexus -b -n 1 pytest/test_macros/NEW_optical.init.mac'
      os.system(command)
 
-     output_file = 'pytest/Kr83_full_sim.h5'
+     #my_env = os.environ.copy()
+     #command = ['./nexus', '-b', '-n', '1', 'pytest/test_macros/NEW_optical.init.mac']
+     #p = subprocess.Popen(command, env=my_env)
+     #try:
+     #     p.wait(timeout=120)
+     #except TimeoutExpired:
+     #     exit()
+
+     output_file = 'pytest/NEW_electron_sim.h5'
 
      with tb.open_file(output_file) as h5out:
 
          assert 'MC'            in h5out.root
-         assert 'events'        in h5out.root.MC
          assert 'particles'     in h5out.root.MC
          assert 'hits'          in h5out.root.MC
          assert 'sns_response'  in h5out.root.MC
          assert 'configuration' in h5out.root.MC
 
-         particles =  h5out.root.MC.particles
-         pcolumns = particles.colnames
+         particles = h5out.root.MC.particles
+         pcolumns  = particles.colnames
 
          assert 'event_id'           in pcolumns
          assert 'particle_id'        in pcolumns
@@ -51,17 +60,17 @@ def test_hdf5_structure():
          assert 'final_proc'         in pcolumns
 
 
-def test_tot_energy_equal_sum_of_hit_energy():
+def test_particle_ids_of_hits_exist_in_particle_table():
 
     command = './nexus -b -n 1 pytest/test_macros/NEW_optical.init.mac'
     os.system(command)
 
     output_file = 'pytest/NEW_electron_sim.h5'
 
-    events = pd.read_hdf(output_file, 'MC/events')
-    total_dep_energy = events.evt_energy.sum()
-
     hits = pd.read_hdf(output_file, 'MC/hits')
-    total_hit_energy = hits[hits.label == "ACTIVE"].energy.sum()
+    hit_pids = hits.particle_id.unique()
 
-    assert total_dep_energy == total_hit_energy
+    particles = pd.read_hdf(output_file, 'MC/particles')
+    particle_ids = particles.particle_id.unique()
+
+    assert np.all(np.isin(hit_pids, particle_ids))
