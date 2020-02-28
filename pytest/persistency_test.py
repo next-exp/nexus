@@ -7,17 +7,17 @@ import tables as tb
 import numpy as np
 
 
+#command = './nexus -b -n 1 pytest/test_macros/NEXT100_optical.init.mac'
+#os.system(command)
+
 my_env = os.environ.copy()
 command = ['./nexus', '-b', '-n', '1', 'pytest/test_macros/NEXT100_optical.init.mac']
 p = subprocess.Popen(command, env=my_env)
 p.wait()
+output_file = 'pytest/NEXT100_electron_full.h5'
+
 
 def test_hdf5_structure():
-
-     #command = './nexus -b -n 1 pytest/test_macros/NEW_optical.init.mac'
-     #os.system(command)
-
-     output_file = 'pytest/NEXT100_electron_full.h5'
 
      with tb.open_file(output_file) as h5out:
 
@@ -88,12 +88,12 @@ def test_particle_ids_of_hits_exist_in_particle_table():
     p = subprocess.Popen(command, env=my_env)
     p.wait()
 
-    output_file = 'pytest/NEW_electron_sim.h5'
+    new_file = 'pytest/NEW_electron_sim.h5'
 
-    hits = pd.read_hdf(output_file, 'MC/hits')
+    hits = pd.read_hdf(new_file, 'MC/hits')
     hit_pids = hits.particle_id.unique()
 
-    particles = pd.read_hdf(output_file, 'MC/particles')
+    particles = pd.read_hdf(new_file, 'MC/particles')
     particle_ids = particles.particle_id.unique()
 
     assert np.all(np.isin(hit_pids, particle_ids))
