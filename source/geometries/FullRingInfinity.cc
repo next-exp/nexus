@@ -485,16 +485,20 @@ namespace nexus {
 
   void FullRingInfinity::CalculateSensitivityVertices(G4double binning)
   {
-    G4int i_max = floor(inner_radius_/binning);
-    G4int j_max = floor(inner_radius_/binning);
-    G4int k_max = floor(lat_dimension_cell_/binning);
+    G4double x_dim = inner_radius_;
+    G4double y_dim = inner_radius_;
+    G4double z_dim = lat_dimension_cell_;
+
+    G4int i_max = floor(x_dim/binning);
+    G4int j_max = floor(y_dim/binning);
+    G4int k_max = floor(z_dim/binning);
 
     for (G4int i=0; i<i_max; i++) {
-      G4double x = -pt_Lx_/2. + i*binning;
+      G4double x = -x_dim/2. + i*binning;
       for (G4int j=0; j<j_max; j++) {
-	G4double y = -pt_Ly_/2. + j*binning;
+	G4double y = -y_dim/2. + j*binning;
 	for (G4int k=0; k<k_max; k++) {
-	  G4double z = -pt_Lz_/2. + k*binning;
+	  G4double z = -z_dim/2. + k*binning;
 	  G4ThreeVector point(x, y, z);
 	  sensitivity_vertices_.push_back(point);
 	}
