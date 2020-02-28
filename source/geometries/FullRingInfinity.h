@@ -78,6 +78,10 @@ namespace nexus {
     mutable std::vector<G4ThreeVector> sensitivity_vertices_;
     G4double sensitivity_binning_;
 
+    G4double sens_x_min_, sens_x_max_;
+    G4double sens_y_min_, sens_y_max_;
+    G4double sens_z_min_, sens_z_max_;
+
 
 
   };

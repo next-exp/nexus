@@ -119,6 +119,50 @@ namespace nexus {
     msg_->DeclareProperty("sensitivity_point_id", sensitivity_point_id_,
 			  "Starting point for sensitivity run");
 
+    G4GenericMessenger::Command& sns_x_min_cmd =
+      msg_->DeclareProperty("sens_x_min", sens_x_min_,
+                            "Minimum x for sensitivity map");
+    sns_x_min_cmd.SetUnitCategory("Length");
+    sns_x_min_cmd.SetParameterName("sens_x_min", false);
+    sns_x_min_cmd.SetRange("sens_x_min>0.");
+
+    G4GenericMessenger::Command& sns_x_max_cmd =
+      msg_->DeclareProperty("sens_x_max", sens_x_max_,
+                            "Maxmimum x for sensitivity map");
+    sns_x_max_cmd.SetUnitCategory("Length");
+    sns_x_max_cmd.SetParameterName("sens_x_max", false);
+    sns_x_max_cmd.SetRange("sens_x_max>0.");
+
+    G4GenericMessenger::Command& sns_y_min_cmd =
+      msg_->DeclareProperty("sens_y_min", sens_y_min_,
+                            "Minimum y for sensitivity map");
+    sns_y_min_cmd.SetUnitCategory("Length");
+    sns_y_min_cmd.SetParameterName("sens_y_min", false);
+    sns_y_min_cmd.SetRange("sens_y_min>0.");
+
+    G4GenericMessenger::Command& sns_y_max_cmd =
+      msg_->DeclareProperty("sens_y_max", sens_y_max_,
+                            "Maxmimum y for sensitivity map");
+    sns_y_max_cmd.SetUnitCategory("Length");
+    sns_y_max_cmd.SetParameterName("sens_y_max", false);
+    sns_y_max_cmd.SetRange("sens_y_max>0.");
+
+    G4GenericMessenger::Command& sns_z_min_cmd =
+      msg_->DeclareProperty("sens_z_min", sens_z_min_,
+                            "Minimum y for sensitivity map");
+    sns_z_min_cmd.SetUnitCategory("Length");
+    sns_z_min_cmd.SetParameterName("sens_z_min", false);
+    sns_z_min_cmd.SetRange("sens_z_min>0.");
+
+    G4GenericMessenger::Command& sns_z_max_cmd =
+      msg_->DeclareProperty("sens_z_max", sens_z_max_,
+                            "Maxmimum y for sensitivity map");
+    sns_z_max_cmd.SetUnitCategory("Length");
+    sns_z_max_cmd.SetParameterName("sens_z_max", false);
+    sns_z_max_cmd.SetRange("sens_z_max>0.");
+
+
+
     sipm_ = new SiPMpetFBK();
   }
 
@@ -485,20 +529,16 @@ namespace nexus {
 
   void FullRingInfinity::CalculateSensitivityVertices(G4double binning)
   {
-    G4double x_dim = inner_radius_;
-    G4double y_dim = inner_radius_;
-    G4double z_dim = lat_dimension_cell_;
-
-    G4int i_max = floor(x_dim/binning);
-    G4int j_max = floor(y_dim/binning);
-    G4int k_max = floor(z_dim/binning);
+    G4int i_max = floor((sens_x_max_ - sens_x_min_)/binning);
+    G4int j_max = floor((sens_y_max_ - sens_y_min_)/binning);
+    G4int k_max = floor((sens_z_max_ - sens_z_min_)/binning);
 
     for (G4int i=0; i<i_max; i++) {
-      G4double x = -x_dim/2. + i*binning;
+      G4double x = sens_x_min_/2. + i*binning;
       for (G4int j=0; j<j_max; j++) {
-	G4double y = -y_dim/2. + j*binning;
+	G4double y = sens_y_min_/2. + j*binning;
 	for (G4int k=0; k<k_max; k++) {
-	  G4double z = -z_dim/2. + k*binning;
+	  G4double z = sens_z_min_/2. + k*binning;
 	  G4ThreeVector point(x, y, z);
 	  sensitivity_vertices_.push_back(point);
 	}
