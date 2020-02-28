@@ -38,9 +38,8 @@ namespace nexus {
   FullRingInfinity::FullRingInfinity():
     BaseGeometry(),
     // Detector dimensions
-    lat_dimension_cell_(48.*mm), // 52.*mm for quads
     sipm_pitch_(4.*mm),
-    lin_n_sipm_per_cell_(16),
+    n_sipm_rows_(16),
     instr_faces_(2),
     kapton_thickn_(0.3*mm),
     depth_(5.*cm),
@@ -84,7 +83,7 @@ namespace nexus {
     cryo_width_cmd.SetParameterName("cryostat_width", false);
     cryo_width_cmd.SetRange("cryostat_width>0.");
 
-    msg_->DeclareProperty("sipm_rows", lin_n_sipm_per_cell_, "Number of SiPM rows");
+    msg_->DeclareProperty("sipm_rows", n_sipm_rows_, "Number of SiPM rows");
     msg_->DeclareProperty("instrumented_faces", instr_faces_, "Number of instrumented faces");
     msg_->DeclareProperty("phantom", phantom_, "True if spherical physical phantom is used");
 
@@ -151,8 +150,8 @@ namespace nexus {
     lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
     this->SetLogicalVolume(lab_logic_);
 
-    lat_dimension_cell_ = sipm_pitch_ *  lin_n_sipm_per_cell_;
-    G4cout << "Lateral dimensions (mm) = " << lat_dimension_cell_/mm << G4endl;
+    axial_length_ = sipm_pitch_ *  n_sipm_rows_;
+    G4cout << "Axial dimensions (mm) = " << axial_length_/mm << G4endl;
 
 
     external_radius_ = inner_radius_ + depth_;
@@ -187,7 +186,7 @@ namespace nexus {
     G4double ext_offset = 0. * mm;
     G4Tubs* LXe_solid =
       new G4Tubs("LXE", inner_radius_ - kapton_thickn_, external_radius_ + ext_offset + kapton_thickn_,
-                 (lat_dimension_cell_ + 2.*kapton_thickn_)/2., 0, twopi);
+                 (axial_length_ + 2.*kapton_thickn_)/2., 0, twopi);
     G4Material* LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
     LXe->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe());
     LXe_logic_ =
@@ -197,7 +196,7 @@ namespace nexus {
 
     G4Tubs* active_solid =
       new G4Tubs("ACTIVE", inner_radius_, external_radius_ + ext_offset,
-                 lat_dimension_cell_/2., 0, twopi);
+                 axial_length_/2., 0, twopi);
     active_logic_ =
       new G4LogicalVolume(active_solid, LXe, "ACTIVE");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), active_logic_,
@@ -216,7 +215,7 @@ namespace nexus {
 
     G4Tubs* kapton_int_solid =
       new G4Tubs("KAPTON", inner_radius_ - kapton_thickn_, inner_radius_,
-                 lat_dimension_cell_/2., 0, twopi);
+                 axial_length_/2., 0, twopi);
     G4LogicalVolume* kapton_int_logic =
       new G4LogicalVolume(kapton_int_solid, kapton, "KAPTON");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), kapton_int_logic,
@@ -224,7 +223,7 @@ namespace nexus {
 
     G4Tubs* kapton_ext_solid =
       new G4Tubs("KAPTON", external_radius_ + ext_offset, external_radius_ + ext_offset + kapton_thickn_,
-                 lat_dimension_cell_/2., 0, twopi);
+                 axial_length_/2., 0, twopi);
     G4LogicalVolume* kapton_ext_logic =
       new G4LogicalVolume(kapton_ext_solid, kapton, "KAPTON");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), kapton_ext_logic,
@@ -235,7 +234,7 @@ namespace nexus {
                  kapton_thickn_/2., 0, twopi);
     G4LogicalVolume* kapton_lat_logic =
       new G4LogicalVolume(kapton_lat_solid, kapton, "KAPTON");
-    G4double z_pos = lat_dimension_cell_/2. + kapton_thickn_/2.;
+    G4double z_pos = axial_length_/2. + kapton_thickn_/2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., z_pos), kapton_lat_logic,
     		      "KAPTON", LXe_logic_, false, 0, true);
     new G4PVPlacement(0, G4ThreeVector(0., 0., -z_pos), kapton_lat_logic,
@@ -276,7 +275,7 @@ namespace nexus {
 
     G4int n_sipm_int = 2*pi*inner_radius_/sipm_pitch_;
     if (instr_faces_ == 2) {
-      G4cout << "Number of sipms in inner face: " <<  n_sipm_int *  lin_n_sipm_per_cell_<< G4endl;
+      G4cout << "Number of sipms in inner face: " <<  n_sipm_int *  n_sipm_rows_<< G4endl;
     }
     G4double step = 2.*pi/n_sipm_int;
     G4double radius = inner_radius_ + sipm_dim.z()/2.;
@@ -285,10 +284,10 @@ namespace nexus {
     rot.rotateX(-pi/2.);
 
     G4int copy_no = 999;
-    for (G4int j=0; j<lin_n_sipm_per_cell_; j++) {
+    for (G4int j=0; j<n_sipm_rows_; j++) {
       // The first must be positioned outside the loop
       if (j!=0) rot.rotateZ(step);
-      G4double z_dimension = -lat_dimension_cell_/2. + (j + 1./2.) * sipm_pitch_;
+      G4double z_dimension = -axial_length_/2. + (j + 1./2.) * sipm_pitch_;
       G4ThreeVector position(0., radius, z_dimension);
       copy_no += 1;
       G4String vol_name = "SIPM_" + std::to_string(copy_no);
@@ -314,7 +313,7 @@ namespace nexus {
     //G4double sipm_pitch_ext = sipm_dim.x() + 0.5 * mm;
     G4double offset = 0.1 * mm;
     G4int n_sipm_ext = 2*pi*external_radius_/sipm_pitch_;
-    G4cout << "Number of sipms in external face: " <<  n_sipm_ext * lin_n_sipm_per_cell_ << G4endl;
+    G4cout << "Number of sipms in external face: " <<  n_sipm_ext * n_sipm_rows_ << G4endl;
     radius = external_radius_ - sipm_dim.z()/2. - offset;
 
     rot.rotateZ(step);
@@ -327,10 +326,10 @@ namespace nexus {
       copy_no = 999;
     }
 
-    for (G4int j=0; j<lin_n_sipm_per_cell_; j++) {
+    for (G4int j=0; j<n_sipm_rows_; j++) {
       // The first must be positioned outside the loop
       if (j!=0) rot.rotateZ(step);
-      G4double z_pos = -lat_dimension_cell_/2. + (j + 1./2.) * sipm_pitch_;
+      G4double z_pos = -axial_length_/2. + (j + 1./2.) * sipm_pitch_;
       G4ThreeVector position(0., radius, z_pos);
       copy_no = copy_no + 1;
       G4String vol_name = "SIPM_" + std::to_string(copy_no);
