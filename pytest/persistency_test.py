@@ -97,3 +97,13 @@ def test_particle_ids_of_hits_exist_in_particle_table():
     particle_ids = particles.particle_id.unique()
 
     assert np.all(np.isin(hit_pids, particle_ids))
+
+
+def test_hit_labels():
+
+     output_file = 'pytest/NEXT100_electron_full.h5'
+
+     hits = pd.read_hdf(output_file, 'MC/hits')
+     hit_labels = hits.label.unique()
+
+     assert 'ACTIVE' in hit_labels
