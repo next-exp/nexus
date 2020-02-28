@@ -101,9 +101,23 @@ def test_particle_ids_of_hits_exist_in_particle_table():
 
 def test_hit_labels():
 
-     output_file = 'pytest/NEXT100_electron_full.h5'
-
      hits = pd.read_hdf(output_file, 'MC/hits')
      hit_labels = hits.label.unique()
 
      assert 'ACTIVE' in hit_labels
+
+
+def test_primary_always_exists():
+
+     particles = pd.read_hdf(output_file, 'MC/particles')
+     primary   = particles.primary.unique()
+
+     assert 1 in primary
+
+
+def test_sensor_binning_is_saved():
+
+     conf = pd.read_hdf(output_file, 'MC/configuration')
+     parameters = conf.param_key.values
+
+     assert any('binning' in p for p in parameters)
