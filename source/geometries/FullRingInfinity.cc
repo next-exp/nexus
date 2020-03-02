@@ -53,8 +53,11 @@ namespace nexus {
     pt_Lz_(0.),
     sensitivity_(false),
     sensitivity_index_(0),
-    sensitivity_binning_(1*mm)
-
+    sensitivity_binning_(1*mm),
+    sens_x_min_(-inner_radius_),
+    sens_x_max_(inner_radius_),
+    sens_y_min_(-inner_radius_),
+    sens_y_max_(inner_radius_)
   {
      // Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/FullRingInfinity/",
@@ -117,6 +120,30 @@ namespace nexus {
 			  "True if sensitivity map is being run");
     msg_->DeclareProperty("sensitivity_point_id", sensitivity_point_id_,
 			  "Starting point for sensitivity run");
+
+    G4GenericMessenger::Command& sns_x_min_cmd =
+      msg_->DeclareProperty("sens_x_min", sens_x_min_,
+                            "Minimum x for sensitivity map");
+    sns_x_min_cmd.SetUnitCategory("Length");
+    sns_x_min_cmd.SetParameterName("sens_x_min", false);
+
+    G4GenericMessenger::Command& sns_x_max_cmd =
+      msg_->DeclareProperty("sens_x_max", sens_x_max_,
+                            "Maxmimum x for sensitivity map");
+    sns_x_max_cmd.SetUnitCategory("Length");
+    sns_x_max_cmd.SetParameterName("sens_x_max", false);
+
+    G4GenericMessenger::Command& sns_y_min_cmd =
+      msg_->DeclareProperty("sens_y_min", sens_y_min_,
+                            "Minimum y for sensitivity map");
+    sns_y_min_cmd.SetUnitCategory("Length");
+    sns_y_min_cmd.SetParameterName("sens_y_min", false);
+
+    G4GenericMessenger::Command& sns_y_max_cmd =
+      msg_->DeclareProperty("sens_y_max", sens_y_max_,
+                            "Maxmimum y for sensitivity map");
+    sns_y_max_cmd.SetUnitCategory("Length");
+    sns_y_max_cmd.SetParameterName("sens_y_max", false);
 
     G4GenericMessenger::Command& sns_z_min_cmd =
       msg_->DeclareProperty("sens_z_min", sens_z_min_,
@@ -371,8 +398,6 @@ namespace nexus {
 
     spheric_gen_ =
       new SpherePointSampler(0., phantom_diam_/2, phantom_origin);
-
-
   }
 
 
@@ -497,25 +522,27 @@ namespace nexus {
 
   void FullRingInfinity::CalculateSensitivityVertices(G4double binning)
   {
-    G4double x_dim = 2. * inner_radius_;
-    G4double y_dim = 2. * inner_radius_;
+    sensitivity_vertices_.clear();
 
-    G4int i_max = floor(x_dim/binning);
-    G4int j_max = floor(y_dim/binning);
+    G4int i_max = floor((sens_x_max_ - sens_x_min_)/binning);
+    G4int j_max = floor((sens_y_max_ - sens_y_min_)/binning);
     G4int k_max = floor((sens_z_max_ - sens_z_min_)/binning);
 
     for (G4int i=0; i<i_max; i++) {
-      G4double x = -x_dim/2. + i*binning;
+      G4double x = sens_x_min_ + i*binning;
       for (G4int j=0; j<j_max; j++) {
-	G4double y = -y_dim/2. + j*binning;
+	G4double y = sens_y_min_ + j*binning;
 	for (G4int k=0; k<k_max; k++) {
 	  G4double z = sens_z_min_ + k*binning;
-	  G4ThreeVector point(x, y, z);
-	  sensitivity_vertices_.push_back(point);
+	  if ((x*x + y*y) < inner_radius_*inner_radius_) {
+	    G4ThreeVector point(x, y, z);
+	    sensitivity_vertices_.push_back(point);
+	  }
 	}
       }
     }
-
+    G4cout << "Number of points in sensitivity map = " << sensitivity_vertices_.size()
+	   << G4endl;
   }
 
 }

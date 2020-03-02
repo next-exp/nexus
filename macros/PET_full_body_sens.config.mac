@@ -7,12 +7,15 @@
 /Geometry/FullRingInfinity/instrumented_faces 1
 /Geometry/FullRingInfinity/cryostat_width 200 cm
 /Geometry/FullRingInfinity/sensitivity true
-/Geometry/FullRingInfinity/sensitivity_binning 1. mm
-/Geometry/FullRingInfinity/sens_z_min -973. mm
-/Geometry/FullRingInfinity/sens_z_max -900. mm
+/Geometry/FullRingInfinity/sensitivity_binning 1. cm
+/Geometry/FullRingInfinity/sens_x_min -180. mm
+/Geometry/FullRingInfinity/sens_x_max  180. mm
+/Geometry/FullRingInfinity/sens_y_min -180. mm
+/Geometry/FullRingInfinity/sens_y_max  180. mm
+/Geometry/FullRingInfinity/sens_z_min -180. mm
+/Geometry/FullRingInfinity/sens_z_max  180. mm
 
 /Geometry/SiPMpet/efficiency 0.2
-/Geometry/SiPMpet/visibility true
 /Geometry/SiPMpet/time_binning 1. microsecond
 /Geometry/SiPMpet/size 6. mm
 
