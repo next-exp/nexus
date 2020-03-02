@@ -1,6 +1,5 @@
 ### --------------------------------------------------------
 ###  Default physics list for nexus.
-###  $Id$
 ### --------------------------------------------------------
 
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4

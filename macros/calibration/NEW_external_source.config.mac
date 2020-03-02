@@ -1,9 +1,9 @@
-### --------------------------------------------------------
+### ------------------------------------------------------------------------
 ###  Configuration macro for the NEW detector geometry
 ###  This macro simulates decays from a Na22 calibration source from outside
 ###  the axial or the lateral port, with lead collimator
 ###  and external scintillator
-### --------------------------------------------------------
+### ------------------------------------------------------------------------
 
 /run/verbose 0
 /event/verbose 0

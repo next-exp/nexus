@@ -1,9 +1,9 @@
-### --------------------------------------------------------
+### -----------------------------------------------------------
 ###  Configuration macro for the NEW detector geometry
 ###  This macro simulates decays from a Na22 calibration source
-###  in one of the ports inside the feedthrough, 
+###  in one of the ports inside the feedthrough,
 ###  at configurable distance from the bottom
-### --------------------------------------------------------
+### -----------------------------------------------------------
 
 
 /run/verbose 0
