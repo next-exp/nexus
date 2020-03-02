@@ -1,3 +1,12 @@
+tag_p6_01_00 - 2 Mar 2020
+	- Add generator to create sensitivity maps.
+	- Add generator of an arbitrary distribution.
+	- Eliminate GATE from dependencies.
+	- TOF table now saves the first pes in each sensors that are detected in a fixed amount of time.
+	- Add possibility of saving only certain tables in the output file.
+	- Add possibility of saving only sensors above a certain threshold in the output file.
+	- The sensor binning is saved automatically.
+
 tag v5_07_00 - 13 Dec 2019
 	- Fix several bugs in the vertex generators of both NEW and NEXT-100.
 	- Add emission spectrum for scintillation generator.
