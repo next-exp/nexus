@@ -4,8 +4,6 @@
 
 ### GENERATOR
 /Generator/RegisterGenerator SINGLE_PARTICLE
-#/Generator/RegisterGenerator DECAY0
-#/Generator/RegisterGenerator ION_GUN
 
 ### ACTIONS
 /Actions/RegisterRunAction DEFAULT
