@@ -52,6 +52,8 @@ namespace nexus {
     pt_Ly_(0.),
     pt_Lz_(0.),
     sensitivity_(false),
+    events_per_point_(1),
+    sensitivity_point_id_(0),
     sensitivity_index_(0),
     sensitivity_binning_(1*mm),
     sens_x_min_(-inner_radius_),
@@ -120,6 +122,8 @@ namespace nexus {
 			  "True if sensitivity map is being run");
     msg_->DeclareProperty("sensitivity_point_id", sensitivity_point_id_,
 			  "Starting point for sensitivity run");
+    msg_->DeclareProperty("events_per_point", events_per_point_,
+			  "Number of events to be generated per point");
 
     G4GenericMessenger::Command& sns_x_min_cmd =
       msg_->DeclareProperty("sens_x_min", sens_x_min_,
@@ -182,7 +186,8 @@ namespace nexus {
 
 
     external_radius_ = inner_radius_ + depth_;
-    G4cout << "Radial dimensions (mm): "<< inner_radius_/mm << ", " << external_radius_/mm << G4endl;
+    G4cout << "Radial dimensions (mm): "<< inner_radius_/mm << ", "
+	   << external_radius_/mm << G4endl;
     BuildCryostat();
     BuildSensors();
 
@@ -417,13 +422,14 @@ namespace nexus {
     } else if (region == "SENSITIVITY") {
       unsigned int i = sensitivity_point_id_ + sensitivity_index_;
 
-      if (i == (sensitivity_vertices_.size()-1)) {
-        G4Exception("[FullRingInfinity]", "GenerateVertex()",
-    		    RunMustBeAborted, "Reached last event in scintillation lookup table.");
+      if (i == (sensitivity_vertices_.size()*events_per_point_-1)) {
+       G4Exception("[FullRingInfinity]", "GenerateVertex()",
+      		    RunMustBeAborted, "Reached last event in sensitivity map.");
       }
 
       try {
-        vertex = sensitivity_vertices_.at(i);
+	auto pos = i % sensitivity_vertices_.size();
+        vertex = sensitivity_vertices_.at(pos);
         sensitivity_index_++;
       }
       catch (const std::out_of_range& oor) {
