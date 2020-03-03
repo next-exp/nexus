@@ -72,6 +72,7 @@ namespace nexus {
     G4float *pt_;
 
     G4bool sensitivity_;
+    G4int events_per_point_;
     G4int sensitivity_point_id_;
     mutable G4int sensitivity_index_;
     mutable std::vector<G4ThreeVector> sensitivity_vertices_;
