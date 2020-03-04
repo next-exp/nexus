@@ -72,20 +72,26 @@ NextFlexFieldCage::NextFlexFieldCage():
 
   _cathode_thickness    = 0.1   * mm;
   _cathode_transparency = 0.98;         // To be checked
+ 
   _anode_thickness      = 0.1   * mm;
   _anode_transparency   = 0.98;         // It was .88 in NEW
+ 
   _gate_thickness       = 0.1   * mm;
   _gate_transparency    = 0.98;         // To be checked
 
   _light_tube_thickness = 5.    * mm;
   _wls_thickness        = 1.    * um;   // XXXXXXXX To be checked
-  _fiber_thickness      = 2.    * mm;
-  _cladding_perc        = 0.02;         // Fraction of fiber thickness devoted to EACH cladding
+
+  _fiber_thickness      =  2.    * mm;
+  _cladding_perc        =  0.02;        // Fraction of fiber thickness devoted to EACH cladding
   _fiber_extra_length   = 20.   * cm;   // Extra length per side of fibers respect FC length
   _fiber_light_tube_gap =  2.   * mm;   // Separation gap between fibers & light tube
   _fiber_sensor_size    =  2.   * mm;   // Side length of squared fiber sensors
                                         // (ideally equal to _fiber_thickness)
-  _num_fiber_sectors    = 20;           // Num of sectors of fiber sensors
+
+  //_num_fiber_sensors    = 20;           // Number of fiber sensors
+  // At this moment we set the number of sensors equal to the number of fibers,
+  // so it is done in BuildFiberSensors()
 
   // Parametrized dimensions
   DefineConfigurationParameters();
@@ -808,11 +814,10 @@ void NextFlexFieldCage::BuildFiberSensors()
   G4double fiber_sensor_inner_rad  = _fiber_inner_rad;
   G4double fiber_sensor_outer_rad  = fiber_sensor_inner_rad + _fiber_sensor_size;
 
-  G4int num_fiber_sensors          = (G4int) (twopi * fiber_sensor_inner_rad /
-                                              _fiber_sensor_size);
+  G4int num_fibers   = (G4int) (twopi * fiber_sensor_inner_rad / _fiber_sensor_size);
+  _num_fiber_sensors = num_fibers; // Setting num sensors = num_fibers
 
-  G4double fiber_sector_phi        = twopi / _num_fiber_sectors;
-
+  G4double fiber_sensor_phi = twopi / _num_fiber_sensors;
 
   /// Fiber Sensor Case ///
   G4String case_name = "FIBER_SENSOR_CASE";
@@ -832,7 +837,7 @@ void NextFlexFieldCage::BuildFiberSensors()
   // Building the Fiber Sensor case
   G4Tubs* case_solid =
     new G4Tubs(case_name, fiber_sensor_inner_rad, fiber_sensor_outer_rad,
-               case_thickness/2., 0., fiber_sector_phi);
+               case_thickness/2., 0., fiber_sensor_phi);
 
   G4LogicalVolume* left_case_logic =
     new G4LogicalVolume(case_solid, _fiber_sensor_case_mat, case_name);
@@ -866,7 +871,7 @@ void NextFlexFieldCage::BuildFiberSensors()
 
   G4Tubs* fiber_sensor_solid =
     new G4Tubs(fiber_sensor_name, fiber_sensor_inner_rad, fiber_sensor_outer_rad,
-               fiber_sensor_thickness/2., 0., fiber_sector_phi);
+               fiber_sensor_thickness/2., 0., fiber_sensor_phi);
 
   G4LogicalVolume* fiber_sensor_logic =
     new G4LogicalVolume(fiber_sensor_solid, _fiber_sensor_mat, fiber_sensor_name);
@@ -923,9 +928,9 @@ void NextFlexFieldCage::BuildFiberSensors()
 
   /// Placing the sensor cases (one per sector) ///
   G4RotationMatrix fiber_sensor_rot;
-  for (G4int sector_id=0; sector_id < _num_fiber_sectors; sector_id++) {
+  for (G4int sector_id=0; sector_id < _num_fiber_sensors; sector_id++) {
 
-    if (sector_id > 0) fiber_sensor_rot.rotateZ(fiber_sector_phi);
+    if (sector_id > 0) fiber_sensor_rot.rotateZ(fiber_sensor_phi);
 
     new G4PVPlacement(G4Transform3D(fiber_sensor_rot,
                       G4ThreeVector(0., 0., case_left_posZ)),
@@ -940,11 +945,11 @@ void NextFlexFieldCage::BuildFiberSensors()
 
   /// Verbosity
   if (_verbosity) {
-    G4cout << "* Num fiber sensors     : " << num_fiber_sensors  << G4endl;
-    G4cout << "* Num fiber sectors     : " << _num_fiber_sectors << G4endl;
-    G4cout << "* Num fibers / sector   : ";
-    G4cout << 1. * num_fiber_sensors / _num_fiber_sectors << G4endl;
-    G4cout << "* Fiber sector phi (deg): " << fiber_sector_phi / deg << G4endl;  
+    G4cout << "* Num fibers          : " << num_fibers  << G4endl;
+    G4cout << "* Num fiber sensors   : " << _num_fiber_sensors << G4endl;
+    G4cout << "* Num fibers / sector : ";
+    G4cout << 1. * num_fibers / _num_fiber_sensors << G4endl;
+    G4cout << "* Fiber sector phi (deg): " << fiber_sensor_phi / deg << G4endl;  
   }
 }
 
