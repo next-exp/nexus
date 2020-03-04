@@ -105,6 +105,13 @@ void NextFlexTrackingPlane::DefineConfigurationParameters()
                         "TP UV wavelength shifting material name");
 
   // SiPMs
+  G4GenericMessenger::Command& sipm_anode_dist_cmd =
+    _msg->DeclareProperty("tp_sipm_anode_dist", _SiPM_ANODE_dist,
+                          "Distance from tracking SiPMs to ANODE.");
+  sipm_anode_dist_cmd.SetParameterName("tp_sipm_anode_dist", false);
+  sipm_anode_dist_cmd.SetUnitCategory("Length");
+  sipm_anode_dist_cmd.SetRange("tp_sipm_anode_dist>=0.");
+
   G4GenericMessenger::Command& sipm_size_cmd =
     _msg->DeclareProperty("tp_sipm_size", _SiPM_size,
                           "Size of tracking SiPMs.");
