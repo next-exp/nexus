@@ -5,6 +5,7 @@
 ### GENERATOR
 #/Generator/RegisterGenerator S1GENERATOR
 /Generator/RegisterGenerator SINGLE_PARTICLE
+#/Generator/RegisterGenerator Kr83m
 
 
 ### ACTIONS
