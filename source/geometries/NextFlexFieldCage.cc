@@ -82,9 +82,9 @@ NextFlexFieldCage::NextFlexFieldCage():
   _light_tube_thickness = 5.    * mm;
   _wls_thickness        = 1.    * um;   // XXXXXXXX To be checked
 
-  _fiber_thickness      =  2.    * mm;
+  _fiber_thickness      =  2.   * mm;
   _cladding_perc        =  0.02;        // Fraction of fiber thickness devoted to EACH cladding
-  _fiber_extra_length   = 20.   * cm;   // Extra length per side of fibers respect FC length
+  _fiber_extra_length   =  2.   * cm;   // Extra length per side of fibers respect FC length
   _fiber_light_tube_gap =  2.   * mm;   // Separation gap between fibers & light tube
   _fiber_sensor_size    =  2.   * mm;   // Side length of squared fiber sensors
                                         // (ideally equal to _fiber_thickness)
