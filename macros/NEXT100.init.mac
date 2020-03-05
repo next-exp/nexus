@@ -17,5 +17,5 @@
 /Actions/RegisterEventAction DEFAULT
 /Actions/RegisterTrackingAction DEFAULT
 
-/nexus/RegisterMacro macros/Next100.config.mac
+/nexus/RegisterMacro macros/NEXT100.config.mac
 /nexus/RegisterDelayedMacro macros/physics/Bi214.mac

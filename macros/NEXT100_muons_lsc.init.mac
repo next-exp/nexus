@@ -31,5 +31,5 @@
 
 /physics_lists/em/MuonNuclear true
 
-/nexus/RegisterDelayedMacro macros/Xe137.mac
-/nexus/RegisterMacro macros/Next100_muons_lsc.config.mac
+/nexus/RegisterDelayedMacro macros/physics/Xe137.mac
+/nexus/RegisterMacro macros/NEXT100_muons_lsc.config.mac
