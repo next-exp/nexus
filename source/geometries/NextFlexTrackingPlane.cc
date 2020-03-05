@@ -47,12 +47,12 @@ NextFlexTrackingPlane::NextFlexTrackingPlane():
   _visibility        (false),
   _msg               (nullptr),
   _wls_matName       ("TPB"),
-  _SiPM_ANODE_dist   (10. * mm),   // Distance from ANODE to SiPM surface
-  _SiPM_size         ( 1. * mm),   // Size of SiPMs
-  _SiPM_pitchX       (15. * mm),   // SiPMs pitch X
-  _SiPM_pitchY       (15. * mm),   // SiPMs pitch Y
-  _SiPM_bin          ( 1. * us),   // SiPMs time bin size
-  _copper_thickness  (12. * cm)    // Thickness of the copper plate
+  _SiPM_ANODE_dist   (10.  * mm),   // Distance from ANODE to SiPM surface
+  _SiPM_size         ( 1.3 * mm),   // Size of SiPMs
+  _SiPM_pitchX       (15.6 * mm),   // SiPMs pitch X
+  _SiPM_pitchY       (15.6 * mm),   // SiPMs pitch Y
+  _SiPM_bin          ( 1.  * us),   // SiPMs time bin size
+  _copper_thickness  (12.  * cm)    // Thickness of the copper plate
 {
 
   // Messenger
