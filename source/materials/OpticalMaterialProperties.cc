@@ -1067,7 +1067,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::EJ280()
   mpt->AddConstProperty("WLSTIMECONSTANT", 8.5 * ns);
 
   // WLS Quantum Efficiency
-  mpt->AddConstProperty("WLSMEANNUMBERPHOTONS", 0.86);
+  mpt->AddConstProperty("WLSMEANNUMBERPHOTONS", 0.87);
 
   return mpt;
 }
