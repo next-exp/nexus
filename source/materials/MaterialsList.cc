@@ -51,99 +51,6 @@ G4Material* MaterialsList::GXe_bydensity(G4double density,
 }
 
 
-G4Material* MaterialsList::GXeEnriched(G4double pressure, G4double temperature)
-{
-  G4double gas_density = XenonGasProperties::Density(pressure);
-  G4Material* mat = GXeEnriched_bydensity(gas_density, temperature, pressure);
-
-  return mat;
-}
-
-
-G4Material* MaterialsList::GXeEnriched_bydensity(G4double density,
-						 G4double temperature,
-						 G4double pressure)
-{
-  G4String name = "GXeEnriched";
-
-  G4Material* mat = G4Material::GetMaterial(name, false);
-
-  if (mat == 0) {
-
-    mat = new G4Material(name, density, 1,
-			 kStateGas, temperature, pressure);
-
-    G4Element* Xe = new G4Element("GXeEnriched", "Xe", 6);
-
-    G4Isotope* Xe129 = new G4Isotope("Xe129", 54, 129, XenonGasProperties::MassPerMole(129));
-    G4Isotope* Xe130 = new G4Isotope("Xe130", 54, 130, XenonGasProperties::MassPerMole(130));
-    G4Isotope* Xe131 = new G4Isotope("Xe131", 54, 131, XenonGasProperties::MassPerMole(131));
-    G4Isotope* Xe132 = new G4Isotope("Xe132", 54, 132, XenonGasProperties::MassPerMole(132));
-    G4Isotope* Xe134 = new G4Isotope("Xe134", 54, 134, XenonGasProperties::MassPerMole(134));
-    G4Isotope* Xe136 = new G4Isotope("Xe136", 54, 136, XenonGasProperties::MassPerMole(136));
-
-    Xe->AddIsotope(Xe129, 0.0656392*perCent);
-    Xe->AddIsotope(Xe130, 0.0656392*perCent);
-    Xe->AddIsotope(Xe131, 0.234361*perCent);
-    Xe->AddIsotope(Xe132, 0.708251*perCent);
-    Xe->AddIsotope(Xe134, 8.6645*perCent);
-    Xe->AddIsotope(Xe136, 90.2616*perCent);
-
-
-
-    mat->AddElement(Xe,1);
-  }
-
-  return mat;
-}
-
-G4Material* MaterialsList::GXeDepleted(G4double pressure, G4double temperature)
-{
-  G4double gas_density = XenonGasProperties::Density(pressure);
-  G4Material* mat = GXeDepleted_bydensity(gas_density, temperature, pressure);
-
-  return mat;
-}
-
-
-G4Material* MaterialsList::GXeDepleted_bydensity(G4double density,
-						 G4double temperature,
-						 G4double pressure)
-{
-  G4String name = "GXeDepleted";
-
-  G4Material* mat = G4Material::GetMaterial(name, false);
-
-  if (mat == 0) {
-
-    mat = new G4Material(name, density, 1,
-			 kStateGas, temperature, pressure);
-
-
-    G4Element* Xe = new G4Element("GXeDepleted", "Xe", 5);
-
-    G4Isotope* Xe129 = new G4Isotope("Xe129", 54, 129, XenonGasProperties::MassPerMole(129));
-    G4Isotope* Xe131 = new G4Isotope("Xe131", 54, 131, XenonGasProperties::MassPerMole(131));
-    G4Isotope* Xe132 = new G4Isotope("Xe132", 54, 132, XenonGasProperties::MassPerMole(132));
-    G4Isotope* Xe134 = new G4Isotope("Xe134", 54, 134, XenonGasProperties::MassPerMole(134));
-    G4Isotope* Xe136 = new G4Isotope("Xe136", 54, 136, XenonGasProperties::MassPerMole(136));
-
-
-    // Bottle number 9056842
-    Xe->AddIsotope(Xe129, 27.29*perCent);
-    Xe->AddIsotope(Xe131, 27.07*perCent);
-    Xe->AddIsotope(Xe132, 28.31*perCent);
-    Xe->AddIsotope(Xe134, 8.61*perCent);
-    Xe->AddIsotope(Xe136, 2.55*perCent);
-
-
-
-    mat->AddElement(Xe,1);
-  }
-
-  return mat;
-}
-
 G4Material* MaterialsList::GAr(G4double pressure, G4double temperature)
 {
   G4String name = "GAr";
@@ -163,6 +70,7 @@ G4Material* MaterialsList::GAr(G4double pressure, G4double temperature)
 
   return mat;
 }
+
 
 G4Material* MaterialsList::GXeAr(G4double pressure, G4double temperature, G4double percXe)
 {
@@ -207,8 +115,6 @@ G4Material* MaterialsList::GXeAr(G4double pressure, G4double temperature, G4doub
 
     return mat;
 }
-
-
 
 
 G4Material* MaterialsList::GXeHe(G4double pressure,
@@ -261,12 +167,8 @@ G4Material* MaterialsList::GXeHe(G4double pressure,
 
 
   }
-
     return mat;
 }
-
-
-
 
 
 G4Material* MaterialsList::Steel()
@@ -335,7 +237,6 @@ G4Material* MaterialsList::Steel316Ti()
 }
 
 
-
 G4Material* MaterialsList::Epoxy()
 {
   G4String name = "Epoxy";
@@ -357,7 +258,6 @@ G4Material* MaterialsList::Epoxy()
 
   return mat;
 }
-
 
 
 G4Material* MaterialsList::Kovar()
@@ -383,7 +283,6 @@ G4Material* MaterialsList::Kovar()
 }
 
 
-
 G4Material* MaterialsList::PEEK()
 {
   G4String name = "PEEK";
@@ -407,24 +306,12 @@ G4Material* MaterialsList::PEEK()
 }
 
 
-
-G4Material* MaterialsList::Sapphire()
-{
-  G4Material* mat =
-    G4NistManager::Instance()->FindOrBuildMaterial("G4_ALUMINUM_OXIDE");
-
-  return mat;
-}
-
-
-
 G4Material* MaterialsList::FusedSilica()
 {
   G4Material* mat =
     G4NistManager::Instance()->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
   return mat;
 }
-
 
 
 G4Material* MaterialsList::PS() // polystyrene
@@ -452,7 +339,6 @@ G4Material* MaterialsList::PS() // polystyrene
 }
 
 
-
 G4Material* MaterialsList::TPB()
 {
   G4String name = "TPB"; // Tetraphenyl butadiene
@@ -471,50 +357,6 @@ G4Material* MaterialsList::TPB()
   }
 
   return mat;
-}
-
-
-G4Material* MaterialsList::ITO()
-{
-  G4String name = "ITO";
-
-  G4Material* mat = G4Material::GetMaterial(name, false);
-
-  if (mat == 0) {
-    G4NistManager* nist = G4NistManager::Instance();
-
-    G4Element* In = nist->FindOrBuildElement("In");
-    G4Element* O = nist->FindOrBuildElement("O");
-
-    mat = new G4Material(name, 7.14*g/cm3, 2, kStateSolid);
-    mat->AddElement(In, 2);
-    mat->AddElement(O, 3);
-  }
-
-  return mat;
-
-}
-
-
-G4Material* MaterialsList::PVT()
-{
-  G4String name = "PVT"; //
-
-  G4Material* mat = G4Material::GetMaterial(name, false);
-
-  if (mat == 0) {
-    G4NistManager* nist = G4NistManager::Instance();
-
-    G4Element* H = nist->FindOrBuildElement("H");
-    G4Element* C = nist->FindOrBuildElement("C");
-
-    mat = new G4Material(name, 1*g/cm3, 2, kStateSolid);
-    mat->AddElement(H, 4);
-    mat->AddElement(C, 2);
-  }
-
-  return mat;
-
 }
 
 
@@ -544,7 +386,6 @@ G4Material* MaterialsList::Kevlar()
 }
 
 
-
 G4Material* MaterialsList::HDPE()
 {
   G4String name = "HDPE";
@@ -567,64 +408,14 @@ G4Material* MaterialsList::HDPE()
 }
 
 
-
-G4Material* MaterialsList::OpticalSilicone()
-{
-  G4String name = "OpticalSilicone";
-
-  G4Material* mat = G4Material::GetMaterial(name, false);
-
-  if (mat == 0) {
-    G4NistManager* nist = G4NistManager::Instance();
-
-    G4Element* H = nist->FindOrBuildElement("H");
-    G4Element* C = nist->FindOrBuildElement("C");
-
-    mat = new G4Material(name, 1.060 *g/cm3, 2, kStateSolid);
-    mat->AddElement(H, 6);
-    mat->AddElement(C, 2);
-  }
-
-  return mat;
-}
-
-
-G4Material* MaterialsList::SeF6(G4double pressure, G4double temperature)
-{
-  // Composition ranges correspond to Selenium Hexafluoride
-
-  G4String name = "SeF6";
-  G4Material* mat = G4Material::GetMaterial(name, false);
-
-  if (mat == 0) {
-
-    G4NistManager* nist = G4NistManager::Instance();
-    G4double density = 7.887*kg/m3;
-
-    if (pressure/bar > 9.5 && pressure/bar < 10.5)
-      density *= 10.;
-    else
-      G4cout  << "[MaterialsList] Pressure " << pressure/bar
-              << " bar not recognized for SeF6! ... Assuming 1bar. " << G4endl;
-
-    mat = new G4Material(name, density, 2, kStateGas, temperature, pressure);
-    G4Element* Se = nist->FindOrBuildElement("Se");
-    mat->AddElement(Se, 1);
-    G4Element* F = nist->FindOrBuildElement("F");
-    mat->AddElement(F, 6);
-  }
-
-  return mat;
-}
-
 G4Material* MaterialsList::LYSO()
 {
-  G4String name = "LYSO"; 
+  G4String name = "LYSO";
 
   G4Material* mat = G4Material::GetMaterial(name, false);
 
   if (mat == 0) {
-    G4NistManager* nist = G4NistManager::Instance();    
+    G4NistManager* nist = G4NistManager::Instance();
 
     G4Element* Si = nist->FindOrBuildElement("Si");
     G4Element* O = nist->FindOrBuildElement("O");
@@ -638,9 +429,10 @@ G4Material* MaterialsList::LYSO()
     mat->AddElement(Y, 0.040);
     mat->AddElement(Lu, 0.714);
   }
-    
+
   return mat;
 }
+
 
 G4Material* MaterialsList::FR4()
 {
@@ -701,7 +493,6 @@ G4Material* MaterialsList::CopyMaterial(G4Material* original, G4String newname)
 
   return newmat;
 }
-
 
 
 G4Material* MaterialsList::FakeDielectric(G4Material* model_mat, G4String name)
