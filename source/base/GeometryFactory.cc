@@ -38,11 +38,9 @@ GeometryFactory::~GeometryFactory()
 #include "NextNewOpticalGeometry.h"
 #include "NextNew.h"
 #include "MagBox.h"
+#include "PMT_QE_setup.h"
 #include "FullRingInfinity.h"
 #include "FullRingTiles.h"
-#include "Petit.h"
-#include "PetitModule.h"
-#include "PMT_QE_setup.h"
 #include "Lab_vertices.h"
 #include "Lab.h"
 #include "NextTonScale.h"
@@ -70,13 +68,11 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
   else if (_name == "FULLRING") p = new FullRingInfinity();
 
   else if (_name == "RING_TILES") p = new FullRingTiles();
-  
-  else if (_name == "PETIT") p = new Petit();
 
   else if (_name == "VERTICES") p = new Lab_vertices();
 
   else if (_name == "PETALO") p = new Lab();
- 
+
   else if (_name == "TON_SCALE") p = new NextTonScale();
 
   else {
