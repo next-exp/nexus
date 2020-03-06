@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author : <justo.martin-albo@ific.uv.es>    
+//  Author : <justo.martin-albo@ific.uv.es>
 //  Created: 13 March 2013
 //
 //  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
@@ -53,18 +53,14 @@ G4UserRunAction* ActionsFactory::CreateRunAction() const
 //////////////////////////////////////////////////////////////////////
 #include "DefaultEventAction.h"
 #include "ELSimEventAction.h"
-#include "MuonsEventAction.h"
 
 G4UserEventAction* ActionsFactory::CreateEventAction() const
 {
   G4UserEventAction* p = 0;
-  
+
   if      (_evtact_name == "DEFAULT") p = new DefaultEventAction();
 
   else if (_evtact_name == "EL_SIM") p = new ELSimEventAction();
-
-  else if (_evtact_name == "MUONS") p = new MuonsEventAction();
-
 
   else {
     G4String err = "Unknown user event action: " + _evtact_name;
@@ -77,7 +73,6 @@ G4UserEventAction* ActionsFactory::CreateEventAction() const
 
 //////////////////////////////////////////////////////////////////////
 #include "DefaultTrackingAction.h"
-#include "ValidationTrackingAction.h"
 #include "AnalysisTrackingAction.h"
 #include "OpticalTrackingAction.h"
 
@@ -86,7 +81,6 @@ G4UserTrackingAction* ActionsFactory::CreateTrackingAction() const
   G4UserTrackingAction* p = 0;
 
   if (_trkact_name == "DEFAULT") p = new DefaultTrackingAction();
-  else if (_trkact_name == "VALIDATION") p = new ValidationTrackingAction();
   else if (_trkact_name == "ANALYSIS") p = new AnalysisTrackingAction();
   else if (_trkact_name == "OPTICAL") p = new OpticalTrackingAction();
   else {
@@ -94,7 +88,7 @@ G4UserTrackingAction* ActionsFactory::CreateTrackingAction() const
     G4Exception("CreateTrackingAction()", "[ActionsFactory]",
       JustWarning, err);
   }
-  
+
   return p;
 }
 
