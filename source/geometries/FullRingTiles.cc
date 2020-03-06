@@ -282,7 +282,7 @@ namespace nexus {
     G4ThreeVector vertex(0.,0.,0.);
 
     if (region == "CENTER") {
-      vertex = vertex;
+      return vertex;
     } else if (region == "PHANTOM") {
       vertex = cylindric_gen_->GenerateVertex("BODY_VOL");
     } else {

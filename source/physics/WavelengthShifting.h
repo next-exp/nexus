@@ -16,8 +16,8 @@
 class G4ParticleChange;
 class G4VWLSTimeGeneratorProfile;
 
-class TH1F;
-class TFile;
+//class TH1F;
+//class TFile;
 
 
 namespace nexus {
@@ -46,8 +46,8 @@ namespace nexus {
     G4PhysicsTable* _wlsIntegralTable;
     G4VWLSTimeGeneratorProfile*  _WLSTimeGeneratorProfile;
 
-    TH1F* hWLSTime;
-    TFile* histo_file;
+    //TH1F* hWLSTime;
+    //TFile* histo_file;
 
   };
 
