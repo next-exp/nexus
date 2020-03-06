@@ -39,7 +39,7 @@ namespace nexus {
     void BuildSiPMPlane(); 
     //  void BuildSiPMChessPlane(); 
 
-    G4LogicalVolume* det_logic_;
+    //    G4LogicalVolume* det_logic_;
     G4LogicalVolume* lXe_logic_;
     G4LogicalVolume* active_logic_;
 

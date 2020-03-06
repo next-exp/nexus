@@ -1,11 +1,11 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author:  
+//  Author:
 //  Created: 2 March 2010
-//  
+//
 //  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
-// ---------------------------------------------------------------------------- 
+// ----------------------------------------------------------------------------
 
 #include "SiPMpetTPB.h"
 #include "PmtSD.h"
@@ -32,12 +32,12 @@
 namespace nexus {
 
   using namespace CLHEP;
-  
+
   SiPMpetTPB::SiPMpetTPB(): BaseGeometry(),
 			    _visibility(0),
                             _refr_index(1.),
-                            _phys(1),
                             _decay_time(2.2*nanosecond),
+			    _phys(1),
                             _time_binning(1.*microsecond)
   {
     /// Messenger
@@ -60,9 +60,9 @@ namespace nexus {
     time_cmd.SetParameterName("time_binning", false);
     time_cmd.SetRange("time_binning>0.");
   }
-  
-  
-  
+
+
+
   SiPMpetTPB::~SiPMpetTPB()
   {
   }
@@ -73,9 +73,9 @@ namespace nexus {
   // {
   //   return _dimensions;
   // }
-  
-  
-  
+
+
+
   void SiPMpetTPB::Construct()
   {
     G4double size = 3. * mm;
@@ -90,16 +90,16 @@ namespace nexus {
     // _dimensions.setX(sipm_x);
     // _dimensions.setY(sipm_y);
     // _dimensions.setZ(sipm_z);
-   
+
 
     G4Box* sipm_solid = new G4Box("SIPMpet", sipm_x/2., sipm_y/2., sipm_z/2);
 
     G4Material* epoxy = MaterialsList::Epoxy();
     G4cout << "Epoxy in SiPMTPB used with constant refraction index = " <<  _refr_index << G4endl;
     epoxy->SetMaterialPropertiesTable(OpticalMaterialProperties::EpoxyFixedRefr(_refr_index));
-      
-    
-    G4LogicalVolume* sipm_logic = 
+
+
+    G4LogicalVolume* sipm_logic =
       new G4LogicalVolume(sipm_solid, epoxy, "SIPMpet");
 
     this->SetLogicalVolume(sipm_logic);
@@ -128,14 +128,14 @@ namespace nexus {
     // PCB ///////////////////////////////////////////////////////
 
     // G4double pcb_z = 0.550 * mm;
-    
+
     // G4Material* plastic = G4NistManager::Instance()->FindOrBuildMaterial("G4_POLYCARBONATE");
 
     // G4Box* plastic_solid = new G4Box("PLASTIC", sipm_x/2., sipm_y/2., pcb_z/2);
-    
-    // G4LogicalVolume* plastic_logic = 
+
+    // G4LogicalVolume* plastic_logic =
     // new G4LogicalVolume(plastic_solid, plastic, "PLASTIC");
-    
+
     // G4double epoxy_z = 0.300 * mm;
 
     // new G4PVPlacement(0, G4ThreeVector(0, 0., epoxy_z/2), plastic_logic,
@@ -145,11 +145,11 @@ namespace nexus {
 
     G4double active_side     = size;
     G4double active_depth    = 0.01   * mm;
-    
+
     G4Box* active_solid =
       new G4Box("PHOTODIODES", active_side/2., active_side/2., active_depth/2);
-    
-    G4Material* silicon = 
+
+    G4Material* silicon =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_Si");
 
     G4LogicalVolume* active_logic =
@@ -157,12 +157,12 @@ namespace nexus {
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., sipm_z/2. - active_depth/2. - .1*mm), active_logic,
 		      "PHOTODIODES", sipm_logic, false, 0, false);
-    
-    
+
+
     // OPTICAL SURFACES //////////////////////////////////////////////
 
     // SiPM efficiency set using the official Hamamatsu specs.
-    
+
     const G4int entries = 21;
 
 
@@ -177,32 +177,32 @@ namespace nexus {
     G4double reflectivity[entries] = {0.      ,0.      ,0.      ,0.      ,0.      ,
                                       0.      ,0.      ,0.      ,0.      ,0.      ,
                                       0.      ,0.      ,0.      ,0.      ,0.      ,
-                                      0.      ,0.      ,0.      ,0.      ,0.,      
+                                      0.      ,0.      ,0.      ,0.      ,0.,
                                        0. };
 
-     G4double efficiency[entries]   = {.5, .5, 
-                                      .5, .5, .5, 
-                                      .5, .5, .5,  
-                                      .5, .5, .5, 
-                                      .5, .5, .5, 
+     G4double efficiency[entries]   = {.5, .5,
+                                      .5, .5, .5,
+                                      .5, .5, .5,
+                                      .5, .5, .5,
+                                      .5, .5, .5,
                                       .5,  .5, .5,
                                       .5,  .5, .5,
                                       .5};
 
-    // G4double efficiency[entries]   = {1., 1., 
-    //                                   1., 1., 1., 
-    //                                   1., 1., 1.,  
-    //                                   1., 1., 1., 
-    //                                   1., 1., 1., 
+    // G4double efficiency[entries]   = {1., 1.,
+    //                                   1., 1., 1.,
+    //                                   1., 1., 1.,
+    //                                   1., 1., 1.,
+    //                                   1., 1., 1.,
     //                                   1.,  1., 1.,
     //                                   1.,  1., 1.,
     //                                   1.};
 
-    // G4double efficiency[entries]   = {0.036, 0.048, 
-    //                                   0.06, 0.07, 0.09, 
-    //                                   0.105, 0.12, 0.145,  
-    //                                   0.17, 0.2, 0.235, 
-    //                                   0.275, 0.32, 0.37, 
+    // G4double efficiency[entries]   = {0.036, 0.048,
+    //                                   0.06, 0.07, 0.09,
+    //                                   0.105, 0.12, 0.145,
+    //                                   0.17, 0.2, 0.235,
+    //                                   0.275, 0.32, 0.37,
     //                                   0.42,  0.425, 0.415,
     //                                   0.35,  0.315, 0.185,
     //                                   0.06};
@@ -212,23 +212,23 @@ namespace nexus {
     //   efficiency_red[i] = efficiency[i]*.20;
     // }
 
-    
+
     G4MaterialPropertiesTable* sipm_mt = new G4MaterialPropertiesTable();
     sipm_mt->AddProperty("EFFICIENCY", energies, efficiency, entries);
     sipm_mt->AddProperty("REFLECTIVITY", energies, reflectivity, entries);
 
-    G4OpticalSurface* sipm_opsurf = 
+    G4OpticalSurface* sipm_opsurf =
       new G4OpticalSurface("SIPM_OPSURF", unified, polished, dielectric_metal);
     sipm_opsurf->SetMaterialPropertiesTable(sipm_mt);
 
-    new G4LogicalSkinSurface("SIPM_OPSURF", active_logic, sipm_opsurf);    
-    
-    
+    new G4LogicalSkinSurface("SIPM_OPSURF", active_logic, sipm_opsurf);
+
+
     // SENSITIVE DETECTOR ////////////////////////////////////////////
 
     G4String sdname = "/SIPM/SiPMpetTPB";
     G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
-    
+
     if (!sdmgr->FindSensitiveDetector(sdname, false)) {
       //     PmtSD* sipmsd = new PmtSD(sdname);
       ToFSD* sipmsd = new ToFSD(sdname);
@@ -238,7 +238,7 @@ namespace nexus {
       //    sipmsd->SetMotherVolumeDepth(1);
       //      sipmsd->SetGrandMotherVolumeDepth(3);
       sipmsd->SetMotherVolumeDepth(2);
-      
+
       G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
       sipm_logic->SetSensitiveDetector(sipmsd);
     }
@@ -257,6 +257,6 @@ namespace nexus {
       active_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
   }
-  
-  
+
+
 } // end namespace nexus
