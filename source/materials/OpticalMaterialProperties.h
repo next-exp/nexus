@@ -70,13 +70,16 @@ namespace nexus {
 
     static G4MaterialPropertiesTable* EJ286();
 
+    static G4MaterialPropertiesTable* Y11();
+
     static G4MaterialPropertiesTable* Pethylene();
-  
+
     static G4MaterialPropertiesTable* FPethylene();
   
     static G4MaterialPropertiesTable* PMMA();
   
     static G4MaterialPropertiesTable* XXX();
+
 
   private:
 
