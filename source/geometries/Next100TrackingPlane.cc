@@ -9,12 +9,15 @@
 
 #include "Next100SiPMBoard.h"
 #include "CylinderPointSampler2020.h"
+#include "Visibilities.h"
 
+#include <G4GenericMessenger.hh>
 #include <G4Tubs.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4NistManager.hh>
 #include <Randomize.hh>
+#include <G4VisAttributes.hh>
 
 using namespace nexus;
 
@@ -25,10 +28,17 @@ Next100TrackingPlane::Next100TrackingPlane(G4double origin_z_coord):
   copper_plate_diameter_       (1340.*mm),
   copper_plate_thickness_      ( 120.*mm),
   distance_board_board_        (   1.*mm),
+  visibility_(false),
   sipm_board_geom_(new Next100SiPMBoard),
   copper_plate_gen_(nullptr),
-  mpv_(nullptr)
+  mpv_(nullptr),
+  msg_(nullptr)
 {
+  msg_ = new G4GenericMessenger(this, "/Geometry/Next100/",
+                                "Control commands of the NEXT-100 geometry.");
+
+  msg_->DeclareProperty("tracking_plane_vis", visibility_,
+                        "Visibility of the tracking plane volumes.");
 }
 
 
@@ -141,6 +151,17 @@ void Next100TrackingPlane::Construct()
                       false, 0, false);
 
   copper_plate_gen_ = new CylinderPointSampler2020(copper_plate_phys_vol);
+
+  // VISIBILITIES //////////////////////////////////////////
+
+  if (visibility_) {
+    G4VisAttributes copper_brown = CopperBrown();
+    copper_plate_logic_vol->SetVisAttributes(copper_brown);
+  } else {
+    copper_plate_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+    sipm_board_logic_vol  ->SetVisAttributes(G4VisAttributes::Invisible);
+  }
+
 }
 
 

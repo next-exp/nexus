@@ -13,6 +13,7 @@
 #include <vector>
 
 class G4VPhysicalVolume;
+class G4GenericMessenger;
 
 namespace nexus {
 
@@ -42,11 +43,15 @@ namespace nexus {
 
     std::vector<G4ThreeVector> board_pos_;
 
+    G4bool visibility_;
+
     Next100SiPMBoard* sipm_board_geom_;
 
     CylinderPointSampler2020* copper_plate_gen_;
 
     G4VPhysicalVolume* mpv_; // Pointer to mother's physical volume
+
+    G4GenericMessenger* msg_;
   };
 
   inline void Next100TrackingPlane::SetMotherPhysicalVolume(G4VPhysicalVolume* p)
