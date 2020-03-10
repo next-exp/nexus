@@ -94,7 +94,7 @@ void GenericPhotosensor::Construct()
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., zpos),
                     window_logic_vol, name, encasing_logic_vol,
-                    false, 0, true);
+                    false, 0, false);
 
   // PHOTOSENSITIVE AREA /////////////////////////////////////////////
 
@@ -112,7 +112,7 @@ void GenericPhotosensor::Construct()
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., zpos),
                     sensarea_logic_vol, name, encasing_logic_vol,
-                    false, 0, true);
+                    false, 0, false);
 
   // OPTICAL PROPERTIES //////////////////////////////////////////////
 

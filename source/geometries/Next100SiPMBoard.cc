@@ -84,7 +84,7 @@ void Next100SiPMBoard::Construct()
   G4VPhysicalVolume* wls_phys_vol =
     new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,zpos),
                       wls_logic_vol, wls_name, board_logic_vol,
-                      false, 0, true);
+                      false, 0, false);
 
   G4OpticalSurface* wls_opsurf =
     new G4OpticalSurface("SIPM_BOARD_WLS_OPSURF",
@@ -119,7 +119,7 @@ void Next100SiPMBoard::Construct()
                         sipm_geom.GetLogicalVolume(),
                         sipm_geom.GetLogicalVolume()->GetName(),
                         board_logic_vol,
-                        false, i*10+j, true);
+                        false, i*10+j, false);
     }
   }
 

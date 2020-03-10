@@ -74,7 +74,7 @@ void Next100TrackingPlane::Construct()
                         sipm_board_logic_vol,
                         sipm_board_logic_vol->GetName(),
                         mpv_->GetLogicalVolume(),
-                        false, i+j, true);
+                        false, i+j, false);
     }
   }
 
@@ -90,13 +90,13 @@ void Next100TrackingPlane::Construct()
 
     new G4PVPlacement(nullptr, position, sipm_board_logic_vol,
                       sipm_board_logic_vol->GetName(), mpv_->GetLogicalVolume(),
-                      false, j+32, true);
+                      false, j+32, false);
 
     position.setX(-xpos); board_pos_.push_back(position);
 
     new G4PVPlacement(nullptr, position, sipm_board_logic_vol,
                       sipm_board_logic_vol->GetName(), mpv_->GetLogicalVolume(),
-                      false, j+39, true);
+                      false, j+39, false);
   }
 
   // Outer columns of 5 boards
@@ -110,13 +110,13 @@ void Next100TrackingPlane::Construct()
 
     new G4PVPlacement(nullptr, position, sipm_board_logic_vol,
                       sipm_board_logic_vol->GetName(), mpv_->GetLogicalVolume(),
-                      false, j+46, true);
+                      false, j+46, false);
 
     position.setX(-xpos); board_pos_.push_back(position);
 
     new G4PVPlacement(nullptr, position, sipm_board_logic_vol,
                       sipm_board_logic_vol->GetName(), mpv_->GetLogicalVolume(),
-                      false, j+51, true);
+                      false, j+51, false);
   }
 
   // TRACKING COPPER PLATE ///////////////////////////////////////////
@@ -138,7 +138,7 @@ void Next100TrackingPlane::Construct()
   G4VPhysicalVolume* copper_plate_phys_vol =
     new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,zpos),
                       copper_plate_logic_vol, copper_plate_name, mpv_->GetLogicalVolume(),
-                      false, 0, true);
+                      false, 0, false);
 
   copper_plate_gen_ = new CylinderPointSampler2020(copper_plate_phys_vol);
 }
