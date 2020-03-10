@@ -118,6 +118,9 @@ namespace nexus {
     // WLS EJ-280
     static G4Material* EJ280();
 
+    // Kuraray Fiber Y11
+    static G4Material* Y11();
+
     // Pethylene (cladding)
     static G4Material* Pethylene();
 
@@ -130,9 +133,7 @@ namespace nexus {
     // Fake dielectric (to be deprecated)
     static G4Material* FakeDielectric(G4Material*, G4String);
 
-    ///
     static G4Material* CopyMaterial(G4Material*, const G4String&);
-
 
   private:
     /// Constructor (hidden)
