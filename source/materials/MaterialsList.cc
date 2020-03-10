@@ -664,11 +664,11 @@ G4Material* MaterialsList::CopyMaterial(G4Material* original, const G4String& ne
       const G4double* fractions = original->GetFractionVector();
       newmat = new G4Material(newname, density, n_elem, state, temperature, pressure);
       for (G4int i = 0; i < n_elem; ++i)
-	     newmat->AddElement(new G4Element(original->GetElement(i)->GetName(),
-					                              original->GetElement(i)->GetSymbol(),
-					                              original->GetElement(i)->GetZ(),
-					                              original->GetElement(i)->GetA()),
-			                                  fractions[i]);
+        newmat->AddElement(new G4Element(original->GetElement(i)->GetName(),
+                                         original->GetElement(i)->GetSymbol(),
+                                         original->GetElement(i)->GetZ(),
+                                         original->GetElement(i)->GetA()),
+                                         fractions[i]);
       }
   }
 
