@@ -9,34 +9,48 @@
 #define NEXT100_TRACKING_PLANE_H
 
 #include "BaseGeometry.h"
+#include <G4ThreeVector.hh>
+#include <vector>
 
+class G4VPhysicalVolume;
 
 namespace nexus {
+
+  class Next100SiPMBoard;
+  class CylinderPointSampler2020;
+
+  // Geometry of the tracking plane of the NEXT-100 detector
 
   class Next100TrackingPlane: public BaseGeometry
   {
   public:
     // Constructor
-    // The mother volume in which all elements of the tracking plane
-    // will be positioned must be provided at construction time.
-    Next100TrackingPlane(G4LogicalVolume* mother_volume);
+    Next100TrackingPlane(G4double origin_z_coord=0.);
     // Destructor
-    virtual ~Next100TrackingPlane();
+    ~Next100TrackingPlane();
     //
-    virtual void Construct();
+    void SetMotherPhysicalVolume(G4VPhysicalVolume*);
     //
-    virtual G4ThreeVector GenerateVertex(const G4String&) const;
+    void Construct();
+    //
+    G4ThreeVector GenerateVertex(const G4String&) const;
 
   private:
-    // Default constructor hidden
-    Next100TrackingPlane();
+    const G4double z0_; // Z position of origin of coordinates
+    const G4double copper_plate_diameter_, copper_plate_thickness_;
+    const G4double distance_board_board_;
 
-  private:
-    G4double copper_plate_diameter_, copper_plate_thickness_;
-    G4double distance_gate_tracking_plane_;
-    G4double distance_board_board_;
-    G4LogicalVolume* mother_volume_;
+    std::vector<G4ThreeVector> board_pos_;
+
+    Next100SiPMBoard* sipm_board_geom_;
+
+    CylinderPointSampler2020* copper_plate_gen_;
+
+    G4VPhysicalVolume* mpv_; // Pointer to mother's physical volume
   };
+
+  inline void Next100TrackingPlane::SetMotherPhysicalVolume(G4VPhysicalVolume* p)
+  { mpv_ = p; }
 
 } // namespace nexus
 

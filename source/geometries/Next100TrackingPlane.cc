@@ -8,89 +8,115 @@
 #include "Next100TrackingPlane.h"
 
 #include "Next100SiPMBoard.h"
+#include "CylinderPointSampler2020.h"
 
 #include <G4Tubs.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4NistManager.hh>
+#include <Randomize.hh>
 
 using namespace nexus;
 
 
-Next100TrackingPlane::Next100TrackingPlane(G4LogicalVolume* mother_volume):
+Next100TrackingPlane::Next100TrackingPlane(G4double origin_z_coord):
   BaseGeometry(),
+  z0_(origin_z_coord), // distance between gate and first face of tracking plane
   copper_plate_diameter_       (1340.*mm),
   copper_plate_thickness_      ( 120.*mm),
-  distance_gate_tracking_plane_(  25.*mm),
   distance_board_board_        (   1.*mm),
-  mother_volume_(mother_volume)
+  sipm_board_geom_(new Next100SiPMBoard),
+  copper_plate_gen_(nullptr),
+  mpv_(nullptr)
 {
-  // Make sure that the pointer to the mother volume is actually defined
-  if (!mother_volume)
-    G4Exception("[Next100TrackingPlane]", "Next100TrackingPlane()",
-                FatalException, "Mother volume is a nullptr.");
 }
 
 
 Next100TrackingPlane::~Next100TrackingPlane()
 {
+  delete sipm_board_geom_;
+  delete copper_plate_gen_;
 }
 
 
 void Next100TrackingPlane::Construct()
 {
+  // Make sure that the pointer to the mother volume is actually defined
+  if (!mpv_)
+    G4Exception("[Next100TrackingPlane]", "Construct()",
+                FatalException, "Mother volume is a nullptr.");
+
   // SIPM BOARDS /////////////////////////////////////////////////////
 
-  Next100SiPMBoard sipm_board_geom;
-  sipm_board_geom.Construct();
-  G4LogicalVolume* sipm_board_logic_vol = sipm_board_geom.GetLogicalVolume();
+  sipm_board_geom_->SetMotherPhysicalVolume(mpv_);
+  sipm_board_geom_->Construct();
+  G4LogicalVolume* sipm_board_logic_vol = sipm_board_geom_->GetLogicalVolume();
 
-  G4double zpos = - distance_gate_tracking_plane_ - sipm_board_geom.GetThickness()/2.;
+  G4double zpos = - z0_ - sipm_board_geom_->GetThickness()/2.;
 
   // -------------------------------------------------------
-  // TODO. Review sensor numbering scheme once HDF5 output
-  //       tables are fixed.
+  // TODO. Review sensor numbering scheme.
   // -------------------------------------------------------
 
   // Central block of 4x8 boards.
 
   for (auto i=0; i<4; i++) {
-    G4double xpos = - 1.5*sipm_board_geom.GetSize() - 1.5*distance_board_board_
-                    + i*(sipm_board_geom.GetSize() + distance_board_board_);
+    G4double xpos = - 1.5*sipm_board_geom_->GetSize() - 1.5*distance_board_board_
+                    + i*(sipm_board_geom_->GetSize() + distance_board_board_);
 
     for (auto j=0; j<8; j++) {
-      G4double ypos = - 3.5*sipm_board_geom.GetSize() - 3.5*distance_board_board_
-                      + j*(sipm_board_geom.GetSize() + distance_board_board_);
+      G4double ypos = - 3.5*sipm_board_geom_->GetSize() - 3.5*distance_board_board_
+                      + j*(sipm_board_geom_->GetSize() + distance_board_board_);
 
-      new G4PVPlacement(nullptr, G4ThreeVector(xpos,ypos,zpos), sipm_board_logic_vol,
-                        sipm_board_logic_vol->GetName(), mother_volume_, false, i+j, true);
+      G4ThreeVector position(xpos, ypos, zpos); board_pos_.push_back(position);
+
+      new G4PVPlacement(nullptr, position,
+                        sipm_board_logic_vol,
+                        sipm_board_logic_vol->GetName(),
+                        mpv_->GetLogicalVolume(),
+                        false, i+j, true);
     }
   }
 
   // Outer columns of 7 boards
 
   for (auto j=0; j<7; j++) {
-    G4double xpos = - 2.5*sipm_board_geom.GetSize() - 2.5*distance_board_board_;
-    G4double ypos = - 3.0*sipm_board_geom.GetSize() - 3.0*distance_board_board_
-                    + j*(sipm_board_geom.GetSize() + distance_board_board_);
+    G4double xpos = - 2.5*sipm_board_geom_->GetSize() - 2.5*distance_board_board_;
+    G4double ypos = - 3.0*sipm_board_geom_->GetSize() - 3.0*distance_board_board_
+                    + j*(sipm_board_geom_->GetSize() + distance_board_board_);
 
-    new G4PVPlacement(nullptr, G4ThreeVector(xpos,ypos,zpos), sipm_board_logic_vol,
-                      sipm_board_logic_vol->GetName(), mother_volume_, false, j+32, true);
-    new G4PVPlacement(nullptr, G4ThreeVector(-xpos,ypos,zpos), sipm_board_logic_vol,
-                      sipm_board_logic_vol->GetName(), mother_volume_, false, j+39, true);
+
+    G4ThreeVector position(xpos, ypos, zpos); board_pos_.push_back(position);
+
+    new G4PVPlacement(nullptr, position, sipm_board_logic_vol,
+                      sipm_board_logic_vol->GetName(), mpv_->GetLogicalVolume(),
+                      false, j+32, true);
+
+    position.setX(-xpos); board_pos_.push_back(position);
+
+    new G4PVPlacement(nullptr, position, sipm_board_logic_vol,
+                      sipm_board_logic_vol->GetName(), mpv_->GetLogicalVolume(),
+                      false, j+39, true);
   }
 
   // Outer columns of 5 boards
 
   for (auto j=0; j<5; j++) {
-    G4double xpos = - 3.5*sipm_board_geom.GetSize() - 3.5*distance_board_board_;
-    G4double ypos = - 2.0*sipm_board_geom.GetSize() - 2.0*distance_board_board_
-                    + j*(sipm_board_geom.GetSize() + distance_board_board_);
+    G4double xpos = - 3.5*sipm_board_geom_->GetSize() - 3.5*distance_board_board_;
+    G4double ypos = - 2.0*sipm_board_geom_->GetSize() - 2.0*distance_board_board_
+                    + j*(sipm_board_geom_->GetSize() + distance_board_board_);
 
-    new G4PVPlacement(nullptr, G4ThreeVector(xpos,ypos,zpos), sipm_board_logic_vol,
-                      sipm_board_logic_vol->GetName(), mother_volume_, false, j+46, true);
-    new G4PVPlacement(nullptr, G4ThreeVector(-xpos,ypos,zpos), sipm_board_logic_vol,
-                      sipm_board_logic_vol->GetName(), mother_volume_, false, j+51, true);
+    G4ThreeVector position(xpos, ypos, zpos); board_pos_.push_back(position);
+
+    new G4PVPlacement(nullptr, position, sipm_board_logic_vol,
+                      sipm_board_logic_vol->GetName(), mpv_->GetLogicalVolume(),
+                      false, j+46, true);
+
+    position.setX(-xpos); board_pos_.push_back(position);
+
+    new G4PVPlacement(nullptr, position, sipm_board_logic_vol,
+                      sipm_board_logic_vol->GetName(), mpv_->GetLogicalVolume(),
+                      false, j+51, true);
   }
 
   // TRACKING COPPER PLATE ///////////////////////////////////////////
@@ -107,15 +133,29 @@ void Next100TrackingPlane::Construct()
                         G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
                         copper_plate_name);
 
-  zpos = - distance_gate_tracking_plane_ - sipm_board_geom.GetThickness()
-         - copper_plate_thickness_/2.;
+  zpos = - z0_ - sipm_board_geom_->GetThickness() - copper_plate_thickness_/2.;
 
-  new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,zpos), copper_plate_logic_vol,
-                   copper_plate_name, mother_volume_, false, 0, true);
+  G4VPhysicalVolume* copper_plate_phys_vol =
+    new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,zpos),
+                      copper_plate_logic_vol, copper_plate_name, mpv_->GetLogicalVolume(),
+                      false, 0, true);
+
+  copper_plate_gen_ = new CylinderPointSampler2020(copper_plate_phys_vol);
 }
 
 
-G4ThreeVector Next100TrackingPlane::GenerateVertex(const G4String&) const
+G4ThreeVector Next100TrackingPlane::GenerateVertex(const G4String& region) const
 {
-  return G4ThreeVector();
+  G4ThreeVector vertex;
+
+  if (region == "SIPM_BOARD") {
+    vertex = sipm_board_geom_->GenerateVertex("");
+    G4int board_num = G4RandFlat::shootInt((long) 0, board_pos_.size());
+    vertex += board_pos_[board_num];
+  }
+  else if (region == "TRK_SUPPORT") {
+    vertex = copper_plate_gen_->GenerateVertex("VOLUME");
+  }
+
+  return vertex;
 }
