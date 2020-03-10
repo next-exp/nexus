@@ -57,7 +57,7 @@ namespace nexus {
   {
     // Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/Next100/",
-				                          "Control commands of geometry Next100.");
+                                  "Control commands of geometry Next100.");
   }
 
 
