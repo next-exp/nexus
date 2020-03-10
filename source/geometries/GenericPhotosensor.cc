@@ -98,6 +98,8 @@ void GenericPhotosensor::Construct()
 
   // PHOTOSENSITIVE AREA /////////////////////////////////////////////
 
+  name = "PHOTOSENSOR_SENSAREA";
+
   G4double sensarea_thickness = 0.1*mm;
 
   G4Box* sensarea_solid_vol =
