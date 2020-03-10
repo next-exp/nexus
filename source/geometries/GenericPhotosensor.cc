@@ -155,9 +155,3 @@ void GenericPhotosensor::SetRefractiveIndex(G4MaterialPropertyVector* mpv)
 {
   window_mat_->GetMaterialPropertiesTable()->AddProperty("RINDEX", mpv);
 }
-
-
-G4ThreeVector GenericPhotosensor::GenerateVertex(const G4String&) const
-{
-  return G4ThreeVector();
-}

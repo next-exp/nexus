@@ -28,11 +28,9 @@ namespace nexus {
     // Constructor for a square sensor
     GenericPhotosensor(G4double size);
     // Destructor
-    virtual ~GenericPhotosensor();
+    ~GenericPhotosensor();
     //
-    virtual void Construct();
-    //
-    virtual G4ThreeVector GenerateVertex(const G4String&) const;
+    void Construct();
 
     G4double GetWidth()     const;
     G4double GetHeight()    const;
