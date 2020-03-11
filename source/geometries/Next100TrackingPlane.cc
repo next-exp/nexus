@@ -182,7 +182,7 @@ void Next100TrackingPlane::PrintSiPMPositions() const
 
   for (unsigned int i=0; i<board_pos_.size(); ++i) {
     for (unsigned int j=0; j<sipm_positions.size(); ++j) {
-      G4int id = 1000 * (i+1) + (j+1);
+      G4int id = 1000 * (i+1) + j;
       G4ThreeVector pos = sipm_positions[j] + board_pos_[i];
       G4cout << id << "  " << pos << G4endl;
     }
