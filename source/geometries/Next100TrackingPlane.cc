@@ -62,7 +62,7 @@ void Next100TrackingPlane::Construct()
   sipm_board_geom_->Construct();
   G4LogicalVolume* sipm_board_logic_vol = sipm_board_geom_->GetLogicalVolume();
 
-  G4double zpos = - z0_ - sipm_board_geom_->GetThickness()/2.;
+  G4double zpos = GetELzCoord() - z0_ - sipm_board_geom_->GetThickness()/2.;
 
   // -------------------------------------------------------
   // TODO. Review sensor numbering scheme.
@@ -154,7 +154,7 @@ void Next100TrackingPlane::Construct()
                         G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
                         copper_plate_name);
 
-  zpos = - z0_ - sipm_board_geom_->GetThickness() - copper_plate_thickness_/2.;
+  zpos = GetELzCoord() - z0_ - sipm_board_geom_->GetThickness() - copper_plate_thickness_/2.;
 
   G4VPhysicalVolume* copper_plate_phys_vol =
     new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,zpos),
