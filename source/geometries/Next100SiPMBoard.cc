@@ -105,7 +105,7 @@ void Next100SiPMBoard::Construct()
 
   zpos = thickness_/2. - wls_thickness - sipm_geom.GetThickness()/2.;
 
-  G4int counter = 1;
+  G4int counter = 0;
 
   for (unsigned int i=0; i<8; i++) {
 
