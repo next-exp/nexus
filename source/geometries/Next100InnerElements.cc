@@ -89,6 +89,7 @@ namespace nexus {
 
     // Tracking plane
     _tracking_plane->SetMotherPhysicalVolume(_mother_phys);
+    _tracking_plane->SetELzCoord(gate_zpos);
     _tracking_plane->Construct();
   }
 
