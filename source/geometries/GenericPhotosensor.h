@@ -41,6 +41,7 @@ namespace nexus {
   private:
     G4double width_, height_, thickness_;
     G4double time_binning_;
+    G4bool visibility_;
     G4Material* window_mat_;
     G4GenericMessenger* msg_;
   };

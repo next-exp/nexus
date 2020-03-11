@@ -31,6 +31,7 @@ GenericPhotosensor::GenericPhotosensor(G4double width,
   BaseGeometry(),
   width_(width), height_(height), thickness_(thickness),
   time_binning_(1.0*microsecond),
+  visibility_(false),
   window_mat_(nullptr),
   msg_(nullptr)
 {
@@ -52,6 +53,9 @@ GenericPhotosensor::GenericPhotosensor(G4double width,
   time_binning_cmd.SetUnitCategory("Time");
   time_binning_cmd.SetParameterName("time_binning", false);
   time_binning_cmd.SetRange("time_binning>0.");
+
+  msg_->DeclareProperty("visibility", visibility_,
+                        "Visibility of the GenericPhotosensor volumes.");
 }
 
 
@@ -62,6 +66,7 @@ GenericPhotosensor::GenericPhotosensor(G4double size): GenericPhotosensor(size,s
 
 GenericPhotosensor::~GenericPhotosensor()
 {
+  delete msg_;
 }
 
 
@@ -98,6 +103,15 @@ void GenericPhotosensor::Construct()
                     window_logic_vol, name, encasing_logic_vol,
                     false, 0, false);
 
+  if (visibility_) {
+    G4VisAttributes blood_red = BloodRed();
+    blood_red.SetForceSolid(true);
+    window_logic_vol->SetVisAttributes(blood_red);
+  }
+  else {
+    window_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+  }
+
   // PHOTOSENSITIVE AREA /////////////////////////////////////////////
 
   name = "PHOTOSENSOR_SENSAREA";
@@ -111,6 +125,9 @@ void GenericPhotosensor::Construct()
     new G4LogicalVolume(sensarea_solid_vol,
                         G4NistManager::Instance()->FindOrBuildMaterial("G4_Si"),
                         name);
+
+  if (!visibility_)
+    sensarea_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
 
   zpos = thickness_/2. - window_thickness - sensarea_thickness/2.;
 
