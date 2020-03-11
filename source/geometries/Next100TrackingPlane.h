@@ -36,6 +36,8 @@ namespace nexus {
     //
     G4ThreeVector GenerateVertex(const G4String&) const;
 
+    void PrintSiPMPositions() const;
+
   private:
     const G4double z0_; // Z position of origin of coordinates
     const G4double copper_plate_diameter_, copper_plate_thickness_;

@@ -70,6 +70,8 @@ void Next100TrackingPlane::Construct()
 
   // Central block of 4x8 boards.
 
+  G4int counter = 1;
+
   for (auto i=0; i<4; i++) {
     G4double xpos = - 1.5*sipm_board_geom_->GetSize() - 1.5*distance_board_board_
                     + i*(sipm_board_geom_->GetSize() + distance_board_board_);
@@ -84,7 +86,8 @@ void Next100TrackingPlane::Construct()
                         sipm_board_logic_vol,
                         sipm_board_logic_vol->GetName(),
                         mpv_->GetLogicalVolume(),
-                        false, i+j, false);
+                        false, counter, false);
+      counter++;
     }
   }
 
@@ -100,13 +103,17 @@ void Next100TrackingPlane::Construct()
 
     new G4PVPlacement(nullptr, position, sipm_board_logic_vol,
                       sipm_board_logic_vol->GetName(), mpv_->GetLogicalVolume(),
-                      false, j+32, false);
+                      false, counter, false);
+
+    counter++;
 
     position.setX(-xpos); board_pos_.push_back(position);
 
     new G4PVPlacement(nullptr, position, sipm_board_logic_vol,
                       sipm_board_logic_vol->GetName(), mpv_->GetLogicalVolume(),
-                      false, j+39, false);
+                      false, counter, false);
+
+    counter++;
   }
 
   // Outer columns of 5 boards
@@ -120,13 +127,17 @@ void Next100TrackingPlane::Construct()
 
     new G4PVPlacement(nullptr, position, sipm_board_logic_vol,
                       sipm_board_logic_vol->GetName(), mpv_->GetLogicalVolume(),
-                      false, j+46, false);
+                      false, counter, false);
+
+    counter++;
 
     position.setX(-xpos); board_pos_.push_back(position);
 
     new G4PVPlacement(nullptr, position, sipm_board_logic_vol,
                       sipm_board_logic_vol->GetName(), mpv_->GetLogicalVolume(),
-                      false, j+51, false);
+                      false, counter, false);
+
+    counter++;
   }
 
   // TRACKING COPPER PLATE ///////////////////////////////////////////
@@ -162,6 +173,20 @@ void Next100TrackingPlane::Construct()
     sipm_board_logic_vol  ->SetVisAttributes(G4VisAttributes::Invisible);
   }
 
+}
+
+
+void Next100TrackingPlane::PrintSiPMPositions() const
+{
+  auto sipm_positions = sipm_board_geom_->GetSiPMPositions();
+
+  for (unsigned int i=0; i<board_pos_.size(); ++i) {
+    for (unsigned int j=0; j<sipm_positions.size(); ++j) {
+      G4int id = 1000 * (i+1) + (j+1);
+      G4ThreeVector pos = sipm_positions[j] + board_pos_[i];
+      G4cout << id << "  " << pos << G4endl;
+    }
+  }
 }
 
 
