@@ -20,6 +20,7 @@
 
 
 class G4GenericMessenger;
+class G4VPhysicalVolume;
 
 namespace nexus {
 
@@ -39,8 +40,9 @@ namespace nexus {
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
-    /// Returns the logical volume of the inner object
+    /// Returns the logical and physical volume of the inner object
     G4LogicalVolume* GetInternalLogicalVolume();
+    G4VPhysicalVolume* GetInternalPhysicalVolume();
 
     /// Builder
     void Construct();
@@ -65,8 +67,9 @@ namespace nexus {
     G4double _down_nozzle_ypos, _bottom_nozzle_ypos;
 
 
-    // Internal Logical Volume
+    // Internal logical and physical volumes
     G4LogicalVolume* _internal_logic_vol;
+    G4VPhysicalVolume* _internal_phys_vol;
 
     // Vertex generators
     CylinderPointSampler* _body_gen;

@@ -17,6 +17,7 @@
 #include "BaseGeometry.h"
 
 class G4LogicalVolume;
+class G4VPhysicalVolume;
 class G4Material;
 class G4GenericMessenger;
 
@@ -41,8 +42,9 @@ namespace nexus {
     /// Destructor
     ~Next100InnerElements();
 
-    /// Set the logical volume that encloses the entire geometry
+    /// Set the logical and physical volume that encloses the entire geometry
     void SetLogicalVolume(G4LogicalVolume*);
+    void SetPhysicalVolume(G4VPhysicalVolume*);
 
     /// Return the relative position respect to the rest of NEXT100 geometry
     G4ThreeVector GetPosition() const;
@@ -60,6 +62,7 @@ namespace nexus {
     const G4double _gate_tracking_plane_distance;
 
     G4LogicalVolume* _mother_logic;
+    G4VPhysicalVolume* _mother_phys;
     G4Material* _gas;
 
     G4double _pressure;
