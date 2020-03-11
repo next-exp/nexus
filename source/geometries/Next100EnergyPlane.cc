@@ -306,7 +306,7 @@ namespace nexus {
     G4LogicalVolume* tpb_logic =
       new G4LogicalVolume(tpb_solid, tpb, "SAPPHIRE_WNDW_TPB");
 
-    G4double tpb_posz = - _sapphire_window_thickness/2. + _tpb_thickness/2.;
+    G4double tpb_posz = - _sapphire_window_thickn/2. + _tpb_thickn/2.;
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., tpb_posz), tpb_logic,
      		      "SAPPHIRE_WNDW_TPB", sapphire_window_logic, false, 0, false);
