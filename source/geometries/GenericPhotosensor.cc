@@ -10,6 +10,7 @@
 #include "MaterialsList.h"
 #include "PmtSD.h"
 #include "OpticalMaterialProperties.h"
+#include "Visibilities.h"
 
 #include <G4Box.hh>
 #include <G4LogicalVolume.hh>
@@ -38,7 +39,7 @@ GenericPhotosensor::GenericPhotosensor(G4double width,
   // attached to its material) do not affect other elements of the geometry or
   // are modified unconsciously by a user.
   window_mat_ = MaterialsList::CopyMaterial(MaterialsList::OpticalSilicone(),
-                                            "GENERIC_PHOTOSENSOR_WINDOW_MATERIAL");
+                                              "GENERIC_PHOTOSENSOR_WINDOW_MATERIAL");
   window_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
 
   // User control commands for generic photosensor
@@ -87,10 +88,11 @@ void GenericPhotosensor::Construct()
   G4Box* window_solid_vol =
     new G4Box(name, width_/2., height_/2., window_thickness/2.);
 
+
   G4LogicalVolume* window_logic_vol =
     new G4LogicalVolume(window_solid_vol, window_mat_, name);
 
-  G4double zpos = height_/2. - window_thickness/2.;
+  G4double zpos = thickness_/2. - window_thickness/2.;
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., zpos),
                     window_logic_vol, name, encasing_logic_vol,
@@ -110,7 +112,7 @@ void GenericPhotosensor::Construct()
                         G4NistManager::Instance()->FindOrBuildMaterial("G4_Si"),
                         name);
 
-  zpos = height_/2. - window_thickness - sensarea_thickness/2.;
+  zpos = thickness_/2. - window_thickness - sensarea_thickness/2.;
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., zpos),
                     sensarea_logic_vol, name, encasing_logic_vol,
@@ -135,18 +137,18 @@ void GenericPhotosensor::Construct()
 
   // SENSITIVE DETECTOR //////////////////////////////////////////////
 
-  G4String sdname = "/GENERIC_PHOTOSENSOR";
+  G4String sdname = "/GENERIC_PHOTOSENSOR/SiPM";
   G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
 
   if (!sdmgr->FindSensitiveDetector(sdname, false)) {
     PmtSD* sensdet = new PmtSD(sdname);
-    sensdet->SetDetectorVolumeDepth(0);
+    sensdet->SetDetectorVolumeDepth(1);
     sensdet->SetDetectorNamingOrder(1000.);
     sensdet->SetTimeBinning(time_binning_);
-    sensdet->SetMotherVolumeDepth(1);
+    sensdet->SetMotherVolumeDepth(2);
 
     G4SDManager::GetSDMpointer()->AddNewDetector(sensdet);
-    encasing_logic_vol->SetSensitiveDetector(sensdet);
+    window_logic_vol->SetSensitiveDetector(sensdet);
   }
 }
 
