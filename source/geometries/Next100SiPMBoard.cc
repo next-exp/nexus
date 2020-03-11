@@ -101,8 +101,11 @@ void Next100SiPMBoard::Construct()
   GenericPhotosensor sipm_geom(1.3*mm);
   sipm_geom.SetRefractiveIndex(tpb->GetMaterialPropertiesTable()->GetProperty("RINDEX"));
   sipm_geom.Construct();
+  //sipm_geom.SetRefractiveIndex(tpb->GetMaterialPropertiesTable()->GetProperty("RINDEX"));
 
-  zpos = thickness_/2. - wls_thickness - 1.*mm;
+  zpos = thickness_/2. - wls_thickness - sipm_geom.GetThickness()/2.;
+
+  G4int counter = 1;
 
   for (unsigned int i=0; i<8; i++) {
 
@@ -113,13 +116,15 @@ void Next100SiPMBoard::Construct()
       G4double ypos = -size_/2. + margin_ + j * pitch_;
 
       G4ThreeVector position(xpos, ypos, zpos);
-      sipm_positions.push_back(position);
+      sipm_positions_.push_back(position);
 
       new G4PVPlacement(nullptr, position,
                         sipm_geom.GetLogicalVolume(),
                         sipm_geom.GetLogicalVolume()->GetName(),
                         board_logic_vol,
-                        false, i*10+j, false);
+                        false, counter, false);
+
+      counter++;
     }
   }
 
