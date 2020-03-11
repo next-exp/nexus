@@ -9,7 +9,7 @@
 
 /control/execute macros/physics/DefaultPhysicsList.mac
 
-/Geometry/RegisterGeometry OPTICAL_GEOMETRY
+/Geometry/RegisterGeometry NEXT_NEW_OPT
 
 /Generator/RegisterGenerator SINGLE_PARTICLE
 

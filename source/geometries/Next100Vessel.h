@@ -50,6 +50,7 @@ namespace nexus {
   private:
     // Dimensions
     G4double _vessel_in_rad, _vessel_body_length, _vessel_length, _vessel_thickness;
+    G4double _distance_gate_body_end;
     G4double _endcap_in_rad, _endcap_theta, _endcap_thickness, _endcap_in_z_width;
     G4double _flange_out_rad, _flange_length, _flange_z_pos;
     G4double _large_nozzle_length, _small_nozzle_length;

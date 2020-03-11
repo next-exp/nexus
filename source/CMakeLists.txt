@@ -39,7 +39,6 @@ add_executable(nexus-test   nexus-test.cc
 
 target_link_libraries(nexus-test ${ROOT_LIBRARIES}
                                  ${Geant4_LIBRARIES}
-                                 ${GATE_LIBRARIES}
                                  ${HDF5_LIBRARIES}
                                  ${GSL_LIBRARIES})
 
@@ -59,7 +58,6 @@ add_executable(nexus nexus.cc
 
 target_link_libraries(nexus ${ROOT_LIBRARIES}
                             ${Geant4_LIBRARIES}
-                            ${GATE_LIBRARIES}
                             ${HDF5_LIBRARIES}
                             ${GSL_LIBRARIES})
 

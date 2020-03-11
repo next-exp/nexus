@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
-///  \file   
-///  \brief  
+///  \file
+///  \brief
 ///
 ///  \author   <jmunoz@ific.uv.es>
 ///  \date     25 Apr 2012
@@ -14,11 +14,10 @@
 
 #include <vector>
 #include <G4Navigator.hh>
-#include <G4TransportationManager.hh>
+#include <G4RotationMatrix.hh>
 
-#include "CylinderPointSampler.h"
+#include "CylinderPointSampler2020.h"
 #include "PmtR11410.h"
-
 
 class G4Material;
 class G4LogicalVolume;
@@ -40,7 +39,10 @@ namespace nexus {
     ~Next100EnergyPlane();
 
     /// Sets the Logical Volume where Inner Elements will be placed
-    void SetLogicalVolume(G4LogicalVolume* mother_logic);
+    void SetMotherLogicalVolume(G4LogicalVolume* mother_logic);
+
+    /// Sets the z position of the surface of the sapphire windows
+    void SetSapphireSurfaceZPos(G4double z);
 
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
@@ -59,39 +61,47 @@ namespace nexus {
 
     // Dimensions
     const G4int _num_PMTs;
-    const G4double _energy_plane_posz;
-    const G4double _carrier_plate_thickness, _carrier_plate_diam, _carrier_plate_central_hole_diam;
-    const G4double _enclosure_length, _enclosure_diam;
-    const G4double _enclosure_flange_length;
-    const G4double _enclosure_window_thickness,_enclosure_window_diam;
-    const G4double _enclosure_pad_thickness;
-    const G4double _pmt_base_diam, _pmt_base_thickness;
-    const G4double _tpb_thickness;
-    // const G4double _pmts_pitch;
+    const G4double _copper_plate_thickn, _copper_plate_diam;
+    const G4double _gas_hole_diam;
+    // const G4double _hole_up_posx, _hole_up_posy;
+    // const G4double _hole_lat1_posx, _hole_lat1_posy;
+    // const G4double _hole_lat2_posx, _hole_lat2_posy;
+    const G4double _hut_int_diam, _hut_thickn, _hut_hole_length;
+    const G4double _hut_length_long, _hut_length_medium, _hut_length_short;
+    const G4int _last_hut_long, _last_hut_medium;
+    const G4double _hole_diam_front, _hole_diam_rear;
+    const G4double _hole_length_front, _hole_length_rear;
+    const G4double _sapphire_window_thickn, _optical_pad_thickn, _tpb_thickn;
+    const G4double _pmt_stand_out;
+    const G4double _internal_pmt_base_diam, _internal_pmt_base_thickn;
 
-    PmtR11410*  _pmt;
-    std::vector<G4ThreeVector> _pmt_positions;
-    G4double _pmt_zpos;
+    // Visibility of the energy plane
+    G4bool _visibility, _verbosity;
 
-
-    // Visibility of the tracking plane
-    G4bool _visibility;
-
-
-    // Vertex generators
-    CylinderPointSampler* _carrier_gen;
-    CylinderPointSampler* _enclosure_flange_gen;
-    CylinderPointSampler* _enclosure_window_gen;
-    CylinderPointSampler* _enclosure_pad_gen;
-    CylinderPointSampler* _pmt_base_gen;
-
-    //  G4double _enclosure_body_perc;
-    
     // Geometry Navigator
     G4Navigator* _geom_navigator;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
+    G4GenericMessenger* _msg;
+
+    // PMT
+    PmtR11410*  _pmt;
+
+    G4double _end_of_sapphire_posz;
+    G4double _copper_plate_posz;
+    G4double _vacuum_posz;
+    std::vector<G4ThreeVector> _pmt_positions;
+    std::vector<G4ThreeVector> _short_hut_pos, _medium_hut_pos, _long_hut_pos;
+    G4double _pmt_zpos;
+    G4RotationMatrix* _pmt_rot;
+    G4double _rot_angle;
+
+    // Vertex generators
+    CylinderPointSampler2020* _copper_gen;
+    CylinderPointSampler2020* _sapphire_window_gen;
+    CylinderPointSampler2020* _optical_pad_gen;
+    CylinderPointSampler2020* _internal_pmt_base_gen;
+    CylinderPointSampler2020* _external_pmt_base_gen;
 
   };
 

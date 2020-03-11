@@ -8,7 +8,7 @@
 /PhysicsList/RegisterPhysics G4OpticalPhysics
 /PhysicsList/RegisterPhysics NexusPhysics
 
-/Geometry/RegisterGeometry OPTICAL_GEOMETRY
+/Geometry/RegisterGeometry NEXT_NEW_OPT
 /Generator/RegisterGenerator EL_TABLE_GENERATOR
 
 /Actions/RegisterTrackingAction DEFAULT
