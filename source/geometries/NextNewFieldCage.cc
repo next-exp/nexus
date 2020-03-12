@@ -27,6 +27,7 @@
 #include <G4Tubs.hh>
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
+#include <G4LogicalBorderSurface.hh>
 #include <G4NistManager.hh>
 #include <G4UserLimits.hh>
 #include <G4SDManager.hh>
@@ -46,6 +47,7 @@ namespace nexus {
 
   NextNewFieldCage::NextNewFieldCage():
     BaseGeometry(),
+    _mother_logic(nullptr), _mother_phys(nullptr),
     // Field cage dimensions
     _dist_feedthroughs(514. * mm), // distance between the centres of the feedthroughs
     _cathode_thickness(.1 * mm),
@@ -206,9 +208,15 @@ namespace nexus {
   }
 
 
-  void NextNewFieldCage::SetLogicalVolume(G4LogicalVolume* mother_logic)
+  void NextNewFieldCage::SetMotherLogicalVolume(G4LogicalVolume* mother_logic)
   {
     _mother_logic = mother_logic;
+  }
+
+
+  void NextNewFieldCage::SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys)
+  {
+    _mother_phys = mother_phys;
   }
 
 
@@ -333,7 +341,7 @@ namespace nexus {
     active_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
     // VERTEX GENERATOR
-    _active_gen = 
+    _active_gen =
       new CylinderPointSampler(0., _active_length, _tube_in_diam/2.,
                                0., G4ThreeVector (0., 0., _active_posz));
   }
@@ -471,8 +479,21 @@ void NextNewFieldCage::BuildBuffer()
       new G4Tubs("TPB_ANODE", 0., anode_diam/2. , _tpb_thickness/2., 0, twopi);
     G4LogicalVolume* tpb_anode_logic =
       new G4LogicalVolume(tpb_anode_solid, _tpb, "TPB_ANODE");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., -_anode_quartz_thickness/2.+_tpb_thickness/2.), tpb_anode_logic,
-		      "TPB_ANODE", anode_logic, false, 0, false);
+
+    G4VPhysicalVolume* tpb_anode_phys =
+      new G4PVPlacement(0, G4ThreeVector(0., 0., -_anode_quartz_thickness/2.+_tpb_thickness/2.), tpb_anode_logic,
+                        "TPB_ANODE", anode_logic, false, 0, false);
+
+    // Optical surface between gas and TPB to model the latter's roughness
+    G4OpticalSurface* gas_tpb_anode_surf =
+      new G4OpticalSurface("GAS_TPB_ANODE_OPSURF", glisur, ground,
+                           dielectric_dielectric, .01);
+
+    new G4LogicalBorderSurface("GAS_TPB_ANODE_OPSURF", tpb_anode_phys, _mother_phys,
+                               gas_tpb_anode_surf);
+    new G4LogicalBorderSurface("GAS_TPB_ANODE_OPSURF", _mother_phys, tpb_anode_phys,
+                               gas_tpb_anode_surf);
+
 
     G4Tubs* ito_anode_solid =
       new G4Tubs("ITO_ANODE", 0., anode_diam/2. , _ito_thickness/2., 0, twopi);
@@ -556,12 +577,13 @@ void NextNewFieldCage::BuildBuffer()
     G4Tubs* tpb_drift_solid =
       new G4Tubs("DRIFT_TPB", _tube_in_diam/2., _tube_in_diam/2. + _tpb_thickness,
                  _tube_length_drift/2., 0, twopi);
-      
+
     G4LogicalVolume* tpb_drift_logic =
       new G4LogicalVolume(tpb_drift_solid, _tpb, "DRIFT_TPB");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), tpb_drift_logic,
-                      "DRIFT_TPB", drift_tube_logic, false, 0, false);
+    G4VPhysicalVolume* tpb_drift_phys =
+      new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), tpb_drift_logic,
+                        "DRIFT_TPB", drift_tube_logic, false, 0, false);
 
 
     /// OPTICAL SURFACE PROPERTIES    ////////
@@ -569,10 +591,20 @@ void NextNewFieldCage::BuildBuffer()
     reflector_opt_surf->SetType(dielectric_metal);
     reflector_opt_surf->SetModel(unified);
     reflector_opt_surf->SetFinish(ground);
-    reflector_opt_surf->SetSigmaAlpha(0.1);
+    reflector_opt_surf->SetSigmaAlpha(0.01);
     reflector_opt_surf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
     new G4LogicalSkinSurface("DRIFT_TUBE", drift_tube_logic,
     			     reflector_opt_surf);
+
+    // Optical surface between gas and TPB to model the latter's roughness
+    G4OpticalSurface* gas_tpb_teflon_surf =
+      new G4OpticalSurface("GAS_TPB_TEFLON_OPSURF", glisur, ground,
+                           dielectric_dielectric, .01);
+
+    new G4LogicalBorderSurface("GAS_TPB_TEFLON_OPSURF", tpb_drift_phys, _mother_phys,
+                               gas_tpb_teflon_surf);
+    new G4LogicalBorderSurface("GAS_TPB_TEFLON_OPSURF", _mother_phys, tpb_drift_phys,
+                               gas_tpb_teflon_surf);
 
     // We set the reflectivity of HDPE to 50% for the moment
     G4OpticalSurface* abs_opt_surf = new G4OpticalSurface("ABSORBER");
@@ -642,7 +674,7 @@ void NextNewFieldCage::BuildBuffer()
     // different parts of the detector.
     // In current implementation the HDPE is not implemented, and only one of the 2 S-Steel rings
     // is simulated with a very close size to both of them.
-    
+
     // Dimensions
     G4double frame_length =  10. * mm;
     G4double frame_thickn =  16. * mm;
