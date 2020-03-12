@@ -7,13 +7,7 @@
 /Geometry/Next100/specific_vertex_Y 2400. mm
 /Geometry/Next100/specific_vertex_Z 0. mm
 
-/Geometry/Next100/shielding_vis false
-/Geometry/Next100/vessel_vis false
-/Geometry/Next100/ics_vis false
-/Geometry/Next100/field_cage_vis false
-/Geometry/Next100/grids_vis false
-/Geometry/Next100/energy_plane_vis false
-/Geometry/Next100/tracking_plane_vis false
+/control/execute macros/geometries/NEXT100DefaultVisibility.mac
 /Geometry/PmtR11410/SD_depth 3
 
 
