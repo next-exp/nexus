@@ -422,8 +422,11 @@ void NextNewVessel::Construct()
 
     G4LogicalVolume* vessel_gas_logic = new G4LogicalVolume(vessel_gas_solid, vessel_gas_mat,"VESSEL_GAS");
     _internal_logic_vol = vessel_gas_logic;
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_gas_logic,
-		      "VESSEL_GAS", vessel_logic, false, 0, false);
+
+    G4VPhysicalVolume* vessel_gas_phys =
+      new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_gas_logic,
+                        "VESSEL_GAS", vessel_logic, false, 0, false);
+    _internal_phys_vol = vessel_gas_phys;
 
 
     /// INTERNAL SOURCE TUBES ////
@@ -787,6 +790,12 @@ void NextNewVessel::Construct()
   {
     return _internal_logic_vol;
   }
+
+  G4VPhysicalVolume* NextNewVessel::GetInternalPhysicalVolume() const
+  {
+    return _internal_phys_vol;
+  }
+
 
   G4double NextNewVessel::GetUPNozzleZPosition() const
   {
