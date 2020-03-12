@@ -33,6 +33,7 @@ Next100SiPMBoard::Next100SiPMBoard():
   mpv_   (nullptr),
   vtxgen_(nullptr)
 {
+  sipm_geom_ = new GenericPhotosensor(1.3*mm);
 }
 
 
@@ -98,12 +99,10 @@ void Next100SiPMBoard::Construct()
   // of the new Hamamatsu SiPMs are known.
   // The refractive index of the sensor's window is matched to that of TPB,
   // its surrounding medium.
-  GenericPhotosensor sipm_geom(1.3*mm);
-  sipm_geom.SetRefractiveIndex(tpb->GetMaterialPropertiesTable()->GetProperty("RINDEX"));
-  sipm_geom.Construct();
-  //sipm_geom.SetRefractiveIndex(tpb->GetMaterialPropertiesTable()->GetProperty("RINDEX"));
+  sipm_geom_->Construct();
+  sipm_geom_->SetRefractiveIndex(tpb->GetMaterialPropertiesTable()->GetProperty("RINDEX"));
 
-  zpos = thickness_/2. - wls_thickness - sipm_geom.GetThickness()/2.;
+  zpos = thickness_/2. - wls_thickness - sipm_geom_->GetThickness()/2.;
 
   G4int counter = 0;
 
@@ -119,8 +118,8 @@ void Next100SiPMBoard::Construct()
       sipm_positions_.push_back(position);
 
       new G4PVPlacement(nullptr, position,
-                        sipm_geom.GetLogicalVolume(),
-                        sipm_geom.GetLogicalVolume()->GetName(),
+                        sipm_geom_->GetLogicalVolume(),
+                        sipm_geom_->GetLogicalVolume()->GetName(),
                         board_logic_vol,
                         false, counter, false);
 
