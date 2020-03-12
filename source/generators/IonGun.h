@@ -1,21 +1,18 @@
-// ----------------------------------------------------------------------------
-///  \file   IonGun.h
-///  \brief  
-///  
-///  \author   Miquel Nebot Guinot <miquel.nebot@ific.uv.es>       
-///  \date     01 Aug 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
-// ----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+//  nexus | IonGun.h
+//
+//  * Author: <miquel.nebot@ific.uv.es>
+//            <justo.martin-albo@ific.uv.es>
+//  * Creation date: 01 Aug 2013
+// -----------------------------------------------------------------------------
 
-#ifndef __IonGun__
-#define __IonGun__
+#ifndef ION_GUN_H
+#define ION_GUN_H
 
 #include <G4VPrimaryGenerator.hh>
 
-class G4GenericMessenger;
 class G4Event;
+class G4GenericMessenger;
 class G4ParticleDefinition;
 
 
@@ -23,36 +20,34 @@ namespace nexus{
 
   class BaseGeometry;
 
-  
-  /// Primary generator (concrete class of G4VPrimaryGenerator) for events 
-  /// consisting of a decay of an  Ion. The user must specify via configuration
-  /// parameters the Isotope, the atomic number and the mass number
- 
-   class IonGun: public G4VPrimaryGenerator
+
+  // Primary generator for events consisting in the decay of a radioactive ion
+  // The user must specify via configuration parameters the atomic number,
+  // mass number and energy level of the isotope of interest.
+
+  class IonGun: public G4VPrimaryGenerator
   {
   public:
-    /// Constructor
+    // Constructor
     IonGun();
-    /// Destructor
+    // Destructor
     ~IonGun();
-    
-    /// This method is invoked at the beginning of the event. It sets 
-    /// a primary vertex in the event.
+
+    // This method is invoked at the beginning of the event,
+    // setting a primary vertex that contains the chosen ion
     void GeneratePrimaryVertex(G4Event*);
- 
+
   private:
-    void SetParticleDefinition();
+    G4ParticleDefinition* IonDefinition();
 
  private:
-    G4GenericMessenger* _msg;
-    G4ParticleDefinition* _particle_definition;
-    G4String _region;
-    G4double _z; //atomic number
-    G4double _a; //mass number
-
-    const BaseGeometry* _geom; ///< Pointer to the detector geometry
+    G4int atomic_number_, mass_number_;
+    G4double energy_level_;
+    G4String region_;
+    G4GenericMessenger* msg_;
+    const BaseGeometry* geom_;
   };
-  
+
 } // end namespace nexus
 
 #endif

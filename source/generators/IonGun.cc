@@ -1,16 +1,15 @@
-// ---------------------------------------------------------------------------
-//  $Id$
+// -----------------------------------------------------------------------------
+//  nexus | IonGun.cc
 //
-//  Author : Miquel Nebot Guinot <miquel.nebot@ific.uv.es>        
-//  Created: 01 Aug 2013
-//
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
-// ---------------------------------------------------------------------------
+//  * Author: <miquel.nebot@ific.uv.es>
+//            <justo.martin-albo@ific.uv.es>
+//  * Creation date: 01 Aug 2013
+// -----------------------------------------------------------------------------
 
 #include "IonGun.h"
 
-#include "DetectorConstruction.h"
 #include "BaseGeometry.h"
+#include "DetectorConstruction.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4RunManager.hh>
@@ -18,64 +17,79 @@
 #include <G4IonTable.hh>
 #include <G4PrimaryVertex.hh>
 
-
 using namespace nexus;
 
 
 IonGun::IonGun():
-  G4VPrimaryGenerator(), _msg(0), _particle_definition(0),
-  _z(0.), _a(0.), _geom(0)
+  G4VPrimaryGenerator(),
+  atomic_number_(0), mass_number_(0), energy_level_(0.),
+  region_(""),
+  msg_(nullptr), geom_(nullptr)
 {
-  _msg = new G4GenericMessenger(this, "/Generator/IonGun/",
-				"Control commands of the ion gun primary generator.");
+  msg_ = new G4GenericMessenger(this, "/Generator/IonGun/",
+                                "Control commands of the ion gun primary generator.");
 
-  G4GenericMessenger::Command& z_ =
-    _msg->DeclareProperty("atomic_number", _z, "Set atomic number");
-  z_.SetParameterName("atomic_number", false);
- 
-  G4GenericMessenger::Command& a_ =
-    _msg->DeclareProperty("mass_number", _a, "Set mass number");
-   a_.SetParameterName("mass_number", false);
+  G4GenericMessenger::Command& atomic_number_cmd =
+    msg_->DeclareProperty("atomic_number", atomic_number_, "Atomic number of the ion.");
+  atomic_number_cmd.SetParameterName("atomic_number", false);
+  atomic_number_cmd.SetRange("atomic_number > 0");
 
-  _msg->DeclareProperty("region", _region, 
-    "Set the region of the geometry where the vertex will be generated.");
- 
-  DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
-  _geom = detconst->GetGeometry();
+  G4GenericMessenger::Command& mass_number_cmd =
+    msg_->DeclareProperty("mass_number", mass_number_, "Mass number of the ion.");
+  mass_number_cmd.SetParameterName("mass_number", false);
+  mass_number_cmd.SetRange("mass_number > 0");
+
+  G4GenericMessenger::Command& energy_level_cmd =
+    msg_->DeclarePropertyWithUnit("energy_level", "MeV", energy_level_,
+                                  "Energy level of the ion.");
+  energy_level_cmd.SetParameterName("energy_level", false);
+  energy_level_cmd.SetRange("energy_level >= 0");
+
+  msg_->DeclareProperty("region", region_,
+                        "Region of the geometry where vertices will be generated.");
+
+  // Load the detector geometry, which will be used for the generation of vertices
+  const DetectorConstruction* detconst = dynamic_cast<const DetectorConstruction*>
+    (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
+  if (detconst) geom_ = detconst->GetGeometry();
+  else G4Exception("IonGun()", "[IonGun]", FatalException, "Unable to load geometry.");
 }
-
 
 
 IonGun::~IonGun()
 {
-  delete _msg;
+  delete msg_;
 }
-// void IonGun::SetParticleDefinition()
-// {
- 
-// }
+
+
+G4ParticleDefinition* IonGun::IonDefinition()
+{
+  G4ParticleDefinition* pdef =
+    G4IonTable::GetIonTable()->GetIon(atomic_number_, mass_number_, energy_level_);
+
+  if (!pdef) G4Exception("IonDefinition()", "[IonGun]",
+                         FatalException, "Unable to find the requested ion.");
+
+  return pdef;
+}
+
 
 void IonGun::GeneratePrimaryVertex(G4Event* event)
 {
- _particle_definition = G4IonTable::GetIonTable()->
-    GetIon(_z, _a, 0.);
-  
-  if (!_particle_definition)
-    G4Exception("SetParticleDefinition()", "[IonGun]",
-		FatalException, " can not create ion "); 
+  // Pointer declared as static so that it gets allocated only once
+  // (i.e. the ion definition is only looked up in the first event).
+  static G4ParticleDefinition* pdef = IonDefinition();
+  // Create the new primary particle (i.e. the ion)
+  G4PrimaryParticle* ion = new G4PrimaryParticle(pdef);
 
-  // Generate an initial position for the particle using the geometry
-  G4ThreeVector position = _geom->GenerateVertex(_region);
-  // Particle generated at start-of-event
+  // Generate an initial position for the ion using the geometry
+  G4ThreeVector position = geom_->GenerateVertex(region_);
+  // Ion generated at the start-of-event time
   G4double time = 0.;
   // Create a new vertex
   G4PrimaryVertex* vertex = new G4PrimaryVertex(position, time);
-  
-  // Create the new primary particle and set it some properties
-  G4PrimaryParticle* particle = 
-    new G4PrimaryParticle(_particle_definition);
- 
-  // Add particle to the vertex and this to the event
-  vertex->SetPrimary(particle);
+
+  // Add ion to the vertex and this to the event
+  vertex->SetPrimary(ion);
   event->AddPrimaryVertex(vertex);
 }
