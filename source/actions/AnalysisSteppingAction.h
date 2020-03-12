@@ -14,6 +14,7 @@
 
 #include <G4UserSteppingAction.hh>
 #include <globals.hh>
+#include <map>
 
 class G4Step;
 
