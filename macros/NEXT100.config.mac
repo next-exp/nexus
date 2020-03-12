@@ -20,10 +20,9 @@
 /Geometry/Next100/vessel_vis false
 /Geometry/Next100/ics_vis false
 /Geometry/Next100/field_cage_vis false
-/Geometry/Next100/grids_vis false
 /Geometry/Next100/energy_plane_vis false
 /Geometry/Next100/tracking_plane_vis false
-/Geometry/SiPMSensl/visibility false
+/Geometry/GenericPhotosensor/visibility false
 /Geometry/PmtR11410/SD_depth 3
 
 
@@ -32,7 +31,7 @@
 # Ion Gun for background decays
 /Generator/IonGun/atomic_number 83
 /Generator/IonGun/mass_number 214
-/Generator/IonGun/region FIELD_CAGE
+/Generator/IonGun/region TRK_SUPPORT
 
 # ACTIONS
 /Actions/DefaultEventAction/energy_threshold 0.6 MeV
