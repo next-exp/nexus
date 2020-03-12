@@ -37,9 +37,14 @@ namespace nexus {
     _tracking_plane = new NextNewTrackingPlane();
   }
 
-  void NextNewInnerElements::SetLogicalVolume(G4LogicalVolume* mother_logic)
+  void NextNewInnerElements::SetMotherLogicalVolume(G4LogicalVolume* mother_logic)
   {
     _mother_logic = mother_logic;
+  }
+
+  void NextNewInnerElements::SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys)
+  {
+    _mother_phys = mother_phys;
   }
 
   void NextNewInnerElements::Construct()
@@ -49,7 +54,8 @@ namespace nexus {
     _pressure =    _gas->GetPressure();
     _temperature = _gas->GetTemperature();
     //INNER ELEMENTS
-    _field_cage->SetLogicalVolume(_mother_logic);
+    _field_cage->SetMotherLogicalVolume(_mother_logic);
+    //_field_cage->SetMotherPhysicalVolume();
     _field_cage->Construct();
     SetELzCoord(_field_cage->GetELzCoord());
     _tracking_plane->SetLogicalVolume(_mother_logic);

@@ -16,6 +16,7 @@
 #include <G4ThreeVector.hh>
 
 class G4LogicalVolume;
+class G4VPhysicalVolume;
 class G4Material;
 class G4GenericMessenger;
 namespace nexus { class NextNewEnergyPlane; }
@@ -34,7 +35,9 @@ namespace nexus {
     ~NextNewInnerElements();
 
     // Sets the Logical Volume where Inner Elements will be placed
-    void SetLogicalVolume(G4LogicalVolume* mother_logic);
+    void SetMotherLogicalVolume(G4LogicalVolume* mother_logic);
+    //
+    void SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys);
 
     // It Returns the relative position respect to the rest of NEXTNEW geometry
     //G4ThreeVector GetPosition() const;
@@ -49,6 +52,7 @@ namespace nexus {
   private:
 
     G4LogicalVolume* _mother_logic;
+    G4VPhysicalVolume* _mother_phys;
     G4Material* _gas;
     G4double _pressure;
     G4double _temperature;
