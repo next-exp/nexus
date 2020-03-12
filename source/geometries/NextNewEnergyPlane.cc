@@ -170,10 +170,16 @@ namespace nexus {
     tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
     G4double window_diam =  _enclosure->GetWindowDiameter();
     G4Tubs* tpb_solid = new G4Tubs("ENCLOSURE_TPB", 0., window_diam/2,
-				   _tpb_thickness/2., 0., twopi);
+                                   _tpb_thickness/2., 0., twopi);
     G4LogicalVolume* tpb_logic =
-      new G4LogicalVolume(tpb_solid, tpb,
-			  "ENCLOSURE_TPB");
+      new G4LogicalVolume(tpb_solid, tpb,"ENCLOSURE_TPB");
+
+    // Optical surface around TPB to model its roughness
+    G4OpticalSurface* enclosure_tpb_opsurf =
+      new G4OpticalSurface("ENCLOSURE_TPB_OPSURF", glisur, ground,
+                           dielectric_dielectric, .01);
+    new G4LogicalSkinSurface("ENCLOSURE_TPB_OPSURF", tpb_logic, enclosure_tpb_opsurf);
+
 
     G4VisAttributes * visattrib_blue = new G4VisAttributes;
     visattrib_blue->SetColor(0., 0., 1.);

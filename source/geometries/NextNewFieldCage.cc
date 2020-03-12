@@ -471,7 +471,7 @@ void NextNewFieldCage::BuildBuffer()
     G4LogicalVolume* anode_logic =
       new G4LogicalVolume(anode_quartz_solid, _quartz, "EL_QUARTZ_ANODE");
     new G4PVPlacement(0, G4ThreeVector(0., 0., _pos_z_anode), anode_logic,
-		      "EL_QUARTZ_ANODE", _mother_logic, false, 0, false);
+                      "EL_QUARTZ_ANODE", _mother_logic, false, 0, false);
     //G4cout << "Anode plate starts in " << _pos_z_anode - _anode_quartz_thickness/2. << " and ends in " <<
     //  _pos_z_anode + _anode_quartz_thickness/2. << G4endl;
 
@@ -480,19 +480,14 @@ void NextNewFieldCage::BuildBuffer()
     G4LogicalVolume* tpb_anode_logic =
       new G4LogicalVolume(tpb_anode_solid, _tpb, "TPB_ANODE");
 
-    G4VPhysicalVolume* tpb_anode_phys =
-      new G4PVPlacement(0, G4ThreeVector(0., 0., -_anode_quartz_thickness/2.+_tpb_thickness/2.), tpb_anode_logic,
+    new G4PVPlacement(0, G4ThreeVector(0., 0., -_anode_quartz_thickness/2.+_tpb_thickness/2.), tpb_anode_logic,
                         "TPB_ANODE", anode_logic, false, 0, false);
 
     // Optical surface between gas and TPB to model the latter's roughness
-    G4OpticalSurface* gas_tpb_anode_surf =
-      new G4OpticalSurface("GAS_TPB_ANODE_OPSURF", glisur, ground,
+    G4OpticalSurface* tpb_anode_surf =
+      new G4OpticalSurface("TPB_ANODE_OPSURF", glisur, ground,
                            dielectric_dielectric, .01);
-
-    new G4LogicalBorderSurface("GAS_TPB_ANODE_OPSURF", tpb_anode_phys, _mother_phys,
-                               gas_tpb_anode_surf);
-    new G4LogicalBorderSurface("GAS_TPB_ANODE_OPSURF", _mother_phys, tpb_anode_phys,
-                               gas_tpb_anode_surf);
+    new G4LogicalSkinSurface("TPB_ANODE_OPSURF", tpb_anode_logic, tpb_anode_surf);
 
 
     G4Tubs* ito_anode_solid =
