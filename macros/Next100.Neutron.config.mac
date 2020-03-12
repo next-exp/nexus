@@ -1,0 +1,41 @@
+### --------------------------------------------------------------------
+###  This macro simulates neutrons in the NEXT-100 geometry.
+###  $Id: Next100.Neutron.config.mac 8758 2016-11-09 15:12:45Z minegui $
+### --------------------------------------------------------------------
+
+##### JOB CONTROL #####
+/nexus/random_seed -1
+/nexus/persistency/eventType background
+/nexus/persistency/outputFile Next100.Neutron.next
+
+
+##### GEOMETRY #####
+/Geometry/Next100/pressure 15. bar
+/Geometry/Next100/max_step_size 1. mm
+/Geometry/Next100/elfield false
+
+/Geometry/Next100/shielding_vis false
+/Geometry/Next100/vessel_vis false
+/Geometry/Next100/ics_vis false
+/Geometry/Next100/field_cage_vis false
+/Geometry/Next100/grids_vis false
+/Geometry/Next100/energy_plane_vis false
+/Geometry/Next100/tracking_plane_vis false
+/Geometry/PmtR11410/SD_depth 3
+
+
+##### GENERATOR #####
+#Neutron generator for cosmogenics
+/Generator/NeutronGenerator/min_energy 100 MeV
+/Generator/NeutronGenerator/max_energy 	100 MeV
+/Generator/NeutronGenerator/region EXTERNAL
+
+## No full simulation
+/PhysicsList/Nexus/clustering          false
+/PhysicsList/Nexus/drift               false
+/PhysicsList/Nexus/electroluminescence false
+
+##### VERBOSITIES #####
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0

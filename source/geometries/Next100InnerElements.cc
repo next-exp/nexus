@@ -46,20 +46,19 @@ namespace nexus {
 
   Next100InnerElements::Next100InnerElements():
     BaseGeometry(),
-    _gate_sapphire_wdw_distance (1441.7 * mm) // should be active length + cathode thickness + buffer length
+    _gate_sapphire_wdw_distance ( 1441.7 * mm), // should be active length + cathode thickness + buffer length
+    _gate_tracking_plane_distance(  25.0 * mm),
+    _mother_logic(nullptr),
+    _mother_phys (nullptr),
+    _gas(nullptr),
+    _field_cage    (new Next100FieldCage()),
+    _energy_plane  (new Next100EnergyPlane()),
+    _tracking_plane(new Next100TrackingPlane(_gate_tracking_plane_distance)),
+    _msg(nullptr)
   {
-    // Field Cage
-    _field_cage = new Next100FieldCage();
-
-    // Energy Plane
-    _energy_plane = new Next100EnergyPlane();
-
-    // Tracking Plane
-    _tracking_plane = new Next100TrackingPlane();
-
-    /// Messenger
+    // Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/Next100/",
-				  "Control commands of geometry Next100.");
+                                  "Control commands of geometry Next100.");
   }
 
 
@@ -67,6 +66,7 @@ namespace nexus {
   {
     _mother_logic = mother_logic;
   }
+
 
   void Next100InnerElements::SetPhysicalVolume(G4VPhysicalVolume* mother_phys)
   {
@@ -95,8 +95,8 @@ namespace nexus {
     _energy_plane->SetSapphireSurfaceZPos(_gate_sapphire_wdw_distance); // to check
     _energy_plane->Construct();
 
-    // Tracking Plane
-    _tracking_plane->SetLogicalVolume(_mother_logic);
+    // Tracking plane
+    _tracking_plane->SetMotherPhysicalVolume(_mother_phys);
     _tracking_plane->SetELzCoord(gate_zpos);
     _tracking_plane->Construct();
   }
@@ -134,7 +134,7 @@ namespace nexus {
     }
     // Tracking Plane regions
     else if ((region == "TRK_SUPPORT") ||
-             (region == "DICE_BOARD")) {
+             (region == "SIPM_BOARD")) {
       vertex = _tracking_plane->GenerateVertex(region);
     }
     else {

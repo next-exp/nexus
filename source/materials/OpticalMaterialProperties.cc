@@ -25,7 +25,7 @@ using namespace CLHEP;
 G4MaterialPropertiesTable* OpticalMaterialProperties::Vacuum()
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
-  
+
   G4double photEnergy[] = {optPhotMinE_, optPhotMaxE_};
   G4double nEntries = sizeof(photEnergy) / sizeof(G4double);
 
@@ -33,12 +33,12 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Vacuum()
   G4double rIndex[] = {1., 1.};
   assert(sizeof(rIndex) == sizeof(photEnergy));
   mpt->AddProperty("RINDEX", photEnergy, rIndex, nEntries);
-  
+
   // ABSORPTION LENGTH
   G4double absLength[] = {noAbsLength_, noAbsLength_};
   assert(sizeof(absLength) == sizeof(photEnergy));
   mpt->AddProperty("ABSLENGTH", photEnergy, absLength, nEntries);
-  
+
   return mpt;
 }
 
@@ -53,7 +53,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FusedSilica()
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
   // REFRACTIVE INDEX
-  // The range is chosen to be up to ~10.7 eV because Sellmeier's equation 
+  // The range is chosen to be up to ~10.7 eV because Sellmeier's equation
   // for fused silica is valid only in that range
   const G4int ri_entries = 200;
   G4double eWidth = (optPhotMaxE_ - optPhotMinE_) / ri_entries;
@@ -68,7 +68,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FusedSilica()
   //    n^2 - 1 = B_1 * \lambda^2 / (\lambda^2 - C_1) +
   //            + B_2 * \lambda^2 / (\lambda^2 - C_2) +
   //            + B_3 * \lambda^2 / (\lambda^2 - C_3),
-  // with wavelength \lambda in micrometers and 
+  // with wavelength \lambda in micrometers and
   //    B_1 = 4.73E-1, B_2 = 6.31E-1, B_3 = 9.06E-1
   //    C_1 = 1.30E-2, C_2 = 4.13E-3, C_3 = 9.88E+1.
 
@@ -82,7 +82,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FusedSilica()
   G4double rIndex[ri_entries];
   for (int i=0; i<ri_entries; i++) {
     G4double lambda = h_Planck*c_light/ri_energy[i]*1000; // in micron
-    G4double n2 = 1 + B_1*pow(lambda,2)/(pow(lambda,2)-C_1) 
+    G4double n2 = 1 + B_1*pow(lambda,2)/(pow(lambda,2)-C_1)
       + B_2*pow(lambda,2)/(pow(lambda,2)-C_2)
       + B_3*pow(lambda,2)/(pow(lambda,2)-C_3);
     rIndex[i] = sqrt(n2);
@@ -94,9 +94,9 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FusedSilica()
 
   // ABSORPTION LENGTH
   G4double abs_energy[] = {
-    optPhotMinE_,  6.46499 * eV, 
+    optPhotMinE_,  6.46499 * eV,
     6.54000 * eV,  6.59490 * eV,  6.64000 * eV,  6.72714 * eV,
-    6.73828 * eV,  6.75000 * eV,  6.82104 * eV,  6.86000 * eV, 
+    6.73828 * eV,  6.75000 * eV,  6.82104 * eV,  6.86000 * eV,
     6.88000 * eV,  6.89000 * eV,  7.00000 * eV,  7.01000 * eV,
     7.01797 * eV,  7.05000 * eV,  7.08000 * eV,  7.08482 * eV,
     7.30000 * eV,  7.36000 * eV,  7.40000 * eV,  7.48000 * eV,
@@ -109,7 +109,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FusedSilica()
   G4double absLength[] = {
     noAbsLength_, noAbsLength_,
     200.0 * cm,   200.0 * cm,  90.0 * cm,  45.0 * cm,
-     45.0 * cm,    30.0 * cm,  24.0 * cm,  21.0 * cm, 
+     45.0 * cm,    30.0 * cm,  24.0 * cm,  21.0 * cm,
      20.0 * cm,    19.0 * cm,  16.0 * cm,  14.0 * cm,
      13.0 * cm,     8.5 * cm,   8.0 * cm,   6.0 * cm,
       1.5 * cm,     1.2 * cm,   1.0 * cm,   .65 * cm,
@@ -136,7 +136,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeFusedSilica(G4double t
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
   // REFRACTIVE INDEX
-  // The range is chosen to be up to ~10.7 eV because Sellmeier's equation 
+  // The range is chosen to be up to ~10.7 eV because Sellmeier's equation
   // for fused silica is valid only in that range
   const G4int ri_entries = 200;
   G4double eWidth = (optPhotMaxE_ - optPhotMinE_) / ri_entries;
@@ -151,7 +151,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeFusedSilica(G4double t
   //    n^2 - 1 = B_1 * \lambda^2 / (\lambda^2 - C_1) +
   //            + B_2 * \lambda^2 / (\lambda^2 - C_2) +
   //            + B_3 * \lambda^2 / (\lambda^2 - C_3),
-  // with wavelength \lambda in micrometers and 
+  // with wavelength \lambda in micrometers and
   //    B_1 = 4.73E-1, B_2 = 6.31E-1, B_3 = 9.06E-1
   //    C_1 = 1.30E-2, C_2 = 4.13E-3, C_3 = 9.88E+1.
 
@@ -165,11 +165,11 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeFusedSilica(G4double t
   G4double rIndex[ri_entries];
   for (int i=0; i<ri_entries; i++) {
     G4double lambda = h_Planck*c_light/ri_energy[i]*1000; // in micron
-    G4double n2 = 1 + B_1*pow(lambda,2)/(pow(lambda,2)-C_1) 
+    G4double n2 = 1 + B_1*pow(lambda,2)/(pow(lambda,2)-C_1)
       + B_2*pow(lambda,2)/(pow(lambda,2)-C_2)
       + B_3*pow(lambda,2)/(pow(lambda,2)-C_3);
     rIndex[i] = sqrt(n2);
-    //G4cout << "* FakeFusedSilica rIndex:  " << std::setw(5) 
+    //G4cout << "* FakeFusedSilica rIndex:  " << std::setw(5)
     //       << ri_energy[i]/eV << " eV -> " << rIndex[i] << G4endl;
   }
   assert(sizeof(rIndex) == sizeof(ri_energy));
@@ -191,13 +191,13 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeFusedSilica(G4double t
 G4MaterialPropertiesTable* OpticalMaterialProperties::GlassEpoxy()
 {
   // Optical properties of Optorez 1330 glass epoxy.
-  // Obtained from http://refractiveindex.info and 
+  // Obtained from http://refractiveindex.info and
   // https://www.zeonex.com/Optics.aspx.html#glass-like
 
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
   // REFRACTIVE INDEX
-  // The range is chosen to be up to ~10.7 eV because Sellmeier's equation 
+  // The range is chosen to be up to ~10.7 eV because Sellmeier's equation
   // for fused silica is valid only in that range
   const G4int ri_entries = 200;
   G4double eWidth = (optPhotMaxE_ - optPhotMinE_) / ri_entries;
@@ -206,12 +206,12 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GlassEpoxy()
   for (int i=0; i<ri_entries; i++) {
     ri_energy[i] = optPhotMinE_ + i * eWidth;
   }
- 
+
   G4double rIndex[ri_entries];
   for (int i=0; i<ri_entries; i++) {
     G4double lambda = h_Planck*c_light/ri_energy[i]*1000; // in micron
-    G4double n2 = 2.291142 - 3.311944E-2*pow(lambda,2) - 1.630099E-2*pow(lambda,-2) + 
-                  7.265983E-3*pow(lambda,-4) - 6.806145E-4*pow(lambda,-6) + 
+    G4double n2 = 2.291142 - 3.311944E-2*pow(lambda,2) - 1.630099E-2*pow(lambda,-2) +
+                  7.265983E-3*pow(lambda,-4) - 6.806145E-4*pow(lambda,-6) +
                   1.960732E-5*pow(lambda,-8);
     rIndex[i] = sqrt(n2);
     // G4cout << "* GlassEpoxy rIndex:  " << std::setw(5)
@@ -223,7 +223,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GlassEpoxy()
   // ABSORPTION LENGTH
   G4double abs_energy[] = {
     optPhotMinE_, 2.000 * eV,
-    2.132 * eV,   2.735 * eV,  2.908 * eV,  3.119 * eV, 
+    2.132 * eV,   2.735 * eV,  2.908 * eV,  3.119 * eV,
     3.320 * eV,   3.476 * eV,  3.588 * eV,  3.749 * eV,
     3.869 * eV,   3.973 * eV,  4.120 * eV,  4.224 * eV,
     4.320 * eV,   4.420 * eV,  5.018 * eV
@@ -232,7 +232,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GlassEpoxy()
 
   G4double absLength[] = {
     noAbsLength_, noAbsLength_,
-    326.00 * mm,  117.68 * mm,  85.89 * mm,  50.93 * mm, 
+    326.00 * mm,  117.68 * mm,  85.89 * mm,  50.93 * mm,
      31.25 * mm,   17.19 * mm,  10.46 * mm,   5.26 * mm,
       3.77 * mm,    2.69 * mm,   1.94 * mm,   1.33 * mm,
       0.73 * mm,    0.32 * mm,   0.10 * mm
@@ -263,7 +263,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Sapphire()
   for (int i=0; i<ri_entries; i++) {
     ri_energy[i] = optPhotMinE_ + i * eWidth;
   }
- 
+
   G4double rIndex[ri_entries];
   for (int i=0; i<ri_entries; i++) {
     rIndex[i] = seq.RefractiveIndex(h_Planck*c_light/ri_energy[i]);
@@ -292,8 +292,8 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Sapphire()
      48.071 * mm,   28.805 * mm,   17.880 * mm,   11.567 * mm,
       7.718 * mm,    4.995 * mm
   };
-  assert(sizeof(absLength) == sizeof(abs_energy)); 
-  mpt->AddProperty("ABSLENGTH", abs_energy, absLength, abs_entries); 
+  assert(sizeof(absLength) == sizeof(abs_energy));
+  mpt->AddProperty("ABSLENGTH", abs_energy, absLength, abs_entries);
 
   return mpt;
 }
@@ -301,10 +301,9 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Sapphire()
 
 
 /// Optical Coupler ///
-// gel NyoGel OCK-451
 G4MaterialPropertiesTable* OpticalMaterialProperties::OptCoupler()
 {
-  // For comparison of optical coupling materials.
+  // gel NyoGel OCK-451
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
   // REFRACTIVE INDEX
@@ -321,7 +320,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::OptCoupler()
   for (int i=0; i<ri_entries; i++) {
     ri_energy[i] = optPhotMinE_ + i * eWidth;
   }
- 
+
   G4double rIndex[ri_entries];
   for (int i=0; i<ri_entries; i++) {
     G4double wl = h_Planck * c_light / ri_energy[i];
@@ -348,8 +347,8 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::OptCoupler()
      499.5 * mm,   399.5 * mm,   199.5 * mm,  132.83 * mm,
       99.5 * mm,     4.5 * mm
   };
-  assert(sizeof(absLength) == sizeof(abs_energy)); 
-  mpt->AddProperty("ABSLENGTH", abs_energy, absLength, abs_entries); 
+  assert(sizeof(absLength) == sizeof(abs_energy));
+  mpt->AddProperty("ABSLENGTH", abs_energy, absLength, abs_entries);
 
   return mpt;
 }
@@ -377,9 +376,9 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GAr(G4double sc_yield)
   for (int i=0; i<ri_entries; i++) {
     G4double wl = h_Planck * c_light / ri_energy[i] * 1000; // in micron
      // From refractiveindex.info
-    rIndex[i] = 1 + 0.012055*(0.2075*pow(wl,2)/(91.012*pow(wl,2)-1) + 
+    rIndex[i] = 1 + 0.012055*(0.2075*pow(wl,2)/(91.012*pow(wl,2)-1) +
                 0.0415*pow(wl,2)/(87.892*pow(wl,2)-1) + 4.3330*pow(wl,2)/(214.02*pow(wl,2)-1));
-    //G4cout << "* GAr rIndex:  " << std::setw(5) << ri_energy[i]/eV 
+    //G4cout << "* GAr rIndex:  " << std::setw(5) << ri_energy[i]/eV
     //       << " eV -> " << rIndex[i] << G4endl;
   }
   assert(sizeof(rIndex) == sizeof(ri_energy));
@@ -404,7 +403,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GAr(G4double sc_yield)
   G4double intensity[sc_entries];
   for (int i=0; i<sc_entries; i++){
     sc_energy[i] = 8.240*eV + 0.008*i*eV;
-    intensity[i] = exp(-pow(Energy_peak/eV-sc_energy[i]/eV,2) / 
+    intensity[i] = exp(-pow(Energy_peak/eV-sc_energy[i]/eV,2) /
                    (2*pow(Energy_sigma/eV, 2)))/(Energy_sigma/eV*sqrt(pi*2.));
     //G4cout << "* GAr energy: " << std::setw(6) << sc_energy[i]/eV << " eV  ->  "
     //       << std::setw(6) << intensity[i] << G4endl;
@@ -421,8 +420,8 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GAr(G4double sc_yield)
   mpt->AddConstProperty("RESOLUTIONSCALE",    1.0);
   //mpt->AddConstProperty("ELTIMECONSTANT",     1260.*ns);
   mpt->AddConstProperty("ATTACHMENT",         1000.*ms);
-  
-  return mpt; 
+
+  return mpt;
 }
 
 
@@ -483,7 +482,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
   //mpt->AddConstProperty("ELTIMECONSTANT",     50.  * ns);
   mpt->AddConstProperty("YIELDRATIO",         .1);
   mpt->AddConstProperty("ATTACHMENT",         1000. * ms);
-  
+
   return mpt;
 }
 
@@ -539,7 +538,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeGrid(G4double pressure
   mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
 
   // CONST PROPERTIES
-  mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield); 
+  mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield);
   mpt->AddConstProperty("RESOLUTIONSCALE",    1.0);
   mpt->AddConstProperty("FASTTIMECONSTANT",   4.5  * ns);
   mpt->AddConstProperty("SLOWTIMECONSTANT",   100. * ns);
@@ -551,7 +550,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeGrid(G4double pressure
 
 
 
-/// PTFE ///
+/// PTFE (== TEFLON) ///
 G4MaterialPropertiesTable* OpticalMaterialProperties::PTFE()
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
@@ -572,11 +571,11 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::PTFE()
   const G4int NUMENTRIES = 2;
   G4double ENERGIES_2[NUMENTRIES]    = {optPhotMinE_, optPhotMaxE_};
   // Specular reflection about the normal to a microfacet.
-  // Such a vector is chosen according to a gaussian distribution with 
+  // Such a vector is chosen according to a gaussian distribution with
   // sigma = SigmaAlhpa (in rad) and centered in the average normal.
   G4double specularlobe[NUMENTRIES]  = {0., 0.};
-  // specular reflection about the average normal 
-  G4double specularspike[NUMENTRIES] = {0., 0.}; 
+  // specular reflection about the average normal
+  G4double specularspike[NUMENTRIES] = {0., 0.};
   // 180 degrees reflection.
   G4double backscatter[NUMENTRIES]   = {0., 0.};
   // 1 - the sum of these three last parameters is the percentage of Lambertian reflection
@@ -599,7 +598,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB()
 {
   // Data from https://doi.org/10.1140/epjc/s10052-018-5807-z
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
-  
+
   // REFRACTIVE INDEX
   const G4int rIndex_numEntries = 2;
   G4double rIndex_energies[rIndex_numEntries] = {optPhotMinE_, optPhotMaxE_};
@@ -619,42 +618,44 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB()
   // XXX There is a mismatch in the border of the figures that anyway, we implement.
   // Fig 20 -> WLS_absLength = 400 nm for wavelength = 250 nm
   // Fig 11 -> WLS_absLength = 100 nm for wavelength = 270 nm
+  // Values for wavelength shorter than 100 nm NOT included as they fit outside
+  // the simulation energy limits set in the header.
   G4double WLS_abs_energy[] = {
     optPhotMinE_,
-    nm_to_eV_ / 480.,  nm_to_eV_ / 470.,
-    nm_to_eV_ / 450.,  nm_to_eV_ / 430.,
-    nm_to_eV_ / 420.,  nm_to_eV_ / 400.,
-    nm_to_eV_ / 380.,  nm_to_eV_ / 360.,
-    nm_to_eV_ / 330.,  nm_to_eV_ / 320.,
-    nm_to_eV_ / 300.,  nm_to_eV_ / 270.,
-    nm_to_eV_ / 250.,  nm_to_eV_ / 230.,
-    nm_to_eV_ / 210.,  nm_to_eV_ / 190.,
-    nm_to_eV_ / 170.,  nm_to_eV_ / 150.,
-    nm_to_eV_ / 100.,  nm_to_eV_ /  70.,
-    nm_to_eV_ /  50.,  nm_to_eV_ /  40.,
-    optPhotMaxE_
+    h_Planck * c_light / (480. * nm),  h_Planck * c_light / (470. * nm),
+    h_Planck * c_light / (450. * nm),  h_Planck * c_light / (430. * nm),
+    h_Planck * c_light / (420. * nm),  h_Planck * c_light / (400. * nm),
+    h_Planck * c_light / (380. * nm),  h_Planck * c_light / (360. * nm),
+    h_Planck * c_light / (330. * nm),  h_Planck * c_light / (320. * nm),
+    h_Planck * c_light / (300. * nm),  h_Planck * c_light / (270. * nm),
+    h_Planck * c_light / (250. * nm),  h_Planck * c_light / (230. * nm),
+    h_Planck * c_light / (210. * nm),  h_Planck * c_light / (190. * nm),
+    h_Planck * c_light / (170. * nm),  h_Planck * c_light / (150. * nm),
+    h_Planck * c_light / (100. * nm),  optPhotMaxE_
   };
   const G4int WLS_abs_entries = sizeof(WLS_abs_energy) / sizeof(G4double);
 
-
   G4double WLS_absLength[] = {
     noAbsLength_,
-    noAbsLength_,  1.e6 * nm,
-    1.e5 * nm,     1.e4 * nm,
-    5.e3 * nm,     1.e3 * nm,
-    100. * nm,      30. * nm,
-     30. * nm,      50. * nm,
-    100. * nm,     100. * nm,
-    400. * nm,     400. * nm,
-    350. * nm,     250. * nm,
-    350. * nm,     400. * nm,
-    400. * nm,     350. * nm,
-    400. * nm,     noAbsLength_,
-    noAbsLength_
+    noAbsLength_,  1.e6 * nm,     // 480 , 470 nm
+    1.e5 * nm,     1.e4 * nm,     // 450 , 430 nm
+    5.e3 * nm,     1.e3 * nm,     // 420 , 400 nm
+    100. * nm,      30. * nm,     // 380 , 360 nm
+     30. * nm,      50. * nm,     // 330 , 320 nm
+    100. * nm,     100. * nm,     // 300 , 270 nm
+    400. * nm,     400. * nm,     // 250 , 230 nm
+    350. * nm,     250. * nm,     // 210 , 190 nm
+    350. * nm,     400. * nm,     // 170 , 150 nm
+    400. * nm,     noAbsLength_   // 100 nm
+
   };
+  //for (int i=0; i<WLS_abs_entries; i++)
+  //  G4cout << "* TPB WLS absLength:  " << std::setw(8) << WLS_abs_energy[i] / eV
+  //         << " eV  ==  " << std::setw(8) << (h_Planck * c_light / WLS_abs_energy[i]) / nm
+  //         << " nm  ->  " << std::setw(6) << WLS_absLength[i] / nm << " nm" << G4endl;
   assert(sizeof(WLS_absLength) == sizeof(WLS_abs_energy));
   mpt->AddProperty("WLSABSLENGTH", WLS_abs_energy,
-                   WLS_absLength,  WLS_abs_entries); 
+                   WLS_absLength,  WLS_abs_entries);
 
   // WLS EMISSION SPECTRUM
   // Implemented with formula (7), with parameter values in table (3)
@@ -673,13 +674,13 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB()
   G4double mu2    = 411.2;
 
   for (int i=0; i<WLS_emi_entries; i++) {
-    G4double wl = h_Planck * c_light / WLS_emi_energy[i] / nm;
+    G4double wl = (h_Planck * c_light / WLS_emi_energy[i]) / nm;
     WLS_emiSpectrum[i] = A * (alpha/2.) * exp((alpha/2.) *
                          (2*mu1 + alpha*pow(sigma1,2) - 2*wl)) *
                          erfc((mu1 + alpha*pow(sigma1,2) - wl) / (sqrt(2)*sigma1)) +
-                         (1-A) * (1 / sqrt(2*pow(sigma2,2)*3.1416)) *                         
+                         (1-A) * (1 / sqrt(2*pow(sigma2,2)*3.1416)) *
                          exp((-pow(wl-mu2,2)) / (2*pow(sigma2,2)));
-    // G4cout << "* newTPB WLSemi:  " << std::setw(4)
+    // G4cout << "* TPB WLSemi:  " << std::setw(4)
     //        << wl << " nm -> " << WLS_emiSpectrum[i] << G4endl;
   };
   assert(sizeof(WLS_emiSpectrum) == sizeof(WLS_emi_energy));
@@ -705,24 +706,24 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPH()
 {
   // from http://omlc.ogi.edu/spectra/PhotochemCAD/html/p-terphenyl.html
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
-    
+
   // REFRACTIVE INDEX
   G4double ri_energy[]  = {optPhotMinE_, optPhotMaxE_};
   G4double rIndex[]     = {1.65, 1.65};
   assert(sizeof(rIndex) == sizeof(ri_energy));
   mpt->AddProperty("RINDEX", ri_energy, rIndex, 2);
-  
+
   // ABSORPTION LENGTH
   G4double abs_energy[]  = {optPhotMinE_, optPhotMaxE_};
   G4double absLength[]   = {noAbsLength_, noAbsLength_};
   assert(sizeof(absLength) == sizeof(abs_energy));
   mpt->AddProperty("ABSLENGTH", abs_energy, absLength, 2);
-  
+
   // WLS EMISSION SPECTRUM
   G4double WLS_emi_energy[] = {
-    optPhotMinE_, 
+    optPhotMinE_,
     2.5 * eV,  3.0 * eV,  3.4 * eV,  3.8 * eV,
-    3.9 * eV,  4.0 * eV,  5.0 * eV, 
+    3.9 * eV,  4.0 * eV,  5.0 * eV,
     optPhotMaxE_
   };
   const G4int WLS_emi_entries = sizeof(WLS_emi_energy) / sizeof(G4double);
@@ -730,7 +731,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPH()
   G4double WLS_emiSpectrum[] = {
     0.00,
     0.00,  0.00,  0.00,  1.00,
-    0.00,  0.00,  0.00, 
+    0.00,  0.00,  0.00,
     0.00
   };
   // XXX TPH WLS emission spectrum set flat between 3.7 and 3.9 eV (To be fixed)
@@ -749,11 +750,11 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPH()
     noAbsLength_,  noAbsLength_,  noAbsLength_,  0.0177 * cm,
     noAbsLength_,  noAbsLength_,  noAbsLength_
   };
-  // XXX TPH WLS AbsLength modelled being a triangle centered at 4.5 eV -> 
+  // XXX TPH WLS AbsLength modelled being a triangle centered at 4.5 eV ->
   // No absorption for Xe scint light (To be fixed.)
   assert(sizeof(WLS_absLength) == sizeof(WLS_abs_energy));
   mpt->AddProperty("WLSABSLENGTH", WLS_abs_energy,
-                   WLS_absLength,  WLS_abs_entries); 
+                   WLS_absLength,  WLS_abs_entries);
 
   // CONST PROPERTIES
   mpt->AddConstProperty("WLSTIMECONSTANT", 0.5 * ns);
@@ -773,11 +774,11 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::EJ280()
   // REFRACTIVE INDEX
   G4double ri_energy[] = {
     optPhotMinE_,
-    nm_to_eV_ / 609.,  nm_to_eV_ / 589.26,
-    nm_to_eV_ / 550.,  nm_to_eV_ / 530.  ,
-    nm_to_eV_ / 500.,  nm_to_eV_ / 490.  ,
-    nm_to_eV_ / 481.,  nm_to_eV_ / 460.  ,
-    nm_to_eV_ / 435.,  nm_to_eV_ / 425.  ,
+    h_Planck * c_light / (609. * nm),  h_Planck * c_light / (589.26 * nm),
+    h_Planck * c_light / (550. * nm),  h_Planck * c_light / (530.   * nm),
+    h_Planck * c_light / (500. * nm),  h_Planck * c_light / (490.   * nm),
+    h_Planck * c_light / (481. * nm),  h_Planck * c_light / (460.   * nm),
+    h_Planck * c_light / (435. * nm),  h_Planck * c_light / (425.   * nm),
     optPhotMaxE_
   };
   const G4int ri_entries = sizeof(ri_energy) / sizeof(G4double);
@@ -797,35 +798,38 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::EJ280()
 
   // ABSORPTION LENGTH
   G4double abs_energy[]  = {
-    optPhotMinE_,      nm_to_eV_ / 610.,  nm_to_eV_ / 605.,
-    nm_to_eV_ / 350.,  nm_to_eV_ / 345.,  optPhotMaxE_
+    optPhotMinE_,                      h_Planck * c_light / (750. * nm),
+    h_Planck * c_light / (740. * nm),  h_Planck * c_light / (380. * nm),
+    h_Planck * c_light / (370. * nm),  optPhotMaxE_
   };
+  const G4int abs_entries = sizeof(abs_energy) / sizeof(G4double);
   G4double absLength[]   = {
-    noAbsLength_,  3. * m,  3. * m,
-    3. *  m,       3. * m,  noAbsLength_
+    noAbsLength_,  noAbsLength_,
+    3.0 * m,       3.0 * m,
+    noAbsLength_,  noAbsLength_
   };
   assert(sizeof(absLength) == sizeof(abs_energy));
-  mpt->AddProperty("ABSLENGTH", abs_energy, absLength, 2);
+  mpt->AddProperty("ABSLENGTH", abs_energy, absLength, abs_entries);
 
   // WLS ABSORPTION LENGTH
   G4double WLS_abs_energy[] = {
-    optPhotMinE_,      nm_to_eV_ / 500.,
-    nm_to_eV_ / 495.,  nm_to_eV_ / 490.,
-    nm_to_eV_ / 485.,  nm_to_eV_ / 480.,
-    nm_to_eV_ / 475.,  nm_to_eV_ / 470.,
-    nm_to_eV_ / 465.,  nm_to_eV_ / 460.,
-    nm_to_eV_ / 455.,  nm_to_eV_ / 450.,
-    nm_to_eV_ / 445.,  nm_to_eV_ / 440.,
-    nm_to_eV_ / 435.,  nm_to_eV_ / 430.,
-    nm_to_eV_ / 425.,  nm_to_eV_ / 420.,
-    nm_to_eV_ / 415.,  nm_to_eV_ / 410.,
-    nm_to_eV_ / 405.,  nm_to_eV_ / 400.,
-    nm_to_eV_ / 395.,  nm_to_eV_ / 390.,
-    nm_to_eV_ / 385.,  nm_to_eV_ / 380.,
-    nm_to_eV_ / 375.,  nm_to_eV_ / 370.,
-    nm_to_eV_ / 365.,  nm_to_eV_ / 360.,
-    nm_to_eV_ / 355.,  nm_to_eV_ / 350.,
-    nm_to_eV_ / 345.,  optPhotMaxE_
+    optPhotMinE_,                      h_Planck * c_light / (500. * nm),
+    h_Planck * c_light / (495. * nm),  h_Planck * c_light / (490. * nm),
+    h_Planck * c_light / (485. * nm),  h_Planck * c_light / (480. * nm),
+    h_Planck * c_light / (475. * nm),  h_Planck * c_light / (470. * nm),
+    h_Planck * c_light / (465. * nm),  h_Planck * c_light / (460. * nm),
+    h_Planck * c_light / (455. * nm),  h_Planck * c_light / (450. * nm),
+    h_Planck * c_light / (445. * nm),  h_Planck * c_light / (440. * nm),
+    h_Planck * c_light / (435. * nm),  h_Planck * c_light / (430. * nm),
+    h_Planck * c_light / (425. * nm),  h_Planck * c_light / (420. * nm),
+    h_Planck * c_light / (415. * nm),  h_Planck * c_light / (410. * nm),
+    h_Planck * c_light / (405. * nm),  h_Planck * c_light / (400. * nm),
+    h_Planck * c_light / (395. * nm),  h_Planck * c_light / (390. * nm),
+    h_Planck * c_light / (385. * nm),  h_Planck * c_light / (380. * nm),
+    h_Planck * c_light / (375. * nm),  h_Planck * c_light / (370. * nm),
+    h_Planck * c_light / (365. * nm),  h_Planck * c_light / (360. * nm),
+    h_Planck * c_light / (355. * nm),  h_Planck * c_light / (350. * nm),
+    h_Planck * c_light / (345. * nm),  optPhotMaxE_
   };
   const G4int WLS_abs_entries = sizeof(WLS_abs_energy) / sizeof(G4double);
 
@@ -844,35 +848,39 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::EJ280()
     (1. / 5.2460) * cm,  (1. / 4.1185) * cm,    // 395 , 390 nm
     (1. / 3.3175) * cm,  (1. / 2.6800) * cm,    // 385 , 380 nm
     (1. / 1.9610) * cm,  (1. / 1.4220) * cm,    // 375 , 370 nm
-    (1. / 1.0295) * cm,  (1. / 0.7680) * cm,    // 365 , 360 nm    
+    (1. / 1.0295) * cm,  (1. / 0.7680) * cm,    // 365 , 360 nm
     (1. / 0.6865) * cm,  (1. / 0.5885) * cm,    // 355 , 350 nm
     noAbsLength_,        noAbsLength_
   };
   assert(sizeof(WLS_absLength) == sizeof(WLS_abs_energy));
   mpt->AddProperty("WLSABSLENGTH", WLS_abs_energy,
-                   WLS_absLength,  WLS_abs_entries); 
+                   WLS_absLength,  WLS_abs_entries);
+  //for (int i=0; i<WLS_abs_entries; i++)
+  //  G4cout << "* EJ280 WLS absLength:  " << std::setw(8) << WLS_abs_energy[i] / eV
+  //         << " eV  ==  " << std::setw(8) << (h_Planck * c_light / WLS_abs_energy[i]) / nm
+  //         << " nm  ->  " << std::setw(6) << WLS_absLength[i] / mm << " mm" << G4endl;
 
   // WLS EMISSION SPECTRUM
   G4double WLS_emi_energy[] = {
-    optPhotMinE_,      nm_to_eV_ / 610.,
-    nm_to_eV_ / 605.,  nm_to_eV_ / 600.,
-    nm_to_eV_ / 595.,  nm_to_eV_ / 590.,
-    nm_to_eV_ / 585.,  nm_to_eV_ / 580.,
-    nm_to_eV_ / 575.,  nm_to_eV_ / 570.,
-    nm_to_eV_ / 565.,  nm_to_eV_ / 560.,
-    nm_to_eV_ / 555.,  nm_to_eV_ / 550.,
-    nm_to_eV_ / 545.,  nm_to_eV_ / 540.,
-    nm_to_eV_ / 535.,  nm_to_eV_ / 530.,
-    nm_to_eV_ / 525.,  nm_to_eV_ / 520.,
-    nm_to_eV_ / 515.,  nm_to_eV_ / 510.,
-    nm_to_eV_ / 505.,  nm_to_eV_ / 500.,
-    nm_to_eV_ / 495.,  nm_to_eV_ / 490.,
-    nm_to_eV_ / 485.,  nm_to_eV_ / 480.,
-    nm_to_eV_ / 475.,  nm_to_eV_ / 470.,
-    nm_to_eV_ / 465.,  nm_to_eV_ / 460.,
-    nm_to_eV_ / 455.,  nm_to_eV_ / 450.,
-    nm_to_eV_ / 445.,  nm_to_eV_ / 440.,
-    nm_to_eV_ / 435.,  optPhotMaxE_
+    optPhotMinE_,                      h_Planck * c_light / (610. * nm),
+    h_Planck * c_light / (605. * nm),  h_Planck * c_light / (600. * nm),
+    h_Planck * c_light / (595. * nm),  h_Planck * c_light / (590. * nm),
+    h_Planck * c_light / (585. * nm),  h_Planck * c_light / (580. * nm),
+    h_Planck * c_light / (575. * nm),  h_Planck * c_light / (570. * nm),
+    h_Planck * c_light / (565. * nm),  h_Planck * c_light / (560. * nm),
+    h_Planck * c_light / (555. * nm),  h_Planck * c_light / (550. * nm),
+    h_Planck * c_light / (545. * nm),  h_Planck * c_light / (540. * nm),
+    h_Planck * c_light / (535. * nm),  h_Planck * c_light / (530. * nm),
+    h_Planck * c_light / (525. * nm),  h_Planck * c_light / (520. * nm),
+    h_Planck * c_light / (515. * nm),  h_Planck * c_light / (510. * nm),
+    h_Planck * c_light / (505. * nm),  h_Planck * c_light / (500. * nm),
+    h_Planck * c_light / (495. * nm),  h_Planck * c_light / (490. * nm),
+    h_Planck * c_light / (485. * nm),  h_Planck * c_light / (480. * nm),
+    h_Planck * c_light / (475. * nm),  h_Planck * c_light / (470. * nm),
+    h_Planck * c_light / (465. * nm),  h_Planck * c_light / (460. * nm),
+    h_Planck * c_light / (455. * nm),  h_Planck * c_light / (450. * nm),
+    h_Planck * c_light / (445. * nm),  h_Planck * c_light / (440. * nm),
+    h_Planck * c_light / (435. * nm),  optPhotMaxE_
   };
   const G4int WLS_emi_entries = sizeof(WLS_emi_energy) / sizeof(G4double);
 
@@ -922,11 +930,11 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::EJ286()
   // REFRACTIVE INDEX
   G4double ri_energy[] = {
     optPhotMinE_,
-    nm_to_eV_ / 609.,    nm_to_eV_ / 589.26,
-    nm_to_eV_ / 550.,    nm_to_eV_ / 530.  ,
-    nm_to_eV_ / 500.,    nm_to_eV_ / 490.  ,
-    nm_to_eV_ / 481.,    nm_to_eV_ / 460.  ,
-    nm_to_eV_ / 435.,    nm_to_eV_ / 425.  ,
+    h_Planck * c_light / (609. * nm),    h_Planck * c_light / (589.26 * nm),
+    h_Planck * c_light / (550. * nm),    h_Planck * c_light / (530.   * nm),
+    h_Planck * c_light / (500. * nm),    h_Planck * c_light / (490.   * nm),
+    h_Planck * c_light / (481. * nm),    h_Planck * c_light / (460.   * nm),
+    h_Planck * c_light / (435. * nm),    h_Planck * c_light / (425.   * nm),
     optPhotMaxE_
   };
   const G4int ri_entries = sizeof(ri_energy) / sizeof(G4double);
@@ -946,42 +954,45 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::EJ286()
 
   // ABSORPTION LENGTH
   G4double abs_energy[]  = {
-    optPhotMinE_,     nm_to_eV_ / 535.,  nm_to_eV_ / 530.,
-    nm_to_eV_ / 285., nm_to_eV_ / 280.,  optPhotMaxE_
+    optPhotMinE_,                      h_Planck * c_light / (750. * nm),
+    h_Planck * c_light / (740. * nm),  h_Planck * c_light / (380. * nm),
+    h_Planck * c_light / (370. * nm),  optPhotMaxE_
   };
+  const G4int abs_entries = sizeof(abs_energy) / sizeof(G4double);
   G4double absLength[]   = {
-    noAbsLength_,  3. * m,  3. * m,
-    3. *  m,       3. * m,  noAbsLength_
+    noAbsLength_,  noAbsLength_,
+    3.0 * m,       3.0 * m,
+    noAbsLength_,  noAbsLength_
   };
   assert(sizeof(absLength) == sizeof(abs_energy));
-  mpt->AddProperty("ABSLENGTH", abs_energy, absLength, 2);
+  mpt->AddProperty("ABSLENGTH", abs_energy, absLength, abs_entries);
 
   // WLS ABSORPTION LENGTH
   G4double WLS_abs_energy[] = {
-    optPhotMinE_,      nm_to_eV_ / 445.,
-                       nm_to_eV_ / 440.,
-    nm_to_eV_ / 435.,  nm_to_eV_ / 430.,
-    nm_to_eV_ / 425.,  nm_to_eV_ / 420.,
-    nm_to_eV_ / 415.,  nm_to_eV_ / 410.,
-    nm_to_eV_ / 405.,  nm_to_eV_ / 400.,
-    nm_to_eV_ / 395.,  nm_to_eV_ / 390.,
-    nm_to_eV_ / 385.,  nm_to_eV_ / 380.,
-    nm_to_eV_ / 375.,  nm_to_eV_ / 370.,
-    nm_to_eV_ / 365.,  nm_to_eV_ / 360.,
-    nm_to_eV_ / 355.,  nm_to_eV_ / 350.,
-    nm_to_eV_ / 345.,  nm_to_eV_ / 340.,
-    nm_to_eV_ / 335.,  nm_to_eV_ / 330.,
-    nm_to_eV_ / 325.,  nm_to_eV_ / 320.,
-    nm_to_eV_ / 315.,  nm_to_eV_ / 310.,
-    nm_to_eV_ / 305.,  nm_to_eV_ / 300.,
-    nm_to_eV_ / 295.,  nm_to_eV_ / 290.,
-    nm_to_eV_ / 285.,  nm_to_eV_ / 280.,
-    nm_to_eV_ / 275.,  optPhotMaxE_
+    optPhotMinE_,                      h_Planck * c_light / (445. * nm),
+                                       h_Planck * c_light / (440. * nm),
+    h_Planck * c_light / (435. / nm),  h_Planck * c_light / (430. * nm),
+    h_Planck * c_light / (425. / nm),  h_Planck * c_light / (420. * nm),
+    h_Planck * c_light / (415. / nm),  h_Planck * c_light / (410. * nm),
+    h_Planck * c_light / (405. / nm),  h_Planck * c_light / (400. * nm),
+    h_Planck * c_light / (395. / nm),  h_Planck * c_light / (390. * nm),
+    h_Planck * c_light / (385. / nm),  h_Planck * c_light / (380. * nm),
+    h_Planck * c_light / (375. / nm),  h_Planck * c_light / (370. * nm),
+    h_Planck * c_light / (365. / nm),  h_Planck * c_light / (360. * nm),
+    h_Planck * c_light / (355. / nm),  h_Planck * c_light / (350. * nm),
+    h_Planck * c_light / (345. / nm),  h_Planck * c_light / (340. * nm),
+    h_Planck * c_light / (335. / nm),  h_Planck * c_light / (330. * nm),
+    h_Planck * c_light / (325. / nm),  h_Planck * c_light / (320. * nm),
+    h_Planck * c_light / (315. / nm),  h_Planck * c_light / (310. * nm),
+    h_Planck * c_light / (305. / nm),  h_Planck * c_light / (300. * nm),
+    h_Planck * c_light / (295. / nm),  h_Planck * c_light / (290. * nm),
+    h_Planck * c_light / (285. / nm),  h_Planck * c_light / (280. * nm),
+    h_Planck * c_light / (275. / nm),  optPhotMaxE_
   };
   const G4int WLS_abs_entries = sizeof(WLS_abs_energy) / sizeof(G4double);
 
   G4double WLS_absLength[] = {
-    noAbsLength_, noAbsLength_,
+    noAbsLength_,         noAbsLength_,
                           (1. / 0.00007) * cm,    // 440 nm
     (1. /  0.0003) * cm,  (1. / 0.00104) * cm,    // 435 , 430 nm
     (1. / 0.00223) * cm,  (1. / 0.00408) * cm,    // 425 , 420 nm
@@ -999,36 +1010,40 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::EJ286()
     (1. / 10.5331) * cm,  (1. /  8.1594) * cm,    // 305 , 300 nm
     (1. /  6.1196) * cm,  (1. /  4.6731) * cm,    // 295 , 290 nm
     (1. /  3.6346) * cm,  (1. /  3.0412) * cm,    // 285 , 280 nm
-    noAbsLength_, noAbsLength_
+    noAbsLength_,         noAbsLength_
   };
   // XXX We are assuming that EJ286 doesn't absorb wave lengths shorter than 280 nm
   // although the spectrum continues ...
   assert(sizeof(WLS_absLength) == sizeof(WLS_abs_energy));
   mpt->AddProperty("WLSABSLENGTH", WLS_abs_energy,
-                   WLS_absLength,  WLS_abs_entries); 
+                   WLS_absLength,  WLS_abs_entries);
+  //for (int i=0; i<WLS_abs_entries; i++)
+  //  G4cout << "* EJ286 WLS absLength:  " << std::setw(8) << WLS_abs_energy[i] / eV
+  //         << " eV  ==  " << std::setw(8) << (h_Planck * c_light / WLS_abs_energy[i]) / nm
+  //         << " nm  ->  " << std::setw(6) << WLS_absLength[i] / mm << " mm" << G4endl;
 
   // WLS EMISSION SPECTRUM
   G4double WLS_emi_energy[] = {
     optPhotMinE_,
-    nm_to_eV_ / 535.,  nm_to_eV_ / 530.,
-    nm_to_eV_ / 525.,  nm_to_eV_ / 520.,
-    nm_to_eV_ / 515.,  nm_to_eV_ / 510.,
-    nm_to_eV_ / 505.,  nm_to_eV_ / 500.,
-    nm_to_eV_ / 495.,  nm_to_eV_ / 490.,
-    nm_to_eV_ / 485.,  nm_to_eV_ / 480.,
-    nm_to_eV_ / 475.,  nm_to_eV_ / 470.,
-    nm_to_eV_ / 465.,  nm_to_eV_ / 460.,
-    nm_to_eV_ / 455.,  nm_to_eV_ / 450.,
-    nm_to_eV_ / 445.,  nm_to_eV_ / 440.,
-    nm_to_eV_ / 435.,  nm_to_eV_ / 430.,
-    nm_to_eV_ / 425.,  nm_to_eV_ / 420.,
-    nm_to_eV_ / 415.,  nm_to_eV_ / 410.,
-    nm_to_eV_ / 405.,  nm_to_eV_ / 400.,
-    nm_to_eV_ / 395.,  nm_to_eV_ / 390.,
-    nm_to_eV_ / 385.,  nm_to_eV_ / 380.,
-    nm_to_eV_ / 375.,  nm_to_eV_ / 370.,
-    nm_to_eV_ / 365.,  nm_to_eV_ / 360.,
-    nm_to_eV_ / 355.,  optPhotMaxE_
+    h_Planck * c_light / (535. * nm),  h_Planck * c_light / (530. * nm),
+    h_Planck * c_light / (525. * nm),  h_Planck * c_light / (520. * nm),
+    h_Planck * c_light / (515. * nm),  h_Planck * c_light / (510. * nm),
+    h_Planck * c_light / (505. * nm),  h_Planck * c_light / (500. * nm),
+    h_Planck * c_light / (495. * nm),  h_Planck * c_light / (490. * nm),
+    h_Planck * c_light / (485. * nm),  h_Planck * c_light / (480. * nm),
+    h_Planck * c_light / (475. * nm),  h_Planck * c_light / (470. * nm),
+    h_Planck * c_light / (465. * nm),  h_Planck * c_light / (460. * nm),
+    h_Planck * c_light / (455. * nm),  h_Planck * c_light / (450. * nm),
+    h_Planck * c_light / (445. * nm),  h_Planck * c_light / (440. * nm),
+    h_Planck * c_light / (435. * nm),  h_Planck * c_light / (430. * nm),
+    h_Planck * c_light / (425. * nm),  h_Planck * c_light / (420. * nm),
+    h_Planck * c_light / (415. * nm),  h_Planck * c_light / (410. * nm),
+    h_Planck * c_light / (405. * nm),  h_Planck * c_light / (400. * nm),
+    h_Planck * c_light / (395. * nm),  h_Planck * c_light / (390. * nm),
+    h_Planck * c_light / (385. * nm),  h_Planck * c_light / (380. * nm),
+    h_Planck * c_light / (375. * nm),  h_Planck * c_light / (370. * nm),
+    h_Planck * c_light / (365. * nm),  h_Planck * c_light / (360. * nm),
+    h_Planck * c_light / (355. * nm),  optPhotMaxE_
   };
   const G4int WLS_emi_entries = sizeof(WLS_emi_energy) / sizeof(G4double);
 
@@ -1069,19 +1084,126 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::EJ286()
 
 
 
+/// Y-11 ///
+G4MaterialPropertiesTable* OpticalMaterialProperties::Y11()
+{
+  // http://kuraraypsf.jp/psf/index.html
+  // http://kuraraypsf.jp/psf/ws.html
+  // Excel provided by kuraray with Tabulated WLS absorption lengths
+  G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
+
+  // REFRACTIVE INDEX
+  G4double ri_energy[] = {
+    optPhotMinE_,  optPhotMaxE_
+  };
+  const G4int ri_entries = sizeof(ri_energy) / sizeof(G4double);
+  G4double rIndex[] = {
+    1.59,  1.59
+  };
+  assert(sizeof(rIndex) == sizeof(ri_energy));
+  mpt->AddProperty("RINDEX", ri_energy,
+                   rIndex,   ri_entries);
+
+  // ABSORPTION LENGTH
+  G4double abs_energy[]  = {
+    optPhotMinE_,                      h_Planck * c_light / (750. * nm),
+    h_Planck * c_light / (740. * nm),  h_Planck * c_light / (380. * nm),
+    h_Planck * c_light / (370. * nm),  optPhotMaxE_
+  };
+  const G4int abs_entries = sizeof(abs_energy) / sizeof(G4double);
+  G4double absLength[]   = {
+    noAbsLength_,  noAbsLength_,
+    3.5 * m,       3.5 * m,
+    noAbsLength_,  noAbsLength_
+  };
+  assert(sizeof(absLength) == sizeof(abs_energy));
+  mpt->AddProperty("ABSLENGTH", abs_energy, absLength, abs_entries);
+
+  // WLS ABSORPTION LENGTH
+  G4double WLS_abs_energy[] = {
+    optPhotMinE_,                      h_Planck * c_light / (490. * nm),
+    h_Planck * c_light / (485. * nm),  h_Planck * c_light / (475. * nm),
+    h_Planck * c_light / (454. * nm),  h_Planck * c_light / (443. * nm),
+    h_Planck * c_light / (430. * nm),  h_Planck * c_light / (410. * nm),
+    h_Planck * c_light / (405. * nm),  h_Planck * c_light / (359. * nm),
+    h_Planck * c_light / (350. * nm),  h_Planck * c_light / (345. * nm),
+    optPhotMaxE_
+  };
+  const G4int WLS_abs_entries = sizeof(WLS_abs_energy) / sizeof(G4double);
+  G4double WLS_absLength[] = {
+    noAbsLength_,  noAbsLength_,    //     , 490 nm
+    44.2  * mm,    5.39 * mm,       // 485 , 475 nm
+    0.395 * mm,    0.462 * mm,      // 454 , 443 nm
+    0.354 * mm,    0.571 * mm,      // 430 , 410 nm
+    0.612 * mm,    4.51 * mm,       // 405 , 359 nm
+    4.81  * mm,    noAbsLength_,    // 350 , 345 nm
+    noAbsLength_
+  };
+  assert(sizeof(WLS_absLength) == sizeof(WLS_abs_energy));
+  mpt->AddProperty("WLSABSLENGTH", WLS_abs_energy,
+                   WLS_absLength,  WLS_abs_entries);
+  //for (int i=0; i<WLS_abs_entries; i++)
+  //  G4cout << "* Y11 WLS absLength:  " << std::setw(8) << WLS_abs_energy[i] / eV
+  //         << " eV  ==  " << std::setw(8) << (h_Planck * c_light / WLS_abs_energy[i]) / nm
+  //         << " nm  ->  " << std::setw(6) << WLS_absLength[i] / mm << " mm" << G4endl;
+
+  // WLS EMISSION SPECTRUM
+  G4double WLS_emi_energy[] = {
+    optPhotMinE_,                      h_Planck * c_light / (580. * nm),
+    h_Planck * c_light / (550. * nm),  h_Planck * c_light / (530. * nm),
+    h_Planck * c_light / (525. * nm),  h_Planck * c_light / (520. * nm),
+    h_Planck * c_light / (515. * nm),  h_Planck * c_light / (510. * nm),
+    h_Planck * c_light / (505. * nm),  h_Planck * c_light / (500. * nm),
+    h_Planck * c_light / (495. * nm),  h_Planck * c_light / (490. * nm),
+    h_Planck * c_light / (485. * nm),  h_Planck * c_light / (480. * nm),
+    h_Planck * c_light / (475. * nm),  h_Planck * c_light / (470. * nm),
+    h_Planck * c_light / (465. * nm),  h_Planck * c_light / (460. * nm),
+    h_Planck * c_light / (455. * nm),  h_Planck * c_light / (450. * nm),
+    h_Planck * c_light / (445. * nm),  optPhotMaxE_
+  };
+  const G4int WLS_emi_entries = sizeof(WLS_emi_energy) / sizeof(G4double);
+
+  G4double WLS_emiSpectrum[] = {
+    0.000,    0.000,   //     , 580 nm
+    0.200,    0.300,   // 550 , 530 nm
+    0.400,    0.600,   // 525 , 520 nm
+    0.750,    0.750,   // 515 , 510 nm
+    0.720,    0.700,   // 505 , 500 nm
+    0.680,    0.650,   // 495 , 490 nm
+    0.700,    0.900,   // 485 , 480 nm
+    1.000,    0.950,   // 475 , 470 nm
+    0.500,    0.300,   // 465 , 460 nm
+    0.100,    0.050,   // 455 , 450 nm
+    0.000,    0.000    // 445 ,     nm
+  };
+  assert(sizeof(WLS_emiSpectrum) == sizeof(WLS_emi_energy));
+  mpt->AddProperty("WLSCOMPONENT",  WLS_emi_energy,
+                   WLS_emiSpectrum, WLS_emi_entries);
+
+  // WLS Delay
+  mpt->AddConstProperty("WLSTIMECONSTANT", 8.5 * ns);
+
+  // WLS Quantum Efficiency
+  mpt->AddConstProperty("WLSMEANNUMBERPHOTONS", 0.87);
+
+  return mpt;
+}
+
+
+
 /// Pethylene ///
-// Fiber cladding material.
 G4MaterialPropertiesTable* OpticalMaterialProperties::Pethylene()
 {
+  // Fiber cladding material.
   // Properties from geant4/examples/extended/optical/wls
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
   // REFRACTIVE INDEX
   const G4int rIndex_numEntries = 2;
   G4double rIndex_energies[rIndex_numEntries] = {optPhotMinE_, optPhotMaxE_};
-  G4double TPB_rIndex[rIndex_numEntries]      = {1.49, 1.49};
+  G4double rIndex[rIndex_numEntries]          = {1.49, 1.49};
   mpt->AddProperty("RINDEX", rIndex_energies,
-                   TPB_rIndex, rIndex_numEntries);
+                   rIndex, rIndex_numEntries);
 
   // ABSORPTION LENGTH
   G4double abs_energy[] = {optPhotMinE_, optPhotMaxE_};
@@ -1094,18 +1216,18 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Pethylene()
 
 
 /// FPethylene ///
-// Fiber cladding material.
 G4MaterialPropertiesTable* OpticalMaterialProperties::FPethylene()
 {
+  // Fiber cladding material.
   // Properties from geant4/examples/extended/optical/wls
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
   // REFRACTIVE INDEX
   const G4int rIndex_numEntries = 2;
   G4double rIndex_energies[rIndex_numEntries] = {optPhotMinE_, optPhotMaxE_};
-  G4double TPB_rIndex[rIndex_numEntries]      = {1.42, 1.42};
+  G4double rIndex[rIndex_numEntries]      = {1.42, 1.42};
   mpt->AddProperty("RINDEX", rIndex_energies,
-                   TPB_rIndex, rIndex_numEntries);
+                   rIndex, rIndex_numEntries);
 
   // ABSORPTION LENGTH
   G4double abs_energy[] = {optPhotMinE_, optPhotMaxE_};
@@ -1118,30 +1240,30 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FPethylene()
 
 
 /// PMMA == PolyMethylmethacrylate ///
-// Fiber cladding material.
 G4MaterialPropertiesTable* OpticalMaterialProperties::PMMA()
 {
+  // Fiber cladding material.
   // Properties from geant4/examples/extended/optical/wls
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
   // REFRACTIVE INDEX
   const G4int rIndex_numEntries = 2;
   G4double rIndex_energies[rIndex_numEntries] = {optPhotMinE_, optPhotMaxE_};
-  G4double TPB_rIndex[rIndex_numEntries]      = {1.49, 1.49};
+  G4double rIndex[rIndex_numEntries]      = {1.49, 1.49};
   mpt->AddProperty("RINDEX", rIndex_energies,
-                   TPB_rIndex, rIndex_numEntries);
+                   rIndex, rIndex_numEntries);
 
   // ABSORPTION LENGTH
   const G4int abs_entries = 16;
   G4double abs_energy[abs_entries] = {
     optPhotMinE_,
-    2.722 * eV,  3.047 * eV,  3.097 * eV,  3.136 * eV,  3.168 * eV,  3.229 * eV,  3.291 * eV, 
+    2.722 * eV,  3.047 * eV,  3.097 * eV,  3.136 * eV,  3.168 * eV,  3.229 * eV,  3.291 * eV,
     3.323 * eV,  3.345 * eV,  3.363 * eV,  3.397 * eV,  3.451 * eV,  3.511 * eV,  3.590 * eV,
     optPhotMaxE_
   };
   G4double abslength[abs_entries] = {
     noAbsLength_,
-    noAbsLength_,  4537. * mm,  329.7 * mm,  98.60 * mm,  36.94 * mm,  10.36 * mm,  4.356 * mm, 
+    noAbsLength_,  4537. * mm,  329.7 * mm,  98.60 * mm,  36.94 * mm,  10.36 * mm,  4.356 * mm,
     2.563 * mm,    1.765 * mm,  1.474 * mm,  1.153 * mm,  0.922 * mm,  0.765 * mm,  0.671 * mm,
     0.671 * mm
   };
@@ -1153,17 +1275,16 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::PMMA()
 
 
 /// XXX ///
-// Playing material properties
 G4MaterialPropertiesTable* OpticalMaterialProperties::XXX()
 {
+  // Playing material properties
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
   // REFRACTIVE INDEX
   const G4int rIndex_numEntries = 2;
   G4double rIndex_energies[rIndex_numEntries] = {optPhotMinE_, optPhotMaxE_};
-  G4double TPB_rIndex[rIndex_numEntries]      = {1.0    , 1.0};
-  mpt->AddProperty("RINDEX", rIndex_energies,
-                   TPB_rIndex, rIndex_numEntries);
+  G4double rIndex[rIndex_numEntries]      = {1.0    , 1.0};
+  mpt->AddProperty("RINDEX", rIndex_energies, rIndex, rIndex_numEntries);
 
   // ABSORPTION LENGTH
   G4double abs_energy[] = {optPhotMinE_, optPhotMaxE_};
@@ -1173,14 +1294,12 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::XXX()
   // WLS ABSORPTION LENGTH
   G4double WLS_abs_energy[] = {optPhotMinE_, optPhotMaxE_};
   G4double WLS_absLength[]  = {noAbsLength_, noAbsLength_};
-  mpt->AddProperty("WLSABSLENGTH", WLS_abs_energy,
-                   WLS_absLength,  2); 
+  mpt->AddProperty("WLSABSLENGTH", WLS_abs_energy, WLS_absLength,  2);
 
   // WLS EMISSION SPECTRUM
   G4double WLS_emi_energy[] = {optPhotMinE_, optPhotMaxE_};
   G4double WLS_emiSpectrum[] = {1.0, 1.0};
-  mpt->AddProperty("WLSCOMPONENT",  WLS_emi_energy,
-                   WLS_emiSpectrum, 2);
+  mpt->AddProperty("WLSCOMPONENT",  WLS_emi_energy, WLS_emiSpectrum, 2);
 
   // WLS Delay
   mpt->AddConstProperty("WLSTIMECONSTANT", 1. * ns);

@@ -258,6 +258,7 @@ namespace nexus {
     G4Material* optical_coupler = MaterialsList::OpticalSilicone();
     optical_coupler->SetMaterialPropertiesTable(OpticalMaterialProperties::OptCoupler());
 
+
     /// Vacuum volume that encapsulates all elements related to PMTs. ///
     G4Tubs* vacuum_front_solid =
       new G4Tubs("HOLE_FRONT", 0., _hole_diam_front/2., _hole_length_front/2., 0., twopi);
@@ -306,6 +307,7 @@ namespace nexus {
       new G4LogicalVolume(tpb_solid, tpb, "SAPPHIRE_WNDW_TPB");
 
     G4double tpb_posz = - _sapphire_window_thickn/2. + _tpb_thickn/2.;
+
     new G4PVPlacement(0, G4ThreeVector(0., 0., tpb_posz), tpb_logic,
      		      "SAPPHIRE_WNDW_TPB", sapphire_window_logic, false, 0, false);
 
@@ -314,7 +316,6 @@ namespace nexus {
     G4OpticalSurface* tpb_surf =
       new G4OpticalSurface("tpb_sapphire_surf",
 			   glisur, ground, dielectric_dielectric, .01);
-
     new G4LogicalSkinSurface("tpb_sapphire_surf", tpb_logic, tpb_surf);
 
 
@@ -428,7 +429,7 @@ namespace nexus {
     G4double full_copper_posz   = _copper_plate_posz + _copper_plate_thickn/2. +
                                   _hut_hole_length   + _hut_length_long -
                                   full_copper_length/2.;
-    _copper_gen = 
+    _copper_gen =
       new CylinderPointSampler2020(0., _copper_plate_diam/2., full_copper_length/2.,
                                    0., twopi, nullptr,
                                    G4ThreeVector(0., 0., full_copper_posz));
@@ -442,7 +443,7 @@ namespace nexus {
     _external_pmt_base_gen =
       new CylinderPointSampler2020(0., (_hut_int_diam + 2.*_hut_thickn)/2., 0.1*mm,
                                    0., twopi, nullptr,
-                                   G4ThreeVector(0., 0., _vacuum_posz + 
+                                   G4ThreeVector(0., 0., _vacuum_posz +
                                                  int_pmt_base_posz + _hut_hole_length/2.));
   }
 

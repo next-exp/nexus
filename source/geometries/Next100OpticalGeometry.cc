@@ -129,7 +129,7 @@ namespace nexus {
   _gate_zpos_in_gas = 0. * mm;
   G4VPhysicalVolume* gas_phys =
     new G4PVPlacement(0, G4ThreeVector(0, 0, -_gate_zpos_in_gas), gas_logic,
-                      "GAS", lab_logic, false, 0, false);
+		      "GAS", lab_logic, false, 0, false);
 
   ///INNER ELEMENTS
   _inner_elements->SetLogicalVolume(gas_logic);

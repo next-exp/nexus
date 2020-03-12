@@ -462,7 +462,7 @@ namespace nexus {
       new G4LogicalVolume(tpb_drift_solid, _tpb, "DRIFT_TPB");
     G4VPhysicalVolume* tpb_drift_phys =
       new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), tpb_drift_logic,
-                        "DRIFT_TPB", teflon_drift_logic, false, 0, false);
+			"DRIFT_TPB", teflon_drift_logic, false, 0, false);
 
 
     /// BUFFER PART ///
@@ -496,7 +496,7 @@ namespace nexus {
       new G4LogicalVolume(tpb_buffer_solid, _tpb, "BUFFER_TPB");
     G4VPhysicalVolume* tpb_buffer_phys =
       new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), tpb_buffer_logic,
-                        "BUFFER_TPB", teflon_buffer_logic, false, 0, false);
+			"BUFFER_TPB", teflon_buffer_logic, false, 0, false);
 
 
     /// Optical surface on teflon ///
@@ -626,7 +626,6 @@ namespace nexus {
         VertexVolume->GetName() != "LIGHT_TUBE_DRIFT" &&
         VertexVolume->GetName() != "LIGHT_TUBE_BUFFER" );
     }
-
     else if (region == "EL_TABLE") {
       unsigned int i = _el_table_point_id + _el_table_index;
       if (i == (_table_vertices.size()-1)) {
