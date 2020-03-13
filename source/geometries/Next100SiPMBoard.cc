@@ -40,6 +40,7 @@ Next100SiPMBoard::Next100SiPMBoard():
 Next100SiPMBoard::~Next100SiPMBoard()
 {
   delete mpv_;
+  delete sipm_geom_;
 }
 
 
