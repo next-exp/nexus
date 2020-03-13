@@ -598,4 +598,14 @@ namespace nexus {
     }
   }
 
+  void Next100EnergyPlane::PrintPMTPositions() const
+  {
+    G4cout << "*** PMT xy positions ***" << G4endl;
+    G4cout << G4endl;
+    for (size_t i=0; i<_pmt_positions.size(); i++) {
+      G4cout << i << ": (" << _pmt_positions.at(i)[0] << ", "
+	     << _pmt_positions.at(i)[1] << ")"  << G4endl;
+    }
+  }
+
 }
