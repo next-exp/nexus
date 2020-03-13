@@ -31,9 +31,9 @@ Next100SiPMBoard::Next100SiPMBoard():
   pitch_    ( 15.60*mm),
   margin_   (  7.30*mm),
   mpv_   (nullptr),
-  vtxgen_(nullptr)
+  vtxgen_(nullptr),
+  sipm_geom_(new GenericPhotosensor(1.3*mm))
 {
-  sipm_geom_ = new GenericPhotosensor(1.3*mm);
 }
 
 
