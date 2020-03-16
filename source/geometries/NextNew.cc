@@ -197,9 +197,11 @@ namespace nexus {
     new G4PVPlacement(0, position, vessel_logic,
 		      "VESSEL", _air_logic, false, 0, false);
     G4LogicalVolume* vessel_gas_logic = _vessel->GetInternalLogicalVolume();
+    G4VPhysicalVolume* vessel_gas_phys = _vessel->GetInternalPhysicalVolume();
 
      //INNER ELEMENTS
-    _inner_elements->SetLogicalVolume(vessel_gas_logic);
+    _inner_elements->SetMotherLogicalVolume(vessel_gas_logic);
+    _inner_elements->SetMotherPhysicalVolume(vessel_gas_phys);
     _inner_elements->Construct();
     _shielding->SetELzCoord(_inner_elements->GetELzCoord());
     _vessel->SetELzCoord(_inner_elements->GetELzCoord());

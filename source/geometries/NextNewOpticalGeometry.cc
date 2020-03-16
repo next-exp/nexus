@@ -3,9 +3,9 @@
 //
 //  Authors: <miquel.nebot@ific.uv.es>
 //  Created: 18 Sept 2013
-//  
+//
 //  Copyright (c) 2013 NEXT Collaboration
-// ---------------------------------------------------------------------------- 
+// ----------------------------------------------------------------------------
 
 #include "NextNewOpticalGeometry.h"
 
@@ -37,7 +37,7 @@ NextNewOpticalGeometry::NextNewOpticalGeometry():
   _gas("naturalXe"),
   _rot_angle(pi)
 {
- // Build the internal gas volume with all the objects that live there 
+ // Build the internal gas volume with all the objects that live there
 
   _inner_elements = new NextNewInnerElements();//gas_logic
 
@@ -52,8 +52,8 @@ NextNewOpticalGeometry::NextNewOpticalGeometry():
   pressure_cmd.SetRange("pressure>0.");
 
   new G4UnitDefinition("1/MeV","1/MeV", "1/Energy", 1/MeV);
-  
-  G4GenericMessenger::Command& sc_yield_cmd = 
+
+  G4GenericMessenger::Command& sc_yield_cmd =
     _msg->DeclareProperty("sc_yield", _sc_yield,
 			  "Set scintillation yield for GXe. It is in photons/MeV");
   sc_yield_cmd.SetParameterName("sc_yield", true);
@@ -72,23 +72,23 @@ void NextNewOpticalGeometry::Construct()
 {
 
   // LAB /////////////////////////////////////////////////////////////
-  // This is just a volume of air without optical properties surrounding 
+  // This is just a volume of air without optical properties surrounding
   // the gas so that optical photons die there.
-    
+
   // AIR
   G4Material* air = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
 
   G4double lab_size = 4.*m;
-  G4Box* lab_solid = 
-    new G4Box("LAB", lab_size/2., lab_size/2., lab_size/2.);    
-  G4LogicalVolume* lab_logic = 
+  G4Box* lab_solid =
+    new G4Box("LAB", lab_size/2., lab_size/2., lab_size/2.);
+  G4LogicalVolume* lab_logic =
     new G4LogicalVolume(lab_solid, air, "LAB");
 
   this->SetDrift(true);
- 
+
   lab_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
-  // Set this volume as the wrapper for the whole geometry 
+  // Set this volume as the wrapper for the whole geometry
   // (i.e., this is the volume that will be placed in the world)
   this->SetLogicalVolume(lab_logic);
 
@@ -96,7 +96,7 @@ void NextNewOpticalGeometry::Construct()
   // Build a big box of gas which hosts the optical geometry
 
   G4Material* gas_mat = nullptr;
-   
+
   if (_gas == "naturalXe") {
     gas_mat = MaterialsList::GXe(_pressure, _temperature);
     gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
@@ -117,26 +117,30 @@ void NextNewOpticalGeometry::Construct()
   G4double gas_size = 3.*m;
   G4Box* gas_solid = new G4Box("GAS", gas_size/2., gas_size/2., gas_size/2.);
   G4LogicalVolume* gas_logic = new G4LogicalVolume(gas_solid, gas_mat, "GAS");
-  
-  ///INNER ELEMENTS
-  _inner_elements->SetLogicalVolume(gas_logic);
-  _inner_elements->Construct();
-  
+
   _displ = G4ThreeVector(0., 0., _inner_elements->GetELzCoord());
   G4RotationMatrix rot;
   rot.rotateY(_rot_angle);
-  new G4PVPlacement(G4Transform3D(rot, _displ), gas_logic,
-		    "GAS", lab_logic, false, 0, false); 
 
-  // Set this volume as the wrapper for the whole geometry 
+  G4VPhysicalVolume* gas_phys =
+    new G4PVPlacement(G4Transform3D(rot, _displ), gas_logic,
+                      "GAS", lab_logic, false, 0, false);
+
+  ///INNER ELEMENTS
+  _inner_elements->SetMotherLogicalVolume(gas_logic);
+  _inner_elements->SetMotherPhysicalVolume(gas_phys);
+  _inner_elements->Construct();
+
+
+  // Set this volume as the wrapper for the whole geometry
   // (i.e., this is the volume that will be placed in the world)
   //  this->SetLogicalVolume(gas_logic);
 
   // Visibilities
   gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
-  
+
 }
- 
+
 
 G4ThreeVector NextNewOpticalGeometry::GenerateVertex(const G4String& region) const
 {
@@ -145,8 +149,8 @@ G4ThreeVector NextNewOpticalGeometry::GenerateVertex(const G4String& region) con
   // AD_HOC is the only vertex that is not rotated and shifted because it is passed by the user
   if  (region == "AD_HOC")
     return vertex;
-  
+
   vertex.rotate(_rot_angle, G4ThreeVector(0., 1., 0.));
-  vertex = vertex + _displ;  
-  return vertex; 
+  vertex = vertex + _displ;
+  return vertex;
 }
