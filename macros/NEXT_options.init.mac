@@ -42,7 +42,7 @@
 
 
 ##### SECONDARY MACRO #####
-/nexus/RegisterMacro macros/NEXT_all_options.config.mac
+/nexus/RegisterMacro macros/NEXT_options.config.mac
 
 ##### DELAYED MACROS #####
 #/nexus/RegisterDelayedMacro macros/physics/Bi214.mac
