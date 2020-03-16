@@ -9,3 +9,4 @@
 /Geometry/Next100/energy_plane_vis       true
 /Geometry/Next100/tracking_plane_vis     true
 /Geometry/GenericPhotosensor/visibility false
+/Geometry/PmtR11410/visibility           true
