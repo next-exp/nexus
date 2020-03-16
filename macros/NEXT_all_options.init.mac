@@ -25,6 +25,8 @@
 #/Generator/RegisterGenerator SINGLE_PARTICLE
 #/Generator/RegisterGenerator DECAY0
 #/Generator/RegisterGenerator Kr83m
+#/Generator/RegisterGenerator SCINTGENERATOR
+#/Generator/RegisterGenerator LABMUON_GENERATOR
 
 
 ##### ACTIONS #####
