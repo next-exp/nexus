@@ -16,7 +16,7 @@
 /Geometry/Next100/pressure 15. bar
 /Geometry/Next100/max_step_size 5. mm
 
-/control/execute macros/geometry/NEXT100DefaultVisibility.mac
+/control/execute macros/geometries/NEXT100DefaultVisibility.mac
 /Geometry/PmtR11410/SD_depth 3
 
 

@@ -64,7 +64,7 @@ namespace nexus {
     _pmt_stand_out (2. * mm), // length that PMTs stand oput of copper, in the front
     _internal_pmt_base_diam (54. * mm),
     _internal_pmt_base_thickn (0.2 * mm),
-    _visibility(0),
+    _visibility(1),
     _verbosity(0)
   {
     /// HOW THIS GEOMETRY IS BUILT ///

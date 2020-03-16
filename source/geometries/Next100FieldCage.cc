@@ -10,6 +10,7 @@
 
 #include "Next100FieldCage.h"
 #include "MaterialsList.h"
+
 #include "Visibilities.h"
 #include "IonizationSD.h"
 #include "OpticalMaterialProperties.h"
@@ -310,10 +311,8 @@ namespace nexus {
     /// Visibilities
     if (_visibility) {
       G4VisAttributes light_blue = nexus::LightBlue();
-      light_blue.SetForceSolid(true);
       el_gap_logic->SetVisAttributes(light_blue);
       G4VisAttributes grey = nexus::LightGrey();
-      grey.SetForceSolid(true);
       diel_grid_logic->SetVisAttributes(grey);
     } else {
       el_gap_logic->SetVisAttributes(G4VisAttributes::Invisible);
