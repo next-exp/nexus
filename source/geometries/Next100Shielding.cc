@@ -214,7 +214,6 @@ namespace nexus {
 
 
     // SETTING VISIBILITIES   //////////
-    G4cout << "Visibility = " << _visibility << G4endl;
     if (_visibility) {
       G4VisAttributes dark_grey_col = nexus::DarkGrey();
       lead_box_logic->SetVisAttributes(dark_grey_col);
@@ -227,7 +226,6 @@ namespace nexus {
       struct_logic->SetVisAttributes(antiox_col);
     }
     else {
-      G4cout << "Here" << G4endl;
       lead_box_logic->SetVisAttributes(G4VisAttributes::Invisible);
       steel_box_logic->SetVisAttributes(G4VisAttributes::Invisible);
       roof_logic->SetVisAttributes(G4VisAttributes::Invisible);
