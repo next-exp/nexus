@@ -40,6 +40,7 @@ namespace nexus {
 
     /// Returns the logical volume of the inner object
     G4LogicalVolume* GetInternalLogicalVolume() const;
+    G4VPhysicalVolume* GetInternalPhysicalVolume() const;
 
     G4double GetUPNozzleZPosition() const;
     G4double GetLATNozzleZPosition() const;
@@ -90,6 +91,7 @@ namespace nexus {
 
     // Internal Logical Volume
     G4LogicalVolume* _internal_logic_vol;
+    G4VPhysicalVolume* _internal_phys_vol;
 
     // Vertex generators
     CylinderPointSampler* _body_gen;

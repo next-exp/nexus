@@ -53,6 +53,7 @@ namespace nexus {
 
   private:
     void GeneratePositions();
+    void PrintPMTPositions() const;
 
   private:
 

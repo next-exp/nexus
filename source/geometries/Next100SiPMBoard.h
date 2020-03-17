@@ -18,6 +18,7 @@ class G4VPhysicalVolume;
 namespace nexus {
 
   class BoxPointSampler;
+  class GenericPhotosensor;
 
   // Geometry of the 8x8 SiPM boards used in the tracking plane of NEXT-100
 
@@ -45,6 +46,7 @@ namespace nexus {
     std::vector<G4ThreeVector> sipm_positions_;
     G4VPhysicalVolume* mpv_;
     BoxPointSampler* vtxgen_;
+    GenericPhotosensor* sipm_geom_;
   };
 
   inline void     Next100SiPMBoard::SetMotherPhysicalVolume(G4VPhysicalVolume* p)
