@@ -1,3 +1,6 @@
+### This macro simulates individual muons in the NEW detector geometry
+### It simulates only the inner part of the detector
+
 ### GEOMETRY
 /Geometry/RegisterGeometry NEXT100
 
@@ -10,7 +13,6 @@
 /Actions/RegisterRunAction DEFAULT
 /Actions/RegisterEventAction DEFAULT
 /Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterSteppingAction DEFAULT
 
 
 ### PHYSICS

@@ -1,0 +1,52 @@
+### ------------------------------------------------------------
+###  This macro shows the most relevant options that can be used.
+###  For each parameters all the options are commented, except
+###  for one, if needed.
+### ------------------------------------------------------------
+
+##### PHYSICS #####
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+#/PhysicsList/RegisterPhysics G4OpticalPhysics
+#/PhysicsList/RegisterPhysics G4HadronElasticPhysicsHP
+#/PhysicsList/RegisterPhysics G4HadronPhysicsQGSP_BERT_HP
+#/PhysicsList/RegisterPhysics G4StoppingPhysics
+#/PhysicsList/RegisterPhysics G4IonPhysics
+/PhysicsList/RegisterPhysics NexusPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
+
+
+##### GEOMETRY #####
+/Geometry/RegisterGeometry NEXT100
+#/Geometry/RegisterGeometry NEXT_NEW
+#/Geometry/RegisterGeometry NEXT100_OPT
+#/Geometry/RegisterGeometry NEXT_NEW_OPT
+
+
+##### GENERATOR #####
+/Generator/RegisterGenerator ION_GUN
+#/Generator/RegisterGenerator SINGLE_PARTICLE
+#/Generator/RegisterGenerator DECAY0
+#/Generator/RegisterGenerator Kr83m
+#/Generator/RegisterGenerator SCINTGENERATOR
+#/Generator/RegisterGenerator LABMUON_GENERATOR
+
+
+##### ACTIONS #####
+/Actions/RegisterRunAction DEFAULT
+
+/Actions/RegisterEventAction DEFAULT
+#/Actions/RegisterEventAction EL_SIM
+
+#/Actions/RegisterSteppingAction ANALYSIS
+
+/Actions/RegisterTrackingAction DEFAULT
+#/Actions/RegisterTrackingAction OPTICAL
+
+
+##### SECONDARY MACRO #####
+/nexus/RegisterMacro macros/NEXT_options.config.mac
+
+##### DELAYED MACROS #####
+#/nexus/RegisterDelayedMacro macros/physics/Bi214.mac

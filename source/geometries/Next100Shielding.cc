@@ -52,7 +52,7 @@ namespace nexus {
     // Box thickness
     _lead_thickness (20. * cm),
     _steel_thickness (6. * mm),
-    _visibility (1)
+    _visibility (0)
 
   {
 

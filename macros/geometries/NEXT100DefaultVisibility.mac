@@ -1,0 +1,12 @@
+### ------------------------------------------------------------------------
+###  Config macro that set default visibilities for the NEXT-100 geometry.
+### ------------------------------------------------------------------------
+
+/Geometry/Next100/shielding_vis         false
+/Geometry/Next100/vessel_vis            false
+/Geometry/Next100/ics_vis               false
+/Geometry/Next100/field_cage_vis         true
+/Geometry/Next100/energy_plane_vis       true
+/Geometry/Next100/tracking_plane_vis     true
+/Geometry/GenericPhotosensor/visibility false
+/Geometry/PmtR11410/visibility           true

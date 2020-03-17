@@ -1,3 +1,8 @@
+### --------------------------------------------------------
+###  Configuration macro for the NEW detector geometry.
+###  This macro simulates radioactive decays to test gamma
+###  production in different versions of GEANT4.
+### --------------------------------------------------------
 
 
 ### PHYSICS
@@ -13,8 +18,6 @@
 
 /Actions/RegisterTrackingAction VALIDATION
 /Actions/RegisterEventAction DEFAULT
-/Actions/RegisterSteppingAction DEFAULT
-/Actions/RegisterRunAction DEFAULT
 
 /nexus/RegisterMacro macros/validation/NEW_valid_K40.config.mac
 #/nexus/RegisterDelayedMacro macros/physics/Bi214.mac

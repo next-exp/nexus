@@ -3,20 +3,18 @@
 ###  $Id: NextNew.init.mac  2013-09-09 13:05 minegui $
 ### --------------------------------------------------------
 
-### This init macro simulates radioactive decays in the NEW detector geometry
+### This macro simulates an e+e- pair in the NEW detector geometry
 ### It simulates only the inner part of the detector
 
 
 /control/execute macros/physics/DefaultPhysicsList.mac
 
-/Geometry/RegisterGeometry OPTICAL_GEOMETRY
+/Geometry/RegisterGeometry NEXT_NEW_OPT
 
 /Generator/RegisterGenerator E+E-PAIR
 
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction DEFAULT
-/Actions/RegisterSteppingAction DEFAULT
-/Actions/RegisterStackingAction DEFAULT
 /Actions/RegisterRunAction DEFAULT
 
 /nexus/RegisterMacro macros/NEW_pair.config.mac

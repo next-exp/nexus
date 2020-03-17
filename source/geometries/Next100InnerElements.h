@@ -61,6 +61,7 @@ namespace nexus {
     const G4double _gate_sapphire_wdw_distance;
     const G4double _gate_tracking_plane_distance;
 
+
     G4LogicalVolume* _mother_logic;
     G4VPhysicalVolume* _mother_phys;
     G4Material* _gas;

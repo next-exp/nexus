@@ -1,9 +1,7 @@
 ### ------------------------------------------------------------------
-###  Basic configuration macro of the nexus physics that results 
-###  in the definition of the ionization electron with no attached 
+###  Basic configuration macro of the nexus physics that results
+###  in the definition of the ionization electron with no attached
 ###  physics processes.
-###
-###  $Id$
 ### ------------------------------------------------------------------
 
 /PhysicsList/Nexus/clustering          false

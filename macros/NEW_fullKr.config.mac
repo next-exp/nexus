@@ -1,7 +1,7 @@
-### --------------------------------------------------------
-###  This macro simulates Kr83 decays uniformly in the active volume and
-###  using the full simulation
-### --------------------------------------------------------
+### ---------------------------------------------------------
+###  This macro simulates Kr83 decays uniformly in the active
+###  volume and using the full simulation
+### ---------------------------------------------------------
 
 
 /run/verbose 0
@@ -21,4 +21,4 @@
 /Geometry/SiPMSensl/time_binning 1. microsecond
 /Geometry/KDB/teflon_masks true
 
-/nexus/persistency/outputFile Kr83_full_nexus_v5_03_01_ACTIVE_7bar_1evt.sim
+/nexus/persistency/outputFile Kr83_full_nexus_ACTIVE_7bar.sim

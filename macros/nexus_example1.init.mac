@@ -1,6 +1,7 @@
 ### --------------------------------------------------------
 ###  Example 1: Initialization macro of nexus.
-###  $Id$
+###  This macro simulates an individual particle in a sphere
+###  full of xenon
 ### --------------------------------------------------------
 
 /control/execute macros/physics/DefaultPhysicsList.mac

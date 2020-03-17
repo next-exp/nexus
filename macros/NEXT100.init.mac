@@ -1,6 +1,6 @@
 ### --------------------------------------------------------
-###  Next100: Initialization macro of nexus.
 ###  $Id: Next100.init.mac 8754 2013-06-15 15:15:13Z jmunoz $
+### This macro simulates radioactive decays in the NEXT100 geometry
 ### --------------------------------------------------------
 
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -15,8 +15,7 @@
 
 /Actions/RegisterRunAction DEFAULT
 /Actions/RegisterEventAction DEFAULT
-/Actions/RegisterSteppingAction DEFAULT
 /Actions/RegisterTrackingAction DEFAULT
 
-/nexus/RegisterMacro macros/Next100.config.mac
+/nexus/RegisterMacro macros/NEXT100.config.mac
 /nexus/RegisterDelayedMacro macros/physics/Bi214.mac

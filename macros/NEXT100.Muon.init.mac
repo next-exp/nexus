@@ -1,6 +1,6 @@
 ### --------------------------------------------------------
-###  Next100: Initialization macro of nexus.
-###  $Id: Next100.Neutron.init.mac 8754 2016-11-09 15:15:13Z minegui $
+###  This macro simulates muons from a surface on top of the lead castle 
+###  $Id: Next100.Muon.init.mac 8754 2017-11-01 10:05:13Z minegui $
 ### --------------------------------------------------------
 
 
@@ -8,8 +8,6 @@
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
 /PhysicsList/RegisterPhysics G4DecayPhysics
 /PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
-/PhysicsList/RegisterPhysics G4HadronElasticPhysicsHP
-/PhysicsList/RegisterPhysics G4HadronPhysicsQGSP_BERT_HP
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
@@ -23,15 +21,14 @@
 /Geometry/RegisterGeometry NEXT100
 
 ### GENERATOR
-/Generator/RegisterGenerator NEUTRON_GENERATOR
+/Generator/RegisterGenerator MUON_GENERATOR
 
 ### ACTIONS
 /Actions/RegisterRunAction DEFAULT
 /Actions/RegisterEventAction DEFAULT
-/Actions/RegisterSteppingAction DEFAULT
 /Actions/RegisterTrackingAction DEFAULT
 
 
 ### EXTRA CONFIGURATION
 /nexus/RegisterDelayedMacro macros/physics/Xe137.mac
-/nexus/RegisterMacro macros/Next100.Neutron.config.mac
+/nexus/RegisterMacro macros/NEXT100.Muon.config.mac

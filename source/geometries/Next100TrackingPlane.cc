@@ -28,7 +28,7 @@ Next100TrackingPlane::Next100TrackingPlane(G4double origin_z_coord):
   copper_plate_diameter_       (1340.*mm),
   copper_plate_thickness_      ( 120.*mm),
   distance_board_board_        (   1.*mm),
-  visibility_(false),
+  visibility_(true),
   sipm_board_geom_(new Next100SiPMBoard),
   copper_plate_gen_(nullptr),
   mpv_(nullptr),

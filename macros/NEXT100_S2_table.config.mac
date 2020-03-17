@@ -1,31 +1,26 @@
-### --------------------------------------------------------
+### ------------------------------------------------------------------
 ###  This init macro simulates tables of secondary scintillation light
 ###  in the NEXT100 detector geometry
-### --------------------------------------------------------
+### ------------------------------------------------------------------
 
 ##### VERBOSITIES #####
 /run/verbose 0
 /event/verbose 0
 /tracking/verbose 0
 
-/Generator/ELTableGenerator/num_ie 10
+/Generator/ScintGenerator/nphotons 100000
+/Generator/ScintGenerator/region   AD_HOC
 
 ##### GEOMETRY #####
 /Geometry/Next100/pressure 15. bar
 /Geometry/Next100/max_step_size 1. mm
-/Geometry/Next100/elfield 1
-/Geometry/Next100/el_table_binning 1. mm
-/Geometry/Next100/el_table_point_id 1000
-/Geometry/Next100/energy_plane_vis true
+/Geometry/Next100/specific_vertex_X 0. mm
+/Geometry/Next100/specific_vertex_Y 0. mm
+/Geometry/Next100/specific_vertex_Z 0. mm
 /Geometry/PmtR11410/SD_depth 3
 
 
 ##### JOB CONTROL #####
-/nexus/persistency/outputFile Next100_table.next
+/nexus/persistency/outputFile Next100_X_0_Y_0_Z_0.next
 
-/nexus/random_seed -2 
-
-
-
-
-
+/nexus/random_seed -2

@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
-///  \file   
-///  \brief  
+///  \file
+///  \brief
 ///
 ///  \author   <justo.martin-albo@ific.uv.es>, <jmunoz@ific.uv.es>
 ///  \date     21 Nov 2011
@@ -58,11 +58,11 @@ namespace nexus {
     G4double _large_nozzle_length, _small_nozzle_length;
     G4double _sc_yield;
     G4double _pressure, _temperature;
-   
+
     // Visibility of the shielding
     G4bool _visibility;
 
-    // Dimensions coming from outside  
+    // Dimensions coming from outside
     G4double _nozzle_ext_diam, _up_nozzle_ypos, _central_nozzle_ypos;
     G4double _down_nozzle_ypos, _bottom_nozzle_ypos;
 

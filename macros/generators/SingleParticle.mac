@@ -1,6 +1,5 @@
 ### --------------------------------------------------------
 ###  Example config macro for the single-particle generator.
-###  $Id$
 ### --------------------------------------------------------
 
 /Generator/SingleParticle/particle e-

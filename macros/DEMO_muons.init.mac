@@ -1,5 +1,5 @@
 ### --------------------------------------------------------
-### Example to run the muons Generator 
+### Example to run the muons generator 
 ### Author: Neus Lopez March <neus.lopez@ific.uv.es>    
 ### date: 30 Jan 2014
 ### --------------------------------------------------------
@@ -12,6 +12,5 @@
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction MUONS
 /Actions/RegisterRunAction DEFAULT
-/Actions/RegisterSteppingAction DEFAULT
 
 /nexus/RegisterMacro macros/DEMO_muons.config.mac

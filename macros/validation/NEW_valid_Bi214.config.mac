@@ -1,23 +1,24 @@
 
-/run/verbose 0
+#VERBOSITY
+/run/verbose 1
 /event/verbose 0
 /tracking/verbose 0
 
-/control/execute macros/geometries/NextNew.mac
+# GEOMETRY
+/Geometry/NextNew/pressure 15. bar
+/Geometry/NextNew/elfield false
+/Geometry/PmtR11410/SD_depth 4
 
-
+# GENERATION
 /Generator/IonGun/atomic_number 83
 /Generator/IonGun/mass_number 214
 /Generator/IonGun/region DICE_BOARD
-
-# ACTIONS
-#/Actions/DefaultEventAction/energy_threshold 0.6 MeV
 
 # PHYSICS
 /PhysicsList/Nexus/clustering          false
 /PhysicsList/Nexus/drift               false
 /PhysicsList/Nexus/electroluminescence false
 
+# PERSISTENCY
 /nexus/persistency/eventType background
-/nexus/persistency/hdf5 true
 /nexus/persistency/outputFile NEW_valid.Bi214.DICE_BOARD.next

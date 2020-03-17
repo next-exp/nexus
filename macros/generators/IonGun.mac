@@ -1,6 +1,5 @@
 ### --------------------------------------------------------
 ###  Example config macro for the ion gun primary generator.
-###  $Id$
 ### --------------------------------------------------------
 
 /Generator/IonGun/atomic_number 81

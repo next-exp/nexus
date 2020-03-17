@@ -10,6 +10,7 @@
 
 #include "Next100FieldCage.h"
 #include "MaterialsList.h"
+
 #include "Visibilities.h"
 #include "IonizationSD.h"
 #include "OpticalMaterialProperties.h"
@@ -142,7 +143,6 @@ namespace nexus {
   {
     _mother_logic = mother_logic;
   }
-
 
   void Next100FieldCage::SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys)
   {
@@ -311,10 +311,8 @@ namespace nexus {
     /// Visibilities
     if (_visibility) {
       G4VisAttributes light_blue = nexus::LightBlue();
-      light_blue.SetForceSolid(true);
       el_gap_logic->SetVisAttributes(light_blue);
       G4VisAttributes grey = nexus::LightGrey();
-      grey.SetForceSolid(true);
       diel_grid_logic->SetVisAttributes(grey);
     } else {
       el_gap_logic->SetVisAttributes(G4VisAttributes::Invisible);
@@ -627,7 +625,6 @@ namespace nexus {
         VertexVolume->GetName() != "LIGHT_TUBE_DRIFT" &&
         VertexVolume->GetName() != "LIGHT_TUBE_BUFFER" );
     }
-
     else if (region == "EL_TABLE") {
       unsigned int i = _el_table_point_id + _el_table_index;
       if (i == (_table_vertices.size()-1)) {

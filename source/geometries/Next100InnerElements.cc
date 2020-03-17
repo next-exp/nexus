@@ -107,7 +107,7 @@ namespace nexus {
     delete _field_cage;
     delete _energy_plane;
     delete _tracking_plane;
-}
+  }
 
 
   G4ThreeVector Next100InnerElements::GenerateVertex(const G4String& region) const

@@ -1,5 +1,5 @@
 ### --------------------------------------------------------
-###  This init macro simulates tables of primary scintillation light
+###  This macro simulates tables of primary scintillation light
 ###  in the NEW detector geometry
 ###  $Id: NEW_S1_table.init.mac 10047 2015-01-23 17:07:30Z paola $
 ### -------------------------------------------------------
@@ -18,6 +18,5 @@
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction EL_SIM
 /Actions/RegisterRunAction DEFAULT
-/Actions/RegisterSteppingAction DEFAULT
 
 /nexus/RegisterMacro macros/NEW_S1_table.config.mac

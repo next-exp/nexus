@@ -64,7 +64,7 @@ namespace nexus {
     _pmt_stand_out (2. * mm), // length that PMTs stand oput of copper, in the front
     _internal_pmt_base_diam (54. * mm),
     _internal_pmt_base_thickn (0.2 * mm),
-    _visibility(0),
+    _visibility(1),
     _verbosity(0)
   {
     /// HOW THIS GEOMETRY IS BUILT ///
@@ -316,7 +316,6 @@ namespace nexus {
     G4OpticalSurface* tpb_surf =
       new G4OpticalSurface("tpb_sapphire_surf",
 			   glisur, ground, dielectric_dielectric, .01);
-
     new G4LogicalSkinSurface("tpb_sapphire_surf", tpb_logic, tpb_surf);
 
 
@@ -430,7 +429,7 @@ namespace nexus {
     G4double full_copper_posz   = _copper_plate_posz + _copper_plate_thickn/2. +
                                   _hut_hole_length   + _hut_length_long -
                                   full_copper_length/2.;
-    _copper_gen = 
+    _copper_gen =
       new CylinderPointSampler2020(0., _copper_plate_diam/2., full_copper_length/2.,
                                    0., twopi, nullptr,
                                    G4ThreeVector(0., 0., full_copper_posz));
@@ -444,7 +443,7 @@ namespace nexus {
     _external_pmt_base_gen =
       new CylinderPointSampler2020(0., (_hut_int_diam + 2.*_hut_thickn)/2., 0.1*mm,
                                    0., twopi, nullptr,
-                                   G4ThreeVector(0., 0., _vacuum_posz + 
+                                   G4ThreeVector(0., 0., _vacuum_posz +
                                                  int_pmt_base_posz + _hut_hole_length/2.));
   }
 

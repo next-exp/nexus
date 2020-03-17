@@ -1,11 +1,11 @@
 ### --------------------------------------------------------
 ###  This macro simulates tables of secondary scintillation light
-###  in the NEW detector geometry                                                                                       
+###  in the NEW detector geometry
 ### --------------------------------------------------------
 
 
-/run/verbose 0 
-/event/verbose 0 
+/run/verbose 0
+/event/verbose 0
 /tracking/verbose 0
 
 ### Generation
@@ -20,7 +20,6 @@
 /Geometry/PmtR11410/SD_depth 4
 /Geometry/KDB/teflon_masks true
 
-/nexus/persistency/outputFile table.NEW.next 
+/nexus/persistency/outputFile table.NEW.next
 
-/nexus/random_seed -2 
-
+/nexus/random_seed -2

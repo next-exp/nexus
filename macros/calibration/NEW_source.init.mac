@@ -3,7 +3,7 @@
 ###  $Id: NextNew.init.mac  2013-09-09 13:05 minegui $
 ### --------------------------------------------------------
 
-### This init macro simulates radioactive decays in the NEW detector geometry 
+### This init macro simulates radioactive decays in the NEW detector geometry
 
 ### PHYSICS
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -18,7 +18,6 @@
 
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction DEFAULT
-/Actions/RegisterSteppingAction DEFAULT
 /Actions/RegisterRunAction DEFAULT
 
 

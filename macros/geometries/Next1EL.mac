@@ -1,6 +1,5 @@
 ### --------------------------------------------------------
 ###  Example config macro for the geometry Next1 EL.
-###  $Id: Next1EL.mac $
 ### --------------------------------------------------------
 
 /Geometry/Next1EL/external_scintillator false

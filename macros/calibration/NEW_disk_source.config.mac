@@ -1,9 +1,8 @@
-### --------------------------------------------------------
-### --------------------------------------------------------
+### -----------------------------------------------------------------
 ###  Configuration macro for the NEW detector geometry
 ###  This macro simulates a Na22 calibration source with a disk shape,
 ###  which doesn't fit in the feedthrough from outside the upper port
-### --------------------------------------------------------
+### -----------------------------------------------------------------
 
 
 /run/verbose 0
