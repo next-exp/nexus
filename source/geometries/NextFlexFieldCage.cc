@@ -42,13 +42,13 @@ NextFlexFieldCage::NextFlexFieldCage():
   _visibility        (false),
   _msg               (nullptr),
   _fc_with_fibers    (true), 
-  _active_length     (130. * cm),          // Distance GATE - CATHODE (meshes not included)
+  _active_length     (116. * cm),         // Distance GATE - CATHODE (meshes not included)
   _drift_transv_diff (1. * mm/sqrt(cm)),   // Drift field transversal diffusion
   _drift_long_diff   (.3 * mm/sqrt(cm)),   // Drift field longitudinal diffusion
-  _buffer_length     (275. * mm),          // Distance CATHODE - sapphire window surfaces
+  _buffer_length     (280. * mm),          // Distance CATHODE - sapphire window surfaces
   _el_gap_length     (10. * mm),           // Distance ANODE - GATE (meshes included)
   _el_field_on       (false),              // EL field ON-OFF
-  _el_field_int      (34.5 * kilovolt/cm), // EL field intensity
+  _el_field_int      (16.0 * kilovolt/cm), // EL field intensity
   _el_transv_diff    (0. * mm/sqrt(cm)),   // EL field transversal diffusion
   _el_long_diff      (0. * mm/sqrt(cm)),   // EL field longitudinal diffusion
   _fiber_claddings   (2),                  // Number of fiber claddings (0, 1 or 2)
@@ -68,7 +68,7 @@ NextFlexFieldCage::NextFlexFieldCage():
 
 
   // Hard-wired dimensions
-  _active_diam          = 106.9 * cm;   // Same as NEXT100
+  _active_diam          = 992.  * mm;   // Same as NEXT100 (avg btwn 1000 & 984 mm)
 
   _cathode_thickness    = 0.1   * mm;
   _cathode_transparency = 0.95;

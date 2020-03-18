@@ -3,9 +3,9 @@
 
 
 ### GENERATOR
-#/Generator/RegisterGenerator S1GENERATOR
-/Generator/RegisterGenerator SINGLE_PARTICLE
-#/Generator/RegisterGenerator Kr83m
+/Generator/RegisterGenerator Kr83m
+#/Generator/RegisterGenerator SCINTGENERATOR
+#/Generator/RegisterGenerator SINGLE_PARTICLE
 
 
 ### ACTIONS
@@ -14,7 +14,6 @@
 /Actions/RegisterEventAction    EL_SIM
 #/Actions/RegisterEventAction    DEFAULT
 
-#/Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterTrackingAction OPTICAL
 
 #/Actions/RegisterSteppingAction DEFAULT
@@ -23,16 +22,16 @@
 
 ### PHYSICS
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
-/PhysicsList/RegisterPhysics G4EmExtraPhysics
+#/PhysicsList/RegisterPhysics G4EmExtraPhysics
 /PhysicsList/RegisterPhysics G4DecayPhysics
 /PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
-/PhysicsList/RegisterPhysics G4HadronElasticPhysicsHP
-/PhysicsList/RegisterPhysics G4HadronPhysicsQGSP_BERT_HP
-/PhysicsList/RegisterPhysics G4StoppingPhysics
-/PhysicsList/RegisterPhysics G4IonPhysics
+#/PhysicsList/RegisterPhysics G4HadronElasticPhysicsHP
+#/PhysicsList/RegisterPhysics G4HadronPhysicsQGSP_BERT_HP
+#/PhysicsList/RegisterPhysics G4StoppingPhysics
+#/PhysicsList/RegisterPhysics G4IonPhysics
 /PhysicsList/RegisterPhysics G4OpticalPhysics
 /PhysicsList/RegisterPhysics NexusPhysics
-/PhysicsList/RegisterPhysics G4StepLimiterPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysic#s
 
 
 ### EXTRA CONFIGURATION
