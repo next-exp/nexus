@@ -15,7 +15,6 @@
 #include "PetLYSOCell.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
-#include "UniformElectricDriftField.h"
 #include "IonizationSD.h"
 
 #include <G4GenericMessenger.hh>

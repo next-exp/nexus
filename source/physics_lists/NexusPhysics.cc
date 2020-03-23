@@ -8,11 +8,6 @@
 // ----------------------------------------------------------------------------
 
 #include "NexusPhysics.h"
-
-#include "IonizationElectron.h"
-#include "IonizationClustering.h"
-#include "IonizationDrift.h"
-#include "Electroluminescence.h"
 #include "WavelengthShifting.h"
 
 #include <G4Scintillation.hh>
@@ -34,23 +29,12 @@ namespace nexus {
   G4_DECLARE_PHYSCONSTR_FACTORY(NexusPhysics);
 
 
-  NexusPhysics::NexusPhysics(): 
-    G4VPhysicsConstructor("NexusPhysics"), 
-    _clustering(true), _drift(true), _electroluminescence(true),
-    risetime_(false),
-    _noCompt(false),  _noCher(false), _noScint(false)
+  NexusPhysics::NexusPhysics():
+    G4VPhysicsConstructor("NexusPhysics"), risetime_(false),
+    _noCompt(false), _noCher(false), _noScint(false)
   {
     _msg = new G4GenericMessenger(this, "/PhysicsList/Nexus/",
       "Control commands of the nexus physics list.");
-
-    _msg->DeclareProperty("clustering", _clustering,
-      "Switch on/off the ionization clustering");
-
-    _msg->DeclareProperty("drift", _drift,
-      "Switch on/off the ionization drift.");
-
-    _msg->DeclareProperty("electroluminescence", _electroluminescence,
-      "Switch on/off the electroluminescence.");
 
     _msg->DeclareProperty("scintRiseTime", risetime_,
       "True if LYSO is used");
@@ -76,9 +60,7 @@ namespace nexus {
 
   void NexusPhysics::ConstructParticle()
   {
-    IonizationElectron::Definition();
     G4OpticalPhoton::Definition();
-    //G4OpticalPhoton::OpticalPhotonDefinition();
   }
 
 
@@ -100,56 +82,12 @@ namespace nexus {
     // Add rise time to scintillation
     if (risetime_) {
       pmanager  = G4Electron::Definition()->GetProcessManager();
-      G4Scintillation*  theScintillationProcess = 
+      G4Scintillation*  theScintillationProcess =
 	(G4Scintillation*)G4ProcessTable::GetProcessTable()->
 	FindProcess("Scintillation", G4Electron::Definition());
       theScintillationProcess->SetFiniteRiseTime(true);
     }
-    
-    pmanager = IonizationElectron::Definition()->GetProcessManager();
-    if (!pmanager) {
-      G4Exception("ConstructProcess()", "[NexusPhysics]", FatalException,
-        "Ionization electron without a process manager.");
-    }
 
-    // Add drift and electroluminescence to the process table of the ie-
-
-    if (_drift) {
-      // First, we remove the standard transportation from the
-      // process table of the ionization electron
-      G4VProcess* transportation = G4ProcessTable::GetProcessTable()->
-        FindProcess("Transportation", IonizationElectron::Definition());
-      pmanager->RemoveProcess(transportation);
-
-      IonizationDrift* drift = new IonizationDrift();
-      pmanager->AddContinuousProcess(drift);
-      pmanager->AddDiscreteProcess(drift);
-    }
-
-    if (_electroluminescence) {
-      Electroluminescence* el = new Electroluminescence();
-      pmanager->AddDiscreteProcess(el);
-    }
-
-
-    // Add clustering to all pertinent particles
-
-    if (_clustering) {
-
-      IonizationClustering* clust = new IonizationClustering();
-
-      auto aParticleIterator = GetParticleIterator();
-      aParticleIterator->reset();
-      while ((*aParticleIterator)()) {
-        G4ParticleDefinition* particle = aParticleIterator->value();
-        pmanager = particle->GetProcessManager();
-
-        if (clust->IsApplicable(*particle)) {
-          pmanager->AddDiscreteProcess(clust);
-          pmanager->AddRestProcess(clust);
-        }
-      }
-    }
 
     if (_noCompt) {
       pmanager  = G4Gamma::Definition()->GetProcessManager();
