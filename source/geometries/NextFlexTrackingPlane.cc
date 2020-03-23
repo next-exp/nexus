@@ -407,32 +407,16 @@ void NextFlexTrackingPlane::BuildSiPMs()
   // Visibility
   tp_SiPM_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
-  /// SiPM Optical properties (Same than SIPMSensl used in NEW)
+  /// SiPM Optical properties
   G4MaterialPropertiesTable* tp_SiPM_optProp = new G4MaterialPropertiesTable();
 
-  const G4int entries = 21;
-  G4double energies[entries] = {
-    1.54980241262 * eV, 1.59979603883 * eV, 1.65312257346 * eV,
-    1.71012680013 * eV, 1.77120275727 * eV, 1.8368028594  * eV,
-    1.90744912322 * eV, 1.98374708815 * eV, 2.06640321682 * eV,
-    2.15624683494 * eV, 2.25425805471 * eV, 2.36160367637 * eV,
-    2.47968386018 * eV, 2.61019353704 * eV, 2.75520428909 * eV,
-    2.91727512963 * eV, 3.09960482523 * eV, 3.30624514691 * eV,
-    3.54240551455 * eV, 3.81489824644 * eV, 3.96749 * eV };
-
-  // It does not reflect anything
-  G4double reflectivity[entries] = {
-    0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
-    0., 0., 0., 0., 0., 0., 0., 0., 0., 0. };
-
+  // Currently set to 100% efficiency. It must be updated to real one
+  // as soon as one detector is selected.
+  G4double energies[]     = {0.2*eV, 11.5*eV};
+  G4double reflectivity[] = {0.0   ,  0.0};
+  G4double efficiency[]   = {1.0   ,  1.0};
+  const G4int entries = 2;
   tp_SiPM_optProp->AddProperty("REFLECTIVITY", energies, reflectivity, entries);
-
-  G4double efficiency[entries] = {
-    0.036, 0.048, 0.060, 0.070, 0.090, 0.105,
-    0.120, 0.145, 0.170, 0.200, 0.235, 0.275,
-    0.320, 0.370, 0.420, 0.425, 0.415, 0.350,
-    0.315, 0.185, 0.060 };
-
   tp_SiPM_optProp->AddProperty("EFFICIENCY", energies, efficiency, entries);
 
   G4OpticalSurface* tp_SiPM_optSurf = 
