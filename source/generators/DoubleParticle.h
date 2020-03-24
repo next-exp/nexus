@@ -64,15 +64,6 @@ namespace nexus {
 
     G4String _region;
 
-    G4double _momentum_X;
-    G4double _momentum_Y;
-    G4double _momentum_Z;
-
-    G4double _costheta_min;
-    G4double _costheta_max;
-    G4double _phi_min;
-    G4double _phi_max;
-
     
   };
 

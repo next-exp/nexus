@@ -42,8 +42,8 @@ namespace nexus {
     G4GenericMessenger* _msg;
     G4int file_no_;
     
-    TH1F* hScintEnergy;
-    TH1F* hCherEnergy;
+    //TH1F* hScintEnergy;
+    //TH1F* hCherEnergy;
 
     TH1F* hScintLambda;
     TH1F* hCherLambda;

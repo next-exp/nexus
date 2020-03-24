@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author : <justo.martin-albo@ific.uv.es>    
+//  Author : <justo.martin-albo@ific.uv.es>
 //  Created: 13 March 2013
 //
 //  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
@@ -32,17 +32,10 @@ GeneratorFactory::~GeneratorFactory()
 //////////////////////////////////////////////////////////////////////
 
 #include "SingleParticle.h"
-#include "Decay0Interface.h"
 #include "IonGun.h"
 #include "Na22Generation.h"
 #include "Kr83mGeneration.h"
-#include "SingleParticle2Pi.h"
-#include "MuonGenerator.h"
-#include "MuonAngleGenerator.h"
-#include "NeutronGenerator.h"
-#include "ELTableGenerator.h"
 #include "ScintillationGenerator.h"
-#include "ElecPositronPair.h"
 #include "DoubleParticle.h"
 #include "Back2backGammas.h"
 #include "SensMap.h"
@@ -50,10 +43,8 @@ GeneratorFactory::~GeneratorFactory()
 G4VPrimaryGenerator* GeneratorFactory::CreateGenerator()
 {
   //G4VPrimaryGenerator* p = 0;
-  
-  if (_name == "SINGLE_PARTICLE") _p = new SingleParticle();
 
-  else if (_name == "DECAY0") _p = new Decay0Interface();
+  if (_name == "SINGLE_PARTICLE") _p = new SingleParticle();
 
   else if (_name == "ION_GUN") _p = new IonGun();
 
@@ -61,21 +52,7 @@ G4VPrimaryGenerator* GeneratorFactory::CreateGenerator()
 
   else if (_name == "Kr83m") _p = new Kr83mGeneration();
 
-  else if (_name == "2PI") _p = new SingleParticle2Pi();
-
-  else if (_name == "MUON_GENERATOR") _p = new MuonGenerator();
-
-  else if (_name == "NEUTRON_GENERATOR") _p = new NeutronGenerator();
-
-  else if (_name == "EL_TABLE_GENERATOR") _p = new ELTableGenerator();
-
   else if (_name == "SCINT_GENERATOR") _p = new ScintillationGenerator();
-
-  else if (_name == "LABMUON_GENERATOR") _p = new MuonAngleGenerator();
-
-  else if (_name == "NEUTRON_GENERATOR") _p = new NeutronGenerator();
-
-  else if (_name == "E+E-PAIR") _p = new ElecPositronPair();
 
   else if (_name == "DOUBLE_PARTICLE") _p = new DoubleParticle();
 
@@ -91,5 +68,3 @@ G4VPrimaryGenerator* GeneratorFactory::CreateGenerator()
 
   return _p;
 }
-
-

@@ -12,7 +12,6 @@
 #include "IonizationHit.h"
 #include "Trajectory.h"
 #include "TrajectoryMap.h"
-#include "IonizationElectron.h"
 
 #include <G4SDManager.hh>
 #include <G4Step.hh>
@@ -66,8 +65,7 @@ G4bool IonizationSD::ProcessHits(G4Step* step, G4TouchableHistory*)
 {
   G4Track* track = step->GetTrack();
 
-  if (track->GetParticleDefinition() == G4OpticalPhoton::Definition() ||
-      track->GetParticleDefinition() == IonizationElectron::Definition())
+  if (track->GetParticleDefinition() == G4OpticalPhoton::Definition())
     return false;
 
   G4double edep = step->GetTotalEnergyDeposit();

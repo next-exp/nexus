@@ -20,8 +20,7 @@ namespace nexus {
 
   using namespace CLHEP; 
   
-  XenonLiquidProperties::XenonLiquidProperties():
-    _pressure(1.*bar), _temperature(160.*kelvin)
+  XenonLiquidProperties::XenonLiquidProperties()
   {
   }
   

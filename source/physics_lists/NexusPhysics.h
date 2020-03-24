@@ -35,10 +35,6 @@ namespace nexus {
     virtual void ConstructProcess();
 
   private:
-    G4bool _clustering;          ///< Switch on/of the ionization clustering
-    G4bool _drift;               ///< Switch on/of the ionization drift
-    G4bool _electroluminescence; ///< Switch on/off the electroluminescence
-
     G4bool risetime_; ///< Rise time for LYSO
 
     G4bool _noCompt; ///< Switch off Compton scattering

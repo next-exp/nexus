@@ -1,7 +1,0 @@
-#################################################
-### Macro for the electroluminescence process ###
-### $Id $                                                          ###
-#################################################
-
-/Physics/Electroluminescence/table_generation true
-/Physics/Electroluminescence/photons_per_point 500000

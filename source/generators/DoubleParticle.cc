@@ -31,9 +31,7 @@ using namespace CLHEP;
 
 DoubleParticle::DoubleParticle():
 G4VPrimaryGenerator(), _msg(0), _particle_definition(0),
-_energy_min(0.), _energy_max(0.), _geom(0), _momentum_X(0.),
-_momentum_Y(0.), _momentum_Z(0.), _costheta_min(0.), _costheta_max(0.),
-_phi_min(0.), _phi_max(0.)
+_energy_min(0.), _energy_max(0.), _geom(0)
 {
   _msg = new G4GenericMessenger(this, "/Generator/DoubleParticle/",
     "Control commands of single-particle generator.");
@@ -55,30 +53,6 @@ _phi_min(0.), _phi_max(0.)
 
   _msg->DeclareProperty("region", _region, 
     "Set the region of the geometry where the vertex will be generated.");
-
-  /// Temporary
-  /*
-  //G4GenericMessenger::Command&  momentum_X_cmd =
-  _msg->DeclareProperty("momentum_X", _momentum_X,
-			"x coord of momentum");
-  //G4GenericMessenger::Command&  momentum_Y_cmd =
-  _msg->DeclareProperty("momentum_Y", _momentum_Y,
-			"y coord of momentum");
-  //G4GenericMessenger::Command&  momentum_Z_cmd =
-  _msg->DeclareProperty("momentum_Z", _momentum_Z,
-			"z coord of momentum");
-
-  _msg->DeclareProperty("min_costheta", _costheta_min, 
-			"Set minimum cosTheta for the direction of the particle.");
-  _msg->DeclareProperty("max_costheta", _costheta_max, 
-			"Set maximum cosTheta for the direction of the particle.");
-  _msg->DeclareProperty("min_phi", _phi_min
-, 
-			"Set minimum phi for the direction of the particle.");
-  _msg->DeclareProperty("max_phi", _phi_max, 
-			"Set maximum phi for the direction of the particle.");
-
-    */
 
   DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
   _geom = detconst->GetGeometry();

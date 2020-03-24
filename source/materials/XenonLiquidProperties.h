@@ -38,7 +38,6 @@ namespace nexus {
     
 
   private:
-    G4double _pressure, _temperature;
     G4double _density;
 
     //static const G4double _densities[100];

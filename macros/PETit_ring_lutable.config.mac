@@ -22,9 +22,6 @@
 /Generator/ScintGenerator/nphotons 100000
 
 ### PHYSICS
-/PhysicsList/Nexus/clustering          false
-/PhysicsList/Nexus/drift               false
-/PhysicsList/Nexus/electroluminescence false
 /PhysicsList/Nexus/offScintillation false
 /PhysicsList/Nexus/offCherenkov false
 

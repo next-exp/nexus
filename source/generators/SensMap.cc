@@ -9,7 +9,6 @@
 
 #include "DetectorConstruction.h"
 #include "BaseGeometry.h"
-#include "IonizationElectron.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4ParticleDefinition.hh>
