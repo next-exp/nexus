@@ -49,6 +49,7 @@ namespace nexus {
     G4double _pressure;
     G4double _temperature;
     G4double _sc_yield;
+    G4double _attachment;
 
     // Vertex decided by user
     G4double _specific_vertex_X;

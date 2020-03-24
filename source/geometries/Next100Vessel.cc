@@ -67,6 +67,7 @@ namespace nexus {
 
     // Vessel gas
     _sc_yield(16670. * 1/MeV),
+    _attachment(1000. * ms),
     _pressure(15 * bar),
     _temperature (303 * kelvin),
     // Visibility
@@ -110,6 +111,12 @@ namespace nexus {
 			    "Set scintillation yield for GXe. It is in photons/MeV");
     sc_yield_cmd.SetParameterName("sc_yield", true);
     sc_yield_cmd.SetUnitCategory("1/Energy");
+
+    G4GenericMessenger::Command& attachment_cmd =
+      _msg->DeclareProperty("attachment", _attachment,
+			    "Electron attachment in gas. It is in milliseconds");
+    attachment_cmd.SetParameterName("attachment", false);
+    attachment_cmd.SetRange("attachment>0.");
 
   }
 
@@ -243,7 +250,7 @@ namespace nexus {
 		  "Unknown kind of xenon, valid options are: natural, enriched, depleted, or XeHe.");
     }
 
-    vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
+    vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield, _attachment));
 
     G4LogicalVolume* vessel_gas_logic = new G4LogicalVolume(vessel_gas_solid, vessel_gas_mat, "VESSEL_GAS");
     _internal_logic_vol = vessel_gas_logic;

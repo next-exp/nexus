@@ -56,7 +56,7 @@ namespace nexus {
     G4double _endcap_in_rad, _endcap_theta, _endcap_thickness, _endcap_in_z_width;
     G4double _flange_out_rad, _flange_length, _flange_z_pos;
     G4double _large_nozzle_length, _small_nozzle_length;
-    G4double _sc_yield;
+    G4double _sc_yield, _attachment;
     G4double _pressure, _temperature;
 
     // Visibility of the shielding
