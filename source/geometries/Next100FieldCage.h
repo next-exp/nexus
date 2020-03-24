@@ -116,6 +116,9 @@ namespace nexus {
     G4double _pressure;
     G4double _temperature;
 
+    G4double _sc_yield;
+    G4double _attachment;
+
     // Pointers to materials definition
     G4Material* _hdpe;
     G4Material* _tpb;

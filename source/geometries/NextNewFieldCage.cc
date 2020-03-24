@@ -87,7 +87,10 @@ namespace nexus {
     // EL field ON or OFF
     _elfield(0),
     _el_table_index(0),
-    _el_table_binning(5. * mm)
+    _el_table_binning(5. * mm),
+
+    _sc_yield(25510. * 1/MeV),
+    _attachment(1000 * ms)
   {
     // Derived dimensions
     _buffer_length =
@@ -282,7 +285,8 @@ namespace nexus {
     ///// CATHODE //////
     G4Material* fgrid_mat =
       MaterialsList::FakeDielectric(_gas, "cath_grid_mat");
-    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _cathode_grid_transparency, _cathode_thickness));
+    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _cathode_grid_transparency, _cathode_thickness,
+                                                                              _sc_yield, _attachment));
     // Dimensions & position
     G4double grid_diam = _tube_in_diam;
 
@@ -426,11 +430,13 @@ void NextNewFieldCage::BuildBuffer()
 
     G4Material* fgrid_mat =
       MaterialsList::FakeDielectric(_gas, "el_grid_anode_mat");
-    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _el_grid_transparency, _grid_thickness));
+    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _el_grid_transparency, _grid_thickness,
+                                                                              _sc_yield, _attachment));
 
     G4Material* fgate_mat =
       MaterialsList::FakeDielectric(_gas, "el_grid_gate_mat");
-    fgate_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _gate_transparency, _grid_thickness));
+    fgate_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _gate_transparency, _grid_thickness,
+                                                                              _sc_yield, _attachment));
 
     // Dimensions & position: the grids are simulated inside the EL gap.
     // Their thickness is symbolic.

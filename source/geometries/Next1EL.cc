@@ -756,10 +756,10 @@ void Next1EL::BuildFieldCage()
 
   G4Material* fgrid = MaterialsList::FakeDielectric(_gxe, "grid_mat");
   fgrid->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, 303,
-									_elgrid_transparency, diel_thickn));
+									_elgrid_transparency, diel_thickn, _sc_yield, _attachment));
   G4Material* fgrid_gate = MaterialsList::FakeDielectric(_gxe, "grid_mat");
   fgrid_gate->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, 303,
-									_gate_transparency, diel_thickn));
+									_gate_transparency, diel_thickn, _sc_yield, _attachment));
 
   G4Tubs* diel_grid =
     new G4Tubs("GRID", 0., _elgap_ring_diam/2., diel_thickn/2., 0, twopi);
@@ -951,7 +951,7 @@ void Next1EL::BuildFieldCage()
 
   G4Material* fcathode = MaterialsList::FakeDielectric(_gxe, "cathode_mat");
   fcathode->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, 303,
-  									transparency, diel_thickn));
+  									transparency, diel_thickn, _sc_yield, _attachment));
 
   G4Tubs* diel_cathd =
     new G4Tubs("CATHODE", 0., _elgap_ring_diam/2., diel_thickn/2., 0, twopi);
@@ -1129,7 +1129,7 @@ void Next1EL::BuildEnergyPlane()
 
   G4Material* fshield = MaterialsList::FakeDielectric(_gxe, "shield_mat");
   fshield->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, 303,
-  									transparency, shield_thickn));
+  									transparency, shield_thickn, _sc_yield, _attachment));
 
   G4Tubs* shield_solid =
     new G4Tubs("PMT_SHIELD", 0., _elgap_ring_diam/2., shield_thickn, 0, twopi);
