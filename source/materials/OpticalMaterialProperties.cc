@@ -495,7 +495,8 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeGrid(G4double pressure
                                                                G4double temperature,
                                                                G4double transparency,
                                                                G4double thickness,
-                                                               G4int    sc_yield)
+                                                               G4int    sc_yield,
+                                                               G4double attachment)
 {
   XenonGasProperties GXe_prop(pressure, temperature);
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
@@ -545,6 +546,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeGrid(G4double pressure
   mpt->AddConstProperty("FASTTIMECONSTANT",   4.5  * ns);
   mpt->AddConstProperty("SLOWTIMECONSTANT",   100. * ns);
   mpt->AddConstProperty("YIELDRATIO",         .1);
+  mpt->AddConstProperty("ATTACHMENT",         attachment);
 
   return mpt;
 }

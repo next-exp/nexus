@@ -60,7 +60,8 @@ namespace nexus {
                                                G4double temperature=STP_Temperature,
                                                G4double transparency=.9,
                                                G4double thickness=1.*mm,
-                                               G4int sc_yield=25510/MeV);
+                                               G4int sc_yield=25510/MeV,
+                                               G4double attachment=1000.*ms);
 
     static G4MaterialPropertiesTable* TPB();
 
