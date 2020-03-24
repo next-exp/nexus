@@ -23,13 +23,13 @@ class G4UIcmdWith3VectorAndUnit;
 
 
 namespace nexus {
-  
+
   class HexagonPointSampler;
   class CylinderPointSampler;
   class MuonsPointSampler;
-  
+
   /// Geometry of the NEXT1-EL detector
-    
+
   class Next1EL: public BaseGeometry
   {
   public:
@@ -41,7 +41,7 @@ namespace nexus {
     /// Returns a vertex in a region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
     void CalculateELTableVertices(G4double radius, G4double binning, G4double z);
-    
+
   private:
     void Construct();
     void DefineMaterials();
@@ -54,7 +54,7 @@ namespace nexus {
     void BuildSiPMTrackingPlane();
     void BuildPMTTrackingPlane();
     void PrintAbsoluteSiPMPos();
-    
+
   private:
 
     HexagonPointSampler* _hexrnd;
@@ -75,12 +75,12 @@ namespace nexus {
     G4LogicalVolume* _lab_logic;
     G4LogicalVolume* _gas_logic;
     G4LogicalVolume* _pmt_logic;
-    
-    
+
+
     // Detector dimensions
-    
-    const G4double _lab_size; ///< Size of the air box containing the detector 
-    
+
+    const G4double _lab_size; ///< Size of the air box containing the detector
+
     const G4double _vessel_diam;   ///< Can internal diameter
     const G4double _vessel_length; ///< Can internal length
     const G4double _vessel_thickn; ///< Can thickness
@@ -99,21 +99,21 @@ namespace nexus {
     const G4double _sideport_tube_length; ///< Collimation tube internal length
     const G4double _sideport_tube_thickn; ///< Collimation tube thickness
     const G4double _sideport_tube_window_thickn; ///< Tube window thickness
-    
+
     const G4double _axialport_diam;   ///< Axial source-port internal diameter
     const G4double _axialport_length; ///< Axial source-port internal length
     const G4double _axialport_thickn; ///< Axial source-port internal thickness
 
     const G4double _axialport_flange_diam;   ///< Axial port flange diameter
     const G4double _axialport_flange_thickn; ///< Axial port flange thickness
-    
+
     const G4double _axialport_tube_diam;   ///< Collimation tube int. diameter
     const G4double _axialport_tube_length; ///< Collimation tube int. length
     const G4double _axialport_tube_thickn; ///< Collimation tube thickness
     const G4double _axialport_tube_window_thickn; ///< Tube window thickness
 
     const G4double _elgap_length; ///< Length of the EL gap
-    
+
     const G4double _elgap_ring_diam;
     const G4double _elgap_ring_thickn;
     const G4double _elgap_ring_height;
@@ -129,7 +129,7 @@ namespace nexus {
 
     const G4double _active_diam;
     const G4double _active_length;
-    
+
     const G4double _fieldcage_length; ///< Fieldcage length
     const G4double _fieldcage_displ;  ///< Distance btw fieldcage & anode endcap
 
@@ -146,14 +146,15 @@ namespace nexus {
     const G4double _pmtholder_cath_cutout_depth;
     const G4double _pmtholder_cath_displ;
     const G4double _pmt_pitch;
-    
+
     const G4double _pmtholder_anode_diam;
     const G4double _pmtholder_anode_thickn;
 
    G4double _max_step_size;
    G4double _sc_yield;
-    
- 
+   G4double _attachment;
+
+
     // Dimensions read through input parameters file
     //
 
@@ -167,10 +168,10 @@ namespace nexus {
     G4ThreeVector _specific_vertex;
     G4double _specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z;
     G4bool _muonsGenerator;
-    
+
     // Positions in the detector geometry relevant for event vertex generation
     //
-    
+
     /// Position of the side source-port in the world reference system
     G4ThreeVector _sideport_position;
     G4ThreeVector _sideport_ext_position;
@@ -179,13 +180,13 @@ namespace nexus {
     G4ThreeVector _axialport_position;
     /// Position of the fieldcage in the world system of reference
     G4ThreeVector _fieldcage_position;
-    /// 
+    ///
     G4ThreeVector _active_position;
     ///
     G4ThreeVector _elgap_position;
 
     G4String _tracking_plane; ///< Tracking plane type: SIPM or PMT
-        
+
 
     // Positions (Z axis) of the TPC electrodes with respect to the
     // FIELDCAGE system of reference
@@ -196,7 +197,7 @@ namespace nexus {
     G4double _pressure;
 
     mutable unsigned int _idx_table;
-    mutable std::vector<G4ThreeVector> _table_vertices;   
+    mutable std::vector<G4ThreeVector> _table_vertices;
 
     std::vector<G4ThreeVector> _pmt_positions;
 
@@ -204,7 +205,7 @@ namespace nexus {
     std::vector<std::pair<int, G4ThreeVector> > _absSiPMpos;
 
     /// Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
+    G4GenericMessenger* _msg;
 
     /// To generate vertices in the Na22 source
     CylinderPointSampler* _cps;
