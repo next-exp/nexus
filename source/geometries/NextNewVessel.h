@@ -114,6 +114,9 @@ namespace nexus {
     // Primary scintillation yield
     G4double _sc_yield;
 
+    // Electron attachment
+    G4double _attachment;
+
     // Gas being used
     G4String _gas;
     G4double _xe_perc;

@@ -107,6 +107,7 @@ namespace nexus {
     _temperature (300 * kelvin),
     _visibility(1),
     _sc_yield(25510. * 1/MeV),
+    _attachment(1000. * ms),
     _gas("naturalXe"),
     _xe_perc(100.),
     _helium_mass_num(4),
@@ -142,6 +143,12 @@ namespace nexus {
 			    "Set scintillation yield for GXe. It is in photons/MeV");
     sc_yield_cmd.SetParameterName("sc_yield", true);
     sc_yield_cmd.SetUnitCategory("1/Energy");
+
+    G4GenericMessenger::Command& attachment_cmd =
+      _msg->DeclareProperty("attachment", _attachment,
+          "Electron attachment in gas. It is in milliseconds");
+    attachment_cmd.SetParameterName("attachment", false);
+    attachment_cmd.SetRange("attachment>0.");
 
     _msg->DeclareProperty("gas", _gas, "Gas being used");
     _msg->DeclareProperty("XePercentage", _xe_perc,
@@ -398,23 +405,23 @@ void NextNewVessel::Construct()
 
     if (_gas == "naturalXe") {
       vessel_gas_mat = MaterialsList::GXe(_pressure, _temperature);
-      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
+      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield, _attachment));
     } else if (_gas == "enrichedXe") {
       vessel_gas_mat =  MaterialsList::GXeEnriched(_pressure, _temperature);
-      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
+      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield, _attachment));
     } else if  (_gas == "depletedXe") {
       vessel_gas_mat =  MaterialsList::GXeDepleted(_pressure, _temperature);
-      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
+      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield, _attachment));
     } else if (_gas == "Ar") {
       vessel_gas_mat =  MaterialsList::GAr(_pressure, _temperature);
-      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GAr(_sc_yield));
+      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GAr(_sc_yield, _attachment));
     } else if (_gas == "ArXe") {
       vessel_gas_mat =  MaterialsList::GXeAr(_pressure, _temperature, _xe_perc);
-      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GAr(_sc_yield));
+      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GAr(_sc_yield, _attachment));
     } else if (_gas == "XeHe") {
       vessel_gas_mat =  MaterialsList::GXeHe(_pressure, _temperature,
 					     _xe_perc, _helium_mass_num);
-      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
+      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield, _attachment));
     } else {
       G4Exception("[NextNewVessel]", "Construct()", FatalException,
 		  "Unknown kind of gas, valid options are: naturalXe, enrichedXe, depletedXe, Ar, ArXe, XeHe.");

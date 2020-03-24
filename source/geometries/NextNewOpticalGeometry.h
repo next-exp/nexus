@@ -18,7 +18,7 @@ namespace nexus {
 
   class NextNewOpticalGeometry: public BaseGeometry
   {
-    /// This geometry is a container of those parts needed 
+    /// This geometry is a container of those parts needed
     /// for light generation and collection, namely the field cage and the sensors
 
   public:
@@ -26,25 +26,26 @@ namespace nexus {
     NextNewOpticalGeometry();
     ///Destructor
     ~NextNewOpticalGeometry();
-    
+
     /// Returns a vertex in a region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
     /// Builder
     void Construct();
 
-  private:     
+  private:
     G4GenericMessenger* _msg;
     G4double _pressure;
     G4double _temperature;
     G4double _sc_yield;
+    G4double _attachment;
     G4String _gas;
     NextNewInnerElements* _inner_elements;
 
     // Rotation around Y and displacement of the whole geometry in the g4 system of reference
     G4ThreeVector _displ;
     G4double _rot_angle;
-   
-   
+
+
   };
 
 } // end namespace nexus
