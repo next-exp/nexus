@@ -56,8 +56,9 @@ namespace nexus {
 
     G4GenericMessenger::Command& attachment_cmd =
       _msg->DeclareProperty("attachment", _attachment,
-			    "Electron attachment in gas. It is in milliseconds");
+			    "Electron attachment in gas.");
     attachment_cmd.SetParameterName("attachment", false);
+    attachment_cmd.SetUnitCategory("Time");
     attachment_cmd.SetRange("attachment>0.");
 
     G4GenericMessenger::Command&  specific_vertex_X_cmd =
