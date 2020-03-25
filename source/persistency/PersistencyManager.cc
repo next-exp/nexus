@@ -221,7 +221,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc,
 
     G4String ini_volume = trj->GetInitialVolume();
     ipart->SetInitialVol(ini_volume);
-    G4String volume = trj->GetDecayVolume();
+    G4String volume = trj->GetFinalVolume();
     ipart->SetFinalVol(volume);
 
     G4double mass = trj->GetParticleDefinition()->GetPDGMass();
