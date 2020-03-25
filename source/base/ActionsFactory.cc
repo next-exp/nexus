@@ -81,6 +81,7 @@ G4UserEventAction* ActionsFactory::CreateEventAction() const
 
 #include "DefaultTrackingAction.h"
 #include "ValidationTrackingAction.h"
+#include "OpticalTrackingAction.h"
 
 
 G4UserTrackingAction* ActionsFactory::CreateTrackingAction() const
@@ -89,6 +90,7 @@ G4UserTrackingAction* ActionsFactory::CreateTrackingAction() const
 
   if (_trkact_name == "DEFAULT") p = new DefaultTrackingAction();
   else if (_trkact_name == "VALIDATION") p = new ValidationTrackingAction();
+  else if (_trkact_name == "OPTICAL") p = new OpticalTrackingAction();
   else {
     G4String err = "Unknown user tracking action: " + _trkact_name;
     G4Exception("CreateTrackingAction()", "[ActionsFactory]",
