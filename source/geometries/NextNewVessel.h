@@ -114,6 +114,9 @@ namespace nexus {
     // Primary scintillation yield
     G4double _sc_yield;
 
+    // Electron lifetime
+    G4double _e_lifetime;
+
     // Gas being used
     G4String _gas;
     G4double _xe_perc;

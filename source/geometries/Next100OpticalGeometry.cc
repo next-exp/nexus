@@ -33,6 +33,7 @@ namespace nexus {
 						    _pressure(15. * bar),
 						    _temperature (300 * kelvin),
 						    _sc_yield(25510. * 1/MeV),
+                                                    _e_lifetime(1000. * ms),
 						    _gas("naturalXe")
   {
     /// Messenger
@@ -52,6 +53,13 @@ namespace nexus {
 			    "Scintillation yield of gas. It is in photons/MeV");
     sc_yield_cmd.SetParameterName("sc_yield", true);
     sc_yield_cmd.SetUnitCategory("1/Energy");
+
+    G4GenericMessenger::Command& e_lifetime_cmd =
+      _msg->DeclareProperty("e_lifetime", _e_lifetime,
+			    "Electron lifetime in gas.");
+    e_lifetime_cmd.SetParameterName("e_lifetime", false);
+    e_lifetime_cmd.SetUnitCategory("Time");
+    e_lifetime_cmd.SetRange("e_lifetime>0.");
 
     G4GenericMessenger::Command&  specific_vertex_X_cmd =
       _msg->DeclareProperty("specific_vertex_X", _specific_vertex_X,
@@ -106,17 +114,20 @@ namespace nexus {
     gas_mat = MaterialsList::GXe(_pressure, _temperature);
     gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure,
 								       _temperature,
-								       _sc_yield));
+								       _sc_yield,
+                                                                       _e_lifetime));
   } else if (_gas == "enrichedXe") {
     gas_mat =  MaterialsList::GXeEnriched(_pressure, _temperature);
     gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure,
 								       _temperature,
-								       _sc_yield));
+								       _sc_yield,
+                                                                       _e_lifetime));
   } else if  (_gas == "depletedXe") {
     gas_mat =  MaterialsList::GXeDepleted(_pressure, _temperature);
     gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure,
 								       _temperature,
-								       _sc_yield));
+								       _sc_yield,
+                                                                       _e_lifetime));
   }  else {
     G4Exception("[Next100OpticalGeometry]", "Construct()", FatalException,
                 "Unknown kind of gas, valid options are: naturalXe, enrichedXe, depletedXe.");

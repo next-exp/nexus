@@ -356,7 +356,8 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::OptCoupler()
 
 
 /// Gaseous Argon ///
-G4MaterialPropertiesTable* OpticalMaterialProperties::GAr(G4double sc_yield)
+G4MaterialPropertiesTable* OpticalMaterialProperties::GAr(G4double sc_yield,
+                                                          G4double e_lifetime)
 {
   // An argon gas proportional scintillation counter with UV avalanche photodiode scintillation
   // readout C.M.B. Monteiro, J.A.M. Lopes, P.C.P.S. Simoes, J.M.F. dos Santos, C.A.N. Conde
@@ -419,7 +420,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GAr(G4double sc_yield)
   mpt->AddConstProperty("YIELDRATIO",         .52);
   mpt->AddConstProperty("RESOLUTIONSCALE",    1.0);
   //mpt->AddConstProperty("ELTIMECONSTANT",     1260.*ns);
-  mpt->AddConstProperty("ATTACHMENT",         1000.*ms);
+  mpt->AddConstProperty("ATTACHMENT",         e_lifetime);
 
   return mpt;
 }
@@ -429,7 +430,8 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GAr(G4double sc_yield)
 /// Gaseous Xenon ///
 G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
                                                           G4double temperature,
-                                                          G4int    sc_yield)
+                                                          G4int    sc_yield,
+                                                          G4double e_lifetime)
 {
   XenonGasProperties GXe_prop(pressure, temperature);
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
@@ -481,7 +483,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
   mpt->AddConstProperty("SLOWTIMECONSTANT",   100. * ns);
   //mpt->AddConstProperty("ELTIMECONSTANT",     50.  * ns);
   mpt->AddConstProperty("YIELDRATIO",         .1);
-  mpt->AddConstProperty("ATTACHMENT",         1000. * ms);
+  mpt->AddConstProperty("ATTACHMENT",         e_lifetime);
 
   return mpt;
 }
@@ -493,7 +495,8 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeGrid(G4double pressure
                                                                G4double temperature,
                                                                G4double transparency,
                                                                G4double thickness,
-                                                               G4int    sc_yield)
+                                                               G4int    sc_yield,
+                                                               G4double e_lifetime)
 {
   XenonGasProperties GXe_prop(pressure, temperature);
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
@@ -543,7 +546,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeGrid(G4double pressure
   mpt->AddConstProperty("FASTTIMECONSTANT",   4.5  * ns);
   mpt->AddConstProperty("SLOWTIMECONSTANT",   100. * ns);
   mpt->AddConstProperty("YIELDRATIO",         .1);
-  mpt->AddConstProperty("ATTACHMENT",         1000. * ms);
+  mpt->AddConstProperty("ATTACHMENT",         e_lifetime);
 
   return mpt;
 }

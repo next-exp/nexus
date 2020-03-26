@@ -34,6 +34,7 @@ NextNewOpticalGeometry::NextNewOpticalGeometry():
   _pressure(1. * bar),
   _temperature (300 * kelvin),
   _sc_yield(25510. * 1/MeV),
+  _e_lifetime(1000. * ms),
   _gas("naturalXe"),
   _rot_angle(pi)
 {
@@ -58,6 +59,13 @@ NextNewOpticalGeometry::NextNewOpticalGeometry():
 			  "Set scintillation yield for GXe. It is in photons/MeV");
   sc_yield_cmd.SetParameterName("sc_yield", true);
   sc_yield_cmd.SetUnitCategory("1/Energy");
+
+  G4GenericMessenger::Command& e_lifetime_cmd =
+    _msg->DeclareProperty("e_lifetime", _e_lifetime,
+        "Electron lifetime in gas.");
+  e_lifetime_cmd.SetParameterName("e_lifetime", false);
+  e_lifetime_cmd.SetUnitCategory("Time");
+  e_lifetime_cmd.SetRange("e_lifetime>0.");
 
   _msg->DeclareProperty("gas", _gas, "Gas being used");
 
@@ -99,16 +107,16 @@ void NextNewOpticalGeometry::Construct()
 
   if (_gas == "naturalXe") {
     gas_mat = MaterialsList::GXe(_pressure, _temperature);
-    gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
+    gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield, _e_lifetime));
   } else if (_gas == "enrichedXe") {
     gas_mat =  MaterialsList::GXeEnriched(_pressure, _temperature);
-    gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
+    gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield, _e_lifetime));
   } else if  (_gas == "depletedXe") {
     gas_mat =  MaterialsList::GXeDepleted(_pressure, _temperature);
-    gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
+    gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield, _e_lifetime));
   } else if (_gas == "Ar") {
     gas_mat =  MaterialsList::GAr(_pressure, _temperature);
-    gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GAr(_sc_yield));
+    gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GAr(_sc_yield, _e_lifetime));
   } else {
     G4Exception("[NextNewOpticalGeometry]", "Construct()", FatalException,
 		"Unknown kind of gas, valid options are: naturalXe, enrichedXe, depletedXe, Ar.");

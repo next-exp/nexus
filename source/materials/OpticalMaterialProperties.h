@@ -24,7 +24,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  // Optical properties of several materials. 
+  // Optical properties of several materials.
   // (N.B. This is a stateless class where all methods are static functions.)
 
   class OpticalMaterialProperties
@@ -39,27 +39,30 @@ namespace nexus {
     // ultraviolet down to 160 nm
     static G4MaterialPropertiesTable* FusedSilica();
 
-    static G4MaterialPropertiesTable* FakeFusedSilica(G4double transparency = .9, 
+    static G4MaterialPropertiesTable* FakeFusedSilica(G4double transparency = .9,
                                                       G4double thickness    = 1. * mm);
-    
+
     static G4MaterialPropertiesTable* Sapphire();
 
     static G4MaterialPropertiesTable* OptCoupler();
 
-    static G4MaterialPropertiesTable* GAr(G4double sc_yield);
+    static G4MaterialPropertiesTable* GAr(G4double sc_yield,
+                                          G4double e_lifetime=1000.*ms);
 
     static G4MaterialPropertiesTable* LAr();
 
     static G4MaterialPropertiesTable* GXe(G4double pressure=1.*bar,
                                           G4double temperature=STP_Temperature,
-                                          G4int sc_yield=25510/MeV);
+                                          G4int sc_yield=25510/MeV,
+                                          G4double e_lifetime=1000.*ms);
 
     static G4MaterialPropertiesTable* FakeGrid(G4double pressure=1.*bar,
                                                G4double temperature=STP_Temperature,
                                                G4double transparency=.9,
                                                G4double thickness=1.*mm,
-                                               G4int sc_yield=25510/MeV);
-    
+                                               G4int sc_yield=25510/MeV,
+                                               G4double e_lifetime=1000.*ms);
+
     static G4MaterialPropertiesTable* TPB();
 
     static G4MaterialPropertiesTable* TPH();
@@ -75,9 +78,9 @@ namespace nexus {
     static G4MaterialPropertiesTable* Pethylene();
 
     static G4MaterialPropertiesTable* FPethylene();
-  
+
     static G4MaterialPropertiesTable* PMMA();
-  
+
     static G4MaterialPropertiesTable* XXX();
 
 

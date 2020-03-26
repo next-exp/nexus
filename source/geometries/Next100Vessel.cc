@@ -67,6 +67,7 @@ namespace nexus {
 
     // Vessel gas
     _sc_yield(16670. * 1/MeV),
+    _e_lifetime(1000. * ms),
     _pressure(15 * bar),
     _temperature (303 * kelvin),
     // Visibility
@@ -110,6 +111,13 @@ namespace nexus {
 			    "Set scintillation yield for GXe. It is in photons/MeV");
     sc_yield_cmd.SetParameterName("sc_yield", true);
     sc_yield_cmd.SetUnitCategory("1/Energy");
+
+    G4GenericMessenger::Command& e_lifetime_cmd =
+      _msg->DeclareProperty("e_lifetime", _e_lifetime,
+			    "Electron lifetime in gas.");
+    e_lifetime_cmd.SetParameterName("e_lifetime", false);
+    e_lifetime_cmd.SetUnitCategory("Time");
+    e_lifetime_cmd.SetRange("e_lifetime>0.");
 
   }
 
@@ -243,7 +251,7 @@ namespace nexus {
 		  "Unknown kind of xenon, valid options are: natural, enriched, depleted, or XeHe.");
     }
 
-    vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
+    vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield, _e_lifetime));
 
     G4LogicalVolume* vessel_gas_logic = new G4LogicalVolume(vessel_gas_solid, vessel_gas_mat, "VESSEL_GAS");
     _internal_logic_vol = vessel_gas_logic;
