@@ -88,9 +88,9 @@ namespace nexus {
     _elfield(0),
     _el_table_index(0),
     _el_table_binning(5. * mm),
-    // Scintillation yield and electron attachment
+    // Scintillation yield and electron lifetime
     _sc_yield(25510. * 1/MeV),
-    _attachment(1000 * ms)
+    _e_lifetime(1000 * ms)
   {
     // Derived dimensions
     _buffer_length =
@@ -290,7 +290,7 @@ namespace nexus {
                                                                               _cathode_grid_transparency,
                                                                               _cathode_thickness,
                                                                               _sc_yield,
-                                                                              _attachment));
+                                                                              _e_lifetime));
     // Dimensions & position
     G4double grid_diam = _tube_in_diam;
 
@@ -439,7 +439,7 @@ void NextNewFieldCage::BuildBuffer()
                                                                               _el_grid_transparency,
                                                                               _grid_thickness,
                                                                               _sc_yield,
-                                                                              _attachment));
+                                                                              _e_lifetime));
 
     G4Material* fgate_mat =
       MaterialsList::FakeDielectric(_gas, "el_grid_gate_mat");
@@ -448,7 +448,7 @@ void NextNewFieldCage::BuildBuffer()
                                                                               _gate_transparency,
                                                                               _grid_thickness,
                                                                               _sc_yield,
-                                                                              _attachment));
+                                                                              _e_lifetime));
 
     // Dimensions & position: the grids are simulated inside the EL gap.
     // Their thickness is symbolic.

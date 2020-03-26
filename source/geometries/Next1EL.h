@@ -152,7 +152,7 @@ namespace nexus {
 
    G4double _max_step_size;
    G4double _sc_yield;
-   G4double _attachment;
+   G4double _e_lifetime;
 
 
     // Dimensions read through input parameters file

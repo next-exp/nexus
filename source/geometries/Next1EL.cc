@@ -128,7 +128,7 @@ Next1EL::Next1EL():
   // DEFAULT VALUES FOR SOME PARAMETERS///////////
   _max_step_size(1.*mm),
   _sc_yield(13889/MeV),
-  _attachment(1000.*ms)
+  _e_lifetime(1000.*ms)
 {
 
   _msg = new G4GenericMessenger(this, "/Geometry/Next1EL/",
@@ -155,12 +155,12 @@ Next1EL::Next1EL():
   sc_yield_cmd.SetParameterName("sc_yield", true);
   sc_yield_cmd.SetUnitCategory("1/Energy");
 
-  G4GenericMessenger::Command& attachment_cmd =
-    _msg->DeclareProperty("attachment", _attachment,
-        "Electron attachment in gas.");
-  attachment_cmd.SetParameterName("attachment", false);
-  attachment_cmd.SetUnitCategory("Time");
-  attachment_cmd.SetRange("attachment>0.");
+  G4GenericMessenger::Command& e_lifetime_cmd =
+    _msg->DeclareProperty("e_lifetime", _e_lifetime,
+        "Electron lifetime in gas.");
+  e_lifetime_cmd.SetParameterName("e_lifetime", false);
+  e_lifetime_cmd.SetUnitCategory("Time");
+  e_lifetime_cmd.SetRange("e_lifetime>0.");
 
   /// Temporary
   G4GenericMessenger::Command&  specific_vertex_X_cmd =
@@ -277,7 +277,7 @@ void Next1EL::DefineMaterials()
   _air = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
   // GASEOUS XENON
   _gxe = MaterialsList::GXe(_pressure, 303);
-  _gxe->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, 303, _sc_yield, _attachment));
+  _gxe->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, 303, _sc_yield, _e_lifetime));
 
   G4cout << "Scintillation yield: " << _sc_yield << G4endl;
 
@@ -757,10 +757,10 @@ void Next1EL::BuildFieldCage()
 
   G4Material* fgrid = MaterialsList::FakeDielectric(_gxe, "grid_mat");
   fgrid->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, 303,
-									_elgrid_transparency, diel_thickn, _sc_yield, _attachment));
+									_elgrid_transparency, diel_thickn, _sc_yield, _e_lifetime));
   G4Material* fgrid_gate = MaterialsList::FakeDielectric(_gxe, "grid_mat");
   fgrid_gate->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, 303,
-									_gate_transparency, diel_thickn, _sc_yield, _attachment));
+									_gate_transparency, diel_thickn, _sc_yield, _e_lifetime));
 
   G4Tubs* diel_grid =
     new G4Tubs("GRID", 0., _elgap_ring_diam/2., diel_thickn/2., 0, twopi);
@@ -952,7 +952,7 @@ void Next1EL::BuildFieldCage()
 
   G4Material* fcathode = MaterialsList::FakeDielectric(_gxe, "cathode_mat");
   fcathode->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, 303,
-  									transparency, diel_thickn, _sc_yield, _attachment));
+  									transparency, diel_thickn, _sc_yield, _e_lifetime));
 
   G4Tubs* diel_cathd =
     new G4Tubs("CATHODE", 0., _elgap_ring_diam/2., diel_thickn/2., 0, twopi);
@@ -1130,7 +1130,7 @@ void Next1EL::BuildEnergyPlane()
 
   G4Material* fshield = MaterialsList::FakeDielectric(_gxe, "shield_mat");
   fshield->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, 303,
-  									transparency, shield_thickn, _sc_yield, _attachment));
+  									transparency, shield_thickn, _sc_yield, _e_lifetime));
 
   G4Tubs* shield_solid =
     new G4Tubs("PMT_SHIELD", 0., _elgap_ring_diam/2., shield_thickn, 0, twopi);
