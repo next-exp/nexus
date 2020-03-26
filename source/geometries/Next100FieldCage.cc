@@ -74,7 +74,7 @@ namespace nexus {
     _el_table_index (0),
     _visibility (1),
     _verbosity (0),
-
+    // Scintillation yield and electron attachment
     _sc_yield(25510. * 1/MeV),
     _attachment(1000. * ms)
   {

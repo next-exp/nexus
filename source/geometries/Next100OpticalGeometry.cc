@@ -33,7 +33,7 @@ namespace nexus {
 						    _pressure(15. * bar),
 						    _temperature (300 * kelvin),
 						    _sc_yield(25510. * 1/MeV),
-                _attachment(1000. * ms),
+                                                    _attachment(1000. * ms),
 						    _gas("naturalXe")
   {
     /// Messenger
@@ -115,19 +115,19 @@ namespace nexus {
     gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure,
 								       _temperature,
 								       _sc_yield,
-                       _attachment));
+                                                                       _attachment));
   } else if (_gas == "enrichedXe") {
     gas_mat =  MaterialsList::GXeEnriched(_pressure, _temperature);
     gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure,
 								       _temperature,
 								       _sc_yield,
-                       _attachment));
+                                                                       _attachment));
   } else if  (_gas == "depletedXe") {
     gas_mat =  MaterialsList::GXeDepleted(_pressure, _temperature);
     gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure,
 								       _temperature,
 								       _sc_yield,
-                       _attachment));
+                                                                       _attachment));
   }  else {
     G4Exception("[Next100OpticalGeometry]", "Construct()", FatalException,
                 "Unknown kind of gas, valid options are: naturalXe, enrichedXe, depletedXe.");
