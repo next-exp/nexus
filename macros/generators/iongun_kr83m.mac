@@ -1,0 +1,12 @@
+## ---------------------------------------------------------
+##  nexus | iongun_kr83m.mac
+##
+##  Example configuration macro of the IonGun for the
+##  generation of radioactive decays of Kr-83m in the
+##  active volume of the detector.
+## ---------------------------------------------------------
+
+/Generator/IonGun/atomic_number 36
+/Generator/IonGun/mass_number   83
+/Generator/IonGun/energy_level  41.6 keV
+/Generator/IonGun/region        ACTIVE
