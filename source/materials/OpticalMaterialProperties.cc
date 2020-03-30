@@ -187,6 +187,63 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeFusedSilica(G4double t
 
 
 
+/// ITO ///
+G4MaterialPropertiesTable* OpticalMaterialProperties::ITO()
+{
+  // Input data: complex refraction index obtained from:
+  // https://refractiveindex.info/?shelf=other&book=In2O3-SnO2&page=Moerland
+
+  G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
+
+  G4double energies[] = {
+    optPhotMinE_,
+    h_Planck * c_light / (1000. * nm),  h_Planck * c_light / (600. * nm),
+    h_Planck * c_light / ( 580. * nm),  h_Planck * c_light / (560. * nm),
+    h_Planck * c_light / ( 540. * nm),  h_Planck * c_light / (520. * nm),
+    h_Planck * c_light / ( 500. * nm),  h_Planck * c_light / (480. * nm),
+    h_Planck * c_light / ( 460. * nm),  h_Planck * c_light / (440. * nm),
+    h_Planck * c_light / ( 420. * nm),  h_Planck * c_light / (400. * nm),
+    optPhotMaxE_ };
+  const G4int num_energies = sizeof(energies) / sizeof(G4double);
+
+  G4double rIndex[] = {
+    1.635,
+    1.635, 1.894,
+    1.906, 1.919,
+    1.931, 1.945,
+    1.960, 1.975,
+    1.993, 2.012,
+    2.036, 2.064,
+    2.064 };
+  assert(sizeof(rIndex) == sizeof(energies));
+  mpt->AddProperty("RINDEX", energies, rIndex, num_energies);
+
+  // ABSORPTION LENGTH
+  G4double abs_length[] = {
+    (1000. * nm) / (4*pi * 0.0103),
+    (1000. * nm) / (4*pi * 0.0103),  (600. * nm) / (4*pi * 0.0023),
+    ( 580. * nm) / (4*pi * 0.0022),  (560. * nm) / (4*pi * 0.0022),
+    ( 540. * nm) / (4*pi * 0.0022),  (520. * nm) / (4*pi * 0.0023),
+    ( 500. * nm) / (4*pi * 0.0026),  (480. * nm) / (4*pi * 0.0031),
+    ( 460. * nm) / (4*pi * 0.0039),  (440. * nm) / (4*pi * 0.0053),
+    ( 420. * nm) / (4*pi * 0.0080),  (400. * nm) / (4*pi * 0.0125),
+    (400. * nm) / (4*pi * 0.0125) };
+  assert(sizeof(rIndex) == sizeof(energies));
+  mpt->AddProperty("ABSLENGTH", energies, abs_length, num_energies);
+
+  //G4cout << "*** ITO properties ...  " << G4endl;
+  //for (int i=0; i<num_energies; i++) {
+  //  G4cout << "* Energy: " << std::setw(5) << energies[i]/eV << " eV  ->  " << std::setw(5)
+  //         << (1240./ (energies[i] / eV)) << " nm" << G4endl;
+  //  G4cout << "  rIndex    : " << std::setw(5) << rIndex[i]
+  //         << "  Abs Length: " << std::setw(5) << abs_length[i] / nm << " nm" << G4endl;
+  //}
+
+  return mpt;
+}
+
+
+
 /// Glass Epoxy ///
 G4MaterialPropertiesTable* OpticalMaterialProperties::GlassEpoxy()
 {
@@ -996,7 +1053,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::EJ286()
 
   G4double WLS_absLength[] = {
     noAbsLength_,         noAbsLength_,
-                          (1. / 0.00007) * cm,    // 440 nm
+                          (1. / 0.00007) * cm,    //       440 nm
     (1. /  0.0003) * cm,  (1. / 0.00104) * cm,    // 435 , 430 nm
     (1. / 0.00223) * cm,  (1. / 0.00408) * cm,    // 425 , 420 nm
     (1. /  0.0104) * cm,  (1. / 0.18544) * cm,    // 415 , 410 nm

@@ -71,8 +71,7 @@ namespace nexus {
     _anode_quartz_thickness (3. * mm),
     _anode_quartz_diam (522. * mm),
     _cathode_grid_transparency (.98),
-    _ito_transparency (.90),
-    _ito_thickness (_grid_thickness),
+    _ito_thickness (110 * nm),
     //
     _ELtransv_diff(0. * mm/sqrt(cm)),
     _ELlong_diff(0. * mm/sqrt(cm)),
@@ -272,7 +271,7 @@ namespace nexus {
     _tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
     //ITO coating
     _ito = MaterialsList::ITO();
-    _ito->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeFusedSilica(_ito_transparency, _ito_thickness));
+    _ito->SetMaterialPropertiesTable(OpticalMaterialProperties::ITO());
 
     // Quartz
     _quartz =  MaterialsList::FusedSilica();
