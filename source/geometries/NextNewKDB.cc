@@ -90,23 +90,6 @@ namespace nexus {
     this->SetLogicalVolume(board_logic);
 
     // In NEW, no TPB on dices, because the quartz plate already shitfs photons
-    // In NEXT-100, TPB is placed inside the gas directly, to match gas pressure
-    // WLS COATING //////////////////////////////////////////////////
-
-    // G4Box* coating_solid = 
-    //   new G4Box("DB_WLS_COATING", db_x/2., db_y/2., coating_thickness/2.);
-
-    // G4Material* TPB = MaterialsList::TPB();
-    // TPB->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
-
-    // G4LogicalVolume* coating_logic =
-    //   new G4LogicalVolume(coating_solid, TPB, "DB_WLS_COATING");
-
-    // G4double pos_z = (-db_z + coating_thickness) / 2.;
-    // new G4PVPlacement(0, G4ThreeVector(0.,0.,pos_z), coating_logic,
-    // 		      "DB_WLS_COATING", board_logic, false, 0, false);
-
-
     // SILICON PMs //////////////////////////////////////////////////
 
     G4LogicalVolume* sipm_logic = _sipm->GetLogicalVolume();
@@ -115,20 +98,14 @@ namespace nexus {
     G4double offset = sipm_pitch/2. - board_side_reduction;
     G4int sipm_no = 0;
 
-    //    for (G4int i=0; i<_rows; i++) {
     for (G4int i=0; i<_columns; i++) {
-      
-      // G4double pos_y = db_y/2. - offset - i*sipm_pitch;
-      G4double pos_x = db_x/2 - offset - i*sipm_pitch;
-      
-      //  for (G4int j=0; j<_columns; j++) {
+      G4double pos_x = db_x/2 - offset - i*sipm_pitch;      
       for (G4int j=0; j<_rows; j++) {
-	
-	//	G4double pos_x = -db_x/2 + offset + j*sipm_pitch;
-	G4double pos_y = -db_y/2. + offset + j*sipm_pitch;
+      	G4double pos_y = -db_y/2. + offset + j*sipm_pitch;
 
         new G4PVPlacement(0, G4ThreeVector(pos_x, pos_y, pos_z), 
           sipm_logic, "SIPMSensl", board_logic, false, sipm_no, false);
+        
         std::pair<int, G4ThreeVector> mypos;
         mypos.first = sipm_no;
         mypos.second = G4ThreeVector(pos_x, pos_y, pos_z);
