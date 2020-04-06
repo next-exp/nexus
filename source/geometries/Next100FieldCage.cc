@@ -232,11 +232,11 @@ namespace nexus {
     active_logic->SetSensitiveDetector(ionisd);
     G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
 
-
     /// Define a drift field for this volume
     UniformElectricDriftField* field = new UniformElectricDriftField();
-    field->SetCathodePosition(_active_zpos + _active_length/2.);
-    field->SetAnodePosition(_active_zpos - _active_length/2.);
+    G4double global_active_zpos = _active_zpos - GetELzCoord();
+    field->SetCathodePosition(global_active_zpos + _active_length/2.);
+    field->SetAnodePosition(global_active_zpos - _active_length/2.);
     field->SetDriftVelocity(1. * mm/microsecond);
     field->SetTransverseDiffusion(_drift_transv_diff);
     field->SetLongitudinalDiffusion(_drift_long_diff);
@@ -275,8 +275,9 @@ namespace nexus {
     if (_elfield) {
       /// Define EL electric field
       UniformElectricDriftField* el_field = new UniformElectricDriftField();
-      el_field->SetCathodePosition(_el_gap_zpos + _el_gap_length/2.);
-      el_field->SetAnodePosition  (_el_gap_zpos - _el_gap_length/2.);
+      G4double global_el_gap_zpos = _el_gap_zpos - GetELzCoord();
+      el_field->SetCathodePosition(global_el_gap_zpos + _el_gap_length/2.);
+      el_field->SetAnodePosition  (global_el_gap_zpos - _el_gap_length/2.);
       el_field->SetDriftVelocity(2.5 * mm/microsecond);
       el_field->SetTransverseDiffusion(_ELtransv_diff);
       el_field->SetLongitudinalDiffusion(_ELlong_diff);
