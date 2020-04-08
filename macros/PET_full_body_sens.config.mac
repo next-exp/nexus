@@ -24,10 +24,6 @@
 ### GENERATOR
 /Generator/SensMap/num_gammas 1
 
-### PHYSICS
-/PhysicsList/Nexus/offScintillation false
-/PhysicsList/Nexus/offCherenkov false
-
 /Actions/DefaultEventAction/energy_threshold 0.95 MeV
 
 ### VERBOSITIES
