@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 ///  \file   NexusPhysics.h
-///  \brief  
+///  \brief
 ///
-///  \author   <justo.martin-albo@ific.uv.es>
+///  \author   <justo.martin-albo@ific.uv.es> <paola.ferrario@dipc.org>
 ///  \date     28 May 2010
 ///  \version  $Id$
 ///
@@ -20,7 +20,7 @@ class G4GenericMessenger;
 namespace nexus {
 
   class WavelengthShifting;
-  
+
   class NexusPhysics: public G4VPhysicsConstructor
   {
   public:
@@ -38,8 +38,6 @@ namespace nexus {
     G4bool risetime_; ///< Rise time for LYSO
 
     G4bool _noCompt; ///< Switch off Compton scattering
-    G4bool _noCher;
-    G4bool _noScint;
 
     G4GenericMessenger* _msg;
     WavelengthShifting* _wls;
