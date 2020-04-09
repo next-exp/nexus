@@ -29,7 +29,8 @@ namespace nexus {
   using namespace CLHEP;
 
   NextNewInnerElements::NextNewInnerElements():
-    BaseGeometry()
+    BaseGeometry(),
+    _mother_logic(nullptr), _mother_phys(nullptr)
   {
     // Build the internal objects that live there
     _energy_plane = new NextNewEnergyPlane();
@@ -55,7 +56,7 @@ namespace nexus {
     _temperature = _gas->GetTemperature();
     //INNER ELEMENTS
     _field_cage->SetMotherLogicalVolume(_mother_logic);
-    //_field_cage->SetMotherPhysicalVolume();
+    _field_cage->SetMotherPhysicalVolume(_mother_phys);
     _field_cage->Construct();
     SetELzCoord(_field_cage->GetELzCoord());
     _tracking_plane->SetLogicalVolume(_mother_logic);
