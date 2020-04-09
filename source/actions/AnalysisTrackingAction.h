@@ -3,7 +3,7 @@
 ///  \brief  General-purpose user tracking action.
 ///
 ///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     25 Mar 2013 
+///  \date     25 Mar 2013
 ///  \version  $Id$
 ///
 ///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
@@ -40,14 +40,15 @@ namespace nexus {
     G4int cer, scint;
 
     G4GenericMessenger* _msg;
+    G4String file_name_;
     G4int file_no_;
-    
+
     //TH1F* hScintEnergy;
     //TH1F* hCherEnergy;
 
     TH1F* hScintLambda;
     TH1F* hCherLambda;
-    
+
     TFile* Times;
   };
 
