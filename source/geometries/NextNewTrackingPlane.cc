@@ -94,12 +94,14 @@ namespace nexus {
     G4SubtractionSolid* support_plate_solid =
       new G4SubtractionSolid("SUPPORT_PLATE", support_plate_nh_solid,support_plate_front_buffer_solid,0,
 			     G4ThreeVector(0.,0.,-_support_plate_thickness/2. + _support_plate_front_buffer_thickness/2.-.5*mm));
+
     //Making tread
     G4Tubs* support_plate_tread_solid = 
       new G4Tubs("SUPPORT_PLATE_TREAD",_support_plate_tread_diam/2.,_support_plate_diam/2.+1.*mm,
 		 (_support_plate_tread_thickness+1.*mm)/2.,0.,twopi);
     support_plate_solid = new G4SubtractionSolid("SUPPORT_PLATE",support_plate_solid,support_plate_tread_solid,0,
 						 G4ThreeVector(0.,0.,-_support_plate_thickness/2. + _support_plate_tread_thickness/2.-.5*mm));
+
     // Making DB cables holes through  
     G4Box* support_plate_cable_hole_solid = 
       new G4Box("SUPPORT_PLATE_HOLE", _cable_hole_width/2., _cable_hole_high/2., _support_plate_thickness/2. + 1.*mm);
@@ -113,11 +115,14 @@ namespace nexus {
     G4LogicalVolume* support_plate_logic = new G4LogicalVolume(support_plate_solid,
 							       G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
 							       "SUPPORT_PLATE"); 
+
     ///// Support Plate placement
     G4double support_plate_z_pos =  _tracking_plane_z_pos + _support_plate_thickness/2.;
     new G4PVPlacement(0, G4ThreeVector(0.,0.,support_plate_z_pos), support_plate_logic,
 		      "SUPPORT_PLATE", _mother_logic, false, 0, false);  
+
     /////  DICE BOARDS  ///// 
+    _kapton_dice_board->SetNeighbourGas(_mother_logic);
     _kapton_dice_board->Construct();
     _kdb_dimensions = _kapton_dice_board->GetDimensions();
     G4LogicalVolume* dice_board_logic = _kapton_dice_board->GetLogicalVolume();

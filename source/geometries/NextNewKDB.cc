@@ -59,6 +59,10 @@ namespace nexus {
   }
   
 
+  void NextNewKDB::SetNeighbourGas(G4LogicalVolume* neigh_gas_logic) {
+    _neigh_gas_logic = neigh_gas_logic;
+  }
+
 
   void NextNewKDB::Construct()
   {
@@ -131,13 +135,8 @@ namespace nexus {
     G4Tubs* hole_solid =
       new G4Tubs(hole_name, 0., hole_diam/2., hole_length/2., 0, twopi);
 
-    // This should be get from mother logical volume ...
-    // By the moment it is hardwired. XXX
-    G4Material* gas = MaterialsList::GXeEnriched(10 * bar, 303 * kelvin);
-    gas->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(10 * bar, 303 * kelvin, 25510. * (1/MeV), 100*millisecond));
-
     G4LogicalVolume* hole_logic = 
-      new G4LogicalVolume(hole_solid, gas, hole_name);
+      new G4LogicalVolume(hole_solid, _neigh_gas_logic->GetMaterial(), hole_name);
 
     // Placing the SiPMs inside the hole.
     G4LogicalVolume* sipm_logic = _sipm->GetLogicalVolume();
