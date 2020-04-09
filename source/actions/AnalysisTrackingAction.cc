@@ -82,7 +82,6 @@ void AnalysisTrackingAction::PreUserTrackingAction(const G4Track* track)
   // Do nothing if the track is an optical photon
 
   if (track->GetDefinition() == G4OpticalPhoton::Definition()) {
-    fpTrackingManager->SetStoreTrajectory(false);
 
      if (track->GetCreatorProcess()->GetProcessName() == "Cerenkov") {
        //track->CalculateVelocityForOpticalPhoton()
@@ -92,8 +91,6 @@ void AnalysisTrackingAction::PreUserTrackingAction(const G4Track* track)
      else if (track->GetCreatorProcess()->GetProcessName() == "Scintillation") {
        hScintLambda->Fill(h_Planck*c_light/track->GetKineticEnergy()/nanometer);
      }
-
-      return;
   }
 
 
@@ -113,9 +110,6 @@ void AnalysisTrackingAction::PreUserTrackingAction(const G4Track* track)
 
 void AnalysisTrackingAction::PostUserTrackingAction(const G4Track* track)
 {
-  // Do nothing if the track is an optical photon or an ionization electron
-  if (track->GetDefinition() == G4OpticalPhoton::Definition()) return;
-
   Trajectory* trj = (Trajectory*) TrajectoryMap::Get(track->GetTrackID());
 
   // Do nothing if the track has no associated trajectory in the map
