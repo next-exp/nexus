@@ -94,7 +94,7 @@ namespace nexus {
     G4double _el_grid_transparency, _gate_transparency;
     G4double _anode_quartz_thickness, _anode_quartz_diam; //_anode_quartz_transparency
     G4double _cathode_grid_transparency;
-    G4double  _ito_transparency, _ito_thickness;
+    G4double _ito_thickness;
     G4double _active_posz;
     G4double _active_length;
 

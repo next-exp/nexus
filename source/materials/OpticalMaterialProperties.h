@@ -42,6 +42,8 @@ namespace nexus {
     static G4MaterialPropertiesTable* FakeFusedSilica(G4double transparency = .9,
                                                       G4double thickness    = 1. * mm);
 
+    static G4MaterialPropertiesTable* ITO();
+
     static G4MaterialPropertiesTable* Sapphire();
 
     static G4MaterialPropertiesTable* OptCoupler();
