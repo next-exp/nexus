@@ -37,19 +37,18 @@ namespace nexus {
     virtual void PostUserTrackingAction(const G4Track*);
 
   private:
-    G4int cer, scint;
 
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
     G4String file_name_;
     G4int file_no_;
 
-    //TH1F* hScintEnergy;
-    //TH1F* hCherEnergy;
+    //TH1F* hScintEnergy_;
+    //TH1F* hCherEnergy_;
 
-    TH1F* hScintLambda;
-    TH1F* hCherLambda;
+    TH1F* hScintLambda_;
+    TH1F* hCherLambda_;
 
-    TFile* Times;
+    TFile* OptPhotons_;
   };
 
 }

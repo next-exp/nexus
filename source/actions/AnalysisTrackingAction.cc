@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author : <justo.martin-albo@ific.uv.es>
+//  Author : <justo.martin-albo@ific.uv.es>, <paola.ferrario@dipc.org>
 //  Created: 25 March 2013
 //
 //  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
@@ -37,23 +37,23 @@ AnalysisTrackingAction::AnalysisTrackingAction(): G4UserTrackingAction(),
                                                   file_name_("OpticalTracking"),
                                                   file_no_(0)
 {
-  _msg = new G4GenericMessenger(this, "/Actions/AnalysisTrackingAction/");
-  _msg->DeclareProperty("file_name", file_name_, "");
-  _msg->DeclareProperty("file_number", file_no_, "");
+  msg_ = new G4GenericMessenger(this, "/Actions/AnalysisTrackingAction/");
+  msg_->DeclareProperty("file_name", file_name_, "");
+  msg_->DeclareProperty("file_number", file_no_, "");
 
   /*
-  hCherEnergy = new TH1F("CherEnergy", "CherEnergy", 1000, 0, 10.);
-  hCherEnergy->GetXaxis()->SetTitle("energy (eV)");
+  hCherEnergy_ = new TH1F("CherEnergy", "CherEnergy", 1000, 0, 10.);
+  hCherEnergy_->GetXaxis()->SetTitle("energy (eV)");
 
-  hScintEnergy = new TH1F("ScintEnergy", "ScintEnergy", 1000, 0, 10.);
-  hScintEnergy->GetXaxis()->SetTitle("energy (eV)");
+  hScintEnergy_ = new TH1F("ScintEnergy", "ScintEnergy", 1000, 0, 10.);
+  hScintEnergy_->GetXaxis()->SetTitle("energy (eV)");
   */
 
-  hCherLambda = new TH1F("CherLambdaProd", "Production wavelength", 1000, 0, 1500.);
-  hCherLambda->GetXaxis()->SetTitle("wavelength (nm)");
+  hCherLambda_ = new TH1F("CherLambda", "CherLambda", 1000, 0, 1500.);
+  hCherLambda_->GetXaxis()->SetTitle("wavelength (nm)");
 
-  hScintLambda = new TH1F("ScintLambda", "ScintLambda", 1000, 0, 800.);
-  hScintLambda->GetXaxis()->SetTitle("wavelength (nm)");
+  hScintLambda_ = new TH1F("ScintLambda", "ScintLambda", 1000, 0, 800.);
+  hScintLambda_->GetXaxis()->SetTitle("wavelength (nm)");
 
 }
 
@@ -64,12 +64,12 @@ AnalysisTrackingAction::~AnalysisTrackingAction()
   std::ostringstream file_number;
   file_number << file_no_;
   G4String filename = file_name_+"."+file_number.str()+".root";
-  Times = new TFile(filename, "recreate");
-  // hCherEnergy->Write();
-  // hScintEnergy->Write();
-  hCherLambda->Write();
-  hScintLambda->Write();
-  Times->Close();
+  OptPhotons_ = new TFile(filename, "recreate");
+  // hCherEnergy_->Write();
+  // hScintEnergy_->Write();
+  hCherLambda_->Write();
+  hScintLambda_->Write();
+  OptPhotons_->Close();
 
 }
 
@@ -85,11 +85,11 @@ void AnalysisTrackingAction::PreUserTrackingAction(const G4Track* track)
 
      if (track->GetCreatorProcess()->GetProcessName() == "Cerenkov") {
        //track->CalculateVelocityForOpticalPhoton()
-       hCherLambda->Fill(h_Planck*c_light/track->GetKineticEnergy()/nanometer);
+       hCherLambda_->Fill(h_Planck*c_light/track->GetKineticEnergy()/nanometer);
      }
 
      else if (track->GetCreatorProcess()->GetProcessName() == "Scintillation") {
-       hScintLambda->Fill(h_Planck*c_light/track->GetKineticEnergy()/nanometer);
+       hScintLambda_->Fill(h_Planck*c_light/track->GetKineticEnergy()/nanometer);
      }
   }
 
