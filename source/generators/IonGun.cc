@@ -23,6 +23,7 @@ using namespace nexus;
 IonGun::IonGun():
   G4VPrimaryGenerator(),
   atomic_number_(0), mass_number_(0), energy_level_(0.),
+  decay_at_time_zero_(true),
   region_(""),
   msg_(nullptr), geom_(nullptr)
 {
@@ -44,6 +45,9 @@ IonGun::IonGun():
                                   "Energy level of the ion.");
   energy_level_cmd.SetParameterName("energy_level", false);
   energy_level_cmd.SetRange("energy_level >= 0");
+
+  msg_->DeclareProperty("decay_at_time_zero", decay_at_time_zero_,
+                        "Set to true to make unstable ions decay at t=0.");
 
   msg_->DeclareProperty("region", region_,
                         "Region of the geometry where vertices will be generated.");
@@ -69,6 +73,16 @@ G4ParticleDefinition* IonGun::IonDefinition()
 
   if (!pdef) G4Exception("IonDefinition()", "[IonGun]",
                          FatalException, "Unable to find the requested ion.");
+
+  // Unstable ions decay by default at a random time t sampled from an exponential
+  // decay distribution proportional to their mean lifetime. This, even for
+  // not so long-lived nuclides, pushes the global time of the event to scales
+  // orders of magnitude longer than the nanosecond precision required in NEXUS
+  // for the correct simulation of the ionization drift and photon tracing.
+  // To prevent this behaviour, the lifetime of unstable isotopes is reset here
+  // (unless the configuration variable 'decay_at_time_zero' has been set to false)
+  // to an arbitrary, short value (1 ps).
+  if (decay_at_time_zero_ && !(pdef->GetPDGStable())) pdef->SetPDGLifeTime(1.*ps);
 
   return pdef;
 }
