@@ -36,7 +36,6 @@ GeometryFactory::~GeometryFactory()
 #include "Next1EL.h"
 #include "Next100.h"
 #include "Next100OpticalGeometry.h"
-#include "NextNewOpticalGeometry.h"
 #include "NextNew.h"
 #include "MagBox.h"
 #include "NextTonScale.h"
@@ -54,8 +53,6 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
   else if (_name == "NEXT100") p = new Next100();
 
   else if (_name == "NEXT100_OPT") p = new Next100OpticalGeometry();
-
-  else if (_name == "NEXT_NEW_OPT") p = new NextNewOpticalGeometry();
 
   else if (_name == "NEXT_NEW") p = new NextNew();
 

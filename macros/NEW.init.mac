@@ -4,8 +4,6 @@
 ### --------------------------------------------------------
 
 ### This macro simulates radioactive decays in the NEW detector geometry
-### Use NEXT_NEW to simulate the whole geometry.
-### To simulate only the inner part of the detector use OPTICAL_GEOMETRY.
 
 ### PHYSICS
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
