@@ -77,6 +77,8 @@ namespace nexus {
     // Materials
     G4String    _gas_name;
     G4double    _gas_pressure, _gas_temperature;
+    G4double    _sc_yield;
+    G4double    _e_lifetime;
     G4Material* _xenon_gas;
     G4Material* _copper_mat;
 

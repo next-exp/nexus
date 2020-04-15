@@ -41,6 +41,7 @@ NextFlex::NextFlex():
   _gas_name          ("enrichedXe"),
   _gas_pressure      (15.  * bar),
   _gas_temperature   (300. * kelvin),
+  _e_lifetime        (1000. * ms),
   _adhoc_x           (0.),              // Vertex-X in case of AD_HOC region
   _adhoc_y           (0.),              // Vertex-Y in case of AD_HOC region
   _adhoc_z           (0.)               // Vertex-Z in case of AD_HOC region
@@ -49,6 +50,9 @@ NextFlex::NextFlex():
   // Messenger
   _msg = new G4GenericMessenger(this, "/Geometry/NextFlex/",
                                 "Control commands of the NextFlex geometry.");
+
+  // Hard-wired dimensions
+  _sc_yield = 25510. * 1 / MeV;   // Scintillation yield
 
   // Parametrized dimensions
   DefineConfigurationParameters();
@@ -96,6 +100,13 @@ void NextFlex::DefineConfigurationParameters()
   gas_temperature_cmd.SetUnitCategory("Temperature");
   gas_temperature_cmd.SetParameterName("gas_temperature", false);
   gas_temperature_cmd.SetRange("gas_temperature>0.");
+
+  G4GenericMessenger::Command& e_lifetime_cmd =
+    _msg->DeclareProperty("e_lifetime", _e_lifetime,
+                          "Electron lifetime in gas.");
+  e_lifetime_cmd.SetParameterName("e_lifetime", false);
+  e_lifetime_cmd.SetUnitCategory("Time");
+  e_lifetime_cmd.SetRange("e_lifetime>0.");
 
   // Specific vertex in case region to shoot from is AD_HOC
   G4GenericMessenger::Command& _adhoc_x_cmd =
@@ -148,9 +159,11 @@ void NextFlex::DefineMaterials()
     G4Exception("[NextParam]", "DefineMaterials()", FatalException,
     "Unknown xenon gas type. Valid options are naturalXe, enrichedXe or depletedXe.");
 
-  _xenon_gas->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_gas_pressure,
-                                                                        _gas_temperature,
-                                                                        25510 * (1./MeV)));
+  _xenon_gas->
+    SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_gas_pressure,
+                                                              _gas_temperature,
+                                                              _sc_yield,
+                                                              _e_lifetime));
 }
 
 
