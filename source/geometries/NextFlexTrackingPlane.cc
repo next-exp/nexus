@@ -66,7 +66,7 @@ NextFlexTrackingPlane::NextFlexTrackingPlane():
   _teflon_thickness    =  5. * mm;
   _wls_thickness       =  1. * um;
   _SiPM_thickness      = 10. * um;
-  _SiPM_case_thickness =  1. * mm;
+  _SiPM_case_thickness =  2. * mm;
 
 
   // Initializing the geometry navigator (used in vertex generation)
@@ -479,7 +479,7 @@ void NextFlexTrackingPlane::GenerateSiPMpositions()
 
       if (radius <= max_radius)
         _SiPM_positions.push_back(G4ThreeVector(posX, posY, 0.));
-        //G4cout << posX << " " << posY << G4endl;
+        G4cout << posX << " " << posY << G4endl;
     }
   }
 

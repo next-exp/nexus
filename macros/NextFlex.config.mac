@@ -4,6 +4,7 @@
 /Geometry/NextFlex/gas              enrichedXe
 /Geometry/NextFlex/gas_pressure     15. bar
 /Geometry/NextFlex/gas_temperature  300. kelvin
+/Geometry/NextFlex/e_lifetime       1000. ms
 
 # ACTIVE
 /Geometry/NextFlex/active_length      116. cm
@@ -12,6 +13,10 @@
 
 # FIELD CAGE
 /Geometry/NextFlex/buffer_length    280. mm
+
+/Geometry/NextFlex/cathode_transparency .98
+/Geometry/NextFlex/anode_transparency   .88
+/Geometry/NextFlex/gate_transparency    .88
 
 /Geometry/NextFlex/el_gap_length    10.  mm
 /Geometry/NextFlex/el_field_on      true
