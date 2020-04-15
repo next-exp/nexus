@@ -38,6 +38,7 @@ using namespace nexus;
 
 NextFlexFieldCage::NextFlexFieldCage():
   BaseGeometry(),
+  _mother_logic      (nullptr),
   _verbosity         (false),
   _visibility        (false),
   _msg               (nullptr),
@@ -302,6 +303,11 @@ void NextFlexFieldCage::DefineMaterials()
 
 void NextFlexFieldCage::Construct()
 {
+  // Make sure that the pointer to the mother volume is actually defined
+  if (!_mother_logic)
+    G4Exception("[NextFlexFieldCage]", "Construct()",
+                FatalException, "Mother volume is a nullptr.");
+
   // Verbosity
   if(_verbosity) G4cout << G4endl << "*** NEXT-Flex Field Cage ..." << G4endl;
 

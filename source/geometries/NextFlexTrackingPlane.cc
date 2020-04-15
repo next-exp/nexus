@@ -43,6 +43,7 @@ using namespace nexus;
 
 NextFlexTrackingPlane::NextFlexTrackingPlane():
   BaseGeometry(),
+  _mother_logic      (nullptr),
   _verbosity         (false),
   _visibility        (false),
   _msg               (nullptr),
@@ -196,6 +197,11 @@ void NextFlexTrackingPlane::DefineMaterials()
 
 void NextFlexTrackingPlane::Construct()
 {
+  // Make sure that the pointer to the mother volume is actually defined
+  if (!_mother_logic)
+    G4Exception("[NextFlexTrackingPlane]", "Construct()",
+                FatalException, "Mother volume is a nullptr.");
+
   // Verbosity
   if(_verbosity) {
     G4cout << G4endl << "*** NEXT-Flex Tracking Plane ..." << G4endl;
@@ -479,7 +485,7 @@ void NextFlexTrackingPlane::GenerateSiPMpositions()
 
       if (radius <= max_radius)
         _SiPM_positions.push_back(G4ThreeVector(posX, posY, 0.));
-        G4cout << posX << " " << posY << G4endl;
+        //G4cout << posX << " " << posY << G4endl;
     }
   }
 

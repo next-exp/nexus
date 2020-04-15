@@ -40,6 +40,7 @@ using namespace nexus;
 
 NextFlexEnergyPlane::NextFlexEnergyPlane():
   BaseGeometry(),
+  _mother_logic      (nullptr),
   _verbosity         (false),
   _visibility        (false),
   _msg               (nullptr),
@@ -168,6 +169,11 @@ void NextFlexEnergyPlane::DefineMaterials()
 
 void NextFlexEnergyPlane::Construct()
 {
+  // Make sure that the pointer to the mother volume is actually defined
+  if (!_mother_logic)
+    G4Exception("[NextFlexEnergyPlane]", "Construct()",
+                FatalException, "Mother volume is a nullptr.");
+
   // Verbosity
   if(_verbosity) {
     G4cout << G4endl << "*** NEXT-Flex Energy Plane ..." << G4endl;
