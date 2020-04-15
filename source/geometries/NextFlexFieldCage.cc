@@ -222,8 +222,9 @@ void NextFlexFieldCage::ComputeDimensions()
 {
   // The field cage goes along the whole field cage
   // (EL_GAP + ACTIVE + CATHODE + BUFFER)
-  _fc_length = _el_gap_length     + _active_length +
-               _cathode_thickness + _buffer_length;
+//  _fc_length = _el_gap_length     + _active_length +
+//               _cathode_thickness + _buffer_length;
+  _fc_length = _active_length + _cathode_thickness + _buffer_length;
 
   _fiber_inner_rad      = _active_diam/2.;
   _light_tube_inner_rad = _active_diam/2.;
@@ -574,7 +575,8 @@ void NextFlexFieldCage::BuildLightTube()
 
   _light_tube_outer_rad = _light_tube_inner_rad + _light_tube_thickness;
   
-  G4double light_tube_iniZ = - _el_gap_length;
+//  G4double light_tube_iniZ = - _el_gap_length;
+  G4double light_tube_iniZ = 0.;
 
   G4double light_tube_posZ = light_tube_iniZ + _fc_length/2.;
 
