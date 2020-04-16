@@ -83,7 +83,8 @@ namespace nexus {
     G4Material* _copper_mat;
 
     // Dimensions
-    G4double    _ics_thickness;
+    G4double _lightTube_ICS_gap;
+    G4double _ics_thickness;
 
     // Detector parts
     NextFlexFieldCage*     _field_cage;

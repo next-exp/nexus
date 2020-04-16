@@ -54,6 +54,8 @@ NextFlex::NextFlex():
   // Hard-wired dimensions
   _sc_yield = 25510. * 1 / MeV;   // Scintillation yield
 
+  _lightTube_ICS_gap = 55. * mm;  // (Set as in NEXT100. To be checked)
+
   // Parametrized dimensions
   DefineConfigurationParameters();
 
@@ -251,7 +253,7 @@ void NextFlex::BuildICS(G4LogicalVolume* mother_logic) {
 
   G4String ics_name = "ICS";
 
-  G4double ics_inner_rad = _field_cage->Get_FC_outer_rad();
+  G4double ics_inner_rad = _field_cage->Get_FC_outer_rad() + _lightTube_ICS_gap;
   G4double ics_outer_rad = ics_inner_rad + _ics_thickness;
 
   G4double ics_iniZ      = _tracking_plane->Get_TP_iniZ();
@@ -278,6 +280,8 @@ void NextFlex::BuildICS(G4LogicalVolume* mother_logic) {
 
   // Verbosity
   if (_verbosity)
+    G4cout << "* ICS.  Inner Rad: " << ics_inner_rad << 
+              "   Outer Rad: " << ics_outer_rad << G4endl;
     G4cout << "* ICS Z positions: " << ics_iniZ << " to " << ics_finZ << G4endl;
 }
 
