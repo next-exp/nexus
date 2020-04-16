@@ -72,7 +72,7 @@ NextFlexFieldCage::NextFlexFieldCage():
 
 
   // Hard-wired dimensions
-  _active_diam          = 992.  * mm;   // Same as NEXT100 (avg btwn 1000 & 984 mm)
+  _active_diam          = 984.  * mm;   // Same as NEXT100 (avg btwn 1000 & 984 mm)
 
   _cathode_thickness    = 0.1   * mm;
   _anode_thickness      = 0.1   * mm;

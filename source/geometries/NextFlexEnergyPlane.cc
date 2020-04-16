@@ -59,11 +59,11 @@ NextFlexEnergyPlane::NextFlexEnergyPlane():
 
   // Hard-wired dimensions & components
   _teflon_thickness = 5. * mm;
-  _wls_thickness    = 1. * um;       // XXXXXXXX To be checked
+  _wls_thickness    = 1. * um;     // XXXXXXXX To be checked
 
   _pmt                = new PmtR11410();
-  _num_pmts           = 60;          // It must be the number of PMTs in NEXT100
-  _pmt_hole_diameter  = 80. * mm;    // It must be bigger than PMT diameter
+  _num_pmts           = 60;        // It must be the number of PMTs in NEXT100
+  _pmt_hole_diameter  = 84. * mm;  // It must be bigger than PMT diameter (84mm in NEXT100)
 
   _window_thickness      = 6.0 * mm;
   _optical_pad_thickness = 1.0 * mm;
@@ -431,6 +431,8 @@ void NextFlexEnergyPlane::BuildPMTs()
     pmt_hole_pos.setZ(_pmt_hole_posZ);
     new G4PVPlacement(nullptr, pmt_hole_pos, pmt_hole_logic, pmt_hole_name,
                       _mother_logic, false, _first_sensor_id + pmt_id, false);
+    if (_verbosity) G4cout << "* PMT " << pmt_id << " position: " 
+                           << pmt_hole_pos << G4endl;
   }
 }
 
@@ -457,7 +459,6 @@ void NextFlexEnergyPlane::GeneratePMTpositions()
       position.setX(radius * cos(angle*deg));
       position.setY(radius * sin(angle*deg));
       _pmt_positions.push_back(position);
-      //if (_verbosity) G4cout << "* PMT position: " << position << G4endl;
     }
 
     for (G4int i=1; i<circle; i++) {
@@ -470,7 +471,6 @@ void NextFlexEnergyPlane::GeneratePMTpositions()
         position.setX(radius * cos(angle * deg));
         position.setY(radius * sin(angle * deg));
         _pmt_positions.push_back(position);
-        //if (_verbosity) G4cout << "* PMT position: " << position << G4endl;
       }
     }
   }
