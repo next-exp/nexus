@@ -1,12 +1,3 @@
-### --------------------------------------------------------
-###  NextNew: Initialization macro of nexus.
-###  $Id: NextNew.init.mac  2013-09-09 13:05 minegui $
-### --------------------------------------------------------
-
-### This init macro simulates radioactive decays in the NEW detector geometry
-### It simulates only the inner part of the detector
-
-
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
 /PhysicsList/RegisterPhysics G4DecayPhysics
 /PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
