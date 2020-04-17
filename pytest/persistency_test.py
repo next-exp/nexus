@@ -85,20 +85,10 @@ def test_particle_ids_of_hits_exist_in_particle_table():
     in the particle table.
     """
 
-   # command = './nexus -b -n 1 pytest/test_macros/NEW_optical.init.mac'
-   # os.system(command)
-
-    my_env = os.environ.copy()
-    command = ['./nexus', '-b', '-n', '1', 'pytest/test_macros/NEW_single_electron.init.mac']
-    p = subprocess.Popen(command, env=my_env)
-    p.wait()
-
-    new_file = 'pytest/NEW_electron_sim.h5'
-
-    hits = pd.read_hdf(new_file, 'MC/hits')
+    hits = pd.read_hdf(output_file, 'MC/hits')
     hit_pids = hits.particle_id.unique()
 
-    particles = pd.read_hdf(new_file, 'MC/particles')
+    particles = pd.read_hdf(output_file, 'MC/particles')
     particle_ids = particles.particle_id.unique()
 
     assert np.all(np.isin(hit_pids, particle_ids))
