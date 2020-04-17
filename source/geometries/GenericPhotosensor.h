@@ -24,7 +24,11 @@ namespace nexus {
     // Constructor for a rectangular sensor providing
     // The default thickness corresponds to a typical value for
     // a silicon photomultiplier.
+<<<<<<< HEAD
     GenericPhotosensor(G4String name,   G4double width,
+=======
+    GenericPhotosensor(G4String name, G4double width,
+>>>>>>> Added name to GenericPhotosensor and window optPros bug fixed.
                        G4double height, G4double thickness = 2.0*mm);
     
     // Constructor for a square sensor
@@ -37,10 +41,17 @@ namespace nexus {
     void Construct();
 
     //
+<<<<<<< HEAD
     G4double GetWidth()       const;
     G4double GetHeight()      const;
     G4double GetThickness()   const;
     const G4String& GetName() const;
+=======
+    G4double GetWidth()     const;
+    G4double GetHeight()    const;
+    G4double GetThickness() const;
+    G4String GetName()      const;
+>>>>>>> Added name to GenericPhotosensor and window optPros bug fixed.
 
     void SetWithWLSCoating       (G4bool with_wls_coating);
     void SetWindowRefractiveIndex(G4MaterialPropertyVector* rindex);
@@ -82,10 +93,17 @@ namespace nexus {
   };
 
 
+<<<<<<< HEAD
   inline G4double GenericPhotosensor::GetWidth()       const { return width_; }
   inline G4double GenericPhotosensor::GetHeight()      const { return height_; }
   inline G4double GenericPhotosensor::GetThickness()   const { return thickness_; }
   inline const G4String& GenericPhotosensor::GetName() const { return name_; }
+=======
+  inline G4double GenericPhotosensor::GetWidth()     const { return width_; }
+  inline G4double GenericPhotosensor::GetHeight()    const { return height_; }
+  inline G4double GenericPhotosensor::GetThickness() const { return thickness_; }
+  inline G4String GenericPhotosensor::GetName()      const { return name_; }
+>>>>>>> Added name to GenericPhotosensor and window optPros bug fixed.
 
   inline void GenericPhotosensor::SetWithWLSCoating(G4bool with_wls_coating)
   { with_wls_coating_ = with_wls_coating; }
