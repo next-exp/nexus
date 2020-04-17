@@ -1,0 +1,16 @@
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+/PhysicsList/RegisterPhysics G4OpticalPhysics
+/PhysicsList/RegisterPhysics NexusPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
+
+/Geometry/RegisterGeometry NEXT100_OPT
+
+/Generator/RegisterGenerator SINGLE_PARTICLE
+
+/Actions/RegisterRunAction DEFAULT
+/Actions/RegisterEventAction DEFAULT
+/Actions/RegisterTrackingAction DEFAULT
+
+/nexus/RegisterMacro pytest/test_macros/NEXT100_sensdet.config.mac
