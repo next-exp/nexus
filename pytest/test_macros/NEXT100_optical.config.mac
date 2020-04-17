@@ -1,8 +1,3 @@
-### --------------------------------------------------------
-###  Configuration macro for the NEXT100 detector geometry
-###  This macro simulates a 1 MeV electron in the active volume
-### --------------------------------------------------------
-
 /run/verbose 1
 /event/verbose 0
 /tracking/verbose 0
