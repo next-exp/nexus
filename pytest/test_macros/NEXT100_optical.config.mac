@@ -17,8 +17,8 @@
 
 ### Generation
 /Generator/SingleParticle/particle e-
-/Generator/SingleParticle/min_energy 1. MeV
-/Generator/SingleParticle/max_energy 1. MeV
+/Generator/SingleParticle/min_energy 100. keV
+/Generator/SingleParticle/max_energy 100. keV
 /Generator/SingleParticle/region ACTIVE
 
 /nexus/persistency/outputFile pytest/NEXT100_electron_full
