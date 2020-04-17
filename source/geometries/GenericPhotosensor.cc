@@ -28,21 +28,18 @@ using namespace nexus;
 GenericPhotosensor::GenericPhotosensor(G4double width,
                                        G4double height,
                                        G4double thickness):
-  BaseGeometry(),
-  width_(width), height_(height), thickness_(thickness),
-  time_binning_(1.0*microsecond),
-  visibility_(false),
-  window_mat_(nullptr),
-  msg_(nullptr)
+  BaseGeometry     (),
+  msg_             (nullptr),
+  width_           (width),      // Width of the Sensitive Area
+  height_          (height),     // Height of the Sensitive Area
+  thickness_       (thickness),  // Thickness of the whole sensor
+  with_WLScoating_ (false),
+  window_rIndex_   (nullptr),
+  sensitive_mpt_   (nullptr),
+  mother_depth_    (1),          // Be sure to set it properly
+  time_binning_    (1.0 * us),
+  visibility_      (false)
 {
-  // We use a duplicate of 'optical silicone' as material for the window.
-  // This way, we make sure that the optical properties of the window (which are
-  // attached to its material) do not affect other elements of the geometry or
-  // are modified unconsciously by a user.
-  window_mat_ = MaterialsList::CopyMaterial(MaterialsList::OpticalSilicone(),
-                                              "GENERIC_PHOTOSENSOR_WINDOW_MATERIAL");
-  window_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
-
   // User control commands for generic photosensor
   msg_ = new G4GenericMessenger(this, "/Geometry/GenericPhotosensor/",
                                 "Control commands of the generic photosensor geometry");
@@ -70,90 +67,178 @@ GenericPhotosensor::~GenericPhotosensor()
 }
 
 
+void GenericPhotosensor::ComputeDimensions()
+{
+  // Encasing 0.1mm bigger than the sensitive area
+  encasing_x_ = width_  + 0.1 * mm;
+  encasing_y_ = height_ + 0.1 * mm;
+  encasing_z_ = thickness_;
+
+  // Window thickness of 0.2mm (Similar to Sensl SiPMs)
+  window_x_ = encasing_x_;
+  window_y_ = encasing_y_;
+  window_z_ = 0.2 * mm;
+
+  // Sensitive area thickness of 0.2mm (Similar to Sensl SiPMs)
+  sensitive_z_ = 0.2 * mm;
+
+  // Check that window + sensitive fits into the encasing
+  if ((window_z_ + sensitive_z_) > encasing_z_)
+    G4Exception("[GenericPhotosensor]", "ComputeDimensions()", FatalException,
+                "Sensor thickness too small.");
+
+  // WLS coating dimensions (thickness = 1 micron by definition)
+  wls_x_ = encasing_x_;
+  wls_y_ = encasing_y_;
+  wls_z_ = 1. * micrometer;
+}
+
+
+void GenericPhotosensor::DefineMaterials()
+{
+  // Encasing /////
+  encasing_mat_ = MaterialsList::FR4();
+
+  // Window /////
+  // Duplicate of 'optical silicone' to avoid interferences with other uses.
+  window_mat_ =
+    MaterialsList::CopyMaterial(MaterialsList::OpticalSilicone(),
+                                "PHOTOSENSOR_WINDOW_MATERIAL");
+
+  // If the sensor has WLS coating the window must have the rIndex from WLS
+  // If the user set an specific rIndex for the window, a WARNING is raised
+  // as the set values are not used.   
+  if (with_WLScoating_) {
+    G4MaterialPropertiesTable* window_optProp = new G4MaterialPropertiesTable();
+    window_optProp->AddProperty("RINDEX",
+      OpticalMaterialProperties::TPB()->GetProperty("RINDEX"));
+    window_mat_->SetMaterialPropertiesTable(window_optProp);
+
+    if (window_rIndex_)
+      G4Exception("[GenericPhotosensor]", "DefineMaterials()", JustWarning,
+                  "Window rIndex set, but NOT USED. Using TPB rIndex.");
+  }
+
+  // If the sensor has NOT WLS coating the window must have the rIndex
+  // set by the user. If it is not set, an exception raises.
+  else {
+    if (!window_rIndex_)
+      G4Exception("[GenericPhotosensor]", "DefineMaterials()", FatalException,
+                  "Window rIndex must be set before constructing");
+
+    window_mat_->GetMaterialPropertiesTable()->AddProperty("RINDEX", window_rIndex_);
+  }
+
+  // Sensitive /////
+  sensitive_mat_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Si");
+
+  // WLS coating /////
+  wls_mat_ = MaterialsList::TPB();
+  wls_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+}
+
+
 void GenericPhotosensor::Construct()
 {
-  // PHOTOSENSOR ENCASING //////////////////////////////////
 
+  ComputeDimensions();
+
+  DefineMaterials();
+
+  // PHOTOSENSOR ENCASING //////////////////////////////////
   G4String name = "PHOTOSENSOR";
 
   G4Box* encasing_solid_vol =
-    new G4Box(name, width_/2., height_/2., thickness_/2.);
+    new G4Box(name, encasing_x_/2., encasing_y_/2., encasing_z_/2.);
 
   G4LogicalVolume* encasing_logic_vol =
-    new G4LogicalVolume(encasing_solid_vol, MaterialsList::FR4(), name);
+    new G4LogicalVolume(encasing_solid_vol, encasing_mat_, name);
 
   BaseGeometry::SetLogicalVolume(encasing_logic_vol);
 
-  // OPTICAL WINDOW ////////////////////////////////////////
 
+  // OPTICAL WINDOW ////////////////////////////////////////
   name = "PHOTOSENSOR_WINDOW";
 
-  G4double window_thickness = thickness_/4.;
-
   G4Box* window_solid_vol =
-    new G4Box(name, width_/2., height_/2., window_thickness/2.);
-
+    new G4Box(name, window_x_/2., window_y_/2., window_z_/2.);
 
   G4LogicalVolume* window_logic_vol =
     new G4LogicalVolume(window_solid_vol, window_mat_, name);
 
-  G4double zpos = thickness_/2. - window_thickness/2.;
+  G4double zpos = encasing_z_/2. - window_z_/2.;
 
-  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., zpos),
-                    window_logic_vol, name, encasing_logic_vol,
-                    false, 0, false);
+  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., zpos), window_logic_vol,
+                    name, encasing_logic_vol, false, 0, false);
 
-  if (visibility_) {
-    G4VisAttributes blood_red = BloodRed();
-    blood_red.SetForceSolid(true);
-    window_logic_vol->SetVisAttributes(blood_red);
-  }
-  else {
-    window_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
-  }
 
   // PHOTOSENSITIVE AREA /////////////////////////////////////////////
-
   name = "PHOTOSENSOR_SENSAREA";
 
-  G4double sensarea_thickness = 0.1*mm;
-
   G4Box* sensarea_solid_vol =
-    new G4Box(name, width_/2., height_/2., sensarea_thickness/2.);
+    new G4Box(name, width_/2., height_/2., sensitive_z_/2.);
 
   G4LogicalVolume* sensarea_logic_vol =
-    new G4LogicalVolume(sensarea_solid_vol,
-                        G4NistManager::Instance()->FindOrBuildMaterial("G4_Si"),
-                        name);
+    new G4LogicalVolume(sensarea_solid_vol, sensitive_mat_, name);
 
-  if (!visibility_)
+  zpos = encasing_z_/2. - window_z_ - sensitive_z_/2.;
+
+  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., zpos), sensarea_logic_vol,
+                    name, encasing_logic_vol, false, 0, false);
+
+
+  // WLS_COATING /////////////////////////////////////////////
+  G4LogicalVolume* wls_logic_vol;
+  if (with_WLScoating_) {
+    name = "PHOTOSENSOR_WLS";
+
+    G4Box* wls_solid_vol =
+      new G4Box(name, wls_x_/2., wls_y_/2., wls_z_/2.);
+
+    wls_logic_vol = new G4LogicalVolume(wls_solid_vol, wls_mat_, name);
+
+    zpos = window_z_/2. - sensitive_z_/2.;
+
+    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., zpos), wls_logic_vol,
+                      name, window_logic_vol, false, 0, false);
+
+    G4OpticalSurface* wls_optSurf = new G4OpticalSurface("PHOTOSENSOR_wls_optSurf",
+                                                         glisur, ground,
+                                                         dielectric_dielectric, .01);
+    
+    new G4LogicalSkinSurface("PHOTOSENSOR_wls_optSurf", wls_logic_vol, wls_optSurf);
+  }
+
+
+  // VISIBILITIES /////////////////////////////////////////////
+  if (visibility_) {
+    window_logic_vol  ->SetVisAttributes(G4VisAttributes::Invisible);
+    G4VisAttributes blood_red = BloodRed();
+    blood_red.SetForceSolid(true);
+    sensarea_logic_vol->SetVisAttributes(blood_red);
+    encasing_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+    wls_logic_vol     ->SetVisAttributes(G4VisAttributes::Invisible);
+  }
+  else {
+    window_logic_vol  ->SetVisAttributes(G4VisAttributes::Invisible);
     sensarea_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+    encasing_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+    wls_logic_vol     ->SetVisAttributes(G4VisAttributes::Invisible);
+  }
 
-  zpos = thickness_/2. - window_thickness - sensarea_thickness/2.;
 
-  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., zpos),
-                    sensarea_logic_vol, name, encasing_logic_vol,
-                    false, 0, false);
-
-  // OPTICAL PROPERTIES //////////////////////////////////////////////
-
-  name = "PHOTOSENSOR_OPSURF";
-
-  G4double energy[]       = {0.2*eV, 11.5*eV};
-  G4double reflectivity[] = {0.0   ,  0.0};
-  G4double efficiency[]   = {1.0   ,  1.0};
-
-  G4MaterialPropertiesTable* photosensor_mpt = new G4MaterialPropertiesTable();
-  photosensor_mpt->AddProperty("REFLECTIVITY", energy, reflectivity, 2);
-  photosensor_mpt->AddProperty("EFFICIENCY",   energy, efficiency,   2);
-
-  G4OpticalSurface* photosensor_opsurf =
+  // SENSOR OPTICAL PROPERTIES ////////////////////////////////////////
+  if (!sensitive_mpt_)
+    G4Exception("[GenericPhotosensor]", "Construct()", FatalException,
+                "Sensor Optical Properties must be set before constructing");
+  name = "SENSITIVE_OPSURF";
+  G4OpticalSurface* sensitive_opsurf =
     new G4OpticalSurface(name, unified, polished, dielectric_metal);
-  photosensor_opsurf->SetMaterialPropertiesTable(photosensor_mpt);
-  new G4LogicalSkinSurface(name, sensarea_logic_vol, photosensor_opsurf);
+  sensitive_opsurf->SetMaterialPropertiesTable(sensitive_mpt_);
+  new G4LogicalSkinSurface(name, sensarea_logic_vol, sensitive_opsurf);
+
 
   // SENSITIVE DETECTOR //////////////////////////////////////////////
-
   G4String sdname = "/GENERIC_PHOTOSENSOR/SiPM";
   G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
 
@@ -162,15 +247,9 @@ void GenericPhotosensor::Construct()
     sensdet->SetDetectorVolumeDepth(1);
     sensdet->SetDetectorNamingOrder(1000.);
     sensdet->SetTimeBinning(time_binning_);
-    sensdet->SetMotherVolumeDepth(2);
+    sensdet->SetMotherVolumeDepth(mother_depth_);
 
     G4SDManager::GetSDMpointer()->AddNewDetector(sensdet);
     window_logic_vol->SetSensitiveDetector(sensdet);
   }
-}
-
-
-void GenericPhotosensor::SetRefractiveIndex(G4MaterialPropertyVector* mpv)
-{
-  window_mat_->GetMaterialPropertiesTable()->AddProperty("RINDEX", mpv);
 }
