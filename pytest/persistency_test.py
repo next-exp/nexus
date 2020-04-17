@@ -89,7 +89,7 @@ def test_particle_ids_of_hits_exist_in_particle_table():
    # os.system(command)
 
     my_env = os.environ.copy()
-    command = ['./nexus', '-b', '-n', '1', 'pytest/test_macros/NEW_optical.init.mac']
+    command = ['./nexus', '-b', '-n', '1', 'pytest/test_macros/NEW_single_electron.init.mac']
     p = subprocess.Popen(command, env=my_env)
     p.wait()
 

@@ -1,19 +1,10 @@
-### --------------------------------------------------------
-###  NextNew: Initialization macro of nexus.
-###  $Id: NextNew.init.mac  2013-09-09 13:05 minegui $
-### --------------------------------------------------------
-
-### This init macro simulates radioactive decays in the NEW detector geometry
-### It simulates only the inner part of the detector
-
-
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
 /PhysicsList/RegisterPhysics G4DecayPhysics
 /PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
-/Geometry/RegisterGeometry NEXT_NEW_OPT
+/Geometry/RegisterGeometry NEXT_NEW
 
 /Generator/RegisterGenerator SINGLE_PARTICLE
 
@@ -23,4 +14,4 @@
 /Actions/RegisterStackingAction DEFAULT
 /Actions/RegisterRunAction DEFAULT
 
-/nexus/RegisterMacro pytest/test_macros/NEW_optical.config.mac
+/nexus/RegisterMacro pytest/test_macros/NEW_single_electron.config.mac

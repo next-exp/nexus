@@ -10,7 +10,7 @@
 # Geometry
 /Geometry/NextNew/elfield false
 /Geometry/NextNew/max_step_size 1. mm
-/Geometry/NextNewOpticalGeometry/pressure 15. bar
+/Geometry/NextNew/pressure 15. bar
 /Geometry/PmtR11410/SD_depth 4
 
 ### Generation
