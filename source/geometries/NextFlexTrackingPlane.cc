@@ -14,6 +14,7 @@
 #include "IonizationSD.h"
 #include "UniformElectricDriftField.h"
 #include "CylinderPointSampler2020.h"
+#include "GenericPhotosensor.h"
 #include "PmtSD.h"
 #include "Visibilities.h"
 
@@ -49,11 +50,14 @@ NextFlexTrackingPlane::NextFlexTrackingPlane():
   _msg               (nullptr),
   _wls_matName       ("TPB"),
   _SiPM_ANODE_dist   (10.  * mm),   // Distance from ANODE to SiPM surface
-  _SiPM_size         ( 1.3 * mm),   // Size of SiPMs
+  _SiPM_sizeX        ( 1.3 * mm),   // Size X (width) of SiPMs
+  _SiPM_sizeY        ( 1.3 * mm),   // Size Y (height) of SiPMs
   _SiPM_pitchX       (15.6 * mm),   // SiPMs pitch X
   _SiPM_pitchY       (15.6 * mm),   // SiPMs pitch Y
   _SiPM_bin          ( 1.  * us),   // SiPMs time bin size
-  _copper_thickness  (12.  * cm)    // Thickness of the copper plate
+  _copper_thickness  (12.  * cm),   // Thickness of the copper plate
+  _teflon_thickness  ( 5.  * mm),   // Thickness of the teflon mask
+  _teflon_hole_diam  ( 7.  * mm)    // Diameter of teflon mask holes
 {
 
   // Messenger
@@ -64,11 +68,12 @@ NextFlexTrackingPlane::NextFlexTrackingPlane():
   DefineConfigurationParameters();
 
   // Hard-wired dimensions & components
-  _teflon_thickness    =  5. * mm;
-  _wls_thickness       =  1. * um;
-  _SiPM_thickness      = 10. * um;
-  _SiPM_case_thickness =  2. * mm;
+  _SiPM_case_thickness = 2. * mm;
+  _wls_thickness       = 1. * um;
 
+  // The SiPM
+  _SiPM = new GenericPhotosensor("TP_SiPM", _SiPM_sizeX, _SiPM_sizeY, 
+                                 _SiPM_case_thickness);
 
   // Initializing the geometry navigator (used in vertex generation)
   _geom_navigator =
@@ -81,6 +86,7 @@ NextFlexTrackingPlane::~NextFlexTrackingPlane()
 {
   delete _msg;
   delete _copper_gen;
+  delete _SiPM;
 }
 
 
@@ -101,6 +107,21 @@ void NextFlexTrackingPlane::DefineConfigurationParameters()
   copper_thickness_cmd.SetUnitCategory("Length");
   copper_thickness_cmd.SetRange("tp_copper_thickness>=0.");
 
+  // Teflon dimensions
+  G4GenericMessenger::Command& teflon_thickness_cmd =
+    _msg->DeclareProperty("tp_teflon_thickness", _teflon_thickness,
+                          "Thickness of the TP teflon mask.");
+  teflon_thickness_cmd.SetParameterName("tp_teflon_thickness", false);
+  teflon_thickness_cmd.SetUnitCategory("Length");
+  teflon_thickness_cmd.SetRange("tp_teflon_thickness>=0.");
+
+  G4GenericMessenger::Command& teflon_hole_diam_cmd =
+    _msg->DeclareProperty("tp_teflon_hole_diam", _teflon_hole_diam,
+                          "Diameter of the TP teflon mask holes.");
+  teflon_hole_diam_cmd.SetParameterName("tp_teflon_hole_diam", false);
+  teflon_hole_diam_cmd.SetUnitCategory("Length");
+  teflon_hole_diam_cmd.SetRange("tp_teflon_hole_diam>=0.");
+
   // UV shifting material
   _msg->DeclareProperty("tp_wls_mat", _wls_matName,
                         "TP UV wavelength shifting material name");
@@ -113,12 +134,19 @@ void NextFlexTrackingPlane::DefineConfigurationParameters()
   sipm_anode_dist_cmd.SetUnitCategory("Length");
   sipm_anode_dist_cmd.SetRange("tp_sipm_anode_dist>=0.");
 
-  G4GenericMessenger::Command& sipm_size_cmd =
-    _msg->DeclareProperty("tp_sipm_size", _SiPM_size,
-                          "Size of tracking SiPMs.");
-  sipm_size_cmd.SetParameterName("tp_sipm_size", false);
-  sipm_size_cmd.SetUnitCategory("Length");
-  sipm_size_cmd.SetRange("tp_sipm_size>0.");
+  G4GenericMessenger::Command& sipm_sizeX_cmd =
+    _msg->DeclareProperty("tp_sipm_sizeX", _SiPM_sizeX,
+                          "SizeX of tracking SiPMs.");
+  sipm_sizeX_cmd.SetParameterName("tp_sipm_sizeX", false);
+  sipm_sizeX_cmd.SetUnitCategory("Length");
+  sipm_sizeX_cmd.SetRange("tp_sipm_sizeX>0.");
+
+  G4GenericMessenger::Command& sipm_sizeY_cmd =
+    _msg->DeclareProperty("tp_sipm_sizeY", _SiPM_sizeY,
+                          "SizeY of tracking SiPMs.");
+  sipm_sizeY_cmd.SetParameterName("tp_sipm_sizeY", false);
+  sipm_sizeY_cmd.SetUnitCategory("Length");
+  sipm_sizeY_cmd.SetRange("tp_sipm_sizeY>0.");
 
   G4GenericMessenger::Command& sipm_pitchX_cmd =
     _msg->DeclareProperty("tp_sipm_pitchX", _SiPM_pitchX,
@@ -146,8 +174,7 @@ void NextFlexTrackingPlane::DefineConfigurationParameters()
 
 void NextFlexTrackingPlane::ComputeDimensions()
 {
-  _teflon_iniZ = _originZ - _SiPM_ANODE_dist - _teflon_thickness;
-
+  _teflon_iniZ = _originZ - _SiPM_ANODE_dist - _SiPM_case_thickness;
   _copper_iniZ = _teflon_iniZ - _copper_thickness;
 
   // Generate SiPM positions
@@ -159,18 +186,10 @@ void NextFlexTrackingPlane::ComputeDimensions()
 void NextFlexTrackingPlane::DefineMaterials()
 {
   // Xenon
-  _xenon_gas     = _mother_logic->GetMaterial();
+  _xenon_gas  = _mother_logic->GetMaterial();
 
   // Copper
-  _copper_mat    = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
-
-  // SiPM case
-  //_SiPM_case_mat = MaterialsList::Epoxy();
-  _SiPM_case_mat = MaterialsList::CopyMaterial(MaterialsList::Epoxy(), "TP_Epoxy");
-  //_SiPM_case_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GlassEpoxy());
-
-  // SiPM
-  _SiPM_mat   = G4NistManager::Instance()->FindOrBuildMaterial("G4_Si");
+  _copper_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
 
   // Teflon
   _teflon_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
@@ -218,9 +237,6 @@ void NextFlexTrackingPlane::Construct()
 
   // Teflon
   BuildTeflon();
-
-  // SiPMs
-  BuildSiPMs();
 }
 
 
@@ -259,7 +275,7 @@ void NextFlexTrackingPlane::BuildCopper()
 
 void NextFlexTrackingPlane::BuildTeflon()
 {
-  /// The teflon ///
+  /// The TEFLON ///
   G4String teflon_name = "TP_TEFLON";
 
   G4double teflon_posZ = _teflon_iniZ + _teflon_thickness/2.;
@@ -267,35 +283,18 @@ void NextFlexTrackingPlane::BuildTeflon()
   G4Tubs* teflon_solid =
     new G4Tubs(teflon_name, 0., _diameter/2., _teflon_thickness/2., 0, twopi);
 
-  // Make SiPM holes
-  //teflon_solid = dynamic_cast<G4Tubs*> (MakeSiPMholes(teflon_solid));
-  //teflon_solid = (G4Tubs*) MakeSiPMholes(teflon_solid);
-
-//  G4LogicalVolume* teflon_logic =
-  _teflon_logic =
+  G4LogicalVolume* teflon_logic =
     new G4LogicalVolume(teflon_solid, _teflon_mat, teflon_name);
 
-  //G4VPhysicalVolume* teflon_phys =
-  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., teflon_posZ), _teflon_logic,
-                    teflon_name, _mother_logic, false, 0, _verbosity);
-
-  // Visibility
-  if (_visibility) {
-    G4VisAttributes light_blue_col = nexus::LightBlue();
-    //light_blue_col.SetForceSolid(true);
-    _teflon_logic->SetVisAttributes(light_blue_col);
-  }
-  else _teflon_logic->SetVisAttributes(G4VisAttributes::Invisible);
-
-  // Adding the optical surface
+  // Adding the teflon optical surface
   G4OpticalSurface* teflon_optSurf = 
     new G4OpticalSurface(teflon_name, unified, ground, dielectric_metal);
   teflon_optSurf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
 
-  new G4LogicalSkinSurface(teflon_name, _teflon_logic, teflon_optSurf);
+  new G4LogicalSkinSurface(teflon_name, teflon_logic, teflon_optSurf);
 
 
-  /// The UV wavelength Shifter in TEFLON ///
+  /// The UV WLS in TEFLON ///
   G4String teflon_wls_name = "TP_TEFLON_WLS";
 
   G4double teflon_wls_posZ = _teflon_thickness/2. - _wls_thickness/2.;
@@ -303,21 +302,14 @@ void NextFlexTrackingPlane::BuildTeflon()
   G4Tubs* teflon_wls_solid =
     new G4Tubs(teflon_wls_name, 0., _diameter/2., _wls_thickness/2., 0, twopi);
 
-  // Make SiPM holes
-  //teflon_wls_solid = dynamic_cast<G4Tubs*> (MakeSiPMholes(teflon_wls_solid));
-  //teflon_wls_solid = (G4Tubs*) MakeSiPMholes(teflon_wls_solid);
-
   G4LogicalVolume* teflon_wls_logic =
     new G4LogicalVolume(teflon_wls_solid, _wls_mat, teflon_wls_name);
 
   G4VPhysicalVolume* teflon_wls_phys =
     new G4PVPlacement(nullptr, G4ThreeVector(0., 0., teflon_wls_posZ), teflon_wls_logic,
-                      teflon_wls_name, _teflon_logic, false, 0, _verbosity);
+                      teflon_wls_name, teflon_logic, false, 0, _verbosity);
 
-  // Visibility
-  teflon_wls_logic->SetVisAttributes(G4VisAttributes::Invisible);
-
-  // Optical surface
+  // Adding the WLS optical surface
   G4OpticalSurface* teflon_wls_optSurf =
     new G4OpticalSurface("teflon_wls_optSurf", glisur, ground,
                          dielectric_dielectric, .01);
@@ -327,139 +319,111 @@ void NextFlexTrackingPlane::BuildTeflon()
   new G4LogicalBorderSurface("GAS_teflon_WLS_surf", _neigh_gas_phys,
                              teflon_wls_phys, teflon_wls_optSurf);
 
+  // Visibilities
+  if (_visibility) {
+    G4VisAttributes light_blue_col = nexus::LightBlue();
+    teflon_logic->SetVisAttributes(light_blue_col);
+    teflon_wls_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  }
+  else {
+    teflon_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    teflon_wls_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  }
+
+
+  /// Adding the SiPMs ///
+
+  // The SiPM
+  G4LogicalVolume* SiPM_logic = BuildSiPM();
+
+  // teflon wls hole
+  G4String wls_hole_name   = "TP_TEFLON_WLS_hole";
+  G4double wls_hole_diam   = _teflon_hole_diam;
+  G4double wls_hole_length = _wls_thickness;
+
+  G4Tubs* wls_hole_solid =
+    new G4Tubs(wls_hole_name, 0., wls_hole_diam/2., wls_hole_length/2., 0, twopi);
+
+  G4LogicalVolume* wls_hole_logic = 
+    new G4LogicalVolume(wls_hole_solid, _xenon_gas, wls_hole_name);
+
+
+  // teflon hole
+  G4String hole_name   = "TP_TEFLON_hole";
+  G4double hole_diam   = _teflon_hole_diam;
+  G4double hole_length = _teflon_thickness - _wls_thickness;
+  G4double hole_posz   = -_teflon_thickness/2. + hole_length/2.;
+
+  G4Tubs* hole_solid =
+    new G4Tubs(hole_name, 0., hole_diam/2., hole_length/2., 0, twopi);
+
+  G4LogicalVolume* hole_logic = 
+    new G4LogicalVolume(hole_solid, _xenon_gas, hole_name);
+
+  // Placing the SiPM into the teflon hole
+  G4double SiPM_pos_z = - hole_length/2. + _SiPM_case_thickness / 2.;
+
+  new G4PVPlacement(0, G4ThreeVector(0., 0., SiPM_pos_z), SiPM_logic,
+                    SiPM_logic->GetName(), hole_logic, false, 0, true);
+
+  // Replicating the teflon & wls-teflon holes
+  for (G4int i=0; i<_num_SiPMs; i++) {
+    G4int SiPM_id = _first_sensor_id + i;
+
+    G4ThreeVector hole_pos = _SiPM_positions[i];
+    hole_pos.setZ(hole_posz);
+    new G4PVPlacement(nullptr, hole_pos, hole_logic, hole_name,
+                      teflon_logic, true, SiPM_id, false);
+
+    G4ThreeVector wls_hole_pos = _SiPM_positions[i];
+    new G4PVPlacement(nullptr, wls_hole_pos, wls_hole_logic, wls_hole_name,
+                      teflon_wls_logic, true, SiPM_id, false);
+
+    //if (_verbosity) G4cout << "* SiPM " << SiPM_id << " position: " 
+    //                       << hole_pos << G4endl;
+  }
+
+
+
+  // Placing the overall teflon sub-system
+  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., teflon_posZ), teflon_logic,
+                    teflon_name, _mother_logic, false, 0, _verbosity);
 
   /// Verbosity ///
   if (_verbosity) {
     G4cout << "* Teflon Z positions: " << _teflon_iniZ
            << " to " << _teflon_iniZ + _teflon_thickness << G4endl;
+    G4cout << "* SiPM Z positions: " << _teflon_iniZ 
+           << " to " << _teflon_iniZ + _SiPM_case_thickness << G4endl;
   } 
 }
 
 
 
-void NextFlexTrackingPlane::BuildSiPMs()
+G4LogicalVolume* NextFlexTrackingPlane::BuildSiPM()
 {
-  /// TP SiPM case ///
-  G4String tp_SiPM_case_name = "TP_SiPM_CASE";
+  /// Constructing the TP SiPM ///
+  // Optical Properties of the sensor
+  G4MaterialPropertiesTable* photosensor_mpt = new G4MaterialPropertiesTable();
+  G4double energy[]       = {0.2 * eV, 11.5 * eV};
+  G4double reflectivity[] = {0.0     ,  0.0};
+  G4double efficiency[]   = {1.0     ,  1.0};
+  photosensor_mpt->AddProperty("REFLECTIVITY", energy, reflectivity, 2);
+  photosensor_mpt->AddProperty("EFFICIENCY",   energy, efficiency,   2);
+  _SiPM->SetOpticalProperties(photosensor_mpt);
 
-  G4double tp_SiPM_case_posZ = _teflon_thickness / 2. - _SiPM_case_thickness/2.;
+  // Set WLS coating
+  _SiPM->SetWithWLSCoating(true);
 
-  // Add to _SiPM_case_mat the refraction index of TPB (neighbor material)
-  G4MaterialPropertiesTable* SiPM_case_optProp = new G4MaterialPropertiesTable();
-  SiPM_case_optProp->AddProperty("RINDEX",
-    _wls_mat->GetMaterialPropertiesTable()->GetProperty("RINDEX"));
-  _SiPM_case_mat->SetMaterialPropertiesTable(SiPM_case_optProp);
+  // Set mother depth & naming order
+  _SiPM->SetSensorDepth(1);
+  _SiPM->SetMotherDepth(2);
+  _SiPM->SetNamingOrder(1);
 
-  // Building the TP SiPM case
-  G4Box* tp_SiPM_case_solid =
-    new G4Box(tp_SiPM_case_name, _SiPM_size/2., _SiPM_size/2., _SiPM_case_thickness/2.);
+  // Construct
+  _SiPM->Construct();
 
-  G4LogicalVolume* tp_SiPM_case_logic =
-    new G4LogicalVolume(tp_SiPM_case_solid, _SiPM_case_mat, tp_SiPM_case_name);
-
-  // Visibility
-  if (_visibility) {
-    G4VisAttributes grey_col = nexus::LightGrey();
-    grey_col.SetForceSolid(true);
-    tp_SiPM_case_logic->SetVisAttributes(grey_col);
-  }
-  else tp_SiPM_case_logic->SetVisAttributes(G4VisAttributes::Invisible);
-
-
-  /// The UV wavelength Shifter in TP SiPMs ///
-  G4String tp_SiPM_wls_name = "TP_SiPM_WLS";
-
-  G4double tp_SiPM_wls_posZ = _SiPM_case_thickness/2. - _wls_thickness/2.;
-
-  G4Box* tp_SiPM_wls_solid =
-    new G4Box(tp_SiPM_wls_name, _SiPM_size/2., _SiPM_size/2., _wls_thickness/2.);
-
-  G4LogicalVolume* tp_SiPM_wls_logic =
-    new G4LogicalVolume(tp_SiPM_wls_solid, _wls_mat, tp_SiPM_wls_name);
-
-  //G4VPhysicalVolume* tp_SiPM_wls_phys =
-  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., tp_SiPM_wls_posZ), tp_SiPM_wls_logic,
-                    tp_SiPM_wls_name, tp_SiPM_case_logic, false, 0, _verbosity);
-
-  // Optical surface
-  G4OpticalSurface* tp_SiPM_wls_optSurf =
-    new G4OpticalSurface("tp_SiPM_wls_optSurf", glisur, ground, dielectric_dielectric, .01);
-
-  new G4LogicalSkinSurface(tp_SiPM_wls_name, tp_SiPM_wls_logic, tp_SiPM_wls_optSurf);
-
-  // Visibility
-  tp_SiPM_wls_logic->SetVisAttributes(G4VisAttributes::Invisible);
-
-
-  /// TP SiPM ///
-  G4String tp_SiPM_name = "TP_SiPM";
-
-  // Distance between wls and photosensor of SiPMs to avoid contiguous Skin Optical Surfaces.
-  G4double gap_wls_phot = 5 * um;
-
-  G4double tp_SiPM_posZ = _SiPM_case_thickness/2. - _wls_thickness
-                          - gap_wls_phot - _SiPM_thickness/2.;
-
-  G4Box* tp_SiPM_solid =
-    new G4Box(tp_SiPM_name, _SiPM_size/2., _SiPM_size/2., _SiPM_thickness/2.);
-
-  G4LogicalVolume* tp_SiPM_logic =
-    new G4LogicalVolume(tp_SiPM_solid, _SiPM_mat, tp_SiPM_name);
-
-  //G4VPhysicalVolume* tp_SiPM_phys =
-  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., tp_SiPM_posZ), tp_SiPM_logic,
-                    tp_SiPM_name, tp_SiPM_case_logic, false, 0, _verbosity);
-
-  // Visibility
-  tp_SiPM_logic->SetVisAttributes(G4VisAttributes::Invisible);
-
-  /// SiPM Optical properties
-  G4MaterialPropertiesTable* tp_SiPM_optProp = new G4MaterialPropertiesTable();
-
-  // Currently set to 100% efficiency. It must be updated to real one
-  // as soon as one detector is selected.
-  G4double energies[]     = {0.2*eV, 11.5*eV};
-  G4double reflectivity[] = {0.0   ,  0.0};
-  G4double efficiency[]   = {1.0   ,  1.0};
-  const G4int entries = 2;
-  tp_SiPM_optProp->AddProperty("REFLECTIVITY", energies, reflectivity, entries);
-  tp_SiPM_optProp->AddProperty("EFFICIENCY", energies, efficiency, entries);
-
-  G4OpticalSurface* tp_SiPM_optSurf = 
-    new G4OpticalSurface(tp_SiPM_name, unified, polished, dielectric_metal);
-
-  tp_SiPM_optSurf->SetMaterialPropertiesTable(tp_SiPM_optProp);
-
-  new G4LogicalSkinSurface(tp_SiPM_name, tp_SiPM_logic, tp_SiPM_optSurf);
-
-  // SiPM Sensitive detector
-  G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
-  if (!sdmgr->FindSensitiveDetector(tp_SiPM_name, false)) {
-    PmtSD* tp_SiPM_sd = new PmtSD(tp_SiPM_name);
-    tp_SiPM_sd->SetDetectorVolumeDepth(0);
-    tp_SiPM_sd->SetMotherVolumeDepth(0);
-    tp_SiPM_sd->SetTimeBinning(_SiPM_bin);
-
-    G4SDManager::GetSDMpointer()->AddNewDetector(tp_SiPM_sd);
-    tp_SiPM_case_logic->SetSensitiveDetector(tp_SiPM_sd);
-  }
-
-
-  /// Placing SiPM cases
-  for (G4int i=0; i<_num_SiPMs; i++) {
-    G4ThreeVector tp_SiPM_case_pos = _SiPM_positions[i];
-    tp_SiPM_case_pos.setZ(tp_SiPM_case_posZ);
-    G4int sipm_id = _first_sensor_id + i;
-    new G4PVPlacement(nullptr, tp_SiPM_case_pos, tp_SiPM_case_logic, tp_SiPM_case_name,
-                      _teflon_logic, true, sipm_id, false);
-  }
-
-
-  /// Verbosity ///
-  if (_verbosity) {
-    G4cout << "* SiPM Z positions: " << _teflon_iniZ + _teflon_thickness - _SiPM_case_thickness
-           << " to " << _teflon_iniZ + _teflon_thickness << G4endl;
-  }
+  return _SiPM->GetLogicalVolume();
 }
 
 
@@ -469,7 +433,7 @@ void NextFlexTrackingPlane::GenerateSiPMpositions()
 {
   // Maximum radius to place SiPMs
   // Lower than diameter to prevent SiPMs being partially out.
-  G4double max_radius = _diameter/2. - _SiPM_size;
+  G4double max_radius = _diameter/2. - _teflon_hole_diam/2.;
   G4double ini_pos_XY = - _diameter/2.;
 
   G4int num_rows    = (G4int) (max_radius * 2 / _SiPM_pitchY);
@@ -485,7 +449,6 @@ void NextFlexTrackingPlane::GenerateSiPMpositions()
 
       if (radius <= max_radius)
         _SiPM_positions.push_back(G4ThreeVector(posX, posY, 0.));
-        //G4cout << posX << " " << posY << G4endl;
     }
   }
 
@@ -496,36 +459,6 @@ void NextFlexTrackingPlane::GenerateSiPMpositions()
     G4cout << "* TP num SiPM columns: " << num_columns << G4endl;
     G4cout << "* Total num SiPMs    : " << _num_SiPMs  << G4endl;
   }
-}
-
-
-
-// Function that makes PMT holes to the solid passed by parameter
-G4SubtractionSolid* NextFlexTrackingPlane::MakeSiPMholes(G4Tubs* ini_solid)
-{
-  // Making the holes slightly bigger than SiPMs
-  G4double loose_factor = 1.5;
-
-  G4double hole_half_sizeX = _SiPM_size * loose_factor;
-  G4double hole_half_sizeY = _SiPM_size * loose_factor;
-  G4double hole_half_sizeZ = ini_solid->GetDz();
-
-  G4Box* hole_solid = new G4Box("HOLE_SOLID", hole_half_sizeX,
-                                hole_half_sizeY, hole_half_sizeZ);
-
-  // Subtracting the first PMT hole
-  G4SubtractionSolid* solid_with_holes =
-    new G4SubtractionSolid("SOLID_WITH_HOLES", ini_solid,
-                           hole_solid, nullptr, _SiPM_positions[0]);
-
-  // Subtracting the rest of the holes
-  for (G4int i=1; i < _num_SiPMs; i++) {
-    solid_with_holes =
-      new G4SubtractionSolid("SOLID_WITH_HOLES", solid_with_holes,
-                             hole_solid, nullptr, _SiPM_positions[i]);
-  }
-
-  return solid_with_holes;
 }
 
 

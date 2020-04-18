@@ -27,6 +27,8 @@ class G4Navigator;
 namespace nexus {
 
   class CylinderPointSampler2020;
+  class GenericPhotosensor;
+
 
   class NextFlexTrackingPlane: public BaseGeometry {
 
@@ -73,21 +75,15 @@ namespace nexus {
     // It generates SiPM XY positions
     void GenerateSiPMpositions();
 
-    // Make the PMT corresponding holes in the solid volume passed.
-    G4SubtractionSolid* MakeSiPMholes(G4Tubs* the_solid);
-
     // Different builders
     void BuildCopper();
     void BuildTeflon();
-    void BuildSiPMs();
+    G4LogicalVolume* BuildSiPM();
 
   private:
 
     // Logical volume where the class is placed
     G4LogicalVolume* _mother_logic;
-
-    // Logical volume of teflon endcap where SiPMs are placed
-    G4LogicalVolume* _teflon_logic;
 
     // Physical volume of the neighbouring gas
     G4VPhysicalVolume* _neigh_gas_phys;
@@ -108,8 +104,8 @@ namespace nexus {
     G4Material* _xenon_gas;
     G4Material* _copper_mat;
     G4Material* _teflon_mat;
-    G4Material* _SiPM_case_mat;
-    G4Material* _SiPM_mat;
+
+    GenericPhotosensor* _SiPM;
 
     G4String    _wls_matName;
     G4Material* _wls_mat;
@@ -119,8 +115,9 @@ namespace nexus {
     G4double _diameter;
     G4double _SiPM_ANODE_dist;
 
-    G4double _SiPM_size;
-    G4double _SiPM_thickness;
+    G4double _SiPM_sizeX;
+    G4double _SiPM_sizeY;
+    //G4double _SiPM_thickness;
     G4double _SiPM_case_thickness;
     G4double _SiPM_pitchX;
     G4double _SiPM_pitchY;
@@ -133,6 +130,7 @@ namespace nexus {
     G4double _copper_iniZ;
 
     G4double _teflon_thickness;
+    G4double _teflon_hole_diam;
     G4double _teflon_iniZ;
     
     G4double _wls_thickness;

@@ -44,13 +44,16 @@
 /Geometry/PmtR11410/time_binning        20. ns
 
 # TRACKING PLANE
-/Geometry/NextFlex/tp_copper_thickness   12. cm
-/Geometry/NextFlex/tp_wls_mat            TPB
-/Geometry/NextFlex/tp_sipm_anode_dist    10. mm
-/Geometry/NextFlex/tp_sipm_size          1.  mm
-/Geometry/NextFlex/tp_sipm_pitchX        15. mm
-/Geometry/NextFlex/tp_sipm_pitchY        15. mm
-/Geometry/NextFlex/tp_sipm_time_binning  5.  ns
+/Geometry/NextFlex/tp_copper_thickness  12. cm
+/Geometry/NextFlex/tp_teflon_thickness   5. mm
+/Geometry/NextFlex/tp_teflon_hole_diam   7. mm
+/Geometry/NextFlex/tp_wls_mat           TPB
+/Geometry/NextFlex/tp_sipm_anode_dist   10. mm
+/Geometry/NextFlex/tp_sipm_sizeX        1.3 mm
+/Geometry/NextFlex/tp_sipm_sizeY        1.3 mm
+/Geometry/NextFlex/tp_sipm_pitchX       15. mm
+/Geometry/NextFlex/tp_sipm_pitchY       15. mm
+/Geometry/NextFlex/tp_sipm_time_binning 5.  ns
 
 # ICS
 /Geometry/NextFlex/ics_thickness  12. cm
