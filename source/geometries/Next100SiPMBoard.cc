@@ -113,6 +113,7 @@ void Next100SiPMBoard::Construct()
   //                                ->GetMaterialPropertiesTable()->GetProperty("RINDEX"));
 
   sipm_->SetMotherDepth(2);
+  sipm_->SetNamingOrder(1000);
   sipm_->Construct();
 
 

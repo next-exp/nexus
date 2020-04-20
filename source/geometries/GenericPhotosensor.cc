@@ -39,6 +39,7 @@ GenericPhotosensor::GenericPhotosensor(G4String name,
   window_rIndex_   (nullptr),
   sensitive_mpt_   (nullptr),
   mother_depth_    (1),          // Be sure to set it properly
+  naming_order_    (1),          // Be sure to set it properly
   time_binning_    (1.0 * us),
   visibility_      (false)
 {
@@ -144,7 +145,6 @@ void GenericPhotosensor::DefineMaterials()
 
 void GenericPhotosensor::Construct()
 {
-
   ComputeDimensions();
 
   DefineMaterials();
@@ -248,7 +248,7 @@ void GenericPhotosensor::Construct()
   if (!sdmgr->FindSensitiveDetector(sdname, false)) {
     PmtSD* sensdet = new PmtSD(sdname);
     sensdet->SetDetectorVolumeDepth(1);
-    sensdet->SetDetectorNamingOrder(1000.);
+    sensdet->SetDetectorNamingOrder(naming_order_);
     sensdet->SetTimeBinning(time_binning_);
     sensdet->SetMotherVolumeDepth(mother_depth_);
 

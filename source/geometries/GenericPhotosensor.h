@@ -48,6 +48,7 @@ namespace nexus {
     void SetWindowRefractiveIndex(G4MaterialPropertyVector* rIndex);
     void SetOpticalProperties    (G4MaterialPropertiesTable* mpt);
     void SetMotherDepth          (G4int mother_depth);
+    void SetNamingOrder          (G4int naming_order);
 
   private:
     G4GenericMessenger* msg_;
@@ -70,6 +71,7 @@ namespace nexus {
     G4MaterialPropertiesTable* sensitive_mpt_;
 
     G4int    mother_depth_;
+    G4int    naming_order_;
     G4double time_binning_;
 
     G4bool visibility_;
@@ -92,6 +94,9 @@ namespace nexus {
 
   inline void GenericPhotosensor::SetMotherDepth(G4int mother_depth)
   { mother_depth_ = mother_depth; }
+
+  inline void GenericPhotosensor::SetNamingOrder(G4int naming_order)
+  { naming_order_ = naming_order; }
 
 
 } // namespace nexus
