@@ -680,13 +680,46 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB()
   // Fig 11 -> WLS_absLength = 100 nm for wavelength = 270 nm
   // Values for wavelength shorter than 100 nm NOT included as they fit outside
   // the simulation energy limits set in the header.
+  
+  //G4double WLS_abs_energy[] = {
+  //  optPhotMinE_,                      h_Planck * c_light / (450. * nm),
+  //  h_Planck * c_light / (440. * nm),  h_Planck * c_light / (430. * nm),
+  //  h_Planck * c_light / (420. * nm),  h_Planck * c_light / (410. * nm),
+  //  h_Planck * c_light / (400. * nm),  h_Planck * c_light / (390. * nm),
+  //  h_Planck * c_light / (380. * nm),  h_Planck * c_light / (370. * nm),
+  //  h_Planck * c_light / (360. * nm),  h_Planck * c_light / (330. * nm),
+  //  h_Planck * c_light / (320. * nm),  h_Planck * c_light / (310. * nm),
+  //  h_Planck * c_light / (300. * nm),  h_Planck * c_light / (270. * nm),
+  //  h_Planck * c_light / (250. * nm),  h_Planck * c_light / (230. * nm),
+  //  h_Planck * c_light / (210. * nm),  h_Planck * c_light / (190. * nm),
+  //  h_Planck * c_light / (170. * nm),  h_Planck * c_light / (150. * nm),
+  //  h_Planck * c_light / (100. * nm),  optPhotMaxE_
+  //};
+  //const G4int WLS_abs_entries = sizeof(WLS_abs_energy) / sizeof(G4double);
+//
+  //G4double WLS_absLength[] = {
+  //  noAbsLength_,  noAbsLength_,  //       450 nm
+  //  1.e6 * nm,     1.e5 * nm,     // 440 , 430 nm
+  //  2.2e4 * nm,     7.e3 * nm,     // 420 , 410 nm
+  //  2.2e3 * nm,     700. * nm,     // 400 , 390 nm
+  //  200. * nm,      50. * nm,     // 380 , 370 nm
+  //   30. * nm,      30. * nm,     // 360 , 330 nm
+  //   50. * nm,      80. * nm,     // 320 , 310 nm
+  //  100. * nm,     100. * nm,     // 300 , 270 nm
+  //  400. * nm,     400. * nm,     // 250 , 230 nm
+  //  350. * nm,     250. * nm,     // 210 , 190 nm
+  //  350. * nm,     400. * nm,     // 170 , 150 nm
+  //  400. * nm,     noAbsLength_   // 100 nm
+  //};
+
+  // WLS ABSORPTION LENGTH (Version NoSecWLS)
+  // The NoSecWLS is forced by setting the WLS_absLength to noAbsLength_
+  // for wavelengths higher than 380 nm where the WLS emission spectrum starts.
   G4double WLS_abs_energy[] = {
     optPhotMinE_,
-    h_Planck * c_light / (480. * nm),  h_Planck * c_light / (470. * nm),
-    h_Planck * c_light / (450. * nm),  h_Planck * c_light / (430. * nm),
-    h_Planck * c_light / (420. * nm),  h_Planck * c_light / (400. * nm),
-    h_Planck * c_light / (380. * nm),  h_Planck * c_light / (360. * nm),
-    h_Planck * c_light / (330. * nm),  h_Planck * c_light / (320. * nm),
+    h_Planck * c_light / (380. * nm),  h_Planck * c_light / (370. * nm),
+    h_Planck * c_light / (360. * nm),  h_Planck * c_light / (330. * nm),
+    h_Planck * c_light / (320. * nm),  h_Planck * c_light / (310. * nm),
     h_Planck * c_light / (300. * nm),  h_Planck * c_light / (270. * nm),
     h_Planck * c_light / (250. * nm),  h_Planck * c_light / (230. * nm),
     h_Planck * c_light / (210. * nm),  h_Planck * c_light / (190. * nm),
@@ -697,18 +730,16 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB()
 
   G4double WLS_absLength[] = {
     noAbsLength_,
-    noAbsLength_,  1.e6 * nm,     // 480 , 470 nm
-    1.e5 * nm,     1.e4 * nm,     // 450 , 430 nm
-    5.e3 * nm,     1.e3 * nm,     // 420 , 400 nm
-    100. * nm,      30. * nm,     // 380 , 360 nm
-     30. * nm,      50. * nm,     // 330 , 320 nm
+    noAbsLength_,   50. * nm,     // 380 , 370 nm
+     30. * nm,      30. * nm,     // 360 , 330 nm
+     50. * nm,      80. * nm,     // 320 , 310 nm
     100. * nm,     100. * nm,     // 300 , 270 nm
     400. * nm,     400. * nm,     // 250 , 230 nm
     350. * nm,     250. * nm,     // 210 , 190 nm
     350. * nm,     400. * nm,     // 170 , 150 nm
     400. * nm,     noAbsLength_   // 100 nm
-
   };
+
   //for (int i=0; i<WLS_abs_entries; i++)
   //  G4cout << "* TPB WLS absLength:  " << std::setw(8) << WLS_abs_energy[i] / eV
   //         << " eV  ==  " << std::setw(8) << (h_Planck * c_light / WLS_abs_energy[i]) / nm
@@ -758,6 +789,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB()
 
   return mpt;
 }
+
 
 
 
