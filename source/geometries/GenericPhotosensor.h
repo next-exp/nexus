@@ -80,8 +80,8 @@ namespace nexus {
   };
 
 
-  inline G4double GenericPhotosensor::GetWidth()     const { return width_; }
-  inline G4double GenericPhotosensor::GetHeight()    const { return height_; }
+  inline G4double GenericPhotosensor::GetWidth()     const { return encasing_x_; }
+  inline G4double GenericPhotosensor::GetHeight()    const { return encasing_y_; }
   inline G4double GenericPhotosensor::GetThickness() const { return thickness_; }
   inline G4String GenericPhotosensor::GetName()      const { return name_; }
 
