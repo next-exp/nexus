@@ -42,13 +42,11 @@ namespace nexus {
     BaseGeometry(),
     _rows(rows),
     _columns(columns),
-    _visibility (1),
-    _teflon_masks(true)
+    _visibility (1)
   {
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/KDB/", "Control commands of kapton dice board geometry.");
     _msg->DeclareProperty("visibility", _visibility, "Kapton Dice Boards Visibility");
-    _msg->DeclareProperty("teflon_masks", _teflon_masks, "True if teflon masks are placed in front of dices");
     _sipm = new SiPMSensl;
   }
 
@@ -110,7 +108,6 @@ namespace nexus {
 
 
     /// TEFLON MASK ///
-    // It is always built despite the "_teflon_masks" parameter
     G4double mask_pos_z = - db_case_z / 2. + mask_z / 2.;
 
     G4Box* mask_solid = new G4Box("DICE_MASK", mask_x/2., mask_y/2., mask_z/2.);

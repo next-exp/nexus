@@ -62,9 +62,6 @@ namespace nexus {
     // Vertex generator
     BoxPointSampler* _dice_gen;
 
-    // teflon masks in fron of dices
-    G4bool _teflon_masks;
- 
   };
 
 } // end namespace nexus
