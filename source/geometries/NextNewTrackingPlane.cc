@@ -122,7 +122,7 @@ namespace nexus {
 		      "SUPPORT_PLATE", _mother_logic, false, 0, false);  
 
     /////  DICE BOARDS  ///// 
-    _kapton_dice_board->SetNeighbourGas(_mother_logic);
+    _kapton_dice_board->SetMotherLogicalVolume(_mother_logic);
     _kapton_dice_board->Construct();
     _kdb_dimensions = _kapton_dice_board->GetDimensions();
     G4LogicalVolume* dice_board_logic = _kapton_dice_board->GetLogicalVolume();

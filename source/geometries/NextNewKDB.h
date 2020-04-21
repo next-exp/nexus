@@ -36,7 +36,7 @@ namespace nexus {
     /// Builder
     virtual void Construct();
 
-    void SetNeighbourGas(G4LogicalVolume* neigh_gas_logic);
+    void SetMotherLogicalVolume(G4LogicalVolume* mother_logic);
     G4ThreeVector GetDimensions() const;
     const std::vector<std::pair<int, G4ThreeVector> >& GetPositions();
     G4ThreeVector GenerateVertex(const G4String& region) const;
@@ -48,7 +48,7 @@ namespace nexus {
     std::vector<std::pair<int, G4ThreeVector> > _positions;
 
     // Neighbour gas logical volume
-    G4LogicalVolume* _neigh_gas_logic;
+    G4LogicalVolume* _mother_logic;
  
     // Visibility of the shielding
     G4bool _visibility;

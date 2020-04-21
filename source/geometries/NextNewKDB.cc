@@ -56,11 +56,13 @@ namespace nexus {
 
   NextNewKDB::~NextNewKDB()
   {
+    delete _msg;
+    delete _dice_gen;
   }
   
 
-  void NextNewKDB::SetNeighbourGas(G4LogicalVolume* neigh_gas_logic) {
-    _neigh_gas_logic = neigh_gas_logic;
+  void NextNewKDB::SetMotherLogicalVolume(G4LogicalVolume* mother_logic) {
+    _mother_logic = mother_logic;
   }
 
 
@@ -136,7 +138,7 @@ namespace nexus {
       new G4Tubs(hole_name, 0., hole_diam/2., hole_length/2., 0, twopi);
 
     G4LogicalVolume* hole_logic = 
-      new G4LogicalVolume(hole_solid, _neigh_gas_logic->GetMaterial(), hole_name);
+      new G4LogicalVolume(hole_solid, _mother_logic->GetMaterial(), hole_name);
 
     // Placing the SiPMs inside the hole.
     G4LogicalVolume* sipm_logic = _sipm->GetLogicalVolume();
