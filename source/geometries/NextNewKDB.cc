@@ -39,10 +39,10 @@ namespace nexus {
 
 
   NextNewKDB::NextNewKDB(G4int rows, G4int columns): 
-    BaseGeometry(),
-    _rows(rows),
-    _columns(columns),
-    _visibility (1)
+    BaseGeometry (),
+    _rows        (rows),
+    _columns     (columns),
+    _visibility  (true)
   {
     /// Messenger
     _msg = new G4GenericMessenger(this, "/Geometry/KDB/", "Control commands of kapton dice board geometry.");
@@ -55,6 +55,7 @@ namespace nexus {
   NextNewKDB::~NextNewKDB()
   {
     delete _msg;
+    delete _sipm;
     delete _dice_gen;
   }
   
@@ -120,14 +121,14 @@ namespace nexus {
 
     // Adding the optical surface
     G4OpticalSurface* mask_optSurf = 
-      new G4OpticalSurface("DICE_MASK_OptSurf", unified, ground, dielectric_metal);
+      new G4OpticalSurface("DICE_MASK_OPSURF", unified, ground, dielectric_metal);
     mask_optSurf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
-    new G4LogicalSkinSurface("DICE_MASK_OptSurf", mask_logic, mask_optSurf);
+    new G4LogicalSkinSurface("DICE_MASK_OPSURF", mask_logic, mask_optSurf);
 
 
     /// Adding the SiPMs to the Dice Board. ///
     // They are placed in a gas cylinder emulating the mask holes
-    G4String hole_name   = "SiPM_hole";
+    G4String hole_name   = "SiPM_HOLE";
     G4double hole_diam   = 3.5 * mm;
     G4double hole_length = mask_z;
 
@@ -142,7 +143,7 @@ namespace nexus {
     G4double         sipm_pos_z = hole_length/2. - _sipm->GetDimensions().z() / 2.;
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., sipm_pos_z), sipm_logic,
-                      "SIPMSensl", hole_logic, false, 0, false);
+                      sipm_logic->GetName(), hole_logic, false, 0, false);
 
     G4int sipm_no = 0;
     for (G4int i=0; i<_columns; i++) {
