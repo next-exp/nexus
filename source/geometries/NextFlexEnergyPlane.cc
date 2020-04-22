@@ -301,12 +301,12 @@ void NextFlexEnergyPlane::BuildTeflon()
 
   // Optical surface
   G4OpticalSurface* teflon_wls_optSurf =
-    new G4OpticalSurface("teflon_wls_optSurf", glisur, ground,
+    new G4OpticalSurface("TEFLON_WLS_OPSURF", glisur, ground,
                          dielectric_dielectric, .01);
 
-  new G4LogicalBorderSurface("teflon_WLS_GAS_surf", teflon_wls_phys,
+  new G4LogicalBorderSurface("TEFLON_WLS_GAS_OPSURF", teflon_wls_phys,
                              _neigh_gas_phys, teflon_wls_optSurf);
-  new G4LogicalBorderSurface("GAS_teflon_WLS_surf", _neigh_gas_phys,
+  new G4LogicalBorderSurface("GAS_TEFLON_WLS_OPSURF", _neigh_gas_phys,
                              teflon_wls_phys, teflon_wls_optSurf);
 
   /// Verbosity ///
@@ -382,9 +382,9 @@ void NextFlexEnergyPlane::BuildPMTs()
 
   // Optical surface
   G4OpticalSurface* window_wls_optSurf = 
-    new G4OpticalSurface("window_wls_optSurf", glisur, ground, dielectric_dielectric, .01);
+    new G4OpticalSurface("EP_WINDOW_WLS_OPSURF", glisur, ground, dielectric_dielectric, .01);
 
-  new G4LogicalSkinSurface(window_wls_name, window_wls_logic, window_wls_optSurf);
+  new G4LogicalSkinSurface("EP_WINDOW_WLS_OPSURF", window_wls_logic, window_wls_optSurf);
 
 
   /// Optical pad ///

@@ -311,12 +311,12 @@ void NextFlexTrackingPlane::BuildTeflon()
 
   // Adding the WLS optical surface
   G4OpticalSurface* teflon_wls_optSurf =
-    new G4OpticalSurface("teflon_wls_optSurf", glisur, ground,
+    new G4OpticalSurface("TEFLON_WLS_OPSURF", glisur, ground,
                          dielectric_dielectric, .01);
 
-  new G4LogicalBorderSurface("teflon_WLS_GAS_surf", teflon_wls_phys,
+  new G4LogicalBorderSurface("TEFLON_WLS_GAS_OPSURF", teflon_wls_phys,
                              _neigh_gas_phys, teflon_wls_optSurf);
-  new G4LogicalBorderSurface("GAS_teflon_WLS_surf", _neigh_gas_phys,
+  new G4LogicalBorderSurface("GAS_TEFLON_WLS_OPSURF", _neigh_gas_phys,
                              teflon_wls_phys, teflon_wls_optSurf);
 
   // Visibilities
@@ -337,7 +337,7 @@ void NextFlexTrackingPlane::BuildTeflon()
   G4LogicalVolume* SiPM_logic = BuildSiPM();
 
   // teflon wls hole
-  G4String wls_hole_name   = "TP_TEFLON_WLS_hole";
+  G4String wls_hole_name   = "TP_TEFLON_WLS_HOLE";
   G4double wls_hole_diam   = _teflon_hole_diam;
   G4double wls_hole_length = _wls_thickness;
 
@@ -349,7 +349,7 @@ void NextFlexTrackingPlane::BuildTeflon()
 
 
   // teflon hole
-  G4String hole_name   = "TP_TEFLON_hole";
+  G4String hole_name   = "TP_TEFLON_HOLE";
   G4double hole_diam   = _teflon_hole_diam;
   G4double hole_length = _teflon_thickness - _wls_thickness;
   G4double hole_posz   = -_teflon_thickness/2. + hole_length/2.;

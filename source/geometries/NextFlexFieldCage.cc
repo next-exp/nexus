@@ -635,19 +635,19 @@ void NextFlexFieldCage::BuildLightTube()
   
     // Optical surface
     G4OpticalSurface* light_tube_wls_optSurf =
-      new G4OpticalSurface("light_tube_wls_optSurf", glisur, ground,
+      new G4OpticalSurface("LIGHT_TUBE_WLS_OPSURF", glisur, ground,
                            dielectric_dielectric, .01);
 
     // Border Surface with ACTIVE
-    new G4LogicalBorderSurface("LIGHT_TUBE_WLS_ACTIVE_surf", light_tube_wls_phys,
+    new G4LogicalBorderSurface("LIGHT_TUBE_WLS_ACTIVE_OPSURF", light_tube_wls_phys,
                                _active_phys, light_tube_wls_optSurf);
-    new G4LogicalBorderSurface("ACTIVE_LIGHT_TUBE_WLS_surf", _active_phys,
+    new G4LogicalBorderSurface("ACTIVE_LIGHT_TUBE_WLS_OPSURF", _active_phys,
                                light_tube_wls_phys, light_tube_wls_optSurf);
 
     // Border Surface with BUFFER
-    new G4LogicalBorderSurface("LIGHT_TUBE_WLS_BUFFER_surf", light_tube_wls_phys,
+    new G4LogicalBorderSurface("LIGHT_TUBE_WLS_BUFFER_OPSURF", light_tube_wls_phys,
                                _buffer_phys, light_tube_wls_optSurf);
-    new G4LogicalBorderSurface("BUFFER_LIGHT_TUBE_WLS_surf", _buffer_phys,
+    new G4LogicalBorderSurface("BUFFER_LIGHT_TUBE_WLS_OPSURF", _buffer_phys,
                                light_tube_wls_phys, light_tube_wls_optSurf);
   }
 
@@ -681,7 +681,7 @@ void NextFlexFieldCage::BuildFibers()
   /// Outer Cladding ///
   if (_fiber_claddings >= 2) {
 
-    G4String oClad_name = "FIBER_oCLAD";
+    G4String oClad_name = "FIBER_OCLAD";
 
     G4Tubs* oClad_solid =
       new G4Tubs(oClad_name, inner_rad, outer_rad, fiber_length/2.,
@@ -710,7 +710,7 @@ void NextFlexFieldCage::BuildFibers()
   /// Inner Cladding ///
   if (_fiber_claddings >= 1) {
 
-    G4String iClad_name = "FIBER_iCLAD";
+    G4String iClad_name = "FIBER_ICLAD";
     if (_fiber_claddings == 1) iClad_name = "FIBER_CLAD";
 
     G4Tubs* iClad_solid =
@@ -765,7 +765,7 @@ void NextFlexFieldCage::BuildFibers()
 
   /// The UV wavelength Shifter in FIBERS ///
   // The inner WLS
-  G4String fiber_iWls_name = "FIBER_iWLS";
+  G4String fiber_iWls_name = "FIBER_IWLS";
 
   G4double fiber_iWls_inner_rad = _fiber_inner_rad;
   G4double fiber_iWls_outer_rad = fiber_iWls_inner_rad + _wls_thickness;
@@ -782,7 +782,7 @@ void NextFlexFieldCage::BuildFibers()
                     fiber_iWls_name, out_logic_volume, false, 0, _verbosity);
 
   // The outer WLS
-  G4String fiber_oWls_name = "FIBER_oWLS";
+  G4String fiber_oWls_name = "FIBER_OWLS";
 
   G4double fiber_oWls_outer_rad = _fiber_inner_rad + _fiber_thickness;;
   G4double fiber_oWls_inner_rad = fiber_oWls_outer_rad - _wls_thickness;
@@ -804,7 +804,7 @@ void NextFlexFieldCage::BuildFibers()
 
   // Optical surfaces
   G4OpticalSurface* fiber_wls_optSurf =
-    new G4OpticalSurface("fiber_wls_optSurf", glisur, ground,
+    new G4OpticalSurface("FIBER_WLS_OPSURF", glisur, ground,
                          dielectric_dielectric, .01);
 
   new G4LogicalSkinSurface(fiber_iWls_name, fiber_iWls_logic,
