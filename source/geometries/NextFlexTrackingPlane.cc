@@ -319,18 +319,6 @@ void NextFlexTrackingPlane::BuildTeflon()
   new G4LogicalBorderSurface("GAS_TEFLON_WLS_OPSURF", _neigh_gas_phys,
                              teflon_wls_phys, teflon_wls_optSurf);
 
-  // Visibilities
-  if (_visibility) {
-    G4VisAttributes light_blue_col = nexus::LightBlue();
-    teflon_logic->SetVisAttributes(light_blue_col);
-    teflon_wls_logic->SetVisAttributes(G4VisAttributes::Invisible);
-  }
-  else {
-    teflon_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    teflon_wls_logic->SetVisAttributes(G4VisAttributes::Invisible);
-  }
-
-
   /// Adding the SiPMs ///
 
   // The SiPM
@@ -383,8 +371,6 @@ void NextFlexTrackingPlane::BuildTeflon()
     //                       << hole_pos << G4endl;
   }
 
-
-
   // Placing the overall teflon sub-system
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., teflon_posZ), teflon_logic,
                     teflon_name, _mother_logic, false, 0, _verbosity);
@@ -396,6 +382,23 @@ void NextFlexTrackingPlane::BuildTeflon()
     G4cout << "* SiPM Z positions: " << _teflon_iniZ 
            << " to " << _teflon_iniZ + _SiPM_case_thickness << G4endl;
   } 
+
+
+  /// Visibilities ///
+  if (_visibility) {
+    G4VisAttributes light_blue_col = nexus::LightBlue();
+    teflon_logic    ->SetVisAttributes(light_blue_col);
+    teflon_wls_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    hole_logic      ->SetVisAttributes(G4VisAttributes::Invisible);
+    wls_hole_logic ->SetVisAttributes(G4VisAttributes::Invisible);
+  }
+  else {
+    teflon_logic    ->SetVisAttributes(G4VisAttributes::Invisible);
+    teflon_wls_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    hole_logic      ->SetVisAttributes(G4VisAttributes::Invisible);
+    wls_hole_logic  ->SetVisAttributes(G4VisAttributes::Invisible);
+  }
+
 }
 
 
