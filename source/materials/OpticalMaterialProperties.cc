@@ -198,7 +198,8 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::ITO()
 
   G4double energies[] = {
     optPhotMinE_,
-    h_Planck * c_light / (1000. * nm),  h_Planck * c_light / (600. * nm),
+    h_Planck * c_light / (1000. * nm),  h_Planck * c_light / (800. * nm),
+    h_Planck * c_light / ( 700. * nm),  h_Planck * c_light / (600. * nm),
     h_Planck * c_light / ( 580. * nm),  h_Planck * c_light / (560. * nm),
     h_Planck * c_light / ( 540. * nm),  h_Planck * c_light / (520. * nm),
     h_Planck * c_light / ( 500. * nm),  h_Planck * c_light / (480. * nm),
@@ -209,7 +210,8 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::ITO()
 
   G4double rIndex[] = {
     1.635,
-    1.635, 1.894,
+    1.635, 1.775,
+    1.835, 1.894,
     1.906, 1.919,
     1.931, 1.945,
     1.960, 1.975,
@@ -222,7 +224,8 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::ITO()
   // ABSORPTION LENGTH
   G4double abs_length[] = {
     (1000. * nm) / (4*pi * 0.0103),
-    (1000. * nm) / (4*pi * 0.0103),  (600. * nm) / (4*pi * 0.0023),
+    (1000. * nm) / (4*pi * 0.0103),  (800. * nm) / (4*pi * 0.0049),
+    ( 700. * nm) / (4*pi * 0.0033),  (600. * nm) / (4*pi * 0.0023),
     ( 580. * nm) / (4*pi * 0.0022),  (560. * nm) / (4*pi * 0.0022),
     ( 540. * nm) / (4*pi * 0.0022),  (520. * nm) / (4*pi * 0.0023),
     ( 500. * nm) / (4*pi * 0.0026),  (480. * nm) / (4*pi * 0.0031),
