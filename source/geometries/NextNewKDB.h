@@ -16,6 +16,8 @@
 #include <vector>
 
 class G4GenericMessenger;
+class G4LogicalVolume;
+
 namespace nexus {class SiPMSensl;}
 namespace nexus {class BoxPointSampler;}
 
@@ -33,7 +35,8 @@ namespace nexus {
 
     /// Builder
     virtual void Construct();
-  
+
+    void SetMotherLogicalVolume(G4LogicalVolume* mother_logic);
     G4ThreeVector GetDimensions() const;
     const std::vector<std::pair<int, G4ThreeVector> >& GetPositions();
     G4ThreeVector GenerateVertex(const G4String& region) const;
@@ -43,6 +46,9 @@ namespace nexus {
     //G4double _support_thickness;
     G4ThreeVector _dimensions;
     std::vector<std::pair<int, G4ThreeVector> > _positions;
+
+    // Neighbour gas logical volume
+    G4LogicalVolume* _mother_logic;
  
     // Visibility of the shielding
     G4bool _visibility;
@@ -56,9 +62,6 @@ namespace nexus {
     // Vertex generator
     BoxPointSampler* _dice_gen;
 
-    // teflon masks in fron of dices
-    G4bool _teflon_masks;
- 
   };
 
 } // end namespace nexus

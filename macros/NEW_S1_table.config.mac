@@ -13,7 +13,6 @@
 # GEOMETRY
 /Geometry/NextNewOpticalGeometry/pressure 10. bar
 /Geometry/PmtR11410/SD_depth 4
-/Geometry/KDB/teflon_masks true
 
 # PHYSICS
 /control/execute macros/physics/IonizationElectron.mac

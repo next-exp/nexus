@@ -20,6 +20,5 @@
 /Geometry/PmtR11410/SD_depth 4
 /Geometry/PmtR11410/time_binning 100. nanosecond
 /Geometry/SiPMSensl/time_binning 1. microsecond
-/Geometry/KDB/teflon_masks true
 
 /nexus/persistency/outputFile Kr83_full_nexus_ACTIVE_7bar.sim
