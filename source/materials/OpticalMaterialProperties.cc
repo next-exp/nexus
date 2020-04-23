@@ -192,6 +192,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::ITO()
 {
   // Input data: complex refraction index obtained from:
   // https://refractiveindex.info/?shelf=other&book=In2O3-SnO2&page=Moerland
+  // Only valid in [1000 - 400] nm
 
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
@@ -232,6 +233,67 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::ITO()
   mpt->AddProperty("ABSLENGTH", energies, abs_length, num_energies);
 
   //G4cout << "*** ITO properties ...  " << G4endl;
+  //for (int i=0; i<num_energies; i++) {
+  //  G4cout << "* Energy: " << std::setw(5) << energies[i]/eV << " eV  ->  " << std::setw(5)
+  //         << (1240./ (energies[i] / eV)) << " nm" << G4endl;
+  //  G4cout << "  rIndex    : " << std::setw(5) << rIndex[i]
+  //         << "  Abs Length: " << std::setw(5) << abs_length[i] / nm << " nm" << G4endl;
+  //}
+
+  return mpt;
+}
+
+
+
+/// PEDOT ///
+G4MaterialPropertiesTable* OpticalMaterialProperties::PEDOT()
+{
+  // Input data: complex refraction index obtained from:
+  // https://refractiveindex.info/?shelf=other&book=PEDOT-PSS&page=Chen
+  // Only valid in [1097 - 302] nm
+
+  G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
+
+  G4double energies[] = {
+    optPhotMinE_,
+    h_Planck * c_light / (1097. * nm),  h_Planck * c_light / (1000. * nm),
+    h_Planck * c_light / ( 950. * nm),  h_Planck * c_light / ( 900. * nm),
+    h_Planck * c_light / ( 800. * nm),  h_Planck * c_light / ( 700. * nm),
+    h_Planck * c_light / ( 600. * nm),  h_Planck * c_light / ( 550. * nm),
+    h_Planck * c_light / ( 500. * nm),  h_Planck * c_light / ( 450. * nm),
+    h_Planck * c_light / ( 420. * nm),  h_Planck * c_light / ( 400. * nm),
+    h_Planck * c_light / ( 370. * nm),  h_Planck * c_light / ( 350. * nm),
+    h_Planck * c_light / ( 302. * nm),  optPhotMaxE_ };
+  const G4int num_energies = sizeof(energies) / sizeof(G4double);
+
+  G4double rIndex[] = {
+    1.4760,
+    1.4760, 1.4662,
+    1.4665, 1.4693,
+    1.4802, 1.4935,
+    1.5080, 1.5155,
+    1.5235, 1.5328,
+    1.5391, 1.5439,
+    1.5522, 1.5587,
+    1.5805, 1.5805 };
+  assert(sizeof(rIndex) == sizeof(energies));
+  mpt->AddProperty("RINDEX", energies, rIndex, num_energies);
+
+  // ABSORPTION LENGTH
+  G4double abs_length[] = {
+    (1097. * nm) / (4*pi * 0.1191),
+    (1097. * nm) / (4*pi * 0.1191),   (1000. * nm) / (4*pi * 0.0859),
+    ( 950. * nm) / (4*pi * 0.0701),   ( 900. * nm) / (4*pi * 0.0561),
+    ( 800. * nm) / (4*pi * 0.0340),   ( 700. * nm) / (4*pi * 0.0197),
+    ( 600. * nm) / (4*pi * 0.0107),   ( 550. * nm) / (4*pi * 0.0076),
+    ( 500. * nm) / (4*pi * 0.0051),   ( 450. * nm) / (4*pi * 0.0035),
+    ( 420. * nm) / (4*pi * 0.0025),   ( 400. * nm) / (4*pi * 0.00194),
+    ( 370. * nm) / (4*pi * 0.00135),  ( 350. * nm) / (4*pi * 0.00103),
+    ( 302. * nm) / (4*pi * 0.0004),   ( 302. * nm) / (4*pi * 0.0004) };
+  assert(sizeof(rIndex) == sizeof(energies));
+  mpt->AddProperty("ABSLENGTH", energies, abs_length, num_energies);
+
+  //G4cout << "*** PEDOT properties ...  " << G4endl;
   //for (int i=0; i<num_energies; i++) {
   //  G4cout << "* Energy: " << std::setw(5) << energies[i]/eV << " eV  ->  " << std::setw(5)
   //         << (1240./ (energies[i] / eV)) << " nm" << G4endl;
@@ -789,7 +851,6 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB()
 
   return mpt;
 }
-
 
 
 
