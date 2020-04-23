@@ -118,6 +118,7 @@ namespace nexus {
     // Dimensions & Positions
     G4double _originZ;
     G4double _diameter;
+    G4double _central_hole_diameter;
 
     G4double _copper_iniZ;
     G4double _copper_finZ;

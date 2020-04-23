@@ -58,12 +58,14 @@ NextFlexEnergyPlane::NextFlexEnergyPlane():
   DefineConfigurationParameters();
 
   // Hard-wired dimensions & components
-  _teflon_thickness = 5. * mm;
-  _wls_thickness    = 1. * um;     // XXXXXXXX To be checked
+  _central_hole_diameter = 12. * mm;
 
-  _pmt                = new PmtR11410();
-  _num_pmts           = 60;        // It must be the number of PMTs in NEXT100
-  _pmt_hole_diameter  = 84. * mm;  // It must be bigger than PMT diameter (84mm in NEXT100)
+  _teflon_thickness = 5. * mm;
+  _wls_thickness    = 1. * um;
+
+  _pmt               = new PmtR11410();
+  _num_pmts          = 60;        // It must be the number of PMTs in NEXT100
+  _pmt_hole_diameter = 84. * mm;  // It must be bigger than PMT diameter (84mm in NEXT100)
 
   _window_thickness      = 6.0 * mm;
   _optical_pad_thickness = 1.0 * mm;
@@ -204,17 +206,26 @@ void NextFlexEnergyPlane::BuildCopper()
   G4String copper_name = "EP_COPPER";
 
   G4double copper_posZ = _copper_iniZ + _copper_thickness/2.;
-  _copper_finZ = _copper_iniZ + _copper_thickness;
+  _copper_finZ         = _copper_iniZ + _copper_thickness;
 
-  G4Tubs* copper_solid =
+  G4Tubs* copper_solid_no_holes =
     new G4Tubs(copper_name, 0., _diameter/2., _copper_thickness/2., 0, twopi);
 
+  // Making the central gas hole
+  G4Tubs* copper_central_hole_solid =
+    new G4Tubs("EP_COPPER_CENTRAL_HOLE", 0., _central_hole_diameter/2.,
+               copper_solid_no_holes->GetDz(), 0., twopi);
+
+  G4SubtractionSolid* copper_solid =
+    new G4SubtractionSolid(copper_name, copper_solid_no_holes,
+                           copper_central_hole_solid, 0, G4ThreeVector(0.,0.,0.));
+
   // If there are PMTs, make corresponding holes
-  //if (_ep_with_PMTs) copper_solid = dynamic_cast<G4Tubs*> (MakePMTholes(copper_solid));
-  if (_ep_with_PMTs) copper_solid = (G4Tubs*) MakePMTholes(copper_solid);
+  if (_ep_with_PMTs)
+    copper_solid = MakePMTholes(dynamic_cast<G4Tubs*>(copper_solid));
 
   G4LogicalVolume* copper_logic =
-    new G4LogicalVolume(copper_solid, _copper_mat, copper_name);
+    new G4LogicalVolume(copper_solid, _copper_mat, copper_name);  
 
   //G4VPhysicalVolume* copper_phys =
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., copper_posZ), copper_logic,
@@ -246,12 +257,21 @@ void NextFlexEnergyPlane::BuildTeflon()
 
   G4double teflon_posZ = _teflon_iniZ + _teflon_thickness/2.;
 
-  G4Tubs* teflon_solid =
+  G4Tubs* teflon_solid_no_holes =
     new G4Tubs(teflon_name, 0., _diameter/2., _teflon_thickness/2., 0, twopi);
 
+  // Making the central gas hole
+  G4Tubs* teflon_central_hole_solid =
+    new G4Tubs("EP_TEFLON_CENTRAL_HOLE", 0., _central_hole_diameter/2.,
+               teflon_solid_no_holes->GetDz(), 0., twopi);
+
+  G4SubtractionSolid* teflon_solid =
+    new G4SubtractionSolid(teflon_name, teflon_solid_no_holes,
+                           teflon_central_hole_solid, 0, G4ThreeVector(0.,0.,0.));
+
   // If there are PMTs, make corresponding holes
-  //if (_ep_with_PMTs) teflon_solid = dynamic_cast<G4Tubs*> (MakePMTholes(teflon_solid));
-  if (_ep_with_PMTs) teflon_solid = (G4Tubs*) MakePMTholes(teflon_solid);
+  if (_ep_with_PMTs)
+    teflon_solid = MakePMTholes(dynamic_cast<G4Tubs*>(teflon_solid));
 
   G4LogicalVolume* teflon_logic =
     new G4LogicalVolume(teflon_solid, _teflon_mat, teflon_name);
@@ -282,12 +302,22 @@ void NextFlexEnergyPlane::BuildTeflon()
 
   G4double teflon_wls_posZ = - _teflon_thickness/2. + _wls_thickness/2.;
 
-  G4Tubs* teflon_wls_solid =
+  G4Tubs* teflon_wls_solid_no_holes =
     new G4Tubs(teflon_wls_name, 0., _diameter/2., _wls_thickness/2., 0, twopi);
 
+  // Making the central gas hole
+  G4Tubs* teflon_wls_central_hole_solid =
+    new G4Tubs("EP_TEFLON_WLS_CENTRAL_HOLE", 0., _central_hole_diameter/2.,
+               teflon_wls_solid_no_holes->GetDz(), 0., twopi);
+
+  G4SubtractionSolid* teflon_wls_solid =
+    new G4SubtractionSolid(teflon_wls_name, teflon_wls_solid_no_holes,
+                           teflon_wls_central_hole_solid, 0,
+                           G4ThreeVector(0.,0.,0.));
+
   // If there are PMTs, make corresponding holes
-  //if (_ep_with_PMTs) teflon_wls_solid = dynamic_cast<G4Tubs*> (MakePMTholes(teflon_wls_solid));
-  if (_ep_with_PMTs) teflon_wls_solid = (G4Tubs*) MakePMTholes(teflon_wls_solid);
+  if (_ep_with_PMTs)
+    teflon_wls_solid = MakePMTholes(dynamic_cast<G4Tubs*>(teflon_wls_solid));
 
   G4LogicalVolume* teflon_wls_logic =
     new G4LogicalVolume(teflon_wls_solid, _wls_mat, teflon_wls_name);
@@ -328,7 +358,7 @@ void NextFlexEnergyPlane::BuildPMTs()
 
   // It must be at least the copper plate thickness
   // and enough to accomodate all the PMTs related stuff
-  G4double pmt_hole_length = _copper_thickness + 20*mm;
+  G4double pmt_hole_length = _copper_thickness + 20 * mm;
 
   G4Tubs* pmt_hole_solid =
     new G4Tubs(pmt_hole_name, 0., _pmt_hole_diameter/2., pmt_hole_length/2., 0, twopi);
@@ -443,11 +473,8 @@ void NextFlexEnergyPlane::GeneratePMTpositions()
 {
   G4int num_conc_circles = 4;
   G4int num_inner_pmts   = 6;
-  //G4double x_pitch       = 125 * mm;
-  //G4double y_pitch       = 108.3 * mm;
-  // 2 mm less than NEXT100 to avoid overlap with field cage fibers
-  G4double x_pitch       = 123 * mm;
-  G4double y_pitch       = 106.3 * mm;
+  G4double x_pitch       = 125 * mm;
+  G4double y_pitch       = 108.3 * mm;
 
   G4ThreeVector position(0.,0.,0.);
 
