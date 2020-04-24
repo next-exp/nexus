@@ -55,6 +55,10 @@ AnalysisTrackingAction::AnalysisTrackingAction(): G4UserTrackingAction(),
   hScintLambda_ = new TH1F("ScintLambda", "ScintLambda", 1000, 0, 800.);
   hScintLambda_->GetXaxis()->SetTitle("wavelength (nm)");
 
+  hScintTime = new TH1F("ScintillationTime", "ScintillationTime", 8000, 0, 40000.);
+  hScintTime->GetXaxis()->SetTitle("Time (ps)");
+  hScintTime->GetYaxis()->SetTitle("Entries / bin");
+
 }
 
 
@@ -69,6 +73,7 @@ AnalysisTrackingAction::~AnalysisTrackingAction()
   // hScintEnergy_->Write();
   hCherLambda_->Write();
   hScintLambda_->Write();
+  hScintTime->Write();
   OptPhotons_->Close();
 
 }
@@ -90,6 +95,7 @@ void AnalysisTrackingAction::PreUserTrackingAction(const G4Track* track)
 
      else if (track->GetCreatorProcess()->GetProcessName() == "Scintillation") {
        hScintLambda_->Fill(h_Planck*c_light/track->GetKineticEnergy()/nanometer);
+       hScintTime->Fill(track->GetGlobalTime()/picosecond);
      }
   }
 

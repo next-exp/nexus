@@ -1,10 +1,8 @@
 // ----------------------------------------------------------------------------
 ///  \file   AnalysisTrackingAction.h
-///  \brief  General-purpose user tracking action.
 ///
-///  \author   <justo.martin-albo@ific.uv.es>
+///  \author   <justo.martin-albo@ific.uv.es>, <paola.ferrario@dipc.org>
 ///  \date     25 Mar 2013
-///  \version  $Id$
 ///
 ///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
@@ -45,8 +43,9 @@ namespace nexus {
     //TH1F* hScintEnergy_;
     //TH1F* hCherEnergy_;
 
-    TH1F* hScintLambda_;
     TH1F* hCherLambda_;
+    TH1F* hScintLambda_;
+    TH1F* hScintTime;
 
     TFile* OptPhotons_;
   };
