@@ -51,9 +51,11 @@ AnalysisTrackingAction::AnalysisTrackingAction(): G4UserTrackingAction(),
 
   hCherLambda_ = new TH1F("CherLambda", "CherLambda", 1000, 0, 1500.);
   hCherLambda_->GetXaxis()->SetTitle("wavelength (nm)");
+  hCherLambda_->GetYaxis()->SetTitle("Entries / bin");
 
   hScintLambda_ = new TH1F("ScintLambda", "ScintLambda", 1000, 0, 800.);
   hScintLambda_->GetXaxis()->SetTitle("wavelength (nm)");
+  hScintLambda_->GetYaxis()->SetTitle("Entries / bin");
 
   hScintTime = new TH1F("ScintillationTime", "ScintillationTime", 8000, 0, 40000.);
   hScintTime->GetXaxis()->SetTitle("Time (ps)");
