@@ -12,8 +12,7 @@ import numpy as np
 
 my_env = os.environ.copy()
 command = ['./nexus', '-b', '-n', '1', 'pytest/test_macros/NEXT100_optical.init.mac']
-p = subprocess.Popen(command, env=my_env)
-p.wait()
+p = subprocess.run(command, check=True, env=my_env)
 output_file = 'pytest/NEXT100_electron_full.h5'
 
 
