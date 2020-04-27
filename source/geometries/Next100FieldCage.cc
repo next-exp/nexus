@@ -75,8 +75,7 @@ namespace nexus {
     _visibility (1),
     _verbosity (0),
     // Scintillation yield and electron lifetime
-    _sc_yield(25510. * 1/MeV),
-    _e_lifetime(1000. * ms)
+    _sc_yield(25510. * 1/MeV)
   {
     /// Define new categories
     new G4UnitDefinition("kilovolt/cm","kV/cm","Electric field", kilovolt/cm);
@@ -291,7 +290,7 @@ namespace nexus {
 
     /// EL grids
     G4Material* fgrid_mat = MaterialsList::FakeDielectric(_gas, "el_grid_mat");
-    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _el_grid_transparency, _grid_thickn, _sc_yield, _e_lifetime));
+    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _el_grid_transparency, _grid_thickn, _sc_yield));
 
 
     /// Dimensions & position: the grids are simulated inside the EL gap.
@@ -335,7 +334,7 @@ namespace nexus {
   void Next100FieldCage::BuildCathodeGrid()
   {
     G4Material* fgrid_mat = MaterialsList::FakeDielectric(_gas, "cath_grid_mat");
-    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _cath_grid_transparency, _grid_thickn, _sc_yield, _e_lifetime));
+    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _cath_grid_transparency, _grid_thickn, _sc_yield));
 
     G4double grid_diam = _el_gap_diam; // to check
 
