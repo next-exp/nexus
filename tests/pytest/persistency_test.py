@@ -7,16 +7,21 @@ import tables as tb
 import numpy as np
 
 
-my_env = os.environ.copy()
-command = ['./nexus', '-b', '-n', '1', 'tests/pytest/test_macros/NEXT100_optical.init.mac']
-p = subprocess.run(command, check=True, env=my_env)
-output_file = 'tests/pytest/NEXT100_electron_full.h5'
+@pytest.fixture(scope="module")
+def input_file(request):
+     my_env = os.environ.copy()
+     command = ['./nexus', '-b', '-n', '1', 'tests/pytest/test_macros/NEXT100_optical.init.mac']
+     p = subprocess.run(command, check=True, env=my_env)
+     input_file_for_tests = 'tests/pytest/NEXT100_electron_full.h5'
+
+     return input_file_for_tests
 
 
-def test_hdf5_structure():
+
+def test_hdf5_structure(input_file):
      """ Check that the hdf5 table structure is the correct one."""
 
-     with tb.open_file(output_file) as h5out:
+     with tb.open_file(input_file) as h5out:
 
          assert 'MC'            in h5out.root
          assert 'particles'     in h5out.root.MC
@@ -75,40 +80,40 @@ def test_hdf5_structure():
          assert 'charge'    in scolumns
 
 
-def test_particle_ids_of_hits_exist_in_particle_table():
+def test_particle_ids_of_hits_exist_in_particle_table(input_file):
     """
     Check that the particle IDs of the hits are also contained
     in the particle table.
     """
 
-    hits = pd.read_hdf(output_file, 'MC/hits')
+    hits = pd.read_hdf(input_file, 'MC/hits')
     hit_pids = hits.particle_id.unique()
 
-    particles = pd.read_hdf(output_file, 'MC/particles')
+    particles = pd.read_hdf(input_file, 'MC/particles')
     particle_ids = particles.particle_id.unique()
 
     assert np.all(np.isin(hit_pids, particle_ids))
 
 
-def test_hit_labels():
+def test_hit_labels(input_file):
      """Check that there is at least one hit in the ACTIVE volume """
-     hits = pd.read_hdf(output_file, 'MC/hits')
+     hits = pd.read_hdf(input_file, 'MC/hits')
      hit_labels = hits.label.unique()
 
      assert 'ACTIVE' in hit_labels
 
 
-def test_primary_always_exists():
+def test_primary_always_exists(input_file):
      """Check that there is at least one primary particle """
-     particles = pd.read_hdf(output_file, 'MC/particles')
+     particles = pd.read_hdf(input_file, 'MC/particles')
      primary   = particles.primary.unique()
 
      assert 1 in primary
 
 
-def test_sensor_binning_is_saved():
+def test_sensor_binning_is_saved(input_file):
      """Check that the sensor binning is saved in the configuration table. """
-     conf = pd.read_hdf(output_file, 'MC/configuration')
+     conf = pd.read_hdf(input_file, 'MC/configuration')
      parameters = conf.param_key.values
 
      assert any('binning' in p for p in parameters)
