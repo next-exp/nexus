@@ -137,9 +137,8 @@ namespace nexus {
     G4double _el_table_binning;
     G4double _el_table_z;
 
-    // Scintillation yield and electron lifetime
+    // Scintillation yield
     G4double _sc_yield;
-    G4double _e_lifetime;
 
   };
 
