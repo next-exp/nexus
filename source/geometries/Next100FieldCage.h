@@ -117,7 +117,6 @@ namespace nexus {
     G4double _temperature;
 
     G4double _sc_yield;
-    G4double _e_lifetime;
 
     // Pointers to materials definition
     G4Material* _hdpe;
