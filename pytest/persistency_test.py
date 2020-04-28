@@ -7,9 +7,6 @@ import tables as tb
 import numpy as np
 
 
-#command = './nexus -b -n 1 pytest/test_macros/NEXT100_optical.init.mac'
-#os.system(command)
-
 my_env = os.environ.copy()
 command = ['./nexus', '-b', '-n', '1', 'pytest/test_macros/NEXT100_optical.init.mac']
 p = subprocess.run(command, check=True, env=my_env)
