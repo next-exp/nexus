@@ -16,4 +16,4 @@
 /Generator/SingleParticle/max_energy 100. keV
 /Generator/SingleParticle/region ACTIVE
 
-/nexus/persistency/outputFile pytest/NEXT100_electron_full
+/nexus/persistency/outputFile tests/pytest/NEXT100_electron_full

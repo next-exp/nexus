@@ -13,4 +13,4 @@
 /Actions/RegisterEventAction DEFAULT
 /Actions/RegisterRunAction DEFAULT
 
-/nexus/RegisterMacro pytest/test_macros/NEXT100_optical.config.mac
+/nexus/RegisterMacro tests/pytest/test_macros/NEXT100_optical.config.mac

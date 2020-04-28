@@ -7,9 +7,9 @@ import tables as tb
 import numpy as np
 
 my_env = os.environ.copy()
-command = ['./nexus', '-b', '-n', '1', 'pytest/test_macros/NEXT100_sensdet.init.mac']
+command = ['./nexus', '-b', '-n', '1', 'tests/pytest/test_macros/NEXT100_sensdet.init.mac']
 p = subprocess.run(command, check=True, env=my_env)
-output_file = 'pytest/NEXT100_sensdet.h5'
+output_file = 'tests/pytest/NEXT100_sensdet.h5'
 
 
 def test_sensor_ids_are_sensible():

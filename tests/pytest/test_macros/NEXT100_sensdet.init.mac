@@ -13,4 +13,4 @@
 /Actions/RegisterEventAction DEFAULT
 /Actions/RegisterTrackingAction DEFAULT
 
-/nexus/RegisterMacro pytest/test_macros/NEXT100_sensdet.config.mac
+/nexus/RegisterMacro tests/pytest/test_macros/NEXT100_sensdet.config.mac

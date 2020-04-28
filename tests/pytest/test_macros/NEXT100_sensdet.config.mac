@@ -1,5 +1,5 @@
 ##### JOB CONTROL #####
-/nexus/persistency/outputFile pytest/Next100_sensdet
+/nexus/persistency/outputFile tests/pytest/Next100_sensdet
 
 
 ##### GEOMETRY #####

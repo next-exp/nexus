@@ -8,9 +8,9 @@ import numpy as np
 
 
 my_env = os.environ.copy()
-command = ['./nexus', '-b', '-n', '1', 'pytest/test_macros/NEXT100_optical.init.mac']
+command = ['./nexus', '-b', '-n', '1', 'tests/pytest/test_macros/NEXT100_optical.init.mac']
 p = subprocess.run(command, check=True, env=my_env)
-output_file = 'pytest/NEXT100_electron_full.h5'
+output_file = 'tests/pytest/NEXT100_electron_full.h5'
 
 
 def test_hdf5_structure():
