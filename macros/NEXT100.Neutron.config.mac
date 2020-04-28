@@ -20,9 +20,10 @@
 
 ##### GENERATOR #####
 #Neutron generator for cosmogenics
-/Generator/NeutronGenerator/min_energy 100 MeV
-/Generator/NeutronGenerator/max_energy 	100 MeV
-/Generator/NeutronGenerator/region EXTERNAL
+/Generator/SingleParticle/particle neutron
+/Generator/SingleParticle/min_energy 100 MeV
+/Generator/SingleParticle/max_energy 100 MeV
+/Generator/SingleParticle/region EXTERNAL
 
 ## No full simulation
 /PhysicsList/Nexus/clustering          false

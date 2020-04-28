@@ -38,7 +38,6 @@ GeneratorFactory::~GeneratorFactory()
 #include "SingleParticle2Pi.h"
 #include "MuonGenerator.h"
 #include "MuonAngleGenerator.h"
-#include "NeutronGenerator.h"
 #include "ELTableGenerator.h"
 #include "ScintillationGenerator.h"
 #include "ElecPositronPair.h"
@@ -63,8 +62,6 @@ G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
   else if (_name == "MUON_GENERATOR") p = new MuonGenerator();
 
   else if (_name == "LABMUON_GENERATOR") p = new MuonAngleGenerator();
-
-  else if (_name == "NEUTRON_GENERATOR") p = new NeutronGenerator();
 
   else if (_name == "EL_TABLE_GENERATOR") p = new ELTableGenerator();
 
