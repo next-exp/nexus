@@ -145,8 +145,6 @@ namespace nexus {
     delete _lab_gen;
     delete _lat_source_gen;
     delete _axial_source_gen;
-
-    delete _muon_gen;
   }
 
   void NextNew::BuildExtScintillator(G4ThreeVector pos, const G4RotationMatrix& rot)
@@ -410,10 +408,6 @@ namespace nexus {
       _source_gen_random = new CylinderPointSampler(0., source_thick, source_diam/2., 0., random_pos_gen, up_rot);
     }
 
-    G4ThreeVector shielding_dim = _shielding->GetDimensions();
-    _muon_gen =
-      new MuonsPointSampler(shielding_dim.x()/2. + 50.*cm, shielding_dim.y()/2. + 1.*cm, shielding_dim.z()/2. + 50.*cm);
-
   }
 
 
@@ -425,8 +419,6 @@ namespace nexus {
     //AIR AROUND SHIELDING
     if (region == "LAB") {
       vertex = _lab_gen->GenerateVertex("INSIDE");
-    } else if (region == "MUONS") {
-      vertex = _muon_gen->GenerateVertex();
     }
     /// Calibration source in capsule, placed inside Jordi's lead,
     /// at the end (lateral and axial ports).
@@ -465,7 +457,7 @@ namespace nexus {
       vertex =  _source_gen_random->GenerateVertex("BODY_VOL");
     }
     else if ( (region == "SHIELDING_LEAD") || (region == "SHIELDING_STEEL") ||
-	          (region == "INNER_AIR")      || (region == "SHIELDING_STRUCT") ||
+	          (region == "INNER_AIR")  || (region == "SHIELDING_STRUCT") ||
 	          (region == "EXTERNAL") ) {
       vertex = _shielding->GenerateVertex(region);
     }

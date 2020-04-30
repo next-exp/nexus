@@ -22,7 +22,6 @@ class G4LogicalVolume;
 class G4GenericMessenger;
 
 namespace nexus {class BoxPointSampler;}
-namespace nexus {class MuonsPointSampler;}
 
 
 namespace nexus {
@@ -65,7 +64,6 @@ namespace nexus {
     Next100InnerElements* _inner_elements;
 
     BoxPointSampler* _lab_gen; ///< Vertex generator
-    MuonsPointSampler* _muon_gen; ///< Vertex generator for muons
 
     /// Messenger for the definition of control commands
     G4GenericMessenger* _msg;

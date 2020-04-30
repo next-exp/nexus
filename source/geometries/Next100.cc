@@ -88,7 +88,6 @@ namespace nexus {
     delete _vessel;
     delete _shielding;
     delete _lab_gen;
-    delete _muon_gen;
   }
 
 
@@ -146,12 +145,6 @@ namespace nexus {
     _lab_gen =
       new BoxPointSampler(_lab_size - 1.*m, _lab_size - 1.*m, _lab_size  - 1.*m,
 			  1.*m,G4ThreeVector(0., 0., 0.), 0);
-
-    G4ThreeVector shielding_dim = _shielding->GetDimensions();
-    _muon_gen = new MuonsPointSampler(shielding_dim.x()/2. + 50.*cm,
-				      shielding_dim.y()/2. + 1.*cm,
-				      shielding_dim.z()/2. + 50.*cm);
-
   }
 
 
@@ -163,14 +156,13 @@ namespace nexus {
     // Air around shielding
     if (region == "LAB") {
       vertex = _lab_gen->GenerateVertex("INSIDE");
-    } else if (region == "MUONS") {
-      vertex = _muon_gen->GenerateVertex();
+    }
     // Shielding regions
-    } else if ((region == "SHIELDING_LEAD")  ||
-	       (region == "SHIELDING_STEEL") ||
-	       (region == "EXTERNAL") ||
-	       (region == "INNER_AIR") ||
-	       (region == "SHIELDING_STRUCT") ) {
+    else if ((region == "SHIELDING_LEAD")  ||
+             (region == "SHIELDING_STEEL") ||
+             (region == "EXTERNAL") ||
+             (region == "INNER_AIR") ||
+             (region == "SHIELDING_STRUCT") ) {
       vertex = _shielding->GenerateVertex(region);
     }
     // Vessel regions

@@ -24,7 +24,6 @@ namespace nexus { class NextNewIcs; }
 namespace nexus { class NextNewInnerElements; }
 namespace nexus {class BoxPointSampler;}
 namespace nexus {class CylinderPointSampler;}
-namespace nexus {class MuonsPointSampler;}
 namespace nexus {class CalibrationSource;}
 namespace nexus {class NaIScintillator;}
 namespace nexus {class SurroundingAir;}
@@ -84,10 +83,6 @@ namespace nexus {
     CylinderPointSampler* _source_gen_up;
     CylinderPointSampler* _source_gen_lat;
     CylinderPointSampler* _source_gen_random;
-    MuonsPointSampler* _muon_gen; ///< Vertex generator for muons
-
-    /// Messenger for the definition of control commands
-    //  G4GenericMessenger* _msg;
 
     // Rotation around Y and displacement of the whole geometry in the g4 system of reference
     G4ThreeVector _displ;
