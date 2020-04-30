@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-///  \file   Enclosure.h
+///  \file   NextNewPmtEnclosure.h
 ///  \brief  Geometry model of the PMTs R11410 enclosure, aka "PMT cans".
 ///
 ///  \author   <miquel.nebot@ific.uv.es>
@@ -27,13 +27,13 @@ class G4OpticalSurface;
 class G4GenericMessenger;
 
 namespace nexus{
-  class Enclosure: public BaseGeometry
+  class NextNewPmtEnclosure: public BaseGeometry
   {
   public:
     //Constructor
-    Enclosure();
+    NextNewPmtEnclosure();
     //Destructor
-    ~Enclosure();
+    ~NextNewPmtEnclosure();
  
     G4ThreeVector GetObjectCenter();
     G4double GetWindowDiameter();

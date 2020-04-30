@@ -62,8 +62,8 @@ namespace nexus {
     _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNewEnergyPlane.");
     _msg->DeclareProperty("energy_plane_vis", _visibility, "Energy Plane Visibility");
 
-    /// The Enclosure
-    _enclosure = new Enclosure();
+    /// The NextNewPmtEnclosure
+    _enclosure = new NextNewPmtEnclosure();
     G4double enclosure_z_center = _enclosure->GetObjectCenter().z();
     _enclosure_z_pos = _energy_plane_z_pos - _carrier_plate_front_buffer_thickness - enclosure_z_center;
   }
@@ -246,7 +246,7 @@ namespace nexus {
 	  _geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != "CARRIER_PLATE");
     }
-    //Enclosures
+    //NextNewPmtEnclosures
     else if (region== "ENCLOSURE_BODY"){
       G4ThreeVector ini_vertex = _enclosure->GenerateVertex(region);
       G4double rand = _num_PMTs * G4UniformRand();

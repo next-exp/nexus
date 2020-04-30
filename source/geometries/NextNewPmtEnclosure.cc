@@ -7,7 +7,7 @@
 //  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
 // ---------------------------------------------------------------------------- 
 
-#include "Enclosure.h"
+#include "NextNewPmtEnclosure.h"
 
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
@@ -38,9 +38,9 @@ namespace nexus{
 
   using namespace CLHEP;
 
-  Enclosure::Enclosure():
+  NextNewPmtEnclosure::NextNewPmtEnclosure():
 
-    // Enclosures dimensions
+    // NextNewPmtEnclosures dimensions
     _enclosure_in_diam (80. * mm), 
     _enclosure_length (200.0 * mm),
     _enclosure_thickness (6. * mm),
@@ -66,7 +66,7 @@ namespace nexus{
     _pmt = new PmtR11410(); 
   }
 
-  void Enclosure::Construct()
+  void NextNewPmtEnclosure::Construct()
   {
     /// Assign optical properties to materials ///
     G4Material* sapphire = MaterialsList::Sapphire();
@@ -233,7 +233,7 @@ namespace nexus{
 
    }
 
-  Enclosure::~Enclosure()
+  NextNewPmtEnclosure::~NextNewPmtEnclosure()
   {
     delete _enclosure_body_gen;
     delete _enclosure_flange_gen;
@@ -244,17 +244,17 @@ namespace nexus{
     delete _enclosure_surf_gen;
   }
 
-  G4ThreeVector Enclosure::GetObjectCenter()
+  G4ThreeVector NextNewPmtEnclosure::GetObjectCenter()
   { return G4ThreeVector(0., 0., _enclosure_length/2.);}
 
-  G4double Enclosure::GetWindowDiameter()
+  G4double NextNewPmtEnclosure::GetWindowDiameter()
   { return _enclosure_window_diam;}
   
-  G4ThreeVector Enclosure::GenerateVertex(const G4String& region) const
+  G4ThreeVector NextNewPmtEnclosure::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);
     
-    /// Enclosures bodies
+    /// NextNewPmtEnclosures bodies
     if (region == "ENCLOSURE_BODY") {
       G4double rand1 = G4UniformRand();
       // Generating in the cilindric part of the enclosure
@@ -271,7 +271,7 @@ namespace nexus{
       }
      
     }
-    /// Enclosures windows
+    /// NextNewPmtEnclosures windows
     else if (region == "ENCLOSURE_WINDOW") {
       vertex = _enclosure_window_gen->GenerateVertex("BODY_VOL");
       //z translation made in CylinderPointSampler

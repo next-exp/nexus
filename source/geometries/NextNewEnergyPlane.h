@@ -17,7 +17,7 @@
 #include <G4TransportationManager.hh>
 
 #include "CylinderPointSampler.h"
-#include "Enclosure.h"
+#include "NextNewPmtEnclosure.h"
 
 
 class G4Material;
@@ -66,7 +66,7 @@ namespace nexus {
     const G4double _axial_port_hole_diam,  _axial_port_thickn;
 
 
-    Enclosure*  _enclosure;
+    NextNewPmtEnclosure*  _enclosure;
     G4double _enclosure_z_pos;
     std::vector<G4ThreeVector> _pmt_positions;
     std::vector<G4ThreeVector> _gas_hole_positions;
