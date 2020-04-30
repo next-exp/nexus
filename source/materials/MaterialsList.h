@@ -130,6 +130,9 @@ namespace nexus {
     // PolyMethylmethacrylate (cladding)
     static G4Material* PMMA();
 
+    // Poly(3,4-ethylenedioxythiophene) a.k.a. PEDOT
+    static G4Material* PEDOT();
+
     // Fake dielectric (to be deprecated)
     static G4Material* FakeDielectric(G4Material*, G4String);
 

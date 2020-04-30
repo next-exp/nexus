@@ -819,3 +819,31 @@ G4Material* MaterialsList::PMMA()
 
   return mat;
 }
+
+
+G4Material* MaterialsList::PEDOT()
+{
+  // Poly(3,4-ethylenedioxythiophene) is a conductive polymer.
+  // Linear Formula: (C6H4O2S)n
+  // Density of dry coating with poly(styrenesulfonate): 1.011 g/cm3
+
+  G4String name = "PEDOT";
+  G4Material* material = G4Material::GetMaterial(name, false);
+
+  if (!material) {
+    G4NistManager* nist = G4NistManager::Instance();
+
+    G4Element* H = nist->FindOrBuildElement("H");
+    G4Element* C = nist->FindOrBuildElement("C");
+    G4Element* O = nist->FindOrBuildElement("O");
+    G4Element* S = nist->FindOrBuildElement("S");
+
+    material = new G4Material(name, 1.011*g/cm3, 4, kStateSolid);
+    material->AddElement(H,4);
+    material->AddElement(C,6);
+    material->AddElement(O,2);
+    material->AddElement(S,1);
+  }
+
+  return material;
+}
