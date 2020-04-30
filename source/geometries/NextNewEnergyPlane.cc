@@ -164,27 +164,6 @@ namespace nexus {
 		      carrier_plate_logic, "CARRIER_PLATE",
 		      _mother_logic, false, 0, false);
 
-
-    /// TPB coating on sapphire window
-    G4Material* tpb = MaterialsList::TPB();
-    tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
-    G4double window_diam =  _enclosure->GetWindowDiameter();
-    G4Tubs* tpb_solid = new G4Tubs("ENCLOSURE_TPB", 0., window_diam/2,
-                                   _tpb_thickness/2., 0., twopi);
-    G4LogicalVolume* tpb_logic =
-      new G4LogicalVolume(tpb_solid, tpb,"ENCLOSURE_TPB");
-
-    // Optical surface around TPB to model its roughness
-    G4OpticalSurface* enclosure_tpb_opsurf =
-      new G4OpticalSurface("ENCLOSURE_TPB_OPSURF", glisur, ground,
-                           dielectric_dielectric, .01);
-    new G4LogicalSkinSurface("ENCLOSURE_TPB_OPSURF", tpb_logic, enclosure_tpb_opsurf);
-
-
-    G4VisAttributes * visattrib_blue = new G4VisAttributes;
-    visattrib_blue->SetColor(0., 0., 1.);
-    tpb_logic->SetVisAttributes(visattrib_blue);
-
     // Placing the enclosures
 
     G4ThreeVector pos;
@@ -194,11 +173,8 @@ namespace nexus {
       tpb_pos = _pmt_positions[i];
       pos.setZ(_enclosure_z_pos);
       tpb_pos.setZ(_enclosure_z_pos + enclosure_z_center + _tpb_thickness/2.);
-      new G4PVPlacement(0, pos, enclosure_logic, "ENCLOSURE", _mother_logic,
-			false, i, false);
-      new G4PVPlacement(0, tpb_pos, tpb_logic, "ENCLOSURE_TPB", _mother_logic,
-			false, i, false);
-      //std::cout<<"enclosure positions"<< _pmt_positions[i]<< _enclosure_z_pos<<std::endl;
+      new G4PVPlacement(nullptr, pos, enclosure_logic, "ENCLOSURE", _mother_logic,
+                        false, i, false);
     }
 
 
@@ -209,10 +185,8 @@ namespace nexus {
       carrier_plate_logic->SetVisAttributes(brown_col);
       G4VisAttributes green_col = nexus::DarkGreen();
       green_col.SetForceSolid(true);
-      tpb_logic->SetVisAttributes(green_col);
     } else {
       carrier_plate_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      tpb_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
     // VERTEX GENERATORS   //////////
