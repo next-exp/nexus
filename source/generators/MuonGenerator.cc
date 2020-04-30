@@ -144,7 +144,7 @@ G4double MuonGenerator::RandomEnergy() const
   if (_energy_max == _energy_min)
     return _energy_min;
   else
-    return (G4UniformRand()*(_energy_max - _energy_min) + _energy_min);
+    return G4UniformRand()*(_energy_max - _energy_min) + _energy_min;
 }
 
 G4String MuonGenerator::MuonCharge() const
@@ -161,11 +161,11 @@ G4double MuonGenerator::GetTheta() const
 {
   TF1 *f1 = new TF1("f1","pow(cos(x),2)",0,pi/2);
   G4double theta = f1->GetRandom();
-  return ( theta );
+  return theta;
 }
 
 
 G4double MuonGenerator::GetPhi() const
 {
-  return ( twopi*G4UniformRand());
+  return twopi*G4UniformRand();
 }
