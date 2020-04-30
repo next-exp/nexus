@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
 ///  \file   MuonGenerator.h
 ///  \brief  Point Sampler for muons generation.
-///  
-///  \author   Neus Lopez March <neus.lopez@ific.uv.es>    
+///
+///  \author   Neus Lopez March <neus.lopez@ific.uv.es>
 ///  \date     30 Jan 2014
-/// 
+///
 ///
 ///  Copyright (c) 2015 NEXT Collaboration
 // ----------------------------------------------------------------------------
@@ -22,7 +22,7 @@ class G4ParticleDefinition;
 namespace nexus {
 
   class BaseGeometry;
-  
+
   class MuonGenerator: public G4VPrimaryGenerator
   {
   public:
@@ -30,27 +30,27 @@ namespace nexus {
     MuonGenerator();
     /// Destructor
     ~MuonGenerator();
-    
-    /// This method is invoked at the beginning of the event. It sets 
+
+    /// This method is invoked at the beginning of the event. It sets
     /// a primary vertex (that is, a particle in a given position and time)
     /// in the event.
     void GeneratePrimaryVertex(G4Event*);
 
   private:
 
-    /// Generate a random kinetic energy with flat probability in 
+    /// Generate a random kinetic energy with flat probability in
     //  the interval [energy_min, energy_max].
     G4double RandomEnergy() const;
     G4String MuonCharge() const;
-    G4double GetPhi();
-    G4double GetTheta();    
+    G4double GetPhi() const;
+    G4double GetTheta() const;
 
   private:
     G4GenericMessenger* _msg;
-  
+
     G4ParticleDefinition* _particle_definition;
 
-    G4double _energy_min; ///< Minimum kinetic energy 
+    G4double _energy_min; ///< Minimum kinetic energy
     G4double _energy_max; ///< Maximum kinetic energy
 
     G4String _region;
@@ -60,7 +60,7 @@ namespace nexus {
     G4double _momentum_X;
     G4double _momentum_Y;
     G4double _momentum_Z;
-       
+
   };
 
 } // end namespace nexus
