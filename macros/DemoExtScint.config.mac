@@ -1,0 +1,58 @@
+### --------------------------------------------------------
+###  This macro simulates Kr83 decays uniformly in the active volume and
+###  using the full simulation
+### --------------------------------------------------------
+
+
+##### JOB CONTROL #####
+
+##### VERBOSITIES #####
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+
+# GEOMETRY
+/control/execute macros/geometries/NextDemo.mac
+
+#/Geometry/NextDemo/max_step_size 5. mm
+/Geometry/NextDemo/max_step_size 1. mm
+#
+## lateral/upper/axial
+/Geometry/NextDemo/calib_port lateral   ## sideNa  ##lateral
+/Geometry/NextDemo/disk_source true
+/Geometry/NextDemo/source_material Na
+#
+/Geometry/NextDemo/sc_yield 25510. 1/MeV
+/Geometry/NextDemo/ext_scint true
+/Geometry/NextDemo/scint_distance 5. cm
+#
+
+######################################################
+
+# GENERATION
+##/Generator/Kr83mGenerator/region ACTIVE
+## LATERAL/UP
+/Generator/Na22Generator/region SOURCE_PORT_LATERAL_DISK
+
+######################################################
+
+# PHYSICS
+## No full simulation
+/PhysicsList/Nexus/clustering          false
+/PhysicsList/Nexus/drift               false
+/PhysicsList/Nexus/electroluminescence false
+
+# ACTIONS
+#/Actions/DefaultEventAction/energy_threshold 0.6 MeV
+#/Actions/DefaultEventAction/max_energy 1.0 MeV
+
+#/nexus/random_seed 14562
+
+
+# PERSISTENCY
+## Ruty - hdf5 true -
+#/nexus/persistency/hdf5 true
+/nexus/persistency/outputFile DemoExtScint.sim
+#/nexus/persistency/outputFile NextDemo.next
+

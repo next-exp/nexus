@@ -1,0 +1,51 @@
+### --------------------------------------------------------
+###  This macro simulates Kr83 decays uniformly in the active volume and
+###  using the full simulation
+### --------------------------------------------------------
+
+
+##### JOB CONTROL #####
+
+##### VERBOSITIES #####
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+
+# GEOMETRY
+/control/execute macros/geometries/NextDemo.mac
+
+#/Geometry/NextDemo/max_step_size 5. mm
+/Geometry/NextDemo/max_step_size 1. mm
+/Geometry/NextDemo/sc_yield 25510. 1/MeV
+/Geometry/NextDemo/ext_scint true
+
+#
+# de new...
+#/Geometry/PmtR11410/SD_depth 3
+#/Geometry/PmtR11410/SD_depth 4
+#/Geometry/KDB/teflon_masks true
+
+######################################################
+
+# GENERATION
+/Generator/Kr83mGenerator/region ACTIVE
+
+# PHYSICS
+## No full simulation
+/PhysicsList/Nexus/clustering          false
+/PhysicsList/Nexus/drift               false
+/PhysicsList/Nexus/electroluminescence false
+
+# ACTIONS
+#/Actions/DefaultEventAction/energy_threshold 0.6 MeV
+/Actions/DefaultEventAction/max_energy 1.0 MeV
+
+#/nexus/random_seed 14562
+
+
+# PERSISTENCY
+## Ruty - hdf5 true -
+/nexus/persistency/hdf5 true
+/nexus/persistency/outputFile NextDemo.next
+
