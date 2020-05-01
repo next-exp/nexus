@@ -63,9 +63,19 @@ void ScintillationGenerator::GeneratePrimaryVertex(G4Event* event)
   G4VPhysicalVolume* vol = _geom_navigator->LocateGlobalPointAndSetup(position, 0, false);
   G4Material* mat = vol->GetLogicalVolume()->GetMaterial();
   G4MaterialPropertiesTable* mpt = mat->GetMaterialPropertiesTable();
+
+  if (!mpt) {
+    G4Exception("[ScintillationGenerator]", "GeneratePrimaryVertex()", FatalException,
+                "Material properties not defined for this material!");
+  }
   // Using fast or slow component here is irrelevant, since we're not using time
   // and they're are the same in energy.
   G4MaterialPropertyVector* spectrum = mpt->GetProperty("FASTCOMPONENT");
+
+  if (!spectrum) {
+    G4Exception("[ScintillationGenerator]", "GeneratePrimaryVertex()", FatalException,
+                "Fast time decay constant not defined for this material!");
+  }
 
   G4PhysicsOrderedFreeVector* spectrum_integral =
     new G4PhysicsOrderedFreeVector();
