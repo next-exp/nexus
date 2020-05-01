@@ -105,13 +105,16 @@ G4UserTrackingAction* ActionsFactory::CreateTrackingAction() const
 
 //////////////////////////////////////////////////////////////////////
 #include "AnalysisSteppingAction.h"
+#include "GeantinoSteppingAction.h"
 
 
 G4UserSteppingAction* ActionsFactory::CreateSteppingAction() const
 {
   G4UserSteppingAction* p = 0;
 
-  if (stpact_name_ == "ANALYSIS") p = new AnalysisSteppingAction();
+  if      (stpact_name_ == "ANALYSIS") p = new AnalysisSteppingAction();
+
+  else if (stpact_name_ == "GEANTINO") p = new GeantinoSteppingAction();
 
   else {
     G4String err = "Unknown user stepping action: " + stpact_name_;
