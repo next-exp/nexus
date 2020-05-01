@@ -1,0 +1,25 @@
+### ---------------------------------------------------------
+### This init macro simulates geantinos in the NEW geometry
+### shot from an specific vertex isotropically
+### ---------------------------------------------------------
+
+
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+# GENERATION
+/Generator/SingleParticle/particle geantino
+/Generator/SingleParticle/min_energy 1  eV
+/Generator/SingleParticle/max_energy 1 keV
+/Generator/SingleParticle/region AD_HOC
+/Geometry/NextNew/specific_vertex_X   0 mm
+/Geometry/NextNew/specific_vertex_Y   0 mm
+/Geometry/NextNew/specific_vertex_Z 100 mm
+
+# GEOMETRY
+/Geometry/NextNew/pressure 10. bar
+/Geometry/PmtR11410/SD_depth 4
+
+/nexus/persistency/eventType geantino
+/nexus/persistency/outputFile geantinos.next
