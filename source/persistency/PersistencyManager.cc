@@ -15,6 +15,7 @@
 #include "PmtSD.h"
 #include "NexusApp.h"
 #include "DetectorConstruction.h"
+#include "GeantinoSteppingAction.h"
 #include "BaseGeometry.h"
 #include "HDF5Writer.h"
 
@@ -47,7 +48,7 @@ PersistencyManager::PersistencyManager(G4String init_macro,
   msg_ = new G4GenericMessenger(this, "/nexus/persistency/");
   msg_->DeclareMethod("outputFile", &PersistencyManager::OpenFile, "");
   msg_->DeclareProperty("eventType", event_type_,
-                        "Type of event: bb0nu, bb2nu or background.");
+                        "Type of event: bb0nu, bb2nu, background or geantino.");
   msg_->DeclareProperty("start_id", start_id_,
                         "Starting event ID for this job.");
 
@@ -126,12 +127,16 @@ G4bool PersistencyManager::Store(const G4Event* event)
     nevt_ = start_id_;
   }
 
-  // Store the trajectories of the event
-  StoreTrajectories(event->GetTrajectoryContainer());
+  if (event_type_ == "geantino") {
+    StoreSteps();
+  }
+  else {
+    // Store the trajectories of the event
+    StoreTrajectories(event->GetTrajectoryContainer());
 
-  // Store ionization hits and sensor hits
-  StoreHits(event->GetHCofThisEvent());
-
+    // Store ionization hits and sensor hits
+    StoreHits(event->GetHCofThisEvent());
+  }
   nevt_++;
 
   TrajectoryMap::Clear();
@@ -139,7 +144,6 @@ G4bool PersistencyManager::Store(const G4Event* event)
 
   return true;
 }
-
 
 
 void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
@@ -326,6 +330,36 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
   }
 }
 
+
+void PersistencyManager::StoreSteps()
+{
+  GeantinoSteppingAction* sa = (GeantinoSteppingAction*)
+    G4RunManager::GetRunManager()->GetUserSteppingAction();
+
+  GeantinoContainer<G4String> initial_volumes = sa->get_initial_volumes();
+  GeantinoContainer<G4String>   final_volumes = sa->get_final_volumes  ();
+  GeantinoContainer<G4String>      proc_names = sa->get_proc_names     ();
+
+  GeantinoContainer<G4ThreeVector> initial_poss = sa->get_initial_poss();
+  GeantinoContainer<G4ThreeVector>   final_poss = sa->get_final_poss  ();
+
+  for (auto it = initial_volumes.begin(); it != initial_volumes.end(); ++it) {
+    G4int track_id = it->first;
+    for (int step_idx=0; step_idx < it->second.size(); ++step_idx) {
+      h5writer_->WriteStep(nevt_, track_id, "geantino", step_idx,
+                           initial_volumes[track_id][step_idx],
+                             final_volumes[track_id][step_idx],
+                                proc_names[track_id][step_idx],
+                           initial_poss   [track_id][step_idx].x(),
+                           initial_poss   [track_id][step_idx].y(),
+                           initial_poss   [track_id][step_idx].z(),
+                             final_poss   [track_id][step_idx].x(),
+                             final_poss   [track_id][step_idx].y(),
+                             final_poss   [track_id][step_idx].z());
+    }
+  }
+  sa->Reset();
+}
 
 G4bool PersistencyManager::Store(const G4Run*)
 {

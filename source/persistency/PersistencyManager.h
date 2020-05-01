@@ -62,6 +62,7 @@ namespace nexus {
     void StoreHits(G4HCofThisEvent*);
     void StoreIonizationHits(G4VHitsCollection*);
     void StorePmtHits(G4VHitsCollection*);
+    void StoreSteps();
 
     void SaveConfigurationInfo(G4String history);
 
@@ -78,7 +79,7 @@ namespace nexus {
     G4bool store_evt_; ///< Should we store the current event?
     G4bool interacting_evt_; ///< Has the current event interacted in ACTIVE?
 
-    G4String event_type_; ///< event type: bb0nu, bb2nu, background or not set
+    G4String event_type_; ///< event type: bb0nu, bb2nu, background, geantino or not set
 
     G4int saved_evts_; ///< number of events to be saved
     G4int interacting_evts_; ///< number of events interacting in ACTIVE
