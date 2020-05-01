@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author:  <justo.martin-albo@ific.uv.es>
+//  Author:  <justo.martin-albo@ific.uv.es> <paola.ferrario@dipc.org>
 //  Created: 27 Jan 2010
 //
 //  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
@@ -30,8 +30,7 @@ namespace nexus {
 
 
   NexusPhysics::NexusPhysics():
-    G4VPhysicsConstructor("NexusPhysics"), risetime_(false),
-    _noCompt(false), _noCher(false), _noScint(false)
+    G4VPhysicsConstructor("NexusPhysics"), risetime_(false), _noCompt(false)
   {
     _msg = new G4GenericMessenger(this, "/PhysicsList/Nexus/",
       "Control commands of the nexus physics list.");
@@ -41,11 +40,6 @@ namespace nexus {
 
     _msg->DeclareProperty("offCompt", _noCompt,
 			  "Switch off Compton Scattering.");
-
-    _msg->DeclareProperty("offCherenkov", _noCher,
-			  "Switch off Cherenkov.");
-    _msg->DeclareProperty("offScintillation", _noScint,
-			  "Switch off Scintillation.");
   }
 
 
@@ -94,30 +88,6 @@ namespace nexus {
        G4VProcess* cs = G4ProcessTable::GetProcessTable()->
         FindProcess("compt", G4Gamma::Definition());
        pmanager->RemoveProcess(cs);
-    }
-    if (_noCher) {
-       pmanager  = G4Electron::Definition()->GetProcessManager();
-       G4VProcess* cs = G4ProcessTable::GetProcessTable()->
-        FindProcess("Cerenkov", G4Electron::Definition());
-       pmanager->RemoveProcess(cs);
-       pmanager  = G4Gamma::Definition()->GetProcessManager();
-       cs = G4ProcessTable::GetProcessTable()->
-	 FindProcess("Cerenkov", G4Gamma::Definition());
-       pmanager->RemoveProcess(cs);
-    }
-    if (_noScint) {
-       pmanager  = G4Electron::Definition()->GetProcessManager();
-       G4VProcess* cs = G4ProcessTable::GetProcessTable()->
-        FindProcess("Scintillation", G4Electron::Definition());
-       pmanager->RemoveProcess(cs);
-        pmanager  = G4Gamma::Definition()->GetProcessManager();
-       cs = G4ProcessTable::GetProcessTable()->
-	 FindProcess("Scintillation", G4Gamma::Definition());
-       pmanager->RemoveProcess(cs);
-       // pmanager  = G4Alpha::Definition()->GetProcessManager();
-       //   cs = G4ProcessTable::GetProcessTable()->
-       // 	 FindProcess("Scintillation", G4Alpha::Definition());
-       // pmanager->RemoveProcess(cs);
     }
 
   }

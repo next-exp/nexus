@@ -21,10 +21,6 @@
 /Generator/ScintGenerator/region AD_HOC
 /Generator/ScintGenerator/nphotons 100000
 
-### PHYSICS
-/PhysicsList/Nexus/offScintillation false
-/PhysicsList/Nexus/offCherenkov false
-
 
 ### VERBOSITIES
 /run/verbose 1

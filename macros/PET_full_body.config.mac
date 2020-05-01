@@ -22,10 +22,6 @@
 ### GENERATOR
 /Generator/Back2back/region CUSTOM
 
-### PHYSICS
-/PhysicsList/Nexus/offScintillation false
-/PhysicsList/Nexus/offCherenkov false
-
 /Actions/DefaultEventAction/energy_threshold 1.02 MeV
 
 ### VERBOSITIES

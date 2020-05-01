@@ -22,8 +22,8 @@
 #/Generator/Back2back/max_costheta 0.608696
 
 ### PHYSICS
-/PhysicsList/Nexus/offScintillation false
-/PhysicsList/Nexus/offCherenkov false
+/process/optical/processActivation Scintillation true
+/process/optical/processActivation Cerenkov      true
 
 
 ### VERBOSITIES
