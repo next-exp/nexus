@@ -1,0 +1,44 @@
+### --------------------------------------------------------
+###  Example config macro for the geometry DEMO++.
+###  Taken from::
+###  Example config macro for the geometry Next1 EL.  ###   $Id: Next1EL.mac $
+###  $Id: NextDemo.mac $
+### --------------------------------------------------------
+
+/Geometry/NextDemo/ext_scint false
+/Geometry/NextDemo/elfield false
+/Geometry/NextDemo/tpb_coating true
+/Geometry/NextDemo/pressure 10. bar
+
+# Choice of 4 side ports
+#/Geometry/NextDemo/sideport_posz -201.4 mm
+/Geometry/NextDemo/sideport_posz -71.5 mm
+#/Geometry/NextDemo/sideport_posz 58.4 mm
+#/Geometry/NextDemo/sideport_posz 188.3 mm
+#
+/Geometry/NextDemo/sideport_angle 30. deg
+#
+/Geometry/NextDemo/gate_transparency .76
+
+#/Geometry/NextDemo/specific_vertex_X 10. mm 
+#/Geometry/NextDemo/specific_vertex_Y 10. mm 
+#/Geometry/NextDemo/specific_vertex_Z 10. mm 
+
+/Geometry/NextDemo/vessel_vis false          # true  #false
+/Geometry/NextDemo/field_cage_vis false      # true
+/Geometry/NextDemo/energy_plane_vis false    # false
+/Geometry/NextDemo/tracking_plane_vis false   # false
+
+/Geometry/NextDemo/demo_main_verbosity false       # true
+/Geometry/NextDemo/vessel_verbosity false          # true
+/Geometry/NextDemo/field_cage_verbosity false      # true
+/Geometry/NextDemo/inner_elements_verbosity false      # true
+/Geometry/NextDemo/energy_plane_verbosity false    # false
+/Geometry/NextDemo/tracking_plane_verbosity false   # false
+/Geometry/NextDemo/SiPMPos_verbosity false
+
+/Geometry/KDB/visibility false          # true
+/Geometry/SiPMSensl/visibility false    # true
+/Geometry/PmtR11410/visibility false    # true
+/Geometry/PmtR11410/SD_depth 4
+
