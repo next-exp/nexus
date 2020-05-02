@@ -13,6 +13,7 @@
 #define GEANTINO_STEPPING_ACTION_H
 
 #include <G4UserSteppingAction.hh>
+#include <G4GenericMessenger.hh>
 #include <G4ThreeVector.hh>
 #include <globals.hh>
 
@@ -40,6 +41,10 @@ namespace nexus {
     virtual void UserSteppingAction(const G4Step*);
 
   private:
+    G4GenericMessenger* msg_;
+
+    std::vector<G4String> selected_volumes_;
+    std::vector<G4String> rejected_volumes_;
 
     GeantinoContainer<G4String> initial_volumes_;
     GeantinoContainer<G4String>   final_volumes_;
@@ -58,6 +63,11 @@ namespace nexus {
     GeantinoContainer<G4ThreeVector> get_final_poss();
 
     void Reset();
+
+  private:
+    void   AddSelectedVolume(G4String);
+    void   AddRejectedVolume(G4String);
+    G4bool        KeepVolume(G4String&, G4String&);
   };
 
 inline GeantinoContainer<G4String> GeantinoSteppingAction::get_initial_volumes(){return initial_volumes_;}
@@ -66,7 +76,6 @@ inline GeantinoContainer<G4String> GeantinoSteppingAction::get_proc_names     ()
 
 inline GeantinoContainer<G4ThreeVector> GeantinoSteppingAction::get_initial_poss(){return initial_poss_;}
 inline GeantinoContainer<G4ThreeVector> GeantinoSteppingAction::get_final_poss  (){return   final_poss_;}
-
 
 } // namespace nexus
 
