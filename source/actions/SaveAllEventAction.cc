@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | ELSimEventAction.cc
+// nexus | SaveAllEventAction.cc
 //
 // This class is based on DefaultEventAction and modified to store
 // all the events, no matter how much energy is deposited.
@@ -7,7 +7,7 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "ELSimEventAction.h"
+#include "SaveAllEventAction.h"
 
 #include <G4Event.hh>
 #include <G4VVisManager.hh>
@@ -17,21 +17,21 @@
 namespace nexus {
 
 
-  ELSimEventAction::ELSimEventAction(): 
+  SaveAllEventAction::SaveAllEventAction():
     G4UserEventAction(), nevt_(0), nupdate_(10)
   {
-  
+
   }
-  
-  
-  
-  ELSimEventAction::~ELSimEventAction()
+
+
+
+  SaveAllEventAction::~SaveAllEventAction()
   {
   }
-  
-  
-  
-  void ELSimEventAction::BeginOfEventAction(const G4Event* /*event*/)
+
+
+
+  void SaveAllEventAction::BeginOfEventAction(const G4Event* /*event*/)
   {
     // Print out event number info
     if ((nevt_ % nupdate_) == 0) {
@@ -42,11 +42,11 @@ namespace nexus {
 
 
 
-  void ELSimEventAction::EndOfEventAction(const G4Event* event)
+  void SaveAllEventAction::EndOfEventAction(const G4Event* event)
   {
     nevt_++;
 
-    
+
     // draw tracks in visual mode
     if (G4VVisManager::GetConcreteInstance()) {
       G4TrajectoryContainer* tc = event->GetTrajectoryContainer();

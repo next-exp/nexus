@@ -17,7 +17,7 @@
 /Generator/RegisterGenerator EL_TABLE
 
 /Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction EL_SIM
+/Actions/RegisterEventAction SAVE_ALL
 /Actions/RegisterRunAction DEFAULT
 
 /nexus/RegisterMacro macros/NEW_S2_table.config.mac
