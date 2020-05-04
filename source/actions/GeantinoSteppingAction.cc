@@ -23,19 +23,13 @@ using namespace nexus;
 GeantinoSteppingAction::GeantinoSteppingAction():
 G4UserSteppingAction(),
 msg_(0),
-selected_volumes_(),
-rejected_volumes_()
+selected_volumes_()
 {
   msg_ = new G4GenericMessenger(this, "/Actions/GeantinoSteppingAction/");
 
   msg_->DeclareMethod("select_volume",
                       &GeantinoSteppingAction::AddSelectedVolume,
                       "add a new volume to select");
-
-  msg_->DeclareMethod("reject_volume",
-                      &GeantinoSteppingAction::AddRejectedVolume,
-                      "add a new volume to reject");
-
 }
 
 
@@ -81,33 +75,17 @@ void GeantinoSteppingAction::AddSelectedVolume(G4String volume_name)
 }
 
 
-void GeantinoSteppingAction::AddRejectedVolume(G4String new_volume)
-{
-  rejected_volumes_.push_back(new_volume);
-}
-
-
 G4bool GeantinoSteppingAction::KeepVolume(G4String& initial_volume, G4String& final_volume)
 {
-  if (selected_volumes_.size()) {
-    for (auto volume=selected_volumes_.begin(); volume != selected_volumes_.end(); volume++)
-    {
-      if (initial_volume == *volume) return true;
-      if (  final_volume == *volume) return true;
-    }
+  if (!selected_volumes_.size()) return true;
 
-    return false;
-  }
-  else if (rejected_volumes_.size()) {
-    for (auto volume=rejected_volumes_.begin(); volume != rejected_volumes_.end(); volume++)
-    {
-      if (initial_volume == *volume) return false;
-      if (  final_volume == *volume) return false;
-    }
-    return true;
+  for (auto volume=selected_volumes_.begin(); volume != selected_volumes_.end(); volume++)
+  {
+    if (initial_volume == *volume) return true;
+    if (  final_volume == *volume) return true;
   }
 
-  return true;
+  return false;
 }
 
 

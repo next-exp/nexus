@@ -44,7 +44,6 @@ namespace nexus {
     G4GenericMessenger* msg_;
 
     std::vector<G4String> selected_volumes_;
-    std::vector<G4String> rejected_volumes_;
 
     GeantinoContainer<G4String> initial_volumes_;
     GeantinoContainer<G4String>   final_volumes_;
@@ -66,7 +65,6 @@ namespace nexus {
 
   private:
     void   AddSelectedVolume(G4String);
-    void   AddRejectedVolume(G4String);
     G4bool        KeepVolume(G4String&, G4String&);
   };
 
