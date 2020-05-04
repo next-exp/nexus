@@ -81,8 +81,8 @@ G4bool GeantinoSteppingAction::KeepVolume(G4String& initial_volume, G4String& fi
 
   for (auto volume=selected_volumes_.begin(); volume != selected_volumes_.end(); volume++)
   {
-    if (initial_volume == *volume) return true;
-    if (  final_volume == *volume) return true;
+    if (initial_volume.contains(*volume)) return true;
+    if (  final_volume.contains(*volume)) return true;
   }
 
   return false;
