@@ -1,0 +1,19 @@
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+# Geometry
+/Geometry/Next100/elfield true
+/Geometry/Next100/EL_field 10 kV/cm
+/Geometry/Next100/max_step_size 1. mm
+/Geometry/Next100/pressure 15. bar
+/Geometry/Next100/sc_yield 10000 1/MeV
+/Geometry/PmtR11410/SD_depth 3
+
+### Generation
+/Generator/SingleParticle/particle e-
+/Generator/SingleParticle/min_energy 100. keV
+/Generator/SingleParticle/max_energy 100. keV
+/Generator/SingleParticle/region ACTIVE
+
+/nexus/persistency/outputFile tests/pytest/NEXT100_electron_full
