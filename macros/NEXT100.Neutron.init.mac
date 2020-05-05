@@ -22,7 +22,7 @@
 /Geometry/RegisterGeometry NEXT100
 
 ### GENERATOR
-/Generator/RegisterGenerator NEUTRON_GENERATOR
+/Generator/RegisterGenerator SINGLE_PARTICLE
 
 ### ACTIONS
 /Actions/RegisterRunAction DEFAULT
