@@ -5,8 +5,7 @@
 #include <iostream>
 
 #define CONFLEN 300
-#define STRLEN 20
-#define PROCLEN 100
+#define STRLEN 100
 
   typedef struct{
      char param_key[CONFLEN];
@@ -56,8 +55,8 @@
 	float final_momentum_z;
 	float kin_energy;
 	float length;
-        char creator_proc[PROCLEN];
-	char final_proc[PROCLEN];
+        char creator_proc[STRLEN];
+	char final_proc[STRLEN];
   } particle_info_t;
 
   typedef struct{

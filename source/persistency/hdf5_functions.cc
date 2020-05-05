@@ -51,7 +51,7 @@ hsize_t createParticleInfoType()
   H5Tset_size (strtype, STRLEN);
 
   hid_t proc_strtype = H5Tcopy(H5T_C_S1);
-  H5Tset_size (proc_strtype, PROCLEN);
+  H5Tset_size (proc_strtype, STRLEN);
 
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (particle_info_t));

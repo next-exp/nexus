@@ -132,9 +132,9 @@ void HDF5Writer::WriteParticleInfo(int evt_number, int particle_indx, const char
   trueInfo.final_momentum_z = final_momentum_z;
   trueInfo.kin_energy = kin_energy;
   trueInfo.length = length;
-  memset(trueInfo.creator_proc, 0, PROCLEN);
+  memset(trueInfo.creator_proc, 0, STRLEN);
   strcpy(trueInfo.creator_proc, creator_proc);
-  memset(trueInfo.final_proc, 0, PROCLEN);
+  memset(trueInfo.final_proc, 0, STRLEN);
   strcpy(trueInfo.final_proc, final_proc);
   writeParticle(&trueInfo,  _particleInfoTable, _memtypeParticleInfo, _ipart);
 
