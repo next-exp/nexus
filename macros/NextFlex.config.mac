@@ -30,7 +30,6 @@
 /Geometry/NextFlex/fiber_mat        EJ280
 /Geometry/NextFlex/fiber_claddings  2
 
-/Geometry/NextFlex/fiber_sensor_pde           1.
 /Geometry/NextFlex/fiber_sensor_time_binning  5. ns
 
 

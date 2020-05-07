@@ -14,11 +14,13 @@
 #include "IonizationSD.h"
 #include "UniformElectricDriftField.h"
 #include "CylinderPointSampler2020.h"
+#include "GenericPhotosensor.h"
 #include "PmtSD.h"
 #include "Visibilities.h"
 
 #include <G4UnitsTable.hh>
 #include <G4GenericMessenger.hh>
+#include <G4Box.hh>
 #include <G4Tubs.hh>
 #include <G4LogicalVolume.hh>
 #include <G4NistManager.hh>
@@ -56,7 +58,6 @@ NextFlexFieldCage::NextFlexFieldCage():
   _anode_transparency(0.95),               // Anode transparency
   _gate_transparency (0.95),               // Gate transparency
   _fiber_claddings   (2),                  // Number of fiber claddings (0, 1 or 2)
-  _fiber_sensor_pde  (1.),                 // Photon detection efficiency of fiber sensors
   _fiber_sensor_bin  (100. * ns),          // Size of fiber sensors time bins
   _wls_matName       ("TPB"),              // UV wls material name
   _fiber_matName     ("EJ280")             // Fiber core material name
@@ -70,30 +71,32 @@ NextFlexFieldCage::NextFlexFieldCage():
   new G4UnitDefinition("kilovolt/cm", "kV/cm", "Electric field", kilovolt/cm);
   new G4UnitDefinition("mm/sqrt(cm)", "mm/sqrt(cm)", "Diffusion", mm/sqrt(cm));
 
-
-  // Hard-wired dimensions
-  _active_diam          = 984.  * mm;   // Same as NEXT100 (avg btwn 1000 & 984 mm)
-
-  _cathode_thickness    = 0.1   * mm;
-  _anode_thickness      = 0.1   * mm;
-  _gate_thickness       = 0.1   * mm;
-
-  _light_tube_thickness = 5.    * mm;
-  _wls_thickness        = 1.    * um;
-
-  _fiber_thickness      =  2.   * mm;
-  _cladding_perc        =  0.02;        // Fraction of fiber thickness devoted to EACH cladding
-  _fiber_extra_length   =  2.   * cm;   // Extra length per side of fibers respect FC length
-  _fiber_light_tube_gap =  2.   * mm;   // Separation gap between fibers & light tube
-  _fiber_sensor_size    =  2.   * mm;   // Side length of squared fiber sensors
-                                        // (ideally equal to _fiber_thickness)
-
-  //_num_fiber_sensors    = 20;           // Number of fiber sensors
-  // At this moment we set the number of sensors equal to the number of fibers,
-  // so it is done in BuildFiberSensors()
-
   // Parametrized dimensions
   DefineConfigurationParameters();
+
+  // Hard-wired dimensions
+  _active_diam            = 984. * mm;   // Same as NEXT100 (avg btwn 1000 & 984 mm)
+
+  _cathode_thickness      = 0.1  * mm;
+  _anode_thickness        = 0.1  * mm;
+  _gate_thickness         = 0.1  * mm;
+
+  _light_tube_thickness   = 5.   * mm;
+  _wls_thickness          = 1.   * um;
+
+  _fiber_thickness        =  2.  * mm;
+  _cladding_perc          =  0.02;       // Fiber thickness perc devoted to each cladding
+  _fiber_extra_length     =  2.  * cm;   // Extra length per side of fibers respect FC length
+  _fiber_light_tube_gap   =  2.  * mm;   // Separation gap between fibers & light tube
+  _fiber_sensor_size      =  2.  * mm;   // Side length of squared fiber sensors
+                                         // (ideally equal to _fiber_thickness)
+  _fiber_sensor_thickness =  2.  * mm;
+
+  // The sensors (Setting thickness to a fix value of 2 mm)
+  _left_sensor  = new GenericPhotosensor("F_SENSOR_L", _fiber_sensor_size,
+                                         _fiber_sensor_size, _fiber_sensor_thickness);
+  _right_sensor = new GenericPhotosensor("F_SENSOR_R", _fiber_sensor_size,
+                                         _fiber_sensor_size, _fiber_sensor_thickness);
 }
 
 
@@ -201,12 +204,6 @@ void NextFlexFieldCage::DefineConfigurationParameters()
                           "Number of fiber claddings.");
   fiber_claddings_cmd.SetParameterName("fiber_claddings", false);
   fiber_claddings_cmd.SetRange("fiber_claddings>=0 && fiber_claddings<=2");
-
-  G4GenericMessenger::Command& fiber_sensor_pde_cmd =
-    _msg->DeclareProperty("fiber_sensor_pde", _fiber_sensor_pde,
-                          "Fiber sensors photon detection efficiency.");
-  fiber_sensor_pde_cmd.SetParameterName("fiber_sensor_pde", false);
-  fiber_sensor_pde_cmd.SetRange("fiber_sensor_pde>=0. && fiber_sensor_pde<=1.");
 
   G4GenericMessenger::Command& fiber_sensor_bin_cmd =
     _msg->DeclareProperty("fiber_sensor_time_binning", _fiber_sensor_bin,
@@ -664,6 +661,9 @@ void NextFlexFieldCage::BuildLightTube()
 
 void NextFlexFieldCage::BuildFibers()
 {
+  // Number of fibers
+  _num_fibers   = (G4int) (twopi * _fiber_inner_rad / _fiber_thickness);
+
   // Radius of the different volumes being built
   G4double inner_rad    = _fiber_inner_rad;
   G4double outer_rad    = _fiber_inner_rad + _fiber_thickness;
@@ -815,6 +815,7 @@ void NextFlexFieldCage::BuildFibers()
 
   /// Verbosity ///
   if (_verbosity) {
+    G4cout << "* Number of fibers: " << _num_fibers << G4endl;
     G4cout << "* Fiber.  Inner Rad: " << _fiber_inner_rad << 
               "   Outer Rad: " << _fiber_inner_rad + _fiber_thickness << G4endl;
     G4cout << "* Fiber Z positions: " << _fiber_iniZ <<
@@ -826,145 +827,87 @@ void NextFlexFieldCage::BuildFibers()
 
 void NextFlexFieldCage::BuildFiberSensors()
 {
-  G4double fiber_sensor_inner_rad  = _fiber_inner_rad;
-  G4double fiber_sensor_outer_rad  = fiber_sensor_inner_rad + _fiber_sensor_size;
-
-  G4int num_fibers   = (G4int) (twopi * fiber_sensor_inner_rad / _fiber_sensor_size);
-  _num_fiber_sensors = num_fibers; // Setting num sensors = num_fibers
-
+  // Num fiber sesnors per plane
+  _num_fiber_sensors = (G4int) (twopi * _fiber_inner_rad / _fiber_sensor_size);
   G4double fiber_sensor_phi = twopi / _num_fiber_sensors;
 
-  /// Fiber Sensor Case ///
-  G4String case_name = "FIBER_SENSOR_CASE";
+  if (_num_fibers != _num_fiber_sensors)
+    G4cout << "* WARNING::BuildFiberSensors - Diferent sizes of fibers and their sensors"
+           << G4endl;
 
-  // Setting a higher thickness for a better visualization
-  G4double case_thickness  = 20 * mm;
+  // Positions to place the sensors
+  G4double sensor_rad        = _fiber_inner_rad + _fiber_sensor_size/2.;
+  G4double sensor_left_posZ  = _fiber_iniZ - _fiber_sensor_thickness/2.;
+  G4double sensor_right_posZ = _fiber_finZ + _fiber_sensor_thickness/2.;
 
-  G4double case_left_posZ  = _fiber_iniZ - case_thickness/2.;
-  G4double case_right_posZ = _fiber_finZ + case_thickness/2.;
+  /// Constructing the sensors
+  // Optical Properties of the sensor
+  G4MaterialPropertiesTable* photosensor_mpt = new G4MaterialPropertiesTable();
+  G4double energy[]       = {0.2 * eV, 11.5 * eV};
+  G4double reflectivity[] = {0.0     ,  0.0};
+  G4double efficiency[]   = {1.0     ,  1.0};
+  photosensor_mpt->AddProperty("REFLECTIVITY", energy, reflectivity, 2);
+  photosensor_mpt->AddProperty("EFFICIENCY",   energy, efficiency,   2);
+  _left_sensor ->SetOpticalProperties(photosensor_mpt);
+  _right_sensor->SetOpticalProperties(photosensor_mpt);
 
-  // Add to _fiber_sensor_case_mat the refraction index of fiber_core (neighbor material)
-  G4MaterialPropertiesTable* fiber_sensor_case_optProp = new G4MaterialPropertiesTable();
-  fiber_sensor_case_optProp->AddProperty("RINDEX",
-    _fiber_mat->GetMaterialPropertiesTable()->GetProperty("RINDEX"));
-  _fiber_sensor_case_mat->SetMaterialPropertiesTable(fiber_sensor_case_optProp);
+  // Adding to sensors encasing, the Reractive Index of fibers to avoid reflections
+  G4MaterialPropertyVector* fibers_rindex = 
+    _fiber_mat->GetMaterialPropertiesTable()->GetProperty("RINDEX");
+  _left_sensor  ->SetWindowRefractiveIndex(fibers_rindex);
+  _right_sensor ->SetWindowRefractiveIndex(fibers_rindex);
 
-  // Building the Fiber Sensor case
-  G4Tubs* case_solid =
-    new G4Tubs(case_name, fiber_sensor_inner_rad, fiber_sensor_outer_rad,
-               case_thickness/2., 0., fiber_sensor_phi);
+  // Construct
+  _left_sensor ->Construct();
+  _right_sensor->Construct();
 
-  G4LogicalVolume* left_case_logic =
-    new G4LogicalVolume(case_solid, _fiber_sensor_case_mat, case_name);
+  G4LogicalVolume* left_sensor_logic  = _left_sensor ->GetLogicalVolume();
+  G4LogicalVolume* right_sensor_logic = _right_sensor->GetLogicalVolume();
 
-  G4LogicalVolume* right_case_logic =
-    new G4LogicalVolume(case_solid, _fiber_sensor_case_mat, case_name);
+  /// Placing the sensors
+  G4RotationMatrix sensor_left_rot;
+  G4RotationMatrix sensor_right_rot;
+  sensor_right_rot.rotateY(pi);
 
-  // Visibilities
-  if (_visibility) {
-    G4VisAttributes red_col = nexus::BloodRed();
-    red_col.SetForceSolid(true);
-    left_case_logic ->SetVisAttributes(red_col);
-    right_case_logic->SetVisAttributes(red_col);
-  }
-  else {
-    left_case_logic ->SetVisAttributes(G4VisAttributes::Invisible);
-    right_case_logic->SetVisAttributes(G4VisAttributes::Invisible);
-  }
+  for (G4int sensor_id=0; sensor_id < _num_fiber_sensors; sensor_id++) {
 
+    G4double phi = sensor_id * fiber_sensor_phi;
 
-  /// Fiber Sensor ///
-  G4String fiber_sensor_name = "FIBER_SENSOR";
+    // Left Sensors
+    if (sensor_id > 0) sensor_left_rot.rotateZ(-fiber_sensor_phi);
 
-  G4double fiber_sensor_thickness  = 10 * um;
-  G4double gap_surf_phot           =  5 * um;
+    G4ThreeVector case_left_pos = G4ThreeVector(sensor_rad * sin(phi),
+                                                sensor_rad * cos(phi),
+                                                sensor_left_posZ);
 
-  G4double fiber_sensor_left_posZ  = case_thickness/2. - gap_surf_phot
-                                     - fiber_sensor_thickness/2.;
-  G4double fiber_sensor_right_posZ = - case_thickness/2. + gap_surf_phot
-                                     + fiber_sensor_thickness/2.;
-
-  G4Tubs* fiber_sensor_solid =
-    new G4Tubs(fiber_sensor_name, fiber_sensor_inner_rad, fiber_sensor_outer_rad,
-               fiber_sensor_thickness/2., 0., fiber_sensor_phi);
-
-  G4LogicalVolume* fiber_sensor_logic =
-    new G4LogicalVolume(fiber_sensor_solid, _fiber_sensor_mat, fiber_sensor_name);
-
-  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., fiber_sensor_left_posZ),
-                    fiber_sensor_logic, fiber_sensor_name + "_L", left_case_logic,
-                    false, 0, _verbosity);
-
-  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., fiber_sensor_right_posZ),
-                    fiber_sensor_logic, fiber_sensor_name + "_R", right_case_logic,
-                    false, 0, _verbosity);
-
-  // Visibilities
-  fiber_sensor_logic->SetVisAttributes(G4VisAttributes::Invisible);
-
-  // READOUT optical properties
-  G4MaterialPropertiesTable* fiber_sensor_optProp = new G4MaterialPropertiesTable();
-
-  const G4int entries = 4;
-  G4double energies[entries] = {1.00 * eV, 3.26 * eV, 3.27 * eV, 100. * eV};
-
-  // It does not reflect anything
-  G4double sensor_reflectivity[entries] = {0., 0., 0., 0.};
-
-  fiber_sensor_optProp->AddProperty("REFLECTIVITY", energies,
-                                    sensor_reflectivity, entries);
-
-  // It detects 0% for UV and "pde" for visible
-  G4double sensor_efficiency[entries] = {_fiber_sensor_pde, _fiber_sensor_pde, 0., 0.};
-
-  fiber_sensor_optProp->AddProperty("EFFICIENCY", energies,
-                                    sensor_efficiency, entries);
-
-  G4OpticalSurface* fiber_sensor_optSurf = 
-    new G4OpticalSurface(fiber_sensor_name, unified, polished, dielectric_metal);
-
-  fiber_sensor_optSurf->SetMaterialPropertiesTable(fiber_sensor_optProp);
-
-  new G4LogicalSkinSurface(fiber_sensor_name, fiber_sensor_logic, fiber_sensor_optSurf);
-
-  // fiber sensor sensitive detector 
-  G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
-  if (!sdmgr->FindSensitiveDetector(fiber_sensor_name, false)) {
-    PmtSD* fiber_sensor_sd = new PmtSD(fiber_sensor_name);
-    fiber_sensor_sd->SetDetectorVolumeDepth(0);
-    fiber_sensor_sd->SetMotherVolumeDepth(0);
-    fiber_sensor_sd->SetTimeBinning(_fiber_sensor_bin);
-
-    G4SDManager::GetSDMpointer()->AddNewDetector(fiber_sensor_sd);
-    left_case_logic ->SetSensitiveDetector(fiber_sensor_sd);
-    right_case_logic->SetSensitiveDetector(fiber_sensor_sd);
-  }
-
-
-  /// Placing the sensor cases (one per sector) ///
-  G4RotationMatrix fiber_sensor_rot;
-  for (G4int sector_id=0; sector_id < _num_fiber_sensors; sector_id++) {
-
-    if (sector_id > 0) fiber_sensor_rot.rotateZ(fiber_sensor_phi);
-
-    new G4PVPlacement(G4Transform3D(fiber_sensor_rot,
-                      G4ThreeVector(0., 0., case_left_posZ)),
-                      left_case_logic, fiber_sensor_name + "_L", _mother_logic,
-                      true, _first_left_sensor_id + sector_id, false);
+    new G4PVPlacement(G4Transform3D(sensor_left_rot, case_left_pos), left_sensor_logic,
+                      left_sensor_logic->GetName(), _mother_logic, true,
+                      _first_left_sensor_id + sensor_id, false);
   
-    new G4PVPlacement(G4Transform3D(fiber_sensor_rot,
-                      G4ThreeVector(0., 0., case_right_posZ)),
-                      right_case_logic, fiber_sensor_name + "_R", _mother_logic,
-                      true, _first_right_sensor_id + sector_id, false);
+    // Right Sensors
+    if (sensor_id > 0) sensor_right_rot.rotateZ(-fiber_sensor_phi);
+
+    G4ThreeVector case_right_pos = G4ThreeVector(sensor_rad * sin(phi),
+                                                 sensor_rad * cos(phi),
+                                                 sensor_right_posZ);
+
+    new G4PVPlacement(G4Transform3D(sensor_right_rot, case_right_pos), right_sensor_logic,
+                                    right_sensor_logic->GetName(), _mother_logic, true,
+                                    _first_right_sensor_id + sensor_id, false);
   }
 
   /// Verbosity
   if (_verbosity) {
-    G4cout << "* Num fibers          : " << num_fibers  << G4endl;
-    G4cout << "* Num fiber sensors   : " << _num_fiber_sensors << G4endl;
-    G4cout << "* Num fibers / sector : ";
-    G4cout << 1. * num_fibers / _num_fiber_sensors << G4endl;
-    G4cout << "* Fiber sector phi (deg): " << fiber_sensor_phi / deg << G4endl;  
+    G4cout << "* Num fiber sensors   : " << _num_fiber_sensors << " * 2" << G4endl;
+    G4cout << "* Num fibers / sensor : "
+           << 1. * _num_fibers / _num_fiber_sensors << G4endl;
+    G4cout << "* Fiber sensor phi (deg): " << fiber_sensor_phi / deg << G4endl;
+    G4cout << "* LEFT  sensors Z positions: "
+           << sensor_left_posZ - _fiber_sensor_thickness/2. << " to " 
+           << sensor_left_posZ + _fiber_sensor_thickness/2. << G4endl;
+    G4cout << "* RIGHT sensors Z positions: "
+           << sensor_right_posZ - _fiber_sensor_thickness/2. << " to " 
+           << sensor_right_posZ + _fiber_sensor_thickness/2. << G4endl;
   }
 }
 

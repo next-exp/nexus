@@ -21,7 +21,6 @@
 #include <G4UnitsTable.hh>
 #include <G4GenericMessenger.hh>
 #include <G4Tubs.hh>
-#include <G4Box.hh>
 #include <G4SubtractionSolid.hh>
 #include <G4TransportationManager.hh>
 #include <G4RotationMatrix.hh>

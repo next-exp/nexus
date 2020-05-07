@@ -21,6 +21,8 @@ class G4GenericMessenger;
 namespace nexus {
 
   class CylinderPointSampler2020;
+  class GenericPhotosensor;
+
 
   class NextFlexFieldCage: public BaseGeometry {
 
@@ -135,10 +137,14 @@ namespace nexus {
     G4double _cladding_perc;
     G4double _fiber_iniZ;
     G4double _fiber_finZ;
+    G4int    _num_fibers;
 
     // FIBER SENSORS
+    GenericPhotosensor* _left_sensor;
+    GenericPhotosensor* _right_sensor;
+
     G4double _fiber_sensor_size;
-    G4double _fiber_sensor_pde;
+    G4double _fiber_sensor_thickness;
     G4double _fiber_sensor_bin;
     G4int    _num_fiber_sensors;
 
