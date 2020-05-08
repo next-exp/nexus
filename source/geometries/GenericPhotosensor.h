@@ -62,10 +62,9 @@ namespace nexus {
     G4String name_;
     
     G4double width_, height_, thickness_;
-    G4double sensitive_z_;
-    G4double case_x_, case_y_, case_z_;
-    G4double window_x_,   window_y_,   window_z_;
-    G4double wls_x_,      wls_y_,      wls_z_;
+    G4double window_thickness_;
+    G4double sensarea_width_, sensarea_height_, sensarea_thickness_;
+    G4double wls_thickness_;
 
     G4Material* case_mat_;
     G4Material* window_mat_;
@@ -85,8 +84,8 @@ namespace nexus {
   };
 
 
-  inline G4double GenericPhotosensor::GetWidth()       const { return case_x_; }
-  inline G4double GenericPhotosensor::GetHeight()      const { return case_y_; }
+  inline G4double GenericPhotosensor::GetWidth()       const { return width_; }
+  inline G4double GenericPhotosensor::GetHeight()      const { return height_; }
   inline G4double GenericPhotosensor::GetThickness()   const { return thickness_; }
   inline const G4String& GenericPhotosensor::GetName() const { return name_; }
 

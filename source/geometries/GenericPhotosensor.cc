@@ -69,31 +69,25 @@ GenericPhotosensor::~GenericPhotosensor()
 
 void GenericPhotosensor::ComputeDimensions()
 {
-  // Encasing 0.1mm bigger than the sensitive area
-  case_x_ = width_  + 0.1 * mm;
-  case_y_ = height_ + 0.1 * mm;
-  case_z_ = thickness_;
-
   // Window thickness of 0.2mm (Similar to Sensl SiPMs)
-  window_x_ = case_x_;
-  window_y_ = case_y_;
-  window_z_ = 0.2 * mm;
+  window_thickness_ = 0.2 * mm;
 
-  // Sensitive area thickness of 0.2mm (Similar to Sensl SiPMs)
-  sensitive_z_ = 0.2 * mm;
+  // Sensitive thickness of 0.2 mm (Similar to Sensl SiPMs)
+  // Sensitive area smaller than case in 1 micron
+  sensarea_thickness_ = 0.2 * mm;
+  sensarea_width_     = width_  - 1. * micrometer;
+  sensarea_height_    = height_ - 1. * micrometer;
 
   // Check that window + sensitive fits into the case
-  if ((window_z_ + sensitive_z_) > case_z_) {
+  if ((window_thickness_ + sensarea_thickness_) > thickness_) {
     G4cout << "*** Sensor thickness required size_z >= "
-           << window_z_ + sensitive_z_ << " mm" << G4endl;
+           << window_thickness_ + sensarea_thickness_ << " mm" << G4endl;
     G4Exception("[GenericPhotosensor]", "ComputeDimensions()", FatalException,
                 "Sensor thickness too small.");
   }
 
   // WLS coating dimensions (thickness = 1 micron by definition)
-  wls_x_ = case_x_;
-  wls_y_ = case_y_;
-  wls_z_ = 1. * micrometer;
+  wls_thickness_ = 1. * micrometer;
 }
 
 
@@ -152,7 +146,7 @@ void GenericPhotosensor::Construct()
   G4String name = name_ + "_CASE";
 
   G4Box* case_solid_vol =
-    new G4Box(name, case_x_/2., case_y_/2., case_z_/2.);
+    new G4Box(name, width_/2., height_/2., thickness_/2.);
 
   G4LogicalVolume* case_logic_vol =
     new G4LogicalVolume(case_solid_vol, case_mat_, name);
@@ -164,12 +158,12 @@ void GenericPhotosensor::Construct()
   name = name_ + "_WINDOW";
 
   G4Box* window_solid_vol =
-    new G4Box(name, window_x_/2., window_y_/2., window_z_/2.);
+    new G4Box(name, width_/2., height_/2., window_thickness_/2.);
 
   G4LogicalVolume* window_logic_vol =
     new G4LogicalVolume(window_solid_vol, window_mat_, name);
 
-  G4double zpos = case_z_/2. - window_z_/2.;
+  G4double zpos = thickness_/2. - window_thickness_/2.;
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., zpos), window_logic_vol,
                     name, case_logic_vol, false, 0, false);
@@ -179,12 +173,12 @@ void GenericPhotosensor::Construct()
   name = name_ + "_SENSAREA";
 
   G4Box* sensarea_solid_vol =
-    new G4Box(name, width_/2., height_/2., sensitive_z_/2.);
+    new G4Box(name, sensarea_width_/2., sensarea_height_/2., sensarea_thickness_/2.);
 
   G4LogicalVolume* sensarea_logic_vol =
     new G4LogicalVolume(sensarea_solid_vol, sensitive_mat_, name);
 
-  zpos = case_z_/2. - window_z_ - sensitive_z_/2.;
+  zpos = thickness_/2. - window_thickness_ - sensarea_thickness_/2.;
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., zpos), sensarea_logic_vol,
                     name, case_logic_vol, false, 0, false);
@@ -196,11 +190,11 @@ void GenericPhotosensor::Construct()
     name = name_ + "_WLS";
 
     G4Box* wls_solid_vol =
-      new G4Box(name, wls_x_/2., wls_y_/2., wls_z_/2.);
+      new G4Box(name, width_/2., height_/2., wls_thickness_/2.);
 
     wls_logic_vol = new G4LogicalVolume(wls_solid_vol, wls_mat_, name);
 
-    zpos = window_z_/2. - wls_z_/2.;
+    zpos = window_thickness_/2. - wls_thickness_/2.;
 
     new G4PVPlacement(nullptr, G4ThreeVector(0., 0., zpos), wls_logic_vol,
                       name, window_logic_vol, false, 0, false);
