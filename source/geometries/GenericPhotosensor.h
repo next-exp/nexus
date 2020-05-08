@@ -47,6 +47,7 @@ namespace nexus {
     void SetWithWLSCoating       (G4bool with_wls_coating);
     void SetWindowRefractiveIndex(G4MaterialPropertyVector* rindex);
     void SetOpticalProperties    (G4MaterialPropertiesTable* mpt);
+    void SetTimeBinning          (G4double time_binning);
     void SetSensorDepth          (G4int sensor_depth);
     void SetMotherDepth          (G4int mother_depth);
     void SetNamingOrder          (G4int naming_order);
@@ -97,6 +98,9 @@ namespace nexus {
 
   inline void GenericPhotosensor::SetOpticalProperties(G4MaterialPropertiesTable* mpt)
   { sensitive_mpt_ = mpt; }
+
+  inline void GenericPhotosensor::SetTimeBinning(G4double time_binning)
+  { time_binning_ = time_binning; }
 
   inline void GenericPhotosensor::SetSensorDepth(G4int sensor_depth)
   { sensor_depth_ = sensor_depth; }

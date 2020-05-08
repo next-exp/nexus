@@ -50,13 +50,6 @@ GenericPhotosensor::GenericPhotosensor(G4String name,
   msg_ = new G4GenericMessenger(this, "/Geometry/" + name_ + '/',
                                 "Control commands of the generic photosensor geometry");
 
-  G4GenericMessenger::Command& time_binning_cmd =
-    msg_->DeclarePropertyWithUnit("time_binning", "ns", time_binning_,
-                                  "Time binning of the recorded waveform.");
-  time_binning_cmd.SetUnitCategory("Time");
-  time_binning_cmd.SetParameterName("time_binning", false);
-  time_binning_cmd.SetRange("time_binning>0.");
-
   msg_->DeclareProperty("visibility", visibility_,
                         "Visibility of the GenericPhotosensor volumes.");
 }
