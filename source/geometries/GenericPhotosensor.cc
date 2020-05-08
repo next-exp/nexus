@@ -113,7 +113,7 @@ void GenericPhotosensor::DefineMaterials()
   // Duplicate of 'optical silicone' to avoid interferences with other uses.
   window_mat_ =
     MaterialsList::CopyMaterial(MaterialsList::OpticalSilicone(),
-                                "PHOTOSENSOR_WINDOW_MATERIAL");
+                                name_ + "_WINDOW_MATERIAL");
   G4MaterialPropertiesTable* window_optProp = new G4MaterialPropertiesTable();
 
   // If the sensor has WLS coating the window must have the rindex from WLS
