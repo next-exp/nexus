@@ -128,7 +128,9 @@ void GenericPhotosensor::DefineMaterials()
   }
 
   // Sensitive /////
-  sensitive_mat_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Si");
+  sensitive_mat_ = 
+    MaterialsList::CopyMaterial(G4NistManager::Instance()->FindOrBuildMaterial("G4_Si"),
+                                name_ + "_SENSITIVE_MATERIAL");
 
   // WLS coating /////
   wls_mat_ = MaterialsList::TPB();
