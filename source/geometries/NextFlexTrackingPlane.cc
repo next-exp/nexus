@@ -53,7 +53,7 @@ NextFlexTrackingPlane::NextFlexTrackingPlane():
   _SiPM_sizeY        ( 1.3 * mm),   // Size Y (height) of SiPMs
   _SiPM_pitchX       (15.6 * mm),   // SiPMs pitch X
   _SiPM_pitchY       (15.6 * mm),   // SiPMs pitch Y
-  _SiPM_bin          ( 1.  * us),   // SiPMs time bin size
+  _SiPM_binning      ( 1.  * us),   // SiPMs time binning size
   _copper_thickness  (12.  * cm),   // Thickness of the copper plate
   _teflon_thickness  ( 5.  * mm),   // Thickness of the teflon mask
   _teflon_hole_diam  ( 7.  * mm)    // Diameter of teflon mask holes
@@ -161,12 +161,12 @@ void NextFlexTrackingPlane::DefineConfigurationParameters()
   sipm_pitchY_cmd.SetUnitCategory("Length");
   sipm_pitchY_cmd.SetRange("tp_sipm_pitchY>0.");
 
-  G4GenericMessenger::Command& sipm_bin_cmd =
-    _msg->DeclareProperty("tp_sipm_time_binning", _SiPM_bin,
+  G4GenericMessenger::Command& sipm_binning_cmd =
+    _msg->DeclareProperty("tp_sipm_time_binning", _SiPM_binning,
                           "Time bin size of SiPMs.");
-  sipm_bin_cmd.SetParameterName("tp_sipm_time_binning", false);
-  sipm_bin_cmd.SetUnitCategory("Time");
-  sipm_bin_cmd.SetRange("tp_sipm_time_binning>=0.");
+  sipm_binning_cmd.SetParameterName("tp_sipm_time_binning", false);
+  sipm_binning_cmd.SetUnitCategory("Time");
+  sipm_binning_cmd.SetRange("tp_sipm_time_binning>=0.");
 }
 
 
@@ -416,6 +416,9 @@ G4LogicalVolume* NextFlexTrackingPlane::BuildSiPM()
 
   // Set WLS coating
   _SiPM->SetWithWLSCoating(true);
+
+  // Set time binning
+  _SiPM->SetTimeBinning(_SiPM_binning);
 
   // Set mother depth & naming order
   _SiPM->SetSensorDepth(1);

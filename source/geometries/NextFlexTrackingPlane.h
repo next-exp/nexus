@@ -121,7 +121,7 @@ namespace nexus {
     G4double _SiPM_case_thickness;
     G4double _SiPM_pitchX;
     G4double _SiPM_pitchY;
-    G4double _SiPM_bin;
+    G4double _SiPM_binning;
     G4double _num_SiPMs;
 
     std::vector<G4ThreeVector> _SiPM_positions;

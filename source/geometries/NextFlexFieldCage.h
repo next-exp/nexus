@@ -145,7 +145,7 @@ namespace nexus {
 
     G4double _fiber_sensor_size;
     G4double _fiber_sensor_thickness;
-    G4double _fiber_sensor_bin;
+    G4double _fiber_sensor_binning;
     G4int    _num_fiber_sensors;
 
 

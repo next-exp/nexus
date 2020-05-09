@@ -58,7 +58,7 @@ NextFlexFieldCage::NextFlexFieldCage():
   _anode_transparency(0.95),               // Anode transparency
   _gate_transparency (0.95),               // Gate transparency
   _fiber_claddings   (2),                  // Number of fiber claddings (0, 1 or 2)
-  _fiber_sensor_bin  (100. * ns),          // Size of fiber sensors time bins
+  _fiber_sensor_binning (100. * ns),       // Size of fiber sensors time binning
   _wls_matName       ("TPB"),              // UV wls material name
   _fiber_matName     ("EJ280")             // Fiber core material name
 {
@@ -205,12 +205,12 @@ void NextFlexFieldCage::DefineConfigurationParameters()
   fiber_claddings_cmd.SetParameterName("fiber_claddings", false);
   fiber_claddings_cmd.SetRange("fiber_claddings>=0 && fiber_claddings<=2");
 
-  G4GenericMessenger::Command& fiber_sensor_bin_cmd =
-    _msg->DeclareProperty("fiber_sensor_time_binning", _fiber_sensor_bin,
+  G4GenericMessenger::Command& fiber_sensor_binning_cmd =
+    _msg->DeclareProperty("fiber_sensor_time_binning", _fiber_sensor_binning,
                           "Time bin size of fiber sensors.");
-  fiber_sensor_bin_cmd.SetParameterName("fiber_sensor_time_binning", false);
-  fiber_sensor_bin_cmd.SetUnitCategory("Time");
-  fiber_sensor_bin_cmd.SetRange("fiber_sensor_time_binning>=0.");
+  fiber_sensor_binning_cmd.SetParameterName("fiber_sensor_time_binning", false);
+  fiber_sensor_binning_cmd.SetUnitCategory("Time");
+  fiber_sensor_binning_cmd.SetRange("fiber_sensor_time_binning>=0.");
 }
 
 
@@ -856,6 +856,10 @@ void NextFlexFieldCage::BuildFiberSensors()
     _fiber_mat->GetMaterialPropertiesTable()->GetProperty("RINDEX");
   _left_sensor  ->SetWindowRefractiveIndex(fibers_rindex);
   _right_sensor ->SetWindowRefractiveIndex(fibers_rindex);
+
+  // Setting the time binning
+  _left_sensor  ->SetTimeBinning(_fiber_sensor_binning);
+  _right_sensor ->SetTimeBinning(_fiber_sensor_binning);
 
   // Construct
   _left_sensor ->Construct();
