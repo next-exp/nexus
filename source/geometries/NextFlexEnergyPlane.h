@@ -1,9 +1,9 @@
 // -----------------------------------------------------------------------------
 //  nexus | NextFlexEnergyPlane.h
 //
-//  * Info:         : NEXT-Flex Energy Plane geometry for performance studies.
-//  * Author        : <jmunoz@ific.uv.es>
-//  * Creation date : January 2020
+//  NEXT-Flex Energy Plane geometry for performance studies.
+//
+//  The NEXT Collaboration
 // -----------------------------------------------------------------------------
 
 #ifndef NEXT_FLEX_ENERGY_PLANE_H
@@ -74,7 +74,7 @@ namespace nexus {
     void GeneratePMTpositions();
 
     // Make the PMT corresponding holes in the solid volume passed.
-    G4SubtractionSolid* MakePMTholes(G4Tubs* the_solid);
+    G4SubtractionSolid* MakePMTholes(G4Tubs* the_solid, G4double length);
 
     // Different builders
     void BuildCopper();

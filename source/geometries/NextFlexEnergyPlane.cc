@@ -1,9 +1,9 @@
 // -----------------------------------------------------------------------------
 //  nexus | NextFlexEnergyPlane.cc
 //
-//  * Info:         : NEXT-Flex Energy Plane geometry for performance studies.
-//  * Author        : <jmunoz@ific.uv.es>
-//  * Creation date : January 2020
+//  NEXT-Flex Energy Plane geometry for performance studies.
+//
+//  The NEXT Collaboration
 // -----------------------------------------------------------------------------
 
 #include "NextFlexEnergyPlane.h"
@@ -179,8 +179,8 @@ void NextFlexEnergyPlane::Construct()
   // Verbosity
   if(_verbosity) {
     G4cout << G4endl << "*** NEXT-Flex Energy Plane ..." << G4endl;
-    G4cout << "  With PMTs:   " << _ep_with_PMTs   << G4endl;
-    G4cout << "  With teflon: " << _ep_with_teflon << G4endl;
+    G4cout << "* With PMTs:   " << _ep_with_PMTs   << G4endl;
+    G4cout << "* With teflon: " << _ep_with_teflon << G4endl;
   }
 
   // Getting volumes dimensions based on parameters.
@@ -190,7 +190,7 @@ void NextFlexEnergyPlane::Construct()
   DefineMaterials();
 
   // Copper
-  BuildCopper();
+  //BuildCopper();
 
   // Teflon
   if (_ep_with_teflon) { BuildTeflon(); }
@@ -222,7 +222,7 @@ void NextFlexEnergyPlane::BuildCopper()
 
   // If there are PMTs, make corresponding holes
   if (_ep_with_PMTs)
-    copper_solid = MakePMTholes(dynamic_cast<G4Tubs*>(copper_solid));
+    copper_solid = MakePMTholes(dynamic_cast<G4Tubs*>(copper_solid), _copper_thickness);
 
   G4LogicalVolume* copper_logic =
     new G4LogicalVolume(copper_solid, _copper_mat, copper_name);  
@@ -271,7 +271,7 @@ void NextFlexEnergyPlane::BuildTeflon()
 
   // If there are PMTs, make corresponding holes
   if (_ep_with_PMTs)
-    teflon_solid = MakePMTholes(dynamic_cast<G4Tubs*>(teflon_solid));
+    teflon_solid = MakePMTholes(dynamic_cast<G4Tubs*>(teflon_solid), _teflon_thickness);
 
   G4LogicalVolume* teflon_logic =
     new G4LogicalVolume(teflon_solid, _teflon_mat, teflon_name);
@@ -317,7 +317,7 @@ void NextFlexEnergyPlane::BuildTeflon()
 
   // If there are PMTs, make corresponding holes
   if (_ep_with_PMTs)
-    teflon_wls_solid = MakePMTholes(dynamic_cast<G4Tubs*>(teflon_wls_solid));
+    teflon_wls_solid = MakePMTholes(dynamic_cast<G4Tubs*>(teflon_wls_solid), _wls_thickness);
 
   G4LogicalVolume* teflon_wls_logic =
     new G4LogicalVolume(teflon_wls_solid, _wls_mat, teflon_wls_name);
@@ -516,12 +516,12 @@ void NextFlexEnergyPlane::GeneratePMTpositions()
 
 
 // Function that makes PMT holes to the solid passed by parameter
-G4SubtractionSolid* NextFlexEnergyPlane::MakePMTholes(G4Tubs* ini_solid)
+G4SubtractionSolid* NextFlexEnergyPlane::MakePMTholes(G4Tubs*  ini_solid,
+                                                      G4double length)
 {
-  G4double hole_halfLength = ini_solid->GetDz();
 
   G4Tubs* hole_solid = new G4Tubs("HOLE_SOLID", 0., _pmt_hole_diameter/2.,
-                                  hole_halfLength, 0., twopi);
+                                  length/2., 0., twopi);
 
   // Subtracting the first PMT hole
   G4SubtractionSolid* solid_with_holes =

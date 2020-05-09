@@ -1,9 +1,9 @@
 // -----------------------------------------------------------------------------
 //  nexus | NextFlexTrackingPlane.cc
 //
-//  * Info:         : NEXT-Flex Tracking Plane geometry for performance studies.
-//  * Author        : <jmunoz@ific.uv.es>
-//  * Creation date : January 2020
+//  NEXT-Flex Tracking Plane geometry for performance studies.
+//
+//  The NEXT Collaboration
 // -----------------------------------------------------------------------------
 
 #include "NextFlexTrackingPlane.h"

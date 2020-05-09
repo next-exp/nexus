@@ -1,9 +1,9 @@
 // -----------------------------------------------------------------------------
 //  nexus | NextFlexFieldCage.h
 //
-//  * Info:         : NEXT-Flex Field Cage geometry for performance studies.
-//  * Author        : <jmunoz@ific.uv.es>
-//  * Creation date : January 2020
+//  NEXT-Flex Field Cage geometry for performance studies.
+//
+//  The NEXT Collaboration
 // -----------------------------------------------------------------------------
 
 #ifndef NEXT_FLEX_FIELD_CAGE_H

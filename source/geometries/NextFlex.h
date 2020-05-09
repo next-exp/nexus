@@ -1,9 +1,9 @@
 // -----------------------------------------------------------------------------
 //  nexus | NextFlex.h
 //
-//  * Info          : NEXT-Flex Detector geometry for performance studies.
-//  * Author        : <jmunoz@ific.uv.es>
-//  * Creation date : January 2020
+//  NEXT-Flex Detector geometry for performance studies.
+//
+//  The NEXT Collaboration
 // -----------------------------------------------------------------------------
 
 #ifndef NEXT_FLEX_H
