@@ -1,8 +1,10 @@
 // -----------------------------------------------------------------------------
 //  nexus | Next100SiPMBoard.h
 //
-//  * Author: <justo.martin-albo@ific.uv.es>
-//  * Creation date: 7 January 2020
+//  NEXT-100 SiPM board implemntation. It contains the 8x8 SiPMs arranged in a
+//  square matrix, and the teflon masks.
+//
+//  The NEXT Collaboration
 // -----------------------------------------------------------------------------
 
 #ifndef NEXT100_SIPM_BOARD_H
