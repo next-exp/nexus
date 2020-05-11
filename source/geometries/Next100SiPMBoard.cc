@@ -13,6 +13,7 @@
 #include "BoxPointSampler.h"
 #include "Visibilities.h"
 
+#include <G4GenericMessenger.hh>
 #include <G4Box.hh>
 #include <G4Tubs.hh>
 #include <G4LogicalVolume.hh>
@@ -35,8 +36,18 @@ Next100SiPMBoard::Next100SiPMBoard():
   mask_thickness_  (  5.   * mm),
   mpv_             (nullptr),
   vtxgen_          (nullptr),
-  sipm_            (new GenericPhotosensor("SiPM", 1.3 * mm))
+  sipm_            (new GenericPhotosensor("SiPM", 1.3 * mm)),
+  time_binning_    (1. * microsecond)
 {
+  msg_ = new G4GenericMessenger(this, "/Geometry/Next100/",
+                                "Control commands of the NEXT-100 geometry.");
+
+  G4GenericMessenger::Command& time_binning_cmd =
+  msg_->DeclareProperty("sipm_time_binning", time_binning_,
+                          "TP SiPMs time binning size");
+  time_binning_cmd.SetParameterName("sipm_time_binning", false);
+  time_binning_cmd.SetUnitCategory("Time");
+  time_binning_cmd.SetRange("sipm_time_binning>0.");
 }
 
 
@@ -137,6 +148,8 @@ void Next100SiPMBoard::Construct()
   sipm_->SetWithWLSCoating(true);
   //sipm_->SetWindowRefractiveIndex(mother_gas->GetMaterialPropertiesTable()
   //                                ->GetProperty("RINDEX"));
+
+  sipm_->SetTimeBinning(time_binning_);
 
   sipm_->SetSensorDepth(2);
   sipm_->SetMotherDepth(4);

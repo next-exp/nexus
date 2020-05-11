@@ -13,7 +13,7 @@
 #include <vector>
 
 class G4VPhysicalVolume;
-
+class G4GenericMessenger;
 
 namespace nexus {
 
@@ -42,12 +42,14 @@ namespace nexus {
     const std::vector<G4ThreeVector>& GetSiPMPositions() const;
 
   private:
+    G4GenericMessenger* msg_;
     G4double size_, board_thickness_, pitch_, margin_;
     G4double mask_thickness_;
     std::vector<G4ThreeVector> sipm_positions_;
     G4VPhysicalVolume*  mpv_;
     BoxPointSampler*    vtxgen_;
     GenericPhotosensor* sipm_;
+    G4double            time_binning_;
   };
 
   inline void     Next100SiPMBoard::SetMotherPhysicalVolume(G4VPhysicalVolume* p)
