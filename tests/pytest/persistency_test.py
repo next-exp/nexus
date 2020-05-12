@@ -28,6 +28,7 @@ def test_hdf5_structure(input_file):
          assert 'hits'          in h5out.root.MC
          assert 'sns_response'  in h5out.root.MC
          assert 'configuration' in h5out.root.MC
+         assert 'sns_positions' in h5out.root.MC
 
 
          pcolumns = h5out.root.MC.particles.colnames
@@ -78,6 +79,16 @@ def test_hdf5_structure(input_file):
          assert 'sensor_id' in scolumns
          assert 'time_bin'  in scolumns
          assert 'charge'    in scolumns
+
+
+         sposcolumns = h5out.root.MC.sns_positions.colnames
+
+         assert 'sensor_id'   in sposcolumns
+         assert 'sensor_name' in sposcolumns
+         assert 'x'           in sposcolumns
+         assert 'y'           in sposcolumns
+         assert 'z'           in sposcolumns
+
 
 
 def test_particle_ids_of_hits_exist_in_particle_table(input_file):
