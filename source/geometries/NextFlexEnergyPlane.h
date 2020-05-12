@@ -74,7 +74,7 @@ namespace nexus {
     void GeneratePMTpositions();
 
     // Make the PMT corresponding holes in the solid volume passed.
-    G4SubtractionSolid* MakePMTholes(G4Tubs* the_solid, G4double length);
+    G4SubtractionSolid* MakePMTholes(G4SubtractionSolid* the_solid, G4double length);
 
     // Different builders
     void BuildCopper();

@@ -190,7 +190,7 @@ void NextFlexEnergyPlane::Construct()
   DefineMaterials();
 
   // Copper
-  //BuildCopper();
+  BuildCopper();
 
   // Teflon
   if (_ep_with_teflon) { BuildTeflon(); }
@@ -211,18 +211,32 @@ void NextFlexEnergyPlane::BuildCopper()
   G4Tubs* copper_solid_no_holes =
     new G4Tubs(copper_name, 0., _diameter/2., _copper_thickness/2., 0, twopi);
 
+  G4double copper_hole_length = copper_solid_no_holes->GetDz() + 1. * cm;
+
   // Making the central gas hole
   G4Tubs* copper_central_hole_solid =
     new G4Tubs("EP_COPPER_CENTRAL_HOLE", 0., _central_hole_diameter/2.,
-               copper_solid_no_holes->GetDz(), 0., twopi);
+               copper_hole_length, 0., twopi);
 
   G4SubtractionSolid* copper_solid =
     new G4SubtractionSolid(copper_name, copper_solid_no_holes,
                            copper_central_hole_solid, 0, G4ThreeVector(0.,0.,0.));
 
   // If there are PMTs, make corresponding holes
-  if (_ep_with_PMTs)
-    copper_solid = MakePMTholes(dynamic_cast<G4Tubs*>(copper_solid), _copper_thickness);
+  if (_ep_with_PMTs) {
+    // Making the pmt hole
+    G4Tubs* copper_pmt_hole_solid =
+      new G4Tubs("EP_COPPER_PMT_HOLE", 0., _pmt_hole_diameter/2.,
+                 copper_hole_length, 0., twopi);
+
+    for (G4int i=0; i < _num_pmts; i++) {
+    //for (G4int i=0; i < 40; i++) {
+      G4ThreeVector pmt_hole_pos = _pmt_positions[i];
+      pmt_hole_pos.setZ(0.);
+      copper_solid = new G4SubtractionSolid(copper_name, copper_solid,
+                                            copper_pmt_hole_solid, 0, pmt_hole_pos);
+    }
+  }
 
   G4LogicalVolume* copper_logic =
     new G4LogicalVolume(copper_solid, _copper_mat, copper_name);  
@@ -260,18 +274,32 @@ void NextFlexEnergyPlane::BuildTeflon()
   G4Tubs* teflon_solid_no_holes =
     new G4Tubs(teflon_name, 0., _diameter/2., _teflon_thickness/2., 0, twopi);
 
+  G4double teflon_hole_length = teflon_solid_no_holes->GetDz() + 1. * cm;
+
   // Making the central gas hole
   G4Tubs* teflon_central_hole_solid =
     new G4Tubs("EP_TEFLON_CENTRAL_HOLE", 0., _central_hole_diameter/2.,
-               teflon_solid_no_holes->GetDz(), 0., twopi);
+               teflon_hole_length, 0., twopi);
 
   G4SubtractionSolid* teflon_solid =
     new G4SubtractionSolid(teflon_name, teflon_solid_no_holes,
                            teflon_central_hole_solid, 0, G4ThreeVector(0.,0.,0.));
 
   // If there are PMTs, make corresponding holes
-  if (_ep_with_PMTs)
-    teflon_solid = MakePMTholes(dynamic_cast<G4Tubs*>(teflon_solid), _teflon_thickness);
+  if (_ep_with_PMTs) {
+    // Making the pmt hole
+    G4Tubs* teflon_pmt_hole_solid =
+      new G4Tubs("EP_TEFLON_PMT_HOLE", 0., _pmt_hole_diameter/2.,
+                 teflon_hole_length, 0., twopi);
+
+    //for (G4int i=0; i < 40; i++) {
+    for (G4int i=0; i < _num_pmts; i++) {
+      G4ThreeVector pmt_hole_pos = _pmt_positions[i];
+      pmt_hole_pos.setZ(0.);
+      teflon_solid = new G4SubtractionSolid(teflon_name, teflon_solid,
+                                            teflon_pmt_hole_solid, 0, pmt_hole_pos);
+    }
+  }
 
   G4LogicalVolume* teflon_logic =
     new G4LogicalVolume(teflon_solid, _teflon_mat, teflon_name);
@@ -283,7 +311,7 @@ void NextFlexEnergyPlane::BuildTeflon()
   // Visibility
   if (_visibility) {
     G4VisAttributes light_blue_col = nexus::LightBlue();
-    //light_blue_col.SetForceSolid(true);
+    light_blue_col.SetForceSolid(true);
     teflon_logic->SetVisAttributes(light_blue_col);
   }
   else teflon_logic->SetVisAttributes(G4VisAttributes::Invisible);
@@ -305,10 +333,12 @@ void NextFlexEnergyPlane::BuildTeflon()
   G4Tubs* teflon_wls_solid_no_holes =
     new G4Tubs(teflon_wls_name, 0., _diameter/2., _wls_thickness/2., 0, twopi);
 
+  G4double teflon_wls_hole_length = teflon_wls_solid_no_holes->GetDz() + 1. * cm;
+
   // Making the central gas hole
   G4Tubs* teflon_wls_central_hole_solid =
     new G4Tubs("EP_TEFLON_WLS_CENTRAL_HOLE", 0., _central_hole_diameter/2.,
-               teflon_wls_solid_no_holes->GetDz(), 0., twopi);
+               teflon_wls_hole_length, 0., twopi);
 
   G4SubtractionSolid* teflon_wls_solid =
     new G4SubtractionSolid(teflon_wls_name, teflon_wls_solid_no_holes,
@@ -316,8 +346,20 @@ void NextFlexEnergyPlane::BuildTeflon()
                            G4ThreeVector(0.,0.,0.));
 
   // If there are PMTs, make corresponding holes
-  if (_ep_with_PMTs)
-    teflon_wls_solid = MakePMTholes(dynamic_cast<G4Tubs*>(teflon_wls_solid), _wls_thickness);
+  if (_ep_with_PMTs) {
+    // Making the pmt hole
+    G4Tubs* teflon_wls_pmt_hole_solid =
+      new G4Tubs("EP_TEFLON_WLS_PMT_HOLE", 0., _pmt_hole_diameter/2.,
+                 teflon_wls_hole_length, 0., twopi);
+
+    //for (G4int i=0; i < 40; i++) {
+    for (G4int i=0; i < _num_pmts; i++) {
+      G4ThreeVector pmt_hole_pos = _pmt_positions[i];
+      pmt_hole_pos.setZ(0.);
+      teflon_wls_solid = new G4SubtractionSolid(teflon_wls_name, teflon_wls_solid,
+                                                teflon_wls_pmt_hole_solid, 0, pmt_hole_pos);
+    }
+  }
 
   G4LogicalVolume* teflon_wls_logic =
     new G4LogicalVolume(teflon_wls_solid, _wls_mat, teflon_wls_name);
@@ -339,6 +381,7 @@ void NextFlexEnergyPlane::BuildTeflon()
   new G4LogicalBorderSurface("GAS_TEFLON_WLS_OPSURF", _neigh_gas_phys,
                              teflon_wls_phys, teflon_wls_optSurf);
 
+
   /// Verbosity ///
   if (_verbosity) {
     G4cout << "* EP Teflon Z positions: " << _teflon_iniZ
@@ -357,8 +400,8 @@ void NextFlexEnergyPlane::BuildPMTs()
   G4String pmt_hole_name = "PMT_HOLE";
 
   // It must be at least the copper plate thickness
-  // and enough to accomodate all the PMTs related stuff
-  G4double pmt_hole_length = _copper_thickness + 20 * mm;
+  // and enough to accomodate the overall PMTs stuff
+  G4double pmt_hole_length = _copper_thickness + 50 * mm;
 
   G4Tubs* pmt_hole_solid =
     new G4Tubs(pmt_hole_name, 0., _pmt_hole_diameter/2., pmt_hole_length/2., 0, twopi);
@@ -386,7 +429,12 @@ void NextFlexEnergyPlane::BuildPMTs()
                       window_name, pmt_hole_logic, false, 0, _verbosity);
 
   // Visibility
-  window_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  if (_visibility) {
+    G4VisAttributes blue_col = nexus::Blue();
+    blue_col.SetForceSolid(true);
+    window_logic->SetVisAttributes(blue_col);
+  }
+  else window_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
   // Vextex generator
   _window_gen = new CylinderPointSampler2020(window_phys);
@@ -457,6 +505,7 @@ void NextFlexEnergyPlane::BuildPMTs()
   _pmt_hole_posZ = _copper_iniZ + pmt_hole_length/2.;
   G4ThreeVector pmt_hole_pos;
   for (int pmt_id=0; pmt_id < _num_pmts; pmt_id++) {
+  //for (int pmt_id=0; pmt_id < 40; pmt_id++) {
     pmt_hole_pos = _pmt_positions[pmt_id];
     pmt_hole_pos.setZ(_pmt_hole_posZ);
     new G4PVPlacement(nullptr, pmt_hole_pos, pmt_hole_logic, pmt_hole_name,
@@ -516,7 +565,7 @@ void NextFlexEnergyPlane::GeneratePMTpositions()
 
 
 // Function that makes PMT holes to the solid passed by parameter
-G4SubtractionSolid* NextFlexEnergyPlane::MakePMTholes(G4Tubs*  ini_solid,
+G4SubtractionSolid* NextFlexEnergyPlane::MakePMTholes(G4SubtractionSolid*  ini_solid,
                                                       G4double length)
 {
 
