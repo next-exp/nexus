@@ -26,6 +26,7 @@
 #include <G4HCtable.hh>
 #include <G4RunManager.hh>
 #include <G4Run.hh>
+#include <G4OpticalPhoton.hh>
 
 #include <string>
 #include <sstream>
@@ -153,6 +154,24 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc) //,
   for (G4int i=0; i<tc->entries(); ++i) {
     Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[i]);
     if (!trj) continue;
+
+    G4bool save_opt_phot = false;
+    std::ifstream init_history(_historyFile_init, std::ifstream::in);
+
+    while (init_history.good()) {
+      std::string key, value;
+      std::getline(init_history, key, ' ');
+      std::getline(init_history, value);
+      if ((key == "/Actions/RegisterTrackingAction") && (value == "OPTICAL")) {
+        save_opt_phot = true;
+        break;
+     }
+   }
+
+    if ((trj->GetParticleDefinition() == G4OpticalPhoton::Definition()) &&
+        (save_opt_phot == false)) {
+      continue;
+    }
 
     G4int trackid = trj->GetTrackID();
 

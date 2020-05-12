@@ -53,15 +53,15 @@ G4UserRunAction* ActionsFactory::CreateRunAction() const
 //////////////////////////////////////////////////////////////////////
 #include "DefaultEventAction.h"
 #include "ELSimEventAction.h"
+#include "AnalysisEventAction.h"
 
 G4UserEventAction* ActionsFactory::CreateEventAction() const
 {
   G4UserEventAction* p = 0;
 
   if      (_evtact_name == "DEFAULT") p = new DefaultEventAction();
-
   else if (_evtact_name == "EL_SIM") p = new ELSimEventAction();
-
+  else if (_evtact_name == "ANALYSIS") p = new AnalysisEventAction();
   else {
     G4String err = "Unknown user event action: " + _evtact_name;
     G4Exception("CreateEventAction()", "[ActionsFactory]", JustWarning, err);

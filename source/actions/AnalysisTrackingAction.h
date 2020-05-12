@@ -1,10 +1,8 @@
 // ----------------------------------------------------------------------------
 ///  \file   AnalysisTrackingAction.h
-///  \brief  General-purpose user tracking action.
 ///
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     25 Mar 2013 
-///  \version  $Id$
+///  \author   <justo.martin-albo@ific.uv.es>, <paola.ferrario@dipc.org>
+///  \date     25 Mar 2013
 ///
 ///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
@@ -37,18 +35,19 @@ namespace nexus {
     virtual void PostUserTrackingAction(const G4Track*);
 
   private:
-    G4int cer, scint;
 
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
+    G4String file_name_;
     G4int file_no_;
-    
-    //TH1F* hScintEnergy;
-    //TH1F* hCherEnergy;
 
-    TH1F* hScintLambda;
-    TH1F* hCherLambda;
-    
-    TFile* Times;
+    //TH1F* hScintEnergy_;
+    //TH1F* hCherEnergy_;
+
+    TH1F* hCherLambda_;
+    TH1F* hScintLambda_;
+    TH1F* hScintTime;
+
+    TFile* OptPhotons_;
   };
 
 }

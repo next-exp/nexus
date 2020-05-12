@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author : <justo.martin-albo@ific.uv.es>    
+//  Author : <justo.martin-albo@ific.uv.es>, <paola.ferrario@dipc.org>
 //  Created: 25 March 2013
 //
 //  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
@@ -33,28 +33,33 @@ using namespace nexus;
 
 
 
-AnalysisTrackingAction::AnalysisTrackingAction(): G4UserTrackingAction(), file_no_(0)
+AnalysisTrackingAction::AnalysisTrackingAction(): G4UserTrackingAction(),
+                                                  file_name_("OpticalTracking"),
+                                                  file_no_(0)
 {
-  _msg = new G4GenericMessenger(this, "/Actions/AnalysisTrackingAction/");
-  _msg->DeclareProperty("file_number", file_no_, "");
+  msg_ = new G4GenericMessenger(this, "/Actions/AnalysisTrackingAction/");
+  msg_->DeclareProperty("file_name", file_name_, "");
+  msg_->DeclareProperty("file_number", file_no_, "");
 
-    /*
-  cer = 0;
-  // scint = 0;
-  hCherEnergy = new TH1F("CherEnergy", "CherEnergy", 1000, 0, 10.);
-  hCherEnergy->GetXaxis()->SetTitle("energy (eV)");
+  /*
+  hCherEnergy_ = new TH1F("CherEnergy", "CherEnergy", 1000, 0, 10.);
+  hCherEnergy_->GetXaxis()->SetTitle("energy (eV)");
 
-  hScintEnergy = new TH1F("ScintEnergy", "ScintEnergy", 1000, 0, 10.);
-  hScintEnergy->GetXaxis()->SetTitle("energy (eV)");
-
-
+  hScintEnergy_ = new TH1F("ScintEnergy", "ScintEnergy", 1000, 0, 10.);
+  hScintEnergy_->GetXaxis()->SetTitle("energy (eV)");
   */
 
-  hCherLambda = new TH1F("CherLambdaProd", "Production wavelength", 1000, 0, 1500.);
-  hCherLambda->GetXaxis()->SetTitle("wavelength (nm)");
+  hCherLambda_ = new TH1F("CherLambda", "CherLambda", 1000, 0, 1500.);
+  hCherLambda_->GetXaxis()->SetTitle("wavelength (nm)");
+  hCherLambda_->GetYaxis()->SetTitle("Entries / bin");
 
-  hScintLambda = new TH1F("ScintLambda", "ScintLambda", 1000, 0, 800.);
-  hScintLambda->GetXaxis()->SetTitle("wavelength (nm)");
+  hScintLambda_ = new TH1F("ScintLambda", "ScintLambda", 1000, 0, 800.);
+  hScintLambda_->GetXaxis()->SetTitle("wavelength (nm)");
+  hScintLambda_->GetYaxis()->SetTitle("Entries / bin");
+
+  hScintTime = new TH1F("ScintillationTime", "ScintillationTime", 8000, 0, 40000.);
+  hScintTime->GetXaxis()->SetTitle("Time (ps)");
+  hScintTime->GetYaxis()->SetTitle("Entries / bin");
 
 }
 
@@ -62,20 +67,17 @@ AnalysisTrackingAction::AnalysisTrackingAction(): G4UserTrackingAction(), file_n
 
 AnalysisTrackingAction::~AnalysisTrackingAction()
 {
-  /*
-  G4cout << "Tot Cerenkov = " << cer << G4endl;
-  // G4cout << "Tot scintillation = " << scint << G4endl;
-  */
   std::ostringstream file_number;
   file_number << file_no_;
-  G4String filename = "ProductionCherLXe."+file_number.str()+".root";
-  Times = new TFile(filename, "recreate");
-  // hCherEnergy->Write();
-  // hScintEnergy->Write();
-  hCherLambda->Write();
-  hScintLambda->Write();
-  Times->Close();
-  
+  G4String filename = file_name_+"."+file_number.str()+".root";
+  OptPhotons_ = new TFile(filename, "recreate");
+  // hCherEnergy_->Write();
+  // hScintEnergy_->Write();
+  hCherLambda_->Write();
+  hScintLambda_->Write();
+  hScintTime->Write();
+  OptPhotons_->Close();
+
 }
 
 
@@ -84,34 +86,29 @@ void AnalysisTrackingAction::PreUserTrackingAction(const G4Track* track)
 {
   // if ( track->GetCreatorProcess())
   //   G4cout << track->GetCreatorProcess()->GetProcessName()  << G4endl;
-  // Do nothing if the track is an optical photon or an ionization electron
-   
+  // Do nothing if the track is an optical photon
+
   if (track->GetDefinition() == G4OpticalPhoton::Definition()) {
-    fpTrackingManager->SetStoreTrajectory(false);    
-      
- 
+
      if (track->GetCreatorProcess()->GetProcessName() == "Cerenkov") {
-  	cer+= 1;
-	//track->CalculateVelocityForOpticalPhoton()
-	hCherLambda->Fill(h_Planck*c_light/track->GetKineticEnergy()/nanometer);	
-     } 
-     
+       //track->CalculateVelocityForOpticalPhoton()
+       hCherLambda_->Fill(h_Planck*c_light/track->GetKineticEnergy()/nanometer);
+     }
+
      else if (track->GetCreatorProcess()->GetProcessName() == "Scintillation") {
-       scint += 1;
-       hScintLambda->Fill(h_Planck*c_light/track->GetKineticEnergy()/nanometer);
-     }  
-     
-      return;
+       hScintLambda_->Fill(h_Planck*c_light/track->GetKineticEnergy()/nanometer);
+       hScintTime->Fill(track->GetGlobalTime()/picosecond);
+     }
   }
 
 
   // Create a new trajectory associated to the track.
   // N.B. If the processesing of a track is interrupted to be resumed
   // later on (to process, for instance, its secondaries) more than
-  // one trajectory associated to the track will be created, but 
+  // one trajectory associated to the track will be created, but
   // the event manager will merge them at some point.
   G4VTrajectory* trj = new Trajectory(track);
-  
+
    // Set the trajectory in the tracking manager
   fpTrackingManager->SetStoreTrajectory(true);
   fpTrackingManager->SetTrajectory(trj);
@@ -121,9 +118,6 @@ void AnalysisTrackingAction::PreUserTrackingAction(const G4Track* track)
 
 void AnalysisTrackingAction::PostUserTrackingAction(const G4Track* track)
 {
-  // Do nothing if the track is an optical photon or an ionization electron
-  if (track->GetDefinition() == G4OpticalPhoton::Definition()) return;
-
   Trajectory* trj = (Trajectory*) TrajectoryMap::Get(track->GetTrackID());
 
   // Do nothing if the track has no associated trajectory in the map
