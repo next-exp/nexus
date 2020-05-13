@@ -1,8 +1,7 @@
 // -----------------------------------------------------------------------------
 //  nexus | GenericPhotosensor.cc
 //
-//  Implementation of a sensor (typically a SiPm) which has all its parameters
-//  settable by parameter.
+//  Geometry of a configurable box-shaped photosensor.
 //
 //  The NEXT Collaboration
 // -----------------------------------------------------------------------------
@@ -40,9 +39,9 @@ GenericPhotosensor::GenericPhotosensor(G4String name,
   with_wls_coating_ (false),
   window_rindex_   (nullptr),
   sensitive_mpt_   (nullptr),
-  sensor_depth_    (1),          // Be sure to set it properly
-  mother_depth_    (1),          // Be sure to set it properly
-  naming_order_    (1),          // Be sure to set it properly
+  sensor_depth_    (-1),
+  mother_depth_    (-1),
+  naming_order_    (-1),
   time_binning_    (1.0 * us),
   visibility_      (false)
 {
@@ -69,7 +68,7 @@ GenericPhotosensor::~GenericPhotosensor()
 
 void GenericPhotosensor::ComputeDimensions()
 {
-  // Window thickness of 0.2mm (Similar to Sensl SiPMs)
+  // Window thickness of 0.2 mm (Similar to Sensl SiPMs)
   window_thickness_ = 0.2 * mm;
 
   // Sensitive thickness of 0.2 mm (Similar to Sensl SiPMs)
@@ -80,10 +79,9 @@ void GenericPhotosensor::ComputeDimensions()
 
   // Check that window + sensitive fits into the case
   if ((window_thickness_ + sensarea_thickness_) > thickness_) {
-    G4cout << "*** Sensor thickness required size_z >= "
-           << window_thickness_ + sensarea_thickness_ << " mm" << G4endl;
     G4Exception("[GenericPhotosensor]", "ComputeDimensions()", FatalException,
-                "Sensor thickness too small.");
+                ("Sensor size too small. Required thickness >= " +
+                 std::to_string(window_thickness_ + sensarea_thickness_) + " mm").data());
   }
 
   // WLS coating dimensions (thickness = 1 micron by definition)
@@ -97,15 +95,17 @@ void GenericPhotosensor::DefineMaterials()
   case_mat_ = MaterialsList::FR4();
 
   // Window /////
-  // Duplicate of 'optical silicone' to avoid interferences with other uses.
+  // The optical properties of a given material, is common for the whole geometry so,
+  // making a copy of the window material restricts its use to this photosensor
+  // and prevents interferences with other possible uses.
   window_mat_ =
     MaterialsList::CopyMaterial(MaterialsList::OpticalSilicone(),
                                 name_ + "_WINDOW_MATERIAL");
   G4MaterialPropertiesTable* window_optProp = new G4MaterialPropertiesTable();
 
-  // If the sensor has WLS coating the window must have the rindex from WLS
-  // If the user set an specific rindex for the window, a WARNING is raised
-  // as the set values are not used.   
+  // In the default behavior of this class, the refractive index of WLS and window
+  // are matched to avoid reflection losses in the interfaces. If the user sets
+  // explicitly a refractive index for the window, it won't be used, raising a warning.
   if (with_wls_coating_) {
     if (window_rindex_)
       G4Exception("[GenericPhotosensor]", "DefineMaterials()", JustWarning,
@@ -199,11 +199,11 @@ void GenericPhotosensor::Construct()
     new G4PVPlacement(nullptr, G4ThreeVector(0., 0., zpos), wls_logic_vol,
                       name, window_logic_vol, false, 0, false);
 
-    G4OpticalSurface* wls_optSurf = new G4OpticalSurface(name + "_optSurf",
+    G4OpticalSurface* wls_optSurf = new G4OpticalSurface(name + "_OPSURF",
                                                          glisur, ground,
                                                          dielectric_dielectric, .01);
     
-    new G4LogicalSkinSurface(name + "_optSurf", wls_logic_vol, wls_optSurf);
+    new G4LogicalSkinSurface(name + "_OPSURF", wls_logic_vol, wls_optSurf);
   }
 
 
@@ -240,10 +240,21 @@ void GenericPhotosensor::Construct()
 
   if (!sdmgr->FindSensitiveDetector(sdname, false)) {
     PmtSD* sensdet = new PmtSD(sdname);
+    if (sensor_depth_ == -1) 
+      G4Exception("[GenericPhotosensor]", "Construct()", FatalException,
+                  "Sensor Depth must be set before constructing");
     sensdet->SetDetectorVolumeDepth(sensor_depth_);
+
+    if (mother_depth_ == -1) 
+      G4Exception("[GenericPhotosensor]", "Construct()", FatalException,
+                  "Mother Depth must be set before constructing");
+    sensdet->SetMotherVolumeDepth(mother_depth_);
+
+    if (naming_order_ == -1) 
+      G4Exception("[GenericPhotosensor]", "Construct()", FatalException,
+                  "Naming Order must be set before constructing");
     sensdet->SetDetectorNamingOrder(naming_order_);
     sensdet->SetTimeBinning(time_binning_);
-    sensdet->SetMotherVolumeDepth(mother_depth_);
 
     G4SDManager::GetSDMpointer()->AddNewDetector(sensdet);
     window_logic_vol->SetSensitiveDetector(sensdet);

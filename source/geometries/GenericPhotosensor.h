@@ -1,8 +1,7 @@
 // -----------------------------------------------------------------------------
 //  nexus | GenericPhotosensor.h
 //
-//  Implementation of a sensor (typically a SiPm) which has all its parameters
-//  settable by parameter.
+//  Geometry of a configurable box-shaped photosensor.
 //
 //  The NEXT Collaboration
 // -----------------------------------------------------------------------------
@@ -23,11 +22,10 @@ namespace nexus {
   {
   public:
     // Constructor for a rectangular sensor providing
-    // width (w), height (h) and thickness (t).
     // The default thickness corresponds to a typical value for
     // a silicon photomultiplier.
-    GenericPhotosensor(G4String name, G4double width,
-                       G4double height, G4double thickness=2.0*mm);
+    GenericPhotosensor(G4String name,   G4double width,
+                       G4double height, G4double thickness = 2.0*mm);
     
     // Constructor for a square sensor
     GenericPhotosensor(G4String name, G4double size);
