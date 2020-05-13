@@ -44,17 +44,20 @@ namespace nexus {
   private:
     G4double size_, thickness_, pitch_, margin_;
     std::vector<G4ThreeVector> sipm_positions_;
-    G4VPhysicalVolume* mpv_;
-    BoxPointSampler* vtxgen_;
-    GenericPhotosensor* sipm_geom_;
+    G4VPhysicalVolume*  mpv_;
+    BoxPointSampler*    vtxgen_;
+    GenericPhotosensor* sipm_;
   };
 
   inline void     Next100SiPMBoard::SetMotherPhysicalVolume(G4VPhysicalVolume* p)
   { mpv_ = p;}
+
   inline G4double Next100SiPMBoard::GetSize() const
   { return size_; }
+
   inline G4double Next100SiPMBoard::GetThickness() const
   { return thickness_; }
+  
   inline const std::vector<G4ThreeVector>& Next100SiPMBoard::GetSiPMPositions() const
   { return sipm_positions_; }
 
