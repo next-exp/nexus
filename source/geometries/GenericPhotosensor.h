@@ -24,16 +24,8 @@ namespace nexus {
     // Constructor for a rectangular sensor providing
     // The default thickness corresponds to a typical value for
     // a silicon photomultiplier.
-<<<<<<< HEAD
     GenericPhotosensor(G4String name,   G4double width,
-=======
-    GenericPhotosensor(G4String name, G4double width,
-<<<<<<< HEAD
->>>>>>> Added name to GenericPhotosensor and window optPros bug fixed.
                        G4double height, G4double thickness = 2.0*mm);
-=======
-                       G4double height, G4double thickness=2.0*mm);
->>>>>>> GenericPhotosensor cosmetic changes on variable names.
     
     // Constructor for a square sensor
     GenericPhotosensor(G4String name, G4double size);
@@ -45,17 +37,10 @@ namespace nexus {
     void Construct();
 
     //
-<<<<<<< HEAD
     G4double GetWidth()       const;
     G4double GetHeight()      const;
     G4double GetThickness()   const;
     const G4String& GetName() const;
-=======
-    G4double GetWidth()     const;
-    G4double GetHeight()    const;
-    G4double GetThickness() const;
-    G4String GetName()      const;
->>>>>>> Added name to GenericPhotosensor and window optPros bug fixed.
 
     void SetWithWLSCoating       (G4bool with_wls_coating);
     void SetWindowRefractiveIndex(G4MaterialPropertyVector* rindex);
@@ -75,16 +60,9 @@ namespace nexus {
     G4String name_;
     
     G4double width_, height_, thickness_;
-<<<<<<< HEAD
     G4double window_thickness_;
     G4double sensarea_width_, sensarea_height_, sensarea_thickness_;
     G4double wls_thickness_;
-=======
-    G4double sensitive_z_;
-    G4double case_x_, case_y_, case_z_;
-    G4double window_x_,   window_y_,   window_z_;
-    G4double wls_x_,      wls_y_,      wls_z_;
->>>>>>> GenericPhotosensor - Changed 'ENCASING' name by shorter 'CASE'
 
     G4Material* case_mat_;
     G4Material* window_mat_;
@@ -104,22 +82,10 @@ namespace nexus {
   };
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   inline G4double GenericPhotosensor::GetWidth()       const { return width_; }
   inline G4double GenericPhotosensor::GetHeight()      const { return height_; }
-=======
-  inline G4double GenericPhotosensor::GetWidth()       const { return case_x_; }
-  inline G4double GenericPhotosensor::GetHeight()      const { return case_y_; }
->>>>>>> GenericPhotosensor - Changed 'ENCASING' name by shorter 'CASE'
   inline G4double GenericPhotosensor::GetThickness()   const { return thickness_; }
   inline const G4String& GenericPhotosensor::GetName() const { return name_; }
-=======
-  inline G4double GenericPhotosensor::GetWidth()     const { return width_; }
-  inline G4double GenericPhotosensor::GetHeight()    const { return height_; }
-  inline G4double GenericPhotosensor::GetThickness() const { return thickness_; }
-  inline G4String GenericPhotosensor::GetName()      const { return name_; }
->>>>>>> Added name to GenericPhotosensor and window optPros bug fixed.
 
   inline void GenericPhotosensor::SetWithWLSCoating(G4bool with_wls_coating)
   { with_wls_coating_ = with_wls_coating; }
