@@ -19,7 +19,7 @@ def input_file(request):
 
 
 def test_hdf5_structure(input_file):
-     """ Check that the hdf5 table structure is the correct one."""
+     """Check that the hdf5 table structure is the correct one."""
 
      with tb.open_file(input_file) as h5out:
 
@@ -28,6 +28,7 @@ def test_hdf5_structure(input_file):
          assert 'hits'          in h5out.root.MC
          assert 'sns_response'  in h5out.root.MC
          assert 'configuration' in h5out.root.MC
+         assert 'sns_positions' in h5out.root.MC
 
 
          pcolumns = h5out.root.MC.particles.colnames
@@ -80,6 +81,16 @@ def test_hdf5_structure(input_file):
          assert 'charge'    in scolumns
 
 
+         sposcolumns = h5out.root.MC.sns_positions.colnames
+
+         assert 'sensor_id'   in sposcolumns
+         assert 'sensor_name' in sposcolumns
+         assert 'x'           in sposcolumns
+         assert 'y'           in sposcolumns
+         assert 'z'           in sposcolumns
+
+
+
 def test_particle_ids_of_hits_exist_in_particle_table(input_file):
     """
     Check that the particle IDs of the hits are also contained
@@ -96,7 +107,7 @@ def test_particle_ids_of_hits_exist_in_particle_table(input_file):
 
 
 def test_hit_labels(input_file):
-     """Check that there is at least one hit in the ACTIVE volume """
+     """Check that there is at least one hit in the ACTIVE volume."""
      hits = pd.read_hdf(input_file, 'MC/hits')
      hit_labels = hits.label.unique()
 
@@ -104,7 +115,7 @@ def test_hit_labels(input_file):
 
 
 def test_primary_always_exists(input_file):
-     """Check that there is at least one primary particle """
+     """Check that there is at least one primary particle."""
      particles = pd.read_hdf(input_file, 'MC/particles')
      primary   = particles.primary.unique()
 
@@ -112,8 +123,25 @@ def test_primary_always_exists(input_file):
 
 
 def test_sensor_binning_is_saved(input_file):
-     """Check that the sensor binning is saved in the configuration table. """
+     """Check that the sensor binning is saved in the configuration table."""
      conf = pd.read_hdf(input_file, 'MC/configuration')
      parameters = conf.param_key.values
 
      assert any('binning' in p for p in parameters)
+
+
+def test_sensor_names_are_the_same_across_tables(input_file):
+     """Check that the sensor labels are the same in all tables."""
+     pos  = pd.read_hdf(input_file, 'MC/sns_positions')
+     conf = pd.read_hdf(input_file, 'MC/configuration')
+
+     pos_labels   = pos.sensor_name.unique()
+     parameters   = conf.param_key.values
+     sns_bin_conf = parameters[['_binning' in p for p in parameters]]
+
+     for label in pos_labels:
+          assert any(p == label + '_binning' for p in sns_bin_conf)
+
+     for p in sns_bin_conf:
+          p_split = p.split('_')
+          assert p_split[0] in pos_labels
