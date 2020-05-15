@@ -1,10 +1,12 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | AnalysisSteppingAction.cc
 //
-//  Author : <justo.martin-albo@ific.uv.es>    
-//  Created: 24 August 2013
+// This class allows the user to print the total number of photons detected by
+// all kinds of photosensors at the end of the run.
+// It also shows examples of information that can be accessed at the stepping
+// level, so it is useful for debugging.
 //
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// The  NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "AnalysisSteppingAction.h"
@@ -29,8 +31,8 @@ AnalysisSteppingAction::AnalysisSteppingAction(): G4UserSteppingAction()
 AnalysisSteppingAction::~AnalysisSteppingAction()
 {
   G4double total_counts = 0;
-  detectorCounts::iterator it = my_counts.begin();
-  while (it != my_counts.end()) {
+  detectorCounts::iterator it = my_counts_.begin();
+  while (it != my_counts_.end()) {
     G4cout << "Detector " << it->first << ": " << it->second << " counts" << G4endl;
     total_counts += it->second;
     it ++;
@@ -43,13 +45,13 @@ AnalysisSteppingAction::~AnalysisSteppingAction()
 void AnalysisSteppingAction::UserSteppingAction(const G4Step* step)
 {
   G4ParticleDefinition* pdef = step->GetTrack()->GetDefinition();
- 
+
   //Check whether the track is an optical photon
   if (pdef != G4OpticalPhoton::Definition()) return;
-  
+
   /*
   // example of information one can access about optical photons
-  
+
   G4Track* track = step->GetTrack();
   G4int pid = track->GetParentID();
   G4int tid = track->GetTrackID();
@@ -67,7 +69,7 @@ void AnalysisSteppingAction::UserSteppingAction(const G4Step* step)
   // Retrieve the pointer to the optical boundary process.
   // We do this only once per run defining our local pointer as static.
   static G4OpBoundaryProcess* boundary = 0;
-    
+
   if (!boundary) { // the pointer is not defined yet
     // Get the list of processes defined for the optical photon
     // and loop through it to find the optical boundary process.
@@ -85,9 +87,9 @@ void AnalysisSteppingAction::UserSteppingAction(const G4Step* step)
       G4String detector_name = step->GetPostStepPoint()->GetTouchableHandle()->GetVolume()->GetName();
       //G4cout << "##### Sensitive Volume: " << detector_name << G4endl;
 
-      detectorCounts::iterator it = my_counts.find(detector_name);
-      if (it != my_counts.end()) my_counts[it->first] += 1;
-      else my_counts[detector_name] = 1;
+      detectorCounts::iterator it = my_counts_.find(detector_name);
+      if (it != my_counts_.end()) my_counts_[it->first] += 1;
+      else my_counts_[detector_name] = 1;
     }
   }
 

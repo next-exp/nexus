@@ -1,12 +1,10 @@
 // ----------------------------------------------------------------------------
-///  \file   DefaultStackingAction.h
-///  \brief  General-purpose user stacking action.
-///
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     25 Aug 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// nexus | DefaultStackingAction.h
+//
+// This class is an example of how to implement a stacking action, if needed.
+// At the moment, it is not used in the NEXT simulations.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef DEFAULT_STACKING_ACTION_H

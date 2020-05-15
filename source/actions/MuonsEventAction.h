@@ -1,12 +1,10 @@
-//---------------------------------------------------------------------------
-//   \file   MuonsEventAction.h
-///  \brief  Based in DefaultEventAction and modified to produce control histos for muons
-///  
-///  \author   Neus Lopez March <neus.lopez@ific.uv.es>    
-///  \date     30 Jan 2014
-/// 
-///
-///  Copyright (c) 2015 NEXT Collaboration
+// ----------------------------------------------------------------------------
+// nexus | MuonsEventAction.h
+//
+// This class is based on DefaultEventAction and modified to produce
+// control histograms for muon generation.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef __MUONS_EVENT_ACTION__
@@ -41,17 +39,17 @@ namespace nexus {
     void EndOfEventAction(const G4Event*);
 
   private:
-    G4GenericMessenger* _msg;
-    G4int _nevt, _nupdate;
-    G4double _energy_threshold;
-    //
-    TH1D *hist;
-    TH1D *hist2;
-    TH1D *hist3;
-    TTree *tree;
-    Double_t tree_phi;
-    Double_t tree_theta;
-    G4String _stringHist;
+    G4GenericMessenger* msg_;
+    G4int nevt_, nupdate_;
+    G4double energy_threshold_;
+
+    TH1D *hist1_;
+    TH1D *hist2_;
+    TH1D *hist3_;
+    TTree *tree_;
+    Double_t tree_phi_;
+    Double_t tree_theta_;
+    G4String stringHist_;
   };
   
 } // namespace nexus
