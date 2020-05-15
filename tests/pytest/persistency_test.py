@@ -115,7 +115,7 @@ def test_hit_labels(input_file):
 
 
 def test_primary_always_exists(input_file):
-     """Check that there is at least one primary particle """
+     """Check that there is at least one primary particle."""
      particles = pd.read_hdf(input_file, 'MC/particles')
      primary   = particles.primary.unique()
 
@@ -135,13 +135,13 @@ def test_sensor_names_are_the_same_across_tables(input_file):
      pos  = pd.read_hdf(input_file, 'MC/sns_positions')
      conf = pd.read_hdf(input_file, 'MC/configuration')
 
-     pos_labels  = pos.sensor_name.unique()
-     parameters  = conf.param_key.values
+     pos_labels   = pos.sensor_name.unique()
+     parameters   = conf.param_key.values
+     sns_bin_conf = parameters[['_binning' in p for p in parameters]]
 
      for label in pos_labels:
-          assert any(p == label + '_binning' for p in parameters)
+          assert any(p == label + '_binning' for p in sns_bin_conf)
 
-     for p in parameters:
-          if '_binning' in p:
-               p_split = p.split('_')
-               assert p_split[0] in pos_labels
+     for p in sns_bin_conf:
+          p_split = p.split('_')
+          assert p_split[0] in pos_labels
