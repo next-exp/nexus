@@ -73,8 +73,8 @@ namespace nexus {
     // It generates PMT XY positions
     void GeneratePMTpositions();
 
-    // Make the PMT corresponding holes in the solid volume passed.
-    G4SubtractionSolid* MakePMTholes(G4SubtractionSolid* the_solid, G4double length);
+    // Make the holes (gas $ PMTs) in the solid volume passed.
+    G4SubtractionSolid* MakeHoles(G4Tubs* ini_solid);
 
     // Different builders
     void BuildCopper();
@@ -115,6 +115,8 @@ namespace nexus {
     G4String    _wls_matName;
     G4Material* _wls_mat;
 
+    PmtR11410*  _pmt;
+
     // Dimensions & Positions
     G4double _originZ;
     G4double _diameter;
@@ -123,16 +125,15 @@ namespace nexus {
     G4double _copper_iniZ;
     G4double _copper_finZ;
     G4double _teflon_iniZ;
+    G4double _pmt_iniZ;
 
     G4double _copper_thickness;
     G4double _teflon_thickness;
     G4double _wls_thickness;
 
-    PmtR11410*                 _pmt;
     G4int                      _num_pmts;
     std::vector<G4ThreeVector> _pmt_positions;
     G4double                   _pmt_hole_diameter;
-    G4double                   _pmt_hole_posZ;
 
     G4double _window_thickness;
     G4double _optical_pad_thickness;
