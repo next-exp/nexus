@@ -134,6 +134,9 @@ namespace nexus {
 
     static G4Material* CopyMaterial(G4Material*, const G4String&);
 
+    // Standard rock
+    static G4Material* StandardRock();
+
   private:
     /// Constructor (hidden)
     MaterialsList();

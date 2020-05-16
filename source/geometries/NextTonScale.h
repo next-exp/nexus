@@ -34,6 +34,7 @@ namespace nexus {
 
   private:
     //
+    G4LogicalVolume* ConstructLabRock(G4LogicalVolume*);
     G4LogicalVolume* ConstructWaterTank(G4LogicalVolume*);
     G4LogicalVolume* ConstructVesselAndICS(G4LogicalVolume*);
     G4LogicalVolume* ConstructFieldCageAndReadout(G4LogicalVolume*);
@@ -50,6 +51,7 @@ namespace nexus {
     G4String gas_;
     G4double gas_pressure_, gas_temperature_;
     G4double detector_diam_, detector_length_;
+    G4double rock_thickn_, rock_diam_;
     G4double tank_size_, tank_thickn_, water_thickn_;
     G4double vessel_thickn_, ics_thickn_, endcap_hollow_;
     G4double fcage_thickn_, active_diam_, active_length_;
