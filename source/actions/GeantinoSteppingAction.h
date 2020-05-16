@@ -13,6 +13,7 @@
 #define GEANTINO_STEPPING_ACTION_H
 
 #include <G4UserSteppingAction.hh>
+#include <G4ParticleDefinition.hh>
 #include <G4GenericMessenger.hh>
 #include <G4ThreeVector.hh>
 #include <globals.hh>
@@ -43,7 +44,8 @@ namespace nexus {
   private:
     G4GenericMessenger* msg_;
 
-    std::vector<G4String> selected_volumes_;
+    std::vector<G4String>              selected_volumes_;
+    std::vector<G4ParticleDefinition*> selected_particles_;
 
     GeantinoContainer<G4String> initial_volumes_;
     GeantinoContainer<G4String>   final_volumes_;
@@ -64,8 +66,10 @@ namespace nexus {
     void Reset();
 
   private:
-    void   AddSelectedVolume(G4String);
-    G4bool        KeepVolume(G4String&, G4String&);
+    void   AddSelectedParticle(G4String);
+    void   AddSelectedVolume  (G4String);
+    G4bool        KeepVolume  (G4String&, G4String&);
+    G4bool        KeepParticle(G4ParticleDefinition*);
   };
 
 inline GeantinoContainer<G4String> GeantinoSteppingAction::get_initial_volumes(){return initial_volumes_;}

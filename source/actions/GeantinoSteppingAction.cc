@@ -12,6 +12,7 @@
 #include <G4Step.hh>
 #include <G4SteppingManager.hh>
 #include <G4ProcessManager.hh>
+#include <G4ParticleTable.hh>
 #include <G4Geantino.hh>
 #include <G4OpBoundaryProcess.hh>
 #include <G4VPhysicalVolume.hh>
@@ -26,6 +27,10 @@ msg_(0),
 selected_volumes_()
 {
   msg_ = new G4GenericMessenger(this, "/Actions/GeantinoSteppingAction/");
+
+  msg_->DeclareMethod("select_particle",
+                      &GeantinoSteppingAction::AddSelectedParticle,
+                      "add a new particle to select");
 
   msg_->DeclareMethod("select_volume",
                       &GeantinoSteppingAction::AddSelectedVolume,
@@ -45,7 +50,7 @@ void GeantinoSteppingAction::UserSteppingAction(const G4Step* step)
   G4ParticleDefinition* pdef     = step->GetTrack()->GetDefinition();
   G4int                 track_id = step->GetTrack()->GetTrackID();
 
-  if (pdef != G4Geantino::Definition()) return;
+  if (!KeepParticle(pdef)) return;
 
   G4StepPoint* pre  = step->GetPreStepPoint();
   G4StepPoint* post = step->GetPostStepPoint();
@@ -69,9 +74,29 @@ void GeantinoSteppingAction::UserSteppingAction(const G4Step* step)
 }
 
 
+void GeantinoSteppingAction::AddSelectedParticle(G4String particle_name)
+{
+  G4ParticleDefinition* pdef = G4ParticleTable::GetParticleTable()->FindParticle(particle_name);
+  if (!pdef) {
+    G4String msg = "No particle description was found for particle name " + particle_name;
+    G4Exception("[GeantinoSteppingAction]", "AddSelectedParticle()", FatalException, msg);
+  }
+  selected_particles_.push_back(pdef);
+}
+
+
 void GeantinoSteppingAction::AddSelectedVolume(G4String volume_name)
 {
   selected_volumes_.push_back(volume_name);
+}
+
+
+G4bool GeantinoSteppingAction::KeepParticle(G4ParticleDefinition* pdef)
+{
+  if (!selected_particles_.size()) return true;
+
+  auto it = std::find(selected_particles_.begin(), selected_particles_.end(), pdef);
+  return it != selected_particles_.end();
 }
 
 
@@ -87,6 +112,7 @@ G4bool GeantinoSteppingAction::KeepVolume(G4String& initial_volume, G4String& fi
 
   return false;
 }
+
 
 
 void GeantinoSteppingAction::Reset()
