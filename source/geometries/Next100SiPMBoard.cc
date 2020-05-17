@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
 //  nexus | Next100SiPMBoard.cc
 //
-//  NEXT-100 SiPM board implemntation. It contains the 8x8 SiPMs arranged in a
+//  NEXT-100 SiPM board implementation. It contains the 8x8 SiPMs arranged in a
 //  square matrix, and the teflon masks.
 //
 //  The NEXT Collaboration
@@ -57,6 +57,7 @@ Next100SiPMBoard::~Next100SiPMBoard()
 {
   delete vtxgen_;
   delete sipm_;
+  delete msg_;
 }
 
 
@@ -99,9 +100,9 @@ void Next100SiPMBoard::Construct()
 
   // Adding the teflon optical surface
   G4OpticalSurface* teflon_optSurf = 
-    new G4OpticalSurface(mask_name + "_optSurf", unified, ground, dielectric_metal);
+    new G4OpticalSurface(mask_name + "_OPSURF", unified, ground, dielectric_metal);
   teflon_optSurf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
-  new G4LogicalSkinSurface(mask_name + "_optSurf", mask_logic_vol, teflon_optSurf);
+  new G4LogicalSkinSurface(mask_name + "_OPSURF", mask_logic_vol, teflon_optSurf);
 
 
   /// TEFLON MASK WLS ///  
@@ -125,11 +126,11 @@ void Next100SiPMBoard::Construct()
 
   // Adding the WLS optical surface
   G4OpticalSurface* mask_wls_optSurf =
-    new G4OpticalSurface(mask_wls_name + "_optSurf", glisur, ground,
+    new G4OpticalSurface(mask_wls_name + "_OPSURF", glisur, ground,
                          dielectric_dielectric, .01);
-  new G4LogicalBorderSurface(mask_wls_name + "_optSurf", mask_wls_phys_vol,
+  new G4LogicalBorderSurface(mask_wls_name + "_OPSURF", mask_wls_phys_vol,
                              mpv_, mask_wls_optSurf);
-  new G4LogicalBorderSurface(mask_wls_name + "_optSurf", mpv_,
+  new G4LogicalBorderSurface(mask_wls_name + "_OPSURF", mpv_,
                              mask_wls_phys_vol, mask_wls_optSurf);
 
 
@@ -148,8 +149,6 @@ void Next100SiPMBoard::Construct()
   sipm_->SetOpticalProperties(photosensor_mpt);
 
   sipm_->SetWithWLSCoating(true);
-  //sipm_->SetWindowRefractiveIndex(mother_gas->GetMaterialPropertiesTable()
-  //                                ->GetProperty("RINDEX"));
 
   sipm_->SetTimeBinning(time_binning_);
 
