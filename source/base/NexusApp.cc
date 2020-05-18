@@ -1,10 +1,11 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | NexusApp.cc
 //
-//  Author : <justo.martin-albo@ific.uv.es>    
-//  Created: 8 March 2013
+// This class is the run manager of the nexus simulation. It takes care of
+// setting up the simulation (geometry, physics lists, generators, actions),
+// so that it is ready to be run.
 //
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "NexusApp.h"
@@ -28,25 +29,25 @@ using namespace nexus;
 NexusApp::NexusApp(G4String init_macro): G4RunManager()
 {
   // Create and configure a generic messenger for the app
-  _msg = new G4GenericMessenger(this, "/nexus/", "Nexus control commands.");
+  msg_ = new G4GenericMessenger(this, "/nexus/", "Nexus control commands.");
 
-  // Define the command to register a configuration macro. 
+  // Define the command to register a configuration macro.
   // The user may invoke the command as many times as needed.
-  _msg->DeclareMethod("RegisterMacro", &NexusApp::RegisterMacro, ""); 
+  msg_->DeclareMethod("RegisterMacro", &NexusApp::RegisterMacro, "");
 
   // Some commands, which we call 'delayed', only work if executed
   // after the initialization of the application. The user may include
   // them in configuration macros registered with the command defined below.
-  _msg->DeclareMethod("RegisterDelayedMacro", 
+  msg_->DeclareMethod("RegisterDelayedMacro",
     &NexusApp::RegisterDelayedMacro, "");
 
   // Define a command to set a seed for the random number generator.
-  _msg->DeclareMethod("random_seed", &NexusApp::SetRandomSeed, 
-    "Set a seed for the random number generator."); 
+  msg_->DeclareMethod("random_seed", &NexusApp::SetRandomSeed,
+    "Set a seed for the random number generator.");
 
   /////////////////////////////////////////////////////////
 
-  // We will set now the user initialization class instances 
+  // We will set now the user initialization class instances
   // in the run manager. In order to do so, we create first the factories
   // (the objects that construct the appropriate instances according
   // to user's input) so that the messenger commands are already defined
@@ -72,7 +73,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
   batch->SessionStart();
 
   // Set the physics list in the run manager
-  this->SetUserInitialization(physicsList); 
+  this->SetUserInitialization(physicsList);
 
   // Set the detector construction instance in the run manager
   DetectorConstruction* dc = new DetectorConstruction();
@@ -124,7 +125,7 @@ NexusApp::~NexusApp()
     (G4VPersistencyManager::GetPersistencyManager());
   current->CloseFile();
 
-  delete _msg;
+  delete msg_;
 }
 
 
@@ -132,7 +133,7 @@ NexusApp::~NexusApp()
 void NexusApp::RegisterMacro(G4String macro)
 {
   // Store the name of the macro file
-  _macros.push_back(macro);
+  macros_.push_back(macro);
 }
 
 
@@ -140,7 +141,7 @@ void NexusApp::RegisterMacro(G4String macro)
 void NexusApp::RegisterDelayedMacro(G4String macro)
 {
   // Store the name of the macro file
-  _delayed.push_back(macro);
+  delayed_.push_back(macro);
 }
 
 
@@ -151,14 +152,14 @@ void NexusApp::Initialize()
   // so that all objects get configured
   // G4UImanager* UI = G4UImanager::GetUIpointer();
 
-  for (unsigned int i=0; i<_macros.size(); i++) {
-    ExecuteMacroFile(_macros[i].data());
+  for (unsigned int i=0; i<macros_.size(); i++) {
+    ExecuteMacroFile(macros_[i].data());
   }
 
   G4RunManager::Initialize();
 
-  for (unsigned int j=0; j<_delayed.size(); j++) {
-    ExecuteMacroFile(_delayed[j].data());
+  for (unsigned int j=0; j<delayed_.size(); j++) {
+    ExecuteMacroFile(delayed_[j].data());
   }
 }
 

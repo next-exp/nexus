@@ -1,16 +1,14 @@
 // ----------------------------------------------------------------------------
-///  \file   GeometryFactory.h
-///  \brief  Factory class to create geometries chosen by the user
-/// 
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     13 March 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
+// nexus | GeometryFactory.h
+//
+// This class instantiates the main geometry of the simulation that the user
+// specifies via configuration parameter.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef GEOMETRY_FACTORY_H
-#define GEOMETRY_FACTORY_H 
+#define GEOMETRY_FACTORY_H
 
 #include <G4String.hh>
 
@@ -34,8 +32,8 @@ namespace nexus {
     BaseGeometry* CreateGeometry() const;
 
   private:
-    G4GenericMessenger* _msg;
-    G4String _name;
+    G4GenericMessenger* msg_;
+    G4String name_;
   };
 
 }

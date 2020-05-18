@@ -1,12 +1,11 @@
 // ----------------------------------------------------------------------------
-///  \file   BatchSession.h
-///  \brief  
-/// 
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     22 Mar 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// nexus | BatchSession.h
+//
+// This class is used to parse the configuration files and execute the commands
+// found in them. One of the features of this class, compared to the G4 one is
+// that an error is prompted when a parameter is not recognized.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef __BATCH_SESSION__
@@ -17,8 +16,6 @@
 
 
 namespace nexus {
-
-  /// TODO. CLASS DESCRIPTION
 
   class BatchSession: public G4UIsession
   {
@@ -40,18 +37,18 @@ namespace nexus {
     G4int ExecCommand(const G4String& command);
 
   private:
-    G4bool _opened;
-    std::ifstream _macrostream;
-    G4UIsession* _prev; ///< Pointer to the previous session
+    G4bool opened_;
+    std::ifstream macrostream_;
+    G4UIsession* prev_; ///< Pointer to the previous session
 
-    G4bool _history_opened;
-    std::ofstream _history;
+    G4bool history_opened_;
+    std::ofstream history_;
   };
 
   // INLINE DEFINITIONS //////////////////////////////////////////////
 
-  inline G4UIsession* BatchSession::GetPreviousSession() const 
-  { return _prev; }
+  inline G4UIsession* BatchSession::GetPreviousSession() const
+  { return prev_; }
 
 } // end namespace nexus
 
