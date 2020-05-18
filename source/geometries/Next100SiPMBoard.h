@@ -1,8 +1,10 @@
 // -----------------------------------------------------------------------------
 //  nexus | Next100SiPMBoard.h
 //
-//  * Author: <justo.martin-albo@ific.uv.es>
-//  * Creation date: 7 January 2020
+//  NEXT-100 SiPM board implemntation. It contains the 8x8 SiPMs arranged in a
+//  square matrix, and the teflon masks.
+//
+//  The NEXT Collaboration
 // -----------------------------------------------------------------------------
 
 #ifndef NEXT100_SIPM_BOARD_H
@@ -13,7 +15,7 @@
 #include <vector>
 
 class G4VPhysicalVolume;
-
+class G4GenericMessenger;
 
 namespace nexus {
 
@@ -42,11 +44,14 @@ namespace nexus {
     const std::vector<G4ThreeVector>& GetSiPMPositions() const;
 
   private:
-    G4double size_, thickness_, pitch_, margin_;
+    G4GenericMessenger* msg_;
+    G4double size_, board_thickness_, pitch_, margin_;
+    G4double mask_thickness_;
     std::vector<G4ThreeVector> sipm_positions_;
     G4VPhysicalVolume*  mpv_;
     BoxPointSampler*    vtxgen_;
     GenericPhotosensor* sipm_;
+    G4double            time_binning_;
   };
 
   inline void     Next100SiPMBoard::SetMotherPhysicalVolume(G4VPhysicalVolume* p)
@@ -56,7 +61,7 @@ namespace nexus {
   { return size_; }
 
   inline G4double Next100SiPMBoard::GetThickness() const
-  { return thickness_; }
+  { return (board_thickness_ + mask_thickness_); }
   
   inline const std::vector<G4ThreeVector>& Next100SiPMBoard::GetSiPMPositions() const
   { return sipm_positions_; }
