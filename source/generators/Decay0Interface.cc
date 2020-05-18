@@ -1,10 +1,14 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | Decay0Interface.cc
 //
-//  Author : <justo.martin-albo@ific.uv.es>
-//  Created: 27 Mar 2009
+// This class provides the primary vertex of a Xe-136 double beta decay,
+// interfacing the DECAY0 c++ code, translated from the original
+// FORTRAN package, with nexus.
+// It provides the primary vertex of a Xe-136 double beta decay.
+// The possibility of reading a previously generated ascii file with the
+// electron momenta is also allowed.
 //
-//  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "Decay0Interface.h"
@@ -23,36 +27,36 @@ using namespace nexus;
 
 
 
-Decay0Interface::Decay0Interface(): 
-  G4VPrimaryGenerator(), _msg(0), _opened(false), _geom(0)
+Decay0Interface::Decay0Interface():
+  G4VPrimaryGenerator(), msg_(0), opened_(false), geom_(0)
 {
 
-  _msg = new G4GenericMessenger(this, "/Generator/Decay0Interface/",
+  msg_ = new G4GenericMessenger(this, "/Generator/Decay0Interface/",
     "Control commands of the Decay0 interface.");
 
-  _msg->DeclareMethod("inputFile", &Decay0Interface::OpenInputFile, "");
-  _msg->DeclareProperty("region", _region, "");
-  
-  _msg->DeclareMethod("EnergyThreshold", &Decay0Interface::SetEnergyThreshold, ""); // for electrons only. 
-  _msg->DeclareMethod("Xe136DecayMode", &Decay0Interface::SetXe136DecayMode, "");
-  _msg->DeclareMethod("Ba136FinalState", &Decay0Interface::SetBa136FinalState, "");
+  msg_->DeclareMethod("inputFile", &Decay0Interface::OpenInputFile, "");
+  msg_->DeclareProperty("region", region_, "");
+
+  msg_->DeclareMethod("EnergyThreshold", &Decay0Interface::SetEnergyThreshold, ""); // for electrons only.
+  msg_->DeclareMethod("Xe136DecayMode", &Decay0Interface::SetXe136DecayMode, "");
+  msg_->DeclareMethod("Ba136FinalState", &Decay0Interface::SetBa136FinalState, "");
 
   DetectorConstruction* detConst = (DetectorConstruction*)
   G4RunManager::GetRunManager()->GetUserDetectorConstruction();
-  _geom = detConst->GetGeometry();
-  
-  _decay0 = 0;
-  _myEventCounter = 0;
-  _energyThreshold = 0.;
+  geom_ = detConst->GetGeometry();
+
+  decay0_ = 0;
+  myEventCounter_ = 0;
+  energyThreshold_ = 0.;
 }
 
 
 
 Decay0Interface::~Decay0Interface()
 {
-  if (_file.is_open()) _file.close();
-  if (_fOutDebug.is_open()) _fOutDebug.close(); 
-  if (_decay0 != 0) delete _decay0;
+  if (file_.is_open()) file_.close();
+  if (fOutDebug_.is_open()) fOutDebug_.close();
+  if (decay0_ != 0) delete decay0_;
 }
 
 
@@ -61,14 +65,14 @@ void Decay0Interface::OpenInputFile(G4String filename)
 {
    if (filename.find("none") != std::string::npos) {
       std::cerr << " We will use the new interface to Decay00 " << std::endl;
-     _opened = false;
+     opened_ = false;
      return;
    }
-     
-  _file.open(filename.data());
 
-  if (_file.good()) {
-    _opened = true;
+  file_.open(filename.data());
+
+  if (file_.good()) {
+    opened_ = true;
     ProcessHeader();
   }
   else {
@@ -85,66 +89,66 @@ void Decay0Interface::GeneratePrimaryVertex(G4Event* event)
 {
   const bool runG4 = true;
 //  const bool runG4 = false;
-  if (!_opened) {
-     if (_decay0 == 0) {
+  if (!opened_) {
+     if (decay0_ == 0) {
        const std::string XeName("Xe136");
-       _decay0 = new decay0(XeName, _Ba136FinalState, _Xe136DecayMode);
-      // Temporary debugging file, just generate particle and dump them on a file 
-//      std::ostringstream fOutStrStr; fOutStrStr << "./Decay0Out_" << _Ba136FinalState << "_" << _Xe136DecayMode << "_V1.txt";
+       decay0_ = new decay0(XeName, Ba136FinalState_, Xe136DecayMode_);
+      // Temporary debugging file, just generate particle and dump them on a file
+//      std::ostringstream fOutStrStr; fOutStrStr << "./Decay0Out_" << Ba136FinalState_ << "_" << Xe136DecayMode_ << "_V1.txt";
 //      std::string fOutStr(fOutStrStr.str());
-//      _fOutDebug.open(fOutStr.c_str());
-       if (_fOutDebug.is_open()) _fOutDebug << " evt tr pdg px py pz e t  " << std::endl;
+//      fOutDebug_.open(fOutStr.c_str());
+       if (fOutDebug_.is_open()) fOutDebug_ << " evt tr pdg px py pz e t  " << std::endl;
      }
-     
+
      std::vector<decay0Part> theParts;
-     _decay0->decay0DoIt(theParts);
+     decay0_->decay0DoIt(theParts);
      //
-     // Keep the event only if the sum of the electron energies are above the threshold. 
+     // Keep the event only if the sum of the electron energies are above the threshold.
      //
      double eTotKin = 0.;
      for(std::vector<decay0Part>::const_iterator itp = theParts.begin(); itp != theParts.end(); itp++) {
-       
-       if (std::abs(itp->_pdgCode) == 11) eTotKin += itp->_energy; 
+
+       if (std::abs(itp->pdgCode_) == 11) eTotKin += itp->energy_;
      }
-     const bool keepEvt = eTotKin > _energyThreshold;
-     _myEventCounter++;
-     if (_fOutDebug.is_open() && keepEvt ) {
+     const bool keepEvt = eTotKin > energyThreshold_;
+     myEventCounter_++;
+     if (fOutDebug_.is_open() && keepEvt ) {
        int k = 0;
        for (std::vector<decay0Part>::const_iterator itp = theParts.begin(); itp != theParts.end(); itp++, k++) {
-         _fOutDebug << " " << _myEventCounter << " " << k << " " << itp->_pdgCode << " " 
-	           << itp->_pmom[0] << " " <<  itp->_pmom[1] << " " << itp->_pmom[2] << " "
-		   << itp->_energy << " " << itp->_time << std::endl;
+         fOutDebug_ << " " << myEventCounter_ << " " << k << " " << itp->pdgCode_ << " "
+	           << itp->pmom_[0] << " " <<  itp->pmom_[1] << " " << itp->pmom_[2] << " "
+		   << itp->energy_ << " " << itp->time_ << std::endl;
         }
      }
      if (runG4 && keepEvt) {
-        particle_position = _geom->GenerateVertex(_region);
+        particle_position = geom_->GenerateVertex(region_);
         for (std::vector<decay0Part>::const_iterator itp = theParts.begin(); itp != theParts.end(); itp++) {
-          G4ParticleDefinition* g4code = 
-             G4ParticleTable::GetParticleTable()->FindParticle(itp->_pdgCode);
+          G4ParticleDefinition* g4code =
+             G4ParticleTable::GetParticleTable()->FindParticle(itp->pdgCode_);
           G4PrimaryParticle* particle =
-	     new G4PrimaryParticle(g4code, MeV*itp->_pmom[0], MeV*itp->_pmom[1], MeV*itp->_pmom[2]);
+	     new G4PrimaryParticle(g4code, MeV*itp->pmom_[0], MeV*itp->pmom_[1], MeV*itp->pmom_[2]);
          // create a primary vertex for the particle
           G4PrimaryVertex* vertex =
               new G4PrimaryVertex(particle_position, particle_time*second);
          vertex->SetPrimary(particle);
          event->AddPrimaryVertex(vertex);
-        } 
+        }
     }
      return;
    }
 
   //G4cout << "GeneratePrimaryVertex()" << G4endl;
- 
-  // reading event-related information    
+
+  // reading event-related information
   G4int entries;     // number of particles in the event
   G4long evt_no;     // event number
   G4double evt_time; // initial time in seconds
 
-  _file >> evt_no >> evt_time >> entries;
+  file_ >> evt_no >> evt_time >> entries;
 
 
   // abort if end-of-file was reached in last operation
-  if (_file.eof()) {
+  if (file_.eof()) {
     G4cout  << "[Decay0Interface] End-of-File reached. "
             << "Aborting the run..." << G4endl;
     G4RunManager::GetRunManager()->AbortRun();
@@ -153,9 +157,9 @@ void Decay0Interface::GeneratePrimaryVertex(G4Event* event)
 
   //G4cout << "entries: " << entries << G4endl;
 
-  // generate a position in the detector 
+  // generate a position in the detector
   // (all primary particles will be generated there)
-  particle_position = _geom->GenerateVertex(_region);
+  particle_position = geom_->GenerateVertex(region_);
 
 
   // reading info for each particle in the event
@@ -165,9 +169,9 @@ void Decay0Interface::GeneratePrimaryVertex(G4Event* event)
     G4int g3code;           // GEANT3 particle code
     G4double px, py, pz;    // Momentum components in MeV
 
-    _file >> g3code >> px >> py >> pz >> particle_time;
+    file_ >> g3code >> px >> py >> pz >> particle_time;
 
-    G4ParticleDefinition* g4code = 
+    G4ParticleDefinition* g4code =
       G4ParticleTable::GetParticleTable()->FindParticle(G3toPDG(g3code));
 
     // create a primary particle
@@ -194,10 +198,10 @@ void Decay0Interface::ProcessHeader()
 {
   G4String line;
 
-  while (!line.contains("First event")) getline(_file, line);
+  while (!line.contains("First event")) getline(file_, line);
 
-  getline(_file, line);
-  getline(_file, line);
+  getline(file_, line);
+  getline(file_, line);
 }
 
 
@@ -217,12 +221,8 @@ G4int Decay0Interface::G3toPDG(const G4int G3code)
     G4cerr << "[Decay0Interface] ERROR: Particle with unknown GEANT3 code: "
     << G3code << G4endl;
      G4Exception("[Decay0Interface]", "G3toPDG()", FatalException,
-		 "Unknown particle GEANT3 code!");     
+		 "Unknown particle GEANT3 code!");
   //G4Exception("Aborting run...");
   }
   return pdg_code;
 }
-
-
-
-
