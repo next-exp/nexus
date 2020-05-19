@@ -47,8 +47,8 @@ namespace nexus {
     BaseGeometry(),
     // Dimensions
     _active_diam (984 * mm), // distance between the centers of two opposite panels
-    _active_length (1159.6 * mm), // distance between gate and cathode
-    _buffer_length (282. * mm),//distance between cathode and sapphire window surfaces
+    _active_length (1204.95 * mm), // distance between gate and one side of cathode
+    _buffer_length (255.45 * mm),// distance between the other side of cathode and sapphire window surfaces
     _grid_thickn (.1 * mm),
     _cathode_gap (1. * cm),
     _teflon_drift_length (1152.6 * mm), // to check with final design
