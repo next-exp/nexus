@@ -78,6 +78,7 @@ namespace nexus {
     // Pointers to materials definition
     G4Material* _hdpe;
     G4Material* _tpb;
+    G4Material* _pedot;
     G4Material* _ito;
     G4Material* _teflon;
     G4Material* _quartz;
@@ -94,6 +95,7 @@ namespace nexus {
     G4double _el_grid_transparency, _gate_transparency;
     G4double _anode_quartz_thickness, _anode_quartz_diam; //_anode_quartz_transparency
     G4double _cathode_grid_transparency;
+    G4double _pedot_thickness;
     G4double _ito_thickness;
     G4double _active_posz;
     G4double _active_length;
