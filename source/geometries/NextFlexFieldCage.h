@@ -156,6 +156,9 @@ namespace nexus {
     G4Material* _teflon_mat;
     G4String    _wls_matName;
     G4Material* _wls_mat;
+    G4Material* _cathode_mat;
+    G4Material* _gate_mat;
+    G4Material* _anode_mat;
     G4String    _fiber_matName;
     G4Material* _fiber_mat;
     G4Material* _iClad_mat;

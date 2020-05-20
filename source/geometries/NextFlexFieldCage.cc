@@ -217,10 +217,7 @@ void NextFlexFieldCage::DefineConfigurationParameters()
 
 void NextFlexFieldCage::ComputeDimensions()
 {
-  // The field cage goes along the whole field cage
-  // (EL_GAP + ACTIVE + CATHODE + BUFFER)
-//  _fc_length = _el_gap_length     + _active_length +
-//               _cathode_thickness + _buffer_length;
+  // The field cage goes along (ACTIVE + CATHODE + BUFFER)
   _fc_length = _active_length + _cathode_thickness + _buffer_length;
 
   _fiber_inner_rad      = _active_diam/2.;
@@ -263,6 +260,20 @@ void NextFlexFieldCage::DefineMaterials()
                 "Unknown UV shifting material. Valid options are NONE, TPB or TPH.");
   }
 
+  // Meshes materials
+  _cathode_mat = MaterialsList::FakeDielectric(_xenon_gas, "cathode_mat");
+  _cathode_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_gas_pressure,
+    _gas_temperature, _cathode_transparency, _cathode_thickness));
+
+  _gate_mat = MaterialsList::FakeDielectric(_xenon_gas, "gate_mat");
+  _gate_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_gas_pressure,
+    _gas_temperature, _gate_transparency, _gate_thickness));
+
+  _anode_mat = MaterialsList::FakeDielectric(_xenon_gas, "anode_mat");
+  _anode_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_gas_pressure,
+    _gas_temperature, _anode_transparency, _anode_thickness));
+
+
   // Fiber core material
   if (_fiber_matName == "EJ280") {
     _fiber_mat = MaterialsList::EJ280();
@@ -290,8 +301,6 @@ void NextFlexFieldCage::DefineMaterials()
 
   // Fiber sensor case material
   _fiber_sensor_case_mat = MaterialsList::CopyMaterial(MaterialsList::Epoxy(), "FC_Epoxy");
-  //_fiber_sensor_case_mat = MaterialsList::Epoxy();
-  //_fiber_sensor_case_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GlassEpoxy());
 
   // Fiber sensor material
   _fiber_sensor_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_Si");
@@ -389,10 +398,6 @@ void NextFlexFieldCage::BuildCathode()
 {
   G4String cathode_name = "CATHODE";
 
-  G4Material* cathode_mat = MaterialsList::FakeDielectric(_xenon_gas, "cathode_mat");
-  cathode_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_gas_pressure,
-    _gas_temperature, _cathode_transparency, _cathode_thickness));
-
   G4double cathode_diam = _active_diam;
   G4double cathode_posZ = _active_length + _cathode_thickness/2.;
 
@@ -400,7 +405,7 @@ void NextFlexFieldCage::BuildCathode()
     new G4Tubs(cathode_name, 0., cathode_diam/2., _cathode_thickness/2., 0, twopi);
 
   G4LogicalVolume* cathode_logic =
-    new G4LogicalVolume(cathode_solid, cathode_mat, cathode_name);
+    new G4LogicalVolume(cathode_solid, _cathode_mat, cathode_name);
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., cathode_posZ), cathode_logic,
                     cathode_name, _mother_logic, false, 0, _verbosity);
@@ -514,10 +519,6 @@ void NextFlexFieldCage::BuildELgap()
   /// GATE ///
   G4String gate_name = "GATE";
 
-  G4Material* gate_mat = MaterialsList::FakeDielectric(_xenon_gas, "gate_mat");
-  gate_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_gas_pressure,
-    _gas_temperature, _gate_transparency, _gate_thickness));
-
   G4double gate_diam = _active_diam;
   G4double gate_posZ = _el_gap_length/2. - _gate_thickness/2.;
 
@@ -525,7 +526,7 @@ void NextFlexFieldCage::BuildELgap()
     new G4Tubs(gate_name, 0., gate_diam/2., _gate_thickness/2., 0, twopi);
 
   G4LogicalVolume* gate_logic =
-    new G4LogicalVolume(gate_solid, gate_mat, gate_name);
+    new G4LogicalVolume(gate_solid, _gate_mat, gate_name);
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., gate_posZ), gate_logic,
                     gate_name, el_gap_logic, false, 0, _verbosity);
@@ -540,10 +541,6 @@ void NextFlexFieldCage::BuildELgap()
   /// ANODE ///
   G4String anode_name = "ANODE";
 
-  G4Material* anode_mat = MaterialsList::FakeDielectric(_xenon_gas, "anode_mat");
-  anode_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_gas_pressure,
-    _gas_temperature, _anode_transparency, _anode_thickness));
-
   G4double anode_diam = _active_diam;
   G4double anode_posZ = -_el_gap_length/2. + _anode_thickness/2.;
 
@@ -551,7 +548,7 @@ void NextFlexFieldCage::BuildELgap()
     new G4Tubs(anode_name, 0., anode_diam/2., _anode_thickness/2., 0, twopi);
 
   G4LogicalVolume* anode_logic =
-    new G4LogicalVolume(anode_solid, anode_mat, anode_name);
+    new G4LogicalVolume(anode_solid, _anode_mat, anode_name);
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., anode_posZ), anode_logic,
                     anode_name, el_gap_logic, false, 0, _verbosity);
