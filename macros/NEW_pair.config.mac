@@ -11,7 +11,7 @@
 # Geometry
 /Geometry/NextNew/elfield 0
 /Geometry/NextNew/max_step_size 1. mm
-/Geometry/NextNewOpticalGeometry/pressure 7. bar
+/Geometry/NextNew/pressure 7. bar
 /Geometry/NextNew/field_cage_vis true
 /Geometry/PmtR11410/SD_depth 4
 
