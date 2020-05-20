@@ -9,7 +9,7 @@
 /PhysicsList/RegisterPhysics G4OpticalPhysics
 /PhysicsList/RegisterPhysics NexusPhysics
 
-/Geometry/RegisterGeometry NEXT100
+/Geometry/RegisterGeometry NEXT100_OPT
 
 /Generator/RegisterGenerator SCINTGENERATOR
 
