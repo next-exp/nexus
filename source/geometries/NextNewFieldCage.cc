@@ -71,7 +71,8 @@ namespace nexus {
     _anode_quartz_thickness (3. * mm),
     _anode_quartz_diam (522. * mm),
     _cathode_grid_transparency (.98),
-    _ito_thickness (110 * nm),
+    _pedot_thickness(200.*nm),
+    _ito_thickness  ( 15.*nm),
     //
     _ELtransv_diff(0. * mm/sqrt(cm)),
     _ELlong_diff(0. * mm/sqrt(cm)),
@@ -271,7 +272,9 @@ namespace nexus {
     //ITO coating
     _ito = MaterialsList::ITO();
     _ito->SetMaterialPropertiesTable(OpticalMaterialProperties::ITO());
-
+    // PEDOT coating
+    _pedot = MaterialsList::PEDOT();
+    _pedot->SetMaterialPropertiesTable(OpticalMaterialProperties::PEDOT());
     // Quartz
     _quartz =  MaterialsList::FusedSilica();
     _quartz->SetMaterialPropertiesTable(OpticalMaterialProperties::FusedSilica());
@@ -483,18 +486,17 @@ void NextNewFieldCage::BuildBuffer()
       new G4Tubs("QUARTZ_ANODE", 0., anode_diam/2. , _anode_quartz_thickness/2., 0, twopi);
     G4LogicalVolume* anode_logic =
       new G4LogicalVolume(anode_quartz_solid, _quartz, "EL_QUARTZ_ANODE");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., _pos_z_anode), anode_logic,
-                      "EL_QUARTZ_ANODE", _mother_logic, false, 0, false);
-    //G4cout << "Anode plate starts in " << _pos_z_anode - _anode_quartz_thickness/2. << " and ends in " <<
-    //  _pos_z_anode + _anode_quartz_thickness/2. << G4endl;
+    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., _pos_z_anode),
+                      anode_logic, "EL_QUARTZ_ANODE", _mother_logic, false, 0, false);
 
     G4Tubs* tpb_anode_solid =
       new G4Tubs("TPB_ANODE", 0., anode_diam/2. , _tpb_thickness/2., 0, twopi);
     G4LogicalVolume* tpb_anode_logic =
       new G4LogicalVolume(tpb_anode_solid, _tpb, "TPB_ANODE");
-
-    new G4PVPlacement(0, G4ThreeVector(0., 0., -_anode_quartz_thickness/2.+_tpb_thickness/2.), tpb_anode_logic,
-                        "TPB_ANODE", anode_logic, false, 0, false);
+    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., -_anode_quartz_thickness/2.+_tpb_thickness/2.),
+                      tpb_anode_logic, "TPB_ANODE", anode_logic, false, 0, false);
+    new G4PVPlacement(nullptr, G4ThreeVector(0., 0.,  _anode_quartz_thickness/2.-_tpb_thickness/2.),
+                      tpb_anode_logic, "TPB_ANODE", anode_logic, false, 1, false);
 
     // Optical surface between gas and TPB to model the latter's roughness
     G4OpticalSurface* tpb_anode_surf =
@@ -502,13 +504,19 @@ void NextNewFieldCage::BuildBuffer()
                            dielectric_dielectric, .01);
     new G4LogicalSkinSurface("TPB_ANODE_OPSURF", tpb_anode_logic, tpb_anode_surf);
 
+    G4Tubs* pedot_anode_solid =
+      new G4Tubs("PEDOT_ANODE", 0., anode_diam/2. , _pedot_thickness/2., 0, 360.*deg);
+    G4LogicalVolume* pedot_anode_logic =
+      new G4LogicalVolume(pedot_anode_solid, _pedot, "PEDOT_ANODE");
+    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., -_anode_quartz_thickness/2.+_tpb_thickness+_pedot_thickness/2.),
+                      pedot_anode_logic, "PEDOT_ANODE", anode_logic, false, 0, false);
 
     G4Tubs* ito_anode_solid =
       new G4Tubs("ITO_ANODE", 0., anode_diam/2. , _ito_thickness/2., 0, twopi);
     G4LogicalVolume* ito_anode_logic =
       new G4LogicalVolume(ito_anode_solid, _ito, "ITO_ANODE");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., +_anode_quartz_thickness/2.- _ito_thickness/2.), ito_anode_logic,
-  			"ITO_ANODE", anode_logic, false, 0, false);
+    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., _anode_quartz_thickness/2.-_tpb_thickness-_ito_thickness/2.),
+                      ito_anode_logic, "ITO_ANODE", anode_logic, false, 0, false);
 
     if (_visibility) {
       G4VisAttributes anode_col = nexus::Red();
