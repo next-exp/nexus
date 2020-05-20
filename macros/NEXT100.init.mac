@@ -9,7 +9,7 @@
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
-/Geometry/RegisterGeometry NEXT100
+/Geometry/RegisterGeometry NEXT100_OPT
 
 /Generator/RegisterGenerator ION_GUN
 
