@@ -160,7 +160,7 @@ namespace nexus{
 
     // PEDOT COATING ON SAPPHIRE WINDOW ////////////////////
 
-    G4double pedot_coating_thickn = 15.*nm;
+    G4double pedot_coating_thickn = 200.*nm;
 
     G4Tubs* pedot_coating_solid =
       new G4Tubs("ENCLOSURE_WINDOW_PEDOT", 0., _enclosure_window_diam/2.,
