@@ -9,7 +9,7 @@
 /tracking/verbose 0
 
 ### Generation
-/Generator/ELTableGenerator/num_ie 1000
+/Generator/ELTableGenerator/num_ie 100
 
 ### Geometry
 /Geometry/NextNew/elfield true
