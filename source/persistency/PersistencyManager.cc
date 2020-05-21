@@ -40,7 +40,8 @@ PersistencyManager::PersistencyManager(G4String init_macro,
                                        std::vector<G4String>& macros,
                                        std::vector<G4String>& delayed_macros):
   G4VPersistencyManager(), msg_(0), init_macro_(init_macro), macros_(macros),
-  delayed_macros_(delayed_macros), ready_(false), store_evt_(true),
+  delayed_macros_(delayed_macros), ready_(false),
+  store_evt_(true), store_steps_(false),
   interacting_evt_(false), event_type_("other"), saved_evts_(0),
   interacting_evts_(0), pmt_bin_size_(-1), sipm_bin_size_(-1),
   nevt_(0), start_id_(0), first_evt_(true), h5writer_(0)
@@ -48,7 +49,7 @@ PersistencyManager::PersistencyManager(G4String init_macro,
   msg_ = new G4GenericMessenger(this, "/nexus/persistency/");
   msg_->DeclareMethod("outputFile", &PersistencyManager::OpenFile, "");
   msg_->DeclareProperty("eventType", event_type_,
-                        "Type of event: bb0nu, bb2nu, background or geantino.");
+                        "Type of event: bb0nu, bb2nu, background.");
   msg_->DeclareProperty("start_id", start_id_,
                         "Starting event ID for this job.");
 
@@ -127,16 +128,15 @@ G4bool PersistencyManager::Store(const G4Event* event)
     nevt_ = start_id_;
   }
 
-  if (event_type_ == "geantino") {
+  if (store_steps_)
     StoreSteps();
-  }
-  else {
-    // Store the trajectories of the event
-    StoreTrajectories(event->GetTrajectoryContainer());
 
-    // Store ionization hits and sensor hits
-    StoreHits(event->GetHCofThisEvent());
-  }
+  // Store the trajectories of the event
+  StoreTrajectories(event->GetTrajectoryContainer());
+
+  // Store ionization hits and sensor hits
+  StoreHits(event->GetHCofThisEvent());
+
   nevt_++;
 
   TrajectoryMap::Clear();
