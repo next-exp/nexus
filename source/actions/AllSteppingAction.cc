@@ -7,7 +7,7 @@
 //  Copyright (c) 2020 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#include "GeantinoSteppingAction.h"
+#include "AllSteppingAction.h"
 
 #include <G4Step.hh>
 #include <G4SteppingManager.hh>
@@ -21,31 +21,31 @@ using namespace nexus;
 
 
 
-GeantinoSteppingAction::GeantinoSteppingAction():
+AllSteppingAction::AllSteppingAction():
 G4UserSteppingAction(),
 msg_(0),
 selected_volumes_()
 {
-  msg_ = new G4GenericMessenger(this, "/Actions/GeantinoSteppingAction/");
+  msg_ = new G4GenericMessenger(this, "/Actions/AllSteppingAction/");
 
   msg_->DeclareMethod("select_particle",
-                      &GeantinoSteppingAction::AddSelectedParticle,
+                      &AllSteppingAction::AddSelectedParticle,
                       "add a new particle to select");
 
   msg_->DeclareMethod("select_volume",
-                      &GeantinoSteppingAction::AddSelectedVolume,
+                      &AllSteppingAction::AddSelectedVolume,
                       "add a new volume to select");
 }
 
 
 
-GeantinoSteppingAction::~GeantinoSteppingAction()
+AllSteppingAction::~AllSteppingAction()
 {
 }
 
 
 
-void GeantinoSteppingAction::UserSteppingAction(const G4Step* step)
+void AllSteppingAction::UserSteppingAction(const G4Step* step)
 {
   G4ParticleDefinition* pdef     = step->GetTrack()->GetDefinition();
   G4int                 track_id = step->GetTrack()->GetTrackID();
@@ -74,24 +74,24 @@ void GeantinoSteppingAction::UserSteppingAction(const G4Step* step)
 }
 
 
-void GeantinoSteppingAction::AddSelectedParticle(G4String particle_name)
+void AllSteppingAction::AddSelectedParticle(G4String particle_name)
 {
   G4ParticleDefinition* pdef = G4ParticleTable::GetParticleTable()->FindParticle(particle_name);
   if (!pdef) {
     G4String msg = "No particle description was found for particle name " + particle_name;
-    G4Exception("[GeantinoSteppingAction]", "AddSelectedParticle()", FatalException, msg);
+    G4Exception("[AllSteppingAction]", "AddSelectedParticle()", FatalException, msg);
   }
   selected_particles_.push_back(pdef);
 }
 
 
-void GeantinoSteppingAction::AddSelectedVolume(G4String volume_name)
+void AllSteppingAction::AddSelectedVolume(G4String volume_name)
 {
   selected_volumes_.push_back(volume_name);
 }
 
 
-G4bool GeantinoSteppingAction::KeepParticle(G4ParticleDefinition* pdef)
+G4bool AllSteppingAction::KeepParticle(G4ParticleDefinition* pdef)
 {
   if (!selected_particles_.size()) return true;
 
@@ -100,7 +100,7 @@ G4bool GeantinoSteppingAction::KeepParticle(G4ParticleDefinition* pdef)
 }
 
 
-G4bool GeantinoSteppingAction::KeepVolume(G4String& initial_volume, G4String& final_volume)
+G4bool AllSteppingAction::KeepVolume(G4String& initial_volume, G4String& final_volume)
 {
   if (!selected_volumes_.size()) return true;
 
@@ -115,7 +115,7 @@ G4bool GeantinoSteppingAction::KeepVolume(G4String& initial_volume, G4String& fi
 
 
 
-void GeantinoSteppingAction::Reset()
+void AllSteppingAction::Reset()
 {
   initial_volumes_.clear();
     final_volumes_.clear();

@@ -15,7 +15,7 @@
 #include "PmtSD.h"
 #include "NexusApp.h"
 #include "DetectorConstruction.h"
-#include "GeantinoSteppingAction.h"
+#include "AllSteppingAction.h"
 #include "BaseGeometry.h"
 #include "HDF5Writer.h"
 
@@ -333,7 +333,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
 
 void PersistencyManager::StoreSteps()
 {
-  GeantinoSteppingAction* sa = (GeantinoSteppingAction*)
+  AllSteppingAction* sa = (AllSteppingAction*)
     G4RunManager::GetRunManager()->GetUserSteppingAction();
 
   GeantinoContainer<G4String> initial_volumes = sa->get_initial_volumes();

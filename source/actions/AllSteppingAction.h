@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
-///  \file   GeantinoSteppingAction.h
-///  \brief  Stepping action to record geantino crossing boundaries.
+///  \file   AllSteppingAction.h
+///  \brief  Stepping action to record every step of a particle.
 ///
 ///  \author   <gonzalo.martinez.lema@weizmann.ac.il>
 ///  \date     01 May 2020
@@ -9,8 +9,8 @@
 ///  Copyright (c) 2020 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef GEANTINO_STEPPING_ACTION_H
-#define GEANTINO_STEPPING_ACTION_H
+#ifndef ALL_STEPPING_ACTION_H
+#define ALL_STEPPING_ACTION_H
 
 #include <G4UserSteppingAction.hh>
 #include <G4ParticleDefinition.hh>
@@ -31,13 +31,13 @@ namespace nexus {
 
   //  Stepping action to analyze the behaviour of optical photons
 
-  class GeantinoSteppingAction: public G4UserSteppingAction
+  class AllSteppingAction: public G4UserSteppingAction
   {
   public:
     /// Constructor
-    GeantinoSteppingAction();
+    AllSteppingAction();
     /// Destructor
-    ~GeantinoSteppingAction();
+    ~AllSteppingAction();
 
     virtual void UserSteppingAction(const G4Step*);
 
@@ -72,12 +72,12 @@ namespace nexus {
     G4bool        KeepParticle(G4ParticleDefinition*);
   };
 
-inline GeantinoContainer<G4String> GeantinoSteppingAction::get_initial_volumes(){return initial_volumes_;}
-inline GeantinoContainer<G4String> GeantinoSteppingAction::get_final_volumes  (){return   final_volumes_;}
-inline GeantinoContainer<G4String> GeantinoSteppingAction::get_proc_names     (){return      proc_names_;}
+inline GeantinoContainer<G4String> AllSteppingAction::get_initial_volumes(){return initial_volumes_;}
+inline GeantinoContainer<G4String> AllSteppingAction::get_final_volumes  (){return   final_volumes_;}
+inline GeantinoContainer<G4String> AllSteppingAction::get_proc_names     (){return      proc_names_;}
 
-inline GeantinoContainer<G4ThreeVector> GeantinoSteppingAction::get_initial_poss(){return initial_poss_;}
-inline GeantinoContainer<G4ThreeVector> GeantinoSteppingAction::get_final_poss  (){return   final_poss_;}
+inline GeantinoContainer<G4ThreeVector> AllSteppingAction::get_initial_poss(){return initial_poss_;}
+inline GeantinoContainer<G4ThreeVector> AllSteppingAction::get_final_poss  (){return   final_poss_;}
 
 } // namespace nexus
 
