@@ -5,15 +5,26 @@ import os
 import subprocess
 import numpy as np
 
+"""
+This module runs all the example init macros contained in the macro folder.
+Caveats:
+1. Each config file needs to have the same name of the init file that calls it.
+2. Examples of config files only are not run, for the time being.
+"""
+
 all_macros = np.array(glob.glob('macros/**/*.init.mac', recursive=True))
 full       = np.array(['full'  in m for m in all_macros])
 lu_table   = np.array(['table' in m for m in all_macros])
 
-full_macros = all_macros[full | lu_table]
+full_macros = all_macros[  full | lu_table]
 fast_macros = all_macros[~(full | lu_table)]
 
 
 def copy_and_modify_macro(config_tmpdir, output_tmpdir, init_macro):
+    """
+    Copy the init and config macro to a temporary directory, modifying
+    the fields related to the path of the config and the output file.
+    """
     init_name  = init_macro.split('/')[-1]
     config_macro = init_macro.replace('init', 'config')
     config_name  = config_macro.split('/')[-1]
@@ -46,7 +57,7 @@ def copy_and_modify_macro(config_tmpdir, output_tmpdir, init_macro):
     return cp_init_macro
 
 
-def go_through_macro_list(capmanager, config_tmpdir, output_tmpdir, macro_list):
+def execute_example_jobs(capmanager, config_tmpdir, output_tmpdir, macro_list):
     my_env = os.environ.copy()
 
     for macro in macro_list:
@@ -59,19 +70,22 @@ def go_through_macro_list(capmanager, config_tmpdir, output_tmpdir, macro_list):
 
 
 def test_run_fast_examples(request, config_tmpdir, output_tmpdir):
+    """Run fast simulation macros"""
     capmanager = request.config.pluginmanager.getplugin("capturemanager")
 
     with capmanager.global_and_fixture_disabled():
         print(f'*** Fast simulations ***')
 
-    go_through_macro_list(capmanager, config_tmpdir, output_tmpdir, fast_macros)
+    execute_example_jobs(capmanager, config_tmpdir, output_tmpdir, fast_macros)
+
 
 
 def test_run_full_examples(request, config_tmpdir, output_tmpdir):
+    """Run full simulation macros"""
     capmanager = request.config.pluginmanager.getplugin("capturemanager")
 
     with capmanager.global_and_fixture_disabled():
         print('')
         print(f'*** Full simulations - some of them are slow ***')
 
-    go_through_macro_list(capmanager, config_tmpdir, output_tmpdir, full_macros)
+    execute_example_jobs(capmanager, config_tmpdir, output_tmpdir, full_macros)
