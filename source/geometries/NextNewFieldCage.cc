@@ -66,7 +66,6 @@ namespace nexus {
     _tpb_thickness(1. * micrometer),
     _el_gap_length (6 * mm),
     _grid_thickness (.1 * mm), //it's just fake dielectric
-    _el_grid_transparency (.88),
     _gate_transparency (.84),
     _anode_quartz_thickness (3. * mm),
     _anode_quartz_diam (522. * mm),
@@ -428,13 +427,6 @@ void NextNewFieldCage::BuildBuffer()
     }
 
     ///// EL GRIDS /////
-
-    G4Material* fgrid_mat =
-      MaterialsList::FakeDielectric(_gas, "el_grid_anode_mat");
-    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure,
-                                                                              _temperature,
-                                                                              _el_grid_transparency,
-                                                                              _grid_thickness));
 
     G4Material* fgate_mat =
       MaterialsList::FakeDielectric(_gas, "el_grid_gate_mat");
