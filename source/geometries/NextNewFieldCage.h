@@ -138,10 +138,6 @@ namespace nexus {
     mutable std::vector<G4ThreeVector> _el_table_vertices;
     G4double _el_table_binning;
     G4double _el_table_z;
-
-    // Scintillation yield
-    G4double _sc_yield;
-
   };
 
 } //end namespace nexus
