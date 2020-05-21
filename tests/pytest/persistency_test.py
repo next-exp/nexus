@@ -8,11 +8,62 @@ import numpy as np
 
 
 @pytest.fixture(scope="module")
-def input_file(request):
+def input_file(config_tmpdir, output_tmpdir):
+
+     base_name = 'NEXT100_optical'
+
+     init_text = f"""
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+/PhysicsList/RegisterPhysics G4OpticalPhysics
+/PhysicsList/RegisterPhysics NexusPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
+
+/Geometry/RegisterGeometry NEXT100_OPT
+
+/Generator/RegisterGenerator SINGLE_PARTICLE
+
+/Actions/RegisterTrackingAction DEFAULT
+/Actions/RegisterEventAction DEFAULT
+/Actions/RegisterRunAction DEFAULT
+
+/nexus/RegisterMacro {config_tmpdir}/{base_name}.config.mac
+"""
+     init_path = os.path.join(config_tmpdir, base_name+'.init.mac')
+     init_file = open(init_path,'w')
+     init_file.write(init_text)
+     init_file.close()
+
+     config_text = f"""
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+/Geometry/Next100/elfield true
+/Geometry/Next100/EL_field 10 kV/cm
+/Geometry/Next100/max_step_size 1. mm
+/Geometry/Next100/pressure 15. bar
+/Geometry/Next100/sc_yield 10000 1/MeV
+/Geometry/PmtR11410/SD_depth 3
+
+/Generator/SingleParticle/particle e-
+/Generator/SingleParticle/min_energy 100. keV
+/Generator/SingleParticle/max_energy 100. keV
+/Generator/SingleParticle/region ACTIVE
+
+/nexus/persistency/outputFile {output_tmpdir}/{base_name}
+"""
+
+     config_path = os.path.join(config_tmpdir, base_name+'.config.mac')
+     config_file = open(config_path,'w')
+     config_file.write(config_text)
+     config_file.close()
+
      my_env = os.environ.copy()
-     command = ['./nexus', '-b', '-n', '1', 'tests/pytest/test_macros/NEXT100_optical.init.mac']
+     command = ['./nexus', '-b', '-n', '1', init_path]
      p = subprocess.run(command, check=True, env=my_env)
-     input_file_for_tests = 'tests/pytest/NEXT100_electron_full.h5'
+     input_file_for_tests = os.path.join(output_tmpdir, base_name+'.h5')
 
      return input_file_for_tests
 
