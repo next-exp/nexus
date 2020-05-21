@@ -336,12 +336,12 @@ void PersistencyManager::StoreSteps()
   AllSteppingAction* sa = (AllSteppingAction*)
     G4RunManager::GetRunManager()->GetUserSteppingAction();
 
-  GeantinoContainer<G4String> initial_volumes = sa->get_initial_volumes();
-  GeantinoContainer<G4String>   final_volumes = sa->get_final_volumes  ();
-  GeantinoContainer<G4String>      proc_names = sa->get_proc_names     ();
+  StepContainer<G4String> initial_volumes = sa->get_initial_volumes();
+  StepContainer<G4String>   final_volumes = sa->get_final_volumes  ();
+  StepContainer<G4String>      proc_names = sa->get_proc_names     ();
 
-  GeantinoContainer<G4ThreeVector> initial_poss = sa->get_initial_poss();
-  GeantinoContainer<G4ThreeVector>   final_poss = sa->get_final_poss  ();
+  StepContainer<G4ThreeVector> initial_poss = sa->get_initial_poss();
+  StepContainer<G4ThreeVector>   final_poss = sa->get_final_poss  ();
 
   for (auto it = initial_volumes.begin(); it != initial_volumes.end(); ++it) {
     G4int track_id = it->first;

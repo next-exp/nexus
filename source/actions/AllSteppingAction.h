@@ -24,7 +24,7 @@
 class G4Step;
 
 template<typename T>
-using GeantinoContainer = std::map<G4int, std::vector<T>>;
+using StepContainer = std::map<G4int, std::vector<T>>;
 
 
 namespace nexus {
@@ -47,21 +47,21 @@ namespace nexus {
     std::vector<G4String>              selected_volumes_;
     std::vector<G4ParticleDefinition*> selected_particles_;
 
-    GeantinoContainer<G4String> initial_volumes_;
-    GeantinoContainer<G4String>   final_volumes_;
-    GeantinoContainer<G4String>      proc_names_;
+    StepContainer<G4String> initial_volumes_;
+    StepContainer<G4String>   final_volumes_;
+    StepContainer<G4String>      proc_names_;
 
-    GeantinoContainer<G4ThreeVector> initial_poss_;
-    GeantinoContainer<G4ThreeVector>   final_poss_;
+    StepContainer<G4ThreeVector> initial_poss_;
+    StepContainer<G4ThreeVector>   final_poss_;
 
   public:
 
-    GeantinoContainer<G4String> get_initial_volumes();
-    GeantinoContainer<G4String> get_final_volumes();
-    GeantinoContainer<G4String> get_proc_names();
+    StepContainer<G4String> get_initial_volumes();
+    StepContainer<G4String> get_final_volumes();
+    StepContainer<G4String> get_proc_names();
 
-    GeantinoContainer<G4ThreeVector> get_initial_poss();
-    GeantinoContainer<G4ThreeVector> get_final_poss();
+    StepContainer<G4ThreeVector> get_initial_poss();
+    StepContainer<G4ThreeVector> get_final_poss();
 
     void Reset();
 
@@ -72,12 +72,12 @@ namespace nexus {
     G4bool        KeepParticle(G4ParticleDefinition*);
   };
 
-inline GeantinoContainer<G4String> AllSteppingAction::get_initial_volumes(){return initial_volumes_;}
-inline GeantinoContainer<G4String> AllSteppingAction::get_final_volumes  (){return   final_volumes_;}
-inline GeantinoContainer<G4String> AllSteppingAction::get_proc_names     (){return      proc_names_;}
+inline StepContainer<G4String> AllSteppingAction::get_initial_volumes(){return initial_volumes_;}
+inline StepContainer<G4String> AllSteppingAction::get_final_volumes  (){return   final_volumes_;}
+inline StepContainer<G4String> AllSteppingAction::get_proc_names     (){return      proc_names_;}
 
-inline GeantinoContainer<G4ThreeVector> AllSteppingAction::get_initial_poss(){return initial_poss_;}
-inline GeantinoContainer<G4ThreeVector> AllSteppingAction::get_final_poss  (){return   final_poss_;}
+inline StepContainer<G4ThreeVector> AllSteppingAction::get_initial_poss(){return initial_poss_;}
+inline StepContainer<G4ThreeVector> AllSteppingAction::get_final_poss  (){return   final_poss_;}
 
 } // namespace nexus
 
