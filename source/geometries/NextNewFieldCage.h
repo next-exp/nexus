@@ -92,7 +92,7 @@ namespace nexus {
     G4double  _ring_width, _ring_thickness, _tube_z_pos;
     G4double _tpb_thickness;
     G4double _el_gap_z_pos, _pos_z_anode, _pos_z_cathode, _el_gap_length, _grid_thickness;
-    G4double _el_grid_transparency, _gate_transparency;
+    G4double _gate_transparency;
     G4double _anode_quartz_thickness, _anode_quartz_diam; //_anode_quartz_transparency
     G4double _cathode_grid_transparency;
     G4double _pedot_thickness;
@@ -138,10 +138,6 @@ namespace nexus {
     mutable std::vector<G4ThreeVector> _el_table_vertices;
     G4double _el_table_binning;
     G4double _el_table_z;
-
-    // Scintillation yield
-    G4double _sc_yield;
-
   };
 
 } //end namespace nexus

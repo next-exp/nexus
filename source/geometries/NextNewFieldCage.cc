@@ -66,7 +66,6 @@ namespace nexus {
     _tpb_thickness(1. * micrometer),
     _el_gap_length (6 * mm),
     _grid_thickness (.1 * mm), //it's just fake dielectric
-    _el_grid_transparency (.88),
     _gate_transparency (.84),
     _anode_quartz_thickness (3. * mm),
     _anode_quartz_diam (522. * mm),
@@ -87,9 +86,7 @@ namespace nexus {
     // EL field ON or OFF
     _elfield(0),
     _el_table_index(0),
-    _el_table_binning(5. * mm),
-    // Scintillation yield and electron lifetime
-    _sc_yield(25510. * 1/MeV)
+    _el_table_binning(5. * mm)
   {
     // Derived dimensions
     _buffer_length =
@@ -289,8 +286,7 @@ namespace nexus {
     fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure,
                                                                               _temperature,
                                                                               _cathode_grid_transparency,
-                                                                              _cathode_thickness,
-                                                                              _sc_yield));
+                                                                              _cathode_thickness));
     // Dimensions & position
     G4double grid_diam = _tube_in_diam;
 
@@ -432,21 +428,12 @@ void NextNewFieldCage::BuildBuffer()
 
     ///// EL GRIDS /////
 
-    G4Material* fgrid_mat =
-      MaterialsList::FakeDielectric(_gas, "el_grid_anode_mat");
-    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure,
-                                                                              _temperature,
-                                                                              _el_grid_transparency,
-                                                                              _grid_thickness,
-                                                                              _sc_yield));
-
     G4Material* fgate_mat =
       MaterialsList::FakeDielectric(_gas, "el_grid_gate_mat");
     fgate_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure,
                                                                               _temperature,
                                                                               _gate_transparency,
-                                                                              _grid_thickness,
-                                                                              _sc_yield));
+                                                                              _grid_thickness));
 
     // Dimensions & position: the grids are simulated inside the EL gap.
     // Their thickness is symbolic.
