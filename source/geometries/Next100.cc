@@ -183,7 +183,7 @@ namespace nexus {
 	     (region == "BUFFER") ||
 	     (region == "XENON") ||
 	     (region == "LIGHT_TUBE") ||
-	     (region == "ENERGY_COPPER_PLATE") ||
+	     (region == "EP_COPPER_PLATE") ||
 	     (region == "SAPPHIRE_WINDOW") ||
 	     (region == "OPTICAL_PAD") ||
 	     (region == "PMT_BODY") ||

@@ -123,7 +123,7 @@ namespace nexus {
       vertex = _field_cage->GenerateVertex(region);
     }
     // Energy Plane regions
-    else if ((region == "ENERGY_COPPER_PLATE") ||
+    else if ((region == "EP_COPPER_PLATE") ||
              (region == "SAPPHIRE_WINDOW") ||
              (region == "OPTICAL_PAD") ||
 	     (region == "PMT") ||
