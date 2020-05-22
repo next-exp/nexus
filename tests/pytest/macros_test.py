@@ -71,6 +71,7 @@ def test_run_fast_examples(request, config_tmpdir, output_tmpdir):
     capmanager = request.config.pluginmanager.getplugin("capturemanager")
 
     with capmanager.global_and_fixture_disabled():
+        print('')
         print(f'*** Fast simulations ***')
 
     execute_example_jobs(capmanager, config_tmpdir, output_tmpdir, fast_macros)
