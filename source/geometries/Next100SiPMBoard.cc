@@ -1,8 +1,9 @@
 // -----------------------------------------------------------------------------
 //  nexus | Next100SiPMBoard.cc
 //
-//  NEXT-100 SiPM board implementation. It contains the 8x8 SiPMs arranged in a
-//  square matrix, and the teflon masks.
+//  Geometry of the NEXT-100 SiPM board, consisting of an 8x8 array of
+//  silicon photomultipliers (1.3x1.3 mm2 of active area) mounted on a Kapton
+//  board covered with a TPB-coated teflon mask.
 //
 //  The NEXT Collaboration
 // -----------------------------------------------------------------------------
@@ -55,14 +56,15 @@ Next100SiPMBoard::Next100SiPMBoard():
 
 Next100SiPMBoard::~Next100SiPMBoard()
 {
+  delete msg_;
   delete vtxgen_;
   delete sipm_;
-  delete msg_;
 }
 
 
 void Next100SiPMBoard::Construct()
 {
+  // Make sure the mother physical volume is actually valid
   if (!mpv_)
     G4Exception("[Next100SiPMBoard]", "Construct()",
                 FatalException, "Mother volume is a nullptr.");

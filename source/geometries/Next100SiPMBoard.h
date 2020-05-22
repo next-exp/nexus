@@ -1,8 +1,9 @@
 // -----------------------------------------------------------------------------
 //  nexus | Next100SiPMBoard.h
 //
-//  NEXT-100 SiPM board implemntation. It contains the 8x8 SiPMs arranged in a
-//  square matrix, and the teflon masks.
+//  Geometry of the NEXT-100 SiPM board, consisting of an 8x8 array of
+//  silicon photomultipliers (1.3x1.3 mm2 of active area) mounted on a Kapton
+//  board covered with a TPB-coated teflon mask.
 //
 //  The NEXT Collaboration
 // -----------------------------------------------------------------------------
@@ -24,7 +25,7 @@ namespace nexus {
 
   // Geometry of the 8x8 SiPM boards used in the tracking plane of NEXT-100
 
-  class Next100SiPMBoard: public nexus::BaseGeometry
+  class Next100SiPMBoard: public BaseGeometry
   {
   public:
     // Default constructor
@@ -34,9 +35,9 @@ namespace nexus {
     //
     void SetMotherPhysicalVolume(G4VPhysicalVolume*);
     //
-    void Construct();
+    void Construct() override;
     //
-    G4ThreeVector GenerateVertex(const G4String&) const;
+    G4ThreeVector GenerateVertex(const G4String&) const override;
 
     G4double GetSize() const;
     G4double GetThickness() const;
@@ -62,7 +63,7 @@ namespace nexus {
 
   inline G4double Next100SiPMBoard::GetThickness() const
   { return (board_thickness_ + mask_thickness_); }
-  
+
   inline const std::vector<G4ThreeVector>& Next100SiPMBoard::GetSiPMPositions() const
   { return sipm_positions_; }
 
