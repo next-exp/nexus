@@ -24,7 +24,7 @@
 # Ion Gun for background decays
 /Generator/IonGun/atomic_number 83
 /Generator/IonGun/mass_number 214
-/Generator/IonGun/region TRK_SUPPORT
+/Generator/IonGun/region TP_COPPER_PLATE
 
 # ACTIONS
 /Actions/DefaultEventAction/energy_threshold 0.6 MeV
