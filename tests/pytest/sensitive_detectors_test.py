@@ -3,13 +3,10 @@ import pytest
 import os
 import subprocess
 import pandas as pd
-import tables as tb
-import numpy as np
 
 
-@pytest.fixture(scope="module")
-def nexus_output_file(config_tmpdir, output_tmpdir):
-     base_name = 'NEXT100_sensdet'
+@pytest.mark.first
+def test_create_nexus_output_file(config_tmpdir, output_tmpdir, base_name, nexus_output_file):
 
      init_text = f"""
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -64,9 +61,8 @@ def nexus_output_file(config_tmpdir, output_tmpdir):
      my_env = os.environ.copy()
      command = ['./nexus', '-b', '-n', '1', init_path]
      p = subprocess.run(command, check=True, env=my_env)
-     nexus_file_for_tests = os.path.join(output_tmpdir, base_name+'.h5')
 
-     return nexus_file_for_tests
+     return nexus_output_file
 
 
 def test_sensor_ids_are_sensible(nexus_output_file):
