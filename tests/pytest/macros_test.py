@@ -57,36 +57,34 @@ def copy_and_modify_macro(config_tmpdir, output_tmpdir, init_macro):
     return cp_init_macro
 
 
-def execute_example_jobs(capmanager, config_tmpdir, output_tmpdir, macro_list):
+def execute_example_jobs(capsys, config_tmpdir, output_tmpdir, macro_list):
     my_env = os.environ.copy()
 
     for macro in macro_list:
         init_macro = copy_and_modify_macro(config_tmpdir, output_tmpdir, macro)
         command = ['./nexus', '-b', '-n', '1', init_macro]
-        with capmanager.global_and_fixture_disabled():
+        with capsys.disabled():
             print(f'Running {macro}')
         p  = subprocess.run(command, check=True, env=my_env)
 
 
 @pytest.mark.second_to_last
-def test_run_fast_examples(request, config_tmpdir, output_tmpdir):
+def test_run_fast_examples(capsys, config_tmpdir, output_tmpdir):
     """Run fast simulation macros"""
-    capmanager = request.config.pluginmanager.getplugin("capturemanager")
 
-    with capmanager.global_and_fixture_disabled():
+    with capsys.disabled():
         print('')
         print(f'*** Fast simulations ***')
 
-    execute_example_jobs(capmanager, config_tmpdir, output_tmpdir, fast_macros)
+    execute_example_jobs(capsys, config_tmpdir, output_tmpdir, fast_macros)
 
 
 @pytest.mark.last
-def test_run_full_examples(request, config_tmpdir, output_tmpdir):
+def test_run_full_examples(capsys, config_tmpdir, output_tmpdir):
     """Run full simulation macros"""
-    capmanager = request.config.pluginmanager.getplugin("capturemanager")
 
-    with capmanager.global_and_fixture_disabled():
+    with capsys.disabled():
         print('')
         print(f'*** Full simulations - some of them are slow ***')
 
-    execute_example_jobs(capmanager, config_tmpdir, output_tmpdir, full_macros)
+    execute_example_jobs(capsys, config_tmpdir, output_tmpdir, full_macros)
