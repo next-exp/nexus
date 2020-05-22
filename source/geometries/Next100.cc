@@ -190,7 +190,7 @@ namespace nexus {
 	     (region == "PMT") ||
 	     (region == "INTERNAL_PMT_BASE") ||
 	     (region == "EXTERNAL_PMT_BASE") ||
-	     (region == "TRK_SUPPORT") ||
+	     (region == "TP_COPPER_PLATE") ||
 	     (region == "DICE_BOARD") ||
 	     (region == "AXIAL_PORT") ||
 	     (region == "EL_TABLE") ) {

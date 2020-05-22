@@ -133,7 +133,7 @@ namespace nexus {
       vertex = _energy_plane->GenerateVertex(region);
     }
     // Tracking Plane regions
-    else if ((region == "TRK_SUPPORT") ||
+    else if ((region == "TP_COPPER_PLATE") ||
              (region == "SIPM_BOARD")) {
       vertex = _tracking_plane->GenerateVertex(region);
     }
