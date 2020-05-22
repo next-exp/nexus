@@ -37,15 +37,15 @@ def test_create_nexus_output_file(config_tmpdir, output_tmpdir, full_base_name, 
 /tracking/verbose 0
 
 /Geometry/Next100/elfield true
-/Geometry/Next100/EL_field 10 kV/cm
+/Geometry/Next100/EL_field 13 kV/cm
 /Geometry/Next100/max_step_size 1. mm
 /Geometry/Next100/pressure 15. bar
 /Geometry/Next100/sc_yield 10000 1/MeV
 /Geometry/PmtR11410/SD_depth 3
 
 /Generator/SingleParticle/particle e-
-/Generator/SingleParticle/min_energy 50. keV
-/Generator/SingleParticle/max_energy 50. keV
+/Generator/SingleParticle/min_energy 100. keV
+/Generator/SingleParticle/max_energy 100. keV
 /Generator/SingleParticle/region ACTIVE
 
 /nexus/persistency/outputFile {output_tmpdir}/{full_base_name}
