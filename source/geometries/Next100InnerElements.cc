@@ -47,7 +47,7 @@ namespace nexus {
   Next100InnerElements::Next100InnerElements():
     BaseGeometry(),
     _gate_sapphire_wdw_distance ( 1441.7 * mm), // should be active length + cathode thickness + buffer length
-    _gate_tracking_plane_distance(  25.6 * mm),
+    _gate_tracking_plane_distance(  25.6 * mm), // Distance between gate and TP copper plate
     _mother_logic(nullptr),
     _mother_phys (nullptr),
     _gas(nullptr),

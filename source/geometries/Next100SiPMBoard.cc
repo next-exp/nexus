@@ -192,7 +192,7 @@ void Next100SiPMBoard::Construct()
   G4double sipm_zpos = - mask_hole_length/2. + sipm_->GetThickness()/2.;
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., sipm_zpos),
-                    sipm_->GetLogicalVolume(), sipm_->GetName(), mask_hole_logic_vol,
+                    sipm_->GetLogicalVolume(), sipm_->GetLogicalVolume()->GetName(), mask_hole_logic_vol,
                     false, 0, false);
 
 
