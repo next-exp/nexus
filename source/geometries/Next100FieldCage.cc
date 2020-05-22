@@ -403,7 +403,7 @@ void Next100FieldCage::BuildBuffer()
 
     /// EL grids
     G4Material* fgrid_mat = MaterialsList::FakeDielectric(_gas, "el_grid_mat");
-    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _el_grid_transparency, _grid_thickn, _sc_yield));
+    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _el_grid_transparency, _grid_thickn));
 
 
     /// Dimensions & position: the grids are simulated inside the EL gap.
