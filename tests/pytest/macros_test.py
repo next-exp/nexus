@@ -1,5 +1,3 @@
-import pytest
-
 import glob
 import os
 import subprocess
@@ -68,7 +66,6 @@ def execute_example_jobs(capmanager, config_tmpdir, output_tmpdir, macro_list):
         p  = subprocess.run(command, check=True, env=my_env)
 
 
-
 def test_run_fast_examples(request, config_tmpdir, output_tmpdir):
     """Run fast simulation macros"""
     capmanager = request.config.pluginmanager.getplugin("capturemanager")
@@ -77,7 +74,6 @@ def test_run_fast_examples(request, config_tmpdir, output_tmpdir):
         print(f'*** Fast simulations ***')
 
     execute_example_jobs(capmanager, config_tmpdir, output_tmpdir, fast_macros)
-
 
 
 def test_run_full_examples(request, config_tmpdir, output_tmpdir):
