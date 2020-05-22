@@ -103,7 +103,7 @@ void Next100SiPMBoard::Construct()
                           mask_name);
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., mask_zpos),
-                    mask_logic_vol, mask_name, board_logic_vol, false, 0, true);
+                    mask_logic_vol, mask_name, board_logic_vol, false, 0, false);
 
   G4OpticalSurface* mask_opsurf =
     new G4OpticalSurface(mask_name+"_OPSURF", unified, ground, dielectric_metal);
@@ -129,7 +129,7 @@ void Next100SiPMBoard::Construct()
   G4VPhysicalVolume* mask_wls_phys_vol =
     new G4PVPlacement(nullptr, G4ThreeVector(0., 0., mask_wls_zpos),
                       mask_wls_logic_vol, mask_wls_name, mask_logic_vol,
-                      false, 0, true);
+                      false, 0, false);
 
   G4OpticalSurface* mask_wls_opsurf =
     new G4OpticalSurface(mask_wls_name+"_OPSURF",
@@ -193,7 +193,7 @@ void Next100SiPMBoard::Construct()
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., sipm_zpos),
                     sipm_->GetLogicalVolume(), sipm_->GetName(), mask_hole_logic_vol,
-                    false, 0, true);
+                    false, 0, false);
 
 
   ////////////////////////////////////////////////////////////////////
@@ -218,11 +218,11 @@ void Next100SiPMBoard::Construct()
       // Placement of the WLS gas hole
       new G4PVPlacement(nullptr, G4ThreeVector(xpos, ypos, 0.),
                         mask_wls_hole_logic_vol, mask_wls_hole_name, mask_wls_logic_vol,
-                        false, counter, true);
+                        false, counter, false);
       // Placement of the hole+SiPM
       new G4PVPlacement(nullptr, G4ThreeVector(xpos, ypos, mask_hole_zpos),
                         mask_hole_logic_vol, mask_hole_name, mask_logic_vol,
-                        false, counter, true);
+                        false, counter, false);
 
       counter++;
     }
