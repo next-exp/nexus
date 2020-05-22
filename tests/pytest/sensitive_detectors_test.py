@@ -65,6 +65,7 @@ def test_create_nexus_output_file(config_tmpdir, output_tmpdir, full_base_name, 
      return nexus_full_output_file
 
 
+@pytest.mark.second
 def test_sensor_ids_are_sensible(nexus_full_output_file):
      """
      Check that we are not registering all photoelectrons
