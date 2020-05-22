@@ -32,11 +32,14 @@ namespace nexus {
     //
     void SetMotherPhysicalVolume(G4VPhysicalVolume*);
     //
-    void Construct();
+    void Construct() override;
     //
-    G4ThreeVector GenerateVertex(const G4String&) const;
+    G4ThreeVector GenerateVertex(const G4String&) const override;
 
     void PrintSiPMPositions() const;
+
+  private:
+    void PlaceSiPMBoardColumns(G4int, G4double, G4double, G4int&, G4LogicalVolume*);
 
   private:
     const G4double z0_; // Z position of origin of coordinates
