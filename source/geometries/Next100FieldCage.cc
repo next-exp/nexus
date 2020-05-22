@@ -47,15 +47,17 @@ namespace nexus {
     BaseGeometry(),
     // Dimensions
     _active_diam (984 * mm), // distance between the centers of two opposite panels
-    _active_length (1159.6 * mm), // distance between gate and cathode
-    _buffer_length (282. * mm),//distance between cathode and sapphire window surfaces
+    gate_cathode_centre_dist_ (1205. * mm), // distance between gate and the centre of cathode grid
+    gate_sapphire_wdw_dist_ (1460.5 * mm), // distance between gate and the surface of sapphire windows
+    cathode_diam_ (980. * mm), // internal diameter of cathode mesh
     _grid_thickn (.1 * mm),
-    _cathode_gap (1. * cm),
-    _teflon_drift_length (1152.6 * mm), // to check with final design
-    _teflon_buffer_length (277. * mm), // to check with final design
+    _cathode_gap (27. * mm),
+    _teflon_total_length (1432. * mm),
     _teflon_thickn (5 * mm),
+    gate_teflon_dist_ (16. * mm),
     _n_panels (18),
     _tpb_thickn (1 * micrometer),
+    _el_gap_diam (1009. * mm), // internal diameter of EL meshes
     _el_gap_length (1. * cm),
     // Diffusion constants
     _drift_transv_diff (1. * mm/sqrt(cm)),
@@ -152,21 +154,29 @@ namespace nexus {
 
   void Next100FieldCage::Construct()
   {
-    /// Calculate derived positions
-    _active_zpos = GetELzCoord() + _active_length/2.;
-    _el_gap_diam = _active_diam + 2. * cm; // TO CHECK
-    _el_gap_zpos = _active_zpos - _active_length/2. - _el_gap_length/2.;
-    _cathode_grid_zpos = _active_zpos + _active_length/2. + _grid_thickn/2. ;
-    _active_ext_radius = _active_diam/2. / cos(pi/_n_panels);
+    /// Calculate lengths of active and buffer regions
+    _active_length = gate_cathode_centre_dist_ - _grid_thickn/2.;
+    _buffer_length = gate_sapphire_wdw_dist_ - _active_length - _grid_thickn;
+
+    /// Calculate derived positions in mother volume
+    _active_zpos       = GetELzCoord() + _active_length/2.;
+    _cathode_grid_zpos = GetELzCoord() + gate_cathode_centre_dist_;
+    _el_gap_zpos       = _active_zpos - _active_length/2. - _el_gap_length/2.;
+
+    if (_verbosity) {
+      G4cout << "Active length = " << _active_length/mm << " mm" << G4endl;
+      G4cout << "Buffer length = " << _buffer_length/mm << " mm" << G4endl;
+      G4cout << G4endl;
+    }
 
     /// Define materials to be used
     DefineMaterials();
-    /// Build the different parts of the field cagse
-    BuildCathodeGrid();
-    BuildELRegion();
+    /// Build the different parts of the field cage
     BuildActive();
-    BuildFieldCage();
+    BuildCathodeGrid();
     BuildBuffer();
+    BuildELRegion();
+    BuildFieldCage();
 
     /// Calculate EL table vertices
     G4double z = _el_gap_zpos + _el_gap_length/2.;
@@ -254,7 +264,112 @@ namespace nexus {
     // G4VisAttributes active_col = nexus::Red();
     // active_col.SetForceSolid(true);
     // active_logic->SetVisAttributes(active_col);
+
+    /// Verbosity
+    if (_verbosity) {
+      G4cout << "Active starts in " << (_active_zpos - _active_length/2.)/mm
+	     << " mm and ends in "
+	     << (_active_zpos + _active_length/2.)/mm << " mm" << G4endl;
+    }
   }
+
+
+
+    void Next100FieldCage::BuildCathodeGrid()
+  {
+    G4Material* fgrid_mat = MaterialsList::FakeDielectric(_gas, "cath_grid_mat");
+    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _cath_grid_transparency, _grid_thickn));
+
+    G4Tubs* diel_grid_solid =
+      new G4Tubs("CATHODE_GRID", 0., cathode_diam_/2., _grid_thickn/2., 0, twopi);
+
+    G4LogicalVolume* diel_grid_logic =
+      new G4LogicalVolume(diel_grid_solid, fgrid_mat, "CATHODE_GRID");
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., _cathode_grid_zpos),
+		      diel_grid_logic, "CATHODE_GRID", _mother_logic,
+		      false, 0, false);
+
+
+    /// Visibilities
+    if (_visibility) {
+      G4VisAttributes grey = nexus::LightGrey();
+      diel_grid_logic->SetVisAttributes(grey);
+    } else {
+      diel_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
+
+
+    /// Verbosity
+    if (_verbosity) {
+      G4cout << "Cathode grid pos z: " << (_cathode_grid_zpos)/mm << " mm" << G4endl;
+    }
+
+  }
+
+
+
+void Next100FieldCage::BuildBuffer()
+  {
+    G4double buffer_zpos =
+      _active_zpos + _active_length/2. + _grid_thickn + _buffer_length/2.;
+
+    /// Position of z planes
+    G4double zplane[2] = {-_buffer_length/2., _buffer_length/2.};
+    /// Inner radius
+    G4double rinner[2] = {0., 0.};
+    /// Outer radius
+    G4double router[2] = {_active_diam/2., _active_diam/2.};
+
+    G4Polyhedra* buffer_solid =
+      new G4Polyhedra("BUFFER", 0., twopi, _n_panels, 2, zplane, rinner, router);
+
+    G4LogicalVolume* buffer_logic =
+      new G4LogicalVolume(buffer_solid, _gas, "BUFFER");
+    new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_zpos), buffer_logic,
+		      "BUFFER", _mother_logic, false, 0, false);
+
+
+    /// Set the volume as an ionization sensitive detector
+    IonizationSD* buffsd = new IonizationSD("/NEXT100/BUFFER");
+    buffsd->IncludeInTotalEnergyDeposit(false);
+    buffer_logic->SetSensitiveDetector(buffsd);
+    G4SDManager::GetSDMpointer()->AddNewDetector(buffsd);
+
+
+    /// Vertex generator
+    G4double active_ext_radius = _active_diam/2. / cos(pi/_n_panels);
+    _buffer_gen = new CylinderPointSampler2020(0., active_ext_radius, _buffer_length/2.,
+                                               0., twopi, nullptr,
+                                               G4ThreeVector(0., 0., buffer_zpos));
+
+    /// Vertex generator for all xenon
+    G4double xenon_length =
+      _el_gap_length + _active_length + _grid_thickn + _buffer_length ;
+    G4double xenon_zpos = (_el_gap_length * _el_gap_zpos +
+     			   _active_length * _active_zpos +
+     			   _grid_thickn * _cathode_grid_zpos +
+     			   _buffer_length * buffer_zpos) / xenon_length;
+    _xenon_gen = new CylinderPointSampler2020(0., active_ext_radius, xenon_length,
+                                              0., twopi, nullptr,
+                                              G4ThreeVector(0., 0., xenon_zpos));
+
+    /// Visibilities
+    buffer_logic->SetVisAttributes(G4VisAttributes::Invisible);
+
+    // G4VisAttributes active_col = nexus::Yellow();
+    // active_col.SetForceSolid(true);
+    // buffer_logic->SetVisAttributes(active_col);
+
+    /// Verbosity
+    if (_verbosity) {
+      G4cout << "Buffer (gas) starts in " << buffer_zpos - _buffer_length/2.
+	     << " and ends in "
+	     << buffer_zpos + _buffer_length/2. << G4endl;
+    }
+
+  }
+
 
 
    void Next100FieldCage::BuildELRegion()
@@ -323,116 +438,22 @@ namespace nexus {
 
     /// Verbosity
     if (_verbosity) {
-      G4cout << "EL gap starts in " << _el_gap_zpos - _el_gap_length/2.
-	     << " and ends in " << _el_gap_zpos + _el_gap_length/2. << G4endl;
+      G4cout << "EL gap starts in " << (_el_gap_zpos - _el_gap_length/2.)/mm
+	     << " mm and ends in " << (_el_gap_zpos + _el_gap_length/2.)/mm << G4endl;
+      G4cout << G4endl;
     }
   }
 
-
-  void Next100FieldCage::BuildCathodeGrid()
-  {
-    G4Material* fgrid_mat = MaterialsList::FakeDielectric(_gas, "cath_grid_mat");
-    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(_pressure, _temperature, _cath_grid_transparency, _grid_thickn));
-
-    G4double grid_diam = _el_gap_diam; // to check
-
-    G4Tubs* diel_grid_solid =
-      new G4Tubs("CATHODE_GRID", 0., grid_diam/2., _grid_thickn/2., 0, twopi);
-
-    G4LogicalVolume* diel_grid_logic =
-      new G4LogicalVolume(diel_grid_solid, fgrid_mat, "CATHODE_GRID");
-
-    new G4PVPlacement(0, G4ThreeVector(0., 0., _cathode_grid_zpos),
-		      diel_grid_logic, "CATHODE_GRID", _mother_logic,
-		      false, 0, false);
-
-
-    /// Visibilities
-    if (_visibility) {
-      G4VisAttributes grey = nexus::LightGrey();
-      diel_grid_logic->SetVisAttributes(grey);
-    } else {
-      diel_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    }
-
-
-    /// Verbosity
-    if (_verbosity) {
-      G4cout << G4endl << "Cathode grid pos z: " << _cathode_grid_zpos << G4endl;
-    }
-
-  }
-
-
-  void Next100FieldCage::BuildBuffer()
-  {
-    G4double buffer_zpos =
-      _active_zpos + _active_length/2. + _grid_thickn + _buffer_length/2.;
-
-    /// Position of z planes
-    G4double zplane[2] = {-_buffer_length/2., _buffer_length/2.};
-    /// Inner radius
-    G4double rinner[2] = {0., 0.};
-    /// Outer radius
-    G4double router[2] = {_active_diam/2., _active_diam/2.};
-
-    G4Polyhedra* buffer_solid =
-      new G4Polyhedra("BUFFER", 0., twopi, _n_panels, 2, zplane, rinner, router);
-
-    G4LogicalVolume* buffer_logic =
-      new G4LogicalVolume(buffer_solid, _gas, "BUFFER");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_zpos), buffer_logic,
-		      "BUFFER", _mother_logic, false, 0, false);
-
-
-    /// Set the volume as an ionization sensitive detector
-    IonizationSD* buffsd = new IonizationSD("/NEXT100/BUFFER");
-    buffsd->IncludeInTotalEnergyDeposit(false);
-    buffer_logic->SetSensitiveDetector(buffsd);
-    G4SDManager::GetSDMpointer()->AddNewDetector(buffsd);
-
-
-    /// Vertex generator
-    _buffer_gen = new CylinderPointSampler2020(0., _active_ext_radius, _buffer_length/2.,
-                                               0., twopi, nullptr,
-                                               G4ThreeVector(0., 0., buffer_zpos));
-
-    /// Vertex generator for all xenon
-    G4double xenon_length =
-      _el_gap_length + _active_length + _grid_thickn + _buffer_length ;
-    G4double xenon_zpos = (_el_gap_length * _el_gap_zpos +
-     			   _active_length * _active_zpos +
-     			   _grid_thickn * _cathode_grid_zpos +
-     			   _buffer_length * buffer_zpos) / xenon_length;
-    _xenon_gen = new CylinderPointSampler2020(0., _active_ext_radius, xenon_length,
-                                              0., twopi, nullptr,
-                                              G4ThreeVector(0., 0., xenon_zpos));
-
-    /// Visibilities
-    buffer_logic->SetVisAttributes(G4VisAttributes::Invisible);
-
-    // G4VisAttributes active_col = nexus::Yellow();
-    // active_col.SetForceSolid(true);
-    // buffer_logic->SetVisAttributes(active_col);
-
-    /// Verbosity
-    if (_verbosity) {
-      G4cout << "Buffer (gas) starts in " << buffer_zpos - _buffer_length/2.
-	     << " and ends in "
-	     << buffer_zpos + _buffer_length/2. << G4endl;
-    }
-
-  }
 
 
   void Next100FieldCage::BuildFieldCage()
   {
     /// DRIFT PART ///
-    G4double teflon_drift_zpos = _active_zpos - _active_length/2. + 2.*mm
-      + _teflon_drift_length/2.; //  to check with final design
+    G4double teflon_drift_length = gate_cathode_centre_dist_ - gate_teflon_dist_ - _cathode_gap/2.;
+    G4double teflon_drift_zpos = GetELzCoord() + gate_teflon_dist_ + teflon_drift_length/2.;
 
     /// Position of z planes
-    G4double zplane[2] = {-_teflon_drift_length/2., _teflon_drift_length/2.};
+    G4double zplane[2] = {-teflon_drift_length/2., teflon_drift_length/2.};
     /// Inner radius
     G4double rinner[2] = {_active_diam/2., _active_diam/2.};
     /// Outer radius
@@ -466,10 +487,11 @@ namespace nexus {
 
 
     /// BUFFER PART ///
-    G4double teflon_buffer_zpos = teflon_drift_zpos + _teflon_drift_length/2.
-      + _cathode_gap + _teflon_buffer_length/2; // TO CHECK
+    G4double teflon_buffer_length = _teflon_total_length - _cathode_gap - teflon_drift_length;
+    G4double teflon_buffer_zpos = teflon_drift_zpos + teflon_drift_length/2.
+      + _cathode_gap + teflon_buffer_length/2;
 
-    G4double zplane_buff[2] = {-_teflon_buffer_length/2., _teflon_buffer_length/2.};
+    G4double zplane_buff[2] = {-teflon_buffer_length/2., teflon_buffer_length/2.};
     G4double router_buff[2] =
       {(_active_diam + 2.*_teflon_thickn)/2., (_active_diam + 2.*_teflon_thickn)/2.};
 
@@ -526,16 +548,14 @@ namespace nexus {
     // Vertex generator
     G4double teflon_ext_radius =
       (_active_diam + 2.*_teflon_thickn)/2. / cos(pi/_n_panels);
-    G4double full_teflon_length =
-      _teflon_drift_length + _cathode_gap + _teflon_buffer_length;
     G4double cathode_gap_zpos =
-      teflon_drift_zpos + _teflon_drift_length/2. + _cathode_gap/2.;
+      teflon_drift_zpos + teflon_drift_length/2. + _cathode_gap/2.;
     G4double teflon_zpos =
-      (_teflon_drift_length * teflon_drift_zpos + _cathode_gap * cathode_gap_zpos +
-       _teflon_buffer_length * teflon_buffer_zpos) / full_teflon_length;
+      (teflon_drift_length * teflon_drift_zpos + _cathode_gap * cathode_gap_zpos +
+       teflon_buffer_length * teflon_buffer_zpos) / _teflon_total_length;
 
     _teflon_gen = new CylinderPointSampler2020(_active_diam/2., teflon_ext_radius,
-                                               full_teflon_length/2., 0., twopi,
+                                               _teflon_total_length/2., 0., twopi,
                                                nullptr, G4ThreeVector (0., 0., teflon_zpos));
 
 
@@ -543,13 +563,12 @@ namespace nexus {
     if (_visibility) {
       G4VisAttributes light_green = nexus::LightGreen();
       G4VisAttributes green = nexus::DarkGreen();
-      //green.SetForceSolid(true);
       //light_green.SetForceSolid(true);
       teflon_drift_logic->SetVisAttributes(light_green);
       teflon_buffer_logic->SetVisAttributes(green);
       G4VisAttributes red = nexus::Red();
-      tpb_drift_logic->SetVisAttributes(red);;
-      tpb_buffer_logic->SetVisAttributes(red);;
+      tpb_drift_logic->SetVisAttributes(red);
+      tpb_buffer_logic->SetVisAttributes(red);
     }
     else {
       teflon_drift_logic->SetVisAttributes(G4VisAttributes::Invisible);
@@ -637,7 +656,8 @@ namespace nexus {
         _el_table_index++;
       }
       catch (const std::out_of_range& oor) {
-        G4Exception("[Next100FieldCage]", "GenerateVertex()", FatalErrorInArgument, "EL lookup table point out of range.");
+        G4Exception("[Next100FieldCage]", "GenerateVertex()", FatalErrorInArgument,
+                    "EL lookup table point out of range.");
       }
     }
 
@@ -686,7 +706,7 @@ namespace nexus {
 
   G4double Next100FieldCage::GetDistanceGateSapphireWindows() const
   {
-    return _active_length + _buffer_length;
+    return _active_length + _grid_thickn +  _buffer_length;
   }
 
 }

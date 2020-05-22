@@ -46,8 +46,8 @@ namespace nexus {
 
   Next100InnerElements::Next100InnerElements():
     BaseGeometry(),
-    _gate_sapphire_wdw_distance ( 1441.7 * mm), // should be active length + cathode thickness + buffer length
-    _gate_tracking_plane_distance(  25.6 * mm), // Distance between gate and TP copper plate
+    _gate_sapphire_wdw_distance  (1460.5 * mm), // active length + cathode thickness + buffer length
+    _gate_tracking_plane_distance(25.6 * mm),
     _mother_logic(nullptr),
     _mother_phys (nullptr),
     _gas(nullptr),
@@ -92,7 +92,7 @@ namespace nexus {
     // Energy Plane
     _energy_plane->SetMotherLogicalVolume(_mother_logic);
     _energy_plane->SetELzCoord(gate_zpos);
-    _energy_plane->SetSapphireSurfaceZPos(_gate_sapphire_wdw_distance); // to check
+    _energy_plane->SetSapphireSurfaceZPos(_gate_sapphire_wdw_distance);
     _energy_plane->Construct();
 
     // Tracking plane
@@ -123,7 +123,7 @@ namespace nexus {
       vertex = _field_cage->GenerateVertex(region);
     }
     // Energy Plane regions
-    else if ((region == "ENERGY_COPPER_PLATE") ||
+    else if ((region == "EP_COPPER_PLATE") ||
              (region == "SAPPHIRE_WINDOW") ||
              (region == "OPTICAL_PAD") ||
 	     (region == "PMT") ||

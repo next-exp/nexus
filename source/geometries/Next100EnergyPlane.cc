@@ -128,23 +128,23 @@ namespace nexus {
 
     G4ThreeVector gas_hole_pos = G4ThreeVector(0., 0., 0.);
     G4SubtractionSolid* copper_plate_hole_solid =
-      new G4SubtractionSolid("ENERGY_COPPER_PLATE", copper_plate_origin_solid,
+      new G4SubtractionSolid("EP_COPPER_PLATE", copper_plate_origin_solid,
     			     copper_plate_gas_hole_solid, 0, gas_hole_pos);
 
     // gas_hole_pos.setX(_hole_up_posx);
     // gas_hole_pos.setY(_hole_up_posy);
     // copper_plate_hole_solid =
-    //   new G4SubtractionSolid("ENERGY_COPPER_PLATE", copper_plate_hole_solid,
+    //   new G4SubtractionSolid("EP_COPPER_PLATE", copper_plate_hole_solid,
     // 			     copper_plate_gas_hole_solid, 0, gas_hole_pos);
     // gas_hole_pos.setX(_hole_lat1_posx);
     // gas_hole_pos.setY(_hole_lat1_posy);
     // copper_plate_hole_solid =
-    //   new G4SubtractionSolid("ENERGY_COPPER_PLATE", copper_plate_hole_solid,
+    //   new G4SubtractionSolid("EP_COPPER_PLATE", copper_plate_hole_solid,
     // 			     copper_plate_gas_hole_solid, 0, gas_hole_pos);
     // gas_hole_pos.setX(_hole_lat2_posx);
     // gas_hole_pos.setY(_hole_lat2_posy);
     // copper_plate_hole_solid =
-    //   new G4SubtractionSolid("ENERGY_COPPER_PLATE", copper_plate_hole_solid,
+    //   new G4SubtractionSolid("EP_COPPER_PLATE", copper_plate_hole_solid,
     // 			     copper_plate_gas_hole_solid, 0, gas_hole_pos);
 
 
@@ -159,13 +159,13 @@ namespace nexus {
     hut_pos = _short_hut_pos[0];
     hut_pos.setZ(transl_z);
     G4UnionSolid* copper_plate_hut_solid =
-      	new G4UnionSolid("ENERGY_COPPER_PLATE", copper_plate_hole_solid,
+      	new G4UnionSolid("EP_COPPER_PLATE", copper_plate_hole_solid,
 			 short_hut_solid, 0, hut_pos);
     for (unsigned int i=1; i<_short_hut_pos.size(); i++) {
       hut_pos = _short_hut_pos[i];
       hut_pos.setZ(transl_z);
       copper_plate_hut_solid =
-      	new G4UnionSolid("ENERGY_COPPER_PLATE", copper_plate_hut_solid,
+      	new G4UnionSolid("EP_COPPER_PLATE", copper_plate_hut_solid,
 			 short_hut_solid, 0, hut_pos);
     }
 
@@ -177,7 +177,7 @@ namespace nexus {
       hut_pos = _medium_hut_pos[i];
       hut_pos.setZ(transl_z);
       copper_plate_hut_solid =
-      	new G4UnionSolid("ENERGY_COPPER_PLATE", copper_plate_hut_solid,
+      	new G4UnionSolid("EP_COPPER_PLATE", copper_plate_hut_solid,
 			 medium_hut_solid, 0, hut_pos);
     }
 
@@ -189,7 +189,7 @@ namespace nexus {
       hut_pos = _long_hut_pos[i];
       hut_pos.setZ(transl_z);
       copper_plate_hut_solid =
-      	new G4UnionSolid("ENERGY_COPPER_PLATE", copper_plate_hut_solid,
+      	new G4UnionSolid("EP_COPPER_PLATE", copper_plate_hut_solid,
 			 long_hut_solid, 0, hut_pos);
     }
 
@@ -220,14 +220,14 @@ namespace nexus {
     transl_z = - _copper_plate_thickn/2. + _hole_length_front/2. - offset/2.;
     hole_pos.setZ(transl_z);
     G4SubtractionSolid* copper_plate_solid =
-      new G4SubtractionSolid("ENERGY_COPPER_PLATE", copper_plate_hut_solid,
+      new G4SubtractionSolid("EP_COPPER_PLATE", copper_plate_hut_solid,
 			     hole_solid, 0, hole_pos);;
 
     for (G4int i=1; i<_num_PMTs; i++) {
       hole_pos = _pmt_positions[i];
       hole_pos.setZ(transl_z);
       copper_plate_solid =
-	new G4SubtractionSolid("ENERGY_COPPER_PLATE", copper_plate_solid,
+	new G4SubtractionSolid("EP_COPPER_PLATE", copper_plate_solid,
 			       hole_solid, 0, hole_pos);
 
     }
@@ -235,7 +235,7 @@ namespace nexus {
     G4LogicalVolume* copper_plate_logic =
       new G4LogicalVolume(copper_plate_solid,
 			  G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
-			  "ENERGY_COPPER_PLATE");
+			  "EP_COPPER_PLATE");
 
     G4double stand_out_length =
       _sapphire_window_thickn + _optical_pad_thickn + _pmt_stand_out;
@@ -243,7 +243,7 @@ namespace nexus {
       GetELzCoord() + _end_of_sapphire_posz + stand_out_length +
       _copper_plate_thickn/2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., _copper_plate_posz),
-		      copper_plate_logic, "ENERGY_COPPER_PLATE", _mother_logic,
+		      copper_plate_logic, "EP_COPPER_PLATE", _mother_logic,
 		      false, 0, false);
 
 
@@ -464,7 +464,7 @@ namespace nexus {
 
     // Copper plate
     // As it is full of holes, let's get sure vertices are in the right volume
-    if (region == "ENERGY_COPPER_PLATE") {
+    if (region == "EP_COPPER_PLATE") {
       G4VPhysicalVolume *VertexVolume;
       do {
         vertex = _copper_gen->GenerateVertex("VOLUME");

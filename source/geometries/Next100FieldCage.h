@@ -55,8 +55,8 @@ namespace nexus {
   private:
 
     void DefineMaterials();
-    void BuildCathodeGrid();
     void BuildActive();
+    void BuildCathodeGrid();
     void BuildBuffer();
     void BuildELRegion();
     void BuildFieldCage();
@@ -64,11 +64,13 @@ namespace nexus {
     void CalculateELTableVertices(G4double, G4double, G4double);
 
     // Dimensions
-    const G4double _active_diam, _active_length, _buffer_length;
-    const G4double _grid_thickn, _cathode_gap;
-    const G4double _teflon_drift_length, _teflon_buffer_length, _teflon_thickn;
+    const G4double _active_diam;
+    const G4double gate_cathode_centre_dist_, gate_sapphire_wdw_dist_;
+    const G4double cathode_diam_, _grid_thickn, _cathode_gap;
+    const G4double _teflon_total_length, _teflon_thickn;
+    const G4double gate_teflon_dist_;
     const G4int _n_panels;
-    const G4double _tpb_thickn, _el_gap_length;
+    const G4double _tpb_thickn, _el_gap_diam, _el_gap_length;
     // Diffusion constants
     G4double _drift_transv_diff, _drift_long_diff;
     G4double _ELtransv_diff; ///< transversal diffusion in the EL gap
@@ -93,8 +95,8 @@ namespace nexus {
     // Verbosity of the geometry
     G4bool _verbosity;
 
-    G4double _active_zpos, _el_gap_diam, _el_gap_zpos, _cathode_grid_zpos;
-    G4double _active_ext_radius;
+    G4double _active_length, _active_zpos, _buffer_length;
+    G4double _el_gap_zpos, _cathode_grid_zpos;
 
 
     // Vertex generators
