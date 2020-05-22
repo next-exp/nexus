@@ -44,6 +44,7 @@ Next100TrackingPlane::Next100TrackingPlane(G4double origin_z_coord):
 
 Next100TrackingPlane::~Next100TrackingPlane()
 {
+  delete msg_;
   delete sipm_board_geom_;
   delete copper_plate_gen_;
 }
