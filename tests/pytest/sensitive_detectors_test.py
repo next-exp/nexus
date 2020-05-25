@@ -43,10 +43,11 @@ def test_create_nexus_output_file(config_tmpdir, output_tmpdir, full_base_name, 
 /Geometry/Next100/sc_yield 10000 1/MeV
 /Geometry/PmtR11410/SD_depth 3
 
+
 /Generator/SingleParticle/particle e-
 /Generator/SingleParticle/min_energy 100. keV
 /Generator/SingleParticle/max_energy 100. keV
-/Generator/SingleParticle/region ACTIVE
+/Generator/SingleParticle/region CENTER
 
 /nexus/persistency/outputFile {output_tmpdir}/{full_base_name}
 /nexus/random_seed 21051817
