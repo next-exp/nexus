@@ -2,8 +2,6 @@ import pytest
 
 import os
 import subprocess
-import pandas as pd
-
 
 @pytest.mark.first
 def test_create_nexus_output_file_next100(config_tmpdir, output_tmpdir, full_base_name_next100, nexus_full_output_file_next100):
@@ -125,21 +123,3 @@ def test_create_nexus_output_file_new(config_tmpdir, output_tmpdir, full_base_na
      p = subprocess.run(command, check=True, env=my_env)
 
      return nexus_full_output_file_new
-
-
-def test_sensor_ids_are_sensible(nexus_full_output_file):
-     """
-     Check that we are not registering all photoelectrons
-     with the same sensor ID, for each type of sensor.
-     """
-
-     sns_response = pd.read_hdf(nexus_full_output_file, 'MC/sns_response')
-
-     pmts  = sns_response[sns_response.sensor_id < 100]
-     sipms = sns_response[sns_response.sensor_id > 100]
-
-     pmt_ids   = pmts.sensor_id.unique()
-     sipm_ids = sipms.sensor_id.unique()
-
-     assert len(pmt_ids ) > 1
-     assert len(sipm_ids) > 1
