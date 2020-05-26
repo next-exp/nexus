@@ -64,7 +64,7 @@ def test_create_nexus_output_file_next100(config_tmpdir, output_tmpdir, full_bas
      return nexus_full_output_file_next100
 
 
-@pytest.mark.second
+@pytest.mark.first
 def test_create_nexus_output_file_new(config_tmpdir, output_tmpdir, full_base_name_new, nexus_full_output_file_new):
 
      init_text = f"""
