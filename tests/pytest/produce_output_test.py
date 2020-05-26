@@ -57,7 +57,7 @@ def test_create_nexus_output_file_next100(config_tmpdir, output_tmpdir, full_bas
      config_file.write(config_text)
      config_file.close()
 
-     my_env = os.environ.copy()
+     my_env = os.environ
      command = ['nexus', '-b', '-n', '1', init_path]
      p = subprocess.run(command, check=True, env=my_env)
 
@@ -118,7 +118,7 @@ def test_create_nexus_output_file_new(config_tmpdir, output_tmpdir, full_base_na
      config_file.write(config_text)
      config_file.close()
 
-     my_env = os.environ.copy()
+     my_env = os.environ
      command = ['nexus', '-b', '-n', '1', init_path]
      p = subprocess.run(command, check=True, env=my_env)
 
