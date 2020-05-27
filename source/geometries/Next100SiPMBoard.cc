@@ -39,12 +39,16 @@ Next100SiPMBoard::Next100SiPMBoard():
   board_thickness_ (  0.5  * mm),
   mask_thickness_  (  2.1  * mm), // Made slightly thicker to fit SiPM
   time_binning_    (1. * microsecond),
+  visibility_      (true),
   mpv_             (nullptr),
   vtxgen_          (nullptr),
   sipm_            (new GenericPhotosensor("SiPM", 1.3 * mm))
 {
   msg_ = new G4GenericMessenger(this, "/Geometry/Next100/",
                                 "Control commands of the NEXT-100 geometry.");
+
+  msg_->DeclareProperty("sipm_board_vis", visibility_,
+                        "Visibility of Next100SiPMBoard.");
 
   G4GenericMessenger::Command& time_binning_cmd =
   msg_->DeclareProperty("sipm_time_binning", time_binning_,
@@ -234,12 +238,18 @@ void Next100SiPMBoard::Construct()
                                 G4ThreeVector(0., 0., -mask_thickness_/2.));
 
   // VISIBILITIES ////////////////////////////////////////////////////
-  G4VisAttributes light_blue = LightBlue();
-  board_logic_vol ->SetVisAttributes(light_blue);
-  mask_logic_vol  ->SetVisAttributes(light_blue);
-
-  mask_wls_logic_vol     ->SetVisAttributes(G4VisAttributes::Invisible);
+  if (visibility_) {
+    G4VisAttributes blue       = Blue();
+    G4VisAttributes light_blue = LightBlue();
+    board_logic_vol ->SetVisAttributes(blue);
+    mask_logic_vol  ->SetVisAttributes(light_blue);
+  }
+  else{
+    board_logic_vol ->SetVisAttributes(G4VisAttributes::Invisible);
+    mask_logic_vol  ->SetVisAttributes(G4VisAttributes::Invisible);    
+  }
   mask_hole_logic_vol    ->SetVisAttributes(G4VisAttributes::Invisible);
+  mask_wls_logic_vol     ->SetVisAttributes(G4VisAttributes::Invisible);
   mask_wls_hole_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
 }
 
