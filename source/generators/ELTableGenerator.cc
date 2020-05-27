@@ -1,10 +1,9 @@
 // ----------------------------------------------------------------------------
-//  ELTableGenerator.cc
+// nexus | ELTableGenerator.cc
 //
-//  Author : J Martin-Albo <jmalbos@ific.uv.es>    
-//  Created: 2 July 2015
+// This generator simulates ionization electrons to produce look-up tables.
 //
-//  Copyright (c) 2015 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "ELTableGenerator.h"
@@ -31,31 +30,31 @@ using namespace CLHEP;
 
 
 ELTableGenerator::ELTableGenerator():
-  G4VPrimaryGenerator(), _msg(0), _num_ie(1)
+  G4VPrimaryGenerator(), msg_(0), num_ie_(1)
 {
-  _msg = new G4GenericMessenger(this, "/Generator/ELTableGenerator/",
+  msg_ = new G4GenericMessenger(this, "/Generator/ELTableGenerator/",
     "Control commands of the EL lookup table primary generator.");
 
   //G4GenericMessenger::Command& num_ie_cmd =
-    _msg->DeclareProperty("num_ie", _num_ie, 
+    msg_->DeclareProperty("num_ie", num_ie_,
       "Set number of ionization electrons to be generated.");
 
   // Retrieve pointer to detector geometry from the run manager
   DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
-  _geom = detconst->GetGeometry();
+  geom_ = detconst->GetGeometry();
 }
 
 
 ELTableGenerator::~ELTableGenerator()
 {
-  delete _msg;
+  delete msg_;
 }
 
 
 void ELTableGenerator::GeneratePrimaryVertex(G4Event* event)
 {
   // Select an initial position for the ionization electrons using the geometry
-  G4ThreeVector position = _geom->GenerateVertex("EL_TABLE");
+  G4ThreeVector position = geom_->GenerateVertex("EL_TABLE");
 
   // Ionization electrons generated at start-of-event
   G4double time = 0.;
@@ -68,9 +67,9 @@ void ELTableGenerator::GeneratePrimaryVertex(G4Event* event)
   G4double mass = IonizationElectron::Definition()->GetPDGMass();
   G4double total_energy = kinetic_energy + mass;
   G4double pz = std::sqrt(total_energy*total_energy - mass*mass);
- 
+
   // Add as many ionization electrons to the vertex as requested by the user
-  for (G4int i=0; i<_num_ie; i++) {
+  for (G4int i=0; i<num_ie_; i++) {
     G4PrimaryParticle* particle =
       new G4PrimaryParticle(IonizationElectron::Definition(), 0., 0., pz);
     vertex->SetPrimary(particle);
