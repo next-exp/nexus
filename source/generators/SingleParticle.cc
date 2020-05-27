@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author : J Martin-Albo <jmalbos@ific.uv.es>    
+//  Author : J Martin-Albo <jmalbos@ific.uv.es>
 //  Created: 27 Mar 2009
 //
 //  Copyright (c) 2009, 2010 NEXT Collaboration
@@ -31,30 +31,30 @@ using namespace CLHEP;
 SingleParticle::SingleParticle():
 G4VPrimaryGenerator(), _msg(0), _particle_definition(0),
 _energy_min(0.), _energy_max(0.), _geom(0), _momentum_X(0.),
-_momentum_Y(0.), _momentum_Z(0.), _costheta_min(0.), _costheta_max(0.),
-_phi_min(0.), _phi_max(0.)
+_momentum_Y(0.), _momentum_Z(0.), _costheta_min(-1.), _costheta_max(1.),
+_phi_min(0.), _phi_max(2.*pi)
 {
   _msg = new G4GenericMessenger(this, "/Generator/SingleParticle/",
     "Control commands of single-particle generator.");
 
-  _msg->DeclareMethod("particle", &SingleParticle::SetParticleDefinition, 
+  _msg->DeclareMethod("particle", &SingleParticle::SetParticleDefinition,
     "Set particle to be generated.");
 
   G4GenericMessenger::Command& min_energy =
-    _msg->DeclareProperty("min_energy", _energy_min, 
+    _msg->DeclareProperty("min_energy", _energy_min,
       "Set minimum kinetic energy of the particle.");
   min_energy.SetUnitCategory("Energy");
   min_energy.SetParameterName("min_energy", false);
   min_energy.SetRange("min_energy>0.");
 
   G4GenericMessenger::Command& max_energy =
-    _msg->DeclareProperty("max_energy", _energy_max, 
+    _msg->DeclareProperty("max_energy", _energy_max,
       "Set maximum kinetic energy of the particle");
   max_energy.SetUnitCategory("Energy");
   max_energy.SetParameterName("max_energy", false);
   max_energy.SetRange("max_energy>0.");
 
-  _msg->DeclareProperty("region", _region, 
+  _msg->DeclareProperty("region", _region,
     "Set the region of the geometry where the vertex will be generated.");
 
   /// Temporary
@@ -68,17 +68,16 @@ _phi_min(0.), _phi_max(0.)
   _msg->DeclareProperty("momentum_Z", _momentum_Z,
 			"z coord of momentum");
 
-  _msg->DeclareProperty("min_costheta", _costheta_min, 
+  _msg->DeclareProperty("min_costheta", _costheta_min,
 			"Set minimum cosTheta for the direction of the particle.");
-  _msg->DeclareProperty("max_costheta", _costheta_max, 
+  _msg->DeclareProperty("max_costheta", _costheta_max,
 			"Set maximum cosTheta for the direction of the particle.");
-  _msg->DeclareProperty("min_phi", _phi_min
-, 
+  _msg->DeclareProperty("min_phi", _phi_min,
 			"Set minimum phi for the direction of the particle.");
-  _msg->DeclareProperty("max_phi", _phi_max, 
+  _msg->DeclareProperty("max_phi", _phi_max,
 			"Set maximum phi for the direction of the particle.");
 
-  
+
 
   DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
   _geom = detconst->GetGeometry();
@@ -95,7 +94,7 @@ SingleParticle::~SingleParticle()
 
 void SingleParticle::SetParticleDefinition(G4String particle_name)
 {
-  _particle_definition = 
+  _particle_definition =
     G4ParticleTable::GetParticleTable()->FindParticle(particle_name);
 
   if (!_particle_definition)
@@ -139,16 +138,16 @@ void SingleParticle::GeneratePrimaryVertex(G4Event* event)
     px = pmod * _momentum_X/mom_mod;
     py = pmod * _momentum_Y/mom_mod;
     pz = pmod * _momentum_Z/mom_mod;
-  } else if (_costheta_min != 0. || _costheta_max != 0. || _phi_min != 0. || _phi_max !=0.) {
+  } else if (_costheta_min != -1. || _costheta_max != 1. || _phi_min != 0. || _phi_max !=2.*pi) {
     G4bool mom_dir = false;
     while (mom_dir == false) {
       G4double cosTheta  = 2.*G4UniformRand()-1.;
-      if (cosTheta > _costheta_min && cosTheta < _costheta_max){   
+      if (cosTheta > _costheta_min && cosTheta < _costheta_max){
 	G4double sinTheta2 = 1. - cosTheta*cosTheta;
 	if( sinTheta2 < 0.)  sinTheta2 = 0.;
-	G4double sinTheta  = std::sqrt(sinTheta2); 
+	G4double sinTheta  = std::sqrt(sinTheta2);
 	G4double phi = twopi*G4UniformRand();
-	  if (phi > _phi_min && phi < _phi_max){   	
+	  if (phi > _phi_min && phi < _phi_max){
 	    mom_dir = true;
 	    _momentum_direction = G4ThreeVector(sinTheta*std::cos(phi),
 						sinTheta*std::sin(phi), cosTheta).unit();
@@ -161,7 +160,7 @@ void SingleParticle::GeneratePrimaryVertex(G4Event* event)
   }
 
   // Create the new primary particle and set it some properties
-  G4PrimaryParticle* particle = 
+  G4PrimaryParticle* particle =
     new G4PrimaryParticle(_particle_definition, px, py, pz);
 
   // Set random polarization
@@ -169,7 +168,7 @@ void SingleParticle::GeneratePrimaryVertex(G4Event* event)
     G4ThreeVector polarization = G4RandomDirection();
     particle->SetPolarization(polarization);
   }
- 
+
     // Add particle to the vertex and this to the event
   vertex->SetPrimary(particle);
   event->AddPrimaryVertex(vertex);
@@ -179,7 +178,7 @@ void SingleParticle::GeneratePrimaryVertex(G4Event* event)
 
 G4double SingleParticle::RandomEnergy() const
 {
-  if (_energy_max == _energy_min) 
+  if (_energy_max == _energy_min)
     return _energy_min;
   else
     return (G4UniformRand()*(_energy_max - _energy_min) + _energy_min);
