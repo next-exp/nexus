@@ -1,14 +1,12 @@
 // ----------------------------------------------------------------------------
-//  \file   MuonGenerator.cc
-//  \brief  Point Sampler on the surface of a rectangular used for muon generation.
-//          Control plots of the generation variables available.
+// nexus | MuonGenerator.cc
 //
-//  Author: Neus Lopez March <neus.lopez@ific.uv.es>
+// This class is the primary generator of muons following the angular
+// distribution at sea level. Angles are saved to be plotted later.
 //
-//  Created: 30 Jan 2015
-//
-//  Copyright (c) 2015 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
+
 #include "MuonGenerator.h"
 #include "DetectorConstruction.h"
 #include "BaseGeometry.h"
@@ -34,35 +32,35 @@ using namespace CLHEP;
 
 
 MuonGenerator::MuonGenerator():
-  G4VPrimaryGenerator(), _msg(0), _particle_definition(0),
-  _energy_min(0.), _energy_max(0.), _geom(0), _momentum_X(0.),
-  _momentum_Y(0.), _momentum_Z(0.)
+  G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
+  energy_min_(0.), energy_max_(0.), geom_(0), momentum_X_(0.),
+  momentum_Y_(0.), momentum_Z_(0.)
 {
-  _msg = new G4GenericMessenger(this, "/Generator/MuonGenerator/",
+  msg_ = new G4GenericMessenger(this, "/Generator/MuonGenerator/",
 				"Control commands of muongenerator.");
 
   G4GenericMessenger::Command& min_energy =
-    _msg->DeclareProperty("min_energy", _energy_min, "Set minimum kinetic energy of the particle.");
+    msg_->DeclareProperty("min_energy", energy_min_, "Set minimum kinetic energy of the particle.");
   min_energy.SetUnitCategory("Energy");
   min_energy.SetParameterName("min_energy", false);
   min_energy.SetRange("min_energy>0.");
 
   G4GenericMessenger::Command& max_energy =
-    _msg->DeclareProperty("max_energy", _energy_max, "Set maximum kinetic energy of the particle");
+    msg_->DeclareProperty("max_energy", energy_max_, "Set maximum kinetic energy of the particle");
   max_energy.SetUnitCategory("Energy");
   max_energy.SetParameterName("max_energy", false);
   max_energy.SetRange("max_energy>0.");
 
-  _msg->DeclareProperty("region", _region,
+  msg_->DeclareProperty("region", region_,
 			"Set the region of the geometry where the vertex will be generated.");
 
-  _msg->DeclareProperty("momentum_X", _momentum_X,"x coord of momentum");
-  _msg->DeclareProperty("momentum_Y", _momentum_Y,"y coord of momentum");
-  _msg->DeclareProperty("momentum_Z", _momentum_Z,"z coord of momentum");
+  msg_->DeclareProperty("momentum_X", momentum_X_,"x coord of momentum");
+  msg_->DeclareProperty("momentum_Y", momentum_Y_,"y coord of momentum");
+  msg_->DeclareProperty("momentum_Z", momentum_Z_,"z coord of momentum");
 
 
   DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
-  _geom = detconst->GetGeometry();
+  geom_ = detconst->GetGeometry();
 
 }
 
@@ -71,18 +69,18 @@ MuonGenerator::MuonGenerator():
 MuonGenerator::~MuonGenerator()
 {
 
-  delete _msg;
+  delete msg_;
 }
 
 void MuonGenerator::GeneratePrimaryVertex(G4Event* event)
 {
-  _particle_definition = G4ParticleTable::GetParticleTable()->FindParticle(MuonCharge());
-  if (!_particle_definition)
+  particle_definition_ = G4ParticleTable::GetParticleTable()->FindParticle(MuonCharge());
+  if (!particle_definition_)
     G4Exception("SetParticleDefinition()", "[MuonGenerator]",
                 FatalException, " can not create a muon ");
 
   // Generate an initial position for the particle using the geometry
-  G4ThreeVector position = _geom->GenerateVertex(_region);
+  G4ThreeVector position = geom_->GenerateVertex(region_);
   // Particle generated at start-of-event
   G4double time = 0.;
   // Create a new vertex
@@ -91,7 +89,7 @@ void MuonGenerator::GeneratePrimaryVertex(G4Event* event)
   G4double kinetic_energy = RandomEnergy();
 
   // Particle propierties
-  G4double mass   = _particle_definition->GetPDGMass();
+  G4double mass   = particle_definition_->GetPDGMass();
   G4double energy = kinetic_energy + mass;
   G4double pmod = std::sqrt(energy*energy - mass*mass);
 
@@ -114,19 +112,19 @@ void MuonGenerator::GeneratePrimaryVertex(G4Event* event)
 
 
   // If user provides a momentum direction, this one is used
-  if (_momentum_X != 0. || _momentum_Y != 0. || _momentum_Z != 0.) {
+  if (momentum_X_ != 0. || momentum_Y_ != 0. || momentum_Z_ != 0.) {
     // Normalize if needed
-    G4double mom_mod = std::sqrt(_momentum_X * _momentum_X +
-				 _momentum_Y * _momentum_Y +
-				 _momentum_Z * _momentum_Z);
-    px = pmod * _momentum_X/mom_mod;
-    py = pmod * _momentum_Y/mom_mod;
-    pz = pmod * _momentum_Z/mom_mod;
+    G4double mom_mod = std::sqrt(momentum_X_ * momentum_X_ +
+				 momentum_Y_ * momentum_Y_ +
+				 momentum_Z_ * momentum_Z_);
+    px = pmod * momentum_X_/mom_mod;
+    py = pmod * momentum_Y_/mom_mod;
+    pz = pmod * momentum_Z_/mom_mod;
   }
 
   // Create the new primary particle and set it some properties
   G4PrimaryParticle* particle =
-    new G4PrimaryParticle(_particle_definition, px, py, pz);
+    new G4PrimaryParticle(particle_definition_, px, py, pz);
 
   // Add info to PrimaryVertex to be accessed from EventAction type class to make histos of variables generated here.
   AddUserInfoToPV *info = new AddUserInfoToPV(theta, phi);
@@ -141,10 +139,10 @@ void MuonGenerator::GeneratePrimaryVertex(G4Event* event)
 
 G4double MuonGenerator::RandomEnergy() const
 {
-  if (_energy_max == _energy_min)
-    return _energy_min;
+  if (energy_max_ == energy_min_)
+    return energy_min_;
   else
-    return G4UniformRand()*(_energy_max - _energy_min) + _energy_min;
+    return G4UniformRand()*(energy_max_ - energy_min_) + energy_min_;
 }
 
 G4String MuonGenerator::MuonCharge() const

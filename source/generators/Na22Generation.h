@@ -1,5 +1,15 @@
-#ifndef __NA22GENERATION__
-#define __NA22GENERATION__
+// ----------------------------------------------------------------------------
+// nexus | Na22Generator.h
+//
+// This class is the primary generator of Na22-like events consisting of
+// two particles in coincidence (back-to-back) coming from e+e- annihilation
+// and one disexcitation gamma.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
+#ifndef NA22GENERATION__
+#define NA22GENERATION__
 
 #include <G4VPrimaryGenerator.hh>
 
@@ -10,17 +20,6 @@ namespace nexus {
 
   class BaseGeometry;
 
-  /// Primary generator (concrete class of G4VPrimaryGenerator) 
-  /// for events Na22-like consisting of two particles in coincidence (back-to-back)
-  /// coming from e+e- annihilation and one disexcitation gamma. 
-  /// The user must specify via configuration parameters the particle type, 
-  /// a kinetic energy interval and the direction of generation for both the 
-  /// disexcitation gamma and the annihilation pair.
-  /// Each particle energy is generated with flat random probability
-  /// between E_min and E_max.
-  /// If a direction of generation is not specified, the user should choose a fraction 
-  /// of solid angle inside whom a direction will be randomly generation. See nexus_example5.config.
-  
   class Na22Generation: public G4VPrimaryGenerator
   {
   public:
@@ -33,11 +32,11 @@ namespace nexus {
 
   private:
 
-    G4GenericMessenger* _msg;
-    const BaseGeometry* _geom;
+    G4GenericMessenger* msg_;
+    const BaseGeometry* geom_;
 
-    G4String _region;
-    
+    G4String region_;
+
   };
 
 }// end namespace nexus

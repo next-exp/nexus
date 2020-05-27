@@ -1,16 +1,18 @@
 // ----------------------------------------------------------------------------
-///  \file   SingleParticle2Pi.h
-///  \brief  Primary generator for single-particle events.
-///  
-///  \author   J Martin-Albo <jmalbos@ific.uv.es>    
-///  \date     27 Mar 2009
-///  \version  $Id: SingleParticle2Pi.h 9216 2013-09-05 12:57:42Z paola $
-///
-///  Copyright (c) 2009, 2010 NEXT Collaboration
+// nexus | SingleParticle2Pi.h
+//
+// This class is the primary generator for events consisting of
+// a single particle, generated in the direction towards the detector,
+// from the NEXT-DEMO sideport. The user must specify via configuration
+// parameters the particle type, a kinetic energy interval.
+// Particle energy is generated with flat random probability
+// between E_min and E_max.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __SINGLE_PARTICLE_2Pi__
-#define __SINGLE_PARTICLE_2Pi__
+#ifndef SINGLE_PARTICLE_2Pi__
+#define SINGLE_PARTICLE_2Pi__
 
 #include <G4VPrimaryGenerator.hh>
 
@@ -23,14 +25,6 @@ namespace nexus {
 
   class BaseGeometry;
 
-
-  /// Primary generator (concrete class of G4VPrimaryGenerator) for events 
-  /// consisting of a single particle. The user must specify via configuration
-  /// parameters the particle type, a kinetic energy interval (a random
-  /// value with random .
-  /// Particle energy is generated with flat random probability
-  /// between E_min and E_max.
-  
   class SingleParticle2Pi: public G4VPrimaryGenerator
   {
   public:
@@ -38,8 +32,8 @@ namespace nexus {
     SingleParticle2Pi();
     /// Destructor
     ~SingleParticle2Pi();
-    
-    /// This method is invoked at the beginning of the event. It sets 
+
+    /// This method is invoked at the beginning of the event. It sets
     /// a primary vertex (that is, a particle in a given position and time)
     /// in the event.
     void GeneratePrimaryVertex(G4Event*);
@@ -48,21 +42,21 @@ namespace nexus {
 
     void SetParticleDefinition(G4String);
 
-    /// Generate a random kinetic energy with flat probability in 
+    /// Generate a random kinetic energy with flat probability in
     //  the interval [energy_min, energy_max].
     G4double RandomEnergy() const;
-    
+
   private:
-    G4GenericMessenger* _msg;
-  
-    G4ParticleDefinition* _particle_definition;
+    G4GenericMessenger* msg_;
 
-    G4double _energy_min; ///< Minimum kinetic energy 
-    G4double _energy_max; ///< Maximum kinetic energy
+    G4ParticleDefinition* particle_definition_;
 
-    G4String _region;
+    G4double energy_min_; ///< Minimum kinetic energy
+    G4double energy_max_; ///< Maximum kinetic energy
 
-    const BaseGeometry* _geom; ///< Pointer to the detector geometry
+    const BaseGeometry* geom_; ///< Pointer to the detector geometry
+
+    G4String region_;
   };
 
 } // end namespace nexus

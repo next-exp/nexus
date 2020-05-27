@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // nexus | Decay0Interface.h
 //
-// This class provides the primary vertex of a Xe-136 double beta decay,
+// This class is the primary generator of a Xe-136 double beta decay,
 // interfacing the DECAY0 c++ code, translated from the original
 // FORTRAN package, with nexus.
 // The possibility of reading a previously generated ascii file with the
