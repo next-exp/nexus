@@ -143,8 +143,7 @@ G4bool PersistencyManager::Store(const G4Event* event)
 
 
 
-void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc) //,
-//                                        gate::Event* ievent)
+void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
 {
 
   // If the pointer is null, no trajectories were stored in this event
@@ -218,7 +217,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc) //,
 
 
 
-void PersistencyManager::StoreHits(G4HCofThisEvent* hce)//, gate::Event* ievt)
+void PersistencyManager::StoreHits(G4HCofThisEvent* hce)
 {
   if (!hce) return;
 
