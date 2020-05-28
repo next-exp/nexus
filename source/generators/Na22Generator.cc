@@ -8,7 +8,7 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "Na22Generation.h"
+#include "Na22Generator.h"
 #include "DetectorConstruction.h"
 #include "BaseGeometry.h"
 
@@ -26,7 +26,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  Na22Generation::Na22Generation() : geom_(0)
+  Na22Generator::Na22Generator() : geom_(0)
   {
     /// For the moment, only random direction are allowed. To be fixes if needed
      msg_ = new G4GenericMessenger(this, "/Generator/Na22Generator/",
@@ -41,11 +41,11 @@ namespace nexus {
     geom_ = detconst->GetGeometry();
   }
 
-  Na22Generation::~Na22Generation()
+  Na22Generator::~Na22Generator()
   {
   }
 
-  void Na22Generation::GeneratePrimaryVertex(G4Event* evt)
+  void Na22Generator::GeneratePrimaryVertex(G4Event* evt)
   {
     // Ask the geometry to generate a position for the particle
     G4ThreeVector position = geom_->GenerateVertex(region_);

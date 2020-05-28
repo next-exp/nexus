@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | SingleParticle.cc
+// nexus | SingleParticleGenerator.cc
 //
 // This class is the primary generator for events consisting of
 // a single particle. The user must specify via configuration
@@ -11,7 +11,7 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "SingleParticle.h"
+#include "SingleParticleGenerator.h"
 
 #include "DetectorConstruction.h"
 #include "BaseGeometry.h"
@@ -32,7 +32,7 @@ using namespace nexus;
 using namespace CLHEP;
 
 
-SingleParticle::SingleParticle():
+SingleParticleGenerator::SingleParticleGenerator():
 G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
 energy_min_(0.), energy_max_(0.), geom_(0), momentum_X_(0.),
 momentum_Y_(0.), momentum_Z_(0.)
@@ -40,7 +40,7 @@ momentum_Y_(0.), momentum_Z_(0.)
   msg_ = new G4GenericMessenger(this, "/Generator/SingleParticle/",
     "Control commands of single-particle generator.");
 
-  msg_->DeclareMethod("particle", &SingleParticle::SetParticleDefinition,
+  msg_->DeclareMethod("particle", &SingleParticleGenerator::SetParticleDefinition,
     "Set particle to be generated.");
 
   G4GenericMessenger::Command& min_energy =
@@ -74,26 +74,26 @@ momentum_Y_(0.), momentum_Z_(0.)
 
 
 
-SingleParticle::~SingleParticle()
+SingleParticleGenerator::~SingleParticleGenerator()
 {
   delete msg_;
 }
 
 
 
-void SingleParticle::SetParticleDefinition(G4String particle_name)
+void SingleParticleGenerator::SetParticleDefinition(G4String particle_name)
 {
   particle_definition_ =
     G4ParticleTable::GetParticleTable()->FindParticle(particle_name);
 
   if (!particle_definition_)
-    G4Exception("SetParticleDefinition()", "[SingleParticle]",
+    G4Exception("SetParticleDefinition()", "[SingleParticleGenerator]",
       FatalException, "User gave an unknown particle name.");
 }
 
 
 
-void SingleParticle::GeneratePrimaryVertex(G4Event* event)
+void SingleParticleGenerator::GeneratePrimaryVertex(G4Event* event)
 {
   // Generate an initial position for the particle using the geometry
   G4ThreeVector position = geom_->GenerateVertex(region_);
@@ -146,7 +146,7 @@ void SingleParticle::GeneratePrimaryVertex(G4Event* event)
 
 
 
-G4double SingleParticle::RandomEnergy() const
+G4double SingleParticleGenerator::RandomEnergy() const
 {
   if (energy_max_ == energy_min_)
     return energy_min_;

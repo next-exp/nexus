@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | SingleParticle.h
+// nexus | SingleParticleGenerator.h
 //
 // This class is the primary generator for events consisting of
 // a single particle. The user must specify via configuration
@@ -11,8 +11,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef SINGLE_PARTICLE__
-#define SINGLE_PARTICLE__
+#ifndef SINGLE_PARTICLE_GENERATOR_
+#define SINGLE_PARTICLE_GENERATOR_
 
 #include <G4VPrimaryGenerator.hh>
 
@@ -25,13 +25,13 @@ namespace nexus {
 
   class BaseGeometry;
 
-  class SingleParticle: public G4VPrimaryGenerator
+  class SingleParticleGenerator: public G4VPrimaryGenerator
   {
   public:
     /// Constructor
-    SingleParticle();
+    SingleParticleGenerator();
     /// Destructor
-    ~SingleParticle();
+    ~SingleParticleGenerator();
 
     /// This method is invoked at the beginning of the event. It sets
     /// a primary vertex (that is, a particle in a given position and time)

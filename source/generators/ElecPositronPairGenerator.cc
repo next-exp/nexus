@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | ElecPositronPair.cc
+// nexus | ElecPositronPairGenerator.cc
 //
 // This generator simulates an electron and a positron from the same vertex,
 // with total kinetic energy settable by parameter.
@@ -7,7 +7,7 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "ElecPositronPair.h"
+#include "ElecPositronPairGenerator.h"
 #include "BaseGeometry.h"
 
 #include "DetectorConstruction.h"
@@ -29,7 +29,7 @@ using namespace nexus;
 using namespace CLHEP;
 
 
-ElecPositronPair::ElecPositronPair():
+ElecPositronPairGenerator::ElecPositronPairGenerator():
 G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
 energy_min_(0.), energy_max_(0.),
 geom_(0)
@@ -60,20 +60,20 @@ geom_(0)
 
 
 
-ElecPositronPair::~ElecPositronPair()
+ElecPositronPairGenerator::~ElecPositronPairGenerator()
 {
   delete msg_;
 }
 
 
-void ElecPositronPair::GeneratePrimaryVertex(G4Event* event)
+void ElecPositronPairGenerator::GeneratePrimaryVertex(G4Event* event)
 {
 
   particle_definition_ =
     G4ParticleTable::GetParticleTable()->FindParticle("e-");
 
   if (!particle_definition_)
-    G4Exception("SetParticleDefinition()", "[ElecPositronPair]",
+    G4Exception("SetParticleDefinition()", "[ElecPositronPairGenerator]",
       FatalException, "User gave an unknown particle name.");
 
   // Generate an initial position for the particle using the geometry
@@ -112,7 +112,7 @@ void ElecPositronPair::GeneratePrimaryVertex(G4Event* event)
     G4ParticleTable::GetParticleTable()->FindParticle("e+");
 
   if (!particle_definition_)
-    G4Exception("SetParticleDefinition()", "[ElecPositronPair]",
+    G4Exception("SetParticleDefinition()", "[ElecPositronPairGenerator]",
       FatalException, "User gave an unknown particle name.");
 
   G4double kinetic_energy2 = tot_kinetic_energy - kinetic_energy;
@@ -138,7 +138,7 @@ void ElecPositronPair::GeneratePrimaryVertex(G4Event* event)
 
 
 
-G4double ElecPositronPair::RandomEnergy(G4double emin, G4double emax) const
+G4double ElecPositronPairGenerator::RandomEnergy(G4double emin, G4double emax) const
 {
   if (emax == emin)
     return emin;

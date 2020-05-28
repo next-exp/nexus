@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | SingleParticle2Pi.cc
+// nexus | SingleParticle2PiGenerator.cc
 //
 // This class is the primary generator for events consisting of
 // a single particle, generated in the direction towards the detector,
@@ -11,7 +11,7 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "SingleParticle2Pi.h"
+#include "SingleParticle2PiGenerator.h"
 
 #include "DetectorConstruction.h"
 #include "BaseGeometry.h"
@@ -32,14 +32,14 @@ using namespace nexus;
 using namespace CLHEP;
 
 
-SingleParticle2Pi::SingleParticle2Pi():
+SingleParticle2PiGenerator::SingleParticle2PiGenerator():
 G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
 energy_min_(0.), energy_max_(0.), geom_(0)
 {
-  msg_ = new G4GenericMessenger(this, "/Generator/SingleParticle/",
+  msg_ = new G4GenericMessenger(this, "/Generator/SingleParticle2Pi/",
                                 "Control commands of single-particle generator.");
 
-  msg_->DeclareMethod("particle", &SingleParticle2Pi::SetParticleDefinition,
+  msg_->DeclareMethod("particle", &SingleParticle2PiGenerator::SetParticleDefinition,
                       "Set particle to be generated.");
 
   G4GenericMessenger::Command& min_energy =
@@ -67,26 +67,26 @@ energy_min_(0.), energy_max_(0.), geom_(0)
 
 
 
-SingleParticle2Pi::~SingleParticle2Pi()
+SingleParticle2PiGenerator::~SingleParticle2PiGenerator()
 {
   delete msg_;
 }
 
 
 
-void SingleParticle2Pi::SetParticleDefinition(G4String particle_name)
+void SingleParticle2PiGenerator::SetParticleDefinition(G4String particle_name)
 {
   particle_definition_ =
     G4ParticleTable::GetParticleTable()->FindParticle(particle_name);
 
   if (!particle_definition_)
-    G4Exception("SetParticleDefinition()", "[SingleParticle2Pi]",
+    G4Exception("SetParticleDefinition()", "[SingleParticle2PiGenerator]",
       FatalException, "User gave an unknown particle name.");
 }
 
 
 
-void SingleParticle2Pi::GeneratePrimaryVertex(G4Event* event)
+void SingleParticle2PiGenerator::GeneratePrimaryVertex(G4Event* event)
 {
   // Generate an initial position for the particle using the geometry
   G4ThreeVector position = geom_->GenerateVertex(region_);
@@ -145,7 +145,7 @@ void SingleParticle2Pi::GeneratePrimaryVertex(G4Event* event)
 
 
 
-G4double SingleParticle2Pi::RandomEnergy() const
+G4double SingleParticle2PiGenerator::RandomEnergy() const
 {
   if (energy_max_ == energy_min_)
     return energy_min_;

@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | Kr83mGeneration.h
+// nexus | Kr83mGenerator.h
 //
 // This class is the primary generator for the decay chain
 // of the isomeric state krypton 83.
@@ -7,8 +7,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __Kr83mGeneration__
-#define __Kr83mGeneration__
+#ifndef Kr83m_GENERATOR__
+#define Kr83m_GENERATOR__
 
 #include <vector>
 #include <G4VPrimaryGenerator.hh>
@@ -47,13 +47,13 @@ namespace nexus {
   /// it makes life a bit more complicated...
   /// So, we have to simulated 2 or 3 particles for each decay..
 
-  class Kr83mGeneration: public G4VPrimaryGenerator
+  class Kr83mGenerator: public G4VPrimaryGenerator
   {
   public:
     //Constructor
-    Kr83mGeneration();
+    Kr83mGenerator();
     //Destructor
-    ~Kr83mGeneration();
+    ~Kr83mGenerator();
 
     void GeneratePrimaryVertex(G4Event* evt);
 

@@ -30,44 +30,44 @@ GeneratorFactory::~GeneratorFactory()
 
 //////////////////////////////////////////////////////////////////////
 
-#include "SingleParticle.h"
+#include "SingleParticleGenerator.h"
 #include "Decay0Interface.h"
-#include "IonGun.h"
-#include "Na22Generation.h"
-#include "Kr83mGeneration.h"
-#include "SingleParticle2Pi.h"
+#include "IonGenerator.h"
+#include "Na22Generator.h"
+#include "Kr83mGenerator.h"
+#include "SingleParticle2PiGenerator.h"
 #include "MuonGenerator.h"
 #include "MuonAngleGenerator.h"
 #include "ELTableGenerator.h"
 #include "ScintillationGenerator.h"
-#include "ElecPositronPair.h"
+#include "ElecPositronPairGenerator.h"
 
 
 G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
 {
   G4VPrimaryGenerator* p = 0;
 
-  if (name_ == "SINGLE_PARTICLE") p = new SingleParticle();
+  if      (name_ == "SINGLE_PARTICLE") p = new SingleParticleGenerator();
 
-  else if (name_ == "DECAY0") p = new Decay0Interface();
+  else if (name_ == "DECAY0")          p = new Decay0Interface();
 
-  else if (name_ == "ION_GUN") p = new IonGun();
+  else if (name_ == "ION")             p = new IonGenerator();
 
-  else if (name_ == "NA22") p = new Na22Generation();
+  else if (name_ == "NA22")            p = new Na22Generator();
 
-  else if (name_ == "Kr83m") p = new Kr83mGeneration();
+  else if (name_ == "Kr83m")           p = new Kr83mGenerator();
 
-  else if (name_ == "2PI") p = new SingleParticle2Pi();
+  else if (name_ == "2PI")             p = new SingleParticle2PiGenerator();
 
-  else if (name_ == "MUON_GENERATOR") p = new MuonGenerator();
+  else if (name_ == "MUON")            p = new MuonGenerator();
 
-  else if (name_ == "LABMUON_GENERATOR") p = new MuonAngleGenerator();
+  else if (name_ == "LAB_MUON")        p = new MuonAngleGenerator();
 
-  else if (name_ == "EL_TABLE_GENERATOR") p = new ELTableGenerator();
+  else if (name_ == "EL_TABLE")        p = new ELTableGenerator();
 
-  else if (name_ == "SCINTGENERATOR") p = new ScintillationGenerator();
+  else if (name_ == "SCINTILLATION")   p = new ScintillationGenerator();
 
-  else if (name_ == "E+E-PAIR") p = new ElecPositronPair();
+  else if (name_ == "E+E-PAIR")        p = new ElecPositronPairGenerator();
 
   else {
     G4String err = "The user specified an unknown generator: " + name_;

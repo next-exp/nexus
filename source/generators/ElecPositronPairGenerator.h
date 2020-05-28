@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | ElecPositronPair.h
+// nexus | ElecPositronPairGenerator.h
 //
 // This generator simulates an electron and a positron from the same vertex,
 // with total kinetic energy settable by parameter.
@@ -21,13 +21,13 @@ namespace nexus {
 
   class BaseGeometry;
 
-  class ElecPositronPair: public G4VPrimaryGenerator
+  class ElecPositronPairGenerator: public G4VPrimaryGenerator
   {
   public:
     /// Constructor
-    ElecPositronPair();
+    ElecPositronPairGenerator();
     /// Destructor
-    ~ElecPositronPair();
+    ~ElecPositronPairGenerator();
 
     /// This method is invoked at the beginning of the event. It sets
     /// a primary vertex (that is, a given position and time)

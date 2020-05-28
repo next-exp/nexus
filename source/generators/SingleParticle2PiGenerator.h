@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | SingleParticle2Pi.h
+// nexus | SingleParticle2PiGenerator.h
 //
 // This class is the primary generator for events consisting of
 // a single particle, generated in the direction towards the detector,
@@ -11,8 +11,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef SINGLE_PARTICLE_2Pi__
-#define SINGLE_PARTICLE_2Pi__
+#ifndef SINGLE_PARTICLE_2PI_GEN__
+#define SINGLE_PARTICLE_2PI_GEN__
 
 #include <G4VPrimaryGenerator.hh>
 
@@ -25,13 +25,13 @@ namespace nexus {
 
   class BaseGeometry;
 
-  class SingleParticle2Pi: public G4VPrimaryGenerator
+  class SingleParticle2PiGenerator: public G4VPrimaryGenerator
   {
   public:
     /// Constructor
-    SingleParticle2Pi();
+    SingleParticle2PiGenerator();
     /// Destructor
-    ~SingleParticle2Pi();
+    ~SingleParticle2PiGenerator();
 
     /// This method is invoked at the beginning of the event. It sets
     /// a primary vertex (that is, a particle in a given position and time)

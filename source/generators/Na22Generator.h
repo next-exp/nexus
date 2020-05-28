@@ -8,8 +8,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef NA22GENERATION__
-#define NA22GENERATION__
+#ifndef NA22_GENERATOR__
+#define NA22_GENERATOR__
 
 #include <G4VPrimaryGenerator.hh>
 
@@ -20,13 +20,13 @@ namespace nexus {
 
   class BaseGeometry;
 
-  class Na22Generation: public G4VPrimaryGenerator
+  class Na22Generator: public G4VPrimaryGenerator
   {
   public:
     //Constructor
-    Na22Generation();
+    Na22Generator();
     //Destructor
-    ~Na22Generation();
+    ~Na22Generator();
 
     void GeneratePrimaryVertex(G4Event* evt);
 
