@@ -118,6 +118,11 @@ G4bool PersistencyManager::Store(const G4Event* event)
 
   if (!store_evt_) {
     TrajectoryMap::Clear();
+    if (store_steps_) {
+      AllSteppingAction* sa = (AllSteppingAction*)
+        G4RunManager::GetRunManager()->GetUserSteppingAction();
+      sa->Reset();
+    }
     return false;
   }
 
