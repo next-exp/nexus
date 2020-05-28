@@ -17,13 +17,13 @@
 /Geometry/NextNew/specific_vertex_Y   0 mm
 /Geometry/NextNew/specific_vertex_Z 100 mm
 
-#/Actions/GeantinoSteppingAction/select_particle geantino
-#/Actions/GeantinoSteppingAction/select_volume   ACTIVE   #    full match
-#/Actions/GeantinoSteppingAction/select_volume   TPB      # partial match
+# ACTIONS
+#/Actions/AllSteppingAction/select_particle geantino
+#/Actions/AllSteppingAction/select_volume   ACTIVE   #    full match
+#/Actions/AllSteppingAction/select_volume   TPB      # partial match
 
 # GEOMETRY
 /Geometry/NextNew/pressure 10. bar
 /Geometry/PmtR11410/SD_depth 4
 
-/nexus/persistency/eventType geantino
 /nexus/persistency/outputFile geantinos.next
