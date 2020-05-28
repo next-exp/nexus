@@ -127,5 +127,10 @@ void AnalysisTrackingAction::PostUserTrackingAction(const G4Track* track)
   trj->SetFinalPosition(track->GetPosition());
   trj->SetFinalTime(track->GetGlobalTime());
   trj->SetTrackLength(track->GetTrackLength());
-  trj->SetDecayVolume(track->GetVolume()->GetName());
+  trj->SetFinalVolume(track->GetVolume()->GetName());
+  trj->SetFinalMomentum(track->GetMomentum());
+
+  // Record last process of the track
+  G4String proc_name = track->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
+  trj->SetFinalProcess(proc_name);
 }
