@@ -31,10 +31,10 @@
 /Geometry/PmtR11410/SD_depth 4
 
 ## Generation
-/Generator/IonGun/atomic_number 81
-/Generator/IonGun/mass_number 208
+/Generator/IonGenerator/atomic_number 81
+/Generator/IonGenerator/mass_number 208
 ## LATERAL/UP
-/Generator/IonGun/region  SOURCE_PORT_LATERAL_DISK
+/Generator/IonGenerator/region  SOURCE_PORT_LATERAL_DISK
 
 # PHYSICS
 /PhysicsList/Nexus/clustering          false

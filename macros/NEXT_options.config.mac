@@ -46,9 +46,9 @@
 
 
 # Ion Gun for background decays - (Bi214: Z=83, A=214), (Tl208: Z=81, A=208)
-/Generator/IonGun/atomic_number 83
-/Generator/IonGun/mass_number 214
-/Generator/IonGun/region SAPPHIRE_WINDOW
+/Generator/IonGenerator/atomic_number 83
+/Generator/IonGenerator/mass_number 214
+/Generator/IonGenerator/region SAPPHIRE_WINDOW
 
 # Single Particle
 #/Generator/SingleParticle/particle e-

@@ -10,9 +10,9 @@
 /Geometry/PmtR11410/SD_depth 4
 
 # GENERATION
-/Generator/IonGun/atomic_number 19
-/Generator/IonGun/mass_number 40
-/Generator/IonGun/region DICE_BOARD
+/Generator/IonGenerator/atomic_number 19
+/Generator/IonGenerator/mass_number 40
+/Generator/IonGenerator/region DICE_BOARD
 
 # PHYSICS
 /PhysicsList/Nexus/clustering          false

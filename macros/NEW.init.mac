@@ -14,7 +14,7 @@
 
 /Geometry/RegisterGeometry NEXT_NEW
 
-/Generator/RegisterGenerator ION_GUN
+/Generator/RegisterGenerator ION
 
 /Actions/RegisterTrackingAction VALIDATION
 /Actions/RegisterEventAction DEFAULT

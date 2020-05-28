@@ -13,7 +13,7 @@
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 /Geometry/RegisterGeometry NEXT100_OPT
-/Generator/RegisterGenerator SCINTGENERATOR
+/Generator/RegisterGenerator SCINTILLATION
 
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction EL_SIM

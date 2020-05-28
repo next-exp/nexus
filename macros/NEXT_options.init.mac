@@ -24,12 +24,12 @@
 
 
 ##### GENERATOR #####
-/Generator/RegisterGenerator ION_GUN
+/Generator/RegisterGenerator ION
 #/Generator/RegisterGenerator SINGLE_PARTICLE
 #/Generator/RegisterGenerator DECAY0
 #/Generator/RegisterGenerator Kr83m
-#/Generator/RegisterGenerator SCINTGENERATOR
-#/Generator/RegisterGenerator LABMUON_GENERATOR
+#/Generator/RegisterGenerator SCINTILLATION
+#/Generator/RegisterGenerator LAB_MUON
 
 
 ##### ACTIONS #####

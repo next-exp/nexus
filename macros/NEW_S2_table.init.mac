@@ -9,7 +9,7 @@
 /PhysicsList/RegisterPhysics NexusPhysics
 
 /Geometry/RegisterGeometry NEXT_NEW
-/Generator/RegisterGenerator EL_TABLE_GENERATOR
+/Generator/RegisterGenerator EL_TABLE
 
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction EL_SIM

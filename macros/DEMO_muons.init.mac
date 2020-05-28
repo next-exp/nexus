@@ -7,7 +7,7 @@
 /control/execute macros/physics/DefaultPhysicsList.mac
 
 /Geometry/RegisterGeometry NEXT1_EL
-/Generator/RegisterGenerator MUON_GENERATOR
+/Generator/RegisterGenerator MUON
 
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction MUONS

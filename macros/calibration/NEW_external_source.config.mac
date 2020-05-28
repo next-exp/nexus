@@ -33,9 +33,9 @@
 /Geometry/PmtR11410/visibility false
 /Geometry/PmtR11410/SD_depth 4
 
-/Generator/IonGun/atomic_number 11
-/Generator/IonGun/mass_number 22
-/Generator/IonGun/region  EXTERNAL_PORT_AXIAL
+/Generator/IonGenerator/atomic_number 11
+/Generator/IonGenerator/mass_number 22
+/Generator/IonGenerator/region  EXTERNAL_PORT_AXIAL
 
 
 # PHYSICS
