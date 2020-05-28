@@ -8,9 +8,11 @@
 // ----------------------------------------------------------------------------
 
 #include "AllSteppingAction.h"
+#include "PersistencyManager.h"
 
 #include <G4Step.hh>
 #include <G4SteppingManager.hh>
+#include <G4VPersistencyManager.hh>
 #include <G4ProcessManager.hh>
 #include <G4ParticleTable.hh>
 #include <G4Geantino.hh>
@@ -35,6 +37,12 @@ selected_volumes_()
   msg_->DeclareMethod("select_volume",
                       &AllSteppingAction::AddSelectedVolume,
                       "add a new volume to select");
+
+  PersistencyManager* pm = dynamic_cast<PersistencyManager*>
+        (G4VPersistencyManager::GetPersistencyManager());
+
+  pm->StoreSteps(true);
+
 }
 
 
