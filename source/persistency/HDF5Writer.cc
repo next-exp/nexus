@@ -36,11 +36,11 @@ void HDF5Writer::Open(std::string fileName)
   _memtypeRun = createRunType();
   _runTable = createTable(_group, run_table_name, _memtypeRun);
 
-  std::string sns_data_table_name = "waveforms";
+  std::string sns_data_table_name = "sns_response";
   _memtypeSnsData = createSensorDataType();
   _snsDataTable = createTable(_group, sns_data_table_name, _memtypeSnsData);
 
-  std::string sns_tof_table_name = "tof_waveforms";
+  std::string sns_tof_table_name = "tof_sns_response";
   _memtypeSnsTof = createSensorTofType();
   _snsTofTable = createTable(_group, sns_tof_table_name, _memtypeSnsTof);
 
@@ -52,7 +52,7 @@ void HDF5Writer::Open(std::string fileName)
   _memtypeParticleInfo = createParticleInfoType();
   _particleInfoTable = createTable(_group, particle_info_table_name, _memtypeParticleInfo);
 
-  std::string sns_pos_table_name = "sensor_positions";
+  std::string sns_pos_table_name = "sns_positions";
   _memtypeSnsPos = createSensorPosType();
   _snsPosTable = createTable(_group, sns_pos_table_name, _memtypeSnsPos);
 
@@ -118,13 +118,13 @@ void HDF5Writer::WriteHitInfo(int evt_number, int particle_indx, float hit_posit
   _ihit++;
 }
 
-void HDF5Writer::WriteParticleInfo(int evt_number, int particle_indx, const char* particle_name, char primary, int mother_id, float initial_vertex_x, float initial_vertex_y, float initial_vertex_z, float initial_vertex_t, float final_vertex_x, float final_vertex_y, float final_vertex_z, float final_vertex_t, const char* initial_volume, const char* final_volume, float momentum_x, float momentum_y, float momentum_z, float kin_energy, const char* creator_proc)
+void HDF5Writer::WriteParticleInfo(int evt_number, int particle_indx, const char* particle_name, char primary, int mother_id, float initial_vertex_x, float initial_vertex_y, float initial_vertex_z, float initial_vertex_t, float final_vertex_x, float final_vertex_y, float final_vertex_z, float final_vertex_t, const char* initial_volume, const char* final_volume, float momentum_x, float momentum_y, float momentum_z, float final_momentum_x, float final_momentum_y, float final_momentum_z, float kin_energy, float length, const char* creator_proc, const char* final_proc)
 {
   particle_info_t trueInfo;
   trueInfo.event_id = evt_number;
   trueInfo.particle_id = particle_indx;
-  memset(trueInfo.name, 0, STRLEN);
-  strcpy(trueInfo.name, particle_name);
+  memset(trueInfo.particle_name, 0, STRLEN);
+  strcpy(trueInfo.particle_name, particle_name);
   trueInfo.primary = primary;
   trueInfo.mother_id = mother_id;
   trueInfo.initial_x = initial_vertex_x;
@@ -142,18 +142,26 @@ void HDF5Writer::WriteParticleInfo(int evt_number, int particle_indx, const char
   trueInfo.initial_momentum_x = momentum_x;
   trueInfo.initial_momentum_y = momentum_y;
   trueInfo.initial_momentum_z = momentum_z;
+  trueInfo.final_momentum_x = final_momentum_x;
+  trueInfo.final_momentum_y = final_momentum_y;
+  trueInfo.final_momentum_z = final_momentum_z;
   trueInfo.kin_energy = kin_energy;
+  trueInfo.length = length;
   memset(trueInfo.creator_proc, 0, STRLEN);
   strcpy(trueInfo.creator_proc, creator_proc);
+  memset(trueInfo.final_proc, 0, STRLEN);
+  strcpy(trueInfo.final_proc, final_proc);
   writeParticle(&trueInfo,  _particleInfoTable, _memtypeParticleInfo, _ipart);
 
   _ipart++;
 }
 
-void HDF5Writer::WriteSensorPosInfo(unsigned int sensor_id, float x, float y, float z)
+void HDF5Writer::WriteSensorPosInfo(unsigned int sensor_id, const char* sensor_name, float x, float y, float z)
 {
   sns_pos_t snsPos;
   snsPos.sensor_id = sensor_id;
+  memset(snsPos.sensor_name, 0, STRLEN);
+  strcpy(snsPos.sensor_name, sensor_name);
   snsPos.x = x;
   snsPos.y = y;
   snsPos.z = z;

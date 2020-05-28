@@ -175,21 +175,21 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc) //,
 
     G4int trackid = trj->GetTrackID();
 
+    G4double length = trj->GetTrackLength();
+
     G4ThreeVector ini_xyz = trj->GetInitialPosition();
     G4double ini_t = trj->GetInitialTime();
-    G4ThreeVector xyz = trj->GetFinalPosition();
-    G4double t = trj->GetFinalTime();
+    G4ThreeVector final_xyz = trj->GetFinalPosition();
+    G4double final_t = trj->GetFinalTime();
 
     G4String ini_volume = trj->GetInitialVolume();
-    G4String volume = trj->GetDecayVolume();
+    G4String final_volume = trj->GetFinalVolume();
 
     G4double mass = trj->GetParticleDefinition()->GetPDGMass();
-    G4ThreeVector mom = trj->GetInitialMomentum();
-    G4double energy = sqrt(mom.mag2() + mass*mass);
+    G4ThreeVector ini_mom = trj->GetInitialMomentum();
+    G4double energy = sqrt(ini_mom.mag2() + mass*mass);
+    G4ThreeVector final_mom = trj->GetFinalMomentum();
 
-    float ini_pos[4] = {(float)ini_xyz.x(), (float)ini_xyz.y(), (float)ini_xyz.z(), (float)ini_t};
-    float final_pos[4] = {(float)xyz.x(), (float)xyz.y(), (float)xyz.z(), (float)t};
-    float momentum[3] = {(float)mom.x(), (float)mom.y(), (float)mom.z()};
     float kin_energy = energy - mass;
     char primary = 0;
     G4int mother_id = 0;
@@ -201,11 +201,18 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc) //,
 
     _h5writer->WriteParticleInfo(_nevt, trackid, trj->GetParticleName().c_str(),
 				 primary, mother_id,
-				 ini_pos[0], ini_pos[1], ini_pos[2], ini_pos[3],
-				 final_pos[0], final_pos[1], final_pos[2], final_pos[3],
-				 ini_volume.c_str(), volume.c_str(),
-				 momentum[0],  momentum[1], momentum[2],
-				 kin_energy, trj->GetCreatorProcess().c_str());
+				 (float)ini_xyz.x(), (float)ini_xyz.y(),
+                                 (float)ini_xyz.z(), (float)ini_t,
+				 (float)final_xyz.x(), (float)final_xyz.y(),
+                                 (float)final_xyz.z(), (float)final_t,
+				 ini_volume.c_str(), final_volume.c_str(),
+				 (float)ini_mom.x(), (float)ini_mom.y(),
+                                 (float)ini_mom.z(), (float)final_mom.x(),
+                                 (float)final_mom.y(), (float)final_mom.z(),
+				 kin_energy, length,
+                                 trj->GetCreatorProcess().c_str(),
+				 trj->GetFinalProcess().c_str());
+
   }
 }
 
@@ -340,7 +347,8 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
       std::vector<G4int>::iterator pos_it =
 	std::find(_sns_posvec.begin(), _sns_posvec.end(), hit->GetPmtID());
       if (pos_it == _sns_posvec.end()) {
-	_h5writer->WriteSensorPosInfo((unsigned int)hit->GetPmtID(), (float)xyz.x(), (float)xyz.y(), (float)xyz.z());
+	_h5writer->WriteSensorPosInfo((unsigned int)hit->GetPmtID(), sdname.c_str(),
+                                      (float)xyz.x(), (float)xyz.y(), (float)xyz.z());
 	_sns_posvec.push_back(hit->GetPmtID());
       }
     }
