@@ -33,7 +33,8 @@ PrimaryGeneration::~PrimaryGeneration()
 void PrimaryGeneration::GeneratePrimaries(G4Event* event)
 {
   if (!generator_)
-    G4Exception("", "", FatalException, "");
+    G4Exception("[PrimaryGeneration]", "GeneratePrimaries()",
+                FatalException, "Generator not set!");
 
   generator_->GeneratePrimaryVertex(event);
 }

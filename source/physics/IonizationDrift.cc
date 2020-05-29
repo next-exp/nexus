@@ -86,7 +86,7 @@ namespace nexus {
         track.GetMaterial()->GetMaterialPropertiesTable();
 
       if (!mpt || !(mpt->ConstPropertyExists("ATTACHMENT"))) { 
-        G4Exception("AlongStepDoIt()", "[IonizationDrift]", JustWarning,
+        G4Exception("[IonizationDrift]", "AlongStepDoIt()", JustWarning,
           "No material properties table found. Assuming no attachment.");
       }
       else {

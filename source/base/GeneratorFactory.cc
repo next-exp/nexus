@@ -71,7 +71,7 @@ G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
 
   else {
     G4String err = "The user specified an unknown generator: " + name_;
-    G4Exception("CreateGenerator()", "[GeneratorFactory]",
+    G4Exception("[GeneratorFactory]", "CreateGenerator()",
         FatalException, err);
   }
 

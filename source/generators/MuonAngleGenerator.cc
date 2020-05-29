@@ -110,7 +110,7 @@ void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
   particle_definition_ =
     G4ParticleTable::GetParticleTable()->FindParticle(MuonCharge());
   if (!particle_definition_)
-    G4Exception("SetParticleDefinition()", "[MuonAngleGenerator]",
+    G4Exception("[MuonAngleGenerator]", "SetParticleDefinition()",
                 FatalException, " can not create a muon ");
 
   // Generate uniform random energy in [E_min, E_max]

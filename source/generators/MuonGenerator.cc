@@ -76,7 +76,7 @@ void MuonGenerator::GeneratePrimaryVertex(G4Event* event)
 {
   particle_definition_ = G4ParticleTable::GetParticleTable()->FindParticle(MuonCharge());
   if (!particle_definition_)
-    G4Exception("SetParticleDefinition()", "[MuonGenerator]",
+    G4Exception("[MuonGenerator]", "SetParticleDefinition()",
                 FatalException, " can not create a muon ");
 
   // Generate an initial position for the particle using the geometry

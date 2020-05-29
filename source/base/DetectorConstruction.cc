@@ -39,7 +39,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 {
   // Check whether a detector geometry has been set
   if (!geometry_) {
-    G4Exception("Construct()", "[DetectorConstruction]",
+    G4Exception("[DetectorConstruction]", "Construct()",
       FatalException, "Geometry not set!");
   }
 

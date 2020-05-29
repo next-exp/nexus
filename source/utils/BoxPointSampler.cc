@@ -177,7 +177,7 @@ namespace nexus {
     // Unknown region
     else {
       G4String err = "Unknown generation region: " + region;
-      G4Exception("GenerateVertex()", "[BoxPointSampler]",
+      G4Exception("[BoxPointSampler]", "GenerateVertex()",
         FatalErrorInArgument, err);
     }
 

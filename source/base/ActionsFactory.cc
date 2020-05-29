@@ -48,7 +48,7 @@ G4UserRunAction* ActionsFactory::CreateRunAction() const
 
   else {
     G4String err = "Unknown user run action: " + runact_name_;
-    G4Exception("CreateRunAction()", "[ActionsFactory]", JustWarning, err);
+    G4Exception("[ActionsFactory]", "CreateRunAction()", JustWarning, err);
   }
   return p;
 }
@@ -71,7 +71,7 @@ G4UserEventAction* ActionsFactory::CreateEventAction() const
 
   else {
     G4String err = "Unknown user event action: " + evtact_name_;
-    G4Exception("CreateEventAction()", "[ActionsFactory]", JustWarning, err);
+    G4Exception("[ActionsFactory]", "CreateEventAction()", JustWarning, err);
   }
 
   return p;
@@ -95,7 +95,7 @@ G4UserTrackingAction* ActionsFactory::CreateTrackingAction() const
 
   else {
     G4String err = "Unknown user tracking action: " + trkact_name_;
-    G4Exception("CreateTrackingAction()", "[ActionsFactory]",
+    G4Exception("[ActionsFactory]", "CreateTrackingAction()",
       JustWarning, err);
   }
 
@@ -115,7 +115,7 @@ G4UserSteppingAction* ActionsFactory::CreateSteppingAction() const
 
   else {
     G4String err = "Unknown user stepping action: " + stpact_name_;
-    G4Exception("CreateSteppingAction()", "[ActionsFactory]",
+    G4Exception("[ActionsFactory]", "CreateSteppingAction()",
       JustWarning, err);
   }
 
@@ -134,7 +134,7 @@ G4UserStackingAction* ActionsFactory::CreateStackingAction() const
 
   else {
     G4String err = "Unknown user stacking action: " + stkact_name_;
-    G4Exception("CreateStackingAction()", "[ActionsFactory]",
+    G4Exception("[ActionsFactory]", "CreateStackingAction()",
       JustWarning, err);
   }
 

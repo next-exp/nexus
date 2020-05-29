@@ -58,7 +58,7 @@ IonGenerator::IonGenerator():
   const DetectorConstruction* detconst = dynamic_cast<const DetectorConstruction*>
     (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
   if (detconst) geom_ = detconst->GetGeometry();
-  else G4Exception("IonGenerator()", "[IonGenerator]", FatalException, "Unable to load geometry.");
+  else G4Exception("[IonGenerator]", "IonGenerator()", FatalException, "Unable to load geometry.");
 }
 
 
@@ -73,7 +73,7 @@ G4ParticleDefinition* IonGenerator::IonDefinition()
   G4ParticleDefinition* pdef =
     G4IonTable::GetIonTable()->GetIon(atomic_number_, mass_number_, energy_level_);
 
-  if (!pdef) G4Exception("IonDefinition()", "[IonGenerator]",
+  if (!pdef) G4Exception("[IonGenerator]", "IonDefinition()",
                          FatalException, "Unable to find the requested ion.");
 
   // Unstable ions decay by default at a random time t sampled from an exponential

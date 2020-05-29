@@ -80,7 +80,7 @@ void SingleParticle2PiGenerator::SetParticleDefinition(G4String particle_name)
     G4ParticleTable::GetParticleTable()->FindParticle(particle_name);
 
   if (!particle_definition_)
-    G4Exception("SetParticleDefinition()", "[SingleParticle2PiGenerator]",
+    G4Exception("[SingleParticle2PiGenerator]", "SetParticleDefinition()",
       FatalException, "User gave an unknown particle name.");
 }
 

@@ -62,7 +62,7 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
 
   else {
     G4String err = "The user selected an unknown geometry: " + name_;
-    G4Exception("CreateGeometry", "[BaseGeometry]", FatalException, err);
+    G4Exception("[GeometryFactory]", "CreateGeometry", FatalException, err);
   }
 
   return p;

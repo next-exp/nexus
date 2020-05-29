@@ -94,7 +94,7 @@ void PersistencyManager::OpenFile(G4String filename)
     h5writer_->Open(hdf5file);
     return;
   } else {
-    G4Exception("OpenFile()", "[PersistencyManager]",
+    G4Exception("[PersistencyManager]", "OpenFile()",
 		JustWarning, "An output file was previously opened.");
   }
 }
@@ -227,7 +227,7 @@ void PersistencyManager::StoreHits(G4HCofThisEvent* hce)
       G4String msg =
         "Collection of hits '" + sdname + "/" + hcname
         + "' is of an unknown type and will not be stored.";
-      G4Exception("StoreHits()", "[PersistencyManager]", JustWarning, msg);
+      G4Exception("[PersistencyManager]", "StoreHits()", JustWarning, msg);
     }
   }
 

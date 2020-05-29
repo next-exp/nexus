@@ -73,7 +73,7 @@ namespace nexus {
     // Add our own wavelength shifting process for the optical photon
     pmanager = G4OpticalPhoton::Definition()->GetProcessManager();
     if (!pmanager) {
-      G4Exception("ConstructProcess()", "[NexusPhysics]", FatalException,
+      G4Exception("[NexusPhysics]", "ConstructProcess()", FatalException,
         "G4OpticalPhoton without a process manager.");
     }
     WavelengthShifting* wls = new WavelengthShifting();
@@ -81,7 +81,7 @@ namespace nexus {
 
     pmanager = IonizationElectron::Definition()->GetProcessManager();
     if (!pmanager) {
-      G4Exception("ConstructProcess()", "[NexusPhysics]", FatalException,
+      G4Exception("[NexusPhysics]", "ConstructProcess()", FatalException,
         "Ionization electron without a process manager.");
     }
 
