@@ -9,8 +9,8 @@
 ///  Copyright (c) 2010 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXT_EL_DB__
-#define __NEXT_EL_DB__
+#ifndef _NEXT_EL_DB___
+#define _NEXT_EL_DB___
 
 #include "SiPM11.h"
 #include "BaseGeometry.h"
@@ -37,11 +37,11 @@ namespace nexus {
 
 
   private:
-    G4int _rows, _columns;
-    G4ThreeVector _dimensions;
-    std::vector<std::pair<int, G4ThreeVector> > _positions;
+    G4int rows_, columns_;
+    G4ThreeVector dimensions_;
+    std::vector<std::pair<int, G4ThreeVector> > positions_;
 
-    SiPM11* _siPM;
+    SiPM11* siPM_;
 
   };
   

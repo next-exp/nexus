@@ -9,8 +9,8 @@
 ///  Copyright (c) 2013 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __MAGBOX__
-#define __MAGBOX__
+#ifndef _MAGBOX___
+#define _MAGBOX___
 
 #include "BaseGeometry.h"
 #include "BoxPointSampler.h"
@@ -38,22 +38,22 @@ namespace nexus {
 
   private:
     // Detector dimensions
-    const G4double _detector_size; /// Size of the Xe box    
+    const G4double detector_size_; /// Size of the Xe box    
 
     // ACTIVE gas Xenon
-    G4Material* _gas;
+    G4Material* gas_;
 
     // Parameters
-    G4double _max_step_size;  /// Maximum Step Size
-    G4String _gas_name;       /// Gas name
-    G4double _pressure;       /// Pressure Gas Xenon
-    G4double _mag_intensity;  /// Magnetic Field Intensity
+    G4double max_step_size_;  /// Maximum Step Size
+    G4String gas_name_;       /// Gas name
+    G4double pressure_;       /// Pressure Gas Xenon
+    G4double mag_intensity_;  /// Magnetic Field Intensity
     
     //Vertex genrator    
-    BoxPointSampler* _active_gen;
+    BoxPointSampler* active_gen_;
 
     /// Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
+    G4GenericMessenger* msg_; 
 
   };
   

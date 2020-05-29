@@ -50,11 +50,11 @@ namespace nexus {
   {
     // PMT BODY //////////////////////////////////////////////////////
 
-    _pmt_diam   = 25.4 * mm;
-    _pmt_length = 43.0 * mm; 
+    pmt_diam_   = 25.4 * mm;
+    pmt_length_ = 43.0 * mm; 
     
     G4Tubs* pmt_solid =
-      new G4Tubs("PMT_R7378A", 0., _pmt_diam/2., _pmt_length/2., 0., twopi);
+      new G4Tubs("PMT_R7378A", 0., pmt_diam_/2., pmt_length_/2., 0., twopi);
     
     G4Material* aluminum = 
       G4NistManager::Instance()->FindOrBuildMaterial("G4_Al");	
@@ -67,7 +67,7 @@ namespace nexus {
     
     // PMT WINDOW ////////////////////////////////////////////////////
     
-    G4double window_diam = _pmt_diam;
+    G4double window_diam = pmt_diam_;
     G4double window_length = 6. * mm;
 
     G4Tubs* window_solid =
@@ -80,7 +80,7 @@ namespace nexus {
     G4LogicalVolume* window_logic =
       new G4LogicalVolume(window_solid, quartz, "PMT_WINDOW");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., (_pmt_length-window_length)/2.),
+    new G4PVPlacement(0, G4ThreeVector(0., 0., (pmt_length_-window_length)/2.),
 		      window_logic, "PMT_WINDOW", pmt_logic, false, 0, true);
 
     G4VisAttributes wndw_col = nexus::Blue();

@@ -38,18 +38,18 @@ namespace nexus {
   ExtraVessel::ExtraVessel():
     BaseGeometry(),
     // Dimensions
-    _diameter (10. * cm),
-    _thickness (1. * mm),
-    _visibility(1)
+    diameter_ (10. * cm),
+    thickness_ (1. * mm),
+    visibility_(1)
   {
-    _msg = new G4GenericMessenger(this, "/Geometry/ExtraVessel/", "Control commands of ExtraVessel geometry.");
-    _msg->DeclareProperty("visibility", _visibility, "visibility of materials placed outside the vessel, behind the tracking plane");
+    msg_ = new G4GenericMessenger(this, "/Geometry/ExtraVessel/", "Control commands of ExtraVessel geometry.");
+    msg_->DeclareProperty("visibility", visibility_, "visibility of materials placed outside the vessel, behind the tracking plane");
   }
 
   
    ExtraVessel::~ExtraVessel()
   {
-    delete _generic_gen;
+    delete generic_gen_;
   }
 
   
@@ -58,7 +58,7 @@ namespace nexus {
     // GENERIC VOLUME //////////////////////////////////////////////////////
 
     G4Tubs* generic_solid = 
-      new G4Tubs("EXTRA_VESSEL", 0., _diameter/2., _thickness/2., 
+      new G4Tubs("EXTRA_VESSEL", 0., diameter_/2., thickness_/2., 
         0., twopi);
 
     // We model the material with a generic material of the density of FR4.
@@ -73,7 +73,7 @@ namespace nexus {
 
 
     // VISIBILITIES //////////////////////////////////////////////////
-    if (_visibility) {
+    if (visibility_) {
       G4VisAttributes generic_col = nexus::Yellow();
       generic_col.SetForceSolid(true);
       generic_logic->SetVisAttributes(generic_col);    
@@ -84,7 +84,7 @@ namespace nexus {
 
     // VERTEX GENERATOR ////////////////////////////////////////////
 
-    _generic_gen = new CylinderPointSampler(0, _thickness, _diameter/2., 0.,
+    generic_gen_ = new CylinderPointSampler(0, thickness_, diameter_/2., 0.,
 					       G4ThreeVector (0., 0., 0.));
   }  
 
@@ -94,7 +94,7 @@ namespace nexus {
     G4ThreeVector vertex(0., 0., 0.);
 
     if (region == "EXTRA_VESSEL") {
-        vertex = _generic_gen->GenerateVertex("BODY_VOL");
+        vertex = generic_gen_->GenerateVertex("BODY_VOL");
     }
     
     return vertex;

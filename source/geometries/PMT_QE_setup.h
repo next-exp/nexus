@@ -9,8 +9,8 @@
 ///  Copyright (c) 2012 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __PMT_QE_SETUP__
-#define __PMT_QE_SETUP__
+#ifndef _PMT_QE_SETUP___
+#define _PMT_QE_SETUP___
 
 #include "BaseGeometry.h"
 #include "PmtR7378A.h"
@@ -38,13 +38,13 @@ namespace nexus {
     void Construct();
 
   private:   
-    G4GenericMessenger* _msg;
-    G4double _z_dist;
-    G4double _length;
-    G4double _pmt_length;
+    G4GenericMessenger* msg_;
+    G4double z_dist_;
+    G4double length_;
+    G4double pmt_length_;
 
-    PmtR11410 _pmt;
-    //PmtR7378A _pmt;
+    PmtR11410 pmt_;
+    //PmtR7378A pmt_;
   };
 
 } // end namespace nexus

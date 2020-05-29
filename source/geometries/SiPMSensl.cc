@@ -33,16 +33,16 @@ namespace nexus {
   using namespace CLHEP;
   
   SiPMSensl::SiPMSensl(): BaseGeometry(),
-                          _visibility(1),
-                          _binning(1.*microsecond)
+                          visibility_(1),
+                          binning_(1.*microsecond)
 
   {
     /// Messenger
-    _msg = new G4GenericMessenger(this, "/Geometry/SiPMSensl/", "Control commands of SiPMSensl geometry.");
-    _msg->DeclareProperty("visibility", _visibility, "SiPMSensl visibility");
+    msg_ = new G4GenericMessenger(this, "/Geometry/SiPMSensl/", "Control commands of SiPMSensl geometry.");
+    msg_->DeclareProperty("visibility", visibility_, "SiPMSensl visibility");
 
     G4GenericMessenger::Command& bin_cmd =
-      _msg->DeclareProperty("time_binning", _binning,
+      msg_->DeclareProperty("timebinning_", binning_,
 			    "Time binning of SensL SiPM");
     bin_cmd.SetUnitCategory("Time");
     bin_cmd.SetParameterName("time_binning", false);
@@ -59,7 +59,7 @@ namespace nexus {
 
   G4ThreeVector SiPMSensl::GetDimensions() const
   {
-    return _dimensions;
+    return dimensions_;
   }
   
   
@@ -72,9 +72,9 @@ namespace nexus {
     G4double sipm_y = 1.80 * mm;
     G4double sipm_z = 0.65 * mm;
 
-    _dimensions.setX(sipm_x);
-    _dimensions.setY(sipm_y);
-    _dimensions.setZ(sipm_z);
+    dimensions_.setX(sipm_x);
+    dimensions_.setY(sipm_y);
+    dimensions_.setZ(sipm_z);
 
     G4Box* sipm_solid = new G4Box("SIPMSensl", sipm_x/2., sipm_y/2., sipm_z/2);
 
@@ -177,7 +177,7 @@ namespace nexus {
       PmtSD* sipmsd = new PmtSD(sdname);
       sipmsd->SetDetectorVolumeDepth(1);
       sipmsd->SetDetectorNamingOrder(1000.);
-      sipmsd->SetTimeBinning(_binning);
+      sipmsd->SetTimeBinning(binning_);
       sipmsd->SetMotherVolumeDepth(3);
       
       G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
@@ -185,7 +185,7 @@ namespace nexus {
     }
 
       // Visibilities
-    if (_visibility) {
+    if (visibility_) {
       G4VisAttributes sipm_col = nexus::DirtyWhite();
       sipm_logic->SetVisAttributes(sipm_col);
       G4VisAttributes blue_col = nexus::Blue();

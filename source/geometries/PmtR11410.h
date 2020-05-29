@@ -48,29 +48,29 @@ namespace nexus {
 
   private:
     // Dimensions
-    G4double _front_body_diam, _front_body_length;
-    G4double _rear_body_diam, _rear_body_length;
-    G4double _body_thickness;
-    G4double _window_diam, _window_thickness;
-    G4double _photocathode_diam, _photocathode_thickness;
+    G4double front_body_diam_, front_body_length_;
+    G4double rear_body_diam_, rear_body_length_;
+    G4double body_thickness_;
+    G4double window_diam_, window_thickness_;
+    G4double photocathode_diam_, photocathode_thickness_;
 
     // Vertex generators
-    CylinderPointSampler* _front_body_gen;
-    CylinderPointSampler* _medium_body_gen;
-    CylinderPointSampler* _rear_body_gen;
-    CylinderPointSampler* _rear_cap_gen;
-    CylinderPointSampler* _front_cap_gen;
+    CylinderPointSampler* front_body_gen_;
+    CylinderPointSampler* medium_body_gen_;
+    CylinderPointSampler* rear_body_gen_;
+    CylinderPointSampler* rear_cap_gen_;
+    CylinderPointSampler* front_cap_gen_;
 
-    G4double _front_body_perc, _fr_med_body_perc, _fr_med_re_body_perc;
-    G4double _front_perc, _fr_med_perc, _fr_med_re_perc, _fr_med_re_cap_perc;
+    G4double front_body_perc_, fr_med_body_perc_, fr_med_re_body_perc_;
+    G4double front_perc_, fr_med_perc_, fr_med_re_perc_, fr_med_re_cap_perc_;
 
-    G4bool _visibility;
-    G4int _sd_depth;
+    G4bool visibility_;
+    G4int sd_depth_;
 
     //Messenger for configuration parameters
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
 
-    G4double _binning;
+    G4double binning_;
 
   };
 

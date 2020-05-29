@@ -31,37 +31,37 @@ namespace nexus {
     BaseGeometry(),
 
     // Body dimensions
-    _table_x (1200. *mm),
-    _table_y (15. *mm),
-    _table_z (2500. *mm),
-    _y_pos(-600. *mm),
-    _visibility(1)
+    table_x_ (1200. *mm),
+    table_y_ (15. *mm),
+    table_z_ (2500. *mm),
+    y_pos_(-600. *mm),
+    visibility_(1)
     
   {
    
    /// Messenger
-    _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
-    _msg->DeclareProperty("table_vis", _visibility, "TABLE Visibility");
+    msg_ = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
+    msg_->DeclareProperty("table_vis", visibility_, "TABLE Visibility");
     
   }
    
   void NextNewPedestal::SetLogicalVolume(G4LogicalVolume* mother_logic)
   {
-    _mother_logic = mother_logic;
+    mother_logic_ = mother_logic;
   }
 
   void NextNewPedestal::Construct()
   {
     ////// SUPPORT TABLE  ///////////
-    G4Box* table_solid = new G4Box("TABLE", _table_x/2., _table_y/2., _table_z/2.);
+    G4Box* table_solid = new G4Box("TABLE", table_x_/2., table_y_/2., table_z_/2.);
    
     G4LogicalVolume* table_logic = new G4LogicalVolume(table_solid, 
 						       MaterialsList::Steel316Ti(),
 						       "TABLE");
-    new G4PVPlacement(0, G4ThreeVector(0.,_y_pos,0.), table_logic, "TABLE", _mother_logic, false, 0,false);
+    new G4PVPlacement(0, G4ThreeVector(0.,y_pos_,0.), table_logic, "TABLE", mother_logic_, false, 0,false);
    
     // SETTING VISIBILITIES   //////////
-    if (_visibility) {
+    if (visibility_) {
       G4VisAttributes steel_col = nexus::LightGrey();
       steel_col.SetForceSolid(true);
       table_logic->SetVisAttributes(steel_col);
@@ -72,7 +72,7 @@ namespace nexus {
 
 
     // VERTEX GENERATORS   //////////
-    _table_gen = new BoxPointSampler(_table_x,_table_y,_table_z,0., G4ThreeVector(0.,_y_pos,0.), 0);
+    table_gen_ = new BoxPointSampler(table_x_,table_y_,table_z_,0., G4ThreeVector(0.,y_pos_,0.), 0);
    		 
     // Calculating some probs
     // G4double table_vol = table_solid->GetCubicVolume();
@@ -81,14 +81,14 @@ namespace nexus {
 
   NextNewPedestal::~NextNewPedestal()
   {
-    delete _table_gen;
+    delete table_gen_;
   }
   
   G4ThreeVector NextNewPedestal::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);
     if (region == "PEDESTAL") {
-      vertex = _table_gen->GenerateVertex("INSIDE");
+      vertex = table_gen_->GenerateVertex("INSIDE");
     }
     else {
       G4Exception("[NextNewPedestal]", "GenerateVertex()", FatalException,
@@ -99,12 +99,12 @@ namespace nexus {
 
   void NextNewPedestal::SetPosition(G4double pos)
   {
-    _y_pos = pos;
+    y_pos_ = pos;
   }
 
   G4ThreeVector NextNewPedestal::GetDimensions() const
   {
-    return G4ThreeVector(_table_x, _table_y, _table_z);
+    return G4ThreeVector(table_x_, table_y_, table_z_);
   }
 
 

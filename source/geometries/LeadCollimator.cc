@@ -13,7 +13,7 @@
 namespace nexus {
   using namespace CLHEP;
 
-  LeadCollimator::LeadCollimator() : _axis_centre(0.*mm), _length(0.*mm)
+  LeadCollimator::LeadCollimator() : axis_centre_(0.*mm), length_(0.*mm)
   {
   }
 
@@ -54,7 +54,7 @@ namespace nexus {
       G4SubtractionSolid* lead_nozzle_freddy_solid =
 	new G4SubtractionSolid("LEAD_COLLIMATOR", lead_nozzle_solid, lateral_nozzle_solid, 0 , G4ThreeVector(0.,0.,0.));
 
-      _axis_centre = nozzle_lead_thick/2.;
+      axis_centre_ = nozzle_lead_thick/2.;
 
       // Piece of lead around screws
       G4Box* lead_screw_flange_solid = new G4Box("LEAD_BLOCK_SCREW_FLANGE_FULL", lead_size_horizontal/2., lead_size_vertical/2.,  (screw_lead_thick + offset_union)/2.);
@@ -119,7 +119,7 @@ namespace nexus {
       union_pos = G4ThreeVector(0, 0, -nozzle_lead_thick/2. - screw_lead_thick - middle_lead_thick - outer_lead_thick - coll_thick - source_thick/2. + offset_union/2.);
       union_solid = new G4UnionSolid("LEAD_COLLIMATOR", union_solid, lead_source_solid, 0, union_pos);
 
-      _length = nozzle_lead_thick + screw_lead_thick + outer_and_middle_lead_thick + coll_thick + source_thick;
+      length_ = nozzle_lead_thick + screw_lead_thick + outer_and_middle_lead_thick + coll_thick + source_thick;
 
 
       G4LogicalVolume* union_logic = new G4LogicalVolume(union_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"), "LEAD_COLLIMATOR");
@@ -132,12 +132,12 @@ namespace nexus {
 
   G4double LeadCollimator::GetAxisCentre()
   {
-    return _axis_centre;
+    return axis_centre_;
   }
 
   G4double LeadCollimator::GetLength()
   {
-    return _length;
+    return length_;
   }
   
 }

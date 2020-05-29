@@ -1,3 +1,13 @@
+// ----------------------------------------------------------------------------
+// nexus | CalibrationSource.h
+//
+// This class describes a source of configurable size.
+// The isotope is also configurable. It is used to simulate the small sources,
+// shaped as capsules, used in Canfranc.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #ifndef CAL_SOURCE_H
 #define CAL_SOURCE_H
 
@@ -16,10 +26,10 @@ namespace nexus {
     ~CalibrationSource();
 
     void Construct();
-   
-    G4double GetSourceDiameter(); 
+
+    G4double GetSourceDiameter();
     G4double GetSourceThickness();
-    
+
     G4double GetCapsuleDiameter();
     G4double GetCapsuleThickness();
 
@@ -28,22 +38,22 @@ namespace nexus {
   private:
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
-    
+    G4GenericMessenger* msg_;
+
     // Dimension of the Na22 source itself
-    G4double _source_diam;
-    G4double _source_thick;
+    G4double source_diam_;
+    G4double source_thick_;
 
     // Dimension of the whole support
-    G4double _capsule_diam;
-    G4double _capsule_thick;
+    G4double capsule_diam_;
+    G4double capsule_thick_;
 
     // Position of source inside its capsule
-    G4double _source_z_pos;
+    G4double source_z_pos_;
 
     // Radioactive source being used
-    G4String _source;
-    
+    G4String source_;
+
 
   };
 }

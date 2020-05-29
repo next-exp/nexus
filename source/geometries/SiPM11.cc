@@ -33,12 +33,12 @@ namespace nexus {
   using namespace CLHEP;
   
   SiPM11::SiPM11(): BaseGeometry(),
-		    _visibility(0)
+		    visibility_(0)
 
   {
     /// Messenger
-    _msg = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
-    _msg->DeclareProperty("SiPM11_vis", _visibility, "SiPM11 Visibility");
+    msg_ = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
+    msg_->DeclareProperty("SiPM11_vis", visibility_, "SiPM11 Visibility");
   }
   
   
@@ -51,7 +51,7 @@ namespace nexus {
 
   G4ThreeVector SiPM11::GetDimensions() const
   {
-    return _dimensions;
+    return dimensions_;
   }
   
   
@@ -64,9 +64,9 @@ namespace nexus {
     G4double sipm_y = 1.900 * mm;
     G4double sipm_z = 0.850 * mm;
 
-    _dimensions.setX(sipm_x);
-    _dimensions.setY(sipm_y);
-    _dimensions.setZ(sipm_z);
+    dimensions_.setX(sipm_x);
+    dimensions_.setY(sipm_y);
+    dimensions_.setZ(sipm_z);
 
     G4Box* sipm_solid = new G4Box("SIPM11", sipm_x/2., sipm_y/2., sipm_z/2);
 
@@ -176,7 +176,7 @@ namespace nexus {
     }
 
     // Visibilities
-    if (_visibility) {
+    if (visibility_) {
        G4VisAttributes sipm_col = nexus::DirtyWhite();
       sipm_logic->SetVisAttributes(sipm_col);
       G4VisAttributes blue_col = nexus::Blue();

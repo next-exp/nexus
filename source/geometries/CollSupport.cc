@@ -11,7 +11,7 @@
 namespace nexus {
   using namespace CLHEP;
 
-  CollSupport::CollSupport() : _axis_centre(0.*mm), _y_displ(16.25*mm)
+  CollSupport::CollSupport() : axis_centre_(0.*mm), y_displ_(16.25*mm)
   {
   }
 
@@ -33,12 +33,12 @@ namespace nexus {
     G4SubtractionSolid* support_solid =
 	new G4SubtractionSolid("SOURCE_SUPPORT",
                                support_full_solid, feedthrough_solid, 
-			       0 , G4ThreeVector(0., _y_displ, 0.));
+			       0 , G4ThreeVector(0., y_displ_, 0.));
     G4LogicalVolume* support_logic =
       new G4LogicalVolume(support_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Al"), "SOURCE_SUPPORT");
     this->SetLogicalVolume(support_logic);
 
-    _axis_centre = alum_thick/2.;
+    axis_centre_ = alum_thick/2.;
 
     G4VisAttributes green_col = nexus::DarkGreen();
     green_col.SetForceSolid(true);
@@ -47,11 +47,11 @@ namespace nexus {
 
   G4double CollSupport::GetAxisCentre()
   {
-    return _axis_centre;
+    return axis_centre_;
   }
 
   G4double CollSupport::GetYDisplacement()
   {
-    return _y_displ;
+    return y_displ_;
   }
 }

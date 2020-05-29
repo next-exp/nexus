@@ -37,13 +37,13 @@ namespace nexus {
     void Construct();
     
   private:
-    G4ThreeVector _dimensions; ///< external dimensions of the SiPM11
+    G4ThreeVector dimensions_; ///< external dimensions of the SiPM11
 
     // Visibility of the tracking plane
-    G4bool _visibility;
+    G4bool visibility_;
 
      // Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
+    G4GenericMessenger* msg_; 
 
   };
 

@@ -9,8 +9,8 @@
 ///  Copyright (c) 2010 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXT1_EL_DBO__
-#define __NEXT1_EL_DBO__
+#ifndef _NEXT1_EL_DBO___
+#define _NEXT1_EL_DBO___
 
 #include "BaseGeometry.h"
 #include <vector>
@@ -31,8 +31,8 @@ namespace nexus {
     
   private:
     void DefineGeometry(G4int rows, G4int columns);
-    G4ThreeVector _dimensions;
-    std::vector<std::pair<int, G4ThreeVector> > _positions;
+    G4ThreeVector dimensions_;
+    std::vector<std::pair<int, G4ThreeVector> > positions_;
   };
   
 } // end namespace nexus

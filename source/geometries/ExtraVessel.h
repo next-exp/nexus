@@ -39,15 +39,15 @@ namespace nexus {
 
   private:
     // Dimensions
-    G4double _diameter, _thickness;
+    G4double diameter_, thickness_;
 
     // Vertex generators
-    CylinderPointSampler* _generic_gen;
+    CylinderPointSampler* generic_gen_;
     
-    G4bool _visibility;
+    G4bool visibility_;
 
     //Messenger for configuration parameters
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
 
   };
 

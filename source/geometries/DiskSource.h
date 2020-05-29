@@ -24,23 +24,23 @@ namespace nexus {
   protected:
     
     // Dimension of the source itself
-    G4double _source_diam;
-    G4double _source_thick;
+    G4double source_diam_;
+    G4double source_thick_;
 
     // Dimension of the whole support
-    G4double _support_diam;
-    G4double _support_thick;
+    G4double support_diam_;
+    G4double support_thick_;
     
 
   };
 
-  inline G4double DiskSource::GetSourceDiameter() const { return _source_diam;}
+  inline G4double DiskSource::GetSourceDiameter() const { return source_diam_;}
 
-  inline G4double DiskSource::GetSourceThickness() const { return _source_thick;}
+  inline G4double DiskSource::GetSourceThickness() const { return source_thick_;}
 
-  inline G4double DiskSource::GetSupportDiameter() const { return _support_diam;}
+  inline G4double DiskSource::GetSupportDiameter() const { return support_diam_;}
 
-  inline G4double DiskSource::GetSupportThickness() const { return _support_thick;}
+  inline G4double DiskSource::GetSupportThickness() const { return support_thick_;}
   
 }
 #endif

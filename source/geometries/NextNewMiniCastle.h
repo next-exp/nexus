@@ -8,8 +8,8 @@
 ///  Copyright (c) 2014 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXTNEW_MINI_CASTLE__
-#define __NEXTNEW_MINI_CASTLE__
+#ifndef _NEXTNEW_MINI_CASTLE___
+#define _NEXTNEW_MINI_CASTLE___
 
 #include "BaseGeometry.h"
 #include "BoxPointSampler.h"
@@ -46,22 +46,22 @@ namespace nexus {
 
   private:
     // Mother logical volume
-    G4LogicalVolume* _mother_logic;
+    G4LogicalVolume* mother_logic_;
 
     // Dimensions
-    G4double  _x, _y, _z, _thickness, _open_space_z;
-    G4double _steel_thickn;
+    G4double  x_, y_, z_, thickness_, _open_spacez_;
+    G4double steel_thickn_;
 
     // Vertex generators
-    BoxPointSampler* _mini_castle_box_gen;
-    BoxPointSampler* _mini_castle_external_surf_gen;
-    BoxPointSampler* _steel_box_gen;
+    BoxPointSampler* mini_castle_box_gen_;
+    BoxPointSampler* mini_castle_external_surf_gen_;
+    BoxPointSampler* steel_box_gen_;
     
     // Geometry Navigator
-    G4Navigator* _geom_navigator;
+    G4Navigator* geom_navigator_;
 
     // Position of the pedestal surface in y
-    G4double _pedestal_surf_y;
+    G4double pedestal_surf_y_;
 
   };
 

@@ -58,24 +58,24 @@ namespace nexus {
 
   private:
 
-    const G4double _gate_sapphire_wdw_distance;
-    const G4double _gate_tracking_plane_distance;
+    const G4double gate_sapphire_wdw_distance_;
+    const G4double gate_tracking_plane_distance_;
 
 
-    G4LogicalVolume* _mother_logic;
-    G4VPhysicalVolume* _mother_phys;
-    G4Material* _gas;
+    G4LogicalVolume* mother_logic_;
+    G4VPhysicalVolume* mother_phys_;
+    G4Material* gas_;
 
-    G4double _pressure;
-    G4double _temperature;
+    G4double pressure_;
+    G4double temperature_;
 
     // Detector parts
-    Next100FieldCage*     _field_cage;
-    Next100EnergyPlane*   _energy_plane;
-    Next100TrackingPlane* _tracking_plane;
+    Next100FieldCage*     field_cage_;
+    Next100EnergyPlane*   energy_plane_;
+    Next100TrackingPlane* tracking_plane_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
 
   };
 

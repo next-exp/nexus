@@ -9,8 +9,8 @@
 ///  Copyright (c) 2010 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __PMT_R7378A__
-#define __PMT_R7378A__
+#ifndef _PMT_R7378A___
+#define _PMT_R7378A___
 
 #include "BaseGeometry.h"
 
@@ -39,11 +39,11 @@ namespace nexus {
     void Construct();
 
   private:
-    G4double _pmt_diam, _pmt_length; ///< PMT dimensions
+    G4double pmt_diam_, pmt_length_; ///< PMT dimensions
   };
 
-  inline G4double PmtR7378A::Diameter() const { return _pmt_diam; }
-  inline G4double PmtR7378A::Length() const { return _pmt_length; }
+  inline G4double PmtR7378A::Diameter() const { return pmt_diam_; }
+  inline G4double PmtR7378A::Length() const { return pmt_length_; }
 
 } // end namespace nexus
 

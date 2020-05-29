@@ -9,8 +9,8 @@
 ///  Copyright (c) 2013 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXTNEW_ENERGY_PLANE__
-#define __NEXTNEW_ENERGY_PLANE__
+#ifndef _NEXTNEW_ENERGY_PLANE___
+#define _NEXTNEW_ENERGY_PLANE___
 
 #include <vector>
 #include <G4Navigator.hh>
@@ -53,34 +53,34 @@ namespace nexus {
     void GenerateGasHolePositions();
 
     // Mother Logical Volume of the whole Energy PLane
-    G4LogicalVolume* _mother_logic;
+    G4LogicalVolume* mother_logic_;
 
-    const G4int _num_PMTs;
-    const G4int _num_gas_holes;
+    const G4int num_PMTs_;
+    const G4int num_gas_holes_;
     // Dimensions
-    const G4double _energy_plane_z_pos;
-    const G4double _carrier_plate_front_buffer_thickness,_carrier_plate_front_buffer_diam ;
-    const G4double _carrier_plate_thickness, _carrier_plate_diam,_enclosure_hole_diam,_gas_hole_diam,_gas_hole_pos ;
-    const G4double _tpb_thickness;
+    const G4double energy_plane_z_pos_;
+    const G4double carrier_plate_front_buffer_thickness_,carrier_plate_front_buffer_diam_ ;
+    const G4double carrier_plate_thickness_, carrier_plate_diam_,enclosure_hole_diam_,gas_hole_diam_,gas_hole_pos_ ;
+    const G4double tpb_thickness_;
 
-    const G4double _axial_port_hole_diam,  _axial_port_thickn;
+    const G4double axial_port_hole_diam_,  axial_port_thickn_;
 
 
-    NextNewPmtEnclosure*  _enclosure;
-    G4double _enclosure_z_pos;
-    std::vector<G4ThreeVector> _pmt_positions;
-    std::vector<G4ThreeVector> _gas_hole_positions;
+    NextNewPmtEnclosure*  enclosure_;
+    G4double enclosure_z_pos_;
+    std::vector<G4ThreeVector> pmt_positions_;
+    std::vector<G4ThreeVector> gas_hole_positions_;
 
     // Visibility of the energy  plane
-    G4bool _visibility;
+    G4bool visibility_;
 
     // Vertex generators
-    CylinderPointSampler* _carrier_gen;
+    CylinderPointSampler* carrier_gen_;
 
     // Geometry Navigator
-    G4Navigator* _geom_navigator;
+    G4Navigator* geom_navigator_;
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
   };
 
 } //end namespace nexus

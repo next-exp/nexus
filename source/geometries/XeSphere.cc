@@ -32,37 +32,37 @@ namespace nexus {
   using namespace CLHEP;
   
   XeSphere::XeSphere(): 
-    BaseGeometry(), _liquid(true), _pressure(STP_Pressure), _radius(1.*m), _sphere_vertex_gen(0) 
+    BaseGeometry(), liquid_(true), pressure_(STP_Pressure), radius_(1.*m), sphere_vertex_gen_(0) 
   {
-    _msg = new G4GenericMessenger(this, "/Geometry/XeSphere/",
+    msg_ = new G4GenericMessenger(this, "/Geometry/XeSphere/",
       "Control commands of geometry XeSphere.");
 
-    _msg->DeclareProperty("LXe", _liquid, 
+    msg_->DeclareProperty("LXe", liquid_, 
       "Build the sphere with liquid xenon.");
 
     G4GenericMessenger::Command& pressure_cmd =
-      _msg->DeclareProperty("pressure", _pressure,
+      msg_->DeclareProperty("pressure", pressure_,
       "Set pressure for gaseous xenon (if selected).");
     pressure_cmd.SetUnitCategory("Pressure");
     pressure_cmd.SetParameterName("pressure", false);
     pressure_cmd.SetRange("pressure>0.");
 
     G4GenericMessenger::Command& radius_cmd =
-      _msg->DeclareProperty("radius", _radius, "Radius of the xenon sphere.");
+      msg_->DeclareProperty("radius", radius_, "Radius of the xenon sphere.");
     radius_cmd.SetUnitCategory("Length");
     radius_cmd.SetParameterName("radius", false);
     radius_cmd.SetRange("radius>0.");
 
     // Create a vertex generator for a sphere
-    _sphere_vertex_gen = new SpherePointSampler(_radius, 0.);
+    sphere_vertex_gen_ = new SpherePointSampler(radius_, 0.);
   }
   
   
   
   XeSphere::~XeSphere()
   {
-    delete _sphere_vertex_gen;
-    delete _msg;
+    delete sphere_vertex_gen_;
+    delete msg_;
   }
     
   
@@ -72,15 +72,15 @@ namespace nexus {
     G4String name = "XE_SPHERE";
 
     // Define solid volume as a sphere
-    G4Orb* sphere_solid = new G4Orb(name, _radius);
+    G4Orb* sphere_solid = new G4Orb(name, radius_);
 
     // Define the material (LXe or GXe) for the sphere. 
     // We use for this the NIST manager or the nexus materials list.
     G4Material* xenon = 0;
-    if (_liquid)
+    if (liquid_)
       xenon = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
     else
-      xenon = MaterialsList::GXe(_pressure);
+      xenon = MaterialsList::GXe(pressure_);
 
     // Define the logical volume of the sphere using the material 
     // and the solid volume defined above
@@ -101,7 +101,7 @@ namespace nexus {
 
   G4ThreeVector XeSphere::GenerateVertex(const G4String& region) const
   {
-    return _sphere_vertex_gen->GenerateVertex(region);
+    return sphere_vertex_gen_->GenerateVertex(region);
   }
   
 

@@ -59,9 +59,9 @@ namespace nexus {
     const G4double dbo_y =    rows * sipm_pitch - 2. * board_side_reduction;
     const G4double dbo_z = board_thickn + coating_thickn;
     
-    _dimensions.setX(dbo_x);
-    _dimensions.setY(dbo_y);
-    _dimensions.setZ(dbo_z);
+    dimensions_.setX(dbo_x);
+    dimensions_.setY(dbo_y);
+    dimensions_.setZ(dbo_z);
 
     G4Box* board_solid = new G4Box("DBO", dbo_x/2., dbo_y/2., dbo_z/2.);
     
@@ -110,7 +110,7 @@ namespace nexus {
 	std::pair<int, G4ThreeVector> mypos;
 	mypos.first = sipm_no;
 	mypos.second = G4ThreeVector(pos_x, pos_y, pos_z);
-	_positions.push_back(mypos);
+	positions_.push_back(mypos);
 	sipm_no++;
       }
     }
@@ -129,12 +129,12 @@ namespace nexus {
 
   G4ThreeVector Next1ELDBO::GetDimensions()
   {
-    return _dimensions;
+    return dimensions_;
   }
 
   std::vector<std::pair<int, G4ThreeVector> > Next1ELDBO::GetPositions()
   {
-    return _positions;
+    return positions_;
   }
   
 } // end namespace nexus

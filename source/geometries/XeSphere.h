@@ -9,8 +9,8 @@
 ///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef __XE_SPHERE__
-#define __XE_SPHERE__
+#ifndef _XE_SPHERE___
+#define _XE_SPHERE___
 
 #include "BaseGeometry.h"
 
@@ -37,15 +37,15 @@ namespace nexus {
     void Construct();
 
   private:
-    G4bool _liquid;     ///< Whether xenon is liquid or not
-    G4double _pressure; ///< Pressure (if gaseous state was selected)
-    G4double _radius;   ///< Radius of the sphere
+    G4bool liquid_;     ///< Whether xenon is liquid or not
+    G4double pressure_; ///< Pressure (if gaseous state was selected)
+    G4double radius_;   ///< Radius of the sphere
 
     /// Vertexes random generator
-    SpherePointSampler* _sphere_vertex_gen;
+    SpherePointSampler* sphere_vertex_gen_;
 
     /// Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
+    G4GenericMessenger* msg_; 
   };
 
 } // end namespace nexus

@@ -9,8 +9,8 @@
 ///  Copyright (c) 2011 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXT100_VESSEL__
-#define __NEXT100_VESSEL__
+#ifndef _NEXT100_VESSEL___
+#define _NEXT100_VESSEL___
 
 #include "BaseGeometry.h"
 #include "CylinderPointSampler.h"
@@ -51,45 +51,45 @@ namespace nexus {
 
   private:
     // Dimensions
-    G4double _vessel_in_rad, _vessel_body_length, _vessel_length, _vessel_thickness;
-    G4double _distance_gate_body_end;
-    G4double _endcap_in_rad, _endcap_theta, _endcap_thickness, _endcap_in_z_width;
-    G4double _flange_out_rad, _flange_length, _flange_z_pos;
-    G4double _large_nozzle_length, _small_nozzle_length;
-    G4double _sc_yield, _e_lifetime;
-    G4double _pressure, _temperature;
+    G4double vessel_in_rad_, vessel_body_length_, vessel_length_, vessel_thickness_;
+    G4double distance_gate_body_end_;
+    G4double endcap_in_rad_, endcap_theta_, endcap_thickness_, endcap_in_z_width_;
+    G4double flange_out_rad_, flange_length_, flange_z_pos_;
+    G4double large_nozzle_length_, small_nozzle_length_;
+    G4double sc_yield_, e_lifetime_;
+    G4double pressure_, temperature_;
 
     // Visibility of the shielding
-    G4bool _visibility;
+    G4bool visibility_;
 
     // Dimensions coming from outside
-    G4double _nozzle_ext_diam, _up_nozzle_ypos, _central_nozzle_ypos;
-    G4double _down_nozzle_ypos, _bottom_nozzle_ypos;
+    G4double nozzle_ext_diam_, up_nozzle_ypos_, central_nozzle_ypos_;
+    G4double down_nozzle_ypos_, bottom_nozzle_ypos_;
 
 
     // Internal logical and physical volumes
-    G4LogicalVolume* _internal_logic_vol;
-    G4VPhysicalVolume* _internal_phys_vol;
+    G4LogicalVolume* internal_logic_vol_;
+    G4VPhysicalVolume* internal_phys_vol_;
 
     // Vertex generators
-    CylinderPointSampler* _body_gen;
-    SpherePointSampler*   _tracking_endcap_gen;
-    SpherePointSampler*   _energy_endcap_gen;
-    CylinderPointSampler* _tracking_flange_gen;
-    CylinderPointSampler* _energy_flange_gen;
+    CylinderPointSampler* body_gen_;
+    SpherePointSampler*   tracking_endcap_gen_;
+    SpherePointSampler*   energy_endcap_gen_;
+    CylinderPointSampler* tracking_flange_gen_;
+    CylinderPointSampler* energy_flange_gen_;
 
-    G4double _perc_endcap_vol;
+    G4double perc_endcap_vol_;
 
     // Geometry Navigator
-    G4Navigator* _geom_navigator;
+    G4Navigator* geom_navigator_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
 
     // Type of gas being used
-    G4String _gas;
-    G4int _helium_mass_num;
-    G4double _xe_perc;
+    G4String gas_;
+    G4int helium_mass_num_;
+    G4double xe_perc_;
 
   };
 

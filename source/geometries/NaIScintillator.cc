@@ -15,10 +15,10 @@ namespace nexus {
 
    using namespace CLHEP;
 
-  NaIScintillator::NaIScintillator(): _visibility(false), _length(38.7*mm)
+  NaIScintillator::NaIScintillator(): visibility_(false), length_(38.7*mm)
   {
-    _msg = new G4GenericMessenger(this, "/Geometry/NaIScintillator/", "Control commands of geometry NextNew.");
-    _msg->DeclareProperty("visibility", _visibility, "Visibility of NaI scintillator");
+    msg_ = new G4GenericMessenger(this, "/Geometry/NaIScintillator/", "Control commands of geometry NextNew.");
+    msg_->DeclareProperty("visibility", visibility_, "Visibility of NaI scintillator");
   }
 
   NaIScintillator::~NaIScintillator()
@@ -29,7 +29,7 @@ namespace nexus {
   {
     G4double radius = 44.5/2.*mm;
   
-    G4Tubs* sc_solid = new G4Tubs("NaI", 0., radius, _length/2., 0., twopi);
+    G4Tubs* sc_solid = new G4Tubs("NaI", 0., radius, length_/2., 0., twopi);
     G4Material* mat = 
       G4NistManager::Instance()->FindOrBuildMaterial("G4_SODIUM_IODIDE");
     G4LogicalVolume* sc_logic = new G4LogicalVolume(sc_solid, mat, "NaI");
@@ -45,7 +45,7 @@ namespace nexus {
     sdmgr->AddNewDetector(ionisd);
     sc_logic->SetSensitiveDetector(ionisd);
 
-     if (_visibility) {
+     if (visibility_) {
       G4VisAttributes yellow_col = nexus::Yellow();
       yellow_col.SetForceSolid(true);
       sc_logic->SetVisAttributes(yellow_col);
@@ -54,6 +54,6 @@ namespace nexus {
 
   G4double NaIScintillator::GetLength()
   {
-    return _length;
+    return length_;
   }
 }

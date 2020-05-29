@@ -18,8 +18,8 @@ namespace nexus {
     G4double GetYDisplacement();
 
   private:
-    G4double _axis_centre;
-    G4double _y_displ;
+    G4double axis_centre_;
+    G4double y_displ_;
   };
 }
 

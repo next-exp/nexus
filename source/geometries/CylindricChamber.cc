@@ -31,7 +31,7 @@ namespace nexus {
   using namespace CLHEP;
 
   CylindricChamber::CylindricChamber(): 
-    BaseGeometry(), _msg(0)
+    BaseGeometry(), msg_(0)
   {
   }
 
@@ -39,7 +39,7 @@ namespace nexus {
 
   CylindricChamber::~CylindricChamber()
   {
-    delete _msg;
+    delete msg_;
   } 
 
 

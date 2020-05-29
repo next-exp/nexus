@@ -17,7 +17,7 @@ namespace nexus {
     G4double GetAxisCentre();
 
   private:
-    G4double _axis_centre;
+    G4double axis_centre_;
   };
 }
 

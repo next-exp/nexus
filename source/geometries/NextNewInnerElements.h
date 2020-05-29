@@ -9,8 +9,8 @@
 ///  Copyright (c) 2013 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXTNEW_INNER_ELEMENTS__
-#define __NEXTNEW_INNER_ELEMENTS__
+#ifndef _NEXTNEW_INNER_ELEMENTS___
+#define _NEXTNEW_INNER_ELEMENTS___
 
 #include "BaseGeometry.h"
 #include <G4ThreeVector.hh>
@@ -51,22 +51,22 @@ namespace nexus {
 
   private:
 
-    G4LogicalVolume* _mother_logic;
-    G4VPhysicalVolume* _mother_phys;
-    G4Material* _gas;
-    G4double _pressure;
-    G4double _temperature;
+    G4LogicalVolume* mother_logic_;
+    G4VPhysicalVolume* mother_phys_;
+    G4Material* gas_;
+    G4double pressure_;
+    G4double temperature_;
 
     // Detector parts
-    NextNewEnergyPlane*   _energy_plane;
-    NextNewFieldCage*     _field_cage;
-    NextNewTrackingPlane* _tracking_plane;
+    NextNewEnergyPlane*   energy_plane_;
+    NextNewFieldCage*     field_cage_;
+    NextNewTrackingPlane* tracking_plane_;
 
     // Visibilities
-    //G4bool _visibility;
+    //G4bool visibility_;
 
     // Messenger for the definition of control commands
-    //G4GenericMessenger* _msg;
+    //G4GenericMessenger* msg_;
 
   };
 

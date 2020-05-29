@@ -44,24 +44,24 @@ namespace nexus {
   private:
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
 
-    G4double _pressure;
-    G4double _temperature;
-    G4double _sc_yield;
-    G4double _e_lifetime;
+    G4double pressure_;
+    G4double temperature_;
+    G4double sc_yield_;
+    G4double e_lifetime_;
 
     // Vertex decided by user
-    G4double _specific_vertex_X;
-    G4double _specific_vertex_Y;
-    G4double _specific_vertex_Z;
+    G4double specific_vertex_X_;
+    G4double specific_vertex_Y_;
+    G4double specific_vertex_Z_;
 
-    G4String _gas;
+    G4String gas_;
 
-    Next100InnerElements* _inner_elements;
+    Next100InnerElements* inner_elements_;
 
     // Relative position of the gate in its mother volume
-    G4double _gate_zpos_in_gas;
+    G4double gate_zpos_in_gas_;
 
   };
 

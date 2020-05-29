@@ -9,8 +9,8 @@
 ///  Copyright (c) 2013 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXTNEW_PEDESTAL__
-#define __NEXTNEW_PEDESTAL__
+#ifndef _NEXTNEW_PEDESTAL___
+#define _NEXTNEW_PEDESTAL___
 
 #include "BaseGeometry.h"
 #include "BoxPointSampler.h"
@@ -45,18 +45,18 @@ namespace nexus {
 
   private:
     // Mother Logical Volume of the ICS
-    G4LogicalVolume* _mother_logic;
+    G4LogicalVolume* mother_logic_;
     // Dimensions
-    G4double  _table_x, _table_y, _table_z, _y_pos;
+    G4double  table_x_, table_y_, table_z_, y_pos_;
    
     // Visibility of the shielding
-    G4bool _visibility;
+    G4bool visibility_;
 
     // Vertex generators
-    BoxPointSampler* _table_gen;
+    BoxPointSampler* table_gen_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
+    G4GenericMessenger* msg_; 
 
   };
 

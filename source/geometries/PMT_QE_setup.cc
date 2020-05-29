@@ -40,11 +40,11 @@ namespace nexus {
 
   PMT_QE_setup::PMT_QE_setup(): BaseGeometry()
   {
-    _msg = new G4GenericMessenger(this, "/Geometry/PMT_QE_setup/",
+    msg_ = new G4GenericMessenger(this, "/Geometry/PMT_QE_setup/",
 				"Control commands of geometry PMT_QE_setup.");
 
     G4GenericMessenger::Command& dist_cmd =
-      _msg->DeclareProperty("z_dist", _z_dist,
+      msg_->DeclareProperty("z_dist", z_dist_,
 			    "Distance of the generation point in z from the surface of the PMT window.");
     dist_cmd.SetUnitCategory("Length");
     dist_cmd.SetParameterName("z_dist", false);
@@ -67,11 +67,11 @@ namespace nexus {
     // The chamber thickness is added to obtain the external (total) size.
     G4double width = 50.*cm;
     G4double height = 50.*cm;
-    _length = 50.*cm;
+    length_ = 50.*cm;
     G4double thickn = 1.*cm;
     G4double X = width  + 2.*thickn;
     G4double Y = height + 2.*thickn;
-    G4double Z = _length + 2.*thickn;
+    G4double Z = length_ + 2.*thickn;
 
     G4Box* chamber_solid = new G4Box("CHAMBER", X/2., Y/2., Z/2.);
 
@@ -84,7 +84,7 @@ namespace nexus {
     // GAS ///////////////////////////////////////////////////////////
     G4double gxe_pressure = 10*bar;
 
-    G4Box* gas_solid = new G4Box("GAS", width/2., height/2., _length/2.);
+    G4Box* gas_solid = new G4Box("GAS", width/2., height/2., length_/2.);
     
     G4Material* gxe = MaterialsList::GXe(gxe_pressure);
     gxe->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(gxe_pressure));
@@ -97,12 +97,12 @@ namespace nexus {
 		      chamber_logic, false, 0, true);
     
     // Positioning of the PMT /////////////////////////////////////////
-    _pmt.Construct();
-    G4LogicalVolume* pmt_logic = _pmt.GetLogicalVolume();
-    //   _pmt_length = _pmt.Length() // this is R7378A
-    _pmt_length = 20*cm; // this is R11410
+    pmt_.Construct();
+    G4LogicalVolume* pmt_logic = pmt_.GetLogicalVolume();
+    //   pmt_length_ = pmt_.Length() // this is R7378A
+    pmt_length_ = 20*cm; // this is R11410
     
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,-_length/2.+_pmt_length/2.), 
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,-length_/2.+_pmtlength_/2.), 
 		      pmt_logic, "PMT",
 		      gas_logic, false, 0, true);
 
@@ -113,11 +113,11 @@ namespace nexus {
 
     // G4RotationMatrix* rotdb = new G4RotationMatrix();
     // rotdb->rotateY(-pi/2.);
-    // new G4PVPlacement(0, G4ThreeVector(0.*cm, 0. ,-_length/2.+_pmt_length + _z_dist + 1.*cm), 
+    // new G4PVPlacement(0, G4ThreeVector(0.*cm, 0. ,-length_/2.+_pmtlength_ + z_dist_ + 1.*cm), 
     // 		      teflon_logic, "TEFLON", gas_logic, false, 0, true);
     // G4RotationMatrix* rotdb2 = new G4RotationMatrix();
     // rotdb2->rotateY(pi/2.);
-    // new G4PVPlacement(rotdb2, G4ThreeVector(-10.*cm, 0., -_length/2.+_pmt_length + _z_dist + 1.*cm), 
+    // new G4PVPlacement(rotdb2, G4ThreeVector(-10.*cm, 0., -length_/2.+_pmtlength_ + z_dist_ + 1.*cm), 
     //  		      teflon_logic, "TEFLON", gas_logic, false, 2, true);
     
     // Optical surface
@@ -137,7 +137,7 @@ namespace nexus {
     G4ThreeVector point;
 
     if (region == "CIRCLE"){
-      //     G4double pmt_diameter = _pmt.Diameter(); // this is R7378A
+      //     G4double pmt_diameter = pmt_.Diameter(); // this is R7378A
       G4double pmt_diameter = 64.*mm;  // this is R11410
       G4double r_max = pmt_diameter/2.;
       G4double r = G4UniformRand()*r_max;
@@ -145,10 +145,10 @@ namespace nexus {
       G4double x = r*cos(phi);
       G4double y = r*sin(phi);
       
-      point =  G4ThreeVector(x, y,-_length/2.+_pmt_length+_z_dist);
+      point =  G4ThreeVector(x, y,-length_/2.+_pmtlength_+z_dist_);
 
     } else if (region == "POINT") {     
-      point = G4ThreeVector(0, 0, -_length/2.+_pmt_length+_z_dist);
+      point = G4ThreeVector(0, 0, -length_/2.+_pmtlength_+z_dist_);
     }
     
     return point;

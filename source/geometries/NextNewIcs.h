@@ -9,8 +9,8 @@
 ///  Copyright (c) 2013 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXTNEW_ICS__
-#define __NEXTNEW_ICS__
+#ifndef _NEXTNEW_ICS___
+#define _NEXTNEW_ICS___
 
 #include "BaseGeometry.h"
 #include "CylinderPointSampler.h"
@@ -45,28 +45,28 @@ namespace nexus {
 
   private:
     // Mother Logical Volume of the ICS
-    G4LogicalVolume* _mother_logic;
+    G4LogicalVolume* mother_logic_;
     // Dimensions
-    G4double _body_inner_diam, _body_length, _body_thickness, _body_zpos;
-    G4double _tracking_tread_diam, _tracking_tread_length;
+    G4double body_inner_diam_, body_length_, body_thickness_, body_zpos_;
+    G4double tracking_tread_diam_, tracking_tread_length_;
    
     // Dimensions coming from outside  
-    G4double  _lat_nozzle_in_diam, _lat_nozzle_x_pos, _lat_nozzle_z_pos;
-    G4double  _up_small_nozzle_in_diam, _up_big_nozzle_in_diam, _up_nozzle_y_pos, _up_nozzle_z_pos;
+    G4double  lat_nozzle_in_diam_, lat_nozzle_x_pos_, lat_nozzle_z_pos_;
+    G4double  up_small_nozzle_in_diam_, up_big_nozzle_in_diam_, up_nozzle_y_pos_, up_nozzle_z_pos_;
 
     // Visibility of the shielding
-    G4bool _visibility;
+    G4bool visibility_;
 
     // Vertex generators
-    CylinderPointSampler* _body_gen;
-    CylinderPointSampler* _tread_gen;
-    G4double _body_perc;
+    CylinderPointSampler* body_gen_;
+    CylinderPointSampler* tread_gen_;
+    G4double body_perc_;
 
     // Geometry Navigator
-    G4Navigator* _geom_navigator;
+    G4Navigator* geom_navigator_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
+    G4GenericMessenger* msg_; 
 
   };
 

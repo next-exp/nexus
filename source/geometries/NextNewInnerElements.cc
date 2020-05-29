@@ -30,48 +30,48 @@ namespace nexus {
 
   NextNewInnerElements::NextNewInnerElements():
     BaseGeometry(),
-    _mother_logic(nullptr), _mother_phys(nullptr)
+    mother_logic_(nullptr), mother_phys_(nullptr)
   {
     // Build the internal objects that live there
-    _energy_plane = new NextNewEnergyPlane();
-    _field_cage = new NextNewFieldCage();
-    _tracking_plane = new NextNewTrackingPlane();
+    energy_plane_ = new NextNewEnergyPlane();
+    field_cage_ = new NextNewFieldCage();
+    tracking_plane_ = new NextNewTrackingPlane();
   }
 
   void NextNewInnerElements::SetMotherLogicalVolume(G4LogicalVolume* mother_logic)
   {
-    _mother_logic = mother_logic;
+    mother_logic_ = mother_logic;
   }
 
   void NextNewInnerElements::SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys)
   {
-    _mother_phys = mother_phys;
+    mother_phys_ = mother_phys;
   }
 
   void NextNewInnerElements::Construct()
   {
     // Reading material
-    _gas = _mother_logic->GetMaterial();
-    _pressure =    _gas->GetPressure();
-    _temperature = _gas->GetTemperature();
+    gas_ = mother_logic_->GetMaterial();
+    pressure_ =    gas_->GetPressure();
+    temperature_ = gas_->GetTemperature();
     //INNER ELEMENTS
-    _field_cage->SetMotherLogicalVolume(_mother_logic);
-    _field_cage->SetMotherPhysicalVolume(_mother_phys);
-    _field_cage->Construct();
-    SetELzCoord(_field_cage->GetELzCoord());
-    _tracking_plane->SetLogicalVolume(_mother_logic);
-    _tracking_plane->SetELzCoord(_field_cage->GetELzCoord());
-    _tracking_plane->Construct();
-    _energy_plane->SetLogicalVolume(_mother_logic);
-    _energy_plane->SetELzCoord(_field_cage->GetELzCoord());
-    _energy_plane->Construct();
+    field_cage_->SetMotherLogicalVolume(mother_logic_);
+    field_cage_->SetMotherPhysicalVolume(mother_phys_);
+    field_cage_->Construct();
+    SetELzCoord(field_cage_->GetELzCoord());
+    tracking_plane_->SetLogicalVolume(mother_logic_);
+    tracking_plane_->SetELzCoord(field_cage_->GetELzCoord());
+    tracking_plane_->Construct();
+    energy_plane_->SetLogicalVolume(mother_logic_);
+    energy_plane_->SetELzCoord(field_cage_->GetELzCoord());
+    energy_plane_->Construct();
   }
 
   NextNewInnerElements::~NextNewInnerElements()
   {
-    delete _energy_plane;
-    delete _field_cage;
-    delete _tracking_plane;
+    delete energy_plane_;
+    delete field_cage_;
+    delete tracking_plane_;
   }
 
 
@@ -84,7 +84,7 @@ namespace nexus {
          (region == "ENCLOSURE_WINDOW")   || (region == "OPTICAL_PAD") ||
          (region == "PMT_BODY")           || (region == "PMT_BASE") ||
          (region == "INT_ENCLOSURE_SURF") || (region == "PMT_SURF")) {
-      vertex = _energy_plane->GenerateVertex(region);
+      vertex = energy_plane_->GenerateVertex(region);
     }
     else if ( (region == "DRIFT_TUBE") ||
               (region == "HDPE_TUBE") ||
@@ -97,10 +97,10 @@ namespace nexus {
               (region == "BUFFER") ||
               (region == "EL_TABLE") ||
               (region == "AD_HOC")) {
-      vertex = _field_cage->GenerateVertex(region);
+      vertex = field_cage_->GenerateVertex(region);
     }
     else if ( (region == "SUPPORT_PLATE") || (region == "DICE_BOARD") || (region == "DB_PLUG") ) {
-      vertex = _tracking_plane->GenerateVertex(region);
+      vertex = tracking_plane_->GenerateVertex(region);
     }
     else {
       G4Exception("[NextNewInnerElements]", "GenerateVertex()", FatalException,
