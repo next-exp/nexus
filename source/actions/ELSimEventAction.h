@@ -9,8 +9,8 @@
 ///  Copyright (c) 2009-2015 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef __ELSIM_EVENT_ACTION__
-#define __ELSIM_EVENT_ACTION__
+#ifndef ELSIM_EVENT_ACTION
+#define ELSIM_EVENT_ACTION
 
 #include <G4UserEventAction.hh>
 #include <globals.hh>

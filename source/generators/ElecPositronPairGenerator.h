@@ -7,8 +7,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __ELEC_POSITRON__
-#define __ELEC_POSITRON__
+#ifndef ELEC_POSITRON
+#define ELEC_POSITRON
 
 #include <G4VPrimaryGenerator.hh>
 

@@ -8,8 +8,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef SCINTILLATIONGENERATOR__
-#define SCINTILLATIONGENERATOR__
+#ifndef SCINTILLATIONGENERATOR
+#define SCINTILLATIONGENERATOR
 
 #include <G4VPrimaryGenerator.hh>
 #include <G4Navigator.hh>

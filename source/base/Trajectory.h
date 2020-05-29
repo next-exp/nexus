@@ -8,8 +8,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __TRAJECTORY__
-#define __TRAJECTORY__
+#ifndef TRAJECTORY
+#define TRAJECTORY
 
 #include <G4VTrajectory.hh>
 #include <G4Allocator.hh>

@@ -7,8 +7,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __DEFAULT_EVENT_ACTION__
-#define __DEFAULT_EVENT_ACTION__
+#ifndef DEFAULT_EVENT_ACTION
+#define DEFAULT_EVENT_ACTION
 
 #include <G4UserEventAction.hh>
 #include <globals.hh>
