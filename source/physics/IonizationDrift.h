@@ -1,12 +1,10 @@
 // ----------------------------------------------------------------------------
-///  \file   IonizationDrift.h
-///  \brief  Drift of ionization clusters
-///
-///  \author   J. Martin-Albo <jmalbos@ific.uv.es>    
-///  \date     1 June 2009
-///  \version  $Id$
-///
-///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
+// nexus | IonizationDrift.h
+//
+// This class implements the process of drifting the ionization electrons
+// under the influence of a field.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef IONIZATION_DRIFT_H
@@ -19,9 +17,6 @@ class G4Navigator;
 class G4ParticleChangeForTransport;
 
 namespace nexus {
-
-  /// Physics process describing the drift of an ionization cluster
-  /// or an ionization electron under the influence of a field.
 
   class IonizationDrift: public G4VContinuousDiscreteProcess
   {
@@ -52,9 +47,9 @@ namespace nexus {
 				    G4double, G4double&);
     
   private:
-    G4LorentzVector _xyzt;
-    G4ParticleChangeForTransport* _ParticleChange;
-    G4Navigator* _nav; ///< Pointer to the G4 navigator for tracking
+    G4LorentzVector xyzt_;
+    G4ParticleChangeForTransport* ParticleChange_;
+    G4Navigator* nav_; ///< Pointer to the G4 navigator for tracking
   };
 
 } // end namespace nexus

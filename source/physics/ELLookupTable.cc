@@ -1,11 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id: ELParamSimulation.cc 4461 2011-11-07 13:56:42Z jmalbos $
+// nexus | ELLookupTable.cc
 //
-//  Authors: <justo.martin-albo@ific.uv.es>, <paola.ferrario@ific.uv.es>
-//  Created: 18 Oct 2011
-//  
-//  Copyright (c) 2011, 2012 NEXT Collaboration. All rights reserved.
-// ---------------------------------------------------------------------------- 
+// This class describes the generation of the EL light.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #include "ELLookupTable.h"
 
@@ -21,44 +20,44 @@ namespace nexus {
     // read the text files and store their content in the transient table
     ReadFiles(filename);
   }
-  
-  
-  
+
+
+
   ELLookupTable::~ELLookupTable()
   {
   }
-  
-  
-  
+
+
+
   void ELLookupTable::ReadFiles(G4String filename)
   {
     // Open the file containing the light table
     std::ifstream file(filename, std::ifstream::out);
-    
+
     if (!file.is_open())
       {}
       //G4Exception("[ELLookupTable] ERROR: cannot open input file!");
-    
+
     // Deal with the header file
     G4String line;
 
     do {
       getline(file, line);
     } while(line[0] == '*');
-    
+
     // Read file and store content in the transient table
-    
+
     int num_bins = 5;
     int last_point_id = 0;
     std::map<int, std::vector<double> > sensor_map;
 
     while (!file.eof()) {
-      
+
       G4int point_id, sensor_id;
       std::vector<double> probs;
-      
+
       file >> point_id >> sensor_id;
-      
+
       for (G4int i=0; i<num_bins; i++) {
 	G4double prob;
 	file >> prob;
@@ -68,16 +67,16 @@ namespace nexus {
       sensor_map.insert(std::make_pair(sensor_id, probs));
 
       if (point_id != last_point_id) {
-	_ELtable.push_back(sensor_map);
+	ELtable_.push_back(sensor_map);
       }
-      
+
       last_point_id = point_id;
-    } 
+    }
   }
-  
 
 
-  const std::map<int, std::vector<double> >& 
+
+  const std::map<int, std::vector<double> >&
   ELLookupTable::GetSensorsMap(const G4ThreeVector& hitpos)
   {
     /// The EL points must be in the middle of the bins.
@@ -95,13 +94,13 @@ namespace nexus {
     /// x and y, because it is a regular squared grid)
     for (int i=0; i<maxidx; i++){
       double bincenter = -binning*(maxidx/2.) + binning/2.+ i*binning;
-      bincenters.push_back(bincenter);    
+      bincenters.push_back(bincenter);
     }
     /// For every coordinate in x, a column is built with a number of bins equal
-    /// to the number of EL points which have that x. Remember that only the points 
+    /// to the number of EL points which have that x. Remember that only the points
     /// which falls inside a circle of a fixed radius are taken into account,
     /// so columns have not all the same number of points
-    
+
     /// Content of elements for every column in the grid
     std::vector<int> columns;
     if (even){
@@ -142,7 +141,7 @@ namespace nexus {
       content.push_back(columns[i]);
     }
 
-    int id;      
+    int id;
 
     /// Maths to obtain the right ID number of the points
     int zero = maxidx/2;
@@ -166,7 +165,7 @@ namespace nexus {
 
     // number of empty bins starting from below
     int base = (maxidx - content[binX-1])/2;
- 
+
     // Check if the point is in a bin which does not correspond to any
     // EL point. In this case the closest bin is chosen.
     if (binY > base + content[binX-1] || binY < base+1){
@@ -204,8 +203,8 @@ namespace nexus {
     // The "-1" comes because the EL point IDs start from 0
     id = sum + binY - base - 1;
 
-    return _ELtable[id];
+    return ELtable_[id];
   }
-  
+
 
 } // end namespace nexus

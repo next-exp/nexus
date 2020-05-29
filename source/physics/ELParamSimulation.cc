@@ -1,11 +1,10 @@
-// -----------------------------------------------------------------------------
-//  $Id$
+// ----------------------------------------------------------------------------
+// nexus | ELParamSimulation.cc
 //
-//  Authors: <justo.martin-albo@ific.uv.es>, <paola.ferrario@ific.uv.es>
-//  Created: 18 Oct 2011
-//  
-//  Copyright (c) 2011, 2012 NEXT Collaboration. All rights reserved.
-// -----------------------------------------------------------------------------
+// This class (WIP) implements a parametrized simulation .
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #include "ELParamSimulation.h"
 
@@ -24,11 +23,11 @@ namespace nexus {
 
   ELParamSimulation::ELParamSimulation(G4Region* region):
     G4VFastSimulationModel("ELParamSimulation", region),
-    _table(0)
+    table_(0)
   {
     // check whether the region has an EL look-up table attached
-    _table = dynamic_cast<ELLookupTable*>(region->GetUserInformation());
-    // if (!_table) {
+    table_ = dynamic_cast<ELLookupTable*>(region->GetUserInformation());
+    // if (!table_) {
     //   G4String msg = "ERROR: no EL lookup table attached to the region!";
     //   G4Exception("[ELParamSimulation]", "ELParamSimulation()",
     // 		  FatalException, msg);
@@ -62,20 +61,20 @@ namespace nexus {
   {
     // Get spatial coordinates
     G4ThreeVector position = ftrack.GetPrimaryTrack()->GetPosition();
-    
+
     G4cout << "position = " << position << G4endl;
 
 
-    //_table->GetSensorsMap()
+    //table_->GetSensorsMap()
 
-    //if (_HCE.size() == 0) {
+    //if (HCE_.size() == 0) {
 
-      G4HCofThisEvent* hce = 
+      G4HCofThisEvent* hce =
 	G4RunManager::GetRunManager()->GetCurrentEvent()->GetHCofThisEvent();
-      
+
       //}
 
-    
+
     G4cout << "No of collections: " << hce->GetNumberOfCollections() << G4endl;
 
 
@@ -89,13 +88,13 @@ namespace nexus {
 
     // Get track coordinates
     // ...
-    
+
     // Ask table for the right sensor map
     // ...
 
     // Fill PmtHits according to this map
 
   }
-  
-  
+
+
 } // end namespace nexus

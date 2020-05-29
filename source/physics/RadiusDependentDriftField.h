@@ -1,13 +1,11 @@
-// -----------------------------------------------------------------------------
-///  \file   RadiusDependentDriftField.h
-///  \brief  
-///  
-///  \author  <justo.martin-albo@ific.uv.es>
-///  \date    4 September 2013
-///  \version $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// nexus | RadiusDependentDriftField.h
+//
+// Drift field varying with radial coordinate.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 
 #ifndef RADIUS_DEPENDENT_DRIFT_FIELD_H
 #define RADIUS_DEPENDENT_DRIFT_FIELD_H
@@ -17,7 +15,7 @@
 
 
 namespace nexus {
-  
+
   class RadiusDependentDriftField: public BaseDriftField
   {
   public:
@@ -25,7 +23,7 @@ namespace nexus {
     RadiusDependentDriftField();
     /// Destructor
     ~RadiusDependentDriftField();
-  
+
     virtual G4double Drift(G4LorentzVector&);
 
     virtual G4LorentzVector GeneratePointAlongDriftLine(const G4LorentzVector&, const G4LorentzVector&);
@@ -36,5 +34,3 @@ namespace nexus {
 } // end namespace nexus
 
 #endif
- 
-

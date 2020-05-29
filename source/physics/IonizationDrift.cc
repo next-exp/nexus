@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | IonizationDrift.cc
 //
-//  Author : J. Martin-Albo <jmalbos@ific.uv.es>    
-//  Created: 1 June 2009
+// This class implements the process of drifting the ionization electrons
+// under the influence of a field.
 //
-//  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "IonizationDrift.h"
@@ -25,17 +25,17 @@ namespace nexus {
   IonizationDrift::IonizationDrift(const G4String& name, G4ProcessType type):
     G4VContinuousDiscreteProcess(name, type)
   {
-    _ParticleChange = new G4ParticleChangeForTransport();
-    pParticleChange = _ParticleChange;
+    ParticleChange_ = new G4ParticleChangeForTransport();
+    pParticleChange = ParticleChange_;
 
-    _nav = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
+    nav_ = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
   }
   
   
   
   IonizationDrift::~IonizationDrift()
   {
-    delete _ParticleChange;
+    delete ParticleChange_;
   }
   
 
@@ -63,8 +63,8 @@ namespace nexus {
     if (!field) return step_length;
 
     // Get displacement from current position due to drift field
-    _xyzt.set(track.GetGlobalTime(), track.GetPosition());
-    step_length = field->Drift(_xyzt);
+    xyzt_.set(track.GetGlobalTime(), track.GetPosition());
+    step_length = field->Drift(xyzt_);
     
     return step_length;
   }
@@ -76,7 +76,7 @@ namespace nexus {
   {
     // Initialize the particle-change (sets all its members equal to
     // the corresponding members in the track).
-    _ParticleChange->Initialize(track);
+    ParticleChange_->Initialize(track);
 
     if (step.GetStepLength() > 0) {
 
@@ -92,16 +92,16 @@ namespace nexus {
       else {
         const G4double attach = mpt->GetConstProperty("ATTACHMENT");
         G4double rnd = -attach * log(G4UniformRand());
-        if (_xyzt.t() > rnd) 
-          _ParticleChange->ProposeTrackStatus(fStopAndKill);
+        if (xyzt_.t() > rnd) 
+          ParticleChange_->ProposeTrackStatus(fStopAndKill);
       }
 
-      _ParticleChange->ProposeGlobalTime(_xyzt.t());
-      _ParticleChange->ProposePosition(_xyzt.vect());
+      ParticleChange_->ProposeGlobalTime(xyzt_.t());
+      ParticleChange_->ProposePosition(xyzt_.vect());
     }
     else {
       // Kill the particle (it didn't move)
-      _ParticleChange->ProposeTrackStatus(fStopAndKill);
+      ParticleChange_->ProposeTrackStatus(fStopAndKill);
     }
     
     return G4VContinuousDiscreteProcess::AlongStepDoIt(track, step);
@@ -123,20 +123,20 @@ namespace nexus {
   G4VParticleChange* 
   IonizationDrift::PostStepDoIt(const G4Track& track, const G4Step& step)
   {
-    _ParticleChange->Initialize(track);
+    ParticleChange_->Initialize(track);
 
     // Update navigator and touchable handle
     G4TouchableHandle touchable = track.GetTouchableHandle();
-    _nav->LocateGlobalPointAndUpdateTouchableHandle
+    nav_->LocateGlobalPointAndUpdateTouchableHandle
       (track.GetPosition(), track.GetMomentumDirection(), touchable, false);
-    _ParticleChange->SetTouchableHandle(touchable);
+    ParticleChange_->SetTouchableHandle(touchable);
     
     // Get the volume where the particle currently lives
     const G4VPhysicalVolume* new_volume = touchable->GetVolume();
 
     // Check whether the particle has left the world volume.
     // If so, we kill it.
-    if (!new_volume) _ParticleChange->ProposeTrackStatus(fStopAndKill);
+    if (!new_volume) ParticleChange_->ProposeTrackStatus(fStopAndKill);
 
     // Set the material corresponding to the new volume
     // (we "cast away" the constness of the pointer because the particle 
@@ -144,7 +144,7 @@ namespace nexus {
     G4Material* new_material = 
       const_cast<G4Material*>(new_volume->GetLogicalVolume()->GetMaterial());
     
-    _ParticleChange->SetMaterialInTouchable(new_material);
+    ParticleChange_->SetMaterialInTouchable(new_material);
        
     return G4VContinuousDiscreteProcess::PostStepDoIt(track, step);
   }

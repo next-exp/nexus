@@ -1,12 +1,9 @@
 // ----------------------------------------------------------------------------
-///  \file   Electroluminescence.h
-///  \brief  Physics process describing the generation of EL light.
-///
-///  \author   J. Martin-Albo <jmalbos@ific.uv.es>    
-///  \date     28 Oct 2009
-///  \version  $Id$
-///
-///  Copyright (c) 2009, 2010 NEXT Collaboration
+// nexus | Electroluminescence.h
+//
+// This class describes the generation of the EL light.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef ELECTROLUMINESCENCE_H
@@ -20,9 +17,6 @@ class G4GenericMessenger;
 
 
 namespace nexus {
-
-  /// This class implements a model for the electroluminescence (in gaseous
-  /// detectors) as a Geant4 discrete physics process.
 
   class Electroluminescence: public G4VDiscreteProcess
   {
@@ -41,7 +35,7 @@ namespace nexus {
     /// as a post-step process, that is, photons are generated as
     /// secondaries at the end of the step.
     G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&);
-    
+
   private:
 
     /// Returns infinity; i.e., the process does not limit the step,
@@ -54,14 +48,14 @@ namespace nexus {
                                        G4PhysicsOrderedFreeVector&);
 
   private:
-    G4ParticleChange* _ParticleChange;
+    G4ParticleChange* ParticleChange_;
 
-    G4PhysicsTable* _theFastIntegralTable;
+    G4PhysicsTable* theFastIntegralTable_;
 
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
 
-    G4bool _table_generation;
-    G4int _photons_per_point;
+    G4bool table_generation_;
+    G4int photons_per_point_;
   };
 
 } // end namespace nexus
