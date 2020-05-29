@@ -25,7 +25,7 @@ namespace nexus {
   public:
     /// Constructor
     BoxPointSampler(G4double inner_x, G4double inner_y, G4double inner_z, 
-		                G4double _thickness,
+		                G4double thickness,
           		      G4ThreeVector origin=G4ThreeVector(0.,0.,0.),
 		                G4RotationMatrix* rotation=0);
     
@@ -40,15 +40,15 @@ namespace nexus {
     G4ThreeVector RotateAndTranslate(G4ThreeVector position);
 						    
   private:
-    G4double _inner_x, _inner_y, _inner_z; ///< Internal dimensions
-    G4double _outer_x, _outer_y, _outer_z; ///< External dimensions
-    G4double _thickness; ///< Walls thickness
+    G4double inner_x_, inner_y_, inner_z_; ///< Internal dimensions
+    G4double outer_x_, outer_y_, outer_z_; ///< External dimensions
+    G4double thickness_; ///< Walls thickness
  
-    G4double _perc_Zvol, _perc_Yvol;   ///< Faces volumes percentages
-    G4double _perc_Zsurf, _perc_Ysurf; ///< Faces surfaces percentages
+    G4double perc_Zvol_, perc_Yvol_;   ///< Faces volumes percentages
+    G4double perc_Zsurf_, perc_Ysurf_; ///< Faces surfaces percentages
 
-    G4ThreeVector _origin;
-    G4RotationMatrix* _rotation;
+    G4ThreeVector origin_;
+    G4RotationMatrix* rotation_;
   };
 
 } // namespace nexus

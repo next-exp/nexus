@@ -40,7 +40,7 @@ namespace nexus {
   private:
     
     G4ThreeVector GetXZPointInMuonsPlane();
-    G4double _x, _yPoint,_z;
+    G4double x_, yPoint_,z_;
    
   };
 

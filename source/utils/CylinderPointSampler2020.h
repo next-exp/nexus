@@ -50,10 +50,10 @@ namespace nexus {
     G4ThreeVector RotateAndTranslate(G4ThreeVector position);
 
   private:
-    G4double          _minRad, _maxRad, _halfLength;  // Solid Dimensions
-    G4double          _iniPhi, _deltaPhi;             // Initial & delta Phi
-    G4RotationMatrix* _rotation;                      // Rotation of the cylinder (if any)
-    G4ThreeVector     _origin;                        // Origin of coordinates
+    G4double          minRad_, maxRad_, halfLength_;  // Solid Dimensions
+    G4double          iniPhi_, deltaPhi_;             // Initial & delta Phi
+    G4RotationMatrix* rotation_;                      // Rotation of the cylinder (if any)
+    G4ThreeVector     origin_;                        // Origin of coordinates
   };
 
 } // namespace nexus

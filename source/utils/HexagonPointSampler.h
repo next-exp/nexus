@@ -69,16 +69,16 @@ namespace nexus {
 
   private:
 
-    G4double _length, _radius, _apothem; ///< internal dimensions
-    G4double _thickness; 
+    G4double length_, radius_, apothem_; ///< internal dimensions
+    G4double thickness_; 
     
-    G4ThreeVector _origin;
-    G4RotationMatrix* _rotation;
+    G4ThreeVector origin_;
+    G4RotationMatrix* rotation_;
 
-    G4double _binning;
-    std::vector<G4ThreeVector> _table_vertices;
+    G4double binning_;
+    std::vector<G4ThreeVector> table_vertices_;
 
-    G4int _number_events;
+    G4int number_events_;
   };
 
   // inline methods ..................................................

@@ -24,7 +24,7 @@ namespace nexus {
   
   MuonsPointSampler::MuonsPointSampler
   (G4double x, G4double yPoint, G4double z):
-    _x(x),_yPoint(yPoint),_z(z)
+    x_(x),yPoint_(yPoint),z_(z)
   {
   }
   
@@ -42,10 +42,10 @@ namespace nexus {
   {
     
     // y is fixed
-    G4double x = -_x + G4UniformRand()*2*_x;
-    G4double z = -_z + G4UniformRand()*2*_z;
+    G4double x = -x_ + G4UniformRand()*2*x_;
+    G4double z = -z_ + G4UniformRand()*2*z_;
     
-    G4ThreeVector mypoint(x, _yPoint, z);
+    G4ThreeVector mypoint(x, yPoint_, z);
     
     // std::cout<<"Generating Muons in: "<<x<<" , "<<y<<" , "<<z<<std::endl;
     return mypoint;

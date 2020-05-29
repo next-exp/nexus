@@ -26,10 +26,10 @@ namespace nexus {
   HexagonPointSampler::HexagonPointSampler
   (G4double apothem, G4double length, G4double thickness,
    G4ThreeVector origin, G4RotationMatrix* rotation):
-    _length(length), _apothem(apothem),  _thickness(thickness),
-    _origin(origin), _rotation(rotation)
+    length_(length), apothem_(apothem),  thickness_(thickness),
+    origin_(origin), rotation_(rotation)
   {
-    _radius = _apothem / cos(pi/6.);
+    radius_ = apothem_ / cos(pi/6.);
   }
   
   
@@ -40,7 +40,7 @@ namespace nexus {
     G4double cell_radius = pitch / sqrt(3.);
     G4double cell_apothem = sqrt(3.)/2. * cell_radius;
     
-    G4int order = floor(2./3. * (_apothem/cell_radius - 1.));
+    G4int order = floor(2./3. * (apothem_/cell_radius - 1.));
 
     // Drop the contents of the vector, if any
     vpos.clear();
@@ -64,7 +64,7 @@ namespace nexus {
       point.rotateZ(face*pi/3.);
 
       // Get a random z coordinate
-      point.setZ(RandomLength(-_length/2., _length/2));
+      point.setZ(RandomLength(-length_/2., length_/2));
       
       // Transform point to the user's system of reference and return
       vertex =  RotateAndTranslate(point);
@@ -77,8 +77,8 @@ namespace nexus {
       G4int face = floor(G4UniformRand() * 6.);
       point.rotateZ(face*pi/3.);
 
-      //point.setZ(RandomLength(-_length/2., -_length/2+100.));
-      point.setZ(RandomLength(_length/2.-20., _length/2.));
+      //point.setZ(RandomLength(-length_/2., -length_/2+100.));
+      point.setZ(RandomLength(length_/2.-20., length_/2.));
       vertex =  RotateAndTranslate(point);
     } // else if (region == TRIANGLE) {
 
@@ -88,7 +88,7 @@ namespace nexus {
     // //   static G4int index = 0;
     // //   if (index == 0) TriangleWalker();
       
-    // //   return _table_vertices[index];
+    // //   return table_vertices_[index];
     // // }
      // Unknown region
     else {
@@ -103,8 +103,8 @@ namespace nexus {
   
   G4ThreeVector HexagonPointSampler::RandomPointInTriangle()
   {
-    G4ThreeVector A(-_radius/2., _radius * cos(pi/6.), 0);
-    G4ThreeVector B( _radius/2., _radius * cos(pi/6.), 0);
+    G4ThreeVector A(-radius_/2., radius_ * cos(pi/6.), 0);
+    G4ThreeVector B( radius_/2., radius_ * cos(pi/6.), 0);
 
     G4double a = G4UniformRand();
     G4double b = G4UniformRand();
@@ -162,9 +162,9 @@ namespace nexus {
     G4double y = 0;
     
     while (x < radius/2.) {
-      _table_vertices.push_back(G4ThreeVector(x,y,z));
+      table_vertices_.push_back(G4ThreeVector(x,y,z));
       y += binning;
-      if (y > _apothem) {
+      if (y > apothem_) {
 	x += binning;
 	y = sqrt(3.) * x;
       }
@@ -206,10 +206,10 @@ namespace nexus {
     G4ThreeVector real_position(position);
     
     // Rotating if needed
-    if (_rotation) 
-      real_position *= (*_rotation);
+    if (rotation_) 
+      real_position *= (*rotation_);
     // Translating
-    real_position += _origin;
+    real_position += origin_;
     
     return real_position;
   }

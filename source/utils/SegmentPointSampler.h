@@ -55,7 +55,7 @@ namespace nexus {
     G4LorentzVector Shoot() const;
     
   private:
-    G4LorentzVector _pre, _post;
+    G4LorentzVector pre_, post_;
   };
   
   // INLINE METHODS ////////////////////////////////////////////////////////////
@@ -64,28 +64,28 @@ namespace nexus {
   
   inline SegmentPointSampler::SegmentPointSampler
   (const G4LorentzVector& pre, const G4LorentzVector& post):
-    _pre(pre), _post(post) {}
+    pre_(pre), post_(post) {}
   
   inline SegmentPointSampler::SegmentPointSampler
   (const G4ThreeVector& pre, const G4ThreeVector& post)
-  { _pre.setVect(pre); _post.setVect(post); }
+  { pre_.setVect(pre); post_.setVect(post); }
 
   inline SegmentPointSampler::~SegmentPointSampler() {}
 
   inline void SegmentPointSampler::SetPoints
   (const G4LorentzVector& pre, const G4LorentzVector& post)
-  { _pre = pre; _post = post; }
+  { pre_ = pre; post_ = post; }
 
   inline const G4LorentzVector& SegmentPointSampler::GetPrePoint() const
-  { return _pre; }
+  { return pre_; }
 
   inline const G4LorentzVector& SegmentPointSampler::GetPostPoint() const
-  { return _post; }
+  { return post_; }
 
   inline G4LorentzVector SegmentPointSampler::Shoot() const
   { G4double rnd = G4UniformRand(); 
-    G4double time = _pre.t() + rnd * (_post.t() - _pre.t());
-    G4ThreeVector position = _pre.v() + rnd * (_post.v() - _pre.v());
+    G4double time = pre_.t() + rnd * (post_.t() - pre_.t());
+    G4ThreeVector position = pre_.v() + rnd * (post_.v() - pre_.v());
     return G4LorentzVector(position,time); }
 
 } // end namespace nexus

@@ -23,28 +23,28 @@ namespace nexus {
     G4double iniPhi, G4double deltaPhi,
     G4RotationMatrix* rotation,
     G4ThreeVector origin ) :
-    _minRad(minRad),
-    _maxRad(maxRad),
-    _halfLength(halfLength),
-    _iniPhi(iniPhi),
-    _deltaPhi(deltaPhi),
-    _rotation(rotation),
-    _origin(origin)
+    minRad_(minRad),
+    maxRad_(maxRad),
+    halfLength_(halfLength),
+    iniPhi_(iniPhi),
+    deltaPhi_(deltaPhi),
+    rotation_(rotation),
+    origin_(origin)
   {
   }
 
 
   // Constructor via Geant4 Physical Volume
   CylinderPointSampler2020::CylinderPointSampler2020 (G4VPhysicalVolume* physVolume):
-    _rotation(physVolume->GetObjectRotation()),
-    _origin(physVolume->GetObjectTranslation())
+    rotation_(physVolume->GetObjectRotation()),
+    origin_(physVolume->GetObjectTranslation())
   {
     G4Tubs* solidVolume = dynamic_cast<G4Tubs*> (physVolume->GetLogicalVolume()->GetSolid());
-    _minRad     = solidVolume->GetRMin();
-    _maxRad     = solidVolume->GetRMax();
-    _halfLength = solidVolume->GetDz();
-    _iniPhi     = solidVolume->GetSPhi();
-    _deltaPhi   = solidVolume->GetDPhi();
+    minRad_     = solidVolume->GetRMin();
+    maxRad_     = solidVolume->GetRMax();
+    halfLength_ = solidVolume->GetDz();
+    iniPhi_     = solidVolume->GetSPhi();
+    deltaPhi_   = solidVolume->GetDPhi();
   }
 
 
@@ -68,28 +68,28 @@ namespace nexus {
     // Generating from inside the cylinder (between minRad and maxRad)
     else if (region == "VOLUME") {
       G4double phi = GetPhi();
-      G4double rad = GetRadius(_minRad, _maxRad);
+      G4double rad = GetRadius(minRad_, maxRad_);
       x = rad * cos(phi);
       y = rad * sin(phi);
-      z = GetLength(_halfLength);
+      z = GetLength(halfLength_);
     }
 
     // Generating from the INNER surface
     else if (region == "INNER_SURFACE") {
       G4double phi = GetPhi();
-      G4double rad = _minRad;
+      G4double rad = minRad_;
       x = rad * cos(phi);
       y = rad * sin(phi);
-      z = GetLength(_halfLength);
+      z = GetLength(halfLength_);
     }
 
     // Generating from the OUTER surface
     else if (region == "OUTER_SURFACE") {
       G4double phi = GetPhi();
-      G4double rad = _maxRad;
+      G4double rad = maxRad_;
       x = rad * cos(phi);
       y = rad * sin(phi);
-      z = GetLength(_halfLength);
+      z = GetLength(halfLength_);
     }
 
     // Unknown region
@@ -114,7 +114,7 @@ namespace nexus {
 
   G4double CylinderPointSampler2020::GetPhi()
   {
-    return (_iniPhi + (G4UniformRand() * _deltaPhi));
+    return (iniPhi_ + (G4UniformRand() * deltaPhi_));
   }
 
 
@@ -129,9 +129,9 @@ namespace nexus {
   G4ThreeVector CylinderPointSampler2020::RotateAndTranslate(G4ThreeVector position)
   {
     // Rotating if needed
-    if (_rotation) position *= *_rotation;
+    if (rotation_) position *= *rotation_;
     // Translating
-    position += _origin;
+    position += origin_;
 
     return position;
   }

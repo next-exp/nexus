@@ -46,16 +46,16 @@ namespace nexus {
     
   private:
     // Sphere dimensions
-    G4double _inner_rad, _outer_rad;
-    G4double _start_phi, _delta_phi;
-    G4double _start_theta, _delta_theta;
+    G4double inner_rad_, outer_rad_;
+    G4double start_phi_, delta_phi_;
+    G4double start_theta_, delta_theta_;
 
     // Needed constants
-    G4double _cos_start_theta, _diff_cos_thetas;
+    G4double cos_start_theta_, diff_cos_thetas_;
 
     // Origin & Rotation
-    G4ThreeVector     _origin;
-    G4RotationMatrix* _rotation;
+    G4ThreeVector     origin_;
+    G4RotationMatrix* rotation_;
 
   };
 
