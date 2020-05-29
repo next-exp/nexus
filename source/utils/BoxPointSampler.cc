@@ -1,10 +1,9 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | BoxPointSampler.cc
 //
-//  Author : Javier Muñoz Vidal <jmunoz@ific.uv.es>
-//  Created: 2 November 2009
+// This class is a sampler of random uniform points in a box-shaped volume.
 //
-//  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "BoxPointSampler.h"

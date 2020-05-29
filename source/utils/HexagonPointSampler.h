@@ -1,14 +1,12 @@
 // ----------------------------------------------------------------------------
-///  \file   HexagonPointSampler.h
-///  \brief  Generator of vertices in a cylindric geometry.
-///
-///  \author  Justo Martín-Albo <jmalbos@ific.uv.es> 
-///           Francesc Monrabal <francesc.monrabal@ific.uv.es>
-///  \date    7 May 2010
-///  \version $Id$
+// nexus | HexagonPointSampler.h
 //
-///  Copyright (c) 2010 NEXT Collaboration
+// This class is a sampler of random uniform points in a hexagon-shaped
+// tube.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
+
 
 #ifndef HEXAGON_POINT_SAMPLER
 #define HEXAGON_POINT_SAMPLER
@@ -22,18 +20,18 @@ namespace nexus {
 
   enum HexagonRegion { INSIDE, PLANE };
 
-  
+
   /// FIXME.
 
   class HexagonPointSampler
   {
   public:
-    
+
     /// Constructor
     HexagonPointSampler(G4double apothem, G4double length, G4double thickness,
 			G4ThreeVector origin=G4ThreeVector(0.,0.,0.),
 			G4RotationMatrix* rotation=0);
-    
+
     /// Destructor
     ~HexagonPointSampler();
 
@@ -41,12 +39,12 @@ namespace nexus {
     G4ThreeVector GenerateVertex(HexagonRegion);
 
     /// Calculates the position of hexagonal cells of a given pitch
-    /// and stores them in a vector (notice that the vector will be 
+    /// and stores them in a vector (notice that the vector will be
     /// cleared before filling it)
-    void TesselateWithFixedPitch(G4double pitch, 
+    void TesselateWithFixedPitch(G4double pitch,
 				 std::vector<G4ThreeVector>& vpos);
-    
-    
+
+
   private:
     /// Calculates the position of cells in the honeycomb and stores
     /// them in a vector
@@ -70,8 +68,8 @@ namespace nexus {
   private:
 
     G4double length_, radius_, apothem_; ///< internal dimensions
-    G4double thickness_; 
-    
+    G4double thickness_;
+
     G4ThreeVector origin_;
     G4RotationMatrix* rotation_;
 
@@ -84,7 +82,7 @@ namespace nexus {
   // inline methods ..................................................
 
   inline HexagonPointSampler::~HexagonPointSampler() {}
-  
+
 } // namespace nexus
 
 #endif

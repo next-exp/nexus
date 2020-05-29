@@ -1,9 +1,11 @@
-// -----------------------------------------------------------------------------
-//  nexus | CylinderPointSampler2020.cc
+// ----------------------------------------------------------------------------
+// nexus | CylinderPointSampler2020.cc
 //
-//  * Author: <jmunoz@ific.uv.es>
-//  * Creation date: 14 January 2020
-// -----------------------------------------------------------------------------
+// This class is a sampler of random uniform points in a cylinder.
+// It follows the GEANT4 cylinder geometry parameter convention.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #include "CylinderPointSampler2020.h"
 

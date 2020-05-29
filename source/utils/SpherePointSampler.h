@@ -1,12 +1,9 @@
 // ----------------------------------------------------------------------------
-///  \file   SpherePointSampler.h
-///  \brief  Generator of random points in a sphere.
-///
-///  \author   Javier Munyoz Vidal <jmunoz@ific.uv.es>
-///  \date     24 November 2009
-///  \version  $Id$
-///
-///  Copyright (c) 2009 NEXT Collaboration
+// nexus | SpherePointSampler.h
+//
+// This class is a sampler of random uniform points in as sphere.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef SPHERE_POINT_SAMPLER
@@ -43,7 +40,7 @@ namespace nexus {
     G4double GetPhi();
     G4double GetTheta();
     G4ThreeVector RotateAndTranslate(G4ThreeVector position);
-    
+
   private:
     // Sphere dimensions
     G4double inner_rad_, outer_rad_;

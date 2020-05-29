@@ -1,12 +1,9 @@
 // ----------------------------------------------------------------------------
-///  \file   CylinderPointSampler.h
-///  \brief  Generator of random points in a cylinder.
-///
-///  \author   Javier Munyoz Vidal <jmunoz@ific.uv.es>
-///  \date     2 November 2009
-///  \version  $Id$
-///
-///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
+// nexus | CylinderPointSampler.h
+//
+// This class is a sampler of random uniform points in a cylinder.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef CYLINDER_POINT_SAMPLER_H
@@ -25,9 +22,9 @@ namespace nexus {
   public:
     /// Constructor
     CylinderPointSampler(G4double inner_rad, G4double inner_length,
-			    G4double body_thickness, G4double endcaps_thickness,
-			    G4ThreeVector origin=G4ThreeVector(0,0,0),
-			    G4RotationMatrix* rotation=0);
+                         G4double body_thickness, G4double endcaps_thickness,
+                         G4ThreeVector origin=G4ThreeVector(0,0,0),
+                         G4RotationMatrix* rotation=0);
     /// Destructor
     ~CylinderPointSampler();
 

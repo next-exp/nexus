@@ -1,10 +1,9 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | SpherePointSampler.cc
 //
-//  Author : Javier Muñoz Vidal <jmunoz@ific.uv.es>
-//  Created: 2 November 2009
+// This class is a sampler of random uniform points in as sphere.
 //
-//  Copyright (c) 2009, 2010 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "SpherePointSampler.h"

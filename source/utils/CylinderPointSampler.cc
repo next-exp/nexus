@@ -1,11 +1,11 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | CylinderPointSampler.cc
 //
-//  Author : Javier Muñoz Vidal <jmunoz@ific.uv.es>
-//  Created: 2 November 2009
+// This class is a sampler of random uniform points in a cylinder.
 //
-//  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
+
 
 #include "CylinderPointSampler.h"
 
