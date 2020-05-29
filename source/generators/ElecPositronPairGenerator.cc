@@ -72,10 +72,6 @@ void ElecPositronPairGenerator::GeneratePrimaryVertex(G4Event* event)
   particle_definition_ =
     G4ParticleTable::GetParticleTable()->FindParticle("e-");
 
-  if (!particle_definition_)
-    G4Exception("SetParticleDefinition()", "[ElecPositronPairGenerator]",
-      FatalException, "User gave an unknown particle name.");
-
   // Generate an initial position for the particle using the geometry
   G4ThreeVector pos = geom_->GenerateVertex(region_);
 
@@ -110,10 +106,6 @@ void ElecPositronPairGenerator::GeneratePrimaryVertex(G4Event* event)
 
    particle_definition_ =
     G4ParticleTable::GetParticleTable()->FindParticle("e+");
-
-  if (!particle_definition_)
-    G4Exception("SetParticleDefinition()", "[ElecPositronPairGenerator]",
-      FatalException, "User gave an unknown particle name.");
 
   G4double kinetic_energy2 = tot_kinetic_energy - kinetic_energy;
 
