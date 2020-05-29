@@ -9,8 +9,8 @@
 //  Copyright (c) 2015 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __MUONS_POINT_SAMPLER__
-#define __MUONS_POINT_SAMPLER__
+#ifndef MUONS_POINT_SAMPLER
+#define MUONS_POINT_SAMPLER
 
 #include <G4ThreeVector.hh>
 #include <G4RotationMatrix.hh>

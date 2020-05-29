@@ -9,8 +9,8 @@
 ///  Copyright (c) 2009-2012 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef __SEGMENT_POINT_SAMPLER__
-#define __SEGMENT_POINT_SAMPLER__
+#ifndef SEGMENT_POINT_SAMPLER
+#define SEGMENT_POINT_SAMPLER
 
 #include <G4LorentzVector.hh>
 #include <G4ThreeVector.hh>

@@ -10,8 +10,8 @@
 ///  Copyright (c) 2010 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __HEXAGON_POINT_SAMPLER__
-#define __HEXAGON_POINT_SAMPLER__
+#ifndef HEXAGON_POINT_SAMPLER
+#define HEXAGON_POINT_SAMPLER
 
 #include <G4ThreeVector.hh>
 #include <G4RotationMatrix.hh>

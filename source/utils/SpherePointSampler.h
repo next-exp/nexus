@@ -9,8 +9,8 @@
 ///  Copyright (c) 2009 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __SPHERE_POINT_SAMPLER__
-#define __SPHERE_POINT_SAMPLER__
+#ifndef SPHERE_POINT_SAMPLER
+#define SPHERE_POINT_SAMPLER
 
 #include <globals.hh>
 #include <G4ThreeVector.hh>
