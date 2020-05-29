@@ -1,12 +1,10 @@
 // ----------------------------------------------------------------------------
-///  \file   PersistencyManager.h
-///  \brief
-///
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     13 March 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// nexus | PersistencyManager.h
+//
+// This class writes all the relevant information of the simulation
+// to an ouput file.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef PERSISTENCY_MANAGER_H
@@ -67,40 +65,40 @@ namespace nexus {
 
 
   private:
-    G4GenericMessenger* _msg; ///< User configuration messenger
+    G4GenericMessenger* msg_; ///< User configuration messenger
 
-    G4String _historyFile_init;
-    G4String _historyFile_conf;
+    G4String historyFile_init_;
+    G4String historyFile_conf_;
 
-    G4bool _ready;     ///< Is the PersistencyManager ready to go?
-    G4bool _store_evt; ///< Should we store the current event?
-    G4bool _interacting_evt; ///< Has the current event interacted in ACTIVE?
+    G4bool ready_;     ///< Is the PersistencyManager ready to go?
+    G4bool store_evt_; ///< Should we store the current event?
+    G4bool interacting_evt_; ///< Has the current event interacted in ACTIVE?
 
-    G4String _event_type; ///< event type: bb0nu, bb2nu, background or not set
+    G4String event_type_; ///< event type: bb0nu, bb2nu, background or not set
 
-    G4int _saved_evts; ///< number of events to be saved
-    G4int _interacting_evts; ///< number of events interacting in ACTIVE
-    G4double _pmt_bin_size, _sipm_bin_size; ///< bin width of sensors
+    G4int saved_evts_; ///< number of events to be saved
+    G4int interacting_evts_; ///< number of events interacting in ACTIVE
+    G4double pmt_bin_size_, sipm_bin_size_; ///< bin width of sensors
 
-    G4int _nevt; ///< Event ID
-    G4int _start_id; ///< ID for the first event in file
-    G4bool _first_evt; ///< true only for the first event of the run
+    G4int nevt_; ///< Event ID
+    G4int start_id_; ///< ID for the first event in file
+    G4bool first_evt_; ///< true only for the first event of the run
 
-    HDF5Writer* _h5writer;  ///< Event writer to hdf5 file
+    HDF5Writer* h5writer_;  ///< Event writer to hdf5 file
 
-    std::map<G4int, std::vector<G4int>* > _hit_map;
-    std::vector<G4int> _sns_posvec;
+    std::map<G4int, std::vector<G4int>* > hit_map_;
+    std::vector<G4int> sns_posvec_;
 
-    std::map<G4String, G4double> _sensdet_bin;
+    std::map<G4String, G4double> sensdet_bin_;
   };
 
 
   // INLINE DEFINITIONS //////////////////////////////////////////////
 
   inline void PersistencyManager::StoreCurrentEvent(G4bool sce)
-  { _store_evt = sce; }
+  { store_evt_ = sce; }
   inline void PersistencyManager::InteractingEvent(G4bool ie)
-  { _interacting_evt = ie; }
+  { interacting_evt_ = ie; }
   inline G4bool PersistencyManager::Store(const G4VPhysicalVolume*)
   { return false; }
   inline G4bool PersistencyManager::Retrieve(G4Event*&)

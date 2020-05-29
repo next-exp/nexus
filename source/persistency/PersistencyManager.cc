@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | PersistencyManager.cc
 //
-//  Author : <justo.martin-albo@ific.uv.es>
-//  Created: 15 March 2013
+// This class writes all the relevant information of the simulation
+// to an ouput file.
 //
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "PersistencyManager.h"
@@ -38,21 +38,21 @@ using namespace nexus;
 
 PersistencyManager::PersistencyManager(G4String historyFile_init,
                                        G4String historyFile_conf):
-  G4VPersistencyManager(), _msg(0),
-  _ready(false), _store_evt(true), _interacting_evt(false),
-  _event_type("other"), _saved_evts(0), _interacting_evts(0),
-  _pmt_bin_size(-1), _sipm_bin_size(-1),
-  _nevt(0), _start_id(0), _first_evt(true), _h5writer(0)
+  G4VPersistencyManager(), msg_(0),
+  ready_(false), store_evt_(true), interacting_evt_(false),
+  event_type_("other"), saved_evts_(0), interacting_evts_(0),
+  pmt_bin_size_(-1), sipm_bin_size_(-1),
+  nevt_(0), start_id_(0), first_evt_(true), h5writer_(0)
 {
 
-  _historyFile_init = historyFile_init;
-  _historyFile_conf = historyFile_conf;
+  historyFile_init_ = historyFile_init;
+  historyFile_conf_ = historyFile_conf;
 
-  _msg = new G4GenericMessenger(this, "/nexus/persistency/");
-  _msg->DeclareMethod("outputFile", &PersistencyManager::OpenFile, "");
-  _msg->DeclareProperty("eventType", _event_type,
+  msg_ = new G4GenericMessenger(this, "/nexus/persistency/");
+  msg_->DeclareMethod("outputFile", &PersistencyManager::OpenFile, "");
+  msg_->DeclareProperty("eventType", event_type_,
                         "Type of event: bb0nu, bb2nu or background.");
-  _msg->DeclareProperty("start_id", _start_id,
+  msg_->DeclareProperty("start_id", start_id_,
                         "Starting event ID for this job.");
 }
 
@@ -60,8 +60,8 @@ PersistencyManager::PersistencyManager(G4String historyFile_init,
 
 PersistencyManager::~PersistencyManager()
 {
-  delete _msg;
-  delete _h5writer;
+  delete msg_;
+  delete h5writer_;
 }
 
 
@@ -88,10 +88,10 @@ void PersistencyManager::Initialize(G4String historyFile_init,
 void PersistencyManager::OpenFile(G4String filename)
 {
   // If the output file was not set yet, do so
-  if (!_h5writer) {
-    _h5writer = new HDF5Writer();
+  if (!h5writer_) {
+    h5writer_ = new HDF5Writer();
     G4String hdf5file = filename + ".h5";
-    _h5writer->Open(hdf5file);
+    h5writer_->Open(hdf5file);
     return;
   } else {
     G4Exception("OpenFile()", "[PersistencyManager]",
@@ -103,29 +103,29 @@ void PersistencyManager::OpenFile(G4String filename)
 
 void PersistencyManager::CloseFile()
 {
-  if (!_h5writer) return;
+  if (!h5writer_) return;
 
-  _h5writer->Close();
+  h5writer_->Close();
 }
 
 
 
 G4bool PersistencyManager::Store(const G4Event* event)
 {
-  if (_interacting_evt) {
-    _interacting_evts++;
+  if (interacting_evt_) {
+    interacting_evts_++;
   }
 
-  if (!_store_evt) {
+  if (!store_evt_) {
     TrajectoryMap::Clear();
     return false;
   }
 
-  _saved_evts++;
+  saved_evts_++;
 
-  if (_first_evt) {
-    _first_evt = false;
-    _nevt = _start_id;
+  if (first_evt_) {
+    first_evt_ = false;
+    nevt_ = start_id_;
   }
 
   // Store the trajectories of the event
@@ -134,7 +134,7 @@ G4bool PersistencyManager::Store(const G4Event* event)
   // Store ionization hits and sensor hits
   StoreHits(event->GetHCofThisEvent());
 
-  _nevt++;
+  nevt_++;
 
   TrajectoryMap::Clear();
   StoreCurrentEvent(true);
@@ -180,7 +180,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
     } else {
       mother_id = trj->GetParentID();
     }
-    _h5writer->WriteParticleInfo(_nevt, trackid, trj->GetParticleName().c_str(),
+    h5writer_->WriteParticleInfo(nevt_, trackid, trj->GetParticleName().c_str(),
 				 primary, mother_id,
 				 (float)ini_xyz.x(), (float)ini_xyz.y(),
                                  (float)ini_xyz.z(), (float)ini_t,
@@ -240,7 +240,7 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
     dynamic_cast<IonizationHitsCollection*>(hc);
   if (!hits) return;
 
-  _hit_map.clear();
+  hit_map_.clear();
 
   double evt_energy = 0.;
   std::string sdname = hits->GetSDname();
@@ -253,18 +253,18 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
     G4int trackid = hit->GetTrackID();
 
     std::vector<G4int>* ihits = nullptr;
-    std::map<G4int, std::vector<G4int>* >::iterator it = _hit_map.find(trackid);
-    if (it != _hit_map.end()) {
+    std::map<G4int, std::vector<G4int>* >::iterator it = hit_map_.find(trackid);
+    if (it != hit_map_.end()) {
       ihits = it->second;
     } else {
        ihits = new std::vector<G4int>;
-      _hit_map[trackid] = ihits;
+      hit_map_[trackid] = ihits;
     }
 
     ihits->push_back(1);
 
     G4ThreeVector xyz = hit->GetPosition();
-    _h5writer->WriteHitInfo(_nevt, trackid,  ihits->size() - 1,
+    h5writer_->WriteHitInfo(nevt_, trackid,  ihits->size() - 1,
 			    xyz[0], xyz[1], xyz[2],
 			    hit->GetTime(), hit->GetEnergyDeposit(),
 			    sdname.c_str());
@@ -282,13 +282,13 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
 
   std::string sdname = hits->GetSDname();
 
-  std::map<G4String, G4double>::const_iterator sensdet_it = _sensdet_bin.find(sdname);
-  if (sensdet_it == _sensdet_bin.end()) {
+  std::map<G4String, G4double>::const_iterator sensdet_it = sensdet_bin_.find(sdname);
+  if (sensdet_it == sensdet_bin_.end()) {
     for (size_t j=0; j<hits->entries(); j++) {
       PmtHit* hit = dynamic_cast<PmtHit*>(hits->GetHit(j));
       if (!hit) continue;
       G4double bin_size = hit->GetBinSize();
-      _sensdet_bin[sdname] = bin_size;
+      sensdet_bin_[sdname] = bin_size;
       break;
     }
   }
@@ -313,16 +313,16 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
       data.push_back(std::make_pair(time_bin, charge));
       amplitude = amplitude + (*it).second;
 
-      _h5writer->WriteSensorDataInfo(_nevt, (unsigned int)hit->GetPmtID(),
+      h5writer_->WriteSensorDataInfo(nevt_, (unsigned int)hit->GetPmtID(),
                                      time_bin, charge);
     }
 
     std::vector<G4int>::iterator pos_it =
-      std::find(_sns_posvec.begin(), _sns_posvec.end(), hit->GetPmtID());
-    if (pos_it == _sns_posvec.end()) {
-      _h5writer->WriteSensorPosInfo((unsigned int)hit->GetPmtID(), sdname.c_str(),
+      std::find(sns_posvec_.begin(), sns_posvec_.end(), hit->GetPmtID());
+    if (pos_it == sns_posvec_.end()) {
+      h5writer_->WriteSensorPosInfo((unsigned int)hit->GetPmtID(), sdname.c_str(),
 				    (float)xyz.x(), (float)xyz.y(), (float)xyz.z());
-      _sns_posvec.push_back(hit->GetPmtID());
+      sns_posvec_.push_back(hit->GetPmtID());
     }
 
   }
@@ -333,27 +333,27 @@ G4bool PersistencyManager::Store(const G4Run*)
 {
   // Store the event type
   G4String key = "event_type";
-  _h5writer->WriteRunInfo(key, _event_type.c_str());
+  h5writer_->WriteRunInfo(key, event_type_.c_str());
 
   // Store the number of events to be processed
   NexusApp* app = (NexusApp*) G4RunManager::GetRunManager();
   G4int num_events = app->GetNumberOfEventsToBeProcessed();
 
   key = "num_events";
-  _h5writer->WriteRunInfo(key,  std::to_string(num_events).c_str());
+  h5writer_->WriteRunInfo(key,  std::to_string(num_events).c_str());
   key = "saved_events";
-  _h5writer->WriteRunInfo(key,  std::to_string(_saved_evts).c_str());
+  h5writer_->WriteRunInfo(key,  std::to_string(saved_evts_).c_str());
   key = "interacting_events";
-  _h5writer->WriteRunInfo(key,  std::to_string(_interacting_evts).c_str());
+  h5writer_->WriteRunInfo(key,  std::to_string(interacting_evts_).c_str());
 
   std::map<G4String, G4double>::const_iterator it;
-  for (it = _sensdet_bin.begin(); it != _sensdet_bin.end(); ++it) {
-    _h5writer->WriteRunInfo((it->first + "_binning").c_str(),
+  for (it = sensdet_bin_.begin(); it != sensdet_bin_.end(); ++it) {
+    h5writer_->WriteRunInfo((it->first + "binning_").c_str(),
                            (std::to_string(it->second/microsecond)+" mus").c_str());
   }
 
-  SaveConfigurationInfo(_historyFile_init);
-  SaveConfigurationInfo(_historyFile_conf);
+  SaveConfigurationInfo(historyFile_init_);
+  SaveConfigurationInfo(historyFile_conf_);
 
   return true;
 }
@@ -370,7 +370,7 @@ void PersistencyManager::SaveConfigurationInfo(G4String file_name)
     if (key != "") {
       auto found = key.find("binning");
       if (found == std::string::npos)
-	_h5writer->WriteRunInfo(key.c_str(), value.c_str());
+	h5writer_->WriteRunInfo(key.c_str(), value.c_str());
     }
 
   }

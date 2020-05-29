@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------
+// nexus | hdf5_functions.h
+//
+// Collection of functions to create h5 tables for nexus output.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #ifndef HDF5_FUNCTIONS_H
 #define HDF5_FUNCTIONS_H
 
