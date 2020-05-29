@@ -349,18 +349,21 @@ void PersistencyManager::StoreSteps()
   StepContainer<G4ThreeVector>   final_poss = sa->get_final_poss  ();
 
   for (auto it = initial_volumes.begin(); it != initial_volumes.end(); ++it) {
-    G4int track_id = it->first;
+    std::pair<G4int, G4String> key           = it->first;
+    G4int                      track_id      = key.first;
+    G4String                   particle_name = key.second;
+
     for (int step_idx=0; step_idx < it->second.size(); ++step_idx) {
-      h5writer_->WriteStep(nevt_, track_id, "geantino", step_idx,
-                           initial_volumes[track_id][step_idx],
-                             final_volumes[track_id][step_idx],
-                                proc_names[track_id][step_idx],
-                           initial_poss   [track_id][step_idx].x(),
-                           initial_poss   [track_id][step_idx].y(),
-                           initial_poss   [track_id][step_idx].z(),
-                             final_poss   [track_id][step_idx].x(),
-                             final_poss   [track_id][step_idx].y(),
-                             final_poss   [track_id][step_idx].z());
+      h5writer_->WriteStep(nevt_, track_id, particle_name, step_idx,
+                           initial_volumes[key][step_idx],
+                             final_volumes[key][step_idx],
+                                proc_names[key][step_idx],
+                           initial_poss   [key][step_idx].x(),
+                           initial_poss   [key][step_idx].y(),
+                           initial_poss   [key][step_idx].z(),
+                             final_poss   [key][step_idx].x(),
+                             final_poss   [key][step_idx].y(),
+                             final_poss   [key][step_idx].z());
     }
   }
   sa->Reset();
