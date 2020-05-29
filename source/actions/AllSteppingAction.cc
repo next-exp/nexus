@@ -55,8 +55,9 @@ AllSteppingAction::~AllSteppingAction()
 
 void AllSteppingAction::UserSteppingAction(const G4Step* step)
 {
-  G4ParticleDefinition* pdef     = step->GetTrack()->GetDefinition();
-  G4int                 track_id = step->GetTrack()->GetTrackID();
+  G4ParticleDefinition* pdef          = step->GetTrack()->GetDefinition();
+  G4int                 track_id      = step->GetTrack()->GetTrackID();
+  G4String              particle_name = pdef->GetParticleName();
 
   if (!KeepParticle(pdef)) return;
 
@@ -73,12 +74,14 @@ void AllSteppingAction::UserSteppingAction(const G4Step* step)
   if (!KeepVolume(initial_volume, final_volume))
     return;
 
-  initial_volumes_[track_id].push_back(initial_volume);
-    final_volumes_[track_id].push_back(  final_volume);
-       proc_names_[track_id].push_back(     proc_name);
+  std::pair<G4int, G4String> key = std::make_pair(track_id, particle_name);
 
-  initial_poss_   [track_id].push_back(initial_pos);
-    final_poss_   [track_id].push_back(  final_pos);
+  initial_volumes_[key].push_back(initial_volume);
+    final_volumes_[key].push_back(  final_volume);
+       proc_names_[key].push_back(     proc_name);
+
+  initial_poss_   [key].push_back(initial_pos);
+    final_poss_   [key].push_back(  final_pos);
 }
 
 

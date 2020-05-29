@@ -24,7 +24,7 @@
 class G4Step;
 
 template<typename T>
-using StepContainer = std::map<G4int, std::vector<T>>;
+using StepContainer = std::map<std::pair<G4int, G4String>, std::vector<T>>;
 
 
 namespace nexus {
