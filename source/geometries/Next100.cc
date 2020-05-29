@@ -1,10 +1,9 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | Next100.cc
 //
-//  Authors: <justo.martin-albo@ific.uv.es>, <jmunoz@ific.uv.es>
-//  Created: 21 Nov 2011
+// Main class that constructs the geometry of the NEXT-100 detector.
 //
-//  Copyright (c) 2011 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "Next100.h"
@@ -120,7 +119,7 @@ namespace nexus {
     vessel_->Construct();
     G4LogicalVolume* shielding_air_logic = shielding_->GetAirLogicalVolume();
     G4LogicalVolume* vessel_logic = vessel_->GetLogicalVolume();
-    gate_zpos_invessel__ = vessel_->GetELzCoord();
+    gate_zpos_in_vessel_ = vessel_->GetELzCoord();
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), vessel_logic,
     		      "VESSEL", shielding_air_logic, false, 0);
 

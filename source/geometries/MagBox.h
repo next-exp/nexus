@@ -1,16 +1,13 @@
 // ----------------------------------------------------------------------------
-///  \file   MagBox.h
-///  \brief  
-///
-///  \author   <jmunoz@ific.uv.es>
-///  \date     January 2014
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration
+// nexus | MagBox.h
+//
+// Detector with magnetic field.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef _MAGBOX___
-#define _MAGBOX___
+#ifndef MAGBOX
+#define MAGBOX
 
 #include "BaseGeometry.h"
 #include "BoxPointSampler.h"
@@ -38,7 +35,7 @@ namespace nexus {
 
   private:
     // Detector dimensions
-    const G4double detector_size_; /// Size of the Xe box    
+    const G4double detector_size_; /// Size of the Xe box
 
     // ACTIVE gas Xenon
     G4Material* gas_;
@@ -48,15 +45,15 @@ namespace nexus {
     G4String gas_name_;       /// Gas name
     G4double pressure_;       /// Pressure Gas Xenon
     G4double mag_intensity_;  /// Magnetic Field Intensity
-    
-    //Vertex genrator    
+
+    //Vertex genrator
     BoxPointSampler* active_gen_;
 
     /// Messenger for the definition of control commands
-    G4GenericMessenger* msg_; 
+    G4GenericMessenger* msg_;
 
   };
-  
+
 } // end namespace nexus
 
 #endif

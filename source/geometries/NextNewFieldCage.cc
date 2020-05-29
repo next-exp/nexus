@@ -1,11 +1,10 @@
-// ----------------------------------------------------------------------------
-//  $Id$
+// -----------------------------------------------------------------------------
+// nexus | NextNewFieldCage.cc
 //
-//  Authors: <miquel.nebot@ific.uv.es>
-//  Created: 12 Sept 2013
+// Field cage of the NEXT-WHITE detector.
 //
-//  Copyright (c) 2013-2015 NEXT Collaboration
-// ----------------------------------------------------------------------------
+// The NEXT Collaboration
+// -----------------------------------------------------------------------------
 
 #include "NextNewFieldCage.h"
 
@@ -472,7 +471,7 @@ void NextNewFieldCage::BuildBuffer()
     G4Tubs* anode_quartz_solid =
       new G4Tubs("QUARTZ_ANODE", 0., anode_diam/2. , anode_quartz_thickness_/2., 0, twopi);
     G4LogicalVolume* anode_logic =
-      new G4LogicalVolume(anodequartz__solid, quartz_, "EL_QUARTZ_ANODE");
+      new G4LogicalVolume(anode_quartz_solid, quartz_, "EL_QUARTZ_ANODE");
     new G4PVPlacement(nullptr, G4ThreeVector(0., 0., pos_z_anode_),
                       anode_logic, "EL_QUARTZ_ANODE", mother_logic_, false, 0, false);
 

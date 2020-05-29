@@ -1,16 +1,13 @@
 // ----------------------------------------------------------------------------
-///  \file   Next1EL.h
-///  \brief  Geometry of the NEXT-1 EL detector.
-///
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     16 Feb 2010
-///  \version  $Id$
-///
-///  Copyright (c) 2010, 2011 NEXT Collaboration
+// nexus | Next1EL.h
+//
+// Geometry of the NEXT-DEMO detector.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef _NEXT1_EL___
-#define _NEXT1_EL___
+#ifndef NEXT1_EL
+#define NEXT1_EL
 
 #include "BaseGeometry.h"
 #include <G4RotationMatrix.hh>

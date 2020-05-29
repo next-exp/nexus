@@ -1,11 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id: Next1ELDBO.cc 3298 2010-11-23 11:49:52Z jmalbos $
+// nexus | Next1ELDBO.cc
 //
-//  Author:  <justo.martin-albo@ific.uv.es>
-//  Created: 2 Nov 2010
-//  
-//  Copyright (c) 2010 NEXT Collaboration
-// ---------------------------------------------------------------------------- 
+// Dice boards of the NEXT-DEMO detector.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #include "Next1ELDBO.h"
 
@@ -45,7 +44,7 @@ namespace nexus {
   }
 
 
-  
+
   void Next1ELDBO::DefineGeometry(G4int rows, G4int columns)
   {
     // DAUGHTER BOARD (DBO) //////////////////////////////////////////
@@ -54,31 +53,31 @@ namespace nexus {
     const G4double coating_thickn = 0.1 * micrometer;
     const G4double board_thickn = 5. * mm;
     const G4double board_side_reduction = 1. * mm;
-    
-    const G4double dbo_x = columns * sipm_pitch - 2. * board_side_reduction;  
+
+    const G4double dbo_x = columns * sipm_pitch - 2. * board_side_reduction;
     const G4double dbo_y =    rows * sipm_pitch - 2. * board_side_reduction;
     const G4double dbo_z = board_thickn + coating_thickn;
-    
+
     dimensions_.setX(dbo_x);
     dimensions_.setY(dbo_y);
     dimensions_.setZ(dbo_z);
 
     G4Box* board_solid = new G4Box("DBO", dbo_x/2., dbo_y/2., dbo_z/2.);
-    
+
     G4Material* teflon =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
-    
-    G4LogicalVolume* board_logic = 
+
+    G4LogicalVolume* board_logic =
       new G4LogicalVolume(board_solid, teflon, "DBO");
 
     this->SetLogicalVolume(board_logic);
 
-    
+
     // WLS COATING ///////////////////////////////////////////////////
-    
-    G4Box* coating_solid = 
+
+    G4Box* coating_solid =
       new G4Box("WLS_COATING", dbo_x/2., dbo_y/2., coating_thickn/2.);
-    
+
     G4Material* TPB = MaterialsList::TPB();
     TPB->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
 
@@ -89,8 +88,8 @@ namespace nexus {
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,pos_z), coating_logic,
 		      "WLS_COATING", board_logic, false, 0);
-    
-    
+
+
     // SILICON PMs ///////////////////////////////////////////////////
     SiPM11 sipm_geom;
 
@@ -136,5 +135,5 @@ namespace nexus {
   {
     return positions_;
   }
-  
+
 } // end namespace nexus

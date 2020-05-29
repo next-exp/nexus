@@ -1,12 +1,9 @@
 // ----------------------------------------------------------------------------
-///  \file   Pmt11410.h
-///  \brief  Geometry model for the Hamamatsu R11410 PMT. 
-///
-///  \author   Javier Muñoz Vidal <jmunoz@ific.uv.es>
-///  \date     1 January 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// nexus | PmtR11410.h
+//
+// Geometry of the Hamamatsu R11410 photomultiplier.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef PMT_R11410_H
@@ -24,7 +21,7 @@ namespace nexus {
 
 
   /// Geometry model for the Hamamatsu R11410-10 photomultiplier
-  
+
   class PmtR11410: public BaseGeometry
   {
   public:

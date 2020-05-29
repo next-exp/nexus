@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | Next100InnerElements.cc
 //
-//  Authors: <jmunoz@ific.uv.es>, <paola.ferrario@dipc.org>
-//  Created: 2 Mar 2012
+// Inner elements of the NEXT-100 detector. They include the field cage,
+// the energy and the tracking plane.
 //
-//  Copyright (c) 2012-2020 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "Next100InnerElements.h"
@@ -53,7 +53,7 @@ namespace nexus {
     gas_(nullptr),
     field_cage_    (new Next100FieldCage()),
     energy_plane_  (new Next100EnergyPlane()),
-    tracking_plane_(new Next100TrackingPlane(_gatetracking_plane__distance)),
+    tracking_plane_(new Next100TrackingPlane(gate_tracking_plane_distance_)),
     msg_(nullptr)
   {
     // Messenger

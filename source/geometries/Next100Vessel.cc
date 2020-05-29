@@ -1,10 +1,9 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | Next100Vessel.cc
 //
-//  Authors: <justo.martin-albo@ific.uv.es>, <jmunoz@ific.uv.es>
-//  Created: 21 Nov 2011
+// Vessel of the NEXT-100 geometry.
 //
-//  Copyright (c) 2011 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "Next100Vessel.h"

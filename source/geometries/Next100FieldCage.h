@@ -1,16 +1,14 @@
 // ----------------------------------------------------------------------------
-///  \file
-///  \brief
-///
-///  \author   <jmunoz@ific.uv.es>, <paola.ferrario@dipc.org>
-///  \date     1 Mar 2012
-///  \version  $Id$
-///
-///  Copyright (c) 2012-2020 NEXT Collaboration
+// nexus | Next100FieldCage.h
+//
+// Field cage geometry of the NEXT-100 detector. It include the elements in
+// the drift and the buffer part of the detector.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef _NEXT100_FIELDCAGE___
-#define _NEXT100_FIELDCAGE___
+#ifndef NEXT100_FIELDCAGE
+#define NEXT100_FIELDCAGE
 
 #include "BaseGeometry.h"
 

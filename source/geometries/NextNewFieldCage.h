@@ -1,14 +1,10 @@
-// ----------------------------------------------------------------------------
-///  \file     NextNewFieldCage.h
-///  \brief    Reflector tube coated with TPB layer.
-///            Also builds the EL, Cathode and Electric Drift Field.
-///
-///  \author   <miquel.nebot@ific.uv.es>
-///  \date     12 Sept 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013-2015 NEXT Collaboration
-// ----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// nexus | NextNewFieldCage.h
+//
+// Field cage of the NEXT-WHITE detector.
+//
+// The NEXT Collaboration
+// -----------------------------------------------------------------------------
 
 #ifndef NEXTNEW_FIELDCAGE_H
 #define NEXTNEW_FIELDCAGE_H

@@ -1,16 +1,13 @@
 // ----------------------------------------------------------------------------
-///  \file   PmtR7378A.h
-///  \brief  Geometry model for the Hamamatsu R7378A PMT. 
-///
-///  \author   J. Martin-Albo <jmalbos@ific.uv.es>
-///  \date     17 Feb 2010
-///  \version  $Id$
-///
-///  Copyright (c) 2010 NEXT Collaboration
+// nexus | PmtR7378A.h
+//
+// Geometry of the Hamamatsu R7378A photomultiplier.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef _PMT_R7378A___
-#define _PMT_R7378A___
+#ifndef PMT_R7378A
+#define PMT_R7378A
 
 #include "BaseGeometry.h"
 
@@ -20,7 +17,7 @@
 namespace nexus {
 
   /// Geometry model for the Hamamatsu R7378A photomultiplier (PMT).
-  
+
   class PmtR7378A: public BaseGeometry
   {
   public:

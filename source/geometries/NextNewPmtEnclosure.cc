@@ -1,9 +1,10 @@
 // -----------------------------------------------------------------------------
-//  nexus | NextNewPmtEnclosure.cc
+// nexus | NextNewPmtEnclosure.cc
 //
-//  * Author  : <miquel.nebot@ific.uv.es>
-//  * Creation: 24 September 2013
-// -----------------------------------------------------------------------------
+// Pseudo-enclosure that describes the copper around the PMTs.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #include "NextNewPmtEnclosure.h"
 

@@ -1,11 +1,9 @@
-// ----------------------------------------------------------------------------
-//  $Id$
+// -----------------------------------------------------------------------------
+// nexus | NextNewVessel.cc
 //
-//  Authors: <miquel.nebot@ific.uv.es>, <jmunoz@ific.uv.es>,
-// <justo.martin-albo@ific.uv.es>, <paola.ferrario@ific.uv.es>
-//  Created: 9 Sept 2013
+// Vessel of the NEXT-WHITE detector.
 //
-//  Copyright (c) 2013 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "NextNewVessel.h"

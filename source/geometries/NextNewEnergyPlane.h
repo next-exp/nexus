@@ -1,16 +1,13 @@
-// ----------------------------------------------------------------------------
-///  \file
-///  \brief
-///
-///  \author   <miquel.nebot@ific.uv.es>
-///  \date     13 Sept 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration
-// ----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// nexus | NextNewEnergyPlane.h
+//
+// Energy plane of the NEXT-WHITE detector.
+//
+// The NEXT Collaboration
+// -----------------------------------------------------------------------------
 
-#ifndef _NEXTNEW_ENERGY_PLANE___
-#define _NEXTNEW_ENERGY_PLANE___
+#ifndef NEXTNEW_ENERGY_PLANE
+#define NEXTNEW_ENERGY_PLANE
 
 #include <vector>
 #include <G4Navigator.hh>

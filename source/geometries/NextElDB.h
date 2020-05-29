@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
 ///  \file   NextElDB.h
-///  \brief  
+///  \brief
 ///
 ///  \author  <justo.martin-albo@ific.uv.es>, <jmunoz@ific.uv.es>
 ///  \date    2 Nov 2010
@@ -9,13 +9,21 @@
 ///  Copyright (c) 2010 NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef _NEXT_EL_DB___
-#define _NEXT_EL_DB___
+#ifndef NEXT_EL_DB
+#define NEXT_EL_DB
 
 #include "SiPM11.h"
 #include "BaseGeometry.h"
 #include <vector>
-
+// -----------------------------------------------------------------------------
+// nexus | NextElDB.h
+// -----------------------------------------------------------------------------
+// nexus | NextElDB.cc
+//
+// Geometry of the NEXT-DEMO SiPM board.
+//
+// The NEXT Collaboration
+// -----------------------------------------------------------------------------
 
 namespace nexus {
 
@@ -31,7 +39,7 @@ namespace nexus {
     G4ThreeVector GetDimensions();
 
     std::vector<std::pair<int, G4ThreeVector> > GetPositions();
-    
+
     /// Builder
     void Construct();
 
@@ -44,7 +52,7 @@ namespace nexus {
     SiPM11* siPM_;
 
   };
-  
+
 } // end namespace nexus
 
 #endif

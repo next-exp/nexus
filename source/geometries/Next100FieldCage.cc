@@ -1,11 +1,10 @@
-
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | Next100FieldCage.cc
 //
-//  Authors: <paola.ferrario@dipc.org>, <jmunoz@ific.uv.es>
-//  Created: 1 Mar 2012
+// Field cage geometry of the NEXT-100 detector. It include the elements in
+// the drift and the buffer part of the detector.
 //
-//  Copyright (c) 2012-2020 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "Next100FieldCage.h"
@@ -241,7 +240,7 @@ namespace nexus {
 
     /// Define a drift field for this volume
     UniformElectricDriftField* field = new UniformElectricDriftField();
-    G4double globalactive_zpos_ = active_zpos_ - GetELzCoord();
+    G4double global_active_zpos = active_zpos_ - GetELzCoord();
     field->SetCathodePosition(global_active_zpos + active_length_/2.);
     field->SetAnodePosition(global_active_zpos - active_length_/2.);
     field->SetDriftVelocity(1. * mm/microsecond);
@@ -387,7 +386,7 @@ void Next100FieldCage::BuildBuffer()
     if (elfield_) {
       /// Define EL electric field
       UniformElectricDriftField* el_field = new UniformElectricDriftField();
-      G4double globalel_gap_zpos_ = el_gap_zpos_ - GetELzCoord();
+      G4double global_el_gap_zpos = el_gap_zpos_ - GetELzCoord();
       el_field->SetCathodePosition(global_el_gap_zpos + el_gap_length_/2.);
       el_field->SetAnodePosition  (global_el_gap_zpos - el_gap_length_/2.);
       el_field->SetDriftVelocity(2.5 * mm/microsecond);

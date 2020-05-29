@@ -1,16 +1,13 @@
-// ----------------------------------------------------------------------------
-///  \file   NextNewTrackingPlane.h
-///  \brief  
-///
-///  \author   <miquel.nebot@ific.uv.es>
-///  \date     17 Sept 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration
+// -----------------------------------------------------------------------------
+// nexus | NextNewTrackingPlane.h
+//
+// TrackingPlane of the NEXT-WHITE detector.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef _NEXTNEW_TRACKING_PLANE___
-#define _NEXTNEW_TRACKING_PLANE___
+#ifndef NEXTNEW_TRACKING_PLANE
+#define NEXTNEW_TRACKING_PLANE
 
 #include <G4LogicalVolume.hh>
 #include <G4Navigator.hh>
@@ -81,10 +78,10 @@ namespace nexus {
     CylinderPointSampler* support_flange_gen_;
     CylinderPointSampler* support_buffer_gen_;
     BoxPointSampler* plug_gen_;
-    
+
     G4double body_perc_;
     G4double flange_perc_;
-    
+
     // Geometry Navigator
     G4Navigator* geom_navigator_;
 
@@ -98,5 +95,3 @@ namespace nexus {
 
 } //end namespace nexus
 #endif
-
-

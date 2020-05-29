@@ -1,17 +1,13 @@
-// ----------------------------------------------------------------------------
-///  \file
-///  \brief
-///
-///  \author   <miquel.nebot@ific.uv.es>, <jmunoz@ific.uv.es>,
-/// <justo.martin-albo@ific.uv.es>, <paola.ferrario@ific.uv.es>
-///  \date     9 Sept 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration
+// -----------------------------------------------------------------------------
+// nexus | NextNewVessel.h
+//
+// Vessel of the NEXT-WHITE detector.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef _NEXTNEW_VESSEL___
-#define _NEXTNEW_VESSEL___
+#ifndef NEXTNEW_VESSEL
+#define NEXTNEW_VESSEL
 
 #include "BaseGeometry.h"
 #include "CylinderPointSampler.h"

@@ -1,16 +1,13 @@
 // ----------------------------------------------------------------------------
-///  \file
-///  \brief
-///
-///  \author   <jmunoz@ific.uv.es>
-///  \date     25 Apr 2012
-///  \version  $Id$
-///
-///  Copyright (c) 2012 NEXT Collaboration
+// nexus | Next100EnergyPlane.h
+//
+// Energy plane geometry of the NEXT-100 detector.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef _NEXT100_ENERGY_PLANE___
-#define _NEXT100_ENERGY_PLANE___
+#ifndef NEXT100_ENERGY_PLANE
+#define NEXT100_ENERGY_PLANE
 
 #include <vector>
 #include <G4Navigator.hh>

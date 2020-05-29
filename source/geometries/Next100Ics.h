@@ -1,16 +1,13 @@
 // ----------------------------------------------------------------------------
-///  \file   
-///  \brief  
-///
-///  \author   <justo.martin-albo@ific.uv.es>, <jmunoz@ific.uv.es>
-///  \date     21 Nov 2011
-///  \version  $Id$
-///
-///  Copyright (c) 2011 NEXT Collaboration
+// nexus | Next100Ics.h
+//
+// Inner copper shielding of the NEXT-100 detector.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef _NEXT100_ICS___
-#define _NEXT100_ICS___
+#ifndef NEXT100_ICS
+#define NEXT100_ICS
 
 #include "BaseGeometry.h"
 #include "CylinderPointSampler.h"

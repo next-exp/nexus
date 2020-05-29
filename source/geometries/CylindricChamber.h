@@ -1,12 +1,9 @@
 // ----------------------------------------------------------------------------
-///  \file 
-///  \brief
-///
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     29 August 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// nexus | CylindricChamber.h
+//
+// General-purpose cylindric chamber.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef CYLINDRIC_CHAMBER_H
@@ -34,7 +31,7 @@ namespace nexus {
 
   private:
     /// Messenger for the definition of control commands
-    G4GenericMessenger* msg_; 
+    G4GenericMessenger* msg_;
   };
 
 } // end namespace nexus

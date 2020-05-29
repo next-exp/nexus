@@ -1,16 +1,13 @@
 // ----------------------------------------------------------------------------
-///  \file   XeSphere.h
-///  \brief  A simple sphere filled with Xe.
-///
-///  \author   Javier Mu?oz Vidal <jmunoz@ific.uv.es>    
-///  \date     27 Nov 2009
-///  \version  $Id$
-///
-///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
+// nexus | XeSphere.h
+//
+// Sphere filled with xenon.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef _XE_SPHERE___
-#define _XE_SPHERE___
+#ifndef XE_SPHERE
+#define XE_SPHERE
 
 #include "BaseGeometry.h"
 
@@ -20,9 +17,9 @@ namespace nexus { class SpherePointSampler; }
 
 
 namespace nexus {
-  
+
   /// Spherical chamber filled with xenon (liquid or gas)
-  
+
   class XeSphere: public BaseGeometry
   {
   public:
@@ -45,7 +42,7 @@ namespace nexus {
     SpherePointSampler* sphere_vertex_gen_;
 
     /// Messenger for the definition of control commands
-    G4GenericMessenger* msg_; 
+    G4GenericMessenger* msg_;
   };
 
 } // end namespace nexus

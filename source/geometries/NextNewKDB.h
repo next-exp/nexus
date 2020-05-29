@@ -1,13 +1,11 @@
-// ----------------------------------------------------------------------------
-///  \file   NextNewKDB.h
-///  \brief  Geometry of the Kapton Dice Boards used in the NEW detector.
-///
-///  \author  <miquel.nebot@ific.uv.es>
-///  \date    18 Sept 2013
-///  \version $Id$
+// -----------------------------------------------------------------------------
+// nexus | NextNewKDB.h
 //
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
-// ----------------------------------------------------------------------------
+// Dice board of the NEXT-WHITE detector. It consists of an 8x8 array of
+// SensL SiPMs on a kapton board.
+//
+// The NEXT Collaboration
+// -----------------------------------------------------------------------------
 
 #ifndef NEXT_NEW_KDB_H
 #define NEXT_NEW_KDB_H
@@ -49,10 +47,10 @@ namespace nexus {
 
     // Neighbour gas logical volume
     G4LogicalVolume* mother_logic_;
- 
+
     // Visibility of the shielding
     G4bool visibility_;
-    
+
     // Messenger for the definition of control commands
     G4GenericMessenger* msg_;
 

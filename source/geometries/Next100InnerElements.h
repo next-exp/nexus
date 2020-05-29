@@ -1,12 +1,10 @@
 // ----------------------------------------------------------------------------
-///  \file   Next100InnerElements.h
-///  \brief  Geometry of the field cage and sensor planes of NEXT-100.
-///
-///  \author   <jmunoz@ific.uv.es>
-///  \date     2 Mar 2012
-///  \version  $Id$
-///
-///  Copyright (c) 2012-2015 NEXT Collaboration
+// nexus | Next100InnerElements.h
+//
+// Inner elements of the NEXT-100 detector. They include the field cage,
+// the energy and the tracking plane.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef NEXT100_INNER_ELEMENTS_H
@@ -27,10 +25,6 @@ namespace nexus {
   class Next100FieldCage;
   class Next100EnergyPlane;
   class Next100TrackingPlane;
-
-
-  /// This is a geometry placer that encloses the energy and tracking planes and
-  /// the field cage, including all internal elements such as active and buffer volumes.
 
   class Next100InnerElements : public BaseGeometry
   {

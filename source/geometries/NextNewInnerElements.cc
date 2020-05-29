@@ -1,11 +1,11 @@
-// ----------------------------------------------------------------------------
-//  $Id$
+// -----------------------------------------------------------------------------
+// nexus | NextNewInnerElements.cc
 //
-//  Authors: <miquel.nebot@ific.uv.es>
-//  Created: 18 Sept 2013
+// Inner elements of the NEXT-WHITE detector. They include the field cage,
+// the energy plane and the tracking plane.
 //
-//  Copyright (c) 2013 NEXT Collaboration
-// ----------------------------------------------------------------------------
+// The NEXT Collaboration
+// -----------------------------------------------------------------------------
 
 #include "NextNewInnerElements.h"
 #include "NextNewEnergyPlane.h"

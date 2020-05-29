@@ -1,8 +1,12 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | ExtraVessel.cc
 //
-//  Copyright (c) 2018 NEXT Collaboration. All rights reserved.
-// ---------------------------------------------------------------------------- 
+// Volume used to simulate radioactive background from materials such as
+// connectors, feedthroughs and adapter boards, placed outside the vessel,
+// behind the tracking plane.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #include "ExtraVessel.h"
 #include "MaterialsList.h"
@@ -32,9 +36,9 @@
 
 
 namespace nexus {
-  
+
   using namespace CLHEP;
-  
+
   ExtraVessel::ExtraVessel():
     BaseGeometry(),
     // Dimensions
@@ -42,32 +46,34 @@ namespace nexus {
     thickness_ (1. * mm),
     visibility_(1)
   {
-    msg_ = new G4GenericMessenger(this, "/Geometry/ExtraVessel/", "Control commands of ExtraVessel geometry.");
-    msg_->DeclareProperty("visibility", visibility_, "visibility of materials placed outside the vessel, behind the tracking plane");
+    msg_ = new G4GenericMessenger(this, "/Geometry/ExtraVessel/",
+                                  "Control commands of ExtraVessel geometry.");
+    msg_->DeclareProperty("visibility", visibility_,
+                          "visibility of ExtraVessel geometry");
   }
 
-  
+
    ExtraVessel::~ExtraVessel()
   {
     delete generic_gen_;
   }
 
-  
+
   void ExtraVessel::Construct()
   {
     // GENERIC VOLUME //////////////////////////////////////////////////////
 
-    G4Tubs* generic_solid = 
-      new G4Tubs("EXTRA_VESSEL", 0., diameter_/2., thickness_/2., 
+    G4Tubs* generic_solid =
+      new G4Tubs("EXTRA_VESSEL", 0., diameter_/2., thickness_/2.,
         0., twopi);
 
     // We model the material with a generic material of the density of FR4.
     // Feedthrough, adapter boards and connectors are made of FR4.
     // The O-rings are made of metal (some of them) and nitrile or viton.
-    
+
     G4Material* mat = MaterialsList::FR4();
 
-    G4LogicalVolume* generic_logic = 
+    G4LogicalVolume* generic_logic =
       new G4LogicalVolume(generic_solid, mat, "EXTRA_VESSEL");
     this->SetLogicalVolume(generic_logic);
 
@@ -76,7 +82,7 @@ namespace nexus {
     if (visibility_) {
       G4VisAttributes generic_col = nexus::Yellow();
       generic_col.SetForceSolid(true);
-      generic_logic->SetVisAttributes(generic_col);    
+      generic_logic->SetVisAttributes(generic_col);
     } else {
       generic_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
@@ -86,7 +92,7 @@ namespace nexus {
 
     generic_gen_ = new CylinderPointSampler(0, thickness_, diameter_/2., 0.,
 					       G4ThreeVector (0., 0., 0.));
-  }  
+  }
 
 
   G4ThreeVector ExtraVessel::GenerateVertex(const G4String& region) const
@@ -96,8 +102,8 @@ namespace nexus {
     if (region == "EXTRA_VESSEL") {
         vertex = generic_gen_->GenerateVertex("BODY_VOL");
     }
-    
+
     return vertex;
   }
-  
+
 } // end namespace nexus

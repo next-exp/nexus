@@ -1,11 +1,11 @@
-// ----------------------------------------------------------------------------
-//  $Id$
+// -----------------------------------------------------------------------------
+// nexus | NextNewRnTube.cc
 //
-//  Authors: <miquel.nebot@ific.uv.es>
-//  Created: 4 Dic 2013
-//  
-//  Copyright (c) 2013 NEXT Collaboration
-// ---------------------------------------------------------------------------- 
+// Tube around the NEXT-WHITE vessel used to shoot backgrounds coming
+// from the air, mainly radon in the air attached to the vessel walls.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #include "NextNewRnTube.h"
 #include <G4GenericMessenger.hh>
@@ -32,13 +32,13 @@ namespace nexus {
     inner_diam_ (970. *mm),
     length_ (1800. *mm),
     thickness_ (1. *mm)
-    
+
   {
    /// Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/NextNew/", "Control commands of geometry NextNew.");
-    msg_->DeclareProperty("RnTube_vis", visibility_, "Radon Tube Visibility");  
+    msg_->DeclareProperty("RnTube_vis", visibility_, "Radon Tube Visibility");
   }
-   
+
   void NextNewRnTube::SetLogicalVolume(G4LogicalVolume* mother_logic)
   {
     mother_logic_ = mother_logic;
@@ -61,7 +61,7 @@ namespace nexus {
     tube_logic->SetUserLimits(new G4UserLimits( 1E8*m, 1E8*m,1E12 *s,100.*keV,0.));
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), tube_logic, "RN_TUBE", mother_logic_, false, 0,false);
-   
+
     // SETTING VISIBILITIES   //////////
     if (visibility_) {
       G4VisAttributes steel_col(G4Colour(.88, .87, .86));
@@ -74,7 +74,7 @@ namespace nexus {
 
     // VERTEX GENERATORS   //////////
     tube_gen_ = new CylinderPointSampler(inner_diam_/2.,length_,thickness_,thickness_, G4ThreeVector(0.,0.,0.), 0);
-   		 
+
     // Calculating some probs
     G4double tube_vol = tube_solid->GetCubicVolume();
     G4double cylinder_vol=   length_*pi*(inner_diam_/2.*inner_diam_/2.);
@@ -85,7 +85,7 @@ namespace nexus {
   {
     delete tube_gen_;
   }
-  
+
   G4ThreeVector NextNewRnTube::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);
@@ -94,7 +94,7 @@ namespace nexus {
     }
     else {
       G4Exception("[NextNewRnTube]", "GenerateVertex()", FatalException,
-		  "Unknown vertex generation region!");     
+		  "Unknown vertex generation region!");
     }
     return vertex;
   }

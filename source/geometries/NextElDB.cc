@@ -1,11 +1,10 @@
-// ----------------------------------------------------------------------------
-//  $Id: NextElDB.cc 3298 2010-11-23 11:49:52Z jmalbos $
+// -----------------------------------------------------------------------------
+// nexus | NextElDB.cc
 //
-//  Author:  <justo.martin-albo@ific.uv.es>, <jmunoz@ific.uv.es>
-//  Created: 2 Nov 2010
-//  
-//  Copyright (c) 2010 NEXT Collaboration
-// ---------------------------------------------------------------------------- 
+// Geometry of the NEXT-DEMO SiPM board.
+//
+// The NEXT Collaboration
+// -----------------------------------------------------------------------------
 
 #include "NextElDB.h"
 
@@ -60,31 +59,31 @@ namespace nexus {
     const G4double board_thickn = 5. * mm;
     // const G4double board_side_reduction = 1. * mm;
     const G4double board_side_reduction = .5 * mm;
-    
-    const G4double dbo_x = columns_ * sipm_pitch - 2. * board_side_reduction ;  
+
+    const G4double dbo_x = columns_ * sipm_pitch - 2. * board_side_reduction ;
     const G4double dbo_y =    rows_ * sipm_pitch - 2. * board_side_reduction ;
     const G4double dbo_z = board_thickn;
-    
+
     dimensions_.setX(dbo_x);
     dimensions_.setY(dbo_y);
     dimensions_.setZ(dbo_z);
 
     G4Box* board_solid = new G4Box("DICE_BOARD", dbo_x/2., dbo_y/2., dbo_z/2.);
-    
+
     G4Material* teflon =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
-    
-    G4LogicalVolume* board_logic = 
+
+    G4LogicalVolume* board_logic =
       new G4LogicalVolume(board_solid, teflon, "DICE_BOARD");
 
     this->SetLogicalVolume(board_logic);
 
-    
+
     // WLS COATING ///////////////////////////////////////////////////
-    
-    G4Box* coating_solid = 
+
+    G4Box* coating_solid =
       new G4Box("DB_WLS_COATING", dbo_x/2., dbo_y/2., coating_thickn/2.);
-    
+
     G4Material* TPB = MaterialsList::TPB();
     TPB->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
 
@@ -95,8 +94,8 @@ namespace nexus {
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,pos_z), coating_logic,
 		      "DB_WLS_COATING", board_logic, false, 0, false);
-    
-    
+
+
     // SILICON PMs ///////////////////////////////////////////////////
     siPM_->Construct();
     G4LogicalVolume* sipm_logic = siPM_->GetLogicalVolume();
@@ -104,7 +103,7 @@ namespace nexus {
     pos_z = -dbo_z/2 + coating_thickn + (siPM_->GetDimensions().z())/2.;
 
     G4double offset = sipm_pitch/2. - board_side_reduction;
-    
+
     G4int sipm_no = 0;
 
     for (G4int i=0; i<rows_; i++) {
@@ -151,5 +150,5 @@ namespace nexus {
   {
     return positions_;
   }
-  
+
 } // end namespace nexus

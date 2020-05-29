@@ -1,11 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id: MagBox.cc  $
+// nexus | MagBox.cc
 //
-//  Author:  <jmunoz@ific.uv.es>   
-//  Created: January 2014
-//  
-//  Copyright (c) 2013 NEXT Collaboration
-// ---------------------------------------------------------------------------- 
+// Detector with magnetic field.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #include "MagBox.h"
 #include "MaterialsList.h"
@@ -37,25 +36,30 @@ namespace nexus {
 
   {
     // Messenger
-    msg_ = new G4GenericMessenger(this, "/Geometry/MagBox/", "Control commands of geometry MagBox.");
+    msg_ =
+      new G4GenericMessenger(this, "/Geometry/MagBox/",
+                             "Control commands of geometry MagBox.");
 
     // Active gas name
-    // G4GenericMessenger::Command& gas_cmd = 
+    // G4GenericMessenger::Command& gas_cmd =
     msg_->DeclareProperty("gas_name", gas_name_, "Gas Name");
     //msg_->DeclareProperty("gas_name", gas_name_, "Active Gas Name");
-    
+
     // Pressure
-    G4GenericMessenger::Command& pressure_cmd = msg_->DeclareProperty("pressure", pressure_, "Gas Pressure");
+    G4GenericMessenger::Command& pressure_cmd =
+      msg_->DeclareProperty("pressure", pressure_, "Gas Pressure");
     pressure_cmd.SetUnitCategory("Pressure");
 
     // Magnetic Field Intensity
-    G4GenericMessenger::Command& mag_cmd = msg_->DeclareProperty("mag_intensity", mag_intensity_,
-								 "Magnetic Field Intensity"); 
+    G4GenericMessenger::Command& mag_cmd =
+      msg_->DeclareProperty("mag_intensity", mag_intensity_,
+                            "Magnetic Field Intensity");
     mag_cmd.SetUnitCategory("Magnetic flux density");
 
     // Maximum Step Size
-    G4GenericMessenger::Command& step_cmd = msg_->DeclareProperty("max_step_size", max_step_size_, 
-								  "Maximum Step Size");
+    G4GenericMessenger::Command& step_cmd =
+      msg_->DeclareProperty("max_step_size", max_step_size_,
+                            "Maximum Step Size");
     step_cmd.SetUnitCategory("Length");
     step_cmd.SetParameterName("max_step_size", false);
     step_cmd.SetRange("max_step_size>0.");
@@ -63,7 +67,7 @@ namespace nexus {
 
 
   MagBox::~MagBox()
-  {    
+  {
     delete active_gen_;
   }
 
@@ -73,14 +77,16 @@ namespace nexus {
     // LAB. This is just a volume of air surrounding the detector
     G4double lab_size = detector_size_ + 1.*cm;
     G4Box* lab_solid = new G4Box("LAB", lab_size/2., lab_size/2., lab_size/2.);
-    
-    G4LogicalVolume* lab_logic = new G4LogicalVolume(lab_solid,
-						     G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
+
+    G4LogicalVolume* lab_logic =
+      new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
     lab_logic->SetVisAttributes(G4VisAttributes::Invisible);
     this->SetLogicalVolume(lab_logic);
 
     // ACTIVE
-    G4Box* active_solid = new G4Box("ACTIVE", detector_size_/2., detector_size_/2., detector_size_/2.);
+    G4Box* active_solid =
+      new G4Box("ACTIVE", detector_size_/2., detector_size_/2.,
+                detector_size_/2.);
 
     // Define the gas
     G4NistManager* man = G4NistManager::Instance();
@@ -92,7 +98,7 @@ namespace nexus {
     else if (gas_name_ == "Hydrogen") {
       std::cout << "*** Hydrogen Pressure (atm): " << pressure_/bar << std::endl;
       gas_ = man->FindOrBuildMaterial("G4_H");
-    }	
+    }
     else if (gas_name_ == "SeF6") {
       std::cout << "*** Selenium HexaFluoride (atm): " << pressure_/bar << std::endl;
       gas_ = MaterialsList::SeF6(pressure_, 303.*kelvin);
@@ -103,12 +109,13 @@ namespace nexus {
     }
 
 
-    G4LogicalVolume* active_logic = new G4LogicalVolume(active_solid, gas_, "ACTIVE");
+    G4LogicalVolume* active_logic =
+      new G4LogicalVolume(active_solid, gas_, "ACTIVE");
     active_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), active_logic,
 		      "ACTIVE", lab_logic, false, 0, false);
-    
+
     // Set the ACTIVE volume as an ionization sensitive detector
     IonizationSD* ionisd = new IonizationSD("/MAGBOX/ACTIVE");
     active_logic->SetSensitiveDetector(ionisd);
@@ -119,21 +126,25 @@ namespace nexus {
     active_logic->SetUserLimits(new G4UserLimits(max_step_size_));
 
     // Magnetic Field
-    std::cout << "*** Magnetic field intensity (tesla): " << mag_intensity_/tesla << std::endl;
-    G4UniformMagField* mag_field = new G4UniformMagField(G4ThreeVector(0., 0., mag_intensity_));
-    G4FieldManager* field_mgr = G4TransportationManager::GetTransportationManager()->GetFieldManager();
+    std::cout << "*** Magnetic field intensity (tesla): "
+              << mag_intensity_/tesla << std::endl;
+    G4UniformMagField* mag_field =
+      new G4UniformMagField(G4ThreeVector(0., 0., mag_intensity_));
+    G4FieldManager* field_mgr =
+      G4TransportationManager::GetTransportationManager()->GetFieldManager();
     field_mgr->SetDetectorField(mag_field);
     field_mgr->CreateChordFinder(mag_field);
     active_logic->SetFieldManager(field_mgr, true);
 
 
     // Vertex Generator
-    active_gen_ = new BoxPointSampler(detector_size_, detector_size_, detector_size_, 0.,
-				      G4ThreeVector(0.,0.,0.) ,0);
+    active_gen_ =
+      new BoxPointSampler(detector_size_, detector_size_, detector_size_, 0.,
+                          G4ThreeVector(0.,0.,0.) ,0);
 
   }
 
-    
+
   G4ThreeVector MagBox::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0.,0.,0.);
@@ -142,9 +153,9 @@ namespace nexus {
     if (region == "ACTIVE") {
       vertex = active_gen_->GenerateVertex(region);
     }
-   
+
     return vertex;
   }
-  
-  
+
+
 } //end namespace nexus

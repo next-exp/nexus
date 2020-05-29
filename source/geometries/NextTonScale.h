@@ -1,9 +1,10 @@
-// -----------------------------------------------------------------------------
-// File   : NextTonScale.h
-// Info   : Detector geometry for ton-scale sensitivity studies.
-// Author : Justo Martin-Albo
-// Date   : January 2019
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// nexus | NextTonScale.h
+//
+// Geometry of a possible tonne-scale NEXT detector.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #ifndef NEXT_TON_SCALE_H
 #define NEXT_TON_SCALE_H

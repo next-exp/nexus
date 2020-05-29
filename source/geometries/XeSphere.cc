@@ -1,11 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | XeSphere.cc
 //
-//  Author:  Javier Muñoz Vidal <jmunoz@ific.uv.es>    
-//  Created: 27 Nov 2009
-//  
-//  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
-// ---------------------------------------------------------------------------- 
+// Sphere filled with xenon.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #include "XeSphere.h"
 
@@ -28,16 +27,17 @@
 #include <CLHEP/Units/SystemOfUnits.h>
 
 namespace nexus {
-  
+
   using namespace CLHEP;
-  
-  XeSphere::XeSphere(): 
-    BaseGeometry(), liquid_(true), pressure_(STP_Pressure), radius_(1.*m), sphere_vertex_gen_(0) 
+
+  XeSphere::XeSphere():
+    BaseGeometry(), liquid_(true), pressure_(STP_Pressure),
+    radius_(1.*m), sphere_vertex_gen_(0)
   {
     msg_ = new G4GenericMessenger(this, "/Geometry/XeSphere/",
       "Control commands of geometry XeSphere.");
 
-    msg_->DeclareProperty("LXe", liquid_, 
+    msg_->DeclareProperty("LXe", liquid_,
       "Build the sphere with liquid xenon.");
 
     G4GenericMessenger::Command& pressure_cmd =
@@ -56,17 +56,17 @@ namespace nexus {
     // Create a vertex generator for a sphere
     sphere_vertex_gen_ = new SpherePointSampler(radius_, 0.);
   }
-  
-  
-  
+
+
+
   XeSphere::~XeSphere()
   {
     delete sphere_vertex_gen_;
     delete msg_;
   }
-    
-  
-  
+
+
+
   void XeSphere::Construct()
   {
     G4String name = "XE_SPHERE";
@@ -74,7 +74,7 @@ namespace nexus {
     // Define solid volume as a sphere
     G4Orb* sphere_solid = new G4Orb(name, radius_);
 
-    // Define the material (LXe or GXe) for the sphere. 
+    // Define the material (LXe or GXe) for the sphere.
     // We use for this the NIST manager or the nexus materials list.
     G4Material* xenon = 0;
     if (liquid_)
@@ -82,13 +82,13 @@ namespace nexus {
     else
       xenon = MaterialsList::GXe(pressure_);
 
-    // Define the logical volume of the sphere using the material 
+    // Define the logical volume of the sphere using the material
     // and the solid volume defined above
-    G4LogicalVolume* sphere_logic = 
+    G4LogicalVolume* sphere_logic =
     new G4LogicalVolume(sphere_solid, xenon, name);
     BaseGeometry::SetLogicalVolume(sphere_logic);
 
-    // Set the logical volume of the sphere as an ionization 
+    // Set the logical volume of the sphere as an ionization
     // sensitive detector, i.e. position, time and energy deposition
     // will be stored for each step of any charged particle crossing
     // the volume.
@@ -96,13 +96,13 @@ namespace nexus {
     G4SDManager::GetSDMpointer()->AddNewDetector(ionizsd);
     sphere_logic->SetSensitiveDetector(ionizsd);
   }
-  
-  
+
+
 
   G4ThreeVector XeSphere::GenerateVertex(const G4String& region) const
   {
     return sphere_vertex_gen_->GenerateVertex(region);
   }
-  
+
 
 } // end namespace nexus

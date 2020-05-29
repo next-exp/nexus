@@ -1,11 +1,10 @@
-// ----------------------------------------------------------------------------
-//  $Id$
+// -----------------------------------------------------------------------------
+// nexus | NextNewTrackingPlane.cc
 //
-//  Authors: <miquel.nebot@ific.uv.es>
-//  Created: 17 Sept 2013
-//  
-//  Copyright (c) 2013 NEXT Collaboration
-// ---------------------------------------------------------------------------- 
+// TrackingPlane of the NEXT-WHITE detector.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #include "NextNewTrackingPlane.h"
 #include "MaterialsList.h"
@@ -33,7 +32,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  NextNewTrackingPlane::NextNewTrackingPlane(): 
+  NextNewTrackingPlane::NextNewTrackingPlane():
     // Dimensions
     support_plate_diam_ (63.0 * cm), //must be checked
     support_plate_thickness_ (12.0 * cm),
@@ -56,12 +55,12 @@ namespace nexus {
     SiPM_rows_ (8),
     SiPM_columns_ (8),
 
-    // Number of Dice Boards, DB columns   
+    // Number of Dice Boards, DB columns
     DB_columns_ (6),
     num_DBs_ (28),
     dice_side_ (79.*mm),
     dice_gap_ (1. *mm),// distance between dices
-   
+
     visibility_ (1)
   {
     /// Initializing the geometry navigator (used in vertex generation)
@@ -72,20 +71,20 @@ namespace nexus {
 
     // The Dice Board
     kapton_dice_board_ = new NextNewKDB(SiPM_rows_, SiPM_columns_);
-      
+
   }
 
   void NextNewTrackingPlane::SetLogicalVolume(G4LogicalVolume* mother_logic)
   {
     mother_logic_ = mother_logic;
   }
-  
+
   void NextNewTrackingPlane::Construct()
   {
     GenerateDBPositions();
-          
+
     ///// SUPPORT PLATE /////
-    G4Tubs* support_plate_nh_solid = 
+    G4Tubs* support_plate_nh_solid =
       new G4Tubs("SUPPORT_PLATE_NH", 0., support_plate_diam_/2., support_plate_thickness_/2., 0., twopi);
     //Making front buffer
     G4Tubs* support_plate_front_buffer_solid =
@@ -96,14 +95,14 @@ namespace nexus {
 			     G4ThreeVector(0.,0.,-support_plate_thickness_/2. + support_plate_front_buffer_thickness_/2.-.5*mm));
 
     //Making tread
-    G4Tubs* support_plate_tread_solid = 
+    G4Tubs* support_plate_tread_solid =
       new G4Tubs("SUPPORT_PLATE_TREAD",support_plate_tread_diam_/2.,support_plate_diam_/2.+1.*mm,
 		 (support_plate_tread_thickness_+1.*mm)/2.,0.,twopi);
     support_plate_solid = new G4SubtractionSolid("SUPPORT_PLATE",support_plate_solid,support_plate_tread_solid,0,
 						 G4ThreeVector(0.,0.,-support_plate_thickness_/2. + support_plate_tread_thickness_/2.-.5*mm));
 
-    // Making DB cables holes through  
-    G4Box* support_plate_cable_hole_solid = 
+    // Making DB cables holes through
+    G4Box* support_plate_cable_hole_solid =
       new G4Box("SUPPORT_PLATE_HOLE", cable_hole_width_/2., cable_hole_high_/2., support_plate_thickness_/2. + 1.*mm);
     G4ThreeVector pos;
     for (unsigned int i=0; i<DB_positions_.size(); i++) {
@@ -111,17 +110,17 @@ namespace nexus {
       support_plate_solid = new G4SubtractionSolid("SUPPORT_PLATE", support_plate_solid,
      						   support_plate_cable_hole_solid, 0, pos);
     }
- 
+
     G4LogicalVolume* support_plate_logic = new G4LogicalVolume(support_plate_solid,
 							       G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
-							       "SUPPORT_PLATE"); 
+							       "SUPPORT_PLATE");
 
     ///// Support Plate placement
     G4double support_plate_z_pos =  tracking_plane_z_pos_ + support_plate_thickness_/2.;
     new G4PVPlacement(0, G4ThreeVector(0.,0.,support_plate_z_pos), support_plate_logic,
-		      "SUPPORT_PLATE", mother_logic_, false, 0, false);  
+		      "SUPPORT_PLATE", mother_logic_, false, 0, false);
 
-    /////  DICE BOARDS  ///// 
+    /////  DICE BOARDS  /////
     kapton_dice_board_->SetMotherLogicalVolume(mother_logic_);
     kapton_dice_board_->Construct();
     kdb_dimensions_ = kapton_dice_board_->GetDimensions();
@@ -130,7 +129,7 @@ namespace nexus {
     ////Dice Boards placement
     //dice_board_z_pos_ = support_plate_z_pos -support_plate_thickness_/2. -z_kdb_displ_ +db_thickness/2.;
     dice_board_z_pos_ = tracking_plane_z_pos_ + db_thickness/2. + 3. * mm - 1.35 * mm;
-    
+
     G4ThreeVector post;
     for (int i=0; i<num_DBs_; i++) {
       post = DB_positions_[i];
@@ -140,11 +139,11 @@ namespace nexus {
     }
 
     // PrintAbsoluteSiPMPos(G4ThreeVector(0., 0., 275.), pi);
-    
+
     //PIGGY TAIL PLUG/////////////////////////////////////////////////////
     G4Box* plug_solid = new G4Box("DB_CONNECTOR", plug_x_/2., plug_y_/2., plug_z_/2.);
     G4LogicalVolume* plug_logic = new G4LogicalVolume(plug_solid,  MaterialsList::PEEK(), "DB_PLUG");
-    //G4PVPlacement * plug_physi;  
+    //G4PVPlacement * plug_physi;
     G4ThreeVector positn;
     for (int i=0; i<num_DBs_; i++) {
       positn = DB_positions_[i];
@@ -154,16 +153,16 @@ namespace nexus {
       new G4PVPlacement(0, positn, plug_logic,"DB_PLUG",
 			mother_logic_, false, i+1, false);
     }
-    
-   
-   //// SETTING VISIBILITIES   //////////    
+
+
+   //// SETTING VISIBILITIES   //////////
     if (visibility_) {
       G4VisAttributes light_brown_col = nexus::CopperBrown();
       light_brown_col.SetForceSolid(true);
       support_plate_logic->SetVisAttributes(light_brown_col);
       G4VisAttributes dirty_white_col =nexus::DirtyWhite();
       dirty_white_col.SetForceSolid(true);
-      plug_logic->SetVisAttributes(dirty_white_col);    
+      plug_logic->SetVisAttributes(dirty_white_col);
     }
     else {
       support_plate_logic->SetVisAttributes(G4VisAttributes::Invisible);
@@ -178,7 +177,7 @@ namespace nexus {
                                G4ThreeVector(0., 0., support_plate_z_pos));
     support_flange_gen_  =
       new CylinderPointSampler(support_plate_tread_diam_/2., support_plate_thickness_/2.,
-			                         (support_plate_diam_ - support_plate_tread_diam_)/2., 0., 
+			                         (support_plate_diam_ - support_plate_tread_diam_)/2., 0.,
                                G4ThreeVector(0., 0., support_plate_z_pos+support_plate_thickness_/4.));
     support_buffer_gen_  =
       new CylinderPointSampler(support_plate_front_buffer_diam_/2.,
@@ -191,11 +190,11 @@ namespace nexus {
 			  // G4ThreeVector(0.,0.,dice_board_z_pos_ + support_plate_front_buffer_thickness_ + support_plate_thickness_),0);
 
      // Getting the support  volume over total
-    G4double body_vol = 
+    G4double body_vol =
       (support_plate_thickness_-support_plate_front_buffer_thickness_)*pi*(support_plate_tread_diam_/2.)*(support_plate_tread_diam_/2.);
-    G4double flange_vol = 
+    G4double flange_vol =
       (support_plate_thickness_/2.)*pi*((support_plate_diam_/2.)*(support_plate_diam_/2.)-( support_plate_tread_diam_/2.)*( support_plate_tread_diam_/2.));
-    G4double buffer_vol = 
+    G4double buffer_vol =
       (support_plate_front_buffer_thickness_/2.)*pi*((support_plate_tread_diam_/2.)*(support_plate_tread_diam_/2.)-(support_plate_front_buffer_diam_/2.)*(support_plate_front_buffer_diam_/2.));
      G4double total_vol = body_vol + flange_vol + buffer_vol;
      body_perc_ = body_vol / total_vol;
@@ -241,7 +240,7 @@ namespace nexus {
       else {
        	vertex = support_buffer_gen_->GenerateVertex("BODY_VOL");
       }
-    } 
+    }
 
     // Dice Boards
     else if (region == "DICE_BOARD") {
@@ -249,7 +248,7 @@ namespace nexus {
       G4double rand = num_DBs_ * G4UniformRand();
       G4ThreeVector db_pos = DB_positions_[int(rand)];
       vertex = ini_vertex + db_pos;
-      vertex.setZ(vertex.z() +dice_board_z_pos_);     
+      vertex.setZ(vertex.z() +dice_board_z_pos_);
     }
 
     // PIGGY TAIL PLUG
@@ -265,14 +264,14 @@ namespace nexus {
 
     else {
       G4Exception("[NextNewTrackingPlane]", "GenerateVertex()", FatalException,
-		  "Unknown vertex generation region!");     
+		  "Unknown vertex generation region!");
     }
-    
+
     return vertex;
   }
 
 
-  
+
   void NextNewTrackingPlane::GenerateDBPositions()
   {
     //  std::cout<< "Generating DB positions"<<std::endl;
@@ -308,7 +307,7 @@ namespace nexus {
   void NextNewTrackingPlane::PrintAbsoluteSiPMPos(G4ThreeVector displ, G4double rot_angle)
   {
     // Print the absolute positions of SiPMs in gas, for possible checks
-    const std::vector<std::pair<int, G4ThreeVector> > SiPM_positions = 
+    const std::vector<std::pair<int, G4ThreeVector> > SiPM_positions =
       kapton_dice_board_->GetPositions();
     G4ThreeVector post;
     for (int i=0; i<num_DBs_; i++) {
@@ -324,7 +323,7 @@ namespace nexus {
 	pos_tot.rotate(rot_angle, G4ThreeVector(0., 1., 0.));
 	pos_tot = pos_tot + displ;
 	abs_pos.second = pos_tot;
-		  
+
 	absSiPMpos_.push_back(abs_pos);
       }
     }
@@ -332,7 +331,7 @@ namespace nexus {
     G4cout <<  G4endl;
     for (unsigned int i=0; i<absSiPMpos_.size(); i++) {
       std::pair<int, G4ThreeVector> abs_pos = absSiPMpos_[i];
-      G4cout << "ID number: " << absSiPMpos_[i].first << ", position: " 
+      G4cout << "ID number: " << absSiPMpos_[i].first << ", position: "
 	     << absSiPMpos_[i].second.getX() << ", "
 	     << absSiPMpos_[i].second.getY() << ", "
 	     << absSiPMpos_[i].second.getZ()  << G4endl;
@@ -340,5 +339,5 @@ namespace nexus {
     G4cout <<  G4endl;
     G4cout << "---------------------------------------------------" << G4endl;
   }
-  
+
 }//end namespace nexus

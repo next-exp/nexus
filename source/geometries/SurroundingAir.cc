@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------
+// nexus | SurroundingAir.cc
+//
+// Volume of air to be placed inside the LSC lead castle.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #include "SurroundingAir.h"
 
 #include <G4Box.hh>

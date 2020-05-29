@@ -1,11 +1,11 @@
-// ---------------------------------------------------------------------------
-//  $Id$
-// 
-//  Author:  <miquel.nebot@ific.uv.es>
-//  Created: 18 Sept 2013
+// -----------------------------------------------------------------------------
+// nexus | NextNewKDB.cc
 //
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
-// ---------------------------------------------------------------------------
+// Dice board of the NEXT-WHITE detector. It consists of an 8x8 array of
+// SensL SiPMs on a kapton board.
+//
+// The NEXT Collaboration
+// -----------------------------------------------------------------------------
 
 #include "NextNewKDB.h"
 
@@ -38,7 +38,7 @@ namespace nexus {
   using namespace CLHEP;
 
 
-  NextNewKDB::NextNewKDB(G4int rows, G4int columns): 
+  NextNewKDB::NextNewKDB(G4int rows, G4int columns):
     BaseGeometry (),
     rows_        (rows),
     columns_     (columns),
@@ -58,7 +58,7 @@ namespace nexus {
     delete sipm_;
     delete dice_gen_;
   }
-  
+
 
   void NextNewKDB::SetMotherLogicalVolume(G4LogicalVolume* mother_logic) {
     mother_logic_ = mother_logic;
@@ -68,7 +68,7 @@ namespace nexus {
   void NextNewKDB::Construct()
   {
     sipm_->Construct();
-   
+
     /// DIMENSIONS ///
 
     const G4double sipm_pitch           = 10. * mm;
@@ -76,11 +76,11 @@ namespace nexus {
     const G4double board_side_reduction = 0.5 * mm;
     const G4double offset               = sipm_pitch/2. - board_side_reduction;
 
-    const G4double db_x = columns_ * sipm_pitch - 2. * board_side_reduction ;  
+    const G4double db_x = columns_ * sipm_pitch - 2. * board_side_reduction ;
     const G4double db_y =    rows_ * sipm_pitch - 2. * board_side_reduction ;
     const G4double db_z = board_thickness;
-    
-    //G4cout << "* Kapton Dice board dimensions: "  << db_x << " , "  
+
+    //G4cout << "* Kapton Dice board dimensions: "  << db_x << " , "
     //       << db_y << " , "  << db_z << G4endl;
 
     const G4double mask_x = db_x;
@@ -98,11 +98,11 @@ namespace nexus {
 
     /// KAPTON BOARD ///  This is the volume that contains everything
     G4Box* board_solid = new G4Box("DICE_BOARD", db_case_x/2., db_case_y/2., db_case_z/2.);
- 
+
     G4Material* kapton =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
- 
-    G4LogicalVolume* board_logic = 
+
+    G4LogicalVolume* board_logic =
       new G4LogicalVolume(board_solid, kapton, "DICE_BOARD");
 
     this->SetLogicalVolume(board_logic);
@@ -112,15 +112,15 @@ namespace nexus {
     G4double mask_pos_z = - db_case_z / 2. + mask_z / 2.;
 
     G4Box* mask_solid = new G4Box("DICE_MASK", mask_x/2., mask_y/2., mask_z/2.);
- 
+
     G4Material* teflon =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
 
-    G4LogicalVolume* mask_logic = 
+    G4LogicalVolume* mask_logic =
       new G4LogicalVolume(mask_solid, teflon, "DICE_MASK");
 
     // Adding the optical surface
-    G4OpticalSurface* mask_optSurf = 
+    G4OpticalSurface* mask_optSurf =
       new G4OpticalSurface("DICE_MASK_OPSURF", unified, ground, dielectric_metal);
     mask_optSurf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
     new G4LogicalSkinSurface("DICE_MASK_OPSURF", mask_logic, mask_optSurf);
@@ -135,7 +135,7 @@ namespace nexus {
     G4Tubs* hole_solid =
       new G4Tubs(hole_name, 0., hole_diam/2., hole_length/2., 0, twopi);
 
-    G4LogicalVolume* hole_logic = 
+    G4LogicalVolume* hole_logic =
       new G4LogicalVolume(hole_solid, mother_logic_->GetMaterial(), hole_name);
 
     // Placing the SiPMs inside the hole.
@@ -158,7 +158,7 @@ namespace nexus {
         mypos.first = sipm_no;
         mypos.second = G4ThreeVector(pos_x, pos_y, 0.);
         positions_.push_back(mypos);
-        //G4cout << "  SiPM " << sipm_no << " : (" << pos_x << ", " << pos_y 
+        //G4cout << "  SiPM " << sipm_no << " : (" << pos_x << ", " << pos_y
         //       << ", " << pos_z << " )" << G4endl;
         sipm_no++;
       }
@@ -196,7 +196,7 @@ namespace nexus {
   }
 
 
-  
+
   const std::vector<std::pair<int, G4ThreeVector> >& NextNewKDB::GetPositions()
   {
     return positions_;
@@ -211,7 +211,7 @@ namespace nexus {
       vertex =dice_gen_->GenerateVertex("INSIDE");
     } else {
       G4Exception("[NextNewKDB]", "GenerateVertex()", FatalException,
-                  "Unknown vertex generation region!");     
+                  "Unknown vertex generation region!");
     }
     return vertex;
   }

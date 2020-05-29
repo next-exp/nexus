@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------
+// nexus | CollSupport.h
+//
+// Support for the collimator used with calibration sources at LSC.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #ifndef COLL_SUPPORT_H
 #define COLL_SUPPORT_H
 

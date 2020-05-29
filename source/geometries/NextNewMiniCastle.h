@@ -1,15 +1,13 @@
-// ----------------------------------------------------------------------------
-///  \file   
-///  \brief    Copper castle inside the shielding lead 
-///  \author   <miquel.nebot@ific.uv.es>, <paola.ferrario@dipc.org>
-///  \date     3 Feb 2014
-///  \version  $Id$
-///
-///  Copyright (c) 2014 NEXT Collaboration
-// ----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// nexus | NextNewMiniCastle.h
+//
+// Copper castle placed inside the lead castle at LSC.
+//
+// The NEXT Collaboration
+// -----------------------------------------------------------------------------
 
-#ifndef _NEXTNEW_MINI_CASTLE___
-#define _NEXTNEW_MINI_CASTLE___
+#ifndef NEXTNEW_MINI_CASTLE
+#define NEXTNEW_MINI_CASTLE
 
 #include "BaseGeometry.h"
 #include "BoxPointSampler.h"
@@ -49,7 +47,7 @@ namespace nexus {
     G4LogicalVolume* mother_logic_;
 
     // Dimensions
-    G4double  x_, y_, z_, thickness_, _open_spacez_;
+    G4double  x_, y_, z_, thickness_, open_space_z_;
     G4double steel_thickn_;
 
     // Vertex generators

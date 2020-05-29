@@ -1,16 +1,14 @@
-// ----------------------------------------------------------------------------
-///  \file   
-///  \brief    Tube arround the vessel to shoot backgrounds comming from the Buffer Gas
-///            mainly Radon in the air attached to the vessel walls 
-///  \author   <miquel.nebot@ific.uv.es>,
-///  \date     3 Dic 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration
+// -----------------------------------------------------------------------------
+// nexus | NextNewRnTube.h
+//
+// Tube around the NEXT-WHITE vessel used to shoot backgrounds coming
+// from the air, mainly radon in the air attached to the vessel walls.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef _NEXTNEW_RN_TUBE___
-#define _NEXTNEW_RN_TUBE___
+#ifndef NEXTNEW_RN_TUBE
+#define NEXTNEW_RN_TUBE
 
 #include "BaseGeometry.h"
 #include "CylinderPointSampler.h"
@@ -45,7 +43,7 @@ namespace nexus {
     G4LogicalVolume* mother_logic_;
     // Dimensions
     G4double  inner_diam_, length_, thickness_;
-   
+
     // Visibility of the shielding
     G4bool visibility_;
 
@@ -53,7 +51,7 @@ namespace nexus {
     CylinderPointSampler* tube_gen_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* msg_; 
+    G4GenericMessenger* msg_;
 
   };
 

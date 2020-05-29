@@ -1,16 +1,14 @@
-// ----------------------------------------------------------------------------
-///  \file    NextNewInnerElements
-///  \brief   This class constructs the inner elements of Next-New:
-///           Energy plane, field cage and tracking plane.
-///  \author   <miquel.nebot@ific.uv.es>
-///  \date     18 Sept 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration
-// ----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// nexus | NextNewInnerElements.h
+//
+// Inner elements of the NEXT-WHITE detector. They include the field cage,
+// the energy plane and the tracking plane.
+//
+// The NEXT Collaboration
+// -----------------------------------------------------------------------------
 
-#ifndef _NEXTNEW_INNER_ELEMENTS___
-#define _NEXTNEW_INNER_ELEMENTS___
+#ifndef NEXTNEW_INNER_ELEMENTS
+#define NEXTNEW_INNER_ELEMENTS
 
 #include "BaseGeometry.h"
 #include <G4ThreeVector.hh>

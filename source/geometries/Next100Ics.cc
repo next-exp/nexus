@@ -1,11 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | Next100Ics.cc
 //
-//  Authors: <justo.martin-albo@ific.uv.es>, <jmunoz@ific.uv.es>
-//  Created: 21 Nov 2011
-//  
-//  Copyright (c) 2011 NEXT Collaboration
-// ---------------------------------------------------------------------------- 
+// Inner copper shielding of the NEXT-100 detector.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #include "Next100Ics.h"
 #include "MaterialsList.h"

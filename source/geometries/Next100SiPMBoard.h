@@ -1,11 +1,11 @@
 // -----------------------------------------------------------------------------
-//  nexus | Next100SiPMBoard.h
+// nexus | Next100SiPMBoard.h
 //
-//  Geometry of the NEXT-100 SiPM board, consisting of an 8x8 array of
-//  silicon photomultipliers (1.3x1.3 mm2 of active area) mounted on a Kapton
-//  board covered with a TPB-coated teflon mask.
+// Geometry of the NEXT-100 SiPM board, consisting of an 8x8 array of
+// silicon photomultipliers (1.3x1.3 mm2 of active area) mounted on a Kapton
+// board covered with a TPB-coated teflon mask.
 //
-//  The NEXT Collaboration
+// The NEXT Collaboration
 // -----------------------------------------------------------------------------
 
 #ifndef NEXT100_SIPM_BOARD_H

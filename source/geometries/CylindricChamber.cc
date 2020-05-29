@@ -1,11 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | CylindricChamber.cc
 //
-//  Author:  <justo.martin-albo@ific.uv.es>
-//  Created: 29 August 2013
-//  
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
-// ---------------------------------------------------------------------------- 
+// General-purpose cylindric chamber.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #include "CylindricChamber.h"
 
@@ -27,10 +26,10 @@
 
 
 namespace nexus {
-  
+
   using namespace CLHEP;
 
-  CylindricChamber::CylindricChamber(): 
+  CylindricChamber::CylindricChamber():
     BaseGeometry(), msg_(0)
   {
   }
@@ -40,7 +39,7 @@ namespace nexus {
   CylindricChamber::~CylindricChamber()
   {
     delete msg_;
-  } 
+  }
 
 
 
@@ -52,7 +51,7 @@ namespace nexus {
     const G4double chamber_length = 100. * cm;
     const G4double chamber_thickn =   1. * cm;
 
-    G4Tubs* chamber_solid = 
+    G4Tubs* chamber_solid =
       new G4Tubs("CHAMBER", 0., (chamber_diam/2. + chamber_thickn),
         (chamber_length/2. + chamber_thickn), 0., twopi);
 
@@ -84,7 +83,7 @@ namespace nexus {
     G4Tubs* active_solid =
       new G4Tubs("ACTIVE", 0., active_diam/2., active_length/2., 0, twopi);
 
-    G4LogicalVolume* active_logic = 
+    G4LogicalVolume* active_logic =
       new G4LogicalVolume(active_solid, gxe, "ACTIVE");
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), active_logic, "ACTIVE",
@@ -116,7 +115,7 @@ namespace nexus {
     G4Tubs* elgap_solid =
       new G4Tubs("EL_GAP", 0., elgap_diam/2., elgap_length/2., 0, twopi);
 
-    G4LogicalVolume* elgap_logic = 
+    G4LogicalVolume* elgap_logic =
       new G4LogicalVolume(elgap_solid, gxe, "EL_GAP");
 
     G4double pos_z = active_length/2. + elgap_length/2.;
@@ -146,7 +145,7 @@ namespace nexus {
 
     pos_z = -30. * cm;
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., pos_z), pmt_logic, 
+    new G4PVPlacement(0, G4ThreeVector(0., 0., pos_z), pmt_logic,
       "PMT", gas_logic, false, 0, true);
 
 
@@ -156,7 +155,7 @@ namespace nexus {
     kdb_geom.Construct();
 
     G4LogicalVolume* kdb_logic = kdb_geom.GetLogicalVolume();
-    
+
     pos_z = active_length/2. + elgap_length + 5.0*mm;
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., pos_z), kdb_logic,
@@ -170,6 +169,6 @@ namespace nexus {
   {
     return G4ThreeVector(0.,0.,0.);
   }
-  
+
 
 } // end namespace nexus

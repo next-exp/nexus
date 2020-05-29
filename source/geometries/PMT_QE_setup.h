@@ -1,16 +1,13 @@
 // ----------------------------------------------------------------------------
-///  \file   PMT_QE_setup.h
-///  \brief  A set-up to measure the quantum efficiency of PMTs.
-///
-///  \author   P. Ferrario <paolafer@ific.uv.es>    
-///  \date     14 December 2012
-///  \version  $Id: PMT_QE_setup.h  $
-///
-///  Copyright (c) 2012 NEXT Collaboration
+// nexus | PMT_QE_setup.h
+//
+// Geometry of a set-up to extract the quantum efficiency of a photomultiplier.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef _PMT_QE_SETUP___
-#define _PMT_QE_SETUP___
+#ifndef PMT_QE_SETUP
+#define PMT_QE_SETUP
 
 #include "BaseGeometry.h"
 #include "PmtR7378A.h"
@@ -37,7 +34,7 @@ namespace nexus {
     /// Define the volumes of the geometry
     void Construct();
 
-  private:   
+  private:
     G4GenericMessenger* msg_;
     G4double z_dist_;
     G4double length_;

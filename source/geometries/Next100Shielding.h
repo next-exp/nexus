@@ -1,16 +1,13 @@
 // ----------------------------------------------------------------------------
-///  \file   
-///  \brief  
-///
-///  \author   <justo.martin-albo@ific.uv.es>, <jmunoz@ific.uv.es>
-///  \date     21 Nov 2011
-///  \version  $Id$
-///
-///  Copyright (c) 2011 NEXT Collaboration
+// nexus | Next100Shielding.h
+//
+// Lead castle placed at the LSC.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef _NEXT100_SHIELDING___
-#define _NEXT100_SHIELDING___
+#ifndef NEXT100_SHIELDING
+#define NEXT100_SHIELDING
 
 #include "BaseGeometry.h"
 #include "BoxPointSampler.h"
@@ -44,7 +41,7 @@ namespace nexus {
     /// Retrieve dimensions
     G4ThreeVector GetDimensions() const;
 
-    
+
   private:
 
     // Dimensions
@@ -64,21 +61,21 @@ namespace nexus {
     BoxPointSampler* lat_roof_gen_;
     BoxPointSampler* front_roof_gen_;
     BoxPointSampler* struct_x_gen_;
-    BoxPointSampler* struct_z_gen_; 
+    BoxPointSampler* struct_z_gen_;
     BoxPointSampler* lat_beam_gen_;
     BoxPointSampler* front_beam_gen_;
 
-    G4double perc_roof_vol_; 
+    G4double perc_roof_vol_;
     G4double perc_front_roof_vol_;
     G4double perc_top_struct_vol_;
     G4double perc_struc_x_vol_;
- 
+
 
     // Geometry Navigator
     G4Navigator* geom_navigator_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* msg_; 
+    G4GenericMessenger* msg_;
 
     // Air logical volume
     G4LogicalVolume* air_box_logic_;

@@ -1,16 +1,13 @@
 // ----------------------------------------------------------------------------
-///  \file
-///  \brief
-///
-///  \author   <justo.martin-albo@ific.uv.es>, <jmunoz@ific.uv.es>
-///  \date     21 Nov 2011
-///  \version  $Id$
-///
-///  Copyright (c) 2011 NEXT Collaboration
+// nexus | Next100.h
+//
+// Main class that constructs the geometry of the NEXT-100 detector.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef _NEXT100___
-#define _NEXT100___
+#ifndef NEXT100
+#define NEXT100
 
 #include "BaseGeometry.h"
 #include "Next100Shielding.h"

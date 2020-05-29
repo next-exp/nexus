@@ -1,11 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id: PMT_QE_setup.cc  $
+// nexus | PMT_QE_setup.cc
 //
-//  Author:  P. Ferrario <paolafer@ific.uv.es>    
-//  Created: 14 Dec 2012
-//  
-//  Copyright (c) 2012 NEXT Collaboration
-// ---------------------------------------------------------------------------- 
+// Geometry of a set-up to extract the quantum efficiency of a photomultiplier.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #include "PMT_QE_setup.h"
 
@@ -56,9 +55,9 @@ namespace nexus {
   PMT_QE_setup::~PMT_QE_setup()
   {
   }
- 
-  
-  
+
+
+
   void PMT_QE_setup::Construct()
   {
     // CHAMBER ///////////////////////////////////////////////////////
@@ -77,49 +76,49 @@ namespace nexus {
 
     G4Material* copper = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
 
-    G4LogicalVolume* chamber_logic = 
+    G4LogicalVolume* chamber_logic =
       new G4LogicalVolume(chamber_solid, copper, "CHAMBER");
     this->SetLogicalVolume(chamber_logic);
-    
+
     // GAS ///////////////////////////////////////////////////////////
     G4double gxe_pressure = 10*bar;
 
     G4Box* gas_solid = new G4Box("GAS", width/2., height/2., length_/2.);
-    
+
     G4Material* gxe = MaterialsList::GXe(gxe_pressure);
     gxe->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(gxe_pressure));
-    // G4Material* air = 
+    // G4Material* air =
     //   G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
-    
+
     G4LogicalVolume* gas_logic = new G4LogicalVolume(gas_solid, gxe, "GAS");
-        
+
     new G4PVPlacement(0, G4ThreeVector(0,0,0), gas_logic, "GAS",
 		      chamber_logic, false, 0, true);
-    
+
     // Positioning of the PMT /////////////////////////////////////////
     pmt_.Construct();
     G4LogicalVolume* pmt_logic = pmt_.GetLogicalVolume();
     //   pmt_length_ = pmt_.Length() // this is R7378A
     pmt_length_ = 20*cm; // this is R11410
-    
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,-length_/2.+_pmtlength_/2.), 
+
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,-length_/2.+pmt_length_/2.),
 		      pmt_logic, "PMT",
 		      gas_logic, false, 0, true);
 
     // Positioning of the teflon panel
-    // G4Box* teflon_solid = new G4Box("GAS", 22.*cm/2., 50.*cm/2., thickn/2.); 
+    // G4Box* teflon_solid = new G4Box("GAS", 22.*cm/2., 50.*cm/2., thickn/2.);
     // G4Material* ptfe = MaterialsList::PEEK();
     // G4LogicalVolume* teflon_logic = new G4LogicalVolume(teflon_solid, ptfe, "TEFLON");
 
     // G4RotationMatrix* rotdb = new G4RotationMatrix();
     // rotdb->rotateY(-pi/2.);
-    // new G4PVPlacement(0, G4ThreeVector(0.*cm, 0. ,-length_/2.+_pmtlength_ + z_dist_ + 1.*cm), 
+    // new G4PVPlacement(0, G4ThreeVector(0.*cm, 0. ,-length_/2.+_pmtlength_ + z_dist_ + 1.*cm),
     // 		      teflon_logic, "TEFLON", gas_logic, false, 0, true);
     // G4RotationMatrix* rotdb2 = new G4RotationMatrix();
     // rotdb2->rotateY(pi/2.);
-    // new G4PVPlacement(rotdb2, G4ThreeVector(-10.*cm, 0., -length_/2.+_pmtlength_ + z_dist_ + 1.*cm), 
+    // new G4PVPlacement(rotdb2, G4ThreeVector(-10.*cm, 0., -length_/2.+_pmtlength_ + z_dist_ + 1.*cm),
     //  		      teflon_logic, "TEFLON", gas_logic, false, 2, true);
-    
+
     // Optical surface
     // G4OpticalSurface* teflon_opsur = new G4OpticalSurface("TEFLON_OPSURF");
     // teflon_opsur->SetType(dielectric_metal);
@@ -127,11 +126,11 @@ namespace nexus {
     // teflon_opsur->SetFinish(ground);
     // teflon_opsur->SetSigmaAlpha(0.0000001); // it does not affect, because the reflection is totally lambertian.
     // teflon_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
-    
+
     // new G4LogicalSkinSurface("TEFLON_OPSURF", teflon_logic, teflon_opsur);
 
   }
-  
+
   G4ThreeVector PMT_QE_setup::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector point;
@@ -144,13 +143,13 @@ namespace nexus {
       G4double phi = G4UniformRand()*2*pi;
       G4double x = r*cos(phi);
       G4double y = r*sin(phi);
-      
-      point =  G4ThreeVector(x, y,-length_/2.+_pmtlength_+z_dist_);
 
-    } else if (region == "POINT") {     
-      point = G4ThreeVector(0, 0, -length_/2.+_pmtlength_+z_dist_);
+      point =  G4ThreeVector(x, y,-length_/2.+pmt_length_+z_dist_);
+
+    } else if (region == "POINT") {
+      point = G4ThreeVector(0, 0, -length_/2.+pmt_length_+z_dist_);
     }
-    
+
     return point;
   }
 

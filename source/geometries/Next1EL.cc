@@ -1,13 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | Next1EL.cc
 //
-//  Authors:  <justo.martin-albo@ific.uv.es>
-//                <paola.ferrario@ific.uv.es>
-//  Created: 27 Jan 2010
+// Geometry of the NEXT-DEMO detector.
 //
-//  Copyright (c) 2010, 2011 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
-
 
 #include "Next1EL.h"
 
@@ -578,7 +575,7 @@ void Next1EL::BuildVessel()
 	       0, twopi);
 
   G4LogicalVolume* sideport_tube_air_logic =
-    new G4LogicalVolume(sideport_tubeair__solid, air_, "SIDEPORT_AIR");
+    new G4LogicalVolume(sideport_tube_air_solid, air_, "SIDEPORT_AIR");
 
   new G4PVPlacement(0,G4ThreeVector(0.,0.,sideport_tube_window_thickn_/2.),
 		    sideport_tube_air_logic, "SIDEPORT_AIR",
@@ -690,7 +687,7 @@ void Next1EL::BuildVessel()
 	       0, twopi);
 
   G4LogicalVolume* axialport_tube_air_logic =
-    new G4LogicalVolume(axialport_tubeair__solid, air_, "AXIALPORT_AIR");
+    new G4LogicalVolume(axialport_tube_air_solid, air_, "AXIALPORT_AIR");
 
   new G4PVPlacement(0, G4ThreeVector(0,0,axialport_tube_window_thickn_/2.),
    		    axialport_tube_air_logic, "AXIALPORT_AIR",
@@ -878,7 +875,7 @@ void Next1EL::BuildFieldCage()
       new G4Polyhedra("LIGHT_TUBE_TPB", 0., twopi, 6, 2, zplane,
 		      rinner_tpb, router_tpb);
     G4LogicalVolume* ltube_tpb_logic =
-      new G4LogicalVolume(ltubetpb__solid, tpb_, "LIGHT_TUBE_TPB");
+      new G4LogicalVolume(ltube_tpb_solid, tpb_, "LIGHT_TUBE_TPB");
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), ltube_tpb_logic,
 		      "LIGHT_TUBE_TPB", ltube_up_logic, false, 0, true);

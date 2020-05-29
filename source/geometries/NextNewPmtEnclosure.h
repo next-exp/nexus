@@ -1,16 +1,13 @@
-// ----------------------------------------------------------------------------
-///  \file   NextNewPmtEnclosure.h
-///  \brief  Geometry model of the PMTs R11410 enclosure, aka "PMT cans".
-///
-///  \author   <miquel.nebot@ific.uv.es>
-///  \date     24 Sept 2013
-///  \version  $Id:
-///
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// -----------------------------------------------------------------------------
+// nexus | NextNewPmtEnclosure.h
+//
+// Pseudo-enclosure that describes the copper around the PMTs.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef _ENCLOSURE___
-#define _ENCLOSURE___
+#ifndef ENCLOSURE
+#define ENCLOSURE
 
 #include <G4ThreeVector.hh>
 #include <G4Navigator.hh>

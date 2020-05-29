@@ -1,9 +1,10 @@
 // ----------------------------------------------------------------------------
+// nexus | Next100OpticalGeometry.cc
 //
-//  Authors: <paola.ferrario@dipc.org>
-//  Created: 30 Dec 2019
+// This class builds a simplified version of the NEXT-100 geometry, where
+// only the inner elements are instantiated.
 //
-//  Copyright (c) 2019 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "Next100OpticalGeometry.h"

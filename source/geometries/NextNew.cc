@@ -1,13 +1,10 @@
-// ----------------------------------------------------------------------------
-//  $Id: NextNew.cc  $
+// -----------------------------------------------------------------------------
+// nexus | NextNew.cc
 //
-//  Author:  Miquel Nebot Guinot <miquel.nebot@ific.uv.es>
-//           <jmunoz@ific.uv.es>, <justo.martin-albo@ific.uv.es>
-//           <paolafer@ific.uv.es>
-//  Created: Sept 2013
+// Main class that builds the NEXT-WHITE detector.
 //
-//  Copyright (c) 2013-2017 NEXT Collaboration
-// ----------------------------------------------------------------------------
+// The NEXT Collaboration
+// -----------------------------------------------------------------------------
 
 #include "NextNew.h"
 
@@ -222,7 +219,7 @@ namespace nexus {
 
     //PEDESTAL
     pedestal_->SetLogicalVolume(air_logic_);
-    pedestal_->SetPosition(pedestal__pos);
+    pedestal_->SetPosition(pedestal_pos_);
     pedestal_->Construct();
 
     //MINI LEAD CASTLE
@@ -261,7 +258,7 @@ namespace nexus {
 
       // This is the position of the whole source + plastic support.
       if (calib_port_ == "lateral") {
-        G4ThreeVector lat_possource_ = G4ThreeVector(lat_pos.getX() + source_->GetSupportThickness()/2., lat_pos.getY(), lat_pos.getZ());
+        G4ThreeVector lat_pos_source = G4ThreeVector(lat_pos.getX() + source_->GetSupportThickness()/2., lat_pos.getY(), lat_pos.getZ());
 
         new G4PVPlacement(G4Transform3D(*lat_rot, lat_pos_source), source_logic, "SOURCE",
                           air_logic_, false, 0, false);
@@ -273,7 +270,7 @@ namespace nexus {
                           air_logic_, false, 0, false);
       } else if (calib_port_ == "random") {
         G4ThreeVector random_pos_source =
-          G4ThreeVector(up_pos.getX(), vessel_->GetOuterRadius() + source_->GetSupportThickness()/2., inner_elements_->GetELzCoord() - source__dist_from_anode);
+          G4ThreeVector(up_pos.getX(), vessel_->GetOuterRadius() + source_->GetSupportThickness()/2., inner_elements_->GetELzCoord() - source_dist_from_anode_);
         new G4PVPlacement(G4Transform3D(*up_rot, random_pos_source), source_logic, "SOURCE",
                           air_logic_, false, 0, true);
       } else {
@@ -402,7 +399,7 @@ namespace nexus {
       G4ThreeVector up_pos_gen =
         G4ThreeVector(up_pos.getX(), up_pos.getY() + source_->GetSourceThickness()/2., up_pos.getZ());
        G4ThreeVector random_pos_gen =
-        G4ThreeVector(up_pos.getX(), vessel_->GetOuterRadius() + source_->GetSourceThickness()/2., inner_elements_->GetELzCoord() - source__dist_from_anode);
+        G4ThreeVector(up_pos.getX(), vessel_->GetOuterRadius() + source_->GetSourceThickness()/2., inner_elements_->GetELzCoord() - source_dist_from_anode_);
       source_gen_lat_ = new CylinderPointSampler(0., source_thick, source_diam/2., 0., lat_pos_gen, lat_rot);
       source_gen_up_ = new CylinderPointSampler(0., source_thick, source_diam/2., 0., up_pos_gen, up_rot);
       source_gen_random_ = new CylinderPointSampler(0., source_thick, source_diam/2., 0., random_pos_gen, up_rot);

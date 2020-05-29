@@ -1,16 +1,13 @@
-// ----------------------------------------------------------------------------
-///  \file   
-///  \brief  
-///
-///  \author   <miquel.nebot@ific.uv.es>,
-///  \date     29 Nov 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration
+// -----------------------------------------------------------------------------
+// nexus | NextNewPedestal.h
+//
+// Table supporting the NEXT-WHITE vessel.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef _NEXTNEW_PEDESTAL___
-#define _NEXTNEW_PEDESTAL___
+#ifndef NEXTNEW_PEDESTAL
+#define NEXTNEW_PEDESTAL
 
 #include "BaseGeometry.h"
 #include "BoxPointSampler.h"
@@ -48,7 +45,7 @@ namespace nexus {
     G4LogicalVolume* mother_logic_;
     // Dimensions
     G4double  table_x_, table_y_, table_z_, y_pos_;
-   
+
     // Visibility of the shielding
     G4bool visibility_;
 
@@ -56,7 +53,7 @@ namespace nexus {
     BoxPointSampler* table_gen_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* msg_; 
+    G4GenericMessenger* msg_;
 
   };
 

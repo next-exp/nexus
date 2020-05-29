@@ -1,11 +1,10 @@
-// ----------------------------------------------------------------------------
-//  $Id$
+// -----------------------------------------------------------------------------
+// nexus | NextNewEnergyPlane.cc
 //
-//  Authors: <miquel.nebot@ific.uv.es>
-//  Created: 13 Sept 2013
+// Energy plane of the NEXT-WHITE detector.
 //
-//  Copyright (c) 2013 NEXT Collaboration
-// ----------------------------------------------------------------------------
+// The NEXT Collaboration
+// -----------------------------------------------------------------------------
 
 #include "NextNewEnergyPlane.h"
 #include "MaterialsList.h"

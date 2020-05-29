@@ -1,11 +1,10 @@
-// ----------------------------------------------------------------------------
-//  $Id$
+// -----------------------------------------------------------------------------
+// nexus | NextNewMiniCastle.cc
 //
-//  Authors: <miquel.nebot@ific.uv.es>, <paola.ferrario@dipc.org>
-//  Created: 3 Feb 2014
+// Copper castle placed inside the lead castle at LSC.
 //
-//  Copyright (c) 2014 NEXT Collaboration
-// ----------------------------------------------------------------------------
+// The NEXT Collaboration
+// -----------------------------------------------------------------------------
 
 #include "NextNewMiniCastle.h"
 #include "Visibilities.h"
@@ -59,7 +58,7 @@ namespace nexus {
     G4Box* x_wall_solid = new G4Box("X_WALL_SOLID", thickness_/2., y_/2., z_/2.);
     G4Box* y_wall_solid_up = new G4Box("Y_WALL_SOLID_UP", x_/2., thickness_/2., z_/2.);
     G4Box* y_wall_solid_down =
-      new G4Box("Y_WALL_SOLID_DOWN", (x_-2.*open_spacez__-2.*thickness_)/2., thickness_/2., z_/2.);
+      new G4Box("Y_WALL_SOLID_DOWN", (x_-2.*open_space_z_-2.*thickness_)/2., thickness_/2., z_/2.);
     G4Box* z_wall_nh_solid = new G4Box("Z_WALL_NH_SOLID", x_/2., y_/2., thickness_/2.);
 
     G4double x_opening_pmts = 525.*mm;
@@ -120,14 +119,14 @@ namespace nexus {
       new G4LogicalVolume (castle_solid,
 			   G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"),"CASTLE");
 
-    G4double y_pos = pedestal_surfy__ + y_ -thickness_/2.;
+    G4double y_pos = pedestal_surf_y_ + y_ -thickness_/2.;
     new G4PVPlacement(0, G4ThreeVector(0., y_pos, 0.), castle_logic,
     		      "MINI_CASTLE", mother_logic_, false, 0, false);
 
     // STEEL SUPPORT STRUCTURE //
-    G4double steelx_ = x_-2*thickness_;
-    G4double steely_ = y_-2*thickness_;
-    G4double steelz_ = z_-2*thickness_;
+    G4double steel_x = x_-2*thickness_;
+    G4double steel_y = y_-2*thickness_;
+    G4double steel_z = z_-2*thickness_;
 
     G4Box* x_steel_solid =
       new G4Box("X_STEEL_SOLID", steel_thickn_/2., steel_y/2., steel_z/2.);
@@ -161,7 +160,7 @@ namespace nexus {
     G4LogicalVolume* steel_logic =
       new G4LogicalVolume (steel_solid, MaterialsList::Steel(), "MINI_CASTLE_STEEL");
 
-    y_pos = pedestal_surfy__ + y_ -thickness_ - steel_thickn_/2.;
+    y_pos = pedestal_surf_y_ + y_ -thickness_ - steel_thickn_/2.;
     new G4PVPlacement(0, G4ThreeVector(0., y_pos, 0.), steel_logic,
 		      "MINI_CASTLE_STEEL", mother_logic_, false, 0, false);
 
@@ -171,13 +170,13 @@ namespace nexus {
     // VERTEX GENERATORS   //////////
     mini_castle_box_gen_ =
       new BoxPointSampler(x_-2.*thickness_, y_-2.*thickness_, z_-2.*thickness_,
-			  thickness_, G4ThreeVector(0., pedestal_surfy__ + y_/2., 0.), 0);
+			  thickness_, G4ThreeVector(0., pedestal_surf_y_ + y_/2., 0.), 0);
 
     mini_castle_external_surf_gen_ =
       new BoxPointSampler(x_-0.5*mm, y_-0.5*mm, z_-0.5*mm, 0 * mm, G4ThreeVector(0., thickness_, 0.), 0);
     steel_box_gen_ =
       new BoxPointSampler(steel_x-2.*steel_thickn_, steel_y-2.*steel_thickn_, steel_z-2.*steel_thickn_,
-			  steel_thickn_, G4ThreeVector(0., pedestal_surfy__ + y_/2., 0.), 0);
+			  steel_thickn_, G4ThreeVector(0., pedestal_surf_y_ + y_/2., 0.), 0);
 
 
     // Calculating some probs

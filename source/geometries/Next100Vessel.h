@@ -1,16 +1,13 @@
 // ----------------------------------------------------------------------------
-///  \file
-///  \brief
-///
-///  \author   <justo.martin-albo@ific.uv.es>, <jmunoz@ific.uv.es>
-///  \date     21 Nov 2011
-///  \version  $Id$
-///
-///  Copyright (c) 2011 NEXT Collaboration
+// nexus | Next100Vessel.h
+//
+// Vessel of the NEXT-100 geometry.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef _NEXT100_VESSEL___
-#define _NEXT100_VESSEL___
+#ifndef NEXT100_VESSEL
+#define NEXT100_VESSEL
 
 #include "BaseGeometry.h"
 #include "CylinderPointSampler.h"

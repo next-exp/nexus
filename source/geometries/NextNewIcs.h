@@ -1,16 +1,13 @@
-// ----------------------------------------------------------------------------
-///  \file   
-///  \brief  
-///
-///  \author   <miquel.nebot@ific.uv.es>,
-///  \date     14 Oct 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration
-// ----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// nexus | NextNewIcs.h
+//
+// Inner copper shielding of the NEXT-WHITE detector.
+//
+// The NEXT Collaboration
+// -----------------------------------------------------------------------------
 
-#ifndef _NEXTNEW_ICS___
-#define _NEXTNEW_ICS___
+#ifndef NEXTNEW_ICS
+#define NEXTNEW_ICS
 
 #include "BaseGeometry.h"
 #include "CylinderPointSampler.h"
@@ -49,8 +46,8 @@ namespace nexus {
     // Dimensions
     G4double body_inner_diam_, body_length_, body_thickness_, body_zpos_;
     G4double tracking_tread_diam_, tracking_tread_length_;
-   
-    // Dimensions coming from outside  
+
+    // Dimensions coming from outside
     G4double  lat_nozzle_in_diam_, lat_nozzle_x_pos_, lat_nozzle_z_pos_;
     G4double  up_small_nozzle_in_diam_, up_big_nozzle_in_diam_, up_nozzle_y_pos_, up_nozzle_z_pos_;
 
@@ -66,7 +63,7 @@ namespace nexus {
     G4Navigator* geom_navigator_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* msg_; 
+    G4GenericMessenger* msg_;
 
   };
 

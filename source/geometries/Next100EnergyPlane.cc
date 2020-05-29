@@ -1,10 +1,9 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | Next100EnergyPlane.cc
 //
-//  Authors: <jmunoz@ific.uv.es>, <paola.ferrario@dipc.org>
-//  Created: 25 Apr 2012
+// Energy plane geometry of the NEXT-100 detector.
 //
-//  Copyright (c) 2012-2020 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "Next100EnergyPlane.h"
