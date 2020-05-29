@@ -31,7 +31,8 @@ namespace nexus {
   {
   public:
     /// Create the singleton instance of the persistency manager
-    static void Initialize(G4String historyFile_init, G4String historyFile_conf);
+    static void Initialize(G4String init_macro, std::vector<G4String>& macros,
+                           std::vector<G4String>& delayed_macros);
 
     /// Set whether to store or not the current event
     void StoreCurrentEvent(G4bool);
@@ -52,7 +53,8 @@ namespace nexus {
 
 
   private:
-    PersistencyManager(G4String historyFile_init, G4String historyFile_conf);
+    PersistencyManager(G4String init_macro, std::vector<G4String>& macros,
+                           std::vector<G4String>& delayed_macros);
     ~PersistencyManager();
     PersistencyManager(const PersistencyManager&);
 
@@ -67,8 +69,10 @@ namespace nexus {
   private:
     G4GenericMessenger* msg_; ///< User configuration messenger
 
-    G4String historyFile_init_;
-    G4String historyFile_conf_;
+    G4String init_macro_;
+    std::vector<G4String> macros_;
+    std::vector<G4String> delayed_macros_;
+    std::vector<G4String> secondary_macros_;
 
     G4bool ready_;     ///< Is the PersistencyManager ready to go?
     G4bool store_evt_; ///< Should we store the current event?

@@ -35,25 +35,23 @@
 using namespace nexus;
 
 
-
-PersistencyManager::PersistencyManager(G4String historyFile_init,
-                                       G4String historyFile_conf):
-  G4VPersistencyManager(), msg_(0),
-  ready_(false), store_evt_(true), interacting_evt_(false),
-  event_type_("other"), saved_evts_(0), interacting_evts_(0),
-  pmt_bin_size_(-1), sipm_bin_size_(-1),
+PersistencyManager::PersistencyManager(G4String init_macro,
+                                       std::vector<G4String>& macros,
+                                       std::vector<G4String>& delayed_macros):
+  G4VPersistencyManager(), msg_(0), init_macro_(init_macro), macros_(macros),
+  delayed_macros_(delayed_macros), ready_(false), store_evt_(true),
+  interacting_evt_(false), event_type_("other"), saved_evts_(0),
+  interacting_evts_(0), pmt_bin_size_(-1), sipm_bin_size_(-1),
   nevt_(0), start_id_(0), first_evt_(true), h5writer_(0)
 {
-
-  historyFile_init_ = historyFile_init;
-  historyFile_conf_ = historyFile_conf;
-
-  msg_ = new G4GenericMessenger(this, "/nexus/persistency/");
-  msg_->DeclareMethod("outputFile", &PersistencyManager::OpenFile, "");
-  msg_->DeclareProperty("eventType", event_type_,
+  _msg = new G4GenericMessenger(this, "/nexus/persistency/");
+  _msg->DeclareMethod("outputFile", &PersistencyManager::OpenFile, "");
+  _msg->DeclareProperty("eventType", event_type_,
                         "Type of event: bb0nu, bb2nu or background.");
   msg_->DeclareProperty("start_id", start_id_,
                         "Starting event ID for this job.");
+
+  _secondary_macros.clear();
 }
 
 
@@ -66,8 +64,8 @@ PersistencyManager::~PersistencyManager()
 
 
 
-void PersistencyManager::Initialize(G4String historyFile_init,
-                                    G4String historyFile_conf)
+void PersistencyManager::Initialize(G4String init_macro, std::vector<G4String>& macros,
+                                    std::vector<G4String>& delayed_macros)
 {
 
   // Get a pointer to the current singleton instance of the persistency
@@ -81,7 +79,7 @@ void PersistencyManager::Initialize(G4String historyFile_init,
   // in the leak of that object since the pointer will no longer be
   // accessible.)
   if (!current) current =
-                  new PersistencyManager(historyFile_init, historyFile_conf);
+                  new PersistencyManager(init_macro,macros, delayed_macros);
 }
 
 
@@ -352,8 +350,16 @@ G4bool PersistencyManager::Store(const G4Run*)
                            (std::to_string(it->second/microsecond)+" mus").c_str());
   }
 
-  SaveConfigurationInfo(historyFile_init_);
-  SaveConfigurationInfo(historyFile_conf_);
+  SaveConfigurationInfo(init_macro_);
+  for (unsigned long i=0; i<macros_.size(); i++) {
+    SaveConfigurationInfo(macros_[i]);
+  }
+  for (unsigned long i=0; i<delayed_macros_.size(); i++) {
+    SaveConfigurationInfo(delayed_macros_[i]);
+  }
+  for (unsigned long i=0; i<secondary_macros_.size(); i++) {
+    SaveConfigurationInfo(secondary_macros_[i]);
+  }
 
   return true;
 }
@@ -363,14 +369,19 @@ void PersistencyManager::SaveConfigurationInfo(G4String file_name)
   std::ifstream history(file_name, std::ifstream::in);
   while (history.good()) {
 
-    std::string key, value;
+    G4String key, value;
     std::getline(history, key, ' ');
     std::getline(history, value);
 
     if (key != "") {
-      auto found = key.find("binning");
-      if (found == std::string::npos)
+      auto found_binning = key.find("binning");
+      auto found_comment = key.find("#");
+      if ((found_binning == std::string::npos) && (found_comment == std::string::npos))
 	h5writer_->WriteRunInfo(key.c_str(), value.c_str());
+
+      auto found_other_macro = key.find("/control/execute");
+      if (found_other_macro != std::string::npos)
+        secondary_macros_.push_back(value);
     }
 
   }
