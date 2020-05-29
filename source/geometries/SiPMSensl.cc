@@ -41,7 +41,7 @@ namespace nexus {
     msg_->DeclareProperty("visibility", visibility_, "SiPMSensl visibility");
 
     G4GenericMessenger::Command& bin_cmd =
-      msg_->DeclareProperty("timebinning_", binning_,
+      msg_->DeclareProperty("time_binning", binning_,
 			    "Time binning of SensL SiPM");
     bin_cmd.SetUnitCategory("Time");
     bin_cmd.SetParameterName("time_binning", false);

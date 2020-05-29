@@ -348,7 +348,7 @@ G4bool PersistencyManager::Store(const G4Run*)
 
   std::map<G4String, G4double>::const_iterator it;
   for (it = sensdet_bin_.begin(); it != sensdet_bin_.end(); ++it) {
-    h5writer_->WriteRunInfo((it->first + "binning_").c_str(),
+    h5writer_->WriteRunInfo((it->first + "_binning").c_str(),
                            (std::to_string(it->second/microsecond)+" mus").c_str());
   }
 
