@@ -1,13 +1,16 @@
-
+// ----------------------------------------------------------------------------
+// nexus | NexusStepLimiterBuilder.h
 //
-// $Id$
+// This class adds a step limiter to electrons, for a fine tracking.
 //
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #ifndef NexusStepLimiterBuilder_h
-#define NexusStepLimiterBuilder_h 1
+#define NexusStepLimiterBuilder_h
 
-#include "G4VPhysicsConstructor.hh"
-#include "globals.hh"
+#include <G4VPhysicsConstructor.hh>
+#include <globals.hh>
 
 
 class G4StepLimiter;

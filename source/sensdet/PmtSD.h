@@ -1,16 +1,14 @@
 // ----------------------------------------------------------------------------
-///  \file   PmtSD.h
-///  \brief  Sensitive detector for photosensors
-///
-///  \author   J. Martin-Albo <jmalbos@ific.uv.es>
-///  \date     15 Feb 2020  
-///  \version  $Id$
-///
-///  Copyright (c) 2010-2012 NEXT Collaboration. All rights reserved.
+// nexus | PmtSD.h
+//
+// This class is the sensitive detector that allows for the registration
+// of the charge detected by a photosensor.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __PMT_SD__
-#define __PMT_SD__
+#ifndef PMT_SD
+#define PMT_SD
 
 #include <G4VSensitiveDetector.hh>
 #include "PmtHit.h"
@@ -23,8 +21,6 @@ class G4OpBoundaryProcess;
 
 
 namespace nexus {
-  
-  /// General-purpose sensitive detector for photosensors
 
   class PmtSD: public G4VSensitiveDetector
   {
@@ -34,12 +30,12 @@ namespace nexus {
     PmtSD(G4String sdname);
     /// The destructor
     ~PmtSD();
-    
-    /// Initialization of the sensitive detector. Invoked at the beginning 
+
+    /// Initialization of the sensitive detector. Invoked at the beginning
     /// of every event. The collection of hits is created here and registered
     /// in the event (so that it can be retrieved thru the G4HCofThisEvent object).
     void Initialize(G4HCofThisEvent*);
-    
+
     /// Method invoked at the end of every event
     void EndOfEvent(G4HCofThisEvent*);
 
@@ -51,7 +47,7 @@ namespace nexus {
     void SetMotherVolumeDepth(G4int);
     /// Return the depth of the SD's mother volume in the geometry hierarchy
     G4int GetMotherVolumeDepth() const;
-    /// Set the naming order (typically, a multiple of 10) of the SD     
+    /// Set the naming order (typically, a multiple of 10) of the SD
     void SetDetectorNamingOrder(G4int);
     /// Return the naming order of the SD
     G4int GetDetectorNamingOrder() const;
@@ -62,7 +58,7 @@ namespace nexus {
     void SetTimeBinning(G4double);
 
     /// Return the unique name of the hits collection created
-    /// by this sensitive detector. This will be used by the 
+    /// by this sensitive detector. This will be used by the
     /// persistency manager to select the collection.
     static G4String GetCollectionUniqueName();
 
@@ -72,30 +68,30 @@ namespace nexus {
 
     G4int FindPmtID(const G4VTouchable*);
 
-    G4int _naming_order; ///< Order of the naming scheme
-    G4int _sensor_depth; ///< Depth of the SD in the geometry tree
-    G4int _mother_depth; ///< Depth of the SD's mother in the geometry tree
-    
-    G4double _timebinning; ///< Time bin width
-    
-    G4OpBoundaryProcess* _boundary; ///< Pointer to the optical boundary process
+    G4int naming_order_; ///< Order of the naming scheme
+    G4int sensor_depth_; ///< Depth of the SD in the geometry tree
+    G4int mother_depth_; ///< Depth of the SD's mother in the geometry tree
 
-    PmtHitsCollection* _HC; ///< Pointer to the collection of hits
+    G4double timebinning_; ///< Time bin width
+
+    G4OpBoundaryProcess* boundary_; ///< Pointer to the optical boundary process
+
+    PmtHitsCollection* HC_; ///< Pointer to the collection of hits
   };
-  
+
   // INLINE METHODS //////////////////////////////////////////////////
 
-  inline void PmtSD::SetDetectorVolumeDepth(G4int d) { _sensor_depth = d; }
-  inline G4int PmtSD::GetDetectorVolumeDepth() const { return _sensor_depth; }
+  inline void PmtSD::SetDetectorVolumeDepth(G4int d) { sensor_depth_ = d; }
+  inline G4int PmtSD::GetDetectorVolumeDepth() const { return sensor_depth_; }
 
-  inline void PmtSD::SetMotherVolumeDepth(G4int d) { _mother_depth = d; }
-  inline G4int PmtSD::GetMotherVolumeDepth() const { return _mother_depth; }
+  inline void PmtSD::SetMotherVolumeDepth(G4int d) { mother_depth_ = d; }
+  inline G4int PmtSD::GetMotherVolumeDepth() const { return mother_depth_; }
 
-  inline void PmtSD::SetDetectorNamingOrder(G4int o) { _naming_order = o; }
-  inline G4int PmtSD::GetDetectorNamingOrder() const { return _naming_order; }
+  inline void PmtSD::SetDetectorNamingOrder(G4int o) { naming_order_ = o; }
+  inline G4int PmtSD::GetDetectorNamingOrder() const { return naming_order_; }
 
-  inline G4double PmtSD::GetTimeBinning() const { return _timebinning; }
-  inline void PmtSD::SetTimeBinning(G4double tb) { _timebinning = tb; }
+  inline G4double PmtSD::GetTimeBinning() const { return timebinning_; }
+  inline void PmtSD::SetTimeBinning(G4double tb) { timebinning_ = tb; }
 
 } // end namespace nexus
 

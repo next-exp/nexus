@@ -1,10 +1,9 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | NexusPhysics.cc
 //
-//  Author:  <justo.martin-albo@ific.uv.es>
-//  Created: 27 Jan 2010
+// This class registers any new physics process defined in nexus.
 //
-//  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "NexusPhysics.h"
@@ -34,18 +33,18 @@ namespace nexus {
 
   NexusPhysics::NexusPhysics():
     G4VPhysicsConstructor("NexusPhysics"),
-    _clustering(true), _drift(true), _electroluminescence(true)
+    clustering_(true), drift_(true), electroluminescence_(true)
   {
-    _msg = new G4GenericMessenger(this, "/PhysicsList/Nexus/",
+    msg_ = new G4GenericMessenger(this, "/PhysicsList/Nexus/",
       "Control commands of the nexus physics list.");
 
-    _msg->DeclareProperty("clustering", _clustering,
+    msg_->DeclareProperty("clustering", clustering_,
       "Switch on/off the ionization clustering");
 
-    _msg->DeclareProperty("drift", _drift,
+    msg_->DeclareProperty("drift", drift_,
       "Switch on/off the ionization drift.");
 
-    _msg->DeclareProperty("electroluminescence", _electroluminescence,
+    msg_->DeclareProperty("electroluminescence", electroluminescence_,
       "Switch on/off the electroluminescence.");
   }
 
@@ -53,7 +52,7 @@ namespace nexus {
 
   NexusPhysics::~NexusPhysics()
   {
-    delete _msg;
+    delete msg_;
   }
 
 
@@ -88,7 +87,7 @@ namespace nexus {
 
     // Add drift and electroluminescence to the process table of the ie-
 
-    if (_drift) {
+    if (drift_) {
       // First, we remove the standard transportation from the
       // process table of the ionization electron
       G4VProcess* transportation = G4ProcessTable::GetProcessTable()->
@@ -100,7 +99,7 @@ namespace nexus {
       pmanager->AddDiscreteProcess(drift);
     }
 
-    if (_electroluminescence) {
+    if (electroluminescence_) {
       Electroluminescence* el = new Electroluminescence();
       pmanager->AddDiscreteProcess(el);
     }
@@ -108,7 +107,7 @@ namespace nexus {
 
     // Add clustering to all pertinent particles
 
-    if (_clustering) {
+    if (clustering_) {
 
       IonizationClustering* clust = new IonizationClustering();
 

@@ -1,16 +1,13 @@
 // ----------------------------------------------------------------------------
-///  \file   PmtHit.h
-///  \brief  
-///
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     10 Feb 2010  
-///  \version  $Id$
-///
-///  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
+// nexus | PmtHit.h
+//
+// This class describes the charge detected by a photosensor.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __PMT_HIT__
-#define __PMT_HIT__
+#ifndef PMT_HIT
+#define PMT_HIT
 
 #include <G4VHit.hh>
 #include <G4THitsCollection.hh>
@@ -19,8 +16,6 @@
 
 
 namespace nexus {
-
-  /// TODO. CLASS DESCRIPTION
 
   class PmtHit: public G4VHit
   {
@@ -33,17 +28,17 @@ namespace nexus {
     PmtHit(const PmtHit&);
     /// Destructor
     ~PmtHit();
-    
+
     /// Assignement operator
     const PmtHit& operator=(const PmtHit&);
     /// Equality operator
     G4int operator==(const PmtHit&) const;
-    
+
     /// Memory allocation
     void* operator new(size_t);
     /// Memory deallocation
      void operator delete(void*);
-    
+
     /// Returns the detector ID code
     G4int GetPmtID() const;
     /// Sets the detector ID code
@@ -64,14 +59,14 @@ namespace nexus {
     void Fill(G4double time, G4int counts=1);
 
     const std::map<G4double, G4int>& GetHistogram() const;
-        
+
   private:
-    G4int _pmt_id;           ///< Detector ID number
-    G4double _bin_size;      ///< Size of time bin
-    G4ThreeVector _position; ///< Detector position
+    G4int pmt_id_;           ///< Detector ID number
+    G4double bin_size_;      ///< Size of time bin
+    G4ThreeVector position_; ///< Detector position
 
     /// Sparse histogram with number of photons detected per time bin
-    std::map<G4double, G4int> _histogram; 
+    std::map<G4double, G4int> histogram_;
   };
 
 } // namespace nexus
@@ -85,22 +80,22 @@ extern G4Allocator<nexus::PmtHit> PmtHitAllocator;
 
 namespace nexus {
 
-  inline void* PmtHit::operator new(size_t) 
+  inline void* PmtHit::operator new(size_t)
   { return ((void*) PmtHitAllocator.MallocSingle()); }
 
-  inline void PmtHit::operator delete(void* hit) 
+  inline void PmtHit::operator delete(void* hit)
   { PmtHitAllocator.FreeSingle((PmtHit*) hit); }
 
-  inline G4int PmtHit::GetPmtID() const { return _pmt_id; }
-  inline void PmtHit::SetPmtID(G4int id) { _pmt_id = id; }
-  
-  inline G4double PmtHit::GetBinSize() const { return _bin_size; }
+  inline G4int PmtHit::GetPmtID() const { return pmt_id_; }
+  inline void PmtHit::SetPmtID(G4int id) { pmt_id_ = id; }
 
-  inline G4ThreeVector PmtHit::GetPosition() const { return _position; }
-  inline void PmtHit::SetPosition(const G4ThreeVector& p) { _position = p; }
+  inline G4double PmtHit::GetBinSize() const { return bin_size_; }
+
+  inline G4ThreeVector PmtHit::GetPosition() const { return position_; }
+  inline void PmtHit::SetPosition(const G4ThreeVector& p) { position_ = p; }
 
   inline const std::map<G4double, G4int>& PmtHit::GetHistogram() const
-  { return _histogram; }
+  { return histogram_; }
 
 } // namespace nexus
 
