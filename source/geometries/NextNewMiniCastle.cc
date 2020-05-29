@@ -9,6 +9,7 @@
 #include "NextNewMiniCastle.h"
 #include "Visibilities.h"
 #include "MaterialsList.h"
+#include "BoxPointSampler.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4SubtractionSolid.hh>

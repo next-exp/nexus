@@ -9,6 +9,10 @@
 #include "Next100.h"
 #include "BoxPointSampler.h"
 #include "MuonsPointSampler.h"
+#include "Next100Shielding.h"
+#include "Next100Vessel.h"
+#include "Next100Ics.h"
+#include "Next100InnerElements.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>

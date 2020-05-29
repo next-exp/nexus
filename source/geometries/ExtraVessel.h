@@ -14,7 +14,6 @@
 #include "BaseGeometry.h"
 #include <G4ThreeVector.hh>
 
-class G4OpticalSurface;
 class G4GenericMessenger;
 
 namespace nexus {

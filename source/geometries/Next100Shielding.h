@@ -10,7 +10,7 @@
 #define NEXT100_SHIELDING
 
 #include "BaseGeometry.h"
-#include "BoxPointSampler.h"
+
 #include <G4Navigator.hh>
 
 class G4GenericMessenger;
@@ -18,6 +18,8 @@ class G4GenericMessenger;
 
 
 namespace nexus {
+
+  class BoxPointSampler;
 
   class Next100Shielding: public BaseGeometry
   {

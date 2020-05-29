@@ -12,6 +12,7 @@
 #include "OpticalMaterialProperties.h"
 #include "CylinderPointSampler.h"
 #include "Visibilities.h"
+#include "PmtR11410.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>

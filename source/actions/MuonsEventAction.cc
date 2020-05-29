@@ -22,6 +22,8 @@
 #include <globals.hh>
 
 #include <TFile.h>
+#include <TTree.h>
+#include <TH1.h>
 
 #include "CLHEP/Units/SystemOfUnits.h"
 #include "AddUserInfoToPV.h"

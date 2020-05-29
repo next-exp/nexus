@@ -11,13 +11,14 @@
 #define NEXTNEW_RN_TUBE
 
 #include "BaseGeometry.h"
-#include "CylinderPointSampler.h"
 
 #include <G4Navigator.hh>
 
 class G4GenericMessenger;
 
 namespace nexus {
+
+  class CylinderPointSampler;
 
   class NextNewRnTube: public BaseGeometry
   {

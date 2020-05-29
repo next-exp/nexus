@@ -24,6 +24,7 @@
 
 #include <TMath.h>
 #include "TFile.h"
+#include "TH2F.h"
 #include "CLHEP/Units/SystemOfUnits.h"
 
 using namespace nexus;

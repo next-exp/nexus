@@ -13,7 +13,6 @@
 #include <G4Navigator.hh>
 #include <G4TransportationManager.hh>
 
-#include "CylinderPointSampler.h"
 #include "NextNewPmtEnclosure.h"
 
 
@@ -23,6 +22,8 @@ class G4GenericMessenger;
 
 
 namespace nexus {
+
+  class CylinderPointSampler;
 
   /// This is a class to place all the components of the energy plane
   class NextNewEnergyPlane: public BaseGeometry

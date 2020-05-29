@@ -10,7 +10,6 @@
 #define NEXTNEW_MINI_CASTLE
 
 #include "BaseGeometry.h"
-#include "BoxPointSampler.h"
 
 #include <G4Navigator.hh>
 #include <G4TransportationManager.hh>
@@ -18,6 +17,8 @@
 class G4GenericMessenger;
 
 namespace nexus {
+
+  class BoxPointSampler;
 
   class NextNewMiniCastle: public BaseGeometry
   {

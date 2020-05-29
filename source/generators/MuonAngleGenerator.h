@@ -13,12 +13,12 @@
 #include <G4VPrimaryGenerator.hh>
 #include <G4RotationMatrix.hh>
 
-#include "TH2F.h"
-
 class G4GenericMessenger;
 class G4Event;
 class G4ParticleDefinition;
 class G4VSolid;
+
+class TH2F;
 
 
 namespace nexus {

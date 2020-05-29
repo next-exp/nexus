@@ -7,19 +7,18 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __MUONS_EVENT_ACTION__
-#define __MUONS_EVENT_ACTION__
+#ifndef MUONS_EVENT_ACTION
+#define MUONS_EVENT_ACTION
 
 #include <G4UserEventAction.hh>
 #include <globals.hh>
 
 
-#include <TTree.h>
-#include <TH1.h>
-
-
 class G4Event;
 class G4GenericMessenger;
+
+class TTree;
+class TH1D;
 
 namespace nexus {
     
@@ -47,8 +46,8 @@ namespace nexus {
     TH1D *hist2_;
     TH1D *hist3_;
     TTree *tree_;
-    Double_t tree_phi_;
-    Double_t tree_theta_;
+    double_t tree_phi_;
+    double_t tree_theta_;
     G4String stringHist_;
   };
   

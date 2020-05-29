@@ -9,6 +9,7 @@
 #include "MagBox.h"
 #include "MaterialsList.h"
 #include "IonizationSD.h"
+#include "BoxPointSampler.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>

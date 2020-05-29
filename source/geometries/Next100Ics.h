@@ -10,9 +10,6 @@
 #define NEXT100_ICS
 
 #include "BaseGeometry.h"
-#include "CylinderPointSampler.h"
-#include "SpherePointSampler.h"
-#include "BoxPointSampler.h"
 
 #include <G4Navigator.hh>
 
@@ -21,6 +18,9 @@ class G4GenericMessenger;
 
 namespace nexus {
 
+  class CylinderPointSampler;
+  class SpherePointSampler;
+  class BoxPointSampler;
 
   class Next100Ics: public BaseGeometry
   {

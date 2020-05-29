@@ -9,9 +9,11 @@
 #include "Next100Ics.h"
 #include "MaterialsList.h"
 #include "Visibilities.h"
+#include "CylinderPointSampler.h"
+#include "SpherePointSampler.h"
+#include "BoxPointSampler.h"
 
 #include <G4GenericMessenger.hh>
-
 #include <G4SubtractionSolid.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>

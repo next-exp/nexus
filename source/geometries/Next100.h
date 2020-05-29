@@ -10,10 +10,6 @@
 #define NEXT100
 
 #include "BaseGeometry.h"
-#include "Next100Shielding.h"
-#include "Next100Vessel.h"
-#include "Next100Ics.h"
-#include "Next100InnerElements.h"
 
 class G4LogicalVolume;
 class G4GenericMessenger;
@@ -23,6 +19,11 @@ namespace nexus {class BoxPointSampler;}
 
 namespace nexus {
 
+  class BoxPointSampler;
+  class Next100Shielding;
+  class Next100Vessel;
+  class Next100Ics;
+  class Next100InnerElements;
 
   class Next100: public BaseGeometry
   {

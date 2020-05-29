@@ -11,8 +11,6 @@
 #define MUONS_POINT_SAMPLER
 
 #include <G4ThreeVector.hh>
-#include <G4RotationMatrix.hh>
-#include <G4Box.hh>
 #include <vector>
 
 namespace nexus {

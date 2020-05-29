@@ -1,31 +1,20 @@
-// ----------------------------------------------------------------------------
-///  \file   NextElDB.h
-///  \brief
-///
-///  \author  <justo.martin-albo@ific.uv.es>, <jmunoz@ific.uv.es>
-///  \date    2 Nov 2010
-///  \version $Id: Next1DBO.h 3279 2010-11-17 12:12:03Z jmalbos $
-//
-///  Copyright (c) 2010 NEXT Collaboration
-// ----------------------------------------------------------------------------
-
-#ifndef NEXT_EL_DB
-#define NEXT_EL_DB
-
-#include "SiPM11.h"
-#include "BaseGeometry.h"
-#include <vector>
 // -----------------------------------------------------------------------------
 // nexus | NextElDB.h
-// -----------------------------------------------------------------------------
-// nexus | NextElDB.cc
 //
 // Geometry of the NEXT-DEMO SiPM board.
 //
 // The NEXT Collaboration
 // -----------------------------------------------------------------------------
 
+#ifndef NEXT_EL_DB
+#define NEXT_EL_DB
+
+#include "BaseGeometry.h"
+#include <vector>
+
 namespace nexus {
+
+  class SiPM11;
 
   class NextElDB: public BaseGeometry
   {

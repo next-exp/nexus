@@ -10,6 +10,8 @@
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
+#include "CylinderPointSampler.h"
+#include "BoxPointSampler.h"
 
 #include <G4PVPlacement.hh>
 #include <G4VisAttributes.hh>

@@ -10,8 +10,6 @@
 #define NEXT100_VESSEL
 
 #include "BaseGeometry.h"
-#include "CylinderPointSampler.h"
-#include "SpherePointSampler.h"
 
 #include <G4Navigator.hh>
 
@@ -20,6 +18,9 @@ class G4GenericMessenger;
 class G4VPhysicalVolume;
 
 namespace nexus {
+
+  class CylinderPointSampler;
+  class SpherePointSampler;
 
   class Next100Vessel: public BaseGeometry
   {

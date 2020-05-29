@@ -11,6 +11,8 @@
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
 #include "CalibrationSource.h"
+#include "CylinderPointSampler.h"
+#include "SpherePointSampler.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>

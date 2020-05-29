@@ -11,6 +11,7 @@
 #include "PmtSD.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
+#include "SiPM11.h"
 
 #include <G4Box.hh>
 #include <G4VisAttributes.hh>

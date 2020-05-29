@@ -13,8 +13,6 @@
 #include <G4Navigator.hh>
 #include <G4TransportationManager.hh>
 
-#include "CylinderPointSampler.h"
-#include "BoxPointSampler.h"
 #include "NextNewKDB.h"
 
 class G4Material;
@@ -22,6 +20,9 @@ class G4LogicalVolume;
 class G4GenericMessenger;
 
 namespace nexus {
+
+  class CylinderPointSampler;
+  class BoxPointSampler;
 
   /// This is a geometry formed by all the components of the tracking plane
   class NextNewTrackingPlane: public BaseGeometry

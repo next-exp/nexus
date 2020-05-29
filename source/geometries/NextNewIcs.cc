@@ -9,6 +9,7 @@
 #include "NextNewIcs.h"
 #include "MaterialsList.h"
 #include "Visibilities.h"
+#include "CylinderPointSampler.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4SubtractionSolid.hh>

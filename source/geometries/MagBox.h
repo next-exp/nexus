@@ -10,7 +10,6 @@
 #define MAGBOX
 
 #include "BaseGeometry.h"
-#include "BoxPointSampler.h"
 
 class G4LogicalVolume;
 class G4GenericMessenger;
@@ -18,6 +17,8 @@ class G4Material;
 
 
 namespace nexus {
+
+  class BoxPointSampler;
 
   class MagBox: public BaseGeometry {
   public:

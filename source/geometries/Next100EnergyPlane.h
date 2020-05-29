@@ -13,7 +13,6 @@
 #include <G4Navigator.hh>
 #include <G4RotationMatrix.hh>
 
-#include "CylinderPointSampler2020.h"
 #include "PmtR11410.h"
 
 class G4Material;
@@ -24,6 +23,8 @@ class G4GenericMessenger;
 namespace nexus {
 
   /// This is a class to place all the components of the energy plane
+
+  class CylinderPointSampler2020;
 
   class Next100EnergyPlane: public BaseGeometry
   {

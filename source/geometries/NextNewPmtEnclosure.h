@@ -13,8 +13,6 @@
 #include <G4Navigator.hh>
 #include <G4TransportationManager.hh>
 #include "BaseGeometry.h"
-#include "CylinderPointSampler.h"
-#include "PmtR11410.h"
 
 class G4Material;
 class G4LogicalVolume;
@@ -24,6 +22,10 @@ class G4OpticalSurface;
 class G4GenericMessenger;
 
 namespace nexus{
+
+  class CylinderPointSampler;
+  class PmtR11410;
+  
   class NextNewPmtEnclosure: public BaseGeometry
   {
   public:

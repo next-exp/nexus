@@ -10,9 +10,6 @@
 #define NEXTNEW_VESSEL
 
 #include "BaseGeometry.h"
-#include "CylinderPointSampler.h"
-#include "SpherePointSampler.h"
-
 
 #include <G4Navigator.hh>
 
@@ -21,6 +18,8 @@ class G4GenericMessenger;
 namespace nexus {
 
   class CalibrationSource;
+  class CylinderPointSampler;
+  class SpherePointSampler;
 
   class NextNewVessel: public BaseGeometry
   {

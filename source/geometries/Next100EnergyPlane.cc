@@ -10,6 +10,7 @@
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
+#include "CylinderPointSampler2020.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4PVPlacement.hh>

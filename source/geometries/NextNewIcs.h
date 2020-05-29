@@ -10,13 +10,14 @@
 #define NEXTNEW_ICS
 
 #include "BaseGeometry.h"
-#include "CylinderPointSampler.h"
 
 #include <G4Navigator.hh>
 
 class G4GenericMessenger;
 
 namespace nexus {
+
+  class CylinderPointSampler;
 
   class NextNewIcs: public BaseGeometry
   {

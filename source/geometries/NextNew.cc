@@ -17,6 +17,7 @@
 #include "DiskSource.h"
 #include "Th228Source.h"
 #include "Na22Source.h"
+#include "CylinderPointSampler.h"
 #include "BoxPointSampler.h"
 #include "MuonsPointSampler.h"
 #include "OpticalMaterialProperties.h"

@@ -8,8 +8,9 @@
 // ----------------------------------------------------------------------------
 
 #include "NextNewRnTube.h"
-#include <G4GenericMessenger.hh>
+#include "CylinderPointSampler.h"
 
+#include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4UnionSolid.hh>
