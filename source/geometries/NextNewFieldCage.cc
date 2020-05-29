@@ -10,7 +10,6 @@
 
 #include "MaterialsList.h"
 #include "IonizationSD.h"
-#include "PmtSD.h"
 #include "UniformElectricDriftField.h"
 #include "OpticalMaterialProperties.h"
 #include "IonizationSD.h"

@@ -115,7 +115,7 @@ namespace nexus {
     pmtsd->SetDetectorVolumeDepth(1);
     pmtsd->SetTimeBinning(100.*nanosecond);
     G4SDManager::GetSDMpointer()->AddNewDetector(pmtsd);
-    window_logic->SetSensitiveDetector(pmtsd);
+    phcath_logic->SetSensitiveDetector(pmtsd);
 
     // OPTICAL SURFACES //////////////////////////////////////////////
 

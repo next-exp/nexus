@@ -154,7 +154,7 @@ namespace nexus {
     pmtsd->SetDetectorVolumeDepth(sd_depth_);
     pmtsd->SetTimeBinning(binning_);
     G4SDManager::GetSDMpointer()->AddNewDetector(pmtsd);
-    window_logic->SetSensitiveDetector(pmtsd);
+    photocathode_logic->SetSensitiveDetector(pmtsd);
 
 
     // VISIBILITIES //////////////////////////////////////////////////

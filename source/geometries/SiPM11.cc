@@ -170,7 +170,7 @@ namespace nexus {
       sipmsd->SetMotherVolumeDepth(1);
 
       G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
-      sipm_logic->SetSensitiveDetector(sipmsd);
+      active_logic->SetSensitiveDetector(sipmsd);
     }
 
     // Visibilities

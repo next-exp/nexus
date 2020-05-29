@@ -257,6 +257,6 @@ void GenericPhotosensor::Construct()
     sensdet->SetTimeBinning(time_binning_);
 
     G4SDManager::GetSDMpointer()->AddNewDetector(sensdet);
-    window_logic_vol->SetSensitiveDetector(sensdet);
+    sensarea_logic_vol->SetSensitiveDetector(sensdet);
   }
 }
