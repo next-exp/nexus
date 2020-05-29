@@ -1,16 +1,13 @@
-// -----------------------------------------------------------------------------
-//  nexus | OpticalMaterialProperties.h
+// ----------------------------------------------------------------------------
+// nexus | OpticalMaterialProperties.h
 //
-//  * Info:         : NEXT-Flex Field Cage geometry for performance studies.
-//  * Author        : <jmunoz@ific.uv.es>
-//  *                 <paola.ferrario@ific.uv.es>
-//  *                 <justo.martin-albo@ific.uv.es>
-//  * Creation date : February 2020
-//  * Description   : Optical properties of most used materials.
-// -----------------------------------------------------------------------------
+// Optical properties of relevant materials.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
-#ifndef __OPTICAL_MATERIAL_PROPERTIES__
-#define __OPTICAL_MATERIAL_PROPERTIES__
+#ifndef OPTICAL_MATERIAL_PROPERTIES
+#define OPTICAL_MATERIAL_PROPERTIES
 
 #include <globals.hh>
 
@@ -24,8 +21,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  // Optical properties of several materials.
-  // (N.B. This is a stateless class where all methods are static functions.)
+  // This is a stateless class where all methods are static functions.
 
   class OpticalMaterialProperties
   {

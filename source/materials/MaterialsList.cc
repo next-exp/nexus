@@ -1,10 +1,9 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | MaterialsList.cc
 //
-//  Author:  <justo.martin-albo@ific.uv.es>
-//  Created: 27 Mar 2009
+// Definition of materials of common use.
 //
-//  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "MaterialsList.h"
@@ -731,7 +730,7 @@ G4Material* MaterialsList::EJ280()
 // Kuraray Y-11
 G4Material* MaterialsList::Y11()
 {
-  G4String name = "Y11"; // 
+  G4String name = "Y11"; //
 
   G4Material* mat = G4Material::GetMaterial(name, false);
 
@@ -747,7 +746,7 @@ G4Material* MaterialsList::Y11()
     mat->AddElement(H, 8);
     mat->AddElement(C, 8);
   }
-  
+
   return mat;
 }
 

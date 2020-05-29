@@ -1,5 +1,9 @@
+// ----------------------------------------------------------------------------
+// nexus | HeliumGasProperties.cc
 //
-//  Copyright (c) 2010-2016 NEXT Collaboration. All rights reserved.
+// This class collects the relevant physical properties of gaseous helium.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "HeliumGasProperties.h"
@@ -15,22 +19,22 @@
 
 namespace nexus {
 
-  using namespace CLHEP; 
-  
+  using namespace CLHEP;
+
   HeliumGasProperties::HeliumGasProperties(G4double pressure,
 					 G4double /*temperature*/):
-    _pressure(pressure)
-    //, _temperature(temperature)
+    pressure_(pressure)
+    //, temperature_(temperature)
   {
     //Density();
   }
-  
-  
-  
+
+
+
   HeliumGasProperties::~HeliumGasProperties()
   {
   }
-  
+
   G4double HeliumGasProperties::MassPerMole(G4int mass_num)
   {
     G4double mass_per_mole = 4.0026*g/mole;
@@ -42,202 +46,202 @@ namespace nexus {
       G4cout << "Unknown Helium mass number: A = " << mass_num << G4endl;
       G4cout << "Reverting to Helium-4" << G4endl;
     }
-    
+
     return mass_per_mole;
   }
-  
+
   G4double HeliumGasProperties::Density(G4double pressure)
   {
     //These values are for a temperature of 300 K
     // taken from https://webbook.nist.gov/cgi/fluid.cgi?Action=Data&Wide=on&ID=C7440597&Type=IsoTherm&Digits=5&PLow=1&PHigh=40&PInc=0.1&T=300&RefState=DEF&TUnit=K&PUnit=bar&DUnit=kg%2Fm3&HUnit=kJ%2Fkg&WUnit=m%2Fs&VisUnit=uPa*s&STUnit=N%2Fm
-    
+
     G4double density = 1.60279*kg/m3;
-    
-    if (pressure/bar >1 && pressure/bar <1.1)	
+
+    if (pressure/bar >1 && pressure/bar <1.1)
 	density =0.1604*kg/m3;
-    else if (pressure/bar >1.1 && pressure/bar <1.2)	
+    else if (pressure/bar >1.1 && pressure/bar <1.2)
 	density =0.17643*kg/m3;
-    else if (pressure/bar >1.2 && pressure/bar <1.3)	
+    else if (pressure/bar >1.2 && pressure/bar <1.3)
 	density =0.19246*kg/m3;
-    else if (pressure/bar >1.3 && pressure/bar <1.4)	
+    else if (pressure/bar >1.3 && pressure/bar <1.4)
 	density =0.20849*kg/m3;
-    else if (pressure/bar >1.4 && pressure/bar <1.5)	
+    else if (pressure/bar >1.4 && pressure/bar <1.5)
 	density =0.22451*kg/m3;
-    else if (pressure/bar >1.5 && pressure/bar <1.6)	
+    else if (pressure/bar >1.5 && pressure/bar <1.6)
 	density =0.24054*kg/m3;
-    else if (pressure/bar >1.6 && pressure/bar <1.7)	
+    else if (pressure/bar >1.6 && pressure/bar <1.7)
 	density =0.25657*kg/m3;
-    else if (pressure/bar >1.7 && pressure/bar <1.8)	
+    else if (pressure/bar >1.7 && pressure/bar <1.8)
         density =0.27259*kg/m3;
-    else if (pressure/bar >1.8 && pressure/bar <1.9)	
+    else if (pressure/bar >1.8 && pressure/bar <1.9)
 	density =0.28861*kg/m3;
-    else if (pressure/bar >1.9 && pressure/bar <2)	
+    else if (pressure/bar >1.9 && pressure/bar <2)
 	density =0.30463*kg/m3;
-    else if (pressure/bar >2 && pressure/bar <2.1)	
+    else if (pressure/bar >2 && pressure/bar <2.1)
 	density =0.32065*kg/m3;
-    else if (pressure/bar >2.1 && pressure/bar <2.2)	
+    else if (pressure/bar >2.1 && pressure/bar <2.2)
 	density =0.33666*kg/m3;
-    else if (pressure/bar >2.2 && pressure/bar <2.3)		
+    else if (pressure/bar >2.2 && pressure/bar <2.3)
 	density =0.35268*kg/m3;
-    else if (pressure/bar >2.3 && pressure/bar <2.3)		
+    else if (pressure/bar >2.3 && pressure/bar <2.3)
 	density =0.36869*kg/m3;
-    else if (pressure/bar >2.3 && pressure/bar <2.3)		
+    else if (pressure/bar >2.3 && pressure/bar <2.3)
 	density =0.36869*kg/m3;
-    else if (pressure/bar >2.3 && pressure/bar <2.4)		
+    else if (pressure/bar >2.3 && pressure/bar <2.4)
 	density =0.36869*kg/m3;
-    else if (pressure/bar >2.4 && pressure/bar <2.5)		
+    else if (pressure/bar >2.4 && pressure/bar <2.5)
 	density =0.38471*kg/m3;
-    else if (pressure/bar >2.5 && pressure/bar <2.6)		
+    else if (pressure/bar >2.5 && pressure/bar <2.6)
 	density =0.40072*kg/m3;
-    else if (pressure/bar >2.6 && pressure/bar <2.7)		
+    else if (pressure/bar >2.6 && pressure/bar <2.7)
 	density =0.41673*kg/m3;
-    else if (pressure/bar >2.7 && pressure/bar <2.8)		
+    else if (pressure/bar >2.7 && pressure/bar <2.8)
 	density =0.43274*kg/m3;
-    else if (pressure/bar >2.8 && pressure/bar <2.9)		
+    else if (pressure/bar >2.8 && pressure/bar <2.9)
 	density =0.44874*kg/m3;
-    else if (pressure/bar >2.9 && pressure/bar <3)		
+    else if (pressure/bar >2.9 && pressure/bar <3)
 	density =0.46475*kg/m3;
-    else if (pressure/bar >3 && pressure/bar <3.1)		
+    else if (pressure/bar >3 && pressure/bar <3.1)
 	density =0.48075*kg/m3;
-    else if (pressure/bar >3.1 && pressure/bar <3.2)		
+    else if (pressure/bar >3.1 && pressure/bar <3.2)
 	density =0.49675*kg/m3;
-    else if (pressure/bar >3.2 && pressure/bar <3.3)		
+    else if (pressure/bar >3.2 && pressure/bar <3.3)
 	density =0.51276*kg/m3;
-    else if (pressure/bar >3.3 && pressure/bar <3.4)		
+    else if (pressure/bar >3.3 && pressure/bar <3.4)
 	density =0.52876*kg/m3;
-    else if (pressure/bar >3.4 && pressure/bar <3.5)		
+    else if (pressure/bar >3.4 && pressure/bar <3.5)
 	density =0.54475*kg/m3;
-    else if (pressure/bar >3.5 && pressure/bar <3.6)		
+    else if (pressure/bar >3.5 && pressure/bar <3.6)
 	density =0.56075*kg/m3;
-    else if (pressure/bar >3.6 && pressure/bar <3.7)		
+    else if (pressure/bar >3.6 && pressure/bar <3.7)
 	density =0.57674*kg/m3;
-    else if (pressure/bar >3.7 && pressure/bar <3.8)		
+    else if (pressure/bar >3.7 && pressure/bar <3.8)
 	density =0.59274*kg/m3;
-    else if (pressure/bar >3.8 && pressure/bar <3.9)		
+    else if (pressure/bar >3.8 && pressure/bar <3.9)
 	density =0.60873*kg/m3;
-    else if (pressure/bar >3.9 && pressure/bar <4)		
+    else if (pressure/bar >3.9 && pressure/bar <4)
 	density =0.62472*kg/m3;
-    else if (pressure/bar >4 && pressure/bar <4.1)		
+    else if (pressure/bar >4 && pressure/bar <4.1)
 	density =0.64071*kg/m3;
-    else if (pressure/bar >4.1 && pressure/bar <4.2)		
+    else if (pressure/bar >4.1 && pressure/bar <4.2)
 	density =0.6567*kg/m3;
-    else if (pressure/bar >4.2 && pressure/bar <4.3)		
+    else if (pressure/bar >4.2 && pressure/bar <4.3)
 	density =0.67268*kg/m3;
-    else if (pressure/bar >4.3 && pressure/bar <4.4)		
+    else if (pressure/bar >4.3 && pressure/bar <4.4)
 	density =0.68867*kg/m3;
-    else if (pressure/bar >4.4 && pressure/bar <4.5)		
+    else if (pressure/bar >4.4 && pressure/bar <4.5)
 	density =0.70465*kg/m3;
-    else if (pressure/bar >4.5 && pressure/bar <4.6)		
+    else if (pressure/bar >4.5 && pressure/bar <4.6)
 	density =0.72064*kg/m3;
-    else if (pressure/bar >4.6 && pressure/bar <4.7)		
+    else if (pressure/bar >4.6 && pressure/bar <4.7)
 	density =0.73662*kg/m3;
-    else if (pressure/bar >4.7 && pressure/bar <4.8)		
+    else if (pressure/bar >4.7 && pressure/bar <4.8)
 	density =0.75259*kg/m3;
-    else if (pressure/bar >4.8 && pressure/bar <4.9)		
+    else if (pressure/bar >4.8 && pressure/bar <4.9)
 	density =0.76857*kg/m3;
-    else if (pressure/bar >4.9 && pressure/bar <5)		
+    else if (pressure/bar >4.9 && pressure/bar <5)
 	density =0.78455*kg/m3;
-    else if (pressure/bar >5 && pressure/bar <5.1)		
+    else if (pressure/bar >5 && pressure/bar <5.1)
 	density =0.80052*kg/m3;
-    else if (pressure/bar >5.1 && pressure/bar <5.2)		
+    else if (pressure/bar >5.1 && pressure/bar <5.2)
 	density =0.8165*kg/m3;
-    else if (pressure/bar >5.2 && pressure/bar <5.3)		
+    else if (pressure/bar >5.2 && pressure/bar <5.3)
 	density =0.83247*kg/m3;
-    else if (pressure/bar >5.3 && pressure/bar <5.4)		
+    else if (pressure/bar >5.3 && pressure/bar <5.4)
 	density =0.84844*kg/m3;
-    else if (pressure/bar >5.4 && pressure/bar <5.5)		
+    else if (pressure/bar >5.4 && pressure/bar <5.5)
 	density =0.86441*kg/m3;
-    else if (pressure/bar >5.5 && pressure/bar <5.6)		
+    else if (pressure/bar >5.5 && pressure/bar <5.6)
 	density =0.88037*kg/m3;
-    else if (pressure/bar >5.6 && pressure/bar <5.7)		
+    else if (pressure/bar >5.6 && pressure/bar <5.7)
 	density =0.89634*kg/m3;
-    else if (pressure/bar >5.7 && pressure/bar <5.8)		
+    else if (pressure/bar >5.7 && pressure/bar <5.8)
 	density =0.91231*kg/m3;
-    else if (pressure/bar >5.8 && pressure/bar <5.9)		
+    else if (pressure/bar >5.8 && pressure/bar <5.9)
 	density =0.92827*kg/m3;
-    else if (pressure/bar >5.9 && pressure/bar <6)		
+    else if (pressure/bar >5.9 && pressure/bar <6)
 	density =0.94423*kg/m3;
-    else if (pressure/bar >6 && pressure/bar <6.1)		
+    else if (pressure/bar >6 && pressure/bar <6.1)
 	density =0.96019*kg/m3;
-    else if (pressure/bar >6.1 && pressure/bar <6.2)		
+    else if (pressure/bar >6.1 && pressure/bar <6.2)
 	density =0.97615*kg/m3;
-    else if (pressure/bar >6.2 && pressure/bar <6.3)		
+    else if (pressure/bar >6.2 && pressure/bar <6.3)
 	density =0.99211*kg/m3;
-    else if (pressure/bar >6.3 && pressure/bar <6.4)		
+    else if (pressure/bar >6.3 && pressure/bar <6.4)
 	density =1.0081*kg/m3;
-    else if (pressure/bar >6.4 && pressure/bar <6.5)		
+    else if (pressure/bar >6.4 && pressure/bar <6.5)
 	density =1.024*kg/m3;
-    else if (pressure/bar >6.5 && pressure/bar <6.6)		
+    else if (pressure/bar >6.5 && pressure/bar <6.6)
 	density =1.04*kg/m3;
-    else if (pressure/bar >6.6 && pressure/bar <6.7)		
+    else if (pressure/bar >6.6 && pressure/bar <6.7)
 	density =1.0559*kg/m3;
-    else if (pressure/bar >6.7 && pressure/bar <6.8)		
+    else if (pressure/bar >6.7 && pressure/bar <6.8)
 	density =1.0719*kg/m3;
-    else if (pressure/bar >6.8 && pressure/bar <6.9)		
+    else if (pressure/bar >6.8 && pressure/bar <6.9)
 	density =1.0878*kg/m3;
-    else if (pressure/bar >6.9 && pressure/bar <7)		
+    else if (pressure/bar >6.9 && pressure/bar <7)
 	density =1.1038*kg/m3;
-    else if (pressure/bar >7 && pressure/bar <7.1)		
+    else if (pressure/bar >7 && pressure/bar <7.1)
 	density =1.1197*kg/m3;
-    else if (pressure/bar >7.1 && pressure/bar <7.2)		
+    else if (pressure/bar >7.1 && pressure/bar <7.2)
 	density =1.1357*kg/m3;
-    else if (pressure/bar >7.2 && pressure/bar <7.3)		
+    else if (pressure/bar >7.2 && pressure/bar <7.3)
 	density =1.1516*kg/m3;
-    else if (pressure/bar >7.3 && pressure/bar <7.4)		
+    else if (pressure/bar >7.3 && pressure/bar <7.4)
 	density =1.1675*kg/m3;
-    else if (pressure/bar >7.4 && pressure/bar <7.5)		
+    else if (pressure/bar >7.4 && pressure/bar <7.5)
 	density =1.1835*kg/m3;
-    else if (pressure/bar >7.5 && pressure/bar <7.6)		
+    else if (pressure/bar >7.5 && pressure/bar <7.6)
 	density =1.1994*kg/m3;
-    else if (pressure/bar >7.6 && pressure/bar <7.7)		
+    else if (pressure/bar >7.6 && pressure/bar <7.7)
 	density =1.2154*kg/m3;
-    else if (pressure/bar >7.7 && pressure/bar <7.8)		
+    else if (pressure/bar >7.7 && pressure/bar <7.8)
 	density =1.2313*kg/m3;
-    else if (pressure/bar >7.8 && pressure/bar <7.9)		
+    else if (pressure/bar >7.8 && pressure/bar <7.9)
 	density =1.2472*kg/m3;
-    else if (pressure/bar >7.9 && pressure/bar <8)		
+    else if (pressure/bar >7.9 && pressure/bar <8)
 	density =1.2632*kg/m3;
-    else if (pressure/bar >8 && pressure/bar <8.1)		
+    else if (pressure/bar >8 && pressure/bar <8.1)
 	density =1.2791*kg/m3;
-    else if (pressure/bar >8.1 && pressure/bar <8.2)		
+    else if (pressure/bar >8.1 && pressure/bar <8.2)
 	density =1.295*kg/m3;
-    else if (pressure/bar >8.2 && pressure/bar <8.3)		
+    else if (pressure/bar >8.2 && pressure/bar <8.3)
 	density =1.3109*kg/m3;
-    else if (pressure/bar >8.3 && pressure/bar <8.4)		
+    else if (pressure/bar >8.3 && pressure/bar <8.4)
 	density =1.3269*kg/m3;
-    else if (pressure/bar >8.4 && pressure/bar <8.5)		
+    else if (pressure/bar >8.4 && pressure/bar <8.5)
 	density =1.3428*kg/m3;
-    else if (pressure/bar >8.5 && pressure/bar <8.6)		
+    else if (pressure/bar >8.5 && pressure/bar <8.6)
 	density =1.3587*kg/m3;
-    else if (pressure/bar >8.6 && pressure/bar <8.7)		
+    else if (pressure/bar >8.6 && pressure/bar <8.7)
 	density =1.3746*kg/m3;
-    else if (pressure/bar >8.7 && pressure/bar <8.8)		
+    else if (pressure/bar >8.7 && pressure/bar <8.8)
 	density =1.3906*kg/m3;
-    else if (pressure/bar >8.8 && pressure/bar <8.9)		
+    else if (pressure/bar >8.8 && pressure/bar <8.9)
 	density =1.4065*kg/m3;
-    else if (pressure/bar >8.9 && pressure/bar <9)		
+    else if (pressure/bar >8.9 && pressure/bar <9)
 	density =1.4224*kg/m3;
-    else if (pressure/bar >9 && pressure/bar <9.1)		
+    else if (pressure/bar >9 && pressure/bar <9.1)
 	density =1.4383*kg/m3;
-    else if (pressure/bar >9.1 && pressure/bar <9.2)		
+    else if (pressure/bar >9.1 && pressure/bar <9.2)
 	density =1.4542*kg/m3;
-    else if (pressure/bar >9.2 && pressure/bar <9.3)		
+    else if (pressure/bar >9.2 && pressure/bar <9.3)
 	density =1.4701*kg/m3;
-    else if (pressure/bar >9.3 && pressure/bar <9.4)		
+    else if (pressure/bar >9.3 && pressure/bar <9.4)
 	density =1.4861*kg/m3;
-    else if (pressure/bar >9.4 && pressure/bar <9.5)		
+    else if (pressure/bar >9.4 && pressure/bar <9.5)
 	density =1.502*kg/m3;
-    else if (pressure/bar >9.5 && pressure/bar <9.6)		
+    else if (pressure/bar >9.5 && pressure/bar <9.6)
 	density =1.5179*kg/m3;
-    else if (pressure/bar >9.6 && pressure/bar <9.7)		
+    else if (pressure/bar >9.6 && pressure/bar <9.7)
 	density =1.5338*kg/m3;
-    else if (pressure/bar >9.7 && pressure/bar <9.8)		
+    else if (pressure/bar >9.7 && pressure/bar <9.8)
 	density =1.5497*kg/m3;
-    else if (pressure/bar >9.8 && pressure/bar <9.9)		
+    else if (pressure/bar >9.8 && pressure/bar <9.9)
 	density =1.5656*kg/m3;
-    else if (pressure/bar >9.9 && pressure/bar <10)		
+    else if (pressure/bar >9.9 && pressure/bar <10)
 	density =1.5815*kg/m3;
-    else if (pressure/bar >10 && pressure/bar <10.1)		
+    else if (pressure/bar >10 && pressure/bar <10.1)
 	density =1.5974*kg/m3;
     else if (pressure/bar >10.1 && pressure/bar <10.2)
 	density =1.6133*kg/m3;
@@ -255,9 +259,9 @@ namespace nexus {
 	density =1.7087*kg/m3;
     else if (pressure/bar >10.8 && pressure/bar <10.9)
 	density =1.7246*kg/m3;
-    else if (pressure/bar >10.9 && pressure/bar <11)		
+    else if (pressure/bar >10.9 && pressure/bar <11)
 	density =1.7405*kg/m3;
-    else if (pressure/bar >11 && pressure/bar <11.1)		
+    else if (pressure/bar >11 && pressure/bar <11.1)
 	density =1.7563*kg/m3;
     else if (pressure/bar >11.1 && pressure/bar <11.2)
 	density =1.7722*kg/m3;
@@ -275,9 +279,9 @@ namespace nexus {
 	density =1.8675*kg/m3;
     else if (pressure/bar >11.8 && pressure/bar <11.9)
 	density =1.8834*kg/m3;
-    else if (pressure/bar >11.9 && pressure/bar <12)		
+    else if (pressure/bar >11.9 && pressure/bar <12)
 	density =1.8993*kg/m3;
-    else if (pressure/bar >12 && pressure/bar <12.1)		
+    else if (pressure/bar >12 && pressure/bar <12.1)
 	density =1.9151*kg/m3;
     else if (pressure/bar >12.1 && pressure/bar <12.2)
 	density =1.931*kg/m3;
@@ -295,9 +299,9 @@ namespace nexus {
 	density =2.0262*kg/m3;
     else if (pressure/bar >12.8 && pressure/bar <12.9)
 	density =2.0421*kg/m3;
-    else if (pressure/bar >12.9 && pressure/bar <13)	
+    else if (pressure/bar >12.9 && pressure/bar <13)
 	density =2.0579*kg/m3;
-    else if (pressure/bar >13 && pressure/bar <13.1)	
+    else if (pressure/bar >13 && pressure/bar <13.1)
 	density =2.0738*kg/m3;
     else if (pressure/bar >13.1 && pressure/bar <13.2)
 	density =2.0896*kg/m3;
@@ -362,5 +366,5 @@ namespace nexus {
 		"Unknown helium desity for theis pressure!");
 return density;
 
-  }  
+  }
 } // end namespace nexus
