@@ -2,7 +2,7 @@
 ///  \file   CylinderPointSampler.h
 ///  \brief  Generator of random points in a cylinder.
 ///
-///  \author   Javier Muñoz Vidal <jmunoz@ific.uv.es>
+///  \author   Javier Munyoz Vidal <jmunoz@ific.uv.es>
 ///  \date     2 November 2009
 ///  \version  $Id$
 ///

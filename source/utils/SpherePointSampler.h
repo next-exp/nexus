@@ -2,7 +2,7 @@
 ///  \file   SpherePointSampler.h
 ///  \brief  Generator of random points in a sphere.
 ///
-///  \author   Javier Muñoz Vidal <jmunoz@ific.uv.es>
+///  \author   Javier Munyoz Vidal <jmunoz@ific.uv.es>
 ///  \date     24 November 2009
 ///  \version  $Id$
 ///

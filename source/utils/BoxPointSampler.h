@@ -2,7 +2,7 @@
 ///  \file   BoxPointSampler.h
 ///  \brief  Sampler of random uniform points in a box-shaped volume.
 ///
-///  \author   Javier Muñoz Vidal <jmunoz@ific.uv.es>
+///  \author   Javier Munyoz Vidal <jmunoz@ific.uv.es>
 ///  \date     2 November 2009
 ///  \version  $Id$
 ///
