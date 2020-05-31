@@ -1,7 +1,12 @@
-### --------------------------------------------------------
-###  Example config macro for the ion gun primary generator.
-### --------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | Ion.mac
+##
+## Example configuration macro of the IonGenerator for Tl-208 radioactive
+## decays.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
-/Generator/IonGun/atomic_number 81
-/Generator/IonGun/mass_number 208
-/Generator/IonGun/region CENTER
+/Generator/IonGenerator/atomic_number 81
+/Generator/IonGenerator/mass_number 208
+/Generator/IonGenerator/region CENTER
