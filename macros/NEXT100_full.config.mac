@@ -1,25 +1,26 @@
-### --------------------------------------------------------
-### This macro simulates Kr83 decays in the NEXT100 geometry
-### using the full simulation.
-### --------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | NEXT100_full.config.mac
+##
+## Configuration macro to simulate Kr-83 decays in the NEXT-100 geometry
+## with generation and transportation of optical photons.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
-
-##### JOB CONTROL #####
-/nexus/persistency/outputFile Next100_full.next
-
+##### VERBOSITY #####
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
 
 ##### GEOMETRY #####
 /Geometry/Next100/elfield true
 /Geometry/Next100/EL_field 13 kV/cm
 /Geometry/Next100/pressure 10. bar
 /Geometry/Next100/max_step_size 5. mm
-
 /Geometry/PmtR11410/SD_depth 3
 
 ##### GENERATOR #####
 /Generator/Kr83mGenerator/region ACTIVE
 
-##### VERBOSITIES #####
-/run/verbose 1
-/event/verbose 0
-/tracking/verbose 0
+##### PERSISTENCY #####
+/nexus/persistency/outputFile Next100_full.next

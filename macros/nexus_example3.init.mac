@@ -1,7 +1,11 @@
-### --------------------------------------------------------
-###  Example 3: Initialization macro of nexus.
-###  $Id: nexus_example3.init.mac 9063 2013-08-07 08:51:19Z jmalbos $
-### --------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | nexus_example3.init.mac
+##
+## Initialization macro to simulate individual particles
+## in the NEXT-DEMO detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /control/execute macros/physics/DefaultPhysicsList.mac
 

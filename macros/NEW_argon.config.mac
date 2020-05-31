@@ -1,10 +1,12 @@
-### --------------------------------------------------------
-###  Configuration macro for the NEW detector geometry
-###  This macro simulates Na22 decays in argon at 5 bar
-###  from one single vertex, at the most internal position
-###  of the axial feedthrough
-### --------------------------------------------------------
-
+## ----------------------------------------------------------------------------
+## nexus | NEW_argon.config.mac
+##
+## Configuration macro to simulate Na-22 decays in argon at 5 bar
+## from one single vertex, at the most internal position  of the axial
+## feedthrough.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /run/verbose 0
 /event/verbose 0
@@ -25,8 +27,6 @@
 /Generator/IonGun/mass_number 22
 /Generator/IonGun/region  SOURCE_PORT_AXIAL
 
-
-# PHYSICS
 /PhysicsList/Nexus/clustering          false
 /PhysicsList/Nexus/drift               false
 /PhysicsList/Nexus/electroluminescence false

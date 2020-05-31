@@ -1,8 +1,11 @@
-### --------------------------------------------------------
-###  This macro simulates neutrons in the NEXT100 geometry
-###  $Id: Next100.Neutron.init.mac 8754 2016-11-09 15:15:13Z minegui $
-### --------------------------------------------------------
-
+## ----------------------------------------------------------------------------
+## nexus | NEXT100.Neutron.init.mac
+##
+## Initialization macro to simulate neutrons from all around the lead shielding
+## in the NEXT-100 detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 ### PHYSICS
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -29,7 +32,6 @@
 /Actions/RegisterEventAction DEFAULT
 /Actions/RegisterTrackingAction DEFAULT
 
-
-### EXTRA CONFIGURATION
+### CONFIGURATION
 /nexus/RegisterDelayedMacro macros/physics/Xe137.mac
 /nexus/RegisterMacro macros/NEXT100.Neutron.config.mac

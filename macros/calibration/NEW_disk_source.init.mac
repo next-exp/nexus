@@ -1,9 +1,12 @@
-### --------------------------------------------------------
-###  NextNew: Initialization macro of nexus.
-###  $Id: NextNew.init.mac  2013-09-09 13:05 minegui $
-### --------------------------------------------------------
-
-### This init macro simulates radioactive decays in the NEW detector geometry
+## ----------------------------------------------------------------------------
+## nexus | NEW_disk_source.init.mac
+##
+## Initialization macro to simulate the activity of a specific calibration
+## source in the NEXT-WHITE detector. The source has a disk shape and
+## it doesn't fit in the upper or lateral ports.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 ### PHYSICS
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -19,6 +22,5 @@
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction DEFAULT
 /Actions/RegisterRunAction DEFAULT
-
 
 /nexus/RegisterMacro macros/calibration/NEW_disk_source.config.mac

@@ -1,3 +1,11 @@
+## ----------------------------------------------------------------------------
+## nexus | NEW_valid_Co60.config.mac
+##
+## Configuration macro to simulate Co-60 decays to test gamma
+## production in different versions of GEANT4.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 #VERBOSITY
 /run/verbose 0

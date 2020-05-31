@@ -1,8 +1,10 @@
-### --------------------------------------------------------
-###  Configuration macro for the NEW detector geometry
-###  This macro simulates an e+e- pair whose total kinetic energy
-###  is 1592 keV, in the active volume
-### --------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | NEW_pair.config.mac
+##
+## Configuration macro to simulate an e+e- pair in the NEW detector geometry.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /run/verbose 0
 /event/verbose 0

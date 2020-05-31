@@ -1,3 +1,21 @@
+## ----------------------------------------------------------------------------
+## nexus | ton_muons_vertical.config.mac
+##
+## Configuration macro to simulate vertical muons following the angular
+## distribution measured at LSC, in a tonne-scale detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+### VERBOSITY
+/control/verbose 0
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+### JOB CONTROL
+/nexus/random_seed 17392
+
 ### GEOMETRY
 /Geometry/NextTonScale/active_diam    200. cm
 /Geometry/NextTonScale/active_length  200. cm
@@ -16,21 +34,11 @@
 ### ACTIONS
 /Actions/DefaultEventAction/energy_threshold 0.01 MeV
 
-
-### PHYSICS (For fast Simulation)
+### PHYSICS (for fast simulation)
 /PhysicsList/Nexus/clustering           false
 /PhysicsList/Nexus/drift                false
 /PhysicsList/Nexus/electroluminescence  false
 
-
-### VERBOSITIES
-/control/verbose 0
-/run/verbose 0
-/event/verbose 0
-/tracking/verbose 0
-
-
-### JOB CONTROL
-/nexus/random_seed 17392
+### PERSISTENCY
 /nexus/persistency/start_id 0
 /nexus/persistency/outputFile TonMuons_vertical_example.next

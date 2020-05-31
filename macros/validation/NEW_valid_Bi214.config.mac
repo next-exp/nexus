@@ -1,3 +1,11 @@
+## ----------------------------------------------------------------------------
+## nexus | NEW_valid_Bi214.config.mac
+##
+## Configuration macro to simulate Bi-214 decays to test gamma
+## production in different versions of GEANT4.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 #VERBOSITY
 /run/verbose 1

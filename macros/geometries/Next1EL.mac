@@ -1,6 +1,10 @@
-### --------------------------------------------------------
-###  Example config macro for the geometry Next1 EL.
-### --------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | Next1EL.mac
+##
+## Ancillary macro to set the parameters of the NEXT-DEMO geometry.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /Geometry/Next1EL/external_scintillator false
 /Geometry/Next1EL/elfield false

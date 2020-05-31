@@ -1,6 +1,11 @@
-#################################################
-### Macro for the electroluminescence process ###
-#################################################
+## ----------------------------------------------------------------------------
+## nexus | EL_tables.mac
+##
+## Physics macro with the parameters of the secondary scintillation
+## look-up table generation.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /Physics/Electroluminescence/table_generation true
 /Physics/Electroluminescence/photons_per_point 5000

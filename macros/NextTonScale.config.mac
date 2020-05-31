@@ -1,3 +1,21 @@
+## ----------------------------------------------------------------------------
+## nexus | NextTonScale.config.mac
+##
+## Configuration macro to simulate individual particles
+## in the NEXT tonne-scale detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+### VERBOSITY
+/control/verbose 0
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+### JOB CONTROL
+/nexus/random_seed 1
+
 ### GEOMETRY
 /Geometry/NextTonScale/active_diam   200. cm
 /Geometry/NextTonScale/active_length 200. cm
@@ -30,10 +48,10 @@
 /Generator/SingleParticle/momentum_Y 0.
 /Generator/SingleParticle/momentum_Z 1.
 
-# Ion Gun for background decays ... (Bi214: Z=83, A=214), (Tl208: Z=81, A=208)
-#/Generator/IonGun/region READOUT_PLANES
-#/Generator/IonGun/atomic_number 81
-#/Generator/IonGun/mass_number 208
+# Ion Generator for background decays... (Bi214: Z=83, A=214), (Tl208: Z=81, A=208)
+#/Generator/IonGenerator/region READOUT_PLANES
+#/Generator/IonGenerator/atomic_number 81
+#/Generator/IonGenerator/mass_number 208
 
 # Decay0 interface for BB decays ... (BB0nu: DecayMode 1), (BB2nu: DecayMode 4)
 #/Generator/Decay0Interface/region ACTIVE
@@ -42,25 +60,14 @@
 #/Generator/Decay0Interface/EnergyThreshold 0. keV
 #/Generator/Decay0Interface/Ba136FinalState 0
 
-
 ### ACTIONS
 /Actions/DefaultEventAction/energy_threshold 2.3 MeV
 
-
-### PHYSICS (For fast Simulation)
+### PHYSICS (for fast simulation)
 /PhysicsList/Nexus/clustering           false
 /PhysicsList/Nexus/drift                false
 /PhysicsList/Nexus/electroluminescence  false
 
-
-### VERBOSITIES
-/control/verbose 0
-/run/verbose 0
-/event/verbose 0
-/tracking/verbose 0
-
-
-### JOB CONTROL
-/nexus/random_seed 1
+### PERSISTENCY
 /nexus/persistency/start_id 0
-/nexus/persistency/outputFile NextTon.Tl208.INNER_SHIELDING.next
+/nexus/persistency/outputFile NextTon.next

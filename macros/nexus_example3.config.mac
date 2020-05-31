@@ -1,16 +1,22 @@
-### --------------------------------------------------------
-###  Example 3: Configuration macro
-###  $Id: nexus_example3.config.mac 9053 2013-08-05 10:13:56Z jmalbos $
-### --------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | nexus_example3.config.mac
+##
+## Configuration macro to simulate individual particles
+## in the NEXT-DEMO detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /run/verbose 1
 /event/verbose 0
 /tracking/verbose 0
+
+/nexus/random_seed -2
+
 /control/execute macros/generators/SingleParticle.mac
+
 /control/execute macros/geometries/Next1EL.mac
 
 /control/execute macros/physics/IonizationElectron.mac
 
 /nexus/persistency/outputFile nexus.next
-
-/nexus/random_seed -2

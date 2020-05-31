@@ -1,3 +1,21 @@
+## ----------------------------------------------------------------------------
+## nexus | NEXT100_muons_lsc.config.mac
+##
+## Configuration macro to simulate muons according to the distribution
+## measured at LSC, in the NEXT-100 geometry.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+### VERBOSITY
+/control/verbose 0
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+### JOB CONTROL
+/nexus/random_seed 17392
+
 ### GEOMETRY
 /Geometry/Next100/pressure 15 bar
 /Geometry/Next100/gas enrichedXe
@@ -15,20 +33,11 @@
 /Actions/DefaultEventAction/energy_threshold 0.01 MeV
 
 
-### PHYSICS (For fast Simulation)
+### PHYSICS (for fast simulation)
 /PhysicsList/Nexus/clustering           false
 /PhysicsList/Nexus/drift                false
 /PhysicsList/Nexus/electroluminescence  false
 
-
-### VERBOSITIES
-/control/verbose 0
-/run/verbose 0
-/event/verbose 0
-/tracking/verbose 0
-
-
-### JOB CONTROL
-/nexus/random_seed 17392
+### PERSISTENCY
 /nexus/persistency/start_id 0
 /nexus/persistency/outputFile Next100Muons_lsc_example.next

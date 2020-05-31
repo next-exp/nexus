@@ -1,6 +1,10 @@
-### ------------------------------------------------------------------------
-###  Config macro that set default visibilities for the NEXT-WHITE geometry.
-### ------------------------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | NEWDefaultVisibility.mac
+##
+## Ancillary macro to set the default visibility of the NEW geometry.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /Geometry/Next100/shielding_vis     false
 /Geometry/NextNew/table_vis         false

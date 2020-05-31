@@ -1,6 +1,10 @@
-### ------------------------------------------------------------------------
-###  Config macro that set default visibilities for the NEXT-100 geometry.
-### ------------------------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | NEXT100DefaultVisibility.mac
+##
+## Ancillary macro to set the default visibility of the NEXT-100 geometry.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /Geometry/Next100/shielding_vis         false
 /Geometry/Next100/vessel_vis            false

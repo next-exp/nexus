@@ -1,3 +1,11 @@
+## ----------------------------------------------------------------------------
+## nexus | NEW_valid_Tl208.config.mac
+##
+## Configuration macro to simulate Tl-208 decays to test gamma
+## production in different versions of GEANT4.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 #VERBOSITY
 /run/verbose 1

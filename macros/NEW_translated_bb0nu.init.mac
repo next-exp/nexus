@@ -1,7 +1,10 @@
-### --------------------------------------------------------
-###  This init macro simulates bb0nu decays
-###  in the NEW detector geometry
-### --------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | NEW_translated_bb0nu.init.mac
+##
+## Initialization macro to simulate bb0nu decays in the NEW detector geometry.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /control/execute macros/physics/DefaultPhysicsList.mac
 

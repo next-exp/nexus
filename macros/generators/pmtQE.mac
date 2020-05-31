@@ -1,7 +1,11 @@
-### --------------------------------------------------------
-###  Example config macro for the single-particle generator.
-###  $Id: SingleParticle.mac 9053 2013-08-05 10:13:56Z jmalbos $
-### --------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | pmtQE.mac
+##
+## Ancillary macro to define the parameters of optical photons to be used
+## in the set-up geometry to extract PMT quantum efficiencies.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /Generator/SingleParticle/particle opticalphoton
 /Generator/SingleParticle/min_energy 4.95936772037 eV

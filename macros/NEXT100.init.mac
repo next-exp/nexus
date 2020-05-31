@@ -1,7 +1,11 @@
-### --------------------------------------------------------
-###  $Id: Next100.init.mac 8754 2013-06-15 15:15:13Z jmunoz $
-### This macro simulates radioactive decays in the NEXT100 geometry
-### --------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | NEXT100.init.mac
+##
+## Initialization macro to simulate Bi-214 radioactive decays from the
+## copper plate of the tracking plane in the NEXT-100 detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
 /PhysicsList/RegisterPhysics G4DecayPhysics

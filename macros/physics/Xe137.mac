@@ -1,1 +1,12 @@
+## ----------------------------------------------------------------------------
+## nexus | Xe137.mac
+##
+## Physics macro to interrupt the Xe-137 decay after the decay to Cs-137.
+## Parameters: n1 n2 n3 n4, with n1(n2) = nucleon number of the
+## first (last) decaying isotope and n3(n4) = atomic number of the
+## first (last) decaying isotope.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
 /grdm/nucleusLimits 137 137 54 54

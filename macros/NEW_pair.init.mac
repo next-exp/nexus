@@ -1,11 +1,10 @@
-### --------------------------------------------------------
-###  NextNew: Initialization macro of nexus.
-###  $Id: NextNew.init.mac  2013-09-09 13:05 minegui $
-### --------------------------------------------------------
-
-### This macro simulates an e+e- pair in the NEW detector geometry
-### It simulates only the inner part of the detector
-
+## ----------------------------------------------------------------------------
+## nexus | NEW_pair.init.mac
+##
+## Initialization macro to simulate an e+e- pair in the NEW detector geometry.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /control/execute macros/physics/DefaultPhysicsList.mac
 

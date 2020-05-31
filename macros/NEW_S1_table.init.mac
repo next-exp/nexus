@@ -1,9 +1,11 @@
-### --------------------------------------------------------
-###  This macro simulates tables of primary scintillation light
-###  in the NEW detector geometry
-###  $Id: NEW_S1_table.init.mac 10047 2015-01-23 17:07:30Z paola $
-### -------------------------------------------------------
-
+## ----------------------------------------------------------------------------
+## nexus | NEW_S1_table.init.mac
+##
+## Initialization macro to simulate primary scintillation light
+## for look-up tables in the NEW detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
 /PhysicsList/RegisterPhysics G4DecayPhysics
@@ -13,6 +15,7 @@
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 /Geometry/RegisterGeometry NEXT_NEW
+
 /Generator/RegisterGenerator SCINTILLATION
 
 /Actions/RegisterTrackingAction DEFAULT

@@ -1,14 +1,11 @@
-### GEOMETRY
-/Geometry/RegisterGeometry TON_SCALE
-
-### GENERATOR
-/Generator/RegisterGenerator LAB_MUON
-
-### ACTIONS
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterRunAction DEFAULT
-
+## ----------------------------------------------------------------------------
+## nexus | ton_muons_vertical.init.mac
+##
+## Initialization macro to simulate vertical muons following the angular
+## distribution measured at LSC, in a tonne-scale detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 ### PHYSICS
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -23,6 +20,17 @@
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 /physics_lists/em/MuonNuclear true
+
+### GEOMETRY
+/Geometry/RegisterGeometry TON_SCALE
+
+### GENERATOR
+/Generator/RegisterGenerator LAB_MUON
+
+### ACTIONS
+/Actions/RegisterTrackingAction DEFAULT
+/Actions/RegisterEventAction DEFAULT
+/Actions/RegisterRunAction DEFAULT
 
 /nexus/RegisterDelayedMacro macros/physics/Xe137.mac
 /nexus/RegisterMacro macros/ton_muons_vertical.config.mac

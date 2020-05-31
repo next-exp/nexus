@@ -1,14 +1,19 @@
-### -----------------------------------------------------------------
-###  Configuration macro for the NEW detector geometry
-###  This macro simulates a Na22 calibration source with a disk shape,
-###  which doesn't fit in the feedthrough from outside the upper port
-### -----------------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | NEW_disk_source.config.mac
+##
+## Configuration macro to simulate the activity of a specific calibration
+## source in the NEXT-WHITE detector. The source has a disk shape and
+## it doesn't fit in the upper or lateral ports.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
-
-/run/verbose 0
+# Verbosity
+/run/verbose 1
 /event/verbose 0
 /tracking/verbose 0
 
+# Geometry
 /Geometry/NextNew/pressure 7. bar
 /Geometry/NextNew/elfield false
 ## lateral/upper
@@ -30,15 +35,16 @@
 /Geometry/PmtR11410/visibility false
 /Geometry/PmtR11410/SD_depth 4
 
-## Generation
+## Generator
 /Generator/IonGenerator/atomic_number 81
 /Generator/IonGenerator/mass_number 208
 ## LATERAL/UP
-/Generator/IonGenerator/region  SOURCE_PORT_LATERAL_DISK
+/Generator/IonGenerator/region SOURCE_PORT_LATERAL_DISK
 
-# PHYSICS
+# Physics
 /PhysicsList/Nexus/clustering          false
 /PhysicsList/Nexus/drift               false
 /PhysicsList/Nexus/electroluminescence false
 
+# Persistency
 /nexus/persistency/outputFile New.source.next

@@ -1,3 +1,21 @@
+## ----------------------------------------------------------------------------
+## nexus | NEXT100.singleMuon_200GeV.config.mac
+##
+## Configuration macro to simulate individual muons from a specific vertex
+## and with fixed energy in the NEXT-100 detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+### VERBOSITY
+/control/verbose 0
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+### JOB CONTROL
+/nexus/random_seed -2
+
 ### GEOMETRY
 /Geometry/Next100/pressure 15. bar
 /Geometry/Next100/max_step_size 1. mm
@@ -6,10 +24,9 @@
 /Geometry/Next100/specific_vertex_X 0. mm
 /Geometry/Next100/specific_vertex_Y 2400. mm
 /Geometry/Next100/specific_vertex_Z 0. mm
-
-/control/execute macros/geometries/NEXT100DefaultVisibility.mac
 /Geometry/PmtR11410/SD_depth 3
 
+/control/execute macros/geometries/NEXT100DefaultVisibility.mac
 
 ### GENERATOR
 # Single Particle
@@ -21,27 +38,16 @@
 /Generator/SingleParticle/momentum_Y -1.
 /Generator/SingleParticle/momentum_Z 0.
 
-
 ### ACTIONS
 #/Actions/ElSimEventAction/max_energy 3. MeV
 #/Actions/DefaultEventAction/energy_threshold 0. MeV
 #/Actions/DefaultEventAction/max_energy 3. MeV
 
-
-### PHYSICS (For fast Simulation)
+### PHYSICS (for fast simulation)
 /PhysicsList/Nexus/clustering           false
 /PhysicsList/Nexus/drift                false
 /PhysicsList/Nexus/electroluminescence  false
 
-
-### VERBOSITIES
-/control/verbose 0
-/run/verbose 0
-/event/verbose 0
-/tracking/verbose 0
-
-
-### JOB CONTROL
-#/nexus/random_seed 0
+### PERSISTENCY
 /nexus/persistency/eventType background
 /nexus/persistency/outputFile NEXT100.singleMuon_200GeV.next

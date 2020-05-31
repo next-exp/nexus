@@ -1,17 +1,18 @@
-### --------------------------------------------------------
-###  This macro simulates tables of secondary scintillation light
-###  in the NEW detector geometry
-### --------------------------------------------------------
-
+## ----------------------------------------------------------------------------
+## nexus | NEW_S2_table.config.mac
+##
+## Configuration macro to simulate secondary scintillation light
+## for look-up tables in the NEW detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /run/verbose 0
 /event/verbose 0
 /tracking/verbose 0
 
-### Generation
-/Generator/ELTableGenerator/num_ie 100
+/nexus/random_seed -2
 
-### Geometry
 /Geometry/NextNew/elfield true
 ## pressure must be set in bar!!!
 /Geometry/NextNew/pressure 15. bar
@@ -19,6 +20,6 @@
 /Geometry/NextNew/el_table_point_id 0
 /Geometry/PmtR11410/SD_depth 4
 
-/nexus/persistency/outputFile table.NEW.next
+/Generator/ELTableGenerator/num_ie 100
 
-/nexus/random_seed -2
+/nexus/persistency/outputFile table.NEW.next

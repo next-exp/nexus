@@ -1,10 +1,14 @@
-### --------------------------------------------------------
-###  Default physics list for nexus.
-### --------------------------------------------------------
+### ----------------------------------------------------------------------------
+## nexus | DefaultPhysicsList.mac
+##
+## Set of physics lists used in the default nexus simulation.
+## No generation and transportation of optical photons occur.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
 /PhysicsList/RegisterPhysics G4DecayPhysics
 /PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
-#/PhysicsList/RegisterPhysics G4OpticalPhysics
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
