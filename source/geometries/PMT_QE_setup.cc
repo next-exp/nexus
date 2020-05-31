@@ -7,10 +7,8 @@
 // ----------------------------------------------------------------------------
 
 #include "PMT_QE_setup.h"
-
 #include "MaterialsList.h"
 #include "SiPM11.h"
-#include "IonizationSD.h"
 #include "BoxPointSampler.h"
 #include "OpticalMaterialProperties.h"
 
@@ -19,19 +17,14 @@
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4Material.hh>
-#include <G4SDManager.hh>
-#include <G4UserLimits.hh>
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
 #include <G4VisAttributes.hh>
 #include <G4NistManager.hh>
-#include <G4SubtractionSolid.hh>
 #include <Randomize.hh>
 #include <G4GenericMessenger.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
-
 
 namespace nexus {
 

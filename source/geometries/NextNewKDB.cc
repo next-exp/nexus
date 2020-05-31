@@ -10,8 +10,6 @@
 #include "NextNewKDB.h"
 
 #include "SiPMSensl.h"
-#include "PmtSD.h"
-#include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "BoxPointSampler.h"
 #include "Visibilities.h"
@@ -23,15 +21,11 @@
 #include <G4Material.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
-#include <G4SDManager.hh>
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
 #include <G4GenericMessenger.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
-
-#include <sstream>
 
 namespace nexus {
 

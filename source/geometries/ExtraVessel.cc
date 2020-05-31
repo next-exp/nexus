@@ -10,29 +10,16 @@
 
 #include "ExtraVessel.h"
 #include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
-#include "PmtSD.h"
 #include "CylinderPointSampler.h"
 #include "Visibilities.h"
 
 #include <G4LogicalVolume.hh>
-#include <G4PVPlacement.hh>
-#include <G4UnionSolid.hh>
 #include <G4Tubs.hh>
 #include <G4Material.hh>
-#include <G4NistManager.hh>
-#include <G4RotationMatrix.hh>
-#include <G4LogicalSkinSurface.hh>
-#include <G4SDManager.hh>
-#include <G4NistManager.hh>
 #include <G4VisAttributes.hh>
-#include <G4Colour.hh>
-#include <Randomize.hh>
-#include <G4OpticalSurface.hh>
 #include <G4GenericMessenger.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
 
 
 namespace nexus {

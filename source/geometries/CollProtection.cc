@@ -31,7 +31,9 @@ namespace nexus {
     G4Box* protection_solid =
       new G4Box("SOURCE_PROTECTION", 100.*mm/2., 100.*mm/2.,  alum_thick/2.);
     G4LogicalVolume* protection_logic =
-      new G4LogicalVolume(protection_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Al"), "SOURCE_PROTECTION");
+      new G4LogicalVolume(protection_solid,
+                          G4NistManager::Instance()->FindOrBuildMaterial("G4_Al"),
+                          "SOURCE_PROTECTION");
     this->SetLogicalVolume(protection_logic);
 
     axis_centre_ = alum_thick/2.;

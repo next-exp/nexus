@@ -9,7 +9,6 @@
 
 #include "Next100FieldCage.h"
 #include "MaterialsList.h"
-
 #include "Visibilities.h"
 #include "IonizationSD.h"
 #include "OpticalMaterialProperties.h"

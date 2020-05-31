@@ -19,19 +19,15 @@
 #include <G4Tubs.hh>
 #include <G4Material.hh>
 #include <G4NistManager.hh>
-#include <G4RotationMatrix.hh>
 #include <G4LogicalSkinSurface.hh>
 #include <G4SDManager.hh>
 #include <G4NistManager.hh>
 #include <G4VisAttributes.hh>
-#include <G4Colour.hh>
 #include <Randomize.hh>
 #include <G4OpticalSurface.hh>
 #include <G4GenericMessenger.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
-
 
 namespace nexus {
 

@@ -11,18 +11,12 @@
 #include "NextNewEnergyPlane.h"
 #include "NextNewFieldCage.h"
 #include "NextNewTrackingPlane.h"
-#include "MaterialsList.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
 #include <G4Material.hh>
-#include <G4VisAttributes.hh>
-#include <G4Region.hh>
-#include <G4UserLimits.hh>
-#include <G4SDManager.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
 
 namespace nexus {
 

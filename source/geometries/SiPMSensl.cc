@@ -9,11 +9,11 @@
 #include "SiPMSensl.h"
 #include "PmtSD.h"
 #include "MaterialsList.h"
-#include <G4GenericMessenger.hh>
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
 
 #include <G4Box.hh>
+#include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
 #include <G4VisAttributes.hh>
 #include <G4PVPlacement.hh>
@@ -22,7 +22,6 @@
 #include <G4SDManager.hh>
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
-#include <G4PhysicalConstants.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 

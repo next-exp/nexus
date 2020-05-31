@@ -15,11 +15,8 @@
 #include <G4PVPlacement.hh>
 #include <G4VisAttributes.hh>
 #include <G4Box.hh>
-#include <G4NistManager.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
-#include <stdexcept>
 
 namespace nexus {
 

@@ -8,35 +8,16 @@
 // ----------------------------------------------------------------------------
 
 #include "Next100InnerElements.h"
-
 #include "Next100FieldCage.h"
 #include "Next100EnergyPlane.h"
 #include "Next100TrackingPlane.h"
-#include "IonizationSD.h"
-#include "PmtSD.h"
-#include "UniformElectricDriftField.h"
-#include "OpticalMaterialProperties.h"
-#include "MaterialsList.h"
-#include "XenonGasProperties.h"
-#include "Visibilities.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
 #include <G4VPhysicalVolume.hh>
-#include <G4Tubs.hh>
-#include <G4PVPlacement.hh>
 #include <G4Material.hh>
-#include <G4VisAttributes.hh>
-#include <G4Region.hh>
-#include <G4UserLimits.hh>
-#include <G4SDManager.hh>
-#include <G4RunManager.hh>
-#include <G4UnitsTable.hh>
-#include <G4TransportationManager.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
-#include <stdexcept>
 
 using namespace CLHEP;
 

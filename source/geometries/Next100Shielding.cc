@@ -21,15 +21,12 @@
 #include <G4UnionSolid.hh>
 #include <G4NistManager.hh>
 #include <G4Material.hh>
-#include <G4Colour.hh>
 #include <Randomize.hh>
 #include <G4TransportationManager.hh>
 #include <G4RotationMatrix.hh>
 #include <G4UserLimits.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
-#include <stdexcept>
 
 namespace nexus {
 

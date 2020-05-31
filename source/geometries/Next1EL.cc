@@ -21,7 +21,6 @@
 #include "MuonsPointSampler.h"
 #include "Visibilities.h"
 
-#include <G4Orb.hh>
 #include <G4Box.hh>
 #include <G4Tubs.hh>
 #include <G4UnionSolid.hh>
@@ -30,7 +29,6 @@
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4NistManager.hh>
-#include <G4Region.hh>
 #include <G4VisAttributes.hh>
 #include <G4SDManager.hh>
 #include <G4OpticalSurface.hh>
@@ -44,7 +42,6 @@
 #include <Randomize.hh>
 #include <G4GenericMessenger.hh>
 #include <G4UnitsTable.hh>
-#include <G4UIcmdWith3VectorAndUnit.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
@@ -275,10 +272,6 @@ void Next1EL::DefineMaterials()
   // GASEOUS XENON
   gxe_ = MaterialsList::GXe(pressure_, 303);
   gxe_->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(pressure_, 303, sc_yield_, e_lifetime_));
-
-  G4cout << "Scintillation yield: " << sc_yield_ << G4endl;
-
-
   // PTFE (TEFLON)
   teflon_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
   // STAINLESS STEEL
@@ -335,13 +328,13 @@ void Next1EL::BuildMuons()
   // G4Orb * muon_solid_ref = new G4Orb ("MUONS_ref",25);
   // G4LogicalVolume*  muon_logic_ref = new G4LogicalVolume(muon_solid_ref, air_, "MUONS_ref");
   // new G4PVPlacement(0, G4ThreeVector(0., yMuonsOrigin, 0.), muon_logic_ref,
-  //                             "MUONS_ref", lab_logic_, false, 0, true);
+  //                             "MUONS_ref", lab_logic_, false, 0, false);
 
   G4Box* muon_solid =
     new G4Box("MUONS", xMuons, yMuons, zMuons);
   G4LogicalVolume*  muon_logic = new G4LogicalVolume(muon_solid, air_, "MUONS");
   new G4PVPlacement(0, G4ThreeVector(0., yMuonsOrigin, 0.), muon_logic,
-		    "MUONS", lab_logic_, false, 0, true);
+		    "MUONS", lab_logic_, false, 0, false);
 
    // visualization
   G4VisAttributes muon_col = nexus::Red();
@@ -382,7 +375,7 @@ void Next1EL::BuildExtScintillator()
 		   sideNa_pos_.getZ());
 
   new G4PVPlacement(G4Transform3D(rot, pos_source), source_logic, "SOURCE",
-		    lab_logic_, false, 0, true);
+		    lab_logic_, false, 0, false);
   G4VisAttributes source_col = nexus::LightGreen();
   source_col.SetForceSolid(true);
   source_logic->SetVisAttributes(source_col);
@@ -407,7 +400,7 @@ void Next1EL::BuildExtScintillator()
 		  pos_source.getY()-(support_thick+source_thick)/2.*sin(sideport_angle_),
 		  pos_source.getZ());
   new G4PVPlacement(G4Transform3D(rot, pos_support), support_logic,
-		    "SOURCE_SUPPORT",  lab_logic_, false, 0, true);
+		    "SOURCE_SUPPORT",  lab_logic_, false, 0, false);
 
   G4VisAttributes support_col = nexus::Red();
   support_col.SetForceSolid(true);
@@ -434,7 +427,7 @@ void Next1EL::BuildExtScintillator()
 		  pos_support .getY()-(support_thick/2.+dist_sc+length/2.)*sin(sideport_angle_),
 		  sideNa_pos_.getZ());
   new G4PVPlacement(G4Transform3D(rot, pos_scint), sc_logic, "NaI",
-		    lab_logic_, false, 0, true);
+		    lab_logic_, false, 0, false);
   G4VisAttributes naI_col = nexus::Blue();
   naI_col.SetForceSolid(true);
   sc_logic->SetVisAttributes(naI_col);
@@ -490,7 +483,7 @@ void Next1EL::BuildVessel()
     new G4LogicalVolume(vessel_solid, steel_, "VESSEL");
 
   new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_logic,
-		    "VESSEL", lab_logic_, false, 0, true);
+		    "VESSEL", lab_logic_, false, 0, false);
 
 
   // GAS /////////////////////////////////////////////////////////////
@@ -515,7 +508,7 @@ void Next1EL::BuildVessel()
   gas_logic_->SetVisAttributes(G4VisAttributes::Invisible);
 
   new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), gas_logic_,
-		    "GAS", vessel_logic, false, 0, true);
+		    "GAS", vessel_logic, false, 0, false);
 
 
   // SIDE SOURCE-PORT ////////////////////////////////////////////////
@@ -537,7 +530,7 @@ void Next1EL::BuildVessel()
   posport.setY(radial_pos * sin(sideport_angle_));
 
   new G4PVPlacement(G4Transform3D(rotport, posport), sideport_flange_logic,
-		    "SIDEPORT_FLANGE", lab_logic_, false, 0, true);
+		    "SIDEPORT_FLANGE", lab_logic_, false, 0, false);
   G4VisAttributes * vis = new G4VisAttributes;
   vis->SetColor(0.5, 0.5, .5);
   vis->SetForceSolid(true);
@@ -567,7 +560,7 @@ void Next1EL::BuildVessel()
   sideport_position_ = posport;
 
   new G4PVPlacement(G4Transform3D(rotport, posport), sideport_tube_logic,
-		    "SIDEPORT",  gas_logic_, false, 0, true);
+		    "SIDEPORT",  gas_logic_, false, 0, false);
 
   G4Tubs* sideport_tube_air_solid =
     new G4Tubs("SIDEPORT_AIR", 0., sideport_tube_diam_/2.,
@@ -579,7 +572,7 @@ void Next1EL::BuildVessel()
 
   new G4PVPlacement(0,G4ThreeVector(0.,0.,sideport_tube_window_thickn_/2.),
 		    sideport_tube_air_logic, "SIDEPORT_AIR",
-		    sideport_tube_logic, false, 0, true);
+		    sideport_tube_logic, false, 0, false);
 
 
   // CATHODE ENDCAP //////////////////////////////////////////////////
@@ -595,7 +588,7 @@ void Next1EL::BuildVessel()
   G4double posz = (vessel_length_ + endcap_thickn_) / 2.;
 
   new G4PVPlacement(0, G4ThreeVector(0.,0.,-posz), endcap_cathode_logic,
-  		    "ENDCAP_CATHODE", lab_logic_, false, 0, true);
+  		    "ENDCAP_CATHODE", lab_logic_, false, 0, false);
 
 
   // ANODE ENDCAP ////////////////////////////////////////////////////
@@ -612,7 +605,7 @@ void Next1EL::BuildVessel()
     new G4LogicalVolume(endcap_anode_solid, steel_, "ENDCAP_ANODE");
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., posz), endcap_anode_logic,
-		    "ENDCAP_ANODE", lab_logic_, false, 0, true);
+		    "ENDCAP_ANODE", lab_logic_, false, 0, false);
 
 
   // AXIAL SOURCE-PORT ///////////////////////////////////////////////
@@ -635,7 +628,7 @@ void Next1EL::BuildVessel()
   axialport_position_.setZ(posz);
 
   new G4PVPlacement(0, axialport_position_, axialport_logic,
-   		    "AXIALPORT", lab_logic_, false, 0, true);
+   		    "AXIALPORT", lab_logic_, false, 0, false);
 
   G4Tubs* axialport_gas_solid = new G4Tubs("GAS", 0., axialport_diam_/2.,
 					   axialport_total_length/2., 0, twopi);
@@ -644,7 +637,7 @@ void Next1EL::BuildVessel()
     new G4LogicalVolume(axialport_gas_solid, gxe_, "GAS");
 
   new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), axialport_gas_logic,
-   		    "GAS", axialport_logic, false, 0, true);
+   		    "GAS", axialport_logic, false, 0, false);
 
 
   // FLANGE ................................................
@@ -660,7 +653,7 @@ void Next1EL::BuildVessel()
     axialport_length_ + axialport_flange_thickn_/2.;
 
   new G4PVPlacement(0, G4ThreeVector(0.,0.,posz), axialport_flange_logic,
-   		    "AXIALPORT_FLANGE", lab_logic_, false, 0, true);
+   		    "AXIALPORT_FLANGE", lab_logic_, false, 0, false);
 
   // Store the position of the port so that it can be used in vertex generation
   posz = posz + axialport_flange_thickn_/2.;
@@ -679,7 +672,7 @@ void Next1EL::BuildVessel()
   posz = (axialport_total_length - axialport_tube_length_) / 2.;
 
   new G4PVPlacement(0, G4ThreeVector(0.,0.,posz), axialport_tube_logic,
-		    "AXIALPORT", axialport_gas_logic, false, 0, true);
+		    "AXIALPORT", axialport_gas_logic, false, 0, false);
 
   G4Tubs* axialport_tube_air_solid =
     new G4Tubs("AXIALPORT_AIR", 0., axialport_tube_diam_/2.,
@@ -691,7 +684,7 @@ void Next1EL::BuildVessel()
 
   new G4PVPlacement(0, G4ThreeVector(0,0,axialport_tube_window_thickn_/2.),
    		    axialport_tube_air_logic, "AXIALPORT_AIR",
-		    axialport_tube_logic, false, 0, true);
+		    axialport_tube_logic, false, 0, false);
 }
 
 
@@ -723,12 +716,12 @@ void Next1EL::BuildFieldCage()
   G4double posz = fieldcage_length_/2. - elgap_ring_height_/2.;
 
   new G4PVPlacement(0, G4ThreeVector(0.,0.,posz + fieldcage_position_.z()), elgap_ring_logic,
-   		    "EL_GAP_RING", gas_logic_, false, 0, true);
+   		    "EL_GAP_RING", gas_logic_, false, 0, false);
 
   posz = posz - elgap_ring_height_ - elgap_length_;
 
   new G4PVPlacement(0, G4ThreeVector(0.,0.,posz + fieldcage_position_.z()), elgap_ring_logic,
-   		    "EL_GAP_RING", gas_logic_, false, 1, true);
+   		    "EL_GAP_RING", gas_logic_, false, 1, false);
 
 
   // EL GAP ................................................
@@ -742,7 +735,7 @@ void Next1EL::BuildFieldCage()
   posz = fieldcage_length_/2. - elgap_ring_height_ - elgap_length_/2.;
 
   new G4PVPlacement(0, G4ThreeVector(0.,0.,posz + fieldcage_position_.z()), elgap_logic,
-		    "EL_GAP", gas_logic_, false, 0, true);
+		    "EL_GAP", gas_logic_, false, 0, false);
 
 
   // Store the position of the EL GAP wrt the WORLD system of reference
@@ -767,13 +760,13 @@ void Next1EL::BuildFieldCage()
     new G4LogicalVolume(diel_grid, fgrid_gate, "GRID_GATE");
   G4double pos1 = - elgap_length_/2. + diel_thickn/2.;
   new G4PVPlacement(0, G4ThreeVector(0.,0.,pos1), diel_grid_gate_logic, "GRID_GATE",
-		    elgap_logic, false, 0, true);
+		    elgap_logic, false, 0, false);
 
   G4LogicalVolume* diel_grid_logic =
     new G4LogicalVolume(diel_grid, fgrid, "GRID");
   G4double pos2 = elgap_length_/2. - diel_thickn/2.;
   new G4PVPlacement(0, G4ThreeVector(0.,0.,pos2), diel_grid_logic, "GRID",
-		    elgap_logic, false, 1, true);
+		    elgap_logic, false, 1, false);
 
   if (elfield_) {
     UniformElectricDriftField* el_field = new UniformElectricDriftField();
@@ -809,7 +802,7 @@ void Next1EL::BuildFieldCage()
     elgap_length_ - active_length_/2.;
 
   new G4PVPlacement(0, G4ThreeVector(0.,0.,posz + fieldcage_position_.z()), active_logic,
-		    "ACTIVE", gas_logic_, false, 0, true);
+		    "ACTIVE", gas_logic_, false, 0, false);
 
   // Store the position of the active volume with respect to the
   // WORLD system of reference
@@ -862,7 +855,7 @@ void Next1EL::BuildFieldCage()
   posz = (gate_posz_ + cathode_posz_) / 2.;
 
   new G4PVPlacement(0, G4ThreeVector(0.,0.,posz + fieldcage_position_.z()), ltube_up_logic,
-   		    "LIGHT_TUBE_UP", gas_logic_, false, 0, true);
+   		    "LIGHT_TUBE_UP", gas_logic_, false, 0, false);
 
   // TPB coating
   if (tpb_coating_) {
@@ -878,7 +871,7 @@ void Next1EL::BuildFieldCage()
       new G4LogicalVolume(ltube_tpb_solid, tpb_, "LIGHT_TUBE_TPB");
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), ltube_tpb_logic,
-		      "LIGHT_TUBE_TPB", ltube_up_logic, false, 0, true);
+		      "LIGHT_TUBE_TPB", ltube_up_logic, false, 0, false);
 
     G4VisAttributes * visattrib_red = new G4VisAttributes;
     visattrib_red->SetColor(1., 0., 0.);
@@ -899,7 +892,7 @@ void Next1EL::BuildFieldCage()
     active_length_ - ltube_gap_ - ltube_bt_length_/2.;
 
   new G4PVPlacement(0, G4ThreeVector(0.,0.,posz + fieldcage_position_.z()), ltube_bt_logic,
-   		    "LIGHT_TUBE_BOTTOM", gas_logic_, false, 0, true);
+   		    "LIGHT_TUBE_BOTTOM", gas_logic_, false, 0, false);
 
 
   // FIELD SHAPING RINGS /////////////////////////////////////////////
@@ -960,7 +953,7 @@ void Next1EL::BuildFieldCage()
   posz = cathode_posz_ - diel_thickn/2.;
 
   new G4PVPlacement(0, G4ThreeVector(0.,0.,posz + fieldcage_position_.z()), diel_cathd_logic, "CATHODE",
-		    gas_logic_, false, 0, true);
+		    gas_logic_, false, 0, false);
 
 
   // SUPPORT BARS ////////////////////////////////////////////////////
@@ -995,7 +988,7 @@ void Next1EL::BuildFieldCage()
     G4double zz = posz;
 
     new G4PVPlacement(G4Transform3D(rotbar, G4ThreeVector(xx, yy, zz + fieldcage_position_.z())),
-		      bar_logic, "SUPPORT_BAR", gas_logic_, false, i, true);
+		      bar_logic, "SUPPORT_BAR", gas_logic_, false, i, false);
   }
 
   // OPTICAL SURFACES ////////////////////////////////////////////////
@@ -1095,7 +1088,7 @@ void Next1EL::BuildEnergyPlane()
     new G4PVPlacement(0, G4ThreeVector(pmt_positions_[i].x(),
   				       pmt_positions_[i].y(),
   				       transl_z-0.5*cm),
-  		      pmt_logic_, "PMT", gas_logic_, false, i, true);
+  		      pmt_logic_, "PMT", gas_logic_, false, i, false);
   }
 
   // Finish with the positioning of the PMT holder

@@ -80,7 +80,9 @@ namespace nexus {
     G4Box* lab_solid = new G4Box("LAB", lab_size/2., lab_size/2., lab_size/2.);
 
     G4LogicalVolume* lab_logic =
-      new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
+      new G4LogicalVolume(lab_solid,
+                          G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
+                          "LAB");
     lab_logic->SetVisAttributes(G4VisAttributes::Invisible);
     this->SetLogicalVolume(lab_logic);
 

@@ -35,8 +35,6 @@
 #include <G4TransportationManager.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
-#include <stdexcept>
 
 using namespace CLHEP;
 

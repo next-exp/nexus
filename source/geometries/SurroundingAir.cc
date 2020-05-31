@@ -12,6 +12,7 @@
 #include <G4NistManager.hh>
 #include <G4LogicalVolume.hh>
 #include <G4VisAttributes.hh>
+
 #include <CLHEP/Units/SystemOfUnits.h>
 
 namespace nexus {
@@ -32,7 +33,10 @@ namespace nexus {
     G4Box* air_solid = 
       new G4Box("AIR", size/2., size/2., size/2.);
     
-    G4LogicalVolume* air_logic = new G4LogicalVolume(air_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "AIR");
+    G4LogicalVolume* air_logic =
+      new G4LogicalVolume(air_solid,
+                          G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
+                          "AIR");
     
     air_logic->SetVisAttributes(G4VisAttributes::Invisible);
 

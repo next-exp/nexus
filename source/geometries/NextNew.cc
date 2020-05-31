@@ -19,10 +19,7 @@
 #include "Na22Source.h"
 #include "CylinderPointSampler.h"
 #include "BoxPointSampler.h"
-#include "MuonsPointSampler.h"
-#include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
-#include "IonizationSD.h"
 #include "CalibrationSource.h"
 #include "NaIScintillator.h"
 #include "SurroundingAir.h"
@@ -38,7 +35,6 @@
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4VisAttributes.hh>
-#include <G4UserLimits.hh>
 #include <G4NistManager.hh>
 #include <G4RotationMatrix.hh>
 #include <G4Transform3D.hh>
@@ -47,8 +43,6 @@
 #include <G4UnionSolid.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
-#include <stdexcept>
 
 namespace nexus {
 

@@ -19,14 +19,9 @@
 #include <G4UnionSolid.hh>
 #include <G4VisAttributes.hh>
 #include <G4Box.hh>
-#include <G4Tubs.hh>
-#include <Randomize.hh>
 #include <G4NistManager.hh>
-#include <G4UserLimits.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
-#include <stdexcept>
 
 namespace nexus {
 

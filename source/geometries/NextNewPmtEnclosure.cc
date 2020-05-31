@@ -23,10 +23,8 @@
 #include <G4NistManager.hh>
 #include <G4RotationMatrix.hh>
 #include <G4LogicalSkinSurface.hh>
-#include <G4SDManager.hh>
 #include <G4NistManager.hh>
 #include <G4VisAttributes.hh>
-#include <G4Colour.hh>
 #include <Randomize.hh>
 #include <G4OpticalSurface.hh>
 

@@ -9,7 +9,6 @@
 
 #include "Next100OpticalGeometry.h"
 #include "Next100InnerElements.h"
-
 #include "OpticalMaterialProperties.h"
 #include "MaterialsList.h"
 

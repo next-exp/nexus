@@ -25,7 +25,6 @@
 #include <G4Sphere.hh>
 #include <G4NistManager.hh>
 #include <G4Material.hh>
-#include <G4Colour.hh>
 #include <Randomize.hh>
 #include <G4TransportationManager.hh>
 

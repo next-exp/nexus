@@ -14,7 +14,6 @@
 #include "Visibilities.h"
 
 #include <G4NistManager.hh>
-#include <G4Box.hh>
 #include <G4Tubs.hh>
 #include <G4Sphere.hh>
 #include <G4LogicalVolume.hh>
@@ -27,7 +26,6 @@
 #include <G4SDManager.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
 
 namespace nexus {
 
@@ -80,7 +78,7 @@ namespace nexus {
       new G4LogicalVolume(window_solid, quartz, "PMT_WINDOW");
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., (pmt_length_-window_length)/2.),
-		      window_logic, "PMT_WINDOW", pmt_logic, false, 0, true);
+		      window_logic, "PMT_WINDOW", pmt_logic, false, 0, false);
 
     G4VisAttributes wndw_col = nexus::Blue();
     window_logic->SetVisAttributes(wndw_col);
@@ -110,7 +108,7 @@ namespace nexus {
 
     //G4PVPlacement* phcath_physi =
       new G4PVPlacement(0, G4ThreeVector(0.,0.,phcath_posz), phcath_logic,
-			"PHOTOCATHODE", window_logic, false, 0, true);
+			"PHOTOCATHODE", window_logic, false, 0, false);
 
     // Sensitive detector
     PmtSD* pmtsd = new PmtSD("/PMT_R7378A/Pmt");
