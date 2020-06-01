@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef HELIUM_GAS_PROPERTIES
-#define HELIUM_GAS_PROPERTIES
+#ifndef HELIUM_GAS_PROPERTIES_H
+#define HELIUM_GAS_PROPERTIES_H
 
 #include <globals.hh>
 #include <vector>

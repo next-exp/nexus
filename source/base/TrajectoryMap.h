@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef TRAJECTORY_MAP
-#define TRAJECTORY_MAP
+#ifndef TRAJECTORY_MAP_H
+#define TRAJECTORY_MAP_H
 
 #include <map>
 

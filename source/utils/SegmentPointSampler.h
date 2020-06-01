@@ -7,8 +7,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef SEGMENT_POINT_SAMPLER
-#define SEGMENT_POINT_SAMPLER
+#ifndef SEGMENT_POINT_SAMPLER_H
+#define SEGMENT_POINT_SAMPLER_H
 
 #include <G4LorentzVector.hh>
 #include <G4ThreeVector.hh>

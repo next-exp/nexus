@@ -7,8 +7,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef IONIZATION_HIT
-#define IONIZATION_HIT
+#ifndef IONIZATION_HIT_H
+#define IONIZATION_HIT_H
 
 #include <G4VHit.hh>
 #include <G4THitsCollection.hh>

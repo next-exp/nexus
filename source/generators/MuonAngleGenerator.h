@@ -7,8 +7,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef MUON_ANGLE_GENERATOR
-#define MUON_ANGLE_GENERATOR
+#ifndef MUON_ANGLE_GENERATOR_H
+#define MUON_ANGLE_GENERATOR_H
 
 #include <G4VPrimaryGenerator.hh>
 #include <G4RotationMatrix.hh>

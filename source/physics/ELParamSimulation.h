@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef EL_PARAM_SIMULATION
-#define EL_PARAM_SIMULATION
+#ifndef EL_PARAM_SIMULATION_H
+#define EL_PARAM_SIMULATION_H
 
 #include <G4VFastSimulationModel.hh>
 #include "PmtHit.h"

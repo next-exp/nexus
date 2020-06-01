@@ -8,8 +8,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef BATCH_SESSION
-#define BATCH_SESSION
+#ifndef BATCH_SESSION_H
+#define BATCH_SESSION_H
 
 #include <G4UIsession.hh>
 #include <fstream>

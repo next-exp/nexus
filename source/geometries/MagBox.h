@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef MAGBOX
-#define MAGBOX
+#ifndef MAGBOX_H
+#define MAGBOX_H
 
 #include "BaseGeometry.h"
 

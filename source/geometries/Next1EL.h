@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef NEXT1_EL
-#define NEXT1_EL
+#ifndef NEXT1_EL_H
+#define NEXT1_EL_H
 
 #include "BaseGeometry.h"
 #include <G4RotationMatrix.hh>

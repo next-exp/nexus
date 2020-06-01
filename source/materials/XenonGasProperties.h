@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef XENON_GAS_PROPERTIES
-#define XENON_GAS_PROPERTIES
+#ifndef XENON_GAS_PROPERTIES_H
+#define XENON_GAS_PROPERTIES_H
 
 #include <globals.hh>
 #include <vector>

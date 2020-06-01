@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef OPTICAL_MATERIAL_PROPERTIES
-#define OPTICAL_MATERIAL_PROPERTIES
+#ifndef OPTICAL_MATERIAL_PROPERTIES_H
+#define OPTICAL_MATERIAL_PROPERTIES_H
 
 #include <globals.hh>
 

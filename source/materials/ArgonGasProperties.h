@@ -7,8 +7,8 @@
 // ----------------------------------------------------------------------------
 
 
-#ifndef ARGON_GAS_PROPERTIES
-#define ARGON_GAS_PROPERTIES
+#ifndef ARGON_GAS_PROPERTIES_H
+#define ARGON_GAS_PROPERTIES_H
 
 #include <globals.hh>
 #include <vector>

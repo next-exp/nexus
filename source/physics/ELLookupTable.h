@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef EL_LOOKUP_TABLE
-#define EL_LOOKUP_TABLE
+#ifndef EL_LOOKUP_TABLE_H
+#define EL_LOOKUP_TABLE_H
 
 #include <G4VUserRegionInformation.hh>
 #include <G4ThreeVector.hh>

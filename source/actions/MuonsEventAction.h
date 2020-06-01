@@ -7,8 +7,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef MUONS_EVENT_ACTION
-#define MUONS_EVENT_ACTION
+#ifndef MUONS_EVENT_ACTION_H
+#define MUONS_EVENT_ACTION_H
 
 #include <G4UserEventAction.hh>
 #include <globals.hh>

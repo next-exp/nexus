@@ -7,8 +7,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef MUON_GENERATOR
-#define MUON_GENERATOR
+#ifndef MUON_GENERATOR_H
+#define MUON_GENERATOR_H
 
 #include <G4VPrimaryGenerator.hh>
 

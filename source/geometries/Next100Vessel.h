@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef NEXT100_VESSEL
-#define NEXT100_VESSEL
+#ifndef NEXT100_VESSEL_H
+#define NEXT100_VESSEL_H
 
 #include "BaseGeometry.h"
 

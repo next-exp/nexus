@@ -7,8 +7,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef NEXT100_FIELDCAGE
-#define NEXT100_FIELDCAGE
+#ifndef NEXT100_FIELDCAGE_H
+#define NEXT100_FIELDCAGE_H
 
 #include "BaseGeometry.h"
 

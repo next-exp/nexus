@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef NEXT100
-#define NEXT100
+#ifndef NEXT100_H
+#define NEXT100_H
 
 #include "BaseGeometry.h"
 

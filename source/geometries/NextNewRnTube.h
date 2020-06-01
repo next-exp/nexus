@@ -7,8 +7,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef NEXTNEW_RN_TUBE
-#define NEXTNEW_RN_TUBE
+#ifndef NEXTNEW_RN_TUBE_H
+#define NEXTNEW_RN_TUBE_H
 
 #include "BaseGeometry.h"
 

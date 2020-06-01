@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef NEXT100_SHIELDING
-#define NEXT100_SHIELDING
+#ifndef NEXT100_SHIELDING_H
+#define NEXT100_SHIELDING_H
 
 #include "BaseGeometry.h"
 

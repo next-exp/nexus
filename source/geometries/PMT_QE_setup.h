@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef PMT_QE_SETUP
-#define PMT_QE_SETUP
+#ifndef PMT_QE_SETUP_H
+#define PMT_QE_SETUP_H
 
 #include "BaseGeometry.h"
 #include "PmtR7378A.h"

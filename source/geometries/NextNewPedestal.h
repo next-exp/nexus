@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef NEXTNEW_PEDESTAL
-#define NEXTNEW_PEDESTAL
+#ifndef NEXTNEW_PEDESTAL_H
+#define NEXTNEW_PEDESTAL_H
 
 #include "BaseGeometry.h"
 #include "BoxPointSampler.h"

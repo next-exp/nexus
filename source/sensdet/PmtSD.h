@@ -7,8 +7,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef PMT_SD
-#define PMT_SD
+#ifndef PMT_SD_H
+#define PMT_SD_H
 
 #include <G4VSensitiveDetector.hh>
 #include "PmtHit.h"

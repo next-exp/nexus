@@ -7,8 +7,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef AddUser_InfoToPV
-#define AddUser_InfoToPV
+#ifndef ADD_USERINFO_TO_PV_H
+#define ADD_USERINFO_TO_PV_H
 
 #include <G4VUserPrimaryVertexInformation.hh>
 #include "globals.hh"

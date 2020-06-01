@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef PMT_HIT
-#define PMT_HIT
+#ifndef PMT_HIT_H
+#define PMT_HIT_H
 
 #include <G4VHit.hh>
 #include <G4THitsCollection.hh>

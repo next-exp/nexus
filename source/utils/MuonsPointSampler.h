@@ -7,8 +7,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef MUONS_POINT_SAMPLER
-#define MUONS_POINT_SAMPLER
+#ifndef MUONS_POINT_SAMPLER_H
+#define MUONS_POINT_SAMPLER_H
 
 #include <G4ThreeVector.hh>
 #include <vector>

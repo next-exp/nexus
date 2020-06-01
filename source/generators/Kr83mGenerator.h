@@ -7,8 +7,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef Kr83m_GENERATOR
-#define Kr83m_GENERATOR
+#ifndef Kr83m_GENERATOR_H
+#define Kr83m_GENERATOR_H
 
 #include <vector>
 #include <G4VPrimaryGenerator.hh>

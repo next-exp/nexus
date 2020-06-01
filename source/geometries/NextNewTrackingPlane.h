@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef NEXTNEW_TRACKING_PLANE
-#define NEXTNEW_TRACKING_PLANE
+#ifndef NEXTNEW_TRACKING_PLANE_H
+#define NEXTNEW_TRACKING_PLANE_H
 
 #include <G4LogicalVolume.hh>
 #include <G4Navigator.hh>

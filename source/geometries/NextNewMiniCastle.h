@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // -----------------------------------------------------------------------------
 
-#ifndef NEXTNEW_MINI_CASTLE
-#define NEXTNEW_MINI_CASTLE
+#ifndef NEXTNEW_MINI_CASTLE_H
+#define NEXTNEW_MINI_CASTLE_H
 
 #include "BaseGeometry.h"
 

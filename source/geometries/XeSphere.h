@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef XE_SPHERE
-#define XE_SPHERE
+#ifndef XE_SPHERE_H
+#define XE_SPHERE_H
 
 #include "BaseGeometry.h"
 

@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // -----------------------------------------------------------------------------
 
-#ifndef NEXTNEW_ICS
-#define NEXTNEW_ICS
+#ifndef NEXTNEW_ICS_H
+#define NEXTNEW_ICS_H
 
 #include "BaseGeometry.h"
 

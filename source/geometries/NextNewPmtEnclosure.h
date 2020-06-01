@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef ENCLOSURE
-#define ENCLOSURE
+#ifndef NEXTNEW_ENCLOSURE_H
+#define NEXTNEW_ENCLOSURE_H
 
 #include <G4ThreeVector.hh>
 #include <G4Navigator.hh>

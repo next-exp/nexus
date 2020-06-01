@@ -7,9 +7,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-
-#ifndef HEXAGON_POINT_SAMPLER
-#define HEXAGON_POINT_SAMPLER
+#ifndef HEXAGON_POINT_SAMPLER_H
+#define HEXAGON_POINT_SAMPLER_H
 
 #include <G4ThreeVector.hh>
 #include <G4RotationMatrix.hh>

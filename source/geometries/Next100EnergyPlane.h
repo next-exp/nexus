@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef NEXT100_ENERGY_PLANE
-#define NEXT100_ENERGY_PLANE
+#ifndef NEXT100_ENERGY_PLANE_H
+#define NEXT100_ENERGY_PLANE_H
 
 #include <vector>
 #include <G4Navigator.hh>

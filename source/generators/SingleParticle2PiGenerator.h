@@ -11,8 +11,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef SINGLE_PARTICLE_2PI_GEN
-#define SINGLE_PARTICLE_2PI_GEN
+#ifndef SINGLE_PARTICLE_2PI_GEN_H
+#define SINGLE_PARTICLE_2PI_GEN_H
 
 #include <G4VPrimaryGenerator.hh>
 

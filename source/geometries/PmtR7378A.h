@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef PMT_R7378A
-#define PMT_R7378A
+#ifndef PMT_R7378A_H
+#define PMT_R7378A_H
 
 #include "BaseGeometry.h"
 

@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef MATERIALS_LIST
-#define MATERIALS_LIST
+#ifndef MATERIALS_LIST_H
+#define MATERIALS_LIST_H
 
 #include <globals.hh>
 

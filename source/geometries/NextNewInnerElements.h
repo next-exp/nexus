@@ -7,8 +7,8 @@
 // The NEXT Collaboration
 // -----------------------------------------------------------------------------
 
-#ifndef NEXTNEW_INNER_ELEMENTS
-#define NEXTNEW_INNER_ELEMENTS
+#ifndef NEXTNEW_INNER_ELEMENTS_H
+#define NEXTNEW_INNER_ELEMENTS_H
 
 #include "BaseGeometry.h"
 #include <G4ThreeVector.hh>

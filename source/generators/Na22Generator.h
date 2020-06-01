@@ -8,8 +8,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef NA22_GENERATOR
-#define NA22_GENERATOR
+#ifndef NA22_GENERATOR_H
+#define NA22_GENERATOR_H
 
 #include <G4VPrimaryGenerator.hh>
 

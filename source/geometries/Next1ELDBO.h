@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef NEXT1_EL_DBO
-#define NEXT1_EL_DBO
+#ifndef NEXT1_EL_DBO_H
+#define NEXT1_EL_DBO_H
 
 #include "BaseGeometry.h"
 #include <vector>

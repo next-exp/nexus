@@ -7,8 +7,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef DEFAULT_RUN_ACTION
-#define DEFAULT_RUN_ACTION
+#ifndef DEFAULT_RUN_ACTION_H
+#define DEFAULT_RUN_ACTION_H
 
 #include <G4UserRunAction.hh>
 
