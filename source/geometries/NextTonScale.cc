@@ -74,13 +74,13 @@ void NextTonScale::Construct()
                      2.*ics_thickn_ + 2.*endcap_hollow_ + 2.*vessel_thickn_;
   tank_size_ = std::max(detector_diam_, detector_length_) +
                2.*water_thickn_ + 2.*tank_thickn_;
-  rock_diam_ = tank_size_ + 2. * cm + 2. * rock_thickn_;
+  rock_diam_ = tank_size_ + 2. * cm + std::min(2. * rock_thickn_, 2. *m);
 
   // LABORATORY ////////////////////////////////////////////
   // Volume of air that contains all other detector volumes.
 
   G4String lab_name = "LABORATORY";
-  G4double lab_size = rock_diam_ + 4.*m; // Clearance of 2 m around water tank and rock
+  G4double lab_size = rock_diam_ + 6.*m; // Clearance of 2 m around water tank and rock
 
   G4Material* lab_material =
     G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
@@ -111,8 +111,9 @@ G4LogicalVolume* NextTonScale::ConstructLabRock(G4LogicalVolume* mother_logic_vo
   // Tube of rock (Standard or G4_CONCRETE) with additional cylinder above tank
   G4String top_rock_name = "LAB_ROCK_TOP";
   G4String side_rock_name = "LAB_ROCK_SURROUND";
-  G4Material* rock_material =
-    G4NistManager::Instance()->FindOrBuildMaterial("G4_CONCRETE");
+  // G4Material* rock_material =
+  //   G4NistManager::Instance()->FindOrBuildMaterial("G4_CONCRETE");
+  G4Material* rock_material = MaterialsList::StandardRock();
 
   G4Tubs* top_rock_solid =
     new G4Tubs(top_rock_name, 0, rock_diam_ / 2.,
@@ -121,7 +122,7 @@ G4LogicalVolume* NextTonScale::ConstructLabRock(G4LogicalVolume* mother_logic_vo
   G4double side_rock_inner_diam = tank_size_ + 2. * cm;
   G4Tubs* side_rock_solid =
     new G4Tubs(side_rock_name, side_rock_inner_diam / 2., rock_diam_ / 2.,
-	       side_rock_height / 2., 0., 360. * deg);
+  	       side_rock_height / 2., 0., 360. * deg);
 
   G4LogicalVolume* top_rock_logic =
     new G4LogicalVolume(top_rock_solid, rock_material, top_rock_name);
@@ -138,8 +139,24 @@ G4LogicalVolume* NextTonScale::ConstructLabRock(G4LogicalVolume* mother_logic_vo
 
   G4double side_rock_y = 0.5 * cm;
   new G4PVPlacement(rock_rotation, G4ThreeVector(0., side_rock_y, 0.),
-		    side_rock_logic, side_rock_name, mother_logic_vol,
-		    false, 0, true);
+  		    side_rock_logic, side_rock_name, mother_logic_vol,
+  		    false, 0, true);
+
+  G4Tubs *tempLab = new G4Tubs("LAB_INNER", 0, tank_size_ / 2., 1 * cm / 2.,
+			       0, 360. * deg);
+  G4LogicalVolume* tempLab_logic =
+    new G4LogicalVolume(tempLab, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB_INNER");
+  G4ThreeVector tempPos(0., tank_size_ / 2. + 0.5*cm, 0.);
+  new G4PVPlacement(rock_rotation, tempPos, tempLab_logic,
+                    "LAB_INNER", mother_logic_vol, false, 0, true);
+
+  G4Tubs *temp2Lab = new G4Tubs("LAB_INNER_SIDE", tank_size_ / 2.,
+				side_rock_inner_diam / 2., tank_size_ / 2.,
+				0, 360. * deg);
+  G4LogicalVolume* temp2Lab_logic =
+    new G4LogicalVolume(temp2Lab, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB_INNER_SIDE");
+  new G4PVPlacement(rock_rotation, G4ThreeVector(0.,0.,0.), temp2Lab_logic,
+                    "LAB_INNER_SIDE", mother_logic_vol, false, 0, true);
 
   return mother_logic_vol;
 }

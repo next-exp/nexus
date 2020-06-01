@@ -58,6 +58,7 @@ G4UserRunAction* ActionsFactory::CreateRunAction() const
 #include "DefaultEventAction.h"
 #include "SaveAllEventAction.h"
 #include "MuonsEventAction.h"
+#include "NoSaveEventAction.h"
 
 G4UserEventAction* ActionsFactory::CreateEventAction() const
 {
@@ -69,6 +70,7 @@ G4UserEventAction* ActionsFactory::CreateEventAction() const
 
   else if (evtact_name_ == "MUONS") p = new MuonsEventAction();
 
+  else if (_evtact_name == "NoSave") p = new NoSaveEventAction();
   else {
     G4String err = "Unknown user event action: " + evtact_name_;
     G4Exception("[ActionsFactory]", "CreateEventAction()", JustWarning, err);
