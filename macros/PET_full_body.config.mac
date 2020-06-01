@@ -23,7 +23,7 @@
 /Generator/Back2back/region CENTER
 #/Generator/Back2back/region CUSTOM
 
-/Actions/DefaultEventAction/energy_threshold 1.02 MeV
+/Actions/DefaultEventAction/energy_threshold .511 MeV
 
 ### VERBOSITIES
 /run/verbose 1
