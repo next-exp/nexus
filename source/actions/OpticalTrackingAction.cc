@@ -64,8 +64,12 @@ void OpticalTrackingAction::PostUserTrackingAction(const G4Track* track)
   trj->SetFinalTime(track->GetGlobalTime());
   trj->SetTrackLength(track->GetTrackLength());
 
-  if (track->GetDefinition() == G4OpticalPhoton::Definition())
-    trj->SetDecayVolume(track->GetNextVolume()->GetName());
+  if (track->GetDefinition() == G4OpticalPhoton::Definition()) {
+    // If optical photon has no NextVolume (escaping from the world),
+    // assign current volume as the decay one.
+    if (track->GetNextVolume()) trj->SetDecayVolume(track->GetNextVolume()->GetName());
+    else                        trj->SetDecayVolume(track->GetVolume()->GetName());
+  }
   else
     trj->SetDecayVolume(track->GetVolume()->GetName());
 }
