@@ -20,8 +20,7 @@ namespace nexus {
   public:
 
     /// Constructor
-    MuonsPointSampler(G4double x, G4double yPoint, G4double z);
-
+    MuonsPointSampler(G4double x, G4double yPoint, G4double z, G4bool disc=false);
     /// Destructor
     ~MuonsPointSampler();
 
@@ -37,6 +36,7 @@ namespace nexus {
 
     G4ThreeVector GetXZPointInMuonsPlane();
     G4double x_, yPoint_,z_;
+    G4bool disc_;
 
   };
 
