@@ -114,7 +114,7 @@ G4UserSteppingAction* ActionsFactory::CreateSteppingAction() const
 
   if      (stpact_name_ == "ANALYSIS") p = new AnalysisSteppingAction();
 
-  else if (stpact_name_ == "ALL"     ) p = new SaveAllSteppingAction();
+  else if (stpact_name_ == "SAVE_ALL") p = new SaveAllSteppingAction();
 
   else {
     G4String err = "Unknown user stepping action: " + stpact_name_;
