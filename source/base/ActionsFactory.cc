@@ -70,7 +70,7 @@ G4UserEventAction* ActionsFactory::CreateEventAction() const
 
   else if (evtact_name_ == "MUONS") p = new MuonsEventAction();
 
-  else if (_evtact_name == "NoSave") p = new NoSaveEventAction();
+  else if (evtact_name_ == "NoSave") p = new NoSaveEventAction();
   else {
     G4String err = "Unknown user event action: " + evtact_name_;
     G4Exception("[ActionsFactory]", "CreateEventAction()", JustWarning, err);
