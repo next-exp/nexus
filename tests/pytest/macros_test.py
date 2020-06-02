@@ -62,7 +62,8 @@ def execute_example_jobs(capsys, config_tmpdir, output_tmpdir, macro_list):
 
     for macro in macro_list:
         init_macro = copy_and_modify_macro(config_tmpdir, output_tmpdir, macro)
-        command = ['nexus', '-b', '-n', '1', init_macro]
+        nexus_exe  = os.environ['NEXUSDIR'] + '/bin/nexus'
+        command    = [nexus_exe, '-b', '-n', '1', init_macro]
         with capsys.disabled():
             print(f'Running {macro}')
         p  = subprocess.run(command, check=True, env=my_env)

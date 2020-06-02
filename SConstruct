@@ -243,7 +243,7 @@ for d in SRCDIR:
 env['CXXCOMSTR']  = "Compiling $SOURCE"
 env['LINKCOMSTR'] = "Linking $TARGET"
 
-nexus = env.Program('nexus', ['source/nexus.cc']+src)
+nexus = env.Program('bin/nexus', ['source/nexus.cc']+src)
 
 TSTDIR = ['utils',
 	  'example']
@@ -254,6 +254,6 @@ for d in TSTDIR:
     tst += Glob(d+'/*.cc')
 
 env.Append(CPPPATH = ['source/tests'])
-nexus_test = env.Program('nexus-test', ['source/nexus-test.cc']+tst+src)
+nexus_test = env.Program('bin/nexus-test', ['source/nexus-test.cc']+tst+src)
 
 Clean(nexus, 'buildvars.scons')
