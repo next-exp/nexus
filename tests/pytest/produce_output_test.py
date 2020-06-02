@@ -3,8 +3,9 @@ import pytest
 import os
 import subprocess
 
+
 @pytest.mark.first
-def test_create_nexus_output_file_next100(config_tmpdir, output_tmpdir, full_base_name_next100, nexus_full_output_file_next100):
+def test_create_nexus_output_file_next100(config_tmpdir, output_tmpdir, NEXUSDIR, full_base_name_next100, nexus_full_output_file_next100):
 
      init_text = f"""
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -58,7 +59,7 @@ def test_create_nexus_output_file_next100(config_tmpdir, output_tmpdir, full_bas
      config_file.close()
 
      my_env    = os.environ
-     nexus_exe = os.environ['NEXUSDIR'] + '/bin/nexus'
+     nexus_exe = NEXUSDIR + '/bin/nexus'
      command   = [nexus_exe, '-b', '-n', '1', init_path]
      p         = subprocess.run(command, check=True, env=my_env)
 
@@ -66,7 +67,7 @@ def test_create_nexus_output_file_next100(config_tmpdir, output_tmpdir, full_bas
 
 
 @pytest.mark.first
-def test_create_nexus_output_file_new(config_tmpdir, output_tmpdir, full_base_name_new, nexus_full_output_file_new):
+def test_create_nexus_output_file_new(config_tmpdir, output_tmpdir, NEXUSDIR, full_base_name_new, nexus_full_output_file_new):
 
      init_text = f"""
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -120,7 +121,7 @@ def test_create_nexus_output_file_new(config_tmpdir, output_tmpdir, full_base_na
      config_file.close()
 
      my_env    = os.environ
-     nexus_exe = os.environ['NEXUSDIR'] + '/bin/nexus'
+     nexus_exe = NEXUSDIR + '/bin/nexus'
      command   = [nexus_exe, '-b', '-n', '1', init_path]
      p         = subprocess.run(command, check=True, env=my_env)
 
