@@ -11,13 +11,9 @@
 #include "PersistencyManager.h"
 
 #include <G4Step.hh>
-#include <G4SteppingManager.hh>
 #include <G4VPersistencyManager.hh>
 #include <G4ProcessManager.hh>
 #include <G4ParticleTable.hh>
-#include <G4Geantino.hh>
-#include <G4OpBoundaryProcess.hh>
-#include <G4VPhysicalVolume.hh>
 
 using namespace nexus;
 
