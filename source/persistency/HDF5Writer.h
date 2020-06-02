@@ -37,7 +37,7 @@ namespace nexus {
     void WriteSensorPosInfo(unsigned int sensor_id, const char* sensor_name, float x, float y, float z);
     void WriteStep(int evt_number,
                    int particle_id, const char* particle_name,
-                   int step_idx,
+                   int step_id,
                    const char* initial_volume,
                    const char*   final_volume,
                    const char*      proc_name,

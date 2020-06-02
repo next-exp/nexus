@@ -169,7 +169,7 @@ void HDF5Writer::WriteSensorPosInfo(unsigned int sensor_id, const char* sensor_n
 
 void HDF5Writer::WriteStep(int evt_number,
                            int particle_id, const char* particle_name,
-                           int step_idx,
+                           int step_id,
                            const char* initial_volume,
                            const char*   final_volume,
                            const char*      proc_name,
@@ -181,7 +181,7 @@ void HDF5Writer::WriteStep(int evt_number,
   step.particle_id = particle_id;
   memset(step.particle_name , 0,  STRLEN);
   strcpy(step.particle_name ,  particle_name);
-  step.step_idx    = step_idx;
+  step.step_id    = step_id;
   memset(step.initial_volume, 0, STRLEN);
   strcpy(step.initial_volume, initial_volume);
   memset(step.  final_volume, 0, STRLEN);

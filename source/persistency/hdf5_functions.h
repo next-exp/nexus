@@ -79,7 +79,7 @@
     int32_t event_id;
     int32_t particle_id;
     char    particle_name[STRLEN];
-    int     step_idx;
+    int     step_id;
     char    initial_volume[STRLEN];
     char      final_volume[STRLEN];
     char         proc_name[STRLEN];

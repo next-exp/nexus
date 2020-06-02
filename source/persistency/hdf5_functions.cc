@@ -121,7 +121,7 @@ hsize_t createStepType()
   H5Tinsert (memtype, "event_id"      , HOFFSET(step_info_t, event_id      ), H5T_NATIVE_INT32);
   H5Tinsert (memtype, "particle_id"   , HOFFSET(step_info_t, particle_id   ), H5T_NATIVE_INT  );
   H5Tinsert (memtype, "particle_name" , HOFFSET(step_info_t, particle_name ), strtype         );
-  H5Tinsert (memtype, "step_idx"      , HOFFSET(step_info_t, step_idx      ), H5T_NATIVE_INT  );
+  H5Tinsert (memtype, "step_id"       , HOFFSET(step_info_t, step_id       ), H5T_NATIVE_INT  );
   H5Tinsert (memtype, "initial_volume", HOFFSET(step_info_t, initial_volume), proc_strtype    );
   H5Tinsert (memtype, "final_volume"  , HOFFSET(step_info_t, final_volume  ), proc_strtype    );
   H5Tinsert (memtype, "proc_name"     , HOFFSET(step_info_t, proc_name     ), proc_strtype    );

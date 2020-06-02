@@ -353,17 +353,17 @@ void PersistencyManager::StoreSteps()
     G4int                      track_id      = key.first;
     G4String                   particle_name = key.second;
 
-    for (int step_idx=0; step_idx < it->second.size(); ++step_idx) {
-      h5writer_->WriteStep(nevt_, track_id, particle_name, step_idx,
-                           initial_volumes[key][step_idx],
-                             final_volumes[key][step_idx],
-                                proc_names[key][step_idx],
-                           initial_poss   [key][step_idx].x(),
-                           initial_poss   [key][step_idx].y(),
-                           initial_poss   [key][step_idx].z(),
-                             final_poss   [key][step_idx].x(),
-                             final_poss   [key][step_idx].y(),
-                             final_poss   [key][step_idx].z());
+    for (int step_id=0; step_id < it->second.size(); ++step_id) {
+      h5writer_->WriteStep(nevt_, track_id, particle_name, step_id,
+                           initial_volumes[key][step_id],
+                             final_volumes[key][step_id],
+                                proc_names[key][step_id],
+                           initial_poss   [key][step_id].x(),
+                           initial_poss   [key][step_id].y(),
+                           initial_poss   [key][step_id].z(),
+                             final_poss   [key][step_id].x(),
+                             final_poss   [key][step_id].y(),
+                             final_poss   [key][step_id].z());
     }
   }
   sa->Reset();
