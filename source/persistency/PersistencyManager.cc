@@ -15,7 +15,7 @@
 #include "PmtSD.h"
 #include "NexusApp.h"
 #include "DetectorConstruction.h"
-#include "AllSteppingAction.h"
+#include "SaveAllSteppingAction.h"
 #include "BaseGeometry.h"
 #include "HDF5Writer.h"
 
@@ -119,7 +119,7 @@ G4bool PersistencyManager::Store(const G4Event* event)
   if (!store_evt_) {
     TrajectoryMap::Clear();
     if (store_steps_) {
-      AllSteppingAction* sa = (AllSteppingAction*)
+      SaveAllSteppingAction* sa = (SaveAllSteppingAction*)
         G4RunManager::GetRunManager()->GetUserSteppingAction();
       sa->Reset();
     }
@@ -338,7 +338,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
 
 void PersistencyManager::StoreSteps()
 {
-  AllSteppingAction* sa = (AllSteppingAction*)
+  SaveAllSteppingAction* sa = (SaveAllSteppingAction*)
     G4RunManager::GetRunManager()->GetUserSteppingAction();
 
   StepContainer<G4String> initial_volumes = sa->get_initial_volumes();

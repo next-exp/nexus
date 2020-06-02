@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-///  \file   AllSteppingAction.h
+///  \file   SaveAllSteppingAction.h
 ///  \brief  Stepping action to record every step of a particle.
 ///
 ///  \author   <gonzalo.martinez.lema@weizmann.ac.il>
@@ -31,13 +31,13 @@ namespace nexus {
 
   //  Stepping action to analyze the behaviour of optical photons
 
-  class AllSteppingAction: public G4UserSteppingAction
+  class SaveAllSteppingAction: public G4UserSteppingAction
   {
   public:
     /// Constructor
-    AllSteppingAction();
+    SaveAllSteppingAction();
     /// Destructor
-    ~AllSteppingAction();
+    ~SaveAllSteppingAction();
 
     virtual void UserSteppingAction(const G4Step*);
 
@@ -72,12 +72,12 @@ namespace nexus {
     G4bool        KeepParticle(G4ParticleDefinition*);
   };
 
-inline StepContainer<G4String> AllSteppingAction::get_initial_volumes(){return initial_volumes_;}
-inline StepContainer<G4String> AllSteppingAction::get_final_volumes  (){return   final_volumes_;}
-inline StepContainer<G4String> AllSteppingAction::get_proc_names     (){return      proc_names_;}
+inline StepContainer<G4String> SaveAllSteppingAction::get_initial_volumes(){return initial_volumes_;}
+inline StepContainer<G4String> SaveAllSteppingAction::get_final_volumes  (){return   final_volumes_;}
+inline StepContainer<G4String> SaveAllSteppingAction::get_proc_names     (){return      proc_names_;}
 
-inline StepContainer<G4ThreeVector> AllSteppingAction::get_initial_poss(){return initial_poss_;}
-inline StepContainer<G4ThreeVector> AllSteppingAction::get_final_poss  (){return   final_poss_;}
+inline StepContainer<G4ThreeVector> SaveAllSteppingAction::get_initial_poss(){return initial_poss_;}
+inline StepContainer<G4ThreeVector> SaveAllSteppingAction::get_final_poss  (){return   final_poss_;}
 
 } // namespace nexus
 

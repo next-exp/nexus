@@ -18,9 +18,9 @@
 /Geometry/NextNew/specific_vertex_Z 100 mm
 
 # ACTIONS
-#/Actions/AllSteppingAction/select_particle geantino
-#/Actions/AllSteppingAction/select_volume   ACTIVE   #    full match
-#/Actions/AllSteppingAction/select_volume   TPB      # partial match
+#/Actions/SaveAllSteppingAction/select_particle geantino
+#/Actions/SaveAllSteppingAction/select_volume   ACTIVE   #    full match
+#/Actions/SaveAllSteppingAction/select_volume   TPB      # partial match
 
 # GEOMETRY
 /Geometry/NextNew/pressure 10. bar

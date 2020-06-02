@@ -7,7 +7,7 @@
 //  Copyright (c) 2020 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#include "AllSteppingAction.h"
+#include "SaveAllSteppingAction.h"
 #include "PersistencyManager.h"
 
 #include <G4Step.hh>
@@ -23,19 +23,19 @@ using namespace nexus;
 
 
 
-AllSteppingAction::AllSteppingAction():
+SaveAllSteppingAction::SaveAllSteppingAction():
 G4UserSteppingAction(),
 msg_(0),
 selected_volumes_()
 {
-  msg_ = new G4GenericMessenger(this, "/Actions/AllSteppingAction/");
+  msg_ = new G4GenericMessenger(this, "/Actions/SaveAllSteppingAction/");
 
   msg_->DeclareMethod("select_particle",
-                      &AllSteppingAction::AddSelectedParticle,
+                      &SaveAllSteppingAction::AddSelectedParticle,
                       "add a new particle to select");
 
   msg_->DeclareMethod("select_volume",
-                      &AllSteppingAction::AddSelectedVolume,
+                      &SaveAllSteppingAction::AddSelectedVolume,
                       "add a new volume to select");
 
   PersistencyManager* pm = dynamic_cast<PersistencyManager*>
@@ -47,13 +47,13 @@ selected_volumes_()
 
 
 
-AllSteppingAction::~AllSteppingAction()
+SaveAllSteppingAction::~SaveAllSteppingAction()
 {
 }
 
 
 
-void AllSteppingAction::UserSteppingAction(const G4Step* step)
+void SaveAllSteppingAction::UserSteppingAction(const G4Step* step)
 {
   G4ParticleDefinition* pdef          = step->GetTrack()->GetDefinition();
   G4int                 track_id      = step->GetTrack()->GetTrackID();
@@ -85,24 +85,24 @@ void AllSteppingAction::UserSteppingAction(const G4Step* step)
 }
 
 
-void AllSteppingAction::AddSelectedParticle(G4String particle_name)
+void SaveAllSteppingAction::AddSelectedParticle(G4String particle_name)
 {
   G4ParticleDefinition* pdef = G4ParticleTable::GetParticleTable()->FindParticle(particle_name);
   if (!pdef) {
     G4String msg = "No particle description was found for particle name " + particle_name;
-    G4Exception("[AllSteppingAction]", "AddSelectedParticle()", FatalException, msg);
+    G4Exception("[SaveAllSteppingAction]", "AddSelectedParticle()", FatalException, msg);
   }
   selected_particles_.push_back(pdef);
 }
 
 
-void AllSteppingAction::AddSelectedVolume(G4String volume_name)
+void SaveAllSteppingAction::AddSelectedVolume(G4String volume_name)
 {
   selected_volumes_.push_back(volume_name);
 }
 
 
-G4bool AllSteppingAction::KeepParticle(G4ParticleDefinition* pdef)
+G4bool SaveAllSteppingAction::KeepParticle(G4ParticleDefinition* pdef)
 {
   if (!selected_particles_.size()) return true;
 
@@ -111,7 +111,7 @@ G4bool AllSteppingAction::KeepParticle(G4ParticleDefinition* pdef)
 }
 
 
-G4bool AllSteppingAction::KeepVolume(G4String& initial_volume, G4String& final_volume)
+G4bool SaveAllSteppingAction::KeepVolume(G4String& initial_volume, G4String& final_volume)
 {
   if (!selected_volumes_.size()) return true;
 
@@ -126,7 +126,7 @@ G4bool AllSteppingAction::KeepVolume(G4String& initial_volume, G4String& final_v
 
 
 
-void AllSteppingAction::Reset()
+void SaveAllSteppingAction::Reset()
 {
   initial_volumes_.clear();
     final_volumes_.clear();
