@@ -1,13 +1,12 @@
 // ----------------------------------------------------------------------------
-///  \file   SaveAllSteppingAction.h
-///  \brief  Stepping action to record every step of a particle.
-///
-///  \author   <gonzalo.martinez.lema@weizmann.ac.il>
-///  \date     01 May 2020
-///  \version  $Id$
-///
-///  Copyright (c) 2020 NEXT Collaboration. All rights reserved.
+// nexus | SaveAllSteppingAction.h
+//
+// This class sets the store_steps flag of the persistency manager
+// so all steps are saved.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
+
 
 #ifndef ALL_STEPPING_ACTION_H
 #define ALL_STEPPING_ACTION_H

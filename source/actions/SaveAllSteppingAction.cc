@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | SaveAllSteppingAction.cc
 //
-//  Author : <gonzalo.martinez.lema@weizmann.ac.il>
-//  Created: 01 May 2020
+// This class sets the store_steps flag of the persistency manager
+// so all steps are saved.
 //
-//  Copyright (c) 2020 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "SaveAllSteppingAction.h"
