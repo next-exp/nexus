@@ -100,7 +100,7 @@ void GenericPhotosensor::DefineMaterials()
   // and prevents interferences with other possible uses.
   window_mat_ =
     MaterialsList::CopyMaterial(MaterialsList::OpticalSilicone(),
-                                name_ + "WINDOW_MATERIAL_");
+                                name_ + "_WINDOW_MATERIAL");
   G4MaterialPropertiesTable* window_optProp = new G4MaterialPropertiesTable();
 
   // In the default behavior of this class, the refractive index of WLS and window
@@ -143,7 +143,7 @@ void GenericPhotosensor::Construct()
   DefineMaterials();
 
   // PHOTOSENSOR CASE //////////////////////////////////
-  G4String name = name_ + "CASE_";
+  G4String name = name_ + "_CASE";
 
   G4Box* case_solid_vol =
     new G4Box(name, width_/2., height_/2., thickness_/2.);
@@ -155,7 +155,7 @@ void GenericPhotosensor::Construct()
 
 
   // OPTICAL WINDOW ////////////////////////////////////////
-  name = name_ + "WINDOW_";
+  name = name_ + "_WINDOW";
 
   G4Box* window_solid_vol =
     new G4Box(name, width_/2., height_/2., window_thickness_/2.);
@@ -170,7 +170,7 @@ void GenericPhotosensor::Construct()
 
 
   // PHOTOSENSITIVE AREA /////////////////////////////////////////////
-  name = name_ + "SENSAREA_";
+  name = name_ + "_SENSAREA";
 
   G4Box* sensarea_solid_vol =
     new G4Box(name, sensarea_width_/2., sensarea_height_/2., sensarea_thickness_/2.);
@@ -187,7 +187,7 @@ void GenericPhotosensor::Construct()
   // WLS_COATING /////////////////////////////////////////////
   G4LogicalVolume* wls_logic_vol;
   if (with_wls_coating_) {
-    name = name_ + "WLS_";
+    name = name_ + "_WLS";
 
     G4Box* wls_solid_vol =
       new G4Box(name, width_/2., height_/2., wls_thickness_/2.);
@@ -199,11 +199,11 @@ void GenericPhotosensor::Construct()
     new G4PVPlacement(nullptr, G4ThreeVector(0., 0., zpos), wls_logic_vol,
                       name, window_logic_vol, false, 0, false);
 
-    G4OpticalSurface* wls_optSurf = new G4OpticalSurface(name + "OPSURF_",
+    G4OpticalSurface* wls_optSurf = new G4OpticalSurface(name + "_OPSURF",
                                                          glisur, ground,
                                                          dielectric_dielectric, .01);
     
-    new G4LogicalSkinSurface(name + "OPSURF_", wls_logic_vol, wls_optSurf);
+    new G4LogicalSkinSurface(name + "_OPSURF", wls_logic_vol, wls_optSurf);
   }
 
 
@@ -229,9 +229,9 @@ void GenericPhotosensor::Construct()
     G4Exception("[GenericPhotosensor]", "Construct()", FatalException,
                 "Sensor Optical Properties must be set before constructing");
   G4OpticalSurface* sensitive_opsurf =
-    new G4OpticalSurface(name + "optSurf_", unified, polished, dielectric_metal);
+    new G4OpticalSurface(name + "_optSurf", unified, polished, dielectric_metal);
   sensitive_opsurf->SetMaterialPropertiesTable(sensitive_mpt_);
-  new G4LogicalSkinSurface(name + "optSurf_", sensarea_logic_vol, sensitive_opsurf);
+  new G4LogicalSkinSurface(name + "_optSurf", sensarea_logic_vol, sensitive_opsurf);
 
 
   // SENSITIVE DETECTOR //////////////////////////////////////////////

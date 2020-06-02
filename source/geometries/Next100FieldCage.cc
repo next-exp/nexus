@@ -87,7 +87,7 @@ namespace nexus {
     msg_ = new G4GenericMessenger(this, "/Geometry/Next100/",
 				  "Control commands of geometry Next100.");
     msg_->DeclareProperty("field_cage_vis", visibility_, "Field Cage Visibility");
-    msg_->DeclareProperty("field_cageverbosity_", verbosity_,
+    msg_->DeclareProperty("field_cage_verbosity", verbosity_,
 			  "Field Cage Verbosity");
 
     G4GenericMessenger::Command& drift_transv_diff_cmd =
