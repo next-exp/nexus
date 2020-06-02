@@ -1,14 +1,10 @@
-// ----------------------------------------------------------------------------
-///  \file     NextNewFieldCage.h
-///  \brief    Reflector tube coated with TPB layer.
-///            Also builds the EL, Cathode and Electric Drift Field.
-///
-///  \author   <miquel.nebot@ific.uv.es>
-///  \date     12 Sept 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013-2015 NEXT Collaboration
-// ----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// nexus | NextNewFieldCage.h
+//
+// Field cage of the NEXT-WHITE detector.
+//
+// The NEXT Collaboration
+// -----------------------------------------------------------------------------
 
 #ifndef NEXTNEW_FIELDCAGE_H
 #define NEXTNEW_FIELDCAGE_H
@@ -69,75 +65,75 @@ namespace nexus {
   private:
 
     // Mother Logical Volume
-    G4LogicalVolume* _mother_logic;
-    G4VPhysicalVolume* _mother_phys;
-    G4Material* _gas;
-    G4double _pressure;
-    G4double _temperature;
+    G4LogicalVolume* mother_logic_;
+    G4VPhysicalVolume* mother_phys_;
+    G4Material* gas_;
+    G4double pressure_;
+    G4double temperature_;
 
     // Pointers to materials definition
-    G4Material* _hdpe;
-    G4Material* _tpb;
-    G4Material* _pedot;
-    G4Material* _ito;
-    G4Material* _teflon;
-    G4Material* _quartz;
-    G4Material* _copper;
+    G4Material* hdpe_;
+    G4Material* tpb_;
+    G4Material* pedot_;
+    G4Material* ito_;
+    G4Material* teflon_;
+    G4Material* quartz_;
+    G4Material* copper_;
 
     // Dimensions
-    G4double _dist_feedthroughs, _cathode_thickness, _cathode_gap;
-    G4double _windows_end_z, _buffer_length;
-    G4double _tube_in_diam, _tube_length_drift, _tube_thickness, _dist_tube_el; //_tube_length_buff
-    G4double _hdpe_length, _hdpe_in_diam, _hdpe_out_diam, _hdpe_ledge;
-    G4double  _ring_width, _ring_thickness, _tube_z_pos;
-    G4double _tpb_thickness;
-    G4double _el_gap_z_pos, _pos_z_anode, _pos_z_cathode, _el_gap_length, _grid_thickness;
-    G4double _gate_transparency;
-    G4double _anode_quartz_thickness, _anode_quartz_diam; //_anode_quartz_transparency
-    G4double _cathode_grid_transparency;
-    G4double _pedot_thickness;
-    G4double _ito_thickness;
-    G4double _active_posz;
-    G4double _active_length;
+    G4double dist_feedthroughs_, cathode_thickness_, cathode_gap_;
+    G4double windows_end_z_, buffer_length_;
+    G4double tube_in_diam_, tube_length_drift_, tube_thickness_, dist_tube_el_; //tube_length_buff_
+    G4double hdpe_length_, hdpe_in_diam_, hdpe_out_diam_, hdpe_ledge_;
+    G4double  ring_width_, ring_thickness_, tube_z_pos_;
+    G4double tpb_thickness_;
+    G4double el_gap_z_pos_, pos_z_anode_, pos_z_cathode_, el_gap_length_, grid_thickness_;
+    G4double gate_transparency_;
+    G4double anode_quartz_thickness_, anode_quartz_diam_; //anode_quartz_transparency_
+    G4double cathode_grid_transparency_;
+    G4double pedot_thickness_;
+    G4double ito_thickness_;
+    G4double active_posz_;
+    G4double active_length_;
 
     // Transverse and longitudinal diffusions
-    G4double _ELtransv_diff;
-    G4double _ELlong_diff;
-    G4double _drift_transv_diff;
-    G4double _drift_long_diff;
+    G4double ELtransv_diff_;
+    G4double ELlong_diff_;
+    G4double drift_transv_diff_;
+    G4double drift_long_diff_;
 
     // Electric field in the EL gap
-    G4double _ELelectric_field;
+    G4double ELelectric_field_;
 
     // Visibility
-    G4bool _visibility;
+    G4bool visibility_;
 
-    G4double _max_step_size;
-    G4bool _elfield;
+    G4double max_step_size_;
+    G4bool elfield_;
 
     // Vertex generators
-    CylinderPointSampler* _drift_tube_gen;
-    CylinderPointSampler* _hdpe_tube_gen;
-    CylinderPointSampler* _xenon_gen;
-    CylinderPointSampler* _buffer_gen;
-    CylinderPointSampler* _active_gen;
-    CylinderPointSampler* _anode_quartz_gen;
-    CylinderPointSampler* _cathode_gen;
-    CylinderPointSampler* _tracking_frames_gen;
+    CylinderPointSampler* drift_tube_gen_;
+    CylinderPointSampler* hdpe_tube_gen_;
+    CylinderPointSampler* xenon_gen_;
+    CylinderPointSampler* buffer_gen_;
+    CylinderPointSampler* active_gen_;
+    CylinderPointSampler* anode_quartz_gen_;
+    CylinderPointSampler* cathode_gen_;
+    CylinderPointSampler* tracking_frames_gen_;
 
-    G4double _specific_vertex_X;
-    G4double _specific_vertex_Y;
-    G4double _specific_vertex_Z;
+    G4double specific_vertex_X_;
+    G4double specific_vertex_Y_;
+    G4double specific_vertex_Z_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
 
 
-    G4int _el_table_point_id;
-    mutable G4int _el_table_index;
-    mutable std::vector<G4ThreeVector> _el_table_vertices;
-    G4double _el_table_binning;
-    G4double _el_table_z;
+    G4int el_table_point_id_;
+    mutable G4int el_table_index_;
+    mutable std::vector<G4ThreeVector> el_table_vertices_;
+    G4double el_table_binning_;
+    G4double el_table_z_;
   };
 
 } //end namespace nexus

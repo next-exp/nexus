@@ -1,6 +1,10 @@
-### --------------------------------------------------------
-###  Example config macro for the single-particle generator.
-### --------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | SingleParticle.mac
+##
+## Ancillary macro to define the parameters of the single particle generator.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /Generator/SingleParticle/particle e-
 /Generator/SingleParticle/min_energy 1. MeV

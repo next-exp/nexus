@@ -1,10 +1,19 @@
-### -----------------------------------------------------------------
-###  This macro simulates the S1 optical response of the NEW detector
-### -----------------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | NEW_S1_table.config.mac
+##
+## Configuration macro to simulate primary scintillation light
+## for look-up tables in the NEW detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
+# VERBOSITY
 /run/verbose 0
 /event/verbose 0
 /tracking/verbose 0
+
+# JOB CONTROL
+/nexus/random_seed -2
 
 # GENERATION
 /Generator/ScintGenerator/region ACTIVE
@@ -16,6 +25,6 @@
 
 # PHYSICS
 /control/execute macros/physics/IonizationElectron.mac
-/nexus/persistency/outputFile S1_param.next
 
-/nexus/random_seed -2
+# PERSISTENCY
+/nexus/persistency/outputFile S1_param.next

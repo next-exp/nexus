@@ -1,12 +1,9 @@
 // ----------------------------------------------------------------------------
-///  \file   BaseDriftField.h
-///  \brief  Abstract base class for description of drift fields.
-///  
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     12 May 2010
-///  \version  $Id$
-///
-///  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
+// nexus | BaseDriftField.h
+//
+// Abstract base class for the description of drift fields.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef BASE_DRIFT_FIELD_H

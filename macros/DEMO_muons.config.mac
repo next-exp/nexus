@@ -1,17 +1,15 @@
-### --------------------------------------------------------
-###  Example to run the muons generator 
-###  Author: Neus Lopez March <neus.lopez@ific.uv.es>    
-###  date: 30 Jan 2014
-### --------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | DEMO_muons.config.mac
+##
+## Configuration macro to simulate muons in the NEXT-DEMO detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
+# VERBOSITY
 /run/verbose 0
 /event/verbose 0
-/tracking/verbose 0
-
-# GENERATION
-/Generator/MuonGenerator/min_energy  4. GeV
-/Generator/MuonGenerator/max_energy  4. GeV
-/Generator/MuonGenerator/region MUONS    
+/tracking/verbose 0  
 
 # GEOMETRY
 /Geometry/Next1EL/elfield false
@@ -26,6 +24,11 @@
 /Geometry/Next1EL/sideport_angle 30. deg
 /Geometry/Next1EL/muonsGenerator true
 
+# GENERATOR
+/Generator/MuonGenerator/min_energy  4. GeV
+/Generator/MuonGenerator/max_energy  4. GeV
+/Generator/MuonGenerator/region MUONS
+
 # ACTIONS
 ## /Actions/MuonsEventAction/energy_threshold 0.6 MeV
 /Actions/MuonsEventAction/stringHist MuonsHist_1.root
@@ -35,5 +38,5 @@
 /PhysicsList/Nexus/drift               false
 /PhysicsList/Nexus/electroluminescence false
 
-# PHYSICS
+# PERSISTENCY
 /nexus/persistency/outputFile DEMO_muons.next

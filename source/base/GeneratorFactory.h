@@ -1,12 +1,10 @@
 // ----------------------------------------------------------------------------
-///  \file   GeneratorFactory.h
-///  \brief  Factory class for the construction of primary generators.
-/// 
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     13 March 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// nexus | GeneratorFactory.h
+//
+// This class instantiates the generator of the simulation that the user
+// specifies via configuration parameter.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef GENERATOR_FACTORY_H
@@ -34,8 +32,8 @@ namespace nexus {
     G4VPrimaryGenerator* CreateGenerator() const;
 
   private:
-    G4GenericMessenger* _msg; ///< Pointer to the messenger
-    G4String _name; ///< Name of the chosen primary generator
+    G4GenericMessenger* msg_; ///< Pointer to the messenger
+    G4String name_; ///< Name of the chosen primary generator
   };
 
 } // end namespace nexus

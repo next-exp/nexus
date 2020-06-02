@@ -1,25 +1,20 @@
-// $Id$
+// ----------------------------------------------------------------------------
+// nexus | NexusStepLimiterBuilder.cc
 //
-//---------------------------------------------------------------------------
+// This class adds a step limiter to electrons, for a fine tracking.
 //
-// ClassName:   G4StepLimiterBuilder
-//
-// Author:      V.Ivanchenko 24.11.2004
-//
-// Modified:
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 
-#include "NexusStepLimiterBuilder.hh"
+#include "NexusStepLimiterBuilder.h"
 
-#include "G4ParticleDefinition.hh"
-#include "G4ProcessManager.hh"
+#include <G4ParticleDefinition.hh>
+#include <G4ProcessManager.hh>
+#include <G4StepLimiter.hh>
+#include <G4UserSpecialCuts.hh>
+#include <G4PhysicsConstructorFactory.hh>
 
-#include "G4StepLimiter.hh"
-#include "G4UserSpecialCuts.hh"
-
-// factory
-#include "G4PhysicsConstructorFactory.hh"
-//
 G4_DECLARE_PHYSCONSTR_FACTORY(NexusStepLimiterBuilder);
 
 

@@ -1,12 +1,9 @@
 // ----------------------------------------------------------------------------
-///  \file   IonizationElectron.h
-///  \brief  Definition of the ionization electron.
-///
-///  \author   J. Martin-Albo <jmalbos@ific.uv.es>    
-///  \date     19 May 2010
-///  \version  $Id$
-///
-///  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
+// nexus | IonizationElectron.h
+//
+// Definition of the ionization electron.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef IONIZATION_ELECTRON_H
@@ -16,7 +13,7 @@
 
 
 namespace nexus {
-  
+
   /// Definition of the ionization electron
 
   class IonizationElectron: public G4ParticleDefinition
@@ -27,14 +24,14 @@ namespace nexus {
 
     /// Destructor
     ~IonizationElectron();
-    
+
   private:
-    /// Default constructor is hidden. 
+    /// Default constructor is hidden.
     /// No instance of this class can be created.
     IonizationElectron();
 
   private:
-    static IonizationElectron* _instance;
+    static IonizationElectron* instance_;
   };
 
 } // end namespace nexus

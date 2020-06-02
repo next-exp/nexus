@@ -1,22 +1,15 @@
 // ----------------------------------------------------------------------------
-///  \file
-///  \brief
-///
-///  \author   <justo.martin-albo@ific.uv.es>, <jmunoz@ific.uv.es>
-///  \date     21 Nov 2011
-///  \version  $Id$
-///
-///  Copyright (c) 2011 NEXT Collaboration
+// nexus | Next100.h
+//
+// Main class that constructs the geometry of the NEXT-100 detector.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXT100__
-#define __NEXT100__
+#ifndef NEXT100_H
+#define NEXT100_H
 
 #include "BaseGeometry.h"
-#include "Next100Shielding.h"
-#include "Next100Vessel.h"
-#include "Next100Ics.h"
-#include "Next100InnerElements.h"
 
 class G4LogicalVolume;
 class G4GenericMessenger;
@@ -26,6 +19,11 @@ namespace nexus {class BoxPointSampler;}
 
 namespace nexus {
 
+  class BoxPointSampler;
+  class Next100Shielding;
+  class Next100Vessel;
+  class Next100Ics;
+  class Next100InnerElements;
 
   class Next100: public BaseGeometry
   {
@@ -47,34 +45,34 @@ namespace nexus {
 
   private:
     // Detector dimensions
-    const G4double _lab_size;          /// Size of the air box containing the detector
+    const G4double lab_size_;          /// Size of the air box containing the detector
 
     // External diameter of nozzles and y positions
-    const G4double _nozzle_ext_diam;
-    const G4double _up_nozzle_ypos, _central_nozzle_ypos, _down_nozzle_ypos, _bottom_nozzle_ypos;
+    const G4double nozzle_ext_diam_;
+    const G4double up_nozzle_ypos_, central_nozzle_ypos_, down_nozzle_ypos_, bottom_nozzle_ypos_;
 
     // Pointers to logical volumes
-    G4LogicalVolume* _lab_logic;
-    G4LogicalVolume* _buffer_gas_logic;
+    G4LogicalVolume* lab_logic_;
+    G4LogicalVolume* buffer_gas_logic_;
 
     // Detector parts
-    Next100Shielding* _shielding;
-    Next100Vessel*    _vessel;
-    Next100Ics*       _ics;
-    Next100InnerElements* _inner_elements;
+    Next100Shielding* shielding_;
+    Next100Vessel*    vessel_;
+    Next100Ics*       ics_;
+    Next100InnerElements* inner_elements_;
 
-    BoxPointSampler* _lab_gen; ///< Vertex generator
+    BoxPointSampler* lab_gen_; ///< Vertex generator
 
     /// Messenger for the definition of control commands
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
 
     /// Specific vertex for AD_HOC region
-    G4double _specific_vertex_X;
-    G4double _specific_vertex_Y;
-    G4double _specific_vertex_Z;
+    G4double specific_vertex_X_;
+    G4double specific_vertex_Y_;
+    G4double specific_vertex_Z_;
 
     /// Position of gate in its mother volume
-    G4double _gate_zpos_in_vessel;
+    G4double gate_zpos_in_vessel_;
   };
 
 } // end namespace nexus

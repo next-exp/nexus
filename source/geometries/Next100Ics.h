@@ -1,21 +1,15 @@
 // ----------------------------------------------------------------------------
-///  \file   
-///  \brief  
-///
-///  \author   <justo.martin-albo@ific.uv.es>, <jmunoz@ific.uv.es>
-///  \date     21 Nov 2011
-///  \version  $Id$
-///
-///  Copyright (c) 2011 NEXT Collaboration
+// nexus | Next100Ics.h
+//
+// Inner copper shielding of the NEXT-100 detector.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXT100_ICS__
-#define __NEXT100_ICS__
+#ifndef NEXT100_ICS_H
+#define NEXT100_ICS_H
 
 #include "BaseGeometry.h"
-#include "CylinderPointSampler.h"
-#include "SpherePointSampler.h"
-#include "BoxPointSampler.h"
 
 #include <G4Navigator.hh>
 
@@ -24,6 +18,9 @@ class G4GenericMessenger;
 
 namespace nexus {
 
+  class CylinderPointSampler;
+  class SpherePointSampler;
+  class BoxPointSampler;
 
   class Next100Ics: public BaseGeometry
   {
@@ -53,39 +50,39 @@ namespace nexus {
 
   private:
     // Mother Logical Volume of the ICS
-    G4LogicalVolume* _mother_logic;
+    G4LogicalVolume* mother_logic_;
     // Dimensions
-    G4double _body_in_rad, _body_length, _body_thickness;
-    G4double _tracking_orad, _tracking_length;
-    G4double _plug_x, _plug_y, _plug_z, _plug_posz;
-    G4double _DB_columns, _num_DBs;
-    //    G4double _tracking_cone_height, _tracking_irad;
-    G4double _energy_theta, _energy_orad, _energy_thickness, _energy_sph_zpos, _energy_cyl_length;
+    G4double body_in_rad_, body_length_, body_thickness_;
+    G4double tracking_orad_, tracking_length_;
+    G4double plug_x_, plug_y_, plug_z_, plug_posz_;
+    G4double DB_columns_, num_DBs_;
+    //    G4double tracking_cone_height_, tracking_irad_;
+    G4double energy_theta_, energy_orad_, energy_thickness_, energy_sph_zpos_, energy_cyl_length_;
 
     // Dimensions coming from outside  
-    G4double _nozzle_ext_diam, _up_nozzle_ypos, _central_nozzle_ypos;
-    G4double _down_nozzle_ypos, _bottom_nozzle_ypos;
+    G4double nozzle_ext_diam_, up_nozzle_ypos_, central_nozzle_ypos_;
+    G4double down_nozzle_ypos_, bottom_nozzle_ypos_;
 
-    std::vector<G4ThreeVector> _DB_positions;
+    std::vector<G4ThreeVector> DB_positions_;
 
 
     // Visibility of the shielding
-    G4bool _visibility;
+    G4bool visibility_;
 
     // Vertex generators
-    CylinderPointSampler* _body_gen;
-    CylinderPointSampler* _tracking_gen;
-    CylinderPointSampler* _energy_cyl_gen;
-    SpherePointSampler*   _energy_sph_gen;
-    BoxPointSampler* _plug_gen;
+    CylinderPointSampler* body_gen_;
+    CylinderPointSampler* tracking_gen_;
+    CylinderPointSampler* energy_cyl_gen_;
+    SpherePointSampler*   energy_sph_gen_;
+    BoxPointSampler* plug_gen_;
 
-    G4double _perc_body_vol, _perc_tracking_vol, _perc_energy_cyl_vol;
+    G4double perc_body_vol_, perc_tracking_vol_, perc_energy_cyl_vol_;
 
     // Geometry Navigator
-    G4Navigator* _geom_navigator;
+    G4Navigator* geom_navigator_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
+    G4GenericMessenger* msg_; 
 
   };
 

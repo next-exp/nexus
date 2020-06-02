@@ -1,7 +1,11 @@
-### --------------------------------------------------------
-### This macro simulates Kr83 decays in the NEXT100 geometry
-### using the full simulation.
-### --------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | NEXT100_full.init.mac
+##
+## Initialization macro to simulate Kr-83 decays in the NEXT-100 geometry
+## with generation and transportation of optical photons.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
 /PhysicsList/RegisterPhysics G4DecayPhysics

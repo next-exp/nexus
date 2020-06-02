@@ -1,13 +1,11 @@
-// -----------------------------------------------------------------------------
-///  \file   UniformElectricDriftField.h
-///  \brief  Uniform electric drift field
-///  
-///  \author  J Martin-Albo <jmalbos@ific.uv.es>    
-///  \date    12 May 2010
-///  \version $Id$
-///
-///  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// nexus | UniformElectricDriftField.h
+//
+// This class defines a homogeneuos electric drift field with constant
+// drift lines from cathode to anode and parallel to a cartesian axis
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #ifndef UNIFORM_ELECTRIC_DRIFT_FIELD_H
 #define UNIFORM_ELECTRIC_DRIFT_FIELD_H
@@ -19,39 +17,35 @@ class G4Material;
 
 
 namespace nexus {
-  
+
   class SegmentPointSampler;
-
-
-  /// This class defines a homogeneuos electric drift field with constant 
-  /// drift lines from cathode to anode and parallel to a cartesian axis 
 
   class UniformElectricDriftField: public BaseDriftField
   {
   public:
     /// Constructor providing position of anode and cathode,
     /// and axis parallel to the drift lines
-    UniformElectricDriftField(G4double anode_position=0., 
+    UniformElectricDriftField(G4double anode_position=0.,
                               G4double cathode_position=0.,
-                              EAxis axis=kZAxis); 
-    
+                              EAxis axis=kZAxis);
+
     /// Destructor
     ~UniformElectricDriftField();
-    
+
     /// Calculate final state (position, time, drift time and length, etc.)
     /// of an ionization electron
     G4double Drift(G4LorentzVector& xyzt);
-    
+
     G4LorentzVector GeneratePointAlongDriftLine(const G4LorentzVector&, const G4LorentzVector&);
-    
+
     // Setters/getters
-    
+
     void SetAnodePosition(G4double);
     G4double GetAnodePosition() const;
 
     void SetCathodePosition(G4double);
     G4double GetCathodePosition() const;
-    
+
     void SetDriftVelocity(G4double);
     G4double GetDriftVelocity() const;
 
@@ -69,7 +63,7 @@ namespace nexus {
 
     void SetNumberOfPhotons(G4double);
     G4double GetNumberOfPhotons() const;
-    
+
   private:
     /// Returns true if coordinate is between anode and cathode
     G4bool CheckCoordinate(G4double);
@@ -77,75 +71,73 @@ namespace nexus {
 
 
   private:
-    
-    EAxis _axis; ///< Axis parallel to field lines
-    
-    G4double _anode_pos;   ///< Anode position in axis _axis
-    G4double _cathode_pos; ///< Cathode position in axis _axis
 
-    G4double _drift_velocity; ///< Drift velocity of the charge carrier
-    G4double _transv_diff;    ///< Transverse diffusion
-    G4double _longit_diff;    ///< Longitudinal diffusion
-    G4double _attachment;
-    G4double _light_yield;
-    G4double _num_ph;
+    EAxis axis_; ///< Axis parallel to field lines
 
-    SegmentPointSampler* _rnd;
+    G4double anode_pos_;   ///< Anode position in axis axis_
+    G4double cathode_pos_; ///< Cathode position in axis axis_
+
+    G4double drift_velocity_; ///< Drift velocity of the charge carrier
+    G4double transv_diff_;    ///< Transverse diffusion
+    G4double longit_diff_;    ///< Longitudinal diffusion
+    G4double attachment_;
+    G4double light_yield_;
+    G4double num_ph_;
+
+    SegmentPointSampler* rnd_;
 
   };
 
-  
+
   // inline methods ..................................................
-  
+
   inline void UniformElectricDriftField::SetAnodePosition(G4double p)
-  { _anode_pos = p; }
-  
+  { anode_pos_ = p; }
+
   inline G4double UniformElectricDriftField::GetAnodePosition() const
-  { return _anode_pos; }
+  { return anode_pos_; }
 
   inline void UniformElectricDriftField::SetCathodePosition(G4double p)
-  { _cathode_pos = p; }
-  
+  { cathode_pos_ = p; }
+
   inline G4double UniformElectricDriftField::GetCathodePosition() const
-  { return _cathode_pos; }
+  { return cathode_pos_; }
 
   inline void UniformElectricDriftField::SetDriftVelocity(G4double dv)
-  { _drift_velocity = dv; }
-  
+  { drift_velocity_ = dv; }
+
   inline G4double UniformElectricDriftField::GetDriftVelocity() const
-  { return _drift_velocity; }
+  { return drift_velocity_; }
 
   inline void UniformElectricDriftField::SetLongitudinalDiffusion(G4double ld)
-  { _longit_diff = ld; }
-  
+  { longit_diff_ = ld; }
+
   inline G4double UniformElectricDriftField::GetLongitudinalDiffusion() const
-  { return _longit_diff; }
+  { return longit_diff_; }
 
   inline void UniformElectricDriftField::SetTransverseDiffusion(G4double td)
-  { _transv_diff = td; }
-  
+  { transv_diff_ = td; }
+
   inline G4double UniformElectricDriftField::GetTransverseDiffusion() const
-  { return _transv_diff; }
+  { return transv_diff_; }
 
   inline void UniformElectricDriftField::SetAttachment(G4double a)
-  { _attachment = a; }
+  { attachment_ = a; }
 
   inline G4double UniformElectricDriftField::GetAttachment() const
-  { return _attachment; }
+  { return attachment_; }
 
   inline void UniformElectricDriftField::SetLightYield(G4double ly)
-  { _light_yield = ly; }
+  { light_yield_ = ly; }
 
   inline G4double UniformElectricDriftField::LightYield() const
-  { return _light_yield; }
+  { return light_yield_; }
 
   inline void UniformElectricDriftField::SetNumberOfPhotons(G4double nph)
-  { _num_ph = nph; }
+  { num_ph_ = nph; }
 
-  
+
 
 } // end namespace nexus
 
 #endif
- 
-

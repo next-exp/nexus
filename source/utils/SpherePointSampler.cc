@@ -1,10 +1,9 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | SpherePointSampler.cc
 //
-//  Author : Javier Muñoz Vidal <jmunoz@ific.uv.es>
-//  Created: 2 November 2009
+// This class is a sampler of random uniform points in as sphere.
 //
-//  Copyright (c) 2009, 2010 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "SpherePointSampler.h"
@@ -27,17 +26,17 @@ namespace nexus {
                                          G4double delta_phi,
                                          G4double start_theta,
                                          G4double delta_theta):
-    _inner_rad(inner_rad),
-    _outer_rad(inner_rad + thickness),
-    _start_phi(start_phi),
-    _delta_phi(delta_phi),
-    _start_theta(start_theta),
-    _delta_theta(delta_theta),
-    _origin(origin),
-    _rotation(rotation)
+    inner_rad_(inner_rad),
+    outer_rad_(inner_rad + thickness),
+    start_phi_(start_phi),
+    delta_phi_(delta_phi),
+    start_theta_(start_theta),
+    delta_theta_(delta_theta),
+    origin_(origin),
+    rotation_(rotation)
   {
-    _cos_start_theta = cos(_start_theta);
-    _diff_cos_thetas = _cos_start_theta - cos(_start_theta + _delta_theta);
+    cos_start_theta_ = cos(start_theta_);
+    diff_cos_thetas_ = cos_start_theta_ - cos(start_theta_ + delta_theta_);
   }
 
 
@@ -54,7 +53,7 @@ namespace nexus {
 
     // Generating in the inner surface
     else if (region == "SURFACE") {
-      G4double rad = _inner_rad;
+      G4double rad = inner_rad_;
       G4double phi = GetPhi();
       G4double theta = GetTheta();
       x = rad * sin(theta) * cos(phi);
@@ -65,7 +64,7 @@ namespace nexus {
 
     // Generating between the inner and outer surfaces
     else if (region == "VOLUME") {
-      G4double rad = GetRadius(_inner_rad, _outer_rad);
+      G4double rad = GetRadius(inner_rad_, outer_rad_);
       G4double phi = GetPhi();
       G4double theta = GetTheta();
       x = rad * sin(theta) * cos(phi);
@@ -76,7 +75,7 @@ namespace nexus {
 
     // Generating inside
     else if (region == "INSIDE") {
-      G4double rad = GetRadius(0., _inner_rad);
+      G4double rad = GetRadius(0., inner_rad_);
       G4double phi = GetPhi();
       G4double theta = GetTheta();
       x = rad * sin(theta) * cos(phi);
@@ -108,14 +107,14 @@ namespace nexus {
 
   G4double SpherePointSampler::GetPhi()
   {
-    return (_start_phi + G4UniformRand() * _delta_phi);
+    return (start_phi_ + G4UniformRand() * delta_phi_);
   }
 
 
 
   G4double SpherePointSampler::GetTheta()
   {
-    return acos( _cos_start_theta - G4UniformRand() * _diff_cos_thetas );
+    return acos( cos_start_theta_ - G4UniformRand() * diff_cos_thetas_ );
   }
 
 
@@ -125,9 +124,9 @@ namespace nexus {
     G4ThreeVector real_pos = position;
 
     // Rotating if needed
-    if (_rotation) real_pos *= *_rotation;
+    if (rotation_) real_pos *= *rotation_;
     // Translating
-    real_pos += _origin;
+    real_pos += origin_;
 
     return real_pos;
   }

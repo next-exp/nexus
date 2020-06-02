@@ -1,8 +1,11 @@
-### ------------------------------------------------------------
-###  This macro shows the most relevant options that can be used.
-###  For each parameters all the options are commented, except
-###  for one, if needed.
-### ------------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | NEXT_options.init.mac
+##
+## Initialization macro that shows the most relevant options that can be used.
+## For each parameter all the options are commented, except for one, if needed.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 ##### PHYSICS #####
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -16,21 +19,18 @@
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
-
 ##### GEOMETRY #####
 /Geometry/RegisterGeometry NEXT100
 #/Geometry/RegisterGeometry NEXT_NEW
 #/Geometry/RegisterGeometry NEXT100_OPT
 
-
 ##### GENERATOR #####
-/Generator/RegisterGenerator ION_GUN
+/Generator/RegisterGenerator ION
 #/Generator/RegisterGenerator SINGLE_PARTICLE
 #/Generator/RegisterGenerator DECAY0
 #/Generator/RegisterGenerator Kr83m
-#/Generator/RegisterGenerator SCINTGENERATOR
-#/Generator/RegisterGenerator LABMUON_GENERATOR
-
+#/Generator/RegisterGenerator SCINTILLATION
+#/Generator/RegisterGenerator LAB_MUON
 
 ##### ACTIONS #####
 /Actions/RegisterRunAction DEFAULT
@@ -43,8 +43,7 @@
 /Actions/RegisterTrackingAction DEFAULT
 #/Actions/RegisterTrackingAction OPTICAL
 
-
-##### SECONDARY MACRO #####
+##### CONFIGURATION MACRO #####
 /nexus/RegisterMacro macros/NEXT_options.config.mac
 
 ##### DELAYED MACROS #####

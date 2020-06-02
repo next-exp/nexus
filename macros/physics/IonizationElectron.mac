@@ -1,8 +1,11 @@
-### ------------------------------------------------------------------
-###  Basic configuration macro of the nexus physics that results
-###  in the definition of the ionization electron with no attached
-###  physics processes.
-### ------------------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | IonizationElectron.mac
+##
+## Physics macro that results in the definition of the ionization electron
+## with no attached physics processes.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /PhysicsList/Nexus/clustering          false
 /PhysicsList/Nexus/drift               false

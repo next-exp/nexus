@@ -1,7 +1,11 @@
 // ----------------------------------------------------------------------------
-/// 
-///
-///  Copyright (c) 2018 NEXT Collaboration. All rights reserved.
+// nexus | ExtraVessel.h
+//
+// Volume used to simulate radioactive background from materials such as
+// connectors, feedthroughs and adapter boards, placed outside the vessel,
+// behind the tracking plane.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef EXTRA_VESSEL_H
@@ -10,16 +14,12 @@
 #include "BaseGeometry.h"
 #include <G4ThreeVector.hh>
 
-class G4OpticalSurface;
 class G4GenericMessenger;
 
 namespace nexus {
 
   class CylinderPointSampler;
 
-
-  /// Geometry model for the Hamamatsu R11410-10 photomultiplier
-  
   class ExtraVessel: public BaseGeometry
   {
   public:
@@ -39,15 +39,15 @@ namespace nexus {
 
   private:
     // Dimensions
-    G4double _diameter, _thickness;
+    G4double diameter_, thickness_;
 
     // Vertex generators
-    CylinderPointSampler* _generic_gen;
-    
-    G4bool _visibility;
+    CylinderPointSampler* generic_gen_;
+
+    G4bool visibility_;
 
     //Messenger for configuration parameters
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
 
   };
 

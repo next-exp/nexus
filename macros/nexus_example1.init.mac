@@ -1,12 +1,16 @@
-### --------------------------------------------------------
-###  Example 1: Initialization macro of nexus.
-###  This macro simulates an individual particle in a sphere
-###  full of xenon
-### --------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | nexus_example1.init.mac
+##
+## Initialization macro to simulate individual particles
+## in a sphere of xenon.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /control/execute macros/physics/DefaultPhysicsList.mac
 
 /Geometry/RegisterGeometry XE_SPHERE
+
 /Generator/RegisterGenerator SINGLE_PARTICLE
 
 /Actions/RegisterRunAction DEFAULT

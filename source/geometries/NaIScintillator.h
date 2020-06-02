@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------
+// nexus | NaIScintillator.h
+//
+// Sodium Iodide scintillator, used with Na22 calibration source.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #ifndef NAI_SCINT_H
 #define NAI_SCINT_H
 
@@ -24,10 +32,10 @@ namespace nexus {
   private:
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg;
-    G4bool _visibility;
-    G4double _length;
-    
+    G4GenericMessenger* msg_;
+    G4bool visibility_;
+    G4double length_;
+
   };
 }
 

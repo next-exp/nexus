@@ -1,10 +1,9 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | XenonGasProperties.cc
 //
-//  Author:  <justo.martin-albo@ific.uv.es>
-//  Created: 25 Dec 2010
+// This class collects the relevant physical properties of gaseous xenon.
 //
-//  Copyright (c) 2010-2012 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "XenonGasProperties.h"
@@ -20,24 +19,24 @@
 
 namespace nexus {
 
-  using namespace CLHEP; 
-  
+  using namespace CLHEP;
+
   XenonGasProperties::XenonGasProperties(G4double pressure,
 					 G4double /*temperature*/):
-    _pressure(pressure)
-    //, _temperature(temperature)
+    pressure_(pressure)
+    //, temperature_(temperature)
   {
     //Density();
   }
-  
-  
-  
+
+
+
   XenonGasProperties::~XenonGasProperties()
   {
   }
-  
 
-  
+
+
   G4double XenonGasProperties::Density(G4double pressure)
   {
     G4double density = 5.324 * kg/m3;
@@ -65,7 +64,7 @@ namespace nexus {
         density = y1 + (y2-y1)*(pressure-x1)/(x2-x1);
         found = true;
         break;
-      } 
+      }
     }
 
     if (!found) {
@@ -74,7 +73,7 @@ namespace nexus {
       }
       else {
         G4Exception("[XenonGaseousProperties]", "Density()", FatalException,
-		    "Unknown xenon density for this pressure!"); 
+		    "Unknown xenon density for this pressure!");
       }
     }
     return density;
@@ -86,15 +85,15 @@ namespace nexus {
   {
     // Isotopic mass per mole taken from
     // http://rushim.ru/books/spravochniki/handbook-chemistry-and-physics.pdf
-    
+
     G4double mass_per_mole = 135.907220*g/mole;
-    
+
     if (a == 124) {
       mass_per_mole = 123.9058958*g/mole;
     } else if (a == 126) {
-      mass_per_mole = 125.904269*g/mole; 
+      mass_per_mole = 125.904269*g/mole;
     } else if (a == 128) {
-      mass_per_mole = 127.9035304*g/mole;  
+      mass_per_mole = 127.9035304*g/mole;
     } else if (a == 129) {
       mass_per_mole = 128.9047795*g/mole;
     } else if (a == 130) {
@@ -115,15 +114,15 @@ namespace nexus {
 
     return mass_per_mole;
   }
-  
 
-  
+
+
   G4double XenonGasProperties::RefractiveIndex(G4double energy)
   {
     // Formula for the refractive index taken from
-    // A. Baldini et al., "Liquid Xe scintillation calorimetry 
+    // A. Baldini et al., "Liquid Xe scintillation calorimetry
     // and Xe optical properties", arXiv:physics/0401072v1 [physics.ins-det]
-    
+
     // The Lorentz-Lorenz equation (also known as Clausius-Mossotti equation)
     // relates the refractive index of a fluid with its density:
     // (n^2 - 1) / (n^2 + 2) = - A · d_M,     (1)
@@ -134,7 +133,7 @@ namespace nexus {
     G4double P[3] = {71.23, 77.75, 1384.89}; // [eV^3 cm3 / mole]
     G4double E[3] = {8.4, 8.81, 13.2};       // [eV]
 
-    // Note.- Equation (1) has, actually, a sign difference with respect 
+    // Note.- Equation (1) has, actually, a sign difference with respect
     // to the one appearing in the reference. Otherwise, it yields values
     // for the refractive index below 1.
 
@@ -148,12 +147,12 @@ namespace nexus {
     for (G4int i=0; i<3; i++)
       virial = virial + P[i] / (energy*energy - E[i]*E[i]);
 
-    // Need to use g/cm3    
-    G4double density = Density(_pressure) / g * cm3;
+    // Need to use g/cm3
+    G4double density = Density(pressure_) / g * cm3;
 
     G4double mol_density = density / 131.29;
     G4double alpha = virial * mol_density;
-    
+
     // Isolating now the n2 from equation (1) and taking the square root
     G4double n2 = (1. - 2*alpha) / (1. + alpha);
     if (n2 < 1.) {
@@ -163,26 +162,26 @@ namespace nexus {
 	// 	  JustWarning, msg);
       n2 = 1.;
     }
-    
+
     return sqrt(n2);
   }
-  
 
-  
+
+
   G4double XenonGasProperties::Scintillation(G4double energy)
   {
-    // FWHM and peak of emission extracted from paper: 
-    // Physical review A, Volume 9, Number 2, 
+    // FWHM and peak of emission extracted from paper:
+    // Physical review A, Volume 9, Number 2,
     // February 1974. Koehler, Ferderber, Redhead and Ebert.
     // Pressure must be in atm = bar
     // XXX Check if there is some newest results.
 
-    G4double pressure = _pressure / atmosphere;
+    G4double pressure = pressure_ / atmosphere;
 
     G4double Wavelength_peak  = (0.05 * pressure + 169.45) * nm;
 
     G4double Wavelength_sigma = 0.;
-    if (pressure < 4.) 
+    if (pressure < 4.)
       Wavelength_sigma = 14.3 * nm;
     else
       Wavelength_sigma = (-0.117 * pressure + 15.16) * nm / (2.*sqrt(2*log(2)));
@@ -198,16 +197,16 @@ namespace nexus {
   }
 
 
-  
+
   void XenonGasProperties::Scintillation
   (G4int entries, G4double* energy, G4double* intensity)
   {
     for (G4int i=0; i<entries; i++)
       intensity[i] = Scintillation(energy[i]);
   }
-  
-  
-  
+
+
+
   G4double XenonGasProperties::ELLightYield(G4double field_strength) const
   {
     // Empirical formula taken from
@@ -217,15 +216,15 @@ namespace nexus {
     // where Y/x is the number of photons per unit lenght (cm),
     // E is the electric field strength, p is the pressure, and a and b
     // are empirically determined constants:
-    
+
     const G4double a = 140. / kilovolt;
     const G4double b = 116. / (bar*cm);
 
-    G4double yield = (a * field_strength/_pressure - b) * _pressure;
+    G4double yield = (a * field_strength/pressure_ - b) * pressure_;
     if (yield < 0.) yield = 0.;
 
     return yield;
   }
-  
-  
+
+
 } // end namespace nexus

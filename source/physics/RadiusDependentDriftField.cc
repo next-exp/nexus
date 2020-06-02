@@ -1,11 +1,11 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | RadiusDependentDriftField.cc
 //
-//  Author : <justo.martin-albo@ific.uv.es>
-//  Created: $ September 2013
+// Drift field varying with radial coordinate.
 //
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
+
 
 #include "RadiusDependentDriftField.h"
 
@@ -32,7 +32,7 @@ G4double RadiusDependentDriftField::Drift(G4LorentzVector& /*xyzt*/)
 
 
 
-G4LorentzVector 
+G4LorentzVector
 RadiusDependentDriftField::GeneratePointAlongDriftLine(const G4LorentzVector&, const G4LorentzVector&)
 {
   return G4LorentzVector();

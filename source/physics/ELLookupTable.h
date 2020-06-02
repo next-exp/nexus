@@ -1,16 +1,13 @@
 // ----------------------------------------------------------------------------
-///  \file   ELLookupTable.h
-///  \brief  
-///
-///  \author   <justo.martin-albo@ific.uv.es>, <paola.ferrario@ific.uv.es>
-///  \date     22 Oct 2011
-///  \version  $Id$
-///
-///  Copyright (c) 2011, 2012 NEXT Collaboration. All rights reserved.
+// nexus | ELLookupTable.h
+//
+// This class describes the generation of the EL light.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __EL_LOOKUP_TABLE__
-#define __EL_LOOKUP_TABLE__
+#ifndef EL_LOOKUP_TABLE_H
+#define EL_LOOKUP_TABLE_H
 
 #include <G4VUserRegionInformation.hh>
 #include <G4ThreeVector.hh>
@@ -22,7 +19,7 @@
 
 namespace nexus {
 
-  class ELLookupTable: public G4VUserRegionInformation 
+  class ELLookupTable: public G4VUserRegionInformation
   {
   public:
     /// Constructor
@@ -32,15 +29,15 @@ namespace nexus {
 
     /// Read input files and store their content in the transient table
     void ReadFiles(G4String);
-    
+
     /// Returns the appropiate sensor map for a given point in the EL gap
-    virtual const std::map<int, std::vector<double> >& 
+    virtual const std::map<int, std::vector<double> >&
     GetSensorsMap(const G4ThreeVector&);
 
 
   private:
 
-    std::vector<std::map<int, std::vector<double> > > _ELtable;
+    std::vector<std::map<int, std::vector<double> > > ELtable_;
 
   };
 

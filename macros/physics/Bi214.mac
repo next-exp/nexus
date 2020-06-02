@@ -1,1 +1,12 @@
+## ----------------------------------------------------------------------------
+## nexus | Bi214.mac
+##
+## Physics macro to interrupt the Bi-214 decay after the decay of Pb-210.
+## Parameters: n1 n2 n3 n4, with n1(n2) = nucleon number of the
+## first (last) decaying isotope and n3(n4) = atomic number of the
+## first (last) decaying isotope.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
 /grdm/nucleusLimits 214 214 83 84

@@ -1,18 +1,15 @@
-// ----------------------------------------------------------------------------
-///  \file   
-///  \brief    Copper castle inside the shielding lead 
-///  \author   <miquel.nebot@ific.uv.es>, <paola.ferrario@dipc.org>
-///  \date     3 Feb 2014
-///  \version  $Id$
-///
-///  Copyright (c) 2014 NEXT Collaboration
-// ----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// nexus | NextNewMiniCastle.h
+//
+// Copper castle placed inside the lead castle at LSC.
+//
+// The NEXT Collaboration
+// -----------------------------------------------------------------------------
 
-#ifndef __NEXTNEW_MINI_CASTLE__
-#define __NEXTNEW_MINI_CASTLE__
+#ifndef NEXTNEW_MINI_CASTLE_H
+#define NEXTNEW_MINI_CASTLE_H
 
 #include "BaseGeometry.h"
-#include "BoxPointSampler.h"
 
 #include <G4Navigator.hh>
 #include <G4TransportationManager.hh>
@@ -20,6 +17,8 @@
 class G4GenericMessenger;
 
 namespace nexus {
+
+  class BoxPointSampler;
 
   class NextNewMiniCastle: public BaseGeometry
   {
@@ -46,22 +45,22 @@ namespace nexus {
 
   private:
     // Mother logical volume
-    G4LogicalVolume* _mother_logic;
+    G4LogicalVolume* mother_logic_;
 
     // Dimensions
-    G4double  _x, _y, _z, _thickness, _open_space_z;
-    G4double _steel_thickn;
+    G4double  x_, y_, z_, thickness_, open_space_z_;
+    G4double steel_thickn_;
 
     // Vertex generators
-    BoxPointSampler* _mini_castle_box_gen;
-    BoxPointSampler* _mini_castle_external_surf_gen;
-    BoxPointSampler* _steel_box_gen;
+    BoxPointSampler* mini_castle_box_gen_;
+    BoxPointSampler* mini_castle_external_surf_gen_;
+    BoxPointSampler* steel_box_gen_;
     
     // Geometry Navigator
-    G4Navigator* _geom_navigator;
+    G4Navigator* geom_navigator_;
 
     // Position of the pedestal surface in y
-    G4double _pedestal_surf_y;
+    G4double pedestal_surf_y_;
 
   };
 

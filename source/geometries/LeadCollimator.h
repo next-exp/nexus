@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------
+// nexus | LeadCollimator.h
+//
+// Lead colllimator used at LSC to screen source from lateral port.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #ifndef LEAD_COLL_H
 #define LEAD_COLL_H
 
@@ -21,10 +29,10 @@ namespace nexus {
     G4double GetLength();
 
   private:
-    G4double _axis_centre;
-    G4double _length;
+    G4double axis_centre_;
+    G4double length_;
   };
-  
+
 }
 
 #endif

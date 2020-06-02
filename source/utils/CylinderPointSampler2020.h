@@ -1,9 +1,11 @@
-// -----------------------------------------------------------------------------
-//  nexus | CylinderPointSampler2020.h
+// ----------------------------------------------------------------------------
+// nexus | CylinderPointSampler2020.h
 //
-//  * Author: <jmunoz@ific.uv.es>
-//  * Creation date: 14 January 2020
-// -----------------------------------------------------------------------------
+// This class is a sampler of random uniform points in a cylinder.
+// It follows the GEANT4 cylinder geometry parameter convention.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #ifndef CYLINDER_POINT_SAMPLER_2020_H
 #define CYLINDER_POINT_SAMPLER_2020_H
@@ -17,10 +19,6 @@ class G4VPhysicalVolume;
 namespace nexus {
 
   using namespace CLHEP;
-
-  // Generator of random positions in a cylinder.
-  // It follows the GEANT4 cylinder geometry parameter convention
-
 
   class CylinderPointSampler2020
   {
@@ -50,10 +48,10 @@ namespace nexus {
     G4ThreeVector RotateAndTranslate(G4ThreeVector position);
 
   private:
-    G4double          _minRad, _maxRad, _halfLength;  // Solid Dimensions
-    G4double          _iniPhi, _deltaPhi;             // Initial & delta Phi
-    G4RotationMatrix* _rotation;                      // Rotation of the cylinder (if any)
-    G4ThreeVector     _origin;                        // Origin of coordinates
+    G4double          minRad_, maxRad_, halfLength_;  // Solid Dimensions
+    G4double          iniPhi_, deltaPhi_;             // Initial & delta Phi
+    G4RotationMatrix* rotation_;                      // Rotation of the cylinder (if any)
+    G4ThreeVector     origin_;                        // Origin of coordinates
   };
 
 } // namespace nexus

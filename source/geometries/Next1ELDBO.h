@@ -1,16 +1,13 @@
 // ----------------------------------------------------------------------------
-///  \file   Next1ELDBO.h
-///  \brief  
-///
-///  \author  <justo.martin-albo@ific.uv.es>
-///  \date    2 Nov 2010
-///  \version $Id: Next1DBO.h 3279 2010-11-17 12:12:03Z jmalbos $
+// nexus | Next1ELDBO.h
 //
-///  Copyright (c) 2010 NEXT Collaboration
+// Dice boards of the NEXT-DEMO detector.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXT1_EL_DBO__
-#define __NEXT1_EL_DBO__
+#ifndef NEXT1_EL_DBO_H
+#define NEXT1_EL_DBO_H
 
 #include "BaseGeometry.h"
 #include <vector>
@@ -28,13 +25,13 @@ namespace nexus {
     G4ThreeVector GetDimensions();
     /// Method to retrieve the position of SiPM inside the daughter board
     std::vector<std::pair<int, G4ThreeVector> > GetPositions();
-    
+
   private:
     void DefineGeometry(G4int rows, G4int columns);
-    G4ThreeVector _dimensions;
-    std::vector<std::pair<int, G4ThreeVector> > _positions;
+    G4ThreeVector dimensions_;
+    std::vector<std::pair<int, G4ThreeVector> > positions_;
   };
-  
+
 } // end namespace nexus
 
 #endif

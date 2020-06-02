@@ -1,12 +1,10 @@
 // ----------------------------------------------------------------------------
-///  \file   Next100InnerElements.h
-///  \brief  Geometry of the field cage and sensor planes of NEXT-100.
-///
-///  \author   <jmunoz@ific.uv.es>
-///  \date     2 Mar 2012
-///  \version  $Id$
-///
-///  Copyright (c) 2012-2015 NEXT Collaboration
+// nexus | Next100InnerElements.h
+//
+// Inner elements of the NEXT-100 detector. They include the field cage,
+// the energy and the tracking plane.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef NEXT100_INNER_ELEMENTS_H
@@ -27,10 +25,6 @@ namespace nexus {
   class Next100FieldCage;
   class Next100EnergyPlane;
   class Next100TrackingPlane;
-
-
-  /// This is a geometry placer that encloses the energy and tracking planes and
-  /// the field cage, including all internal elements such as active and buffer volumes.
 
   class Next100InnerElements : public BaseGeometry
   {
@@ -58,24 +52,24 @@ namespace nexus {
 
   private:
 
-    const G4double _gate_sapphire_wdw_distance;
-    const G4double _gate_tracking_plane_distance;
+    const G4double gate_sapphire_wdw_distance_;
+    const G4double gate_tracking_plane_distance_;
 
 
-    G4LogicalVolume* _mother_logic;
-    G4VPhysicalVolume* _mother_phys;
-    G4Material* _gas;
+    G4LogicalVolume* mother_logic_;
+    G4VPhysicalVolume* mother_phys_;
+    G4Material* gas_;
 
-    G4double _pressure;
-    G4double _temperature;
+    G4double pressure_;
+    G4double temperature_;
 
     // Detector parts
-    Next100FieldCage*     _field_cage;
-    Next100EnergyPlane*   _energy_plane;
-    Next100TrackingPlane* _tracking_plane;
+    Next100FieldCage*     field_cage_;
+    Next100EnergyPlane*   energy_plane_;
+    Next100TrackingPlane* tracking_plane_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
 
   };
 

@@ -1,10 +1,14 @@
-
-///
-///  Copyright (c) 2010-2016 NEXT Collaboration. All rights reserved.
+// ----------------------------------------------------------------------------
+// nexus | ArgonGasProperties.h
+//
+// This class collects the relevant physical properties of gaseous argon.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __ARGON_GAS_PROPERTIES__
-#define __ARGON_GAS_PROPERTIES__
+
+#ifndef ARGON_GAS_PROPERTIES_H
+#define ARGON_GAS_PROPERTIES_H
 
 #include <globals.hh>
 #include <vector>
@@ -25,21 +29,21 @@ namespace nexus {
 
     /// Return the refractive index of xenon gas for a given photon energy
     //   G4double RefractiveIndex(G4double energy);
-    
+
     /* G4double Scintillation(G4double energy); */
     /* void Scintillation(G4int entries, G4double* energy, G4double* intensity); */
 
     static G4double Density(G4double pressure=5.*CLHEP::bar);
-    
+
 
     /// Electroluminescence yield of pure xenon gas
     G4double ELLightYield(G4double field_strength) const;
-    
+
 
   private:
-    G4double _pressure;
-    //    G4double _temperature;
-    
+    G4double pressure_;
+    //    G4double temperature_;
+
   };
 
 } // end namespace nexus

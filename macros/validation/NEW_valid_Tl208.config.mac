@@ -1,3 +1,11 @@
+## ----------------------------------------------------------------------------
+## nexus | NEW_valid_Tl208.config.mac
+##
+## Configuration macro to simulate Tl-208 decays to test gamma
+## production in different versions of GEANT4.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 #VERBOSITY
 /run/verbose 1
@@ -10,9 +18,9 @@
 /Geometry/PmtR11410/SD_depth 4
 
 # GENERATION
-/Generator/IonGun/atomic_number 81
-/Generator/IonGun/mass_number 208
-/Generator/IonGun/region DICE_BOARD
+/Generator/IonGenerator/atomic_number 81
+/Generator/IonGenerator/mass_number 208
+/Generator/IonGenerator/region DICE_BOARD
 
 # PHYSICS
 /PhysicsList/Nexus/clustering          false

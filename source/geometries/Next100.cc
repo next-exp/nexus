@@ -1,15 +1,18 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | Next100.cc
 //
-//  Authors: <justo.martin-albo@ific.uv.es>, <jmunoz@ific.uv.es>
-//  Created: 21 Nov 2011
+// Main class that constructs the geometry of the NEXT-100 detector.
 //
-//  Copyright (c) 2011 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "Next100.h"
 #include "BoxPointSampler.h"
 #include "MuonsPointSampler.h"
+#include "Next100Shielding.h"
+#include "Next100Vessel.h"
+#include "Next100Ics.h"
+#include "Next100InnerElements.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -31,30 +34,30 @@ namespace nexus {
   Next100::Next100():
     BaseGeometry(),
     // Lab dimensions
-    _lab_size (5. * m),
+    lab_size_ (5. * m),
     // Nozzles external diam and y positions
-    _nozzle_ext_diam (9. * cm),
-    _up_nozzle_ypos (20. * cm),
-    _central_nozzle_ypos (0. * cm),
-    _down_nozzle_ypos (-20. * cm),
-    _bottom_nozzle_ypos(-53. * cm)
+    nozzle_ext_diam_ (9. * cm),
+    up_nozzle_ypos_ (20. * cm),
+    central_nozzle_ypos_ (0. * cm),
+    down_nozzle_ypos_ (-20. * cm),
+    bottom_nozzle_ypos_(-53. * cm)
   {
 
-    _msg = new G4GenericMessenger(this, "/Geometry/Next100/",
+    msg_ = new G4GenericMessenger(this, "/Geometry/Next100/",
 				  "Control commands of geometry Next100.");
 
     G4GenericMessenger::Command&  specific_vertex_X_cmd =
-      _msg->DeclareProperty("specific_vertex_X", _specific_vertex_X,
+      msg_->DeclareProperty("specific_vertex_X", specific_vertex_X_,
                             "If region is AD_HOC, x coord of primary particles");
     specific_vertex_X_cmd.SetParameterName("specific_vertex_X", true);
     specific_vertex_X_cmd.SetUnitCategory("Length");
     G4GenericMessenger::Command&  specific_vertex_Y_cmd =
-      _msg->DeclareProperty("specific_vertex_Y", _specific_vertex_Y,
+      msg_->DeclareProperty("specific_vertex_Y", specific_vertex_Y_,
                             "If region is AD_HOC, y coord of primary particles");
     specific_vertex_Y_cmd.SetParameterName("specific_vertex_Y", true);
     specific_vertex_Y_cmd.SetUnitCategory("Length");
     G4GenericMessenger::Command&  specific_vertex_Z_cmd =
-      _msg->DeclareProperty("specific_vertex_Z", _specific_vertex_Z,
+      msg_->DeclareProperty("specific_vertex_Z", specific_vertex_Z_,
                             "If region is AD_HOC, z coord of primary particles");
     specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
     specific_vertex_Z_cmd.SetUnitCategory("Length");
@@ -64,18 +67,18 @@ namespace nexus {
   // order since some of them depend on the previous ones
 
   // Shielding
-  _shielding = new Next100Shielding();
+  shielding_ = new Next100Shielding();
 
   // Vessel
-  _vessel = new Next100Vessel(_nozzle_ext_diam, _up_nozzle_ypos, _central_nozzle_ypos,
-			      _down_nozzle_ypos, _bottom_nozzle_ypos);
+  vessel_ = new Next100Vessel(nozzle_ext_diam_, up_nozzle_ypos_, central_nozzle_ypos_,
+			      down_nozzle_ypos_, bottom_nozzle_ypos_);
 
   // Internal copper shielding
-  _ics = new Next100Ics(_nozzle_ext_diam, _up_nozzle_ypos, _central_nozzle_ypos,
-			_down_nozzle_ypos, _bottom_nozzle_ypos);
+  ics_ = new Next100Ics(nozzle_ext_diam_, up_nozzle_ypos_, central_nozzle_ypos_,
+			down_nozzle_ypos_, bottom_nozzle_ypos_);
 
   // Inner Elements
-  _inner_elements = new Next100InnerElements();
+  inner_elements_ = new Next100InnerElements();
 
   }
 
@@ -83,11 +86,11 @@ namespace nexus {
 
   Next100::~Next100()
   {
-    delete _inner_elements;
-    delete _ics;
-    delete _vessel;
-    delete _shielding;
-    delete _lab_gen;
+    delete inner_elements_;
+    delete ics_;
+    delete vessel_;
+    delete shielding_;
+    delete lab_gen_;
   }
 
 
@@ -100,50 +103,50 @@ namespace nexus {
     // on the outside.
 
     G4Box* lab_solid =
-      new G4Box("LAB", _lab_size/2., _lab_size/2., _lab_size/2.);
+      new G4Box("LAB", lab_size_/2., lab_size_/2., lab_size_/2.);
 
-    _lab_logic =
+    lab_logic_ =
       new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
 			  "LAB");
-    _lab_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
 
     // Set this volume as the wrapper for the whole geometry
     // (i.e., this is the volume that will be placed in the world)
-    this->SetLogicalVolume(_lab_logic);
+    this->SetLogicalVolume(lab_logic_);
 
 
     // SHIELDING
-    _shielding->Construct();
-    G4LogicalVolume* shielding_logic = _shielding->GetLogicalVolume();
+    shielding_->Construct();
+    G4LogicalVolume* shielding_logic = shielding_->GetLogicalVolume();
 
     // VESSEL
-    _vessel->Construct();
-    G4LogicalVolume* shielding_air_logic = _shielding->GetAirLogicalVolume();
-    G4LogicalVolume* vessel_logic = _vessel->GetLogicalVolume();
-    _gate_zpos_in_vessel = _vessel->GetELzCoord();
+    vessel_->Construct();
+    G4LogicalVolume* shielding_air_logic = shielding_->GetAirLogicalVolume();
+    G4LogicalVolume* vessel_logic = vessel_->GetLogicalVolume();
+    gate_zpos_in_vessel_ = vessel_->GetELzCoord();
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), vessel_logic,
     		      "VESSEL", shielding_air_logic, false, 0);
 
-    G4LogicalVolume* vessel_internal_logic = _vessel->GetInternalLogicalVolume();
-    G4VPhysicalVolume* vessel_internal_phys = _vessel->GetInternalPhysicalVolume();
+    G4LogicalVolume* vessel_internal_logic = vessel_->GetInternalLogicalVolume();
+    G4VPhysicalVolume* vessel_internal_phys = vessel_->GetInternalPhysicalVolume();
 
     // Inner Elements
-    _inner_elements->SetLogicalVolume(vessel_internal_logic);
-    _inner_elements->SetPhysicalVolume(vessel_internal_phys);
-    _inner_elements->SetELzCoord(_gate_zpos_in_vessel);
-    _inner_elements->Construct();
+    inner_elements_->SetLogicalVolume(vessel_internal_logic);
+    inner_elements_->SetPhysicalVolume(vessel_internal_phys);
+    inner_elements_->SetELzCoord(gate_zpos_in_vessel_);
+    inner_elements_->Construct();
 
     // Internal Copper Shielding
-    _ics->SetLogicalVolume(vessel_internal_logic);
-    _ics->Construct();
+    ics_->SetLogicalVolume(vessel_internal_logic);
+    ics_->Construct();
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., -_gate_zpos_in_vessel), shielding_logic,
-     		      "LEAD_BOX", _lab_logic, false, 0);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., -gate_zpos_in_vessel_), shielding_logic,
+     		      "LEAD_BOX", lab_logic_, false, 0);
 
 
     //// VERTEX GENERATORS   //
-    _lab_gen =
-      new BoxPointSampler(_lab_size - 1.*m, _lab_size - 1.*m, _lab_size  - 1.*m,
+    lab_gen_ =
+      new BoxPointSampler(lab_size_ - 1.*m, lab_size_ - 1.*m, lab_size_  - 1.*m,
 			  1.*m,G4ThreeVector(0., 0., 0.), 0);
   }
 
@@ -155,7 +158,7 @@ namespace nexus {
 
     // Air around shielding
     if (region == "LAB") {
-      vertex = _lab_gen->GenerateVertex("INSIDE");
+      vertex = lab_gen_->GenerateVertex("INSIDE");
     }
     // Shielding regions
     else if ((region == "SHIELDING_LEAD")  ||
@@ -163,19 +166,19 @@ namespace nexus {
              (region == "EXTERNAL") ||
              (region == "INNER_AIR") ||
              (region == "SHIELDING_STRUCT") ) {
-      vertex = _shielding->GenerateVertex(region);
+      vertex = shielding_->GenerateVertex(region);
     }
     // Vessel regions
     else if ((region == "VESSEL") ||
 	     (region == "VESSEL_FLANGES") ||
 	     (region == "VESSEL_TRACKING_ENDCAP") ||
 	     (region == "VESSEL_ENERGY_ENDCAP")) {
-      vertex = _vessel->GenerateVertex(region);
+      vertex = vessel_->GenerateVertex(region);
     }
     // Inner copper shielding
     else if ((region == "ICS") ||
 	     (region == "DB_PLUG")) {
-      vertex = _ics->GenerateVertex(region);
+      vertex = ics_->GenerateVertex(region);
     }
     // Inner elements (photosensors' planes and field cage)
     else if ((region == "CENTER") ||
@@ -194,12 +197,12 @@ namespace nexus {
 	     (region == "DICE_BOARD") ||
 	     (region == "AXIAL_PORT") ||
 	     (region == "EL_TABLE") ) {
-      vertex = _inner_elements->GenerateVertex(region);
+      vertex = inner_elements_->GenerateVertex(region);
     }
     else if (region == "AD_HOC") {
       // AD_HOC does not need to be shifted because it is passed by the user
       vertex =
-	G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
+	G4ThreeVector(specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_);
       return vertex;
     }
     else {
@@ -207,7 +210,7 @@ namespace nexus {
 		  "Unknown vertex generation region!");
     }
 
-    G4ThreeVector displacement = G4ThreeVector(0., 0., -_gate_zpos_in_vessel);
+    G4ThreeVector displacement = G4ThreeVector(0., 0., -gate_zpos_in_vessel_);
     vertex = vertex + displacement;
 
     return vertex;

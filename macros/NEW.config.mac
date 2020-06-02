@@ -1,10 +1,11 @@
-### --------------------------------------------------------
-###  Configuration macro for the NEW detector geometry
-###  This macro simulates Bi-214 decays from the dice boards
-###  Author: Miquel Nebot Guinot <minegui@ific.uv.es>
-###  date: 09 Sept 2013
-### --------------------------------------------------------
-
+## ----------------------------------------------------------------------------
+## nexus | NEW.config.mac
+##
+## Configuration macro to simulate Bi-214 radioactive decays from the dice
+## boards in the NEW detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /run/verbose 0
 /event/verbose 0
@@ -15,15 +16,12 @@
 
 /control/execute macros/geometries/NEWDefaultVisibility.mac
 
+/Generator/IonGenerator/atomic_number 83
+/Generator/IonGenerator/mass_number 214
+/Generator/IonGenerator/region DICE_BOARD
 
-/Generator/IonGun/atomic_number 83
-/Generator/IonGun/mass_number 214
-/Generator/IonGun/region DICE_BOARD
-
-# ACTIONS
 /Actions/DefaultEventAction/energy_threshold 0.6 MeV
 
-# PHYSICS
 /PhysicsList/Nexus/clustering          false
 /PhysicsList/Nexus/drift               false
 /PhysicsList/Nexus/electroluminescence false

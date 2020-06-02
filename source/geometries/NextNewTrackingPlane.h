@@ -1,23 +1,18 @@
-// ----------------------------------------------------------------------------
-///  \file   NextNewTrackingPlane.h
-///  \brief  
-///
-///  \author   <miquel.nebot@ific.uv.es>
-///  \date     17 Sept 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration
+// -----------------------------------------------------------------------------
+// nexus | NextNewTrackingPlane.h
+//
+// TrackingPlane of the NEXT-WHITE detector.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXTNEW_TRACKING_PLANE__
-#define __NEXTNEW_TRACKING_PLANE__
+#ifndef NEXTNEW_TRACKING_PLANE_H
+#define NEXTNEW_TRACKING_PLANE_H
 
 #include <G4LogicalVolume.hh>
 #include <G4Navigator.hh>
 #include <G4TransportationManager.hh>
 
-#include "CylinderPointSampler.h"
-#include "BoxPointSampler.h"
 #include "NextNewKDB.h"
 
 class G4Material;
@@ -25,6 +20,9 @@ class G4LogicalVolume;
 class G4GenericMessenger;
 
 namespace nexus {
+
+  class CylinderPointSampler;
+  class BoxPointSampler;
 
   /// This is a geometry formed by all the components of the tracking plane
   class NextNewTrackingPlane: public BaseGeometry
@@ -54,49 +52,47 @@ namespace nexus {
   private:
 
     // Logical Volume where whole Tracking Plane is placed
-    G4LogicalVolume* _mother_logic;
+    G4LogicalVolume* mother_logic_;
     // Dice board
-    NextNewKDB* _kapton_dice_board;
+    NextNewKDB* kapton_dice_board_;
     // Dimensions
-    const G4double _support_plate_diam, _support_plate_thickness, _support_plate_front_buffer_diam,
-      _support_plate_front_buffer_thickness, _support_plate_tread_diam, _support_plate_tread_thickness;
-    const G4double _tracking_plane_z_pos;
-    //  G4double _el_gap_z_edge, _z_kdb_displ;////????????
-    const G4double _cable_hole_width, _cable_hole_high;
-    const G4double _plug_x,_plug_y,_plug_z;
-    const G4double _plug_distance_from_copper;
+    const G4double support_plate_diam_, support_plate_thickness_, support_plate_front_buffer_diam_,
+      support_plate_front_buffer_thickness_, support_plate_tread_diam_, support_plate_tread_thickness_;
+    const G4double tracking_plane_z_pos_;
+    //  G4double el_gap_z_edge_, z_kdb_displ_;////????????
+    const G4double cable_hole_width_, cable_hole_high_;
+    const G4double plug_x_,plug_y_,plug_z_;
+    const G4double plug_distance_from_copper_;
 
-    const G4int _SiPM_rows, _SiPM_columns;
-    const G4int _DB_columns, _num_DBs, _dice_side, _dice_gap;
-    G4ThreeVector _kdb_dimensions;
-    std::vector<G4ThreeVector> _DB_positions;
+    const G4int SiPM_rows_, SiPM_columns_;
+    const G4int DB_columns_, num_DBs_, dice_side_, dice_gap_;
+    G4ThreeVector kdb_dimensions_;
+    std::vector<G4ThreeVector> DB_positions_;
 
-    G4double _dice_board_z_pos;
+    G4double dice_board_z_pos_;
 
     // Visibility of the tracking plane
-    G4bool _visibility;
+    G4bool visibility_;
 
     // Vertex generators
-    CylinderPointSampler* _support_body_gen;
-    CylinderPointSampler* _support_flange_gen;
-    CylinderPointSampler* _support_buffer_gen;
-    BoxPointSampler* _plug_gen;
-    
-    G4double _body_perc;
-    G4double _flange_perc;
-    
+    CylinderPointSampler* support_body_gen_;
+    CylinderPointSampler* support_flange_gen_;
+    CylinderPointSampler* support_buffer_gen_;
+    BoxPointSampler* plug_gen_;
+
+    G4double body_perc_;
+    G4double flange_perc_;
+
     // Geometry Navigator
-    G4Navigator* _geom_navigator;
+    G4Navigator* geom_navigator_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
 
     // Container to store the absolute position of SiPMs in gas
-    std::vector<std::pair<int, G4ThreeVector> > _absSiPMpos;
+    std::vector<std::pair<int, G4ThreeVector> > absSiPMpos_;
 
   };
 
 } //end namespace nexus
 #endif
-
-

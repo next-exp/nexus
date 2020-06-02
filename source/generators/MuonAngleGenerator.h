@@ -1,26 +1,24 @@
 // ----------------------------------------------------------------------------
-///  \file   MuonAngleGenerator.h
-///  \brief  Point Sampler for muons generation to centre of Geom.
-///
-///  \author   Andrew Laing <andrew.laing@uta.edu>
-///  \date     30 Jan 2014
-///
-///
-///  Copyright (c) 2019 NEXT Collaboration
+// nexus | MuonAngleGenerator.h
+//
+// This class is the primary generator of muons following an angular
+// distribution measured in the LSC.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __MUON_ANGLE_GENERATOR__
-#define __MUON_ANGLE_GENERATOR__
+#ifndef MUON_ANGLE_GENERATOR_H
+#define MUON_ANGLE_GENERATOR_H
 
 #include <G4VPrimaryGenerator.hh>
 #include <G4RotationMatrix.hh>
-
-#include "TH2F.h"
 
 class G4GenericMessenger;
 class G4Event;
 class G4ParticleDefinition;
 class G4VSolid;
+
+class TH2F;
 
 
 namespace nexus {
@@ -58,26 +56,26 @@ namespace nexus {
     			const G4ThreeVector& dir);
 
   private:
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
 
-    G4ParticleDefinition* _particle_definition;
-    
-    G4bool _angular_generation; ///< Distribution or all downwards
-    G4double _axis_rotation; ///< Angle between North and +z
-    G4RotationMatrix *_rPhi; ///< Rotation to adjust axes
+    G4ParticleDefinition* particle_definition_;
 
-    G4double _energy_min; ///< Minimum kinetic energy
-    G4double _energy_max; ///< Maximum kinetic energy
+    G4bool angular_generation_; ///< Distribution or all downwards
+    G4double axis_rotation_; ///< Angle between North and +z
+    G4RotationMatrix *rPhi_; ///< Rotation to adjust axes
 
-    G4String _region; ///< Name of generator region
-    G4String _ang_file; ///< Name of file with distributions
-    G4String _dist_name; ///< Name of distribution in file
+    G4double energy_min_; ///< Minimum kinetic energy
+    G4double energy_max_; ///< Maximum kinetic energy
 
-    TH2F * _distribution; ///< Anglular distribution
+    G4String region_; ///< Name of generator region
+    G4String ang_file_; ///< Name of file with distributions
+    G4String dist_name_; ///< Name of distribution in file
 
-    const BaseGeometry* _geom; ///< Pointer to the detector geometry
+    TH2F * distribution_; ///< Anglular distribution
 
-    G4VSolid * _geom_solid;
+    const BaseGeometry* geom_; ///< Pointer to the detector geometry
+
+    G4VSolid * geom_solid_;
 
   };
 

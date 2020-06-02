@@ -1,8 +1,11 @@
-### --------------------------------------------------------
-### This init macro simulates Kr-83 decays in the NEW geometry
-### with generation and transportation of optical photons
-### --------------------------------------------------------
-
+## ----------------------------------------------------------------------------
+## nexus | NEW_fullKr.init.mac
+##
+## Initialization macro to simulate Kr-83 decays in the NEW geometry
+## with generation and transportation of optical photons.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
 /PhysicsList/RegisterPhysics G4DecayPhysics

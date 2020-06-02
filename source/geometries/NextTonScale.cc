@@ -1,8 +1,10 @@
-// -----------------------------------------------------------------------------
-// File   : NextTonScale.cc (Based in a previous version)
-// Author : Justo Martin-Albo
-// Date   : 3rd Aug 2019
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// nexus | NextTonScale.cc
+//
+// Geometry of a possible tonne-scale NEXT detector.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #include "NextTonScale.h"
 

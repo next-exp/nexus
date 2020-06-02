@@ -1,19 +1,16 @@
 // ----------------------------------------------------------------------------
-///  \file   
-///  \brief  
-///
-///  \author   <justo.martin-albo@ific.uv.es>, <jmunoz@ific.uv.es>
-///  \date     21 Nov 2011
-///  \version  $Id$
-///
-///  Copyright (c) 2011 NEXT Collaboration
+// nexus | Next100Shielding.h
+//
+// Lead castle placed at the LSC.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXT100_SHIELDING__
-#define __NEXT100_SHIELDING__
+#ifndef NEXT100_SHIELDING_H
+#define NEXT100_SHIELDING_H
 
 #include "BaseGeometry.h"
-#include "BoxPointSampler.h"
+
 #include <G4Navigator.hh>
 
 class G4GenericMessenger;
@@ -21,6 +18,8 @@ class G4GenericMessenger;
 
 
 namespace nexus {
+
+  class BoxPointSampler;
 
   class Next100Shielding: public BaseGeometry
   {
@@ -44,44 +43,44 @@ namespace nexus {
     /// Retrieve dimensions
     G4ThreeVector GetDimensions() const;
 
-    
+
   private:
 
     // Dimensions
-    G4double _lead_x, _lead_y, _lead_z;
-    G4double _shield_x, _shield_y, _shield_z;
-    G4double  _beam_base_thickness, _lateral_z_separation, _roof_z_separation , _front_x_separation;
-    G4double _lead_thickness, _steel_thickness;
+    G4double lead_x_, lead_y_, lead_z_;
+    G4double shield_x_, shield_y_, shield_z_;
+    G4double  beam_base_thickness_, lateral_z_separation_, roof_z_separation_ , front_x_separation_;
+    G4double lead_thickness_, steel_thickness_;
 
     // Visibility of the shielding
-    G4bool _visibility;
+    G4bool visibility_;
 
     // Vertex generators
-    BoxPointSampler* _lead_gen;
-    BoxPointSampler* _external_gen;
-    BoxPointSampler* _steel_gen;
-    BoxPointSampler* _inner_air_gen;
-    BoxPointSampler* _lat_roof_gen;
-    BoxPointSampler* _front_roof_gen;
-    BoxPointSampler* _struct_x_gen;
-    BoxPointSampler* _struct_z_gen; 
-    BoxPointSampler* _lat_beam_gen;
-    BoxPointSampler* _front_beam_gen;
+    BoxPointSampler* lead_gen_;
+    BoxPointSampler* external_gen_;
+    BoxPointSampler* steel_gen_;
+    BoxPointSampler* inner_air_gen_;
+    BoxPointSampler* lat_roof_gen_;
+    BoxPointSampler* front_roof_gen_;
+    BoxPointSampler* struct_x_gen_;
+    BoxPointSampler* struct_z_gen_;
+    BoxPointSampler* lat_beam_gen_;
+    BoxPointSampler* front_beam_gen_;
 
-    G4double _perc_roof_vol; 
-    G4double _perc_front_roof_vol;
-    G4double _perc_top_struct_vol;
-    G4double _perc_struc_x_vol;
- 
+    G4double perc_roof_vol_;
+    G4double perc_front_roof_vol_;
+    G4double perc_top_struct_vol_;
+    G4double perc_struc_x_vol_;
+
 
     // Geometry Navigator
-    G4Navigator* _geom_navigator;
+    G4Navigator* geom_navigator_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
+    G4GenericMessenger* msg_;
 
     // Air logical volume
-    G4LogicalVolume* _air_box_logic;
+    G4LogicalVolume* air_box_logic_;
 
   };
 

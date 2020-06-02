@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | GeneratorFactory.cc
 //
-//  Author : <justo.martin-albo@ific.uv.es>    
-//  Created: 13 March 2013
+// This class instantiates the generator of the simulation that the user
+// specifies via configuration parameter.
 //
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "GeneratorFactory.h"
@@ -15,67 +15,65 @@
 using namespace nexus;
 
 
-GeneratorFactory::GeneratorFactory(): _msg(0)
+GeneratorFactory::GeneratorFactory(): msg_(0)
 {
-  _msg = new G4GenericMessenger(this, "/Generator/");
-  _msg->DeclareProperty("RegisterGenerator", _name, "");
+  msg_ = new G4GenericMessenger(this, "/Generator/");
+  msg_->DeclareProperty("RegisterGenerator", name_, "");
 }
 
 
 GeneratorFactory::~GeneratorFactory()
 {
-  delete _msg;
+  delete msg_;
 }
 
 
 //////////////////////////////////////////////////////////////////////
 
-#include "SingleParticle.h"
+#include "SingleParticleGenerator.h"
 #include "Decay0Interface.h"
-#include "IonGun.h"
-#include "Na22Generation.h"
-#include "Kr83mGeneration.h"
-#include "SingleParticle2Pi.h"
+#include "IonGenerator.h"
+#include "Na22Generator.h"
+#include "Kr83mGenerator.h"
+#include "SingleParticle2PiGenerator.h"
 #include "MuonGenerator.h"
 #include "MuonAngleGenerator.h"
 #include "ELTableGenerator.h"
 #include "ScintillationGenerator.h"
-#include "ElecPositronPair.h"
+#include "ElecPositronPairGenerator.h"
 
 
 G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
 {
   G4VPrimaryGenerator* p = 0;
-  
-  if (_name == "SINGLE_PARTICLE") p = new SingleParticle();
 
-  else if (_name == "DECAY0") p = new Decay0Interface();
+  if      (name_ == "SINGLE_PARTICLE") p = new SingleParticleGenerator();
 
-  else if (_name == "ION_GUN") p = new IonGun();
+  else if (name_ == "DECAY0")          p = new Decay0Interface();
 
-  else if (_name == "NA22") p = new Na22Generation();
+  else if (name_ == "ION")             p = new IonGenerator();
 
-  else if (_name == "Kr83m") p = new Kr83mGeneration();
+  else if (name_ == "NA22")            p = new Na22Generator();
 
-  else if (_name == "2PI") p = new SingleParticle2Pi();
+  else if (name_ == "Kr83m")           p = new Kr83mGenerator();
 
-  else if (_name == "MUON_GENERATOR") p = new MuonGenerator();
+  else if (name_ == "2PI")             p = new SingleParticle2PiGenerator();
 
-  else if (_name == "LABMUON_GENERATOR") p = new MuonAngleGenerator();
+  else if (name_ == "MUON")            p = new MuonGenerator();
 
-  else if (_name == "EL_TABLE_GENERATOR") p = new ELTableGenerator();
+  else if (name_ == "LAB_MUON")        p = new MuonAngleGenerator();
 
-  else if (_name == "SCINTGENERATOR") p = new ScintillationGenerator();
+  else if (name_ == "EL_TABLE")        p = new ELTableGenerator();
 
-  else if (_name == "E+E-PAIR") p = new ElecPositronPair();
+  else if (name_ == "SCINTILLATION")   p = new ScintillationGenerator();
+
+  else if (name_ == "E+E-PAIR")        p = new ElecPositronPairGenerator();
 
   else {
-    G4String err = "The user specified an unknown generator: " + _name;
-    G4Exception("CreateGenerator()", "[GeneratorFactory]",
+    G4String err = "The user specified an unknown generator: " + name_;
+    G4Exception("[GeneratorFactory]", "CreateGenerator()",
         FatalException, err);
   }
 
   return p;
 }
-
-

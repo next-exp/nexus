@@ -1,9 +1,20 @@
-### ------------------------------------------------------------
-###  This macro shows the most relevant options that can be used.
-###  For each parameters all the options are commented, except
-###  for one.
-### ------------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | NEXT_options.config.mac
+##
+## Configuration macro that shows the most relevant options that can be used.
+## For each parameter all the options are commented, except for one, if needed.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
+
+##### VERBOSITIES #####
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+##### JOB CONTROL #####
+/nexus/random_seed 197658
 
 ##### GEOMETRY #####
 /Geometry/Next100/elfield false
@@ -46,9 +57,9 @@
 
 
 # Ion Gun for background decays - (Bi214: Z=83, A=214), (Tl208: Z=81, A=208)
-/Generator/IonGun/atomic_number 83
-/Generator/IonGun/mass_number 214
-/Generator/IonGun/region SAPPHIRE_WINDOW
+/Generator/IonGenerator/atomic_number 83
+/Generator/IonGenerator/mass_number 214
+/Generator/IonGenerator/region SAPPHIRE_WINDOW
 
 # Single Particle
 #/Generator/SingleParticle/particle e-
@@ -84,15 +95,7 @@
 /PhysicsList/Nexus/electroluminescence false
 
 
-##### JOB CONTROL #####
+##### PERSISTENCY #####
 /nexus/persistency/start_id 1000
 /nexus/persistency/outputFile Next100.next
 /nexus/persistency/eventType background # bb0nu, bb2nu...
-
-/nexus/random_seed 197658
-
-
-##### VERBOSITIES #####
-/run/verbose 0
-/event/verbose 0
-/tracking/verbose 0

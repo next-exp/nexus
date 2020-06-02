@@ -1,10 +1,21 @@
+## ----------------------------------------------------------------------------
+## nexus | MagBox.config.mac
+##
+## Configuration macro to simulate single electrons in a magnetic detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
-### GEOMETRY (Xenon, Hydrogen, SeF6)
-/Geometry/MagBox/gas_name Xenon
+### VERBOSITY
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+### GEOMETRY
+/Geometry/MagBox/gas_name Xenon #(Xenon, Hydrogen, SeF6)
 /Geometry/MagBox/pressure 20. bar
 /Geometry/MagBox/mag_intensity 10.0 tesla
 /Geometry/MagBox/max_step_size 1.0 mm
-
 
 ### GENERATOR
 /Generator/SingleParticle/region CENTER
@@ -15,18 +26,10 @@
 #/Generator/SingleParticle/momentum_Y  1.
 #/Generator/SingleParticle/momentum_Z  0.
 
-
 ### PHYSICS
 /PhysicsList/Nexus/clustering          false
 /PhysicsList/Nexus/drift               false
 /PhysicsList/Nexus/electroluminescence false
 
-
-### VERBOSITIES
-/run/verbose 0
-/event/verbose 0
-/tracking/verbose 0
-
-
-### JOB CONTROL
+### PERSISTENCY
 /nexus/persistency/outputFile output.next

@@ -1,11 +1,12 @@
-### --------------------------------------------------------
-###  NextNew: Initialization macro of nexus.
-###  $Id: NextNew.init.mac  2013-09-09 13:05 minegui $
-### --------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | NEW.init.mac
+##
+## Initialization macro to simulate Bi-214 radioactive decays from the dice
+## boards in the NEW detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
-### This macro simulates radioactive decays in the NEW detector geometry
-
-### PHYSICS
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
 /PhysicsList/RegisterPhysics G4DecayPhysics
 /PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
@@ -14,7 +15,7 @@
 
 /Geometry/RegisterGeometry NEXT_NEW
 
-/Generator/RegisterGenerator ION_GUN
+/Generator/RegisterGenerator ION
 
 /Actions/RegisterTrackingAction VALIDATION
 /Actions/RegisterEventAction DEFAULT

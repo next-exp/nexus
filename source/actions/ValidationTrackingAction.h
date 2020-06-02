@@ -1,12 +1,13 @@
 // ----------------------------------------------------------------------------
-///  \file   ValidationTrackingAction.h
-///  \brief  General-purpose user tracking action.
-///
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     25 Mar 2013 
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// nexus | ValidationTrackingAction.h
+//
+// This class is based on DefaultTrackinAction.
+// In addition, it creates and saves ROOT histograms with the energy
+// of the gammas produced in the simulation. Its purpose is to produce
+// histograms to be compared across different versions of GEANT4,
+// before changing version.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef VALIDATION_TRACKING_ACTION_H

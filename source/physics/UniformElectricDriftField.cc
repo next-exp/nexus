@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | UniformElectricDriftField.cc
 //
-//  Author : J Martin-Albo <jmalbos@ific.uv.es>    
-//  Created: 12 May 2010
+// This class defines a homogeneuos electric drift field with constant
+// drift lines from cathode to anode and parallel to a cartesian axis
 //
-//  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "UniformElectricDriftField.h"
@@ -17,59 +17,59 @@
 
 
 namespace nexus {
-  
+
   using namespace CLHEP;
-  
+
 
   UniformElectricDriftField::UniformElectricDriftField
-  (G4double anode_position, G4double cathode_position, EAxis axis): 
-    BaseDriftField(), 
-    _axis(axis), _anode_pos(anode_position), _cathode_pos(cathode_position), 
-    _drift_velocity(0.), _transv_diff(0.), _longit_diff(0.),  _light_yield(0.)    
+  (G4double anode_position, G4double cathode_position, EAxis axis):
+    BaseDriftField(),
+    axis_(axis), anode_pos_(anode_position), cathode_pos_(cathode_position),
+    drift_velocity_(0.), transv_diff_(0.), longit_diff_(0.),  light_yield_(0.)
   {
     // initialize random generator with dummy values
-    _rnd = new SegmentPointSampler(G4LorentzVector(0.,0.,0.,-999.),
+    rnd_ = new SegmentPointSampler(G4LorentzVector(0.,0.,0.,-999.),
                                    G4LorentzVector(0.,0.,0.,-999.));
   }
-  
-  
-  
+
+
+
   UniformElectricDriftField::~UniformElectricDriftField()
   {
-    delete _rnd;
+    delete rnd_;
   }
-  
+
 
 
   G4double UniformElectricDriftField::Drift(G4LorentzVector& xyzt)
   {
     // If the origin is not between anode and cathode,
     // the charge carrier, obviously, doesn't move.
-    if (!CheckCoordinate(xyzt[_axis]))
+    if (!CheckCoordinate(xyzt[axis_]))
       return 0.;
 
     // Set the offset according to relative anode-cathode pos
     G4double secmargin = -1. * micrometer;
-    if (_anode_pos > _cathode_pos) secmargin = -secmargin;
+    if (anode_pos_ > cathode_pos_) secmargin = -secmargin;
 
     // Calculate drift time and distance to anode
-    G4double drift_length = fabs(xyzt[_axis] - _anode_pos);
-    G4double drift_time = drift_length / _drift_velocity;
-    
+    G4double drift_length = fabs(xyzt[axis_] - anode_pos_);
+    G4double drift_time = drift_length / drift_velocity_;
+
     // Calculate longitudinal and transversal deviation due to diffusion
-    G4double transv_sigma = _transv_diff * sqrt(drift_length);
-    G4double longit_sigma = _longit_diff * sqrt(drift_length);
-    G4double time_sigma = longit_sigma / _drift_velocity;
+    G4double transv_sigma = transv_diff_ * sqrt(drift_length);
+    G4double longit_sigma = longit_diff_ * sqrt(drift_length);
+    G4double time_sigma = longit_sigma / drift_velocity_;
 
     G4ThreeVector position;
     G4double time;
 
     for (G4int i=0; i<3; i++) {
-      if (i != _axis)  {     // Transverse coordinate
+      if (i != axis_)  {     // Transverse coordinate
         position[i] = G4RandGauss::shoot(xyzt[i], transv_sigma);
-      } 
+      }
       else { // Longitudinal coordinate
-        position[i] = _anode_pos + secmargin;
+        position[i] = anode_pos_ + secmargin;
         G4double deltat = G4RandGauss::shoot(0, time_sigma);
         time = xyzt.t() + drift_time + deltat;
         if (time < 0.) time = xyzt.t() + drift_time;
@@ -83,33 +83,33 @@ namespace nexus {
 
     // Set the new time and position of the drifting charge
     xyzt.set(time, position);
-    
+
     return step_length;
   }
 
-  
-  
+
+
   G4LorentzVector UniformElectricDriftField::GeneratePointAlongDriftLine(
 									 const G4LorentzVector& origin, const G4LorentzVector& end)
   {
-   
-    // if (origin != _rnd->GetPrePoint()) {
+
+    // if (origin != rnd_->GetPrePoint()) {
       // G4LorentzVector end(origin);
       // Drift(end);
-    
-    _rnd->SetPoints(origin, end);
+
+    rnd_->SetPoints(origin, end);
     //   }
-  
-    
-    return _rnd->Shoot();
+
+
+    return rnd_->Shoot();
   }
 
 
 
   G4bool UniformElectricDriftField::CheckCoordinate(G4double coord)
   {
-    G4double max_coord = std::max(_anode_pos, _cathode_pos);
-    G4double min_coord = std::min(_anode_pos, _cathode_pos);
+    G4double max_coord = std::max(anode_pos_, cathode_pos_);
+    G4double min_coord = std::min(anode_pos_, cathode_pos_);
     //   G4cout << "max = " << max_coord << ", min = " << min_coord << G4endl;
     return !((coord > max_coord) || (coord < min_coord));
   }

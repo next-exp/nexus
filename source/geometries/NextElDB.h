@@ -1,23 +1,20 @@
-// ----------------------------------------------------------------------------
-///  \file   NextElDB.h
-///  \brief  
-///
-///  \author  <justo.martin-albo@ific.uv.es>, <jmunoz@ific.uv.es>
-///  \date    2 Nov 2010
-///  \version $Id: Next1DBO.h 3279 2010-11-17 12:12:03Z jmalbos $
+// -----------------------------------------------------------------------------
+// nexus | NextElDB.h
 //
-///  Copyright (c) 2010 NEXT Collaboration
-// ----------------------------------------------------------------------------
+// Geometry of the NEXT-DEMO SiPM board.
+//
+// The NEXT Collaboration
+// -----------------------------------------------------------------------------
 
-#ifndef __NEXT_EL_DB__
-#define __NEXT_EL_DB__
+#ifndef NEXT_EL_DB_H
+#define NEXT_EL_DB_H
 
-#include "SiPM11.h"
 #include "BaseGeometry.h"
 #include <vector>
 
-
 namespace nexus {
+
+  class SiPM11;
 
   class NextElDB: public BaseGeometry
   {
@@ -31,20 +28,20 @@ namespace nexus {
     G4ThreeVector GetDimensions();
 
     std::vector<std::pair<int, G4ThreeVector> > GetPositions();
-    
+
     /// Builder
     void Construct();
 
 
   private:
-    G4int _rows, _columns;
-    G4ThreeVector _dimensions;
-    std::vector<std::pair<int, G4ThreeVector> > _positions;
+    G4int rows_, columns_;
+    G4ThreeVector dimensions_;
+    std::vector<std::pair<int, G4ThreeVector> > positions_;
 
-    SiPM11* _siPM;
+    SiPM11* siPM_;
 
   };
-  
+
 } // end namespace nexus
 
 #endif

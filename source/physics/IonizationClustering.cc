@@ -1,11 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | IonizationClustering.cc
 //
-//  Author:  <justo.martin-albo@ific.uv.es>
-//  Created: 10 May 2010
-//  
-//  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
-// ---------------------------------------------------------------------------- 
+// This class creates ionization electrons where energy is deposited.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #include "IonizationClustering.h"
 
@@ -27,29 +26,29 @@ namespace nexus {
 
 
   using namespace CLHEP;
-  
+
   IonizationClustering::IonizationClustering(const G4String& process_name,
                                              G4ProcessType type):
-    G4VRestDiscreteProcess(process_name, type), _ParticleChange(0), _rnd(0)
+    G4VRestDiscreteProcess(process_name, type), ParticleChange_(0), rnd_(0)
   {
     // Create particle change object
-    _ParticleChange = new G4ParticleChange();
-    pParticleChange = _ParticleChange;
+    ParticleChange_ = new G4ParticleChange();
+    pParticleChange = ParticleChange_;
 
     // Create a segment point sample
-    _rnd = new SegmentPointSampler();
+    rnd_ = new SegmentPointSampler();
   }
-  
-  
-  
-  IonizationClustering::~IonizationClustering() 
+
+
+
+  IonizationClustering::~IonizationClustering()
   {
-    delete _rnd;
-    delete _ParticleChange;
+    delete rnd_;
+    delete ParticleChange_;
   }
-  
-  
-  
+
+
+
   G4bool IonizationClustering::IsApplicable(const G4ParticleDefinition& pdef)
   {
     if (pdef == *G4OpticalPhoton::Definition() ||
@@ -60,49 +59,49 @@ namespace nexus {
 
     else return false;
   }
-  
-  
-  
+
+
+
   G4VParticleChange*
   IonizationClustering::AtRestDoIt(const G4Track& track, const G4Step& step)
   {
-    // The method simply calls the equivalent PostStepDoIt, 
+    // The method simply calls the equivalent PostStepDoIt,
     // proceeding as in any other step.
     return IonizationClustering::PostStepDoIt(track, step);
   }
-  
-  
-  
+
+
+
   G4VParticleChange*
   IonizationClustering::PostStepDoIt(const G4Track& track, const G4Step& step)
   {
     // Initialize particle change with current track values
-    _ParticleChange->Initialize(track);
+    ParticleChange_->Initialize(track);
 
     //////////////////////////////////////////////////////////////////
     // Get energy deposited through ionization during the last step.
-    // If no energy was deposited, we are done here. 
+    // If no energy was deposited, we are done here.
 
-    G4double energy_dep = 
+    G4double energy_dep =
       step.GetTotalEnergyDeposit() - step.GetNonIonizingEnergyDeposit();
 
     if (energy_dep <= 0.)
       return G4VRestDiscreteProcess::PostStepDoIt(track, step);
 
     //////////////////////////////////////////////////////////////////
-    // The clustering process makes sense only for those regions with 
-    // a drift field defined. Therefore, check whether the current region 
+    // The clustering process makes sense only for those regions with
+    // a drift field defined. Therefore, check whether the current region
     // has a drift field attached, and stop the process if that's not the case.
 
     G4Region* region = track.GetVolume()->GetLogicalVolume()->GetRegion();
 
-    BaseDriftField* field = 
+    BaseDriftField* field =
       dynamic_cast<BaseDriftField*>(region->GetUserInformation());
 
     if (!field) return G4VRestDiscreteProcess::PostStepDoIt(track, step);
 
     //////////////////////////////////////////////////////////////////
-    // Calculate the number of charges to be simulated generating a 
+    // Calculate the number of charges to be simulated generating a
     // a Gaussian random number with mean given by the 'empirical'
     // average energy needed to produce an ionization pair, W_i.
     // The fluctuations (sigma of the distribution) are in general
@@ -110,11 +109,11 @@ namespace nexus {
     // and N is the average number of charges.
 
     // Fetch the W_i and F from the material properties table
-    //G4MaterialPropertiesTable* mpt = 
+    //G4MaterialPropertiesTable* mpt =
     //  track.GetMaterial()->GetMaterialPropertiesTable();
     //if (!mpt)
     //  return G4VRestDiscreteProcess::PostStepDoIt(track, step);
-    
+
     //G4double ioni_energy = mpt->GetConstProperty("IONIZATIONENERGY");
     //G4double fano_factor = mpt->GetConstProperty("FANOFACTOR");
     G4double ioni_energy = 22.4 * eV;
@@ -123,7 +122,7 @@ namespace nexus {
     G4double mean = energy_dep / ioni_energy;
 
     G4int num_charges = 0;
-    
+
     if (mean > 10.) {
       G4double sigma = sqrt(mean*fano_factor);
       num_charges = G4int(G4RandGauss::shoot(mean, sigma) + 0.5);
@@ -132,11 +131,11 @@ namespace nexus {
       num_charges = G4int(G4Poisson(mean));
     }
 
-    _ParticleChange->SetNumberOfSecondaries(num_charges);
+    ParticleChange_->SetNumberOfSecondaries(num_charges);
 
     // Track secondaries first
-    if ((track.GetTrackStatus() == fAlive) && num_charges > 0) 
-      _ParticleChange->ProposeTrackStatus(fSuspend);
+    if ((track.GetTrackStatus() == fAlive) && num_charges > 0)
+      ParticleChange_->ProposeTrackStatus(fSuspend);
 
     //////////////////////////////////////////////////////////////////
 
@@ -148,13 +147,13 @@ namespace nexus {
 			                        step.GetPreStepPoint()->GetGlobalTime());
     G4LorentzVector post_point(step.GetPostStepPoint()->GetPosition(),
                   			       step.GetPostStepPoint()->GetGlobalTime());
-    _rnd->SetPoints(pre_point, post_point);
+    rnd_->SetPoints(pre_point, post_point);
 
 
     for (G4int i=0; i<num_charges; i++) {
 
-      G4DynamicParticle* ionielectron = 
-        new G4DynamicParticle(IonizationElectron::Definition(), 
+      G4DynamicParticle* ionielectron =
+        new G4DynamicParticle(IonizationElectron::Definition(),
           momentum_direction, kinetic_energy);
 
       // Calculate position and time. We distribute the ie- along
@@ -162,36 +161,36 @@ namespace nexus {
       // where we use the post-step point.
       G4LorentzVector point;
       if (track.GetDefinition() == G4Gamma::Definition()) point = post_point;
-      else point = _rnd->Shoot();
-	
-      G4Track* aSecondaryTrack = 
+      else point = rnd_->Shoot();
+
+      G4Track* aSecondaryTrack =
         new G4Track(ionielectron, point.t(), point.v());
-      
+
       aSecondaryTrack->
         SetTouchableHandle(step.GetPreStepPoint()->GetTouchableHandle());
-      
-      _ParticleChange->AddSecondary(aSecondaryTrack);
+
+      ParticleChange_->AddSecondary(aSecondaryTrack);
     }
 
     return G4VRestDiscreteProcess::PostStepDoIt(track, step);
   }
-  
-  
-  
-  G4double IonizationClustering::GetMeanFreePath(const G4Track&, 
+
+
+
+  G4double IonizationClustering::GetMeanFreePath(const G4Track&,
     G4double, G4ForceCondition* condition)
   {
     *condition = StronglyForced;
     return DBL_MAX;
   }
-  
-  
-  
-  G4double IonizationClustering::GetMeanLifeTime(const G4Track&, 
+
+
+
+  G4double IonizationClustering::GetMeanLifeTime(const G4Track&,
     G4ForceCondition* condition)
   {
     *condition = Forced;
     return DBL_MAX;
   }
-  
+
 } // end namespace nexus

@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------
+// nexus | CollProtection.cc
+//
+// Aluminum box used to protect calibration sources at LSC.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #include "CollProtection.h"
 #include "Visibilities.h"
 
@@ -9,7 +17,7 @@
 namespace nexus {
   using namespace CLHEP;
 
- CollProtection::CollProtection() : _axis_centre(0.*mm)
+ CollProtection::CollProtection() : axis_centre_(0.*mm)
   {
   }
 
@@ -20,13 +28,15 @@ namespace nexus {
   void CollProtection::Construct()
   {
     G4double alum_thick = 9. * mm;
-    G4Box* protection_solid = 
+    G4Box* protection_solid =
       new G4Box("SOURCE_PROTECTION", 100.*mm/2., 100.*mm/2.,  alum_thick/2.);
     G4LogicalVolume* protection_logic =
-      new G4LogicalVolume(protection_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_Al"), "SOURCE_PROTECTION");
+      new G4LogicalVolume(protection_solid,
+                          G4NistManager::Instance()->FindOrBuildMaterial("G4_Al"),
+                          "SOURCE_PROTECTION");
     this->SetLogicalVolume(protection_logic);
 
-    _axis_centre = alum_thick/2.;
+    axis_centre_ = alum_thick/2.;
 
     G4VisAttributes red_col = nexus::Red();
     red_col.SetForceSolid(true);
@@ -35,6 +45,6 @@ namespace nexus {
 
    G4double CollProtection::GetAxisCentre()
   {
-    return _axis_centre;
+    return axis_centre_;
   }
 }

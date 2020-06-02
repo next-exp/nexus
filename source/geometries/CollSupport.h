@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------
+// nexus | CollSupport.h
+//
+// Support for the collimator used with calibration sources at LSC.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #ifndef COLL_SUPPORT_H
 #define COLL_SUPPORT_H
 
@@ -18,8 +26,8 @@ namespace nexus {
     G4double GetYDisplacement();
 
   private:
-    G4double _axis_centre;
-    G4double _y_displ;
+    G4double axis_centre_;
+    G4double y_displ_;
   };
 }
 

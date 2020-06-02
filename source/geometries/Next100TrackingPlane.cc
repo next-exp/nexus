@@ -1,9 +1,10 @@
-// -----------------------------------------------------------------------------
-//  nexus | Next100TrackingPlane.cc
+// ----------------------------------------------------------------------------
+// nexus | Next100TrackingPlane.cc
 //
-//  * Author: <justo.martin-albo@ific.uv.es>
-//  * Creation date: 22 January 2020
-// -----------------------------------------------------------------------------
+// Tracking plane of the NEXT-100 geometry.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #include "Next100TrackingPlane.h"
 

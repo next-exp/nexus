@@ -1,11 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | PmtR7378A.cc
 //
-//  Author:  J. Martin-Albo <jmalbos@ific.uv.es>
-//  Created: 17 Feb 2010
-//  
-//  Copyright (c) 2010 NEXT Collaboration
-// ---------------------------------------------------------------------------- 
+// Geometry of the Hamamatsu R7378A photomultiplier.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #include "PmtR7378A.h"
 
@@ -15,7 +14,6 @@
 #include "Visibilities.h"
 
 #include <G4NistManager.hh>
-#include <G4Box.hh>
 #include <G4Tubs.hh>
 #include <G4Sphere.hh>
 #include <G4LogicalVolume.hh>
@@ -28,81 +26,80 @@
 #include <G4SDManager.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
 
 namespace nexus {
-  
+
   using namespace CLHEP;
-  
+
   PmtR7378A::PmtR7378A(): BaseGeometry()
   {
   }
-  
-  
-  
+
+
+
   PmtR7378A::~PmtR7378A()
   {
   }
-  
-  
-  
+
+
+
   void PmtR7378A::Construct()
   {
     // PMT BODY //////////////////////////////////////////////////////
 
-    _pmt_diam   = 25.4 * mm;
-    _pmt_length = 43.0 * mm; 
-    
-    G4Tubs* pmt_solid =
-      new G4Tubs("PMT_R7378A", 0., _pmt_diam/2., _pmt_length/2., 0., twopi);
-    
-    G4Material* aluminum = 
-      G4NistManager::Instance()->FindOrBuildMaterial("G4_Al");	
+    pmt_diam_   = 25.4 * mm;
+    pmt_length_ = 43.0 * mm;
 
-    G4LogicalVolume* pmt_logic = 
+    G4Tubs* pmt_solid =
+      new G4Tubs("PMT_R7378A", 0., pmt_diam_/2., pmt_length_/2., 0., twopi);
+
+    G4Material* aluminum =
+      G4NistManager::Instance()->FindOrBuildMaterial("G4_Al");
+
+    G4LogicalVolume* pmt_logic =
       new G4LogicalVolume(pmt_solid, aluminum, "PMT_R7378A");
 
     this->SetLogicalVolume(pmt_logic);
-    
-    
+
+
     // PMT WINDOW ////////////////////////////////////////////////////
-    
-    G4double window_diam = _pmt_diam;
+
+    G4double window_diam = pmt_diam_;
     G4double window_length = 6. * mm;
 
     G4Tubs* window_solid =
       new G4Tubs("PMT_WINDOW", 0., window_diam/2., window_length/2., 0., twopi);
 
-    G4Material* quartz = 
+    G4Material* quartz =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
     quartz->SetMaterialPropertiesTable(OpticalMaterialProperties::FusedSilica());
-    
+
     G4LogicalVolume* window_logic =
       new G4LogicalVolume(window_solid, quartz, "PMT_WINDOW");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., (_pmt_length-window_length)/2.),
-		      window_logic, "PMT_WINDOW", pmt_logic, false, 0, true);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., (pmt_length_-window_length)/2.),
+		      window_logic, "PMT_WINDOW", pmt_logic, false, 0, false);
 
     G4VisAttributes wndw_col = nexus::Blue();
     window_logic->SetVisAttributes(wndw_col);
-    
-    
+
+
     // PHOTOCATHODE //////////////////////////////////////////////////
-    
+
     G4double phcath_diam   = 22.0 * mm;
     G4double phcath_height =  4.0 * mm;
     G4double phcath_thickn =  0.1 * mm;
     G4double phcath_posz   =-16.0 * mm;
-    
-    G4double rmax = 
+
+    G4double rmax =
       0.5 * (phcath_diam*phcath_diam / (4*phcath_height) + phcath_height);
     G4double rmin = rmax - phcath_thickn;
     G4double theta = asin(phcath_diam/(2.*rmax));
 
     G4Sphere* phcath_solid =
       new G4Sphere("PHOTOCATHODE", rmin, rmax, 0, twopi, 0, theta);
-    
-    G4LogicalVolume* phcath_logic = 
+
+    G4LogicalVolume* phcath_logic =
       new G4LogicalVolume(phcath_solid, aluminum, "PHOTOCATHODE");
 
     G4VisAttributes vis_solid;
@@ -111,8 +108,8 @@ namespace nexus {
 
     //G4PVPlacement* phcath_physi =
       new G4PVPlacement(0, G4ThreeVector(0.,0.,phcath_posz), phcath_logic,
-			"PHOTOCATHODE", window_logic, false, 0, true);
-    
+			"PHOTOCATHODE", window_logic, false, 0, false);
+
     // Sensitive detector
     PmtSD* pmtsd = new PmtSD("/PMT_R7378A/Pmt");
     pmtsd->SetDetectorVolumeDepth(1);
@@ -122,10 +119,10 @@ namespace nexus {
 
     // OPTICAL SURFACES //////////////////////////////////////////////
 
-    // The values for the efficiency are chosen in order to match 
+    // The values for the efficiency are chosen in order to match
     // the curve of the quantum efficiency provided by Hamamatsu:
     // http://sales.hamamatsu.com/en/products/electron-tube-division/detectors/photomultiplier-tubes/part-r7378a.php
-    // The source of light is point-like, isotropic and it has been placed at a 
+    // The source of light is point-like, isotropic and it has been placed at a
     // distance of 25 cm from the surface of the PMT window.
     // The quantity to be compared with the Hamamatsu curve is:
     // number of detected photons/ number of photons that reach the PMT window.
@@ -133,7 +130,7 @@ namespace nexus {
     // number of photons that reach the PMT window because
     // light is generated only in that fraction of solid angle that subtends the
     // window of the PMT.
-    
+
     const G4int entries = 30;
 
     G4double ENERGIES[entries] =
@@ -144,7 +141,7 @@ namespace nexus {
        3.87438*eV, 4.13267*eV, 4.42786*eV, 4.76846*eV, 5.16583*eV,
        5.63545*eV, 6.19900*eV, 6.88778*eV, 7.74875*eV, 8.85571*eV};
     G4double EFFICIENCY[entries] =
-      { 0.00000, 0.00028, 0.00100, 0.00500, 0.00100,  
+      { 0.00000, 0.00028, 0.00100, 0.00500, 0.00100,
     	0.02200, 0.04500, 0.07000, 0.11500, 0.16000,
     	0.20500, 0.23500, 0.27000, 0.29000, 0.31300,
     	0.35200, 0.38000, 0.38000, 0.37300, 0.37300,
@@ -158,17 +155,17 @@ namespace nexus {
 	0., 0., 0., 0., 0.,
 	0., 0., 0., 0., 0.,
 	0., 0., 0., 0., 0. };
-    
+
     G4MaterialPropertiesTable* phcath_mpt = new G4MaterialPropertiesTable();
     phcath_mpt->AddProperty("EFFICIENCY", ENERGIES, EFFICIENCY, entries);
     phcath_mpt->AddProperty("REFLECTIVITY", ENERGIES, REFLECTIVITY, entries);
-    
+
     G4OpticalSurface* phcath_opsur =
       new G4OpticalSurface("PHOTOCATHODE", unified, polished, dielectric_metal);
     phcath_opsur->SetMaterialPropertiesTable(phcath_mpt);
-    
+
     new G4LogicalSkinSurface("PHOTOCATHODE", phcath_logic, phcath_opsur);
   }
-  
-  
+
+
 } // end namespace nexus

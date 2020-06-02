@@ -1,16 +1,13 @@
 // ----------------------------------------------------------------------------
-///  \file   PmtR7378A.h
-///  \brief  Geometry model for the Hamamatsu R7378A PMT. 
-///
-///  \author   J. Martin-Albo <jmalbos@ific.uv.es>
-///  \date     17 Feb 2010
-///  \version  $Id$
-///
-///  Copyright (c) 2010 NEXT Collaboration
+// nexus | PmtR7378A.h
+//
+// Geometry of the Hamamatsu R7378A photomultiplier.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __PMT_R7378A__
-#define __PMT_R7378A__
+#ifndef PMT_R7378A_H
+#define PMT_R7378A_H
 
 #include "BaseGeometry.h"
 
@@ -20,7 +17,7 @@
 namespace nexus {
 
   /// Geometry model for the Hamamatsu R7378A photomultiplier (PMT).
-  
+
   class PmtR7378A: public BaseGeometry
   {
   public:
@@ -39,11 +36,11 @@ namespace nexus {
     void Construct();
 
   private:
-    G4double _pmt_diam, _pmt_length; ///< PMT dimensions
+    G4double pmt_diam_, pmt_length_; ///< PMT dimensions
   };
 
-  inline G4double PmtR7378A::Diameter() const { return _pmt_diam; }
-  inline G4double PmtR7378A::Length() const { return _pmt_length; }
+  inline G4double PmtR7378A::Diameter() const { return pmt_diam_; }
+  inline G4double PmtR7378A::Length() const { return pmt_length_; }
 
 } // end namespace nexus
 

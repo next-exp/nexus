@@ -1,22 +1,18 @@
 // ----------------------------------------------------------------------------
-///  \file
-///  \brief
-///
-///  \author   <jmunoz@ific.uv.es>
-///  \date     25 Apr 2012
-///  \version  $Id$
-///
-///  Copyright (c) 2012 NEXT Collaboration
+// nexus | Next100EnergyPlane.h
+//
+// Energy plane geometry of the NEXT-100 detector.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXT100_ENERGY_PLANE__
-#define __NEXT100_ENERGY_PLANE__
+#ifndef NEXT100_ENERGY_PLANE_H
+#define NEXT100_ENERGY_PLANE_H
 
 #include <vector>
 #include <G4Navigator.hh>
 #include <G4RotationMatrix.hh>
 
-#include "CylinderPointSampler2020.h"
 #include "PmtR11410.h"
 
 class G4Material;
@@ -27,6 +23,8 @@ class G4GenericMessenger;
 namespace nexus {
 
   /// This is a class to place all the components of the energy plane
+
+  class CylinderPointSampler2020;
 
   class Next100EnergyPlane: public BaseGeometry
   {
@@ -58,51 +56,51 @@ namespace nexus {
   private:
 
     // Mother Logical Volume of the whole Energy PLane
-    G4LogicalVolume* _mother_logic;
+    G4LogicalVolume* mother_logic_;
 
     // Dimensions
-    const G4int _num_PMTs;
-    const G4double _copper_plate_thickn, _copper_plate_diam;
-    const G4double _gas_hole_diam;
-    // const G4double _hole_up_posx, _hole_up_posy;
-    // const G4double _hole_lat1_posx, _hole_lat1_posy;
-    // const G4double _hole_lat2_posx, _hole_lat2_posy;
-    const G4double _hut_int_diam, _hut_thickn, _hut_hole_length;
-    const G4double _hut_length_long, _hut_length_medium, _hut_length_short;
-    const G4int _last_hut_long, _last_hut_medium;
-    const G4double _hole_diam_front, _hole_diam_rear;
-    const G4double _hole_length_front, _hole_length_rear;
-    const G4double _sapphire_window_thickn, _optical_pad_thickn, _tpb_thickn;
-    const G4double _pmt_stand_out;
-    const G4double _internal_pmt_base_diam, _internal_pmt_base_thickn;
+    const G4int num_PMTs_;
+    const G4double copper_plate_thickn_, copper_plate_diam_;
+    const G4double gas_hole_diam_;
+    // const G4double hole_up_posx_, hole_up_posy_;
+    // const G4double hole_lat1_posx_, hole_lat1_posy_;
+    // const G4double hole_lat2_posx_, hole_lat2_posy_;
+    const G4double hut_int_diam_, hut_thickn_, hut_hole_length_;
+    const G4double hut_length_long_, hut_length_medium_, hut_length_short_;
+    const G4int last_hut_long_, last_hut_medium_;
+    const G4double hole_diam_front_, hole_diam_rear_;
+    const G4double hole_length_front_, hole_length_rear_;
+    const G4double sapphire_window_thickn_, optical_pad_thickn_, tpb_thickn_;
+    const G4double pmt_stand_out_;
+    const G4double internal_pmt_base_diam_, internal_pmt_base_thickn_;
 
     // Visibility of the energy plane
-    G4bool _visibility, _verbosity;
+    G4bool visibility_, verbosity_;
 
     // Geometry Navigator
-    G4Navigator* _geom_navigator;
+    G4Navigator* geom_navigator_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
 
     // PMT
-    PmtR11410*  _pmt;
+    PmtR11410*  pmt_;
 
-    G4double _end_of_sapphire_posz;
-    G4double _copper_plate_posz;
-    G4double _vacuum_posz;
-    std::vector<G4ThreeVector> _pmt_positions;
-    std::vector<G4ThreeVector> _short_hut_pos, _medium_hut_pos, _long_hut_pos;
-    G4double _pmt_zpos;
-    G4RotationMatrix* _pmt_rot;
-    G4double _rot_angle;
+    G4double end_of_sapphire_posz_;
+    G4double copper_plate_posz_;
+    G4double vacuum_posz_;
+    std::vector<G4ThreeVector> pmt_positions_;
+    std::vector<G4ThreeVector> short_hut_pos_, medium_hut_pos_, long_hut_pos_;
+    G4double pmt_zpos_;
+    G4RotationMatrix* pmt_rot_;
+    G4double rot_angle_;
 
     // Vertex generators
-    CylinderPointSampler2020* _copper_gen;
-    CylinderPointSampler2020* _sapphire_window_gen;
-    CylinderPointSampler2020* _optical_pad_gen;
-    CylinderPointSampler2020* _internal_pmt_base_gen;
-    CylinderPointSampler2020* _external_pmt_base_gen;
+    CylinderPointSampler2020* copper_gen_;
+    CylinderPointSampler2020* sapphire_window_gen_;
+    CylinderPointSampler2020* optical_pad_gen_;
+    CylinderPointSampler2020* internal_pmt_base_gen_;
+    CylinderPointSampler2020* external_pmt_base_gen_;
 
   };
 

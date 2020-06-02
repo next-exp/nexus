@@ -1,14 +1,10 @@
-// ----------------------------------------------------------------------------
-///  \file   NextNew.h
-///  \brief  
-///
-///  \author   <miquel.nebot@ific.uv.es>, <jmunoz@ific.uv.es>, 
-///            <justo.martin-albo@ific.uv.es>
-///  \date     Sept 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013-2015 NEXT Collaboration
-// ----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// nexus | NextNew.h
+//
+// Main class that builds the NEXT-WHITE detector.
+//
+// The NEXT Collaboration
+// -----------------------------------------------------------------------------
 
 #ifndef NEXTNEW_H
 #define NEXTNEW_H
@@ -16,12 +12,12 @@
 #include "BaseGeometry.h"
 #include <G4RotationMatrix.hh>
 
-namespace nexus { class Next100Shielding; }
-namespace nexus { class NextNewPedestal; }
-namespace nexus { class NextNewMiniCastle; }
-namespace nexus { class NextNewVessel; }
-namespace nexus { class NextNewIcs; }
-namespace nexus { class NextNewInnerElements; }
+namespace nexus {class Next100Shielding; }
+namespace nexus {class NextNewPedestal; }
+namespace nexus {class NextNewMiniCastle; }
+namespace nexus {class NextNewVessel; }
+namespace nexus {class NextNewIcs; }
+namespace nexus {class NextNewInnerElements; }
 namespace nexus {class BoxPointSampler;}
 namespace nexus {class CylinderPointSampler;}
 namespace nexus {class CalibrationSource;}
@@ -54,68 +50,68 @@ namespace nexus {
     void Construct();
 
   private:
-    
+
     // Detector dimensions
-    const G4double _lab_size; ///< Size of the air box containing the detector  
-   
-    //   G4double _pressure; ///< Pressure xenon gas
+    const G4double lab_size_; ///< Size of the air box containing the detector
+
+    //   G4double pressure_; ///< Pressure xenon gas
 
     // Pointers to logical volumes
-    G4LogicalVolume* _lab_logic;
-    //  G4LogicalVolume* _shielding_air_logic;
-    G4LogicalVolume* _air_logic;
+    G4LogicalVolume* lab_logic_;
+    //  G4LogicalVolume* shielding_air_logic_;
+    G4LogicalVolume* air_logic_;
 
     //Detector parts
-    Next100Shielding* _shielding;
-    NextNewPedestal* _pedestal;
-    NextNewMiniCastle* _mini_castle;
-    NextNewVessel* _vessel;   
-    NextNewIcs* _ics;
-    NextNewInnerElements* _inner_elements;
-    NaIScintillator* _naI;
-    SurroundingAir* _air;
-    LeadCollimator* _coll;
-    ExtraVessel* _extra;
-    
-    BoxPointSampler* _lab_gen; ///< Vertex generator
-    CylinderPointSampler* _lat_source_gen;
-    CylinderPointSampler* _axial_source_gen;
-    CylinderPointSampler* _source_gen_up;
-    CylinderPointSampler* _source_gen_lat;
-    CylinderPointSampler* _source_gen_random;
+    Next100Shielding* shielding_;
+    NextNewPedestal* pedestal_;
+    NextNewMiniCastle* mini_castle_;
+    NextNewVessel* vessel_;
+    NextNewIcs* ics_;
+    NextNewInnerElements* inner_elements_;
+    NaIScintillator* naI_;
+    SurroundingAir* air_;
+    LeadCollimator* coll_;
+    ExtraVessel* extra_;
+
+    BoxPointSampler* lab_gen_; ///< Vertex generator
+    CylinderPointSampler* lat_source_gen_;
+    CylinderPointSampler* axial_source_gen_;
+    CylinderPointSampler* source_gen_up_;
+    CylinderPointSampler* source_gen_lat_;
+    CylinderPointSampler* source_gen_random_;
 
     // Rotation around Y and displacement of the whole geometry in the g4 system of reference
-    G4ThreeVector _displ;
-    G4double _rot_angle;
+    G4ThreeVector displ_;
+    G4double rot_angle_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
+    G4GenericMessenger* msg_;
 
     // Kind of block of lead on the lateral port placed to shield source
-    G4bool _lead_block; ///< true if the two lead blocks inlateral port are placed as shielding
-    G4double _lead_dist; ///< distance between the two pieces of lead
-    G4bool _ext_scint; ///< true if external scintillator is placed
-    G4String _calib_port; /// position of calibration source (lateral/axial)
-    G4double _dist_scint; ///< distance from the end of lateral/axial port tube and scintillator
-    
+    G4bool lead_block_; ///< true if the two lead blocks inlateral port are placed as shielding
+    G4double lead_dist_; ///< distance between the two pieces of lead
+    G4bool ext_scint_; ///< true if external scintillator is placed
+    G4String calib_port_; /// position of calibration source (lateral/axial)
+    G4double dist_scint_; ///< distance from the end of lateral/axial port tube and scintillator
+
     // Incapsulated calibration source volume
-    CalibrationSource* _cal;
+    CalibrationSource* cal_;
     // Distance from the end of the lateral feedthrough to the source pos
-    //   G4double _ext_source_distance;
+    //   G4double ext_source_distance_;
 
-    G4bool _lead_castle; ///< false if castle is open (e.g., lead collimator in axial port)
+    G4bool lead_castle_; ///< false if castle is open (e.g., lead collimator in axial port)
 
-    G4bool _disk_source; ///< true if external disk-like calibration source
-    G4String _source_mat; ///< Kind of external disk-like calibration source (Na/Th so far)
-    DiskSource* _source;
-    G4double _source_dist_from_anode;
+    G4bool disk_source_; ///< true if external disk-like calibration source
+    G4String source_mat_; ///< Kind of external disk-like calibration source (Na/Th so far)
+    DiskSource* source_;
+    G4double source_dist_from_anode_;
 
-    G4RotationMatrix* _extra_rot; ///< rotation of the external elements outside the vessel, behind the tracking plane
-    G4ThreeVector _extra_pos; ///< position of the external elements outside the vessel, behind the tracking plane
+    G4RotationMatrix* extra_rot_; ///< rotation of the external elements outside the vessel, behind the tracking plane
+    G4ThreeVector extra_pos_; ///< position of the external elements outside the vessel, behind the tracking plane
 
-    G4double _pedestal_pos;
+    G4double pedestal_pos_;
   };
-  
+
 } // end namespace nexus
 
 #endif

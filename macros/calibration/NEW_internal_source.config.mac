@@ -1,15 +1,20 @@
 ### -----------------------------------------------------------
-###  Configuration macro for the NEW detector geometry
-###  This macro simulates decays from a Na22 calibration source
-###  in one of the ports inside the feedthrough,
-###  at configurable distance from the bottom
-### -----------------------------------------------------------
+## nexus | NEW_internal_source.config.mac
+##
+## Configuration macro to simulate the activity of a specific calibration
+## source in the NEXT-WHITE detector. The source is placed inside one of the
+## ports inside the feedthrough, at configurable distance
+## from the most internal part of the feedthrough.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
-
+# Verbosity
 /run/verbose 0
 /event/verbose 0
 /tracking/verbose 0
 
+# Geometry
 /Geometry/NextNew/pressure 7. bar
 /Geometry/NextNew/elfield false
 /Geometry/CalibrationSource/source Na
@@ -36,15 +41,16 @@
 /Geometry/PmtR11410/visibility false
 /Geometry/PmtR11410/SD_depth 4
 
-/Generator/IonGun/atomic_number 11
-/Generator/IonGun/mass_number 22
+# Generator
+/Generator/IonGenerator/atomic_number 11
+/Generator/IonGenerator/mass_number 22
 ## ANODE/AXIAL/UPPER
-/Generator/IonGun/region INTERNAL_PORT_AXIAL
+/Generator/IonGenerator/region INTERNAL_PORT_AXIAL
 
-
-# PHYSICS
+# Physics
 /PhysicsList/Nexus/clustering          false
 /PhysicsList/Nexus/drift               false
 /PhysicsList/Nexus/electroluminescence false
 
+# Persistency
 /nexus/persistency/outputFile New.source.next

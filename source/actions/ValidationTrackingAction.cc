@@ -1,10 +1,13 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | ValidationTrackingAction.cc
 //
-//  Author : <justo.martin-albo@ific.uv.es>    
-//  Created: 25 March 2013
+// This class is based on DefaultTrackinAction.
+// In addition, it creates and saves ROOT histograms with the energy
+// of the gammas produced in the simulation. Its purpose is to produce
+// histograms to be compared across different versions of GEANT4,
+// before changing version.
 //
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "ValidationTrackingAction.h"
@@ -39,7 +42,7 @@ ValidationTrackingAction::ValidationTrackingAction(): G4UserTrackingAction()
 
 ValidationTrackingAction::~ValidationTrackingAction()
 {
-  out_file_ = new TFile("GammaEnergy.root", "recreate");  
+  out_file_ = new TFile("GammaEnergy.root", "recreate");
   gamma_energy_->Write();
   out_file_->Close();
 }
@@ -49,9 +52,9 @@ ValidationTrackingAction::~ValidationTrackingAction()
 void ValidationTrackingAction::PreUserTrackingAction(const G4Track* track)
 {
   // Do nothing if the track is an optical photon or an ionization electron
-  if (track->GetDefinition() == G4OpticalPhoton::Definition() || 
+  if (track->GetDefinition() == G4OpticalPhoton::Definition() ||
       track->GetDefinition() == IonizationElectron::Definition()) {
-      fpTrackingManager->SetStoreTrajectory(false);    
+      fpTrackingManager->SetStoreTrajectory(false);
       return;
   }
 
@@ -62,10 +65,10 @@ void ValidationTrackingAction::PreUserTrackingAction(const G4Track* track)
   // Create a new trajectory associated to the track.
   // N.B. If the processesing of a track is interrupted to be resumed
   // later on (to process, for instance, its secondaries) more than
-  // one trajectory associated to the track will be created, but 
+  // one trajectory associated to the track will be created, but
   // the event manager will merge them at some point.
   G4VTrajectory* trj = new Trajectory(track);
-  
+
    // Set the trajectory in the tracking manager
   fpTrackingManager->SetStoreTrajectory(true);
   fpTrackingManager->SetTrajectory(trj);
@@ -76,7 +79,7 @@ void ValidationTrackingAction::PreUserTrackingAction(const G4Track* track)
 void ValidationTrackingAction::PostUserTrackingAction(const G4Track* track)
 {
   // Do nothing if the track is an optical photon or an ionization electron
-  if (track->GetDefinition() == G4OpticalPhoton::Definition() || 
+  if (track->GetDefinition() == G4OpticalPhoton::Definition() ||
     track->GetDefinition() == IonizationElectron::Definition()) return;
 
   Trajectory* trj = (Trajectory*) TrajectoryMap::Get(track->GetTrackID());

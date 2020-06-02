@@ -1,20 +1,16 @@
 // ----------------------------------------------------------------------------
-///  \file   MuonsPointSampler.h
-///  \brief  Generator of vertices in a cylindric geometry.
-///
-///  Author: Neus Lopez March <neus.lopez@ific.uv.es>
-//        
-//  Created: 30 Jan 2015
+// nexus | MuonsPointSampler.h
 //
-//  Copyright (c) 2015 NEXT Collaboration
+// This class is a sampler of random uniform points in a rectangular surface,
+// with fixed y coordinate.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __MUONS_POINT_SAMPLER__
-#define __MUONS_POINT_SAMPLER__
+#ifndef MUONS_POINT_SAMPLER_H
+#define MUONS_POINT_SAMPLER_H
 
 #include <G4ThreeVector.hh>
-#include <G4RotationMatrix.hh>
-#include <G4Box.hh>
 #include <vector>
 
 namespace nexus {
@@ -22,32 +18,32 @@ namespace nexus {
   class MuonsPointSampler
   {
   public:
-    
+
     /// Constructor
     MuonsPointSampler(G4double x, G4double yPoint, G4double z);
-     
+
     /// Destructor
     ~MuonsPointSampler();
-    
+
     /// Returns vertex in the Muons plane
 
     G4ThreeVector GenerateVertex();
-   
+
   private:
     /// Default constructor is hidden
     MuonsPointSampler();
-    
+
   private:
-    
+
     G4ThreeVector GetXZPointInMuonsPlane();
-    G4double _x, _yPoint,_z;
-   
+    G4double x_, yPoint_,z_;
+
   };
 
   // inline methods ..................................................
 
   inline MuonsPointSampler::~MuonsPointSampler() { }
-  
+
 } // namespace nexus
 
 #endif

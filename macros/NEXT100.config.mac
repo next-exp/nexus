@@ -1,41 +1,39 @@
-### --------------------------------------------------------
-###  Next100: Configuration macro
-###  $Id: Next100.config.mac 8758 2013-06-15 11:12:45Z jmunoz $
-### --------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | NEXT100.config.mac
+##
+## Configuration macro to simulate Bi-214 radioactive decays from thethe
+## copper plate of the tracking plane in the NEXT-100 detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
-
-##### JOB CONTROL #####
-/nexus/persistency/outputFile Next100.next
-## eventType options: bb0nu, bb2nu, background
-/nexus/persistency/eventType background
-
-
+##### VERBOSITY #####
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
 
 ##### GEOMETRY #####
 /Geometry/Next100/elfield false
 /Geometry/Next100/pressure 15. bar
 /Geometry/Next100/max_step_size 5. mm
-
 /Geometry/PmtR11410/SD_depth 3
 
-
-
 ##### GENERATOR #####
-# Ion Gun for background decays
-/Generator/IonGun/atomic_number 83
-/Generator/IonGun/mass_number 214
-/Generator/IonGun/region TP_COPPER_PLATE
+/Generator/IonGenerator/atomic_number 83
+/Generator/IonGenerator/mass_number 214
+/Generator/IonGenerator/region TP_COPPER_PLATE
 
-# ACTIONS
+##### ACTIONS #####
 /Actions/DefaultEventAction/energy_threshold 0.6 MeV
 /Actions/DefaultEventAction/max_energy 2.55 MeV
 
+##### PHYSICS #####
 ## No full simulation
 /PhysicsList/Nexus/clustering          false
 /PhysicsList/Nexus/drift               false
 /PhysicsList/Nexus/electroluminescence false
 
-##### VERBOSITIES #####
-/run/verbose 0
-/event/verbose 0
-/tracking/verbose 0
+##### PERSISTENCY #####
+/nexus/persistency/outputFile Next100.next
+## eventType options: bb0nu, bb2nu, background
+/nexus/persistency/eventType background

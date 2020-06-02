@@ -1,12 +1,10 @@
-//---------------------------------------------------------------------------
-//   \file   AddUserInfoToPV
-///  \brief  Add User info (muons) to the Primary Vertex
-///  
-///  \author   Neus Lopez March <neus.lopez@ific.uv.es>    
-///  \date     30 Jan 2014
-/// 
-///
-///  Copyright (c) 2015 NEXT Collaboration
+// ----------------------------------------------------------------------------
+// nexus | AddUserInfoToPV.cc
+//
+// This class is a utility to add the information about muon directions
+// to the primary vertex of the MuonGenerator class.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "AddUserInfoToPV.h"
@@ -14,8 +12,7 @@
 using namespace nexus;
 
 AddUserInfoToPV::AddUserInfoToPV(G4double theta, G4double phi):
-  //muon generator angles
-  _Theta(theta),_Phi(phi)
+  theta_(theta),phi_(phi)
 {
 }
 
@@ -25,8 +22,6 @@ AddUserInfoToPV::~AddUserInfoToPV()
 }
 
 void AddUserInfoToPV::Print() const
-{ 
-  //  std::cout<<"in print"<<std::endl;  
+{
+  //  std::cout<<"in print"<<std::endl;
 }
-
-

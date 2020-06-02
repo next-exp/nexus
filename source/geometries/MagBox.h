@@ -1,19 +1,15 @@
 // ----------------------------------------------------------------------------
-///  \file   MagBox.h
-///  \brief  
-///
-///  \author   <jmunoz@ific.uv.es>
-///  \date     January 2014
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration
+// nexus | MagBox.h
+//
+// Detector with magnetic field.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __MAGBOX__
-#define __MAGBOX__
+#ifndef MAGBOX_H
+#define MAGBOX_H
 
 #include "BaseGeometry.h"
-#include "BoxPointSampler.h"
 
 class G4LogicalVolume;
 class G4GenericMessenger;
@@ -21,6 +17,8 @@ class G4Material;
 
 
 namespace nexus {
+
+  class BoxPointSampler;
 
   class MagBox: public BaseGeometry {
   public:
@@ -38,25 +36,25 @@ namespace nexus {
 
   private:
     // Detector dimensions
-    const G4double _detector_size; /// Size of the Xe box    
+    const G4double detector_size_; /// Size of the Xe box
 
     // ACTIVE gas Xenon
-    G4Material* _gas;
+    G4Material* gas_;
 
     // Parameters
-    G4double _max_step_size;  /// Maximum Step Size
-    G4String _gas_name;       /// Gas name
-    G4double _pressure;       /// Pressure Gas Xenon
-    G4double _mag_intensity;  /// Magnetic Field Intensity
-    
-    //Vertex genrator    
-    BoxPointSampler* _active_gen;
+    G4double max_step_size_;  /// Maximum Step Size
+    G4String gas_name_;       /// Gas name
+    G4double pressure_;       /// Pressure Gas Xenon
+    G4double mag_intensity_;  /// Magnetic Field Intensity
+
+    //Vertex genrator
+    BoxPointSampler* active_gen_;
 
     /// Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
+    G4GenericMessenger* msg_;
 
   };
-  
+
 } // end namespace nexus
 
 #endif

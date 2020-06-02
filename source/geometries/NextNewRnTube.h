@@ -1,25 +1,24 @@
-// ----------------------------------------------------------------------------
-///  \file   
-///  \brief    Tube arround the vessel to shoot backgrounds comming from the Buffer Gas
-///            mainly Radon in the air attached to the vessel walls 
-///  \author   <miquel.nebot@ific.uv.es>,
-///  \date     3 Dic 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration
+// -----------------------------------------------------------------------------
+// nexus | NextNewRnTube.h
+//
+// Tube around the NEXT-WHITE vessel used to shoot backgrounds coming
+// from the air, mainly radon in the air attached to the vessel walls.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXTNEW_RN_TUBE__
-#define __NEXTNEW_RN_TUBE__
+#ifndef NEXTNEW_RN_TUBE_H
+#define NEXTNEW_RN_TUBE_H
 
 #include "BaseGeometry.h"
-#include "CylinderPointSampler.h"
 
 #include <G4Navigator.hh>
 
 class G4GenericMessenger;
 
 namespace nexus {
+
+  class CylinderPointSampler;
 
   class NextNewRnTube: public BaseGeometry
   {
@@ -42,18 +41,18 @@ namespace nexus {
 
   private:
     // Mother Logical Volume of the ICS
-    G4LogicalVolume* _mother_logic;
+    G4LogicalVolume* mother_logic_;
     // Dimensions
-    G4double  _inner_diam, _length, _thickness;
-   
+    G4double  inner_diam_, length_, thickness_;
+
     // Visibility of the shielding
-    G4bool _visibility;
+    G4bool visibility_;
 
     // Vertex generators
-    CylinderPointSampler* _tube_gen;
+    CylinderPointSampler* tube_gen_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
+    G4GenericMessenger* msg_;
 
   };
 

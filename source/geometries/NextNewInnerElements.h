@@ -1,16 +1,14 @@
-// ----------------------------------------------------------------------------
-///  \file    NextNewInnerElements
-///  \brief   This class constructs the inner elements of Next-New:
-///           Energy plane, field cage and tracking plane.
-///  \author   <miquel.nebot@ific.uv.es>
-///  \date     18 Sept 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration
-// ----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// nexus | NextNewInnerElements.h
+//
+// Inner elements of the NEXT-WHITE detector. They include the field cage,
+// the energy plane and the tracking plane.
+//
+// The NEXT Collaboration
+// -----------------------------------------------------------------------------
 
-#ifndef __NEXTNEW_INNER_ELEMENTS__
-#define __NEXTNEW_INNER_ELEMENTS__
+#ifndef NEXTNEW_INNER_ELEMENTS_H
+#define NEXTNEW_INNER_ELEMENTS_H
 
 #include "BaseGeometry.h"
 #include <G4ThreeVector.hh>
@@ -51,22 +49,22 @@ namespace nexus {
 
   private:
 
-    G4LogicalVolume* _mother_logic;
-    G4VPhysicalVolume* _mother_phys;
-    G4Material* _gas;
-    G4double _pressure;
-    G4double _temperature;
+    G4LogicalVolume* mother_logic_;
+    G4VPhysicalVolume* mother_phys_;
+    G4Material* gas_;
+    G4double pressure_;
+    G4double temperature_;
 
     // Detector parts
-    NextNewEnergyPlane*   _energy_plane;
-    NextNewFieldCage*     _field_cage;
-    NextNewTrackingPlane* _tracking_plane;
+    NextNewEnergyPlane*   energy_plane_;
+    NextNewFieldCage*     field_cage_;
+    NextNewTrackingPlane* tracking_plane_;
 
     // Visibilities
-    //G4bool _visibility;
+    //G4bool visibility_;
 
     // Messenger for the definition of control commands
-    //G4GenericMessenger* _msg;
+    //G4GenericMessenger* msg_;
 
   };
 

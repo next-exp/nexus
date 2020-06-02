@@ -1,11 +1,11 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | IonizationElectron.cc
 //
-//  Author : J. Martin-Albo <jmalbos@ific.uv.es>    
-//  Created: 19 May 2010
+// Definition of the ionization electron.
 //
-//  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
+
 
 #include "IonizationElectron.h"
 
@@ -14,12 +14,12 @@
 #include "CLHEP/Units/PhysicalConstants.h"
 
 
-namespace nexus {  
+namespace nexus {
 
   using namespace CLHEP;
-  
-  
-  IonizationElectron* IonizationElectron::_instance = 0;
+
+
+  IonizationElectron* IonizationElectron::instance_ = 0;
 
 
 
@@ -38,11 +38,11 @@ namespace nexus {
   IonizationElectron* IonizationElectron::Definition()
   {
     // Return the (only) instance if it has been defined already.
-    if (_instance) return _instance;
-    
+    if (instance_) return instance_;
+
     // Search for ionization electron definition in particle table.
     // If we get a null pointer, the particle has not been created yet.
-    
+
     const G4String name = "ie-";
 
     G4ParticleDefinition* pdef =
@@ -54,9 +54,9 @@ namespace nexus {
       //    2*spin       parity          C-conjugation
       //    2*Isospin    2*Isospin3      G-parity
       //    type         lepton number   baryon number   PDG encoding
-      //    stable       lifetime        decay table 
+      //    stable       lifetime        decay table
       //    shortlived   subType         anti_encoding
-      pdef = 
+      pdef =
         new G4ParticleDefinition(name, electron_mass_c2, 0., -1.*eplus,
 				  1, 0, 0,
 				  0, 0, 0,
@@ -64,9 +64,9 @@ namespace nexus {
 				  true, -1.0, NULL,
 				  false, "e", 0);
     }
-    
-    _instance = (IonizationElectron*) pdef;
-    return _instance;
+
+    instance_ = (IonizationElectron*) pdef;
+    return instance_;
   }
 
 

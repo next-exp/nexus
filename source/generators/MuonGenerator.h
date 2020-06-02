@@ -1,16 +1,14 @@
 // ----------------------------------------------------------------------------
-///  \file   MuonGenerator.h
-///  \brief  Point Sampler for muons generation.
-///
-///  \author   Neus Lopez March <neus.lopez@ific.uv.es>
-///  \date     30 Jan 2014
-///
-///
-///  Copyright (c) 2015 NEXT Collaboration
+// nexus | MuonGenerator.h
+//
+// This class is the primary generator of muons following the angular
+// distribution at sea level. Angles are saved to be plotted later.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __MUON_GENERATOR__
-#define __MUON_GENERATOR__
+#ifndef MUON_GENERATOR_H
+#define MUON_GENERATOR_H
 
 #include <G4VPrimaryGenerator.hh>
 
@@ -46,20 +44,20 @@ namespace nexus {
     G4double GetTheta() const;
 
   private:
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
 
-    G4ParticleDefinition* _particle_definition;
+    G4ParticleDefinition* particle_definition_;
 
-    G4double _energy_min; ///< Minimum kinetic energy
-    G4double _energy_max; ///< Maximum kinetic energy
+    G4double energy_min_; ///< Minimum kinetic energy
+    G4double energy_max_; ///< Maximum kinetic energy
 
-    G4String _region;
+    G4String region_;
 
-    const BaseGeometry* _geom; ///< Pointer to the detector geometry
+    const BaseGeometry* geom_; ///< Pointer to the detector geometry
 
-    G4double _momentum_X;
-    G4double _momentum_Y;
-    G4double _momentum_Z;
+    G4double momentum_X_;
+    G4double momentum_Y_;
+    G4double momentum_Z_;
 
   };
 

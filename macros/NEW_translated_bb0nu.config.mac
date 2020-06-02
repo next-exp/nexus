@@ -1,20 +1,22 @@
-### --------------------------------------------------------
-###  This init macro simulates bb0nu decays
-###  in the NEW detector geometry
-### --------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | NEW_translated_bb0nu.config.mac
+##
+## Configuration macro to simulate bb0nu decays in the NEW detector geometry.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /run/verbose 0
 /event/verbose 0
 /tracking/verbose 0
-/control/execute macros/generators/GenbbTranslatedInterface.mac
-#
+
+/nexus/random_seed 542862
+
 /Geometry/NextNew/pressure 15. bar
 /Geometry/NextNew/elfield false
 
-# PHYSICS
+/control/execute macros/generators/GenbbTranslatedInterface.mac
+
 /control/execute macros/physics/IonizationElectron.mac
 
-
 /nexus/persistency/outputFile bb0_GS_mode1_S1L1f.next
-
-/nexus/random_seed 542862

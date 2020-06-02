@@ -1,8 +1,10 @@
-### --------------------------------------------------------
-###  Example config macro for the double beta generator.
-###  $Id: GenbbInterface.mac 8754 2013-06-19 15:15:13Z jmunoz $
-### --------------------------------------------------------
-
+## ----------------------------------------------------------------------------
+## nexus | GenbbTranslatedInterface.mac
+##
+## Ancillary macro to define the parameters of bb0nu/bb2nu decays.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 # Decay0 Interface for bb0nu/bb2nu decays - (BB0nu: DecayMode 1), (BB2nu: DecayMode 4)
 # use electron momenta extracted with the DECAY0 software

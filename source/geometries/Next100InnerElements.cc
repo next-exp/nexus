@@ -1,42 +1,23 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | Next100InnerElements.cc
 //
-//  Authors: <jmunoz@ific.uv.es>, <paola.ferrario@dipc.org>
-//  Created: 2 Mar 2012
+// Inner elements of the NEXT-100 detector. They include the field cage,
+// the energy and the tracking plane.
 //
-//  Copyright (c) 2012-2020 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "Next100InnerElements.h"
-
 #include "Next100FieldCage.h"
 #include "Next100EnergyPlane.h"
 #include "Next100TrackingPlane.h"
-#include "IonizationSD.h"
-#include "PmtSD.h"
-#include "UniformElectricDriftField.h"
-#include "OpticalMaterialProperties.h"
-#include "MaterialsList.h"
-#include "XenonGasProperties.h"
-#include "Visibilities.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
 #include <G4VPhysicalVolume.hh>
-#include <G4Tubs.hh>
-#include <G4PVPlacement.hh>
 #include <G4Material.hh>
-#include <G4VisAttributes.hh>
-#include <G4Region.hh>
-#include <G4UserLimits.hh>
-#include <G4SDManager.hh>
-#include <G4RunManager.hh>
-#include <G4UnitsTable.hh>
-#include <G4TransportationManager.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
-#include <stdexcept>
 
 using namespace CLHEP;
 
@@ -46,31 +27,31 @@ namespace nexus {
 
   Next100InnerElements::Next100InnerElements():
     BaseGeometry(),
-    _gate_sapphire_wdw_distance  (1460.5 * mm), // active length + cathode thickness + buffer length
-    _gate_tracking_plane_distance(25.6 * mm),
-    _mother_logic(nullptr),
-    _mother_phys (nullptr),
-    _gas(nullptr),
-    _field_cage    (new Next100FieldCage()),
-    _energy_plane  (new Next100EnergyPlane()),
-    _tracking_plane(new Next100TrackingPlane(_gate_tracking_plane_distance)),
-    _msg(nullptr)
+    gate_sapphire_wdw_distance_  (1460.5 * mm), // active length + cathode thickness + buffer length
+    gate_tracking_plane_distance_(25.6 * mm),
+    mother_logic_(nullptr),
+    mother_phys_ (nullptr),
+    gas_(nullptr),
+    field_cage_    (new Next100FieldCage()),
+    energy_plane_  (new Next100EnergyPlane()),
+    tracking_plane_(new Next100TrackingPlane(gate_tracking_plane_distance_)),
+    msg_(nullptr)
   {
     // Messenger
-    _msg = new G4GenericMessenger(this, "/Geometry/Next100/",
+    msg_ = new G4GenericMessenger(this, "/Geometry/Next100/",
                                   "Control commands of geometry Next100.");
   }
 
 
   void Next100InnerElements::SetLogicalVolume(G4LogicalVolume* mother_logic)
   {
-    _mother_logic = mother_logic;
+    mother_logic_ = mother_logic;
   }
 
 
   void Next100InnerElements::SetPhysicalVolume(G4VPhysicalVolume* mother_phys)
   {
-    _mother_phys = mother_phys;
+    mother_phys_ = mother_phys;
   }
 
 
@@ -79,34 +60,34 @@ namespace nexus {
     // Position in Z of the beginning of the drift region
     G4double gate_zpos = GetELzCoord();
     // Reading mother material
-    _gas = _mother_logic->GetMaterial();
-    _pressure =    _gas->GetPressure();
-    _temperature = _gas->GetTemperature();
+    gas_ = mother_logic_->GetMaterial();
+    pressure_ =    gas_->GetPressure();
+    temperature_ = gas_->GetTemperature();
 
     // Field Cage
-    _field_cage->SetMotherLogicalVolume(_mother_logic);
-    _field_cage->SetMotherPhysicalVolume(_mother_phys);
-    _field_cage->SetELzCoord(gate_zpos);
-    _field_cage->Construct();
+    field_cage_->SetMotherLogicalVolume(mother_logic_);
+    field_cage_->SetMotherPhysicalVolume(mother_phys_);
+    field_cage_->SetELzCoord(gate_zpos);
+    field_cage_->Construct();
 
     // Energy Plane
-    _energy_plane->SetMotherLogicalVolume(_mother_logic);
-    _energy_plane->SetELzCoord(gate_zpos);
-    _energy_plane->SetSapphireSurfaceZPos(_gate_sapphire_wdw_distance);
-    _energy_plane->Construct();
+    energy_plane_->SetMotherLogicalVolume(mother_logic_);
+    energy_plane_->SetELzCoord(gate_zpos);
+    energy_plane_->SetSapphireSurfaceZPos(gate_sapphire_wdw_distance_);
+    energy_plane_->Construct();
 
     // Tracking plane
-    _tracking_plane->SetMotherPhysicalVolume(_mother_phys);
-    _tracking_plane->SetELzCoord(gate_zpos);
-    _tracking_plane->Construct();
+    tracking_plane_->SetMotherPhysicalVolume(mother_phys_);
+    tracking_plane_->SetELzCoord(gate_zpos);
+    tracking_plane_->Construct();
   }
 
 
   Next100InnerElements::~Next100InnerElements()
   {
-    delete _field_cage;
-    delete _energy_plane;
-    delete _tracking_plane;
+    delete field_cage_;
+    delete energy_plane_;
+    delete tracking_plane_;
   }
 
 
@@ -120,7 +101,7 @@ namespace nexus {
 	(region == "BUFFER") ||
 	(region == "XENON") ||
 	(region == "LIGHT_TUBE")) {
-      vertex = _field_cage->GenerateVertex(region);
+      vertex = field_cage_->GenerateVertex(region);
     }
     // Energy Plane regions
     else if ((region == "EP_COPPER_PLATE") ||
@@ -130,12 +111,12 @@ namespace nexus {
              (region == "PMT_BODY") ||
 	     (region == "INTERNAL_PMT_BASE") ||
 	     (region == "EXTERNAL_PMT_BASE")) {
-      vertex = _energy_plane->GenerateVertex(region);
+      vertex = energy_plane_->GenerateVertex(region);
     }
     // Tracking Plane regions
     else if ((region == "TP_COPPER_PLATE") ||
              (region == "SIPM_BOARD")) {
-      vertex = _tracking_plane->GenerateVertex(region);
+      vertex = tracking_plane_->GenerateVertex(region);
     }
     else {
       G4Exception("[Next100InnerElements]", "GenerateVertex()", FatalException,

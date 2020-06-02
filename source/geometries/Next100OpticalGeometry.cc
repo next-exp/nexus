@@ -1,14 +1,14 @@
 // ----------------------------------------------------------------------------
+// nexus | Next100OpticalGeometry.cc
 //
-//  Authors: <paola.ferrario@dipc.org>
-//  Created: 30 Dec 2019
+// This class builds a simplified version of the NEXT-100 geometry, where
+// only the inner elements are instantiated.
 //
-//  Copyright (c) 2019 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "Next100OpticalGeometry.h"
 #include "Next100InnerElements.h"
-
 #include "OpticalMaterialProperties.h"
 #include "MaterialsList.h"
 
@@ -30,18 +30,18 @@ using namespace CLHEP;
 namespace nexus {
 
   Next100OpticalGeometry::Next100OpticalGeometry(): BaseGeometry(),
-						    _pressure(15. * bar),
-						    _temperature (300 * kelvin),
-						    _sc_yield(25510. * 1/MeV),
-                                                    _e_lifetime(1000. * ms),
-						    _gas("naturalXe")
+						    pressure_(15. * bar),
+						    temperature_ (300 * kelvin),
+						    sc_yield_(25510. * 1/MeV),
+                                                    e_lifetime_(1000. * ms),
+						    gas_("naturalXe")
   {
     /// Messenger
-    _msg = new G4GenericMessenger(this, "/Geometry/Next100/",
+    msg_ = new G4GenericMessenger(this, "/Geometry/Next100/",
 				  "Control commands of geometry Next100.");
 
     G4GenericMessenger::Command& pressure_cmd =
-      _msg->DeclareProperty("pressure", _pressure, "Pressure of gasn.");
+      msg_->DeclareProperty("pressure", pressure_, "Pressure of gasn.");
     pressure_cmd.SetUnitCategory("Pressure");
     pressure_cmd.SetParameterName("pressure", false);
     pressure_cmd.SetRange("pressure>0.");
@@ -49,38 +49,38 @@ namespace nexus {
     new G4UnitDefinition("1/MeV","1/MeV", "1/Energy", 1/MeV);
 
     G4GenericMessenger::Command& sc_yield_cmd =
-      _msg->DeclareProperty("sc_yield", _sc_yield,
+      msg_->DeclareProperty("sc_yield", sc_yield_,
 			    "Scintillation yield of gas. It is in photons/MeV");
     sc_yield_cmd.SetParameterName("sc_yield", true);
     sc_yield_cmd.SetUnitCategory("1/Energy");
 
     G4GenericMessenger::Command& e_lifetime_cmd =
-      _msg->DeclareProperty("e_lifetime", _e_lifetime,
+      msg_->DeclareProperty("e_lifetime", e_lifetime_,
 			    "Electron lifetime in gas.");
     e_lifetime_cmd.SetParameterName("e_lifetime", false);
     e_lifetime_cmd.SetUnitCategory("Time");
     e_lifetime_cmd.SetRange("e_lifetime>0.");
 
     G4GenericMessenger::Command&  specific_vertex_X_cmd =
-      _msg->DeclareProperty("specific_vertex_X", _specific_vertex_X,
+      msg_->DeclareProperty("specific_vertex_X", specific_vertex_X_,
                             "If region is AD_HOC, x coord of primary particles");
     specific_vertex_X_cmd.SetParameterName("specific_vertex_X", true);
     specific_vertex_X_cmd.SetUnitCategory("Length");
     G4GenericMessenger::Command&  specific_vertex_Y_cmd =
-      _msg->DeclareProperty("specific_vertex_Y", _specific_vertex_Y,
+      msg_->DeclareProperty("specific_vertex_Y", specific_vertex_Y_,
                             "If region is AD_HOC, y coord of primary particles");
     specific_vertex_Y_cmd.SetParameterName("specific_vertex_Y", true);
     specific_vertex_Y_cmd.SetUnitCategory("Length");
     G4GenericMessenger::Command&  specific_vertex_Z_cmd =
-      _msg->DeclareProperty("specific_vertex_Z", _specific_vertex_Z,
+      msg_->DeclareProperty("specific_vertex_Z", specific_vertex_Z_,
                             "If region is AD_HOC, z coord of primary particles");
     specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
     specific_vertex_Z_cmd.SetUnitCategory("Length");
 
-    _msg->DeclareProperty("gas", _gas, "Gas being used");
+    msg_->DeclareProperty("gas", gas_, "Gas being used");
 
 
-    _inner_elements = new Next100InnerElements();
+    inner_elements_ = new Next100InnerElements();
   }
 
 
@@ -110,24 +110,24 @@ namespace nexus {
 
   G4Material* gas_mat = nullptr;
 
-  if (_gas == "naturalXe") {
-    gas_mat = MaterialsList::GXe(_pressure, _temperature);
-    gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure,
-								       _temperature,
-								       _sc_yield,
-                                                                       _e_lifetime));
-  } else if (_gas == "enrichedXe") {
-    gas_mat =  MaterialsList::GXeEnriched(_pressure, _temperature);
-    gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure,
-								       _temperature,
-								       _sc_yield,
-                                                                       _e_lifetime));
-  } else if  (_gas == "depletedXe") {
-    gas_mat =  MaterialsList::GXeDepleted(_pressure, _temperature);
-    gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure,
-								       _temperature,
-								       _sc_yield,
-                                                                       _e_lifetime));
+  if (gas_ == "naturalXe") {
+    gas_mat = MaterialsList::GXe(pressure_, temperature_);
+    gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(pressure_,
+								       temperature_,
+								       sc_yield_,
+                                                                       e_lifetime_));
+  } else if (gas_ == "enrichedXe") {
+    gas_mat =  MaterialsList::GXeEnriched(pressure_, temperature_);
+    gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(pressure_,
+								       temperature_,
+								       sc_yield_,
+                                                                       e_lifetime_));
+  } else if  (gas_ == "depletedXe") {
+    gas_mat =  MaterialsList::GXeDepleted(pressure_, temperature_);
+    gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(pressure_,
+								       temperature_,
+								       sc_yield_,
+                                                                       e_lifetime_));
   }  else {
     G4Exception("[Next100OpticalGeometry]", "Construct()", FatalException,
                 "Unknown kind of gas, valid options are: naturalXe, enrichedXe, depletedXe.");
@@ -137,16 +137,16 @@ namespace nexus {
   G4Box* gas_solid = new G4Box("GAS", gas_size/2., gas_size/2., gas_size/2.);
   G4LogicalVolume* gas_logic = new G4LogicalVolume(gas_solid, gas_mat, "GAS");
 
-  _gate_zpos_in_gas = 0. * mm;
+  gate_zpos_in_gas_ = 0. * mm;
   G4VPhysicalVolume* gas_phys =
-    new G4PVPlacement(0, G4ThreeVector(0, 0, -_gate_zpos_in_gas), gas_logic,
+    new G4PVPlacement(0, G4ThreeVector(0, 0, -gate_zpos_in_gas_), gas_logic,
 		      "GAS", lab_logic, false, 0, false);
 
   ///INNER ELEMENTS
-  _inner_elements->SetLogicalVolume(gas_logic);
-  _inner_elements->SetPhysicalVolume(gas_phys);
-  _inner_elements->SetELzCoord(_gate_zpos_in_gas);
-  _inner_elements->Construct();
+  inner_elements_->SetLogicalVolume(gas_logic);
+  inner_elements_->SetPhysicalVolume(gas_phys);
+  inner_elements_->SetELzCoord(gate_zpos_in_gas_);
+  inner_elements_->Construct();
 
   // Visibilities
   gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
@@ -166,14 +166,14 @@ namespace nexus {
     if (region == "AD_HOC") {
       // AD_HOC does not need to be shifted because it is passed by the user
       vertex =
-	G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
+	G4ThreeVector(specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_);
       return vertex;
     }
     else {
-      vertex = _inner_elements->GenerateVertex(region);
+      vertex = inner_elements_->GenerateVertex(region);
     }
 
-    G4ThreeVector displacement = G4ThreeVector(0., 0., -_gate_zpos_in_gas);
+    G4ThreeVector displacement = G4ThreeVector(0., 0., -gate_zpos_in_gas_);
     vertex = vertex + displacement;
     return vertex;
   }

@@ -1,6 +1,10 @@
-### --------------------------------------------------------
-###  Example config macro for the geometry XeSphere.
-### --------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | XeSphere.mac
+##
+## Ancillary macro to set the parameters of the XeSphere geometry.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /Geometry/XeSphere/LXe false
 /Geometry/XeSphere/pressure 15. bar

@@ -1,3 +1,17 @@
+## ----------------------------------------------------------------------------
+## nexus | MagBox.init.mac
+##
+## Initialization macro to simulate single electrons in a magnetic detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+### PHYSICS
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics NexusPhysics
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 ### GEOMETRY
 /Geometry/RegisterGeometry MAG_BOX
@@ -10,12 +24,5 @@
 /Actions/RegisterEventAction DEFAULT
 /Actions/RegisterTrackingAction DEFAULT
 
-### PHYSICS
-/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
-/PhysicsList/RegisterPhysics NexusPhysics
-/PhysicsList/RegisterPhysics G4DecayPhysics
-/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
-/PhysicsList/RegisterPhysics G4StepLimiterPhysics
-
-### EXTRA CONFIGURATION
+### CONFIGURATION
 /nexus/RegisterMacro macros/MagBox.config.mac

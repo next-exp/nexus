@@ -1,3 +1,11 @@
+## ----------------------------------------------------------------------------
+## nexus | NEW_valid_K40.config.mac
+##
+## Configuration macro to simulate K-40 decays to test gamma
+## production in different versions of GEANT4.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 #VERBOSITY
 /run/verbose 1
@@ -10,9 +18,9 @@
 /Geometry/PmtR11410/SD_depth 4
 
 # GENERATION
-/Generator/IonGun/atomic_number 19
-/Generator/IonGun/mass_number 40
-/Generator/IonGun/region DICE_BOARD
+/Generator/IonGenerator/atomic_number 19
+/Generator/IonGenerator/mass_number 40
+/Generator/IonGenerator/region DICE_BOARD
 
 # PHYSICS
 /PhysicsList/Nexus/clustering          false

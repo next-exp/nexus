@@ -1,12 +1,10 @@
-// ---------------------------------------------------------------------------- 
-//  //
-//  \brief Point Sampler on the surface of a rectangular used for muon generation.
+// ----------------------------------------------------------------------------
+// nexus | MuonsPointSampler.cc
 //
-//  Author: Neus Lopez March <neus.lopez@ific.uv.es>
-//        
-//  Created: 30 Jan 2015
+// This class is a sampler of random uniform points in a rectangular surface,
+// with fixed y coordinate.
 //
-//  Copyright (c) 2015 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "MuonsPointSampler.h"
@@ -21,34 +19,34 @@
 namespace nexus {
 
   using namespace CLHEP;
-  
+
   MuonsPointSampler::MuonsPointSampler
   (G4double x, G4double yPoint, G4double z):
-    _x(x),_yPoint(yPoint),_z(z)
+    x_(x),yPoint_(yPoint),z_(z)
   {
   }
-  
-  
+
+
   G4ThreeVector MuonsPointSampler::GenerateVertex()
   {
-    
+
     // Get a random point in the surface of the muon plane
     G4ThreeVector point = GetXZPointInMuonsPlane();
-    
+
     return point;
   }
-  
+
   G4ThreeVector MuonsPointSampler::GetXZPointInMuonsPlane()
   {
-    
+
     // y is fixed
-    G4double x = -_x + G4UniformRand()*2*_x;
-    G4double z = -_z + G4UniformRand()*2*_z;
-    
-    G4ThreeVector mypoint(x, _yPoint, z);
-    
+    G4double x = -x_ + G4UniformRand()*2*x_;
+    G4double z = -z_ + G4UniformRand()*2*z_;
+
+    G4ThreeVector mypoint(x, yPoint_, z);
+
     // std::cout<<"Generating Muons in: "<<x<<" , "<<y<<" , "<<z<<std::endl;
     return mypoint;
   }
-  
+
 } // end namespace nexus

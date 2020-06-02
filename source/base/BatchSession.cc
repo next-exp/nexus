@@ -1,10 +1,11 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | BatchSession.cc
 //
-//  Author : <justo.martin-albo@ific.uv.es>    
-//  Created: 22 Mar 2013
+// This class is used to parse the configuration files and execute the commands
+// found in them. One of the features of this class, compared to the G4 one is
+// that an error is prompted when a parameter is not recognized.
 //
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "BatchSession.h"
@@ -37,32 +38,32 @@ static void Tokenize(const G4String& str, std::vector<G4String>& tokens)
     tokens.push_back(str.substr(pos0, pos-pos0));
     pos0 = str.find_first_not_of(delimiter, pos);
     pos = str.find_first_of(delimiter, pos0);
-  } 
+  }
 }
 
 
 
 BatchSession::BatchSession(G4String filename, G4String historyFile, G4UIsession* previous_session):
-  G4UIsession(),  _opened(false), _prev(previous_session), _history_opened(false)
+  G4UIsession(),  opened_(false), prev_(previous_session), history_opened_(false)
 {
-  _macrostream.open(filename.data(), std::ios::in);
+  macrostream_.open(filename.data(), std::ios::in);
 
-  if (_macrostream.fail()) {
+  if (macrostream_.fail()) {
     G4String msg = "Cannot open macro file " + filename;
     G4Exception("[BatchSession]", "BatchSession()", FatalException, msg);
-  } 
-  else {
-    _opened = true;
   }
-  
+  else {
+    opened_ = true;
+  }
+
   G4UImanager::GetUIpointer()-> SetSession(this);
 
   if (historyFile != "") {
-    if (!_history_opened) {
-      _history.open(historyFile, std::ofstream::out);
-      _history_opened = true;
+    if (!history_opened_) {
+      history_.open(historyFile, std::ofstream::out);
+      history_opened_ = true;
     } else {
-      _history.open(historyFile, std::ofstream::app);
+      history_.open(historyFile, std::ofstream::app);
     }
   }
 
@@ -72,8 +73,8 @@ BatchSession::BatchSession(G4String filename, G4String historyFile, G4UIsession*
 
 BatchSession::~BatchSession()
 {
-  if (_opened) _macrostream.close();
-  if (_history_opened) _history.close();
+  if (opened_) macrostream_.close();
+  if (history_opened_) history_.close();
 }
 
 
@@ -86,10 +87,10 @@ G4String BatchSession::ReadCommand()
 
   G4String cmdtotal = "";
   G4bool qcontinued = false;
-  
-  while (_macrostream.good()) {
 
-    _macrostream.getline(linebuf, BUFSIZE);
+  while (macrostream_.good()) {
+
+    macrostream_.getline(linebuf, BUFSIZE);
 
     G4String cmdline(linebuf);
 
@@ -130,20 +131,20 @@ G4String BatchSession::ReadCommand()
       cmdtotal+= " ";
     }
 
-    if (_history_opened) {
-      _history << cmdline << G4endl;
+    if (history_opened_) {
+      history_ << cmdline << G4endl;
     }
     if(qcontinued) continue; // read the next line
 
     if(cmdtotal.size() != 0) break;
-    if(_macrostream.eof()) break;
+    if(macrostream_.eof()) break;
   }
 
   // strip again
   cmdtotal= cmdtotal.strip(G4String::both);
 
   // finally,
-  if(_macrostream.eof() && cmdtotal.size()==0) {
+  if(macrostream_.eof() && cmdtotal.size()==0) {
     return "exit";
   }
 
@@ -184,10 +185,10 @@ G4int BatchSession::ExecCommand(const G4String& command)
 
 G4UIsession * BatchSession::SessionStart()
 {
-  if(!_opened) return _prev;
+  if(!opened_) return prev_;
 
   while(1) {
-   
+
     G4String newCommand = ReadCommand();
 
     if (newCommand == "exit") break;
@@ -208,7 +209,7 @@ G4UIsession * BatchSession::SessionStart()
     }
   }
 
-  return _prev;
+  return prev_;
 }
 
 

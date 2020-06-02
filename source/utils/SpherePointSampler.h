@@ -1,16 +1,13 @@
 // ----------------------------------------------------------------------------
-///  \file   SpherePointSampler.h
-///  \brief  Generator of random points in a sphere.
-///
-///  \author   Javier Muñoz Vidal <jmunoz@ific.uv.es>
-///  \date     24 November 2009
-///  \version  $Id$
-///
-///  Copyright (c) 2009 NEXT Collaboration
+// nexus | SpherePointSampler.h
+//
+// This class is a sampler of random uniform points in as sphere.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __SPHERE_POINT_SAMPLER__
-#define __SPHERE_POINT_SAMPLER__
+#ifndef SPHERE_POINT_SAMPLER
+#define SPHERE_POINT_SAMPLER
 
 #include <globals.hh>
 #include <G4ThreeVector.hh>
@@ -43,19 +40,19 @@ namespace nexus {
     G4double GetPhi();
     G4double GetTheta();
     G4ThreeVector RotateAndTranslate(G4ThreeVector position);
-    
+
   private:
     // Sphere dimensions
-    G4double _inner_rad, _outer_rad;
-    G4double _start_phi, _delta_phi;
-    G4double _start_theta, _delta_theta;
+    G4double inner_rad_, outer_rad_;
+    G4double start_phi_, delta_phi_;
+    G4double start_theta_, delta_theta_;
 
     // Needed constants
-    G4double _cos_start_theta, _diff_cos_thetas;
+    G4double cos_start_theta_, diff_cos_thetas_;
 
     // Origin & Rotation
-    G4ThreeVector     _origin;
-    G4RotationMatrix* _rotation;
+    G4ThreeVector     origin_;
+    G4RotationMatrix* rotation_;
 
   };
 

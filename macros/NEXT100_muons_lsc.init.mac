@@ -1,21 +1,11 @@
-###
-### This macro simulates muons according to the distribution
-### measured at LSC, in the NEXT100 geometry.
-###
-
-### GEOMETRY
-/Geometry/RegisterGeometry NEXT100
-
-
-### GENERATOR
-/Generator/RegisterGenerator LABMUON_GENERATOR
-
-
-### ACTIONS
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterRunAction DEFAULT
-
+## ----------------------------------------------------------------------------
+## nexus | NEXT100_muons_lsc.init.mac
+##
+## Initialization macro to simulate muons according to the distribution
+## measured at LSC, in the NEXT-100 geometry.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 ### PHYSICS
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -28,6 +18,17 @@
 /PhysicsList/RegisterPhysics G4IonPhysics
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
+
+### GEOMETRY
+/Geometry/RegisterGeometry NEXT100
+
+### GENERATOR
+/Generator/RegisterGenerator LAB_MUON
+
+### ACTIONS
+/Actions/RegisterTrackingAction DEFAULT
+/Actions/RegisterEventAction DEFAULT
+/Actions/RegisterRunAction DEFAULT
 
 /physics_lists/em/MuonNuclear true
 

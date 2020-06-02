@@ -1,11 +1,11 @@
 // -----------------------------------------------------------------------------
-//  nexus | Next100SiPMBoard.cc
+// nexus | Next100SiPMBoard.cc
 //
-//  Geometry of the NEXT-100 SiPM board, consisting of an 8x8 array of
-//  silicon photomultipliers (1.3x1.3 mm2 of active area) mounted on a Kapton
-//  board covered with a TPB-coated teflon mask.
+// Geometry of the NEXT-100 SiPM board, consisting of an 8x8 array of
+// silicon photomultipliers (1.3x1.3 mm2 of active area) mounted on a Kapton
+// board covered with a TPB-coated teflon mask.
 //
-//  The NEXT Collaboration
+// The NEXT Collaboration
 // -----------------------------------------------------------------------------
 
 #include "Next100SiPMBoard.h"
@@ -110,9 +110,9 @@ void Next100SiPMBoard::Construct()
                     mask_logic_vol, mask_name, board_logic_vol, false, 0, false);
 
   G4OpticalSurface* mask_opsurf =
-    new G4OpticalSurface(mask_name+"_OPSURF", unified, ground, dielectric_metal);
+    new G4OpticalSurface(mask_name+"OPSURF_", unified, ground, dielectric_metal);
   mask_opsurf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
-  new G4LogicalSkinSurface(mask_name+"_OPSURF", mask_logic_vol, mask_opsurf);
+  new G4LogicalSkinSurface(mask_name+"OPSURF_", mask_logic_vol, mask_opsurf);
 
 
   // WLS COATING /////////////////////////////////////////////////////
@@ -136,11 +136,11 @@ void Next100SiPMBoard::Construct()
                       false, 0, false);
 
   G4OpticalSurface* mask_wls_opsurf =
-    new G4OpticalSurface(mask_wls_name+"_OPSURF",
+    new G4OpticalSurface(mask_wls_name+"OPSURF_",
                          glisur, ground, dielectric_dielectric, .01);
-  new G4LogicalBorderSurface(mask_wls_name+"_OPSURF",
+  new G4LogicalBorderSurface(mask_wls_name+"OPSURF_",
                              mask_wls_phys_vol, mpv_, mask_wls_opsurf);
-  new G4LogicalBorderSurface(mask_wls_name+"_OPSURF",
+  new G4LogicalBorderSurface(mask_wls_name+"OPSURF_",
                              mpv_, mask_wls_phys_vol, mask_wls_opsurf);
 
 

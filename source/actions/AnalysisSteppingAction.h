@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
-///  \file   DefaultSteppingAction.h
-///  \brief  General-purpose user stepping action.
-///
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     24 August 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// nexus | AnalysisSteppingAction.h
+//
+// This class allows the user to print the total number of photons detected by
+// all kinds of photosensors at the end of the run.
+// It also shows examples of information that can be accessed at the stepping
+// level, so it is useful for debugging.
+//
+// The  NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef ANALYSIS_STEPPING_ACTION_H
@@ -35,7 +35,7 @@ namespace nexus {
 
   private:
     typedef std::map<G4String, int> detectorCounts;
-    detectorCounts my_counts;
+    detectorCounts my_counts_;
   };
 
 } // namespace nexus

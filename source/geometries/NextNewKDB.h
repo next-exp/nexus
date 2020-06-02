@@ -1,13 +1,11 @@
-// ----------------------------------------------------------------------------
-///  \file   NextNewKDB.h
-///  \brief  Geometry of the Kapton Dice Boards used in the NEW detector.
-///
-///  \author  <miquel.nebot@ific.uv.es>
-///  \date    18 Sept 2013
-///  \version $Id$
+// -----------------------------------------------------------------------------
+// nexus | NextNewKDB.h
 //
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
-// ----------------------------------------------------------------------------
+// Dice board of the NEXT-WHITE detector. It consists of an 8x8 array of
+// SensL SiPMs on a kapton board.
+//
+// The NEXT Collaboration
+// -----------------------------------------------------------------------------
 
 #ifndef NEXT_NEW_KDB_H
 #define NEXT_NEW_KDB_H
@@ -42,25 +40,25 @@ namespace nexus {
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
   private:
-    G4int _rows, _columns;
-    //G4double _support_thickness;
-    G4ThreeVector _dimensions;
-    std::vector<std::pair<int, G4ThreeVector> > _positions;
+    G4int rows_, columns_;
+    //G4double support_thickness_;
+    G4ThreeVector dimensions_;
+    std::vector<std::pair<int, G4ThreeVector> > positions_;
 
     // Neighbour gas logical volume
-    G4LogicalVolume* _mother_logic;
- 
+    G4LogicalVolume* mother_logic_;
+
     // Visibility of the shielding
-    G4bool _visibility;
-    
+    G4bool visibility_;
+
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
 
     // Instance of the SiPM class
-    SiPMSensl* _sipm;
+    SiPMSensl* sipm_;
 
     // Vertex generator
-    BoxPointSampler* _dice_gen;
+    BoxPointSampler* dice_gen_;
 
   };
 

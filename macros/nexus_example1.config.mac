@@ -1,17 +1,20 @@
-### -----------------------------------------------------------
-###  Example 1: Configuration macro
-###  This macros simulates an individual electron in a sphere
-###  filled with xenon
-### -----------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | nexus_example1.config.mac
+##
+## Configuration macro to simulate individual particles
+## in a sphere of xenon.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
 
 /control/execute macros/geometries/XeSphere.mac
 
 /control/execute macros/generators/SingleParticle.mac
 
 /control/execute macros/physics/IonizationElectron.mac
-
-/run/verbose 0
-/event/verbose 0
-/tracking/verbose 0
 
 /nexus/persistency/outputFile nexus.next

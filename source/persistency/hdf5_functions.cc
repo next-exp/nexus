@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------
+// nexus | hdf5_functions.cc
+//
+// Collection of functions to create h5 tables for nexus output.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #include "hdf5_functions.h"
 
 hsize_t createRunType()

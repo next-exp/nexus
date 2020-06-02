@@ -1,13 +1,16 @@
-### --------------------------------------------------------
-### Example to run the muons generator 
-### Author: Neus Lopez March <neus.lopez@ific.uv.es>    
-### date: 30 Jan 2014
-### --------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | DEMO_muons.init.mac
+##
+## Initialization macro to simulate muons in the NEXT-DEMO detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /control/execute macros/physics/DefaultPhysicsList.mac
 
 /Geometry/RegisterGeometry NEXT1_EL
-/Generator/RegisterGenerator MUON_GENERATOR
+
+/Generator/RegisterGenerator MUON
 
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction MUONS

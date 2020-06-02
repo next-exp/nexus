@@ -1,12 +1,10 @@
-// -----------------------------------------------------------------------------
-//  nexus | OpticalMaterialProperties.cc
+// ----------------------------------------------------------------------------
+// nexus | OpticalMaterialProperties.cc
 //
-//  * Info:         : Optical properties of relevant materials.
-//  * Author        : <jmunoz@ific.uv.es>
-//  *                 <paola.ferrario@dipc.org>
-//  *                 <justo.martin-albo@ific.uv.es>
-//  * Creation date : February 2020
-// -----------------------------------------------------------------------------
+// Optical properties of relevant materials.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #include "OpticalMaterialProperties.h"
 #include "XenonGasProperties.h"
@@ -745,7 +743,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB()
   // Fig 11 -> WLS_absLength = 100 nm for wavelength = 270 nm
   // Values for wavelength shorter than 100 nm NOT included as they fit outside
   // the simulation energy limits set in the header.
-  
+
   //G4double WLS_abs_energy[] = {
   //  optPhotMinE_,                      h_Planck * c_light / (450. * nm),
   //  h_Planck * c_light / (440. * nm),  h_Planck * c_light / (430. * nm),

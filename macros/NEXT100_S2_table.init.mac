@@ -1,8 +1,11 @@
-### --------------------------------------------------------
-###  This init macro simulates tables of secondary scintillation light
-###  in the NEXT100 detector geometry
-###  $Id: jmunoz $
-### --------------------------------------------------------
+## ----------------------------------------------------------------------------
+## nexus | NEXT100_S2_table.init.mac
+##
+## Initialization macro to simulate secondary scintillation light
+## for look-up tables in the NEXT-100 detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
 
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
 /PhysicsList/RegisterPhysics G4DecayPhysics
@@ -11,7 +14,7 @@
 
 /Geometry/RegisterGeometry NEXT100_OPT
 
-/Generator/RegisterGenerator SCINTGENERATOR
+/Generator/RegisterGenerator SCINTILLATION
 
 /Actions/RegisterRunAction DEFAULT
 /Actions/RegisterEventAction EL_SIM
