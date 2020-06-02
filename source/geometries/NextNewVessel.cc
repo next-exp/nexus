@@ -155,7 +155,7 @@ namespace nexus {
 			  "Mass number for helium used, 3 or 4");
 
     // msg_->DeclareProperty("source", source_, "Radioactive source being used");
-    msg_->DeclareProperty("internalcalib_port_", calib_port_, "Calibration port being used");
+    msg_->DeclareProperty("internal_calib_port", calib_port_, "Calibration port being used");
 
     G4GenericMessenger::Command& source_dist_cmd =
       msg_->DeclareProperty("source_distance", source_distance_,

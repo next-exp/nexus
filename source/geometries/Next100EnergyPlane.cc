@@ -90,7 +90,7 @@ namespace nexus {
 				  "Control commands of geometry Next100.");
     msg_->DeclareProperty("energy_plane_vis", visibility_,
 			  "Energy Plane visibility");
-    msg_->DeclareProperty("energy_planeverbosity_", verbosity_,
+    msg_->DeclareProperty("energy_plane_verbosity", verbosity_,
 			  "Energy Plane verbosity");
 
     /// The PMT

@@ -110,9 +110,9 @@ void Next100SiPMBoard::Construct()
                     mask_logic_vol, mask_name, board_logic_vol, false, 0, false);
 
   G4OpticalSurface* mask_opsurf =
-    new G4OpticalSurface(mask_name+"OPSURF_", unified, ground, dielectric_metal);
+    new G4OpticalSurface(mask_name+"_OPSURF", unified, ground, dielectric_metal);
   mask_opsurf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
-  new G4LogicalSkinSurface(mask_name+"OPSURF_", mask_logic_vol, mask_opsurf);
+  new G4LogicalSkinSurface(mask_name+"_OPSURF", mask_logic_vol, mask_opsurf);
 
 
   // WLS COATING /////////////////////////////////////////////////////
@@ -136,11 +136,11 @@ void Next100SiPMBoard::Construct()
                       false, 0, false);
 
   G4OpticalSurface* mask_wls_opsurf =
-    new G4OpticalSurface(mask_wls_name+"OPSURF_",
+    new G4OpticalSurface(mask_wls_name+"_OPSURF",
                          glisur, ground, dielectric_dielectric, .01);
-  new G4LogicalBorderSurface(mask_wls_name+"OPSURF_",
+  new G4LogicalBorderSurface(mask_wls_name+"_OPSURF",
                              mask_wls_phys_vol, mpv_, mask_wls_opsurf);
-  new G4LogicalBorderSurface(mask_wls_name+"OPSURF_",
+  new G4LogicalBorderSurface(mask_wls_name+"_OPSURF",
                              mpv_, mask_wls_phys_vol, mask_wls_opsurf);
 
 
