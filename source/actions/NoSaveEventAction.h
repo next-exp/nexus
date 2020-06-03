@@ -1,16 +1,23 @@
-#ifndef __NOSAVE_EVENT_ACTION__
-#define __NOSAVE_EVENT_ACTION__
+// ----------------------------------------------------------------------------
+// nexus | NoSaveEventAction.h
+//
+// This event action saves no event information to file
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
+#ifndef NOSAVE_EVENT_ACTION_H
+#define NOSAVE_EVENT_ACTION_H
 
 #include <G4UserEventAction.hh>
 #include <globals.hh>
 
 class G4Event;
-class G4GenericMessenger;
 
 namespace nexus {
     
-  /// This class is a general-purpose event action, where all events are stored, not only
-  /// those that deposit some energy in the active volume. It is used mainly for EL table production
+  /// This class is an Event Action which forces nexus
+  /// Not to store any event information
   
   class NoSaveEventAction: public G4UserEventAction
   {

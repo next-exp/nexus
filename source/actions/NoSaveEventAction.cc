@@ -3,8 +3,6 @@
 #include "PersistencyManager.h"
 
 #include <G4Event.hh>
-#include <G4VVisManager.hh>
-#include <G4Trajectory.hh>
 
 
 namespace nexus {
