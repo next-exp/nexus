@@ -12,12 +12,17 @@ Caveats:
 2. Examples of config files only are not run, for the time being.
 """
 
-all_macros = np.array(glob.glob('macros/**/*.init.mac', recursive=True))
-full       = np.array(['full'  in m for m in all_macros])
-lu_table   = np.array(['table' in m for m in all_macros])
+@pytest.fixture(scope='module')
+def macro_list(NEXUSDIR):
 
-full_macros = all_macros[  full | lu_table]
-fast_macros = all_macros[~(full | lu_table)]
+    all_macros = np.array(glob.glob(NEXUSDIR + '/macros/**/*.init.mac', recursive=True))
+    full       = np.array(['full'  in m for m in all_macros])
+    lu_table   = np.array(['table' in m for m in all_macros])
+
+    full_macros = all_macros[  full | lu_table]
+    fast_macros = all_macros[~(full | lu_table)]
+
+    return fast_macros, full_macros
 
 
 def copy_and_modify_macro(config_tmpdir, output_tmpdir, init_macro):
@@ -57,34 +62,35 @@ def copy_and_modify_macro(config_tmpdir, output_tmpdir, init_macro):
     return cp_init_macro
 
 
-def execute_example_jobs(capsys, config_tmpdir, output_tmpdir, macro_list):
+def execute_example_jobs(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, macro_list):
     my_env = os.environ.copy()
 
     for macro in macro_list:
         init_macro = copy_and_modify_macro(config_tmpdir, output_tmpdir, macro)
-        command = ['nexus', '-b', '-n', '1', init_macro]
+        nexus_exe  = NEXUSDIR + '/bin/nexus'
+        command    = [nexus_exe, '-b', '-n', '1', init_macro]
         with capsys.disabled():
             print(f'Running {macro}')
         p  = subprocess.run(command, check=True, env=my_env)
 
 
 @pytest.mark.second_to_last
-def test_run_fast_examples(capsys, config_tmpdir, output_tmpdir):
+def test_run_fast_examples(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, macro_list):
     """Run fast simulation macros"""
 
     with capsys.disabled():
         print('')
         print(f'*** Fast simulations ***')
 
-    execute_example_jobs(capsys, config_tmpdir, output_tmpdir, fast_macros)
+    execute_example_jobs(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, macro_list[0])
 
 
 @pytest.mark.last
-def test_run_full_examples(capsys, config_tmpdir, output_tmpdir):
+def test_run_full_examples(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, macro_list):
     """Run full simulation macros"""
 
     with capsys.disabled():
         print('')
         print(f'*** Full simulations - some of them are slow ***')
 
-    execute_example_jobs(capsys, config_tmpdir, output_tmpdir, full_macros)
+    execute_example_jobs(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, macro_list[1])
