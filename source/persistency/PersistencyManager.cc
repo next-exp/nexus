@@ -44,14 +44,14 @@ PersistencyManager::PersistencyManager(G4String init_macro,
   interacting_evts_(0), pmt_bin_size_(-1), sipm_bin_size_(-1),
   nevt_(0), start_id_(0), first_evt_(true), h5writer_(0)
 {
-  _msg = new G4GenericMessenger(this, "/nexus/persistency/");
-  _msg->DeclareMethod("outputFile", &PersistencyManager::OpenFile, "");
-  _msg->DeclareProperty("eventType", event_type_,
+  msg_ = new G4GenericMessenger(this, "/nexus/persistency/");
+  msg_->DeclareMethod("outputFile", &PersistencyManager::OpenFile, "");
+  msg_->DeclareProperty("eventType", event_type_,
                         "Type of event: bb0nu, bb2nu or background.");
   msg_->DeclareProperty("start_id", start_id_,
                         "Starting event ID for this job.");
 
-  _secondary_macros.clear();
+  secondary_macros_.clear();
 }
 
 
@@ -79,7 +79,7 @@ void PersistencyManager::Initialize(G4String init_macro, std::vector<G4String>& 
   // in the leak of that object since the pointer will no longer be
   // accessible.)
   if (!current) current =
-                  new PersistencyManager(init_macro,macros, delayed_macros);
+                  new PersistencyManager(init_macro, macros, delayed_macros);
 }
 
 
@@ -280,8 +280,8 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
 
   std::string sdname = hits->GetSDname();
 
-  std::map<G4String, G4double>::const_iterator sensdet_it = _sensdet_bin.find(sdname);
-  if (sensdet_it == _sensdet_bin.end()) {
+  std::map<G4String, G4double>::const_iterator sensdet_it = sensdet_bin_.find(sdname);
+  if (sensdet_it == sensdet_bin_.end()) {
     for (G4int j=0; j<hits->entries(); j++) {
       PmtHit* hit = dynamic_cast<PmtHit*>(hits->GetHit(j));
       if (!hit) continue;
