@@ -267,7 +267,7 @@ G4Material* MaterialsList::GXeHe(G4double pressure,
 
 G4Material* MaterialsList::StandardRock(){
 
-  G4String name = "StandRock";
+  G4String name = "StandardRock";
 
   G4Material* mat = G4Material::GetMaterial(name, false);
 
