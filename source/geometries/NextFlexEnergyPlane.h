@@ -84,84 +84,84 @@ namespace nexus {
   private:
 
     // Logical volume where the class is placed
-    G4LogicalVolume* _mother_logic;
+    G4LogicalVolume* mother_logic_;
 
     // Physical volume of the neighbouring gas
-    G4VPhysicalVolume* _neigh_gas_phys;
+    G4VPhysicalVolume* neigh_gas_phys_;
 
     // Verbosity of the geometry
-    G4bool _verbosity;
+    G4bool verbosity_;
 
     // Visibilities
-    G4bool _visibility;
+    G4bool visibility_;
 
     // The messenger
-    G4GenericMessenger* _msg; // Messenger for configuration parameters
+    G4GenericMessenger* msg_; // Messenger for configuration parameters
 
    // Geometry Navigator
-    G4Navigator* _geom_navigator;
+    G4Navigator* geom_navigator_;
 
     // Energy Plane Configuration
-    G4bool _ep_with_PMTs;    // PMTs arranged ala NEXT100
-    G4bool _ep_with_teflon;  // Teflon mask to reflect light
+    G4bool ep_with_PMTs_;    // PMTs arranged ala NEXT100
+    G4bool ep_with_teflon_;  // Teflon mask to reflect light
 
     // Materials & Components
-    G4Material* _xenon_gas;
-    G4Material* _copper_mat;
-    G4Material* _teflon_mat;
-    G4Material* _sapphire_mat;
-    G4Material* _optical_pad_mat;
+    G4Material* xenon_gas_;
+    G4Material* copper_mat_;
+    G4Material* teflon_mat_;
+    G4Material* sapphire_mat_;
+    G4Material* optical_pad_mat_;
 
-    G4String    _wls_matName;
-    G4Material* _wls_mat;
+    G4String    wls_matName_;
+    G4Material* wls_mat_;
 
-    PmtR11410*  _pmt;
+    PmtR11410*  pmt_;
 
     // Dimensions & Positions
-    G4double _originZ;
-    G4double _diameter;
-    G4double _central_hole_diameter;
+    G4double originZ_;
+    G4double diameter_;
+    G4double central_hole_diameter_;
 
-    G4double _copper_iniZ;
-    G4double _copper_finZ;
-    G4double _teflon_iniZ;
-    G4double _pmt_iniZ;
+    G4double copper_iniZ_;
+    G4double copper_finZ_;
+    G4double teflon_iniZ_;
+    G4double pmt_iniZ_;
 
-    G4double _copper_thickness;
-    G4double _teflon_thickness;
-    G4double _wls_thickness;
+    G4double copper_thickness_;
+    G4double teflon_thickness_;
+    G4double wls_thickness_;
 
-    G4int                      _num_pmts;
-    std::vector<G4ThreeVector> _pmt_positions;
-    G4double                   _pmt_hole_diameter;
+    G4int                      num_pmts_;
+    std::vector<G4ThreeVector> pmt_positions_;
+    G4double                   pmt_hole_diameter_;
 
-    G4double _window_thickness;
-    G4double _optical_pad_thickness;
+    G4double window_thickness_;
+    G4double optical_pad_thickness_;
 
     // Sensor IDs
-    G4int _first_sensor_id;
+    G4int first_sensor_id_;
 
     // Vertex generators
-    CylinderPointSampler2020* _copper_gen;
-    CylinderPointSampler2020* _window_gen;
+    CylinderPointSampler2020* copper_gen_;
+    CylinderPointSampler2020* window_gen_;
 
   }; // class NextFlexEnergyPlane
 
 
   inline void NextFlexEnergyPlane::SetMotherLogicalVolume(G4LogicalVolume* mother_logic)
-    { _mother_logic = mother_logic; }
+    { mother_logic_ = mother_logic; }
 
   inline void NextFlexEnergyPlane::SetNeighGasPhysicalVolume(G4VPhysicalVolume* neigh_gas_phys)
-    { _neigh_gas_phys = neigh_gas_phys; }
+    { neigh_gas_phys_ = neigh_gas_phys; }
 
-  inline void NextFlexEnergyPlane::SetOriginZ(G4double posZ)  { _originZ = posZ;  }
+  inline void NextFlexEnergyPlane::SetOriginZ(G4double posZ)  { originZ_ = posZ;  }
 
-  inline void NextFlexEnergyPlane::SetDiameter(G4double diam) { _diameter = diam; }
+  inline void NextFlexEnergyPlane::SetDiameter(G4double diam) { diameter_ = diam; }
 
-  inline G4double NextFlexEnergyPlane::Get_EP_finZ() { return _copper_finZ; }
+  inline G4double NextFlexEnergyPlane::Get_EP_finZ() { return copper_finZ_; }
 
   inline void NextFlexEnergyPlane::SetFirstSensorID(const G4int first_id)
-    { _first_sensor_id = first_id; }
+    { first_sensor_id_ = first_id; }
 
 } // namespace nexus
 

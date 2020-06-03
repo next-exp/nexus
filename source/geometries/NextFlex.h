@@ -66,36 +66,36 @@ namespace nexus {
     const G4int FIRST_RIGHT_FIBER_SENSOR_ID = 20000;
 
     // Verbosity of the geometry
-    G4bool _verbosity;
+    G4bool verbosity_;
 
     // Visibility of the geometry
-    G4bool _ics_visibility;
+    G4bool ics_visibility_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
 
     // Materials
-    G4String    _gas_name;
-    G4double    _gas_pressure, _gas_temperature;
-    G4double    _sc_yield;
-    G4double    _e_lifetime;
-    G4Material* _xenon_gas;
-    G4Material* _copper_mat;
+    G4String    gas_name_;
+    G4double    gas_pressure_, gas_temperature_;
+    G4double    sc_yield_;
+    G4double    e_lifetime_;
+    G4Material* xenon_gas_;
+    G4Material* copper_mat_;
 
     // Dimensions
-    G4double _lightTube_ICS_gap;
-    G4double _ics_thickness;
+    G4double lightTube_ICS_gap_;
+    G4double ics_thickness_;
 
     // Detector parts
-    NextFlexFieldCage*     _field_cage;
-    NextFlexEnergyPlane*   _energy_plane;
-    NextFlexTrackingPlane* _tracking_plane;
+    NextFlexFieldCage*     field_cage_;
+    NextFlexEnergyPlane*   energy_plane_;
+    NextFlexTrackingPlane* tracking_plane_;
 
     // Vertex generators
-    CylinderPointSampler2020* _copper_gen;
+    CylinderPointSampler2020* copper_gen_;
 
     // AD-HOC vertex
-    G4double _adhoc_x, _adhoc_y, _adhoc_z;
+    G4double adhoc_x_, adhoc_y_, adhoc_z_;
   };
 
 } // end namespace nexus

@@ -83,81 +83,80 @@ namespace nexus {
   private:
 
     // Logical volume where the class is placed
-    G4LogicalVolume* _mother_logic;
+    G4LogicalVolume* mother_logic_;
 
     // Physical volume of the neighbouring gas
-    G4VPhysicalVolume* _neigh_gas_phys;
+    G4VPhysicalVolume* neigh_gas_phys_;
 
     // Verbosity of the geometry
-    G4bool _verbosity;
+    G4bool verbosity_;
 
     // Visibilities
-    G4bool _visibility;
+    G4bool visibility_;
 
     // The messenger
-    G4GenericMessenger* _msg; // Messenger for configuration parameters
+    G4GenericMessenger* msg_; // Messenger for configuration parameters
 
    // Geometry Navigator
-    G4Navigator* _geom_navigator;
+    G4Navigator* geom_navigator_;
 
     // Materials & Components
-    G4Material* _xenon_gas;
-    G4Material* _copper_mat;
-    G4Material* _teflon_mat;
+    G4Material* xenon_gas_;
+    G4Material* copper_mat_;
+    G4Material* teflon_mat_;
 
-    GenericPhotosensor* _SiPM;
+    GenericPhotosensor* SiPM_;
 
-    G4String    _wls_matName;
-    G4Material* _wls_mat;
+    G4String    wls_mat_name_;
+    G4Material* wls_mat_;
 
     // Dimensions & Positions
-    G4double _originZ;
-    G4double _diameter;
-    G4double _SiPM_ANODE_dist;
+    G4double origin_z_;
+    G4double diameter_;
+    G4double SiPM_ANODE_dist_;
 
-    G4double _SiPM_sizeX;
-    G4double _SiPM_sizeY;
-    //G4double _SiPM_thickness;
-    G4double _SiPM_case_thickness;
-    G4double _SiPM_pitchX;
-    G4double _SiPM_pitchY;
-    G4double _SiPM_binning;
-    G4double _num_SiPMs;
+    G4double SiPM_size_x_;
+    G4double SiPM_size_y_;
+    G4double SiPM_case_thickness_;
+    G4double SiPM_pitch_x_;
+    G4double SiPM_pitch_y_;
+    G4double SiPM_binning_;
+    G4double num_SiPMs_;
 
-    std::vector<G4ThreeVector> _SiPM_positions;
+    std::vector<G4ThreeVector> SiPM_positions_;
 
-    G4double _copper_thickness;
-    G4double _copper_iniZ;
+    G4double copper_thickness_;
+    G4double copper_iniZ_;
 
-    G4double _teflon_thickness;
-    G4double _teflon_hole_diam;
-    G4double _teflon_iniZ;
+    G4double teflon_thickness_;
+    G4double teflon_hole_diam_;
+    G4double teflon_iniZ_;
     
-    G4double _wls_thickness;
+    G4double wls_thickness_;
 
     // Sensor IDs
-    G4int _first_sensor_id;
+    G4int first_sensor_id_;
 
     // Vertex generators
-    CylinderPointSampler2020* _copper_gen;
+    CylinderPointSampler2020* copper_gen_;
 
   }; // class NextFlexTrackingPlane
 
 
   inline void NextFlexTrackingPlane::SetMotherLogicalVolume(G4LogicalVolume* mother_logic)
-    { _mother_logic = mother_logic; }
+    { mother_logic_ = mother_logic; }
 
   inline void NextFlexTrackingPlane::SetNeighGasPhysicalVolume(G4VPhysicalVolume* neigh_gas_phys)
-    { _neigh_gas_phys = neigh_gas_phys; }
+    { neigh_gas_phys_ = neigh_gas_phys; }
 
-  inline void NextFlexTrackingPlane::SetOriginZ(G4double posZ)  { _originZ = posZ;  }
+  inline void NextFlexTrackingPlane::SetOriginZ(G4double posZ)  { origin_z_ = posZ;  }
 
-  inline void NextFlexTrackingPlane::SetDiameter(G4double diam) { _diameter = diam; }
+  inline void NextFlexTrackingPlane::SetDiameter(G4double diam) { diameter_ = diam; }
 
-  inline G4double NextFlexTrackingPlane::Get_TP_iniZ() { return _copper_iniZ; }
+  inline G4double NextFlexTrackingPlane::Get_TP_iniZ() { return copper_iniZ_; }
 
   inline void NextFlexTrackingPlane::SetFirstSensorID(const G4int first_id)
-    { _first_sensor_id = first_id; }
+    { first_sensor_id_ = first_id; }
 
 } // namespace nexus
 

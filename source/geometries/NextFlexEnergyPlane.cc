@@ -40,38 +40,38 @@ using namespace nexus;
 
 NextFlexEnergyPlane::NextFlexEnergyPlane():
   BaseGeometry(),
-  _mother_logic      (nullptr),
-  _verbosity         (false),
-  _visibility        (false),
-  _msg               (nullptr),
-  _ep_with_PMTs      (true),    // Implement PMTs arranged ala NEXT100
-  _ep_with_teflon    (false),   // Implement a teflon mask to reflect light 
-  _wls_matName       ("TPB"),
-  _copper_thickness  (12 * cm)  // Thickness of the copper plate
+  mother_logic_      (nullptr),
+  verbosity_         (false),
+  visibility_        (false),
+  msg_               (nullptr),
+  ep_with_PMTs_      (true),    // Implement PMTs arranged ala NEXT100
+  ep_with_teflon_    (false),   // Implement a teflon mask to reflect light 
+  wls_matName_       ("TPB"),
+  copper_thickness_  (12 * cm)  // Thickness of the copper plate
 {
 
   // Messenger
-  _msg = new G4GenericMessenger(this, "/Geometry/NextFlex/",
+  msg_ = new G4GenericMessenger(this, "/Geometry/NextFlex/",
                                 "Control commands of the NextFlex geometry.");
 
   // Parametrized dimensions
   DefineConfigurationParameters();
 
   // Hard-wired dimensions & components
-  _central_hole_diameter = 12. * mm;
+  central_hole_diameter_ = 12. * mm;
 
-  _teflon_thickness = 5. * mm;
-  _wls_thickness    = 1. * um;
+  teflon_thickness_ = 5. * mm;
+  wls_thickness_    = 1. * um;
 
-  _pmt               = new PmtR11410();
-  _num_pmts          = 60;        // It must be the number of PMTs in NEXT100
-  _pmt_hole_diameter = 84. * mm;  // It must be bigger than PMT diameter (84mm in NEXT100)
+  pmt_               = new PmtR11410();
+  num_pmts_          = 60;        // It must be the number of PMTs in NEXT100
+  pmt_hole_diameter_ = 84. * mm;  // It must be bigger than PMT diameter (84mm in NEXT100)
 
-  _window_thickness      = 6.0 * mm;
-  _optical_pad_thickness = 1.0 * mm;
+  window_thickness_      = 6.0 * mm;
+  optical_pad_thickness_ = 1.0 * mm;
 
   // Initializing the geometry navigator (used in vertex generation)
-  _geom_navigator =
+  geom_navigator_ =
     G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
 }
 
@@ -79,9 +79,9 @@ NextFlexEnergyPlane::NextFlexEnergyPlane():
 
 NextFlexEnergyPlane::~NextFlexEnergyPlane()
 {
-  delete _msg;
-  delete _copper_gen;
-  if (_ep_with_PMTs) delete _window_gen;
+  delete msg_;
+  delete copper_gen_;
+  if (ep_with_PMTs_) delete window_gen_;
 }
 
 
@@ -89,25 +89,25 @@ NextFlexEnergyPlane::~NextFlexEnergyPlane()
 void NextFlexEnergyPlane::DefineConfigurationParameters()
 {
   // Verbosity
-  _msg->DeclareProperty("ep_verbosity", _verbosity, "Verbosity");
+  msg_->DeclareProperty("ep_verbosity", verbosity_, "Verbosity");
 
   // Visibility
-  _msg->DeclareProperty("ep_visibility", _visibility, "ENERGY_PLANE Visibility");
+  msg_->DeclareProperty("ep_visibility", visibility_, "ENERGY_PLANE Visibility");
 
   // ENERGY_PLANE configuration
-  _msg->DeclareProperty("ep_with_PMTs"  , _ep_with_PMTs  , "ENERGY_PLANE with PMTs");
-  _msg->DeclareProperty("ep_with_teflon", _ep_with_teflon, "ENERGY_PLANE with teflon");
+  msg_->DeclareProperty("ep_with_PMTs"  , ep_with_PMTs_  , "ENERGY_PLANE with PMTs");
+  msg_->DeclareProperty("ep_with_teflon", ep_with_teflon_, "ENERGY_PLANE with teflon");
 
   // Copper dimensions
   G4GenericMessenger::Command& copper_thickness_cmd =
-    _msg->DeclareProperty("ep_copper_thickness", _copper_thickness,
+    msg_->DeclareProperty("ep_copper_thickness", copper_thickness_,
                           "Thickness of the EP Copper plate.");
   copper_thickness_cmd.SetParameterName("ep_copper_thickness", false);
   copper_thickness_cmd.SetUnitCategory("Length");
   copper_thickness_cmd.SetRange("ep_copper_thickness>=0.");
 
   // UV shifting material
-  _msg->DeclareProperty("ep_wls_mat", _wls_matName,
+  msg_->DeclareProperty("ep_wls_mat", wls_matName_,
                         "EP UV wavelength shifting material name");
 }
 
@@ -115,20 +115,20 @@ void NextFlexEnergyPlane::DefineConfigurationParameters()
 
 void NextFlexEnergyPlane::ComputeDimensions()
 {
-  _copper_iniZ = _originZ;
-  _teflon_iniZ = _originZ;
-  _pmt_iniZ    = _originZ;
+  copper_iniZ_ = originZ_;
+  teflon_iniZ_ = originZ_;
+  pmt_iniZ_    = originZ_;
 
   // Shifting Copper placement in case of teflon
-  if (_ep_with_teflon) _copper_iniZ += _teflon_thickness;
+  if (ep_with_teflon_) copper_iniZ_ += teflon_thickness_;
 
   // If there are PMTs (for comparison with Next100) generate their positions
   // and position components accordingly
-  if (_ep_with_PMTs) {
+  if (ep_with_PMTs_) {
     GeneratePMTpositions();
 
-    _copper_iniZ = _pmt_iniZ + 9. * mm;
-    if (_ep_with_teflon) _teflon_iniZ = _copper_iniZ - _teflon_thickness;
+    copper_iniZ_ = pmt_iniZ_ + 9. * mm;
+    if (ep_with_teflon_) teflon_iniZ_ = copper_iniZ_ - teflon_thickness_;
   }
 
 }
@@ -138,34 +138,34 @@ void NextFlexEnergyPlane::ComputeDimensions()
 void NextFlexEnergyPlane::DefineMaterials()
 {
   // Xenon
-  _xenon_gas = _mother_logic->GetMaterial();
+  xenon_gas_ = mother_logic_->GetMaterial();
 
   // Copper
-  _copper_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
+  copper_mat_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
 
   // Teflon
-  _teflon_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+  teflon_mat_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
 
   // Sapphire
-  _sapphire_mat = MaterialsList::Sapphire();
-  _sapphire_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::Sapphire());
+  sapphire_mat_ = MaterialsList::Sapphire();
+  sapphire_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::Sapphire());
 
   // Optical coupler
-  _optical_pad_mat = MaterialsList::OpticalSilicone();
-  _optical_pad_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::OptCoupler());
+  optical_pad_mat_ = MaterialsList::OpticalSilicone();
+  optical_pad_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::OptCoupler());
 
 
   // UV shifting material
-  if (_wls_matName == "NONE") {
-    _wls_mat = _mother_logic->GetMaterial();
+  if (wls_matName_ == "NONE") {
+    wls_mat_ = mother_logic_->GetMaterial();
   }
-  else if (_wls_matName == "TPB") {
-    _wls_mat = MaterialsList::TPB();
-    _wls_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+  else if (wls_matName_ == "TPB") {
+    wls_mat_ = MaterialsList::TPB();
+    wls_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
   }
-  else if (_wls_matName == "TPH") {
-    _wls_mat = MaterialsList::TPH();
-    _wls_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::TPH());
+  else if (wls_matName_ == "TPH") {
+    wls_mat_ = MaterialsList::TPH();
+    wls_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::TPH());
   }
   else {
     G4Exception("[NextFlex]", "EnergyPlane::DefineMaterials()", FatalException,
@@ -178,15 +178,15 @@ void NextFlexEnergyPlane::DefineMaterials()
 void NextFlexEnergyPlane::Construct()
 {
   // Make sure that the pointer to the mother volume is actually defined
-  if (!_mother_logic)
+  if (!mother_logic_)
     G4Exception("[NextFlexEnergyPlane]", "Construct()",
                 FatalException, "Mother volume is a nullptr.");
 
   // Verbosity
-  if(_verbosity) {
+  if(verbosity_) {
     G4cout << G4endl << "*** NEXT-Flex Energy Plane ..." << G4endl;
-    G4cout << "* With PMTs:   " << _ep_with_PMTs   << G4endl;
-    G4cout << "* With teflon: " << _ep_with_teflon << G4endl;
+    G4cout << "* With PMTs:   " << ep_with_PMTs_   << G4endl;
+    G4cout << "* With teflon: " << ep_with_teflon_ << G4endl;
   }
 
   // Getting volumes dimensions based on parameters.
@@ -199,10 +199,10 @@ void NextFlexEnergyPlane::Construct()
   BuildCopper();
 
   // Teflon
-  if (_ep_with_teflon) { BuildTeflon(); }
+  if (ep_with_teflon_) { BuildTeflon(); }
 
   // PMTs
-  if (_ep_with_PMTs) { BuildPMTs(); }
+  if (ep_with_PMTs_) { BuildPMTs(); }
 }
 
 
@@ -211,35 +211,35 @@ void NextFlexEnergyPlane::BuildCopper()
 {
   G4String copper_name = "EP_COPPER";
 
-  G4double copper_posZ = _copper_iniZ + _copper_thickness/2.;
-  _copper_finZ         = _copper_iniZ + _copper_thickness;
+  G4double copper_posZ = copper_iniZ_ + copper_thickness_/2.;
+  copper_finZ_         = copper_iniZ_ + copper_thickness_;
 
   G4Tubs* copper_solid_no_holes =
-    new G4Tubs(copper_name, 0., _diameter/2., _copper_thickness/2., 0, twopi);
+    new G4Tubs(copper_name, 0., diameter_/2., copper_thickness_/2., 0, twopi);
 
   G4SubtractionSolid* copper_solid = MakeHoles(copper_solid_no_holes);
 
   G4LogicalVolume* copper_logic =
-    new G4LogicalVolume(copper_solid, _copper_mat, copper_name);  
+    new G4LogicalVolume(copper_solid, copper_mat_, copper_name);  
 
   //G4VPhysicalVolume* copper_phys =
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., copper_posZ), copper_logic,
-                    copper_name, _mother_logic, false, 0, _verbosity);
+                    copper_name, mother_logic_, false, 0, verbosity_);
 
   // Vertex generator
-  //_copper_gen = new CylinderPointSampler2020(copper_phys);
-  _copper_gen = new CylinderPointSampler2020(0., _diameter/2., _copper_thickness/2.,
+  //copper_gen_ = new CylinderPointSampler2020(copper_phys);
+  copper_gen_ = new CylinderPointSampler2020(0., diameter_/2., copper_thickness_/2.,
                                              0, twopi, nullptr,
                                              G4ThreeVector(0., 0., copper_posZ));
 
   // Visibility
-  if (_visibility) copper_logic->SetVisAttributes(nexus::CopperBrown());
+  if (visibility_) copper_logic->SetVisAttributes(nexus::CopperBrown());
   else             copper_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
   // Verbosity
-  if (_verbosity) {
-    G4cout << "* EP Copper Z positions: " << _copper_iniZ
-           << " to " << _copper_finZ << G4endl;
+  if (verbosity_) {
+    G4cout << "* EP Copper Z positions: " << copper_iniZ_
+           << " to " << copper_finZ_ << G4endl;
   }
 }
 
@@ -250,19 +250,19 @@ void NextFlexEnergyPlane::BuildTeflon()
   /// The teflon ///
   G4String teflon_name = "EP_TEFLON";
 
-  G4double teflon_posZ = _teflon_iniZ + _teflon_thickness/2.;
+  G4double teflon_posZ = teflon_iniZ_ + teflon_thickness_/2.;
 
   G4Tubs* teflon_solid_no_holes =
-    new G4Tubs(teflon_name, 0., _diameter/2., _teflon_thickness/2., 0, twopi);
+    new G4Tubs(teflon_name, 0., diameter_/2., teflon_thickness_/2., 0, twopi);
 
   G4SubtractionSolid* teflon_solid =MakeHoles(teflon_solid_no_holes);
 
   G4LogicalVolume* teflon_logic =
-    new G4LogicalVolume(teflon_solid, _teflon_mat, teflon_name);
+    new G4LogicalVolume(teflon_solid, teflon_mat_, teflon_name);
 
   //G4VPhysicalVolume* teflon_phys =
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., teflon_posZ), teflon_logic,
-                    teflon_name, _mother_logic, false, 0, _verbosity);
+                    teflon_name, mother_logic_, false, 0, verbosity_);
 
   // Adding the optical surface
   G4OpticalSurface* teflon_optSurf = 
@@ -276,19 +276,19 @@ void NextFlexEnergyPlane::BuildTeflon()
   /// The UV wavelength Shifter in TEFLON ///
   G4String teflon_wls_name = "EP_TEFLON_WLS";
 
-  G4double teflon_wls_posZ = - _teflon_thickness/2. + _wls_thickness/2.;
+  G4double teflon_wls_posZ = - teflon_thickness_/2. + wls_thickness_/2.;
 
   G4Tubs* teflon_wls_solid_no_holes =
-    new G4Tubs(teflon_wls_name, 0., _diameter/2., _wls_thickness/2., 0, twopi);
+    new G4Tubs(teflon_wls_name, 0., diameter_/2., wls_thickness_/2., 0, twopi);
 
   G4SubtractionSolid* teflon_wls_solid = MakeHoles(teflon_wls_solid_no_holes);
 
   G4LogicalVolume* teflon_wls_logic =
-    new G4LogicalVolume(teflon_wls_solid, _wls_mat, teflon_wls_name);
+    new G4LogicalVolume(teflon_wls_solid, wls_mat_, teflon_wls_name);
 
   G4VPhysicalVolume* teflon_wls_phys =
     new G4PVPlacement(nullptr, G4ThreeVector(0., 0., teflon_wls_posZ), teflon_wls_logic,
-                      teflon_wls_name, teflon_logic, false, 0, _verbosity);
+                      teflon_wls_name, teflon_logic, false, 0, verbosity_);
 
   // Optical surface
   G4OpticalSurface* teflon_wls_optSurf =
@@ -296,13 +296,13 @@ void NextFlexEnergyPlane::BuildTeflon()
                          dielectric_dielectric, .01);
 
   new G4LogicalBorderSurface("TEFLON_WLS_GAS_OPSURF", teflon_wls_phys,
-                             _neigh_gas_phys, teflon_wls_optSurf);
-  new G4LogicalBorderSurface("GAS_TEFLON_WLS_OPSURF", _neigh_gas_phys,
+                             neigh_gas_phys_, teflon_wls_optSurf);
+  new G4LogicalBorderSurface("GAS_TEFLON_WLS_OPSURF", neigh_gas_phys_,
                              teflon_wls_phys, teflon_wls_optSurf);
 
 
   /// Visibility ///
-  if (_visibility) {
+  if (visibility_) {
     G4VisAttributes light_blue_col = nexus::LightBlue();
     light_blue_col.SetForceSolid(true);
     teflon_logic->SetVisAttributes(light_blue_col);
@@ -313,9 +313,9 @@ void NextFlexEnergyPlane::BuildTeflon()
 
 
   /// Verbosity ///
-  if (_verbosity) {
-    G4cout << "* EP Teflon Z positions: " << _teflon_iniZ
-           << " to " << _teflon_iniZ + _teflon_thickness << G4endl;
+  if (verbosity_) {
+    G4cout << "* EP Teflon Z positions: " << teflon_iniZ_
+           << " to " << teflon_iniZ_ + teflon_thickness_ << G4endl;
   } 
 }
 
@@ -331,50 +331,50 @@ void NextFlexEnergyPlane::BuildPMTs()
 
   // It must be at least the copper plate thickness
   // and enough to accomodate the overall PMTs stuff
-  G4double pmt_hole_length = _copper_thickness + 50 * mm;
+  G4double pmt_hole_length = copper_thickness_ + 50 * mm;
 
   G4Tubs* pmt_hole_solid =
-    new G4Tubs(pmt_hole_name, 0., _pmt_hole_diameter/2., pmt_hole_length/2., 0, twopi);
+    new G4Tubs(pmt_hole_name, 0., pmt_hole_diameter_/2., pmt_hole_length/2., 0, twopi);
 
   G4LogicalVolume* pmt_hole_logic =
-    new G4LogicalVolume(pmt_hole_solid, _xenon_gas, pmt_hole_name);
+    new G4LogicalVolume(pmt_hole_solid, xenon_gas_, pmt_hole_name);
 
 
   /// Sapphire window ///
   G4String window_name = "EP_WINDOW";
 
-  G4double window_posz = - pmt_hole_length/2. + _window_thickness/2.;
+  G4double window_posz = - pmt_hole_length/2. + window_thickness_/2.;
 
   G4Tubs* window_solid =
-    new G4Tubs(window_name, 0., _pmt_hole_diameter/2., _window_thickness/2., 0, twopi);
+    new G4Tubs(window_name, 0., pmt_hole_diameter_/2., window_thickness_/2., 0, twopi);
 
   G4LogicalVolume* window_logic =
-    new G4LogicalVolume(window_solid, _sapphire_mat, window_name);
+    new G4LogicalVolume(window_solid, sapphire_mat_, window_name);
 
   //G4VPhysicalVolume* window_phys =
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., window_posz), window_logic,
-                    window_name, pmt_hole_logic, false, 0, _verbosity);
+                    window_name, pmt_hole_logic, false, 0, verbosity_);
 
   // Vextex generator
-  _window_gen =
-    new CylinderPointSampler2020(0., _pmt_hole_diameter/2., _window_thickness/2., 0., twopi,
-                                 nullptr, G4ThreeVector(0., 0., _window_thickness/2.));
+  window_gen_ =
+    new CylinderPointSampler2020(0., pmt_hole_diameter_/2., window_thickness_/2., 0., twopi,
+                                 nullptr, G4ThreeVector(0., 0., window_thickness_/2.));
 
 
   /// TPB coating on windows ///
   G4String window_wls_name = "EP_WINDOW_WLS";
 
-  G4double window_wls_posz = - _window_thickness/2. + _wls_thickness/2.;
+  G4double window_wls_posz = - window_thickness_/2. + wls_thickness_/2.;
 
   G4Tubs* window_wls_solid =
-    new G4Tubs(window_wls_name, 0., _pmt_hole_diameter/2., _wls_thickness/2., 0, twopi);
+    new G4Tubs(window_wls_name, 0., pmt_hole_diameter_/2., wls_thickness_/2., 0, twopi);
 
   G4LogicalVolume* window_wls_logic =
-    new G4LogicalVolume(window_wls_solid, _wls_mat, window_wls_name);
+    new G4LogicalVolume(window_wls_solid, wls_mat_, window_wls_name);
 
   //G4VPhysicalVolume* window_wls_phys =
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., window_wls_posz), window_wls_logic,
-                    window_wls_name, window_logic, false, 0, _verbosity);
+                    window_wls_name, window_logic, false, 0, verbosity_);
 
   // Optical surface
   G4OpticalSurface* window_wls_optSurf = 
@@ -386,50 +386,50 @@ void NextFlexEnergyPlane::BuildPMTs()
   /// Optical pad ///
   G4String optical_pad_name = "OPTICAL_PAD";
 
-  G4double optical_posz = - pmt_hole_length/2. + _window_thickness
-                          + _optical_pad_thickness/2.;
+  G4double optical_posz = - pmt_hole_length/2. + window_thickness_
+                          + optical_pad_thickness_/2.;
 
   G4Tubs* optical_pad_solid =
-    new G4Tubs(optical_pad_name, 0., _pmt_hole_diameter/2., _optical_pad_thickness/2., 0, twopi);
+    new G4Tubs(optical_pad_name, 0., pmt_hole_diameter_/2., optical_pad_thickness_/2., 0, twopi);
 
   G4LogicalVolume* optical_pad_logic =
-    new G4LogicalVolume(optical_pad_solid, _optical_pad_mat, optical_pad_name);
+    new G4LogicalVolume(optical_pad_solid, optical_pad_mat_, optical_pad_name);
 
   //G4VPhysicalVolume* optical_pad_phys =
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., optical_posz), optical_pad_logic,
-                    optical_pad_name, pmt_hole_logic, false, 0, _verbosity);
+                    optical_pad_name, pmt_hole_logic, false, 0, verbosity_);
 
 
   /// PMT ///
   G4String pmt_name = "PMT";
 
-  _pmt->Construct();
+  pmt_->Construct();
   
-  G4double pmt_posz = - pmt_hole_length/2.     + _window_thickness
-                      + _optical_pad_thickness + _pmt->GetRelPosition().z();
+  G4double pmt_posz = - pmt_hole_length/2.     + window_thickness_
+                      + optical_pad_thickness_ + pmt_->GetRelPosition().z();
 
-  G4LogicalVolume* pmt_logic = _pmt->GetLogicalVolume();
+  G4LogicalVolume* pmt_logic = pmt_->GetLogicalVolume();
 
   G4RotationMatrix* pmt_rot = new G4RotationMatrix();
   pmt_rot->rotateY(pi);
   new G4PVPlacement(pmt_rot, G4ThreeVector(0., 0., pmt_posz), pmt_logic,
-                    pmt_name, pmt_hole_logic, false, 0, _verbosity);
+                    pmt_name, pmt_hole_logic, false, 0, verbosity_);
 
 
   /// Placing the encapsulating volumes ///
-  G4double hole_posZ = _pmt_iniZ + pmt_hole_length/2.;
+  G4double hole_posZ = pmt_iniZ_ + pmt_hole_length/2.;
   G4ThreeVector pmt_hole_pos;
-  for (int pmt_id=0; pmt_id < _num_pmts; pmt_id++) {
+  for (int pmt_id=0; pmt_id < num_pmts_; pmt_id++) {
   //for (int pmt_id=0; pmt_id < 40; pmt_id++) {
-    pmt_hole_pos = _pmt_positions[pmt_id];
+    pmt_hole_pos = pmt_positions_[pmt_id];
     pmt_hole_pos.setZ(hole_posZ);
     new G4PVPlacement(nullptr, pmt_hole_pos, pmt_hole_logic, pmt_hole_name,
-                      _mother_logic, false, _first_sensor_id + pmt_id, false);
+                      mother_logic_, false, first_sensor_id_ + pmt_id, false);
   }
 
 
   /// Visibility ///
-  if (_visibility) {
+  if (visibility_) {
     G4VisAttributes blue_col = nexus::Lilla();
     blue_col.SetForceSolid(true);
     window_logic->SetVisAttributes(blue_col);
@@ -460,8 +460,8 @@ void NextFlexEnergyPlane::GeneratePMTpositions()
       G4double angle = place * step;
       position.setX(radius * cos(angle*deg));
       position.setY(radius * sin(angle*deg));
-      position.setZ(_pmt_iniZ);
-      _pmt_positions.push_back(position);
+      position.setZ(pmt_iniZ_);
+      pmt_positions_.push_back(position);
     }
 
     for (G4int i=1; i<circle; i++) {
@@ -473,24 +473,24 @@ void NextFlexEnergyPlane::GeneratePMTpositions()
         G4double angle = start_angle + place * step;
         position.setX(radius * cos(angle * deg));
         position.setY(radius * sin(angle * deg));
-        position.setZ(_pmt_iniZ);
-        _pmt_positions.push_back(position);
+        position.setZ(pmt_iniZ_);
+        pmt_positions_.push_back(position);
       }
     }
   }
 
   // Checking
-  if ((G4int) _pmt_positions.size() != _num_pmts) {
+  if ((G4int) pmt_positions_.size() != num_pmts_) {
     G4cout << "\nERROR: Number of PMTs doesn't match with number of positions calculated\n";
-    G4cout << "Num. PMTs = " << _num_pmts << ", Num. positions = "
-           << _pmt_positions.size() << G4endl;
+    G4cout << "Num. PMTs = " << num_pmts_ << ", Num. positions = "
+           << pmt_positions_.size() << G4endl;
     exit(0);
   }
 
-  if (_verbosity) {
-    G4cout << "* Total num PMTs: " << _pmt_positions.size() << G4endl;
-    for (int pmt_id=0; pmt_id < _num_pmts; pmt_id++)
-      G4cout << "* PMT " << pmt_id << " position: " << _pmt_positions[pmt_id] << G4endl;
+  if (verbosity_) {
+    G4cout << "* Total num PMTs: " << pmt_positions_.size() << G4endl;
+    for (int pmt_id=0; pmt_id < num_pmts_; pmt_id++)
+      G4cout << "* PMT " << pmt_id << " position: " << pmt_positions_[pmt_id] << G4endl;
   }
 }
 
@@ -501,7 +501,7 @@ G4SubtractionSolid* NextFlexEnergyPlane::MakeHoles(G4Tubs*  ini_solid)
 {
 
   // Making the central gas hole
-  G4Tubs* central_hole_solid = new G4Tubs("CENTRAL_HOLE", 0., _central_hole_diameter/2.,
+  G4Tubs* central_hole_solid = new G4Tubs("CENTRAL_HOLE", 0., central_hole_diameter_/2.,
                                           ini_solid->GetDz() + 1.*cm, 0., twopi);
 
   G4SubtractionSolid* solid_with_holes =
@@ -509,15 +509,15 @@ G4SubtractionSolid* NextFlexEnergyPlane::MakeHoles(G4Tubs*  ini_solid)
                            0, G4ThreeVector(0.,0.,0.));
 
   // If there are PMTs, make corresponding holes
-  if (_ep_with_PMTs) {
+  if (ep_with_PMTs_) {
 
     // Making the pmt hole
-    G4Tubs* pmt_hole_solid = new G4Tubs("PMT_HOLE", 0., _pmt_hole_diameter/2.,
+    G4Tubs* pmt_hole_solid = new G4Tubs("PMT_HOLE", 0., pmt_hole_diameter_/2.,
                                         ini_solid->GetDz() + 1.*cm, 0., twopi);
 
     // Substracting the holes
-    for (G4int i=0; i < _num_pmts; i++) {
-      G4ThreeVector pmt_hole_pos = _pmt_positions[i];
+    for (G4int i=0; i < num_pmts_; i++) {
+      G4ThreeVector pmt_hole_pos = pmt_positions_[i];
       pmt_hole_pos.setZ(0.);
       solid_with_holes = new G4SubtractionSolid(ini_solid->GetName(), solid_with_holes,
                                                 pmt_hole_solid, 0, pmt_hole_pos);
@@ -536,17 +536,17 @@ G4ThreeVector NextFlexEnergyPlane::GenerateVertex(const G4String& region) const
   if (region == "EP_COPPER") {
     G4VPhysicalVolume *VertexVolume;
     do {
-      vertex       = _copper_gen->GenerateVertex("VOLUME");
-      VertexVolume = _geom_navigator->LocateGlobalPointAndSetup(vertex, 0, false);
+      vertex       = copper_gen_->GenerateVertex("VOLUME");
+      VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(vertex, 0, false);
     } while (VertexVolume->GetName() != region);
   }
 
   else if (region == "EP_WINDOWS") {
-    vertex = _window_gen->GenerateVertex("VOLUME");
+    vertex = window_gen_->GenerateVertex("VOLUME");
     //G4cout << vertex << G4endl;
     // XY placement
-    G4double rand = _num_pmts * G4UniformRand();
-    G4ThreeVector window_pos = _pmt_positions[int(rand)];
+    G4double rand = num_pmts_ * G4UniformRand();
+    G4ThreeVector window_pos = pmt_positions_[int(rand)];
     vertex += window_pos;
     //G4cout << vertex << G4endl;
   }

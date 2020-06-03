@@ -84,122 +84,122 @@ namespace nexus {
   private:
 
     // Logical volume where the class is placed
-    G4LogicalVolume* _mother_logic;
+    G4LogicalVolume* mother_logic_;
 
     // Physical volumes
-    G4VPhysicalVolume* _active_phys;
-    G4VPhysicalVolume* _buffer_phys;
+    G4VPhysicalVolume* active_phys_;
+    G4VPhysicalVolume* buffer_phys_;
 
     // Verbosity of the geometry
-    G4bool _verbosity;
+    G4bool verbosity_;
 
     // Visibilities
-    G4bool _visibility;
+    G4bool visibility_;
 
     // The messenger
-    G4GenericMessenger* _msg; // Messenger for configuration parameters
+    G4GenericMessenger* msg_; // Messenger for configuration parameters
 
     // Energy Plane Configuration
-    G4bool _fc_with_fibers;
+    G4bool fc_with_fibers_;
 
     // ACTIVE
-    G4double _active_diam,       _active_length;
-    G4double _drift_transv_diff, _drift_long_diff;
+    G4double active_diam_,       active_length_;
+    G4double drift_transv_diff_, drift_long_diff_;
 
     // CATHODE
-    G4double _cathode_thickness, _cathode_transparency;
+    G4double cathode_thickness_, cathode_transparency_;
 
     // BUFFER
-    G4double _buffer_length;
-    G4double _buffer_finalZ;
+    G4double buffer_length_;
+    G4double buffer_finalZ_;
 
     // EL_GAP
-    G4double _el_gap_length;
-    G4bool   _el_field_on;
-    G4double _el_field_int;
-    G4double _el_transv_diff, _el_long_diff;
-    G4double _anode_thickness, _anode_transparency;
-    G4double _gate_thickness,  _gate_transparency;
+    G4double el_gap_length_;
+    G4bool   el_field_on_;
+    G4double el_field_int_;
+    G4double el_transv_diff_, el_long_diff_;
+    G4double anode_thickness_, anode_transparency_;
+    G4double gate_thickness_,  gate_transparency_;
 
     // LIGHT_TUBE
-    G4double _light_tube_thickness;
-    G4double _fc_length;
-    G4double _light_tube_inner_rad;
-    G4double _light_tube_outer_rad;
-    G4double _wls_thickness;
+    G4double light_tube_thickness_;
+    G4double fc_length_;
+    G4double light_tube_inner_rad_;
+    G4double light_tube_outer_rad_;
+    G4double wls_thickness_;
 
     // FIBERS
-    G4double _fiber_thickness;
-    G4int    _fiber_claddings;
-    G4double _fiber_extra_length;
-    G4double _fiber_inner_rad;
-    G4double _fiber_light_tube_gap;
-    G4double _cladding_perc;
-    G4double _fiber_iniZ;
-    G4double _fiber_finZ;
-    G4int    _num_fibers;
+    G4double fiber_thickness_;
+    G4int    fiber_claddings_;
+    G4double fiber_extra_length_;
+    G4double fiber_inner_rad_;
+    G4double fiber_light_tube_gap_;
+    G4double cladding_perc_;
+    G4double fiber_iniZ_;
+    G4double fiber_finZ_;
+    G4int    num_fibers_;
 
     // FIBER SENSORS
-    GenericPhotosensor* _left_sensor;
-    GenericPhotosensor* _right_sensor;
+    GenericPhotosensor* left_sensor_;
+    GenericPhotosensor* right_sensor_;
 
-    G4double _fiber_sensor_size;
-    G4double _fiber_sensor_thickness;
-    G4double _fiber_sensor_binning;
-    G4int    _num_fiber_sensors;
+    G4double fiber_sensor_size_;
+    G4double fiber_sensor_thickness_;
+    G4double fiber_sensor_binning_;
+    G4int    num_fiber_sensors_;
 
 
     // Materials
-    G4double    _gas_pressure, _gas_temperature;
-    G4Material* _xenon_gas;
+    G4double    gas_pressure_, gas_temperature_;
+    G4Material* xenon_gas_;
 
-    G4Material* _teflon_mat;
-    G4String    _wls_matName;
-    G4Material* _wls_mat;
-    G4Material* _cathode_mat;
-    G4Material* _gate_mat;
-    G4Material* _anode_mat;
-    G4String    _fiber_matName;
-    G4Material* _fiber_mat;
-    G4Material* _iClad_mat;
-    G4Material* _oClad_mat;
-    G4Material* _fiber_sensor_case_mat;
-    G4Material* _fiber_sensor_mat;
+    G4Material* teflon_mat_;
+    G4String    wls_mat_name_;
+    G4Material* wls_mat_;
+    G4Material* cathode_mat_;
+    G4Material* gate_mat_;
+    G4Material* anode_mat_;
+    G4String    fiber_mat_name_;
+    G4Material* fiber_mat_;
+    G4Material* iClad_mat_;
+    G4Material* oClad_mat_;
+    G4Material* fiber_sensor_case_mat_;
+    G4Material* fiber_sensor_mat_;
 
     // Sensor IDs
-    G4int _first_left_sensor_id;
-    G4int _first_right_sensor_id;
+    G4int first_left_sensor_id_;
+    G4int first_right_sensor_id_;
 
 
     // Vertex generators
-    CylinderPointSampler2020* _active_gen;
-    CylinderPointSampler2020* _buffer_gen;
-    CylinderPointSampler2020* _el_gap_gen;
-    CylinderPointSampler2020* _light_tube_gen;
-    CylinderPointSampler2020* _fiber_gen;
+    CylinderPointSampler2020* active_gen_;
+    CylinderPointSampler2020* buffer_gen_;
+    CylinderPointSampler2020* el_gap_gen_;
+    CylinderPointSampler2020* light_tube_gen_;
+    CylinderPointSampler2020* fiber_gen_;
 
   }; // class NextFlexFieldCage
 
 
   inline void NextFlexFieldCage::SetMotherLogicalVolume(G4LogicalVolume* mother_logic)
-    { _mother_logic = mother_logic; }
+    { mother_logic_ = mother_logic; }
 
   inline G4VPhysicalVolume* NextFlexFieldCage::Get_BUFFER_phys()
-    { return _buffer_phys; }
+    { return buffer_phys_; }
 
-  inline G4double NextFlexFieldCage::Get_ACTIVE_diam()   { return _active_diam; }
+  inline G4double NextFlexFieldCage::Get_ACTIVE_diam()   { return active_diam_; }
 
-  inline G4double NextFlexFieldCage::Get_FC_outer_rad()  { return _light_tube_outer_rad; }
+  inline G4double NextFlexFieldCage::Get_FC_outer_rad()  { return light_tube_outer_rad_; }
 
-  inline G4double NextFlexFieldCage::Get_BUFFER_finalZ() { return _buffer_finalZ; }
+  inline G4double NextFlexFieldCage::Get_BUFFER_finalZ() { return buffer_finalZ_; }
 
-  inline G4double NextFlexFieldCage::Get_EL_GAP_iniZ()   { return - _el_gap_length; }
+  inline G4double NextFlexFieldCage::Get_EL_GAP_iniZ()   { return - el_gap_length_; }
 
-  inline void NextFlexFieldCage::SetFirstLeftSensorID(const G4int first_id)
-    { _first_left_sensor_id = first_id; }
+  inline void NextFlexFieldCage::SetFirstLeftSensorID(const G4int id)
+    { first_left_sensor_id_ = id; }
 
-  inline void NextFlexFieldCage::SetFirstRightSensorID(const G4int first_id)
-    { _first_right_sensor_id = first_id; }
+  inline void NextFlexFieldCage::SetFirstRightSensorID(const G4int id)
+    { first_right_sensor_id_ = id; }
 
 } // namespace nexus
 

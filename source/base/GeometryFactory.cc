@@ -61,7 +61,7 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
 
   else if (name_ == "TON_SCALE") p = new NextTonScale();
 
-  else if (_name == "NEXT_FLEX") p = new NextFlex();
+  else if (name_ == "NEXT_FLEX") p = new NextFlex();
 
   else {
     G4String err = "The user selected an unknown geometry: " + name_;
