@@ -22,9 +22,9 @@ namespace nexus {
   using namespace CLHEP;
 
   XenonGasProperties::XenonGasProperties(G4double pressure,
-					 G4double /*temperature*/):
-    pressure_(pressure)
-    //, temperature_(temperature)
+					 G4double temperature):
+    pressure_(pressure),
+    temperature_(temperature)
   {
     //Density();
   }
@@ -35,6 +35,53 @@ namespace nexus {
   {
   }
 
+
+  void XenonGasProperties::MakeDataTable(){
+      // Fills the data_ vector with temperature, pressure, and density data
+      // Assumes the data file goes up in pressure then temperature
+      // with the format: Temperature Pressure Density
+
+      // Open file
+      std::string filename = "data/gxe_density_table.txt";
+      std::ifstream inFile;
+      inFile.open(filename);
+      if (!inFile) {
+        G4Exception("[XenonGaseousProperties]", "Density()", FatalErrorInArgument,
+        "File could not be opened!");
+      }
+
+      std::vector<std::vector<G4double>> data;
+      // Read lines in file
+      G4String thisline;
+      getline(inFile, thisline); // don't use first line
+      G4int npressures = 0;
+      G4int ntemps = 0;
+      G4int count = 0;
+      G4double thistemp = 0;
+      G4double temp, press, dens;
+      char comma;
+      while (inFile>>temp>>comma>>press>>comma>>dens){
+        std::vector<G4double> thisdata {temp*kelvin, press*bar, dens*(kg/m3)};
+        data_.push_back(thisdata);
+
+        // Figure out how many temperature and pressures we have
+        if (temp == thistemp){
+          npressures++;
+        }
+        else {
+          thistemp = temp;
+          ntemps++;
+          npressures = 1;
+        }
+        count++;
+      }
+
+      npressures_ = npressures-1;
+      ntemps_ = ntemps;
+
+      inFile.close();
+      return;
+    }
 
 
   G4double XenonGasProperties::Density(G4double pressure)
