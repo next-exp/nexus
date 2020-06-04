@@ -22,6 +22,7 @@ namespace nexus {
   public:
     /// Constructor
     XenonGasProperties(G4double pressure, G4double temperature);
+    XenonGasProperties();
     /// Destructor
     ~XenonGasProperties();
 

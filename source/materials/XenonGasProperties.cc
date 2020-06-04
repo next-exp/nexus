@@ -25,10 +25,19 @@ namespace nexus {
   XenonGasProperties::XenonGasProperties(G4double pressure,
 					 G4double temperature):
     pressure_(pressure),
-    temperature_(temperature)
+    temperature_(temperature),
+    data_()
   {
     //Density();
   }
+
+
+  XenonGasProperties::XenonGasProperties():
+  pressure_(),
+  temperature_(),
+  data_()
+{
+}
 
 
 
