@@ -32,6 +32,7 @@ namespace nexus {
     void Scintillation(G4int entries, G4double* energy, G4double* intensity);
 
     void MakeDataTable();
+    G4double GetDensity(G4double pressure, G4double temperature);
 
     static G4double Density(G4double pressure);
     static G4double MassPerMole(G4int a);

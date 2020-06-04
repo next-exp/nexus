@@ -7,6 +7,7 @@
 // ----------------------------------------------------------------------------
 
 #include "XenonGasProperties.h"
+#include "Interpolation.h"
 
 #include <G4AnalyticalPolSolver.hh>
 #include <G4MaterialPropertiesTable.hh>
@@ -84,45 +85,104 @@ namespace nexus {
     }
 
 
+    G4double XenonGasProperties::GetDensity(G4double pressure, G4double temperature)
+      {
+        // Interpolate to calculate the density
+        // at a given pressure and temperature
+
+        G4double density = 5.324 * kg/m3;
+        MakeDataTable();
+
+        // Find correct interval and use bilinear interpolation
+        G4bool found = false;
+        G4int tcount = 0;
+        G4int pcount = 0;
+        G4int count = 0;
+        G4double t1, t2, p1, p2, d11, d12, d21, d22, d1, d2;
+
+        while (tcount < ntemps_-1){
+          t1 = data_[count][0];
+          t2 = data_[count+npressures_][0];
+
+          if (temperature >= t1 && temperature < t2){
+            while (pcount < npressures_-1){
+              p1 = data_[count][1];
+              p2 = data_[count+1][1];
+
+              if (pressure >= p1 && pressure < p2){
+                d11 = data_[count][2];
+                d12 = data_[count+1][2];
+                d21 = data_[count+npressures_][2];
+                d22 = data_[count+npressures_+1][2];
+
+                density = BilinearInterpolation(temperature, t1, t2,
+                                                  pressure, p1, p2,
+                                                  d11, d12, d21, d22);
+                found = true;
+                break;
+              }
+              pcount++;
+              count++;
+            }
+
+            if (!found) {
+              if (pressure == data_[count][1]) {
+                d1 = data_[count][2];
+                d2 = data_[count+npressures_][2];
+                density = LinearInterpolation(temperature, t1, t2, d1, d2);
+                found = true;
+              } else {
+              G4Exception("[XenonGaseousProperties]", "GetDensity()", FatalErrorInArgument,
+              "Unknown xenon density for this pressure!");
+              }
+            }
+
+            break;
+          }
+          tcount++;
+          pcount = 0;
+          count += npressures_;
+        }
+
+        if (!found) {
+          if (temperature == data_[count][0]) {
+            while (pcount< npressures_-1){
+              p1 = data_[count][1];
+              p2 = data_[count+1][1];
+
+              if (pressure >= p1 && pressure < p2){
+                d1 = data_[count][2];
+                d2 = data_[count+1][2];
+
+                density = LinearInterpolation(pressure, p1, p2, d1, d2);
+                found = true;
+                break;
+              }
+              pcount++;
+              count++;
+            }
+            if (!found) {
+              if (pressure == data_[count][1]) {
+                density = data_[count][2];
+                found = true;
+              } else {
+                G4Exception("[XenonGaseousProperties]", "GetDensity()", FatalErrorInArgument,
+                "Unknown xenon density for this pressure!");
+              }
+            }
+          } else {
+            G4Exception("[XenonGaseousProperties]", "GetDensity()", FatalErrorInArgument,
+    		    "Unknown xenon density for this temperature!");
+          }
+        }
+
+        return density;
+      }
+
+
   G4double XenonGasProperties::Density(G4double pressure)
   {
     G4double density = 5.324 * kg/m3;
-
-    // These values are taken from O. Sifner and J. Klomfar, "Thermodynamic Properties of Xenon from the Triple Point to 800 K with Pressures up to 350 MPa", J. Phys. Chem. Ref. Data, Vol. 23, No. 1, 1994
-    // We assume T = 300 K and perform a linear interpolation between any pair of values.
-    const G4int n_pressures = 6;
-    G4double data[n_pressures][2] =
-      {{  1.0 * bar,   5.29 * kg/m3},
-       {  5.0 * bar,  27.01 * kg/m3},
-       { 10.0 * bar,  55.55 * kg/m3},
-       { 20.0 * bar, 118.36 * kg/m3},
-       { 30.0 * bar, 191.51 * kg/m3},
-       { 40.0 * bar, 280.40 * kg/m3}
-      };
-
-    G4bool found = false;
-
-    for (G4int i=0; i<n_pressures-1; ++i) {
-      if  (pressure >= data[i][0] && pressure < data[i+1][0]) {
-        G4double x1 = data[i][0];
-        G4double x2 = data[i+1][0];
-        G4double y1 = data[i][1];
-        G4double y2 = data[i+1][1];
-        density = y1 + (y2-y1)*(pressure-x1)/(x2-x1);
-        found = true;
-        break;
-      }
-    }
-
-    if (!found) {
-      if (pressure == data[n_pressures-1][0]) {
-        density = data[n_pressures-1][1];
-      }
-      else {
-        G4Exception("[XenonGaseousProperties]", "Density()", FatalException,
-		    "Unknown xenon density for this pressure!");
-      }
-    }
     return density;
   }
 
