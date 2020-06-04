@@ -148,7 +148,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
   if (!tc) return;
 
   // Loop through the trajectories stored in the container
-  for (G4int i=0; i<tc->entries(); ++i) {
+  for (auto i=0; i<tc->entries(); ++i) {
     Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[i]);
     if (!trj) continue;
 
@@ -205,7 +205,7 @@ void PersistencyManager::StoreHits(G4HCofThisEvent* hce)
   G4HCtable* hct = sdmgr->GetHCtable();
 
   // Loop through the hits collections
-  for (int i=0; i<hct->entries(); i++) {
+  for (auto i=0; i<hct->entries(); i++) {
 
     // Collection are identified univocally (in principle) using
     // their id number, and this can be obtained using the collection
@@ -243,7 +243,7 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
   double evt_energy = 0.;
   std::string sdname = hits->GetSDname();
 
-  for (G4int i=0; i<hits->entries(); i++) {
+  for (auto i=0; i<hits->entries(); i++) {
 
     IonizationHit* hit = dynamic_cast<IonizationHit*>(hits->GetHit(i));
     if (!hit) continue;
@@ -282,7 +282,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
 
   std::map<G4String, G4double>::const_iterator sensdet_it = sensdet_bin_.find(sdname);
   if (sensdet_it == sensdet_bin_.end()) {
-    for (G4int j=0; j<hits->entries(); j++) {
+    for (auto j=0; j<hits->entries(); j++) {
       PmtHit* hit = dynamic_cast<PmtHit*>(hits->GetHit(j));
       if (!hit) continue;
       G4double bin_size = hit->GetBinSize();
@@ -291,7 +291,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
     }
   }
 
-  for (G4int i=0; i<hits->entries(); i++) {
+  for (auto i=0; i<hits->entries(); i++) {
 
     PmtHit* hit = dynamic_cast<PmtHit*>(hits->GetHit(i));
     if (!hit) continue;
