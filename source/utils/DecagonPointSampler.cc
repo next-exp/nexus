@@ -14,23 +14,19 @@
 //  ************   Need to be chacked   ************
 // ----------------------------------------------------------------------------
 
-//#include "HexagonPointSampler.h"
 #include "DecagonPointSampler.h"
 
 #include <Randomize.hh>
 #include <G4RunManager.hh>
 
-#include "CLHEP/Units/PhysicalConstants.h"
+#include <G4PhysicalConstants.hh>
 
 #include <vector>
 
 
 namespace nexus {
 
-  using namespace CLHEP;
 
-
-  //HexagonPointSampler::HexagonPointSampler
   DecagonPointSampler::DecagonPointSampler
   (G4double apothem, G4double length, G4double thickness,
    G4ThreeVector origin, G4RotationMatrix* rotation):
@@ -43,7 +39,6 @@ namespace nexus {
 
 
 
-  //void HexagonPointSampler::TesselateWithFixedPitch
   void DecagonPointSampler::TesselateWithFixedPitch
   (G4double pitch, std::vector<G4ThreeVector>& vpos)
   {
@@ -62,7 +57,7 @@ namespace nexus {
   }
 
 
-  //G4ThreeVector HexagonPointSampler::GenerateVertex(HexagonRegion region)
+
   G4ThreeVector DecagonPointSampler::GenerateVertex(DecagonRegion region)
   {
     G4ThreeVector vertex;
@@ -111,7 +106,6 @@ namespace nexus {
     // // }
      // Unknown region
     else {
-      //G4Exception("[HexagonPointSampler]", "GenerateVertex()", FatalException,
       G4Exception("[DecagonPointSampler]", "GenerateVertex()", FatalException,
 		  "Unknown Region!");
     }
@@ -120,8 +114,6 @@ namespace nexus {
   }
 
 
-
-  //G4ThreeVector HexagonPointSampler::RandomPointInTriangle()
   G4ThreeVector DecagonPointSampler::RandomPointInTriangle()
   {
     //G4ThreeVector A(-_radius/2., _radius * cos(pi/6.), 0);
@@ -145,8 +137,6 @@ namespace nexus {
   }
 
 
-
-  //void HexagonPointSampler::PlaceCells(std::vector<G4ThreeVector>& vp,
   void DecagonPointSampler::PlaceCells(std::vector<G4ThreeVector>& vp,
 				       G4int order, G4double cell_apothem)
   {
@@ -183,7 +173,6 @@ namespace nexus {
 
 
 
-  //void HexagonPointSampler::TriangleWalker
   void DecagonPointSampler::TriangleWalker
   (G4double radius, G4double binning, G4double z)
   {
@@ -203,26 +192,6 @@ namespace nexus {
 
 
 
-
-  //G4double HexagonPointSampler::RandomRadius(G4double inner, G4double outer)
-  G4double DecagonPointSampler::RandomRadius(G4double inner, G4double outer)
-  {
-    G4double rnd = G4UniformRand();
-    G4double r = sqrt((1.-rnd) * inner*inner + rnd * outer*outer);
-    return r;
-  }
-
-
-
-  //G4double HexagonPointSampler::RandomPhi()
-  G4double DecagonPointSampler::RandomPhi()
-  {
-    return (G4UniformRand() * twopi);
-  }
-
-
-
-  //G4double HexagonPointSampler::RandomLength(G4double min,
   G4double DecagonPointSampler::RandomLength(G4double min,
 					     G4double max)
   {
@@ -232,7 +201,7 @@ namespace nexus {
 
 
   G4ThreeVector
-  //HexagonPointSampler::RotateAndTranslate(const G4ThreeVector& position)
+
   DecagonPointSampler::RotateAndTranslate(const G4ThreeVector& position)
   {
     G4ThreeVector real_position(position);
