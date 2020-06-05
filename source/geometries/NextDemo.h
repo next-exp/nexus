@@ -57,13 +57,13 @@ namespace nexus {
     ~NextDemo();
 
     /// Returns a vertex in a region of the geometry
-    G4ThreeVector GenerateVertex(const G4String& region) const;
-
+    G4ThreeVector GenerateVertex(const G4String& region) const override;
+    void Construct() override;
 
   private:
     void BuildExtScintillator(G4ThreeVector pos, const G4RotationMatrix& rot);
     void BuildExtSource(G4ThreeVector pos, const G4RotationMatrix& rot);
-    void Construct();
+ 
 
   private:
 
