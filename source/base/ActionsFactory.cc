@@ -84,6 +84,7 @@ G4UserEventAction* ActionsFactory::CreateEventAction() const
 #include "DefaultTrackingAction.h"
 #include "ValidationTrackingAction.h"
 #include "OpticalTrackingAction.h"
+#include "LowMemoryTrackingAction.h"
 
 G4UserTrackingAction* ActionsFactory::CreateTrackingAction() const
 {
@@ -94,6 +95,8 @@ G4UserTrackingAction* ActionsFactory::CreateTrackingAction() const
   else if (trkact_name_ == "VALIDATION") p = new ValidationTrackingAction();
 
   else if (trkact_name_ == "OPTICAL") p = new OpticalTrackingAction();
+
+  else if (trkact_name_ == "LOW_MEMORY") p = new LowMemoryTrackingAction();
 
   else {
     G4String err = "Unknown user tracking action: " + trkact_name_;
