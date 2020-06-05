@@ -18,7 +18,6 @@
 #/Geometry/NextDemo/max_step_size 5. mm
 /Geometry/NextDemo/max_step_size 1. mm
 /Geometry/NextDemo/sc_yield 25510. 1/MeV
-/Geometry/NextDemo/ext_scint true
 
 #
 # de new...
@@ -45,7 +44,5 @@
 
 
 # PERSISTENCY
-## Ruty - hdf5 true -
-/nexus/persistency/hdf5 true
 /nexus/persistency/outputFile NextDemo.next
 
