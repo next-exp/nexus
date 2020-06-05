@@ -28,17 +28,14 @@
 #include <G4LogicalSkinSurface.hh>
 #include <G4NistManager.hh>
 #include <Randomize.hh>
+#include <G4SystemOfUnits.hh>
+#include <G4PhysicalConstants.hh>
 
-#include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
-#include <stdexcept>
 
 namespace nexus {
 
-  using namespace CLHEP;
 
   NextDemoTrackingPlane::NextDemoTrackingPlane():
-  //NextDemoTrackingPlane::NextDemoTrackingPlane(const G4double el_gap_z_edge):
 
     // Dimensions
     _support_side (16.0 * cm),  // <-> from STEP file
