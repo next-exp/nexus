@@ -70,7 +70,7 @@ hsize_t createParticleInfoType()
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (particle_info_t));
   H5Tinsert (memtype, "event_id", HOFFSET (particle_info_t, event_id), H5T_NATIVE_INT32);
   H5Tinsert (memtype, "particle_id",HOFFSET (particle_info_t, particle_id),H5T_NATIVE_INT);
-  H5Tinsert (memtype, "name",HOFFSET (particle_info_t, name),strtype);
+  H5Tinsert (memtype, "particle_name",HOFFSET (particle_info_t, particle_name),strtype);
   H5Tinsert (memtype, "primary",HOFFSET (particle_info_t, primary), H5T_NATIVE_CHAR);
   H5Tinsert (memtype, "mother_id",HOFFSET (particle_info_t, mother_id),H5T_NATIVE_INT);
   H5Tinsert (memtype, "initial_x",HOFFSET (particle_info_t, initial_x), H5T_NATIVE_FLOAT);
@@ -86,16 +86,25 @@ hsize_t createParticleInfoType()
   H5Tinsert (memtype, "initial_momentum_x",HOFFSET (particle_info_t, initial_momentum_x), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "initial_momentum_y",HOFFSET (particle_info_t, initial_momentum_y), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "initial_momentum_z",HOFFSET (particle_info_t, initial_momentum_z), H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "final_momentum_x", HOFFSET (particle_info_t, final_momentum_x), H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "final_momentum_y", HOFFSET (particle_info_t, final_momentum_y), H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "final_momentum_z", HOFFSET (particle_info_t, final_momentum_z), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "kin_energy",HOFFSET (particle_info_t, kin_energy), H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "length", HOFFSET (particle_info_t, length), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "creator_proc",HOFFSET (particle_info_t, creator_proc), strtype);
+  H5Tinsert (memtype, "final_proc", HOFFSET (particle_info_t, final_proc), strtype);
   return memtype;
 }
 
 hsize_t createSensorPosType()
 {
+  hid_t strtype = H5Tcopy(H5T_C_S1);
+  H5Tset_size (strtype, STRLEN);
+
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (sns_pos_t));
   H5Tinsert (memtype, "sensor_id" , HOFFSET (sns_pos_t, sensor_id) , H5T_NATIVE_UINT);
+  H5Tinsert (memtype, "sensor_name", HOFFSET (sns_pos_t, sensor_name), strtype);
   H5Tinsert (memtype, "x" , HOFFSET (sns_pos_t, x) , H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "y" , HOFFSET (sns_pos_t, y) , H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "z" , HOFFSET (sns_pos_t, z) , H5T_NATIVE_FLOAT);
