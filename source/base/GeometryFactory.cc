@@ -34,6 +34,7 @@ GeometryFactory::~GeometryFactory()
 #include "FullRingTiles.h"
 #include "Lab_vertices.h"
 #include "Lab.h"
+#include "PetBox.h"
 
 BaseGeometry* GeometryFactory::CreateGeometry() const
 {
@@ -46,6 +47,8 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
   else if (name_ == "VERTICES") p = new Lab_vertices();
 
   else if (name_ == "PETALO") p = new Lab();
+
+  else if (_name == "PETBOX") p = new PetBox();
 
   else {
     G4String err = "The user selected an unknown geometry: " + name_;
