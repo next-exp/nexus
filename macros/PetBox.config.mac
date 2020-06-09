@@ -1,0 +1,24 @@
+### GEOMETRY
+/Geometry/PetBox/visibility true
+/Geometry/PetBox/box_size 19.2 cm
+/Geometry/PetBox/box_thickness 2. cm
+
+
+### GENERATOR
+/Generator/Back2back/region CENTER
+
+### PHYSICS
+/process/optical/processActivation Scintillation true
+/process/optical/processActivation Cerenkov      true
+
+### VERBOSITIES
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+/nexus/random_seed 132323
+
+### OUTPUT FILE
+/nexus/persistency/start_id 0
+/nexus/persistency/outputFile petbox.pet
+

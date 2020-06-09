@@ -1,0 +1,21 @@
+### PHYSICS
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics G4OpticalPhysics
+/PhysicsList/RegisterPhysics NexusPhysics
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
+
+### GEOMETRY
+/Geometry/RegisterGeometry PETBOX
+
+### GENERATOR
+/Generator/RegisterGenerator BACK2BACK
+
+### ACTIONS
+/Actions/RegisterRunAction DEFAULT
+/Actions/RegisterEventAction DEFAULT
+/Actions/RegisterTrackingAction DEFAULT
+/Actions/RegisterSteppingAction DEFAULT
+
+/nexus/RegisterMacro macros/PetBox.config.mac
