@@ -201,7 +201,6 @@ G4Material* MaterialsList::Steel()
 }
 
 
-
 G4Material* MaterialsList::Steel316Ti()
 {
   G4String name = "Steel316Ti";
@@ -253,6 +252,25 @@ G4Material* MaterialsList::Epoxy()
     mat->AddElement(H, 44);
     mat->AddElement(C, 15);
     mat->AddElement(O, 7);
+  }
+
+  return mat;
+}
+
+
+G4Material* MaterialsList::CarbonFiber()
+{
+  G4String name = "CarbonFiber";
+
+  G4Material* mat = G4Material::GetMaterial(name, false);
+
+  if (mat == 0) {
+    G4NistManager* nist = G4NistManager::Instance();
+
+    G4Element* C = nist->FindOrBuildElement("C");
+
+    mat = new G4Material(name, 1.6*g/cm3, 1);
+    mat->AddElement(C, 1);
   }
 
   return mat;
