@@ -34,7 +34,14 @@ namespace nexus {
                     source_pos_y_(0.*mm),
                     source_pos_z_(0.*mm),
                     box_size_(19.2*cm),
-                    box_thickness_(2.*cm)
+                    box_thickness_(2.*cm),
+                    ih_x_size_(4.6*cm),
+                    ih_y_size_(12.*cm),
+                    ih_z_size_(6*cm),
+                    ih_thickness_(3.*mm),
+                    source_tube_thickness_(1.*mm),
+                    source_tube_int_radius_(1.1*cm),
+                    source_tube_length_(10.*cm)
   {
     // Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/PetBox/",
@@ -68,6 +75,48 @@ namespace nexus {
     box_thickness_cmd.SetUnitCategory("Length");
     box_thickness_cmd.SetParameterName("box_thickness", false);
     box_thickness_cmd.SetRange("box_thickness>0.");
+
+    G4GenericMessenger::Command& ih_x_cmd =
+      msg_->DeclareProperty("ih_x", ih_x_size_, "X size of internal hat");
+    ih_x_cmd.SetUnitCategory("Length");
+    ih_x_cmd.SetParameterName("ih_x", false);
+    ih_x_cmd.SetRange("ih_x>0.");
+
+    G4GenericMessenger::Command& ih_y_cmd =
+      msg_->DeclareProperty("ih_y", ih_y_size_, "Y size of internal hat");
+    ih_y_cmd.SetUnitCategory("Length");
+    ih_y_cmd.SetParameterName("ih_y", false);
+    ih_y_cmd.SetRange("ih_y>0.");
+
+    G4GenericMessenger::Command& ih_z_cmd =
+      msg_->DeclareProperty("ih_z", ih_z_size_, "Z size of internal hat");
+    ih_z_cmd.SetUnitCategory("Length");
+    ih_z_cmd.SetParameterName("ih_z", false);
+    ih_z_cmd.SetRange("ih_z>0.");
+
+    G4GenericMessenger::Command& ih_thickness_cmd =
+      msg_->DeclareProperty("ih_thickness", ih_thickness_, "Thickness of internal hat");
+    ih_thickness_cmd.SetUnitCategory("Length");
+    ih_thickness_cmd.SetParameterName("ih_thickness", false);
+    ih_thickness_cmd.SetRange("ih_thickness>0.");
+
+    G4GenericMessenger::Command& source_tube_thickness_cmd =
+      msg_->DeclareProperty("source_tube_thickness", source_tube_thickness_, "Thickness of source_tube");
+    source_tube_thickness_cmd.SetUnitCategory("Length");
+    source_tube_thickness_cmd.SetParameterName("source_tube_thickness", false);
+    source_tube_thickness_cmd.SetRange("source_tube_thickness>0.");
+
+    G4GenericMessenger::Command& source_tube_int_radius_cmd =
+      msg_->DeclareProperty("source_tube_int_radius", source_tube_int_radius_, "Int_Radius of source_tube");
+    source_tube_int_radius_cmd.SetUnitCategory("Length");
+    source_tube_int_radius_cmd.SetParameterName("source_tube_int_radius", false);
+    source_tube_int_radius_cmd.SetRange("source_tube_int_radius>0.");
+
+    G4GenericMessenger::Command& source_tube_length_cmd =
+      msg_->DeclareProperty("source_tube_length", source_tube_length_, "Length of source_tube");
+    source_tube_length_cmd.SetUnitCategory("Length");
+    source_tube_length_cmd.SetParameterName("source_tube_length", false);
+    source_tube_length_cmd.SetRange("source_tube_length>0.");
 
   }
 
@@ -117,6 +166,50 @@ namespace nexus {
     new G4PVPlacement(0, G4ThreeVector(0., 0, 0), LXe_logic_,
                       "LXE", box_logic, false, 0, true);
 
+
+    // INTERNAL HAT AND SOURCE TUBE
+    G4Box* internal_hat_solid =
+      new G4Box("INTERNAL_HAT", ih_x_size_/2., ih_y_size_/2., ih_z_size_/2.);
+
+    G4LogicalVolume* internal_hat_logic =
+      new G4LogicalVolume(internal_hat_solid, aluminum, "INTERNAL_HAT");
+
+    new G4PVPlacement(0, G4ThreeVector(0., (-box_size_/2.+box_thickness_+ih_y_size_/2.), 0), internal_hat_logic,
+                      "INTERNAL_HAT", LXe_logic_, false, 0, true);
+
+    G4Box* vacuum_hat_solid =
+      new G4Box("VACUUM_HAT", (ih_x_size_-2.*ih_thickness_)/2., (ih_y_size_-2.*ih_thickness_)/2., (ih_z_size_-2.*ih_thickness_)/2.);
+
+    G4Material* vacuum = G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");;
+    vacuum->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
+    G4LogicalVolume* vacuum_hat_logic =
+      new G4LogicalVolume(vacuum_hat_solid, vacuum, "VACUUM_HAT");
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0, 0), vacuum_hat_logic,
+                      "VACUUM_HAT", internal_hat_logic, false, 0, true);
+
+    G4Tubs* source_tube_solid =
+      new G4Tubs("SOURCE_TUBE", 0, source_tube_int_radius_ + source_tube_thickness_, source_tube_length_/2., 0, twopi);
+
+    G4Material* carbon_fiber = MaterialsList::CarbonFiber();
+    G4LogicalVolume* source_tube_logic =
+      new G4LogicalVolume(source_tube_solid, carbon_fiber, "SOURCE_TUBE");
+
+    G4RotationMatrix rot;
+    rot.rotateX(pi/2.);
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., 0., 0.)), source_tube_logic,
+                      "SOURCE_TUBE", vacuum_hat_logic, false, 0, true);
+
+    G4Tubs* air_source_tube_solid =
+      new G4Tubs("AIR_SOURCE_TUBE", 0, source_tube_int_radius_, (source_tube_length_ - 2.*source_tube_thickness_)/2., 0, twopi);
+
+    G4LogicalVolume* air_source_tube_logic =
+      new G4LogicalVolume(air_source_tube_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "AIR_SOURCE_TUBE");
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), air_source_tube_logic,
+                      "AIR_SOURCE_TUBE", source_tube_logic, false, 0, true);
+
+
     // Visibilities
     if (visibility_) {
       G4VisAttributes box_col = nexus::White();
@@ -124,6 +217,15 @@ namespace nexus {
       G4VisAttributes lxe_col = nexus::Blue();
       //lxe_col.SetForceSolid(true);
       LXe_logic_->SetVisAttributes(lxe_col);
+      G4VisAttributes ih_col = nexus::Yellow();
+      internal_hat_logic->SetVisAttributes(ih_col);
+      G4VisAttributes vacuum_col = nexus::Lilla();
+      vacuum_hat_logic->SetVisAttributes(vacuum_col);
+      G4VisAttributes source_tube_col = nexus::Red();
+      //source_tube_col.SetForceSolid(true);
+      source_tube_logic->SetVisAttributes(source_tube_col);
+      G4VisAttributes air_source_tube_col = nexus::DarkGrey();
+      air_source_tube_logic->SetVisAttributes(air_source_tube_col);
     }
     else {
       box_logic->SetVisAttributes(G4VisAttributes::Invisible);
