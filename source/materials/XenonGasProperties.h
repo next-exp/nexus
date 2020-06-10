@@ -44,7 +44,7 @@ namespace nexus {
 
   private:
     G4double pressure_;
-    G4double temperature_;
+    //G4double temperature_;
     G4int npressures_;
     G4int ntemps_;
     std::vector<std::vector<G4double>> data_; // temp, press, density

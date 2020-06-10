@@ -1,18 +1,15 @@
-// ----------------------------------------------------------------------------
-///  \file   Interpolation.h
-///  \brief  General class do linear and bilinear interpolation
-///
-///  \author  Taylor Contreras <taylorcontreras@g.harvard.edu>
-///  \date    16 March 2020
-///  \version $Id$
+// -----------------------------------------------------------------------------
+//  nexus | Interpolation.h
 //
-///  Copyright (c) 2015 NEXT Collaboration. All rights reserved.
+//  Functions for linear and bilinear interpolation.
+//
+//  The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "G4ThreeVector.hh"
+#ifndef INTERPOLATION_H
+#define INTERPOLATION_H
 
-#ifndef _INTERPOLATION_
-#define _INTERPOLATION_
+#include <G4ThreeVector.hh>
 
 namespace nexus {
 
