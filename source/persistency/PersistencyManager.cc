@@ -35,32 +35,34 @@
 
 #include "CLHEP/Units/SystemOfUnits.h"
 
-using namespace nexus;
 
-PersistencyManager::PersistencyManager(G4String historyFile_init, G4String historyFile_conf):
-  G4VPersistencyManager(), _msg(0),
-  _ready(false), _store_evt(true), _interacting_evt(false),
-  event_type_("other"),  _saved_evts(0), _interacting_evts(0),
-  _nevt(0), _start_id(0), _first_evt(true), _thr_charge(0),
-  _tof_time(50.*nanosecond), _sns_only(false), _save_tot_charge(true), _h5writer(0)
+PersistencyManager::PersistencyManager(G4String init_macro,
+                                       std::vector<G4String>& macros,
+                                       std::vector<G4String>& delayed_macros):
+  G4VPersistencyManager(), msg_(0), init_macro_(init_macro), macros_(macros),
+  delayed_macros_(delayed_macros), ready_(false), store_evt_(true),
+  interacting_evt_(false), event_type_("other"), saved_evts_(0),
+  interacting_evts_(0), nevt_(0), start_id_(0), first_evt_(true),
+  thr_charge_(0), tof_time_(50.*nanosecond), sns_only_(false),
+  save_tot_charge_(true), h5writer_(0)
 {
-
-  _historyFile_init = historyFile_init;
-  _historyFile_conf = historyFile_conf;
-
-  _msg = new G4GenericMessenger(this, "/nexus/persistency/");
-  _msg->DeclareMethod("outputFile", &PersistencyManager::OpenFile, "");
-  _msg->DeclareProperty("eventType", event_type_, "Type of event: bb0nu, bb2nu or background.");
-  _msg->DeclareProperty("start_id", _start_id, "Starting event ID for this job.");
-  _msg->DeclareProperty("thr_charge", _thr_charge, "Threshold for the charge saved in file.");
-  _msg->DeclareProperty("sns_only", _sns_only, "If true, no true information is saved.");
-  _msg->DeclareProperty("save_tot_charge", _save_tot_charge, "If true, total charge is saved.");
+  msg_ = new G4GenericMessenger(this, "/nexus/persistency/");
+  msg_->DeclareMethod("outputFile", &PersistencyManager::OpenFile, "");
+  msg_->DeclareProperty("eventType", event_type_,
+                        "Type of event: bb0nu, bb2nu or background.");
+  msg_->DeclareProperty("start_id", start_id_,
+                        "Starting event ID for this job.");
+  msg_->DeclareProperty("thr_charge", thr_charge_, "Threshold for the charge saved in file.");
+  msg_->DeclareProperty("sns_only", sns_only_, "If true, no true information is saved.");
+  msg_->DeclareProperty("save_tot_charge", save_tot_charge_, "If true, total charge is saved.");
 
   G4GenericMessenger::Command& time_cmd =
-    _msg->DeclareProperty("tof_time", _tof_time, "Time saved in tof table per sensor");
-    time_cmd.SetUnitCategory("Time");
-    time_cmd.SetParameterName("tof_time", false);
-    time_cmd.SetRange("tof_time>0.");
+    msg_->DeclareProperty("tof_time", tof_time_, "Time saved in tof table per sensor");
+  time_cmd.SetUnitCategory("Time");
+  time_cmd.SetParameterName("tof_time", false);
+  time_cmd.SetRange("tof_time>0.");
+
+  secondary_macros_.clear();
 }
 
 
@@ -72,8 +74,8 @@ PersistencyManager::~PersistencyManager()
 }
 
 
-
-void PersistencyManager::Initialize(G4String historyFile_init, G4String historyFile_conf)
+void PersistencyManager::Initialize(G4String init_macro, std::vector<G4String>& macros,
+                                    std::vector<G4String>& delayed_macros)
 {
 
   // Get a pointer to the current singleton instance of the persistency
@@ -86,7 +88,8 @@ void PersistencyManager::Initialize(G4String historyFile_init, G4String historyF
   // of another G4VPersistencyManager-derived was previously set, resulting
   // in the leak of that object since the pointer will no longer be
   // accessible.)
-  if (!current) current = new PersistencyManager(historyFile_init, historyFile_conf);
+  if (!current) current =
+                  new PersistencyManager(init_macro, macros, delayed_macros);
 }
 
 
@@ -419,8 +422,16 @@ G4bool PersistencyManager::Store(const G4Run*)
   key = "interacting_events";
   _h5writer->WriteRunInfo(key,  std::to_string(_interacting_evts).c_str());
 
-  SaveConfigurationInfo(_historyFile_init);
-  SaveConfigurationInfo(_historyFile_conf);
+  SaveConfigurationInfo(init_macro_);
+  for (unsigned long i=0; i<macros_.size(); i++) {
+    SaveConfigurationInfo(macros_[i]);
+  }
+  for (unsigned long i=0; i<delayed_macros_.size(); i++) {
+    SaveConfigurationInfo(delayed_macros_[i]);
+  }
+  for (unsigned long i=0; i<secondary_macros_.size(); i++) {
+    SaveConfigurationInfo(secondary_macros_[i]);
+  }
 
   return true;
 }
@@ -430,14 +441,19 @@ void PersistencyManager::SaveConfigurationInfo(G4String file_name)
   std::ifstream history(file_name, std::ifstream::in);
   while (history.good()) {
 
-    std::string key, value;
+    G4String key, value;
     std::getline(history, key, ' ');
     std::getline(history, value);
 
     if (key != "") {
-      auto found = key.find("binning");
-      if (found == std::string::npos)
-        _h5writer->WriteRunInfo(key.c_str(), value.c_str());
+      auto found_binning = key.find("binning");
+      auto found_comment = key.find("#");
+      if ((found_binning == std::string::npos) && (found_comment == std::string::npos))
+	h5writer_->WriteRunInfo(key.c_str(), value.c_str());
+
+      auto found_other_macro = key.find("/control/execute");
+      if (found_other_macro != std::string::npos)
+        secondary_macros_.push_back(value);
     }
 
   }

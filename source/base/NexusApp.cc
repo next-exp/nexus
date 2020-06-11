@@ -34,17 +34,17 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
 
   // Define the command to register a configuration macro. 
   // The user may invoke the command as many times as needed.
-  _msg->DeclareMethod("RegisterMacro", &NexusApp::RegisterMacro, ""); 
+  _msg->DeclareMethod("RegisterMacro", &NexusApp::RegisterMacro, "");
 
   // Some commands, which we call 'delayed', only work if executed
   // after the initialization of the application. The user may include
   // them in configuration macros registered with the command defined below.
-  _msg->DeclareMethod("RegisterDelayedMacro", 
-    &NexusApp::RegisterDelayedMacro, "");
+  msg_->DeclareMethod("RegisterDelayedMacro",
+                      &NexusApp::RegisterDelayedMacro, "");
 
   // Define a command to set a seed for the random number generator.
-  _msg->DeclareMethod("random_seed", &NexusApp::SetRandomSeed, 
-    "Set a seed for the random number generator."); 
+  msg_->DeclareMethod("random_seed", &NexusApp::SetRandomSeed,
+                      "Set a seed for the random number generator.");
 
   /////////////////////////////////////////////////////////
 
@@ -121,7 +121,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
   // number generator
   SetRandomSeed(-1);
 
-  PersistencyManager::Initialize(historyFile_init, historyFile_config);
+  PersistencyManager::Initialize(init_macro, _macros, _delayed);
 }
 
 
