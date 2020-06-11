@@ -43,7 +43,12 @@ namespace nexus {
                     ih_thickness_(3.*mm),
                     source_tube_thickness_(1.*mm),
                     source_tube_int_radius_(1.1*cm),
-                    source_tube_length_(10.*cm)
+                    source_tube_length_(10.*cm),
+                    active_depth_(3.*cm),
+                    dist_dice_walls_(5.25*mm),
+                    dist_ihat_wall_(2.*mm),
+                    wall_thickness_(1.75*mm),
+                    max_step_size_(1.*mm)
   {
     // Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/PetBox/",
@@ -120,6 +125,29 @@ namespace nexus {
     source_tube_length_cmd.SetParameterName("source_tube_length", false);
     source_tube_length_cmd.SetRange("source_tube_length>0.");
 
+    G4GenericMessenger::Command& active_depth_cmd =
+      msg_->DeclareProperty("active_depth", active_depth_, "Depth of Xe in front of sensors");
+    active_depth_cmd.SetUnitCategory("Length");
+    active_depth_cmd.SetParameterName("active_depth", false);
+    active_depth_cmd.SetRange("active_depth>0.");
+
+    G4GenericMessenger::Command& dist_dice_walls_cmd =
+      msg_->DeclareProperty("dist_dice_walls", dist_dice_walls_, "Distance between the border of the dices and the absorbent walls");
+    dist_dice_walls_cmd.SetUnitCategory("Length");
+    dist_dice_walls_cmd.SetParameterName("dist_dice_walls", false);
+    dist_dice_walls_cmd.SetRange("dist_dice_walls>0.");
+
+    G4GenericMessenger::Command& dist_ihat_wall_cmd =
+      msg_->DeclareProperty("dist_ihat_wall", dist_ihat_wall_, "Distance between the internal hat and the separation walls");
+    dist_ihat_wall_cmd.SetUnitCategory("Length");
+    dist_ihat_wall_cmd.SetParameterName("dist_ihat_wall", false);
+    dist_ihat_wall_cmd.SetRange("dist_ihat_wall>0.");
+
+    G4GenericMessenger::Command& wall_thickness_cmd =
+      msg_->DeclareProperty("wall_thickness", wall_thickness_, "Thickness of the separation wall");
+    wall_thickness_cmd.SetUnitCategory("Length");
+    wall_thickness_cmd.SetParameterName("wall_thickness", false);
+    wall_thickness_cmd.SetRange("wall_thickness>0.");
 
     tile_ = new TileFBK();
   }
@@ -223,6 +251,28 @@ namespace nexus {
     full_col_size_ = n_tile_rows * tile_->GetDimensions().y();
 
 
+    // 2 ACTIVE REGIONS
+    G4double active_y_size = full_col_size_ + 2.*dist_dice_walls_;
+    G4double active_z_size = full_row_size_ + 2.*dist_dice_walls_;
+    G4double active_x_pos = ih_x_size_/2. + dist_ihat_wall_ + wall_thickness_ + active_depth_/2.;
+
+    G4Box* active_solid =
+      new G4Box("ACTIVE", active_depth_/2., active_y_size/2., active_z_size/2.);
+    G4LogicalVolume* active_logic =
+      new G4LogicalVolume(active_solid, LXe, "ACTIVE");
+    new G4PVPlacement(0, G4ThreeVector(-active_x_pos, 0., 0.), active_logic,
+                      "ACTIVE", LXe_logic_, false, 1, true);
+    new G4PVPlacement(0, G4ThreeVector(active_x_pos, 0., 0.), active_logic,
+                      "ACTIVE", LXe_logic_, false, 2, true);
+
+    // Set the ACTIVE volume as an ionization sensitive det
+    IonizationSD* ionisd = new IonizationSD("/PETALO/ACTIVE");
+    active_logic->SetSensitiveDetector(ionisd);
+    G4SDManager::GetSDMpointer()->AddNewDetector(ionisd);
+
+    // Limit the step size in ACTIVE volume for better tracking precision
+    active_logic->SetUserLimits(new G4UserLimits(max_step_size_));
+
 
     // Visibilities
     if (visibility_) {
@@ -240,6 +290,10 @@ namespace nexus {
       source_tube_logic->SetVisAttributes(source_tube_col);
       G4VisAttributes air_source_tube_col = nexus::DarkGrey();
       air_source_tube_logic->SetVisAttributes(air_source_tube_col);
+      G4VisAttributes active_col = nexus::Blue();
+      active_logic->SetVisAttributes(active_col);
+      G4VisAttributes w_col = nexus::Red();
+      separation_wall_logic->SetVisAttributes(w_col);
     }
     else {
       box_logic->SetVisAttributes(G4VisAttributes::Invisible);

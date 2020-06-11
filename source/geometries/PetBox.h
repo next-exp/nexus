@@ -36,10 +36,16 @@ namespace nexus {
 
     G4double source_pos_x_, source_pos_y_, source_pos_z_;
     G4double box_size_, box_thickness_;
+
     G4double ih_x_size_, ih_y_size_, ih_z_size_, ih_thickness_;
     G4double source_tube_thickness_, source_tube_int_radius_, source_tube_length_;
 
     G4double tile_thickn_, full_row_size_, full_col_size_;
+
+    G4double active_depth_, dist_dice_walls_;
+    G4double dist_ihat_wall_, wall_thickness_;
+
+    G4double max_step_size_;
 
     /// Messenger for the definition of control commands
     G4GenericMessenger* msg_;
