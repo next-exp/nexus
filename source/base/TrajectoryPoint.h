@@ -1,12 +1,10 @@
 // ----------------------------------------------------------------------------
-///  \file   TrajectoryPoint.h
-///  \brief  A point (position, time) in the trajectory of a track
-/// 
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     27 March 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// nexus | TrajectoryPoint.h
+//
+// This class describes a point (position and time) in the trajectory
+// of a particle.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef TRAJECTORY_POINT_H
@@ -17,8 +15,6 @@
 
 
 namespace nexus {
-
-  /// A point (position and time) in the trajectory of a simulated track
 
   class TrajectoryPoint: public G4VTrajectoryPoint
   {
@@ -47,8 +43,8 @@ namespace nexus {
     G4double GetTime() const;
 
   private:
-    G4ThreeVector _position;
-    G4double _time;
+    G4ThreeVector position_;
+    G4double time_;
 };
 
 } // namespace nexus
@@ -73,9 +69,9 @@ namespace nexus {
   { TrjPointAllocator.FreeSingle((TrajectoryPoint*) tp); }
 
   inline const G4ThreeVector TrajectoryPoint::GetPosition() const
-  { return _position; }
+  { return position_; }
 
-  inline G4double TrajectoryPoint::GetTime() const { return _time; }
+  inline G4double TrajectoryPoint::GetTime() const { return time_; }
 
 } // end namespace nexus
 

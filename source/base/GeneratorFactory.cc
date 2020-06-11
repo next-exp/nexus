@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | GeneratorFactory.cc
 //
-//  Author : <justo.martin-albo@ific.uv.es>
-//  Created: 13 March 2013
+// This class instantiates the generator of the simulation that the user
+// specifies via configuration parameter.
 //
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "GeneratorFactory.h"
@@ -15,17 +15,17 @@
 using namespace nexus;
 
 
-GeneratorFactory::GeneratorFactory(): _msg(0)
+GeneratorFactory::GeneratorFactory(): msg_(0)
 {
-  _msg = new G4GenericMessenger(this, "/Generator/");
-  _msg->DeclareProperty("RegisterGenerator", _name, "");
+  msg_ = new G4GenericMessenger(this, "/Generator/");
+  msg_->DeclareProperty("RegisterGenerator", name_, "");
 }
 
 
 GeneratorFactory::~GeneratorFactory()
 {
-  delete _msg;
-  delete _p;
+  delete msg_;
+  delete p_;
 }
 
 
@@ -44,27 +44,27 @@ G4VPrimaryGenerator* GeneratorFactory::CreateGenerator()
 {
   //G4VPrimaryGenerator* p = 0;
 
-  if (_name == "SINGLE_PARTICLE") _p = new SingleParticle();
+  if (name_ == "SINGLE_PARTICLE") p_ = new SingleParticle();
 
-  else if (_name == "ION_GUN") _p = new IonGun();
+  else if (name_ == "ION_GUN") p_ = new IonGun();
 
-  else if (_name == "NA22") _p = new Na22Generation();
+  else if (name_ == "NA22") p_ = new Na22Generation();
 
-  else if (_name == "Kr83m") _p = new Kr83mGeneration();
+  else if (name_ == "Kr83m") p_ = new Kr83mGeneration();
 
-  else if (_name == "SCINT_GENERATOR") _p = new ScintillationGenerator();
+  else if (name_ == "SCINT_GENERATOR") p_ = new ScintillationGenerator();
 
-  else if (_name == "DOUBLE_PARTICLE") _p = new DoubleParticle();
+  else if (name_ == "DOUBLE_PARTICLE") p_ = new DoubleParticle();
 
-  else if (_name == "BACK2BACK") _p = new Back2backGammas();
+  else if (name_ == "BACK2BACK") p_ = new Back2backGammas();
 
-  else if (_name == "SENSMAP") _p = new SensMap();
+  else if (name_ == "SENSMAP") p_ = new SensMap();
 
   else {
-    G4String err = "The user specified an unknown generator: " + _name;
-    G4Exception("CreateGenerator()", "[GeneratorFactory]",
+    G4String err = "The user specified an unknown generator: " + name_;
+    G4Exception("[GeneratorFactory]", "CreateGenerator()",
         FatalException, err);
   }
 
-  return _p;
+  return p_;
 }

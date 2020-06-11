@@ -1,16 +1,14 @@
 // ----------------------------------------------------------------------------
-///  \file   ActionsFactory.h
-///  \brief  
-/// 
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     13 March 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
+// nexus | ActionFactory.h
+//
+// This class instantiates the run, event, tracking, stepping and stacking
+// actions that the user specifies via configuration parameters.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef ACTIONS_FACTORY_H
-#define ACTIONS_FACTORY_H 
+#define ACTIONS_FACTORY_H
 
 #include <G4String.hh>
 
@@ -39,13 +37,13 @@ namespace nexus {
     G4UserStackingAction* CreateStackingAction() const;
 
   private:
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
 
-    G4String _runact_name; ///< Name of the user run action
-    G4String _evtact_name; ///< Name of the user event action
-    G4String _trkact_name; ///< Name of the user tracking action
-    G4String _stpact_name; ///< Name of the user stepping action
-    G4String _stkact_name; ///< Name of the user stacking action
+    G4String runact_name_; ///< Name of the user run action
+    G4String evtact_name_; ///< Name of the user event action
+    G4String trkact_name_; ///< Name of the user tracking action
+    G4String stpact_name_; ///< Name of the user stepping action
+    G4String stkact_name_; ///< Name of the user stacking action
   };
 
 } // end namespace nexus

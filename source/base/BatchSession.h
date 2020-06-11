@@ -1,16 +1,15 @@
 // ----------------------------------------------------------------------------
-///  \file   BatchSession.h
-///  \brief  
-/// 
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     22 Mar 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// nexus | BatchSession.h
+//
+// This class is used to parse the configuration files and execute the commands
+// found in them. One of the features of this class, compared to the G4 one is
+// that an error is prompted when a parameter is not recognized.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __BATCH_SESSION__
-#define __BATCH_SESSION__
+#ifndef BATCH_SESSION_H
+#define BATCH_SESSION_H
 
 #include <G4UIsession.hh>
 #include <fstream>

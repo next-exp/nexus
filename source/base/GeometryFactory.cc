@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | GeometryFactory.cc
 //
-//  Author : <justo.martin-albo@ific.uv.es>
-//  Created: 13 March 2013
+// This class instantiates the main geometry of the simulation that the user
+// specifies via configuration parameter.
 //
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "GeometryFactory.h"
@@ -16,16 +16,16 @@
 using namespace nexus;
 
 
-GeometryFactory::GeometryFactory(): _msg(0)
+GeometryFactory::GeometryFactory(): msg_(0)
 {
-  _msg = new G4GenericMessenger(this, "/Geometry/");
-  _msg->DeclareProperty("RegisterGeometry", _name, "");
+  msg_ = new G4GenericMessenger(this, "/Geometry/");
+  msg_->DeclareProperty("RegisterGeometry", name_, "");
 }
 
 
 GeometryFactory::~GeometryFactory()
 {
-  delete _msg;
+  delete msg_;
 }
 
 
@@ -39,17 +39,17 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
 {
   BaseGeometry* p = 0;
 
-  if (_name == "FULLRING") p = new FullRingInfinity();
+  if (name_ == "FULLRING") p = new FullRingInfinity();
 
-  else if (_name == "RING_TILES") p = new FullRingTiles();
+  else if (name_ == "RING_TILES") p = new FullRingTiles();
 
-  else if (_name == "VERTICES") p = new Lab_vertices();
+  else if (name_ == "VERTICES") p = new Lab_vertices();
 
-  else if (_name == "PETALO") p = new Lab();
+  else if (name_ == "PETALO") p = new Lab();
 
   else {
-    G4String err = "The user selected an unknown geometry: " + _name;
-    G4Exception("CreateGeometry", "[BaseGeometry]", FatalException, err);
+    G4String err = "The user selected an unknown geometry: " + name_;
+    G4Exception("[GeometryFactory]", "CreateGeometry()", FatalException, err);
   }
 
   return p;

@@ -1,12 +1,11 @@
 // ----------------------------------------------------------------------------
-///  \file   NexusApp.h
-///  \brief  
-///
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     8 March 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// nexus | NexusApp.h
+//
+// This class is the run manager of the nexus simulation. It takes care of
+// setting up the simulation (geometry, physics lists, generators, actions),
+// so that it is ready to be run.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef NEXUS_APP_H
@@ -22,9 +21,6 @@ namespace nexus {
   class GeometryFactory;
   class GeneratorFactory;
   class ActionsFactory;
-
-
-  /// TODO. CLASS DESCRIPTION
 
   class NexusApp: public G4RunManager
   {
