@@ -1,10 +1,14 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | SingleParticle.cc
 //
-//  Author : J Martin-Albo <jmalbos@ific.uv.es>
-//  Created: 27 Mar 2009
+// This class is the primary generator for events consisting of
+// a single particle. The user must specify via configuration
+// parameters the particle type, a kinetic energy interval and, optionally,
+// a momentum direction.
+// Particle energy is generated with flat random probability
+// between E_min and E_max.
 //
-//  Copyright (c) 2009, 2010 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "SingleParticle.h"

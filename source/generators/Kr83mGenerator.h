@@ -1,5 +1,14 @@
-#ifndef __Kr83mGeneration__
-#define __Kr83mGeneration__
+// ----------------------------------------------------------------------------
+// nexus | Kr83mGenerator.h
+//
+// This class is the primary generator for the decay chain
+// of the isomeric state krypton 83.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
+#ifndef Kr83m_GENERATOR_H
+#define Kr83m_GENERATOR_H
 
 #include <vector>
 #include <G4VPrimaryGenerator.hh>
@@ -11,9 +20,7 @@ class G4GenericMessenger;
 namespace nexus {
 
   class BaseGeometry;
-
-  /// Primary generator (concrete class of G4VPrimaryGenerator) 
-  /// for the decay chain of the isomeric state Krypton 83 
+ 
   /// This state decays into the fundamental state of Kr 83 in two steps,
   ///  (JP 1/2- --> Jp 7/2+ -> 9/2+), with transition energies of 32.15 and 9.4 keV
   ///  The life time of 83mKr is long, ~ 1.83 hours, so, infinite for us,
@@ -40,13 +47,13 @@ namespace nexus {
   /// it makes life a bit more complicated...
   /// So, we have to simulated 2 or 3 particles for each decay..  
   
-  class Kr83mGeneration: public G4VPrimaryGenerator
+  class Kr83mGenerator: public G4VPrimaryGenerator
   {
   public:
     //Constructor
-    Kr83mGeneration();
+    Kr83mGenerator();
     //Destructor
-    ~Kr83mGeneration();
+    ~Kr83mGenerator();
 
     void GeneratePrimaryVertex(G4Event* evt);
 

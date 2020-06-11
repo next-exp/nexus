@@ -32,9 +32,9 @@ GeneratorFactory::~GeneratorFactory()
 //////////////////////////////////////////////////////////////////////
 
 #include "SingleParticle.h"
-#include "IonGun.h"
-#include "Na22Generation.h"
-#include "Kr83mGeneration.h"
+#include "IonGenerator.h"
+#include "Na22Generator.h"
+#include "Kr83mGenerator.h"
 #include "ScintillationGenerator.h"
 #include "DoubleParticle.h"
 #include "Back2backGammas.h"
@@ -46,13 +46,13 @@ G4VPrimaryGenerator* GeneratorFactory::CreateGenerator()
 
   if (name_ == "SINGLE_PARTICLE") p_ = new SingleParticle();
 
-  else if (name_ == "ION_GUN") p_ = new IonGun();
+  else if (name_ == "ION") p_ = new IonGenerator();
 
-  else if (name_ == "NA22") p_ = new Na22Generation();
+  else if (name_ == "NA22") p_ = new Na22Generator();
 
-  else if (name_ == "Kr83m") p_ = new Kr83mGeneration();
+  else if (name_ == "Kr83m") p_ = new Kr83mGenerator();
 
-  else if (name_ == "SCINT_GENERATOR") p_ = new ScintillationGenerator();
+  else if (name_ == "SCINTILLATION") p_ = new ScintillationGenerator();
 
   else if (name_ == "DOUBLE_PARTICLE") p_ = new DoubleParticle();
 

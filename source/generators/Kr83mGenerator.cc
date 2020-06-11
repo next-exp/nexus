@@ -1,12 +1,13 @@
 // ----------------------------------------------------------------------------
+// nexus | Kr83mGenerator.cc
 //
+// This class is the primary generator for the decay chain
+// of the isomeric state krypton 83.
 //
-//  Author : P. Ferrario <paola.ferrario@ific.uv.es>    
-//  Created: 6 Dic 2011
-//
-//  Copyright (c) 2011 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
-#include "Kr83mGeneration.h"
+
+#include "Kr83mGenerator.h"
 
 #include "G4Event.hh"
 #include "DetectorConstruction.h"
@@ -29,7 +30,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  Kr83mGeneration::Kr83mGeneration() : geom_(0),energy_32_(32.1473*keV), energy_9_(9.396*keV),
+  Kr83mGenerator::Kr83mGenerator() : geom_(0),energy_32_(32.1473*keV), energy_9_(9.396*keV),
                                      probGamma_9_(0.0490), lifetime_9_(154.*ns)
   {
   // From the TORI /ENSDF data tables. 
@@ -71,7 +72,7 @@ namespace nexus {
    energy_Xrays_.push_back(14.326*keV);   	
    probability_Xrays_.push_back(0.01*0.0064 + probability_Xrays_[probability_Xrays_.size() -1]);
    
-   std::cerr << " Kr83Generation::Kr83Generation, probability to emit an X-ray " 
+   std::cerr << " Kr83Generator::Kr83Generator, probability to emit an X-ray " 
              << probability_Xrays_[probability_Xrays_.size() -1]*100. << " percent " << std::endl;
     /// For the moment, only random direction are allowed. 
     // Since the transion are either E3, M4 (32 keV), E2, M1, (9 keV), 
@@ -101,11 +102,11 @@ namespace nexus {
 //
   }
 
-  Kr83mGeneration::~Kr83mGeneration()
+  Kr83mGenerator::~Kr83mGenerator()
   {
   }
 
-  void Kr83mGeneration::GeneratePrimaryVertex(G4Event* evt)
+  void Kr83mGenerator::GeneratePrimaryVertex(G4Event* evt)
   {
     // Add an Ascci ntuple to debug.. 
    // const int evtNum = evt->GetEventID();

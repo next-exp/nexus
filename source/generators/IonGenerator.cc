@@ -1,12 +1,14 @@
-// -----------------------------------------------------------------------------
-//  nexus | IonGun.cc
+// ----------------------------------------------------------------------------
+// nexus | IonGenerator.cc
 //
-//  * Author: <miquel.nebot@ific.uv.es>
-//            <justo.martin-albo@ific.uv.es>
-//  * Creation date: 01 Aug 2013
-// -----------------------------------------------------------------------------
+// This class is the primary generator for events consisting in the decay
+// of a radioactive ion. The user must specify via configuration parameters
+// the atomic number, mass number and energy level of the isotope of interest.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
-#include "IonGun.h"
+#include "IonGenerator.h"
 
 #include "BaseGeometry.h"
 #include "DetectorConstruction.h"
@@ -20,14 +22,14 @@
 using namespace nexus;
 
 
-IonGun::IonGun():
+IonGenerator::IonGenerator():
   G4VPrimaryGenerator(),
   atomic_number_(0), mass_number_(0), energy_level_(0.),
   decay_at_time_zero_(true),
   region_(""),
   msg_(nullptr), geom_(nullptr)
 {
-  msg_ = new G4GenericMessenger(this, "/Generator/IonGun/",
+  msg_ = new G4GenericMessenger(this, "/Generator/IonGenerator/",
                                 "Control commands of the ion gun primary generator.");
 
   G4GenericMessenger::Command& atomic_number_cmd =
@@ -56,22 +58,23 @@ IonGun::IonGun():
   const DetectorConstruction* detconst = dynamic_cast<const DetectorConstruction*>
     (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
   if (detconst) geom_ = detconst->GetGeometry();
-  else G4Exception("IonGun()", "[IonGun]", FatalException, "Unable to load geometry.");
+  else G4Exception("[IonGenerator]", "IonGenerator()", FatalException,
+                   "Unable to load geometry.");
 }
 
 
-IonGun::~IonGun()
+IonGenerator::~IonGenerator()
 {
   delete msg_;
 }
 
 
-G4ParticleDefinition* IonGun::IonDefinition()
+G4ParticleDefinition* IonGenerator::IonDefinition()
 {
   G4ParticleDefinition* pdef =
     G4IonTable::GetIonTable()->GetIon(atomic_number_, mass_number_, energy_level_);
 
-  if (!pdef) G4Exception("IonDefinition()", "[IonGun]",
+  if (!pdef) G4Exception("[IonGenerator]", "IonDefinition()",
                          FatalException, "Unable to find the requested ion.");
 
   // Unstable ions decay by default at a random time t sampled from an exponential
@@ -88,7 +91,7 @@ G4ParticleDefinition* IonGun::IonDefinition()
 }
 
 
-void IonGun::GeneratePrimaryVertex(G4Event* event)
+void IonGenerator::GeneratePrimaryVertex(G4Event* event)
 {
   // Pointer declared as static so that it gets allocated only once
   // (i.e. the ion definition is only looked up in the first event).

@@ -1,12 +1,14 @@
 // ----------------------------------------------------------------------------
+// nexus | Na22Generator.cc
 //
+// This class is the primary generator of Na22-like events consisting of
+// two particles in coincidence (back-to-back) coming from e+e- annihilation
+// and one disexcitation gamma.
 //
-//  Author : P. Ferrario <paola.ferrario@ific.uv.es>    
-//  Created: 6 Dic 2011
-//
-//  Copyright (c) 2011 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
-#include "Na22Generation.h"
+
+#include "Na22Generator.h"
 
 #include "G4Event.hh"
 #include "DetectorConstruction.h"
@@ -25,7 +27,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
- Na22Generation::Na22Generation() : geom_(0) 
+ Na22Generator::Na22Generator() : geom_(0) 
   {
     /// For the moment, only random direction are allowed. To be fixes if needed
      msg_ = new G4GenericMessenger(this, "/Generator/Na22Generator/",
@@ -39,11 +41,11 @@ namespace nexus {
     geom_ = detconst->GetGeometry();
   }
 
-  Na22Generation::~Na22Generation()
+  Na22Generator::~Na22Generator()
   {
   }
 
-  void Na22Generation::GeneratePrimaryVertex(G4Event* evt)
+  void Na22Generator::GeneratePrimaryVertex(G4Event* evt)
   {
     // Ask the geometry to generate a position for the particle
 

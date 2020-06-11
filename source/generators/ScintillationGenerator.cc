@@ -1,10 +1,11 @@
 // ----------------------------------------------------------------------------
-//  $Id: ScintillationGenerator.cc 9593 2014-02-13 16:38:56Z paola $
+// nexus | ScintillationGenerator.cc
 //
-//  Author : J Martin-Albo <jmalbos@ific.uv.es>
-//  Created: 27 Mar 2009
+// This class is the primary generator of a number of optical photons with
+// energy following the scintillation spectrum of the material
+// where the vertex is produced.
 //
-//  Copyright (c) 2009, 2010 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "ScintillationGenerator.h"

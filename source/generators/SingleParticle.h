@@ -1,16 +1,18 @@
 // ----------------------------------------------------------------------------
-///  \file   SingleParticle.h
-///  \brief  Primary generator for single-particle events.
-///  
-///  \author   J Martin-Albo <jmalbos@ific.uv.es>    
-///  \date     27 Mar 2009
-///  \version  $Id$
-///
-///  Copyright (c) 2009, 2010 NEXT Collaboration
+// nexus | SingleParticle.h
+//
+// This class is the primary generator for events consisting of
+// a single particle. The user must specify via configuration
+// parameters the particle type, a kinetic energy interval and, optionally,
+// a momentum direction.
+// Particle energy is generated with flat random probability
+// between E_min and E_max.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __SINGLE_PARTICLE__
-#define __SINGLE_PARTICLE__
+#ifndef SINGLE_PARTICLE_H
+#define SINGLE_PARTICLE_H
 
 #include <G4VPrimaryGenerator.hh>
 

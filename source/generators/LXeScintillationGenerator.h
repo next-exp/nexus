@@ -1,14 +1,15 @@
 // ----------------------------------------------------------------------------
-///  file   LXeScintillationGenerator.h
-///  brief  Primary generator for scintillation in LXe
-///
-///  author  Paola Ferrario <paola.ferrario@dipc.org>
-///  date    2 Apr 2019
-///  Copyright (c) 2019 NEXT Collaboration
+// nexus | LXeScintillationGenerator.h
+//
+// This class is the primary generator of a number of optical photons with
+// energy following the scintillation spectrum of LXe,
+// where the vertex is produced.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __LXESCINTILLATIONGENERATOR__
-#define __LXESCINTILLATIONGENERATOR__
+#ifndef LXESCINTILLATIONGENERATOR_H
+#define LXESCINTILLATIONGENERATOR_H
 
 #include <G4VPrimaryGenerator.hh>
 
@@ -19,12 +20,6 @@ class G4PhysicsOrderedFreeVector;
 namespace nexus {
 
   class BaseGeometry;
-
-
-  /// Primary generator (concrete class of G4VPrimaryGenerator) for events
-  /// consisting of a single particle. The user must specify via configuration
-  /// parameters the particle type, a kinetic energy interval (a random
-  /// value with random .
 
   class LXeScintillationGenerator: public G4VPrimaryGenerator
   {
@@ -54,4 +49,4 @@ namespace nexus {
 
 } // end namespace nexus
 
-#endif // __LXESCINTILLATIONGENERATOR__
+#endif

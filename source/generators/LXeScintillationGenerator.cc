@@ -1,9 +1,11 @@
 // ----------------------------------------------------------------------------
+// nexus | LXeScintillationGenerator.cc
 //
-//  Author : Paola Ferrario <paola.ferrario@dipc.org>
-//  Created: 2 Apr 2019
+// This class is the primary generator of a number of optical photons with
+// energy following the scintillation spectrum of LXe,
+// where the vertex is produced.
 //
-//  Copyright (c) 2019 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "LXeScintillationGenerator.h"

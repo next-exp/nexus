@@ -1,16 +1,15 @@
 // ----------------------------------------------------------------------------
-///  \file   ScintillationGenerator.h
-///  \brief  Primary generator for scintillation in HPXe
-///  
-///  \author   J Martin-Albo <jmalbos@ific.uv.es>    
-///  \date     27 Mar 2009
-///  \version  $Id: ScintillationGenerator.h 9216 2013-09-05 12:57:42Z paola $
-///
-///  Copyright (c) 2009, 2010 NEXT Collaboration
+// nexus | ScintillationGenerator.h
+//
+// This class is the primary generator of a number of optical photons with
+// energy following the scintillation spectrum of the material
+// where the vertex is produced.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __SCINTILLATIONGENERATOR__
-#define __SCINTILLATIONGENERATOR__
+#ifndef SCINTILLATIONGENERATOR_H
+#define SCINTILLATIONGENERATOR_H
 
 #include <G4VPrimaryGenerator.hh>
 #include <G4Navigator.hh>
