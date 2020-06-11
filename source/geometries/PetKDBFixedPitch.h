@@ -1,12 +1,9 @@
 // ----------------------------------------------------------------------------
-///  \file   PetKDBFixedPitch.h
-///  \brief  Geometry of the PETALO Dice Boards.
-///
-///  \author  <paolafer@ific.uv.es>
-///  \date    2015
-///  \version $Id$
+// nexus | PetKDBFixedPitch.h
 //
-///  Copyright (c) 2015-2017 NEXT Collaboration. All rights reserved.
+// Kapton dice board with a fixed distance among SiPMs.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef PET_KDBFixedPitch_H

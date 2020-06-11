@@ -1,5 +1,14 @@
-#ifndef FULLRINGINF_
-#define FULLRINGINF_
+// ----------------------------------------------------------------------------
+// nexus | FullRingInfinity.h
+//
+// This class implements the geometry of a cylindric ring of LXe,
+// of configurable length and diameter.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
+#ifndef FULL_RING_INF_H
+#define FULL_RING_INF_H
 
 #include "BaseGeometry.h"
 #include <vector>

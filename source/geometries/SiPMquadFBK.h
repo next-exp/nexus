@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------
+// nexus | SiPMquadFBK.h
+//
+// Specific SiPM geometry proposed by FBK.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #ifndef SIPM_quad_FBK_H
 #define SIPM_quad_FBK_H
 
@@ -15,13 +23,13 @@ namespace nexus {
     SiPMquadFBK();
     /// Destructor
     ~SiPMquadFBK();
-    
+
     /// Return dimensions of the SiPM
     //G4ThreeVector GetDimensions() const;
-    
+
     /// Invoke this method to build the volumes of the geometry
     void Construct();
-    
+
   private:
     //G4ThreeVector _dimensions; ///< external dimensions of the SiPMpet
 
@@ -37,7 +45,7 @@ namespace nexus {
     G4double time_binning_;
 
      // Messenger for the definition of control commands
-    G4GenericMessenger* msg_; 
+    G4GenericMessenger* msg_;
 
   };
 

@@ -1,12 +1,9 @@
 // ----------------------------------------------------------------------------
-///  \file   BaseGeometry.h
-///  \brief  Abstract base class for encapsulation of geometries.
-///
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     27 Mar 2009
-///  \version  $Id$
-///
-///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
+// nexus | BaseGeometry.h
+//
+// This is an abstract base class for encapsulation of geometries.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef BASE_GEOMETRY_H
@@ -76,7 +73,7 @@ namespace nexus {
     void SetDimensions(G4ThreeVector dim);
 
   protected:
-    G4ThreeVector _dimensions; ///< XYZ dimensions of a regular geometry
+    G4ThreeVector dimensions_; ///< XYZ dimensions of a regular geometry
 
 
   private:
@@ -86,24 +83,24 @@ namespace nexus {
     const BaseGeometry& operator=(const BaseGeometry&);
 
   private:
-    G4LogicalVolume* _logicVol; ///< Pointer to the logical volume
-    G4double _span; ///< Maximum dimension of the geometry
-    G4bool _drift; ///< True if geometry contains a drift field (for hit coordinates)
-    G4double _el_z; ///< Starting point of EL generation in z
+    G4LogicalVolume* logicVol_; ///< Pointer to the logical volume
+    G4double span_; ///< Maximum dimension of the geometry
+    G4bool drift_; ///< True if geometry contains a drift field (for hit coordinates)
+    G4double el_z_; ///< Starting point of EL generation in z
   };
 
 
   // Inline definitions ///////////////////////////////////
 
-  inline BaseGeometry::BaseGeometry(): _logicVol(0), _span(25.*m), _drift(false), _el_z(0.*mm) {}
+  inline BaseGeometry::BaseGeometry(): logicVol_(0), span_(25.*m), drift_(false), el_z_(0.*mm) {}
 
   inline BaseGeometry::~BaseGeometry() {}
 
   inline G4LogicalVolume* BaseGeometry::GetLogicalVolume() const
-  { return _logicVol; }
+  { return logicVol_; }
 
   inline void BaseGeometry::SetLogicalVolume(G4LogicalVolume* lv)
-  { _logicVol = lv; }
+  { logicVol_ = lv; }
 
   inline G4ThreeVector BaseGeometry::GenerateVertex(const G4String&) const
   { return G4ThreeVector(0., 0., 0.); }
@@ -111,22 +108,22 @@ namespace nexus {
   inline std::pair<G4ThreeVector, G4ThreeVector> BaseGeometry::GenerateVertices(const G4String&) const
     { return std::make_pair(G4ThreeVector(0., 0., 0.),G4ThreeVector(0., 0., 0.)); }
   
-  inline void BaseGeometry::SetSpan(G4double s) { _span = s; }
+  inline void BaseGeometry::SetSpan(G4double s) { span_ = s; }
 
-  inline G4double BaseGeometry::GetSpan() { return _span; }
+  inline G4double BaseGeometry::GetSpan() { return span_; }
 
 
-  inline void BaseGeometry::SetDrift(G4bool drift) { _drift = drift; }
+  inline void BaseGeometry::SetDrift(G4bool drift) { drift_ = drift; }
 
-  inline G4bool BaseGeometry::GetDrift() const { return _drift; }
+  inline G4bool BaseGeometry::GetDrift() const { return drift_; }
 
-  inline G4double BaseGeometry::GetELzCoord() const {return _el_z;}
+  inline G4double BaseGeometry::GetELzCoord() const {return el_z_;}
 
-  inline void BaseGeometry::SetELzCoord(G4double z) {_el_z = z;}
+  inline void BaseGeometry::SetELzCoord(G4double z) {el_z_ = z;}
   
-  inline void BaseGeometry::SetDimensions(G4ThreeVector dim) {  _dimensions = dim; }
+  inline void BaseGeometry::SetDimensions(G4ThreeVector dim) {  dimensions_ = dim; }
   
-  inline  G4ThreeVector BaseGeometry::GetDimensions()  { return _dimensions; }
+  inline  G4ThreeVector BaseGeometry::GetDimensions()  { return dimensions_; }
 
   inline void BaseGeometry::CalculateGlobalPos(G4ThreeVector& vertex) const
   {

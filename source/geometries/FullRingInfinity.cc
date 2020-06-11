@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id: FullRingInfinity.cc  $
+// nexus | FullRingInfinity.cc
 //
-//  Author:  <paolafer@ific.uv.es>
-//  Created: March 2018
+// This class implements the geometry of a cylindric ring of LXe,
+// of configurable length and diameter.
 //
-//  Copyright (c) 2015 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "FullRingInfinity.h"

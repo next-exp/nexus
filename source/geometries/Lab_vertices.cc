@@ -1,11 +1,12 @@
 // ----------------------------------------------------------------------------
-//  $Id: Lab.cc 10054 2015-02-09 14:50:49Z paola $
+// nexus | Lab_vertices.cc
 //
-//  Author:  <paolafer@ific.uv.es>
-//  Created: 2015
-//  
-//  Copyright (c) 2015-2017 NEXT Collaboration. All rights reserved.
-// ---------------------------------------------------------------------------- 
+// This class consists of two LXe cells placed opposite to each other.
+// A file is expected to be read with the positions of the vertices of the gamma
+// interactions in each cell.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #include "Lab_vertices.h"
 
@@ -37,14 +38,14 @@ namespace nexus {
   using namespace CLHEP;
 
   Lab_vertices::Lab_vertices(): 
-    BaseGeometry(), _msg(0), type_("LXe")
+    BaseGeometry(), msg_(0), type_("LXe")
   {
-    _msg = new G4GenericMessenger(this, "/Geometry/Lab_vertices/", 
+    msg_ = new G4GenericMessenger(this, "/Geometry/Lab_vertices/", 
 				  "Control commands of geometry Lab_vertices.");
-    _msg->DeclareProperty("starting_point", starting_point_, "");
-    _msg->DeclareProperty("file_name", filename_, "");
+    msg_->DeclareProperty("starting_point", starting_point_, "");
+    msg_->DeclareProperty("file_name", filename_, "");
      // Which material are we using?
-     _msg->DeclareProperty("det_type", type_, "type of detector");
+     msg_->DeclareProperty("det_type", type_, "type of detector");
 
      module_ = new PetLXeCell();
     
@@ -54,7 +55,7 @@ namespace nexus {
 
   Lab_vertices::~Lab_vertices()
   {
-    delete _msg;
+    delete msg_;
   } 
 
 

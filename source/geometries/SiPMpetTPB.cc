@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | SiPMpetTPB.cc
 //
-//  Author:
-//  Created: 2 March 2010
+// Basic 3x3 mm2 SiPM geometry with TPB coating.
+// The decay time of TPB is configurable.
 //
-//  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "SiPMpetTPB.h"
@@ -34,28 +34,28 @@ namespace nexus {
   using namespace CLHEP;
 
   SiPMpetTPB::SiPMpetTPB(): BaseGeometry(),
-			    _visibility(0),
-                            _refr_index(1.),
-                            _decay_time(2.2*nanosecond),
-			    _phys(1),
-                            _time_binning(1.*microsecond)
+			    visibility_(0),
+                            refr_index_(1.),
+                            decay_time_(2.2*nanosecond),
+			    phys_(1),
+                            time_binning_(1.*microsecond)
   {
     /// Messenger
-    _msg = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
-    _msg->DeclareProperty("SiPMpet_vis", _visibility, "SiPMpet Visibility");
-    _msg->DeclareProperty("refr_index", _refr_index, "Refraction index for epoxy");
+    msg_ = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
+    msg_->DeclareProperty("SiPMpet_vis", visibility_, "SiPMpet Visibility");
+    msg_->DeclareProperty("refr_index", refr_index_, "Refraction index for epoxy");
     //Are we using physical opt properties?
-    _msg->DeclareProperty("physics", _phys, "physical optical properties");
+    msg_->DeclareProperty("physics", phys_, "physical optical properties");
 
     G4GenericMessenger::Command& decay_time_cmd =
-      _msg->DeclareProperty("decay_time", _decay_time,
+      msg_->DeclareProperty("decay_time", decay_time_,
 			    "Time binning of SensL SiPM");
     decay_time_cmd.SetUnitCategory("Decay time of TPB");
     decay_time_cmd.SetParameterName("decay_time", false);
     decay_time_cmd.SetRange("decay_time>0.");
 
     G4GenericMessenger::Command& time_cmd =
-      _msg->DeclareProperty("time_binning", _time_binning, "Time binning for the sensor");
+      msg_->DeclareProperty("time_binning", time_binning_, "Time binning for the sensor");
     time_cmd.SetUnitCategory("Time");
     time_cmd.SetParameterName("time_binning", false);
     time_cmd.SetRange("time_binning>0.");
@@ -95,8 +95,8 @@ namespace nexus {
     G4Box* sipm_solid = new G4Box("SIPMpet", sipm_x/2., sipm_y/2., sipm_z/2);
 
     G4Material* epoxy = MaterialsList::Epoxy();
-    G4cout << "Epoxy in SiPMTPB used with constant refraction index = " <<  _refr_index << G4endl;
-    epoxy->SetMaterialPropertiesTable(OpticalMaterialProperties::EpoxyFixedRefr(_refr_index));
+    G4cout << "Epoxy in SiPMTPB used with constant refraction index = " <<  refr_index_ << G4endl;
+    epoxy->SetMaterialPropertiesTable(OpticalMaterialProperties::EpoxyFixedRefr(refr_index_));
 
 
     G4LogicalVolume* sipm_logic =
@@ -108,12 +108,12 @@ namespace nexus {
     G4double tpb_z = 0.001 * mm;
     G4Box* tpb_solid = new G4Box("TPB", sipm_x/2., sipm_y/2., tpb_z/2);
     G4Material* TPB = MaterialsList::TPB();
-    if (_phys) {
+    if (phys_) {
       G4cout << "TPB with refraction index equal to LXe" << G4endl;
-      TPB->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB_LXe(_decay_time));
+      TPB->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB_LXe(decay_time_));
     } else {
       G4cout << "TPB with constant refraction index equal to 1.7 "<< G4endl;
-      TPB->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB_LXe_nconst(_decay_time));
+      TPB->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB_LXe_nconst(decay_time_));
     }
 
     G4LogicalVolume* tpb_logic =
@@ -234,7 +234,7 @@ namespace nexus {
       ToFSD* sipmsd = new ToFSD(sdname);
       sipmsd->SetDetectorVolumeDepth(0);
       sipmsd->SetDetectorNamingOrder(1000.);
-      sipmsd->SetTimeBinning(_time_binning);
+      sipmsd->SetTimeBinning(time_binning_);
       //    sipmsd->SetMotherVolumeDepth(1);
       //      sipmsd->SetGrandMotherVolumeDepth(3);
       sipmsd->SetMotherVolumeDepth(2);
@@ -244,7 +244,7 @@ namespace nexus {
     }
 
     // Visibilities
-    if (_visibility) {
+    if (visibility_) {
       G4VisAttributes red_col = nexus::Brown();
       sipm_logic->SetVisAttributes(red_col);
 

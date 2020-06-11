@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------
+// nexus | SiPMpetFBK.h
+//
+// Basic SiPM geometry without TPB coating.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #ifndef SIPM_pet_FBK_H
 #define SIPM_pet_FBK_H
 

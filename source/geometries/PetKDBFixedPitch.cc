@@ -1,11 +1,10 @@
-// ---------------------------------------------------------------------------
-//  $Id$
-// 
-//  Author:  <paolafer@ific.uv.es>
-//  Created: 2015
+// ----------------------------------------------------------------------------
+// nexus | PetKDBFixedPitch.cc
 //
-//  Copyright (c) 2015-2017 NEXT Collaboration. All rights reserved.
-// ---------------------------------------------------------------------------
+// Kapton dice board with a fixed distance among SiPMs.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #include "PetKDBFixedPitch.h"
 
