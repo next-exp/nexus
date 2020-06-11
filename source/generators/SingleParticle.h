@@ -53,25 +53,25 @@ namespace nexus {
     G4double RandomEnergy() const;
     
   private:
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
   
-    G4ParticleDefinition* _particle_definition;
+    G4ParticleDefinition* particle_definition_;
 
-    G4double _energy_min; ///< Minimum kinetic energy 
-    G4double _energy_max; ///< Maximum kinetic energy
+    G4double energy_min_; ///< Minimum kinetic energy 
+    G4double energy_max_; ///< Maximum kinetic energy
 
-    const BaseGeometry* _geom; ///< Pointer to the detector geometry
+    const BaseGeometry* geom_; ///< Pointer to the detector geometry
 
-    G4String _region;
+    G4String region_;
 
-    G4double _momentum_X;
-    G4double _momentum_Y;
-    G4double _momentum_Z;
+    G4double momentum_X_;
+    G4double momentum_Y_;
+    G4double momentum_Z_;
 
-    G4double _costheta_min;
-    G4double _costheta_max;
-    G4double _phi_min;
-    G4double _phi_max;
+    G4double costheta_min_;
+    G4double costheta_max_;
+    G4double phi_min_;
+    G4double phi_max_;
 
     
   };

@@ -33,10 +33,10 @@ namespace nexus {
 
   private:
 
-    G4GenericMessenger* _msg;
-    const BaseGeometry* _geom;
+    G4GenericMessenger* msg_;
+    const BaseGeometry* geom_;
 
-    G4String _region;
+    G4String region_;
   };
 
 }// end namespace nexus

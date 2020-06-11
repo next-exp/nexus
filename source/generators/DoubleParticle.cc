@@ -1,10 +1,11 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | DoubleParticle.cc
 //
-//  Author : P Ferrario <paolafer@ific.uv.es>    
-//  Created: 
+// This generator is based on the SingleParticle generator, but simulates
+// two particles instead of one. The region passed to the GenerateVertex()
+// method must provide two positions.
 //
-//  Copyright (c) 2009, 2010 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "DoubleParticle.h"
@@ -30,49 +31,49 @@ using namespace CLHEP;
 
 
 DoubleParticle::DoubleParticle():
-G4VPrimaryGenerator(), _msg(0), _particle_definition(0),
-_energy_min(0.), _energy_max(0.), _geom(0)
+G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
+energy_min_(0.), energy_max_(0.), geom_(0)
 {
-  _msg = new G4GenericMessenger(this, "/Generator/DoubleParticle/",
+  msg_ = new G4GenericMessenger(this, "/Generator/DoubleParticle/",
     "Control commands of single-particle generator.");
 
-  _msg->DeclareMethod("particle", &DoubleParticle::SetParticleDefinition, 
+  msg_->DeclareMethod("particle", &DoubleParticle::SetParticleDefinition, 
     "Set particle to be generated.");
 
   G4GenericMessenger::Command& min_energy =
-    _msg->DeclareProperty("min_energy", _energy_min, 
+    msg_->DeclareProperty("min_energy", energy_min_, 
       "Set minimum kinetic energy of the particle.");
   min_energy.SetUnitCategory("Energy");
   min_energy.SetParameterName("min_energy", false);
   min_energy.SetRange("min_energy>0.");
 
   G4GenericMessenger::Command& max_energy =
-    _msg->DeclareProperty("max_energy", _energy_max, 
+    msg_->DeclareProperty("max_energy", energy_max_, 
       "Set maximum kinetic energy of the particle");
   max_energy.SetUnitCategory("Energy");
 
-  _msg->DeclareProperty("region", _region, 
+  msg_->DeclareProperty("region", region_, 
     "Set the region of the geometry where the vertex will be generated.");
 
   DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
-  _geom = detconst->GetGeometry();
+  geom_ = detconst->GetGeometry();
 }
 
 
 
 DoubleParticle::~DoubleParticle()
 {
-  delete _msg;
+  delete msg_;
 }
 
 
 
 void DoubleParticle::SetParticleDefinition(G4String particle_name)
 {
-  _particle_definition = 
+  particle_definition_ = 
     G4ParticleTable::GetParticleTable()->FindParticle(particle_name);
 
-  if (!_particle_definition)
+  if (!particle_definition_)
     G4Exception("SetParticleDefinition()", "[DoubleParticle]",
       FatalException, "User gave an unknown particle name.");
 }
@@ -82,7 +83,7 @@ void DoubleParticle::SetParticleDefinition(G4String particle_name)
 void DoubleParticle::GeneratePrimaryVertex(G4Event* event)
 {
   // Generate an initial position for the particle using the geometry
-  std::pair<G4ThreeVector, G4ThreeVector>  positions = _geom->GenerateVertices(_region);
+  std::pair<G4ThreeVector, G4ThreeVector>  positions = geom_->GenerateVertices(region_);
   G4ThreeVector pos1 = positions.first;
   G4ThreeVector pos2 = positions.second;
 
@@ -100,24 +101,24 @@ void DoubleParticle::GeneratePrimaryVertex(G4Event* event)
   G4double kinetic_energy = RandomEnergy();
 
   // Generate random direction by default
-  G4ThreeVector _momentum_direction = G4RandomDirection();
+  G4ThreeVector momentum_direction_ = G4RandomDirection();
 
     // Calculate cartesian components of momentum
-  G4double mass   = _particle_definition->GetPDGMass();
+  G4double mass   = particle_definition_->GetPDGMass();
   G4double energy = kinetic_energy + mass;
   G4double pmod = std::sqrt(energy*energy - mass*mass);
-  G4double px = pmod * _momentum_direction.x();
-  G4double py = pmod * _momentum_direction.y();
-  G4double pz = pmod * _momentum_direction.z();
+  G4double px = pmod * momentum_direction_.x();
+  G4double py = pmod * momentum_direction_.y();
+  G4double pz = pmod * momentum_direction_.z();
 
 
 
   // Create the new primary particle and set it some properties
   G4PrimaryParticle* particle = 
-    new G4PrimaryParticle(_particle_definition, px, py, pz);
+    new G4PrimaryParticle(particle_definition_, px, py, pz);
 
   // Set random polarization
-  if (_particle_definition == G4OpticalPhoton::Definition()) {
+  if (particle_definition_ == G4OpticalPhoton::Definition()) {
     G4ThreeVector polarization = G4RandomDirection();
     particle->SetPolarization(polarization);
   }
@@ -133,22 +134,22 @@ void DoubleParticle::GeneratePrimaryVertex(G4Event* event)
   G4double kinetic_energy2 = RandomEnergy();
 
   // Generate random direction by default
-  G4ThreeVector _momentum_direction2 = G4RandomDirection();
+  G4ThreeVector momentum_direction2_ = G4RandomDirection();
 
     // Calculate cartesian components of momentum
   // G4double mass   = _particle_definition->GetPDGMass();
   G4double energy2 = kinetic_energy2 + mass;
   G4double pmod2 = std::sqrt(energy2*energy2 - mass*mass);
-  G4double px2 = pmod2 * _momentum_direction2.x();
-  G4double py2 = pmod2 * _momentum_direction2.y();
-  G4double pz2 = pmod2 * _momentum_direction2.z();
+  G4double px2 = pmod2 * momentum_direction2_.x();
+  G4double py2 = pmod2 * momentum_direction2_.y();
+  G4double pz2 = pmod2 * momentum_direction2_.z();
 
   // Create the new primary particle and set it some properties
   G4PrimaryParticle* particle2 = 
-    new G4PrimaryParticle(_particle_definition, px2, py2, pz2);
+    new G4PrimaryParticle(particle_definition_, px2, py2, pz2);
 
   // Set random polarization
-  if (_particle_definition == G4OpticalPhoton::Definition()) {
+  if (particle_definition_ == G4OpticalPhoton::Definition()) {
     G4ThreeVector polarization2 = G4RandomDirection();
     particle2->SetPolarization(polarization2);
   }
@@ -162,8 +163,8 @@ void DoubleParticle::GeneratePrimaryVertex(G4Event* event)
 
 G4double DoubleParticle::RandomEnergy() const
 {
-  if (_energy_max == _energy_min) 
-    return _energy_min;
+  if (energy_max_ == energy_min_) 
+    return energy_min_;
   else
-    return (G4UniformRand()*(_energy_max - _energy_min) + _energy_min);
+    return (G4UniformRand()*(energy_max_ - energy_min_) + energy_min_);
 }

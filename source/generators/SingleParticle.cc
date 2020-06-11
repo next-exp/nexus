@@ -29,75 +29,75 @@ using namespace CLHEP;
 
 
 SingleParticle::SingleParticle():
-G4VPrimaryGenerator(), _msg(0), _particle_definition(0),
-_energy_min(0.), _energy_max(0.), _geom(0), _momentum_X(0.),
-_momentum_Y(0.), _momentum_Z(0.), _costheta_min(-1.), _costheta_max(1.),
-_phi_min(0.), _phi_max(2.*pi)
+G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
+energy_min_(0.), energy_max_(0.), geom_(0), momentum_X_(0.),
+momentum_Y_(0.), momentum_Z_(0.), costheta_min_(-1.), costheta_max_(1.),
+phi_min_(0.), phi_max_(2.*pi)
 {
-  _msg = new G4GenericMessenger(this, "/Generator/SingleParticle/",
+  msg_ = new G4GenericMessenger(this, "/Generator/SingleParticle/",
     "Control commands of single-particle generator.");
 
-  _msg->DeclareMethod("particle", &SingleParticle::SetParticleDefinition,
+  msg_->DeclareMethod("particle", &SingleParticle::SetParticleDefinition,
     "Set particle to be generated.");
 
   G4GenericMessenger::Command& min_energy =
-    _msg->DeclareProperty("min_energy", _energy_min,
+    msg_->DeclareProperty("min_energy", energy_min_,
       "Set minimum kinetic energy of the particle.");
   min_energy.SetUnitCategory("Energy");
   min_energy.SetParameterName("min_energy", false);
   min_energy.SetRange("min_energy>0.");
 
   G4GenericMessenger::Command& max_energy =
-    _msg->DeclareProperty("max_energy", _energy_max,
+    msg_->DeclareProperty("max_energy", energy_max_,
       "Set maximum kinetic energy of the particle");
   max_energy.SetUnitCategory("Energy");
   max_energy.SetParameterName("max_energy", false);
   max_energy.SetRange("max_energy>0.");
 
-  _msg->DeclareProperty("region", _region,
+  msg_->DeclareProperty("region", region_,
     "Set the region of the geometry where the vertex will be generated.");
 
   /// Temporary
   //G4GenericMessenger::Command&  momentum_X_cmd =
-  _msg->DeclareProperty("momentum_X", _momentum_X,
+  msg_->DeclareProperty("momentum_X", momentum_X_,
 			"x coord of momentum");
   //G4GenericMessenger::Command&  momentum_Y_cmd =
-  _msg->DeclareProperty("momentum_Y", _momentum_Y,
+  msg_->DeclareProperty("momentum_Y", momentum_Y_,
 			"y coord of momentum");
   //G4GenericMessenger::Command&  momentum_Z_cmd =
-  _msg->DeclareProperty("momentum_Z", _momentum_Z,
+  msg_->DeclareProperty("momentum_Z", momentum_Z_,
 			"z coord of momentum");
 
-  _msg->DeclareProperty("min_costheta", _costheta_min,
+  msg_->DeclareProperty("min_costheta", costheta_min_,
 			"Set minimum cosTheta for the direction of the particle.");
-  _msg->DeclareProperty("max_costheta", _costheta_max,
+  msg_->DeclareProperty("max_costheta", costheta_max_,
 			"Set maximum cosTheta for the direction of the particle.");
-  _msg->DeclareProperty("min_phi", _phi_min,
+  msg_->DeclareProperty("min_phi", phi_min_,
 			"Set minimum phi for the direction of the particle.");
-  _msg->DeclareProperty("max_phi", _phi_max,
+  msg_->DeclareProperty("max_phi", phi_max_,
 			"Set maximum phi for the direction of the particle.");
 
 
 
   DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
-  _geom = detconst->GetGeometry();
+  geom_ = detconst->GetGeometry();
 }
 
 
 
 SingleParticle::~SingleParticle()
 {
-  delete _msg;
+  delete msg_;
 }
 
 
 
 void SingleParticle::SetParticleDefinition(G4String particle_name)
 {
-  _particle_definition =
+  particle_definition_ =
     G4ParticleTable::GetParticleTable()->FindParticle(particle_name);
 
-  if (!_particle_definition)
+  if (!particle_definition_)
     G4Exception("SetParticleDefinition()", "[SingleParticle]",
       FatalException, "User gave an unknown particle name.");
 }
@@ -107,7 +107,7 @@ void SingleParticle::SetParticleDefinition(G4String particle_name)
 void SingleParticle::GeneratePrimaryVertex(G4Event* event)
 {
   // Generate an initial position for the particle using the geometry
-  G4ThreeVector position = _geom->GenerateVertex(_region);
+  G4ThreeVector position = geom_->GenerateVertex(region_);
 
   // Particle generated at start-of-event
   G4double time = 0.;
@@ -119,41 +119,41 @@ void SingleParticle::GeneratePrimaryVertex(G4Event* event)
   G4double kinetic_energy = RandomEnergy();
 
   // Generate random direction by default
-  G4ThreeVector _momentum_direction = G4RandomDirection();
+  G4ThreeVector momentum_direction_ = G4RandomDirection();
 
     // Calculate cartesian components of momentum
-  G4double mass   = _particle_definition->GetPDGMass();
+  G4double mass   = particle_definition_->GetPDGMass();
   G4double energy = kinetic_energy + mass;
   G4double pmod = std::sqrt(energy*energy - mass*mass);
-  G4double px = pmod * _momentum_direction.x();
-  G4double py = pmod * _momentum_direction.y();
-  G4double pz = pmod * _momentum_direction.z();
+  G4double px = pmod * momentum_direction_.x();
+  G4double py = pmod * momentum_direction_.y();
+  G4double pz = pmod * momentum_direction_.z();
 
   // If user provides a momentum direction, this one is used
-  if (_momentum_X != 0. || _momentum_Y != 0. || _momentum_Z != 0.) {
+  if (momentum_X_ != 0. || momentum_Y_ != 0. || momentum_Z_ != 0.) {
     // Normalize if needed
-    G4double mom_mod = std::sqrt(_momentum_X * _momentum_X +
-				 _momentum_Y * _momentum_Y +
-				 _momentum_Z * _momentum_Z);
-    px = pmod * _momentum_X/mom_mod;
-    py = pmod * _momentum_Y/mom_mod;
-    pz = pmod * _momentum_Z/mom_mod;
-  } else if (_costheta_min != -1. || _costheta_max != 1. || _phi_min != 0. || _phi_max !=2.*pi) {
+    G4double mom_mod = std::sqrt(momentum_X_ * momentum_X_ +
+				 momentum_Y_ * momentum_Y_ +
+				 momentum_Z_ * momentum_Z_);
+    px = pmod * momentum_X_/mom_mod;
+    py = pmod * momentum_Y_/mom_mod;
+    pz = pmod * momentum_Z_/mom_mod;
+  } else if (costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. || phi_max_ !=2.*pi) {
     G4bool mom_dir = false;
     while (mom_dir == false) {
       G4double cosTheta  = 2.*G4UniformRand()-1.;
-      if (cosTheta > _costheta_min && cosTheta < _costheta_max){
+      if (cosTheta > costheta_min_ && cosTheta < costheta_max_){
 	G4double sinTheta2 = 1. - cosTheta*cosTheta;
 	if( sinTheta2 < 0.)  sinTheta2 = 0.;
 	G4double sinTheta  = std::sqrt(sinTheta2);
 	G4double phi = twopi*G4UniformRand();
-	  if (phi > _phi_min && phi < _phi_max){
+	  if (phi > phi_min_ && phi < phi_max_){
 	    mom_dir = true;
-	    _momentum_direction = G4ThreeVector(sinTheta*std::cos(phi),
+	    momentum_direction_ = G4ThreeVector(sinTheta*std::cos(phi),
 						sinTheta*std::sin(phi), cosTheta).unit();
-	    px = pmod * _momentum_direction.x();
-	    py = pmod * _momentum_direction.y();
-	    pz = pmod * _momentum_direction.z();
+	    px = pmod * momentum_direction_.x();
+	    py = pmod * momentum_direction_.y();
+	    pz = pmod * momentum_direction_.z();
 	  }
       }
     }
@@ -161,10 +161,10 @@ void SingleParticle::GeneratePrimaryVertex(G4Event* event)
 
   // Create the new primary particle and set it some properties
   G4PrimaryParticle* particle =
-    new G4PrimaryParticle(_particle_definition, px, py, pz);
+    new G4PrimaryParticle(particle_definition_, px, py, pz);
 
   // Set random polarization
-  if (_particle_definition == G4OpticalPhoton::Definition()) {
+  if (particle_definition_ == G4OpticalPhoton::Definition()) {
     G4ThreeVector polarization = G4RandomDirection();
     particle->SetPolarization(polarization);
   }
@@ -178,8 +178,8 @@ void SingleParticle::GeneratePrimaryVertex(G4Event* event)
 
 G4double SingleParticle::RandomEnergy() const
 {
-  if (_energy_max == _energy_min)
-    return _energy_min;
+  if (energy_max_ == energy_min_)
+    return energy_min_;
   else
-    return (G4UniformRand()*(_energy_max - _energy_min) + _energy_min);
+    return (G4UniformRand()*(energy_max_ - energy_min_) + energy_min_);
 }

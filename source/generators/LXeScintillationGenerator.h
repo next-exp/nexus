@@ -44,11 +44,11 @@ namespace nexus {
     void ComputeCumulativeDistribution(const G4PhysicsOrderedFreeVector&,
                                        G4PhysicsOrderedFreeVector&);
 
-    G4GenericMessenger* _msg;
-    const BaseGeometry* _geom; ///< Pointer to the detector geometry
+    G4GenericMessenger* msg_;
+    const BaseGeometry* geom_; ///< Pointer to the detector geometry
 
-    G4String _region;
-    G4int    _nphotons;
+    G4String region_;
+    G4int    nphotons_;
 
   };
 

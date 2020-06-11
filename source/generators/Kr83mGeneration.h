@@ -52,20 +52,20 @@ namespace nexus {
 
   private:
 
-    G4GenericMessenger* _msg;
-    const BaseGeometry* _geom;
+    G4GenericMessenger* msg_;
+    const BaseGeometry* geom_;
 
-    G4double _energy_32; // Transition energy from the 1/2- state to the intermediate state, 7/2+ 
-    G4double _energy_9; // ... from the JP 7/2+ to the Kr83 fundamental state. 
-    G4double _probGamma_9; // ...The probability for a gamma instead of an EC conversion (related to the alpha EC) 
-    G4double _lifetime_9; // ...The lifetime of the intermediate state.  
-    std::vector<double> _energy_Xrays; // Energies of various X-ray, as the Kr83 atom relaxes to 
-    std::vector<double> _probability_Xrays; // Probability to emit an X-ray of the above energy, per decay. 
+    G4double energy_32_; // Transition energy from the 1/2- state to the intermediate state, 7/2+ 
+    G4double energy_9_; // ... from the JP 7/2+ to the Kr83 fundamental state. 
+    G4double probGamma_9_; // ...The probability for a gamma instead of an EC conversion (related to the alpha EC) 
+    G4double lifetime_9_; // ...The lifetime of the intermediate state.  
+    std::vector<double> energy_Xrays_; // Energies of various X-ray, as the Kr83 atom relaxes to 
+    std::vector<double> probability_Xrays_; // Probability to emit an X-ray of the above energy, per decay. 
                                             // We make cumulative, for easy access for random number. 
 
-    G4String _region;
-    G4ParticleDefinition*  _particle_defgamma;
-    G4ParticleDefinition*  _particle_defelectron;
+    G4String region_;
+    G4ParticleDefinition*  particle_defgamma_;
+    G4ParticleDefinition*  particle_defelectron_;
   };
 
 }// end namespace nexus

@@ -31,25 +31,25 @@ using namespace CLHEP;
 
 
 LXeScintillationGenerator::LXeScintillationGenerator() :
-  G4VPrimaryGenerator(), _msg(0), _geom(0), _nphotons(100000)
+  G4VPrimaryGenerator(), msg_(0), geom_(0), nphotons_(100000)
 {
-  _msg = new G4GenericMessenger(this, "/Generator/LXeScintGenerator/",
+  msg_ = new G4GenericMessenger(this, "/Generator/LXeScintGenerator/",
     "Control commands of LXe scintillation generator.");
 
-  _msg->DeclareProperty("region", _region,
+  msg_->DeclareProperty("region", region_,
                            "Set the region of the geometry where the vertex will be generated.");
 
-  _msg->DeclareProperty("nphotons", _nphotons, "Set number of photons");
+  msg_->DeclareProperty("nphotons", nphotons_, "Set number of photons");
 
   DetectorConstruction* detconst =
     (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
-  _geom = detconst->GetGeometry();
+  geom_ = detconst->GetGeometry();
 
 }
 
 LXeScintillationGenerator::~LXeScintillationGenerator()
 {
-  delete _msg;
+  delete msg_;
 }
 
 
@@ -58,7 +58,7 @@ void LXeScintillationGenerator::GeneratePrimaryVertex(G4Event* event)
   G4ParticleDefinition* particle_definition = G4OpticalPhoton::Definition();
 
   // Generate an initial position for the particle using the geometry
-  G4ThreeVector position = _geom->GenerateVertex(_region);
+  G4ThreeVector position = geom_->GenerateVertex(region_);
   // Particle generated at start-of-event
   G4double time = 0.;
 
@@ -76,17 +76,17 @@ void LXeScintillationGenerator::GeneratePrimaryVertex(G4Event* event)
   // Create a new vertex
   G4PrimaryVertex* vertex = new G4PrimaryVertex(position, time);
 
-  for ( G4int i = 0; i<_nphotons; i++)
+  for ( G4int i = 0; i<nphotons_; i++)
     {
       // Generate random direction by default
-      G4ThreeVector _momentum_direction = G4RandomDirection();
+      G4ThreeVector momentum_direction_ = G4RandomDirection();
       // Determine photon energy
       G4double sc_value = G4UniformRand()*sc_max;
       G4double pmod = spectrum_integral->GetEnergy(sc_value);
 
-      G4double px = pmod * _momentum_direction.x();
-      G4double py = pmod * _momentum_direction.y();
-      G4double pz = pmod * _momentum_direction.z();
+      G4double px = pmod * momentum_direction_.x();
+      G4double py = pmod * momentum_direction_.y();
+      G4double pz = pmod * momentum_direction_.z();
 
       // Create the new primary particle and set it some properties
       G4PrimaryParticle* particle = new G4PrimaryParticle(particle_definition, px, py, pz);

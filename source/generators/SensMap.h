@@ -34,10 +34,10 @@ namespace nexus {
     void GeneratePrimaryVertex(G4Event*);
 
   private:
-    G4GenericMessenger* _msg; ///< Pointer to UI messenger
-    const BaseGeometry* _geom; ///< Pointer to the detector geometry
+    G4GenericMessenger* msg_; ///< Pointer to UI messenger
+    const BaseGeometry* geom_; ///< Pointer to the detector geometry
 
-    G4int _num_gammas;
+    G4int num_gammas_;
   };
 
 } // end namespace nexus

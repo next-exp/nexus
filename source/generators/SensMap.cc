@@ -28,31 +28,31 @@ using namespace CLHEP;
 
 
 SensMap::SensMap():
-  G4VPrimaryGenerator(), _msg(0), _num_gammas(1)
+  G4VPrimaryGenerator(), msg_(0), num_gammas_(1)
 {
-  _msg = new G4GenericMessenger(this, "/Generator/SensMap/",
+  msg_ = new G4GenericMessenger(this, "/Generator/SensMap/",
     "Control commands of the sensitivity map primary generator.");
 
-    _msg->DeclareProperty("num_gammas", _num_gammas, 
+    msg_->DeclareProperty("num_gammas", num_gammas_, 
 			  "Set number of back-to-back gammas to be generated.");
 
   // Retrieve pointer to detector geometry from the run manager
   DetectorConstruction* detconst =
     (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
-  _geom = detconst->GetGeometry();
+  geom_ = detconst->GetGeometry();
 }
 
 
 SensMap::~SensMap()
 {
-  delete _msg;
+  delete msg_;
 }
 
 
 void SensMap::GeneratePrimaryVertex(G4Event* event)
 {
   // Select an initial position for the gammas using the geometry
-  G4ThreeVector position = _geom->GenerateVertex("SENSITIVITY");
+  G4ThreeVector position = geom_->GenerateVertex("SENSITIVITY");
   // Gammas generated at start-of-event
   G4double time = 0.;
   // Create a new vertex
@@ -71,7 +71,7 @@ void SensMap::GeneratePrimaryVertex(G4Event* event)
   G4double pmod = std::sqrt(energy*energy - mass*mass);
 
   // Add as many gamma pairs to the vertex as requested by the user
-  for (G4int i=0; i<_num_gammas; i++) {
+  for (G4int i=0; i<num_gammas_; i++) {
 
     G4ThreeVector momentum_direction = G4RandomDirection();
     G4double px = pmod * momentum_direction.x();

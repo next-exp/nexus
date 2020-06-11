@@ -29,38 +29,38 @@ using namespace CLHEP;
 
 
 ScintillationGenerator::ScintillationGenerator() :
-  G4VPrimaryGenerator(), _msg(0), _geom(0), _nphotons(1000000)
+  G4VPrimaryGenerator(), msg_(0), geom_(0), nphotons_(1000000)
 {
-  _msg = new G4GenericMessenger(this, "/Generator/ScintGenerator/",
+  msg_ = new G4GenericMessenger(this, "/Generator/ScintGenerator/",
     "Control commands of scintillation generator.");
 
-  _msg->DeclareProperty("region", _region,
+  msg_->DeclareProperty("region", region_,
                            "Set the region of the geometry where the vertex will be generated.");
 
-  _msg->DeclareProperty("nphotons", _nphotons, "Set number of photons");
+  msg_->DeclareProperty("nphotons", nphotons_, "Set number of photons");
 
-  _geom_navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
+  geom_navigator_ = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
 
   DetectorConstruction* detconst =
     (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
-  _geom = detconst->GetGeometry();
+  geom_ = detconst->GetGeometry();
 }
 
 ScintillationGenerator::~ScintillationGenerator()
 {
-  delete _msg;
+  delete msg_;
 }
 
 void ScintillationGenerator::GeneratePrimaryVertex(G4Event* event)
 {
   G4ParticleDefinition* particle_definition = G4OpticalPhoton::Definition();
   // Generate an initial position for the particle using the geometry and set time to 0.
-  G4ThreeVector position = _geom->GenerateVertex(_region);
+  G4ThreeVector position = geom_->GenerateVertex(region_);
   G4double time = 0.;
 
   // Energy is sampled from integral (like it is done in G4Scintillation)
 
-  G4VPhysicalVolume* vol = _geom_navigator->LocateGlobalPointAndSetup(position, 0, false);
+  G4VPhysicalVolume* vol = geom_navigator_->LocateGlobalPointAndSetup(position, 0, false);
   G4Material* mat = vol->GetLogicalVolume()->GetMaterial();
   G4MaterialPropertiesTable* mpt = mat->GetMaterialPropertiesTable();
 
@@ -85,16 +85,16 @@ void ScintillationGenerator::GeneratePrimaryVertex(G4Event* event)
   // Create a new vertex
   G4PrimaryVertex* vertex = new G4PrimaryVertex(position, time);
 
-  for ( G4int i = 0; i<_nphotons; i++)
+  for ( G4int i = 0; i<nphotons_; i++)
     {
       // Generate random direction by default
-      G4ThreeVector _momentum_direction = G4RandomDirection();
+      G4ThreeVector momentum_direction_ = G4RandomDirection();
       // Determine photon energy
       G4double sc_value = G4UniformRand()*sc_max;
       G4double pmod = spectrum_integral->GetEnergy(sc_value);
-      G4double px = pmod * _momentum_direction.x();
-      G4double py = pmod * _momentum_direction.y();
-      G4double pz = pmod * _momentum_direction.z();
+      G4double px = pmod * momentum_direction_.x();
+      G4double py = pmod * momentum_direction_.y();
+      G4double pz = pmod * momentum_direction_.z();
 
       // Create the new primary particle and set it some properties
       G4PrimaryParticle* particle = new G4PrimaryParticle(particle_definition, px, py, pz);

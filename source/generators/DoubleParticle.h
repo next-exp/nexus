@@ -1,16 +1,15 @@
 // ----------------------------------------------------------------------------
-///  \file   DoubleParticle.h
-///  \brief  Primary generator for single-particle events.
-///  
-///  \author   P Ferrario <paolafer@ific.uv.es>    
-///  \date     2 Dic 2015
-///  \version  $Id$
-///
-///  Copyright (c) 2015 NEXT Collaboration
+// nexus | DoubleParticle.h
+//
+// This generator is based on the SingleParticle generator, but simulates
+// two particles instead of one. The region passed to the GenerateVertex()
+// method must provide two positions.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __DOUBLE_PARTICLE__
-#define __DOUBLE_PARTICLE__
+#ifndef DOUBLE_PARTICLE_H
+#define DOUBLE_PARTICLE_H
 
 #include <G4VPrimaryGenerator.hh>
 
@@ -22,14 +21,6 @@ class G4ParticleDefinition;
 namespace nexus {
 
   class BaseGeometry;
-
-
-  /// Primary generator (concrete class of G4VPrimaryGenerator) for events 
-  /// consisting of a single particle. The user must specify via configuration
-  /// parameters the particle type, a kinetic energy interval (a random
-  /// value with random .
-  /// Particle energy is generated with flat random probability
-  /// between E_min and E_max.
   
   class DoubleParticle: public G4VPrimaryGenerator
   {
@@ -53,16 +44,16 @@ namespace nexus {
     G4double RandomEnergy() const;
     
   private:
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
   
-    G4ParticleDefinition* _particle_definition;
+    G4ParticleDefinition* particle_definition_;
 
-    G4double _energy_min; ///< Minimum kinetic energy 
-    G4double _energy_max; ///< Maximum kinetic energy
+    G4double energy_min_; ///< Minimum kinetic energy 
+    G4double energy_max_; ///< Maximum kinetic energy
 
-    const BaseGeometry* _geom; ///< Pointer to the detector geometry
+    const BaseGeometry* geom_; ///< Pointer to the detector geometry
 
-    G4String _region;
+    G4String region_;
 
     
   };
