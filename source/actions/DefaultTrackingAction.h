@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
-///  \file   DefaultTrackingAction.h
-///  \brief  General-purpose user tracking action.
-///
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     25 Mar 2013 
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// nexus | DefaultTrackingAction.h
+//
+// This class is the default tracking action of the NEXT simulation.
+// It stores in memory the trajectories of all particles, except optical photons
+// and ionization electrons, with the relevant tracking information that will be
+// saved to the output file.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef DEFAULT_TRACKING_ACTION_H

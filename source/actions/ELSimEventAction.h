@@ -1,16 +1,14 @@
 // ----------------------------------------------------------------------------
-///  \file   ELSimEventAction.h
-///  \brief  A general-purpose user event action.
-///
-///  \author   P. Ferrario <paolafer@ific.uv.es>
-///  \date     23 Jan 2015
-///  \version  $Id$
-///
-///  Copyright (c) 2009-2015 NEXT Collaboration. All rights reserved.
+// nexus | ELSimEventAction.h
+//
+// This class is based on DefaultEventAction and modified to store
+// all the events, no matter how much energy is deposited.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __ELSIM_EVENT_ACTION__
-#define __ELSIM_EVENT_ACTION__
+#ifndef ELSIM_EVENT_ACTION_H
+#define ELSIM_EVENT_ACTION_H
 
 #include <G4UserEventAction.hh>
 #include <globals.hh>
@@ -19,9 +17,6 @@ class G4Event;
 class G4GenericMessenger;
 
 namespace nexus {
-    
-  /// This class is a general-purpose event action, where all events are stored, not only
-  /// those that deposit some energy in the active volume. It is used mainly for EL table production
   
   class ELSimEventAction: public G4UserEventAction
   {
@@ -38,7 +33,7 @@ namespace nexus {
 
   private:
    
-    G4int _nevt, _nupdate;
+    G4int nevt_, nupdate_;
 
   };
   

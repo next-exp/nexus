@@ -1,9 +1,13 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | AnalysisSteppingAction.cc
 //
-//  Author : <>    
+// This class allows the user to print the total number of photons detected by
+// all kinds of photosensors at the end of the run.
+// It produces histograms with photon velocities and wavelengths.
+// It also shows examples of information that can be accessed at the stepping
+// level, so it is useful for debugging.
 //
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// The  NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "AnalysisSteppingAction.h"
@@ -30,17 +34,17 @@ using namespace nexus;
 using namespace CLHEP;
 
 
-AnalysisSteppingAction::AnalysisSteppingAction(): G4UserSteppingAction(), file_no_(0) 
+AnalysisSteppingAction::AnalysisSteppingAction(): G4UserSteppingAction(), file_no_(0)
 {
-  _msg = new G4GenericMessenger(this, "/Actions/AnalysisSteppingAction/");
-  _msg->DeclareProperty("file_number", file_no_, "");
-  
+  msg_ = new G4GenericMessenger(this, "/Actions/AnalysisSteppingAction/");
+  msg_->DeclareProperty("file_number", file_no_, "");
+
   detected = 0;
   not_det = 0;
- 
+
   times.clear();
   wavelengths.clear();
- 
+
 
   hVelocity = new TH1F("PhVelocity", "Velocity of detected photons", 1000, 0, 0.4);
   hVelocity->GetXaxis()->SetTitle("velocity (ps)");
@@ -48,7 +52,7 @@ AnalysisSteppingAction::AnalysisSteppingAction(): G4UserSteppingAction(), file_n
   hVE->GetXaxis()->SetTitle("velocity (ps)");
   hVE->GetYaxis()->SetTitle("wavelength (nm)");
 
-  hCherLambdaDet = 
+  hCherLambdaDet =
     new TH1F("CherLambdaDet", "Detection wavelength", 1000, 0, 1500.);
   hCherLambdaDet->GetXaxis()->SetTitle("wavelength (nm)");
 
@@ -65,10 +69,10 @@ AnalysisSteppingAction::~AnalysisSteppingAction()
 
   G4cout << "Detected photons = " << detected << G4endl;
   G4cout << "Non detected photons = " << not_det << G4endl;
-   
-   
+
+
    double first = 1000.*second ;
-   
+
    for (unsigned int i=0; i< times.size(); ++i) {
      if (times[i] < first) {
        first = times[i];
@@ -85,14 +89,14 @@ AnalysisSteppingAction::~AnalysisSteppingAction()
    std::ostringstream file_number;
    file_number << file_no_;
    G4String filename = "PhotonVelocitiesCherLXe."+file_number.str()+".root";
-  
+
    TFile* histo_file = new TFile(filename,"recreate");
    hVelocity->Write();
    hVE->Write();
    hCherLambdaDet->Write();
    hTV->Write();
    histo_file->Close();
- 
+
   G4double total_counts = 0;
   detectorCounts::iterator it = my_counts.begin();
   while (it != my_counts.end()) {
@@ -106,10 +110,10 @@ AnalysisSteppingAction::~AnalysisSteppingAction()
 
 
 void AnalysisSteppingAction::UserSteppingAction(const G4Step* step)
-{ 
+{
   G4ParticleDefinition* pdef = step->GetTrack()->GetDefinition();
 
-  //  Check whether the track is an optical photon  
+  //  Check whether the track is an optical photon
   if (pdef != G4OpticalPhoton::Definition()) return;
 
 
@@ -127,7 +131,7 @@ void AnalysisSteppingAction::UserSteppingAction(const G4Step* step)
   // Retrieve the pointer to the optical boundary process.
   // We do this only once per run defining our local pointer as static.
   static G4OpBoundaryProcess* boundary = 0;
-  
+
   if (!boundary) { // the pointer is not defined yet
     // Get the list of processes defined for the optical photon
     // and loop through it to find the optical boundary process.
@@ -144,9 +148,9 @@ void AnalysisSteppingAction::UserSteppingAction(const G4Step* step)
 
     // if boundary->GetStatus() == 2 in SiPMpet refraction takes place
     if (boundary->GetStatus() == Detection) {
-	detected = detected + 1;	
-	double distance = 
-	  std::pow(point2->GetPosition().getX() - point1->GetPosition().getX(), 2) + 
+	detected = detected + 1;
+	double distance =
+	  std::pow(point2->GetPosition().getX() - point1->GetPosition().getX(), 2) +
 	  std::pow(point2->GetPosition().getY() - point1->GetPosition().getY(), 2)  + std::pow(point2->GetPosition().getZ() - point1->GetPosition().getZ(), 2) ;
 	distance = std::sqrt(distance);
 	G4double lambda = h_Planck*c_light/step->GetTrack()->GetKineticEnergy()/nanometer;
@@ -158,14 +162,14 @@ void AnalysisSteppingAction::UserSteppingAction(const G4Step* step)
 
 	G4String detector_name = step->GetPostStepPoint()->GetTouchableHandle()->GetVolume()->GetName();
 	//G4cout << "##### Sensitive Volume: " << detector_name << G4endl;
-	
+
 	detectorCounts::iterator it = my_counts.find(detector_name);
 	if (it != my_counts.end()) my_counts[it->first] += 1;
 	else my_counts[detector_name] = 1;
       } else {
 	not_det = not_det + 1;
       }
-    
+
       //	G4cout << "check: " << velocity << ", " << track_velocity << G4endl;
 
 

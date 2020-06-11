@@ -1,10 +1,12 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | DefaultTrackingAction.cc
 //
-//  Author : <justo.martin-albo@ific.uv.es>
-//  Created: 25 March 2013
+// This class is the default tracking action of the NEXT simulation.
+// It stores in memory the trajectories of all particles, except optical photons
+// and ionization electrons, with the relevant tracking information that will be
+// saved to the output file.
 //
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "DefaultTrackingAction.h"

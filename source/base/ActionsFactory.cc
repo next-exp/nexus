@@ -94,7 +94,6 @@ G4UserTrackingAction* ActionsFactory::CreateTrackingAction() const
 
 
 //////////////////////////////////////////////////////////////////////
-#include "DefaultSteppingAction.h"
 #include "AnalysisSteppingAction.h"
 
 

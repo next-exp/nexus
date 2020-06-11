@@ -1,12 +1,11 @@
 // ----------------------------------------------------------------------------
-///  \file   OpticalTrackingAction.h
-///  \brief  Devoted to optical physics checks.
-///
-///  \author   <javier.munoz.vidal@gmail.com>
-///  \date     Oct 2019 
-///  \version  $Id$
-///
-///  Copyright (c) 2019 NEXT Collaboration. All rights reserved.
+// nexus | OpticalTrackingAction.h
+//
+// This class saves the trajectories of optical photons, in addition to the
+// particles saved by the default tracking action. Its purpose is to store
+// optical photon information in the output file.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef OPTICAL_TRACKING_ACTION_H
