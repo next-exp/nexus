@@ -17,6 +17,5 @@
 /Actions/RegisterRunAction DEFAULT
 /Actions/RegisterEventAction DEFAULT
 /Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterSteppingAction DEFAULT 
 
 /nexus/RegisterMacro macros/PETit_tiles.config.mac
