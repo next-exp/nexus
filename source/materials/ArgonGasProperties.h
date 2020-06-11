@@ -1,10 +1,13 @@
-
-///
-///  Copyright (c) 2010-2016 NEXT Collaboration. All rights reserved.
+// ----------------------------------------------------------------------------
+// nexus | ArgonGasProperties.h
+//
+// This class collects the relevant physical properties of gaseous argon.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __ARGON_GAS_PROPERTIES__
-#define __ARGON_GAS_PROPERTIES__
+#ifndef ARGON_GAS_PROPERTIES_H
+#define ARGON_GAS_PROPERTIES_H
 
 #include <globals.hh>
 #include <vector>
@@ -37,7 +40,7 @@ namespace nexus {
     
 
   private:
-    G4double _pressure;
+    G4double pressure_;
     //    G4double _temperature;
     
   };

@@ -1,5 +1,9 @@
+// ----------------------------------------------------------------------------
+// nexus | HeliumGasProperties.cc
 //
-//  Copyright (c) 2010-2016 NEXT Collaboration. All rights reserved.
+// This class collects the relevant physical properties of gaseous helium.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "HeliumGasProperties.h"
@@ -19,7 +23,7 @@ namespace nexus {
   
   HeliumGasProperties::HeliumGasProperties(G4double pressure,
 					 G4double /*temperature*/):
-    _pressure(pressure)
+    pressure_(pressure)
     //, _temperature(temperature)
   {
     //Density();

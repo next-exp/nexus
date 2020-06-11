@@ -1,16 +1,13 @@
 // ----------------------------------------------------------------------------
-///  \file   XenonGasProperties.h
-///  \brief  
-///  
-///  \author  <justo.martin-albo@ific.uv.es>
-///  \date    25 Dec 2010
-///  \version $Id$
-///
-///  Copyright (c) 2010-2012 NEXT Collaboration. All rights reserved.
+// nexus | XenonGasProperties.h
+//
+// This class collects the relevant physical properties of gaseous xenon.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __XENON_GAS_PROPERTIES__
-#define __XENON_GAS_PROPERTIES__
+#ifndef XENON_GAS_PROPERTIES_H
+#define XENON_GAS_PROPERTIES_H
 
 #include <globals.hh>
 #include <vector>
@@ -30,7 +27,7 @@ namespace nexus {
 
     /// Return the refractive index of xenon gas for a given photon energy
     G4double RefractiveIndex(G4double energy);
-    
+
     G4double Scintillation(G4double energy);
     void Scintillation(G4int entries, G4double* energy, G4double* intensity);
 
@@ -39,12 +36,12 @@ namespace nexus {
 
     /// Electroluminescence yield of pure xenon gas
     G4double ELLightYield(G4double field_strength) const;
-    
+
 
   private:
-    G4double _pressure;
+    G4double pressure_;
     //    G4double _temperature;
-    
+
   };
 
 } // end namespace nexus

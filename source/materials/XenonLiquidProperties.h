@@ -1,16 +1,13 @@
 // ----------------------------------------------------------------------------
-///  \file   XenonLiquidProperties.h
-///  \brief  
-///  
-///  \author  <paola.ferrario@ific.uv.es>
-///  \date    1 Jun 2015
-///  \version $Id$
-///
-///  Copyright (c) 2010-2015 NEXT Collaboration. All rights reserved.
+// nexus | XenonLiquidProperties.cc
+//
+// This class collects the relevant physical properties of liquid xenon.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __XENON_LIQUID_PROPERTIES__
-#define __XENON_LIQUID_PROPERTIES__
+#ifndef XENON_LIQUID_PROPERTIES_H
+#define XENON_LIQUID_PROPERTIES_H
 
 #include <globals.hh>
 #include <vector>
@@ -32,16 +29,16 @@ namespace nexus {
 
     /// Return the refractive index of xenon gas for a given photon energy
     G4double RefractiveIndex(G4double energy);
-    
+
     G4double Scintillation(G4double energy);
     void Scintillation(G4int entries, G4double* energy, G4double* intensity);
-    
+
 
   private:
-    G4double _density;
+    G4double density_;
 
     //static const G4double _densities[100];
-  
+
   };
 
 } // end namespace nexus

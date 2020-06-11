@@ -1,6 +1,9 @@
-
+// ----------------------------------------------------------------------------
+// nexus | ArgonGasProperties.cc
 //
-//  Copyright (c) 2010-2016 NEXT Collaboration. All rights reserved.
+// This class collects the relevant physical properties of gaseous argon.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "ArgonGasProperties.h"
@@ -20,7 +23,7 @@ namespace nexus {
   
   ArgonGasProperties::ArgonGasProperties(G4double pressure,
 					 G4double /*temperature*/):
-    _pressure(pressure)
+    pressure_(pressure)
     //, _temperature(temperature)
   {
     //Density();
@@ -164,7 +167,7 @@ namespace nexus {
     const G4double a = 81. / kilovolt;
     const G4double b = 47. / (bar*cm);
 
-    G4double yield = (a * field_strength/_pressure - b) * _pressure;
+    G4double yield = (a * field_strength/pressure_ - b) * pressure_;
     if (yield < 0.) yield = 0.;
 
     return yield;
