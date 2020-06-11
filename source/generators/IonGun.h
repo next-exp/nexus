@@ -43,6 +43,7 @@ namespace nexus{
  private:
     G4int atomic_number_, mass_number_;
     G4double energy_level_;
+    G4bool decay_at_time_zero_;
     G4String region_;
     G4GenericMessenger* msg_;
     const BaseGeometry* geom_;
