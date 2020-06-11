@@ -12,3 +12,4 @@ buildvars.scons
 nexus
 *.history
 *.pet
+build
