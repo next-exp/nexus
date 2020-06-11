@@ -160,17 +160,17 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
     if (!trj) continue;
 
     G4bool save_opt_phot = false;
-    std::ifstream init_history(historyFile_init_, std::ifstream::in);
+    std::ifstream init_read(init_macro_, std::ifstream::in);
 
-    while (init_history.good()) {
+    while (init_read.good()) {
       std::string key, value;
-      std::getline(init_history, key, ' ');
-      std::getline(init_history, value);
+      std::getline(init_read, key, ' ');
+      std::getline(init_read, value);
       if ((key == "/Actions/RegisterTrackingAction") && (value == "OPTICAL")) {
         save_opt_phot = true;
         break;
-     }
-   }
+      }
+    }
 
     if ((trj->GetParticleDefinition() == G4OpticalPhoton::Definition()) &&
         (save_opt_phot == false)) {
