@@ -34,7 +34,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
 
   // Define the command to register a configuration macro. 
   // The user may invoke the command as many times as needed.
-  _msg->DeclareMethod("RegisterMacro", &NexusApp::RegisterMacro, "");
+  msg_->DeclareMethod("RegisterMacro", &NexusApp::RegisterMacro, "");
 
   // Some commands, which we call 'delayed', only work if executed
   // after the initialization of the application. The user may include
@@ -62,16 +62,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
   // The physics lists are handled with Geant4's own 'factory'
   physicsList = new G4GenericPhysicsList();
 
-  // Process now the initialization macro
-  G4String historyFile = init_macro;
-  std::size_t pos = historyFile.rfind('/');
-  historyFile = historyFile.substr(pos+1);
-  pos = historyFile.find("init");
-  historyFile = historyFile.substr(0, pos - 1);
-
-  G4String historyFile_init = historyFile + ".init.history";
-
-  BatchSession* batch = new BatchSession(init_macro.c_str(), historyFile_init.c_str());
+  BatchSession* batch = new BatchSession(init_macro.c_str());
   batch->SessionStart();
 
   // Set the physics list in the run manager
@@ -112,16 +103,13 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
   if (UI->GetCurrentValues("/Actions/RegisterSteppingAction") != "")
     this->SetUserAction(actfctr.CreateSteppingAction());
 
-  G4String historyFile_config = historyFile + ".config.history";
-  UI->StoreHistory(historyFile_config.c_str());
-
   /////////////////////////////////////////////////////////
 
   // Set by default a random seed (system time) for the random
   // number generator
   SetRandomSeed(-1);
 
-  PersistencyManager::Initialize(init_macro, _macros, _delayed);
+  PersistencyManager::Initialize(init_macro, macros_, delayed_);
 }
 
 
@@ -177,7 +165,7 @@ void NexusApp::Initialize()
 void NexusApp::ExecuteMacroFile(const char* filename)
 {
   G4UImanager* UI = G4UImanager::GetUIpointer();
-  G4UIsession* batchSession = new BatchSession(filename, "", UI->GetSession());
+  G4UIsession* batchSession = new BatchSession(filename, UI->GetSession());
   UI->SetSession(batchSession);
   G4UIsession* previousSession = UI->GetSession()->SessionStart();
   delete UI->GetSession();

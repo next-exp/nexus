@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author : <justo.martin-albo@ific.uv.es>    
+//  Author : <justo.martin-albo@ific.uv.es>
 //  Created: 22 Mar 2013
 //
 //  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
@@ -37,43 +37,31 @@ static void Tokenize(const G4String& str, std::vector<G4String>& tokens)
     tokens.push_back(str.substr(pos0, pos-pos0));
     pos0 = str.find_first_not_of(delimiter, pos);
     pos = str.find_first_of(delimiter, pos0);
-  } 
+  }
 }
 
 
-
-BatchSession::BatchSession(G4String filename, G4String historyFile, G4UIsession* previous_session):
-  G4UIsession(),  _opened(false), _prev(previous_session), _history_opened(false)
+BatchSession::BatchSession(G4String filename, G4UIsession* previous_session):
+  G4UIsession(), opened_(false), prev_(previous_session)
 {
   _macrostream.open(filename.data(), std::ios::in);
 
   if (_macrostream.fail()) {
     G4String msg = "Cannot open macro file " + filename;
     G4Exception("[BatchSession]", "BatchSession()", FatalException, msg);
-  } 
+  }
   else {
     _opened = true;
   }
-  
+
   G4UImanager::GetUIpointer()-> SetSession(this);
-
-  if (historyFile != "") {
-    if (!_history_opened) {
-      _history.open(historyFile, std::ofstream::out);
-      _history_opened = true;
-    } else {
-      _history.open(historyFile, std::ofstream::app);
-    }
-  }
-
 }
 
 
 
 BatchSession::~BatchSession()
 {
-  if (_opened) _macrostream.close();
-  if (_history_opened) _history.close();
+  if (opened_) macrostream_.close();
 }
 
 
@@ -86,7 +74,7 @@ G4String BatchSession::ReadCommand()
 
   G4String cmdtotal = "";
   G4bool qcontinued = false;
-  
+
   while (_macrostream.good()) {
 
     _macrostream.getline(linebuf, BUFSIZE);
@@ -130,9 +118,6 @@ G4String BatchSession::ReadCommand()
       cmdtotal+= " ";
     }
 
-    if (_history_opened) {
-      _history << cmdline << G4endl;
-    }
     if(qcontinued) continue; // read the next line
 
     if(cmdtotal.size() != 0) break;
@@ -187,7 +172,7 @@ G4UIsession * BatchSession::SessionStart()
   if(!_opened) return _prev;
 
   while(1) {
-   
+
     G4String newCommand = ReadCommand();
 
     if (newCommand == "exit") break;
