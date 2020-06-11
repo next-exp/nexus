@@ -3,6 +3,11 @@ import os
 
 
 @pytest.fixture(scope = 'session')
+def NEXUSDIR():
+    return os.environ['NEXUSDIR']
+
+
+@pytest.fixture(scope = 'session')
 def config_tmpdir(tmpdir_factory):
     return tmpdir_factory.mktemp('configure_tests')
 
