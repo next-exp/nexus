@@ -1,10 +1,9 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | CylinderPointSampler.cc
 //
-//  Author : Javier Muñoz Vidal <jmunoz@ific.uv.es>
-//  Created: 2 November 2009
+// This class is a sampler of random uniform points in a cylinder.
 //
-//  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "CylinderPointSampler.h"
@@ -25,26 +24,26 @@ namespace nexus {
                                              G4double endcaps_thickness,
                                              G4ThreeVector origin,
                                              G4RotationMatrix* rotation):
-    _inner_length(inner_length),
-    _inner_radius(inner_radius),
-    _body_thickness(body_thickness),
-    _endcaps_thickness(endcaps_thickness),
-    _outer_radius(_inner_radius + _body_thickness),
-    _origin(origin),
-    _rotation(rotation)
+    inner_length_(inner_length),
+    inner_radius_(inner_radius),
+    body_thickness_(body_thickness),
+    endcaps_thickness_(endcaps_thickness),
+    outer_radius_(inner_radius_ + body_thickness_),
+    origin_(origin),
+    rotation_(rotation)
   {
     // Calculate surface ratio between body and endcaps
-    G4double body_surf = twopi * _inner_radius * _inner_length;
-    G4double endcaps_surf = 2. * pi * _inner_radius * _inner_radius;
-    _perc_body_surf = body_surf / (body_surf + endcaps_surf);
+    G4double body_surf = twopi * inner_radius_ * inner_length_;
+    G4double endcaps_surf = 2. * pi * inner_radius_ * inner_radius_;
+    perc_body_surf_ = body_surf / (body_surf + endcaps_surf);
 
     // Calculate volume ratio between body and endcaps
-    G4double body_vol = pi * _inner_length *
-      (_outer_radius*_outer_radius - _inner_radius*_inner_radius);
+    G4double body_vol = pi * inner_length_ *
+      (outer_radius_*outer_radius_ - inner_radius_*inner_radius_);
     G4double endcaps_vol =
-      2. * (pi * _outer_radius*_outer_radius) * _endcaps_thickness;
+      2. * (pi * outer_radius_*outer_radius_) * endcaps_thickness_;
 
-    _perc_body_vol = body_vol / (body_vol + endcaps_vol);
+    perc_body_vol_ = body_vol / (body_vol + endcaps_vol);
   }
 
 
@@ -69,24 +68,24 @@ namespace nexus {
     else if (region == "ENDCAP_VOL") {
       G4double rand = G4UniformRand();
       G4double phi = GetPhi();
-      G4double rad = GetRadius(0., _outer_radius);
+      G4double rad = GetRadius(0., outer_radius_);
       x = rad * cos(phi);
       y = rad * sin(phi);
       // Selecting between -Z and +Z
-      if (rand < 0.5) origin = -0.5 * (_inner_length + _endcaps_thickness);
-      else            origin =  0.5 * (_inner_length + _endcaps_thickness);
-      z = GetLength(origin, _endcaps_thickness);
+      if (rand < 0.5) origin = -0.5 * (inner_length_ + endcaps_thickness_);
+      else            origin =  0.5 * (inner_length_ + endcaps_thickness_);
+      z = GetLength(origin, endcaps_thickness_);
       point =  RotateAndTranslate(G4ThreeVector(x, y, z));
     }
 
     // Generating in the body volume
     else if (region == "BODY_VOL") {
       G4double phi = GetPhi();
-      G4double rad = GetRadius(_inner_radius, _outer_radius);
+      G4double rad = GetRadius(inner_radius_, outer_radius_);
       x = rad * cos(phi);
       y = rad * sin(phi);
       origin = 0.;
-      z = GetLength(origin, _inner_length);
+      z = GetLength(origin, inner_length_);
       point = RotateAndTranslate(G4ThreeVector(x, y, z));
     }
 
@@ -95,24 +94,24 @@ namespace nexus {
       G4double rand = G4UniformRand();
       G4double rand2 = G4UniformRand();
 
-      if (rand < _perc_body_vol) {
+      if (rand < perc_body_vol_) {
         // Generating in the body volume
         G4double phi = GetPhi();
-        G4double rad = GetRadius(_inner_radius, _outer_radius);
+        G4double rad = GetRadius(inner_radius_, outer_radius_);
         x = rad * cos(phi);
         y = rad * sin(phi);
         origin = 0.;
-        z = GetLength(origin, _inner_length);
+        z = GetLength(origin, inner_length_);
       }
       else {
         // Generating in the endcaps volume
         G4double phi = GetPhi();
-        G4double rad = GetRadius(0., _outer_radius);
+        G4double rad = GetRadius(0., outer_radius_);
         x = rad * cos(phi);
         y = rad * sin(phi);
-        if (rand2 < 0.5) origin = -0.5 * (_inner_length + _endcaps_thickness);
-        else origin             =  0.5 * (_inner_length + _endcaps_thickness);
-        z = GetLength(origin, _endcaps_thickness);
+        if (rand2 < 0.5) origin = -0.5 * (inner_length_ + endcaps_thickness_);
+        else origin             =  0.5 * (inner_length_ + endcaps_thickness_);
+        z = GetLength(origin, endcaps_thickness_);
       }
 
       point =  RotateAndTranslate(G4ThreeVector(x, y, z));
@@ -121,11 +120,11 @@ namespace nexus {
     // Generating in the volume inside
     else if (region == "INSIDE") {
       G4double phi = GetPhi();
-      G4double rad = GetRadius(0., _inner_radius);
+      G4double rad = GetRadius(0., inner_radius_);
       x = rad * cos(phi);
       y = rad * sin(phi);
       origin = 0.;
-      z = GetLength(origin, _inner_length);
+      z = GetLength(origin, inner_length_);
       point =  RotateAndTranslate(G4ThreeVector(x, y, z));
     }
 
@@ -133,22 +132,22 @@ namespace nexus {
     else if (region == "ENDCAP_SURF") {
       G4double rand = G4UniformRand();
       G4double phi = GetPhi();
-      G4double rad = GetRadius(0., _inner_radius);
+      G4double rad = GetRadius(0., inner_radius_);
       x = rad * cos(phi);
       y = rad * sin(phi);
       // Selecting between -Z and +Z
-      if (rand < 0.5) z = -0.5 * _inner_length;
-      else z            =  0.5 * _inner_length;
+      if (rand < 0.5) z = -0.5 * inner_length_;
+      else z            =  0.5 * inner_length_;
       point = RotateAndTranslate(G4ThreeVector(x, y, z));
     }
 
     // Generating in the body surface
     else if (region == "BODY_SURF") {
       G4double phi = GetPhi();
-      x = _inner_radius * cos(phi);
-      y = _inner_radius * sin(phi);
+      x = inner_radius_ * cos(phi);
+      y = inner_radius_ * sin(phi);
       origin = 0.;
-      z = GetLength(origin, _inner_length);
+      z = GetLength(origin, inner_length_);
       point = RotateAndTranslate(G4ThreeVector(x, y, z));
     }
 
@@ -157,22 +156,22 @@ namespace nexus {
       G4double rand = G4UniformRand();
       G4double rand2 = G4UniformRand();
 
-      if (rand < _perc_body_surf) {
+      if (rand < perc_body_surf_) {
         // Generating in the body surface
         G4double phi = GetPhi();
-        x = _inner_radius * cos(phi);
-        y = _inner_radius * sin(phi);
+        x = inner_radius_ * cos(phi);
+        y = inner_radius_ * sin(phi);
         origin = 0.;
-        z = GetLength(origin, _inner_length);
+        z = GetLength(origin, inner_length_);
       }
       else {
         // Generating in the endcaps surface
         G4double phi = GetPhi();
-        G4double rad = GetRadius(0., _inner_radius);
+        G4double rad = GetRadius(0., inner_radius_);
         x = rad * cos(phi);
         y = rad * sin(phi);
-        if (rand2 < 0.5) z = -0.5 * _inner_length;
-        else             z =  0.5 * _inner_length;
+        if (rand2 < 0.5) z = -0.5 * inner_length_;
+        else             z =  0.5 * inner_length_;
       }
 
       point =  RotateAndTranslate(G4ThreeVector(x, y, z));
@@ -219,9 +218,9 @@ namespace nexus {
     G4ThreeVector real_pos = position;
 
     // Rotating if needed
-    if (_rotation) real_pos *= *_rotation;
+    if (rotation_) real_pos *= *rotation_;
     // Translating
-    real_pos += _origin;
+    real_pos += origin_;
 
     return real_pos;
   }
