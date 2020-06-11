@@ -1,5 +1,17 @@
-#ifndef __TOF_SD__
-#define __TOF_SD__
+// ----------------------------------------------------------------------------
+// nexus | ToFSD.h
+//
+// This class is the sensitive detector used for PETALO.
+// Each time a photoelectron is detected by a sensor, two PmtHit instances
+// are created (if needed): one to store the full response with large time
+// binning and the other one with a fine time binning, which stores only
+// the first part of the waveform.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
+#ifndef TOF_SD_H
+#define TOF_SD_H
 
 #include <G4VSensitiveDetector.hh>
 #include "PmtHit.h"
@@ -12,8 +24,6 @@ class G4OpBoundaryProcess;
 
 
 namespace nexus {
-
-  /// General-purpose sensitive detector for photosensors
 
   class ToFSD: public G4VSensitiveDetector
   {
@@ -66,34 +76,34 @@ namespace nexus {
 
     G4int FindPmtID(const G4VTouchable*);
 
-    G4int _naming_order; ///< Order of the naming scheme
-    G4int _sensor_depth; ///< Depth of the SD in the geometry tree
-    G4int _mother_depth; ///< Depth of the SD's mother in the geometry tree
-    G4int _grandmother_depth; ///< Depth of the SD's grandmother in the geometry tree
+    G4int naming_order_; ///< Order of the naming scheme
+    G4int sensor_depth_; ///< Depth of the SD in the geometry tree
+    G4int mother_depth_; ///< Depth of the SD's mother in the geometry tree
+    G4int grandmother_depth_; ///< Depth of the SD's grandmother in the geometry tree
 
-    G4double _timebinning; ///< Time bin width
+    G4double timebinning_; ///< Time bin width
 
-    G4OpBoundaryProcess* _boundary; ///< Pointer to the optical boundary process
+    G4OpBoundaryProcess* boundary_; ///< Pointer to the optical boundary process
 
-    PmtHitsCollection* _HC; ///< Pointer to the collection of hits
+    PmtHitsCollection* HC_; ///< Pointer to the collection of hits
   };
 
   // INLINE METHODS //////////////////////////////////////////////////
 
-  inline void ToFSD::SetDetectorVolumeDepth(G4int d) { _sensor_depth = d; }
-  inline G4int ToFSD::GetDetectorVolumeDepth() const { return _sensor_depth; }
+  inline void ToFSD::SetDetectorVolumeDepth(G4int d) { sensor_depth_ = d; }
+  inline G4int ToFSD::GetDetectorVolumeDepth() const { return sensor_depth_; }
 
-  inline void ToFSD::SetMotherVolumeDepth(G4int d) { _mother_depth = d; }
-  inline G4int ToFSD::GetMotherVolumeDepth() const { return _mother_depth; }
+  inline void ToFSD::SetMotherVolumeDepth(G4int d) { mother_depth_ = d; }
+  inline G4int ToFSD::GetMotherVolumeDepth() const { return mother_depth_; }
 
-  inline void ToFSD::SetDetectorNamingOrder(G4int o) { _naming_order = o; }
-  inline G4int ToFSD::GetDetectorNamingOrder() const { return _naming_order; }
+  inline void ToFSD::SetDetectorNamingOrder(G4int o) { naming_order_ = o; }
+  inline G4int ToFSD::GetDetectorNamingOrder() const { return naming_order_; }
 
-  inline void ToFSD::SetGrandMotherVolumeDepth(G4int d) { _grandmother_depth = d; }
-  inline G4int ToFSD::GetGrandMotherVolumeDepth() const { return _grandmother_depth; }
+  inline void ToFSD::SetGrandMotherVolumeDepth(G4int d) { grandmother_depth_ = d; }
+  inline G4int ToFSD::GetGrandMotherVolumeDepth() const { return grandmother_depth_; }
 
-  inline G4double ToFSD::GetTimeBinning() const { return _timebinning; }
-  inline void ToFSD::SetTimeBinning(G4double tb) { _timebinning = tb; }
+  inline G4double ToFSD::GetTimeBinning() const { return timebinning_; }
+  inline void ToFSD::SetTimeBinning(G4double tb) { timebinning_ = tb; }
 
 } // end namespace nexus
 

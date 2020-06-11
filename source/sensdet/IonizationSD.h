@@ -1,12 +1,9 @@
 // ----------------------------------------------------------------------------
-///  \file   IonizationSD.h
-///  \brief  Sensitive detector to create ionization hits.
-///
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     27 Apr 2009
-///  \version  $Id: IonizationSD.h 2017 2009-07-15 21:55:44Z jmalbos $ 
-///
-///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
+// nexus | IonizationSD.h
+//
+// This class is the sensitive detector that creates ionization hits.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef IONIZATION_SD_H
@@ -21,9 +18,9 @@ class G4TouchableHistory;
 
 
 namespace nexus {
-  
+
   /// Sensitive detector to create ionization hits
-  
+
   class IonizationSD: public G4VSensitiveDetector
   {
   public:
@@ -31,11 +28,11 @@ namespace nexus {
     IonizationSD(const G4String& sdname);
     /// Destructor
     virtual ~IonizationSD();
-    
-    /// A hit collection created by this sensitive detector is attached 
+
+    /// A hit collection created by this sensitive detector is attached
     /// in this method to the G4HCofThisEvent object.
     virtual void Initialize(G4HCofThisEvent*);
-  
+
     void EndOfEvent(G4HCofThisEvent*);
 
     /// Return the unique name of the hits collection created
@@ -46,18 +43,18 @@ namespace nexus {
     void IncludeInTotalEnergyDeposit(G4bool);
 
   private:
-    /// 
+    ///
     virtual G4bool ProcessHits(G4Step*, G4TouchableHistory*);
-    
+
   private:
-    IonizationHitsCollection* _IHC;
-    G4String _det_name;
-    G4bool _include;
+    IonizationHitsCollection* IHC_;
+    G4String det_name_;
+    G4bool include_;
   };
 
-  inline void IonizationSD::IncludeInTotalEnergyDeposit(G4bool inc) 
-  { _include = inc; } 
-  
+  inline void IonizationSD::IncludeInTotalEnergyDeposit(G4bool inc)
+  { include_ = inc; }
+
 } // end namespace nexus
 
 #endif

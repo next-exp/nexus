@@ -1,10 +1,9 @@
 // ----------------------------------------------------------------------------
-//  $Id: IonizationSD.cc 2025 2009-07-17 11:11:39Z jmalbos $
+// nexus | IonizationSD.cc
 //
-//  Author : <justo.martin-albo@ific.uv.es>
-//  Created: 27 Apr 2009
+// This class is the sensitive detector that creates ionization hits.
 //
-//  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "IonizationSD.h"
@@ -22,13 +21,13 @@
 using namespace nexus;
 
 
-  
+
 IonizationSD::IonizationSD(const G4String& name):
-  G4VSensitiveDetector(name), _include(true)
+  G4VSensitiveDetector(name), include_(true)
 {
   collectionName.insert(GetCollectionUniqueName());
 }
-  
+
 
 
 IonizationSD::~IonizationSD()
@@ -44,23 +43,23 @@ G4String IonizationSD::GetCollectionUniqueName()
 }
 
 
-  
+
 void IonizationSD::Initialize(G4HCofThisEvent* hce)
 {
-  // Create a collection of ionization hits and add it to 
+  // Create a collection of ionization hits and add it to
   // the collection of hits of the event
 
-  _IHC = 
+  IHC_ =
     new IonizationHitsCollection(SensitiveDetectorName, collectionName[0]);
 
-  G4int hcid = 
+  G4int hcid =
     G4SDManager::GetSDMpointer()->GetCollectionID(SensitiveDetectorName+"/"+collectionName[0]);
-  hce->AddHitsCollection(hcid, _IHC);
- 
+  hce->AddHitsCollection(hcid, IHC_);
+
 }
-  
-  
-  
+
+
+
 G4bool IonizationSD::ProcessHits(G4Step* step, G4TouchableHistory*)
 {
   G4Track* track = step->GetTrack();
@@ -69,7 +68,7 @@ G4bool IonizationSD::ProcessHits(G4Step* step, G4TouchableHistory*)
     return false;
 
   G4double edep = step->GetTotalEnergyDeposit();
-    
+
   // Discard steps where no energy was deposited in the detector
   if (edep <= 0.) return false;
 
@@ -79,14 +78,14 @@ G4bool IonizationSD::ProcessHits(G4Step* step, G4TouchableHistory*)
   hit->SetTime(step->GetTrack()->GetGlobalTime());
   hit->SetEnergyDeposit(edep);
   hit->SetPosition(step->GetPostStepPoint()->GetPosition());
-    
-  // Add hit to collection
-  _IHC->insert(hit);
 
-  // Add energy deposit to the trajectory associated 
+  // Add hit to collection
+  IHC_->insert(hit);
+
+  // Add energy deposit to the trajectory associated
   // to the current track
-  if (_include) {
-    Trajectory* trj = 
+  if (include_) {
+    Trajectory* trj =
       (Trajectory*) TrajectoryMap::Get(step->GetTrack()->GetTrackID());
     if (trj) {
       edep += trj->GetEnergyDeposit();
@@ -96,10 +95,9 @@ G4bool IonizationSD::ProcessHits(G4Step* step, G4TouchableHistory*)
 
   return true;
 }
-  
-  
+
+
 
 void IonizationSD::EndOfEvent(G4HCofThisEvent*)
 {
 }
-

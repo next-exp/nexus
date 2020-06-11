@@ -1,16 +1,14 @@
 // ----------------------------------------------------------------------------
-///  \file   PmtSD.h
-///  \brief  Sensitive detector for photosensors
-///
-///  \author   J. Martin-Albo <jmalbos@ific.uv.es>
-///  \date     15 Feb 2020
-///  \version  $Id: PmtSD.h 9094 2013-08-19 14:52:12Z paola $
-///
-///  Copyright (c) 2010-2012 NEXT Collaboration. All rights reserved.
+// nexus | PmtSD.h
+//
+// This class is the sensitive detector that allows for the registration
+// of the charge detected by a photosensor.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __PMT_SD__
-#define __PMT_SD__
+#ifndef PMT_SD_H
+#define PMT_SD_H
 
 #include <G4VSensitiveDetector.hh>
 #include "PmtHit.h"
@@ -23,8 +21,6 @@ class G4OpBoundaryProcess;
 
 
 namespace nexus {
-
-  /// General-purpose sensitive detector for photosensors
 
   class PmtSD: public G4VSensitiveDetector
   {
@@ -77,34 +73,34 @@ namespace nexus {
 
     G4int FindPmtID(const G4VTouchable*);
 
-    G4int _naming_order; ///< Order of the naming scheme
-    G4int _sensor_depth; ///< Depth of the SD in the geometry tree
-    G4int _mother_depth; ///< Depth of the SD's mother in the geometry tree
-    G4int _grandmother_depth; ///< Depth of the SD's grandmother in the geometry tree
+    G4int naming_order_; ///< Order of the naming scheme
+    G4int sensor_depth_; ///< Depth of the SD in the geometry tree
+    G4int mother_depth_; ///< Depth of the SD's mother in the geometry tree
+    G4int grandmother_depth_; ///< Depth of the SD's grandmother in the geometry tree
 
-    G4double _timebinning; ///< Time bin width
+    G4double timebinning_; ///< Time bin width
 
-    G4OpBoundaryProcess* _boundary; ///< Pointer to the optical boundary process
+    G4OpBoundaryProcess* boundary_; ///< Pointer to the optical boundary process
 
-    PmtHitsCollection* _HC; ///< Pointer to the collection of hits
+    PmtHitsCollection* HC_; ///< Pointer to the collection of hits
   };
 
   // INLINE METHODS //////////////////////////////////////////////////
 
-  inline void PmtSD::SetDetectorVolumeDepth(G4int d) { _sensor_depth = d; }
-  inline G4int PmtSD::GetDetectorVolumeDepth() const { return _sensor_depth; }
+  inline void PmtSD::SetDetectorVolumeDepth(G4int d) { sensor_depth_ = d; }
+  inline G4int PmtSD::GetDetectorVolumeDepth() const { return sensor_depth_; }
 
-  inline void PmtSD::SetMotherVolumeDepth(G4int d) { _mother_depth = d; }
-  inline G4int PmtSD::GetMotherVolumeDepth() const { return _mother_depth; }
+  inline void PmtSD::SetMotherVolumeDepth(G4int d) { mother_depth_ = d; }
+  inline G4int PmtSD::GetMotherVolumeDepth() const { return mother_depth_; }
 
-  inline void PmtSD::SetDetectorNamingOrder(G4int o) { _naming_order = o; }
-  inline G4int PmtSD::GetDetectorNamingOrder() const { return _naming_order; }
+  inline void PmtSD::SetDetectorNamingOrder(G4int o) { naming_order_ = o; }
+  inline G4int PmtSD::GetDetectorNamingOrder() const { return naming_order_; }
 
-  inline void PmtSD::SetGrandMotherVolumeDepth(G4int d) { _grandmother_depth = d; }
-  inline G4int PmtSD::GetGrandMotherVolumeDepth() const { return _grandmother_depth; }
+  inline void PmtSD::SetGrandMotherVolumeDepth(G4int d) { grandmother_depth_ = d; }
+  inline G4int PmtSD::GetGrandMotherVolumeDepth() const { return grandmother_depth_; }
 
-  inline G4double PmtSD::GetTimeBinning() const { return _timebinning; }
-  inline void PmtSD::SetTimeBinning(G4double tb) { _timebinning = tb; }
+  inline G4double PmtSD::GetTimeBinning() const { return timebinning_; }
+  inline void PmtSD::SetTimeBinning(G4double tb) { timebinning_ = tb; }
 
 } // end namespace nexus
 

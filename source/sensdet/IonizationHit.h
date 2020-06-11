@@ -1,16 +1,14 @@
 // ----------------------------------------------------------------------------
-///  \file   IonizationHit.h
-///  \brief  Ionization deposit left by a particle in an active volume.
-///
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     27 Apr 2009
-///  \version  $Id$ 
-///
-///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
+// nexus | IonizationHit.h
+//
+// This class describes the ionization deposit left by a particle
+// in a sensitive volume.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __IONIZATION_HIT__
-#define __IONIZATION_HIT__
+#ifndef IONIZATION_HIT_
+#define IONIZATION_HIT_
 
 #include <G4VHit.hh>
 #include <G4THitsCollection.hh>
@@ -32,7 +30,7 @@ namespace nexus {
     IonizationHit(const IonizationHit&);
     /// Destructor
     virtual ~IonizationHit();
-    
+
     /// Assignement operator
     const IonizationHit& operator=(const IonizationHit&);
     /// Equality operator
@@ -45,7 +43,7 @@ namespace nexus {
   public:
     G4int GetTrackID();
     void SetTrackID(G4int);
-    
+
     G4double GetTime();
     void SetTime(G4double);
 
@@ -56,38 +54,38 @@ namespace nexus {
     void SetPosition(G4ThreeVector);
 
   private:
-    G4int _track_id;         
-    G4double _time;
-    G4double _energy_dep;
-    G4ThreeVector _position; 
+    G4int track_id_;
+    G4double time_;
+    G4double energy_dep_;
+    G4ThreeVector position_;
   };
-  
-  
+
+
   typedef G4THitsCollection<IonizationHit> IonizationHitsCollection;
   extern G4Allocator<IonizationHit> IonizationHitAllocator;
 
-  
+
   // INLINE DEFINITIONS //////////////////////////////////////////////
-  
-  inline void* IonizationHit::operator new(size_t) 
+
+  inline void* IonizationHit::operator new(size_t)
   { return ((void*) IonizationHitAllocator.MallocSingle()); }
-  
+
   inline void IonizationHit::operator delete(void* aHit)
   { IonizationHitAllocator.FreeSingle((IonizationHit*) aHit); }
 
-  inline G4int IonizationHit::GetTrackID() { return _track_id; }
-  inline void IonizationHit::SetTrackID(G4int id) { _track_id = id; }
-  
-  inline G4double IonizationHit::GetTime() { return _time; }
-  inline void IonizationHit::SetTime(G4double t) { _time = t; }
+  inline G4int IonizationHit::GetTrackID() { return track_id_; }
+  inline void IonizationHit::SetTrackID(G4int id) { track_id_ = id; }
 
-  inline G4double IonizationHit::GetEnergyDeposit() { return _energy_dep; }
-  inline void IonizationHit::SetEnergyDeposit(G4double edep) 
-  { _energy_dep = edep; }
+  inline G4double IonizationHit::GetTime() { return time_; }
+  inline void IonizationHit::SetTime(G4double t) { time_ = t; }
 
-  inline G4ThreeVector IonizationHit::GetPosition() { return _position; }
-  inline void IonizationHit::SetPosition(G4ThreeVector xyz) 
-  { _position = xyz; }
+  inline G4double IonizationHit::GetEnergyDeposit() { return energy_dep_; }
+  inline void IonizationHit::SetEnergyDeposit(G4double edep)
+  { energy_dep_ = edep; }
+
+  inline G4ThreeVector IonizationHit::GetPosition() { return position_; }
+  inline void IonizationHit::SetPosition(G4ThreeVector xyz)
+  { position_ = xyz; }
 
 
 } // end namespace nexus

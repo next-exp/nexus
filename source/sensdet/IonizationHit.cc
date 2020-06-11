@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | IonizationHit.cc
 //
-//  Author:  <justo.martin-albo@ific.uv.es>
-//  Created: 27 Apr 2009
+// This class describes the ionization deposit left by a particle
+// in a sensitive volume.
 //
-//  Copyother (c) 2009-2013 NEXT Collaboration. All others reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "IonizationHit.h"
@@ -15,40 +15,40 @@ namespace nexus {
 
 
   G4Allocator<IonizationHit> IonizationHitAllocator;
-  
-  
+
+
 
   IonizationHit::IonizationHit(): G4VHit()
   {
   }
 
-  
-  
+
+
   IonizationHit::IonizationHit(const IonizationHit& other): G4VHit()
   {
     *this = other;
   }
-  
+
 
 
   IonizationHit::~IonizationHit()
   {
   }
-  
-  
-  
+
+
+
   const IonizationHit& IonizationHit::operator=(const IonizationHit& other)
-  { 
-    _track_id   = other._track_id;
-    _time       = other._time;
-    _energy_dep = other._energy_dep;
-    _position   = other._position;
-    
+  {
+    track_id_   = other.track_id_;
+    time_       = other.time_;
+    energy_dep_ = other.energy_dep_;
+    position_   = other.position_;
+
     return *this;
   }
-  
-  
-  
+
+
+
   G4int IonizationHit::operator==(const IonizationHit& other) const
   {
     return (this==&other) ? 1 : 0;
