@@ -1,15 +1,25 @@
 
-*.o
 .DS_Store
 .sconf
 .sconsign.dblite
 source/.DS_Store
-*.*~
-*.next
+*~
+
+# nexus output files
 *.h5
 *.root
-buildvars.scons
-nexus
+
+# nexus auxiliary files
+*.dat
 *.history
 *.pet
+*.macro
+
+# building files and folders
+bin
 build
+buildvars.scons
+cmake
+nexus
+nexus-test
+*.o
