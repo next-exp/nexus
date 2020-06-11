@@ -51,11 +51,11 @@ namespace nexus {
     void SetRandomSeed(G4int);
 
   private:
-    G4GenericMessenger* _msg;
-    std::vector<G4String> _macros;
-    std::vector<G4String> _delayed;
+    G4GenericMessenger* msg_;
+    std::vector<G4String> macros_;
+    std::vector<G4String> delayed_;
 
-    GeneratorFactory* _genfctr;
+    GeneratorFactory* genfctr_;
 
   };
 

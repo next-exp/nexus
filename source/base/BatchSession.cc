@@ -44,14 +44,14 @@ static void Tokenize(const G4String& str, std::vector<G4String>& tokens)
 BatchSession::BatchSession(G4String filename, G4UIsession* previous_session):
   G4UIsession(), opened_(false), prev_(previous_session)
 {
-  _macrostream.open(filename.data(), std::ios::in);
+  macrostream_.open(filename.data(), std::ios::in);
 
-  if (_macrostream.fail()) {
+  if (macrostream_.fail()) {
     G4String msg = "Cannot open macro file " + filename;
     G4Exception("[BatchSession]", "BatchSession()", FatalException, msg);
   }
   else {
-    _opened = true;
+    opened_ = true;
   }
 
   G4UImanager::GetUIpointer()-> SetSession(this);
@@ -75,9 +75,9 @@ G4String BatchSession::ReadCommand()
   G4String cmdtotal = "";
   G4bool qcontinued = false;
 
-  while (_macrostream.good()) {
+  while (macrostream_.good()) {
 
-    _macrostream.getline(linebuf, BUFSIZE);
+    macrostream_.getline(linebuf, BUFSIZE);
 
     G4String cmdline(linebuf);
 
@@ -121,14 +121,14 @@ G4String BatchSession::ReadCommand()
     if(qcontinued) continue; // read the next line
 
     if(cmdtotal.size() != 0) break;
-    if(_macrostream.eof()) break;
+    if(macrostream_.eof()) break;
   }
 
   // strip again
   cmdtotal= cmdtotal.strip(G4String::both);
 
   // finally,
-  if(_macrostream.eof() && cmdtotal.size()==0) {
+  if(macrostream_.eof() && cmdtotal.size()==0) {
     return "exit";
   }
 
@@ -169,7 +169,7 @@ G4int BatchSession::ExecCommand(const G4String& command)
 
 G4UIsession * BatchSession::SessionStart()
 {
-  if(!_opened) return _prev;
+  if(!opened_) return prev_;
 
   while(1) {
 
@@ -193,7 +193,7 @@ G4UIsession * BatchSession::SessionStart()
     }
   }
 
-  return _prev;
+  return prev_;
 }
 
 

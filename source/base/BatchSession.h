@@ -48,7 +48,7 @@ namespace nexus {
   // INLINE DEFINITIONS //////////////////////////////////////////////
 
   inline G4UIsession* BatchSession::GetPreviousSession() const 
-  { return _prev; }
+  { return prev_; }
 
 } // end namespace nexus
 

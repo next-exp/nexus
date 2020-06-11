@@ -35,6 +35,8 @@
 
 #include "CLHEP/Units/SystemOfUnits.h"
 
+using namespace nexus;
+
 
 PersistencyManager::PersistencyManager(G4String init_macro,
                                        std::vector<G4String>& macros,
@@ -69,8 +71,8 @@ PersistencyManager::PersistencyManager(G4String init_macro,
 
 PersistencyManager::~PersistencyManager()
 {
-  delete _msg;
-  delete _h5writer;
+  delete msg_;
+  delete h5writer_;
 }
 
 
@@ -95,9 +97,9 @@ void PersistencyManager::Initialize(G4String init_macro, std::vector<G4String>& 
 
 void PersistencyManager::OpenFile(G4String filename)
 {
-  _h5writer = new HDF5Writer();
+  h5writer_ = new HDF5Writer();
   G4String hdf5file = filename + ".h5";
-  _h5writer->Open(hdf5file);
+  h5writer_->Open(hdf5file);
   return;
 }
 
@@ -105,7 +107,7 @@ void PersistencyManager::OpenFile(G4String filename)
 
 void PersistencyManager::CloseFile()
 {
-  _h5writer->Close();
+  h5writer_->Close();
   return;
 }
 
@@ -113,30 +115,30 @@ void PersistencyManager::CloseFile()
 
 G4bool PersistencyManager::Store(const G4Event* event)
 {
-  if (_interacting_evt) {
-    _interacting_evts++;
+  if (interacting_evt_) {
+    interacting_evts_++;
   }
 
-  if (!_store_evt) {
+  if (!store_evt_) {
     TrajectoryMap::Clear();
     return false;
   }
 
-  _saved_evts++;
+  saved_evts_++;
 
 
-  if (_first_evt) {
-    _first_evt = false;
-    _nevt = _start_id;
+  if (first_evt_) {
+    first_evt_ = false;
+    nevt_ = start_id_;
   }
 
-  if (_sns_only == false) {
+  if (sns_only_ == false) {
     StoreTrajectories(event->GetTrajectoryContainer());
   }
 
   StoreHits(event->GetHCofThisEvent());
 
-  _nevt++;
+  nevt_++;
 
   TrajectoryMap::Clear();
   StoreCurrentEvent(true);
@@ -158,7 +160,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
     if (!trj) continue;
 
     G4bool save_opt_phot = false;
-    std::ifstream init_history(_historyFile_init, std::ifstream::in);
+    std::ifstream init_history(historyFile_init_, std::ifstream::in);
 
     while (init_history.good()) {
       std::string key, value;
@@ -201,7 +203,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
       mother_id = trj->GetParentID();
     }
 
-    _h5writer->WriteParticleInfo(_nevt, trackid, trj->GetParticleName().c_str(),
+    h5writer_->WriteParticleInfo(nevt_, trackid, trj->GetParticleName().c_str(),
 				 primary, mother_id,
 				 (float)ini_xyz.x(), (float)ini_xyz.y(),
                                  (float)ini_xyz.z(), (float)ini_t,
@@ -241,7 +243,7 @@ void PersistencyManager::StoreHits(G4HCofThisEvent* hce)
     G4VHitsCollection* hits = hce->GetHC(hcid);
 
     if (hcname == IonizationSD::GetCollectionUniqueName()) {
-      if (_sns_only == false) {
+      if (sns_only_ == false) {
 	StoreIonizationHits(hits);
       }
     }
@@ -274,7 +276,7 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
      G4int trackid = hit->GetTrackID();
      G4ThreeVector hit_pos = hit->GetPosition();
 
-     _h5writer->WriteHitInfo(_nevt, trackid,
+     h5writer_->WriteHitInfo(nevt_, trackid,
 			     hit_pos[0], hit_pos[1], hit_pos[2],
 			     hit->GetTime(), hit->GetEnergyDeposit(),
 			     sdname.c_str());
@@ -312,14 +314,14 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
       G4int sens_id;
       sens_id = hit->GetPmtID();
 
-      if (amplitude > _thr_charge){
+      if (amplitude > thr_charge_){
         sensor_ids.push_back(sens_id);
       }
       if (hit->GetPmtID() >= 1000) {
-	_bin_size = binsize;
+	bin_size_ = binsize;
       }
     } else if (hit->GetPmtID()<0) {
-      _tof_bin_size = binsize;
+      tof_bin_size_ = binsize;
     }
   }
 
@@ -335,23 +337,23 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
     std::vector< std::pair<unsigned int, float> > data;
 
     G4double amplitude = 0.;
-    if (_save_tot_charge == true) {
+    if (save_tot_charge_ == true) {
       for (it = wvfm.begin(); it != wvfm.end(); ++it) {
         amplitude = amplitude + (*it).second;
         unsigned int time_bin = (unsigned int)((*it).first/binsize+0.5);
         unsigned int charge = (unsigned int)((*it).second+0.5);
         data.push_back(std::make_pair(time_bin, charge));
-        _h5writer->WriteSensorDataInfo(_nevt, (unsigned int)hit->GetPmtID(), time_bin, charge);
+        h5writer_->WriteSensorDataInfo(nevt_, (unsigned int)hit->GetPmtID(), time_bin, charge);
       }
     }
 
     if (hit->GetPmtID() >= 0) {
       std::vector<G4int>::iterator pos_it =
-	std::find(_sns_posvec.begin(), _sns_posvec.end(), hit->GetPmtID());
-      if (pos_it == _sns_posvec.end()) {
-	_h5writer->WriteSensorPosInfo((unsigned int)hit->GetPmtID(), sdname.c_str(),
+	std::find(sns_posvec_.begin(), sns_posvec_.end(), hit->GetPmtID());
+      if (pos_it == sns_posvec_.end()) {
+	h5writer_->WriteSensorPosInfo((unsigned int)hit->GetPmtID(), sdname.c_str(),
                                       (float)xyz.x(), (float)xyz.y(), (float)xyz.z());
-	_sns_posvec.push_back(hit->GetPmtID());
+	sns_posvec_.push_back(hit->GetPmtID());
       }
     }
 
@@ -364,10 +366,10 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
 
     for (it = wvfmTof.begin(); it != wvfmTof.end(); ++it) {
 
-      if (((*it).first) <= _tof_time){
+      if (((*it).first) <= tof_time_){
         unsigned int time_bin_tof = (unsigned int)((*it).first/binsize_tof+0.5);
         unsigned int charge_tof = (unsigned int)((*it).second+0.5);
-        _h5writer->WriteSensorTofInfo(_nevt, hitTof->GetPmtID(), time_bin_tof, charge_tof);
+        h5writer_->WriteSensorTofInfo(nevt_, hitTof->GetPmtID(), time_bin_tof, charge_tof);
       }
       else {
         break;
@@ -412,15 +414,15 @@ G4bool PersistencyManager::Store(const G4Run*)
   G4int num_events = app->GetNumberOfEventsToBeProcessed();
 
   G4String key = "num_events";
-  _h5writer->WriteRunInfo(key, std::to_string(num_events).c_str());
+  h5writer_->WriteRunInfo(key, std::to_string(num_events).c_str());
   key = "saved_events";
-  _h5writer->WriteRunInfo(key, std::to_string(_saved_evts).c_str());
+  h5writer_->WriteRunInfo(key, std::to_string(saved_evts_).c_str());
   key = "bin_size";
-  _h5writer->WriteRunInfo(key, (std::to_string(_bin_size/microsecond)+" mus").c_str());
+  h5writer_->WriteRunInfo(key, (std::to_string(bin_size_/microsecond)+" mus").c_str());
   key = "tof_bin_size";
-  _h5writer->WriteRunInfo(key, (std::to_string(_tof_bin_size/picosecond)+" ps").c_str());
+  h5writer_->WriteRunInfo(key, (std::to_string(tof_bin_size_/picosecond)+" ps").c_str());
   key = "interacting_events";
-  _h5writer->WriteRunInfo(key,  std::to_string(_interacting_evts).c_str());
+  h5writer_->WriteRunInfo(key,  std::to_string(interacting_evts_).c_str());
 
   SaveConfigurationInfo(init_macro_);
   for (unsigned long i=0; i<macros_.size(); i++) {

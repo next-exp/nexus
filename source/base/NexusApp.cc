@@ -30,7 +30,7 @@ using namespace nexus;
 NexusApp::NexusApp(G4String init_macro): G4RunManager()
 {
   // Create and configure a generic messenger for the app
-  _msg = new G4GenericMessenger(this, "/nexus/", "Nexus control commands.");
+  msg_ = new G4GenericMessenger(this, "/nexus/", "Nexus control commands.");
 
   // Define the command to register a configuration macro. 
   // The user may invoke the command as many times as needed.
@@ -56,7 +56,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
 
   GeometryFactory  geomfctr;
   //GeneratorFactory genfctr;
-  _genfctr = new GeneratorFactory();
+  genfctr_ = new GeneratorFactory();
   ActionsFactory   actfctr;
 
   // The physics lists are handled with Geant4's own 'factory'
@@ -81,7 +81,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
   // Set the primary generation instance in the run manager
   PrimaryGeneration* pg = new PrimaryGeneration();
   //pg->SetGenerator(genfctr.CreateGenerator());
-  pg->SetGenerator(_genfctr->CreateGenerator());
+  pg->SetGenerator(genfctr_->CreateGenerator());
   this->SetUserAction(pg);
 
   // Set the user action instances, if any, in the run manager
@@ -121,8 +121,8 @@ NexusApp::~NexusApp()
     (G4VPersistencyManager::GetPersistencyManager());
   current->CloseFile();
 
-  delete _msg;
-  delete _genfctr;
+  delete msg_;
+  delete genfctr_;
 }
 
 
@@ -130,7 +130,7 @@ NexusApp::~NexusApp()
 void NexusApp::RegisterMacro(G4String macro)
 {
   // Store the name of the macro file
-  _macros.push_back(macro);
+  macros_.push_back(macro);
 }
 
 
@@ -138,7 +138,7 @@ void NexusApp::RegisterMacro(G4String macro)
 void NexusApp::RegisterDelayedMacro(G4String macro)
 {
   // Store the name of the macro file
-  _delayed.push_back(macro);
+  delayed_.push_back(macro);
 }
 
 
@@ -149,14 +149,14 @@ void NexusApp::Initialize()
   // so that all objects get configured
   // G4UImanager* UI = G4UImanager::GetUIpointer();
 
-  for (unsigned int i=0; i<_macros.size(); i++) {
-    ExecuteMacroFile(_macros[i].data());
+  for (unsigned int i=0; i<macros_.size(); i++) {
+    ExecuteMacroFile(macros_[i].data());
   }
 
   G4RunManager::Initialize();
 
-  for (unsigned int j=0; j<_delayed.size(); j++) {
-    ExecuteMacroFile(_delayed[j].data());
+  for (unsigned int j=0; j<delayed_.size(); j++) {
+    ExecuteMacroFile(delayed_[j].data());
   }
 }
 

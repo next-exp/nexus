@@ -74,29 +74,29 @@ namespace nexus {
     std::vector<G4String> delayed_macros_;
     std::vector<G4String> secondary_macros_;
 
-    G4bool _ready;     ///< Is the PersistencyManager ready to go?
-    G4bool _store_evt; ///< Should we store the current event?
-    G4bool _interacting_evt; ///< Has the current event interacted in ACTIVE?
+    G4bool ready_;     ///< Is the PersistencyManager ready to go?
+    G4bool store_evt_; ///< Should we store the current event?
+    G4bool interacting_evt_; ///< Has the current event interacted in ACTIVE?
 
     G4String event_type_; ///< event type: bb0nu, bb2nu, background or not set
 
-    std::vector<G4int> _sns_posvec;
+    std::vector<G4int> sns_posvec_;
 
-    G4int _saved_evts; ///< number of events to be saved
-    G4int _interacting_evts; ///< number of events interacting in ACTIVE
-    G4double _pmt_bin_size, _sipm_bin_size; ///< bin width of sensors
+    G4int saved_evts_; ///< number of events to be saved
+    G4int interacting_evts_; ///< number of events interacting in ACTIVE
+    G4double pmt_bin_size_, sipm_bin_size_; ///< bin width of sensors
 
-    G4int _nevt; ///< Event ID
-    G4int _start_id; ///< ID for the first event in file
-    G4bool _first_evt; ///< true only for the first event of the run
+    G4int nevt_; ///< Event ID
+    G4int start_id_; ///< ID for the first event in file
+    G4bool first_evt_; ///< true only for the first event of the run
 
-    G4int _thr_charge;
-    G4double _tof_time;
-    G4bool _sns_only;
-    G4bool _save_tot_charge;
-    HDF5Writer* _h5writer;  ///< Event writer to hdf5 file
+    G4int thr_charge_;
+    G4double tof_time_;
+    G4bool sns_only_;
+    G4bool save_tot_charge_;
+    HDF5Writer* h5writer_;  ///< Event writer to hdf5 file
 
-    G4double _bin_size, _tof_bin_size;
+    G4double bin_size_, tof_bin_size_;
 
   };
 
@@ -104,9 +104,9 @@ namespace nexus {
   // INLINE DEFINITIONS //////////////////////////////////////////////
 
   inline void PersistencyManager::StoreCurrentEvent(G4bool sce)
-  { _store_evt = sce; }
+  { store_evt_ = sce; }
   inline void PersistencyManager::InteractingEvent(G4bool ie)
-  { _interacting_evt = ie; }
+  { interacting_evt_ = ie; }
   inline G4bool PersistencyManager::Store(const G4VPhysicalVolume*)
   { return false; }
   inline G4bool PersistencyManager::Retrieve(G4Event*&)
