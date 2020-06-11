@@ -8,6 +8,8 @@
 // ----------------------------------------------------------------------------
 
 #include "PetBox.h"
+//#include "TileHamamatsuVUV.h"
+#include "TileFBK.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
@@ -118,6 +120,8 @@ namespace nexus {
     source_tube_length_cmd.SetParameterName("source_tube_length", false);
     source_tube_length_cmd.SetRange("source_tube_length>0.");
 
+
+    tile_ = new TileFBK();
   }
 
   PetBox::~PetBox()
@@ -208,6 +212,16 @@ namespace nexus {
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), air_source_tube_logic,
                       "AIR_SOURCE_TUBE", source_tube_logic, false, 0, true);
+
+
+    // TILE CONSTRUCT
+    G4double n_tile_rows = 2;
+    G4double n_tile_columns = 2;
+    tile_->Construct();
+    tile_thickn_ = tile_->GetDimensions().z();
+    full_row_size_ = n_tile_columns * tile_->GetDimensions().x();
+    full_col_size_ = n_tile_rows * tile_->GetDimensions().y();
+
 
 
     // Visibilities
