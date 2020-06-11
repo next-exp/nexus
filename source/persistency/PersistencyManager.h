@@ -1,12 +1,10 @@
 // ----------------------------------------------------------------------------
-///  \file   PersistencyManager.h
-///  \brief
-///
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     13 March 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// nexus | PersistencyManager.h
+//
+// This class writes all the relevant information of the simulation
+// to an ouput file.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef PERSISTENCY_MANAGER_H
