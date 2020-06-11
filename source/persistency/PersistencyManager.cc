@@ -313,12 +313,10 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
     if (hit->GetPmtID() >= 0) {
       G4int sens_id;
       sens_id = hit->GetPmtID();
+      bin_size_ = binsize;
 
       if (amplitude > thr_charge_){
         sensor_ids.push_back(sens_id);
-      }
-      if (hit->GetPmtID() >= 1000) {
-	bin_size_ = binsize;
       }
     } else if (hit->GetPmtID()<0) {
       tof_bin_size_ = binsize;
