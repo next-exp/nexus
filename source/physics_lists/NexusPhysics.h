@@ -1,12 +1,9 @@
 // ----------------------------------------------------------------------------
-///  \file   NexusPhysics.h
-///  \brief
-///
-///  \author   <justo.martin-albo@ific.uv.es> <paola.ferrario@dipc.org>
-///  \date     28 May 2010
-///  \version  $Id$
-///
-///  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
+// nexus | NexusPhysics.h
+//
+// This class registers any new physics process defined in nexus.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef NEXUS_PHYSICS_H
@@ -37,10 +34,10 @@ namespace nexus {
   private:
     G4bool risetime_; ///< Rise time for LYSO
 
-    G4bool _noCompt; ///< Switch off Compton scattering
+    G4bool noCompt_; ///< Switch off Compton scattering
 
-    G4GenericMessenger* _msg;
-    WavelengthShifting* _wls;
+    G4GenericMessenger* msg_;
+    WavelengthShifting* wls_;
   };
 
 } // end namespace nexus
