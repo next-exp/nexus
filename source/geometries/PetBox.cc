@@ -274,6 +274,26 @@ namespace nexus {
     active_logic->SetUserLimits(new G4UserLimits(max_step_size_));
 
 
+    // PYREX WALLS BETWEEN THE INTERNAL HAT AND THE ACTIVE REGIONS
+    G4double sep_wall_width = full_row_size_ + 2* dist_dice_walls_;
+    G4double sep_wall_x_pos = ih_x_size_/2. + wall_thickness_/2. + dist_ihat_wall_;
+    G4double sep_wall_y_pos = -box_size_/2. + box_thickness_ + ih_y_size_/2.;
+
+    G4Box* separation_wall_solid =
+      new G4Box("SEPARATION_WALL", wall_thickness_/2., ih_y_size_/2., sep_wall_width/2.);
+
+    G4Material* pyrex = G4NistManager::Instance()->FindOrBuildMaterial("G4_Pyrex_Glass");
+
+    G4LogicalVolume* separation_wall_logic =
+      new G4LogicalVolume(separation_wall_solid, pyrex, "SEPARATION_WALL");
+
+    new G4PVPlacement(0, G4ThreeVector(-sep_wall_x_pos, sep_wall_y_pos, 0), separation_wall_logic,
+                        "SEPARATION_WALL1", LXe_logic_, false, 1, true);
+
+    new G4PVPlacement(0, G4ThreeVector(sep_wall_x_pos, sep_wall_y_pos, 0), separation_wall_logic,
+                        "SEPARATION_WALL2", LXe_logic_, false, 2, true);
+
+
     // Visibilities
     if (visibility_) {
       G4VisAttributes box_col = nexus::White();
