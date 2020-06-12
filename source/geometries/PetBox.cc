@@ -294,6 +294,52 @@ namespace nexus {
                         "SEPARATION_WALL2", LXe_logic_, false, 2, true);
 
 
+    //PYREX WALLS SURROUNDING THE SIPM DICE BOARDS
+    G4double wall_width = active_depth_ + tile_thickn_;
+    G4double horiz_wall_length = full_row_size_ + 2.*dist_dice_walls_;
+    G4double wall_x_pos = ih_x_size_/2. + dist_ihat_wall_ + wall_thickness_ + active_depth_ + tile_thickn_ - wall_width/2.;
+    G4double wall_y_pos = full_col_size_/2. + dist_dice_walls_ + wall_thickness_/2.;
+
+    G4Box* surrounding_sensors_horiz_wall_solid =
+      new G4Box("SURROUNDING_SENSORS_HORIZ_WALL", wall_width/2., wall_thickness_/2., horiz_wall_length/2.);
+
+    G4LogicalVolume* surrounding_sensors_horiz_wall_logic =
+      new G4LogicalVolume(surrounding_sensors_horiz_wall_solid, pyrex, "SURROUNDING_SENSORS_HORIZ_WALL");
+
+    new G4PVPlacement(0, G4ThreeVector(-wall_x_pos, wall_y_pos, 0), surrounding_sensors_horiz_wall_logic,
+                       "SURROUNDING_SENSORS_HORIZ_WALL1", LXe_logic_, false, 1, true);
+
+    new G4PVPlacement(0, G4ThreeVector(-wall_x_pos, -wall_y_pos, 0), surrounding_sensors_horiz_wall_logic,
+                        "SURROUNDING_SENSORS_HORIZ_WALL2", LXe_logic_, false, 2, true);
+
+    new G4PVPlacement(0, G4ThreeVector(wall_x_pos, wall_y_pos, 0), surrounding_sensors_horiz_wall_logic,
+                      "SURROUNDING_SENSORS_HORIZ_WALL3", LXe_logic_, false, 3, true);
+
+    new G4PVPlacement(0, G4ThreeVector(wall_x_pos, -wall_y_pos, 0), surrounding_sensors_horiz_wall_logic,
+                      "SURROUNDING_SENSORS_HORIZ_WALL4", LXe_logic_, false, 4, true);
+
+
+    G4double vert_wall_length = full_col_size_ + 2.*dist_dice_walls_;
+    G4double wall_z_pos = full_row_size_/2. + dist_dice_walls_ + wall_thickness_/2.;
+    G4Box* surrounding_sensors_vert_wall_solid =
+      new G4Box("SURROUNDING_SENSORS_VERT_WALL", wall_width/2., vert_wall_length/2., wall_thickness_/2.);
+
+    G4LogicalVolume* surrounding_sensors_vert_wall_logic =
+      new G4LogicalVolume(surrounding_sensors_vert_wall_solid, pyrex, "SURROUNDING_SENSORS_VERT_WALL");
+
+    new G4PVPlacement(0, G4ThreeVector(-wall_x_pos, 0, -wall_z_pos), surrounding_sensors_vert_wall_logic,
+                      "SURROUNDING_SENSORS_VERT_WALL1", LXe_logic_, false, 1, true);
+
+    new G4PVPlacement(0, G4ThreeVector(-wall_x_pos, 0, wall_z_pos), surrounding_sensors_vert_wall_logic,
+                      "SURROUNDING_SENSORS_VERT_WALL2", LXe_logic_, false, 2, true);
+
+    new G4PVPlacement(0, G4ThreeVector(wall_x_pos, 0, -wall_z_pos), surrounding_sensors_vert_wall_logic,
+                      "SURROUNDING_SENSORS_VERT_WALL3", LXe_logic_, false, 3, true);
+
+    new G4PVPlacement(0, G4ThreeVector(wall_x_pos, 0, wall_z_pos), surrounding_sensors_vert_wall_logic,
+                      "SURROUNDING_SENSORS_VERT_WALL4", LXe_logic_, false, 4, true);
+
+
     // Visibilities
     if (visibility_) {
       G4VisAttributes box_col = nexus::White();
