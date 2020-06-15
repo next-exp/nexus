@@ -443,16 +443,21 @@ void PersistencyManager::SaveConfigurationInfo(G4String file_name)
   std::ifstream history(file_name, std::ifstream::in);
   while (history.good()) {
 
+    G4String line;
+    std::getline(history, line);
+    if (line[0] == '#')
+      continue;
+
+    std::stringstream ss(line);
     G4String key, value;
-    std::getline(history, key, ' ');
-    std::getline(history, value);
+    std::getline(ss, key, ' ');
+    std::getline(ss, value);
 
     if (key != "") {
       auto found_binning = key.find("binning");
-      auto found_comment = key.find("#");
       auto found_other_macro = key.find("/control/execute");
-      if ((found_binning == std::string::npos) && (found_comment == std::string::npos)
-          && (found_other_macro == std::string::npos)) {
+      if ((found_binning == std::string::npos) &&
+          (found_other_macro == std::string::npos)) {
         if (key[0] == '\n') {
           key.erase(0, 1);
         }
