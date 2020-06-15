@@ -450,14 +450,15 @@ void PersistencyManager::SaveConfigurationInfo(G4String file_name)
     if (key != "") {
       auto found_binning = key.find("binning");
       auto found_comment = key.find("#");
-      if ((found_binning == std::string::npos) && (found_comment == std::string::npos)) {
+      auto found_other_macro = key.find("/control/execute");
+      if ((found_binning == std::string::npos) && (found_comment == std::string::npos)
+          && (found_other_macro == std::string::npos)) {
         if (key[0] == '\n') {
           key.erase(0, 1);
         }
 	h5writer_->WriteRunInfo(key.c_str(), value.c_str());
       }
 
-      auto found_other_macro = key.find("/control/execute");
       if (found_other_macro != std::string::npos)
         secondary_macros_.push_back(value);
     }
