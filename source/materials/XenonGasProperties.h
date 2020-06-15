@@ -22,6 +22,7 @@ namespace nexus {
   public:
     /// Constructor
     XenonGasProperties(G4double pressure, G4double temperature);
+    XenonGasProperties();
     /// Destructor
     ~XenonGasProperties();
 
@@ -30,6 +31,9 @@ namespace nexus {
 
     G4double Scintillation(G4double energy);
     void Scintillation(G4int entries, G4double* energy, G4double* intensity);
+
+    void MakeDataTable();
+    G4double GetDensity(G4double pressure, G4double temperature);
 
     static G4double Density(G4double pressure);
     static G4double MassPerMole(G4int a);
@@ -40,7 +44,10 @@ namespace nexus {
 
   private:
     G4double pressure_;
-    //    G4double temperature_;
+    //G4double temperature_;
+    G4int npressures_;
+    G4int ntemps_;
+    std::vector<std::vector<G4double>> data_; // temp, press, density
 
   };
 
