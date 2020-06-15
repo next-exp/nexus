@@ -84,7 +84,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FusedSilica()
       + B_2*pow(lambda,2)/(pow(lambda,2)-C_2)
       + B_3*pow(lambda,2)/(pow(lambda,2)-C_3);
     rIndex[i] = sqrt(n2);
-    //G4cout << "* FusedSilica rIndex:  " << std::setw(5) << ri_energy[i]/eV
+    // G4cout << "* FusedSilica rIndex:  " << std::setw(5) << ri_energy[i]/eV
     //       << " eV -> " << rIndex[i] << G4endl;
   }
   assert(sizeof(rIndex) == sizeof(ri_energy));
@@ -383,7 +383,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Sapphire()
   for (int i=0; i<ri_entries; i++) {
     ri_energy[i] = optPhotMinE_ + i * eWidth;
   }
- 
+
   G4double rIndex[ri_entries];
   for (int i=0; i<ri_entries; i++) {
     rIndex[i] = seq.RefractiveIndex(h_Planck*c_light/ri_energy[i]);
@@ -1067,7 +1067,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::EJ280()
   mpt->AddConstProperty("WLSTIMECONSTANT", 8.5 * ns);
 
   // WLS Quantum Efficiency
-  mpt->AddConstProperty("WLSMEANNUMBERPHOTONS", 0.87);
+  mpt->AddConstProperty("WLSMEANNUMBERPHOTONS", 0.86);
 
   return mpt;
 }
@@ -1463,4 +1463,3 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::XXX()
 
   return mpt;
 }
-
