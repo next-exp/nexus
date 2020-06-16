@@ -88,7 +88,7 @@ namespace nexus {
     G4double tpb_z = 0.001 * mm;
     G4Box* tpb_solid = new G4Box("TPB", sipm_x/2., sipm_y/2., tpb_z/2);
     G4Material* TPB = MaterialsList::TPB();
-    TPB->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB_LXe());
+    TPB->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
     G4LogicalVolume* tpb_logic =
       new G4LogicalVolume(tpb_solid, TPB, "TPB");
 
