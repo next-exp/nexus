@@ -660,6 +660,17 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeGrid(G4double pressure
   mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
   mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
 
+
+  // PHOTOELECTRIC REEMISSION
+  // https://aip.scitation.org/doi/10.1063/1.1708797
+  G4double stainless_wf = 4.3 * eV; // work function
+  G4double prob         = 1e-3;
+  G4double ph_energy [] = {optPhotMinE_, stainless_wf - 0.1*eV, stainless_wf, optPhotMaxE_};
+  G4double emission_p[] = {           0,                     0,         prob,         prob};
+  mpt->AddProperty("OP_PHOTOELECTRIC_PROBABILITY",
+                   ph_energy, emission_p, 4);
+
+
   // CONST PROPERTIES
   mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield);
   mpt->AddConstProperty("RESOLUTIONSCALE",    1.0);
