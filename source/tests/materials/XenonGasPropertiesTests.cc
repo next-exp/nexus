@@ -4,6 +4,8 @@
 
 #include <setjmp.h>
 
+#include <csignal>
+
 #include <catch.hpp>
 
 int val;
