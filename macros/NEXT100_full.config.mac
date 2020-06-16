@@ -17,7 +17,6 @@
 /Geometry/Next100/EL_field 13 kV/cm
 /Geometry/Next100/pressure 10. bar
 /Geometry/Next100/max_step_size 5. mm
-/Geometry/PmtR11410/SD_depth 3
 
 ##### GENERATOR #####
 /Generator/Kr83mGenerator/region ACTIVE

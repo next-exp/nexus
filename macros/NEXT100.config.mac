@@ -16,7 +16,6 @@
 /Geometry/Next100/elfield false
 /Geometry/Next100/pressure 15. bar
 /Geometry/Next100/max_step_size 5. mm
-/Geometry/PmtR11410/SD_depth 3
 
 ##### GENERATOR #####
 /Generator/IonGenerator/atomic_number 83

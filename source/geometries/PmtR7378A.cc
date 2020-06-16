@@ -112,7 +112,7 @@ namespace nexus {
 
     // Sensitive detector
     PmtSD* pmtsd = new PmtSD("/PMT_R7378A/Pmt");
-    pmtsd->SetDetectorVolumeDepth(1);
+    pmtsd->SetDetectorVolumeDepth(2);
     pmtsd->SetTimeBinning(100.*nanosecond);
     G4SDManager::GetSDMpointer()->AddNewDetector(pmtsd);
     phcath_logic->SetSensitiveDetector(pmtsd);

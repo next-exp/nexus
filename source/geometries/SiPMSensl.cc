@@ -173,10 +173,10 @@ namespace nexus {
 
     if (!sdmgr->FindSensitiveDetector(sdname, false)) {
       PmtSD* sipmsd = new PmtSD(sdname);
-      sipmsd->SetDetectorVolumeDepth(1);
+      sipmsd->SetDetectorVolumeDepth(3);
       sipmsd->SetDetectorNamingOrder(1000.);
       sipmsd->SetTimeBinning(binning_);
-      sipmsd->SetMotherVolumeDepth(3);
+      sipmsd->SetMotherVolumeDepth(5);
 
       G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
       active_logic->SetSensitiveDetector(sipmsd);
