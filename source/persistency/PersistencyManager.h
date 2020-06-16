@@ -37,6 +37,7 @@ namespace nexus {
     /// Set whether to store or not the current event
     void StoreCurrentEvent(G4bool);
     void InteractingEvent(G4bool);
+    void StoreSteps(G4bool);
 
     ///
     virtual G4bool Store(const G4Event*);
@@ -62,6 +63,7 @@ namespace nexus {
     void StoreHits(G4HCofThisEvent*);
     void StoreIonizationHits(G4VHitsCollection*);
     void StorePmtHits(G4VHitsCollection*);
+    void StoreSteps();
 
     void SaveConfigurationInfo(G4String history);
 
@@ -76,6 +78,7 @@ namespace nexus {
 
     G4bool ready_;     ///< Is the PersistencyManager ready to go?
     G4bool store_evt_; ///< Should we store the current event?
+    G4bool store_steps_; ///< Should we store the steps for the current event?
     G4bool interacting_evt_; ///< Has the current event interacted in ACTIVE?
 
     G4String event_type_; ///< event type: bb0nu, bb2nu, background or not set
@@ -101,6 +104,8 @@ namespace nexus {
 
   inline void PersistencyManager::StoreCurrentEvent(G4bool sce)
   { store_evt_ = sce; }
+  inline void PersistencyManager::StoreSteps(G4bool ss)
+  { store_steps_ = ss; }
   inline void PersistencyManager::InteractingEvent(G4bool ie)
   { interacting_evt_ = ie; }
   inline G4bool PersistencyManager::Store(const G4VPhysicalVolume*)

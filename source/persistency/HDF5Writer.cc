@@ -21,7 +21,7 @@ using namespace nexus;
 
 HDF5Writer::HDF5Writer():
   file_(0), irun_(0), ismp_(0), ihit_(0),
-  ipart_(0), ipos_(0)
+  ipart_(0), ipos_(0), istep_(0)
 {
 }
 
@@ -58,6 +58,10 @@ void HDF5Writer::Open(std::string fileName)
   std::string sns_pos_table_name = "sns_positions";
   memtypeSnsPos_ = createSensorPosType();
   snsPosTable_ = createTable(group_, sns_pos_table_name, memtypeSnsPos_);
+
+  std::string step_table_name = "steps";
+  memtypeStep_ = createStepType();
+  stepTable_   = createTable(group_, step_table_name, memtypeStep_);
 
   isOpen_ = true;
 }
@@ -161,4 +165,37 @@ void HDF5Writer::WriteSensorPosInfo(unsigned int sensor_id, const char* sensor_n
   writeSnsPos(&snsPos, snsPosTable_, memtypeSnsPos_, ipos_);
 
   ipos_++;
+}
+
+void HDF5Writer::WriteStep(int evt_number,
+                           int particle_id, const char* particle_name,
+                           int step_id,
+                           const char* initial_volume,
+                           const char*   final_volume,
+                           const char*      proc_name,
+                           float initial_x, float initial_y, float initial_z,
+                           float   final_x, float   final_y, float   final_z)
+{
+  step_info_t step;
+  step.event_id    = evt_number;
+  step.particle_id = particle_id;
+  memset(step.particle_name , 0,  STRLEN);
+  strcpy(step.particle_name ,  particle_name);
+  step.step_id    = step_id;
+  memset(step.initial_volume, 0, STRLEN);
+  strcpy(step.initial_volume, initial_volume);
+  memset(step.  final_volume, 0, STRLEN);
+  strcpy(step.  final_volume,   final_volume);
+  memset(step.     proc_name, 0, STRLEN);
+  strcpy(step.     proc_name,      proc_name);
+  step.initial_x   = initial_x;
+  step.initial_y   = initial_y;
+  step.initial_z   = initial_z;
+  step.  final_x   =   final_x;
+  step.  final_y   =   final_y;
+  step.  final_z   =   final_z;
+
+  writeStep(&step, stepTable_, memtypeStep_, istep_);
+
+  istep_++;
 }

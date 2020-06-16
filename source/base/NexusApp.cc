@@ -76,9 +76,12 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
   pg->SetGenerator(genfctr.CreateGenerator());
   this->SetUserAction(pg);
 
-  // Set the user action instances, if any, in the run manager
-
+  // User interface
   G4UImanager* UI = G4UImanager::GetUIpointer();
+
+  PersistencyManager::Initialize(init_macro, macros_, delayed_);
+
+  // Set the user action instances, if any, in the run manager
 
   if (UI->GetCurrentValues("/Actions/RegisterRunAction") != "")
     this->SetUserAction(actfctr.CreateRunAction());
@@ -101,7 +104,6 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
   // number generator
   SetRandomSeed(-1);
 
-  PersistencyManager::Initialize(init_macro, macros_, delayed_);
 }
 
 

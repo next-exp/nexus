@@ -1,11 +1,8 @@
-## ----------------------------------------------------------------------------
-## nexus | NEW_S1_table.init.mac
-##
-## Initialization macro to simulate primary scintillation light
-## for look-up tables in the NEW detector.
-##
-## The NEXT Collaboration
-## ----------------------------------------------------------------------------
+### --------------------------------------------------------
+### This init macro simulates geantinos in the NEW geometry
+### shot from an specific vertex isotropically
+### --------------------------------------------------------
+
 
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
 /PhysicsList/RegisterPhysics G4DecayPhysics
@@ -16,10 +13,11 @@
 
 /Geometry/RegisterGeometry NEXT_NEW
 
-/Generator/RegisterGenerator SCINTILLATION
+/Generator/RegisterGenerator SINGLE_PARTICLE
 
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction SAVE_ALL
+/Actions/RegisterSteppingAction SAVE_ALL
 /Actions/RegisterRunAction DEFAULT
 
-/nexus/RegisterMacro macros/NEW_S1_table.config.mac
+/nexus/RegisterMacro macros/NEW_geantino.config.mac

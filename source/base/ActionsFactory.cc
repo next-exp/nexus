@@ -56,7 +56,7 @@ G4UserRunAction* ActionsFactory::CreateRunAction() const
 
 //////////////////////////////////////////////////////////////////////
 #include "DefaultEventAction.h"
-#include "ELSimEventAction.h"
+#include "SaveAllEventAction.h"
 #include "MuonsEventAction.h"
 
 G4UserEventAction* ActionsFactory::CreateEventAction() const
@@ -65,7 +65,7 @@ G4UserEventAction* ActionsFactory::CreateEventAction() const
 
   if      (evtact_name_ == "DEFAULT") p = new DefaultEventAction();
 
-  else if (evtact_name_ == "EL_SIM") p = new ELSimEventAction();
+  else if (evtact_name_ == "SAVE_ALL") p = new SaveAllEventAction();
 
   else if (evtact_name_ == "MUONS") p = new MuonsEventAction();
 
@@ -105,13 +105,16 @@ G4UserTrackingAction* ActionsFactory::CreateTrackingAction() const
 
 //////////////////////////////////////////////////////////////////////
 #include "AnalysisSteppingAction.h"
+#include "SaveAllSteppingAction.h"
 
 
 G4UserSteppingAction* ActionsFactory::CreateSteppingAction() const
 {
   G4UserSteppingAction* p = 0;
 
-  if (stpact_name_ == "ANALYSIS") p = new AnalysisSteppingAction();
+  if      (stpact_name_ == "ANALYSIS") p = new AnalysisSteppingAction();
+
+  else if (stpact_name_ == "SAVE_ALL") p = new SaveAllSteppingAction();
 
   else {
     G4String err = "Unknown user stepping action: " + stpact_name_;

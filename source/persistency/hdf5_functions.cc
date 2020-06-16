@@ -107,6 +107,33 @@ hsize_t createSensorPosType()
   return memtype;
 }
 
+
+hsize_t createStepType()
+{
+  hid_t strtype = H5Tcopy(H5T_C_S1);
+  H5Tset_size (strtype, STRLEN);
+
+  hid_t proc_strtype = H5Tcopy(H5T_C_S1);
+  H5Tset_size (proc_strtype, STRLEN);
+
+  //Create compound datatype for the table
+  hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof(step_info_t));
+  H5Tinsert (memtype, "event_id"      , HOFFSET(step_info_t, event_id      ), H5T_NATIVE_INT32);
+  H5Tinsert (memtype, "particle_id"   , HOFFSET(step_info_t, particle_id   ), H5T_NATIVE_INT  );
+  H5Tinsert (memtype, "particle_name" , HOFFSET(step_info_t, particle_name ), strtype         );
+  H5Tinsert (memtype, "step_id"       , HOFFSET(step_info_t, step_id       ), H5T_NATIVE_INT  );
+  H5Tinsert (memtype, "initial_volume", HOFFSET(step_info_t, initial_volume), proc_strtype    );
+  H5Tinsert (memtype, "final_volume"  , HOFFSET(step_info_t, final_volume  ), proc_strtype    );
+  H5Tinsert (memtype, "proc_name"     , HOFFSET(step_info_t, proc_name     ), proc_strtype    );
+  H5Tinsert (memtype, "initial_x"     , HOFFSET(step_info_t, initial_x     ), H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "initial_y"     , HOFFSET(step_info_t, initial_y     ), H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "initial_z"     , HOFFSET(step_info_t, initial_z     ), H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "final_x"       , HOFFSET(step_info_t, final_x       ), H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "final_y"       , HOFFSET(step_info_t, final_y       ), H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "final_z"       , HOFFSET(step_info_t, final_z       ), H5T_NATIVE_FLOAT);
+  return memtype;
+}
+
 hid_t createTable(hid_t group, std::string& table_name, hsize_t memtype)
 {
   //Create 1D dataspace (evt number). First dimension is unlimited (initially 0)
@@ -242,6 +269,26 @@ void writeSnsPos(sns_pos_t* snsPos, hid_t dataset, hid_t memtype, hsize_t counte
   hsize_t count[1] = {1};
   H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
   H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, snsPos);
+  H5Sclose(file_space);
+  H5Sclose(memspace);
+}
+
+void writeStep(step_info_t* step, hid_t dataset, hid_t memtype, hsize_t counter)
+{
+  hid_t memspace, file_space;
+
+  const hsize_t n_dims = 1;
+  hsize_t dims[n_dims] = {1};
+  memspace = H5Screate_simple(n_dims, dims, NULL);
+
+  dims[0] = counter + 1;
+  H5Dset_extent(dataset, dims);
+
+  file_space = H5Dget_space(dataset);
+  hsize_t start[1] = {counter};
+  hsize_t count[1] = {1};
+  H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
+  H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, step);
   H5Sclose(file_space);
   H5Sclose(memspace);
 }

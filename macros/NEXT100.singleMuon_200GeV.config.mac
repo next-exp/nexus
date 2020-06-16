@@ -39,7 +39,7 @@
 /Generator/SingleParticle/momentum_Z 0.
 
 ### ACTIONS
-#/Actions/ElSimEventAction/max_energy 3. MeV
+#/Actions/SaveAllEventAction/max_energy 3. MeV
 #/Actions/DefaultEventAction/energy_threshold 0. MeV
 #/Actions/DefaultEventAction/max_energy 3. MeV
 
