@@ -74,10 +74,8 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::EpoxyFixedRefr(G4double n)
 
   XenonLiquidProperties LXe_prop;
 
-  const G4int ri_entries = 18;
-  G4double ri_energy[ri_entries] = {optPhotMinE_, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV,
-                                    6.4*eV, 6.6*eV, 6.8*eV, 7*eV, 7.2*eV, 7.4*eV,
-                                    7.6*eV, 7.8*eV, 8*eV, 8.2*eV, optPhotMaxE_};
+  const G4int ri_entries = 2;
+  G4double ri_energy[ri_entries] = {optPhotMinE_, optPhotMaxE_};
 
   G4double ri_index[ri_entries];
   for (G4int i=0; i<ri_entries; i++) {
