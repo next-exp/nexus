@@ -21,7 +21,8 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  /// This is a stateless class where all methods are static functions.
+  /// Optical properties of several materials.
+  /// (N.B. This is a stateless class where all methods are static functions.)
 
   class OpticalMaterialProperties
   {
@@ -44,8 +45,6 @@ namespace nexus {
 
     static G4MaterialPropertiesTable* Sapphire();
 
-    static G4MaterialPropertiesTable* OptCoupler();
-
     static G4MaterialPropertiesTable* GAr(G4double sc_yield);
     static G4MaterialPropertiesTable* LAr();
 
@@ -59,27 +58,22 @@ namespace nexus {
 					       G4double thickness=1.*mm,
 					       G4int sc_yield=25510/MeV);
 
-   static G4MaterialPropertiesTable* LXe();
-   static G4MaterialPropertiesTable* FakeLXe();
-   static G4MaterialPropertiesTable* LXe_nconst();
-   static G4MaterialPropertiesTable* LXe_window();
-
+    static G4MaterialPropertiesTable* LXe();
+    static G4MaterialPropertiesTable* FakeLXe();
+    static G4MaterialPropertiesTable* LXe_nconst();
 
     static G4MaterialPropertiesTable* Glass();
 
-    static G4MaterialPropertiesTable* TPB(G4double pressure=10.*bar,
-					  G4double temperature=STP_Temperature);
-    static G4MaterialPropertiesTable* TPB_LXe(G4double decay=2.2*nanosecond);
-    static G4MaterialPropertiesTable* TPB_LXe_nconst(G4double decay=2.2*nanosecond);
-
-    static G4MaterialPropertiesTable* TPBOld();
-    static G4MaterialPropertiesTable* TPBmatr();
-    static G4MaterialPropertiesTable* WLS2();
     static G4MaterialPropertiesTable* PTFE();
     static G4MaterialPropertiesTable* PTFE_LXe(G4double reflectivity=0.95);
-    static G4MaterialPropertiesTable* PTFE_with_TPB();
     static G4MaterialPropertiesTable* PTFE_non_reflectant();
     static G4MaterialPropertiesTable* Pyrex_vidrasa();
+
+
+    static G4MaterialPropertiesTable* TPB(G4double decay=2.2*nanosecond);
+    static G4MaterialPropertiesTable* TPB_LXe(G4double decay=2.2*nanosecond);
+    static G4MaterialPropertiesTable* TPB_LXe_nconst(G4double decay=2.2*nanosecond);
+    
     static G4MaterialPropertiesTable* LYSO();
     static G4MaterialPropertiesTable* LYSO_nconst();
     static G4MaterialPropertiesTable* FakeLYSO();
@@ -87,6 +81,11 @@ namespace nexus {
 
 
   private:
+
+    static constexpr G4double optPhotMinE_ = 1.   * eV;
+    static constexpr G4double optPhotMaxE_ = 8.21 * eV;
+    static constexpr G4double noAbsLength_ = 1.e8  * m;
+
     /// Constructor (hidden)
     OpticalMaterialProperties();
     /// Destructor (hidden)
