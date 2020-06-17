@@ -13,6 +13,7 @@
 #include "IonizationDrift.h"
 #include "Electroluminescence.h"
 #include "WavelengthShifting.h"
+#include "OpPhotoelectricEffect.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4OpticalPhoton.hh>
@@ -78,6 +79,9 @@ namespace nexus {
     }
     WavelengthShifting* wls = new WavelengthShifting();
     pmanager->AddDiscreteProcess(wls);
+
+    OpPhotoelectricEffect* photoe = new OpPhotoelectricEffect();
+    pmanager->AddDiscreteProcess(photoe);
 
     pmanager = IonizationElectron::Definition()->GetProcessManager();
     if (!pmanager) {
