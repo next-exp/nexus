@@ -54,7 +54,7 @@ GenericPhotosensor::GenericPhotosensor(G4String name,
 }
 
 
-GenericPhotosensor::GenericPhotosensor(G4String name, G4double size): 
+GenericPhotosensor::GenericPhotosensor(G4String name, G4double size):
   GenericPhotosensor(name, size, size)
 {
 }
@@ -124,7 +124,7 @@ void GenericPhotosensor::DefineMaterials()
                   "Window rindex must be set before constructing");
 
     window_optProp->AddProperty("RINDEX", window_rindex_);
-    window_mat_->SetMaterialPropertiesTable(window_optProp);    
+    window_mat_->SetMaterialPropertiesTable(window_optProp);
   }
 
   // Sensitive /////
@@ -202,8 +202,10 @@ void GenericPhotosensor::Construct()
     G4OpticalSurface* wls_optSurf = new G4OpticalSurface(name + "_OPSURF",
                                                          glisur, ground,
                                                          dielectric_dielectric, .01);
-    
+
     new G4LogicalSkinSurface(name + "_OPSURF", wls_logic_vol, wls_optSurf);
+
+    wls_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
   }
 
 
@@ -214,13 +216,11 @@ void GenericPhotosensor::Construct()
     red.SetForceSolid(true);
     sensarea_logic_vol->SetVisAttributes(red);
     case_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
-    if (with_wls_coating_) wls_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
   }
   else {
     window_logic_vol  ->SetVisAttributes(G4VisAttributes::Invisible);
     sensarea_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
     case_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
-    if (with_wls_coating_) wls_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
   }
 
 
@@ -240,17 +240,17 @@ void GenericPhotosensor::Construct()
 
   if (!sdmgr->FindSensitiveDetector(sdname, false)) {
     PmtSD* sensdet = new PmtSD(sdname);
-    if (sensor_depth_ == -1) 
+    if (sensor_depth_ == -1)
       G4Exception("[GenericPhotosensor]", "Construct()", FatalException,
                   "Sensor Depth must be set before constructing");
     sensdet->SetDetectorVolumeDepth(sensor_depth_);
 
-    if (mother_depth_ == -1) 
+    if (mother_depth_ == -1)
       G4Exception("[GenericPhotosensor]", "Construct()", FatalException,
                   "Mother Depth must be set before constructing");
     sensdet->SetMotherVolumeDepth(mother_depth_);
 
-    if (naming_order_ == -1) 
+    if (naming_order_ == -1)
       G4Exception("[GenericPhotosensor]", "Construct()", FatalException,
                   "Naming Order must be set before constructing");
     sensdet->SetDetectorNamingOrder(naming_order_);
