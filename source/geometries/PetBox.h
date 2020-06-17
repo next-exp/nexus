@@ -33,6 +33,7 @@ namespace nexus {
     G4LogicalVolume* LXe_logic_;
 
     G4bool visibility_;
+    G4double reflectivity_;
 
     G4double source_pos_x_, source_pos_y_, source_pos_z_;
     G4double box_size_, box_thickness_;

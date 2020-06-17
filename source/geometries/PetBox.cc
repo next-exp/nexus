@@ -32,6 +32,7 @@ namespace nexus {
 
   PetBox::PetBox(): BaseGeometry(),
                     visibility_(0),
+                    reflectivity_(0),
                     source_pos_x_(0.*mm),
                     source_pos_y_(0.*mm),
                     source_pos_z_(0.*mm),
@@ -54,6 +55,7 @@ namespace nexus {
     msg_ = new G4GenericMessenger(this, "/Geometry/PetBox/",
                                   "Control commands of geometry PetBox.");
     msg_->DeclareProperty("visibility", visibility_, "Visibility");
+    msg_->DeclareProperty("surf_reflectivity", reflectivity_, "Reflectivity of box walls");
 
     G4GenericMessenger::Command& source_pos_x_cmd =
       msg_->DeclareProperty("source_pos_x", source_pos_x_, "X position of the source");
@@ -69,7 +71,6 @@ namespace nexus {
       msg_->DeclareProperty("source_pos_z", source_pos_z_, "Z position of the source");
     source_pos_z_cmd.SetUnitCategory("Length");
     source_pos_z_cmd.SetParameterName("source_pos_z", false);
-
 
     G4GenericMessenger::Command& box_size_cmd =
       msg_->DeclareProperty("box_size", box_size_, "Size of box");
@@ -338,6 +339,18 @@ namespace nexus {
 
     new G4PVPlacement(0, G4ThreeVector(wall_x_pos, 0, wall_z_pos), surrounding_sensors_vert_wall_logic,
                       "SURROUNDING_SENSORS_VERT_WALL4", LXe_logic_, false, 4, true);
+
+
+    // Optical surface for the walls
+    G4OpticalSurface* wall_opsur = new G4OpticalSurface("OP_WALL");
+    wall_opsur->SetType(dielectric_metal);
+    wall_opsur->SetModel(unified);
+    wall_opsur->SetFinish(ground);
+    wall_opsur->SetSigmaAlpha(0.1);
+    wall_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::ReflectantSurface(reflectivity_));
+    new G4LogicalSkinSurface("OP_WALL", separation_wall_logic, wall_opsur);
+    new G4LogicalSkinSurface("OP_WALL_H", surrounding_sensors_horiz_wall_logic, wall_opsur);
+    new G4LogicalSkinSurface("OP_WALL_V", surrounding_sensors_vert_wall_logic, wall_opsur);
 
 
     // Visibilities
