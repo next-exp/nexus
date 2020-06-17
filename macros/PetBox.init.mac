@@ -11,6 +11,7 @@
 
 ### GENERATOR
 /Generator/RegisterGenerator BACK2BACK
+#/Generator/RegisterGenerator SINGLE_PARTICLE
 
 ### ACTIONS
 /Actions/RegisterRunAction DEFAULT

@@ -3,6 +3,13 @@
 /Geometry/PetBox/box_size 19.2 cm
 /Geometry/PetBox/box_thickness 2. cm
 
+/Geometry/Tile/visibility true
+
+/Geometry/SiPMpet/efficiency 0.2
+/Geometry/SiPMpet/visibility true
+/Geometry/SiPMpet/time_binning 1. microsecond
+/Geometry/SiPMpet/mother_depth 2
+/Geometry/SiPMpet/naming_order 1000
 
 ### GENERATOR
 /Generator/Back2back/region CENTER
