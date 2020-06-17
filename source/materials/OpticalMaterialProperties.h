@@ -40,6 +40,12 @@ namespace nexus {
     static G4MaterialPropertiesTable* FakeFusedSilica(G4double transparency=.9,
 						      G4double thickness=1.*mm);
 
+<<<<<<< HEAD
+=======
+    static G4MaterialPropertiesTable* FakeLXe(G4double transparency=.89,
+    G4double thickness=0.6*mm);
+    
+>>>>>>> 787ccaf... Add FakeLXe material optical properties for the quartz
     static G4MaterialPropertiesTable* Sapphire();
 
     static G4MaterialPropertiesTable* OptCoupler();

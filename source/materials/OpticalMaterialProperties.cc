@@ -263,6 +263,38 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeFusedSilica(G4double t
   return mpt;
 }
 
+G4MaterialPropertiesTable* OpticalMaterialProperties::FakeLXe(G4double transparency, G4double thickness)
+{
+  G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
+
+  // REFRACTIVE INDEX //////////////////////////////////////////////////////////
+  // Liquid xenon refractive index
+
+  const G4int ri_entries = 18;
+  G4double ri_energy[ri_entries]
+    = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV, 7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV, 8*eV, 8.2*eV, 8.21*eV};
+
+  XenonLiquidProperties LXe_prop;
+  G4double rindex[ri_entries];
+  for (G4int i=0; i<ri_entries; i++) {
+    rindex[i] = LXe_prop.RefractiveIndex(ri_energy[i]);
+  }
+
+  mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
+
+  // ABSORPTION LENGTH /////////////////////////////////////////////////////////
+  // It matches the transparency
+
+  G4double abs_length = -thickness/log(transparency);
+  const G4int NUMENTRIES  = 2;
+  G4double abs_energy[NUMENTRIES] = { .1*eV, 100.*eV };
+  G4double ABSL[NUMENTRIES]  = {abs_length, abs_length};
+
+  mpt->AddProperty("ABSLENGTH", abs_energy, ABSL, NUMENTRIES);
+
+  return mpt;
+}
+
 G4MaterialPropertiesTable* OpticalMaterialProperties::GlassEpoxy()
 {
   // Optical properties of Optorez 1330 glass epoxy.
