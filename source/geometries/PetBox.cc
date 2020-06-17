@@ -8,8 +8,9 @@
 // ----------------------------------------------------------------------------
 
 #include "PetBox.h"
-//#include "TileHamamatsuVUV.h"
-#include "TileFBK.h"
+#include "TileHamamatsuVUV.h"
+//#include "TileHamamatsuBlue.h"
+//#include "TileFBK.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
@@ -150,7 +151,7 @@ namespace nexus {
     wall_thickness_cmd.SetParameterName("wall_thickness", false);
     wall_thickness_cmd.SetRange("wall_thickness>0.");
 
-    tile_ = new TileFBK();
+    tile_ = new TileHamamatsuVUV();
   }
 
   PetBox::~PetBox()
@@ -244,12 +245,12 @@ namespace nexus {
 
 
     // TILE CONSTRUCT
-    G4double n_tile_rows = 2;
-    G4double n_tile_columns = 2;
+    n_tile_rows_ = 2;
+    n_tile_columns_ = 2;
     tile_->Construct();
     tile_thickn_ = tile_->GetDimensions().z();
-    full_row_size_ = n_tile_columns * tile_->GetDimensions().x();
-    full_col_size_ = n_tile_rows * tile_->GetDimensions().y();
+    full_row_size_ = n_tile_columns_ * tile_->GetDimensions().x();
+    full_col_size_ = n_tile_rows_ * tile_->GetDimensions().y();
 
 
     // 2 ACTIVE REGIONS
@@ -382,6 +383,50 @@ namespace nexus {
 
   void PetBox::BuildSensors()
   {
+//      G4LogicalVolume* tile_logic = tile_->GetLogicalVolume();
+//      G4double x_pos = ih_x_size_/2. + active_depth_ + tile_thickn_/2.+dist_ihat_wall_+wall_thickness_;
+//      G4RotationMatrix rot;
+//      rot.rotateY(-pi/2.);
+//      new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, 0., 0.)), tile_logic,
+//      "TileFBK", LXe_logic_, false, 0, true);
+
+    G4LogicalVolume* tile_logic = tile_->GetLogicalVolume();
+    G4double x_pos = ih_x_size_/2. + active_depth_ + tile_thickn_/2.+ dist_ihat_wall_ + wall_thickness_;
+
+    G4RotationMatrix rot;
+    rot.rotateY(-pi/2.);
+    G4ThreeVector position;
+    G4String vol_name;
+
+    G4int copy_no = 1;
+
+    for (G4int i=0; i<n_tile_rows_; i++) {
+      G4double y_pos = -full_col_size_/2. + tile_->GetDimensions().y()/2. + i*tile_->GetDimensions().y();
+      for (G4int j=0; j<n_tile_columns_; j++) {
+    G4double z_pos = -full_row_size_/2. + tile_->GetDimensions().x()/2. + j*tile_->GetDimensions().x();
+
+    position = G4ThreeVector(x_pos, y_pos, z_pos);
+    vol_name = "TILE_" + std::to_string(copy_no);
+    new G4PVPlacement(G4Transform3D(rot, position), tile_logic,
+              vol_name, LXe_logic_, false, copy_no, true);
+    copy_no += 1;
+
+      }
+    }
+
+    rot.rotateY(pi);
+
+    for (G4int i=0; i<n_tile_rows_; i++) {
+      G4double y_pos = -full_col_size_/2. + tile_->GetDimensions().y()/2. + i*tile_->GetDimensions().y();
+      for (G4int j=0; j<n_tile_columns_; j++) {
+    G4double z_pos = -full_row_size_/2. + tile_->GetDimensions().x()/2. + j*tile_->GetDimensions().x();
+    position = G4ThreeVector(-x_pos, y_pos, z_pos);
+    vol_name = "TILE_" + std::to_string(copy_no);
+    new G4PVPlacement(G4Transform3D(rot, position), tile_logic,
+              vol_name, LXe_logic_, false, copy_no, true);
+    copy_no += 1;
+  }
+    }
   }
 
 
