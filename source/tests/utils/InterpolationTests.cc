@@ -42,7 +42,7 @@ TEST_CASE("Linear Interpolation") {
     REQUIRE (y == 4.0);
 
     y = nexus::LinearInterpolation(1.0, 1.0, 1.0, 1.0, 2.0);
-    REQUIRE (isnan(y));
+    REQUIRE (std::isnan(y));
 
     y = nexus::LinearInterpolation(1.5, 1.0, 2.0, 2.0, 2.0);
     REQUIRE (y == 2.0);
@@ -50,10 +50,10 @@ TEST_CASE("Linear Interpolation") {
 
   SECTION ("x not in range"){
     G4double y = nexus::LinearInterpolation(5.0, 1.0, 2.0, 3.0, 4.0);
-    REQUIRE (isnan(y));
+    REQUIRE (std::isnan(y));
 
     y = nexus::LinearInterpolation(0.0, 1.0, 2.0, 3.0, 4.0);
-    REQUIRE (isnan(y));
+    REQUIRE (std::isnan(y));
   }
 
 }
@@ -128,21 +128,21 @@ TEST_CASE("Bilinear Interpolation"){
     G4double y = nexus::BilinearInterpolation(0.0, 1.0, 2.0,
                                               1.5, 1.0, 2.0,
                                               1.0, 2.0, 3.0, 4.0);
-    REQUIRE (isnan(y));
+    REQUIRE (std::isnan(y));
 
     y = nexus::BilinearInterpolation(3.0, 1.0, 2.0,
                                      1.5, 1.0, 2.0,
                                      1.0, 2.0, 3.0, 4.0);
-    REQUIRE (isnan(y));
+    REQUIRE (std::isnan(y));
 
     y = nexus::BilinearInterpolation(1.5, 1.0, 2.0,
                                      0.0, 1.0, 2.0,
                                      1.0, 2.0, 3.0, 4.0);
-    REQUIRE (isnan(y));
+    REQUIRE (std::isnan(y));
 
     y = nexus::BilinearInterpolation(1.5, 1.0, 2.0,
                                      3.0, 1.0, 2.0,
                                      1.0, 2.0, 3.0, 4.0);
-    REQUIRE (isnan(y));
+    REQUIRE (std::isnan(y));
   }
 }
