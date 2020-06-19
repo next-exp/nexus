@@ -115,6 +115,11 @@ namespace nexus {
     new G4LogicalSkinSurface("FR4_OPSURF", tile_logic, fr4_opsurf);
 
 
+    G4int sensor_depth = 1;
+    G4int mother_depth = 2;
+    sipm_->SetSensorDepth(sensor_depth);
+    sipm_->SetMotherDepth(mother_depth);
+
     sipm_->Construct();
     G4ThreeVector sipm_dim = sipm_->GetDimensions();
 
