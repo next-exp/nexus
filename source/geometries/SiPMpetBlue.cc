@@ -28,7 +28,6 @@ namespace nexus {
 			    refr_index_(1.55), //given by Hammamatsu datasheet
                             eff_(1.),
                             time_binning_(200.*nanosecond),
-                            sipm_size_(6.*mm),
 			    mother_depth_(0),
                             naming_order_(0)
 
@@ -48,11 +47,6 @@ namespace nexus {
     time_cmd.SetParameterName("time_binning", false);
     time_cmd.SetRange("time_binning>0.");
 
-    G4GenericMessenger::Command& size_cmd =
-      msg_->DeclareProperty("size", sipm_size_, "Size of SiPMs");
-    size_cmd.SetUnitCategory("Length");
-    size_cmd.SetParameterName("size", false);
-    size_cmd.SetRange("size>0.");
   }
 
   SiPMpetBlue::~SiPMpetBlue()
@@ -63,8 +57,8 @@ namespace nexus {
   {
 
     // PACKAGE ///////////////////////////////////////////////////////
-    G4double sipm_x = sipm_size_;
-    G4double sipm_y = sipm_size_;
+    G4double sipm_x = 6.0 * mm;
+    G4double sipm_y = 6.0 * mm;
     G4double sipm_z = 0.6 * mm;
 
     SetDimensions(G4ThreeVector(sipm_x, sipm_y, sipm_z));
