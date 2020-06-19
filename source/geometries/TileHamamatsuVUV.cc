@@ -147,7 +147,7 @@ namespace nexus {
     G4LogicalVolume* quartz_logic =
     new G4LogicalVolume(quartz_solid, quartz, "TILE_QUARTZ_WINDOW");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., tile_z_/2. - quartz_thick_/2.), quartz_logic,
+    new G4PVPlacement(0, G4ThreeVector(0., 0., -quartz_thick_/2.), quartz_logic,
                       "TILE_QUARTZ_WINDOW", lxe_logic, false, 0, true);
 
     // The real LXe region as active
@@ -155,7 +155,7 @@ namespace nexus {
     new G4Box("ACTIVE_LXE_TILE", lxe_x/2., lxe_y/2., lxe_thick_/2.);
     G4LogicalVolume* active_logic =
     new G4LogicalVolume(active_solid, LXe, "ACTIVE_LXE_TILE");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., tile_z_/2. - quartz_thick_ - lxe_thick_/2.), active_logic, "ACTIVE_LXE_TILE", lxe_logic, false, 0, true);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., lxe_thick_/2.), active_logic, "ACTIVE_LXE_TILE", lxe_logic, false, 0, true);
 
     // Set the ACTIVE volume as an ionization sensitive det
     IonizationSD* ionisd = new IonizationSD("/PETALO/ACTIVE_LXE_TILE");
