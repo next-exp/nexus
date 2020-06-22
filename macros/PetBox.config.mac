@@ -8,7 +8,7 @@
 /Geometry/SiPMpet/efficiency 0.2
 /Geometry/SiPMpet/visibility true
 /Geometry/SiPMpet/time_binning 1. microsecond
-/Geometry/SiPMpet/naming_order 1000
+/Geometry/SiPMpet/naming_order 0
 
 ### GENERATOR
 /Generator/Back2back/region CENTER

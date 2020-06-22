@@ -383,15 +383,8 @@ namespace nexus {
 
   void PetBox::BuildSensors()
   {
-//      G4LogicalVolume* tile_logic = tile_->GetLogicalVolume();
-//      G4double x_pos = ih_x_size_/2. + active_depth_ + tile_thickn_/2.+dist_ihat_wall_+wall_thickness_;
-//      G4RotationMatrix rot;
-//      rot.rotateY(-pi/2.);
-//      new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, 0., 0.)), tile_logic,
-//      "TileFBK", LXe_logic_, false, 0, true);
-
     G4LogicalVolume* tile_logic = tile_->GetLogicalVolume();
-    G4double x_pos = ih_x_size_/2. + active_depth_ + tile_thickn_/2.+ dist_ihat_wall_ + wall_thickness_;
+    G4double x_pos = ih_x_size_/2. + dist_ihat_wall_ + wall_thickness_ + active_depth_ + tile_thickn_/2.;
 
     G4RotationMatrix rot;
     rot.rotateY(-pi/2.);
@@ -401,9 +394,9 @@ namespace nexus {
     G4int copy_no = 1;
 
     for (G4int i=0; i<n_tile_rows_; i++) {
-      G4double y_pos = -full_col_size_/2. + tile_->GetDimensions().y()/2. + i*tile_->GetDimensions().y();
+      G4double y_pos = full_col_size_/2. - tile_->GetDimensions().y()/2. - i*tile_->GetDimensions().y();
       for (G4int j=0; j<n_tile_columns_; j++) {
-    G4double z_pos = -full_row_size_/2. + tile_->GetDimensions().x()/2. + j*tile_->GetDimensions().x();
+        G4double z_pos = -full_row_size_/2. + tile_->GetDimensions().x()/2. + j*tile_->GetDimensions().x();
 
     position = G4ThreeVector(x_pos, y_pos, z_pos);
     vol_name = "TILE_" + std::to_string(copy_no);
