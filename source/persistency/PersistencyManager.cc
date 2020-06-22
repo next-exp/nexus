@@ -157,7 +157,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
   if (!tc) return;
 
   // Loop through the trajectories stored in the container
-  for (auto i=0; i<tc->entries(); ++i) {
+  for (size_t i=0; i<tc->entries(); ++i) {
     Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[i]);
     if (!trj) continue;
 
@@ -252,7 +252,7 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
   double evt_energy = 0.;
   std::string sdname = hits->GetSDname();
 
-  for (auto i=0; i<hits->entries(); i++) {
+  for (size_t i=0; i<hits->entries(); i++) {
 
     IonizationHit* hit = dynamic_cast<IonizationHit*>(hits->GetHit(i));
     if (!hit) continue;
@@ -291,7 +291,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
 
   std::map<G4String, G4double>::const_iterator sensdet_it = sensdet_bin_.find(sdname);
   if (sensdet_it == sensdet_bin_.end()) {
-    for (auto j=0; j<hits->entries(); j++) {
+    for (size_t j=0; j<hits->entries(); j++) {
       PmtHit* hit = dynamic_cast<PmtHit*>(hits->GetHit(j));
       if (!hit) continue;
       G4double bin_size = hit->GetBinSize();
@@ -300,7 +300,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
     }
   }
 
-  for (auto i=0; i<hits->entries(); i++) {
+  for (size_t i=0; i<hits->entries(); i++) {
 
     PmtHit* hit = dynamic_cast<PmtHit*>(hits->GetHit(i));
     if (!hit) continue;
@@ -353,7 +353,7 @@ void PersistencyManager::StoreSteps()
     G4int                      track_id      = key.first;
     G4String                   particle_name = key.second;
 
-    for (int step_id=0; step_id < it->second.size(); ++step_id) {
+    for (size_t step_id=0; step_id < it->second.size(); ++step_id) {
       h5writer_->WriteStep(nevt_, track_id, particle_name, step_id,
                            initial_volumes[key][step_id],
                              final_volumes[key][step_id],

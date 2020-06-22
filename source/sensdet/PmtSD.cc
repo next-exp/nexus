@@ -69,7 +69,7 @@ namespace nexus {
       // Get the list of processes defined for the optical photon
       // and loop through it to find the optical boundary process.
       G4ProcessVector* pv = pdef->GetProcessManager()->GetProcessList();
-      for (G4int i=0; i<pv->size(); i++) {
+      for (size_t i=0; i<pv->size(); i++) {
    	if ((*pv)[i]->GetProcessName() == "OpBoundary") {
    	  boundary_ = (G4OpBoundaryProcess*) (*pv)[i];
    	  break;
@@ -88,7 +88,7 @@ namespace nexus {
 	G4int pmt_id = FindPmtID(touchable);
 
  	PmtHit* hit = 0;
-	for (G4int i=0; i<HC_->entries(); i++) {
+	for (size_t i=0; i<HC_->entries(); i++) {
  	  if ((*HC_)[i]->GetPmtID() == pmt_id) {
  	    hit = (*HC_)[i];
 	    break;

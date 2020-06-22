@@ -167,17 +167,26 @@ namespace nexus {
     // (i.e., this is the volume that will be placed in the world)
     this->SetLogicalVolume(lab_logic_);
 
-    G4LogicalVolume* shielding_logic;
+    G4LogicalVolume* surroundings_logic;
+    G4String         surroundings_name;
     if (lead_castle_) {
       //SHIELDING
       shielding_->Construct();
+      G4LogicalVolume*
       shielding_logic = shielding_->GetLogicalVolume();
       // shielding_air_logic_ = shielding_->GetAirLogicalVolume();
       air_logic_ = shielding_->GetAirLogicalVolume();
+
+      surroundings_logic = shielding_logic;
+      surroundings_name  = "LEAD_BOX";
+
     } else {
       air_->Construct();
       //shieldingair__logic_ = air_->GetLogicalVolume();
       air_logic_ = air_->GetLogicalVolume();
+
+      surroundings_logic = air_logic_;
+      surroundings_name  = "AIR";
     }
 
     //VESSEL
@@ -195,6 +204,13 @@ namespace nexus {
     inner_elements_->Construct();
     shielding_->SetELzCoord(inner_elements_->GetELzCoord());
     vessel_->SetELzCoord(inner_elements_->GetELzCoord());
+
+    displ_ = G4ThreeVector(0., 0., inner_elements_->GetELzCoord());
+    G4RotationMatrix rot;
+    rot.rotateY(rot_angle_);
+    new G4PVPlacement(G4Transform3D(rot, displ_),
+                      surroundings_logic, surroundings_name,
+                      lab_logic_, false, 0, false);
 
      //ICS
     ics_->SetLogicalVolume(vessel_gas_logic);
@@ -357,19 +373,6 @@ namespace nexus {
                     "The placement of lead collimator must be lateral or axial!");
       }
 
-    }
-
-
-    displ_ = G4ThreeVector(0., 0., inner_elements_->GetELzCoord());
-    G4RotationMatrix rot;
-    rot.rotateY(rot_angle_);
-    if (lead_castle_) {
-      // Placement of the shielding volume, rotated and translated to have a right-handed ref system with z = z drift.
-      new G4PVPlacement(G4Transform3D(rot, displ_), shielding_logic, "LEAD_BOX",
-                        lab_logic_, false, 0, false);
-    } else {
-      new G4PVPlacement(G4Transform3D(rot, displ_), air_logic_, "AIR",
-                        lab_logic_, false, 0, false);
     }
 
     //// VERTEX GENERATORS   //
