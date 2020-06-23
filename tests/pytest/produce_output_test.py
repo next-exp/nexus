@@ -40,8 +40,6 @@ def test_create_nexus_output_file_next100(config_tmpdir, output_tmpdir, NEXUSDIR
 /Geometry/Next100/max_step_size 1. mm
 /Geometry/Next100/pressure 15. bar
 /Geometry/Next100/sc_yield 10000 1/MeV
-/Geometry/PmtR11410/SD_depth 3
-
 
 /Generator/SingleParticle/particle e-
 /Generator/SingleParticle/min_energy 100. keV
@@ -102,8 +100,6 @@ def test_create_nexus_output_file_new(config_tmpdir, output_tmpdir, NEXUSDIR, fu
 /Geometry/NextNew/max_step_size 1. mm
 /Geometry/NextNew/pressure 15. bar
 /Geometry/NextNew/sc_yield 10000 1/MeV
-/Geometry/PmtR11410/SD_depth 4
-
 
 /Generator/SingleParticle/particle e-
 /Generator/SingleParticle/min_energy 100. keV
