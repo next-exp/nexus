@@ -10,8 +10,9 @@
 #define PET_PLAIN_DICE_H
 
 #include "BaseGeometry.h"
-#include <G4Material.hh>
 #include <vector>
+
+class G4Material;
 
 
 class G4GenericMessenger;

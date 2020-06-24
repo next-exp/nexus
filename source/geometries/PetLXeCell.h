@@ -10,7 +10,6 @@
 #define PET_LXE_CELL_H
 
 #include "BaseGeometry.h"
-#include "BoxPointSampler.h"
 
 class G4LogicalVolume;
 class G4GenericMessenger;

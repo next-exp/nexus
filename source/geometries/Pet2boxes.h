@@ -10,7 +10,6 @@
 #define PET2BOXES_H
 
 #include "BaseGeometry.h"
-#include "BoxPointSampler.h"
 
 class G4LogicalVolume;
 class G4GenericMessenger;
