@@ -8,6 +8,7 @@
 
 # ACTIVE
 /Geometry/NextFlex/active_length      116. cm
+/Geometry/NextFlex/active_diam        100. cm
 /Geometry/NextFlex/drift_transv_diff  1. mm/sqrt(cm)
 /Geometry/NextFlex/drift_long_diff    .3 mm/sqrt(cm)
 
@@ -30,17 +31,17 @@
 /Geometry/NextFlex/fiber_mat        EJ280
 /Geometry/NextFlex/fiber_claddings  2
 
-/Geometry/NextFlex/fiber_sensor_time_binning  5. ns
+/Geometry/NextFlex/fiber_sensor_time_binning  25. ns
 
 
 # ENERGY PLANE
-/Geometry/NextFlex/ep_with_PMTs         true
+/Geometry/NextFlex/ep_with_PMTs         false
 /Geometry/NextFlex/ep_with_teflon       true
 /Geometry/NextFlex/ep_copper_thickness  12. cm
 /Geometry/NextFlex/ep_wls_mat           TPB
 
 /Geometry/PmtR11410/SD_depth            3
-/Geometry/PmtR11410/time_binning        20. ns
+/Geometry/PmtR11410/time_binning        25. ns
 
 # TRACKING PLANE
 /Geometry/NextFlex/tp_copper_thickness  12. cm
@@ -52,7 +53,7 @@
 /Geometry/NextFlex/tp_sipm_sizeY        1.3 mm
 /Geometry/NextFlex/tp_sipm_pitchX       15. mm
 /Geometry/NextFlex/tp_sipm_pitchY       15. mm
-/Geometry/NextFlex/tp_sipm_time_binning 5.  ns
+/Geometry/NextFlex/tp_sipm_time_binning 1.  microsecond
 
 # ICS
 /Geometry/NextFlex/ics_thickness  12. cm
@@ -101,6 +102,9 @@
 
 # Kripton
 /Generator/Kr83mGenerator/region  ACTIVE
+#/Geometry/NextFlex/specific_vertex_X  0. mm
+#/Geometry/NextFlex/specific_vertex_Y  0. mm
+#/Geometry/NextFlex/specific_vertex_Z  580. mm
 
 
 ### ACTIONS
@@ -124,4 +128,4 @@
 ### CONTROL
 /nexus/random_seed            -1
 /nexus/persistency/start_id   0
-/nexus/persistency/outputFile tst.NextFlex.next
+/nexus/persistency/outputFile NextFlex.next

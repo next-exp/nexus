@@ -323,6 +323,18 @@ void NextFlexEnergyPlane::BuildTeflon()
 
 void NextFlexEnergyPlane::BuildPMTs()
 {
+  // This PMT arrangement replicates the one of NEXT100, so first of all
+  // let's check that sensor diameter is consistent with NEXT100 diameter
+  if (diameter_ > 1000. * mm) {
+    G4Exception("[NextFlex]", "EnergyPlane::BuildPMTs()", JustWarning,
+                "Building PMTs ala NEXT100 with detector diameter much bigger");
+  }
+  else if (diameter_ < 984. * mm) {
+    G4Exception("[NextFlex]", "EnergyPlane::BuildPMTs()", FatalException,
+                "Building PMTs ala NEXT100 with detector diameter much smaller");
+  }
+
+
   // First we define a volume ("PMT_HOLE") to contain all PMT stuff,
   // and this volume will be the one replicated.
 

@@ -45,6 +45,7 @@ NextFlexFieldCage::NextFlexFieldCage():
   visibility_        (false),
   msg_               (nullptr),
   fc_with_fibers_    (true), 
+  active_diam_       (984. * mm),          // Same as NEXT100 (something btwn 1000 & 984 mm)
   active_length_     (116. * cm),          // Distance GATE - CATHODE (meshes not included)
   drift_transv_diff_ (1. * mm/sqrt(cm)),   // Drift field transversal diffusion
   drift_long_diff_   (.3 * mm/sqrt(cm)),   // Drift field longitudinal diffusion
@@ -75,8 +76,6 @@ NextFlexFieldCage::NextFlexFieldCage():
   DefineConfigurationParameters();
 
   // Hard-wired dimensions
-  active_diam_            = 984. * mm;   // Same as NEXT100 (avg btwn 1000 & 984 mm)
-
   cathode_thickness_      = 0.1  * mm;
   anode_thickness_        = 0.1  * mm;
   gate_thickness_         = 0.1  * mm;
@@ -84,13 +83,13 @@ NextFlexFieldCage::NextFlexFieldCage():
   light_tube_thickness_   = 5.   * mm;
   wls_thickness_          = 1.   * um;
 
-  fiber_thickness_        =  2.  * mm;
-  cladding_perc_          =  0.02;       // Fiber thickness perc devoted to each cladding
-  fiber_extra_length_     =  2.  * cm;   // Extra length per side of fibers respect FC length
-  fiber_light_tube_gap_   =  2.  * mm;   // Separation gap between fibers & light tube
-  fiber_sensor_size_      =  2.  * mm;   // Side length of squared fiber sensors
-                                         // (ideally equal to fiber_thickness_)
-  fiber_sensor_thickness_ =  2.  * mm;
+  fiber_thickness_        = 2.  * mm;
+  cladding_perc_          = 0.02;       // Fiber thickness perc devoted to each cladding
+  fiber_extra_length_     = 2.  * cm;   // Extra length per side of fibers respect FC length
+  fiber_light_tube_gap_   = 2.  * mm;   // Separation gap between fibers & light tube
+  fiber_sensor_size_      = 2.  * mm;   // Side length of squared fiber sensors
+                                        // (ideally equal to fiber_thickness_)
+  fiber_sensor_thickness_ = 2.  * mm;
 
   // The sensors (Setting thickness to a fix value of 2 mm)
   left_sensor_  = new GenericPhotosensor("F_SENSOR_L", fiber_sensor_size_,
@@ -131,7 +130,14 @@ void NextFlexFieldCage::DefineConfigurationParameters()
                           "Length of the ACTIVE volume.");
   active_length_cmd.SetParameterName("active_length", false);
   active_length_cmd.SetUnitCategory("Length");
-  active_length_cmd.SetRange("active_length>=0.");
+  active_length_cmd.SetRange("active_length>0.");
+
+  G4GenericMessenger::Command& active_diam_cmd =
+    msg_->DeclareProperty("active_diam", active_diam_,
+                          "Diameter of the ACTIVE volume.");
+  active_diam_cmd.SetParameterName("active_diam", false);
+  active_diam_cmd.SetUnitCategory("Length");
+  active_diam_cmd.SetRange("active_diam>0.");
 
   G4GenericMessenger::Command& drift_transv_diff_cmd =
     msg_->DeclareProperty("drift_transv_diff", drift_transv_diff_,
