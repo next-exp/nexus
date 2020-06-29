@@ -857,12 +857,20 @@ void NextFlexFieldCage::BuildFiberSensors()
   // Adding to sensors encasing, the Reractive Index of fibers to avoid reflections
   G4MaterialPropertyVector* fibers_rindex = 
     fiber_mat_->GetMaterialPropertiesTable()->GetProperty("RINDEX");
-  left_sensor_  ->SetWindowRefractiveIndex(fibers_rindex);
-  right_sensor_ ->SetWindowRefractiveIndex(fibers_rindex);
+  left_sensor_ ->SetWindowRefractiveIndex(fibers_rindex);
+  right_sensor_->SetWindowRefractiveIndex(fibers_rindex);
 
   // Setting the time binning
-  left_sensor_  ->SetTimeBinning(fiber_sensor_binning_);
-  right_sensor_ ->SetTimeBinning(fiber_sensor_binning_);
+  left_sensor_ ->SetTimeBinning(fiber_sensor_binning_);
+  right_sensor_->SetTimeBinning(fiber_sensor_binning_);
+
+  // Set mother depth & naming order
+  left_sensor_ ->SetSensorDepth(1);
+  left_sensor_ ->SetMotherDepth(2);
+  left_sensor_ ->SetNamingOrder(1);
+  right_sensor_->SetSensorDepth(1);
+  right_sensor_->SetMotherDepth(2);
+  right_sensor_->SetNamingOrder(1);
 
   // Construct
   left_sensor_ ->Construct();
