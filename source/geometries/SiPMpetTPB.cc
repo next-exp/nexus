@@ -68,14 +68,6 @@ namespace nexus {
   }
 
 
-
-  // G4ThreeVector SiPMpetTPB::GetDimensions() const
-  // {
-  //   return _dimensions;
-  // }
-
-
-
   void SiPMpetTPB::Construct()
   {
     G4double size = 3. * mm;

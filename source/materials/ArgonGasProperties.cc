@@ -24,7 +24,6 @@ namespace nexus {
   ArgonGasProperties::ArgonGasProperties(G4double pressure,
 					 G4double /*temperature*/):
     pressure_(pressure)
-    //, _temperature(temperature)
   {
     //Density();
   }

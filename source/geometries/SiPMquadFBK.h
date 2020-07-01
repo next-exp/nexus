@@ -24,14 +24,10 @@ namespace nexus {
     /// Destructor
     ~SiPMquadFBK();
 
-    /// Return dimensions of the SiPM
-    //G4ThreeVector GetDimensions() const;
-
     /// Invoke this method to build the volumes of the geometry
     void Construct();
 
   private:
-    //G4ThreeVector _dimensions; ///< external dimensions of the SiPMpet
 
     // Visibility of the tracking plane
     G4bool visibility_;

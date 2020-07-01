@@ -41,7 +41,6 @@ namespace nexus {
 
   private:
     G4double pressure_;
-    //    G4double _temperature;
     
   };
 

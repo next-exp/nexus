@@ -40,7 +40,6 @@ namespace nexus {
 
   private:
     G4int rows_, columns_;
-    //G4double _support_thickness;
     G4ThreeVector dimensions_;
     std::vector<std::pair<int, G4ThreeVector> > positions_;
 
@@ -57,9 +56,6 @@ namespace nexus {
 
     // Messenger for the definition of control commands
     G4GenericMessenger* msg_;
-
-    // Outer material
-    //G4Material* _out_mat;
 
  // Reflectivity of teflon
 G4double refl_;

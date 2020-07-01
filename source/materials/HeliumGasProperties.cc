@@ -24,7 +24,6 @@ namespace nexus {
   HeliumGasProperties::HeliumGasProperties(G4double pressure,
 					 G4double /*temperature*/):
     pressure_(pressure)
-    //, _temperature(temperature)
   {
     //Density();
   }

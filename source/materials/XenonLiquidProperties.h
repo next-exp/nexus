@@ -37,8 +37,6 @@ namespace nexus {
   private:
     G4double density_;
 
-    //static const G4double _densities[100];
-
   };
 
 } // end namespace nexus

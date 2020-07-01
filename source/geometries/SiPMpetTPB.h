@@ -18,7 +18,7 @@ class G4GenericMessenger;
 namespace nexus {
 
 
-  /// Geometry of  3x3 mm2 active surface SiPMs
+  /// Geometry of 3x3 mm2 active surface SiPMs
 
   class SiPMpetTPB: public BaseGeometry
   {
@@ -28,14 +28,10 @@ namespace nexus {
     /// Destructor
     ~SiPMpetTPB();
 
-    /// Return dimensions of the SiPM
-    //G4ThreeVector GetDimensions() const;
-
     /// Invoke this method to build the volumes of the geometry
     void Construct();
 
   private:
-    //G4ThreeVector _dimensions; ///< external dimensions of the SiPMpetTPB
 
     // Visibility of the tracking plane
     G4bool visibility_;

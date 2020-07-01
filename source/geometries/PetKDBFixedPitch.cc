@@ -190,7 +190,6 @@ namespace nexus {
 
 
     // SETTING VISIBILITIES   //////////
-    // _visibility  = false;
     if (visibility_) {
       G4VisAttributes board_col(G4Colour(0., 0., 1.));
       board_logic->SetVisAttributes(board_col);  

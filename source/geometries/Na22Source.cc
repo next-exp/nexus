@@ -71,25 +71,4 @@ namespace nexus {
     return;
   
   }
-
-  // G4double Na22Source::GetSourceDiameter()
-  // {
-  //   return _source_diam;
-  // }
-
-  // G4double Na22Source::GetSourceThickness()
-  // {
-  //   return _source_thick;
-  // }
-
-  //  G4double Na22Source::GetSupportDiameter()
-  // {
-  //   return _support_diam;
-  // }
-
-  // G4double Na22Source::GetSupportThickness()
-  // {
-  //   return _support_thick;
-  // }
-  
 }
