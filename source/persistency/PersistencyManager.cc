@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | PersistencyManager.cc
 //
-//  Author : <justo.martin-albo@ific.uv.es>
-//  Created: 15 March 2013
+// This class writes all the relevant information of the simulation
+// to an ouput file.
 //
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "PersistencyManager.h"

@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | DefaultRunAction.cc
 //
-//  Author : <justo.martin-albo@ific.uv.es>    
-//  Created: 13 March 2013
+// This is the default run action of the NEXT simulations.
+// A message at the beginning and at the end of the simulation is printed.
 //
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "DefaultRunAction.h"

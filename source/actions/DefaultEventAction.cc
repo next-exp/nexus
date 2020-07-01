@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | DefaultEventAction.cc
 //
-//  Author : J Martin-Albo <jmalbos@ific.uv.es>
-//  Created: 15 Apr 2009
+// This is the default event action of the NEXT simulations. Only events with
+// deposited energy larger than 0 are saved in the nexus output file.
 //
-//  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "DefaultEventAction.h"
@@ -26,19 +26,20 @@ namespace nexus {
 
 
   DefaultEventAction::DefaultEventAction():
-    G4UserEventAction(), _nevt(0), _nupdate(10), _energy_threshold(0.), _energy_max(DBL_MAX)
+    G4UserEventAction(), nevt_(0), nupdate_(10), energy_threshold_(0.),
+    energy_max_(DBL_MAX)
   {
-    _msg = new G4GenericMessenger(this, "/Actions/DefaultEventAction/");
+    msg_ = new G4GenericMessenger(this, "/Actions/DefaultEventAction/");
 
     G4GenericMessenger::Command& thresh_cmd =
-       _msg->DeclareProperty("energy_threshold", _energy_threshold,
+       msg_->DeclareProperty("energy_threshold", energy_threshold_,
                              "Minimum deposited energy to save the event to file.");
     thresh_cmd.SetParameterName("energy_threshold", true);
     thresh_cmd.SetUnitCategory("Energy");
     thresh_cmd.SetRange("energy_threshold>0.");
 
     G4GenericMessenger::Command& max_energy_cmd =
-      _msg->DeclareProperty("max_energy", _energy_max,
+      msg_->DeclareProperty("max_energy", energy_max_,
                             "Maximum deposited energy to save the event to file.");
     max_energy_cmd.SetParameterName("max_energy", true);
     max_energy_cmd.SetUnitCategory("Energy");
@@ -56,9 +57,9 @@ namespace nexus {
   void DefaultEventAction::BeginOfEventAction(const G4Event* /*event*/)
   {
     // Print out event number info
-    if ((_nevt % _nupdate) == 0) {
-      G4cout << " >> Event no. " << _nevt  << G4endl;
-      if (_nevt  == (10 * _nupdate)) _nupdate *= 10;
+    if ((nevt_ % nupdate_) == 0) {
+      G4cout << " >> Event no. " << nevt_  << G4endl;
+      if (nevt_  == (10 * nupdate_)) nupdate_ *= 10;
     }
   }
 
@@ -66,11 +67,11 @@ namespace nexus {
 
   void DefaultEventAction::EndOfEventAction(const G4Event* event)
   {
-    _nevt++;
+    nevt_++;
 
     // Determine whether total energy deposit in ionization sensitive
     // detectors is above threshold
-    if (_energy_threshold >= 0.) {
+    if (energy_threshold_ >= 0.) {
 
       // Get the trajectories stored for this event and loop through them
       // to calculate the total energy deposit
@@ -97,7 +98,7 @@ namespace nexus {
       } else {
 	pm->InteractingEvent(false);
       }
-      if (!event->IsAborted() && edep > _energy_threshold && edep < _energy_max) {
+      if (!event->IsAborted() && edep > energy_threshold_ && edep < energy_max_) {
 	pm->StoreCurrentEvent(true);
       } else {
 	pm->StoreCurrentEvent(false);

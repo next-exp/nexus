@@ -1,16 +1,15 @@
 // ----------------------------------------------------------------------------
-///  \file   Trajectory.h
-///  \brief  Record of a track used by the persistency mechanism.
-///
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     26 March 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// nexus | Trajectory.h
+//
+// This class records the relevant information of a particle and its path
+// through the geometry. It is later used by the persistency mechanism to write
+// the particle information in the output file.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __TRAJECTORY__
-#define __TRAJECTORY__
+#ifndef TRAJECTORY_H
+#define TRAJECTORY_H
 
 #include <G4VTrajectory.hh>
 #include <G4Allocator.hh>
@@ -23,12 +22,6 @@ class G4VTrajectoryPoint;
 namespace nexus {
 
   typedef std::vector<G4VTrajectoryPoint*> TrajectoryPointContainer;
-
-
-  /// Record of a track used by the persistency mechanism.
-  /// It stores basic information of the particle and its path through
-  /// the geometry. A number of its properties are copied from the track
-  /// in construction and cannot be modified.
 
   class Trajectory: public G4VTrajectory
   {
@@ -123,32 +116,32 @@ namespace nexus {
 
 
   private:
-    G4ParticleDefinition* _pdef; //< Pointer to the particle definition
+    G4ParticleDefinition* pdef_; //< Pointer to the particle definition
 
-    G4int _trackId;   ///< Identification number of the track
-    G4int _parentId;  ///< Identification number of the parent particle
+    G4int trackId_;   ///< Identification number of the track
+    G4int parentId_;  ///< Identification number of the parent particle
 
-    G4ThreeVector _initial_momentum;
-    G4ThreeVector _final_momentum;
+    G4ThreeVector initial_momentum_;
+    G4ThreeVector final_momentum_;
 
-    G4ThreeVector _initial_position;
-    G4ThreeVector _final_position;
+    G4ThreeVector initial_position_;
+    G4ThreeVector final_position_;
 
-    G4double _initial_time;
-    G4double _final_time;
+    G4double initial_time_;
+    G4double final_time_;
 
-    G4double _length;
-    G4double _edep;
+    G4double length_;
+    G4double edep_;
 
-    G4String _creator_process;
-    G4String _final_process;
+    G4String creator_process_;
+    G4String final_process_;
 
-    G4String _initial_volume;
-    G4String _final_volume;
+    G4String initial_volume_;
+    G4String final_volume_;
 
-    G4bool _record_trjpoints;
+    G4bool record_trjpoints_;
 
-    TrajectoryPointContainer* _trjpoints;
+    TrajectoryPointContainer* trjpoints_;
 
 };
 
@@ -171,71 +164,71 @@ inline void nexus::Trajectory::operator delete(void* trj)
 { TrjAllocator.FreeSingle((nexus::Trajectory*) trj); }
 
 inline G4ParticleDefinition* nexus::Trajectory::GetParticleDefinition()
-{ return _pdef; }
+{ return pdef_; }
 
 inline int nexus::Trajectory::GetPointEntries() const
-{ return _trjpoints->size(); }
+{ return trjpoints_->size(); }
 
 inline G4VTrajectoryPoint* nexus::Trajectory::GetPoint(G4int i) const
-{ return (*_trjpoints)[i]; }
+{ return (*trjpoints_)[i]; }
 
 inline G4ThreeVector nexus::Trajectory::GetInitialMomentum() const
-{ return _initial_momentum; }
+{ return initial_momentum_; }
 
 inline G4int nexus::Trajectory::GetTrackID() const
-{ return _trackId; }
+{ return trackId_; }
 
 inline G4int nexus::Trajectory::GetParentID() const
-{ return _parentId; }
+{ return parentId_; }
 
 inline G4ThreeVector nexus::Trajectory::GetFinalMomentum() const
-{ return _final_momentum; }
+{ return final_momentum_; }
 
 inline void nexus::Trajectory::SetFinalMomentum(const G4ThreeVector& m)
-{ _final_momentum = m; }
+{ final_momentum_ = m; }
 
 inline G4ThreeVector nexus::Trajectory::GetInitialPosition() const
-{ return _initial_position; }
+{ return initial_position_; }
 
 inline G4ThreeVector nexus::Trajectory::GetFinalPosition() const
-{ return _final_position; }
+{ return final_position_; }
 
 inline void nexus::Trajectory::SetFinalPosition(const G4ThreeVector& x)
-{ _final_position = x; }
+{ final_position_ = x; }
 
 inline G4double nexus::Trajectory::GetInitialTime() const
-{ return _initial_time; }
+{ return initial_time_; }
 
 inline G4double nexus::Trajectory::GetFinalTime() const
-{ return _final_time; }
+{ return final_time_; }
 
 inline void nexus::Trajectory::SetFinalTime(G4double t)
-{ _final_time = t; }
+{ final_time_ = t; }
 
-inline G4double nexus::Trajectory::GetTrackLength() const { return _length; }
+inline G4double nexus::Trajectory::GetTrackLength() const { return length_; }
 
-inline void nexus::Trajectory::SetTrackLength(G4double l) { _length = l; }
+inline void nexus::Trajectory::SetTrackLength(G4double l) { length_ = l; }
 
-inline G4double nexus::Trajectory::GetEnergyDeposit() const { return _edep; }
+inline G4double nexus::Trajectory::GetEnergyDeposit() const { return edep_; }
 
-inline void nexus::Trajectory::SetEnergyDeposit(G4double e) { _edep = e; }
+inline void nexus::Trajectory::SetEnergyDeposit(G4double e) { edep_ = e; }
 
 inline G4String nexus::Trajectory::GetCreatorProcess() const
-{ return _creator_process; }
+{ return creator_process_; }
 
 inline G4String nexus::Trajectory::GetFinalProcess() const
-{ return _final_process; }
+{ return final_process_; }
 
 inline void nexus::Trajectory::SetFinalProcess(G4String fp)
-{ _final_process = fp; }
+{ final_process_ = fp; }
 
 inline G4String nexus::Trajectory::GetInitialVolume() const
-{ return _initial_volume; }
+{ return initial_volume_; }
 
 inline G4String nexus::Trajectory::GetFinalVolume() const
-{ return _final_volume; }
+{ return final_volume_; }
 
 inline void nexus::Trajectory::SetFinalVolume(G4String fv)
-{ _final_volume = fv; }
+{ final_volume_ = fv; }
 
 #endif

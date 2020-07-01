@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | ActionFactory.cc
 //
-//  Author : <justo.martin-albo@ific.uv.es>
-//  Created: 13 March 2013
+// This class instantiates the run, event, tracking, stepping and stacking
+// actions that the user specifies via configuration parameters.
 //
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "ActionsFactory.h"
@@ -19,20 +19,20 @@
 using namespace nexus;
 
 
-ActionsFactory::ActionsFactory(): _msg(0)
+ActionsFactory::ActionsFactory(): msg_(0)
 {
-  _msg = new G4GenericMessenger(this, "/Actions/");
-  _msg->DeclareProperty("RegisterRunAction",      _runact_name, "");
-  _msg->DeclareProperty("RegisterEventAction",    _evtact_name, "");
-  _msg->DeclareProperty("RegisterTrackingAction", _trkact_name, "");
-  _msg->DeclareProperty("RegisterSteppingAction", _stpact_name, "");
-  _msg->DeclareProperty("RegisterStackingAction", _stkact_name, "");
+  msg_ = new G4GenericMessenger(this, "/Actions/");
+  msg_->DeclareProperty("RegisterRunAction",      runact_name_, "");
+  msg_->DeclareProperty("RegisterEventAction",    evtact_name_, "");
+  msg_->DeclareProperty("RegisterTrackingAction", trkact_name_, "");
+  msg_->DeclareProperty("RegisterSteppingAction", stpact_name_, "");
+  msg_->DeclareProperty("RegisterStackingAction", stkact_name_, "");
 }
 
 
 ActionsFactory::~ActionsFactory()
 {
-  delete _msg;
+  delete msg_;
 }
 
 
@@ -44,7 +44,7 @@ G4UserRunAction* ActionsFactory::CreateRunAction() const
 {
   G4UserRunAction* p = 0;
 
-  if (_runact_name == "DEFAULT") p = new DefaultRunAction();
+  if (runact_name_ == "DEFAULT") p = new DefaultRunAction();
 
   return p;
 }
@@ -59,12 +59,12 @@ G4UserEventAction* ActionsFactory::CreateEventAction() const
 {
   G4UserEventAction* p = 0;
 
-  if      (_evtact_name == "DEFAULT") p = new DefaultEventAction();
-  else if (_evtact_name == "EL_SIM") p = new ELSimEventAction();
-  else if (_evtact_name == "ANALYSIS") p = new AnalysisEventAction();
+  if      (evtact_name_ == "DEFAULT") p = new DefaultEventAction();
+  else if (evtact_name_ == "EL_SIM") p = new ELSimEventAction();
+  else if (evtact_name_ == "ANALYSIS") p = new AnalysisEventAction();
   else {
-    G4String err = "Unknown user event action: " + _evtact_name;
-    G4Exception("CreateEventAction()", "[ActionsFactory]", JustWarning, err);
+    G4String err = "Unknown user event action: " + evtact_name_;
+    G4Exception("[ActionsFactory]", "CreateEventAction()", JustWarning, err);
   }
 
   return p;
@@ -80,12 +80,12 @@ G4UserTrackingAction* ActionsFactory::CreateTrackingAction() const
 {
   G4UserTrackingAction* p = 0;
 
-  if (_trkact_name == "DEFAULT") p = new DefaultTrackingAction();
-  else if (_trkact_name == "ANALYSIS") p = new AnalysisTrackingAction();
-  else if (_trkact_name == "OPTICAL") p = new OpticalTrackingAction();
+  if (trkact_name_ == "DEFAULT") p = new DefaultTrackingAction();
+  else if (trkact_name_ == "ANALYSIS") p = new AnalysisTrackingAction();
+  else if (trkact_name_ == "OPTICAL") p = new OpticalTrackingAction();
   else {
-    G4String err = "Unknown user tracking action: " + _trkact_name;
-    G4Exception("CreateTrackingAction()", "[ActionsFactory]",
+    G4String err = "Unknown user tracking action: " + trkact_name_;
+    G4Exception("[ActionsFactory]", "CreateTrackingAction()",
       JustWarning, err);
   }
 
@@ -94,7 +94,6 @@ G4UserTrackingAction* ActionsFactory::CreateTrackingAction() const
 
 
 //////////////////////////////////////////////////////////////////////
-#include "DefaultSteppingAction.h"
 #include "AnalysisSteppingAction.h"
 
 
@@ -102,12 +101,11 @@ G4UserSteppingAction* ActionsFactory::CreateSteppingAction() const
 {
   G4UserSteppingAction* p = 0;
 
-  if (_stpact_name == "DEFAULT") p = new DefaultSteppingAction();
-  else if (_stpact_name == "ANALYSIS") p = new AnalysisSteppingAction();
+  if (stpact_name_ == "ANALYSIS") p = new AnalysisSteppingAction();
 
   else {
-    G4String err = "Unknown user stepping action: " + _stpact_name;
-    G4Exception("CreateSteppingAction()", "[ActionsFactory]",
+    G4String err = "Unknown user stepping action: " + stpact_name_;
+    G4Exception("[ActionsFactory]", "CreateSteppingAction()",
       JustWarning, err);
   }
 
@@ -122,11 +120,11 @@ G4UserStackingAction* ActionsFactory::CreateStackingAction() const
 {
   G4UserStackingAction* p = 0;
 
-  if (_stkact_name == "DEFAULT") p = new DefaultStackingAction();
+  if (stkact_name_ == "DEFAULT") p = new DefaultStackingAction();
 
   else {
-    G4String err = "Unknown user stacking action: " + _stkact_name;
-    G4Exception("CreateStackingAction()", "[ActionsFactory]",
+    G4String err = "Unknown user stacking action: " + stkact_name_;
+    G4Exception("[ActionsFactory]", "CreateStackingAction()",
       JustWarning, err);
   }
 

@@ -1,13 +1,15 @@
-// -----------------------------------------------------------------------------
-//  nexus | IonGun.h
+// ----------------------------------------------------------------------------
+// nexus | IonGenerator.h
 //
-//  * Author: <miquel.nebot@ific.uv.es>
-//            <justo.martin-albo@ific.uv.es>
-//  * Creation date: 01 Aug 2013
-// -----------------------------------------------------------------------------
+// This class is the primary generator for events consisting in the decay
+// of a radioactive ion. The user must specify via configuration parameters
+// the atomic number, mass number and energy level of the isotope of interest.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
-#ifndef ION_GUN_H
-#define ION_GUN_H
+#ifndef ION_GENERATOR_H
+#define ION_GENERATOR_H
 
 #include <G4VPrimaryGenerator.hh>
 
@@ -25,13 +27,13 @@ namespace nexus{
   // The user must specify via configuration parameters the atomic number,
   // mass number and energy level of the isotope of interest.
 
-  class IonGun: public G4VPrimaryGenerator
+  class IonGenerator: public G4VPrimaryGenerator
   {
   public:
     // Constructor
-    IonGun();
+    IonGenerator();
     // Destructor
-    ~IonGun();
+    ~IonGenerator();
 
     // This method is invoked at the beginning of the event,
     // setting a primary vertex that contains the chosen ion

@@ -1,5 +1,16 @@
-#ifndef __BACK2BACK__
-#define __BACK2BACK__
+// ----------------------------------------------------------------------------
+// nexus | Back2backGammas.h
+//
+// This generator simulates two gammas of 510.999 keV back to back, with
+// random direction. It is possible to specify a limited solid angle.
+// Control histograms of the solid angle where gammas are generated
+// are produced.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
+#ifndef BACK2BACK_H
+#define BACK2BACK_H
 
 #include <G4VPrimaryGenerator.hh>
 
@@ -12,18 +23,6 @@ class TH1F;
 namespace nexus {
 
   class BaseGeometry;
-
-  /// Primary generator (concrete class of G4VPrimaryGenerator) 
-  /// for events Na22-like consisting of two particles in coincidence (back-to-back)
-  /// coming from e+e- annihilation and one disexcitation gamma. 
-  /// The user must specify via configuration parameters the particle type, 
-  /// a kinetic energy interval and the direction of generation for both the 
-  /// disexcitation gamma and the annihilation pair.
-  /// Each particle energy is generated with flat random probability
-  /// between E_min and E_max.
-  /// If a direction of generation is not specified, the user should choose a fraction 
-  /// of solid angle inside which a direction will be randomly generation.
-  /// See nexus_example5.config.
   
   class Back2backGammas: public G4VPrimaryGenerator
   {
@@ -37,15 +36,15 @@ namespace nexus {
 
   private:
 
-    G4GenericMessenger* _msg;
-    const BaseGeometry* _geom;
+    G4GenericMessenger* msg_;
+    const BaseGeometry* geom_;
 
-    G4String _region;
+    G4String region_;
 
-    G4double _costheta_min;
-    G4double _costheta_max;
-    G4double _phi_min;
-    G4double _phi_max;
+    G4double costheta_min_;
+    G4double costheta_max_;
+    G4double phi_min_;
+    G4double phi_max_;
 
     TH1F*  theta_angle_;
     TH1F*  phi_angle_;

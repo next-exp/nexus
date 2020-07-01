@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | PrimaryGeneration.cc
 //
-//  Author:  <justo.martin-albo@ific.uv.es>
-//  Created: 9 Mar 2009
+// This is a mandatory class which initializes the generation of
+// primary particles in a nexus event.
 //
-//  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "PrimaryGeneration.h"
@@ -18,7 +18,7 @@ using namespace nexus;
 
 
 PrimaryGeneration::PrimaryGeneration():
-  G4VUserPrimaryGeneratorAction(), _generator(0)
+  G4VUserPrimaryGeneratorAction(), generator_(0)
 {
 }
 
@@ -32,8 +32,8 @@ PrimaryGeneration::~PrimaryGeneration()
 
 void PrimaryGeneration::GeneratePrimaries(G4Event* event)
 {
-  if (!_generator)
+  if (!generator_)
     G4Exception("", "", FatalException, "");
 
-  _generator->GeneratePrimaryVertex(event);
+  generator_->GeneratePrimaryVertex(event);
 }

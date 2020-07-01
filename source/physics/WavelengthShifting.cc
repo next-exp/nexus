@@ -1,11 +1,14 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | WavelengthShifting.cc
 //
-//  Author:  P. Ferrario <paola.ferrario@ific.uv.es>    
-//  Created: 13 Sept 2013
-//  
-//  Copyright (c) 2013 NEXT Collaboration
-// ---------------------------------------------------------------------------- 
+// This is a class with a nexus-defined process for wavelength shifting.
+// It differs from G4OpWls, because the mean free path is not calculated
+// from a wls_absorption length property but through a probability property,
+// thus independent from the material thickness.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #include "WavelengthShifting.h"
 
 #include <G4OpticalPhoton.hh>
@@ -14,7 +17,7 @@
 
 #include "CLHEP/Units/PhysicalConstants.h"
 
-#include<TH1F.h>
+#include <TH1F.h>
 #include <TFile.h>
 
 namespace nexus {
@@ -22,12 +25,12 @@ namespace nexus {
   using namespace CLHEP;
 
   WavelengthShifting::WavelengthShifting(const G4String& name, G4ProcessType type): 
-    G4VDiscreteProcess(name, type), _wlsIntegralTable(0)
+    G4VDiscreteProcess(name, type), wlsIntegralTable_(0)
   {
-    _ParticleChange = new G4ParticleChange();
-    pParticleChange = _ParticleChange;
+    ParticleChange_ = new G4ParticleChange();
+    pParticleChange = ParticleChange_;
    
-    _WLSTimeGeneratorProfile = 
+    WLSTimeGeneratorProfile_ = 
       new G4WLSTimeGeneratorProfileExponential("WLSTimeGeneratorProfileExponential");
 
     BuildThePhysicsTable();
@@ -38,12 +41,12 @@ namespace nexus {
 
   WavelengthShifting::~WavelengthShifting()
   {
-    delete _ParticleChange;
-    if (_wlsIntegralTable != 0) {
-      _wlsIntegralTable->clearAndDestroy();
-      delete _wlsIntegralTable;
+    delete ParticleChange_;
+    if (wlsIntegralTable_ != 0) {
+      wlsIntegralTable_->clearAndDestroy();
+      delete wlsIntegralTable_;
     }
-    delete _WLSTimeGeneratorProfile;
+    delete WLSTimeGeneratorProfile_;
 
     // histo_file = new TFile("HistoFile.root","recreate");
     // hWLSTime->Write();
@@ -57,8 +60,8 @@ namespace nexus {
   
   G4VParticleChange* WavelengthShifting::PostStepDoIt(const G4Track& track,const G4Step& step)
   {
-    _ParticleChange->Initialize(track);     
-    _ParticleChange->ProposeTrackStatus(fStopAndKill);
+    ParticleChange_->Initialize(track);     
+    ParticleChange_->ProposeTrackStatus(fStopAndKill);
 
     const G4Material* material = track.GetMaterial();   
  
@@ -86,11 +89,11 @@ namespace nexus {
    if (rndm > conversion_efficiency) {
      return G4VDiscreteProcess::PostStepDoIt(track, step);
    }	 
-   _ParticleChange->SetNumberOfSecondaries(1);
+   ParticleChange_->SetNumberOfSecondaries(1);
 
    G4int materialIndex = material->GetIndex();
    G4PhysicsOrderedFreeVector* WLSIntegral  =
-     (G4PhysicsOrderedFreeVector*)((*_wlsIntegralTable)(materialIndex));
+     (G4PhysicsOrderedFreeVector*)((*wlsIntegralTable_)(materialIndex));
     
    // Sample the energy randomly
    G4double wls_max = WLSIntegral->GetMaxValue();
@@ -139,7 +142,7 @@ namespace nexus {
      
     // Generate new G4Track object and give position of WLS optical photon
    G4double WLSTime = aMaterialPropertiesTable->GetConstProperty("WLSTIMECONSTANT");
-   G4double TimeDelay = _WLSTimeGeneratorProfile->GenerateTime(WLSTime);
+   G4double TimeDelay = WLSTimeGeneratorProfile_->GenerateTime(WLSTime);
    G4double aSecondaryTime = (pPostStepPoint->GetGlobalTime()) + TimeDelay; 
    G4ThreeVector aSecondaryPosition = pPostStepPoint->GetPosition();
  
@@ -147,7 +150,7 @@ namespace nexus {
      new G4Track(aWLSPhoton,aSecondaryTime,aSecondaryPosition);  
    aSecondaryTrack->SetTouchableHandle(track.GetTouchableHandle());   
    aSecondaryTrack->SetParentID(track.GetTrackID());
-   _ParticleChange->AddSecondary(aSecondaryTrack);
+   ParticleChange_->AddSecondary(aSecondaryTrack);
 
    //hWLSTime->Fill(TimeDelay/picosecond);
      
@@ -157,15 +160,15 @@ namespace nexus {
 
   void WavelengthShifting::BuildThePhysicsTable()
   {
-    if (_wlsIntegralTable) return;
+    if (wlsIntegralTable_) return;
   
     const G4MaterialTable* theMaterialTable = 
       G4Material::GetMaterialTable();
     G4int numOfMaterials = G4Material::GetNumberOfMaterials();
   
     // create new physics table   
-    if(!_wlsIntegralTable)
-      _wlsIntegralTable = new G4PhysicsTable(numOfMaterials);
+    if(!wlsIntegralTable_)
+      wlsIntegralTable_ = new G4PhysicsTable(numOfMaterials);
    
     // loop for materials
   
@@ -190,7 +193,7 @@ namespace nexus {
       // The WLS integral for a given material
       // will be inserted in the table according to the
       // position of the material in the material table.    
-      _wlsIntegralTable->insertAt(i,aPhysicsOrderedFreeVector);
+      wlsIntegralTable_->insertAt(i,aPhysicsOrderedFreeVector);
     }
   }
 
@@ -214,7 +217,7 @@ namespace nexus {
 	 if (conversion_efficiency == 0.) {
 	   return AttenuationLength;
 	 }	 
-	 // _ParticleChange->SetNumberOfSecondaries(1);
+	 // ParticleChange_->SetNumberOfSecondaries(1);
 	 AttenuationLength = DBL_MIN;
        }
      }

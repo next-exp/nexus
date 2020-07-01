@@ -1,12 +1,11 @@
 // ----------------------------------------------------------------------------
-///  \file 
-///  \brief
-///
-///  \author   <paolafer@ific.uv.es>
-///  \date     2015
-///  \version  $Id: Lab.h 9593 2014-02-13 16:38:56Z paola $
-///
-///  Copyright (c) 2015-2017 NEXT Collaboration. All rights reserved.
+// nexus | Lab_vertices.h
+//
+// This class consists of two LXe cells placed opposite to each other.
+// A file is expected to be read with the positions of the vertices of the gamma
+// interactions in each cell.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef LAB_V_H
@@ -40,7 +39,7 @@ namespace nexus {
 
   private:
     /// Messenger for the definition of control commands
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
 
     PetLXeCell* module_;
 

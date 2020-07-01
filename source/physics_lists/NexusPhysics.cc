@@ -1,10 +1,9 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | NexusPhysics.cc
 //
-//  Author:  <justo.martin-albo@ific.uv.es> <paola.ferrario@dipc.org>
-//  Created: 27 Jan 2010
+// This class registers any new physics process defined in nexus.
 //
-//  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "NexusPhysics.h"
@@ -30,15 +29,15 @@ namespace nexus {
 
 
   NexusPhysics::NexusPhysics():
-    G4VPhysicsConstructor("NexusPhysics"), risetime_(false), _noCompt(false)
+    G4VPhysicsConstructor("NexusPhysics"), risetime_(false), noCompt_(false)
   {
-    _msg = new G4GenericMessenger(this, "/PhysicsList/Nexus/",
+    msg_ = new G4GenericMessenger(this, "/PhysicsList/Nexus/",
       "Control commands of the nexus physics list.");
 
-    _msg->DeclareProperty("scintRiseTime", risetime_,
+    msg_->DeclareProperty("scintRiseTime", risetime_,
       "True if LYSO is used");
 
-    _msg->DeclareProperty("offCompt", _noCompt,
+    msg_->DeclareProperty("offCompt", noCompt_,
 			  "Switch off Compton Scattering.");
   }
 
@@ -46,8 +45,8 @@ namespace nexus {
 
   NexusPhysics::~NexusPhysics()
   {
-    delete _msg;
-    delete _wls;
+    delete msg_;
+    delete wls_;
   }
 
 
@@ -70,8 +69,8 @@ namespace nexus {
         "G4OpticalPhoton without a process manager.");
     }
     //WavelengthShifting* wls = new WavelengthShifting();
-    _wls = new WavelengthShifting();
-    pmanager->AddDiscreteProcess(_wls);
+    wls_ = new WavelengthShifting();
+    pmanager->AddDiscreteProcess(wls_);
 
     // Add rise time to scintillation
     if (risetime_) {
@@ -83,7 +82,7 @@ namespace nexus {
     }
 
 
-    if (_noCompt) {
+    if (noCompt_) {
       pmanager  = G4Gamma::Definition()->GetProcessManager();
        G4VProcess* cs = G4ProcessTable::GetProcessTable()->
         FindProcess("compt", G4Gamma::Definition());

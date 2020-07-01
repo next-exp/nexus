@@ -1,10 +1,11 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | BatchSession.cc
 //
-//  Author : <justo.martin-albo@ific.uv.es>
-//  Created: 22 Mar 2013
+// This class is used to parse the configuration files and execute the commands
+// found in them. One of the features of this class, compared to the G4 one is
+// that an error is prompted when a parameter is not recognized.
 //
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "BatchSession.h"

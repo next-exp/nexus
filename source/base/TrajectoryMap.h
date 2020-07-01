@@ -1,16 +1,13 @@
 // ----------------------------------------------------------------------------
-///  \file   TrajectoryMap.h
-///  \brief  
-///  
-///  \author   <justo.martin-albo@ific.uv.es>
-///  \date     25 Mar 2013
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// nexus | TrajectoryMap.h
+//
+// This class is a container of particle trajectories.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __TRAJECTORY_MAP__
-#define __TRAJECTORY_MAP__
+#ifndef TRAJECTORY_MAP_H
+#define TRAJECTORY_MAP_H
 
 #include <map>
 
@@ -37,7 +34,7 @@ namespace nexus {
     ~TrajectoryMap();
 
   private:
-    static std::map<int, G4VTrajectory*> _map;
+    static std::map<int, G4VTrajectory*> map_;
   };
 
 } // namespace nexus

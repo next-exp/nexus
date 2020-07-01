@@ -1,12 +1,9 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | OpticalMaterialProperties.cc
 //
-//  Author:  <justo.martin-albo@ific.uv.es>
-//           <francesc.monrabal@ific.uv.es>
-//           <paola.ferrario@ific.uv.es>
-//  Created: 17 August 2009
+// Optical properties of relevant materials.
 //
-//  Copyright (c) 2009-2011 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "OpticalMaterialProperties.h"
@@ -22,49 +19,49 @@ using namespace CLHEP;
 G4MaterialPropertiesTable* OpticalMaterialProperties::Vacuum()
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
-  
+
   const G4int entries = 2;
   G4double energy[entries] = {0.01*eV, 100.*eV};
-  
+
   // REFRACTIVE INDEX
   G4double rindex[entries] = {1., 1.};
   mpt->AddProperty("RINDEX", energy, rindex, entries);
-  
+
   // ABSORPTION LENGTH
   G4double abslen[entries] = {1.e8*m, 1.e8*m};
   mpt->AddProperty("ABSLENGTH", energy, abslen, entries);
-  
+
   return mpt;
 }
 
 G4MaterialPropertiesTable* OpticalMaterialProperties::Epoxy()
 {
   // Optical properties of Epoxy adhesives.
-  // Obtained from 
+  // Obtained from
   // http://www.epotek.com/SSCDocs/techtips/Tech%20Tip%2018%20-%20Understanding%20Optical%20Properties%20for%20Epoxy%20Apps.pdf
 
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
-  
-  G4double energy[2] = 
+
+  G4double energy[2] =
     {1*eV, 10.751*eV};
-  G4double rindex[2] = 
+  G4double rindex[2] =
     {1.54, 1.54};
 
   // ABSORPTION LENGTH /////////////////////////////////////////////////////////
 
   const G4int abs_entries = 17;
-  
+
   G4double abs_energy[abs_entries]=
-    {1.*eV, 2.132*eV, 2.735*eV, 2.908*eV, 3.119*eV, 
-     3.320*eV, 3.476*eV, 3.588*eV, 3.749*eV, 3.869*eV, 
-     3.973*eV, 4.120*eV, 4.224*eV, 4.320*eV, 4.420*eV, 
+    {1.*eV, 2.132*eV, 2.735*eV, 2.908*eV, 3.119*eV,
+     3.320*eV, 3.476*eV, 3.588*eV, 3.749*eV, 3.869*eV,
+     3.973*eV, 4.120*eV, 4.224*eV, 4.320*eV, 4.420*eV,
      5.018*eV, 8.*eV};
   G4double abslength[abs_entries] =
-    {15000.*cm, 326.*mm, 117.68*mm, 85.89*mm, 50.93*mm, 
-     31.25*mm, 17.19*mm, 10.46*mm, 5.26*mm, 3.77*mm, 
+    {15000.*cm, 326.*mm, 117.68*mm, 85.89*mm, 50.93*mm,
+     31.25*mm, 17.19*mm, 10.46*mm, 5.26*mm, 3.77*mm,
      2.69*mm, 1.94*mm, 1.94*mm, 1.94*mm, 1.94*mm,
-     1.94*mm, 1.94*mm}; 
- 
+     1.94*mm, 1.94*mm};
+
   mpt->AddProperty("RINDEX", energy, rindex, 2);
   mpt->AddProperty("ABSLENGTH", abs_energy, abslength, abs_entries);
 
@@ -148,11 +145,11 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FusedSilica()
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
   // REFRACTIVE INDEX //////////////////////////////////////////////////////////
-  // The range is chosen to be up to ~10.7 eV because Sellmeier's equation 
+  // The range is chosen to be up to ~10.7 eV because Sellmeier's equation
   // for fused silica is valid only in that range
- 
+
   const G4int ri_entries = 200;
-  
+
   G4double ri_energy[ri_entries];
   for (int i=0; i<ri_entries; i++) {
     ri_energy[i] = (1 + i*0.049)*eV;
@@ -163,7 +160,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FusedSilica()
   //    n^2 - 1 = B_1 * \lambda^2 / (\lambda^2 - C_1) +
   //            + B_2 * \lambda^2 / (\lambda^2 - C_2) +
   //            + B_3 * \lambda^2 / (\lambda^2 - C_3),
-  // with wavelength \lambda in micrometers and 
+  // with wavelength \lambda in micrometers and
   //    B_1 = 4.73E-1, B_2 = 6.31E-1, B_3 = 9.06E-1
   //    C_1 = 1.30E-2, C_2 = 4.13E-3, C_3 = 9.88E+1.
 
@@ -177,7 +174,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FusedSilica()
   G4double rindex[ri_entries];
   for (int i=0; i<ri_entries; i++) {
     G4double lambda = h_Planck*c_light/ri_energy[i]*1000; // in micron
-    G4double n2 = 1 + B_1*pow(lambda,2)/(pow(lambda,2)-C_1) 
+    G4double n2 = 1 + B_1*pow(lambda,2)/(pow(lambda,2)-C_1)
       + B_2*pow(lambda,2)/(pow(lambda,2)-C_2)
       + B_3*pow(lambda,2)/(pow(lambda,2)-C_3);
     rindex[i] = sqrt(n2);
@@ -188,22 +185,22 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FusedSilica()
   // ABSORPTION LENGTH /////////////////////////////////////////////////////////
 
   const G4int abs_entries = 30;
-  
+
   G4double abs_energy[abs_entries]=
-    {1.*eV, 6.46499*eV, 6.54*eV, 6.59490*eV, 6.64*eV, 
-     6.72714*eV, 6.73828*eV, 6.75*eV, 6.82104*eV, 6.86*eV, 
-     6.88*eV, 6.89*eV, 7.*eV, 7.01*eV, 7.01797*eV, 
-     7.05*eV, 7.08*eV, 7.08482*eV, 7.30*eV, 7.36*eV, 
-     7.4*eV, 7.48*eV, 7.52*eV, 7.58*eV, 7.67440*eV, 
+    {1.*eV, 6.46499*eV, 6.54*eV, 6.59490*eV, 6.64*eV,
+     6.72714*eV, 6.73828*eV, 6.75*eV, 6.82104*eV, 6.86*eV,
+     6.88*eV, 6.89*eV, 7.*eV, 7.01*eV, 7.01797*eV,
+     7.05*eV, 7.08*eV, 7.08482*eV, 7.30*eV, 7.36*eV,
+     7.4*eV, 7.48*eV, 7.52*eV, 7.58*eV, 7.67440*eV,
      7.76*eV, 7.89*eV, 7.93*eV, 8.*eV, 10.7*eV};
   G4double abslength[abs_entries] =
-    {1500.*cm, 1500.*cm, 200.*cm, 200.*cm, 90.*cm, 
-     45.*cm, 45*cm, 30*cm, 24*cm, 21*cm, 
+    {1500.*cm, 1500.*cm, 200.*cm, 200.*cm, 90.*cm,
+     45.*cm, 45*cm, 30*cm, 24*cm, 21*cm,
      20*cm , 19*cm, 16*cm, 14.*cm, 13.*cm,
-     8.5*cm, 8.*cm, 6.*cm, 1.5*cm, 1.2*cm, 
-     1.*cm, .65*cm, .4*cm, .37*cm, .32*cm, 
-     .28*cm, .220*cm, .215*cm, .00005*cm, .00005*cm}; 
- 
+     8.5*cm, 8.*cm, 6.*cm, 1.5*cm, 1.2*cm,
+     1.*cm, .65*cm, .4*cm, .37*cm, .32*cm,
+     .28*cm, .220*cm, .215*cm, .00005*cm, .00005*cm};
+
   mpt->AddProperty("ABSLENGTH", abs_energy, abslength, abs_entries);
 
   return mpt;

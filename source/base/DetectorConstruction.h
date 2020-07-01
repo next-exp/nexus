@@ -1,12 +1,9 @@
 // ----------------------------------------------------------------------------
-///  \file   DetectorConstruction.h
-///  \brief  Initialization class for detector setup.
-///  
-///  \author   <justo.martin-albo@ific.uv.es>    
-///  \date     9 Mar 2009
-///  \version  $Id$
-///
-///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
+// nexus | DetectorConstruction.h
+//
+// This class is used to initialize the detector geometry.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef DETECTOR_CONSTRUCTION_H
@@ -32,7 +29,7 @@ namespace nexus {
     /// Destructor
     ~DetectorConstruction();
 
-    /// Mandatory method invoked by the run manager. 
+    /// Mandatory method invoked by the run manager.
     /// It returns the physical volume that represents the world.
     virtual G4VPhysicalVolume* Construct();
 
@@ -42,17 +39,17 @@ namespace nexus {
     const BaseGeometry* GetGeometry() const;
 
   private:
-    BaseGeometry* _geometry; 
+    BaseGeometry* geometry_;
   };
 
 
   // INLINE DEFINITIONS /////////////////////////////////////////////
- 
+
   inline void DetectorConstruction::SetGeometry(BaseGeometry* g)
-  { _geometry = g; }
+  { geometry_ = g; }
 
   inline const BaseGeometry* DetectorConstruction::GetGeometry() const
-  { return _geometry; }
+  { return geometry_; }
 
 } // end namespace nexus
 

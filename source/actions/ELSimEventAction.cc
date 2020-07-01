@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | ELSimEventAction.cc
 //
-//  Author : P Ferrario <paolafer@ific.uv.es>
-//  Created: 23 Jan 2015
+// This class is based on DefaultEventAction and modified to store
+// all the events, no matter how much energy is deposited.
 //
-//  Copyright (c) 2009-2015 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "ELSimEventAction.h"
@@ -18,7 +18,7 @@ namespace nexus {
 
 
   ELSimEventAction::ELSimEventAction(): 
-    G4UserEventAction(), _nevt(0), _nupdate(10)
+    G4UserEventAction(), nevt_(0), nupdate_(10)
   {
   
   }
@@ -34,9 +34,9 @@ namespace nexus {
   void ELSimEventAction::BeginOfEventAction(const G4Event* /*event*/)
   {
     // Print out event number info
-    if ((_nevt % _nupdate) == 0) {
-      G4cout << " >> Event no. " << _nevt << G4endl;
-      if (_nevt == (10 * _nupdate)) _nupdate *= 10;
+    if ((nevt_ % nupdate_) == 0) {
+      G4cout << " >> Event no. " << nevt_ << G4endl;
+      if (nevt_ == (10 * nupdate_)) nupdate_ *= 10;
     }
   }
 
@@ -44,7 +44,7 @@ namespace nexus {
 
   void ELSimEventAction::EndOfEventAction(const G4Event* event)
   {
-    _nevt++;
+    nevt_++;
 
     
     // draw tracks in visual mode

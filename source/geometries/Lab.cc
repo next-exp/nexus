@@ -1,11 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id: Lab.cc 10054 2015-02-09 14:50:49Z paola $
+// nexus | Lab.cc
 //
-//  Author:  <paolafer@ific.uv.es>
-//  Created: 2015
-//  
-//  Copyright (c) 2015-2017 NEXT Collaboration. All rights reserved.
-// ---------------------------------------------------------------------------- 
+// This class consists of two LXe cells placed opposite to each other.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #include "Lab.h"
 
@@ -33,25 +32,25 @@
 
 
 namespace nexus {
-  
+
   using namespace CLHEP;
 
-  Lab::Lab(): 
-    BaseGeometry(), _msg(0)
+  Lab::Lab():
+    BaseGeometry(), msg_(0)
   {
-    _msg = new G4GenericMessenger(this, "/Geometry/Lab/", 
+    msg_ = new G4GenericMessenger(this, "/Geometry/Lab/",
 				  "Control commands of geometry Lab.");
 
     module_ = new PetLXeCell();
-    
+
   }
 
 
 
   Lab::~Lab()
   {
-    delete _msg;
-  } 
+    delete msg_;
+  }
 
 
 
@@ -62,14 +61,14 @@ namespace nexus {
   // events can be generated on the outside.
 
     G4double lab_size (2. * m);
-    G4Box* lab_solid = 
+    G4Box* lab_solid =
       new G4Box("LAB", lab_size/2., lab_size/2., lab_size/2.);
-    
+
     G4LogicalVolume* lab_logic =
       new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "AIR");
     lab_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    
-    // Set this volume as the wrapper for the whole geometry 
+
+    // Set this volume as the wrapper for the whole geometry
     // (i.e., this is the volume that will be placed in the world)
     this->SetLogicalVolume(lab_logic);
 
@@ -85,21 +84,21 @@ namespace nexus {
     new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0.,0., 10.*cm + cell_dim.z()/2.)), module_logic,
                       "MODULE_1", lab_logic, false, 1, true);
 
-    // Build walls of stainless steel, with low thickness 
+    // Build walls of stainless steel, with low thickness
     G4double det_size = cell_dim.x();
     G4double det_size_z = 1.*mm;
-    G4Box* det_solid = 
+    G4Box* det_solid =
       new G4Box("WALL", det_size/2., det_size/2., det_size_z/2.);
     G4Material* steel = MaterialsList::Steel();
-    
+
     G4LogicalVolume* det_logic = new G4LogicalVolume(det_solid, steel, "WALL");
     //   det_logic_->SetVisAttributes(G4VisAttributes::Invisible);
-    
+
     new G4PVPlacement(0, G4ThreeVector(0., 0., -10.*cm + det_size_z/2.), det_logic,
          	      "WALL", lab_logic, false, 0, true);
     new G4PVPlacement(0, G4ThreeVector(0., 0., 10.*cm - det_size_z/2.), det_logic,
          	      "WALL", lab_logic, false, 1, true);
-    
+
   }
 
 
@@ -107,17 +106,17 @@ namespace nexus {
   G4ThreeVector Lab::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);
-    
+
     if (region == "CENTER") {
       vertex = G4ThreeVector(0.,0.,0.);
     } else {
        G4Exception("[Lab]", "GenerateVertex()", FatalException,
-		  "Unknown vertex generation region!");     
+		  "Unknown vertex generation region!");
     }
 
      return vertex;
   }
 
-  
+
 
 } // end namespace nexus

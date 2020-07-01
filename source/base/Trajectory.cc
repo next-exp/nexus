@@ -1,10 +1,11 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | Trajectory.cc
 //
-//  Author : <justo.martin-albo@ific.uv.es>    
-//  Created: 26 March 2013
+// This class records the relevant information of a particle and its path
+// through the geometry. It is later used by the persistency mechanism to write
+// the particle information in the output file.
 //
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "Trajectory.h"
@@ -25,25 +26,25 @@ G4Allocator<Trajectory> TrjAllocator;
 
 
 Trajectory::Trajectory(const G4Track* track): 
-  G4VTrajectory(), _pdef(0), _trackId(-1), _parentId(-1),
-  _initial_time(0.), _final_time(0), _length(0.), _edep(0.), 
-  _record_trjpoints(true), _trjpoints(0)
+  G4VTrajectory(), pdef_(0), trackId_(-1), parentId_(-1),
+  initial_time_(0.), final_time_(0), length_(0.), edep_(0.), 
+  record_trjpoints_(true), trjpoints_(0)
 {
-  _pdef     = track->GetDefinition();
-  _trackId  = track->GetTrackID();
-  _parentId = track->GetParentID();
+  pdef_     = track->GetDefinition();
+  trackId_  = track->GetTrackID();
+  parentId_ = track->GetParentID();
 
-  if (_parentId == 0) 
-    _creator_process = "none";
+  if (parentId_ == 0) 
+    creator_process_ = "none";
   else 
-    _creator_process = track->GetCreatorProcess()->GetProcessName();
+    creator_process_ = track->GetCreatorProcess()->GetProcessName();
 
-  _initial_momentum = track->GetMomentum();
-  _initial_position = track->GetVertexPosition();
-  _initial_time = track->GetGlobalTime();
-  _initial_volume = track->GetVolume()->GetName();
+  initial_momentum_ = track->GetMomentum();
+  initial_position_ = track->GetVertexPosition();
+  initial_time_ = track->GetGlobalTime();
+  initial_volume_ = track->GetVolume()->GetName();
 
-  _trjpoints = new TrajectoryPointContainer();
+  trjpoints_ = new TrajectoryPointContainer();
 
   // Add this trajectory in the map, but only if no other
   // trajectory for this track id has been registered yet
@@ -55,50 +56,50 @@ Trajectory::Trajectory(const G4Track* track):
 
 Trajectory::Trajectory(const Trajectory& other): G4VTrajectory()
 {
-  _pdef = other._pdef;
+  pdef_ = other.pdef_;
 }
 
 
 
 Trajectory::~Trajectory()
 {
-  for (unsigned int i=0; i<_trjpoints->size(); ++i) 
-    delete (*_trjpoints)[i];
-  _trjpoints->clear();
-  delete _trjpoints;
+  for (unsigned int i=0; i<trjpoints_->size(); ++i) 
+    delete (*trjpoints_)[i];
+  trjpoints_->clear();
+  delete trjpoints_;
 }
 
 
 
 G4String Trajectory::GetParticleName() const
 {
-  return _pdef->GetParticleName();
+  return pdef_->GetParticleName();
 }
 
 
 
 G4int Trajectory::GetPDGEncoding() const
 {
-  return _pdef->GetPDGEncoding();
+  return pdef_->GetPDGEncoding();
 }
 
 
 
 G4double Trajectory::GetCharge() const
 {
-  return _pdef->GetPDGCharge();
+  return pdef_->GetPDGCharge();
 }
 
 
 
 void Trajectory::AppendStep(const G4Step* step)
 {
-  if (!_record_trjpoints) return;
+  if (!record_trjpoints_) return;
 
   TrajectoryPoint* point = 
     new TrajectoryPoint(step->GetPostStepPoint()->GetPosition(),
                         step->GetPostStepPoint()->GetGlobalTime());
-  _trjpoints->push_back(point);
+  trjpoints_->push_back(point);
 }
 
 
@@ -107,18 +108,18 @@ void Trajectory::MergeTrajectory(G4VTrajectory* second)
 {
   if (!second) return;
 
-  if (!_record_trjpoints) return;
+  if (!record_trjpoints_) return;
 
   Trajectory* tmp = (Trajectory*) second;
   G4int entries = tmp->GetPointEntries();
 
   // initial point of the second trajectory should not be merged
   for (G4int i=1; i<entries ; ++i) { 
-    _trjpoints->push_back((*(tmp->_trjpoints))[i]);
+    trjpoints_->push_back((*(tmp->trjpoints_))[i]);
   }
 
-  delete (*tmp->_trjpoints)[0];
-  tmp->_trjpoints->clear();
+  delete (*tmp->trjpoints_)[0];
+  tmp->trjpoints_->clear();
 }
 
 

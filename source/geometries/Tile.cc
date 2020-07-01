@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------
+// nexus | Tile.cc
+//
+// Geometry of a basic tile.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #include "Tile.h"
 #include "PmtSD.h"
 #include "ToFSD.h"
@@ -24,7 +32,7 @@
 namespace nexus {
 
   using namespace CLHEP;
-  
+
   Tile::Tile(): BaseGeometry(),
 		visibility_(0),
 		tile_x_(19.8 * mm),
@@ -33,12 +41,12 @@ namespace nexus {
 		sipm_pitch_(4.7 * mm),
 		n_rows_(8),
 		n_columns_(4)
-		
+
   {
     /// Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/Tile/", "Control commands of geometry.");
     msg_->DeclareProperty("visibility", visibility_, "Tile Visibility");
-    
+
     G4GenericMessenger::Command& size_x_cmd =
       msg_->DeclareProperty("size_x", tile_x_, "Size of tile X");
     size_x_cmd.SetUnitCategory("Length");
@@ -68,22 +76,22 @@ namespace nexus {
 
     sipm_ = new SiPMpetFBK();
   }
-  
+
   Tile::~Tile()
   {
-  }  
-  
+  }
+
   void Tile::Construct()
   {
-    SetDimensions(G4ThreeVector(tile_x_, tile_y_, tile_z_));   
+    SetDimensions(G4ThreeVector(tile_x_, tile_y_, tile_z_));
 
     G4Box* tile_solid = new G4Box("TILE", tile_x_/2., tile_y_/2., tile_z_/2);
 
     G4Material* epoxy = MaterialsList::Epoxy();
     // G4cout << "Epoxy used with constant refraction index = " <<  refr_index_ << G4endl;
     //epoxy->SetMaterialPropertiesTable(OpticalMaterialProperties::EpoxyFixedRefr(refr_index_));
-    
-    G4LogicalVolume* tile_logic = 
+
+    G4LogicalVolume* tile_logic =
       new G4LogicalVolume(tile_solid, epoxy, "TILE");
 
     this->SetLogicalVolume(tile_logic);
@@ -97,11 +105,11 @@ namespace nexus {
     G4double air_x = tile_x_ - offset_x;
     G4double air_y = tile_y_ - offset_y;
     G4double air_z = 1.2 * mm + sipm_dim.z();
-    
+
     G4Box* air_solid = new G4Box("TILE_AIR", air_x/2., air_y/2., air_z/2);
 
     G4Material* air = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
-    G4LogicalVolume* air_logic = 
+    G4LogicalVolume* air_logic =
       new G4LogicalVolume(air_solid, air, "TILE_AIR");
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., tile_z_/2. - air_z/2.),
@@ -115,7 +123,8 @@ namespace nexus {
     for (int i=0; i<n_columns_; i++){
       for (int j=0; j<n_rows_; j++){
 	count += 1;
-	new G4PVPlacement(0, G4ThreeVector(-tile_x_/2. + offset_x + sipm_dim.x()/2. + i * sipm_pitch_, -tile_y_/2.
+	new G4PVPlacement(0, G4ThreeVector(-tile_x_/2. + offset_x + sipm_dim.x()/2. + i * sipm_pitch_,
+                                           -tile_y_/2.
 					   + offset_y + sipm_dim.y()/2. + j * sipm_pitch_,
 					   tile_z_/2. - air_z + sipm_dim.z()/2.),
 			  sipm_logic, "SiPMpetFBK", air_logic, false, count, true);
@@ -126,17 +135,17 @@ namespace nexus {
     G4double quartz_x = tile_x_ - offset_x;
     G4double quartz_y = tile_y_ - offset_y;
     G4double quartz_z = 0.6 * mm;
-    
+
     G4Box* quartz_solid = new G4Box("TILE_WINDOW", quartz_x/2., quartz_y/2., quartz_z/2);
 
     G4Material* quartz = MaterialsList::FusedSilica();
     quartz->SetMaterialPropertiesTable(OpticalMaterialProperties::FusedSilica());
-    G4LogicalVolume* quartz_logic = 
+    G4LogicalVolume* quartz_logic =
       new G4LogicalVolume(quartz_solid, quartz, "TILE_WINDOW");
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., air_z/2. - quartz_z/2.),
     		      quartz_logic, "TILE_WINDOW", air_logic, false, 0, true);
-    
+
 
     // Visibilities
     if (visibility_) {
@@ -148,7 +157,7 @@ namespace nexus {
       G4VisAttributes air_col = nexus::LightBlue();
       //air_col.SetForceSolid(true);
       air_logic->SetVisAttributes(air_col);
-      
+
     }
     else {
       tile_logic->SetVisAttributes(G4VisAttributes::Invisible);
@@ -160,6 +169,6 @@ G4ThreeVector Tile::GetDimensions() {
   return G4ThreeVector(tile_x_, tile_y_, tile_z_);
 
 }
-  
-  
+
+
 } // end namespace nexus

@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-///  \file   AnalysisTrackingAction.h
-///
-///  \author   <justo.martin-albo@ific.uv.es>, <paola.ferrario@dipc.org>
-///  \date     25 Mar 2013
-///
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// nexus | AnalysisTrackingAction.h
+//
+// This class produces histograms of the wavelengths and the time of production
+// of the optical photons.
+//
+// The  NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef ANALYSIS_TRACKING_ACTION_H

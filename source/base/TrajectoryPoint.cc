@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | TrajectoryPoint.cc
 //
-//  Author : <justo.martin-albo@ific.uv.es>    
-//  Created: 27 March 2013
+// This class describes a point (position and time) in the trajectory
+// of a particle.
 //
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "TrajectoryPoint.h"
@@ -15,15 +15,15 @@ using namespace nexus;
 G4Allocator<TrajectoryPoint> TrjPointAllocator;
 
 
-TrajectoryPoint::TrajectoryPoint(): 
-  _position(0.,0.,0.), _time(0.)
+TrajectoryPoint::TrajectoryPoint():
+  position_(0.,0.,0.), time_(0.)
 {
 }
 
 
 
 TrajectoryPoint::TrajectoryPoint(G4ThreeVector pos, G4double t):
-  _position(pos), _time(t)
+  position_(pos), time_(t)
 {
 }
 
@@ -38,8 +38,8 @@ TrajectoryPoint::TrajectoryPoint(const TrajectoryPoint& other)
 
 const TrajectoryPoint& TrajectoryPoint::operator=(const TrajectoryPoint& other)
 {
-  _position = other._position;
-  _time     = other._time;
+  position_ = other.position_;
+  time_     = other.time_;
 
   return *this;
 }
@@ -49,6 +49,3 @@ const TrajectoryPoint& TrajectoryPoint::operator=(const TrajectoryPoint& other)
 TrajectoryPoint::~TrajectoryPoint()
 {
 }
-
-
-

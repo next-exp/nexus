@@ -1,5 +1,14 @@
-#ifndef FULLRINGTILES_
-#define FULLRINGTILES_
+// ----------------------------------------------------------------------------
+// nexus | FullRingTiles.h
+//
+// This class implements the geometry of a cylindric ring of LXe,
+// of configurable length and diameter, instrumented with specific tiles.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
+#ifndef FULL_RING_TILES_H
+#define FULL_RING_TILES_H
 
 #include "BaseGeometry.h"
 

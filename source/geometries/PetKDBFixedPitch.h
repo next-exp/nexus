@@ -1,12 +1,9 @@
 // ----------------------------------------------------------------------------
-///  \file   PetKDBFixedPitch.h
-///  \brief  Geometry of the PETALO Dice Boards.
-///
-///  \author  <paolafer@ific.uv.es>
-///  \date    2015
-///  \version $Id$
+// nexus | PetKDBFixedPitch.h
 //
-///  Copyright (c) 2015-2017 NEXT Collaboration. All rights reserved.
+// Kapton dice board with a fixed distance among SiPMs.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef PET_KDBFixedPitch_H
@@ -46,11 +43,10 @@ namespace nexus {
     void SetMaterial(G4Material& mat);
 
   private:
- 
-    //G4double _support_thickness;
+
     G4ThreeVector dimensions_;
     std::vector<std::pair<int, G4ThreeVector> > positions_;
- 
+
     // Visibility of the shielding
     G4bool visibility_;
 
@@ -62,16 +58,12 @@ namespace nexus {
 
     // xy dimensions
     G4double xysize_;
-    
+
     // Messenger for the definition of control commands
-    G4GenericMessenger* msg_;    
-   
-    
-    // Outer material
-    //G4Material* _out_mat;
+    G4GenericMessenger* msg_;
 
     SiPMpetVUV* sipm_;
- 
+
   };
 
 } // end namespace nexus

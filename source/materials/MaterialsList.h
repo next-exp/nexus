@@ -1,16 +1,13 @@
 // ----------------------------------------------------------------------------
-///  \file   MaterialsList.cc
-///  \brief  Definition of common materials.
-///
-///  \author   J Martin-Albo <jmalbos@ific.uv.es>
-///  \date     27 Mar 2009
-///  \version  $Id$
-///
-///  Copyright (c) 2009-2011 NEXT Collaboration
+// nexus | MaterialsList.h
+//
+// Definition of materials of common use.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __MATERIALS_LIST__
-#define __MATERIALS_LIST__
+#ifndef MATERIALS_LIST_H
+#define MATERIALS_LIST_H
 
 #include <globals.hh>
 

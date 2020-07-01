@@ -1,13 +1,14 @@
 // ----------------------------------------------------------------------------
-///  File   AnalysisEventAction.h
-///  Description  An event action that counts scintillation photon.
-///
-///  Author:   paola.ferrario@dipc.org
-///  Created:     6 Apr 2020
+// nexus | AnalysisEventAction.h
+//
+// This class is based on DefaultEventAction and modified to produce
+// a histogram of the number of scintillation photons event by event.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef ANALYSIS_EVENT_ACTION__
-#define ANALYSIS_EVENT_ACTION__
+#ifndef ANALYSIS_EVENT_ACTION_H
+#define ANALYSIS_EVENT_ACTION_H
 
 #include <G4UserEventAction.hh>
 #include <globals.hh>
@@ -35,10 +36,10 @@ namespace nexus {
     void EndOfEventAction(const G4Event*);
 
   private:
-    G4GenericMessenger* _msg;
-    G4int _nevt, _nupdate;
-    G4double _energy_threshold;
-    G4double _energy_max;
+    G4GenericMessenger* msg_;
+    G4int nevt_, nupdate_;
+    G4double energy_threshold_;
+    G4double energy_max_;
     G4String file_name_;
     G4int file_no_;
 

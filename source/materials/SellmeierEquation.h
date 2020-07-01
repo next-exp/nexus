@@ -1,13 +1,10 @@
 // ----------------------------------------------------------------------------
-///  \file   SellmeierEquation.h
-///  \brief  Calculation of refractive index using Sellmeier's equation
-///  
-///  \author  <justo.martin-albo@ific.uv.es>
-///
-///  \date    7 Nov 2011
-///  \version $Id$
-///
-///  Copyright (c) 2011-2013 NEXT Collaboration. All rights reserved.
+// nexus | SellmeierEquation.h
+//
+// The Sellmeier equation is an empirical relationship between refractive
+// index and wavelength for a dielectric transparent medium.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef SELLMEIER_EQUATION_H
@@ -15,9 +12,6 @@
 
 
 namespace nexus {
-
-  /// The Sellmeier equation is an empirical relationship between refractive
-  /// index and wavelength for a dielectric transparent medium.
 
   class SellmeierEquation
   {
@@ -28,16 +22,16 @@ namespace nexus {
     G4double RefractiveIndex(G4double wavelength);
 
   private:
-    G4double _B[3];
-    G4double _C[3];
+    G4double B_[3];
+    G4double C_[3];
   };
 
   // Inline definitions ///////////////////////////////////
 
   inline SellmeierEquation::SellmeierEquation(G4double* B, G4double* C)
-  { 
+  {
     for (unsigned int i=0; i<3; i++) {
-      _B[i] = B[i]; _C[i] = C[i];
+      B_[i] = B[i]; C_[i] = C[i];
     }
   }
 
@@ -47,10 +41,10 @@ namespace nexus {
   {
     G4double n2 = 1.;
     G4double wl2 = wavelength * wavelength;
-    
+
     for (unsigned int i=0; i<3; i++)
-      n2 += (_B[i] * wl2) / (wl2 - _C[i]);
-    
+      n2 += (B_[i] * wl2) / (wl2 - C_[i]);
+
     return sqrt(n2);
   }
 

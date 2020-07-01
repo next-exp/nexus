@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------
+// nexus | HDF5Writer.cc
+//
+// This class writes the h5 nexus output file.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #include "HDF5Writer.h"
 
 #include <sstream>
@@ -12,9 +20,9 @@ using namespace nexus;
 
 
 HDF5Writer::HDF5Writer():
-  _file(0), _irun(0), _ismp(0),
-  _ismp_tof(0), _ihit(0),
-  _ipart(0), _ipos(0)
+  file_(0), irun_(0), ismp_(0),
+  ismp_tof_(0), ihit_(0),
+  ipart_(0), ipos_(0)
 {
 }
 
@@ -24,45 +32,45 @@ HDF5Writer::~HDF5Writer()
 
 void HDF5Writer::Open(std::string fileName)
 {
-  _firstEvent= true;
+  firstEvent_= true;
 
-  _file = H5Fcreate( fileName.c_str(), H5F_ACC_TRUNC,
+  file_ = H5Fcreate( fileName.c_str(), H5F_ACC_TRUNC,
                       H5P_DEFAULT, H5P_DEFAULT );
 
   std::string group_name = "/MC";
-  _group = createGroup(_file, group_name);
+  group_ = createGroup(file_, group_name);
 
   std::string run_table_name = "configuration";
-  _memtypeRun = createRunType();
-  _runTable = createTable(_group, run_table_name, _memtypeRun);
+  memtypeRun_ = createRunType();
+  runTable_ = createTable(group_, run_table_name, memtypeRun_);
 
   std::string sns_data_table_name = "sns_response";
-  _memtypeSnsData = createSensorDataType();
-  _snsDataTable = createTable(_group, sns_data_table_name, _memtypeSnsData);
+  memtypeSnsData_ = createSensorDataType();
+  snsDataTable_ = createTable(group_, sns_data_table_name, memtypeSnsData_);
 
   std::string sns_tof_table_name = "tof_sns_response";
-  _memtypeSnsTof = createSensorTofType();
-  _snsTofTable = createTable(_group, sns_tof_table_name, _memtypeSnsTof);
+  memtypeSnsTof_ = createSensorTofType();
+  snsTofTable_ = createTable(group_, sns_tof_table_name, memtypeSnsTof_);
 
   std::string hit_info_table_name = "hits";
-  _memtypeHitInfo = createHitInfoType();
-  _hitInfoTable = createTable(_group, hit_info_table_name, _memtypeHitInfo);
+  memtypeHitInfo_ = createHitInfoType();
+  hitInfoTable_ = createTable(group_, hit_info_table_name, memtypeHitInfo_);
 
   std::string particle_info_table_name = "particles";
-  _memtypeParticleInfo = createParticleInfoType();
-  _particleInfoTable = createTable(_group, particle_info_table_name, _memtypeParticleInfo);
+  memtypeParticleInfo_ = createParticleInfoType();
+  particleInfoTable_ = createTable(group_, particle_info_table_name, memtypeParticleInfo_);
 
   std::string sns_pos_table_name = "sns_positions";
-  _memtypeSnsPos = createSensorPosType();
-  _snsPosTable = createTable(_group, sns_pos_table_name, _memtypeSnsPos);
+  memtypeSnsPos_ = createSensorPosType();
+  snsPosTable_ = createTable(group_, sns_pos_table_name, memtypeSnsPos_);
 
-  _isOpen = true;
+  isOpen_ = true;
 }
 
 void HDF5Writer::Close()
 {
-  _isOpen=false;
-  H5Fclose(_file);
+  isOpen_=false;
+  H5Fclose(file_);
 }
 
 void HDF5Writer::WriteRunInfo(const char* param_key, const char* param_value)
@@ -72,9 +80,9 @@ void HDF5Writer::WriteRunInfo(const char* param_key, const char* param_value)
   memset(runData.param_value, 0, CONFLEN);
   strcpy(runData.param_key, param_key);
   strcpy(runData.param_value, param_value);
-  writeRun(&runData, _runTable, _memtypeRun, _irun);
+  writeRun(&runData, runTable_, memtypeRun_, irun_);
 
-  _irun++;
+  irun_++;
 }
 
 void HDF5Writer::WriteSensorDataInfo(int evt_number, unsigned int sensor_id, unsigned int time_bin, unsigned int charge)
@@ -84,9 +92,9 @@ void HDF5Writer::WriteSensorDataInfo(int evt_number, unsigned int sensor_id, uns
   snsData.sensor_id = sensor_id;
   snsData.time_bin = time_bin;
   snsData.charge = charge;
-  writeSnsData(&snsData, _snsDataTable, _memtypeSnsData, _ismp);
+  writeSnsData(&snsData, snsDataTable_, memtypeSnsData_, ismp_);
 
-  _ismp++;
+  ismp_++;
 }
 
 void HDF5Writer::WriteSensorTofInfo(int evt_number, int sensor_id, unsigned int time_bin, unsigned int charge)
@@ -96,9 +104,9 @@ void HDF5Writer::WriteSensorTofInfo(int evt_number, int sensor_id, unsigned int 
   snsTof.sensor_id = sensor_id;
   snsTof.time_bin = time_bin;
   snsTof.charge = charge;
-  writeSnsTof(&snsTof, _snsTofTable, _memtypeSnsTof, _ismp_tof);
+  writeSnsTof(&snsTof, snsTofTable_, memtypeSnsTof_, ismp_tof_);
 
-  _ismp_tof++;
+  ismp_tof_++;
 }
 
 void HDF5Writer::WriteHitInfo(int evt_number, int particle_indx, float hit_position_x, float hit_position_y, float hit_position_z, float hit_time, float hit_energy, const char* label)
@@ -113,9 +121,9 @@ void HDF5Writer::WriteHitInfo(int evt_number, int particle_indx, float hit_posit
   trueInfo.energy = hit_energy;
   strcpy(trueInfo.label, label);
   trueInfo.particle_id = particle_indx;
-  writeHit(&trueInfo,  _hitInfoTable, _memtypeHitInfo, _ihit);
+  writeHit(&trueInfo,  hitInfoTable_, memtypeHitInfo_, ihit_);
 
-  _ihit++;
+  ihit_++;
 }
 
 void HDF5Writer::WriteParticleInfo(int evt_number, int particle_indx, const char* particle_name, char primary, int mother_id, float initial_vertex_x, float initial_vertex_y, float initial_vertex_z, float initial_vertex_t, float final_vertex_x, float final_vertex_y, float final_vertex_z, float final_vertex_t, const char* initial_volume, const char* final_volume, float momentum_x, float momentum_y, float momentum_z, float final_momentum_x, float final_momentum_y, float final_momentum_z, float kin_energy, float length, const char* creator_proc, const char* final_proc)
@@ -151,9 +159,9 @@ void HDF5Writer::WriteParticleInfo(int evt_number, int particle_indx, const char
   strcpy(trueInfo.creator_proc, creator_proc);
   memset(trueInfo.final_proc, 0, STRLEN);
   strcpy(trueInfo.final_proc, final_proc);
-  writeParticle(&trueInfo,  _particleInfoTable, _memtypeParticleInfo, _ipart);
+  writeParticle(&trueInfo,  particleInfoTable_, memtypeParticleInfo_, ipart_);
 
-  _ipart++;
+  ipart_++;
 }
 
 void HDF5Writer::WriteSensorPosInfo(unsigned int sensor_id, const char* sensor_name, float x, float y, float z)
@@ -165,7 +173,7 @@ void HDF5Writer::WriteSensorPosInfo(unsigned int sensor_id, const char* sensor_n
   snsPos.x = x;
   snsPos.y = y;
   snsPos.z = z;
-  writeSnsPos(&snsPos, _snsPosTable, _memtypeSnsPos, _ipos);
+  writeSnsPos(&snsPos, snsPosTable_, memtypeSnsPos_, ipos_);
 
-  _ipos++;
+  ipos_++;
 }

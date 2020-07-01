@@ -1,10 +1,9 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | MaterialsList.cc
 //
-//  Author:  <justo.martin-albo@ific.uv.es>
-//  Created: 27 Mar 2009
+// Definition of materials of common use.
 //
-//  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "MaterialsList.h"

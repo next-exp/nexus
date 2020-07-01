@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------
+// nexus | SiPMpetFBK.cc
+//
+// Basic SiPM geometry without TPB coating.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #include "SiPMpetFBK.h"
 #include "PmtSD.h"
 #include "ToFSD.h"

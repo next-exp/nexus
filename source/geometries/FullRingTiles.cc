@@ -1,11 +1,11 @@
 // ----------------------------------------------------------------------------
-//  $Id: FullRingTiles.cc  $
+// nexus | FullRingTiles.cc
 //
-//  Author:  <paolafer@ific.uv.es>   
-//  Created: March 2018
-//  
-//  Copyright (c) 2015 NEXT Collaboration
-// ---------------------------------------------------------------------------- 
+// This class implements the geometry of a cylindric ring of LXe,
+// of configurable length and diameter, instrumented with specific tiles.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #include "FullRingTiles.h"
 #include "SiPMpetFBK.h"

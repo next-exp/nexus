@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------
+// nexus | Na22Source.h
+//
+// Na-22 calibration specific source with plastic support used at LSC.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #ifndef NA22_SOURCE_H
 #define NA22_SOURCE_H
 
@@ -24,12 +32,12 @@ namespace nexus {
   private:
     
     /* // Dimension of the source itself */
-    /* G4double _source_diam; */
-    /* G4double _source_thick; */
+    /* G4double source_diam_; */
+    /* G4double source_thick_; */
 
     /* // Dimension of the whole support */
-    /* G4double _support_diam; */
-    /* G4double _support_thick; */
+    /* G4double support_diam_; */
+    /* G4double support_thick_; */
     
 
   };

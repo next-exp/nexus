@@ -1,10 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | DefaultStackingAction.cc
 //
-//  Author : <justo.martin-albo@ific.uv.es>    
-//  Created: 25 August 2013
+// This class is an example of how to implement a stacking action, if needed.
+// At the moment, it is not used in the NEXT simulations.
 //
-//  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "DefaultStackingAction.h"
@@ -26,7 +26,7 @@ DefaultStackingAction::~DefaultStackingAction()
 
 
 
-G4ClassificationOfNewTrack 
+G4ClassificationOfNewTrack
 DefaultStackingAction::ClassifyNewTrack(const G4Track* /*track*/)
 {
   return fUrgent;

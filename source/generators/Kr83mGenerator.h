@@ -1,5 +1,14 @@
-#ifndef __Kr83mGeneration__
-#define __Kr83mGeneration__
+// ----------------------------------------------------------------------------
+// nexus | Kr83mGenerator.h
+//
+// This class is the primary generator for the decay chain
+// of the isomeric state krypton 83.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
+#ifndef Kr83m_GENERATOR_H
+#define Kr83m_GENERATOR_H
 
 #include <vector>
 #include <G4VPrimaryGenerator.hh>
@@ -11,9 +20,7 @@ class G4GenericMessenger;
 namespace nexus {
 
   class BaseGeometry;
-
-  /// Primary generator (concrete class of G4VPrimaryGenerator) 
-  /// for the decay chain of the isomeric state Krypton 83 
+ 
   /// This state decays into the fundamental state of Kr 83 in two steps,
   ///  (JP 1/2- --> Jp 7/2+ -> 9/2+), with transition energies of 32.15 and 9.4 keV
   ///  The life time of 83mKr is long, ~ 1.83 hours, so, infinite for us,
@@ -40,32 +47,32 @@ namespace nexus {
   /// it makes life a bit more complicated...
   /// So, we have to simulated 2 or 3 particles for each decay..  
   
-  class Kr83mGeneration: public G4VPrimaryGenerator
+  class Kr83mGenerator: public G4VPrimaryGenerator
   {
   public:
     //Constructor
-    Kr83mGeneration();
+    Kr83mGenerator();
     //Destructor
-    ~Kr83mGeneration();
+    ~Kr83mGenerator();
 
     void GeneratePrimaryVertex(G4Event* evt);
 
   private:
 
-    G4GenericMessenger* _msg;
-    const BaseGeometry* _geom;
+    G4GenericMessenger* msg_;
+    const BaseGeometry* geom_;
 
-    G4double _energy_32; // Transition energy from the 1/2- state to the intermediate state, 7/2+ 
-    G4double _energy_9; // ... from the JP 7/2+ to the Kr83 fundamental state. 
-    G4double _probGamma_9; // ...The probability for a gamma instead of an EC conversion (related to the alpha EC) 
-    G4double _lifetime_9; // ...The lifetime of the intermediate state.  
-    std::vector<double> _energy_Xrays; // Energies of various X-ray, as the Kr83 atom relaxes to 
-    std::vector<double> _probability_Xrays; // Probability to emit an X-ray of the above energy, per decay. 
+    G4double energy_32_; // Transition energy from the 1/2- state to the intermediate state, 7/2+ 
+    G4double energy_9_; // ... from the JP 7/2+ to the Kr83 fundamental state. 
+    G4double probGamma_9_; // ...The probability for a gamma instead of an EC conversion (related to the alpha EC) 
+    G4double lifetime_9_; // ...The lifetime of the intermediate state.  
+    std::vector<double> energy_Xrays_; // Energies of various X-ray, as the Kr83 atom relaxes to 
+    std::vector<double> probability_Xrays_; // Probability to emit an X-ray of the above energy, per decay. 
                                             // We make cumulative, for easy access for random number. 
 
-    G4String _region;
-    G4ParticleDefinition*  _particle_defgamma;
-    G4ParticleDefinition*  _particle_defelectron;
+    G4String region_;
+    G4ParticleDefinition*  particle_defgamma_;
+    G4ParticleDefinition*  particle_defelectron_;
   };
 
 }// end namespace nexus

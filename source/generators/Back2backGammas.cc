@@ -1,11 +1,14 @@
 // ----------------------------------------------------------------------------
+// nexus | Back2backGammas.cc
 //
+// This generator simulates two gammas of 510.999 keV back to back, with
+// random direction. It is possible to specify a limited solid angle.
+// Control histograms of the solid angle where gammas are generated
+// are produced.
 //
-//  Author : P. Ferrario <paola.ferrario@ific.uv.es>    
-//  Created: 6 Dic 2011
-//
-//  Copyright (c) 2011 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
+
 #include "Back2backGammas.h"
 
 #include "G4Event.hh"
@@ -28,28 +31,29 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  Back2backGammas::Back2backGammas() : _geom(0), _costheta_min(-1.), _costheta_max(1.),
-				       _phi_min(0.), _phi_max(2.*pi)
+  Back2backGammas::Back2backGammas() : geom_(0), costheta_min_(-1.),
+                                       costheta_max_(1.),
+				       phi_min_(0.), phi_max_(2.*pi)
   {
     G4cout << "Limits = " << std::numeric_limits<unsigned int>::max() << G4endl;
     /// For the moment, only random direction are allowed. To be fixes if needed
-     _msg = new G4GenericMessenger(this, "/Generator/Back2back/",
+     msg_ = new G4GenericMessenger(this, "/Generator/Back2back/",
     "Control commands of 511-keV back to back gammas generator.");
 
-     _msg->DeclareProperty("region", _region,
+     msg_->DeclareProperty("region", region_,
 			   "Set the region of the geometry where the vertex will be generated.");
 
-     _msg->DeclareProperty("min_costheta", _costheta_min,
+     msg_->DeclareProperty("min_costheta", costheta_min_,
 			   "Set minimum cosTheta for the direction of the particle.");
-     _msg->DeclareProperty("max_costheta", _costheta_max,
+     msg_->DeclareProperty("max_costheta", costheta_max_,
 			   "Set maximum cosTheta for the direction of the particle.");
-     _msg->DeclareProperty("min_phi", _phi_min,
+     msg_->DeclareProperty("min_phi", phi_min_,
 			   "Set minimum phi for the direction of the particle.");
-     _msg->DeclareProperty("max_phi", _phi_max,
+     msg_->DeclareProperty("max_phi", phi_max_,
 			   "Set maximum phi for the direction of the particle.");
 
      DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
-    _geom = detconst->GetGeometry();
+    geom_ = detconst->GetGeometry();
 
     theta_angle_ = new TH1F("CosTheta", "CosTheta", 180, -2, 2);
     theta_angle_->GetXaxis()->SetTitle("Cos(theta)");
@@ -72,7 +76,7 @@ namespace nexus {
   {
     // Ask the geometry to generate a position for the particle
 
-    G4ThreeVector position = _geom->GenerateVertex(_region);
+    G4ThreeVector position = geom_->GenerateVertex(region_);
     G4double time = 0.;
     G4PrimaryVertex* vertex =
         new G4PrimaryVertex(position, time);
@@ -93,19 +97,20 @@ namespace nexus {
     G4double py = pmod * momentum_direction.y();
     G4double pz = pmod * momentum_direction.z();
 
-    if (_costheta_min != -1. || _costheta_max != 1. || _phi_min != 0. || _phi_max != 2.*pi) {
+    if (costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. || phi_max_ != 2.*pi) {
       G4bool mom_dir = false;
       while (mom_dir == false) {
 	G4double cosTheta  = 2.*G4UniformRand()-1.;
-	if (cosTheta > _costheta_min && cosTheta < _costheta_max){
+	if (cosTheta > costheta_min_ && cosTheta < costheta_max_){
 	  G4double sinTheta2 = 1. - cosTheta*cosTheta;
 	  if( sinTheta2 < 0.)  sinTheta2 = 0.;
 	  G4double sinTheta  = std::sqrt(sinTheta2);
 	  G4double phi = twopi*G4UniformRand();
-	  if (phi > _phi_min && phi < _phi_max){
+	  if (phi > phi_min_ && phi < phi_max_){
 	    mom_dir = true;
 	    momentum_direction = G4ThreeVector(sinTheta*std::cos(phi),
-					       sinTheta*std::sin(phi), cosTheta).unit();
+					       sinTheta*std::sin(phi),
+                                               cosTheta).unit();
 	    px = pmod * momentum_direction.x();
 	    py = pmod * momentum_direction.y();
 	    pz = pmod * momentum_direction.z();

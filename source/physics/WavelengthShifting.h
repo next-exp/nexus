@@ -1,13 +1,14 @@
 // ----------------------------------------------------------------------------
-///  \file   WavelengthShifting.h
-///  \brief  Physics process describing the wavelength shifting.
-///
-///  \author   P. Ferrario <paola.ferrario@ific.uv.es>    
-///  \date     13 Sept 2013
-///  \version  $Id $
-///
-///  Copyright (c) 2013 NEXT Collaboration
+// nexus | WavelengthShifting.h
+//
+// This is a class with a nexus-defined process for wavelength shifting.
+// It differs from G4OpWls, because the mean free path is not calculated
+// from a wls_absorption length property but through a probability property,
+// thus independent from the material thickness.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
+
 #ifndef WLS_H
 #define WLS_H
 
@@ -42,9 +43,9 @@ namespace nexus {
     void ComputeCumulativeDistribution(const G4MaterialPropertyVector& pdf, G4PhysicsOrderedFreeVector& cdf);
 
   private:
-    G4ParticleChange* _ParticleChange;
-    G4PhysicsTable* _wlsIntegralTable;
-    G4VWLSTimeGeneratorProfile*  _WLSTimeGeneratorProfile;
+    G4ParticleChange* ParticleChange_;
+    G4PhysicsTable* wlsIntegralTable_;
+    G4VWLSTimeGeneratorProfile*  WLSTimeGeneratorProfile_;
 
     //TH1F* hWLSTime;
     //TFile* histo_file;

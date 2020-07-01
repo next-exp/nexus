@@ -1,10 +1,13 @@
 // ----------------------------------------------------------------------------
-///  \file   AnalysisSteppingAction.h
-///
-///
-///  \version  $Id$
-///
-///  Copyright (c) 2013 NEXT Collaboration. All rights reserved.
+// nexus | AnalysisSteppingAction.h
+//
+// This class allows the user to print the total number of photons detected by
+// all kinds of photosensors at the end of the run.
+// It produces histograms with photon velocities and wavelengths.
+// It also shows examples of information that can be accessed at the stepping
+// level, so it is useful for debugging.
+//
+// The  NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #ifndef ANALYSIS_STEPPING_ACTION_H
@@ -46,7 +49,7 @@ namespace nexus {
     TH2F* hTV;
     TH1F* hCherLambdaDet;
 
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
     G4int file_no_;
 
     typedef std::map<G4String, int> detectorCounts;

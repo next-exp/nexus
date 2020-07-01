@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------
+// nexus | HDF5Writer.h
+//
+// This class writes the h5 nexus output file.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #ifndef HDF5WRITER_H
 #define HDF5WRITER_H
 
@@ -30,34 +38,34 @@ namespace nexus {
     void WriteSensorPosInfo(unsigned int sensor_id, const char* sensor_name, float x, float y, float z);
 
   private:
-    size_t _file; ///< HDF5 file
+    size_t file_; ///< HDF5 file
 
-    bool _isOpen;
-    bool _firstEvent; ///< First event
+    bool isOpen_;
+    bool firstEvent_; ///< First event
 
-    size_t _group; ///< group for everything
+    size_t group_; ///< group for everything
 
     //Datasets
-    size_t _runTable;
-    size_t _snsDataTable;
-    size_t _snsTofTable;
-    size_t _hitInfoTable;
-    size_t _particleInfoTable;
-    size_t _snsPosTable;
+    size_t runTable_;
+    size_t snsDataTable_;
+    size_t snsTofTable_;
+    size_t hitInfoTable_;
+    size_t particleInfoTable_;
+    size_t snsPosTable_;
 
-    size_t _memtypeRun;
-    size_t _memtypeSnsData;
-    size_t _memtypeSnsTof;
-    size_t _memtypeHitInfo;
-    size_t _memtypeParticleInfo;
-    size_t _memtypeSnsPos;
+    size_t memtypeRun_;
+    size_t memtypeSnsData_;
+    size_t memtypeSnsTof_;
+    size_t memtypeHitInfo_;
+    size_t memtypeParticleInfo_;
+    size_t memtypeSnsPos_;
 
-    size_t _irun; ///< counter for configuration parameters
-    size_t _ismp; ///< counter for written waveform samples
-    size_t _ismp_tof; ///< counter for written waveform samples (first bins only)
-    size_t _ihit; ///< counter for true information
-    size_t _ipart; ///< counter for particle information
-    size_t _ipos; ///< counter for sensor positions
+    size_t irun_; ///< counter for configuration parameters
+    size_t ismp_; ///< counter for written waveform samples
+    size_t ismp_tof_; ///< counter for written waveform samples (first bins only)
+    size_t ihit_; ///< counter for true information
+    size_t ipart_; ///< counter for particle information
+    size_t ipos_; ///< counter for sensor positions
 
   };
 

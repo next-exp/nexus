@@ -1,10 +1,13 @@
-
-///
-///  Copyright (c) 2010-2016 NEXT Collaboration. All rights reserved.
+// ----------------------------------------------------------------------------
+// nexus | HeliumGasProperties.h
+//
+// This class collects the relevant physical properties of gaseous helium.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __HELIUM_GAS_PROPERTIES__
-#define __HELIUM_GAS_PROPERTIES__
+#ifndef HELIUM_GAS_PROPERTIES_H
+#define HELIUM_GAS_PROPERTIES_H
 
 #include <globals.hh>
 #include <vector>
@@ -31,8 +34,7 @@ namespace nexus {
 
 
   private:
-    G4double _pressure;
-    //    G4double _temperature;
+    G4double pressure_;
 
   };
 

@@ -1,10 +1,9 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | XenonLiquidProperties.cc
 //
-//  Author:  <justo.martin-albo@ific.uv.es>
-//  Created: 25 Dec 2010
+// This class collects the relevant physical properties of liquid xenon.
 //
-//  Copyright (c) 2010-2012 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "XenonLiquidProperties.h"
@@ -18,37 +17,37 @@
 
 namespace nexus {
 
-  using namespace CLHEP; 
-  
+  using namespace CLHEP;
+
   XenonLiquidProperties::XenonLiquidProperties()
   {
   }
-  
-  
-  
+
+
+
   XenonLiquidProperties::~XenonLiquidProperties()
   {
   }
-  
 
-  
+
+
   G4double XenonLiquidProperties::Density()
   {
 
     // Density at 1 atm, T ~ 160 K
-    _density = 2.953 * g/cm3;
+    density_ = 2.953 * g/cm3;
 
-    return _density;
+    return density_;
   }
-  
 
-  
+
+
   G4double XenonLiquidProperties::RefractiveIndex(G4double energy)
   {
     // Formula for the refractive index taken from
-    // A. Baldini et al., "Liquid Xe scintillation calorimetry 
+    // A. Baldini et al., "Liquid Xe scintillation calorimetry
     // and Xe optical properties", arXiv:physics/0401072v1 [physics.ins-det]
-    
+
     // The Lorentz-Lorenz equation (also known as Clausius-Mossotti equation)
     // relates the refractive index of a fluid with its density:
     // (n^2 - 1) / (n^2 + 2) = - A · d_M,     (1)
@@ -59,7 +58,7 @@ namespace nexus {
     G4double P[3] = {71.23, 77.75, 1384.89}; // [eV^2 cm3 / mole]
     G4double E[3] = {8.4, 8.81, 13.2};       // [eV]
 
-    // Note.- Equation (1) has, actually, a sign difference with respect 
+    // Note.- Equation (1) has, actually, a sign difference with respect
     // to the one appearing in the reference. Otherwise, it yields values
     // for the refractive index below 1.
 
@@ -90,16 +89,16 @@ namespace nexus {
     }
     return sqrt(n2);
   }
-  
 
-  
+
+
   G4double XenonLiquidProperties::Scintillation(G4double energy)
   {
     // K. Fuji et al., "High accuracy measurement of the emission spectrum of liquid xenon
     // in the vacuum ultraviolet region",
     // Nuclear Instruments and Methods in Physics Research A 795 (2015) 293–297
     // http://ac.els-cdn.com/S016890021500724X/1-s2.0-S016890021500724X-main.pdf?_tid=83d56f0a-3aff-11e7-bf7d-00000aacb361&acdnat=1495025656_407067006589f99ae136ef18b8b35a04
-    G4double Wavelength_peak = 174.8*nm; 
+    G4double Wavelength_peak = 174.8*nm;
     G4double Wavelength_FWHM = 10.2*nm;
     G4double Wavelength_sigma = Wavelength_FWHM/2.35;
 
@@ -107,14 +106,14 @@ namespace nexus {
     G4double Energy_sigma = (h_Planck*c_light*Wavelength_sigma/pow(Wavelength_peak,2));
     // G4double bin = 6*Energy_sigma/500;
 
-    G4double intensity = 
+    G4double intensity =
 	  exp(-pow(Energy_peak/eV-energy/eV,2)/(2*pow(Energy_sigma/eV, 2)))/(Energy_sigma/eV*sqrt(pi*2.));
 
     return intensity;
   }
 
 
-  
+
   void XenonLiquidProperties::Scintillation
   (G4int entries, G4double* energy, G4double* intensity)
   {
@@ -122,8 +121,8 @@ namespace nexus {
       intensity[i] = Scintillation(energy[i]);
     }
   }
-  
-  
- 
-  
+
+
+
+
 } // end namespace nexus
