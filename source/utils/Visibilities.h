@@ -1,13 +1,14 @@
 // ----------------------------------------------------------------------------
 ///  \file   Visibilities.h
 ///  \brief  General class to define colors for displaying geometries
-///
-///  \author  <paola.ferrario@ific.uv.es>
-///  \date    17 Jun 2015
-///  \version $Id$
-//
-///  Copyright (c) 2015 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
+// nexus | Visibilities.h
+//
+// This class define colors for geometry display.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #include <G4VisAttributes.hh>
 
 #ifndef VIS_H
@@ -47,8 +48,8 @@ namespace nexus {
   { G4Colour myColour(.7,.7,.7); G4VisAttributes myAttr(myColour); return myAttr;}
   inline G4VisAttributes TitaniumGrey()
   { G4Colour myColour(.71, .69, .66); G4VisAttributes myAttr(myColour); return myAttr;}
-  
-    
+
+
 }  // end namespace nexus
 
 #endif
