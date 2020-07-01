@@ -191,7 +191,7 @@ namespace nexus {
       particle3->SetPolarization(0.,0.,0.);
       particle3->SetProperTime(time9);
       vertex->SetPrimary(particle3);
-//      fOutCheckKr83mTmp << " " << evtNum << " 9  22 " << _energy_9 << std::endl;  
+//      fOutCheckKr83mTmp << " " << evtNum << " 9  22 " << energy_9_ << std::endl;  
     } else { // a soft electron. (Electron Conversion )    
      // Calculate cartesian components of momentum for the most energetic EC 
       energy = energy_9_ + mass;
@@ -204,7 +204,7 @@ namespace nexus {
       particle3->SetMomentum(px, py, pz);
       particle3->SetProperTime(time9);
       vertex->SetPrimary(particle3);
-//      fOutCheckKr83mTmp << " " << evtNum << " 9  11 " << _energy_9 << std::endl;  
+//      fOutCheckKr83mTmp << " " << evtNum << " 9  11 " << energy_9_ << std::endl;  
    }   
    evt->AddPrimaryVertex(vertex);
   }
