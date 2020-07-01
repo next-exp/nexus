@@ -12,6 +12,7 @@
 #include "PmtSD.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
+#include "Visibilities.h"
 
 #include <G4Box.hh>
 #include <G4VisAttributes.hh>
@@ -32,7 +33,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  PetKDBFixedPitch::PetKDBFixedPitch(): 
+  PetKDBFixedPitch::PetKDBFixedPitch():
     BaseGeometry(),
     visibility_ (0),
     sipm_pitch_(3.2*mm),
@@ -44,7 +45,7 @@ namespace nexus {
    msg_->DeclareProperty("kdb_vis", visibility_, "PET Kapton Dice Boards Visibility");
    msg_->DeclareProperty("reflectivity", refl_, "Reflectivity of the board in LXe");
 
-   G4GenericMessenger::Command& pitch_cmd = 
+   G4GenericMessenger::Command& pitch_cmd =
        msg_->DeclareProperty("sipm_pitch", sipm_pitch_, "Distance between SiPMs");
      pitch_cmd.SetUnitCategory("Length");
      pitch_cmd.SetParameterName("sipm_pitch", false);
@@ -52,7 +53,7 @@ namespace nexus {
 
    sipm_ = new SiPMpetVUV;
    //sipm_ = new SiPMpetTPB;
-    
+
   }
 
   PetKDBFixedPitch::~PetKDBFixedPitch()
@@ -80,9 +81,9 @@ namespace nexus {
     //    const G4double coating_thickness = 0.1 * micrometer;
     const G4double board_thickness = 0.3 * mm;
     //const G4double board_side_reduction = .5 * mm;
-    const G4double board_side_reduction = 0. * mm;  
+    const G4double board_side_reduction = 0. * mm;
 
-    const G4double db_x = columns * sipm_pitch_ - 2. * board_side_reduction ;  
+    const G4double db_x = columns * sipm_pitch_ - 2. * board_side_reduction ;
     const G4double db_y = rows * sipm_pitch_ - 2. * board_side_reduction ;
     const G4double db_z = board_thickness;
 
@@ -99,14 +100,14 @@ namespace nexus {
     dimensions_.setX(out_x);
     dimensions_.setY(out_y);
     dimensions_.setZ(out_z);
-    
+
     G4Material* out_material = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
     out_material->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe());
 
     //   std::cout << "Border = " << border << G4endl;
     //std::cout << "LXe_volume, x: " << out_x << ", y: " << out_y << ", z: " << out_z << std::endl;
     G4Box* out_solid = new G4Box("LXE_DICE", out_x/2., out_y/2., out_z/2.);
-    G4LogicalVolume* out_logic = 
+    G4LogicalVolume* out_logic =
       new G4LogicalVolume(out_solid, out_material,  "LXE_DICE");
     this->SetLogicalVolume(out_logic);
 
@@ -115,13 +116,13 @@ namespace nexus {
 
     //std::cout << "db_x: " << db_x << ", db_y: " << db_y << ", db_z: " << db_z << std::endl;
     G4Box* board_solid = new G4Box("DICE_BOARD", db_x/2., db_y/2., db_z/2.);
- 
+
     G4Material* kapton =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
-    //    G4Material* teflon = 
+    //    G4Material* teflon =
     //    G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
- 
-    G4LogicalVolume* board_logic = 
+
+    G4LogicalVolume* board_logic =
       new G4LogicalVolume(board_solid, kapton, "DICE_BOARD");
     new G4PVPlacement(0, G4ThreeVector(0.,0., -border), board_logic,
 			"DICE_BOARD", out_logic, false, 0, true);
@@ -132,16 +133,16 @@ namespace nexus {
     db_opsur->SetModel(unified);
     db_opsur->SetFinish(ground);
     db_opsur->SetSigmaAlpha(0.1);
-   
+
     //db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
     db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_LXe(refl_));
-    
+
     new G4LogicalSkinSurface("DICE_BOARD", board_logic, db_opsur);
 
-   
+
     // WLS COATING //////////////////////////////////////////////////
-    
-    // G4Box* coating_solid = 
+
+    // G4Box* coating_solid =
     //   new G4Box("DB_WLS_COATING", db_x/2., db_y/2., coating_thickness/2.);
 
     // G4Material* TPB = MaterialsList::TPB();
@@ -153,11 +154,11 @@ namespace nexus {
     // G4double pos_z = db_z/2. - coating_thickness / 2.;
     // new G4PVPlacement(0, G4ThreeVector(0., 0., pos_z), coating_logic,
     // 		      "DB_WLS_COATING", board_logic, false, 0, true);
-    
+
 
     // SILICON PMs //////////////////////////////////////////////////
 
-   
+
     G4LogicalVolume* sipm_logic = sipm_->GetLogicalVolume();
 
     G4double pos_z = db_z/2. - border+ (sipm_->GetDimensions().z())/2.;
@@ -175,7 +176,7 @@ namespace nexus {
 
 	//G4cout << pos_x << ", " << pos_y << ", " << pos_z << G4endl;
 
-        new G4PVPlacement(0, G4ThreeVector(pos_x, pos_y, pos_z), 
+        new G4PVPlacement(0, G4ThreeVector(pos_x, pos_y, pos_z),
           sipm_logic, "SIPMpet", out_logic, false, sipm_no, true);
 
         std::pair<int, G4ThreeVector> mypos;
@@ -191,14 +192,14 @@ namespace nexus {
 
     // SETTING VISIBILITIES   //////////
     if (visibility_) {
-      G4VisAttributes board_col(G4Colour(0., 0., 1.));
-      board_logic->SetVisAttributes(board_col);  
-      //   G4VisAttributes tpb_col(G4Colour(1., 1., 1.));
-      //     tpb_col.SetForceSolid(true);
-      //  coating_logic->SetVisAttributes(tpb_col);    
+      G4VisAttributes board_col = nexus::CopperBrown();
+      board_logic->SetVisAttributes(board_col);
+      //   G4VisAttributes tpb_col = nexus::Red();
+      //   tpb_col.SetForceSolid(true);
+      //   coating_logic->SetVisAttributes(tpb_col);
     }
     else {
-    
+
       board_logic->SetVisAttributes(G4VisAttributes::Invisible);
       // coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
@@ -208,7 +209,7 @@ namespace nexus {
   {
     return dimensions_;
   }
-  
+
   const std::vector<std::pair<int, G4ThreeVector> >& PetKDBFixedPitch::GetPositions()
   {
     return positions_;
