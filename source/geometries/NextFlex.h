@@ -60,10 +60,10 @@ namespace nexus {
 
   private:
 
-    const G4int FIRST_ENERGY_SENSOR_ID      =     0;
-    const G4int FIRST_TRACKING_SENSOR_ID    =  1000;
-    const G4int FIRST_LEFT_FIBER_SENSOR_ID  = 10000;
-    const G4int FIRST_RIGHT_FIBER_SENSOR_ID = 20000;
+    const G4int FIRST_ENERGY_SENSOR_ID      =      0;
+    const G4int FIRST_TRACKING_SENSOR_ID    =   1000;
+    const G4int FIRST_LEFT_FIBER_SENSOR_ID  = 100000;
+    const G4int FIRST_RIGHT_FIBER_SENSOR_ID = 200000;
 
     // Verbosity of the geometry
     G4bool verbosity_;
