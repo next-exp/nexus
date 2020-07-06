@@ -2,7 +2,7 @@
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
-#include "SiPMpetFBK.h"
+#include "SiPMpetFBK_new.h"
 #include "IonizationSD.h"
 
 #include <G4GenericMessenger.hh>
@@ -67,7 +67,7 @@ namespace nexus {
     msg_->DeclareProperty("rows", n_rows_, "Number of rows");
     msg_->DeclareProperty("columns", n_columns_, "Number of columns");
 
-    sipm_ = new SiPMpetFBK();
+    sipm_ = new SiPMpetFBK_new();
   }
 
   TileFBK::~TileFBK()

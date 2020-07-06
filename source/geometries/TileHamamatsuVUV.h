@@ -6,7 +6,7 @@
 
 class G4GenericMessenger;
 namespace nexus {
-    class SiPMpetVUV;}
+    class SiPMpetVUV_new;}
 
 namespace nexus {
 
@@ -47,7 +47,7 @@ namespace nexus {
      // Messenger for the definition of control commands
     G4GenericMessenger* msg_;
 
-    SiPMpetVUV* sipm_;
+    SiPMpetVUV_new* sipm_;
 
   };
 

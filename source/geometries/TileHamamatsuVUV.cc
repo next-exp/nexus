@@ -2,7 +2,7 @@
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
-#include "SiPMpetVUV.h"
+#include "SiPMpetVUV_new.h"
 #include "IonizationSD.h"
 
 #include <G4GenericMessenger.hh>
@@ -88,7 +88,7 @@ namespace nexus {
     quartz_transparency_cmd.SetRange("quartz_transparency>0 && quartz_transparency<1");
 
 
-    sipm_ = new SiPMpetVUV();
+    sipm_ = new SiPMpetVUV_new();
   }
 
   TileHamamatsuVUV::~TileHamamatsuVUV()
