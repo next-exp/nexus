@@ -263,7 +263,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeFusedSilica(G4double t
   return mpt;
 }
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::FakeLXe(G4double transparency, G4double thickness)
+G4MaterialPropertiesTable* OpticalMaterialProperties::FakeGenericMaterial(G4double transparency, G4double thickness)
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 

@@ -147,7 +147,7 @@ namespace nexus {
     G4Box* quartz_solid = new G4Box("TILE_QUARTZ_WINDOW", quartz_x/2., quartz_y/2., quartz_thick_/2);
 
     G4Material* quartz = MaterialsList::FusedSilica();
-    quartz->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeLXe(quartz_transparency_, quartz_thick_));
+    quartz->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGenericMaterial(quartz_transparency_, quartz_thick_));
 
     G4LogicalVolume* quartz_logic =
     new G4LogicalVolume(quartz_solid, quartz, "TILE_QUARTZ_WINDOW");
