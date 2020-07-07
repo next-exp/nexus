@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------
+// nexus | TileFBK.cc
+//
+// Geometry of a FBK sensor tile.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #include "TileFBK.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"

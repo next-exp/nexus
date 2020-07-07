@@ -1,5 +1,13 @@
-#ifndef PETBOX_
-#define PETBOX_
+// ----------------------------------------------------------------------------
+// nexus | PetBox.cc
+//
+// This class implements the geometry of a symmetric box of LXe.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
+#ifndef PET_BOX_H_
+#define PET_BOX_H_
 
 #include "BaseGeometry.h"
 

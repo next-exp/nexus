@@ -1,10 +1,9 @@
 // ----------------------------------------------------------------------------
-//  $Id: PetBox.cc  $
+// nexus | PetBox.cc
 //
-//  Author:  <paola.ferrario@dipc.org>
-//  Created: January 2019
+// This class implements the geometry of a symmetric box of LXe.
 //
-//  Copyright (c) 2015 NEXT Collaboration
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "PetBox.h"

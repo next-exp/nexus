@@ -1,5 +1,13 @@
-#ifndef TILEFBK_H
-#define TILEFBK_H
+// ----------------------------------------------------------------------------
+// nexus | TileFBK.cc
+//
+// Geometry of a FBK sensor tile.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
+#ifndef TILE_FBK_H
+#define TILE_FBK_H
 
 #include "BaseGeometry.h"
 #include <G4ThreeVector.hh>

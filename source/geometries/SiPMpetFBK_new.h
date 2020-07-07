@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------
+// nexus | SiPMpetFBK_new.cc
+//
+// 3x3 mm2 FBK SiPM geometry.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #ifndef SIPM_pet_FBK_new_H
 #define SIPM_pet_FBK_new_H
 

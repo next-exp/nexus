@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------
+// nexus | SiPMpetBlue.cc
+//
+// 6x6 mm2 Hamamatsu Blue SiPM geometry.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #include "SiPMpetBlue.h"
 #include "ToFSD.h"
 #include "MaterialsList.h"

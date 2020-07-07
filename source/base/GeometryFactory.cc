@@ -48,7 +48,7 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
 
   else if (name_ == "PETALO") p = new Lab();
 
-  else if (_name == "PETBOX") p = new PetBox();
+  else if (name_ == "PETBOX") p = new PetBox();
 
   else {
     G4String err = "The user selected an unknown geometry: " + name_;

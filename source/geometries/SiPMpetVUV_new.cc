@@ -1,11 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | SiPMpetVUV_new.cc
 //
-//  Author:  
-//  Created: 
-//  
-//  Copyright (c) 2010-2013 NEXT Collaboration. All rights reserved.
-// ---------------------------------------------------------------------------- 
+// 6x6 mm2 VUV Hamamatsu SiPM geometry.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
 
 #include "SiPMpetVUV_new.h"
 #include "ToFSD.h"

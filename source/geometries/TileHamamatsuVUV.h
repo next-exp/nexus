@@ -1,5 +1,13 @@
-#ifndef TILEHAMAMATSUVUV_H
-#define TILEHAMAMATSUVUV_H
+// ----------------------------------------------------------------------------
+// nexus | TileHamamatsuVUV.cc
+//
+// Hamamatsu VUV sensor tile geometry.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
+#ifndef TILE_HAMAMATSU_VUV_H
+#define TILE_HAMAMATSU_VUV_H
 
 #include "BaseGeometry.h"
 #include <G4ThreeVector.hh>

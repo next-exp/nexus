@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------
+// nexus | SiPMpetFBK_new.cc
+//
+// 3x3 mm2 FBK SiPM geometry.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #include "SiPMpetFBK_new.h"
 #include "PmtSD.h"
 #include "ToFSD.h"

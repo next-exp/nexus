@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------
+// nexus | TileHamamatsuVUV.cc
+//
+// Hamamatsu VUV sensor tile geometry.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #include "TileHamamatsuVUV.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"

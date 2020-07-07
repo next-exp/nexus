@@ -1,5 +1,13 @@
-#ifndef TILEHAMAMATSUBLUE_H
-#define TILEHAMAMATSUBLUE_H
+// ----------------------------------------------------------------------------
+// nexus | TileHamamatsuBlue.cc
+//
+// Hamamatsu Blue sensor tile geometry.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
+#ifndef TILE_HAMAMATSU_BLUE_H
+#define TILE_HAMAMATSU_BLUE_H
 
 #include "BaseGeometry.h"
 #include <G4ThreeVector.hh>

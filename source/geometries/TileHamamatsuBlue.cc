@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------
+// nexus | TileHamamatsuBlue.cc
+//
+// Hamamatsu Blue sensor tile geometry.
+//
+// The NEXT Collaboration
+// ----------------------------------------------------------------------------
+
 #include "TileHamamatsuBlue.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
