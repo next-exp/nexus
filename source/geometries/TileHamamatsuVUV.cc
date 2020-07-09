@@ -179,18 +179,17 @@ namespace nexus {
     // SiPMs
     G4LogicalVolume* sipm_logic = sipm_->GetLogicalVolume();
 
-    G4int copy_no = 0;
-    for (int i=0; i<n_columns_; i++){
-      for (int j=0; j<n_rows_; j++){
-	copy_no += 1;
-    G4double x_pos = -tile_x_/2. + offset_x + sipm_dim.x()/2. + i * sipm_pitch_;
-    G4double y_pos =  tile_y_/2. - offset_y - sipm_dim.y()/2. - j * sipm_pitch_;
-    G4double z_pos = tile_z_/2. - quartz_thick_ - lxe_thick_ - sipm_dim.z()/2.;
-    G4String vol_name = "SiPMpetVUV_" + std::to_string(copy_no);
-	new G4PVPlacement(0, G4ThreeVector(x_pos, y_pos, z_pos),
-			  sipm_logic, vol_name, tile_logic, false, copy_no, true);
-	}
+    for (int i=0; i<n_rows_; i++){
+      for (int j=0; j<n_columns_; j++){
+        G4int copy_no = i*2*n_columns_ + j + 1;
+        G4double x_pos = -tile_x_/2. + offset_x + sipm_dim.x()/2. + j * sipm_pitch_;
+        G4double y_pos =  tile_y_/2. - offset_y - sipm_dim.y()/2. - i * sipm_pitch_;
+        G4double z_pos = tile_z_/2. - quartz_thick_ - lxe_thick_ - sipm_dim.z()/2.;
+        G4String vol_name = "SiPMpetVUV_" + std::to_string(copy_no);
+        new G4PVPlacement(0, G4ThreeVector(x_pos, y_pos, z_pos),
+                          sipm_logic, vol_name, tile_logic, false, copy_no, true);
       }
+    }
 
     // Visibilities
     if (visibility_) {

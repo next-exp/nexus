@@ -392,11 +392,10 @@ namespace nexus {
 
     G4int copy_no = 1;
 
-    for (G4int j=0; j<n_tile_columns_; j++) {
-      G4double z_pos = full_row_size_/2. - tile_->GetDimensions().x()/2. - j*tile_->GetDimensions().x();
-      for (G4int i=0; i<n_tile_rows_; i++) {
-        G4double y_pos = full_col_size_/2. - tile_->GetDimensions().y()/2. - i*tile_->GetDimensions().y();
-
+    for (G4int i=0; i<n_tile_rows_; i++) {
+      G4double y_pos = full_col_size_/2. - tile_->GetDimensions().y()/2. - i*tile_->GetDimensions().y();
+      for (G4int j=0; j<n_tile_columns_; j++) {
+        G4double z_pos = -full_row_size_/2. + tile_->GetDimensions().x()/2. + j*tile_->GetDimensions().x();
         position = G4ThreeVector(x_pos, y_pos, z_pos);
         vol_name = "TILE_" + std::to_string(copy_no);
         new G4PVPlacement(G4Transform3D(rot, position), tile_logic,
@@ -407,10 +406,10 @@ namespace nexus {
 
     rot.rotateY(pi);
 
-    for (G4int j=0; j<n_tile_columns_; j++) {
-      G4double z_pos = full_row_size_/2. - tile_->GetDimensions().x()/2. - j*tile_->GetDimensions().x();
-      for (G4int i=0; i<n_tile_rows_; i++) {
-        G4double y_pos = -full_col_size_/2. + tile_->GetDimensions().y()/2. + i*tile_->GetDimensions().y();
+    for (G4int i=0; i<n_tile_rows_; i++) {
+      G4double y_pos = full_col_size_/2. - tile_->GetDimensions().y()/2. - i*tile_->GetDimensions().y();
+      for (G4int j=0; j<n_tile_columns_; j++) {
+        G4double z_pos = full_row_size_/2. - tile_->GetDimensions().x()/2. - j*tile_->GetDimensions().x();
         position = G4ThreeVector(-x_pos, y_pos, z_pos);
         vol_name = "TILE_" + std::to_string(copy_no);
         new G4PVPlacement(G4Transform3D(rot, position), tile_logic,
