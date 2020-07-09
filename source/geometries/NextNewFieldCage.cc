@@ -378,18 +378,15 @@ void NextNewFieldCage::BuildBuffer()
 			       0., G4ThreeVector (0., 0., buffer_posz));
 
     // VERTEX GENERATOR FOR ALL XENON
-    G4double pos_el = el_gap_z_pos_ / 2. + grid_thickness_ / 2.;
     G4double xenon_posz = (buffer_length_ * buffer_posz +
 			   active_length_ * active_posz_ +
 			   cathode_thickness_ * pos_z_cathode_ +
-			   el_gap_length_ * el_gap_z_pos_ +
-			   grid_thickness_ * pos_el) / (buffer_length_ +
+			   el_gap_length_ * el_gap_z_pos_) / (buffer_length_ +
 							active_length_ +
 							cathode_thickness_ +
-							el_gap_length_ +
-							grid_thickness_);
+							el_gap_length_);
     G4double xenon_len = buffer_length_ + active_length_
-      + cathode_thickness_ + grid_thickness_ + el_gap_length_;
+      + cathode_thickness_ + el_gap_length_;
     xenon_gen_ =
       new CylinderPointSampler(0., xenon_len, tube_in_diam_/2.,
                                0., G4ThreeVector (0., 0., xenon_posz));
