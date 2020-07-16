@@ -134,6 +134,8 @@ namespace nexus {
     mutable std::vector<G4ThreeVector> el_table_vertices_;
     G4double el_table_binning_;
     G4double el_table_z_;
+
+    G4double photoe_prob_;
   };
 
 } //end namespace nexus

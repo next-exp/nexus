@@ -82,7 +82,9 @@ namespace nexus {
     // EL field ON or OFF
     elfield_(0),
     el_table_index_(0),
-    el_table_binning_(5. * mm)
+    el_table_binning_(5. * mm),
+
+    photoe_prob_(0)
   {
     // Derived dimensions
     buffer_length_ =
@@ -186,6 +188,9 @@ namespace nexus {
 			    "Z coordinate for EL generation");
     eltable_z_cmd.SetUnitCategory("Length");
     eltable_z_cmd.SetParameterName("el_table_z", false);
+
+    msg_->DeclareProperty("photoe_prob", photoe_prob_,
+          "Probability of photon to ie- conversion");
 
   }
 
@@ -423,10 +428,15 @@ void NextNewFieldCage::BuildBuffer()
 
     G4Material* fgate_mat =
       MaterialsList::FakeDielectric(gas_, "el_grid_gate_mat");
+    // We have to set the defaults explicitely because C++ doesn't support
+    // named arguments
     fgate_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_,
                                                                               temperature_,
                                                                               gate_transparency_,
-                                                                              grid_thickness_));
+                                                                              grid_thickness_,
+                                                                              25510/MeV,
+                                                                              1000.*ms,
+                                                                              photoe_prob_));
 
     // Dimensions & position: the grids are simulated inside the EL gap.
     // Their thickness is symbolic.
