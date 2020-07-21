@@ -49,6 +49,7 @@ namespace nexus {
     G4int    mother_depth_;
     G4int    naming_order_;
     G4double time_binning_;
+    G4bool   box_geom_;
 
      // Messenger for the definition of control commands
     G4GenericMessenger* msg_;

@@ -34,7 +34,8 @@ namespace nexus {
 
   SiPMpet::SiPMpet(): BaseGeometry(),
                       visibility_(0),
-                      time_binning_(1.*microsecond)
+                      time_binning_(1.*microsecond),
+                      box_geom_(false)
 
   {
     /// Messenger
@@ -46,6 +47,8 @@ namespace nexus {
     time_cmd.SetUnitCategory("Time");
     time_cmd.SetParameterName("time_binning", false);
     time_cmd.SetRange("time_binning>0.");
+
+    msg_->DeclareProperty("box_geom", box_geom_, "To indicate whether Box geometry is being used and so naming ordering correctly set.");
   }
 
 

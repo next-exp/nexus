@@ -38,7 +38,8 @@ namespace nexus {
                             sensor_depth_(-1),
                             mother_depth_(-1),
                             naming_order_(-1),
-                            time_binning_(200.*nanosecond)
+                            time_binning_(200.*nanosecond),
+                            box_geom_(false)
 
   {
     /// Messenger
@@ -53,6 +54,8 @@ namespace nexus {
     time_cmd.SetUnitCategory("Time");
     time_cmd.SetParameterName("time_binning", false);
     time_cmd.SetRange("time_binning>0.");
+
+    msg_->DeclareProperty("box_geom", box_geom_, "To indicate whether Box geometry is being used and so naming ordering correctly set.");
   }
   
   SiPMpetVUV_new::~SiPMpetVUV_new()
@@ -150,6 +153,7 @@ namespace nexus {
                       "Naming Order must be set before constructing");
         sipmsd->SetDetectorNamingOrder(naming_order_);
         sipmsd->SetTimeBinning(time_binning_);
+        sipmsd->SetBoxGeom(box_geom_);
 
         G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
         active_window_logic->SetSensitiveDetector(sipmsd);

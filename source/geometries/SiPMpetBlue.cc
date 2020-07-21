@@ -38,7 +38,8 @@ namespace nexus {
                             sensor_depth_(-1),
                             mother_depth_(-1),
                             naming_order_(-1),
-                            time_binning_(200.*nanosecond)
+                            time_binning_(200.*nanosecond),
+                            box_geom_(false)
 
   {
     /// Messenger
@@ -54,6 +55,8 @@ namespace nexus {
     time_cmd.SetUnitCategory("Time");
     time_cmd.SetParameterName("time_binning", false);
     time_cmd.SetRange("time_binning>0.");
+
+    msg_->DeclareProperty("box_geom", box_geom_, "To indicate whether Box geometry is being used and so naming ordering correctly set.");
 
   }
 

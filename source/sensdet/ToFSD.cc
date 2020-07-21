@@ -28,7 +28,7 @@ namespace nexus {
   ToFSD::ToFSD(G4String sdname):
     G4VSensitiveDetector(sdname),
     naming_order_(0), sensor_depth_(0), mother_depth_(0),
-    boundary_(0)
+    boundary_(0), box_geom_(false)
   {
     // Register the name of the collection of hits
     collectionName.insert(GetCollectionUniqueName());
@@ -140,7 +140,7 @@ namespace nexus {
       G4int motherid = touchable->GetCopyNumber(mother_depth_);
       pmtid = naming_order_*motherid + pmtid;
     }
-    else{
+    if (box_geom_) {
       std::vector<G4int> init_ids ({ 0, 4, 32, 36, 64, 68, 96, 100 });
       G4int motherid = touchable->GetCopyNumber(mother_depth_);
       G4int first_id = (init_ids)[motherid - 1];
@@ -148,6 +148,7 @@ namespace nexus {
     }
     return pmtid;
   }
+
 
 
   void ToFSD::EndOfEvent(G4HCofThisEvent* /*HCE*/)

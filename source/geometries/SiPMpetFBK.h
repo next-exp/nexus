@@ -49,6 +49,7 @@ namespace nexus {
     G4double eff_;
 
     G4double time_binning_, sipm_size_;
+    G4bool   box_geom_;
 
      // Messenger for the definition of control commands
     G4GenericMessenger* msg_;

@@ -9,6 +9,7 @@
 /Geometry/SiPMpet/visibility true
 /Geometry/SiPMpet/time_binning 1. microsecond
 /Geometry/SiPMpet/naming_order 0
+/Geometry/SiPMpet/box_geom true
 
 ### GENERATOR
 /Generator/Back2back/region CENTER

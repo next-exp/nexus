@@ -65,6 +65,9 @@ namespace nexus {
     /// Set a time binning for the pmt hits
     void SetTimeBinning(G4double);
 
+    /// Set the box geometry parameter
+    void SetBoxGeom(G4bool);
+
     /// Return the unique name of the hits collection created
     /// by this sensitive detector. This will be used by the
     /// persistency manager to select the collection.
@@ -85,6 +88,8 @@ namespace nexus {
 
     G4OpBoundaryProcess* boundary_; ///< Pointer to the optical boundary process
 
+    G4bool box_geom_; ///< Boolean required to change the naming_order_ for the case of the BoxSetup
+
     PmtHitsCollection* HC_; ///< Pointer to the collection of hits
   };
 
@@ -104,6 +109,8 @@ namespace nexus {
 
   inline G4double ToFSD::GetTimeBinning() const { return timebinning_; }
   inline void ToFSD::SetTimeBinning(G4double tb) { timebinning_ = tb; }
+
+  inline void ToFSD::SetBoxGeom(G4bool bg) { box_geom_ = bg; }
 
 } // end namespace nexus
 
