@@ -9,8 +9,8 @@
 #ifndef NEXT_FLEX_FIELD_CAGE_H
 #define NEXT_FLEX_FIELD_CAGE_H
 
-#include <G4ThreeVector.hh>
 #include "BaseGeometry.h"
+#include <G4ThreeVector.hh>
 
 class G4LogicalVolume;
 class G4VPhysicalVolume;

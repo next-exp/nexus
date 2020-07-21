@@ -10,7 +10,6 @@
 #define NEXT_FLEX_H
 
 #include "BaseGeometry.h"
-
 #include <G4ThreeVector.hh>
 
 class G4LogicalVolume;

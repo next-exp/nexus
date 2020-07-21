@@ -11,6 +11,7 @@
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "XenonGasProperties.h"
+#include "PmtR11410.h"
 #include "IonizationSD.h"
 #include "UniformElectricDriftField.h"
 #include "CylinderPointSampler2020.h"

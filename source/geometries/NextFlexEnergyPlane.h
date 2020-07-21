@@ -9,11 +9,9 @@
 #ifndef NEXT_FLEX_ENERGY_PLANE_H
 #define NEXT_FLEX_ENERGY_PLANE_H
 
+#include "BaseGeometry.h"
 #include <G4ThreeVector.hh>
 #include <vector>
-
-#include "BaseGeometry.h"
-#include "PmtR11410.h"
 
 class G4LogicalVolume;
 class G4VPhysicalVolume;
@@ -26,6 +24,7 @@ class G4Navigator;
 
 namespace nexus {
 
+  class PmtR11410;
   class CylinderPointSampler2020;
 
   class NextFlexEnergyPlane: public BaseGeometry {

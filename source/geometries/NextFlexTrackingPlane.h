@@ -9,11 +9,9 @@
 #ifndef NEXT_FLEX_TRACKING_PLANE_H
 #define NEXT_FLEX_TRACKING_PLANE_H
 
+#include "BaseGeometry.h"
 #include <G4ThreeVector.hh>
 #include <vector>
-
-#include "BaseGeometry.h"
-
 
 class G4LogicalVolume;
 class G4VPhysicalVolume;
