@@ -11,7 +11,7 @@
 ### ACTIONS
 /Actions/RegisterRunAction      DEFAULT
 
-/Actions/RegisterEventAction    EL_SIM
+/Actions/RegisterEventAction    SAVE_ALL
 #/Actions/RegisterEventAction    DEFAULT
 
 /Actions/RegisterTrackingAction OPTICAL
@@ -31,8 +31,8 @@
 #/PhysicsList/RegisterPhysics G4IonPhysics
 /PhysicsList/RegisterPhysics G4OpticalPhysics
 /PhysicsList/RegisterPhysics NexusPhysics
-/PhysicsList/RegisterPhysics G4StepLimiterPhysic#s
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 
 ### EXTRA CONFIGURATION
-/nexus/RegisterMacro macros/NextFlex.config
+/nexus/RegisterMacro macros/NextFlex.config.mac

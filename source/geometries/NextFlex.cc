@@ -1,7 +1,11 @@
 // -----------------------------------------------------------------------------
 //  nexus | NextFlex.cc
 //
-//  NEXT-Flex Detector geometry for performance studies.
+//  NEXT-Flex Detector is a very flexible geometry for performance studies.
+//  Many of the dimensions of the TrackingPlane, FieldCage and WLS-fibers barrel
+//  are settable by paramater.
+//  A typical use of this geometry can be the performance comparison between
+//  different TrackingPlane configurations(EL, SiPM sizes, pitch ...).  
 //
 //  The NEXT Collaboration
 // -----------------------------------------------------------------------------
@@ -42,6 +46,7 @@ NextFlex::NextFlex():
   gas_pressure_      (15.  * bar),
   gas_temperature_   (300. * kelvin),
   e_lifetime_        (1000. * ms),
+  ics_thickness_     (12. * cm),
   adhoc_x_           (0.),              // Vertex-X in case of AD_HOC region
   adhoc_y_           (0.),              // Vertex-Y in case of AD_HOC region
   adhoc_z_           (0.)               // Vertex-Z in case of AD_HOC region
@@ -158,7 +163,7 @@ void NextFlex::DefineMaterials()
     xenon_gas_ = MaterialsList::GXeDepleted(gas_pressure_, gas_temperature_);
 
   else
-    G4Exception("[NextParam]", "DefineMaterials()", FatalException,
+    G4Exception("[NextFlex]", "DefineMaterials()", FatalException,
     "Unknown xenon gas type. Valid options are naturalXe, enrichedXe or depletedXe.");
 
   xenon_gas_->
@@ -184,7 +189,7 @@ void NextFlex::Construct()
 
   // The lab
   G4String lab_name = "LABORATORY";
-  G4double lab_size = 50. * m;
+  G4double lab_size = 20. * m;
 
   G4Box* lab_solid_vol = new G4Box(lab_name, lab_size/2.,
                                    lab_size/2., lab_size/2.);
@@ -199,7 +204,7 @@ void NextFlex::Construct()
 
   // The Gas
   G4String gas_name = "GAS";
-  G4double gas_size = 20. * m;
+  G4double gas_size = 10. * m;
 
   G4Box* gas_solid_vol = new G4Box(gas_name, gas_size/2.,
                                    gas_size/2., gas_size/2.);
@@ -211,7 +216,7 @@ void NextFlex::Construct()
 
   G4VPhysicalVolume* gas_phys_vol =
     new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), gas_logic_vol,
-                      gas_name, lab_logic_vol, false, 0, true);
+                      gas_name, lab_logic_vol, false, 0, verbosity_);
 
   // The Field Cage
   field_cage_->SetMotherLogicalVolume(gas_logic_vol);

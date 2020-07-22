@@ -262,7 +262,7 @@ void NextFlexFieldCage::DefineMaterials()
     wls_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::TPH());
   }
   else {
-    G4Exception("[NextFlex]", "FieldCage::DefineMaterials()", FatalException,
+    G4Exception("[NextFlexFieldCage]", "DefineMaterials()", FatalException,
                 "Unknown UV shifting material. Valid options are NONE, TPB or TPH.");
   }
 
@@ -294,7 +294,7 @@ void NextFlexFieldCage::DefineMaterials()
     fiber_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::Y11());
   }
   else {
-    G4Exception("[NextParam]", "FieldCage::DefineMaterials()", FatalException,
+    G4Exception("[NextFlexFieldCage]", "DefineMaterials()", FatalException,
     "Unknown inner WLS material. Valid options are EJ280, EJ286 or Y11.");
   }
 
@@ -360,7 +360,6 @@ void NextFlexFieldCage::BuildActive()
   G4LogicalVolume* active_logic =
     new G4LogicalVolume(active_solid, xenon_gas_, active_name);
 
-  //G4VPhysicalVolume* active_phys =
   active_phys_ =
     new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,active_length_/2.),
                       active_logic, active_name, mother_logic_,
@@ -693,7 +692,6 @@ void NextFlexFieldCage::BuildFibers()
     G4LogicalVolume* oClad_logic =
       new G4LogicalVolume(oClad_solid, oClad_mat_, oClad_name);
 
-    //G4VPhysicalVolume* oClad_phys =
     new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,fiber_posZ),
                       oClad_logic, oClad_name, inn_logic_volume,
                       false, 0, verbosity_);
@@ -723,7 +721,6 @@ void NextFlexFieldCage::BuildFibers()
     G4LogicalVolume* iClad_logic =
       new G4LogicalVolume(iClad_solid, iClad_mat_, iClad_name);
 
-    //G4VPhysicalVolume* iClad_phys =
     new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,fiber_posZ),
                       iClad_logic, iClad_name, inn_logic_volume,
                       false, 0, verbosity_);
@@ -780,7 +777,6 @@ void NextFlexFieldCage::BuildFibers()
   G4LogicalVolume* fiber_iWls_logic =
     new G4LogicalVolume(fiber_iWls_solid, wls_mat_, fiber_iWls_name);
 
-  //G4VPhysicalVolume* fiber_iWls_phys =
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., 0.), fiber_iWls_logic,
                     fiber_iWls_name, out_logic_volume, false, 0, verbosity_);
 
@@ -797,7 +793,6 @@ void NextFlexFieldCage::BuildFibers()
   G4LogicalVolume* fiber_oWls_logic =
     new G4LogicalVolume(fiber_oWls_solid, wls_mat_, fiber_oWls_name);
 
-  //G4VPhysicalVolume* fiber_oWls_phys =
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., 0.), fiber_oWls_logic,
                     fiber_oWls_name, out_logic_volume, false, 0, verbosity_);
 
@@ -835,7 +830,7 @@ void NextFlexFieldCage::BuildFiberSensors()
   G4double fiber_sensor_phi = twopi / num_fiber_sensors_;
 
   if (num_fibers_ != num_fiber_sensors_)
-    G4cout << "* WARNING::BuildFiberSensors - Diferent sizes of fibers and their sensors"
+    G4cout << "* WARNING::BuildFiberSensors - Different sizes of fibers and their sensors"
            << G4endl;
 
   // Positions to place the sensors
@@ -854,7 +849,7 @@ void NextFlexFieldCage::BuildFiberSensors()
   left_sensor_ ->SetOpticalProperties(photosensor_mpt);
   right_sensor_->SetOpticalProperties(photosensor_mpt);
 
-  // Adding to sensors encasing, the Reractive Index of fibers to avoid reflections
+  // Adding to sensors encasing, the Refractive Index of fibers to avoid reflections
   G4MaterialPropertyVector* fibers_rindex = 
     fiber_mat_->GetMaterialPropertiesTable()->GetProperty("RINDEX");
   left_sensor_ ->SetWindowRefractiveIndex(fibers_rindex);
@@ -948,7 +943,7 @@ G4ThreeVector NextFlexFieldCage::GenerateVertex(const G4String& region) const
     vertex = fiber_gen_->GenerateVertex("VOLUME");
   }
   else {
-    G4Exception("[NextNew]", "GenerateVertex()", FatalException,
+    G4Exception("[NextFlexFieldCage]", "GenerateVertex()", FatalException,
                 "Unknown vertex generation region!");
   }
 

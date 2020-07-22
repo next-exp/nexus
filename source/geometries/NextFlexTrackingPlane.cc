@@ -206,7 +206,7 @@ void NextFlexTrackingPlane::DefineMaterials()
     wls_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::TPH());
   }
   else {
-    G4Exception("[NextFlex]", "EnergyPlane::DefineMaterials()", FatalException,
+    G4Exception("[NextFlexTrackingPlane]", "DefineMaterials()", FatalException,
                 "Unknown UV shifting material. Valid options are NONE, TPB or TPH.");
   }
 }
@@ -351,7 +351,7 @@ void NextFlexTrackingPlane::BuildTeflon()
   G4double SiPM_pos_z = - hole_length/2. + SiPM_case_thickness_ / 2.;
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., SiPM_pos_z), SiPM_logic,
-                    SiPM_logic->GetName(), hole_logic, false, 0, true);
+                    SiPM_logic->GetName(), hole_logic, false, 0, verbosity_);
 
   // Replicating the teflon & wls-teflon holes
   for (G4int i=0; i<num_SiPMs_; i++) {
@@ -384,20 +384,12 @@ void NextFlexTrackingPlane::BuildTeflon()
 
 
   /// Visibilities ///
-  if (visibility_) {
-    G4VisAttributes light_blue_col = nexus::LightBlue();
-    teflon_logic    ->SetVisAttributes(light_blue_col);
-    teflon_wls_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    hole_logic      ->SetVisAttributes(G4VisAttributes::Invisible);
-    wls_hole_logic ->SetVisAttributes(G4VisAttributes::Invisible);
-  }
-  else {
-    teflon_logic    ->SetVisAttributes(G4VisAttributes::Invisible);
-    teflon_wls_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    hole_logic      ->SetVisAttributes(G4VisAttributes::Invisible);
-    wls_hole_logic  ->SetVisAttributes(G4VisAttributes::Invisible);
-  }
-
+  if (visibility_) teflon_logic->SetVisAttributes(nexus::LightBlue());
+  else             teflon_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  
+  teflon_wls_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  hole_logic      ->SetVisAttributes(G4VisAttributes::Invisible);
+  wls_hole_logic ->SetVisAttributes(G4VisAttributes::Invisible);
 }
 
 
@@ -481,7 +473,7 @@ G4ThreeVector NextFlexTrackingPlane::GenerateVertex(const G4String& region) cons
   }
 
   else {
-    G4Exception("[NextNew]", "GenerateVertex()", FatalException,
+    G4Exception("[NextFlexTrackingPlane]", "GenerateVertex()", FatalException,
                 "Unknown vertex generation region!");
   }
 

@@ -169,7 +169,7 @@ void NextFlexEnergyPlane::DefineMaterials()
     wls_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::TPH());
   }
   else {
-    G4Exception("[NextFlex]", "EnergyPlane::DefineMaterials()", FatalException,
+    G4Exception("[NextFlexEnergyPlane]", "DefineMaterials()", FatalException,
                 "Unknown UV shifting material. Valid options are NONE, TPB or TPH.");
   }
 }
@@ -223,7 +223,6 @@ void NextFlexEnergyPlane::BuildCopper()
   G4LogicalVolume* copper_logic =
     new G4LogicalVolume(copper_solid, copper_mat_, copper_name);  
 
-  //G4VPhysicalVolume* copper_phys =
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., copper_posZ), copper_logic,
                     copper_name, mother_logic_, false, 0, verbosity_);
 
@@ -261,7 +260,6 @@ void NextFlexEnergyPlane::BuildTeflon()
   G4LogicalVolume* teflon_logic =
     new G4LogicalVolume(teflon_solid, teflon_mat_, teflon_name);
 
-  //G4VPhysicalVolume* teflon_phys =
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., teflon_posZ), teflon_logic,
                     teflon_name, mother_logic_, false, 0, verbosity_);
 
@@ -327,11 +325,11 @@ void NextFlexEnergyPlane::BuildPMTs()
   // This PMT arrangement replicates the one of NEXT100, so first of all
   // let's check that sensor diameter is consistent with NEXT100 diameter
   if (diameter_ > 1000. * mm) {
-    G4Exception("[NextFlex]", "EnergyPlane::BuildPMTs()", JustWarning,
+    G4Exception("[NextFlexEnergyPlane]", "BuildPMTs()", JustWarning,
                 "Building PMTs ala NEXT100 with detector diameter much bigger");
   }
   else if (diameter_ < 984. * mm) {
-    G4Exception("[NextFlex]", "EnergyPlane::BuildPMTs()", FatalException,
+    G4Exception("[NextFlexEnergyPlane]", "BuildPMTs()", FatalException,
                 "Building PMTs ala NEXT100 with detector diameter much smaller");
   }
 
@@ -364,11 +362,10 @@ void NextFlexEnergyPlane::BuildPMTs()
   G4LogicalVolume* window_logic =
     new G4LogicalVolume(window_solid, sapphire_mat_, window_name);
 
-  //G4VPhysicalVolume* window_phys =
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., window_posz), window_logic,
                     window_name, pmt_hole_logic, false, 0, verbosity_);
 
-  // Vextex generator
+  // Vertex generator
   window_gen_ =
     new CylinderPointSampler2020(0., pmt_hole_diameter_/2., window_thickness_/2., 0., twopi,
                                  nullptr, G4ThreeVector(0., 0., window_thickness_/2.));
@@ -385,7 +382,6 @@ void NextFlexEnergyPlane::BuildPMTs()
   G4LogicalVolume* window_wls_logic =
     new G4LogicalVolume(window_wls_solid, wls_mat_, window_wls_name);
 
-  //G4VPhysicalVolume* window_wls_phys =
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., window_wls_posz), window_wls_logic,
                     window_wls_name, window_logic, false, 0, verbosity_);
 
@@ -408,7 +404,6 @@ void NextFlexEnergyPlane::BuildPMTs()
   G4LogicalVolume* optical_pad_logic =
     new G4LogicalVolume(optical_pad_solid, optical_pad_mat_, optical_pad_name);
 
-  //G4VPhysicalVolume* optical_pad_phys =
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., optical_posz), optical_pad_logic,
                     optical_pad_name, pmt_hole_logic, false, 0, verbosity_);
 
@@ -433,7 +428,6 @@ void NextFlexEnergyPlane::BuildPMTs()
   G4double hole_posZ = pmt_iniZ_ + pmt_hole_length/2.;
   G4ThreeVector pmt_hole_pos;
   for (int pmt_id=0; pmt_id < num_pmts_; pmt_id++) {
-  //for (int pmt_id=0; pmt_id < 40; pmt_id++) {
     pmt_hole_pos = pmt_positions_[pmt_id];
     pmt_hole_pos.setZ(hole_posZ);
     new G4PVPlacement(nullptr, pmt_hole_pos, pmt_hole_logic, pmt_hole_name,
@@ -556,16 +550,14 @@ G4ThreeVector NextFlexEnergyPlane::GenerateVertex(const G4String& region) const
 
   else if (region == "EP_WINDOWS") {
     vertex = window_gen_->GenerateVertex("VOLUME");
-    //G4cout << vertex << G4endl;
     // XY placement
     G4double rand = num_pmts_ * G4UniformRand();
     G4ThreeVector window_pos = pmt_positions_[int(rand)];
     vertex += window_pos;
-    //G4cout << vertex << G4endl;
   }
 
   else {
-    G4Exception("[NextNew]", "GenerateVertex()", FatalException,
+    G4Exception("[NextFlexEnergyPlane]", "GenerateVertex()", FatalException,
                 "Unknown vertex generation region!");
   }
 
