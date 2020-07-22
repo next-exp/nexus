@@ -115,7 +115,7 @@ namespace nexus {
 
     G4double SiPM_size_x_;
     G4double SiPM_size_y_;
-    G4double SiPM_case_thickness_;
+    G4double SiPM_size_z_;
     G4double SiPM_pitch_x_;
     G4double SiPM_pitch_y_;
     G4double SiPM_binning_;

@@ -51,6 +51,7 @@ NextFlexTrackingPlane::NextFlexTrackingPlane():
   SiPM_ANODE_dist_   (10.  * mm),   // Distance from ANODE to SiPM surface
   SiPM_size_x_       ( 1.3 * mm),   // Size X (width) of SiPMs
   SiPM_size_y_       ( 1.3 * mm),   // Size Y (height) of SiPMs
+  SiPM_size_z_       ( 2.0 * mm),   // Size Z (thickness) of SiPMs
   SiPM_pitch_x_      (15.6 * mm),   // SiPMs pitch X
   SiPM_pitch_y_      (15.6 * mm),   // SiPMs pitch Y
   SiPM_binning_      ( 1.  * us),   // SiPMs time binning size
@@ -67,12 +68,10 @@ NextFlexTrackingPlane::NextFlexTrackingPlane():
   DefineConfigurationParameters();
 
   // Hard-wired dimensions & components
-  SiPM_case_thickness_ = 2. * mm;
   wls_thickness_       = 1. * um;
 
   // The SiPM
-  SiPM_ = new GenericPhotosensor("TP_SiPM", SiPM_size_x_, SiPM_size_y_, 
-                                 SiPM_case_thickness_);
+  SiPM_ = new GenericPhotosensor("TP_SiPM", SiPM_size_x_, SiPM_size_y_, SiPM_size_z_);
 
   // Initializing the geometry navigator (used in vertex generation)
   geom_navigator_ =
@@ -147,6 +146,13 @@ void NextFlexTrackingPlane::DefineConfigurationParameters()
   sipm_sizeY_cmd.SetUnitCategory("Length");
   sipm_sizeY_cmd.SetRange("tp_sipm_sizeY>0.");
 
+  G4GenericMessenger::Command& sipm_sizeZ_cmd =
+    msg_->DeclareProperty("tp_sipm_sizeZ", SiPM_size_z_,
+                          "SizeZ of tracking SiPMs.");
+  sipm_sizeZ_cmd.SetParameterName("tp_sipm_sizeZ", false);
+  sipm_sizeZ_cmd.SetUnitCategory("Length");
+  sipm_sizeZ_cmd.SetRange("tp_sipm_sizeZ>0.");
+
   G4GenericMessenger::Command& sipm_pitchX_cmd =
     msg_->DeclareProperty("tp_sipm_pitchX", SiPM_pitch_x_,
                           "PitchX of tracking SiPMs.");
@@ -173,7 +179,7 @@ void NextFlexTrackingPlane::DefineConfigurationParameters()
 
 void NextFlexTrackingPlane::ComputeDimensions()
 {
-  teflon_iniZ_ = origin_z_ - SiPM_ANODE_dist_ - SiPM_case_thickness_;
+  teflon_iniZ_ = origin_z_ - SiPM_ANODE_dist_ - SiPM_size_z_;
   copper_iniZ_ = teflon_iniZ_ - copper_thickness_;
 
   // Generate SiPM positions
@@ -348,7 +354,7 @@ void NextFlexTrackingPlane::BuildTeflon()
     new G4LogicalVolume(hole_solid, xenon_gas_, hole_name);
 
   // Placing the SiPM into the teflon hole
-  G4double SiPM_pos_z = - hole_length/2. + SiPM_case_thickness_ / 2.;
+  G4double SiPM_pos_z = - hole_length/2. + SiPM_size_z_ / 2.;
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., SiPM_pos_z), SiPM_logic,
                     SiPM_logic->GetName(), hole_logic, false, 0, verbosity_);
@@ -379,7 +385,7 @@ void NextFlexTrackingPlane::BuildTeflon()
     G4cout << "* Teflon Z positions: " << teflon_iniZ_
            << " to " << teflon_iniZ_ + teflon_thickness_ << G4endl;
     G4cout << "* SiPM Z positions: " << teflon_iniZ_ 
-           << " to " << teflon_iniZ_ + SiPM_case_thickness_ << G4endl;
+           << " to " << teflon_iniZ_ + SiPM_size_z_ << G4endl;
   } 
 
 
