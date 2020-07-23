@@ -673,8 +673,8 @@ void NextFlexFieldCage::BuildFibers()
   // Lengths & positions
   G4double fiber_length = fc_length_ +  2. * fiber_extra_length_;
   fiber_iniZ_           = - el_gap_length_ - fiber_extra_length_;
-  fiber_finZ_           = fiber_iniZ_  + fiber_length;
-  G4double fiber_posZ   = fiber_iniZ_  + fiber_length/2.;
+  fiber_finZ_           = fiber_iniZ_ + fiber_length;
+  G4double fiber_posZ   = fiber_iniZ_ + fiber_length/2.;
 
   // Most out / inn volumes
   G4LogicalVolume* out_logic_volume = mother_logic_;
@@ -747,10 +747,9 @@ void NextFlexFieldCage::BuildFibers()
   G4LogicalVolume* core_logic =
     new G4LogicalVolume(core_solid, fiber_mat_, core_name);
 
-  G4VPhysicalVolume* core_phys =
-    new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,fiber_posZ),
-                      core_logic, core_name, inn_logic_volume,
-                      false, 0, verbosity_);
+  new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,fiber_posZ),
+                    core_logic, core_name, inn_logic_volume,
+                    false, 0, verbosity_);
 
   // Visibility
   if (visibility_) core_logic->SetVisAttributes(nexus::LightGreen());
@@ -760,7 +759,8 @@ void NextFlexFieldCage::BuildFibers()
   if (fiber_claddings_ == 0) out_logic_volume = core_logic;
 
   // Vertex generator
-  fiber_gen_ = new CylinderPointSampler2020(core_phys);
+  fiber_gen_ = new CylinderPointSampler2020(inner_rad, outer_rad, fiber_length/2., 0., twopi, nullptr,
+                                            G4ThreeVector(0., 0., fiber_iniZ_ + fiber_length/2.));
 
 
   /// The UV wavelength Shifter in FIBERS ///
@@ -940,7 +940,10 @@ G4ThreeVector NextFlexFieldCage::GenerateVertex(const G4String& region) const
     vertex = light_tube_gen_->GenerateVertex("VOLUME");
   }
   else if (region == "FIBER_CORE") {
-    vertex = fiber_gen_->GenerateVertex("VOLUME");
+    if (fc_with_fibers_) vertex = fiber_gen_->GenerateVertex("VOLUME");
+    else
+      G4Exception("[NextFlexFieldCage]", "GenerateVertex()", FatalException,
+              "Trying to generate Vertices in NON-existing fibers");
   }
   else {
     G4Exception("[NextFlexFieldCage]", "GenerateVertex()", FatalException,

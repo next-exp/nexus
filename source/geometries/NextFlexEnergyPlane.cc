@@ -227,7 +227,6 @@ void NextFlexEnergyPlane::BuildCopper()
                     copper_name, mother_logic_, false, 0, verbosity_);
 
   // Vertex generator
-  //copper_gen_ = new CylinderPointSampler2020(copper_phys);
   copper_gen_ = new CylinderPointSampler2020(0., diameter_/2., copper_thickness_/2.,
                                              0, twopi, nullptr,
                                              G4ThreeVector(0., 0., copper_posZ));
@@ -549,11 +548,16 @@ G4ThreeVector NextFlexEnergyPlane::GenerateVertex(const G4String& region) const
   }
 
   else if (region == "EP_WINDOWS") {
-    vertex = window_gen_->GenerateVertex("VOLUME");
-    // XY placement
-    G4double rand = num_pmts_ * G4UniformRand();
-    G4ThreeVector window_pos = pmt_positions_[int(rand)];
-    vertex += window_pos;
+    if (ep_with_PMTs_) {
+      vertex = window_gen_->GenerateVertex("VOLUME");
+      // XY placement
+      G4double rand = num_pmts_ * G4UniformRand();
+      G4ThreeVector window_pos = pmt_positions_[int(rand)];
+      vertex += window_pos;
+      }
+    else
+      G4Exception("[NextFlexEnergyPlane]", "GenerateVertex()", FatalException,
+      "Trying to generate Vertices in NON-existing EP Windows");
   }
 
   else {
