@@ -284,10 +284,11 @@ void NextFlex::BuildICS(G4LogicalVolume* mother_logic) {
   copper_gen_ = new CylinderPointSampler2020(ics_phys);
 
   // Verbosity
-  if (verbosity_)
+  if (verbosity_) {
     G4cout << "* ICS.  Inner Rad: " << ics_inner_rad << 
               "   Outer Rad: " << ics_outer_rad << G4endl;
     G4cout << "* ICS Z positions: " << ics_iniZ << " to " << ics_finZ << G4endl;
+  }
 }
 
 

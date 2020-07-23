@@ -89,13 +89,7 @@ NextFlexFieldCage::NextFlexFieldCage():
   fiber_light_tube_gap_   = 2.  * mm;   // Separation gap between fibers & light tube
   fiber_sensor_size_      = 2.  * mm;   // Side length of squared fiber sensors
                                         // (ideally equal to fiber_thickness_)
-  fiber_sensor_thickness_ = 2.  * mm;
-
-  // The sensors (Setting thickness to a fix value of 2 mm)
-  left_sensor_  = new GenericPhotosensor("F_SENSOR_L", fiber_sensor_size_,
-                                         fiber_sensor_size_, fiber_sensor_thickness_);
-  right_sensor_ = new GenericPhotosensor("F_SENSOR_R", fiber_sensor_size_,
-                                         fiber_sensor_size_, fiber_sensor_thickness_);
+  fiber_sensor_thickness_ = 2.  * mm;   // (Thickness set to a fix value of 2 mm)
 }
 
 
@@ -329,6 +323,12 @@ void NextFlexFieldCage::Construct()
 
   // Define materials.
   DefineMaterials();
+
+  // Build the sensors 
+  left_sensor_  = new GenericPhotosensor("F_SENSOR_L", fiber_sensor_size_,
+                                         fiber_sensor_size_, fiber_sensor_thickness_);
+  right_sensor_ = new GenericPhotosensor("F_SENSOR_R", fiber_sensor_size_,
+                                         fiber_sensor_size_, fiber_sensor_thickness_);
 
   // Build components
   BuildActive();

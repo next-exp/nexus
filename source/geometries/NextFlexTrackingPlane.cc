@@ -59,7 +59,6 @@ NextFlexTrackingPlane::NextFlexTrackingPlane():
   teflon_thickness_  ( 5.  * mm),   // Thickness of the teflon mask
   teflon_hole_diam_  ( 7.  * mm)    // Diameter of teflon mask holes
 {
-
   // Messenger
   msg_ = new G4GenericMessenger(this, "/Geometry/NextFlex/",
                                 "Control commands of the NextFlex geometry.");
@@ -68,10 +67,7 @@ NextFlexTrackingPlane::NextFlexTrackingPlane():
   DefineConfigurationParameters();
 
   // Hard-wired dimensions & components
-  wls_thickness_       = 1. * um;
-
-  // The SiPM
-  SiPM_ = new GenericPhotosensor("TP_SiPM", SiPM_size_x_, SiPM_size_y_, SiPM_size_z_);
+  wls_thickness_  = 1. * um;
 
   // Initializing the geometry navigator (used in vertex generation)
   geom_navigator_ =
@@ -231,11 +227,15 @@ void NextFlexTrackingPlane::Construct()
     G4cout << G4endl << "*** NEXT-Flex Tracking Plane ..." << G4endl;
   }
 
+
   // Getting volumes dimensions based on parameters.
   ComputeDimensions();
 
   // Define materials.
   DefineMaterials();
+
+  // The SiPM
+  SiPM_ = new GenericPhotosensor("TP_SiPM", SiPM_size_x_, SiPM_size_y_, SiPM_size_z_);
 
   // Copper
   BuildCopper();
