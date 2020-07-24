@@ -91,7 +91,7 @@ void PersistencyManager::OpenFile(G4String filename)
   if (!h5writer_) {
     h5writer_ = new HDF5Writer();
     G4String hdf5file = filename + ".h5";
-    h5writer_->Open(hdf5file);
+    h5writer_->Open(hdf5file, store_steps_);
     return;
   } else {
     G4Exception("[PersistencyManager]", "OpenFile()",
