@@ -97,7 +97,7 @@ namespace nexus {
     // Unknown region
     else {
       G4Exception("[CylinderPointSampler2020]", "GenerateVertex()", FatalException,
-		  "Unknown Region!");
+                  "Unknown Region!");
     }
 
     return RotateAndTranslate(G4ThreeVector(x, y, z));

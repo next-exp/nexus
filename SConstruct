@@ -197,6 +197,8 @@ if not env['LIBPATH']:
         Abort('ROOT libraries could not be found.')
 
 
+    ## HDF5 configuration ----------------------------------
+
     if env['HDF5_DIR'] != NULL_PATH:
         env.PrependENVPath('PATH', env['HDF5_DIR'])
     try: 

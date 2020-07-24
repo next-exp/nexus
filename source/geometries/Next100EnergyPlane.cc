@@ -599,11 +599,10 @@ namespace nexus {
 
   void Next100EnergyPlane::PrintPMTPositions() const
   {
-    G4cout << "*** PMT xy positions ***" << G4endl;
+    G4cout << "*** PMT xyz positions ***" << G4endl;
     G4cout << G4endl;
     for (size_t i=0; i<pmt_positions_.size(); i++) {
-      G4cout << i << ": (" << pmt_positions_.at(i)[0] << ", "
-	     << pmt_positions_.at(i)[1] << ")"  << G4endl;
+      G4cout << "PMTR11410 " << i << "  " << pmt_positions_[i] << G4endl;
     }
   }
 

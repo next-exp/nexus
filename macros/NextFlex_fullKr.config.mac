@@ -1,0 +1,110 @@
+## ----------------------------------------------------------------------------
+## nexus | NextFlex.config.mac
+##
+## Configuration  macro to simulate Kr83 decays in the NextFlex detector
+## with generation and transportation of optical photons.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+### GEOMETRY
+
+# GAS SETTING
+/Geometry/NextFlex/gas              enrichedXe
+/Geometry/NextFlex/gas_pressure     15. bar
+/Geometry/NextFlex/gas_temperature  300. kelvin
+/Geometry/NextFlex/sc_yield         25510. 1/MeV
+/Geometry/NextFlex/e_lifetime       1000. ms
+
+# ACTIVE
+/Geometry/NextFlex/active_length      116. cm
+/Geometry/NextFlex/active_diam        100. cm
+/Geometry/NextFlex/drift_transv_diff  1. mm/sqrt(cm)
+/Geometry/NextFlex/drift_long_diff    .3 mm/sqrt(cm)
+
+# FIELD CAGE
+/Geometry/NextFlex/buffer_length    280. mm
+
+/Geometry/NextFlex/cathode_transparency .98
+/Geometry/NextFlex/anode_transparency   .88
+/Geometry/NextFlex/gate_transparency    .88
+
+/Geometry/NextFlex/el_gap_length    10.  mm
+/Geometry/NextFlex/el_field_on      true
+/Geometry/NextFlex/el_field_int     16. kilovolt/cm
+/Geometry/NextFlex/el_transv_diff   0. mm/sqrt(cm)
+/Geometry/NextFlex/el_long_diff     0. mm/sqrt(cm)
+
+/Geometry/NextFlex/fc_wls_mat       TPB
+
+/Geometry/NextFlex/fc_with_fibers   true
+/Geometry/NextFlex/fiber_mat        EJ280
+/Geometry/NextFlex/fiber_claddings  2
+
+/Geometry/NextFlex/fiber_sensor_time_binning  25. ns
+
+
+# ENERGY PLANE
+/Geometry/NextFlex/ep_with_PMTs         false
+/Geometry/NextFlex/ep_with_teflon       true
+/Geometry/NextFlex/ep_copper_thickness  12. cm
+/Geometry/NextFlex/ep_wls_mat           TPB
+
+/Geometry/PmtR11410/SD_depth            3
+/Geometry/PmtR11410/time_binning        25. ns
+
+# TRACKING PLANE
+/Geometry/NextFlex/tp_copper_thickness  12. cm
+/Geometry/NextFlex/tp_teflon_thickness   5. mm
+/Geometry/NextFlex/tp_teflon_hole_diam   7. mm
+/Geometry/NextFlex/tp_wls_mat           TPB
+/Geometry/NextFlex/tp_sipm_anode_dist   10. mm
+/Geometry/NextFlex/tp_sipm_sizeX        1.3 mm
+/Geometry/NextFlex/tp_sipm_sizeY        1.3 mm
+/Geometry/NextFlex/tp_sipm_sizeZ        2.0 mm
+/Geometry/NextFlex/tp_sipm_pitchX       15. mm
+/Geometry/NextFlex/tp_sipm_pitchY       15. mm
+/Geometry/NextFlex/tp_sipm_time_binning 1.  microsecond
+
+# ICS
+/Geometry/NextFlex/ics_thickness  12. cm
+
+# VERBOSITY
+/Geometry/NextFlex/verbosity     true
+/Geometry/NextFlex/fc_verbosity  true
+/Geometry/NextFlex/ep_verbosity  true
+/Geometry/NextFlex/tp_verbosity  true
+
+# VISIBILITIES
+/Geometry/NextFlex/fc_visibility  true
+/Geometry/NextFlex/ep_visibility  true
+/Geometry/PmtR11410/visibility    true
+/Geometry/NextFlex/tp_visibility  true
+/Geometry/NextFlex/ics_visibility true
+
+
+### GENERATOR
+# Kripton
+/Generator/Kr83mGenerator/region  AD_HOC
+/Geometry/NextFlex/specific_vertex_X  0. mm
+/Geometry/NextFlex/specific_vertex_Y  0. mm
+/Geometry/NextFlex/specific_vertex_Z  580. mm
+
+
+### PHYSICS
+/PhysicsList/Nexus/clustering           true
+/PhysicsList/Nexus/drift                true
+/PhysicsList/Nexus/electroluminescence  true
+
+
+### VERBOSITY
+/control/verbose   0
+/run/verbose       0
+/event/verbose     0
+/tracking/verbose  0
+
+
+### CONTROL
+/nexus/random_seed            -1
+/nexus/persistency/start_id   0
+/nexus/persistency/outputFile NextFlex.next
