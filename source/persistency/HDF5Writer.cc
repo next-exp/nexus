@@ -29,7 +29,7 @@ HDF5Writer::~HDF5Writer()
 {
 }
 
-void HDF5Writer::Open(std::string fileName)
+void HDF5Writer::Open(std::string fileName, bool debug)
 {
   firstEvent_= true;
 
@@ -37,31 +37,35 @@ void HDF5Writer::Open(std::string fileName)
                       H5P_DEFAULT, H5P_DEFAULT );
 
   std::string group_name = "/MC";
-  group_ = createGroup(file_, group_name);
+  size_t group = createGroup(file_, group_name);
 
   std::string run_table_name = "configuration";
   memtypeRun_ = createRunType();
-  runTable_ = createTable(group_, run_table_name, memtypeRun_);
+  runTable_ = createTable(group, run_table_name, memtypeRun_);
 
   std::string sns_data_table_name = "sns_response";
   memtypeSnsData_ = createSensorDataType();
-  snsDataTable_ = createTable(group_, sns_data_table_name, memtypeSnsData_);
+  snsDataTable_ = createTable(group, sns_data_table_name, memtypeSnsData_);
 
   std::string hit_info_table_name = "hits";
   memtypeHitInfo_ = createHitInfoType();
-  hitInfoTable_ = createTable(group_, hit_info_table_name, memtypeHitInfo_);
+  hitInfoTable_ = createTable(group, hit_info_table_name, memtypeHitInfo_);
 
   std::string particle_info_table_name = "particles";
   memtypeParticleInfo_ = createParticleInfoType();
-  particleInfoTable_ = createTable(group_, particle_info_table_name, memtypeParticleInfo_);
+  particleInfoTable_ = createTable(group, particle_info_table_name, memtypeParticleInfo_);
 
   std::string sns_pos_table_name = "sns_positions";
   memtypeSnsPos_ = createSensorPosType();
-  snsPosTable_ = createTable(group_, sns_pos_table_name, memtypeSnsPos_);
+  snsPosTable_ = createTable(group, sns_pos_table_name, memtypeSnsPos_);
 
-  std::string step_table_name = "steps";
-  memtypeStep_ = createStepType();
-  stepTable_   = createTable(group_, step_table_name, memtypeStep_);
+  if (debug) {
+    std::string debug_group_name = "/DEBUG";
+    size_t debug_group = createGroup(file_, debug_group_name);
+    std::string step_table_name = "steps";
+    memtypeStep_ = createStepType();
+    stepTable_   = createTable(debug_group, step_table_name, memtypeStep_);
+  }
 
   isOpen_ = true;
 }

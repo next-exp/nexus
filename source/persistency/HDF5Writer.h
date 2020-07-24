@@ -25,7 +25,7 @@ namespace nexus {
     ~HDF5Writer();
 
     /// open file
-    void Open(std::string filename);
+    void Open(std::string filename, bool debug);
 
     /// close file
     void Close();
@@ -49,8 +49,6 @@ namespace nexus {
 
     bool isOpen_;
     bool firstEvent_; ///< First event
-
-    size_t group_; ///< group for everything
 
     //Datasets
     size_t runTable_;
