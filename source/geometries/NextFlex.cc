@@ -45,6 +45,7 @@ NextFlex::NextFlex():
   gas_name_          ("enrichedXe"),
   gas_pressure_      (15.  * bar),
   gas_temperature_   (300. * kelvin),
+  sc_yield_          (25510. * 1 / MeV),
   e_lifetime_        (1000. * ms),
   ics_thickness_     (12. * cm),
   adhoc_x_           (0.),              // Vertex-X in case of AD_HOC region
@@ -57,8 +58,6 @@ NextFlex::NextFlex():
                                 "Control commands of the NextFlex geometry.");
 
   // Hard-wired dimensions
-  sc_yield_ = 25510. * 1 / MeV;   // Scintillation yield
-
   lightTube_ICS_gap_ = 55. * mm;  // (Set as in NEXT100. To be checked)
 
   // Parametrized dimensions
@@ -107,6 +106,13 @@ void NextFlex::DefineConfigurationParameters()
   gas_temperature_cmd.SetUnitCategory("Temperature");
   gas_temperature_cmd.SetParameterName("gas_temperature", false);
   gas_temperature_cmd.SetRange("gas_temperature>0.");
+
+  new G4UnitDefinition("1/MeV","1/MeV", "1/Energy", 1/MeV);
+  G4GenericMessenger::Command& sc_yield_cmd =
+    msg_->DeclareProperty("sc_yield", sc_yield_,
+        "Set scintillation yield for GXe. It is in photons/MeV");
+  sc_yield_cmd.SetParameterName("sc_yield", true);
+  sc_yield_cmd.SetUnitCategory("1/Energy");
 
   G4GenericMessenger::Command& e_lifetime_cmd =
     msg_->DeclareProperty("e_lifetime", e_lifetime_,

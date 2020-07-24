@@ -13,6 +13,7 @@
 /Geometry/NextFlex/gas              enrichedXe
 /Geometry/NextFlex/gas_pressure     15. bar
 /Geometry/NextFlex/gas_temperature  300. kelvin
+/Geometry/NextFlex/sc_yield         25510. 1/MeV
 /Geometry/NextFlex/e_lifetime       1000. ms
 
 # ACTIVE
@@ -84,14 +85,13 @@
 
 ### GENERATOR
 # Kripton
-/Generator/Kr83mGenerator/region  ACTIVE
+/Generator/Kr83mGenerator/region  AD_HOC
 /Geometry/NextFlex/specific_vertex_X  0. mm
 /Geometry/NextFlex/specific_vertex_Y  0. mm
 /Geometry/NextFlex/specific_vertex_Z  580. mm
 
 
 ### PHYSICS
-/process/optical/scintillation/setTrackSecondariesFirst true
 /PhysicsList/Nexus/clustering           true
 /PhysicsList/Nexus/drift                true
 /PhysicsList/Nexus/electroluminescence  true
