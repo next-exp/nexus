@@ -1,3 +1,12 @@
+## ----------------------------------------------------------------------------
+## nexus | NextFlex.config.mac
+##
+## Configuration  macro to simulate Kr83 decays in the NextFlex detector
+## with generation and transportation of optical photons.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
 ### GEOMETRY
 
 # GAS SETTING
@@ -74,42 +83,11 @@
 
 
 ### GENERATOR
-# Scint generator
-#/Generator/ScintGenerator/region AD_HOC
-#/Geometry/NextFlex/specific_vertex_X 0. mm
-#/Geometry/NextFlex/specific_vertex_Y 0. mm
-#/Geometry/NextFlex/specific_vertex_Z 500. mm
-## (Kripton: 1046, 1MeV: 25510, Qbb: 62704)
-#/Generator/ScintGenerator/nphotons 100000
-
-# Single Particle
-#/Generator/SingleParticle/region      AD_HOC
-#/Geometry/NextFlex/specific_vertex_X  0. mm
-#/Geometry/NextFlex/specific_vertex_Y  535. mm
-#/Geometry/NextFlex/specific_vertex_Z  100. mm
-#/Generator/SingleParticle/particle   geantino
-##/Generator/SingleParticle/particle   opticalphoton
-##/Generator/SingleParticle/particle   e-
-##/Generator/SingleParticle/particle   alpha
-#/Generator/SingleParticle/min_energy 10.0 keV
-#/Generator/SingleParticle/max_energy 10.0 keV
-##/Generator/SingleParticle/min_energy 7.20625 eV
-##/Generator/SingleParticle/max_energy 7.20625 eV
-##/Generator/SingleParticle/min_energy 2.454 MeV
-##/Generator/SingleParticle/max_energy 2.454 MeV
-#/Generator/SingleParticle/momentum_X 0.
-#/Generator/SingleParticle/momentum_Y 0.
-#/Generator/SingleParticle/momentum_Z -1.
-
 # Kripton
 /Generator/Kr83mGenerator/region  ACTIVE
-#/Geometry/NextFlex/specific_vertex_X  0. mm
-#/Geometry/NextFlex/specific_vertex_Y  0. mm
-#/Geometry/NextFlex/specific_vertex_Z  580. mm
-
-
-### ACTIONS
-#/Actions/DefaultEventAction/energy_threshold 2.3 MeV
+/Geometry/NextFlex/specific_vertex_X  0. mm
+/Geometry/NextFlex/specific_vertex_Y  0. mm
+/Geometry/NextFlex/specific_vertex_Z  580. mm
 
 
 ### PHYSICS
