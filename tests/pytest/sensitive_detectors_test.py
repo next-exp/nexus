@@ -57,12 +57,15 @@ def test_sensors_numbering(nexus_files):
     assert pmt_ids.sort_values().tolist() == list(range(num_pmts))
 
     # Assert SiPM-Boards numbering is correct
-    assert  (sipm_ids // board_ordering).min() >= 1
-    assert  (sipm_ids // board_ordering).max() <= num_boards
+    assert (sipm_ids // board_ordering).min() >= 1
+    assert (sipm_ids // board_ordering).max() <= num_boards
 
     # Assert SiPM number inside Boards is correct
-    assert  (sipm_ids % board_ordering).min() >= 0
-    assert  (sipm_ids % board_ordering).max() <  sipms_per_board
+    assert (sipm_ids % board_ordering).min() >= 0
+    assert (sipm_ids % board_ordering).max() <  sipms_per_board
+
+    # Assert there is no sensor positions repeated
+    assert len(sns_positions) == len(sns_positions.sensor_id.unique())
 
 
 #@mark.parametrize("i_fname,num_pmts,num_boards,sipms_per_board,board_ordering",
@@ -97,3 +100,6 @@ def test_sensors_numbering(nexus_files):
 #    # Assert SiPM number inside Boards is correct
 #    assert  (sipm_ids % board_ordering).min() >= 0
 #    assert  (sipm_ids % board_ordering).max() <  sipms_per_board
+#
+#    # Assert there is no sensor positions repeated
+#    assert len(sns_positions) == len(sns_positions.sensor_id.unique())
