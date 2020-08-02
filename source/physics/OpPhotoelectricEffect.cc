@@ -65,32 +65,31 @@ namespace nexus {
       return G4VDiscreteProcess::PostStepDoIt(track, step);
 
     G4double photon_energy = track.GetDynamicParticle()->GetTotalEnergy();
-    G4int    n_ie          = G4Poisson(probabilities->Value(photon_energy));
 
-    if (!n_ie)
+    // We force each photon to produce a maximum of one electron.
+    if (G4UniformRand() >= probabilities->Value(photon_energy))
       return G4VDiscreteProcess::PostStepDoIt(track, step);
 
     particle_change_->ProposeTrackStatus(fStopAndKill);
-    particle_change_->SetNumberOfSecondaries(n_ie);
+    particle_change_->SetNumberOfSecondaries(1);
 
-    for (G4int i=0; i < n_ie; i++) {
-      G4ThreeVector momentum_direction = G4RandomDirection();
-      G4double      kinetic_energy     = photon_energy/n_ie;
+    G4ThreeVector momentum_direction = G4RandomDirection();
+    G4double      work_function      = mpt->GetConstProperty("WORK_FUNCTION");
+    G4double      kinetic_energy     = photon_energy - work_function;
 
-      G4DynamicParticle*
-      ie = new G4DynamicParticle(IonizationElectron::Definition(),
-                                 momentum_direction, kinetic_energy);
+    G4DynamicParticle*
+    ie = new G4DynamicParticle(IonizationElectron::Definition(),
+                               momentum_direction, kinetic_energy);
 
+    G4StepPoint* post = step.GetPostStepPoint();
+    G4Track* new_track = new G4Track(ie,
+                                     post->GetGlobalTime(),
+                                     post->GetPosition  ());
 
-      G4StepPoint* post = step.GetPostStepPoint();
-      G4Track* new_track = new G4Track(ie,
-                                       post->GetGlobalTime(),
-                                       post->GetPosition  ());
+    new_track->SetTouchableHandle(post->GetTouchableHandle());
+    new_track->SetParentID(track.GetTrackID());
 
-      new_track->SetTouchableHandle(post->GetTouchableHandle());
-      new_track->SetParentID(track.GetTrackID());
-      particle_change_->AddSecondary(new_track);
-    }
+    particle_change_->AddSecondary(new_track);
 
     return particle_change_;
   }
