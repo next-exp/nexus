@@ -55,26 +55,31 @@ namespace nexus {
     const G4Material* material = track.GetMaterial();
 
     G4MaterialPropertiesTable* mpt = material->GetMaterialPropertiesTable();
-    if (!mpt)
-      return G4VDiscreteProcess::PostStepDoIt(track, step);
 
-    G4MaterialPropertyVector*
-    probabilities = mpt->GetProperty("OP_PHOTOELECTRIC_PROBABILITY");
-
-    if (!probabilities)
+    if (!mpt ||
+        !mpt->ConstPropertyExists("WORK_FUNCTION") ||
+        !mpt->ConstPropertyExists("OP_PHOTOELECTRIC_PROBABILITY"))
       return G4VDiscreteProcess::PostStepDoIt(track, step);
 
     G4double photon_energy = track.GetDynamicParticle()->GetTotalEnergy();
+    G4double work_function = mpt->GetConstProperty("WORK_FUNCTION");
+    G4double probability   = mpt->GetConstProperty("OP_PHOTOELECTRIC_PROBABILITY");
 
-    // We force each photon to produce a maximum of one electron.
-    if (G4UniformRand() >= probabilities->Value(photon_energy))
+    if (!work_function || !probability)
+      return G4VDiscreteProcess::PostStepDoIt(track, step);
+
+    // We have to compare the energy with the work function here because
+    // Geant4 doesn't deal with the vector of probabilities correctly.
+    if ((photon_energy   <  work_function) ||
+        (G4UniformRand() >= probability  ) )
       return G4VDiscreteProcess::PostStepDoIt(track, step);
 
     particle_change_->ProposeTrackStatus(fStopAndKill);
+
+    // We force each photon to produce a maximum of one electron.
     particle_change_->SetNumberOfSecondaries(1);
 
     G4ThreeVector momentum_direction = G4RandomDirection();
-    G4double      work_function      = mpt->GetConstProperty("WORK_FUNCTION");
     G4double      kinetic_energy     = photon_energy - work_function;
 
     G4DynamicParticle*
