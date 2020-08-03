@@ -665,11 +665,8 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeGrid(G4double pressure
   // PHOTOELECTRIC REEMISSION
   // https://aip.scitation.org/doi/10.1063/1.1708797
   G4double stainless_wf = 4.3 * eV; // work function
-  G4double prob         = photoe_p;
-  G4double ph_energy [] = {optPhotMinE_, stainless_wf - 0.1*eV, stainless_wf, optPhotMaxE_};
-  G4double emission_p[] = {           0,                     0,         prob,         prob};
   mpt->AddConstProperty("WORK_FUNCTION", stainless_wf);
-  mpt->AddProperty("OP_PHOTOELECTRIC_PROBABILITY", ph_energy, emission_p, 4);
+  mpt->AddConstProperty("OP_PHOTOELECTRIC_PROBABILITY", photoe_p);
 
 
   // CONST PROPERTIES
