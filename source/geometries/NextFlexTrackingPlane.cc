@@ -388,14 +388,17 @@ void NextFlexTrackingPlane::BuildTeflon()
            << " to " << teflon_iniZ_ + SiPM_size_z_ << G4endl;
   } 
 
-
   /// Visibilities ///
-  if (visibility_) teflon_logic->SetVisAttributes(nexus::LightBlue());
-  else             teflon_logic->SetVisAttributes(G4VisAttributes::Invisible);
-  
+  if (visibility_) {
+    teflon_logic->SetVisAttributes(nexus::LightBlue());
+    hole_logic  ->SetVisAttributes(nexus::LightBlue());
+  }
+  else {
+    teflon_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    hole_logic  ->SetVisAttributes(G4VisAttributes::Invisible);
+  }
   teflon_wls_logic->SetVisAttributes(G4VisAttributes::Invisible);
-  hole_logic      ->SetVisAttributes(G4VisAttributes::Invisible);
-  wls_hole_logic ->SetVisAttributes(G4VisAttributes::Invisible);
+  wls_hole_logic  ->SetVisAttributes(G4VisAttributes::Invisible);
 }
 
 
