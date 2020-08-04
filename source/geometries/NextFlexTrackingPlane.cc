@@ -437,24 +437,30 @@ G4LogicalVolume* NextFlexTrackingPlane::BuildSiPM()
 // Function that computes and stores the XY positions of SiPMs in the copper plate
 void NextFlexTrackingPlane::GenerateSiPMpositions()
 {
-  // Maximum radius to place SiPMs
-  // Lower than diameter to prevent SiPMs being partially out.
-  G4double max_radius = diameter_/2. - teflon_hole_diam_/2.;
-  G4double ini_pos_XY = - diameter_/2.;
+  // Maximum radius to place the SiPMs
+  // It must be lower than diameter to prevent SiPMs being partially out.
+  G4double safety_dist = 4. * mm;
+  G4double max_radius  = diameter_/2. - safety_dist;
+  if (safety_dist < teflon_hole_diam_/2.)
+    G4Exception("[NextFlexTrackingPlane]", "GenerateSiPMpositions()", FatalException,
+                "Safety distance lower than teflon hole radius.");
 
-  G4int num_rows    = (G4int) (max_radius * 2 / SiPM_pitch_y_);
-  G4int num_columns = (G4int) (max_radius * 2 / SiPM_pitch_x_);
+  G4int num_rows    = (G4int) (max_radius * 2 / SiPM_pitch_y_) + 1;
+  G4int num_columns = (G4int) (max_radius * 2 / SiPM_pitch_x_) + 1;
+
+  G4double ini_pos_x = - (num_columns - 1) * SiPM_pitch_x_/2.;
+  G4double ini_pos_y = - (num_rows    - 1) * SiPM_pitch_y_/2.;
 
   for (G4int num_row=0; num_row<num_rows; num_row++) {
-    G4double posY = ini_pos_XY + num_row * SiPM_pitch_y_;
+    G4double pos_y = ini_pos_y + num_row * SiPM_pitch_y_;
 
     for (G4int num_column=0; num_column<num_columns; num_column++) {
-      G4double posX = ini_pos_XY + num_column * SiPM_pitch_x_;
+      G4double pos_x = ini_pos_x + num_column * SiPM_pitch_x_;
 
-      G4double radius = pow (pow(posX, 2.) + pow(posY, 2.), 0.5);
+      G4double radius = pow (pow(pos_x, 2.) + pow(pos_y, 2.), 0.5);
 
       if (radius <= max_radius)
-        SiPM_positions_.push_back(G4ThreeVector(posX, posY, 0.));
+        SiPM_positions_.push_back(G4ThreeVector(pos_x, pos_y, 0.));
     }
   }
 
