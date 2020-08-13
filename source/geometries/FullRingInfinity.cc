@@ -298,6 +298,7 @@ namespace nexus {
 
   void FullRingInfinity::BuildSensors()
   {
+    sipm_->SetSensorDepth(1);
     sipm_->Construct();
 
     G4LogicalVolume* sipm_logic = sipm_->GetLogicalVolume();

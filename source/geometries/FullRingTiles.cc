@@ -51,7 +51,7 @@ namespace nexus {
      // Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/FullRingTiles/",
                                   "Control commands of geometry FullRingTiles.");
-    
+
     G4GenericMessenger::Command& depth_cmd =
       msg_->DeclareProperty("depth", depth_, "Dimension in DOI");
     depth_cmd.SetUnitCategory("Length");
@@ -68,13 +68,13 @@ namespace nexus {
     msg_->DeclareProperty("instrumented_faces", instr_faces_, "Number of instrumented faces");
 
     tile_ = new Tile();
-   
+
     phantom_diam_ = 12.*cm;
     phantom_length_ = 10.*cm;
-    
-    cylindric_gen_ = 
+
+    cylindric_gen_ =
       new CylinderPointSampler(0., phantom_length_, phantom_diam_/2., 0., G4ThreeVector (0., 0., 0.));
-    
+
   }
 
   FullRingTiles::~FullRingTiles()
@@ -83,12 +83,12 @@ namespace nexus {
   }
 
   void FullRingTiles::Construct()
-  { 
+  {
     // LAB. This is just a volume of air surrounding the detector
     G4double lab_size = 1.*m;
     G4Box* lab_solid = new G4Box("LAB", lab_size/2., lab_size/2., lab_size/2.);
-    
-    lab_logic_ = 
+
+    lab_logic_ =
       new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
     lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
     this->SetLogicalVolume(lab_logic_);
@@ -96,7 +96,7 @@ namespace nexus {
     tile_->Construct();
     tile_logic_ = tile_->GetLogicalVolume();
     tile_dim_ = tile_->GetDimensions();
-    
+
     lat_dimension_cell_ = tile_dim_.y() *  n_tile_rows_;
     G4cout << "Lateral dimensions (mm) = " << lat_dimension_cell_/mm << G4endl;
 
@@ -114,7 +114,7 @@ namespace nexus {
     const G4double space_for_elec = 2. * cm;
     const G4double int_radius_cryo = inner_radius_ - cryo_thickn_ - space_for_elec;
     const G4double ext_radius_cryo = external_radius_ + cryo_thickn_ + space_for_elec;
-   
+
 
     G4Tubs* cryostat_solid =
       new G4Tubs("CRYOSTAT", int_radius_cryo, ext_radius_cryo, cryo_width_/2., 0, twopi);
@@ -154,10 +154,10 @@ namespace nexus {
 
     G4Material* kapton =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
-        
+
     G4Tubs* kapton_int_solid =
       new G4Tubs("KAPTON", inner_radius_ - kapton_thickn_, inner_radius_,
-                 lat_dimension_cell_/2., 0, twopi);    
+                 lat_dimension_cell_/2., 0, twopi);
     G4LogicalVolume* kapton_int_logic =
       new G4LogicalVolume(kapton_int_solid, kapton, "KAPTON");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), kapton_int_logic,
@@ -165,7 +165,7 @@ namespace nexus {
 
     G4Tubs* kapton_ext_solid =
       new G4Tubs("KAPTON", external_radius_ + ext_offset, external_radius_ + ext_offset + kapton_thickn_,
-                 lat_dimension_cell_/2., 0, twopi);    
+                 lat_dimension_cell_/2., 0, twopi);
     G4LogicalVolume* kapton_ext_logic =
       new G4LogicalVolume(kapton_ext_solid, kapton, "KAPTON");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), kapton_ext_logic,
@@ -217,7 +217,7 @@ namespace nexus {
 
     // The external radius distance must be at the level of the SiPM surfaces
     G4double radius = external_radius_ + tile_dim_.z()/2. - 1.2 * mm;
-    
+
     G4RotationMatrix rot;
     rot.rotateX(pi/2.);
 
@@ -267,18 +267,18 @@ namespace nexus {
 
 
  void FullRingTiles::BuildPhantom()
-  {  
-    G4Tubs* phantom_solid = new G4Tubs("PHANTOM",  0., phantom_diam_/2., 
+  {
+    G4Tubs* phantom_solid = new G4Tubs("PHANTOM",  0., phantom_diam_/2.,
                  phantom_length_/2., 0, twopi);
-    G4LogicalVolume* phantom_logic =  
+    G4LogicalVolume* phantom_logic =
       new G4LogicalVolume(phantom_solid, MaterialsList::PEEK(), "PHANTOM");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), phantom_logic,
 		       "PAHNTOM", lab_logic_, false, 0, true);
   }
-  
+
 
   G4ThreeVector FullRingTiles::GenerateVertex(const G4String& region) const
-  {  
+  {
     G4ThreeVector vertex(0.,0.,0.);
 
     if (region == "CENTER") {
@@ -287,9 +287,9 @@ namespace nexus {
       vertex = cylindric_gen_->GenerateVertex("BODY_VOL");
     } else {
       G4Exception("[FullRingTiles]", "GenerateVertex()", FatalException,
-                  "Unknown vertex generation region!");     
+                  "Unknown vertex generation region!");
     }
-    
+
     return vertex;
   }
 
