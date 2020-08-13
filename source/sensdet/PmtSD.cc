@@ -82,7 +82,7 @@ namespace nexus {
       // Check whether the photon has been detected in the boundary
       if (boundary_->GetStatus() == Detection) {
 	const G4VTouchable* touchable =
-	  step->GetPreStepPoint()->GetTouchable();
+	  step->GetPostStepPoint()->GetTouchable();
 
 	G4int pmt_id = FindPmtID(touchable);
 
