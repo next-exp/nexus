@@ -27,8 +27,18 @@ def nexus_output_file_full_body(output_tmpdir, base_name_full_body):
     return os.path.join(output_tmpdir, base_name_full_body+'.h5')
 
 
+@pytest.fixture(scope = 'session')
+def base_name_ring_tiles():
+    return 'PET_ring_tiles_sd_test'
+
+
+@pytest.fixture(scope = 'session')
+def nexus_output_file_ring_tiles(output_tmpdir, base_name_ring_tiles):
+    return os.path.join(output_tmpdir, base_name_ring_tiles+'.h5')
+
+
 @pytest.fixture(scope="module",
-         params=["nexus_output_file_full_body"],
-         ids=["full_body"])
+         params=["nexus_output_file_full_body", "nexus_output_file_ring_tiles"],
+         ids=["full_body", "ring_tiles"])
 def nexus_files(request):
     return request.getfixturevalue(request.param)
