@@ -40,8 +40,8 @@ GenericPhotosensor::GenericPhotosensor(G4String name,
   window_rindex_   (nullptr),
   sensitive_mpt_   (nullptr),
   sensor_depth_    (-1),
-  mother_depth_    (-1),
-  naming_order_    (-1),
+  mother_depth_    (0),
+  naming_order_    (0),
   time_binning_    (1.0 * us),
   visibility_      (false)
 {
@@ -243,18 +243,15 @@ void GenericPhotosensor::Construct()
     if (sensor_depth_ == -1)
       G4Exception("[GenericPhotosensor]", "Construct()", FatalException,
                   "Sensor Depth must be set before constructing");
+
+    if ((naming_order_ > 0) & (mother_depth_ == 0))
+      G4Exception("[GenericPhotosensor]", "Construct()", FatalException,
+                  "naming_order set without setting mother_depth");
+
     sensdet->SetDetectorVolumeDepth(sensor_depth_);
-
-    if (mother_depth_ == -1)
-      G4Exception("[GenericPhotosensor]", "Construct()", FatalException,
-                  "Mother Depth must be set before constructing");
-    sensdet->SetMotherVolumeDepth(mother_depth_);
-
-    if (naming_order_ == -1)
-      G4Exception("[GenericPhotosensor]", "Construct()", FatalException,
-                  "Naming Order must be set before constructing");
+    sensdet->SetMotherVolumeDepth  (mother_depth_);
     sensdet->SetDetectorNamingOrder(naming_order_);
-    sensdet->SetTimeBinning(time_binning_);
+    sensdet->SetTimeBinning        (time_binning_);
 
     G4SDManager::GetSDMpointer()->AddNewDetector(sensdet);
     sensarea_logic_vol->SetSensitiveDetector(sensdet);
