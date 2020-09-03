@@ -17,7 +17,6 @@
 
 # GEOMETRY
 /Geometry/Next100/pressure 15. bar
-/Geometry/PmtR11410/SD_depth 3
 
 # GENERATION
 /Generator/ScintGenerator/region ACTIVE

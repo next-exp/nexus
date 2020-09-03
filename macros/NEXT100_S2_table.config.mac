@@ -21,7 +21,6 @@
 /Geometry/Next100/specific_vertex_X 0. mm
 /Geometry/Next100/specific_vertex_Y 0. mm
 /Geometry/Next100/specific_vertex_Z 0. mm
-/Geometry/PmtR11410/SD_depth 3
 
 #### GENERATOR ####
 /Generator/ScintGenerator/nphotons 100000

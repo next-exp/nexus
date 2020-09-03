@@ -43,14 +43,12 @@
 
 /Geometry/NextFlex/fiber_sensor_time_binning  25. ns
 
-
 # ENERGY PLANE
 /Geometry/NextFlex/ep_with_PMTs         false
 /Geometry/NextFlex/ep_with_teflon       true
 /Geometry/NextFlex/ep_copper_thickness  12. cm
 /Geometry/NextFlex/ep_wls_mat           TPB
 
-/Geometry/PmtR11410/SD_depth            3
 /Geometry/PmtR11410/time_binning        25. ns
 
 # TRACKING PLANE

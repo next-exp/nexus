@@ -12,7 +12,6 @@
 #include "OpticalMaterialProperties.h"
 #include "PmtR7378A.h"
 #include "IonizationSD.h"
-#include "PmtSD.h"
 #include "HexagonPointSampler.h"
 #include "UniformElectricDriftField.h"
 #include "XenonGasProperties.h"

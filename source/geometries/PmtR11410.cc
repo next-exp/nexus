@@ -45,14 +45,13 @@ namespace nexus {
     photocathode_diam_ (64. * mm),
     photocathode_thickness_ (.1 * mm),
     visibility_(1),
-    sd_depth_(2),
+    sd_depth_(-1),
     binning_(100.*nanosecond)
   {
     msg_ = new G4GenericMessenger(this, "/Geometry/PmtR11410/",
 				  "Control commands of PmtR11410 geometry.");
+
     msg_->DeclareProperty("visibility", visibility_, "Hamamatsu R11410 PMTs visibility");
-    msg_->DeclareProperty("SD_depth", sd_depth_,
-			  "Sensitive detector depth in volume being replicated");
 
     G4GenericMessenger::Command& bin_cmd =
       msg_->DeclareProperty("time_binning", binning_,
@@ -151,10 +150,13 @@ namespace nexus {
 
     // Sensitive detector
     PmtSD* pmtsd = new PmtSD("/PMT_R11410/PmtR11410");
+    if (sd_depth_ == -1) 
+      G4Exception("[PmtR11410]", "Construct()", FatalException,
+                  "Sensor Depth must be set before constructing");
     pmtsd->SetDetectorVolumeDepth(sd_depth_);
     pmtsd->SetTimeBinning(binning_);
     G4SDManager::GetSDMpointer()->AddNewDetector(pmtsd);
-    window_logic->SetSensitiveDetector(pmtsd);
+    photocathode_logic->SetSensitiveDetector(pmtsd);
 
 
     // VISIBILITIES //////////////////////////////////////////////////

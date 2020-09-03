@@ -18,7 +18,6 @@
 /Geometry/NextNew/pressure 15. bar
 /Geometry/NextNew/el_table_binning 1. mm
 /Geometry/NextNew/el_table_point_id 0
-/Geometry/PmtR11410/SD_depth 4
 
 /Generator/ELTableGenerator/num_ie 100
 

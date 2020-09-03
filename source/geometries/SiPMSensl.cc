@@ -30,10 +30,14 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  SiPMSensl::SiPMSensl(): BaseGeometry(),
-                          visibility_(1),
-                          binning_(1.*microsecond)
-
+  SiPMSensl::SiPMSensl():
+    BaseGeometry   (),
+    msg_           (nullptr),
+    binning_       (1.*microsecond),
+    sensor_depth_  (-1),
+    mother_depth_  (-1),
+    naming_order_  (-1),
+    visibility_    (1)
   {
     /// Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/SiPMSensl/", "Control commands of SiPMSensl geometry.");
@@ -173,13 +177,26 @@ namespace nexus {
 
     if (!sdmgr->FindSensitiveDetector(sdname, false)) {
       PmtSD* sipmsd = new PmtSD(sdname);
-      sipmsd->SetDetectorVolumeDepth(1);
-      sipmsd->SetDetectorNamingOrder(1000.);
+
+      if (sensor_depth_ == -1) 
+        G4Exception("[SiPMSensl]", "Construct()", FatalException,
+                    "Sensor Depth must be set before constructing");
+      sipmsd->SetDetectorVolumeDepth(sensor_depth_);
+
+      if (mother_depth_ == -1) 
+        G4Exception("[SiPMSensl]", "Construct()", FatalException,
+                    "Mother Depth must be set before constructing");
+      sipmsd->SetMotherVolumeDepth(mother_depth_);
+
+      if (naming_order_ == -1) 
+        G4Exception("[SiPMSensl]", "Construct()", FatalException,
+                    "Naming Order must be set before constructing");
+      sipmsd->SetDetectorNamingOrder(naming_order_);
+
       sipmsd->SetTimeBinning(binning_);
-      sipmsd->SetMotherVolumeDepth(3);
 
       G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
-      sipm_logic->SetSensitiveDetector(sipmsd);
+      active_logic->SetSensitiveDetector(sipmsd);
     }
 
       // Visibilities
@@ -198,6 +215,5 @@ namespace nexus {
       plastic_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
   }
-
 
 } // end namespace nexus

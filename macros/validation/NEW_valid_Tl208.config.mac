@@ -15,7 +15,6 @@
 # GEOMETRY
 /Geometry/NextNew/pressure 15. bar
 /Geometry/NextNew/elfield false
-/Geometry/PmtR11410/SD_depth 4
 
 # GENERATION
 /Generator/IonGenerator/atomic_number 81

@@ -9,7 +9,6 @@
 #include "Next1ELDBO.h"
 
 #include "SiPM11.h"
-#include "PmtSD.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 

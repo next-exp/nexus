@@ -61,10 +61,14 @@ namespace nexus {
 
   void NextNewKDB::Construct()
   {
+    /// Constructing the SiPM ///
+    sipm_->SetSensorDepth(3);
+    sipm_->SetMotherDepth(5);
+    sipm_->SetNamingOrder(1000);
     sipm_->Construct();
 
-    /// DIMENSIONS ///
 
+    /// DIMENSIONS ///
     const G4double sipm_pitch           = 10. * mm;
     const G4double board_thickness      = 0.3 * mm; // this is the real DB thickness
     const G4double board_side_reduction = 0.5 * mm;
@@ -163,7 +167,7 @@ namespace nexus {
                       "DICE_MASK", board_logic, false, 0, false);
 
 
-    // SETTING VISIBILITIES   //////////
+    /// SETTING VISIBILITIES   //////////
     if (visibility_) {
       G4VisAttributes board_col = nexus::Yellow();
       board_logic->SetVisAttributes(board_col);

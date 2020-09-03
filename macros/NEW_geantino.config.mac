@@ -24,6 +24,5 @@
 
 # GEOMETRY
 /Geometry/NextNew/pressure 10. bar
-/Geometry/PmtR11410/SD_depth 4
 
 /nexus/persistency/outputFile geantinos.next

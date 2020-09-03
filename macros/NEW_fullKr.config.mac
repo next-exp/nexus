@@ -18,7 +18,6 @@
 /Geometry/NextNew/e_lifetime 1000. ms
 /Geometry/NextNew/EL_field 10 kV/cm
 /Geometry/NextNew/elfield true
-/Geometry/PmtR11410/SD_depth 4
 /Geometry/PmtR11410/time_binning 100. nanosecond
 /Geometry/SiPMSensl/time_binning 1. microsecond
 

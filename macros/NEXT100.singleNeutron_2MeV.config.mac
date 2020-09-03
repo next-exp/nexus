@@ -24,7 +24,6 @@
 /Geometry/Next100/specific_vertex_X 0. mm
 /Geometry/Next100/specific_vertex_Y 2400. mm
 /Geometry/Next100/specific_vertex_Z 0. mm
-/Geometry/PmtR11410/SD_depth 3
 
 /control/execute macros/geometries/NEXT100DefaultVisibility.mac
 

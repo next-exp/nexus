@@ -25,20 +25,22 @@ namespace nexus {
   class PmtR11410: public BaseGeometry
   {
   public:
-    /// Constructor
+    // Constructor
     PmtR11410();
 
-    /// Destructor
+    // Destructor
     ~PmtR11410();
 
     G4ThreeVector GetRelPosition();
 
-    /// Generate a vertex within a given region of the geometry
+    // Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
     // Builder
     void Construct();
 
+    // Setting sensor depth
+    void SetSensorDepth (G4int sensor_depth);
 
   private:
     G4OpticalSurface* GetPhotOptSurf();
@@ -62,15 +64,17 @@ namespace nexus {
     G4double front_perc_, fr_med_perc_, fr_med_re_perc_, fr_med_re_cap_perc_;
 
     G4bool visibility_;
+
     G4int sd_depth_;
 
     //Messenger for configuration parameters
     G4GenericMessenger* msg_;
 
     G4double binning_;
-
   };
 
+  inline void PmtR11410::SetSensorDepth(G4int sensor_depth)
+  { sd_depth_ = sensor_depth; }
 
 } // end namespace nexus
 

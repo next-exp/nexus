@@ -15,7 +15,6 @@
 /Geometry/NextNew/max_step_size 1. mm
 /Geometry/NextNew/pressure 7. bar
 /Geometry/NextNew/field_cage_vis true
-/Geometry/PmtR11410/SD_depth 4
 
 ### Generation
 /Generator/ElecPositronPair/min_energy 1.592 MeV

@@ -1,19 +1,37 @@
-import pandas as pd
+import pandas     as pd
+#from   pytest import mark
 
 
-def test_sensor_ids_are_sensible(nexus_files):
-     """
-     Check that we are not registering all photoelectrons
-     with the same sensor ID, for each type of sensor.
-     """
 
-     sns_response = pd.read_hdf(nexus_files, 'MC/sns_response')
+def test_sensors_numbering(detectors):
+    """
+    Check that sensors are correctly numbered.
+    """
 
-     pmts  = sns_response[sns_response.sensor_id < 100]
-     sipms = sns_response[sns_response.sensor_id > 100]
+    det_fname, num_pmts, num_boards, sipms_per_board, board_ordering = detectors
 
-     pmt_ids   = pmts.sensor_id.unique()
-     sipm_ids = sipms.sensor_id.unique()
+    num_sipms = num_boards * sipms_per_board
 
-     assert len(pmt_ids ) > 1
-     assert len(sipm_ids) > 1
+    # Checking that only 2 types of sensors exist
+    sns_positions = pd.read_hdf(det_fname, 'MC/sns_positions')
+    assert len(sns_positions.sensor_name.unique()) == 2
+
+    # Assert the total number of sensors is correct
+    pmt_ids  = sns_positions[sns_positions.sensor_name == "PmtR11410"].sensor_id
+    sipm_ids = sns_positions[sns_positions.sensor_name == "SiPM"].sensor_id
+    assert     len(pmt_ids)  == num_pmts
+    assert 1 < len(sipm_ids) <= num_sipms
+
+    # Assert PMT numbering is correct
+    assert pmt_ids.sort_values().tolist() == list(range(num_pmts))
+
+    # Assert SiPM-Boards numbering is correct
+    assert (sipm_ids // board_ordering).min() >= 1
+    assert (sipm_ids // board_ordering).max() <= num_boards
+
+    # Assert SiPM number inside Boards is correct
+    assert (sipm_ids % board_ordering).min() >= 0
+    assert (sipm_ids % board_ordering).max() <  sipms_per_board
+
+    # Assert there is no sensor positions repeated
+    assert len(sns_positions) == len(sns_positions.sensor_id.unique())

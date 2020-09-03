@@ -140,6 +140,7 @@ namespace nexus {
     // PHOTOMULTIPLIER ///////////////////////////////////////////////
 
     PmtR11410 pmt_geom;
+    pmt_geom.SetSensorDepth(0);
     pmt_geom.Construct();
     G4LogicalVolume* pmt_logic = pmt_geom.GetLogicalVolume();
 
