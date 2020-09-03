@@ -410,6 +410,7 @@ void NextFlexEnergyPlane::BuildPMTs()
   /// PMT ///
   G4String pmt_name = "PMT";
 
+  pmt_->SetSensorDepth(3);
   pmt_->Construct();
   
   G4double pmt_posz = - pmt_hole_length/2.     + window_thickness_
