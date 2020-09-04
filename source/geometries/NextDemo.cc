@@ -54,58 +54,58 @@ using namespace CLHEP;
 NextDemo::NextDemo():
     BaseGeometry(),
     // LABORATORY //////////////////////////////////
-    _lab_size (2. * m),
+    lab_size_ (2. * m),
     //_rot_angle(pi),
     // VESSEL ////////////////////
-    _vessel_diam   (300. * mm),
-    _vessel_length (600. * mm),
-    _vessel_thickn (  3. * mm),
+    vessel_diam_   (300. * mm),
+    vessel_length_ (600. * mm),
+    vessel_thickn_ (  3. * mm),
     // ENDCAPS /////////////////////////////////////
-    _endcap_diam   (330. * mm),
-    _endcap_thickn ( 30. * mm),
+    endcap_diam_   (330. * mm),
+    endcap_thickn_ ( 30. * mm),
     // SIDE SOURCE-PORT ////////////////////////////
     //  in NextDemoVessel.cc
 
     /*// AXIAL SOURCE-PORT ///////////////////////////
-    _axialport_diam   (16. * mm),
-    _axialport_length (24. * mm),
-    _axialport_thickn ( 2. * mm),
-    _axialport_flange_diam   (34. * mm),
-    _axialport_flange_thickn (13. * mm),
-    _axialport_tube_diam   ( 5. * mm),
-    _axialport_tube_length (30. * mm),
-    _axialport_tube_thickn ( 1. * mm),
-    _axialport_tube_window_thickn (0.5 * mm),
+    axialport_diam_   (16. * mm),
+    axialport_length_ (24. * mm),
+    axialport_thickn_ ( 2. * mm),
+    axialport_flange_diam_   (34. * mm),
+    axialport_flange_thickn_ (13. * mm),
+    axialport_tube_diam_   ( 5. * mm),
+    axialport_tube_length_ (30. * mm),
+    axialport_tube_thickn_ ( 1. * mm),
+    axialport_tube_window_thickn_ (0.5 * mm),
     */
     ////
-    _verbosity(0),
-    _calib_port(""),  // ("sideNa")  ("lateral")
-    _disk_source(false),  // false, true
-    _source_mat(""),    // ("Na")
-    _ext_scint(false),    // false, true
-    _dist_scint(5. * cm)
+    verbosity_(0),
+    calib_port_(""),  // ("sideNa")  ("lateral")
+    disk_source_(false),  // false, true
+    source_mat_(""),    // ("Na")
+    ext_scint_(false),    // false, true
+    dist_scint_(5. * cm)
 {
 
   //Create geometry-related objects
-  _vessel = new NextDemoVessel(_vessel_diam, _vessel_length, _vessel_thickn);
-  _inner_elements = new NextDemoInnerElements(_vessel_length);
+  vessel_ = new NextDemoVessel(vessel_diam_, vessel_length_, vessel_thickn_);
+  inner_elements_ = new NextDemoInnerElements(vessel_length_);
 
-  _msg = new G4GenericMessenger(this, "/Geometry/NextDemo/",
+  msg_ = new G4GenericMessenger(this, "/Geometry/NextDemo/",
 				"Control commands of geometry NextDemo.");
 
-  _msg->DeclareProperty("demo_main_verbosity", _verbosity, "Demo main verbosity");
+  msg_->DeclareProperty("demo_main_verbosity", verbosity_, "Demo main verbosity");
   // Boolean-type properties (true or false)
 
 
   new G4UnitDefinition("1/MeV","1/MeV", "1/Energy", 1/MeV);
 
-  _msg->DeclareProperty("calib_port", _calib_port, "Where calibration source is placed (lateral/axial/upper)");
-  _msg->DeclareProperty("disk_source", _disk_source, "External disk-shape calibration source");
-  _msg->DeclareProperty("source_material", _source_mat, "Kind of external disk-shape calibration source");
-  _msg->DeclareProperty("ext_scint", _ext_scint, "Placement of external NaI scintillator");
+  msg_->DeclareProperty("calib_port", calib_port_, "Where calibration source is placed (lateral/axial/upper)");
+  msg_->DeclareProperty("disk_source", disk_source_, "External disk-shape calibration source");
+  msg_->DeclareProperty("source_material", source_mat_, "Kind of external disk-shape calibration source");
+  msg_->DeclareProperty("ext_scint", ext_scint_, "Placement of external NaI scintillator");
 
   G4GenericMessenger::Command& scint_dist_cmd =
-    _msg->DeclareProperty("scint_distance", _dist_scint,
+    msg_->DeclareProperty("scint_distance", dist_scint_,
 			  "Distance between the end of the port tube and the NaI scintillator");
     scint_dist_cmd.SetUnitCategory("Length");
     scint_dist_cmd.SetParameterName("scint_distance", false);
@@ -114,24 +114,24 @@ NextDemo::NextDemo():
 
   //muons building
   G4GenericMessenger::Command& muonsGenerator_cmd =
-    _msg->DeclareProperty("muonsGenerator", _muonsGenerator, "Build or not Muons");
+    msg_->DeclareProperty("muonsGenerator", muonsGenerator_, "Build or not Muons");
     muonsGenerator_cmd.SetParameterName("muonsGenerator", false);
 
-  _naI = new NaIScintillator();
+  naI_ = new NaIScintillator();
 
-  _air = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
-  _steel = MaterialsList::Steel();
+  air_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
+  steel_ = MaterialsList::Steel();
 
 }
 
 
 NextDemo::~NextDemo()
 {
-  delete _source_gen_side;
-  delete _muons_sampling;
-  delete _msg;
-  delete _vessel;
-  delete _inner_elements;
+  delete source_gen_side_;
+  delete muons_sampling_;
+  delete msg_;
+  delete vessel_;
+  delete inner_elements_;
 }
 
 
@@ -142,24 +142,24 @@ void NextDemo::Construct()
   // order since some of them depend on the previous ones
   BuildLab();
 
-  if(_muonsGenerator)
+  if(muonsGenerator_)
     BuildMuons();
 
   //BuildVessel();
-  _vessel->Construct();
-  G4LogicalVolume* vessel_logic = _vessel->GetLogicalVolume();
+  vessel_->Construct();
+  G4LogicalVolume* vessel_logic = vessel_->GetLogicalVolume();
   G4ThreeVector position(0.,0.,0.);
   new G4PVPlacement(0, position, vessel_logic,
-                    "VESSEL", _lab_logic, false, 0, false);
+                    "VESSEL", lab_logic_, false, 0, false);
 
-   G4LogicalVolume* vessel_internal_logic = _vessel->GetInternalLogicalVolume();
+   G4LogicalVolume* vessel_internal_logic = vessel_->GetInternalLogicalVolume();
 
    //G4Material* vessel_gas_material = vessel_internal_logic->GetMaterial();
 
 
   //INNER ELEMENTS  // Ruty - from New
-  _inner_elements->SetLogicalVolume(vessel_internal_logic);
-  _inner_elements->Construct();
+  inner_elements_->SetLogicalVolume(vessel_internal_logic);
+  inner_elements_->Construct();
 
 
     //    RUTY     //
@@ -167,16 +167,16 @@ void NextDemo::Construct()
     // Flat endcap, CF-300, no ports of interest for the simulation.
 
         G4Tubs* endcap_cathode_solid =
-          new G4Tubs("ENDCAP_CATHODE", 0., _endcap_diam/2.,
-                     _endcap_thickn/2., 0., twopi);
+          new G4Tubs("ENDCAP_CATHODE", 0., endcap_diam_/2.,
+                     endcap_thickn_/2., 0., twopi);
 
         G4LogicalVolume* endcap_cathode_logic =
-          new G4LogicalVolume(endcap_cathode_solid, _steel, "ENDCAP_CATHODE");
+          new G4LogicalVolume(endcap_cathode_solid, steel_, "ENDCAP_CATHODE");
 
-        G4double posz = (_vessel_length + _endcap_thickn) / 2.;
+        G4double posz = (vessel_length_ + endcap_thickn_) / 2.;
 
         new G4PVPlacement(0, G4ThreeVector(0.,0.,-posz), endcap_cathode_logic,
-                          "ENDCAP_CATHODE", _lab_logic, false, 0, true);
+                          "ENDCAP_CATHODE", lab_logic_, false, 0, true);
          /*
         G4VisAttributes * vis1 = new G4VisAttributes;
         vis1->SetColor(0.5, 0.5, .5);
@@ -194,15 +194,15 @@ void NextDemo::Construct()
           // This line in comment If there is no need for the axial port hole.
           //new G4Tubs("ENDCAP_ANODE", (_axialport_diam/2. + _axialport_thickn),
           new G4Tubs("ENDCAP_ANODE", 0.,
-                     _endcap_diam/2., _endcap_thickn/2., 0., twopi);
+                     endcap_diam_/2., endcap_thickn_/2., 0., twopi);
 
         G4LogicalVolume* endcap_anode_logic =
-          new G4LogicalVolume(endcap_anode_solid, _steel, "ENDCAP_ANODE");
+          new G4LogicalVolume(endcap_anode_solid, steel_, "ENDCAP_ANODE");
 
         new G4PVPlacement(0, G4ThreeVector(0., 0., posz), endcap_anode_logic,
-                          "ENDCAP_ANODE", _lab_logic, false, 0, true);
+                          "ENDCAP_ANODE", lab_logic_, false, 0, true);
 
-   if (_verbosity) {
+   if (verbosity_) {
         G4cout << "  ***** ENDCAP_CATHODE *****  " << G4endl;
         G4cout << "*** Positions  Z: ***" <<  -posz  << G4endl;
         G4cout << "  ***** ENDCAP_ANODE *****  " << G4endl;
@@ -219,27 +219,27 @@ void NextDemo::Construct()
 
   // PORT ..................................................
 
-        G4double axialport_total_length = _endcap_thickn + _axialport_length;
+        G4double axialport_total_length = endcap_thickn_ + axialport_length_;
 
         G4Tubs* axialport_solid =
-          new G4Tubs("AXIALPORT", 0., (_axialport_diam/2. + _axialport_thickn),
+          new G4Tubs("AXIALPORT", 0., (axialport_diam_/2. + axialport_thickn_),
                      axialport_total_length/2., 0, twopi);
 
         G4LogicalVolume* axialport_logic =
-          new G4LogicalVolume(axialport_solid, _steel, "AXIALPORT");
+          new G4LogicalVolume(axialport_solid, steel_, "AXIALPORT");
 
-         posz = (_vessel_length + axialport_total_length) / 2.;
+         posz = (vessel_length_ + axialport_total_length) / 2.;
 
-        _axialport_position.setX(0.);
-        _axialport_position.setY(0.);
-        _axialport_position.setZ(posz);
+        axialport_position_.setX(0.);
+        axialport_position_.setY(0.);
+        axialport_position_.setZ(posz);
 
-        new G4PVPlacement(0, _axialport_position, axialport_logic,
-                          "AXIALPORT", _lab_logic, false, 0, true);
+        new G4PVPlacement(0, axialport_position_, axialport_logic,
+                          "AXIALPORT", lab_logic_, false, 0, true);
 
       // GAS in Axialport.......................................
 
-        G4Tubs* axialport_gas_solid = new G4Tubs("GAS1", 0., _axialport_diam/2.,
+        G4Tubs* axialport_gas_solid = new G4Tubs("GAS1", 0., axialport_diam_/2.,
                                                  axialport_total_length/2., 0, twopi);
 
         G4LogicalVolume* axialport_gas_logic =
@@ -252,51 +252,51 @@ void NextDemo::Construct()
         // FLANGE ................................................
 
         G4Tubs* axialport_flange_solid =
-          new G4Tubs("AXIALPORT_FLANGE", _axialport_tube_diam/2.,
-                     _axialport_flange_diam/2., _axialport_flange_thickn/2., 0, twopi);
+          new G4Tubs("AXIALPORT_FLANGE", axialport_tube_diam_/2.,
+                     axialport_flange_diam_/2., axialport_flange_thickn_/2., 0, twopi);
 
         G4LogicalVolume* axialport_flange_logic =
-          new G4LogicalVolume(axialport_flange_solid, _steel, "AXIALPORT_FLANGE");
+          new G4LogicalVolume(axialport_flange_solid, steel_, "AXIALPORT_FLANGE");
 
         // posz = _vessel_length/2. + _endcap_thickn +
         //   _axialport_length + _axialport_flange_thickn/2.;
         //G4double
-        posz = _vessel_length/2 + axialport_total_length + _axialport_flange_thickn/2.;
+        posz = vessel_length_/2 + axialport_total_length + axialport_flange_thickn_/2.;
 
         new G4PVPlacement(0, G4ThreeVector(0.,0.,posz), axialport_flange_logic,
-                          "AXIALPORT_FLANGE", _lab_logic, false, 0, true);
+                          "AXIALPORT_FLANGE", lab_logic_, false, 0, true);
 
 
         // Store the position of the port so that it can be used in vertex generation
         // posz = posz + _axialport_flange_thickn/2.;
-        posz = _vessel_length/2. + axialport_total_length + _axialport_flange_thickn;
-        _axialport_position.set(0., 0., posz);
+        posz = vessel_length_/2. + axialport_total_length + axialport_flange_thickn_;
+        axialport_position_.set(0., 0., posz);
 
 
         // SOURCE TUBE ...........................................
 
     G4Tubs* axialport_tube_solid =
-      new G4Tubs("AXIALPORT", 0., (_axialport_tube_diam/2.+_axialport_tube_thickn),
-                 _axialport_tube_length/2., 0, twopi);
+      new G4Tubs("AXIALPORT", 0., (axialport_tube_diam_/2.+axialport_tube_thickn_),
+                 axialport_tube_length_/2., 0, twopi);
 
     G4LogicalVolume* axialport_tube_logic =
-      new G4LogicalVolume(axialport_tube_solid, _steel, "AXIALPORT");
+      new G4LogicalVolume(axialport_tube_solid, steel_, "AXIALPORT");
 
     //G4double
-    posz = (axialport_total_length - _axialport_tube_length) / 2.;
+    posz = (axialport_total_length - axialport_tube_length_) / 2.;
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,posz), axialport_tube_logic,
                       "AXIALPORT", axialport_gas_logic, false, 0, true);
 
     G4Tubs* axialport_tube_air_solid =
-      new G4Tubs("AXIALPORT_AIR", 0., _axialport_tube_diam/2.,
-                 (_axialport_tube_length-_axialport_tube_window_thickn)/2.,
+      new G4Tubs("AXIALPORT_AIR", 0., axialport_tube_diam_/2.,
+                 (axialport_tube_length_-axialport_tube_window_thickn_)/2.,
                  0, twopi);
 
     G4LogicalVolume* axialport_tube_air_logic =
-      new G4LogicalVolume(axialport_tube_air_solid, _air, "AXIALPORT_AIR");
+      new G4LogicalVolume(axialport_tubeair__solid, air_, "AXIALPORT_AIR");
 
-    new G4PVPlacement(0, G4ThreeVector(0,0,_axialport_tube_window_thickn/2.),
+    new G4PVPlacement(0, G4ThreeVector(0,0,axialport_tube_window_thickn_/2.),
                       axialport_tube_air_logic, "AXIALPORT_AIR",
                       axialport_tube_logic, false, 0, true);
     */
@@ -307,25 +307,25 @@ void NextDemo::Construct()
 
   /////////////////////////////////////////////////////////////////////////////////
 
-    G4ThreeVector sideport_pos = _vessel->GetSideSourcePosition(); // this is the position of the end of the port tube
-    _sideport_ext_position = sideport_pos;
+    G4ThreeVector sideport_pos = vessel_->GetSideSourcePosition(); // this is the position of the end of the port tube
+    sideport_ext_position_ = sideport_pos;
     //G4double
-    _sideport_angle =  _vessel->GetSideSourceAngle();
+    sideport_angle_ =  vessel_->GetSideSourceAngle();
     G4RotationMatrix* sideport_rot = new G4RotationMatrix();
     sideport_rot->rotateY(-pi/2);
-    sideport_rot->rotateZ(_sideport_angle);
-   if (_verbosity) {
+    sideport_rot->rotateZ(sideport_angle_);
+   if (verbosity_) {
       G4cout << " ********************************* "<< G4endl;
       G4cout << " ********************************* "<< G4endl;
       G4cout << "sideport_pos: " << sideport_pos << G4endl;
-      G4cout << "_sideport_angle: " << _sideport_angle << G4endl;
+      G4cout << "sideport_angle_: " << sideport_angle_ << G4endl;
       G4cout << " ********************************* "<< G4endl;
       G4cout << " ********************************* "<< G4endl;
    }
 
-    if (_disk_source) {
-      if (_source_mat == "Na") {
-        _source = new Na22Source();
+    if (disk_source_) {
+      if (source_mat_ == "Na") {
+        source_ = new Na22Source();
       // } else if (_source_mat == "Th") {
       //   _source = new Th228Source();
       } else {
@@ -333,10 +333,10 @@ void NextDemo::Construct()
                     "The material of disk source must be Na or Th!");
       }
     // This is the position of the whole source + plastic support.
-      if (_calib_port == "lateral") {
+      if (calib_port_ == "lateral") {
       BuildExtSource(G4ThreeVector(
-                        sideport_pos.getX()-(_source->GetSupportThickness()/2.)*cos(_sideport_angle),
-                        sideport_pos.getY()-(_source->GetSupportThickness()/2.)*sin(_sideport_angle),
+                        sideport_pos.getX()-(source_->GetSupportThickness()/2.)*cos(sideport_angle_),
+                        sideport_pos.getY()-(source_->GetSupportThickness()/2.)*sin(sideport_angle_),
                         sideport_pos.getZ()), *sideport_rot);
 
       } else {
@@ -352,18 +352,18 @@ void NextDemo::Construct()
 
     // Build NaI external scintillator
 
-    if (_ext_scint) {
-      if (_calib_port == "lateral") {
+    if (ext_scint_) {
+      if (calib_port_ == "lateral") {
         // G4RotationMatrix rot;
         // rot.rotateY(-pi/2.);
         BuildExtScintillator(G4ThreeVector(
-                       sideport_pos.getX()-(_naI->GetLength()/2.+_dist_scint)*cos(_sideport_angle),
-                       sideport_pos.getY()-(_naI->GetLength()/2.+_dist_scint)*sin(_sideport_angle),
+                       sideport_pos.getX()-(naI_->GetLength()/2.+dist_scint_)*cos(sideport_angle_),
+                       sideport_pos.getY()-(naI_->GetLength()/2.+dist_scint_)*sin(sideport_angle_),
                        sideport_pos.getZ()), *sideport_rot);
-      /*} else if (_calib_port == "axial") {
+      /*} else if (calib_port_ == "axial") {
         //    G4RotationMatrix rot_ax;
         BuildExtScintillator(G4ThreeVector(axial_pos.getX(), axial_pos.getY(),
-                                           axial_pos.getZ() - _dist_scint - _naI->GetLength()/2.), *ax_rot); */
+                                           axial_pos.getZ() - dist_scint_ - naI_->GetLength()/2.), *ax_rot); */
       } else {
          G4Exception("[NextDemo]", "Construct()", FatalException,
 		  "The placement of external scintillator must be lateral or axial!");
@@ -373,19 +373,19 @@ void NextDemo::Construct()
 
     //// VERTEX GENERATORS   //
     // These are the vertices of the external disk source
-    if (_disk_source) {
+    if (disk_source_) {
       //G4double sup_source_diam  = _source->GetSupportDiameter();
-      G4double sup_source_thick = _source->GetSupportThickness();
-      G4double source_diam = _source->GetSourceDiameter();
-      G4double source_thick = _source->GetSourceThickness();
+      G4double sup_source_thick = source_->GetSupportThickness();
+      G4double source_diam = source_->GetSourceDiameter();
+      G4double source_thick = source_->GetSourceThickness();
       G4ThreeVector side_pos_gen = G4ThreeVector(
                         //sideport_pos.getX()-(_source->GetSupportThickness())*cos(_sideport_angle),
                         //sideport_pos.getY()-(_source->GetSupportThickness())*sin(_sideport_angle),
-                        sideport_pos.getX()-(sup_source_thick-source_thick/2.)*cos(_sideport_angle),
-                        sideport_pos.getY()-(sup_source_thick-source_thick/2.)*sin(_sideport_angle),
+                        sideport_pos.getX()-(sup_source_thick-source_thick/2.)*cos(sideport_angle_),
+                        sideport_pos.getY()-(sup_source_thick-source_thick/2.)*sin(sideport_angle_),
                         sideport_pos.getZ());
 
-      _source_gen_side = new CylinderPointSampler(0., source_thick, source_diam/2., 0., side_pos_gen, sideport_rot);
+      source_gen_side_ = new CylinderPointSampler(0., source_thick, source_diam/2., 0., side_pos_gen, sideport_rot);
 
     }
 
@@ -400,16 +400,16 @@ void NextDemo::BuildLab()
   // on the outside.
 
   G4Box* lab_solid =
-    new G4Box("LAB", _lab_size/2., _lab_size/2., _lab_size/2.);
+    new G4Box("LAB", lab_size_/2., lab_size_/2., lab_size_/2.);
 
-  _lab_logic = new G4LogicalVolume(lab_solid, _air, "LAB");
-  _lab_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  lab_logic_ = new G4LogicalVolume(lab_solid, air_, "LAB");
+  lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
 
   this->SetDrift(true);
 
   // Set this volume as the wrapper for the whole geometry
   // (i.e., this is the volume that will be placed in the world)
-  this->SetLogicalVolume(_lab_logic);
+  this->SetLogicalVolume(lab_logic_);
 }
 
 
@@ -417,14 +417,14 @@ void NextDemo::BuildMuons()
 {
   // MUONS /////////////////////////////////////////////////////////////
 
-  G4double xMuons = _lab_size/400;    // origin: _lab_size/3;  /4;
-  G4double yMuons = _lab_size/500.;
-  G4double zMuons = _lab_size/300;    // origin: _lab_size/2;  /3;
+  G4double xMuons = lab_size_/400;    // origin: lab_size_/3;  /4;
+  G4double yMuons = lab_size_/500.;
+  G4double zMuons = lab_size_/300;    // origin: lab_size_/2;  /3;
 
   G4double yMuonsOrigin = 400.;
 
   //sampling position in a surface above the detector
-  _muons_sampling = new MuonsPointSampler(xMuons, yMuonsOrigin, zMuons);
+  muons_sampling_ = new MuonsPointSampler(xMuons, yMuonsOrigin, zMuons);
 
 
   // To visualize the muon generation surface
@@ -437,9 +437,9 @@ void NextDemo::BuildMuons()
 
   G4Box* muon_solid =
     new G4Box("MUONS", xMuons, yMuons, zMuons);
-  G4LogicalVolume*  muon_logic = new G4LogicalVolume(muon_solid, _air, "MUONS");
+  G4LogicalVolume*  muon_logic = new G4LogicalVolume(muon_solid, air_, "MUONS");
   new G4PVPlacement(0, G4ThreeVector(0., yMuonsOrigin, 0.), muon_logic,
-		    "MUONS", _lab_logic, false, 0, true);
+		    "MUONS", lab_logic_, false, 0, true);
 
    // visualization
   G4VisAttributes muon_col = nexus::Red();
@@ -454,13 +454,13 @@ G4ThreeVector NextDemo::GenerateVertex(const G4String& region) const
   G4ThreeVector vertex(0., 0., 0.);
   if (region == "MUONS") {
     //generate muons sampling the plane
-    vertex = _muons_sampling->GenerateVertex();
+    vertex = muons_sampling_->GenerateVertex();
   }
     // Extended sources with the shape of a disk outside port
     else if (region == "SOURCE_PORT_LATERAL_DISK") {
-    vertex =  _source_gen_side->GenerateVertex("BODY_VOL");
+    vertex =  source_gen_side_->GenerateVertex("BODY_VOL");
   } else if (region == "SIDEPORT") {
-    vertex = _sideport_ext_position;
+    vertex = sideport_ext_position_;
   //} else if (region == "AXIALPORT") {
   //  vertex = _axialport_position;
   //} else if (region == "Na22LATERAL") {
@@ -476,7 +476,7 @@ G4ThreeVector NextDemo::GenerateVertex(const G4String& region) const
               (region == "AD_HOC")  ||
 	      (region == "EL_TABLE")
               ){
-      vertex = _inner_elements->GenerateVertex(region);
+      vertex = inner_elements_->GenerateVertex(region);
     }
     else if (region == "AD_HOC"){
     //vertex =  _specific_vertex;
@@ -494,26 +494,26 @@ G4ThreeVector NextDemo::GenerateVertex(const G4String& region) const
 
 void NextDemo::BuildExtScintillator(G4ThreeVector pos, const G4RotationMatrix& rot)
 {
-_naI->Construct();
-G4LogicalVolume* sc_logic = _naI->GetLogicalVolume();
+naI_->Construct();
+G4LogicalVolume* sc_logic = naI_->GetLogicalVolume();
 
 G4ThreeVector pos_scint =
   G4ThreeVector(pos.getX(), pos.getY(), pos.getZ());
 new G4PVPlacement(G4Transform3D(rot, pos_scint), sc_logic, "NaI",
-      _lab_logic, false, 0, true);
+      lab_logic_, false, 0, true);
 }
 
 
 
 void NextDemo::BuildExtSource(G4ThreeVector pos, const G4RotationMatrix& rot)
 {
- _source->Construct();
- G4LogicalVolume* source_logic = _source->GetLogicalVolume();
+ source_->Construct();
+ G4LogicalVolume* source_logic = source_->GetLogicalVolume();
 
 G4ThreeVector pos_source =
   G4ThreeVector(pos.getX(), pos.getY(), pos.getZ());
 new G4PVPlacement(G4Transform3D(rot, pos_source), source_logic, "SOURCE_Na",
-      _lab_logic, false, 0, true);
+      lab_logic_, false, 0, true);
 }
 
 

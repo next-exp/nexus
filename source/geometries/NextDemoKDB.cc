@@ -42,23 +42,23 @@ namespace nexus {
   //NextNewKDB::NextNewKDB(G4int rows, G4int columns):
   NextDemoKDB::NextDemoKDB(G4int rows, G4int columns): 
     BaseGeometry(),
-    _rows(rows),
-    _columns(columns),
-    _visibility (1),
-    _teflon_masks(false)
+    rows_(rows),
+    columns_(columns),
+    visibility_ (1),
+    teflon_masks_(false)
   {
     /// Messenger
-    _msg = new G4GenericMessenger(this, "/Geometry/KDB/", "Control commands of kapton dice board geometry.");
-    _msg->DeclareProperty("visibility", _visibility, "Kapton Dice Boards Visibility");
-    _msg->DeclareProperty("teflon_masks", _teflon_masks, "True if teflon masks are placed in front of dices");
-    _sipm = new SiPMSensl;
+    msg_ = new G4GenericMessenger(this, "/Geometry/KDB/", "Control commands of kapton dice board geometry.");
+    msg_->DeclareProperty("visibility", visibility_, "Kapton Dice Boards Visibility");
+    msg_->DeclareProperty("teflon_masks", teflon_masks_, "True if teflon masks are placed in front of dices");
+    sipm_ = new SiPMSensl;
   }
 
   NextDemoKDB::~NextDemoKDB()
   {
-     delete _msg;
-     delete _sipm;
-     delete _dice_gen;
+     delete msg_;
+     delete sipm_;
+     delete dice_gen_;
   }
   
 
@@ -66,24 +66,24 @@ namespace nexus {
   {
     // DIMENSIONS ///////////////////////////////////////////////////
     
-    _sipm->Construct();
+    sipm_->Construct();
    
     const G4double sipm_pitch = 10. * mm;
     //   const G4double coating_thickness = 0.1 * micrometer;
     const G4double board_thickness = 0.3 * mm; // this is the real DB thickness
     const G4double board_side_reduction = .5 * mm;    
-    const G4double db_x = _columns * sipm_pitch - 2. * board_side_reduction ;  
-    const G4double db_y =    _rows * sipm_pitch - 2. * board_side_reduction ;
+    const G4double db_x = columns_ * sipm_pitch - 2. * board_side_reduction ;  
+    const G4double db_y =    rows_ * sipm_pitch - 2. * board_side_reduction ;
     //  const G4double db_z = board_thickness;
-    const G4double db_z = _sipm->GetDimensions().z() + 1. * mm; // this is in order not to have volumes overlapping
+    const G4double db_z = sipm_->GetDimensions().z() + 1. * mm; // this is in order not to have volumes overlapping
    
-    _dimensions.setX(db_x);
-    _dimensions.setY(db_y);
-    _dimensions.setZ(db_z);
+    dimensions_.setX(db_x);
+    dimensions_.setY(db_y);
+    dimensions_.setZ(db_z);
 
     double vertex_displ = db_z/2. - board_thickness/2.;
     // Vertex generator
-    _dice_gen = new BoxPointSampler(db_x, db_y, board_thickness, 0., G4ThreeVector(0., 0., -vertex_displ), 0);
+    dice_gen_ = new BoxPointSampler(db_x, db_y, board_thickness, 0., G4ThreeVector(0., 0., -vertex_displ), 0);
 
     // KAPTON BOARD /////////////////////////////////////////////////
 
@@ -116,20 +116,20 @@ namespace nexus {
 
     // SILICON PMs //////////////////////////////////////////////////
 
-    G4LogicalVolume* sipm_logic = _sipm->GetLogicalVolume();
+    G4LogicalVolume* sipm_logic = sipm_->GetLogicalVolume();
     //  pos_z = -db_z/2. + coating_thickness + (_sipm->GetDimensions().z())/2.;
-    G4double pos_z = -db_z/2. + (_sipm->GetDimensions().z())/2.;
+    G4double pos_z = -db_z/2. + (sipm_->GetDimensions().z())/2.;
     G4double offset = sipm_pitch/2. - board_side_reduction;
     G4int sipm_no = 0;
 
     //    for (G4int i=0; i<_rows; i++) {
-    for (G4int i=0; i<_columns; i++) {
+    for (G4int i=0; i<columns_; i++) {
       
       // G4double pos_y = db_y/2. - offset - i*sipm_pitch;
       G4double pos_x = db_x/2 - offset - i*sipm_pitch;
       
       //  for (G4int j=0; j<_columns; j++) {
-      for (G4int j=0; j<_rows; j++) {
+      for (G4int j=0; j<rows_; j++) {
 	
 	//	G4double pos_x = -db_x/2 + offset + j*sipm_pitch;
 	G4double pos_y = -db_y/2. + offset + j*sipm_pitch;
@@ -139,12 +139,12 @@ namespace nexus {
         std::pair<int, G4ThreeVector> mypos;
         mypos.first = sipm_no;
         mypos.second = G4ThreeVector(pos_x, pos_y, pos_z);
-        _positions.push_back(mypos);
+        positions_.push_back(mypos);
         sipm_no++;
       }
     }
 
-    if (_teflon_masks == true) {
+    if (teflon_masks_ == true) {
       // Setting reflectivity properties of TEFLON
       /// Optical surfaces
       G4OpticalSurface* dboard_opsur = new G4OpticalSurface("KDB");
@@ -158,7 +158,7 @@ namespace nexus {
     }
 
     // SETTING VISIBILITIES   //////////
-    if (_visibility) {
+    if (visibility_) {
       G4VisAttributes board_col = nexus::Yellow();
       board_logic->SetVisAttributes(board_col);
       // G4VisAttributes tpb_col = nexus::DarkGreen();
@@ -175,19 +175,19 @@ namespace nexus {
 
   G4ThreeVector NextDemoKDB::GetDimensions() const
   {
-    return _dimensions;
+    return dimensions_;
   }
   
   const std::vector<std::pair<int, G4ThreeVector> >& NextDemoKDB::GetPositions()
   {
-    return _positions;
+    return positions_;
   }
 
   G4ThreeVector NextDemoKDB::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);
     if (region == "DICE_BOARD") {
-      vertex =_dice_gen->GenerateVertex("INSIDE");
+      vertex =dice_gen_->GenerateVertex("INSIDE");
     } else {
       G4Exception("[NextNewKDB]", "GenerateVertex()", FatalException,
                   "Unknown vertex generation region!");     

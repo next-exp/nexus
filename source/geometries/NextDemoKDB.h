@@ -44,25 +44,25 @@ namespace nexus {
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
   private:
-    G4int _rows, _columns;
+    G4int rows_, columns_;
     //G4double _support_thickness;
-    G4ThreeVector _dimensions;
-    std::vector<std::pair<int, G4ThreeVector> > _positions;
+    G4ThreeVector dimensions_;
+    std::vector<std::pair<int, G4ThreeVector> > positions_;
  
     // Visibility of the shielding
-    G4bool _visibility;
+    G4bool visibility_;
     
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
 
     // Instance of the SiPM class
-    SiPMSensl* _sipm;
+    SiPMSensl* sipm_;
 
     // Vertex generator
-    BoxPointSampler* _dice_gen;
+    BoxPointSampler* dice_gen_;
 
     // teflon masks in fron of dices
-    G4bool _teflon_masks;
+    G4bool teflon_masks_;
  
   };
 
