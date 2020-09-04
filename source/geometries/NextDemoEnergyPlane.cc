@@ -198,6 +198,7 @@ namespace nexus {
       
 
     // Adding the PMT
+    pmt_->SetSensorDepth(4);
     pmt_->Construct();
     G4LogicalVolume* pmt_logic = pmt_->GetLogicalVolume();
     G4double pmt_rel_posz = pmt_->GetRelPosition().z();

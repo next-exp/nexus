@@ -65,7 +65,10 @@ namespace nexus {
   void NextDemoKDB::Construct()
   {
     // DIMENSIONS ///////////////////////////////////////////////////
-    
+
+    sipm_->SetSensorDepth(2);
+    sipm_->SetMotherDepth(3);
+    sipm_->SetNamingOrder(1000);
     sipm_->Construct();
    
     const G4double sipm_pitch = 10. * mm;
