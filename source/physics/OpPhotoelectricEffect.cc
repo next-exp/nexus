@@ -86,11 +86,18 @@ namespace nexus {
     ie = new G4DynamicParticle(IonizationElectron::Definition(),
                                momentum_direction, kinetic_energy);
 
-    G4StepPoint* post = step.GetPostStepPoint();
-    G4Track* new_track = new G4Track(ie,
-                                     post->GetGlobalTime(),
-                                     post->GetPosition  ());
+    // Setting the emission point to either the pre or the post
+    // step points results in a warning about the new particle
+    // having a negative local time. This seems to be caused by
+    // the positions being in a boundary between two volumes.
+    // Taking the midpoint avoids the warning without affecting
+    // the physics.
+    G4StepPoint*  pre  = step.GetPreStepPoint();
+    G4StepPoint*  post = step.GetPostStepPoint();
+    G4double      time = post->GetGlobalTime();
+    G4ThreeVector pos  = (pre->GetPosition() + post->GetPosition()) / 2;
 
+    G4Track* new_track = new G4Track(ie, time, pos);
     new_track->SetTouchableHandle(post->GetTouchableHandle());
     new_track->SetParentID(track.GetTrackID());
 
