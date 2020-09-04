@@ -64,7 +64,7 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
 
   else if (name_ == "NEXT_FLEX") p = new NextFlex();
 
-  else if (_name == "NEXT_DEMO") p = new NextDemo();
+  else if (name_ == "NEXT_DEMO") p = new NextDemo();
 
 
   else {

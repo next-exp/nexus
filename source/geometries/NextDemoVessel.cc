@@ -52,55 +52,55 @@ namespace nexus {
     // ENDCAPS ///////////////////////////
     //  is constract in NextDemo.cc
     // SIDE SOURCE-PORT ////////////////////////////
-    _sideport_diam   (40. * mm),
-    _sideport_length (30. * mm), // STEP file: 31.8 
-    _sideport_thickn ( 2. * mm),
-    _sideport_flange_diam   (71. * mm),
-    _sideport_flange_thickn ( 8. * mm),  // STEP file: 43.8 - 31.8 = 12. mm  // prev: 8.
-    _sideport_tube_diam   (12.1 * mm),
-    _sideport_tube_length (30.0 * mm),
-    _sideport_tube_thickn ( 1.0 * mm),
-    _sideport_tube_window_thickn (0.5 * mm),
+    sideport_diam_   (40. * mm),
+    sideport_length_ (30. * mm), // STEP file: 31.8 
+    sideport_thickn_ ( 2. * mm),
+    sideport_flange_diam_   (71. * mm),
+    sideport_flange_thickn_ ( 8. * mm),  // STEP file: 43.8 - 31.8 = 12. mm  // prev: 8.
+    sideport_tube_diam_   (12.1 * mm),
+    sideport_tube_length_ (30.0 * mm),
+    sideport_tube_thickn_ ( 1.0 * mm),
+    sideport_tube_window_thickn_ (0.5 * mm),
     //_sideport_angle(30. * deg),
     // AXIAL SOURCE-PORT //////////
     //  is constract in NextDemo.cc
     ///////////////////////////////
     // Vessel gas
-    _visibility(0),           // 1
-    _verbosity(0),
-    _pressure(10. * bar),
-    _temperature (300 * kelvin),
-    _sc_yield(13889/MeV),
-    _gas("naturalXe"),
+    visibility_(0),           // 1
+    verbosity_(0),
+    pressure_(10. * bar),
+    temperature_ (300 * kelvin),
+    sc_yield_(13889/MeV),
+    gas_("naturalXe"),
     // _sc_yield(25510. * 1/MeV),
-    _Xe_perc(100.)
+    Xe_perc_(100.)
   {
 
 
    /// Needed External variables
-   _vessel_diam   = vessel_diam;
-   _vessel_length = vessel_length;
-   _vessel_thickn = vessel_thickn;
+   vessel_diam_   = vessel_diam;
+   vessel_length_ = vessel_length;
+   vessel_thickn_ = vessel_thickn;
 
     // Initializing the geometry navigator (used in vertex generation)
-    _geom_navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
+    geom_navigator_ = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
 
     /// Messenger
-    _msg = new G4GenericMessenger(this, "/Geometry/NextDemo/", "Control commands of geometry NextDemo.");
-    _msg->DeclareProperty("vessel_vis", _visibility, "Vessel Visibility");
+    msg_ = new G4GenericMessenger(this, "/Geometry/NextDemo/", "Control commands of geometry NextDemo.");
+    msg_->DeclareProperty("vessel_vis", visibility_, "Vessel Visibility");
 
-    _msg->DeclareProperty("vessel_verbosity", _verbosity, "Vessel verbosity");
+    msg_->DeclareProperty("vessel_verbosity", verbosity_, "Vessel verbosity");
 
      G4GenericMessenger::Command& sideport_posz_cmd =
-    _msg->DeclareProperty("sideport_posz", _sideport_posz, "Set distance of sideport from z=0.");
+    msg_->DeclareProperty("sideport_posz", sideport_posz_, "Set distance of sideport from z=0.");
      sideport_posz_cmd.SetUnitCategory("Length");
 
      G4GenericMessenger::Command& sideport_angle_cmd =
-    _msg->DeclareProperty("sideport_angle", _sideport_angle, "Set angle of sideport.");
+    msg_->DeclareProperty("sideport_angle", sideport_angle_, "Set angle of sideport.");
      sideport_angle_cmd.SetUnitCategory("Angle");
 
     G4GenericMessenger::Command& pressure_cmd =
-    _msg->DeclareProperty("pressure", _pressure, "Xenon pressure");
+    msg_->DeclareProperty("pressure", pressure_, "Xenon pressure");
     //"Set pressure for gaseous xenon.");
     pressure_cmd.SetUnitCategory("Pressure");
     pressure_cmd.SetParameterName("pressure", false);
@@ -109,13 +109,13 @@ namespace nexus {
     new G4UnitDefinition("1/MeV","1/MeV", "1/Energy", 1/MeV);
 
     G4GenericMessenger::Command& sc_yield_cmd =
-      _msg->DeclareProperty("sc_yield", _sc_yield,
+      msg_->DeclareProperty("sc_yield", sc_yield_,
 			    "Set scintillation yield for GXe. It is in photons/MeV");
     sc_yield_cmd.SetParameterName("sc_yield", true);
     sc_yield_cmd.SetUnitCategory("1/Energy");
 
-    _msg->DeclareProperty("gas", _gas, "Gas being used");
-    _msg->DeclareProperty("XePercentage", _Xe_perc, "Percentage of xenon used in mixtures");
+    msg_->DeclareProperty("gas", gas_, "Gas being used");
+    msg_->DeclareProperty("XePercentage", Xe_perc_, "Percentage of xenon used in mixtures");
   }
 
 
@@ -124,30 +124,30 @@ namespace nexus {
     {
       //Materials
 
-      G4Material* _air   = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
-      G4Material* _steel = MaterialsList::Steel();
+      G4Material* air_   = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
+      G4Material* steel_ = MaterialsList::Steel();
       // CAN /////////////////////////////////////////////////////////////
       // Stainless steel (grade 304L) cylinder. CF-300.
       // A CF-60 half-nipple on the side accommodates a window for
       // calibration sources.
   /////////////////////////////////////////////////////////////////////////////////////////////////////
-    G4Material* _vessel_gas_mat = nullptr;
+    G4Material* vessel_gas_mat_ = nullptr;
 
-    if (_gas == "naturalXe") {
-      _vessel_gas_mat = MaterialsList::GXe(_pressure, _temperature);
-      _vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
-    } else if (_gas == "enrichedXe") {
-      _vessel_gas_mat =  MaterialsList::GXeEnriched(_pressure, _temperature);
-      _vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
-    } else if  (_gas == "depletedXe") {
-      _vessel_gas_mat =  MaterialsList::GXeDepleted(_pressure, _temperature);
-      _vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(_pressure, _temperature, _sc_yield));
-    } else if (_gas == "Ar") {
-      _vessel_gas_mat =  MaterialsList::GAr(_pressure, _temperature);
-      _vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GAr(_sc_yield));
-    } else if (_gas == "ArXe") {
-      _vessel_gas_mat =  MaterialsList::GXeAr(_pressure, _temperature, _Xe_perc);
-      _vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GAr(_sc_yield));
+    if (gas_ == "naturalXe") {
+      vessel_gas_mat_ = MaterialsList::GXe(pressure_, temperature_);
+      vessel_gas_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(pressure_, temperature_, sc_yield_));
+    } else if (gas_ == "enrichedXe") {
+      vessel_gas_mat_ =  MaterialsList::GXeEnriched(pressure_, temperature_);
+      vessel_gas_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(pressure_, temperature_, sc_yield_));
+    } else if  (gas_ == "depletedXe") {
+      vessel_gas_mat_ =  MaterialsList::GXeDepleted(pressure_, temperature_);
+      vessel_gas_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(pressure_, temperature_, sc_yield_));
+    } else if (gas_ == "Ar") {
+      vessel_gas_mat_ =  MaterialsList::GAr(pressure_, temperature_);
+      vessel_gas_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::GAr(sc_yield_));
+    } else if (gas_ == "ArXe") {
+      vessel_gas_mat_ =  MaterialsList::GXeAr(pressure_, temperature_, Xe_perc_);
+      vessel_gas_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::GAr(sc_yield_));
     } else {
       G4Exception("[NextDemoVessel]", "Construct()", FatalException,
 		  "Unknown kind of gas, valid options are: naturalXe, enrichedXe, depletedXe, Ar.");
@@ -161,32 +161,32 @@ namespace nexus {
 
      //  VESSEL CAN  ///////////////////////////////////////////////
 
-      G4double vessel_total_diam = _vessel_diam + 2.*_vessel_thickn;
+      G4double vessel_total_diam = vessel_diam_ + 2.*vessel_thickn_;
 
       G4Tubs* can_solid = 
-        new G4Tubs("VESSEL", 0., vessel_total_diam/2., _vessel_length/2., 0, twopi);
+        new G4Tubs("VESSEL", 0., vessel_total_diam/2., vessel_length_/2., 0, twopi);
       // SIDE SOURCE-PORT ////////////////////////////////////////////////
 
-      G4double sideport_total_length = _sideport_length + _vessel_thickn;
+      G4double sideport_total_length = sideport_length_ + vessel_thickn_;
 
       G4Tubs* side_port_solid =
-        new G4Tubs("VESSEL_SIDEPORT", 0., (_sideport_diam/2. + _sideport_thickn),
+        new G4Tubs("VESSEL_SIDEPORT", 0., (sideport_diam_/2. + sideport_thickn_),
                    sideport_total_length/2., 0, twopi);
      //// FLANGE CF flange closing the port.  ////////     
       G4Tubs* sideport_flange_solid =
-        new G4Tubs("SIDEPORT_FLANGE", _sideport_tube_diam/2., _sideport_flange_diam/2.,
-                    _sideport_flange_thickn/2., 0, twopi);
+        new G4Tubs("SIDEPORT_FLANGE", sideport_tube_diam_/2., sideport_flange_diam_/2.,
+                    sideport_flange_thickn_/2., 0, twopi);
       // SIDEPORT_TUBE  ////////
       G4Tubs* sideport_tube_solid =
-        new G4Tubs("SIDEPORT_TUBE", 0., (_sideport_tube_diam/2.+_sideport_tube_thickn),
-                   _sideport_tube_length/2., 0, twopi);
+        new G4Tubs("SIDEPORT_TUBE", 0., (sideport_tube_diam_/2.+sideport_tube_thickn_),
+                   sideport_tube_length_/2., 0, twopi);
 
     ///////  VESSEL GAS  &  SIDE SOURCE-PORT Flange & Tube :: GAS   /////////////
       G4Tubs* cyl_gas =
-        new G4Tubs("GAS_VESSEL", 0., _vessel_diam/2., _vessel_length/2., 0, twopi);
+        new G4Tubs("GAS_VESSEL", 0., vessel_diam_/2., vessel_length_/2., 0, twopi);
 
       G4Tubs* sideport_gas =
-        new G4Tubs("GAS_SIDEPORT", 0., _sideport_diam/2.,
+        new G4Tubs("GAS_SIDEPORT", 0., sideport_diam_/2.,
                    sideport_total_length/2., 0, twopi);
 
 
@@ -194,35 +194,35 @@ namespace nexus {
 
      /*     G4UnionSolid* sideport_solid =
       new G4UnionSolid("VESSEL_SIDEPORT", side_port_solid, sideport_flange_solid, 0,
-		       G4ThreeVector(0.,0.,_sideport_total_length/2.+_sideport_flange_thickn/2.));
+		       G4ThreeVector(0.,0.,sideport_total_length_/2.+sideport_flange_thickn_/2.));
           sideport_solid =
       new G4UnionSolid("VESSEL_SIDEPORT", sideport_solid, sideport_tube_solid, 0,
 		       G4ThreeVector(0.,0.,
-                       (_sideport_total_length + _sideport_flange_thickn + _sideport_tube_length)/2.));
+                       (sideport_total_length_ + sideport_flange_thickn_ + sideport_tube_length_)/2.));
        */
 
             G4UnionSolid* sideport_solid = 
       new G4UnionSolid("VESSEL_SIDEPORT", sideport_flange_solid, sideport_tube_solid, 0,
-                       G4ThreeVector(0.,0., _sideport_tube_length/2.));
+                       G4ThreeVector(0.,0., sideport_tube_length_/2.));
             sideport_solid =
       new G4UnionSolid("VESSEL_SIDEPORT", sideport_solid, side_port_solid, 0,
-                       G4ThreeVector(0.,0., -(sideport_total_length +_sideport_flange_thickn)/2.));
+                       G4ThreeVector(0.,0., -(sideport_total_length +sideport_flange_thickn_)/2.));
 
 
 
       // rotation matrix for the side source port
       G4RotationMatrix rotport;
       rotport.rotateY(-pi/2.);
-      rotport.rotateZ(_sideport_angle);
+      rotport.rotateZ(sideport_angle_);
 
       // position of the side source-port
-      G4double rad_sideport = vessel_total_diam/2. + _sideport_length + _sideport_flange_thickn/2.;
-      G4ThreeVector posport(-rad_sideport * cos(_sideport_angle),
-                            -rad_sideport * sin(_sideport_angle),
-                            _sideport_posz);
-      /*G4ThreeVector posport(-(vessel_total_diam+_sideport_length)/2. * cos(_sideport_angle),
-                              -(vessel_total_diam+_sideport_length)/2. * sin(_sideport_angle),
-                              _sideport_posz); */
+      G4double rad_sideport = vessel_total_diam/2. + sideport_length_ + sideport_flange_thickn_/2.;
+      G4ThreeVector posport(-rad_sideport * cos(sideport_angle_),
+                            -rad_sideport * sin(sideport_angle_),
+                            sideport_posz_);
+      /*G4ThreeVector posport(-(vessel_total_diam+sideport_length_)/2. * cos(sideport_angle_),
+                              -(vessel_total_diam+sideport_length_)/2. * sin(sideport_angle_),
+                              sideport_posz_); */
 
       G4UnionSolid* vessel_solid =
         new G4UnionSolid("VESSEL", can_solid, sideport_solid,
@@ -230,7 +230,7 @@ namespace nexus {
 
       G4LogicalVolume* vessel_logic =
         // new G4LogicalVolume(can_solid, _steel, "VESSEL");
-        new G4LogicalVolume(vessel_solid, _steel, "VESSEL");
+        new G4LogicalVolume(vessel_solid, steel_, "VESSEL");
       this->SetLogicalVolume(vessel_logic);
 
       ///////////////////////////////////////////////////////////////
@@ -241,21 +241,21 @@ namespace nexus {
       ///////////////////////////////////////////////////////////////
 
       /////////////////////////////   ????   ///////////////////
-      posport.setX(-(_vessel_diam + sideport_total_length)/2. * cos(_sideport_angle));
-      posport.setY(-(_vessel_diam + sideport_total_length)/2. * sin(_sideport_angle));
+      posport.setX(-(vessel_diam_ + sideport_total_length)/2. * cos(sideport_angle_));
+      posport.setY(-(vessel_diam_ + sideport_total_length)/2. * sin(sideport_angle_));
 
       G4UnionSolid* gas_solid = new G4UnionSolid("GAS", cyl_gas, sideport_gas,
                                                  G4Transform3D(rotport, posport));
 
-      G4LogicalVolume* _gas_logic = new G4LogicalVolume(gas_solid, _vessel_gas_mat, "GAS");    // gxe
-      _gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      G4LogicalVolume* gas_logic_ = new G4LogicalVolume(gas_solid, vessel_gas_mat_, "GAS");    // gxe
+      gas_logic_->SetVisAttributes(G4VisAttributes::Invisible);
 
-      _internal_logic_vol = _gas_logic;
+      internal_logic_vol_ = gas_logic_;
      
       G4VPhysicalVolume* vessel_gas_phys =
-        new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), _gas_logic,
+        new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), gas_logic_,
                           "GAS", vessel_logic, false, 0, true);
-      _internal_phys_vol = vessel_gas_phys;
+      internal_phys_vol_ = vessel_gas_phys;
 
 
       /*G4VisAttributes * vis = new G4VisAttributes;
@@ -265,29 +265,29 @@ namespace nexus {
       */
 
       G4double radial_pos =
-      -(vessel_total_diam/2. + _sideport_length + _sideport_flange_thickn/2. + _sideport_tube_length);
-      _sideport_ext_position.setX(radial_pos * cos(_sideport_angle));
-      _sideport_ext_position.setY(radial_pos * sin(_sideport_angle));
-      _sideport_ext_position.setZ(_sideport_posz);
+      -(vessel_total_diam/2. + sideport_length_ + sideport_flange_thickn_/2. + sideport_tube_length_);
+      sideport_ext_position_.setX(radial_pos * cos(sideport_angle_));
+      sideport_ext_position_.setY(radial_pos * sin(sideport_angle_));
+      sideport_ext_position_.setZ(sideport_posz_);
 
 
       // TUBE  AIR   ....................................
 
       radial_pos =
         //-(vessel_total_diam/2. + _sideport_length - _sideport_tube_length/2.);
-        -(vessel_total_diam/2. + _sideport_length +_sideport_flange_thickn/2.+ _sideport_tube_length/2.+ _sideport_tube_window_thickn/2.);
-      posport.setX(radial_pos * cos(_sideport_angle));
-      posport.setY(radial_pos * sin(_sideport_angle));
+        -(vessel_total_diam/2. + sideport_length_ +sideport_flange_thickn_/2.+ sideport_tube_length_/2.+ sideport_tube_window_thickn_/2.);
+      posport.setX(radial_pos * cos(sideport_angle_));
+      posport.setY(radial_pos * sin(sideport_angle_));
 
-      _sideport_position = posport;
+      sideport_position_ = posport;
 
       G4Tubs* sideport_tube_air_solid =
-        new G4Tubs("SIDEPORT_AIR", 0., _sideport_tube_diam/2.,
-                   (_sideport_tube_length - _sideport_tube_window_thickn)/2.,
+        new G4Tubs("SIDEPORT_AIR", 0., sideport_tube_diam_/2.,
+                   (sideport_tube_length_ - sideport_tube_window_thickn_)/2.,
                    0, twopi);
 
       G4LogicalVolume* sideport_tube_air_logic =
-        new G4LogicalVolume(sideport_tube_air_solid, _air, "SIDEPORT_AIR");
+        new G4LogicalVolume(sideport_tube_air_solid, air_, "SIDEPORT_AIR");
     ////////////////////////////////////////////////????????????????????///
       new G4PVPlacement(G4Transform3D(rotport, posport),
                        //(0,G4ThreeVector(0.,0.,_sideport_tube_window_thickn/2.),
@@ -312,22 +312,22 @@ namespace nexus {
 
   G4LogicalVolume* NextDemoVessel::GetInternalLogicalVolume() const
   {
-    return _internal_logic_vol;
+    return internal_logic_vol_;
   }
 
   G4VPhysicalVolume* NextDemoVessel::GetInternalPhysicalVolume() const
   {
-    return _internal_phys_vol;
+    return internal_phys_vol_;
   }
 
   G4ThreeVector NextDemoVessel::GetSideSourcePosition() const
   {
-    return _sideport_ext_position;
+    return sideport_ext_position_;
   }
 
   G4double NextDemoVessel::GetSideSourceAngle() const
   {
-    return _sideport_angle;
+    return sideport_angle_;
   }
 
 }//end namespace nexus

@@ -60,35 +60,35 @@ namespace nexus {
   private:
 
     // Mother Logical Volume of the whole Energy PLane
-    G4LogicalVolume* _mother_logic;
-    G4Material* _gas;
-    G4double _pressure, _temperature;
+    G4LogicalVolume* mother_logic_;
+    G4Material* gas_;
+    G4double pressure_, temperature_;
 
     // Dimensions
-    const G4int _num_PMTs;
-    const G4double _energy_plane_posz;
-    const G4double _carrier_plate_thickness, _carrier_plate_diam, _carrier_plate_central_hole_diam;
-    const G4double _enclosure_length, _enclosure_diam;
-    const G4double _enclosure_flange_length;
-    const G4double _enclosure_window_thickness,_enclosure_window_diam;
-    const G4double _enclosure_pad_thickness;
-    const G4double _pmt_base_diam, _pmt_base_thickness;
-    const G4double _tpb_thickness;
+    const G4int num_PMTs_;
+    const G4double energy_plane_posz_;
+    const G4double carrier_plate_thickness_, carrier_plate_diam_, carrier_plate_central_hole_diam_;
+    const G4double enclosure_length_, enclosure_diam_;
+    const G4double enclosure_flange_length_;
+    const G4double enclosure_window_thickness_,enclosure_window_diam_;
+    const G4double enclosure_pad_thickness_;
+    const G4double pmt_base_diam_, pmt_base_thickness_;
+    const G4double tpb_thickness_;
 
 
     // Visibility
-    G4bool _visibility, _verbosity;
+    G4bool visibility_, verbosity_;
 
     // Geometry Navigator
-    G4Navigator* _geom_navigator;
+    G4Navigator* geom_navigator_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
+    G4GenericMessenger* msg_; 
 
     // PMT
-    PmtR11410*  _pmt;
-    std::vector<G4ThreeVector> _pmt_positions;
-    G4double _pmt_zpos;
+    PmtR11410*  pmt_;
+    std::vector<G4ThreeVector> pmt_positions_;
+    G4double pmt_zpos_;
 
 
     

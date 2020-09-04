@@ -67,40 +67,40 @@ namespace nexus {
   private:
 
     // Logical Volume where whole Tracking Plane is placed
-    G4LogicalVolume* _mother_logic;
+    G4LogicalVolume* mother_logic_;
 
     // Dice board
     //   NextElDB* _dice_board;
     //  NextNewKDB* _dice_board;
-    NextDemoKDB* _dice_board;
+    NextDemoKDB* dice_board_;
 
     // Dimensions
     // G4double _support_diam, _support_thickness;
-    G4double _support_side, _support_thickness;
-    G4double _el_gap_z_edge, _z_displ;
-    G4double _hole_size;
+    G4double support_side_, support_thickness_;
+    G4double el_gap_z_edge_, z_displ_;
+    G4double hole_size_;
 
-    G4int _SiPM_rows, _SiPM_columns;
-    G4int _DB_columns, _num_DBs;                // Ruty
-    G4int _dice_side_x, _dice_side,_dice_gap;   // Ruty
-    std::vector<G4ThreeVector> _DB_positions;
+    G4int SiPM_rows_, SiPM_columns_;
+    G4int DB_columns_, num_DBs_;                // Ruty
+    G4int dice_side_x_, dice_side_,dice_gap_;   // Ruty
+    std::vector<G4ThreeVector> DB_positions_;
 
     // Visibility of the tracking plane
-    G4bool _visibility, _verbosity, _verb_sipmPos;
+    G4bool visibility_, verbosity_, verb_sipmPos_;
 
     // Vertex generators
     //CylinderPointSampler* _support_gen;
-    BoxPointSampler* _support_gen;
-    BoxPointSampler* _dice_board_gen;
+    BoxPointSampler* support_gen_;
+    BoxPointSampler* dice_board_gen_;
 
     // Geometry Navigator
-    G4Navigator* _geom_navigator;
+    G4Navigator* geom_navigator_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
+    G4GenericMessenger* msg_; 
 
     // Container to store the absolute position of SiPMs in gas
-    std::vector<std::pair<int, G4ThreeVector> > _absSiPMpos;
+    std::vector<std::pair<int, G4ThreeVector> > absSiPMpos_;
   };
 
 } //end namespace nexus

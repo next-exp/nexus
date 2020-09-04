@@ -59,28 +59,28 @@ namespace nexus {
 
   private:
     
-    G4LogicalVolume* _mother_logic;
-    G4VPhysicalVolume* _mother_phys;
+    G4LogicalVolume* mother_logic_;
+    G4VPhysicalVolume* mother_phys_;
 
-    G4Material* _gas;
-    G4double _pressure;
-    G4double _temperature;
+    G4Material* gas_;
+    G4double pressure_;
+    G4double temperature_;
 
     // Can internal length <> From NextDemo.cc -> transfer to NextDemoFieldCage.cc
-    G4double _vessel_length;
-    G4double _anode_z_pos;
+    G4double vessel_length_;
+    G4double anode_z_pos_;
 
     // Detector parts
-    NextDemoFieldCage*     _field_cage;
-    NextDemoTrackingPlane* _tracking_plane;
-    NextDemoEnergyPlane*   _energy_plane;
+    NextDemoFieldCage*     field_cage_;
+    NextDemoTrackingPlane* tracking_plane_;
+    NextDemoEnergyPlane*   energy_plane_;
 
     // Visibilities or Verbosity
     // G4bool _visibility;
-    G4bool _verbosity;
+    G4bool verbosity_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* _msg; 
+    G4GenericMessenger* msg_; 
   
   };
 
