@@ -142,5 +142,4 @@ def test_sensor_names_are_the_same_across_tables(detectors):
         assert any(p == label + '_binning' for p in sns_bin_conf)
 
     for p in sns_bin_conf:
-        p_split = p.split('_')
-        assert p_split[0] in pos_labels
+        assert p[:-8] in pos_labels

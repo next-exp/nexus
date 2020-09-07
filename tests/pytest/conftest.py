@@ -37,6 +37,16 @@ def nexus_full_output_file_next100(output_tmpdir, full_base_name_next100):
 
 
 @pytest.fixture(scope = 'session')
+def full_base_name_flex100():
+    return 'FLEX100_full_electron'
+
+
+@pytest.fixture(scope = 'session')
+def nexus_full_output_file_flex100(output_tmpdir, full_base_name_flex100):
+    return os.path.join(output_tmpdir, full_base_name_flex100 + '.h5')
+
+
+@pytest.fixture(scope = 'session')
 def new_detector(nexus_full_output_file_new):
     num_pmts        = 12
     num_boards      = 28
@@ -54,9 +64,19 @@ def next100_detector(nexus_full_output_file_next100):
     return nexus_full_output_file_next100, num_pmts, num_boards, sipms_per_board, board_ordering
 
 
+@pytest.fixture(scope = 'session')
+def flex100_detector(nexus_full_output_file_flex100):
+    num_pmts        = 60
+    num_boards      = 1
+    sipms_per_board = 3093
+    board_ordering  = 3093
+    return nexus_full_output_file_flex100, num_pmts, num_boards, sipms_per_board, board_ordering
+
+
 @pytest.fixture(scope = "module",
                 params= ["new_detector",
-                         "next100_detector"],
-                ids   = ["new", "next100"])
+                         "next100_detector",
+                         "flex100_detector"],
+                ids   = ["new", "next100", "flex100"])
 def detectors(request):
     return request.getfixturevalue(request.param)
