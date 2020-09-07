@@ -898,6 +898,9 @@ void NextFlexFieldCage::BuildFiberSensors()
                                                 sensor_rad * cos(phi),
                                                 sensor_left_posZ);
 
+    if (verbosity_) G4cout << "* Left  fiber sensor " << first_left_sensor_id_ + sensor_id
+                           << " position: " << case_left_pos << G4endl;
+
     new G4PVPlacement(G4Transform3D(sensor_left_rot, case_left_pos), left_sensor_logic,
                       left_sensor_logic->GetName(), mother_logic_, true,
                       first_left_sensor_id_ + sensor_id, false);
@@ -908,6 +911,9 @@ void NextFlexFieldCage::BuildFiberSensors()
     G4ThreeVector case_right_pos = G4ThreeVector(sensor_rad * sin(phi),
                                                  sensor_rad * cos(phi),
                                                  sensor_right_posZ);
+
+    if (verbosity_) G4cout << "* Right fiber sensor " << first_right_sensor_id_ + sensor_id
+                           << " position: " << case_right_pos << G4endl;
 
     new G4PVPlacement(G4Transform3D(sensor_right_rot, case_right_pos), right_sensor_logic,
                                     right_sensor_logic->GetName(), mother_logic_, true,
