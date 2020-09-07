@@ -95,6 +95,7 @@ namespace nexus {
 
     // Visibilities
     G4bool visibility_;
+    G4bool fiber_sensor_visibility_;
 
     // The messenger
     G4GenericMessenger* msg_; // Messenger for configuration parameters

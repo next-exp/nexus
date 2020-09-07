@@ -40,28 +40,29 @@ using namespace nexus;
 
 NextFlexFieldCage::NextFlexFieldCage():
   BaseGeometry(),
-  mother_logic_      (nullptr),
-  verbosity_         (false),
-  visibility_        (false),
-  msg_               (nullptr),
-  fc_with_fibers_    (true), 
-  active_diam_       (984. * mm),          // Same as NEXT100 (something btwn 1000 & 984 mm)
-  active_length_     (116. * cm),          // Distance GATE - CATHODE (meshes not included)
-  drift_transv_diff_ (1. * mm/sqrt(cm)),   // Drift field transversal diffusion
-  drift_long_diff_   (.3 * mm/sqrt(cm)),   // Drift field longitudinal diffusion
-  cathode_transparency_ (0.95),            // Cathode transparency
-  buffer_length_     (280. * mm),          // Distance CATHODE - sapphire window surfaces
-  el_gap_length_     (10. * mm),           // Distance ANODE - GATE (meshes included)
-  el_field_on_       (false),              // EL field ON-OFF
-  el_field_int_      (16.0 * kilovolt/cm), // EL field intensity
-  el_transv_diff_    (0. * mm/sqrt(cm)),   // EL field transversal diffusion
-  el_long_diff_      (0. * mm/sqrt(cm)),   // EL field longitudinal diffusion
-  anode_transparency_(0.95),               // Anode transparency
-  gate_transparency_ (0.95),               // Gate transparency
-  fiber_claddings_   (2),                  // Number of fiber claddings (0, 1 or 2)
-  fiber_sensor_binning_ (100. * ns),       // Size of fiber sensors time binning
-  wls_mat_name_      ("TPB"),              // UV wls material name
-  fiber_mat_name_    ("EJ280")             // Fiber core material name
+  mother_logic_            (nullptr),
+  verbosity_               (false),
+  visibility_              (false),
+  fiber_sensor_visibility_ (false),
+  msg_                     (nullptr),
+  fc_with_fibers_          (true), 
+  active_diam_             (984. * mm),          // Same as NEXT100 (something btwn 1000 & 984 mm)
+  active_length_           (116. * cm),          // Distance GATE - CATHODE (meshes not included)
+  drift_transv_diff_       (1. * mm/sqrt(cm)),   // Drift field transversal diffusion
+  drift_long_diff_         (.3 * mm/sqrt(cm)),   // Drift field longitudinal diffusion
+  cathode_transparency_    (0.95),               // Cathode transparency
+  buffer_length_           (280. * mm),          // Distance CATHODE - sapphire window surfaces
+  el_gap_length_           (10. * mm),           // Distance ANODE - GATE (meshes included)
+  el_field_on_             (false),              // EL field ON-OFF
+  el_field_int_            (16.0 * kilovolt/cm), // EL field intensity
+  el_transv_diff_          (0. * mm/sqrt(cm)),   // EL field transversal diffusion
+  el_long_diff_            (0. * mm/sqrt(cm)),   // EL field longitudinal diffusion
+  anode_transparency_      (0.95),               // Anode transparency
+  gate_transparency_       (0.95),               // Gate transparency
+  fiber_claddings_         (2),                  // Number of fiber claddings (0, 1 or 2)
+  fiber_sensor_binning_    (100. * ns),          // Size of fiber sensors time binning
+  wls_mat_name_            ("TPB"),              // UV wls material name
+  fiber_mat_name_          ("EJ280")             // Fiber core material name
 {
 
   // Messenger
@@ -112,8 +113,11 @@ void NextFlexFieldCage::DefineConfigurationParameters()
   // Verbosity
   msg_->DeclareProperty("fc_verbosity", verbosity_, "Verbosity");
 
-  // Visibility
-  msg_->DeclareProperty("fc_visibility", visibility_, "FIELD_CAGE Visibility");
+  // Visibilities
+  msg_->DeclareProperty("fc_visibility", visibility_, "FIELD_CAGE visibility");
+
+  msg_->DeclareProperty("fiber_sensor_visibility", fiber_sensor_visibility_,
+                        "Fiber sensors visibility");
 
   // FIELD_CAGE configuration
   msg_->DeclareProperty("fc_with_fibers", fc_with_fibers_, "FIELD_CAGE with fibers");
@@ -866,6 +870,10 @@ void NextFlexFieldCage::BuildFiberSensors()
   right_sensor_->SetSensorDepth(1);
   right_sensor_->SetMotherDepth(2);
   right_sensor_->SetNamingOrder(1);
+
+  // Set visibilities
+  left_sensor_ ->SetVisibility(fiber_sensor_visibility_);
+  right_sensor_->SetVisibility(fiber_sensor_visibility_);
 
   // Construct
   left_sensor_ ->Construct();

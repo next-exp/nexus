@@ -31,7 +31,6 @@ GenericPhotosensor::GenericPhotosensor(G4String name,
                                        G4double height,
                                        G4double thickness):
   BaseGeometry     (),
-  msg_             (nullptr),
   name_            (name),
   width_           (width),      // Width of the Sensitive Area
   height_          (height),     // Height of the Sensitive Area
@@ -45,12 +44,6 @@ GenericPhotosensor::GenericPhotosensor(G4String name,
   time_binning_    (1.0 * us),
   visibility_      (false)
 {
-  // User control commands for generic photosensor
-  msg_ = new G4GenericMessenger(this, "/Geometry/" + name_ + '/',
-                                "Control commands of the generic photosensor geometry");
-
-  msg_->DeclareProperty("visibility", visibility_,
-                        "Visibility of the GenericPhotosensor volumes.");
 }
 
 
@@ -62,7 +55,6 @@ GenericPhotosensor::GenericPhotosensor(G4String name, G4double size):
 
 GenericPhotosensor::~GenericPhotosensor()
 {
-  delete msg_;
 }
 
 

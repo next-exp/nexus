@@ -91,6 +91,7 @@ namespace nexus {
 
     // Visibilities
     G4bool visibility_;
+    G4bool SiPM_visibility_;
 
     // The messenger
     G4GenericMessenger* msg_; // Messenger for configuration parameters

@@ -51,7 +51,7 @@ namespace nexus {
     G4double board_thickness_, mask_thickness_;
     G4double time_binning_;
     std::vector<G4ThreeVector> sipm_positions_;
-    G4bool   visibility_;
+    G4bool   visibility_, sipm_visibility_;
     G4VPhysicalVolume*  mpv_;
     BoxPointSampler*    vtxgen_;
     GenericPhotosensor* sipm_;

@@ -40,6 +40,7 @@ Next100SiPMBoard::Next100SiPMBoard():
   mask_thickness_  (  2.1  * mm), // Made slightly thicker to fit SiPM
   time_binning_    (1. * microsecond),
   visibility_      (true),
+  sipm_visibility_ (false),
   mpv_             (nullptr),
   vtxgen_          (nullptr),
   sipm_            (new GenericPhotosensor("SiPM", 1.3 * mm))
@@ -49,6 +50,9 @@ Next100SiPMBoard::Next100SiPMBoard():
 
   msg_->DeclareProperty("sipm_board_vis", visibility_,
                         "Visibility of Next100SiPMBoard.");
+
+  msg_->DeclareProperty("sipm_vis", sipm_visibility_,
+                        "Visibility of Next100 SiPMs.");
 
   G4GenericMessenger::Command& time_binning_cmd =
   msg_->DeclareProperty("sipm_time_binning", time_binning_,
@@ -185,6 +189,7 @@ void Next100SiPMBoard::Construct()
   G4double efficiency[]   = {1.0     ,  1.0};
   photosensor_mpt->AddProperty("REFLECTIVITY", energy, reflectivity, 2);
   photosensor_mpt->AddProperty("EFFICIENCY",   energy, efficiency,   2);
+  sipm_->SetVisibility(sipm_visibility_);
   sipm_->SetOpticalProperties(photosensor_mpt);
   sipm_->SetWithWLSCoating(true);
   sipm_->SetTimeBinning(time_binning_);
