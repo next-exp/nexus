@@ -18,6 +18,6 @@
 
 /Actions/RegisterRunAction DEFAULT
 /Actions/RegisterEventAction SAVE_ALL
-/Actions/RegisterTrackingAction OPTICAL
+/Actions/RegisterTrackingAction DEFAULT
 
 /nexus/RegisterMacro macros/NEXT100_S2_table.config.mac
