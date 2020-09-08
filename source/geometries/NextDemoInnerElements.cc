@@ -36,6 +36,8 @@ namespace nexus {
 
   NextDemoInnerElements::NextDemoInnerElements(const G4double vessel_length):
     BaseGeometry(),
+    gate_sapphire_wdw_distance_(427. * mm), // to be checked
+    gate_tp_copper_distance_(10.8 * mm + 5.79 * mm), // to be checked
     mother_logic_(nullptr),
     mother_phys_(nullptr),
     verbosity_(0)
@@ -59,13 +61,16 @@ namespace nexus {
     mother_logic_ = mother_logic;
   }
 
-  void NextDemoInnerElements::SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys)
+  void NextDemoInnerElements::SetPhysicalVolume(G4VPhysicalVolume* mother_phys)
   {
     mother_phys_ = mother_phys;
   }
 
   void NextDemoInnerElements::Construct()
   {
+    // Position in Z of the beginning of the drift region
+    G4double gate_zpos = GetELzCoord();
+
     // Reading material
     gas_ = mother_logic_->GetMaterial();
     pressure_ =    gas_->GetPressure();
@@ -73,21 +78,18 @@ namespace nexus {
 
     //INNER ELEMENTS
     field_cage_->SetLogicalVolume(mother_logic_);
-    field_cage_->SetMotherPhysicalVolume(mother_phys_);
+    field_cage_->SetPhysicalVolume(mother_phys_);
+    field_cage_->SetELzCoord(gate_zpos);
     field_cage_->Construct();
-    // SetELzCoord(_field_cage->GetELzCoord());   //  Ruty 25-03-2020 transfer to TrackPl ELzEdge
-    anode_z_pos_ = field_cage_->GetAnodezCoord();   //  Ruty 25-03-2020 transfer to TrackPl ELzEdg
-   if (verbosity_) {
-      G4cout << "******************************" << G4endl;
-      G4cout << "INNER_ELEMENTS: anode_z_pos_: " << anode_z_pos_  <<  G4endl;
-      G4cout << "******************************" << G4endl;
-   }
+
     tracking_plane_->SetLogicalVolume(mother_logic_);
-    tracking_plane_->SetAnodeZCoord(anode_z_pos_);
-    //_tracking_plane->SetELzCoord(_field_cage->GetELzCoord());
+    tracking_plane_->SetELzCoord(gate_zpos);
+    tracking_plane_->SetTPGateDistance(gate_tp_copper_distance_);
     tracking_plane_->Construct();
+
     energy_plane_->SetLogicalVolume(mother_logic_);
-    // _energy_plane->SetELzCoord(_field_cage->GetELzCoord());
+    energy_plane_->SetELzCoord(gate_zpos);
+    energy_plane_->SetSapphireSurfaceZPos(gate_sapphire_wdw_distance_);
     energy_plane_->Construct();
   }
 

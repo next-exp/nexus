@@ -155,6 +155,9 @@ namespace nexus {
 
     /// To generate vertices in the Na22 source
     // CylinderPointSampler* _cps; // old
+
+    /// Position of gate in its mother volume
+    G4double gate_zpos_in_vessel_;
   };
 
 

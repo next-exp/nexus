@@ -1,5 +1,5 @@
 // ------------------------------------------------------------------------
-///  \file    NextNewInnerElements 
+///  \file    NextNewInnerElements
 ///  \brief   This class constructs the inner elements of Next-New:
 ///           Energy plane, field cage and tracking plane.
 ///  \author   <miquel.nebot@ific.uv.es>
@@ -9,7 +9,7 @@
 ///  Copyright (c) 2013 NEXT Collaboration
 //
 //
-//  Updated to NextDemo++  by  Ruth Weiss Babai  <ruty.wb@gmail.com> 
+//  Updated to NextDemo++  by  Ruth Weiss Babai  <ruty.wb@gmail.com>
 //  From: NextNewInnerElements.h
 //  Date:      June-Aug 2019
 // ------------------------------------------------------------------------
@@ -24,7 +24,7 @@ class G4LogicalVolume;
 class G4VPhysicalVolume;
 class G4Material;
 class G4GenericMessenger;
-namespace nexus { class NextDemoFieldCage; } 
+namespace nexus { class NextDemoFieldCage; }
 namespace nexus { class NextDemoTrackingPlane; }
 namespace nexus { class NextDemoEnergyPlane; }
 
@@ -38,13 +38,13 @@ namespace nexus {
     NextDemoInnerElements(const G4double vessel_length);
     // Destructor
     ~NextDemoInnerElements();
-    
+
     // Sets the Logical Volume where Inner Elements will be placed
     void SetLogicalVolume(G4LogicalVolume* mother_logic);
 
-    /// Sets the mother's physical volume, needed for the definition
+    /// Sets the physical volume, needed for the definition
     /// of border optical surfaces
-    void SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys);
+    void SetPhysicalVolume(G4VPhysicalVolume* mother_phys);
 
 
     // It Returns the relative position respect to the rest of NEXTNEW geometry
@@ -58,7 +58,10 @@ namespace nexus {
     void Construct();
 
   private:
-    
+
+    G4double gate_sapphire_wdw_distance_;
+    G4double gate_tp_copper_distance_;
+
     G4LogicalVolume* mother_logic_;
     G4VPhysicalVolume* mother_phys_;
 
@@ -80,11 +83,10 @@ namespace nexus {
     G4bool verbosity_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* msg_; 
-  
+    G4GenericMessenger* msg_;
+
   };
 
 } // end namespace nexus
 
 #endif
-    

@@ -54,6 +54,7 @@ namespace nexus {
     G4LogicalVolume* internal_logic_vol_;
     G4VPhysicalVolume* internal_phys_vol_;
 
+    G4double distance_gate_body_end_;
     G4ThreeVector sideport_position_;
     G4ThreeVector sideport_ext_position_;
     // G4ThreeVector _axialport_position;

@@ -56,9 +56,9 @@ namespace nexus {
     /// Sets the Logical Volume where Inner Elements will be placed
     void SetLogicalVolume(G4LogicalVolume* mother_logic);
 
-    /// Sets the mother's physical volume, needed for the definition
+    /// Sets the physical volume, needed for the definition
     /// of border optical surfaces
-    void SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys);
+    void SetPhysicalVolume(G4VPhysicalVolume* mother_phys);
 
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;

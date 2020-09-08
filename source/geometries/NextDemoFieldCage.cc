@@ -192,7 +192,7 @@ namespace nexus {
 
 
 
-  void NextDemoFieldCage::SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys)
+  void NextDemoFieldCage::SetPhysicalVolume(G4VPhysicalVolume* mother_phys)
   {
     mother_phys_ = mother_phys;
   }
@@ -217,9 +217,9 @@ namespace nexus {
   // World==Vessel Coordinates => EL_table_gate_posz = _gate_posz + _fieldcage_position.z
   el_table_z_ = gate_posz_ + fieldcage_position_.z();
    // 0.1 * mm is added to avoid very small negative numbers in drift lengths
-  SetELzCoord(el_table_z_ + 0.1 * mm); // Gate-Mesh Posz
+  //SetELzCoord(el_table_z_ + 0.1 * mm); // Gate-Mesh Posz
  ////////////////////////
-  AnodezCoord_ = el_table_z_  + elgap_length_ + anode_length_/2.;  // To the Edge of EL_GAP or before the Anode, facing Sipm (+ anode_length_/2.) ??
+  //AnodezCoord_ = el_table_z_  + elgap_length_ + anode_length_/2.;  // To the Edge of EL_GAP or before the Anode, facing Sipm (+ anode_length_/2.) ??
  /////////////////////
    /// Ionielectrons are generated at a z = .5 mm inside the EL gap, not on border
   el_table_z_ = el_table_z_ + 0.5*mm;    // Next1EL.cc  SEE down here from: NextNewFieldCage.cc !!!
@@ -275,16 +275,16 @@ namespace nexus {
 
   G4double posz = fieldcage_length_/2. ; // STEP file (? - anode_length_), (prev: - elgap_ring_height_/2.)
 
-  new G4PVPlacement(0, G4ThreeVector(0.,0.,posz + fieldcage_position_.z()), anode_ring_logic,
-   		    "ANODE_RING", mother_logic_, false, 0, true);
+  //new G4PVPlacement(0, G4ThreeVector(0.,0.,posz + fieldcage_position_.z()), anode_ring_logic,
+  // 		    "ANODE_RING", mother_logic_, false, 0, true);
 
-   if (verbosity_) {
-      G4cout << "Anode ring starts in " 
-             << posz + fieldcage_position_.z() - anode_ring_length_/2. << G4endl
-             << " and ends in " 
-             << posz + fieldcage_position_.z() + anode_ring_length_/2. 
-             << G4endl;
-   }
+   // if (verbosity_) {
+   //    G4cout << "Anode ring starts in " 
+   //           << posz + fieldcage_position_.z() - anode_ring_length_/2. << G4endl
+   //           << " and ends in " 
+   //           << posz + fieldcage_position_.z() + anode_ring_length_/2. 
+   //           << G4endl;
+   // }
 //////////////////////////////////////////////////////////////////////////////
   G4Tubs* elgap_ring_solid =
     new G4Tubs("EL_GAP_RING", elgap_ring_diam_/2.,
@@ -297,27 +297,27 @@ namespace nexus {
   // posz = _fieldcage_length/2. - _anode_ring_length/2. - 5.5 * mm - _elgap_ring_height/2.; 
   posz = posz - anode_ring_length_/2. - 5.5 * mm - elgap_ring_height_/2.;  // (1.1+4.4)*mm for distance, STEP file
 
-  new G4PVPlacement(0, G4ThreeVector(0.,0.,posz + fieldcage_position_.z()), elgap_ring_logic,
-   		    "EL_GAP_RING", mother_logic_, false, 0, true);
+  // new G4PVPlacement(0, G4ThreeVector(0.,0.,posz + fieldcage_position_.z()), elgap_ring_logic,
+  //  		    "EL_GAP_RING", mother_logic_, false, 0, true);
 
-   if (verbosity_) {
-      G4cout << "Gate ring starts in " 
-             << posz + fieldcage_position_.z() - elgap_ring_height_/2. << G4endl
-             << " and ends in " 
-             << posz + fieldcage_position_.z() + elgap_ring_height_/2. 
-             << G4endl;
-   }
+  //  if (verbosity_) {
+  //     G4cout << "Gate ring starts in " 
+  //            << posz + fieldcage_position_.z() - elgap_ring_height_/2. << G4endl
+  //            << " and ends in " 
+  //            << posz + fieldcage_position_.z() + elgap_ring_height_/2. 
+  //            << G4endl;
+  //  }
 
 
-  if (visibility_) {
-  G4VisAttributes * visEL = new G4VisAttributes;
-  visEL->SetColor(0.2, 0.7, 0.3);
-  visEL->SetForceWireframe(true);
-  elgap_ring_logic->SetVisAttributes(visEL);
-  }
-  else {
-    elgap_ring_logic->SetVisAttributes(G4VisAttributes::Invisible);
-  }
+  // if (visibility_) {
+  // G4VisAttributes * visEL = new G4VisAttributes;
+  // visEL->SetColor(0.2, 0.7, 0.3);
+  // visEL->SetForceWireframe(true);
+  // elgap_ring_logic->SetVisAttributes(visEL);
+  // }
+  // else {
+  //   elgap_ring_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  // }
 
   // EL GAP ................................................
 
@@ -327,28 +327,30 @@ namespace nexus {
   G4LogicalVolume* elgap_logic =
     new G4LogicalVolume(elgap_solid, gas_, "EL_GAP");   // gxe_
 
-  posz = fieldcage_length_/2. - anode_length_ - elgap_length_/2.;  // (STEP file:- anode_length_),  (prev: - elgap_ring_height_)
-
-  new G4PVPlacement(0, G4ThreeVector(0.,0.,posz + fieldcage_position_.z()), elgap_logic,
-		    "EL_GAP", mother_logic_, false, 0, true);
+  //posz = = fieldcage_length_/2. - anode_length_ - elgap_length_/2.;  // (STEP file:- anode_length_),  (prev: - elgap_ring_height_)
+  G4double el_gap_zpos = GetELzCoord() - elgap_length_/2.;
+  
+  // new G4PVPlacement(0, G4ThreeVector(0.,0.,posz + fieldcage_position_.z()),
+   new G4PVPlacement(0, G4ThreeVector(0.,0., el_gap_zpos),
+                    elgap_logic, "EL_GAP", mother_logic_, false, 0, true);
 
   // Store the position of the EL GAP wrt the WORLD system of reference
-  elgap_position_.set(0.,0.,fieldcage_position_.z()+posz);
+  //elgap_position_.set(0.,0.,fieldcage_position_.z()+posz);
 
-   if (verbosity_) {
-     G4cout << "  ****************************  " << G4endl;
-     G4cout << "*** Positions of el_gap FC coordinates***" << G4endl;
-     G4cout << "posz: " << posz << G4endl;
-     G4cout << "Positions of el_gap world coordinate: " << posz + fieldcage_position_.z() << G4endl;
-     G4cout << "elgap_position_() " << elgap_position_.z() << G4endl;
-     G4cout << "EL GAP starts in " << posz + fieldcage_position_.z() - elgap_length_/2. << G4endl
-            << " and ends in " <<  posz + fieldcage_position_.z() + elgap_length_/2. << G4endl;
-     G4cout << "fieldcage_position_: " <<  fieldcage_position_ << G4endl;
-     G4cout << "fieldcage_length_: " <<  fieldcage_length_ << G4endl;
-     G4cout << "anode_position_ (wrld): " <<  anode_posz_ + fieldcage_position_.z() << G4endl;
-     G4cout << "cathode_position_ (wrld): " <<  cathode_posz_ + fieldcage_position_.z() << G4endl;
-     G4cout << "  ****************************  " << G4endl;
-   }
+   // if (verbosity_) {
+   //   G4cout << "  ****************************  " << G4endl;
+   //   G4cout << "*** Positions of el_gap FC coordinates***" << G4endl;
+   //   G4cout << "posz: " << posz << G4endl;
+   //   G4cout << "Positions of el_gap world coordinate: " << posz + fieldcage_position_.z() << G4endl;
+   //   G4cout << "elgap_position_() " << elgap_position_.z() << G4endl;
+   //   G4cout << "EL GAP starts in " << posz + fieldcage_position_.z() - elgap_length_/2. << G4endl
+   //          << " and ends in " <<  posz + fieldcage_position_.z() + elgap_length_/2. << G4endl;
+   //   G4cout << "fieldcage_position_: " <<  fieldcage_position_ << G4endl;
+   //   G4cout << "fieldcage_length_: " <<  fieldcage_length_ << G4endl;
+   //   G4cout << "anode_position_ (wrld): " <<  anode_posz_ + fieldcage_position_.z() << G4endl;
+   //   G4cout << "cathode_position_ (wrld): " <<  cathode_posz_ + fieldcage_position_.z() << G4endl;
+   //   G4cout << "  ****************************  " << G4endl;
+   // }
   //////////////////////////////////////////////////////////////////////////////////
 
 
@@ -366,7 +368,7 @@ namespace nexus {
 
   G4LogicalVolume* diel_grid_gate_logic =
     new G4LogicalVolume(diel_grid, fgrid_gate, "GRID_GATE");
-  G4double pos1 = - elgap_length_/2. + diel_thickn/2.;
+  G4double pos1 = elgap_length_/2. - diel_thickn/2.;
   new G4PVPlacement(0, G4ThreeVector(0.,0.,pos1), diel_grid_gate_logic, "GRID_GATE",
 		    elgap_logic, false, 0, true);
 
@@ -381,21 +383,23 @@ namespace nexus {
     G4LogicalVolume* anode_logic =
       new G4LogicalVolume(anode_quartz_solid, quartz_, "EL_QUARTZ_ANODE");
 
-    G4double pos_z_anode_ = anode_posz_ + fieldcage_position_.z();
+    //G4double pos_z_anode_ = anode_posz_ + fieldcage_position_.z();
+    G4double pos_z_anode = GetELzCoord() - elgap_length_ - anode_length_/2.;
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., pos_z_anode_), anode_logic,
+    new G4PVPlacement(0, G4ThreeVector(0., 0., pos_z_anode), anode_logic,
 		      "EL_QUARTZ_ANODE", mother_logic_, false, 0, true);
 
    if (verbosity_) {
-       G4cout << "Anode plate starts in " << pos_z_anode_ - anode_length_/2. << G4endl
-              << " and ends in "          << pos_z_anode_ + anode_length_/2. << G4endl;
+       G4cout << "Anode plate starts in " << pos_z_anode - anode_length_/2. << G4endl
+              << " and ends in "          << pos_z_anode + anode_length_/2. << G4endl;
    }
 
 
   if (elfield_) {
     UniformElectricDriftField* el_field = new UniformElectricDriftField();
-    el_field->SetCathodePosition(elgap_position_.z()-elgap_length_/2.);
-    el_field->SetAnodePosition(elgap_position_.z()+elgap_length_/2.);
+    G4double global_el_gap_zpos = el_gap_zpos - GetELzCoord();
+    el_field->SetCathodePosition(global_el_gap_zpos + elgap_length_/2.);
+    el_field->SetAnodePosition(global_el_gap_zpos - elgap_length_/2.);
     el_field->SetDriftVelocity(2.5*mm/microsecond);
     el_field->SetTransverseDiffusion(1.*mm/sqrt(cm));
     el_field->SetLongitudinalDiffusion(.5*mm/sqrt(cm));
@@ -423,15 +427,16 @@ namespace nexus {
   G4LogicalVolume* active_logic =
     new G4LogicalVolume(active_solid, gas_, "ACTIVE");
 
-  //  posz = _fieldcage_length/2. - _elgap_ring_height - _elgap_length - _active_length/2.;  Prev:
-      posz = fieldcage_length_/2.  - anode_length_ - elgap_length_ - GateHV_Mesh_Dist_ - active_length_/2.;
+  //   posz = fieldcage_length_/2.  - anode_length_ - elgap_length_ - GateHV_Mesh_Dist_ - active_length_/2.;
+  G4double active_zpos = GetELzCoord() + active_length_/2.;
 
-  new G4PVPlacement(0, G4ThreeVector(0.,0.,posz + fieldcage_position_.z()), active_logic,
-		    "ACTIVE", mother_logic_, false, 0, true);
+    //new G4PVPlacement(0, G4ThreeVector(0.,0.,posz + fieldcage_position_.z()),
+    new G4PVPlacement(0, G4ThreeVector(0.,0., active_zpos),
+                    active_logic, "ACTIVE", mother_logic_, false, 0, true);
 
   // Store the position of the active volume with respect to the
   // WORLD system of reference
-  active_position_.set(0.,0.,fieldcage_position_.z()+posz);
+  //active_position_.set(0.,0.,fieldcage_position_.z()+posz);
 
   //_hexrnd = new HexagonPointSampler(_active_diam/2., _active_length, 0.,
 				  //  active_position_);
@@ -448,8 +453,9 @@ namespace nexus {
 
   //Define a drift field for this volume
   UniformElectricDriftField* field = new UniformElectricDriftField();
-  field->SetCathodePosition(active_position_.z() - active_length_/2.);
-  field->SetAnodePosition(elgap_position_.z()-elgap_length_/2.);
+  G4double global_active_zpos = active_zpos - GetELzCoord();
+  field->SetCathodePosition(global_active_zpos + active_length_/2.);
+  field->SetAnodePosition(global_active_zpos - active_length_/2.);
   field->SetDriftVelocity(1.*mm/microsecond);
   field->SetTransverseDiffusion(1.*mm/sqrt(cm));
   field->SetLongitudinalDiffusion(.3*mm/sqrt(cm));
@@ -459,6 +465,28 @@ namespace nexus {
   drift_region->AddRootLogicalVolume(active_logic);
 
   active_logic->SetVisAttributes(G4VisAttributes::Invisible);
+
+  // CATHODE .....................................
+
+  diel_thickn = 1. * mm;
+  G4double transparency = 0.98;
+
+  G4Material* fcathode = MaterialsList::FakeDielectric(gas_, "cathode_mat");
+  fcathode->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_, temperature_,
+  									transparency, diel_thickn));
+
+  G4Tubs* diel_cathd =
+    new G4Tubs("CATHODE", 0., cathode_ring_diam_/2., diel_thickn/2., 0, twopi);  // elgap_ring_diam_/2
+
+  G4LogicalVolume* diel_cathd_logic =
+    new G4LogicalVolume(diel_cathd, fcathode, "CATHODE");
+
+  //posz = cathode_posz_ - diel_thickn/2.;
+  G4double cathode_zpos = GetELzCoord() + active_length_ + diel_thickn/2.;
+
+  //new G4PVPlacement(0, G4ThreeVector(0.,0.,posz + fieldcage_position_.z()),
+  new G4PVPlacement(0, G4ThreeVector(0.,0., cathode_zpos),
+                    diel_cathd_logic, "CATHODE", mother_logic_, false, 0, true);
 
 
   // LIGHT TUBE //////////////////////////////////////////////////////
@@ -479,21 +507,22 @@ namespace nexus {
   G4LogicalVolume* ltube_up_logic =
     new G4LogicalVolume(ltube_up_solid, teflon_, "LIGHT_TUBE_UP");
 
-  //  posz = (_gate_posz + _cathode_posz) / 2.;  Prev.
-  posz = (gate_posz_ - GateHV_Mesh_Dist_ + cathode_posz_) / 2.;  // STEP file: ( - GateHV_Mesh_Dist_)
+  //posz = (gate_posz_ - GateHV_Mesh_Dist_ + cathode_posz_) / 2.;  // STEP file: ( - GateHV_Mesh_Dist_)
+  G4double lt_up_zpos = (GetELzCoord() + GateHV_Mesh_Dist_ + cathode_zpos)/2.;
 
-  new G4PVPlacement(0, G4ThreeVector(0.,0.,posz + fieldcage_position_.z()), ltube_up_logic,
-   		    "LIGHT_TUBE_UP", mother_logic_, false, 0, true);
+  //new G4PVPlacement(0, G4ThreeVector(0.,0.,posz + fieldcage_position_.z()),
+  new G4PVPlacement(0, G4ThreeVector(0.,0., lt_up_zpos),
+                    ltube_up_logic, "LIGHT_TUBE_UP", mother_logic_, false, 0, true);
 
-  if (verbosity_) {
-	G4cout << "  ****************************  " << G4endl;
-        G4cout << "*** Positions of internal upper light tubs ***" << G4endl;
-	G4cout << "posz: " << posz << G4endl;
-	G4cout << "fieldcage_position_.z() : "  <<  fieldcage_position_.z() << G4endl;
-	G4cout << "LIGHT_TUBE_UP.Z: " << posz + fieldcage_position_.z() << G4endl;
-	G4cout << "LIGHT_TUBE_UP.Z edge: " << posz + fieldcage_position_.z() + ltube_up_length_/2. << G4endl;
-	G4cout << "  ****************************  " << G4endl;
-  }
+  // if (verbosity_) {
+  //       G4cout << "  ****************************  " << G4endl;
+  //       G4cout << "*** Positions of internal upper light tubs ***" << G4endl;
+  //       G4cout << "posz: " << posz << G4endl;
+  //       G4cout << "fieldcage_position_.z() : "  <<  fieldcage_position_.z() << G4endl;
+  //       G4cout << "LIGHT_TUBE_UP.Z: " << posz + fieldcage_position_.z() << G4endl;
+  //       G4cout << "LIGHT_TUBE_UP.Z edge: " << posz + fieldcage_position_.z() + ltube_up_length_/2. << G4endl;
+  //       G4cout << "  ****************************  " << G4endl;
+  // }
 
   // TPB coating
   //if (_tpb_coating) {
@@ -532,24 +561,24 @@ namespace nexus {
   G4LogicalVolume* ltube_bt_logic =
     new G4LogicalVolume(ltube_bt_solid, teflon_, "LIGHT_TUBE_BOTTOM");
 
-  // posz = _fieldcage_length/2. - _elgap_ring_height - _elgap_length -   // Prev.
-  //        _active_length - _ltube_gap - _ltube_bt_length/2.;
-  posz = (gate_posz_ - GateHV_Mesh_Dist_ + cathode_posz_) / 2.     // STEP file: ( - GateHV_Mesh_Dist_)
-         -  ltube_up_length_/2.  - ltube_gap_  - ltube_bt_length_/2.;
+  // posz = (gate_posz_ - GateHV_Mesh_Dist_ + cathode_posz_) / 2.     // STEP file: ( - GateHV_Mesh_Dist_)
+  //        -  ltube_up_length_/2.  - ltube_gap_  - ltube_bt_length_/2.;
+  G4double lt_bottom_zpos = lt_up_zpos + ltube_up_length_/2.  + ltube_gap_  + ltube_bt_length_/2.;
 
-  new G4PVPlacement(0, G4ThreeVector(0.,0.,posz + fieldcage_position_.z()), ltube_bt_logic,
-   		    "LIGHT_TUBE_BOTTOM", mother_logic_, false, 0, true);
+  //new G4PVPlacement(0, G4ThreeVector(0.,0.,posz + fieldcage_position_.z()),
+  new G4PVPlacement(0, G4ThreeVector(0.,0., lt_bottom_zpos),
+                    ltube_bt_logic, "LIGHT_TUBE_BOTTOM", mother_logic_, false, 0, true);
 
 ///////////////////////////////////////////////////////////////////////////////////
-   if (verbosity_) {
-	   G4cout << "  ****************************  " << G4endl;
-	   G4cout << "*** Positions of internal light tubs ***" << G4endl;
-	   G4cout << "posz: " << posz << G4endl;
-	   G4cout << "LIGHT_TUBE_BOTTOM.Z: " << posz + fieldcage_position_.z() << G4endl;
-	   G4cout << "fieldcage_position_: " <<  fieldcage_position_ << G4endl;
-	   G4cout << "ACTIVE: " << active_position_ << G4endl;
-	   G4cout << "  ****************************  " << G4endl;
-   }
+   // if (verbosity_) {
+   //         G4cout << "  ****************************  " << G4endl;
+   //         G4cout << "*** Positions of internal light tubs ***" << G4endl;
+   //         G4cout << "posz: " << posz << G4endl;
+   //         G4cout << "LIGHT_TUBE_BOTTOM.Z: " << posz + fieldcage_position_.z() << G4endl;
+   //         G4cout << "fieldcage_position_: " <<  fieldcage_position_ << G4endl;
+   //         G4cout << "ACTIVE: " << active_position_ << G4endl;
+   //         G4cout << "  ****************************  " << G4endl;
+   // }
 //////////////////////////////////////////////////////////////////////////////////
 
   // SETTING VISIBILITIES   //////////
@@ -592,8 +621,8 @@ namespace nexus {
       if (verbosity_) {
          G4cout << "posz (wrld): " <<  i  << " :  " <<  posz  + fieldcage_position_.z() << G4endl;
       }
-    new G4PVPlacement(0, G4ThreeVector(0., 0., posz + fieldcage_position_.z()), ring_logic,
-                "FIELD_RING", mother_logic_, false, i, true);
+    // new G4PVPlacement(0, G4ThreeVector(0., 0., posz + fieldcage_position_.z()), ring_logic,
+    //             "FIELD_RING", mother_logic_, false, i, true);
 
     //  prev:  posz = posz - _ring_height - 5.1 * mm;
     posz = posz - ring_height_ - 5.0 * mm;
@@ -614,8 +643,8 @@ namespace nexus {
         G4cout << "posz (wrld): "  <<  i  << " :  " << posz  + fieldcage_position_.z() << G4endl;
      }
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., posz  + fieldcage_position_.z()), ring_logic,
-                "FIELD_RING", mother_logic_, false, i, true);
+    // new G4PVPlacement(0, G4ThreeVector(0., 0., posz  + fieldcage_position_.z()), ring_logic,
+    //             "FIELD_RING", mother_logic_, false, i, true);
 
     posz = posz - ring_height_ - 10. * mm;
 
@@ -632,25 +661,7 @@ namespace nexus {
     ring_logic->SetVisAttributes(G4VisAttributes::Invisible);
    }
   //_visibility = 0;
-  // CATHODE .....................................
 
-  diel_thickn = 1. * mm;
-  G4double transparency = 0.98;
-
-  G4Material* fcathode = MaterialsList::FakeDielectric(gas_, "cathode_mat");
-  fcathode->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_, temperature_,
-  									transparency, diel_thickn));
-
-  G4Tubs* diel_cathd =
-    new G4Tubs("CATHODE", 0., cathode_ring_diam_/2., diel_thickn/2., 0, twopi);  // elgap_ring_diam_/2
-
-  G4LogicalVolume* diel_cathd_logic =
-    new G4LogicalVolume(diel_cathd, fcathode, "CATHODE");
-
-  posz = cathode_posz_ - diel_thickn/2.;
-
-  new G4PVPlacement(0, G4ThreeVector(0.,0.,posz + fieldcage_position_.z()), diel_cathd_logic, "CATHODE",
-		    mother_logic_, false, 0, true);
 
 
   // SUPPORT BARS - DRIFT ////////////////////////////////////////////////////
@@ -707,22 +718,22 @@ namespace nexus {
     G4double yy = pos_rad * sin((i*36.+90)*deg);
     G4double zz = posz;
 
-    new G4PVPlacement(G4Transform3D(rotbar, G4ThreeVector(xx, yy, zz + fieldcage_position_.z())),
-		      bar_logic, "SUPPORT_BAR", mother_logic_, false, i, true);
+    // new G4PVPlacement(G4Transform3D(rotbar, G4ThreeVector(xx, yy, zz + fieldcage_position_.z())),
+    //     	      bar_logic, "SUPPORT_BAR", mother_logic_, false, i, true);
   }
    /*G4VisAttributes * vis3 = new G4VisAttributes;
    vis3->SetColor(0.5, 0.5, .5);
    vis3->SetForceSolid(true);
    bar_logic->SetVisAttributes(vis3);*/
 
-   if (visibility_) {
-   G4VisAttributes dirty_white_col =nexus::DirtyWhite();
-   dirty_white_col.SetForceSolid(true);
-   bar_logic->SetVisAttributes(dirty_white_col);
-   }
-   else {
-     bar_logic->SetVisAttributes(G4VisAttributes::Invisible);
-   }
+   // if (visibility_) {
+   // G4VisAttributes dirty_white_col =nexus::DirtyWhite();
+   // dirty_white_col.SetForceSolid(true);
+   // bar_logic->SetVisAttributes(dirty_white_col);
+   // }
+   // else {
+   //   bar_logic->SetVisAttributes(G4VisAttributes::Invisible);
+   // }
 
   // SUPPORT BARS - BUFFER //////////////////////////////////////////////
 
@@ -767,8 +778,8 @@ namespace nexus {
     G4double yy = pos_rad * sin((i*36.+90)*deg); // yy
     G4double zz = posz;
 
-    new G4PVPlacement(G4Transform3D(rotbar, G4ThreeVector(xx, yy, zz + fieldcage_position_.z())),
-		      barBT_logic, "SUPPORT_BAR_BT", mother_logic_, false, i, true);
+    // new G4PVPlacement(G4Transform3D(rotbar, G4ThreeVector(xx, yy, zz + fieldcage_position_.z())),
+    //     	      barBT_logic, "SUPPORT_BAR_BT", mother_logic_, false, i, true);
   }
 
 
