@@ -25,7 +25,7 @@ namespace nexus {
     // The default thickness corresponds to a typical value for
     // a silicon photomultiplier.
     GenericPhotosensor(G4String name,   G4double width,
-                       G4double height, G4double thickness = 2.0*mm);
+                       G4double height, G4double thickness = 2.0 * mm);
     
     // Constructor for a square sensor
     GenericPhotosensor(G4String name, G4double size);
@@ -42,6 +42,7 @@ namespace nexus {
     G4double GetThickness()   const;
     const G4String& GetName() const;
 
+    void SetVisibility           (G4bool visibility);
     void SetWithWLSCoating       (G4bool with_wls_coating);
     void SetWindowRefractiveIndex(G4MaterialPropertyVector* rindex);
     void SetOpticalProperties    (G4MaterialPropertiesTable* mpt);
@@ -54,8 +55,6 @@ namespace nexus {
 
     void ComputeDimensions();
     void DefineMaterials();
-
-    G4GenericMessenger* msg_;
 
     G4String name_;
     
@@ -86,6 +85,9 @@ namespace nexus {
   inline G4double GenericPhotosensor::GetHeight()      const { return height_; }
   inline G4double GenericPhotosensor::GetThickness()   const { return thickness_; }
   inline const G4String& GenericPhotosensor::GetName() const { return name_; }
+
+  inline void GenericPhotosensor::SetVisibility(G4bool visibility)
+  { visibility_ = visibility; }
 
   inline void GenericPhotosensor::SetWithWLSCoating(G4bool with_wls_coating)
   { with_wls_coating_ = with_wls_coating; }

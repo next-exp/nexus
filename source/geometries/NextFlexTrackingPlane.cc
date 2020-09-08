@@ -46,8 +46,9 @@ NextFlexTrackingPlane::NextFlexTrackingPlane():
   mother_logic_      (nullptr),
   verbosity_         (false),
   visibility_        (false),
+  SiPM_visibility_   (false),
   msg_               (nullptr),
-  wls_mat_name_       ("TPB"),
+  wls_mat_name_      ("TPB"),
   SiPM_ANODE_dist_   (10.  * mm),   // Distance from ANODE to SiPM surface
   SiPM_size_x_       ( 1.3 * mm),   // Size X (width) of SiPMs
   SiPM_size_y_       ( 1.3 * mm),   // Size Y (height) of SiPMs
@@ -90,8 +91,11 @@ void NextFlexTrackingPlane::DefineConfigurationParameters()
   // Verbosity
   msg_->DeclareProperty("tp_verbosity", verbosity_, "Verbosity");
 
-  // Visibility
+  // Visibilities
   msg_->DeclareProperty("tp_visibility", visibility_, "TRACKING_PLANE Visibility");
+
+  msg_->DeclareProperty("tp_sipm_visibility", SiPM_visibility_,
+                        "TRACKING_PLANE SiPMs Visibility");
 
   // Copper dimensions
   G4GenericMessenger::Command& copper_thickness_cmd =
@@ -426,6 +430,9 @@ G4LogicalVolume* NextFlexTrackingPlane::BuildSiPM()
   SiPM_->SetMotherDepth(2);
   SiPM_->SetNamingOrder(1);
 
+  // Set visibility
+  SiPM_->SetVisibility(SiPM_visibility_);
+  
   // Construct
   SiPM_->Construct();
 

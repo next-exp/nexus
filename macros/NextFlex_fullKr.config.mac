@@ -74,11 +74,13 @@
 /Geometry/NextFlex/tp_verbosity  true
 
 # VISIBILITIES
-/Geometry/NextFlex/fc_visibility  true
-/Geometry/NextFlex/ep_visibility  true
-/Geometry/PmtR11410/visibility    true
-/Geometry/NextFlex/tp_visibility  true
-/Geometry/NextFlex/ics_visibility true
+/Geometry/NextFlex/fc_visibility           true
+/Geometry/NextFlex/fiber_sensor_visibility false
+/Geometry/NextFlex/ep_visibility           true
+/Geometry/PmtR11410/visibility             true
+/Geometry/NextFlex/tp_visibility           true
+/Geometry/NextFlex/tp_sipm_visibility      false
+/Geometry/NextFlex/ics_visibility          false
 
 
 ### GENERATOR
