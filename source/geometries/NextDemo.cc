@@ -145,27 +145,27 @@ void NextDemo::Construct()
   if(muonsGenerator_)
     BuildMuons();
 
-  //BuildVessel();
   vessel_->Construct();
   G4LogicalVolume* vessel_logic = vessel_->GetLogicalVolume();
-  G4ThreeVector position(0.,0.,0.);
-  new G4PVPlacement(0, position, vessel_logic,
+  gate_zpos_in_vessel_ = vessel_->GetELzCoord();
+  new G4PVPlacement(0, G4ThreeVector(0., 0., -gate_zpos_in_vessel_), vessel_logic,
                     "VESSEL", lab_logic_, false, 0, false);
 
-   G4LogicalVolume* vessel_internal_logic = vessel_->GetInternalLogicalVolume();
+  G4LogicalVolume*   vessel_internal_logic = vessel_->GetInternalLogicalVolume();
+  G4VPhysicalVolume* vessel_internal_phys  = vessel_->GetInternalPhysicalVolume();
 
-   //G4Material* vessel_gas_material = vessel_internal_logic->GetMaterial();
 
-
-  //INNER ELEMENTS  // Ruty - from New
+  //INNER ELEMENTS
   inner_elements_->SetLogicalVolume(vessel_internal_logic);
+  inner_elements_->SetPhysicalVolume(vessel_internal_phys);
+  inner_elements_->SetELzCoord(gate_zpos_in_vessel_);
   inner_elements_->Construct();
 
 
     //    RUTY     //
     // CATHODE ENDCAP //////////////////////////////////////////////////
     // Flat endcap, CF-300, no ports of interest for the simulation.
-
+/*
         G4Tubs* endcap_cathode_solid =
           new G4Tubs("ENDCAP_CATHODE", 0., endcap_diam_/2.,
                      endcap_thickn_/2., 0., twopi);
@@ -177,12 +177,12 @@ void NextDemo::Construct()
 
         new G4PVPlacement(0, G4ThreeVector(0.,0.,-posz), endcap_cathode_logic,
                           "ENDCAP_CATHODE", lab_logic_, false, 0, true);
-         /*
+
         G4VisAttributes * vis1 = new G4VisAttributes;
         vis1->SetColor(0.5, 0.5, .5);
         vis1->SetForceSolid(true);
         endcap_cathode_logic->SetVisAttributes(vis1);
-         */
+
 
         // ANODE ENDCAP ////////////////////////////////////////////////////
         // Flat endcap, CF-300, CF-16 port for calibration sources
@@ -201,13 +201,13 @@ void NextDemo::Construct()
 
         new G4PVPlacement(0, G4ThreeVector(0., 0., posz), endcap_anode_logic,
                           "ENDCAP_ANODE", lab_logic_, false, 0, true);
-
-   if (verbosity_) {
-        G4cout << "  ***** ENDCAP_CATHODE *****  " << G4endl;
-        G4cout << "*** Positions  Z: ***" <<  -posz  << G4endl;
-        G4cout << "  ***** ENDCAP_ANODE *****  " << G4endl;
-        G4cout << "*** Positions  Z: ***" <<  posz  << G4endl;
-   }
+*/
+   // if (verbosity_) {
+   //      G4cout << "  ***** ENDCAP_CATHODE *****  " << G4endl;
+   //      G4cout << "*** Positions  Z: ***" <<  -posz  << G4endl;
+   //      G4cout << "  ***** ENDCAP_ANODE *****  " << G4endl;
+   //      G4cout << "*** Positions  Z: ***" <<  posz  << G4endl;
+   // }
          /*
         G4VisAttributes * vis2 = new G4VisAttributes;
         vis2->SetColor(0.5, 0.5, .5);
@@ -347,7 +347,7 @@ void NextDemo::Construct()
       //G4VisAttributes light_brown_col = nexus::CopperBrown();
       //source_logic->SetVisAttributes(light_brown_col);
       //source_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      
+
     }
 
     // Build NaI external scintillator
@@ -481,7 +481,7 @@ G4ThreeVector NextDemo::GenerateVertex(const G4String& region) const
     else if (region == "AD_HOC"){
     //vertex =  _specific_vertex;
     vertex =  vertex;
-  } 
+  }
    else {
       G4Exception("[NextDemo]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");
@@ -515,5 +515,3 @@ G4ThreeVector pos_source =
 new G4PVPlacement(G4Transform3D(rot, pos_source), source_logic, "SOURCE_Na",
       lab_logic_, false, 0, true);
 }
-
-

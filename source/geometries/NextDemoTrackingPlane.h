@@ -50,7 +50,8 @@ namespace nexus {
     // Sets the Logical Volume where Inner Elements will be placed
     void SetLogicalVolume(G4LogicalVolume* mother_logic);
 
-    void SetAnodeZCoord(G4double z);
+    // Set the distance between the surface of the copper support and the gate
+    void SetTPGateDistance(G4double tp_z);
 
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
@@ -77,7 +78,7 @@ namespace nexus {
     // Dimensions
     // G4double _support_diam, _support_thickness;
     G4double support_side_, support_thickness_;
-    G4double el_gap_z_edge_, z_displ_;
+    G4double z_displ_;
     G4double hole_size_;
 
     G4int SiPM_rows_, SiPM_columns_;

@@ -46,6 +46,9 @@ namespace nexus {
     /// Sets the Logical Volume where Inner Elements will be placed
     void SetLogicalVolume(G4LogicalVolume* mother_logic);
 
+    /// Sets the z position of the surface of the sapphire windows
+    void SetSapphireSurfaceZPos(G4double z);
+
     /*/// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
     */
@@ -63,10 +66,11 @@ namespace nexus {
     G4LogicalVolume* mother_logic_;
     G4Material* gas_;
     G4double pressure_, temperature_;
+    G4double end_of_sapphire_posz_;
 
     // Dimensions
     const G4int num_PMTs_;
-    const G4double energy_plane_posz_;
+    //const G4double energy_plane_posz_;
     const G4double carrier_plate_thickness_, carrier_plate_diam_, carrier_plate_central_hole_diam_;
     const G4double enclosure_length_, enclosure_diam_;
     const G4double enclosure_flange_length_;
@@ -86,6 +90,7 @@ namespace nexus {
     G4GenericMessenger* msg_; 
 
     // PMT
+    G4RotationMatrix* pmt_rot_;
     PmtR11410*  pmt_;
     std::vector<G4ThreeVector> pmt_positions_;
     G4double pmt_zpos_;

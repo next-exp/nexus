@@ -41,7 +41,7 @@ namespace nexus {
     support_side_ (16.0 * cm),  // <-> from STEP file
     support_thickness_ (1.2 * cm),  // <-> from STEP file  //  Next100:(2.0 * cm)
     //
-    z_displ_ (5.79 * mm),  // From Neus Drawing (5.79 * mm)
+    //z_displ_ (5.79 * mm),  // From Neus Drawing (5.79 * mm)
     hole_size_ (49 * mm), // <-> from STEP file // For Next100::(45 * mm),
 
     // SiPMTs per Dice Board
@@ -76,6 +76,10 @@ namespace nexus {
   }
 
 
+  void NextDemoTrackingPlane::SetTPGateDistance(G4double tp_z)
+  {
+    z_displ_ = tp_z;
+  }
 
   void NextDemoTrackingPlane::Construct()
   {
@@ -111,28 +115,34 @@ namespace nexus {
 
     ///// Support Plate placement
 
+    // G4double support_plate_posz =
+      // el_gap_z_edge_ + z_displ_ + db_thickness + support_thickness_/2.;
     G4double support_plate_posz =
-             el_gap_z_edge_ + z_displ_ + db_thickness + support_thickness_/2.;
+      GetELzCoord() - z_displ_ - db_thickness - support_thickness_/2.;
     new G4PVPlacement(0, G4ThreeVector(0.,0.,support_plate_posz),
                support_plate_logic,  "SUPPORT_PLATE", mother_logic_, false, 0);
 
     ///// Dice Boards placement
-    G4double dice_board_posz = el_gap_z_edge_ + z_displ_ + db_thickness/2.;
-   if (verbosity_) {
-    G4cout << "  ****************************  " << G4endl;
-    G4cout << " from GET  el_gap_z_edge_ " <<  el_gap_z_edge_  << G4endl;
-    G4cout << " dice_board_posz: " << dice_board_posz  <<  G4endl;
-    G4cout << "  ****************************  " << G4endl;
-   }
+    //G4double dice_board_posz = el_gap_z_edge_ + z_displ_ + db_thickness/2.;
+    G4double dice_board_posz = GetELzCoord() - z_displ_ - db_thickness/2.;
+    if (verbosity_) {
+      G4cout << "  ****************************  " << G4endl;
+      // G4cout << " from GET  el_gap_z_edge_ " <<  el_gap_z_edge_  << G4endl;
+      G4cout << " dice_board_posz: " << dice_board_posz  <<  G4endl;
+      G4cout << "  ****************************  " << G4endl;
+    }
 
      const std::vector<std::pair<int, G4ThreeVector> > SiPM_positions =
       dice_board_->GetPositions();
+
+     G4RotationMatrix* dice_rot = new G4RotationMatrix();
+     dice_rot->rotateY(pi);
 
     G4ThreeVector pos;
     for (int i=0; i<num_DBs_; i++) {
       pos = DB_positions_[i];
       pos.setZ(dice_board_posz);
-      new G4PVPlacement(0, pos, dice_board_logic,
+      new G4PVPlacement(G4Transform3D(*dice_rot, pos), dice_board_logic,
 			"DICE_BOARD", mother_logic_, false, i+1, false);
       // Store the absolute positions of SiPMs in gas, for possible checks
       for (unsigned int si=0; si< SiPM_positions.size(); si++) {
@@ -190,11 +200,6 @@ namespace nexus {
   void NextDemoTrackingPlane::SetLogicalVolume(G4LogicalVolume* mother_logic)
   {
     mother_logic_ = mother_logic;
-  }
-
-  void NextDemoTrackingPlane::SetAnodeZCoord(G4double z)
-  {
-    el_gap_z_edge_ = z;
   }
 
 
@@ -267,7 +272,7 @@ namespace nexus {
 
     // For every column
     for (G4int col=0; col<DB_columns_; col++) {
-      G4double pos_x = x_dim/2. - col * x_step;
+      G4double pos_x = - x_dim/2. + col * x_step;
       G4int rows = num_rows[col];
       G4double y_dim = y_step * (rows-1);
       // For every row
