@@ -1,3 +1,14 @@
+tag v6_01_00 - 8 Sept 2020
+	- Add NextFlex, a new flexible geometry which configurable sensors and dimensions,
+	meant to be used to study designs of future detectors.
+	- Change the implementation of the PmtSD class, in what concerns
+	the volume that triggers the detection.
+	- Add a stepping action that saves all the steps of certain particles
+	going through certain volumes.
+	- Remove the creation of .history files.
+	- Change the code according to nexus conventions.
+        - Add automatic tests for all the example macros.
+
 tag v6_00_00 - 22 May 2020
 	- Rewrite the inner elements of the NEXT100 geometry, following the current design.
 	- Fix the placement of the NEW tracking plane.
