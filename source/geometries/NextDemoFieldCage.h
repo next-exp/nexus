@@ -183,10 +183,7 @@ namespace nexus {
     //HexagonPointSampler* _hexrnd;
     DecagonPointSampler* decrnd_gen_;   // Ruty
 
-    G4double specific_vertex_X_;
-    G4double specific_vertex_Y_;
-    G4double specific_vertex_Z_;
-
+    
     // Messenger for the definition of control commands
     G4GenericMessenger* msg_; 
 
