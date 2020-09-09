@@ -112,6 +112,23 @@ NextDemo::NextDemo():
     scint_dist_cmd.SetRange("scint_distance>=0.");
 
 
+    G4GenericMessenger::Command&  specific_vertex_X_cmd =
+      msg_->DeclareProperty("specific_vertex_X", specific_vertex_X_,
+                            "If region is AD_HOC, x coord where particles are generated");
+    specific_vertex_X_cmd.SetParameterName("specific_vertex_X", true);
+    specific_vertex_X_cmd.SetUnitCategory("Length");
+    G4GenericMessenger::Command&  specific_vertex_Y_cmd =
+      msg_->DeclareProperty("specific_vertex_Y", specific_vertex_Y_,
+                            "If region is AD_HOC, y coord where particles are generated");
+    specific_vertex_Y_cmd.SetParameterName("specific_vertex_Y", true);
+    specific_vertex_Y_cmd.SetUnitCategory("Length");
+    G4GenericMessenger::Command&  specific_vertex_Z_cmd =
+      msg_->DeclareProperty("specific_vertex_Z", specific_vertex_Z_,
+                            "If region is AD_HOC, z coord where particles are generated");
+    specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
+    specific_vertex_Z_cmd.SetUnitCategory("Length");
+
+
   //muons building
   G4GenericMessenger::Command& muonsGenerator_cmd =
     msg_->DeclareProperty("muonsGenerator", muonsGenerator_, "Build or not Muons");
@@ -456,36 +473,38 @@ G4ThreeVector NextDemo::GenerateVertex(const G4String& region) const
     //generate muons sampling the plane
     vertex = muons_sampling_->GenerateVertex();
   }
-    // Extended sources with the shape of a disk outside port
-    else if (region == "SOURCE_PORT_LATERAL_DISK") {
+  // Extended sources with the shape of a disk outside port
+  else if (region == "SOURCE_PORT_LATERAL_DISK") {
     vertex =  source_gen_side_->GenerateVertex("BODY_VOL");
   } else if (region == "SIDEPORT") {
     vertex = sideport_ext_position_;
-  //} else if (region == "AXIALPORT") {
-  //  vertex = _axialport_position;
-  //} else if (region == "Na22LATERAL") {
-  //  vertex = _sideNa_pos;
+    //} else if (region == "AXIALPORT") {
+    //  vertex = _axialport_position;
+    //} else if (region == "Na22LATERAL") {
+    //  vertex = _sideNa_pos;
   }
 
-    //INNER ELEMENTS
-    else if ( (region == "ACTIVE")  ||
-              //(region == "CENTER") ||
-	      //(region == "XENON") ||
-	      //(region == "DRIFT_TUBE") ||
-	      //(region == "BUFFER") ||
-              (region == "AD_HOC")  ||
-	      (region == "EL_TABLE")
-              ){
-      vertex = inner_elements_->GenerateVertex(region);
-    }
-    else if (region == "AD_HOC"){
-    //vertex =  _specific_vertex;
-    vertex =  vertex;
+  //INNER ELEMENTS
+  else if ( (region == "ACTIVE")  ||
+            //(region == "CENTER") ||
+            //(region == "XENON") ||
+            //(region == "DRIFT_TUBE") ||
+            //(region == "BUFFER") ||
+            (region == "EL_TABLE")
+            ){
+    vertex = inner_elements_->GenerateVertex(region);
   }
-   else {
-      G4Exception("[NextDemo]", "GenerateVertex()", FatalException,
-		  "Unknown vertex generation region!");
-    }
+  else if (region == "AD_HOC") {
+    vertex = G4ThreeVector(specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_);
+    return vertex;
+  }
+  else {
+    G4Exception("[NextDemo]", "GenerateVertex()", FatalException,
+                "Unknown vertex generation region!");
+  }
+
+  G4ThreeVector displacement = G4ThreeVector(0., 0., -gate_zpos_in_vessel_);
+  vertex = vertex + displacement;
 
   return vertex;
 
