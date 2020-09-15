@@ -69,13 +69,16 @@ namespace nexus {
     G4double end_of_sapphire_posz_;
 
     // Dimensions
+    const G4double dist_gate_support_surface_;
     const G4int num_PMTs_;
     //const G4double energy_plane_posz_;
-    const G4double carrier_plate_thickness_, carrier_plate_diam_, carrier_plate_central_hole_diam_;
-    const G4double enclosure_length_, enclosure_diam_;
-    const G4double enclosure_flange_length_;
-    const G4double enclosure_window_thickness_,enclosure_window_diam_;
-    const G4double enclosure_pad_thickness_;
+    const G4double carrier_plate_thickness_, carrier_plate_diam_;
+    const G4double carrier_plate_central_hole_diam_;
+    const G4double pmt_hole_length_, pmt_hole_diam_;
+    const G4double pmt_flange_length_;
+    const G4double sapphire_window_thickness_, sapphire_window_diam_;
+    const G4double pedot_coating_thickness_;
+    const G4double optical_pad_thickness_;
     const G4double pmt_base_diam_, pmt_base_thickness_;
     const G4double tpb_thickness_;
 
