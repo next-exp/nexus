@@ -1,14 +1,9 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | NextDemoEnergyPlane.cc
 //
-//  Authors: <jmunoz@ific.uv.es>
-//  Created: 25 Apr 2012
+// Energy plane geometry of the DEMO++ detector.
 //
-//  Copyright (c) 2012 NEXT Collaboration
-//
-//  Updated to NextDemo++  by  Ruth Weiss Babai <ruty.wb@gmail.com>
-//  From:   "Next100EnergyPlane.cc"
-//  Date:       June 2019
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "NextDemoEnergyPlane.h"
@@ -32,16 +27,12 @@
 #include <Randomize.hh>
 #include <G4RotationMatrix.hh>
 
-#include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
-#include <stdexcept>
-
 namespace nexus {
 
   using namespace CLHEP;
 
   NextDemoEnergyPlane::NextDemoEnergyPlane():
-    dist_gate_support_surface_(445.5 * mm),
+    gate_support_surface_dist_ (445.5 * mm),
     num_PMTs_ (3),
     carrier_plate_thickness_ (45. * mm),
     carrier_plate_diam_ ( 234. * mm),
@@ -53,12 +44,11 @@ namespace nexus {
     sapphire_window_diam_ (85. * mm),
     pedot_coating_thickness_ (3. * micrometer),
     optical_pad_thickness_ (1.0 * mm),
-    pmt_base_diam_ (47. *mm),
-    pmt_base_thickness_ (5. *mm),
-    tpb_thickness_ (1.*micrometer),
-    //   _pmts_pitch (11.0 * cm),
-    visibility_(1),
-    verbosity_(0)
+    pmt_base_diam_ (47. * mm),
+    pmt_base_thickness_ (5. * mm),
+    tpb_thickness_ (1.* micrometer),
+    visibility_ (1),
+    verbosity_ (0)
   {
     /// Initializing the geometry navigator (used in vertex generation) ///
     geom_navigator_ =
@@ -66,7 +56,7 @@ namespace nexus {
 
     /// Messenger ///
     msg_ = new G4GenericMessenger(this, "/Geometry/NextDemo/",
-                                  "Control commands of geometry NextDemo.");
+                                  "Control commands of the NextDemo geometry.");
     msg_->DeclareProperty("energy_plane_vis", visibility_,
                           "Energy Plane Visibility");
 
@@ -77,25 +67,28 @@ namespace nexus {
   }
 
 
+  NextDemoEnergyPlane::~NextDemoEnergyPlane()
+  {
+    delete msg_;
+    delete pmt_;
+  }
+
 
   void NextDemoEnergyPlane::SetLogicalVolume(G4LogicalVolume* mother_logic)
   {
     mother_logic_ = mother_logic;
-    gas_ = mother_logic_->GetMaterial();
-    pressure_ =    gas_->GetPressure();
-    temperature_ = gas_->GetTemperature();
   }
 
 
-  void NextDemoEnergyPlane::SetSapphireSurfaceZPos(G4double z)
+  void NextDemoEnergyPlane::SetGateSapphireSurfaceDistance(G4double dist)
   {
-    end_of_sapphire_posz_ = z;
+    gate_sapphire_dist_ = dist;
   }
 
 
   void NextDemoEnergyPlane::Construct()
   {
-    GeneratePositions();
+    GeneratePmtPositions();
 
     /// Support Plate ///
     G4Tubs* carrier_plate_nh_solid =
@@ -127,11 +120,11 @@ namespace nexus {
 
     G4LogicalVolume* carrier_plate_logic =
       new G4LogicalVolume(carrier_plate_solid,
-                          G4NistManager::Instance()->FindOrBuildMaterial("G4_Aluminum"),
+                          G4NistManager::Instance()->FindOrBuildMaterial("G4_Al"),
                           "EP_PLATE");
 
     G4double carrier_plate_posz =
-      GetELzCoord() + dist_gate_support_surface_ + carrier_plate_thickness_/2.;
+      GetELzCoord() + gate_support_surface_dist_ + carrier_plate_thickness_/2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., carrier_plate_posz),
                       carrier_plate_logic, "EP_PLATE", mother_logic_,
                       false, 0, false);
@@ -185,7 +178,7 @@ namespace nexus {
       new G4LogicalVolume(sapphire_window_solid, sapphire, "SAPPHIRE_WINDOW");
 
     G4double window_zpos = -pmt_hole_length_/2. + sapphire_window_thickness_/2. ;
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,window_zpos),
+    new G4PVPlacement(0, G4ThreeVector(0., 0., window_zpos),
                       sapphire_window_logic, "SAPPHIRE_WINDOW",
                       pmt_hole_logic, false, 0, false);
 
@@ -234,13 +227,13 @@ namespace nexus {
     pmt_->Construct();
     G4LogicalVolume* pmt_logic = pmt_->GetLogicalVolume();
     G4double pmt_rel_zpos = pmt_->GetRelPosition().z();
-    pmt_zpos_ = pad_zpos + optical_pad_thickness_/2. + pmt_rel_zpos;
-    G4ThreeVector pmt_pos = G4ThreeVector(0., 0., pmt_zpos_);
+    G4double pmt_zpos = pad_zpos + optical_pad_thickness_/2. + pmt_rel_zpos;
+    G4ThreeVector pmt_pos = G4ThreeVector(0., 0., pmt_zpos);
 
-    pmt_rot_ = new G4RotationMatrix();
-    pmt_rot_->rotateY(pi);
+    G4RotationMatrix* pmt_rot = new G4RotationMatrix();
+    pmt_rot->rotateY(pi);
 
-    new G4PVPlacement(G4Transform3D(*pmt_rot_, pmt_pos), pmt_logic,
+    new G4PVPlacement(G4Transform3D(*pmt_rot, pmt_pos), pmt_logic,
 		      "PMT", pmt_hole_logic, false, 0, false);
 
 
@@ -259,7 +252,7 @@ namespace nexus {
                       false, 0, false);
 
 
-    G4double pmt_hole_zpos = GetELzCoord() + end_of_sapphire_posz_
+    G4double pmt_hole_zpos = GetELzCoord() + gate_sapphire_dist_
       + pmt_hole_length_/2.;
 
     G4ThreeVector pos;
@@ -307,12 +300,7 @@ namespace nexus {
   }
 
 
-  NextDemoEnergyPlane::~NextDemoEnergyPlane()
-  {
-  }
-
-
-  void NextDemoEnergyPlane::GeneratePositions()
+  void NextDemoEnergyPlane::GeneratePmtPositions()
   {
     /// Compute and store the XY positions of PMTs in the support plate ///
     G4int total_positions = 0;

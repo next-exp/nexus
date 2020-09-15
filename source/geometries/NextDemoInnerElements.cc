@@ -89,7 +89,7 @@ namespace nexus {
 
     energy_plane_->SetLogicalVolume(mother_logic_);
     energy_plane_->SetELzCoord(gate_zpos);
-    energy_plane_->SetSapphireSurfaceZPos(gate_sapphire_wdw_distance_);
+    energy_plane_->SetGateSapphireSurfaceDistance(gate_sapphire_wdw_distance_);
     energy_plane_->Construct();
   }
 
