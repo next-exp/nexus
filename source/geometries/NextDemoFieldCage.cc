@@ -59,7 +59,7 @@ namespace nexus {
     light_tube_buff_end_z_ (420.6 * mm),
     anode_length_ (3.2 * mm),
     anode_diam_ (256.3 * mm),
-    tpb_thickn_ (.001 * mm),
+    tpb_thickn_ (3 * micrometer),
     active_diam_ (194.2 * mm),
     ring_diam_ (235. * mm),
     ring_height_ (10. * mm),
