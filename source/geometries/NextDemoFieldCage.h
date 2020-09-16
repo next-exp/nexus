@@ -1,20 +1,14 @@
 // ----------------------------------------------------------------------------
-///  \file
-///  \brief
-///
-///  \author   <paola.ferrario@ific.uv.es>
-///  \date     1 Mar 2012
-///  \version  $Id$
-///
-///  Copyright (c) 2012 NEXT Collaboration
+// nexus | NextDemoFieldCage.h
 //
-//  Updated to NextDemo++  by  Ruth Weiss Babai <ruty.wb@gmail.com>
-//  Based on: NextNewFieldCage.h and Next1EL.h
-//  Date:   June 2019
+// Field cage geometry of the DEMO++ detector. It include the elements in
+// the drift and the buffer part of the detector.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXT_DEMO_FIELDCAGE_H
-#define __NEXT_DEMO_FIELDCAGE_H
+#ifndef NEXT_DEMO_FIELDCAGE_H
+#define NEXT_DEMO_FIELDCAGE_H
 
 #include <vector>
 #include <G4LogicalVolume.hh>
@@ -22,7 +16,6 @@
 #include <G4TransportationManager.hh>
 
 #include "BaseGeometry.h"
-#include "DecagonPointSampler.h"
 
 class G4GenericMessenger;
 
@@ -60,9 +53,6 @@ namespace nexus {
     void Construct();
 
   private:
-    /// Calculates the vertices for the EL table generation
-    void CalculateELTableVertices(G4double radius,
-				  G4double binning, G4double z);
 
     G4Navigator* geom_navigator_;
 
@@ -81,7 +71,6 @@ namespace nexus {
 
 
     // Dimensions
-
     const G4double gate_cathode_centre_dist_;
     const G4double grid_thickn_, gate_transparency_;
     const G4double buffer_length_;
@@ -124,28 +113,6 @@ namespace nexus {
 
     // Vertex generators
     CylinderPointSampler2020* active_gen_;
-
-
- /// Position of the fieldcage in the world system of reference
-    G4ThreeVector fieldcage_position_;
-    ///
-    G4ThreeVector active_position_;
-    ///
-    G4ThreeVector elgap_position_;
-
-    // G4String _tracking_plane; ///< Tracking plane type: SIPM or PMT
-
-    // Positions (Z axis) of the TPC electrodes with respect to the
-    // FIELDCAGE system of reference
-    G4double gate_posz_;    ///< Z position of the gate wrt FIELDCAGE
-    G4double anode_posz_;   ///< Z position of the anode wrt FIELDCAGE
-    G4double cathode_posz_; ///< Z position of the cathode wrt FIELDCAGE
-    G4double AnodezCoord_;
-
-    // Vertex generators
-    //HexagonPointSampler* _hexrnd;
-    DecagonPointSampler* decrnd_gen_;   // Ruty
-
 
     // Messenger for the definition of control commands
     G4GenericMessenger* msg_;

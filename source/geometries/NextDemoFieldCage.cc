@@ -1,14 +1,10 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | NextDemoFieldCage.cc
 //
-//  Authors: <paola.ferrario@ific.uv.es>, <jmunoz@ific.uv.es>
-//  Created: 1 Mar 2012
+// Field cage geometry of the DEMO++ detector. It include the elements in
+// the drift and the buffer part of the detector.
 //
-//  Copyright (c) 2012 NEXT Collaboration
-//
-//  Updated to NextDemo++  by  Ruth Weiss Babai <ruty.wb@gmail.com>
-//  Based on: NextNewFieldCage.cc and Next1EL.cc
-//  Date:   June 2019
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "NextDemoFieldCage.h"
@@ -149,8 +145,6 @@ namespace nexus {
   {
     //delete msg_;
   }
-
-
 
 
   void NextDemoFieldCage::SetMotherLogicalVolume(G4LogicalVolume* mother_logic)
@@ -574,7 +568,6 @@ void NextDemoFieldCage::BuildCathodeGrid()
   G4ThreeVector NextDemoFieldCage::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);
-
 
      if (region == "ACTIVE") {
        G4VPhysicalVolume *VertexVolume;
