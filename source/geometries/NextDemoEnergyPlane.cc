@@ -74,7 +74,7 @@ namespace nexus {
   }
 
 
-  void NextDemoEnergyPlane::SetLogicalVolume(G4LogicalVolume* mother_logic)
+  void NextDemoEnergyPlane::SetMotherLogicalVolume(G4LogicalVolume* mother_logic)
   {
     mother_logic_ = mother_logic;
   }

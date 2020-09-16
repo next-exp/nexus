@@ -87,7 +87,7 @@ namespace nexus {
     tracking_plane_->SetTPGateDistance(gate_tp_copper_distance_);
     tracking_plane_->Construct();
 
-    energy_plane_->SetLogicalVolume(mother_logic_);
+    energy_plane_->SetMotherLogicalVolume(mother_logic_);
     energy_plane_->SetELzCoord(gate_zpos);
     energy_plane_->SetGateSapphireSurfaceDistance(gate_sapphire_wdw_distance_);
     energy_plane_->Construct();
