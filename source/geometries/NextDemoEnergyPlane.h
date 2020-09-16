@@ -58,9 +58,9 @@ namespace nexus {
     const G4int num_PMTs_;
     const G4double carrier_plate_thickness_, carrier_plate_diam_;
     const G4double carrier_plate_central_hole_diam_;
-    const G4double pmt_hole_length_, pmt_hole_diam_;
-    const G4double pmt_flange_length_;
+    const G4double pmt_hole_length_;
     const G4double sapphire_window_thickness_, sapphire_window_diam_;
+    const G4double wndw_ring_stand_out_;
     const G4double pedot_coating_thickness_;
     const G4double optical_pad_thickness_;
     const G4double pmt_base_diam_, pmt_base_thickness_;
@@ -73,7 +73,7 @@ namespace nexus {
     G4Navigator* geom_navigator_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* msg_; 
+    G4GenericMessenger* msg_;
 
     // PMT
     PmtR11410*  pmt_;

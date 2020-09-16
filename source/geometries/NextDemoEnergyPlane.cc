@@ -38,15 +38,14 @@ namespace nexus {
     carrier_plate_diam_ ( 234. * mm),
     carrier_plate_central_hole_diam_ (10. * mm),
     pmt_hole_length_ (18.434 * cm),
-    pmt_hole_diam_ (9.6 * cm),
-    pmt_flange_length_ (19.5 * mm),
     sapphire_window_thickness_ (6. * mm),
     sapphire_window_diam_ (85. * mm),
-    pedot_coating_thickness_ (3. * micrometer),
-    optical_pad_thickness_ (1.0 * mm),
+    wndw_ring_stand_out_ (1.5 * mm), //how much the ring around sapph windows stands out of them
+    pedot_coating_thickness_ (200. * nanometer), // copied from NEW
+    optical_pad_thickness_ (1. * mm), // copied from NEW
     pmt_base_diam_ (47. * mm),
     pmt_base_thickness_ (5. * mm),
-    tpb_thickness_ (1.* micrometer),
+    tpb_thickness_ (3.* micrometer),
     visibility_ (1),
     verbosity_ (0)
   {
@@ -88,6 +87,11 @@ namespace nexus {
 
   void NextDemoEnergyPlane::Construct()
   {
+    /// Derived positions ///
+    G4double wndw_ring_thickness = 1.5 * mm; //the actual number is not relevant
+    G4double wndw_ring_length =
+      gate_support_surface_dist_ - gate_sapphire_dist_ + wndw_ring_stand_out_;
+
     GeneratePmtPositions();
 
     /// Support Plate ///
@@ -108,7 +112,7 @@ namespace nexus {
 
     /// Making PMT holes ///
     G4Tubs* carrier_plate_pmt_hole_solid =
-      new G4Tubs("EP_PLATE_PMT_HOLE", 0., pmt_hole_diam_/2.,
+      new G4Tubs("EP_PLATE_PMT_HOLE", 0., sapphire_window_diam_/2.,
                  (carrier_plate_thickness_+1.*cm)/2., 0., twopi);
 
     for (int i=0; i<num_PMTs_; i++) {
@@ -122,7 +126,6 @@ namespace nexus {
       new G4LogicalVolume(carrier_plate_solid,
                           G4NistManager::Instance()->FindOrBuildMaterial("G4_Al"),
                           "EP_PLATE");
-
     G4double carrier_plate_posz =
       GetELzCoord() + gate_support_surface_dist_ + carrier_plate_thickness_/2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., carrier_plate_posz),
@@ -137,6 +140,8 @@ namespace nexus {
     G4Material* sapphire = MaterialsList::Sapphire();
     sapphire->SetMaterialPropertiesTable(OpticalMaterialProperties::Sapphire());
 
+    G4Material* copper = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
+
     G4Material* vacuum =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
     vacuum->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
@@ -150,23 +155,10 @@ namespace nexus {
     /// A volume of vacuum is constructed to hold the elements ///
     /// that are replicated ///
     G4Tubs* pmt_hole_solid =
-      new G4Tubs("PMT_HOLE", 0., pmt_hole_diam_/2., pmt_hole_length_/2.,
+      new G4Tubs("PMT_HOLE", 0., sapphire_window_diam_/2., pmt_hole_length_/2.,
                  0., twopi);
     G4LogicalVolume* pmt_hole_logic =
       new G4LogicalVolume(pmt_hole_solid, vacuum, "PMT_HOLE");
-
-    G4Tubs* pmt_flange_solid =
-      new G4Tubs("PMT_FLANGE", sapphire_window_diam_/2.,
-                 pmt_hole_diam_/2., pmt_flange_length_/2., 0., twopi);
-
-    G4LogicalVolume* pmt_flange_logic =
-      new G4LogicalVolume(pmt_flange_solid,
-                          G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
-			  "PMT_FLANGE");
-
-    G4ThreeVector flange_pos(0., 0., -pmt_hole_length_/2. + pmt_flange_length_/2.);
-    new G4PVPlacement(0, flange_pos, pmt_flange_logic,
-      		      "PMT_FLANGE", pmt_hole_logic, false, 0, false);
 
 
     /// Sapphire window ///
@@ -177,10 +169,12 @@ namespace nexus {
     G4LogicalVolume* sapphire_window_logic =
       new G4LogicalVolume(sapphire_window_solid, sapphire, "SAPPHIRE_WINDOW");
 
-    G4double window_zpos = -pmt_hole_length_/2. + sapphire_window_thickness_/2. ;
+    G4double window_zpos =
+      -pmt_hole_length_/2. + sapphire_window_thickness_/2. ;
     new G4PVPlacement(0, G4ThreeVector(0., 0., window_zpos),
                       sapphire_window_logic, "SAPPHIRE_WINDOW",
                       pmt_hole_logic, false, 0, false);
+
 
     /// TPB coating on pedot ///
     G4Tubs* tpb_solid =
@@ -245,26 +239,37 @@ namespace nexus {
       new G4LogicalVolume(pmt_base_solid,
                           G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON"),
 			  "PMT_BASE");
-
     G4double pmt_base_pos = pmt_hole_length_/2. - pmt_base_thickness_;
     new G4PVPlacement(0, G4ThreeVector(0.,0., pmt_base_pos),
 		      pmt_base_logic, "PMT_BASE", pmt_hole_logic,
                       false, 0, false);
 
+    G4double pmt_hole_zpos =
+      GetELzCoord() + gate_sapphire_dist_ + pmt_hole_length_/2.;
 
-    G4double pmt_hole_zpos = GetELzCoord() + gate_sapphire_dist_
-      + pmt_hole_length_/2.;
 
-    G4ThreeVector pos;
-    G4ThreeVector tpb_pos;
+    /// Copper ring embracing the sapphire window ///
+    G4Tubs* wndw_ring_solid =
+      new G4Tubs("WINDOW_RING", sapphire_window_diam_/2.,
+                 sapphire_window_diam_/2. + wndw_ring_thickness,
+                 wndw_ring_length/2., 0., twopi);
+    G4LogicalVolume* wndw_ring_logic =
+      new G4LogicalVolume(wndw_ring_solid, copper, "WINDOW_RING");
+    G4double wndw_ring_zpos =
+      GetELzCoord() + gate_support_surface_dist_ - wndw_ring_length/2.;
+
     if (verbosity_) G4cout << "*** XY position of PMTs ***" << G4endl;
 
+    G4ThreeVector pos;
     for (int i=0; i<num_PMTs_; i++) {
       pos = pmt_positions_[i];
       if (verbosity_) G4cout << pos.getX() << ", " << pos.getY() << G4endl;
       pos.setZ(pmt_hole_zpos);
-      new G4PVPlacement(0, pos, pmt_hole_logic,
-			"PMT_HOLE", mother_logic_, false, i, false);
+      new G4PVPlacement(0, pos, pmt_hole_logic, "PMT_HOLE", mother_logic_,
+                        false, i, false);
+      pos.setZ(wndw_ring_zpos);
+      new G4PVPlacement(0, pos, wndw_ring_logic, "WINDOW_RING", mother_logic_,
+                        false, i, false);
     }
 
 
@@ -276,7 +281,7 @@ namespace nexus {
       G4VisAttributes copper_col = CopperBrown();
       // copper_col.SetForceSolid(true);
       carrier_plate_logic->SetVisAttributes(copper_col);
-      pmt_flange_logic->SetVisAttributes(copper_col);
+      wndw_ring_logic->SetVisAttributes(copper_col);
       G4VisAttributes sapphire_col = nexus::Lilla();
       sapphire_col.SetForceSolid(true);
       sapphire_window_logic->SetVisAttributes(sapphire_col);
@@ -291,7 +296,7 @@ namespace nexus {
       tpb_logic->SetVisAttributes(tpb_col);
     } else {
       carrier_plate_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      pmt_flange_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      wndw_ring_logic->SetVisAttributes(G4VisAttributes::Invisible);
       sapphire_window_logic->SetVisAttributes(G4VisAttributes::Invisible);
       optical_pad_logic->SetVisAttributes(G4VisAttributes::Invisible);
       pmt_base_logic->SetVisAttributes(G4VisAttributes::Invisible);
