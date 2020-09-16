@@ -18,6 +18,7 @@
 #include "NextDemoTrackingPlane.h"
 #include "NextDemoEnergyPlane.h"
 #include "MaterialsList.h"
+#include "CylinderPointSampler2020.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
@@ -51,7 +52,7 @@ namespace nexus {
     vessel_length_ = vessel_length;
 
     // Build the internal objects that live there
-    field_cage_ = new NextDemoFieldCage(vessel_length_);
+    field_cage_ = new NextDemoFieldCage();
     tracking_plane_ = new NextDemoTrackingPlane();
     energy_plane_ = new NextDemoEnergyPlane();
   }
@@ -77,8 +78,8 @@ namespace nexus {
     temperature_ = gas_->GetTemperature();
 
     //INNER ELEMENTS
-    field_cage_->SetLogicalVolume(mother_logic_);
-    field_cage_->SetPhysicalVolume(mother_phys_);
+    field_cage_->SetMotherLogicalVolume(mother_logic_);
+    field_cage_->SetMotherPhysicalVolume(mother_phys_);
     field_cage_->SetELzCoord(gate_zpos);
     field_cage_->Construct();
 
