@@ -223,10 +223,8 @@ namespace nexus {
 
     G4Polyhedra* active_solid =
       new G4Polyhedra("ACTIVE", 0., twopi, 10, 2, zplane, rinner, router);
-
     G4LogicalVolume* active_logic =
       new G4LogicalVolume(active_solid, gas_, "ACTIVE");
-
     new G4PVPlacement(0, G4ThreeVector(0.,0., active_zpos_),
                       active_logic, "ACTIVE", mother_logic_, false, 0, false);
 
@@ -263,15 +261,16 @@ void NextDemoFieldCage::BuildCathodeGrid()
   {
     G4Material* grid_mat =
       MaterialsList::FakeDielectric(gas_, "cath_grid_mat");
-    grid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_, temperature_, cath_grid_transparency_, grid_thickn_));
+    grid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_,
+                                                                             temperature_,
+                                                                             cath_grid_transparency_,
+                                                                             grid_thickn_));
 
     G4Tubs* cathode_grid_solid =
       new G4Tubs("CATHODE_GRID", 0., cathode_ring_diam_/2., grid_thickn_/2.,
                  0, twopi);
-
     G4LogicalVolume* cathode_grid_logic =
       new G4LogicalVolume(cathode_grid_solid, grid_mat, "CATHODE_GRID");
-
     new G4PVPlacement(0, G4ThreeVector(0., 0., cathode_grid_zpos_),
 		      cathode_grid_logic, "CATHODE_GRID", mother_logic_,
 		      false, 0, false);
@@ -287,9 +286,6 @@ void NextDemoFieldCage::BuildCathodeGrid()
 
   void NextDemoFieldCage::BuildBuffer()
   {
-    G4double buffer_zpos =
-      active_zpos_ + active_length_/2. + grid_thickn_ + buffer_length_/2.;
-
     /// Position of z planes
     G4double zplane[2] = {-buffer_length_/2., buffer_length_/2.};
     /// Inner radius
@@ -299,9 +295,11 @@ void NextDemoFieldCage::BuildCathodeGrid()
 
     G4Polyhedra* buffer_solid =
       new G4Polyhedra("BUFFER", 0., twopi, 10, 2, zplane, rinner, router);
-
     G4LogicalVolume* buffer_logic =
       new G4LogicalVolume(buffer_solid, gas_, "BUFFER");
+
+    G4double buffer_zpos =
+      active_zpos_ + active_length_/2. + grid_thickn_ + buffer_length_/2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_zpos), buffer_logic,
 		      "BUFFER", mother_logic_, false, 0, false);
 
@@ -321,12 +319,10 @@ void NextDemoFieldCage::BuildCathodeGrid()
   {
     G4Tubs* elgap_solid = new G4Tubs("EL_GAP", 0., elgap_ring_diam_/2.,
                                      el_gap_length_/2., 0, twopi);
-
     G4LogicalVolume* elgap_logic =
-      new G4LogicalVolume(elgap_solid, gas_, "EL_GAP");   // gxe_
+      new G4LogicalVolume(elgap_solid, gas_, "EL_GAP");
 
     G4double el_gap_zpos = GetELzCoord() - el_gap_length_/2.;
-
     new G4PVPlacement(0, G4ThreeVector(0., 0., el_gap_zpos),
                       elgap_logic, "EL_GAP", mother_logic_, false, 0, false);
 
@@ -339,7 +335,6 @@ void NextDemoFieldCage::BuildCathodeGrid()
       el_field->SetTransverseDiffusion(ELtransv_diff_);
       el_field->SetLongitudinalDiffusion(ELlong_diff_);
       XenonGasProperties xgp(pressure_, temperature_);
-      // el_field->SetLightYield(xgp.ELLightYield(24.8571*kilovolt/cm));//value for E that gives Y=1160 photons per ie- in normal conditions
       el_field->SetLightYield(xgp.ELLightYield(ELelectric_field_));
       G4Region* el_region = new G4Region("EL_REGION");
       el_region->SetUserInformation(el_field);
@@ -352,9 +347,9 @@ void NextDemoFieldCage::BuildCathodeGrid()
     G4Tubs* gate_grid_solid =
       new G4Tubs("GRID_GATE", 0., elgap_ring_diam_/2., grid_thickn_/2.,
                  0, twopi);
-
     G4LogicalVolume* gate_grid_logic =
       new G4LogicalVolume(gate_grid_solid, grid_mat, "GATE_GRID");
+
     G4double grid_zpos = el_gap_length_/2. - grid_thickn_/2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., grid_zpos),
                       gate_grid_logic, "GATE_GRID",
@@ -363,12 +358,10 @@ void NextDemoFieldCage::BuildCathodeGrid()
     G4Tubs* anode_quartz_solid =
       new G4Tubs("ANODE_PLATE", 0., anode_diam_/2. , anode_length_/2.,
                  0, twopi);
-
     G4LogicalVolume* anode_logic =
       new G4LogicalVolume(anode_quartz_solid, quartz_, "ANODE_PLATE");
 
     G4double anode_zpos = GetELzCoord() - el_gap_length_ - anode_length_/2.;
-
     new G4PVPlacement(0, G4ThreeVector(0., 0., anode_zpos), anode_logic,
                       "ANODE_PLATE", mother_logic_, false, 0, false);
 
@@ -389,17 +382,14 @@ void NextDemoFieldCage::BuildCathodeGrid()
   void NextDemoFieldCage::BuildFieldCage()
   {
     /// Drift light tube
-    G4double zplane[2] = {-ltube_drift_length_/2., ltube_drift_length_/2.};
+    G4double drift_zplane[2] = {-ltube_drift_length_/2., ltube_drift_length_/2.};
     G4double rinner[2] = {active_diam_/2., active_diam_/2.};
     G4double router[2] =
       {active_diam_/2. + ltube_thickn_, active_diam_/2. + ltube_thickn_};
 
-    G4cout << rinner[0] << ", " << router[0] << ", " << zplane[0] << G4endl;
-
     G4Polyhedra* ltube_drift_solid =
-      new G4Polyhedra("LIGHT_TUBE_DRIFT", 0., twopi, 10, 2, zplane,
+      new G4Polyhedra("LIGHT_TUBE_DRIFT", 0., twopi, 10, 2, drift_zplane,
                       rinner, router);
-
     G4LogicalVolume* ltube_drift_logic =
       new G4LogicalVolume(ltube_drift_solid, teflon_, "LIGHT_TUBE_DRIFT");
 
@@ -413,7 +403,7 @@ void NextDemoFieldCage::BuildCathodeGrid()
       {active_diam_/2. + tpb_thickn_, active_diam_/2. + tpb_thickn_};
 
     G4Polyhedra* tpb_drift_solid =
-      new G4Polyhedra("DRIFT_TPB", 0., twopi, 10, 2, zplane,
+      new G4Polyhedra("DRIFT_TPB", 0., twopi, 10, 2, drift_zplane,
 		      rinner, router_tpb);
     G4LogicalVolume* tpb_drift_logic =
       new G4LogicalVolume(tpb_drift_solid, tpb_, "DRIFT_TPB");
@@ -426,16 +416,23 @@ void NextDemoFieldCage::BuildCathodeGrid()
     G4Polyhedra* ltube_buff_solid =
       new G4Polyhedra("LIGHT_TUBE_BUFFER", 0., twopi, 10, 2, buff_zplane,
                       rinner, router);
-
     G4LogicalVolume* ltube_buff_logic =
       new G4LogicalVolume(ltube_buff_solid, teflon_, "LIGHT_TUBE_BUFFER");
 
     G4double lt_buffer_zpos =
       GetELzCoord() + light_tube_buff_start_z_ + ltube_buff_length_/2.;
-
     new G4PVPlacement(0, G4ThreeVector(0., 0., lt_buffer_zpos),
                       ltube_buff_logic, "LIGHT_TUBE_BOTTOM", mother_logic_,
                       false, 0, false);
+
+    G4Polyhedra* tpb_buff_solid =
+      new G4Polyhedra("BUFFER_TPB", 0., twopi, 10, 2, buff_zplane,
+		      rinner, router_tpb);
+    G4LogicalVolume* tpb_buff_logic =
+      new G4LogicalVolume(tpb_buff_solid, tpb_, "BUFFER_TPB");
+    G4VPhysicalVolume* tpb_buff_phys =
+      new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), tpb_buff_logic,
+		      "BUFFER_TPB", ltube_buff_logic, false, 0, false);
 
     /// Optical surfaces
     G4OpticalSurface* lt_drift_opsur = new G4OpticalSurface("LIGHT_TUBE_DRIFT");
@@ -447,16 +444,6 @@ void NextDemoFieldCage::BuildCathodeGrid()
     new G4LogicalSkinSurface("LIGHT_TUBE_DRIFT",
                              ltube_drift_logic, lt_drift_opsur);
 
-    G4OpticalSurface* gas_tpb_teflon_surf =
-      new G4OpticalSurface("GAS_TPB_TEFLON_OPSURF", glisur, ground,
-                           dielectric_dielectric, .01);
-
-    new G4LogicalBorderSurface("GAS_TPB_TEFLON_OPSURF", tpb_drift_phys,
-                               mother_phys_, gas_tpb_teflon_surf);
-    new G4LogicalBorderSurface("GAS_TPB_TEFLON_OPSURF", mother_phys_,
-                               tpb_drift_phys, gas_tpb_teflon_surf);
-
-
     G4OpticalSurface* lt_buff_opsur = new G4OpticalSurface("LIGHT_TUBE_BUFFER");
     lt_buff_opsur->SetType(dielectric_metal);
     lt_buff_opsur->SetModel(unified);
@@ -465,6 +452,19 @@ void NextDemoFieldCage::BuildCathodeGrid()
     lt_buff_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
     new G4LogicalSkinSurface("LIGHT_TUBE_BUFFER",
                              ltube_buff_logic, lt_buff_opsur);
+
+    G4OpticalSurface* gas_tpb_teflon_surf =
+      new G4OpticalSurface("GAS_TPB_TEFLON_OPSURF", glisur, ground,
+                           dielectric_dielectric, .01);
+
+    new G4LogicalBorderSurface("GAS_TPB_TEFLON_OPSURF", tpb_drift_phys,
+                               mother_phys_, gas_tpb_teflon_surf);
+    new G4LogicalBorderSurface("GAS_TPB_TEFLON_OPSURF", mother_phys_,
+                               tpb_drift_phys, gas_tpb_teflon_surf);
+    new G4LogicalBorderSurface("GAS_TPB_TEFLON_OPSURF", tpb_buff_phys,
+                               mother_phys_, gas_tpb_teflon_surf);
+    new G4LogicalBorderSurface("GAS_TPB_TEFLON_OPSURF", mother_phys_,
+                               tpb_buff_phys, gas_tpb_teflon_surf);
 
 
     /// Visibilities
