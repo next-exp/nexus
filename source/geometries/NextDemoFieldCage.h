@@ -89,6 +89,7 @@ namespace nexus {
     const G4double ring_diam_;
     const G4double ring_height_;
     const G4double ring_thickn_;
+    const G4double ring_drift_buff_gap_;
     const G4double dist_gate_first_ring_;
     const G4double bar_start_z_, bar_end_z_;
     const G4double bar_width_;
