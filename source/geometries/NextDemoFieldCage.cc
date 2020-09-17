@@ -64,6 +64,7 @@ namespace nexus {
     ring_diam_ (235. * mm),
     ring_height_ (10. * mm),
     ring_thickn_ (5. * mm),
+    ring_drift_buff_gap_ (37.2 * mm),
     dist_gate_first_ring_ (18.4 * mm),
     bar_start_z_ (14. * mm),
     bar_end_z_ (403.5 * mm),
@@ -342,7 +343,10 @@ void NextDemoFieldCage::BuildCathodeGrid()
     }
 
     G4Material* grid_mat = MaterialsList::FakeDielectric(gas_, "grid_mat");
-    grid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_, temperature_, gate_transparency_, grid_thickn_));
+    grid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_,
+                                                                             temperature_,
+                                                                             gate_transparency_,
+                                                                             grid_thickn_));
 
     G4Tubs* gate_grid_solid =
       new G4Tubs("GRID_GATE", 0., elgap_ring_diam_/2., grid_thickn_/2.,
@@ -482,27 +486,27 @@ void NextDemoFieldCage::BuildCathodeGrid()
     G4Tubs* ring_solid = new G4Tubs("FIELD_RING", ring_diam_/2.,
                                     (ring_diam_/2.+ring_thickn_),
                                     ring_height_/2., 0, twopi);
-
     G4LogicalVolume* ring_logic =
       new G4LogicalVolume(ring_solid, aluminum_, "FIELD_RING");
 
     G4int num_rings = 19;
-
+    G4double dist_between_ring_centres = 15. * mm;
     G4double posz = GetELzCoord() + dist_gate_first_ring_ + ring_height_/2.;
     for (G4int i=0; i<num_rings; i++) {
-      // new G4PVPlacement(0, G4ThreeVector(0., 0., posz), ring_logic,
-      //                   "FIELD_RING", mother_logic_, false, i, true);
+      new G4PVPlacement(0, G4ThreeVector(0., 0., posz), ring_logic,
+                        "FIELD_RING", mother_logic_, false, i, true);
 
-      posz = posz + ring_height_ + 15. * mm;
+      posz = posz + dist_between_ring_centres;
     }
 
     /// Buffer part
-    //  posz = posz + ring_height_ + 5.0 * mm - ring_up_bt_gap_;
-    // for (G4int i=19; i<23; i++) {
-    //   new G4PVPlacement(0, G4ThreeVector(0., 0., posz), ring_logic,
-    //                     "FIELD_RING", mother_logic_, false, i, false);
-    //   posz = posz - ring_height_ - 10. * mm;
-    // }
+    posz = posz - dist_between_ring_centres + ring_height_/2. +
+      ring_drift_buff_gap_ + ring_height_/2.;
+    for (G4int i=19; i<23; i++) {
+      new G4PVPlacement(0, G4ThreeVector(0., 0., posz), ring_logic,
+                        "FIELD_RING", mother_logic_, false, i, true);
+      posz = posz + dist_between_ring_centres;
+    }
 
     /// Visibilities
     if (visibility_) {
@@ -538,16 +542,18 @@ void NextDemoFieldCage::BuildCathodeGrid()
 
 
     G4LogicalVolume* bar_logic =
-      new G4LogicalVolume(bar_solid, MaterialsList::PEEK(), "SUPPORT_BAR");
+      new G4LogicalVolume(bar_solid, MaterialsList::HDPE(), "SUPPORT_BAR");
 
     G4double bar_rpos = active_diam_/2. + ltube_thickn_ + bar_thickn_/2.;
     G4double bar_zpos = GetELzCoord() + bar_start_z_ + bar_length_/2.;
 
     G4RotationMatrix rotbar;
-    for (G4int i=0; i<10; i++) {
-    rotbar.rotateZ((i*36.+90)*deg);     // 360/10.
-    G4double x = bar_rpos * cos((i*36.+90)*deg);
-    G4double y = bar_rpos * sin((i*36.+90)*deg);
+    G4int n_bars = 10;
+    G4double step = 360 / n_bars;
+    for (G4int i=0; i<n_bars; i++) {
+    rotbar.rotateZ((i*step+90)*deg);
+    G4double x = bar_rpos * cos((i*step+90)*deg);
+    G4double y = bar_rpos * sin((i*step+90)*deg);
 
     // new G4PVPlacement(G4Transform3D(rotbar, G4ThreeVector(x, y, bar_zpos)),
     //      	      bar_logic, "SUPPORT_BAR", mother_logic_, false, i, true);
