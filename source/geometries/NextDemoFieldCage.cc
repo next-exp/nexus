@@ -49,7 +49,6 @@ namespace nexus {
     gate_transparency_ (0.76),
     buffer_length_ (117.85 * mm),
     cath_grid_transparency_ (0.98),
-    cathode_ring_diam_ (229. * mm),
     el_gap_length_ (9.8 * mm), // 9.8 mm when there's the plate
     elgap_ring_diam_ (232. * mm),
     light_tube_drift_start_z_ (16. * mm),
@@ -74,10 +73,6 @@ namespace nexus {
     bar_end_z_ (403.5 * mm),
     bar_width_ (19. * mm),
     bar_thickn_ (11. * mm),
-    bar_addon1_length_ ( 7. * mm),
-    bar_addon1_thickn_ (16. * mm),
-    bar_addon2_length_ (16.5 * mm),
-    bar_addon2_thickn_ ( 7. * mm),
     visibility_ (0),
     verbosity_(0),
     max_step_size_(1.*mm),
@@ -271,9 +266,13 @@ void NextDemoFieldCage::BuildCathodeGrid()
                                                                              cath_grid_transparency_,
                                                                              grid_thickn_));
 
-    G4Tubs* cathode_grid_solid =
-      new G4Tubs("CATHODE_GRID", 0., cathode_ring_diam_/2., grid_thickn_/2.,
-                 0, twopi);
+    G4double cath_zplane[2] = {-grid_thickn_/2., grid_thickn_/2.};
+    G4double rinner[2] = {0., 0.};
+    G4double router[2] = {active_diam_/2., active_diam_/2.};
+
+    G4Polyhedra* cathode_grid_solid =
+      new G4Polyhedra("CATHODE_GRID", 0., twopi, 10, 2, cath_zplane,
+                      rinner, router);
     G4LogicalVolume* cathode_grid_logic =
       new G4LogicalVolume(cathode_grid_solid, grid_mat, "CATHODE_GRID");
     new G4PVPlacement(0, G4ThreeVector(0., 0., cathode_grid_zpos_),
@@ -477,10 +476,10 @@ void NextDemoFieldCage::BuildCathodeGrid()
 
     /// Visibilities
     if (visibility_) {
-      G4VisAttributes titanium_col = nexus::TitaniumGrey();
-      titanium_col.SetForceSolid(true);
-      ltube_drift_logic->SetVisAttributes(titanium_col);
-      ltube_buff_logic->SetVisAttributes(titanium_col);
+      G4VisAttributes teflon_col = nexus::White();
+      teflon_col.SetForceSolid(true);
+      ltube_drift_logic->SetVisAttributes(teflon_col);
+      ltube_buff_logic->SetVisAttributes(teflon_col);
     } else {
       ltube_drift_logic->SetVisAttributes(G4VisAttributes::Invisible);
       ltube_buff_logic->SetVisAttributes(G4VisAttributes::Invisible);
@@ -494,7 +493,7 @@ void NextDemoFieldCage::BuildCathodeGrid()
       new G4LogicalVolume(ring_solid, aluminum_, "FIELD_RING");
 
     G4double posz = GetELzCoord() + dist_gate_first_ring_ + ring_height_/2.;
-    for (G4int i=0; i<num_drift_rings; i++) {
+    for (G4int i=0; i<num_drift_rings_; i++) {
       new G4PVPlacement(0, G4ThreeVector(0., 0., posz), ring_logic,
                         "FIELD_RING", mother_logic_, false, i, true);
 
@@ -502,48 +501,27 @@ void NextDemoFieldCage::BuildCathodeGrid()
     }
 
     /// Buffer part
-    dist_between_ring_centres = 10. * mm;
     posz = posz - dist_drift_ring_centres_ + ring_height_/2. +
       ring_drift_buff_gap_ + ring_height_/2.;
-    for (G4int i=num_drift_rings_; i<num_rings; i++) {
+    for (G4int i=num_drift_rings_; i<num_rings_; i++) {
       new G4PVPlacement(0, G4ThreeVector(0., 0., posz), ring_logic,
                         "FIELD_RING", mother_logic_, false, i, true);
-      posz = posz + dist_buff_ring_centres;
+      posz = posz + dist_buff_ring_centres_;
     }
 
     /// Visibilities
     if (visibility_) {
       G4VisAttributes yellow_col =nexus::Yellow();
-      yellow_col.SetForceSolid(true);
       ring_logic->SetVisAttributes(yellow_col);
     }
     else {
       ring_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
-    /*
+
     /// SUPPORT BARS - DRIFT
-    G4Box* bar_base = new G4Box("SUPPORT_BAR", bar_thickn_/2.,
-                                bar_width_/2., bar_length_/2.);
-
-    G4Box* addon1 = new G4Box("SUPPORT_BAR", bar_addon1_thickn_/2.,
-                              bar_width_/2., bar_addon1_length_/2.);
-
-    G4Box* addon2 = new G4Box("SUPPORT_BAR", bar_addon2_thickn_/2.,
-                              bar_width_/2., bar_addon2_length_/2.);
-
-    ///  UNIONS for support bar (pillar) and add_on
-    G4UnionSolid* bar_solid =
-      new G4UnionSolid("SUPPORT_BAR", bar_base, addon1, 0,
-                       G4ThreeVector((bar_thickn_ + bar_addon1_thickn_)/2., 0.,
-                                     -(bar_length_ - bar_addon1_length_)/2.)); // + or -
-
-    bar_solid =
-      new G4UnionSolid("SUPPORT_BAR", bar_solid, addon2, 0,
-                       G4ThreeVector(bar_thickn_/2. + bar_addon1_thickn_ - bar_addon2_thickn_/2., 0,
-                                     -(bar_length_ + bar_addon2_length_)/2.));
-
-
+    G4Box* bar_solid = new G4Box("SUPPORT_BAR", bar_width_/2.,
+                                 bar_thickn_/2., bar_length_/2.);
     G4LogicalVolume* bar_logic =
       new G4LogicalVolume(bar_solid, MaterialsList::HDPE(), "SUPPORT_BAR");
 
@@ -551,15 +529,17 @@ void NextDemoFieldCage::BuildCathodeGrid()
     G4double bar_zpos = GetELzCoord() + bar_start_z_ + bar_length_/2.;
 
     G4RotationMatrix rotbar;
+    G4ThreeVector bar_pos(0., bar_rpos, bar_zpos);
+
     G4int n_bars = 10;
     G4double step = 360 / n_bars;
     for (G4int i=0; i<n_bars; i++) {
-    rotbar.rotateZ((i*step+90)*deg);
-    G4double x = bar_rpos * cos((i*step+90)*deg);
-    G4double y = bar_rpos * sin((i*step+90)*deg);
-
-    // new G4PVPlacement(G4Transform3D(rotbar, G4ThreeVector(x, y, bar_zpos)),
-    //      	      bar_logic, "SUPPORT_BAR", mother_logic_, false, i, true);
+      G4double angle = (i*step)*deg;
+      if (i!=0) rotbar.rotateZ(step*deg);
+      bar_pos.setX(-bar_rpos * sin(angle));
+      bar_pos.setY(bar_rpos * cos(angle));
+      new G4PVPlacement(G4Transform3D(rotbar, bar_pos),
+                        bar_logic, "SUPPORT_BAR", mother_logic_, false, i, true);
     }
 
     if (visibility_) {
@@ -570,7 +550,7 @@ void NextDemoFieldCage::BuildCathodeGrid()
     else {
       bar_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
-    */
+
   }
 
 

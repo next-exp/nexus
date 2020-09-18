@@ -75,7 +75,6 @@ namespace nexus {
     const G4double grid_thickn_, gate_transparency_;
     const G4double buffer_length_;
     const G4double cath_grid_transparency_;
-    const G4double cathode_ring_diam_;
     const G4double el_gap_length_, elgap_ring_diam_;
     const G4double light_tube_drift_start_z_, light_tube_drift_end_z_;
     const G4double ltube_thickn_;
@@ -90,10 +89,6 @@ namespace nexus {
     const G4double dist_gate_first_ring_;
     const G4double bar_start_z_, bar_end_z_;
     const G4double bar_width_, bar_thickn_;
-    const G4double bar_addon1_length_;
-    const G4double bar_addon1_thickn_;
-    const G4double bar_addon2_length_;
-    const G4double bar_addon2_thickn_;
 
     // Visibility and verbosity
     G4bool visibility_, verbosity_;
