@@ -495,7 +495,7 @@ void NextDemoFieldCage::BuildCathodeGrid()
     G4double posz = GetELzCoord() + dist_gate_first_ring_ + ring_height_/2.;
     for (G4int i=0; i<num_drift_rings_; i++) {
       new G4PVPlacement(0, G4ThreeVector(0., 0., posz), ring_logic,
-                        "FIELD_RING", mother_logic_, false, i, true);
+                        "FIELD_RING", mother_logic_, false, i, false);
 
       posz = posz + dist_drift_ring_centres_;
     }
@@ -505,7 +505,7 @@ void NextDemoFieldCage::BuildCathodeGrid()
       ring_drift_buff_gap_ + ring_height_/2.;
     for (G4int i=num_drift_rings_; i<num_rings_; i++) {
       new G4PVPlacement(0, G4ThreeVector(0., 0., posz), ring_logic,
-                        "FIELD_RING", mother_logic_, false, i, true);
+                        "FIELD_RING", mother_logic_, false, i, false);
       posz = posz + dist_buff_ring_centres_;
     }
 
@@ -539,7 +539,7 @@ void NextDemoFieldCage::BuildCathodeGrid()
       bar_pos.setX(-bar_rpos * sin(angle));
       bar_pos.setY(bar_rpos * cos(angle));
       new G4PVPlacement(G4Transform3D(rotbar, bar_pos),
-                        bar_logic, "SUPPORT_BAR", mother_logic_, false, i, true);
+                        bar_logic, "SUPPORT_BAR", mother_logic_, false, i, false);
     }
 
     if (visibility_) {
