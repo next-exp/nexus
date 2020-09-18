@@ -96,9 +96,9 @@ namespace nexus {
     G4double max_step_size_;
 
     G4double active_length_, active_zpos_;
-    G4double cathode_grid_zpos_, el_gap_zpos_;
     G4double ltube_drift_length_, ltube_buff_length_;
     G4double bar_length_;
+    G4double cathode_grid_zpos_, el_gap_zpos_;
     G4double drift_transv_diff_, drift_long_diff_;
     G4double ELtransv_diff_, ELlong_diff_;
     G4bool elfield_, ELelectric_field_;
