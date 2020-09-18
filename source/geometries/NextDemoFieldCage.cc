@@ -61,10 +61,14 @@ namespace nexus {
     anode_diam_ (256.3 * mm),
     tpb_thickn_ (3 * micrometer),
     active_diam_ (194.2 * mm),
+    num_drift_rings_ (19),
+    num_rings_ (23),
     ring_diam_ (235. * mm),
     ring_height_ (10. * mm),
     ring_thickn_ (5. * mm),
-    ring_drift_buff_gap_ (37.2 * mm),
+    ring_drift_buff_gap_ (27.2 * mm),
+    dist_drift_ring_centres_ (15. * mm),
+    dist_buff_ring_centres_ (20. * mm),
     dist_gate_first_ring_ (18.4 * mm),
     bar_start_z_ (14. * mm),
     bar_end_z_ (403.5 * mm),
@@ -489,23 +493,22 @@ void NextDemoFieldCage::BuildCathodeGrid()
     G4LogicalVolume* ring_logic =
       new G4LogicalVolume(ring_solid, aluminum_, "FIELD_RING");
 
-    G4int num_rings = 19;
-    G4double dist_between_ring_centres = 15. * mm;
     G4double posz = GetELzCoord() + dist_gate_first_ring_ + ring_height_/2.;
-    for (G4int i=0; i<num_rings; i++) {
+    for (G4int i=0; i<num_drift_rings; i++) {
       new G4PVPlacement(0, G4ThreeVector(0., 0., posz), ring_logic,
                         "FIELD_RING", mother_logic_, false, i, true);
 
-      posz = posz + dist_between_ring_centres;
+      posz = posz + dist_drift_ring_centres_;
     }
 
     /// Buffer part
-    posz = posz - dist_between_ring_centres + ring_height_/2. +
+    dist_between_ring_centres = 10. * mm;
+    posz = posz - dist_drift_ring_centres_ + ring_height_/2. +
       ring_drift_buff_gap_ + ring_height_/2.;
-    for (G4int i=19; i<23; i++) {
+    for (G4int i=num_drift_rings_; i<num_rings; i++) {
       new G4PVPlacement(0, G4ThreeVector(0., 0., posz), ring_logic,
                         "FIELD_RING", mother_logic_, false, i, true);
-      posz = posz + dist_between_ring_centres;
+      posz = posz + dist_buff_ring_centres;
     }
 
     /// Visibilities
