@@ -161,16 +161,16 @@ namespace nexus {
 
   void NextDemoFieldCage::Construct()
   {
-    /// Calculate lengths of active region
-    active_length_ = gate_cathode_centre_dist_ - grid_thickn_/2.;
+    /// Calculate derived lengths of specific volumes
+    active_length_      = gate_cathode_centre_dist_ - grid_thickn_/2.;
+    ltube_drift_length_ = light_tube_drift_end_z_ - light_tube_drift_start_z_;
+    ltube_buff_length_  = light_tube_buff_end_z_ - light_tube_buff_start_z_;
+    bar_length_         = bar_end_z_ - bar_start_z_;
 
     /// Calculate derived positions in mother volume
     active_zpos_       = GetELzCoord() + active_length_/2.;
     cathode_grid_zpos_ = GetELzCoord() + gate_cathode_centre_dist_;
     el_gap_zpos_       = active_zpos_ - active_length_/2. - el_gap_length_/2.;
-    ltube_drift_length_ = light_tube_drift_end_z_ - light_tube_drift_start_z_;
-    ltube_buff_length_  = light_tube_buff_end_z_ - light_tube_buff_start_z_;
-    bar_length_  = bar_end_z_ - bar_start_z_;
 
     if (verbosity_) {
       G4cout << "Active length = " << active_length_/mm << " mm" << G4endl;
@@ -519,7 +519,8 @@ void NextDemoFieldCage::BuildCathodeGrid()
     }
 
 
-    /// SUPPORT BARS - DRIFT
+    /// SUPPORT BARS
+    // This volume is simplified to a parallelepiped made of polyethilene.
     G4Box* bar_solid = new G4Box("SUPPORT_BAR", bar_width_/2.,
                                  bar_thickn_/2., bar_length_/2.);
     G4LogicalVolume* bar_logic =
