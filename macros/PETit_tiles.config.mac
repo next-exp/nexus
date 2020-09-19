@@ -7,8 +7,6 @@
 /Geometry/FullRingTiles/instrumented_faces 1
 /Geometry/SiPMpet/efficiency 0.2
 /Geometry/SiPMpet/visibility true
-/Geometry/SiPMpet/mother_depth 2
-/Geometry/SiPMpet/naming_order 1000
 /Geometry/Tile/visibility true
 /Geometry/SiPMpet/time_binning 1. microsecond
 /Geometry/SiPMpet/size 3. mm

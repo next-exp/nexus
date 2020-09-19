@@ -23,13 +23,19 @@ namespace nexus {
     SiPMpetFBK();
     /// Destructor
     ~SiPMpetFBK();
-    
+
     /// Return dimensions of the SiPM
     //G4ThreeVector GetDimensions() const;
-    
+
     /// Invoke this method to build the volumes of the geometry
     void Construct();
-    
+
+    /// Setting for correct ID numbering
+    void SetSensorDepth (G4int sensor_depth);
+    void SetMotherDepth (G4int mother_depth);
+    void SetNamingOrder (G4int naming_order);
+
+
   private:
     //G4ThreeVector _dimensions; ///< external dimensions of the SiPMpet
 
@@ -42,12 +48,27 @@ namespace nexus {
     // PDE for the sensor
     G4double eff_;
 
-    G4double time_binning_, sipm_size_, mother_depth_, naming_order_;
+    G4double time_binning_, sipm_size_;
 
      // Messenger for the definition of control commands
-    G4GenericMessenger* msg_; 
+    G4GenericMessenger* msg_;
+
+    // Numbering
+    G4int sensor_depth_;
+    G4int mother_depth_;
+    G4int naming_order_;
 
   };
+
+  inline void SiPMpetFBK::SetSensorDepth(G4int sensor_depth)
+  { sensor_depth_ = sensor_depth; }
+
+  inline void SiPMpetFBK::SetMotherDepth(G4int mother_depth)
+  { mother_depth_ = mother_depth; }
+
+  inline void SiPMpetFBK::SetNamingOrder(G4int naming_order)
+  { naming_order_ = naming_order; }
+
 
 
 } // end namespace nexus

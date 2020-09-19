@@ -96,6 +96,9 @@ namespace nexus {
 
     this->SetLogicalVolume(tile_logic);
 
+    sipm_->SetSensorDepth(1);
+    sipm_->SetMotherDepth(3);
+    sipm_->SetNamingOrder(1000);
     sipm_->Construct();
     G4ThreeVector sipm_dim = sipm_->GetDimensions();
 

@@ -6,7 +6,9 @@ import numpy as np
 def test_hdf5_structure(nexus_files):
      """Check that the hdf5 table structure is the correct one."""
 
-     with tb.open_file(nexus_files) as h5out:
+     filename, _, _, _, _ = nexus_files
+
+     with tb.open_file(filename) as h5out:
 
          assert 'MC'                in h5out.root
          assert 'particles'         in h5out.root.MC
@@ -89,11 +91,12 @@ def test_particle_ids_of_hits_exist_in_particle_table(nexus_files):
     Check that the particle IDs of the hits are also contained
     in the particle table.
     """
+    filename, _, _, _, _ = nexus_files
 
-    hits = pd.read_hdf(nexus_files, 'MC/hits')
+    hits = pd.read_hdf(filename, 'MC/hits')
     hit_pids = hits.particle_id.unique()
 
-    particles = pd.read_hdf(nexus_files, 'MC/particles')
+    particles = pd.read_hdf(filename, 'MC/particles')
     particle_ids = particles.particle_id.unique()
 
     assert np.all(np.isin(hit_pids, particle_ids))
@@ -101,7 +104,9 @@ def test_particle_ids_of_hits_exist_in_particle_table(nexus_files):
 
 def test_hit_labels(nexus_files):
      """Check that there is at least one hit in the ACTIVE volume."""
-     hits = pd.read_hdf(nexus_files, 'MC/hits')
+     filename, _, _, _, _ = nexus_files
+
+     hits = pd.read_hdf(filename, 'MC/hits')
      hit_labels = hits.label.unique()
 
      assert 'ACTIVE' in hit_labels
@@ -109,7 +114,8 @@ def test_hit_labels(nexus_files):
 
 def test_primary_always_exists(nexus_files):
      """Check that there is at least one primary particle."""
-     particles = pd.read_hdf(nexus_files, 'MC/particles')
+     filename, _, _, _, _ = nexus_files
+     particles = pd.read_hdf(filename, 'MC/particles')
      primary   = particles.primary.unique()
 
      assert 1 in primary
@@ -117,7 +123,8 @@ def test_primary_always_exists(nexus_files):
 
 def test_sensor_binning_is_saved(nexus_files):
      """Check that the sensor binning is saved in the configuration table."""
-     conf = pd.read_hdf(nexus_files, 'MC/configuration')
+     filename, _, _, _, _ = nexus_files
+     conf = pd.read_hdf(filename, 'MC/configuration')
      parameters = conf.param_key.values
 
      assert any('bin_size' in p for p in parameters)

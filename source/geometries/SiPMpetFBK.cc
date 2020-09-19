@@ -31,13 +31,14 @@
 namespace nexus {
 
   using namespace CLHEP;
-  
+
   SiPMpetFBK::SiPMpetFBK(): BaseGeometry(),
 			    visibility_(0),
 			    refr_index_(1.54),
                             eff_(1.),
                             time_binning_(200.*nanosecond),
                             sipm_size_(3.*mm),
+                            sensor_depth_(-1),
 			    mother_depth_(0),
                             naming_order_(0)
 
@@ -48,10 +49,7 @@ namespace nexus {
     msg_->DeclareProperty("refr_index", refr_index_, "Refraction index for epoxy");
     msg_->DeclareProperty("efficiency", eff_, "Efficiency of SiPM");
 
-    msg_->DeclareProperty("mother_depth", mother_depth_, "Depth of sipm in its mother, being replicated");
-    msg_->DeclareProperty("naming_order", naming_order_, "To start numbering at different place than zero.");
-    
-    G4GenericMessenger::Command& time_cmd = 
+    G4GenericMessenger::Command& time_cmd =
       msg_->DeclareProperty("time_binning", time_binning_, "Time binning for the sensor");
     time_cmd.SetUnitCategory("Time");
     time_cmd.SetParameterName("time_binning", false);
@@ -63,22 +61,22 @@ namespace nexus {
     size_cmd.SetParameterName("size", false);
     size_cmd.SetRange("size>0.");
   }
-  
+
   SiPMpetFBK::~SiPMpetFBK()
   {
-  }  
-  
+  }
+
   void SiPMpetFBK::Construct()
   {
-   
+
     // PACKAGE ///////////////////////////////////////////////////////
     G4double offset = 0.1 * mm;
-    
+
     G4double sipm_x = sipm_size_;
     G4double sipm_y = sipm_size_;
     G4double sipm_z = 0.6 * mm;
-    
-    SetDimensions(G4ThreeVector(sipm_x, sipm_y, sipm_z));   
+
+    SetDimensions(G4ThreeVector(sipm_x, sipm_y, sipm_z));
 
     G4Box* sipm_solid = new G4Box("SiPMpetFBK", sipm_x/2., sipm_y/2., sipm_z/2);
 
@@ -89,7 +87,7 @@ namespace nexus {
        epoxy->SetMaterialPropertiesTable(OpticalMaterialProperties::EpoxyLXeRefr());
     }
 
-    G4LogicalVolume* sipm_logic = 
+    G4LogicalVolume* sipm_logic =
       new G4LogicalVolume(sipm_solid, epoxy, "SiPMpetFBK");
 
     this->SetLogicalVolume(sipm_logic);
@@ -99,11 +97,11 @@ namespace nexus {
     G4double active_x = sipm_x;
     G4double active_y = sipm_y;
     G4double active_depth = 0.01 * mm;
-    
+
     G4Box* active_solid =
       new G4Box("PHOTODIODES", active_x/2., active_y/2., active_depth/2);
-    
-    G4Material* silicon = 
+
+    G4Material* silicon =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_Si");
 
     G4LogicalVolume* active_logic =
@@ -111,9 +109,9 @@ namespace nexus {
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., sipm_z/2. - active_depth/2. - offset),
                       active_logic, "PHOTODIODES", sipm_logic, false, 0, true);
-    
+
     // OPTICAL SURFACES /////////////////////////////////////////////
-    
+
     const G4int entries = 12;
 
 
@@ -123,38 +121,42 @@ namespace nexus {
 				   7.99895*eV, 8.26558*eV};
     G4double reflectivity[entries] = {0., 0., 0., 0.,
 				      0., 0., 0.,
-                                      0., 0., 0.,      
+                                      0., 0., 0.,
 				      0., 0.};
-    G4double efficiency[entries]   = {eff_, eff_, eff_, 
-                                      eff_, eff_, eff_, 
+    G4double efficiency[entries]   = {eff_, eff_, eff_,
+                                      eff_, eff_, eff_,
                                       eff_, eff_, eff_,
                                       eff_, eff_};
 
-    
+
     G4MaterialPropertiesTable* sipm_mt = new G4MaterialPropertiesTable();
     sipm_mt->AddProperty("EFFICIENCY", energies, efficiency, entries);
     sipm_mt->AddProperty("REFLECTIVITY", energies, reflectivity, entries);
 
-    G4OpticalSurface* sipm_opsurf = 
+    G4OpticalSurface* sipm_opsurf =
       new G4OpticalSurface("SIPM_OPSURF", unified, polished, dielectric_metal);
     sipm_opsurf->SetMaterialPropertiesTable(sipm_mt);
 
-    new G4LogicalSkinSurface("SIPM_OPSURF", active_logic, sipm_opsurf);    
-    
-    
+    new G4LogicalSkinSurface("SIPM_OPSURF", active_logic, sipm_opsurf);
+
+
     // SENSITIVE DETECTOR ////////////////////////////////////////////
 
     G4String sdname = "/SIPM/SiPMpetFBK";
     G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
-    
+
     if (!sdmgr->FindSensitiveDetector(sdname, false)) {
-      //PmtSD* sipmsd = new PmtSD(sdname);
       ToFSD* sipmsd = new ToFSD(sdname);
-      sipmsd->SetDetectorNamingOrder(naming_order_);
+
+      if (sensor_depth_ == -1) 
+        G4Exception("[SiPMpetFBK]", "Construct()", FatalException,
+                    "Sensor depth must be set before constructing");
+      sipmsd->SetDetectorVolumeDepth(sensor_depth_);
       sipmsd->SetMotherVolumeDepth(mother_depth_);
+      sipmsd->SetDetectorNamingOrder(naming_order_);
       sipmsd->SetTimeBinning(time_binning_);
       G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
-      sipm_logic->SetSensitiveDetector(sipmsd);
+      active_logic->SetSensitiveDetector(sipmsd);
     }
 
     // Visibilities
@@ -170,6 +172,6 @@ namespace nexus {
       active_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
   }
-  
-  
+
+
 } // end namespace nexus
