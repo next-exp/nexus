@@ -360,7 +360,7 @@ namespace nexus {
     G4ThreeVector position;
     G4String vol_name;
 
-    G4int copy_no = 1;
+    G4int copy_no = 0;
 
     for (G4int i=0; i<n_tile_rows_; i++) {
       G4double y_pos = full_col_size_/2. - tile_->GetDimensions().y()/2. - i*tile_->GetDimensions().y();
