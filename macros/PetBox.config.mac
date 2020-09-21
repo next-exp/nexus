@@ -1,7 +1,5 @@
 ### GEOMETRY
 /Geometry/PetBox/visibility true
-/Geometry/PetBox/box_size 19.2 cm
-/Geometry/PetBox/box_thickness 2. cm
 
 /Geometry/Tile/visibility true
 
