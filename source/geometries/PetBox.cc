@@ -44,7 +44,7 @@ namespace nexus {
                     ih_thickness_(3.*mm),
                     source_tube_thickness_(1.*mm),
                     source_tube_int_radius_(1.1*cm),
-                    source_tube_length_(10.*cm),
+                    source_tube_length_(11.*cm),
                     active_depth_(3.*cm),
                     dist_dice_panel_(5.25*mm),
                     dist_ihat_panel_(2.*mm),
@@ -122,7 +122,7 @@ namespace nexus {
                       "LXE", box_logic, false, 0, true);
 
 
-    // INTERNAL HAT AND SOURCE TUBE
+    // INTERNAL HAT
     G4Box* internal_hat_solid =
       new G4Box("INTERNAL_HAT", ih_x_size_/2., ih_y_size_/2., ih_z_size_/2.);
 
@@ -143,6 +143,7 @@ namespace nexus {
     new G4PVPlacement(0, G4ThreeVector(0., 0, 0), vacuum_hat_logic,
                       "VACUUM_HAT", internal_hat_logic, false, 0, true);
 
+    // SOURCE TUBE
     G4Tubs* source_tube_solid =
       new G4Tubs("SOURCE_TUBE", 0, source_tube_int_radius_ + source_tube_thickness_, source_tube_length_/2., 0, twopi);
 
@@ -152,17 +153,56 @@ namespace nexus {
 
     G4RotationMatrix rot;
     rot.rotateX(pi/2.);
-    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., 0., 0.)), source_tube_logic,
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., source_tube_length_/2.-(ih_y_size_-2.*ih_thickness_)/2., 0.)), source_tube_logic,
                       "SOURCE_TUBE", vacuum_hat_logic, false, 0, true);
 
     G4Tubs* air_source_tube_solid =
-      new G4Tubs("AIR_SOURCE_TUBE", 0, source_tube_int_radius_, (source_tube_length_ - 2.*source_tube_thickness_)/2., 0, twopi);
+      new G4Tubs("AIR_SOURCE_TUBE", 0, source_tube_int_radius_, source_tube_length_/2.-source_tube_thickness_, 0, twopi);
 
     G4LogicalVolume* air_source_tube_logic =
       new G4LogicalVolume(air_source_tube_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "AIR_SOURCE_TUBE");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), air_source_tube_logic,
+    new G4PVPlacement(0, G4ThreeVector(0., 0., source_tube_thickness_), air_source_tube_logic,
                       "AIR_SOURCE_TUBE", source_tube_logic, false, 0, true);
+
+    // SOURCE TUBE INSIDE HAT
+    G4Tubs* source_tube_inside_hat_solid =
+      new G4Tubs("SOURCE_TUBE", 0, source_tube_int_radius_ + source_tube_thickness_, ih_thickness_/2., 0, twopi);
+
+    G4LogicalVolume* source_tube_inside_hat_logic =
+      new G4LogicalVolume(source_tube_inside_hat_solid, carbon_fiber, "SOURCE_TUBE");
+
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., (-ih_y_size_+ih_thickness_)/2., 0.)), source_tube_inside_hat_logic,
+                      "SOURCE_TUBE", internal_hat_logic, false, 0, true);
+
+    G4Tubs* air_source_tube_inside_hat_solid =
+      new G4Tubs("AIR_SOURCE_TUBE", 0, source_tube_int_radius_, ih_thickness_/2., 0, twopi);
+
+    G4LogicalVolume* air_source_tube_inside_hat_logic =
+      new G4LogicalVolume(air_source_tube_inside_hat_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "AIR_SOURCE_TUBE");
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), air_source_tube_inside_hat_logic,
+                      "AIR_SOURCE_TUBE", source_tube_inside_hat_logic, false, 0, true);
+
+    // SOURCE TUBE INSIDE BOX
+    G4Tubs* source_tube_inside_box_solid =
+      new G4Tubs("SOURCE_TUBE", 0, source_tube_int_radius_ + source_tube_thickness_, box_thickness_/2., 0, twopi);
+
+    G4LogicalVolume* source_tube_inside_box_logic =
+      new G4LogicalVolume(source_tube_inside_box_solid, carbon_fiber, "SOURCE_TUBE");
+
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., (-box_size_+box_thickness_)/2., 0.)), source_tube_inside_box_logic,
+                      "SOURCE_TUBE", box_logic, false, 0, true);
+
+    G4Tubs* air_source_tube_inside_box_solid =
+      new G4Tubs("AIR_SOURCE_TUBE", 0, source_tube_int_radius_, box_thickness_/2., 0, twopi);
+
+    G4LogicalVolume* air_source_tube_inside_box_logic =
+      new G4LogicalVolume(air_source_tube_inside_box_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "AIR_SOURCE_TUBE");
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), air_source_tube_inside_box_logic,
+                      "AIR_SOURCE_TUBE", source_tube_inside_box_logic, false, 0, true);
+
 
 
     // TILE CONSTRUCT
@@ -288,10 +328,17 @@ namespace nexus {
       G4VisAttributes vacuum_col = nexus::Lilla();
       vacuum_hat_logic->SetVisAttributes(vacuum_col);
       G4VisAttributes source_tube_col = nexus::Red();
-      //source_tube_col.SetForceSolid(true);
+      source_tube_col.SetForceSolid(true);
       source_tube_logic->SetVisAttributes(source_tube_col);
       G4VisAttributes air_source_tube_col = nexus::DarkGrey();
+      //air_source_tube_col.SetForceSolid(true);
       air_source_tube_logic->SetVisAttributes(air_source_tube_col);
+      G4VisAttributes air_source_tube_inside_hat_col = nexus::Blue();
+      air_source_tube_inside_hat_col.SetForceSolid(true);
+      source_tube_inside_hat_logic->SetVisAttributes(air_source_tube_inside_hat_col);
+      G4VisAttributes air_source_tube_inside_box_col = nexus::White();
+      air_source_tube_inside_box_col.SetForceSolid(true);
+      source_tube_inside_box_logic->SetVisAttributes(air_source_tube_inside_box_col);
       G4VisAttributes active_col = nexus::Blue();
       active_logic->SetVisAttributes(active_col);
       G4VisAttributes panel_col = nexus::Red();
