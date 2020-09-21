@@ -52,8 +52,8 @@ namespace nexus {
     G4double n_tile_rows_, n_tile_columns_;
     G4double tile_thickn_, full_row_size_, full_col_size_;
 
-    G4double active_depth_, dist_dice_walls_;
-    G4double dist_ihat_wall_, wall_thickness_;
+    G4double active_depth_, dist_dice_panel_;
+    G4double dist_ihat_panel_, panel_thickness_;
 
     G4double max_step_size_;
 

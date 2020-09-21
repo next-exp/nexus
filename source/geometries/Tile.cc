@@ -7,8 +7,6 @@
 // ----------------------------------------------------------------------------
 
 #include "Tile.h"
-#include "PmtSD.h"
-#include "ToFSD.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"

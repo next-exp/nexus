@@ -46,16 +46,16 @@ namespace nexus {
                     source_tube_int_radius_(1.1*cm),
                     source_tube_length_(10.*cm),
                     active_depth_(3.*cm),
-                    dist_dice_walls_(5.25*mm),
-                    dist_ihat_wall_(2.*mm),
-                    wall_thickness_(1.75*mm),
+                    dist_dice_panel_(5.25*mm),
+                    dist_ihat_panel_(2.*mm),
+                    panel_thickness_(1.75*mm),
                     max_step_size_(1.*mm)
   {
     // Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/PetBox/",
                                   "Control commands of geometry PetBox.");
     msg_->DeclareProperty("visibility", visibility_, "Visibility");
-    msg_->DeclareProperty("surf_reflectivity", reflectivity_, "Reflectivity of box walls");
+    msg_->DeclareProperty("surf_reflectivity", reflectivity_, "Reflectivity of the panels");
 
     G4GenericMessenger::Command& source_pos_x_cmd =
       msg_->DeclareProperty("source_pos_x", source_pos_x_, "X position of the source");
@@ -175,9 +175,9 @@ namespace nexus {
 
 
     // 2 ACTIVE REGIONS
-    G4double active_y_size = full_col_size_ + 2.*dist_dice_walls_;
-    G4double active_z_size = full_row_size_ + 2.*dist_dice_walls_;
-    G4double active_x_pos = ih_x_size_/2. + dist_ihat_wall_ + wall_thickness_ + active_depth_/2.;
+    G4double active_y_size = full_col_size_ + 2.*dist_dice_panel_;
+    G4double active_z_size = full_row_size_ + 2.*dist_dice_panel_;
+    G4double active_x_pos = ih_x_size_/2. + dist_ihat_panel_ + panel_thickness_ + active_depth_/2.;
 
     G4Box* active_solid =
       new G4Box("ACTIVE", active_depth_/2., active_y_size/2., active_z_size/2.);
@@ -197,82 +197,83 @@ namespace nexus {
     active_logic->SetUserLimits(new G4UserLimits(max_step_size_));
 
 
-    // PYREX WALLS BETWEEN THE INTERNAL HAT AND THE ACTIVE REGIONS
-    G4double sep_wall_width = full_row_size_ + 2* dist_dice_walls_;
-    G4double sep_wall_x_pos = ih_x_size_/2. + wall_thickness_/2. + dist_ihat_wall_;
-    G4double sep_wall_y_pos = -box_size_/2. + box_thickness_ + ih_y_size_/2.;
+    // PYREX PANELS BETWEEN THE INTERNAL HAT AND THE ACTIVE REGIONS
+    G4double entry_panel_width = full_row_size_ + 2* dist_dice_panel_;
+    G4double entry_panel_xpos = ih_x_size_/2. + panel_thickness_/2. + dist_ihat_panel_;
+    G4double entry_panel_ypos = -box_size_/2. + box_thickness_ + ih_y_size_/2.;
 
-    G4Box* separation_wall_solid =
-      new G4Box("SEPARATION_WALL", wall_thickness_/2., ih_y_size_/2., sep_wall_width/2.);
+    G4Box* entry_panel_solid =
+      new G4Box("ENTRY_PANEL", panel_thickness_/2., ih_y_size_/2., entry_panel_width/2.);
 
     G4Material* pyrex = G4NistManager::Instance()->FindOrBuildMaterial("G4_Pyrex_Glass");
 
-    G4LogicalVolume* separation_wall_logic =
-      new G4LogicalVolume(separation_wall_solid, pyrex, "SEPARATION_WALL");
+    G4LogicalVolume* entry_panel_logic =
+      new G4LogicalVolume(entry_panel_solid, pyrex, "ENTRY_PANEL");
 
-    new G4PVPlacement(0, G4ThreeVector(-sep_wall_x_pos, sep_wall_y_pos, 0), separation_wall_logic,
-                        "SEPARATION_WALL1", LXe_logic_, false, 1, true);
+    new G4PVPlacement(0, G4ThreeVector(-entry_panel_xpos, entry_panel_ypos, 0), entry_panel_logic,
+                        "ENTRY_PANEL", LXe_logic_, false, 1, true);
 
-    new G4PVPlacement(0, G4ThreeVector(sep_wall_x_pos, sep_wall_y_pos, 0), separation_wall_logic,
-                        "SEPARATION_WALL2", LXe_logic_, false, 2, true);
-
-
-    //PYREX WALLS SURROUNDING THE SIPM DICE BOARDS
-    G4double wall_width = active_depth_ + tile_thickn_;
-    G4double horiz_wall_length = full_row_size_ + 2.*dist_dice_walls_;
-    G4double wall_x_pos = ih_x_size_/2. + dist_ihat_wall_ + wall_thickness_ + active_depth_ + tile_thickn_ - wall_width/2.;
-    G4double wall_y_pos = full_col_size_/2. + dist_dice_walls_ + wall_thickness_/2.;
-
-    G4Box* surrounding_sensors_horiz_wall_solid =
-      new G4Box("SURROUNDING_SENSORS_HORIZ_WALL", wall_width/2., wall_thickness_/2., horiz_wall_length/2.);
-
-    G4LogicalVolume* surrounding_sensors_horiz_wall_logic =
-      new G4LogicalVolume(surrounding_sensors_horiz_wall_solid, pyrex, "SURROUNDING_SENSORS_HORIZ_WALL");
-
-    new G4PVPlacement(0, G4ThreeVector(-wall_x_pos, wall_y_pos, 0), surrounding_sensors_horiz_wall_logic,
-                       "SURROUNDING_SENSORS_HORIZ_WALL1", LXe_logic_, false, 1, true);
-
-    new G4PVPlacement(0, G4ThreeVector(-wall_x_pos, -wall_y_pos, 0), surrounding_sensors_horiz_wall_logic,
-                        "SURROUNDING_SENSORS_HORIZ_WALL2", LXe_logic_, false, 2, true);
-
-    new G4PVPlacement(0, G4ThreeVector(wall_x_pos, wall_y_pos, 0), surrounding_sensors_horiz_wall_logic,
-                      "SURROUNDING_SENSORS_HORIZ_WALL3", LXe_logic_, false, 3, true);
-
-    new G4PVPlacement(0, G4ThreeVector(wall_x_pos, -wall_y_pos, 0), surrounding_sensors_horiz_wall_logic,
-                      "SURROUNDING_SENSORS_HORIZ_WALL4", LXe_logic_, false, 4, true);
+    new G4PVPlacement(0, G4ThreeVector(entry_panel_xpos, entry_panel_ypos, 0), entry_panel_logic,
+                        "ENTRY_PANEL", LXe_logic_, false, 2, true);
 
 
-    G4double vert_wall_length = full_col_size_ + 2.*dist_dice_walls_;
-    G4double wall_z_pos = full_row_size_/2. + dist_dice_walls_ + wall_thickness_/2.;
-    G4Box* surrounding_sensors_vert_wall_solid =
-      new G4Box("SURROUNDING_SENSORS_VERT_WALL", wall_width/2., vert_wall_length/2., wall_thickness_/2.);
+    //PYREX PANELS SURROUNDING THE SIPM DICE BOARDS
+    G4double lat_panel_width = active_depth_ + tile_thickn_;
+    G4double horiz_panel_length = full_row_size_ + 2.*dist_dice_panel_;
+    G4double lat_panel_xpos = ih_x_size_/2. + dist_ihat_panel_ + panel_thickness_ + active_depth_ + tile_thickn_ - lat_panel_width/2.;
+    G4double lat_panel_ypos = full_col_size_/2. + dist_dice_panel_ + panel_thickness_/2.;
 
-    G4LogicalVolume* surrounding_sensors_vert_wall_logic =
-      new G4LogicalVolume(surrounding_sensors_vert_wall_solid, pyrex, "SURROUNDING_SENSORS_VERT_WALL");
+    G4Box* horiz_lat_panel_solid =
+      new G4Box("LAT_PANEL", lat_panel_width/2., panel_thickness_/2., horiz_panel_length/2.);
 
-    new G4PVPlacement(0, G4ThreeVector(-wall_x_pos, 0, -wall_z_pos), surrounding_sensors_vert_wall_logic,
-                      "SURROUNDING_SENSORS_VERT_WALL1", LXe_logic_, false, 1, true);
+    G4LogicalVolume* horiz_lat_panel_logic =
+      new G4LogicalVolume(horiz_lat_panel_solid, pyrex, "LAT_PANEL");
 
-    new G4PVPlacement(0, G4ThreeVector(-wall_x_pos, 0, wall_z_pos), surrounding_sensors_vert_wall_logic,
-                      "SURROUNDING_SENSORS_VERT_WALL2", LXe_logic_, false, 2, true);
+    new G4PVPlacement(0, G4ThreeVector(-lat_panel_xpos, lat_panel_ypos, 0), horiz_lat_panel_logic,
+                       "LAT_PANEL", LXe_logic_, false, 1, true);
 
-    new G4PVPlacement(0, G4ThreeVector(wall_x_pos, 0, -wall_z_pos), surrounding_sensors_vert_wall_logic,
-                      "SURROUNDING_SENSORS_VERT_WALL3", LXe_logic_, false, 3, true);
+    new G4PVPlacement(0, G4ThreeVector(-lat_panel_xpos, -lat_panel_ypos, 0), horiz_lat_panel_logic,
+                        "LAT_PANEL", LXe_logic_, false, 2, true);
 
-    new G4PVPlacement(0, G4ThreeVector(wall_x_pos, 0, wall_z_pos), surrounding_sensors_vert_wall_logic,
-                      "SURROUNDING_SENSORS_VERT_WALL4", LXe_logic_, false, 4, true);
+    new G4PVPlacement(0, G4ThreeVector(lat_panel_xpos, lat_panel_ypos, 0), horiz_lat_panel_logic,
+                      "LAT_PANEL", LXe_logic_, false, 3, true);
+
+    new G4PVPlacement(0, G4ThreeVector(lat_panel_xpos, -lat_panel_ypos, 0), horiz_lat_panel_logic,
+                      "LAT_PANEL", LXe_logic_, false, 4, true);
 
 
-    // Optical surface for the walls
-    G4OpticalSurface* wall_opsur = new G4OpticalSurface("OP_WALL");
-    wall_opsur->SetType(dielectric_metal);
-    wall_opsur->SetModel(unified);
-    wall_opsur->SetFinish(ground);
-    wall_opsur->SetSigmaAlpha(0.1);
-    wall_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::ReflectantSurface(reflectivity_));
-    new G4LogicalSkinSurface("OP_WALL", separation_wall_logic, wall_opsur);
-    new G4LogicalSkinSurface("OP_WALL_H", surrounding_sensors_horiz_wall_logic, wall_opsur);
-    new G4LogicalSkinSurface("OP_WALL_V", surrounding_sensors_vert_wall_logic, wall_opsur);
+    G4double vert_panel_length = full_col_size_ + 2.*dist_dice_panel_;
+    G4double lat_panel_zpos = full_row_size_/2. + dist_dice_panel_ + panel_thickness_/2.;
+
+    G4Box* vert_lat_panel_solid =
+      new G4Box("LAT_PANEL", lat_panel_width/2., vert_panel_length/2., panel_thickness_/2.);
+
+    G4LogicalVolume* vert_lat_panel_logic =
+      new G4LogicalVolume(vert_lat_panel_solid, pyrex, "LAT_PANEL");
+
+    new G4PVPlacement(0, G4ThreeVector(-lat_panel_xpos, 0, -lat_panel_zpos), vert_lat_panel_logic,
+                      "LAT_PANEL", LXe_logic_, false, 1, true);
+
+    new G4PVPlacement(0, G4ThreeVector(-lat_panel_xpos, 0, lat_panel_zpos), vert_lat_panel_logic,
+                      "LAT_PANEL", LXe_logic_, false, 2, true);
+
+    new G4PVPlacement(0, G4ThreeVector(lat_panel_xpos, 0, -lat_panel_zpos), vert_lat_panel_logic,
+                      "LAT_PANEL", LXe_logic_, false, 3, true);
+
+    new G4PVPlacement(0, G4ThreeVector(lat_panel_xpos, 0, lat_panel_zpos), vert_lat_panel_logic,
+                      "LAT_PANEL", LXe_logic_, false, 4, true);
+
+
+    // Optical surface for the panels
+    G4OpticalSurface* panel_opsur = new G4OpticalSurface("OP_PANEL");
+    panel_opsur->SetType(dielectric_metal);
+    panel_opsur->SetModel(unified);
+    panel_opsur->SetFinish(ground);
+    panel_opsur->SetSigmaAlpha(0.1);
+    panel_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::ReflectantSurface(reflectivity_));
+    new G4LogicalSkinSurface("OP_PANEL", entry_panel_logic, panel_opsur);
+    new G4LogicalSkinSurface("OP_PANEL_H", horiz_lat_panel_logic, panel_opsur);
+    new G4LogicalSkinSurface("OP_PANEL_V", vert_lat_panel_logic, panel_opsur);
 
 
     // Visibilities
@@ -293,8 +294,8 @@ namespace nexus {
       air_source_tube_logic->SetVisAttributes(air_source_tube_col);
       G4VisAttributes active_col = nexus::Blue();
       active_logic->SetVisAttributes(active_col);
-      G4VisAttributes w_col = nexus::Red();
-      separation_wall_logic->SetVisAttributes(w_col);
+      G4VisAttributes panel_col = nexus::Red();
+      entry_panel_logic->SetVisAttributes(panel_col);
     }
     else {
       box_logic->SetVisAttributes(G4VisAttributes::Invisible);
@@ -305,7 +306,7 @@ namespace nexus {
   void PetBox::BuildSensors()
   {
     G4LogicalVolume* tile_logic = tile_->GetLogicalVolume();
-    G4double x_pos = ih_x_size_/2. + dist_ihat_wall_ + wall_thickness_ + active_depth_ + tile_thickn_/2.;
+    G4double x_pos = ih_x_size_/2. + dist_ihat_panel_ + panel_thickness_ + active_depth_ + tile_thickn_/2.;
 
     G4RotationMatrix rot;
     rot.rotateY(-pi/2.);
