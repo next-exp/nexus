@@ -33,14 +33,14 @@ namespace nexus {
   using namespace CLHEP;
 
   TileFBK::TileFBK(): BaseGeometry(),
-		visibility_(0),
-        reflectivity_(0.),
-        tile_x_(29.0 * mm),
-        tile_y_(29.0 * mm),
-		tile_z_(1.6 * mm),
-        sipm_pitch_(3.5 * mm),
-		n_rows_(8),
-		n_columns_(8)
+              	       visibility_(0),
+                      reflectivity_(0.),
+                      tile_x_(29.0 * mm),
+                      tile_y_(29.0 * mm),
+              	       tile_z_(1.6 * mm),
+                      sipm_pitch_(3.5 * mm),
+              	       n_rows_(8),
+          	       n_columns_(8)
 
   {
     /// Messenger

@@ -32,14 +32,14 @@ namespace nexus {
   using namespace CLHEP;
 
   SiPMpetBlue::SiPMpetBlue(): BaseGeometry(),
-			    visibility_(0),
-			    refr_index_(1.55), //given by Hammamatsu datasheet
-                            eff_(1.),
-                            sensor_depth_(-1),
-                            mother_depth_(-1),
-                            naming_order_(-1),
-                            time_binning_(200.*nanosecond),
-                            box_geom_(false)
+			      visibility_(0),
+			      refr_index_(1.55), //given by Hammamatsu datasheet
+                              eff_(1.),
+                              sensor_depth_(-1),
+                              mother_depth_(-1),
+                              naming_order_(-1),
+                              time_binning_(200.*nanosecond),
+                              box_geom_(false)
 
   {
     /// Messenger

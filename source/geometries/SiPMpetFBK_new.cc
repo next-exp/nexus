@@ -31,15 +31,15 @@
 namespace nexus {
 
   using namespace CLHEP;
-  
+
   SiPMpetFBK_new::SiPMpetFBK_new(): BaseGeometry(),
-			    visibility_(0),
-                            eff_(1.),
-                            sensor_depth_(-1),
-                            mother_depth_(-1),
-                            naming_order_(-1),
-                            time_binning_(200.*nanosecond),
-                            box_geom_(false)
+			            visibility_(0),
+                                    eff_(1.),
+                                    sensor_depth_(-1),
+                                    mother_depth_(-1),
+                                    naming_order_(-1),
+                                    time_binning_(200.*nanosecond),
+                                    box_geom_(false)
 
   {
     /// Messenger

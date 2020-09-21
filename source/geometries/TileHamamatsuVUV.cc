@@ -32,17 +32,17 @@ namespace nexus {
   using namespace CLHEP;
 
   TileHamamatsuVUV::TileHamamatsuVUV(): BaseGeometry(),
-		visibility_(0),
-        reflectivity_(0.),
-		tile_x_(30.9 * mm),
-		tile_y_(30.7 * mm),
-		tile_z_(3. * mm),
-		sipm_pitch_(7.5 * mm),
-		n_rows_(4),
-		n_columns_(4),
-        lxe_thick_(0.6 * mm),
-        quartz_thick_(0.6 * mm),
-        quartz_transparency_(0.9)
+		                                    visibility_(0),
+                                        reflectivity_(0.),
+                                		    tile_x_(30.9 * mm),
+                                		    tile_y_(30.7 * mm),
+                                		    tile_z_(3. * mm),
+                                		    sipm_pitch_(7.5 * mm),
+                                		    n_rows_(4),
+                                		    n_columns_(4),
+                                        lxe_thick_(0.6 * mm),
+                                        quartz_thick_(0.6 * mm),
+                                        quartz_transparency_(0.9)
 
   {
     /// Messenger

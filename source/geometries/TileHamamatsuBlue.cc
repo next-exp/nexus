@@ -33,14 +33,14 @@ namespace nexus {
   using namespace CLHEP;
 
   TileHamamatsuBlue::TileHamamatsuBlue(): BaseGeometry(),
-		visibility_(0),
-        reflectivity_(0.),
-        tile_x_(25. * mm),
-        tile_y_(25. * mm),
-		tile_z_(1.35 * mm),
-        sipm_pitch_(6.2 * mm),
-		n_rows_(4),
-		n_columns_(4)
+                                          visibility_(0),
+                                          reflectivity_(0.),
+                                          tile_x_(25. * mm),
+                                          tile_y_(25. * mm),
+                                          tile_z_(1.35 * mm),
+                                          sipm_pitch_(6.2 * mm),
+                                          n_rows_(4),
+                                          n_columns_(4)
 
   {
     /// Messenger
