@@ -50,62 +50,16 @@ namespace nexus {
     msg_->DeclareProperty("visibility", visibility_, "Tile Visibility");
     msg_->DeclareProperty("reflectivity", reflectivity_, "Reflectivity for FR4");
 
-    G4GenericMessenger::Command& size_x_cmd =
-      msg_->DeclareProperty("size_x", tile_x_, "Size of tile X");
-    size_x_cmd.SetUnitCategory("Length");
-    size_x_cmd.SetParameterName("size_x", false);
-    size_x_cmd.SetRange("size_x>0.");
-
-    G4GenericMessenger::Command& size_y_cmd =
-      msg_->DeclareProperty("size_y", tile_y_, "Size of tile Y");
-    size_y_cmd.SetUnitCategory("Length");
-    size_y_cmd.SetParameterName("size_y", false);
-    size_y_cmd.SetRange("size_y>0.");
-
-    G4GenericMessenger::Command& size_z_cmd =
-      msg_->DeclareProperty("size_z", tile_z_, "Size of tile Z");
-    size_z_cmd.SetUnitCategory("Length");
-    size_z_cmd.SetParameterName("size_z", false);
-    size_z_cmd.SetRange("size_z>0.");
-
-    G4GenericMessenger::Command& pitch_cmd =
-      msg_->DeclareProperty("pitch", sipm_pitch_, "Pitch of SiPMs");
-    pitch_cmd.SetUnitCategory("Length");
-    pitch_cmd.SetParameterName("pitch", false);
-    pitch_cmd.SetRange("pitch>0.");
-
-    msg_->DeclareProperty("rows", n_rows_, "Number of rows");
-    msg_->DeclareProperty("columns", n_columns_, "Number of columns");
-
-    G4GenericMessenger::Command& lxe_thick_cmd =
-      msg_->DeclareProperty("lxe_thick", lxe_thick_, "Thickness of volume of LXe");
-    lxe_thick_cmd.SetUnitCategory("Length");
-    lxe_thick_cmd.SetParameterName("lxe_thick", false);
-    lxe_thick_cmd.SetRange("lxe_thick>0.");
-
-    G4GenericMessenger::Command& quartz_thick_cmd =
-      msg_->DeclareProperty("quartz_thick", quartz_thick_, "Thickness of volume of quartz");
-    quartz_thick_cmd.SetUnitCategory("Length");
-    quartz_thick_cmd.SetParameterName("quartz_thick", false);
-    quartz_thick_cmd.SetRange("quartz_thick>0.");
-
-    G4GenericMessenger::Command& quartz_transparency_cmd =
-      msg_->DeclareProperty("quartz_transparency", quartz_transparency_,
-                "Set the transparency of the quartz layer");
-    quartz_transparency_cmd.SetParameterName("quartz_transparency", false);
-    quartz_transparency_cmd.SetRange("quartz_transparency>0 && quartz_transparency<1");
-
-
-    sipm_ = new SiPMpetVUV_new();
+    sipm_ = new SiPMHamamatsuVUV();
   }
 
   TileHamamatsuVUV::~TileHamamatsuVUV()
   {
-  }  
+  }
 
   void TileHamamatsuVUV::Construct()
   {
-    SetDimensions(G4ThreeVector(tile_x_, tile_y_, tile_z_));   
+    SetDimensions(G4ThreeVector(tile_x_, tile_y_, tile_z_));
 
     G4Box* tile_solid = new G4Box("TILE_PLASTIC", tile_x_/2., tile_y_/2., tile_z_/2);
 
