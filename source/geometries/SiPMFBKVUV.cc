@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
-// nexus | SiPMpetFBK_new.cc
+// nexus | SiPMFBKVUV.cc
 //
 // 3x3 mm2 FBK SiPM geometry.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "SiPMpetFBK_new.h"
+#include "SiPMFBKVUV.h"
 #include "PmtSD.h"
 #include "ToFSD.h"
 #include "MaterialsList.h"
@@ -32,7 +32,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  SiPMpetFBK_new::SiPMpetFBK_new(): BaseGeometry(),
+  SiPMFBKVUV::SiPMFBKVUV(): BaseGeometry(),
 			            visibility_(0),
                                     eff_(1.),
                                     sensor_depth_(-1),
@@ -48,8 +48,8 @@ namespace nexus {
     msg_->DeclareProperty("efficiency", eff_, "Efficiency of SiPM");
 
     msg_->DeclareProperty("naming_order", naming_order_, "To start numbering at different place than zero.");
-    
-    G4GenericMessenger::Command& time_cmd = 
+
+    G4GenericMessenger::Command& time_cmd =
       msg_->DeclareProperty("time_binning", time_binning_, "Time binning for the sensor");
     time_cmd.SetUnitCategory("Time");
     time_cmd.SetParameterName("time_binning", false);
@@ -57,14 +57,14 @@ namespace nexus {
 
     msg_->DeclareProperty("box_geom", box_geom_, "To indicate whether Box geometry is being used and so naming ordering correctly set.");
   }
-  
-  SiPMpetFBK_new::~SiPMpetFBK_new()
+
+  SiPMFBKVUV::~SiPMFBKVUV()
   {
-  }  
-  
-  void SiPMpetFBK_new::Construct()
+  }
+
+  void SiPMFBKVUV::Construct()
   {
-   
+
     // PACKAGE ///////////////////////////////////////////////////////
     G4double sipm_x = 3. * mm;
     G4double sipm_y = 3.4 * mm;
@@ -72,11 +72,11 @@ namespace nexus {
 
     SetDimensions(G4ThreeVector(sipm_x, sipm_y, sipm_z));
 
-    G4Box* sipm_solid = new G4Box("SiPMpetFBK", sipm_x/2., sipm_y/2., sipm_z/2);
+    G4Box* sipm_solid = new G4Box("SiPMFBKVUV", sipm_x/2., sipm_y/2., sipm_z/2);
 
     G4Material* plastic = MaterialsList::FR4();
     G4LogicalVolume* sipm_logic =
-      new G4LogicalVolume(sipm_solid, plastic, "SiPMpetFBK");
+      new G4LogicalVolume(sipm_solid, plastic, "SiPMFBKVUV");
 
     this->SetLogicalVolume(sipm_logic);
 
@@ -99,9 +99,9 @@ namespace nexus {
     new G4PVPlacement(0, G4ThreeVector(0., 0., sipm_z/2. - active_depth/2.),
                       active_logic, "PHOTODIODES", sipm_logic, false, 0, true);
 
-    
+
     // OPTICAL SURFACES /////////////////////////////////////////////
-    
+
     const G4int entries = 12;
 
     G4double energies[entries] = {1.5*eV, 6.19919*eV, 6.35814*eV,                                                 6.52546*eV, 6.70182*eV, 6.88799*eV,
@@ -111,42 +111,42 @@ namespace nexus {
                                       0., 0., 0.,
                                       0., 0., 0.,
                                       0., 0., 0.};
-    G4double efficiency[entries]   = {eff_, eff_, eff_, 
-                                      eff_, eff_, eff_, 
+    G4double efficiency[entries]   = {eff_, eff_, eff_,
+                                      eff_, eff_, eff_,
                                       eff_, eff_, eff_,
                                       eff_, eff_, eff_};
 
-    
+
     G4MaterialPropertiesTable* sipm_mt = new G4MaterialPropertiesTable();
     sipm_mt->AddProperty("EFFICIENCY", energies, efficiency, entries);
     sipm_mt->AddProperty("REFLECTIVITY", energies, reflectivity, entries);
 
-    G4OpticalSurface* sipm_opsurf = 
+    G4OpticalSurface* sipm_opsurf =
       new G4OpticalSurface("SIPM_OPSURF", unified, polished, dielectric_metal);
     sipm_opsurf->SetMaterialPropertiesTable(sipm_mt);
 
     new G4LogicalSkinSurface("SIPM_OPSURF", active_logic, sipm_opsurf);
-    
-    
+
+
     // SENSITIVE DETECTOR ////////////////////////////////////////////
 
-    G4String sdname = "/SIPM/SiPMpetFBK";
+    G4String sdname = "/SIPM/SiPMFBKVUV";
     G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
-    
+
     if (!sdmgr->FindSensitiveDetector(sdname, false)) {
       ToFSD* sipmsd = new ToFSD(sdname);
       if (sensor_depth_ == -1)
-        G4Exception("[SiPMpetFBK]", "Construct()", FatalException,
+        G4Exception("[SiPMFBKVUV]", "Construct()", FatalException,
                     "Sensor Depth must be set before constructing");
       sipmsd->SetDetectorVolumeDepth(sensor_depth_);
 
       if (mother_depth_ == -1)
-        G4Exception("[SiPMpetFBK]", "Construct()", FatalException,
+        G4Exception("[SiPMFBKVUV]", "Construct()", FatalException,
                     "Mother Depth must be set before constructing");
       sipmsd->SetMotherVolumeDepth(mother_depth_);
 
       if (naming_order_ == -1)
-        G4Exception("[SiPMpetFBK]", "Construct()", FatalException,
+        G4Exception("[SiPMFBKVUV]", "Construct()", FatalException,
                     "Naming Order must be set before constructing");
       sipmsd->SetDetectorNamingOrder(naming_order_);
       sipmsd->SetTimeBinning(time_binning_);
@@ -169,6 +169,6 @@ namespace nexus {
       active_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
   }
-  
-  
+
+
 } // end namespace nexus

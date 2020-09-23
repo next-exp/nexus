@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | SiPMpetFBK_new.cc
+// nexus | SiPMFBKVUV.cc
 //
 // 3x3 mm2 FBK SiPM geometry.
 //
@@ -16,17 +16,17 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class SiPMpetFBK_new: public BaseGeometry
+  class SiPMFBKVUV: public BaseGeometry
   {
   public:
     /// Constructor
-    SiPMpetFBK_new();
+    SiPMFBKVUV();
     /// Destructor
-    ~SiPMpetFBK_new();
-    
+    ~SiPMFBKVUV();
+
     /// Return dimensions of the SiPM
     //G4ThreeVector GetDimensions() const;
-    
+
     /// Invoke this method to build the volumes of the geometry
     void Construct();
 
@@ -35,7 +35,7 @@ namespace nexus {
     void SetMotherDepth (G4int mother_depth);
     void SetNamingOrder (G4int naming_order);
 
-    
+
   private:
     //G4ThreeVector _dimensions; ///< external dimensions of the SiPMpet
 
@@ -50,20 +50,20 @@ namespace nexus {
     G4bool   box_geom_;
 
      // Messenger for the definition of control commands
-    G4GenericMessenger* msg_; 
+    G4GenericMessenger* msg_;
 
   };
 
-  inline void SiPMpetFBK_new::SetTimeBinning(G4double time_binning)
+  inline void SiPMFBKVUV::SetTimeBinning(G4double time_binning)
   { time_binning_ = time_binning; }
 
-  inline void SiPMpetFBK_new::SetSensorDepth(G4int sensor_depth)
+  inline void SiPMFBKVUV::SetSensorDepth(G4int sensor_depth)
   { sensor_depth_ = sensor_depth; }
 
-  inline void SiPMpetFBK_new::SetMotherDepth(G4int mother_depth)
+  inline void SiPMFBKVUV::SetMotherDepth(G4int mother_depth)
   { mother_depth_ = mother_depth; }
 
-  inline void SiPMpetFBK_new::SetNamingOrder(G4int naming_order)
+  inline void SiPMFBKVUV::SetNamingOrder(G4int naming_order)
   { naming_order_ = naming_order; }
 
 

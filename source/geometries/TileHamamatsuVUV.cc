@@ -10,7 +10,7 @@
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
-#include "SiPMpetVUV_new.h"
+#include "SiPMHamamatsuVUV.h"
 #include "IonizationSD.h"
 
 #include <G4GenericMessenger.hh>
@@ -139,7 +139,7 @@ namespace nexus {
         G4double x_pos = -tile_x_/2. + offset_x + sipm_dim.x()/2. + j * sipm_pitch_;
         G4double y_pos =  tile_y_/2. - offset_y - sipm_dim.y()/2. - i * sipm_pitch_;
         G4double z_pos = tile_z_/2. - quartz_thick_ - lxe_thick_ - sipm_dim.z()/2.;
-        G4String vol_name = "SiPMpetVUV_" + std::to_string(copy_no);
+        G4String vol_name = "SiPMHmstuVUV_" + std::to_string(copy_no);
         new G4PVPlacement(0, G4ThreeVector(x_pos, y_pos, z_pos),
                           sipm_logic, vol_name, tile_logic, false, copy_no, true);
       }

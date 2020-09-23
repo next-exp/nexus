@@ -14,7 +14,7 @@
 
 class G4GenericMessenger;
 namespace nexus {
-    class SiPMpetVUV_new;}
+    class SiPMHamamatsuVUV;}
 
 namespace nexus {
 
@@ -25,12 +25,12 @@ namespace nexus {
     TileHamamatsuVUV();
     /// Destructor
     ~TileHamamatsuVUV();
-    
+
     /// Invoke this method to build the volumes of the geometry
     void Construct();
 
     G4ThreeVector GetDimensions();
-    
+
   private:
     // Visibility of the tracking plane
     G4bool visibility_;
@@ -55,7 +55,7 @@ namespace nexus {
      // Messenger for the definition of control commands
     G4GenericMessenger* msg_;
 
-    SiPMpetVUV_new* sipm_;
+    SiPMHamamatsuVUV* sipm_;
 
   };
 

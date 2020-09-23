@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | SiPMpetVUV_new.cc
+// nexus | SiPMHamamatsuVUV.cc
 //
 // 6x6 mm2 VUV Hamamatsu SiPM geometry.
 //
@@ -16,17 +16,17 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class SiPMpetVUV_new: public BaseGeometry
+  class SiPMHamamatsuVUV: public BaseGeometry
   {
   public:
     /// Constructor
-    SiPMpetVUV_new();
+    SiPMHamamatsuVUV();
     /// Destructor
-    ~SiPMpetVUV_new();
-    
+    ~SiPMHamamatsuVUV();
+
     /// Return dimensions of the SiPM
     //G4ThreeVector GetDimensions() const;
-    
+
     /// Invoke this method to build the volumes of the geometry
     void Construct();
 
@@ -56,16 +56,16 @@ namespace nexus {
 
   };
 
-  inline void SiPMpetVUV_new::SetTimeBinning(G4double time_binning)
+  inline void SiPMHamamatsuVUV::SetTimeBinning(G4double time_binning)
   { time_binning_ = time_binning; }
 
-  inline void SiPMpetVUV_new::SetSensorDepth(G4int sensor_depth)
+  inline void SiPMHamamatsuVUV::SetSensorDepth(G4int sensor_depth)
   { sensor_depth_ = sensor_depth; }
 
-  inline void SiPMpetVUV_new::SetMotherDepth(G4int mother_depth)
+  inline void SiPMHamamatsuVUV::SetMotherDepth(G4int mother_depth)
   { mother_depth_ = mother_depth; }
 
-  inline void SiPMpetVUV_new::SetNamingOrder(G4int naming_order)
+  inline void SiPMHamamatsuVUV::SetNamingOrder(G4int naming_order)
   { naming_order_ = naming_order; }
 
 

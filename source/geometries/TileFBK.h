@@ -13,7 +13,7 @@
 #include <G4ThreeVector.hh>
 
 class G4GenericMessenger;
-namespace nexus {class SiPMpetFBK_new;}
+namespace nexus {class SiPMFBKVUV;}
 
 namespace nexus {
 
@@ -54,7 +54,7 @@ namespace nexus {
      // Messenger for the definition of control commands
     G4GenericMessenger* msg_;
 
-    SiPMpetFBK_new* sipm_;
+    SiPMFBKVUV* sipm_;
 
   };
 

@@ -10,7 +10,7 @@
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
-#include "SiPMpetFBK_new.h"
+#include "SiPMFBKVUV.h"
 #include "IonizationSD.h"
 
 #include <G4GenericMessenger.hh>
@@ -48,7 +48,7 @@ namespace nexus {
     msg_->DeclareProperty("visibility", visibility_, "Tile Visibility");
     msg_->DeclareProperty("reflectivity", reflectivity_, "Reflectivity for FR4");
 
-    sipm_ = new SiPMpetFBK_new();
+    sipm_ = new SiPMFBKVUV();
   }
 
   TileFBK::~TileFBK()
