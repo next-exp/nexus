@@ -62,7 +62,8 @@ namespace nexus {
     size_cmd.SetParameterName("size", false);
     size_cmd.SetRange("size>0.");
 
-    msg_->DeclareProperty("box_geom", box_geom_, "To indicate whether Box geometry is being used and so naming ordering correctly set.");
+    msg_->DeclareProperty("box_geom", box_geom_,
+      "To indicate whether Box geometry is being used and so the sensor id correctly set.");
   }
 
   SiPMpetFBK::~SiPMpetFBK()

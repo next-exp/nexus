@@ -55,7 +55,8 @@ namespace nexus {
     time_cmd.SetParameterName("time_binning", false);
     time_cmd.SetRange("time_binning>0.");
 
-    msg_->DeclareProperty("box_geom", box_geom_, "To indicate whether Box geometry is being used and so naming ordering correctly set.");
+    msg_->DeclareProperty("box_geom", box_geom_,
+      "To indicate whether Box geometry is being used and so the sensor id correctly set.");
   }
 
   SiPMFBKVUV::~SiPMFBKVUV()
