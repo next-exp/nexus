@@ -114,7 +114,7 @@ namespace nexus {
     G4LogicalVolume* quartz_logic =
     new G4LogicalVolume(quartz_solid, quartz, "TILE_QUARTZ_WINDOW");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., -quartz_thick_/2.), quartz_logic,
+    new G4PVPlacement(0, G4ThreeVector(0., 0., quartz_thick_/2.), quartz_logic,
                       "TILE_QUARTZ_WINDOW", lxe_logic, false, 0, true);
 
     // The real LXe region as active
