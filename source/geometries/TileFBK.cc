@@ -98,7 +98,7 @@ namespace nexus {
         G4double z_pos = tile_z_/2. - sipm_dim.z()/2.;
         G4String vol_name = "SiPMpetFBK_" + std::to_string(copy_no);
         new G4PVPlacement(0, G4ThreeVector(x_pos, y_pos, z_pos),
-                  sipm_logic, vol_name, tile_logic, false, copy_no, true);
+                  sipm_logic, vol_name, tile_logic, false, copy_no, false);
 	}
       }
 

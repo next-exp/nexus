@@ -101,7 +101,7 @@ namespace nexus {
 
     G4double zpos_lxe = tile_z_/2. - (quartz_thick_+lxe_thick_)/2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., zpos_lxe), lxe_logic,
-                      "TILE_LXE", tile_logic, false, 0, true);
+                      "TILE_LXE", tile_logic, false, 0, false);
 
     // Layer of quartz defined inside the LXe
     G4double quartz_x = tile_x_ - offset_x;
@@ -117,7 +117,7 @@ namespace nexus {
     new G4LogicalVolume(quartz_solid, quartz, "TILE_QUARTZ_WINDOW");
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., quartz_thick_/2.), quartz_logic,
-                      "TILE_QUARTZ_WINDOW", lxe_logic, false, 0, true);
+                      "TILE_QUARTZ_WINDOW", lxe_logic, false, 0, false);
 
     // The real LXe region as active
     G4Box* active_solid =
@@ -125,7 +125,7 @@ namespace nexus {
     G4LogicalVolume* active_logic =
     new G4LogicalVolume(active_solid, LXe, "ACTIVE_LXE_TILE");
     new G4PVPlacement(0, G4ThreeVector(0., 0., lxe_thick_/2.), active_logic,
-      "ACTIVE_LXE_TILE", lxe_logic, false, 0, true);
+      "ACTIVE_LXE_TILE", lxe_logic, false, 0, false);
 
     // Set the ACTIVE volume as an ionization sensitive det
     IonizationSD* ionisd = new IonizationSD("/PETALO/ACTIVE_LXE_TILE");
@@ -144,7 +144,7 @@ namespace nexus {
         G4double z_pos = tile_z_/2. - quartz_thick_ - lxe_thick_ - sipm_dim.z()/2.;
         G4String vol_name = "SiPMHmstuVUV_" + std::to_string(copy_no);
         new G4PVPlacement(0, G4ThreeVector(x_pos, y_pos, z_pos),
-                          sipm_logic, vol_name, tile_logic, false, copy_no, true);
+                          sipm_logic, vol_name, tile_logic, false, copy_no, false);
       }
     }
 

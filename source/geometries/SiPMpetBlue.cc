@@ -98,7 +98,7 @@ namespace nexus {
       new G4LogicalVolume(epoxy_solid, epoxy, "Epoxy");
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., sipm_z/2. - epoxy_depth/2.),
-    epoxy_logic, "Epoxy", sipm_logic, false, 0, true);
+    epoxy_logic, "Epoxy", sipm_logic, false, 0, false);
 
 
     // ACTIVE WINDOW /////////////////////////////////////////////////
@@ -117,7 +117,7 @@ namespace nexus {
       new G4LogicalVolume(active_solid, silicon, "PHOTODIODES");
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., sipm_z/2. - epoxy_depth - active_depth/2.),
-                      active_logic, "PHOTODIODES", sipm_logic, false, 0, true);
+                      active_logic, "PHOTODIODES", sipm_logic, false, 0, false);
 
 
     // OPTICAL SURFACES /////////////////////////////////////////////

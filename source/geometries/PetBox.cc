@@ -106,7 +106,7 @@ namespace nexus {
       new G4LogicalVolume(box_solid, aluminum, "BOX");
 
     new G4PVPlacement(0, G4ThreeVector(0., 0, 0), box_logic,
-                      "BOX", lab_logic_, false, 0, true);
+                      "BOX", lab_logic_, false, 0, false);
 
     // LXe
     G4double LXe_size = box_size_ - 2.*box_thickness_;
@@ -119,7 +119,7 @@ namespace nexus {
       new G4LogicalVolume(LXe_solid, LXe, "LXE");
 
     new G4PVPlacement(0, G4ThreeVector(0., 0, 0), LXe_logic_,
-                      "LXE", box_logic, false, 0, true);
+                      "LXE", box_logic, false, 0, false);
 
 
     // INTERNAL HAT
@@ -130,7 +130,7 @@ namespace nexus {
       new G4LogicalVolume(internal_hat_solid, aluminum, "INTERNAL_HAT");
 
     new G4PVPlacement(0, G4ThreeVector(0., (-box_size_/2.+box_thickness_+ih_y_size_/2.), 0),
-      internal_hat_logic, "INTERNAL_HAT", LXe_logic_, false, 0, true);
+      internal_hat_logic, "INTERNAL_HAT", LXe_logic_, false, 0, false);
 
     G4double vacuum_hat_xsize = ih_x_size_-2.*ih_thickness_;
     G4double vacuum_hat_ysize = ih_y_size_-2.*ih_thickness_;
@@ -144,7 +144,7 @@ namespace nexus {
       new G4LogicalVolume(vacuum_hat_solid, vacuum, "VACUUM_HAT");
 
     new G4PVPlacement(0, G4ThreeVector(0., 0, 0), vacuum_hat_logic,
-                      "VACUUM_HAT", internal_hat_logic, false, 0, true);
+                      "VACUUM_HAT", internal_hat_logic, false, 0, false);
 
     // SOURCE TUBE
     G4double source_tube_ext_radius = source_tube_int_radius_ + source_tube_thickness_;
@@ -159,7 +159,7 @@ namespace nexus {
     rot.rotateX(pi/2.);
     G4double source_tube_ypos = source_tube_length_/2.-(ih_y_size_-2.*ih_thickness_)/2.;
     new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., source_tube_ypos, 0.)),
-      source_tube_logic,"SOURCE_TUBE", vacuum_hat_logic, false, 0, true);
+      source_tube_logic,"SOURCE_TUBE", vacuum_hat_logic, false, 0, false);
 
     G4double air_source_tube_len = source_tube_length_/2.-source_tube_thickness_;
     G4Tubs* air_source_tube_solid =
@@ -170,7 +170,7 @@ namespace nexus {
       new G4LogicalVolume(air_source_tube_solid, air, "AIR_SOURCE_TUBE");
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., source_tube_thickness_), air_source_tube_logic,
-                      "AIR_SOURCE_TUBE", source_tube_logic, false, 0, true);
+                      "AIR_SOURCE_TUBE", source_tube_logic, false, 0, false);
 
     // SOURCE TUBE INSIDE HAT
     G4Tubs* source_tube_inside_hat_solid =
@@ -180,7 +180,7 @@ namespace nexus {
       new G4LogicalVolume(source_tube_inside_hat_solid, carbon_fiber, "SOURCE_TUBE");
 
     new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., (-ih_y_size_+ih_thickness_)/2., 0.)),
-                      source_tube_inside_hat_logic, "SOURCE_TUBE", internal_hat_logic, false, 0, true);
+                      source_tube_inside_hat_logic, "SOURCE_TUBE", internal_hat_logic, false, 0, false);
 
     G4Tubs* air_source_tube_inside_hat_solid =
       new G4Tubs("AIR_SOURCE_TUBE", 0, source_tube_int_radius_, ih_thickness_/2., 0, twopi);
@@ -189,7 +189,7 @@ namespace nexus {
       new G4LogicalVolume(air_source_tube_inside_hat_solid, air, "AIR_SOURCE_TUBE");
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), air_source_tube_inside_hat_logic,
-                      "AIR_SOURCE_TUBE", source_tube_inside_hat_logic, false, 0, true);
+                      "AIR_SOURCE_TUBE", source_tube_inside_hat_logic, false, 0, false);
 
     // SOURCE TUBE INSIDE BOX
     G4Tubs* source_tube_inside_box_solid =
@@ -199,7 +199,7 @@ namespace nexus {
       new G4LogicalVolume(source_tube_inside_box_solid, carbon_fiber, "SOURCE_TUBE");
 
     new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., (-box_size_+box_thickness_)/2., 0.)),
-                      source_tube_inside_box_logic, "SOURCE_TUBE", box_logic, false, 0, true);
+                      source_tube_inside_box_logic, "SOURCE_TUBE", box_logic, false, 0, false);
 
     G4Tubs* air_source_tube_inside_box_solid =
       new G4Tubs("AIR_SOURCE_TUBE", 0, source_tube_int_radius_, box_thickness_/2., 0, twopi);
@@ -208,7 +208,7 @@ namespace nexus {
       new G4LogicalVolume(air_source_tube_inside_box_solid, air, "AIR_SOURCE_TUBE");
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), air_source_tube_inside_box_logic,
-                      "AIR_SOURCE_TUBE", source_tube_inside_box_logic, false, 0, true);
+                      "AIR_SOURCE_TUBE", source_tube_inside_box_logic, false, 0, false);
 
 
 
@@ -231,9 +231,9 @@ namespace nexus {
     G4LogicalVolume* active_logic =
       new G4LogicalVolume(active_solid, LXe, "ACTIVE");
     new G4PVPlacement(0, G4ThreeVector(-active_x_pos, 0., 0.), active_logic,
-                      "ACTIVE", LXe_logic_, false, 1, true);
+                      "ACTIVE", LXe_logic_, false, 1, false);
     new G4PVPlacement(0, G4ThreeVector(active_x_pos, 0., 0.), active_logic,
-                      "ACTIVE", LXe_logic_, false, 2, true);
+                      "ACTIVE", LXe_logic_, false, 2, false);
 
     // Set the ACTIVE volume as an ionization sensitive det
     IonizationSD* ionisd = new IonizationSD("/PETALO/ACTIVE");
@@ -258,10 +258,10 @@ namespace nexus {
       new G4LogicalVolume(entry_panel_solid, pyrex, "ENTRY_PANEL");
 
     new G4PVPlacement(0, G4ThreeVector(-entry_panel_xpos, entry_panel_ypos, 0), entry_panel_logic,
-                        "ENTRY_PANEL", LXe_logic_, false, 1, true);
+                        "ENTRY_PANEL", LXe_logic_, false, 1, false);
 
     new G4PVPlacement(0, G4ThreeVector(entry_panel_xpos, entry_panel_ypos, 0), entry_panel_logic,
-                        "ENTRY_PANEL", LXe_logic_, false, 2, true);
+                        "ENTRY_PANEL", LXe_logic_, false, 2, false);
 
 
     //PYREX PANELS SURROUNDING THE SIPM DICE BOARDS
@@ -278,16 +278,16 @@ namespace nexus {
       new G4LogicalVolume(horiz_lat_panel_solid, pyrex, "LAT_PANEL");
 
     new G4PVPlacement(0, G4ThreeVector(-lat_panel_xpos, lat_panel_ypos, 0),
-                      horiz_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 1, true);
+                      horiz_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 1, false);
 
     new G4PVPlacement(0, G4ThreeVector(-lat_panel_xpos, -lat_panel_ypos, 0),
-                      horiz_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 2, true);
+                      horiz_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 2, false);
 
     new G4PVPlacement(0, G4ThreeVector(lat_panel_xpos, lat_panel_ypos, 0), horiz_lat_panel_logic,
-                      "LAT_PANEL", LXe_logic_, false, 3, true);
+                      "LAT_PANEL", LXe_logic_, false, 3, false);
 
     new G4PVPlacement(0, G4ThreeVector(lat_panel_xpos, -lat_panel_ypos, 0), horiz_lat_panel_logic,
-                      "LAT_PANEL", LXe_logic_, false, 4, true);
+                      "LAT_PANEL", LXe_logic_, false, 4, false);
 
 
     G4double vert_panel_length = full_col_size_ + 2.*dist_dice_panel_;
@@ -300,16 +300,16 @@ namespace nexus {
       new G4LogicalVolume(vert_lat_panel_solid, pyrex, "LAT_PANEL");
 
     new G4PVPlacement(0, G4ThreeVector(-lat_panel_xpos, 0, -lat_panel_zpos),
-                      vert_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 1, true);
+                      vert_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 1, false);
 
     new G4PVPlacement(0, G4ThreeVector(-lat_panel_xpos, 0, lat_panel_zpos),
-                      vert_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 2, true);
+                      vert_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 2, false);
 
     new G4PVPlacement(0, G4ThreeVector(lat_panel_xpos, 0, -lat_panel_zpos),
-                      vert_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 3, true);
+                      vert_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 3, false);
 
     new G4PVPlacement(0, G4ThreeVector(lat_panel_xpos, 0, lat_panel_zpos),
-                      vert_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 4, true);
+                      vert_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 4, false);
 
 
     // Optical surface for the panels
@@ -379,7 +379,7 @@ namespace nexus {
         position = G4ThreeVector(x_pos, y_pos, z_pos);
         vol_name = "TILE_" + std::to_string(copy_no);
         new G4PVPlacement(G4Transform3D(rot, position), tile_logic,
-                          vol_name, LXe_logic_, false, copy_no, true);
+                          vol_name, LXe_logic_, false, copy_no, false);
         copy_no += 1;
       }
     }
@@ -393,7 +393,7 @@ namespace nexus {
         position = G4ThreeVector(-x_pos, y_pos, z_pos);
         vol_name = "TILE_" + std::to_string(copy_no);
         new G4PVPlacement(G4Transform3D(rot, position), tile_logic,
-                          vol_name, LXe_logic_, false, copy_no, true);
+                          vol_name, LXe_logic_, false, copy_no, false);
         copy_no += 1;
       }
     }
