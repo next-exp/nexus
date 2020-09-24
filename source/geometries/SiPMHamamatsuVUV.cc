@@ -92,8 +92,8 @@ namespace nexus {
     G4LogicalVolume* active_window_logic =
       new G4LogicalVolume(active_window_solid, silicon, "PHOTODIODES");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., sipm_z/2. - active_window_depth/2.), active_window_logic,
-              "PHOTODIODES", sipm_logic, false, 0, true);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., sipm_z/2. - active_window_depth/2.),
+      active_window_logic, "PHOTODIODES", sipm_logic, false, 0, true);
 
 
     // OPTICAL SURFACES //////////////////////////////////////////////

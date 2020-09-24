@@ -91,7 +91,8 @@ namespace nexus {
     // LXe
     G4double lxe_x = tile_x_ - offset_x;
     G4double lxe_y = tile_y_ - offset_y;
-    G4Box* lxe_solid = new G4Box("TILE_LXE", lxe_x/2., lxe_y/2., (lxe_thick_+quartz_thick_)/2.);
+    G4Box* lxe_solid = new G4Box("TILE_LXE", lxe_x/2., lxe_y/2.,
+                                 (lxe_thick_+quartz_thick_)/2.);
 
     G4Material* LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
       LXe->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe());
@@ -106,7 +107,8 @@ namespace nexus {
     G4double quartz_x = tile_x_ - offset_x;
     G4double quartz_y = tile_y_ - offset_y;
 
-    G4Box* quartz_solid = new G4Box("TILE_QUARTZ_WINDOW", quartz_x/2., quartz_y/2., quartz_thick_/2);
+    G4Box* quartz_solid = new G4Box("TILE_QUARTZ_WINDOW", quartz_x/2., quartz_y/2.,
+                                    quartz_thick_/2);
 
     G4Material* quartz = MaterialsList::FusedSilica();
     quartz->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGenericMaterial(quartz_transparency_, quartz_thick_));
@@ -122,7 +124,8 @@ namespace nexus {
     new G4Box("ACTIVE_LXE_TILE", lxe_x/2., lxe_y/2., lxe_thick_/2.);
     G4LogicalVolume* active_logic =
     new G4LogicalVolume(active_solid, LXe, "ACTIVE_LXE_TILE");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., lxe_thick_/2.), active_logic, "ACTIVE_LXE_TILE", lxe_logic, false, 0, true);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., lxe_thick_/2.), active_logic,
+      "ACTIVE_LXE_TILE", lxe_logic, false, 0, true);
 
     // Set the ACTIVE volume as an ionization sensitive det
     IonizationSD* ionisd = new IonizationSD("/PETALO/ACTIVE_LXE_TILE");
