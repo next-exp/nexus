@@ -46,16 +46,17 @@ namespace nexus {
     G4bool verbosity_;
     G4bool visibility_;
 
-    const G4double plate_side_, plate_thickness_, plate_hole_side_;
+    const G4double plate_side_, plate_thickn_, plate_hole_side_;
 
-    G4int num_boards_;
+    G4String           tp_type_;
+    G4int              num_boards_;
     NextDemoSiPMBoard* sipm_board_;
-    G4ThreeVector board_dimensions_;
+    G4ThreeVector      board_size_;
     std::vector<G4ThreeVector> board_pos_;
 
-    BoxPointSampler* plate_gen_;
+    BoxPointSampler*    plate_gen_;
 
-    G4VPhysicalVolume* mother_phys_;
+    G4VPhysicalVolume*  mother_phys_;
 
     G4GenericMessenger* msg_;
 

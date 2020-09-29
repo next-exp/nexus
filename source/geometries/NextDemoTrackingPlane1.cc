@@ -34,8 +34,9 @@ NextDemoTrackingPlane1::NextDemoTrackingPlane1():
   verbosity_       (false),
   visibility_      (false),
   plate_side_      (16. * cm),
-  plate_thickness_ (12. * mm),
+  plate_thickn_    (12. * mm),
   plate_hole_side_ (49. * mm),
+  tp_type_         ("original"),
   num_boards_      (4),
   sipm_board_      (new NextDemoSiPMBoard()),
   plate_gen_(nullptr),
@@ -45,11 +46,14 @@ NextDemoTrackingPlane1::NextDemoTrackingPlane1():
   msg_ = new G4GenericMessenger(this, "/Geometry/NextDemo/",
                                 "Control commands of the NextDemo geometry.");
 
+  msg_->DeclareProperty("tracking_plane_type", tp_type_,
+                        "Tracking Plane type");
+
   msg_->DeclareProperty("tracking_plane_verbosity", verbosity_,
                         "Tracking Plane verbosity");
 
   msg_->DeclareProperty("tracking_plane_vis", visibility_,
-                        "Visibility of the tracking plane volumes.");
+                        "Tracking Plane visibility");
 
   // Initializing the geometry navigator
   geom_navigator_ =
@@ -69,55 +73,74 @@ NextDemoTrackingPlane1::~NextDemoTrackingPlane1()
 
 void NextDemoTrackingPlane1::Construct()
 {
-  // Make sure the pointer to the mother volume is actually defined
+  /// Verbosity
+//  if(verbosity_) {
+//    G4cout << G4endl << "*** NEXT Demo Tracking Plane ..." << G4endl;
+//  }
+  if(verbosity_) G4cout << G4endl << "*** NEXT Demo Tracking Plane ";
+
+  /// Defining Tracking Plane Type parameters
+  G4double gate_board_dist = 0.; // Distance from GATE to SiPM Board kapton surface
+  G4double membrane_thickn = 0.;
+  G4double coating_thickn  = 0.;
+
+  if (tp_type_ == "original") {
+    if(verbosity_) G4cout << "(original) ..." << G4endl;
+    gate_board_dist = 16.76 * mm;
+    membrane_thickn = 0.;
+    coating_thickn  = 0.;
+  }
+  else if (tp_type_ == "type1") {
+    if(verbosity_) G4cout << "(type1) ..." << G4endl;
+    gate_board_dist = 9.16 * mm;
+    membrane_thickn = 0.25 * mm;
+    coating_thickn  = 2.0  * micrometer;
+  }
+  else
+    G4Exception("[NextDemoTrackingPlane1]", "Construct()",
+                FatalException, "Tracking Plane Type not valid.");
+
+
+  /// Make sure the pointer to the mother volume is actually defined
   if (!mother_phys_)
     G4Exception("[NextDemoTrackingPlane1]", "Construct()",
                 FatalException, "Mother volume is a nullptr.");
 
   G4LogicalVolume* mother_logic = mother_phys_->GetLogicalVolume();
 
-  /// Verbosity
-  if(verbosity_) {
-    G4cout << G4endl << "*** NEXT Demo Tracking Plane ..." << G4endl;
-  }
 
   /// SiPM BOARDs
   G4String board_name = "SiPM_BOARD";
-  sipm_board_->SetMotherLogicalVolume(mother_logic);
+  sipm_board_->SetMotherPhysicalVolume(mother_phys_);
+  sipm_board_->SetMembraneThickness(membrane_thickn);
+  sipm_board_->SetCoatingThickness (coating_thickn);
   sipm_board_->Construct();
   G4LogicalVolume* board_logic = sipm_board_->GetLogicalVolume();
-  board_dimensions_            = sipm_board_->GetDimensions();
-  if (verbosity_)
-    G4cout << "* SiPM board dimensions: " << board_dimensions_ << G4endl; 
+  board_size_                  = sipm_board_->GetBoardSize();
+  G4double kapton_thickn       = sipm_board_->GetKaptonThickness();
 
   // Placing the boards
-  G4double gate_board_dist = 16.76 * mm;
-  G4double board_thickness =  0.25 * mm;
-  G4double board_posz      = GetELzCoord() - gate_board_dist - board_thickness/2.;
-
+  G4double board_posz      = GetELzCoord() - gate_board_dist + board_size_.z()/2. - kapton_thickn;
   GenerateBoardPositions(board_posz);
-
-  G4RotationMatrix* board_rot = new G4RotationMatrix();
-  board_rot->rotateY(pi);
-
-  G4ThreeVector pos;
   for (G4int i=0; i<num_boards_; i++)
-    new G4PVPlacement(G4Transform3D(*board_rot, board_pos_[i]), board_logic, board_name,
-                      mother_logic, false, i+1, true);
+    new G4PVPlacement(nullptr, board_pos_[i], board_logic, board_name,
+                      mother_logic, false, i+14, true);
+
 
   /// SUPPORT PLATE
   G4String plate_name = "TP_PLATE";
 
-  G4Box* plate_nh_solid = new G4Box(plate_name, plate_side_/2.,
-                                    plate_side_/2., plate_thickness_/2.);
+  G4Box* plate_nh_solid   = new G4Box(plate_name, plate_side_/2.,
+                                      plate_side_/2., plate_thickn_/2.);
 
   G4Box* plate_hole_solid = new G4Box("TP_PLATE_HOLE", plate_hole_side_/2.,
-                                      plate_hole_side_/2., plate_thickness_/2. + 2. * mm);
+                                      plate_hole_side_/2., plate_thickn_/2. + 2. * mm);
 
   // Making the holes
   G4SubtractionSolid* plate_solid =
     new G4SubtractionSolid(plate_name, plate_nh_solid, plate_hole_solid, nullptr,
-                           G4ThreeVector(board_pos_[0].getX(),board_pos_[0].getY(), 0));
+                           G4ThreeVector(board_pos_[0].x(),board_pos_[0].y(), 0));
+
   for (G4int i=1; i<num_boards_; i++) {
     G4ThreeVector hole_pos = board_pos_[i];
     hole_pos.setZ(0.);
@@ -129,19 +152,18 @@ void NextDemoTrackingPlane1::Construct()
     new G4LogicalVolume(plate_solid, MaterialsList::Steel(), plate_name);
 
   // We arbitrarily place the TP_PLATE 10 mm away from the SiPMBoards
-  G4double plate_posz = board_posz - 10. * mm - plate_thickness_/2.;
+  G4double plate_posz = board_posz - 10. * mm - plate_thickn_/2.;
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., plate_posz), plate_logic,
                     plate_name, mother_logic, false, 0, true);
 
 
   /// GENERATORS
-  plate_gen_ = new BoxPointSampler(plate_side_/2., plate_side_/2., plate_thickness_/2., 0.,
+  plate_gen_ = new BoxPointSampler(plate_side_, plate_side_, plate_thickn_, 0.,
                                    G4ThreeVector(0., 0., plate_posz), nullptr);
 
   /// VISIBILITIES
   if (visibility_) {
-    //G4VisAttributes brown = CopperBrown();
     plate_logic->SetVisAttributes(CopperBrown());
     board_logic->SetVisAttributes(LightBlue());
   } else {
@@ -158,8 +180,8 @@ void NextDemoTrackingPlane1::GenerateBoardPositions(G4double board_posz)
   //  From NextNewTrackingPlane: & From Drawing "0000-00 ASSEMBLY NEXT-DEMO++.pdf"
 
   G4double boards_gap = 1. * mm;
-  G4double pos_x = (board_dimensions_.getX() + boards_gap) / 2.;
-  G4double pos_y = (board_dimensions_.getY() + boards_gap) / 2.;
+  G4double pos_x = (board_size_.x() + boards_gap) / 2.;
+  G4double pos_y = (board_size_.y() + boards_gap) / 2.;
 
   // Placing board 1
   G4ThreeVector pos1(0., 0., 0.);
@@ -204,7 +226,6 @@ G4ThreeVector NextDemoTrackingPlane1::GenerateVertex(const G4String& region) con
     vertex         = sipm_board_->GenerateVertex("DICE_BOARD");
     G4double rand  = num_boards_ * G4UniformRand();
     vertex        += board_pos_[int(rand)];
-    //vertex        -= G4ThreeVector(0., 0., board_dimensions_.getZ()/2.);
   }
 
   else if (region == "TP_PLATE") {
