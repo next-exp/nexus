@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // nexus | NextDemoEnergyPlane.cc
 //
-// Energy plane geometry of the DEMO++ detector.
+// Geometry of the DEMO++ energy plane.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
@@ -28,8 +28,6 @@
 #include <G4RotationMatrix.hh>
 
 namespace nexus {
-
-  using namespace CLHEP;
 
   NextDemoEnergyPlane::NextDemoEnergyPlane():
     gate_support_surface_dist_ (445.5 * mm),
@@ -323,8 +321,8 @@ namespace nexus {
     }
 
     if (total_positions != num_PMTs_) {
-      G4cout << "\n\nERROR: Number of PMTs doesn't match with number of positions calculated\n";
-      exit(0);
+      G4Exception("[NextDemoEnergyPlane]", "GeneratePmtPositions()",
+                  FatalException, " Number of PMTs doesn't match with number of positions calculated");
     }
 
   }
