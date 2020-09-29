@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // nexus | NextDemoEnergyPlane.h
 //
-// Energy plane geometry of the DEMO++ detector.
+// Geometry of the DEMO++ energy plane.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
