@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // nexus | NextDemoFieldCage.h
 //
-// Field cage geometry of the DEMO++ detector. It include the elements in
-// the drift and the buffer part of the detector.
+// Geometry of the DEMO++ field cage. It include the elements in
+// the drift and the buffer part of the detector + EL region.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
