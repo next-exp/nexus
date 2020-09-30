@@ -49,7 +49,8 @@ namespace nexus {
     gate_transparency_ (0.76),
     buffer_length_ (117.85 * mm),
     cath_grid_transparency_ (0.98),
-    el_gap_length_ (9.8 * mm), // 9.8 mm when there's the plate
+    el_gap_length_plate_ (9.8 * mm), // when there's the plate
+    el_gap_length_mesh_ (5. * mm), // when there's the mesh
     elgap_ring_diam_ (232. * mm),
     light_tube_drift_start_z_ (16. * mm),
     light_tube_drift_end_z_ (304. * mm),
@@ -81,7 +82,8 @@ namespace nexus {
     ELtransv_diff_ (1. * mm / sqrt(cm)),
     ELlong_diff_ (0.5 * mm / sqrt(cm)),
     elfield_(0),
-    ELelectric_field_ (23.2857 * kilovolt / cm)
+    ELelectric_field_ (23.2857 * kilovolt / cm),
+    plate_(false)
   {
     /// Define new categories ///
     new G4UnitDefinition("kilovolt/cm","kV/cm","Electric field", kilovolt/cm);
@@ -138,6 +140,9 @@ namespace nexus {
                             "Electric field in the EL region");
     El_field_intensity_cmd.SetParameterName("EL_field_intensity", true);
     El_field_intensity_cmd.SetUnitCategory("Electric field");
+
+    msg_->DeclareProperty("plate", plate_,
+                          "True if the anode is a quartz plate, false if it's a mesh.");
   }
 
 
@@ -170,7 +175,6 @@ namespace nexus {
     /// Calculate derived positions in mother volume
     active_zpos_       = GetELzCoord() + active_length_/2.;
     cathode_grid_zpos_ = GetELzCoord() + gate_cathode_centre_dist_;
-    el_gap_zpos_       = active_zpos_ - active_length_/2. - el_gap_length_/2.;
 
     if (verbosity_) {
       G4cout << "Active length = " << active_length_/mm << " mm" << G4endl;
@@ -321,20 +325,27 @@ void NextDemoFieldCage::BuildCathodeGrid()
 
   void NextDemoFieldCage::BuildELRegion()
   {
+    G4double el_gap_length = 0. * mm;
+    if (plate_) {
+      el_gap_length = el_gap_length_plate_;
+    } else {
+      el_gap_length = el_gap_length_mesh_;
+    }
+
     G4Tubs* elgap_solid = new G4Tubs("EL_GAP", 0., elgap_ring_diam_/2.,
-                                     el_gap_length_/2., 0, twopi);
+                                     el_gap_length/2., 0, twopi);
     G4LogicalVolume* elgap_logic =
       new G4LogicalVolume(elgap_solid, gas_, "EL_GAP");
 
-    G4double el_gap_zpos = GetELzCoord() - el_gap_length_/2.;
+    G4double el_gap_zpos = GetELzCoord() - el_gap_length/2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., el_gap_zpos),
                       elgap_logic, "EL_GAP", mother_logic_, false, 0, false);
 
     if (elfield_) {
       UniformElectricDriftField* el_field = new UniformElectricDriftField();
-      G4double global_el_gap_zpos = el_gap_zpos_ - GetELzCoord();
-      el_field->SetCathodePosition(global_el_gap_zpos + el_gap_length_/2.);
-      el_field->SetAnodePosition(global_el_gap_zpos - el_gap_length_/2.);
+      G4double global_el_gap_zpos = el_gap_zpos - GetELzCoord();
+      el_field->SetCathodePosition(global_el_gap_zpos + el_gap_length/2.);
+      el_field->SetAnodePosition(global_el_gap_zpos - el_gap_length/2.);
       el_field->SetDriftVelocity(2.5*mm/microsecond);
       el_field->SetTransverseDiffusion(ELtransv_diff_);
       el_field->SetLongitudinalDiffusion(ELlong_diff_);
@@ -357,20 +368,27 @@ void NextDemoFieldCage::BuildCathodeGrid()
     G4LogicalVolume* gate_grid_logic =
       new G4LogicalVolume(gate_grid_solid, grid_mat, "GATE_GRID");
 
-    G4double grid_zpos = el_gap_length_/2. - grid_thickn_/2.;
+    G4double grid_zpos = el_gap_length/2. - grid_thickn_/2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., grid_zpos),
                       gate_grid_logic, "GATE_GRID",
                       elgap_logic, false, 0, false);
 
-    G4Tubs* anode_quartz_solid =
-      new G4Tubs("ANODE_PLATE", 0., anode_diam_/2. , anode_length_/2.,
-                 0, twopi);
-    G4LogicalVolume* anode_logic =
-      new G4LogicalVolume(anode_quartz_solid, quartz_, "ANODE_PLATE");
+    G4LogicalVolume* anode_logic = nullptr;
+    if (plate_) {
+      G4Tubs* anode_quartz_solid =
+        new G4Tubs("ANODE_PLATE", 0., anode_diam_/2. , anode_length_/2.,
+                   0, twopi);
+      anode_logic =
+        new G4LogicalVolume(anode_quartz_solid, quartz_, "ANODE_PLATE");
 
-    G4double anode_zpos = GetELzCoord() - el_gap_length_ - anode_length_/2.;
-    new G4PVPlacement(0, G4ThreeVector(0., 0., anode_zpos), anode_logic,
-                      "ANODE_PLATE", mother_logic_, false, 0, false);
+      G4double anode_zpos = GetELzCoord() - el_gap_length - anode_length_/2.;
+      new G4PVPlacement(0, G4ThreeVector(0., 0., anode_zpos), anode_logic,
+                        "ANODE_PLATE", mother_logic_, false, 0, false);
+    } else {
+      grid_zpos = -grid_zpos;
+      new G4PVPlacement(0, G4ThreeVector(0., 0., grid_zpos), gate_grid_logic,
+		      "ANODE_GRID", elgap_logic, false, 1, false);
+    }
 
     /// Visibilities
     if (visibility_) {
@@ -379,7 +397,9 @@ void NextDemoFieldCage::BuildCathodeGrid()
       G4VisAttributes grey = nexus::LightGrey();
       gate_grid_logic->SetVisAttributes(grey);
       G4VisAttributes yellow = nexus::Yellow();
-      anode_logic->SetVisAttributes(yellow);
+      if (plate_) {
+        anode_logic->SetVisAttributes(yellow);
+      }
     } else {
       elgap_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
