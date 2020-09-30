@@ -3,6 +3,7 @@
 /Geometry/NextDemo/ext_scint false
 /Geometry/NextDemo/elfield false
 /Geometry/NextDemo/pressure 10. bar
+/Geometry/NextDemo/plate true
 
 # Choice of 4 side ports
 #/Geometry/NextDemo/sideport_posz -201.4 mm
