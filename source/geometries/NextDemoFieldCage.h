@@ -75,7 +75,8 @@ namespace nexus {
     const G4double grid_thickn_, gate_transparency_;
     const G4double buffer_length_;
     const G4double cath_grid_transparency_;
-    const G4double el_gap_length_, elgap_ring_diam_;
+    const G4double el_gap_length_plate_, el_gap_length_mesh_;
+    const G4double elgap_ring_diam_;
     const G4double light_tube_drift_start_z_, light_tube_drift_end_z_;
     const G4double ltube_thickn_;
     const G4double light_tube_buff_start_z_, light_tube_buff_end_z_;
@@ -98,10 +99,11 @@ namespace nexus {
     G4double active_length_, active_zpos_;
     G4double ltube_drift_length_, ltube_buff_length_;
     G4double bar_length_;
-    G4double cathode_grid_zpos_, el_gap_zpos_;
+    G4double cathode_grid_zpos_;
     G4double drift_transv_diff_, drift_long_diff_;
     G4double ELtransv_diff_, ELlong_diff_;
     G4bool elfield_, ELelectric_field_;
+    G4bool plate_;
 
     // Vertex generators
     CylinderPointSampler2020* active_gen_;
