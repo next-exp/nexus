@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef PET_BOX_H_
-#define PET_BOX_H_
+#ifndef PET_BOX_H
+#define PET_BOX_H
 
 #include "BaseGeometry.h"
 
