@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | SiPMpetBlue.cc
+// nexus | SiPMHamamatsuBlue.cc
 //
 // 6x6 mm2 Hamamatsu Blue SiPM geometry.
 //
@@ -16,13 +16,13 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class SiPMpetBlue: public BaseGeometry
+  class SiPMHamamatsuBlue: public BaseGeometry
   {
   public:
     /// Constructor
-    SiPMpetBlue();
+    SiPMHamamatsuBlue();
     /// Destructor
-    ~SiPMpetBlue();
+    ~SiPMHamamatsuBlue();
 
     /// Return dimensions of the SiPM
     //G4ThreeVector GetDimensions() const;
@@ -56,16 +56,16 @@ namespace nexus {
 
   };
 
-  inline void SiPMpetBlue::SetTimeBinning(G4double time_binning)
+  inline void SiPMHamamatsuBlue::SetTimeBinning(G4double time_binning)
   { time_binning_ = time_binning; }
 
-  inline void SiPMpetBlue::SetSensorDepth(G4int sensor_depth)
+  inline void SiPMHamamatsuBlue::SetSensorDepth(G4int sensor_depth)
   { sensor_depth_ = sensor_depth; }
 
-  inline void SiPMpetBlue::SetMotherDepth(G4int mother_depth)
+  inline void SiPMHamamatsuBlue::SetMotherDepth(G4int mother_depth)
   { mother_depth_ = mother_depth; }
 
-  inline void SiPMpetBlue::SetNamingOrder(G4int naming_order)
+  inline void SiPMHamamatsuBlue::SetNamingOrder(G4int naming_order)
   { naming_order_ = naming_order; }
 
 
