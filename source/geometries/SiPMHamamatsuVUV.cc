@@ -69,11 +69,11 @@ namespace nexus {
 
     SetDimensions(G4ThreeVector(sipm_x, sipm_y, sipm_z));
 
-    G4Box* sipm_solid = new G4Box("SiPMHmstuVUV", sipm_x/2., sipm_y/2., sipm_z/2);
+    G4Box* sipm_solid = new G4Box("SiPMHmtsuVUV", sipm_x/2., sipm_y/2., sipm_z/2);
 
     G4Material* plastic = MaterialsList::FR4();
     G4LogicalVolume* sipm_logic =
-      new G4LogicalVolume(sipm_solid, plastic, "SiPMHmstuVUV");
+      new G4LogicalVolume(sipm_solid, plastic, "SiPMHmtsuVUV");
 
     this->SetLogicalVolume(sipm_logic);
 
@@ -129,23 +129,23 @@ namespace nexus {
 
     // SENSITIVE DETECTOR ////////////////////////////////////////////
 
-    G4String sdname = "/SIPM/SiPMHmstuVUV";
+    G4String sdname = "/SIPM/SiPMHmtsuVUV";
     G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
 
     if (!sdmgr->FindSensitiveDetector(sdname, false)) {
         ToFSD* sipmsd = new ToFSD(sdname);
         if (sensor_depth_ == -1)
-          G4Exception("[SiPMHmstuVUV]", "Construct()", FatalException,
+          G4Exception("[SiPMHmtsuVUV]", "Construct()", FatalException,
                       "Sensor Depth must be set before constructing");
         sipmsd->SetDetectorVolumeDepth(sensor_depth_);
 
         if (mother_depth_ == -1)
-          G4Exception("[SiPMHmstuVUV]", "Construct()", FatalException,
+          G4Exception("[SiPMHmtsuVUV]", "Construct()", FatalException,
                       "Mother Depth must be set before constructing");
         sipmsd->SetMotherVolumeDepth(mother_depth_);
 
         if (naming_order_ == -1)
-          G4Exception("[SiPMHmstuVUV]", "Construct()", FatalException,
+          G4Exception("[SiPMHmtsuVUV]", "Construct()", FatalException,
                       "Naming Order must be set before constructing");
         sipmsd->SetDetectorNamingOrder(naming_order_);
         sipmsd->SetTimeBinning(time_binning_);
