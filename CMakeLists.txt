@@ -7,11 +7,11 @@
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 project(nexus)
 
-IF(COMMAND cmake_policy)
-  IF(${CMAKE_VERSION} VERSION_GREATER "3.8.2")
-    cmake_policy(SET CMP0074 NEW)
-  ENDIF(${CMAKE_VERSION} VERSION_GREATER "3.8.2")
-ENDIF(COMMAND cmake_policy)
+##IF(COMMAND cmake_policy)
+##  IF(${CMAKE_VERSION} VERSION_GREATER "3.8.2")
+##    cmake_policy(SET CMP0074 NEW)
+##  ENDIF(${CMAKE_VERSION} VERSION_GREATER "3.8.2")
+##ENDIF(COMMAND cmake_policy)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 

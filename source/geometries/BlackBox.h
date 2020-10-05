@@ -1,18 +1,19 @@
 // ----------------------------------------------------------------------------
-///  \file   Test_Geometry.h
+///  \file   BlackBox.h
 ///  \brief  ...
 ///
 ///  \author   Miryam Martínez Vara <Miryam.Martinez@ific.uv.es>    
-///  \date     7 May 2020
+///  \date     2 Oct 2020
 ///  \version  $Id$
 ///
 ///  Copyright (c) 2020 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef TEST_GEOMETRY_H
-#define TEST_GEOMETRY_H
+#ifndef BLACK_BOX_H
+#define BLACK_BOX_H
 
 #include "BaseGeometry.h"
+#include "NextNewKDB.h"
 
 class G4Material;
 class G4OpticalSurface;
@@ -24,13 +25,13 @@ namespace nexus {
   
   /// Spherical chamber filled with xenon (liquid or gas)
   
-  class Test_Geometry: public BaseGeometry
+  class BlackBox: public BaseGeometry
   {
   public:
     /// Constructor
-    Test_Geometry();
+    BlackBox();
     /// Destructor
-    ~Test_Geometry();
+    ~BlackBox();
 
     /// Return vertex within region <region> of the chamber
     G4ThreeVector GenerateVertex(const G4String& region) const;
@@ -43,22 +44,16 @@ namespace nexus {
 
   private:
     // Dimensions
-    G4double _world_size;
-    G4double _tpb_diam_outer; 
-    G4double _tpb_diam_inner;
-    G4double _tpb_length;
-    G4double _pedot_diam_outer; 
-    G4double _pedot_diam_inner;
-    G4double _pedot_length ;
-    G4double _sapphire_diam_outer; 
-    G4double _sapphire_diam_inner;
-    G4double _sapphire_length;
-
-    // Gas
-    G4String _gas;
-    G4double _pressure, _temperature;
-    G4int _helium_mass_num;
-    G4double _xe_perc;
+    G4double _world_z;
+    G4double _world_xy;
+    // SiPMs per Dice Board
+    const G4int SiPM_rows_, SiPM_columns_;
+    // Dice board
+    NextNewKDB* kapton_dice_board_;
+    G4ThreeVector kdb_dimensions_;
+    G4double dice_board_x_pos_;
+    G4double dice_board_y_pos_;
+    G4double dice_board_z_pos_;
 
     G4bool _visibility;
 
