@@ -91,15 +91,15 @@ namespace nexus {
     // LXe
     G4double lxe_x = tile_x_ - offset_x;
     G4double lxe_y = tile_y_ - offset_y;
-    G4Box* lxe_solid = new G4Box("TILE_LXE", lxe_x/2., lxe_y/2.,
-                                 (lxe_thick_+quartz_thick_)/2.);
+    G4double lxe_z = lxe_thick_+quartz_thick_;
+    G4Box* lxe_solid = new G4Box("TILE_LXE", lxe_x/2., lxe_y/2., lxe_z/2.);
 
     G4Material* LXe = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
       LXe->SetMaterialPropertiesTable(OpticalMaterialProperties::LXe());
     G4LogicalVolume* lxe_logic =
       new G4LogicalVolume(lxe_solid, LXe, "TILE_LXE");
 
-    G4double zpos_lxe = tile_z_/2. - (quartz_thick_+lxe_thick_)/2.;
+    G4double zpos_lxe = tile_z_/2. - (lxe_thick_+quartz_thick_)/2;
     new G4PVPlacement(0, G4ThreeVector(0., 0., zpos_lxe), lxe_logic,
                       "TILE_LXE", tile_logic, false, 0, false);
 
@@ -116,7 +116,8 @@ namespace nexus {
     G4LogicalVolume* quartz_logic =
     new G4LogicalVolume(quartz_solid, quartz, "TILE_QUARTZ_WINDOW");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., quartz_thick_/2.), quartz_logic,
+    G4double zpos_quartz = (lxe_thick_+quartz_thick_)/2. - quartz_thick_/2.;
+    new G4PVPlacement(0, G4ThreeVector(0., 0., zpos_quartz), quartz_logic,
                       "TILE_QUARTZ_WINDOW", lxe_logic, false, 0, false);
 
     // The real LXe region as active
@@ -124,7 +125,9 @@ namespace nexus {
     new G4Box("ACTIVE_LXE_TILE", lxe_x/2., lxe_y/2., lxe_thick_/2.);
     G4LogicalVolume* active_logic =
     new G4LogicalVolume(active_solid, LXe, "ACTIVE_LXE_TILE");
-    new G4PVPlacement(0, G4ThreeVector(0., 0., lxe_thick_/2.), active_logic,
+
+    G4double zpos_active = -(lxe_thick_+quartz_thick_)/2. + lxe_thick_/2.;
+    new G4PVPlacement(0, G4ThreeVector(0., 0., zpos_active), active_logic,
       "ACTIVE_LXE_TILE", lxe_logic, false, 0, false);
 
     // Set the ACTIVE volume as an ionization sensitive det
