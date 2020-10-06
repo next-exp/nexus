@@ -51,6 +51,7 @@ namespace nexus {
                     dist_dice_panel_(5.25*mm),
                     dist_ihat_panel_(2.*mm),
                     panel_thickness_(1.75*mm),
+                    dist_entry_panel_lat_panel_(13.45*mm),
                     max_step_size_(1.*mm)
   {
     // Messenger
@@ -251,8 +252,9 @@ namespace nexus {
     //PYREX PANELS SURROUNDING THE SIPM DICE BOARDS
     G4double lat_panel_width = active_depth_ + tile_thickn_;
     G4double horiz_panel_length = full_row_size_ + 2.*dist_dice_panel_;
-    G4double lat_panel_xpos = ih_x_size_/2. + dist_ihat_panel_ + panel_thickness_
-                              + active_depth_ + tile_thickn_ - lat_panel_width/2.;
+    G4double lat_panel_xpos = entry_panel_xpos + dist_entry_panel_lat_panel_ + lat_panel_width/2.;
+                              // ih_x_size_/2. + dist_ihat_panel_ + panel_thickness_
+                              // + active_depth_ + tile_thickn_ - lat_panel_width/2.;
     G4double lat_panel_ypos = full_col_size_/2. + dist_dice_panel_ + panel_thickness_/2.;
 
     G4Box* horiz_lat_panel_solid =

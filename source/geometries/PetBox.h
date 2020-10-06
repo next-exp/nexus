@@ -54,6 +54,7 @@ namespace nexus {
 
     G4double active_depth_, dist_dice_panel_;
     G4double dist_ihat_panel_, panel_thickness_;
+    G4double dist_entry_panel_lat_panel_;
 
     G4double max_step_size_;
 
