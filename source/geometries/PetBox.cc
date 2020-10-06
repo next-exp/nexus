@@ -41,10 +41,12 @@ namespace nexus {
                     ih_x_size_(4.6*cm),
                     ih_y_size_(12.*cm),
                     ih_z_size_(6*cm),
-                    ih_thickness_(3.*mm),
-                    source_tube_thickness_(1.*mm),
+                    ih_thick_wall_(3.*mm),
+                    ih_thick_roof_(6.*mm),
+                    dist_source_roof_(10.*mm),
+                    source_tube_thick_wall_(1.*mm),
+                    source_tube_thick_roof_(5.*mm),
                     source_tube_int_radius_(1.1*cm),
-                    source_tube_length_(11.*cm),
                     active_depth_(3.*cm),
                     dist_dice_panel_(5.25*mm),
                     dist_ihat_panel_(2.*mm),
@@ -118,7 +120,7 @@ namespace nexus {
     LXe_logic_ =
       new G4LogicalVolume(LXe_solid, LXe, "LXE");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0, 0), LXe_logic_,
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), LXe_logic_,
                       "LXE", box_logic, false, 0, false);
 
 
@@ -132,9 +134,9 @@ namespace nexus {
     new G4PVPlacement(0, G4ThreeVector(0., (-box_size_/2.+box_thickness_+ih_y_size_/2.), 0),
       internal_hat_logic, "INTERNAL_HAT", LXe_logic_, false, 0, false);
 
-    G4double vacuum_hat_xsize = ih_x_size_-2.*ih_thickness_;
-    G4double vacuum_hat_ysize = ih_y_size_-2.*ih_thickness_;
-    G4double vacuum_hat_zsize = ih_z_size_-2.*ih_thickness_;
+    G4double vacuum_hat_xsize = ih_x_size_-2.*ih_thick_wall_;
+    G4double vacuum_hat_ysize = ih_y_size_-ih_thick_roof_;
+    G4double vacuum_hat_zsize = ih_z_size_-2.*ih_thick_wall_;
     G4Box* vacuum_hat_solid =
       new G4Box("VACUUM_HAT", vacuum_hat_xsize/2.,vacuum_hat_ysize/2., vacuum_hat_zsize/2.);
 
@@ -147,9 +149,10 @@ namespace nexus {
                       "VACUUM_HAT", internal_hat_logic, false, 0, false);
 
     // SOURCE TUBE
-    G4double source_tube_ext_radius = source_tube_int_radius_ + source_tube_thickness_;
+    G4double source_tube_ext_radius = source_tube_int_radius_ + source_tube_thick_wall_;
+    G4double source_tube_length = ih_y_size_-ih_thick_roof_ - dist_source_roof_;
     G4Tubs* source_tube_solid =
-      new G4Tubs("SOURCE_TUBE", 0, source_tube_ext_radius, source_tube_length_/2., 0, twopi);
+      new G4Tubs("SOURCE_TUBE", 0, source_tube_ext_radius, source_tube_length/2., 0, twopi);
 
     G4Material* carbon_fiber = MaterialsList::CarbonFiber();
     G4LogicalVolume* source_tube_logic =
@@ -157,7 +160,7 @@ namespace nexus {
 
     G4RotationMatrix rot;
     rot.rotateX(pi/2.);
-    G4double source_tube_ypos = source_tube_length_/2.-(ih_y_size_-2.*ih_thickness_)/2.;
+    G4double source_tube_ypos = source_tube_length/2.-(ih_y_size_-ih_thick_roof_)/2.;
     new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., source_tube_ypos, 0.)),
       source_tube_logic,"SOURCE_TUBE", vacuum_hat_logic, false, 0, false);
 

@@ -46,8 +46,8 @@ namespace nexus {
     G4double source_pos_x_, source_pos_y_, source_pos_z_;
     G4double box_size_, box_thickness_;
 
-    G4double ih_x_size_, ih_y_size_, ih_z_size_, ih_thickness_;
-    G4double source_tube_thickness_, source_tube_int_radius_, source_tube_length_;
+    G4double ih_x_size_, ih_y_size_, ih_z_size_, ih_thick_wall_, ih_thick_roof_;
+    G4double source_tube_thick_wall_, source_tube_thick_roof_, source_tube_int_radius_, dist_source_roof_;
 
     G4double n_tile_rows_, n_tile_columns_;
     G4double tile_thickn_, full_row_size_, full_col_size_;
