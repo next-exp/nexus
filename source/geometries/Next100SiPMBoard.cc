@@ -32,12 +32,12 @@ using namespace nexus;
 
 Next100SiPMBoard::Next100SiPMBoard():
   BaseGeometry     (),
-  size_            (123.40 * mm),
-  pitch_           ( 15.55 * mm),
-  margin_          (  7.33 * mm),
-  hole_diam_       (  7.00 * mm),
-  board_thickness_ (  0.5  * mm),
-  mask_thickness_  (  2.1  * mm), // Made slightly thicker to fit SiPM
+  size_            (123.40  * mm),
+  pitch_           ( 15.55  * mm),
+  margin_          (  7.275 * mm),
+  hole_diam_       (  7.00  * mm),
+  board_thickness_ (  0.5   * mm),
+  mask_thickness_  (  2.1   * mm), // Made slightly thicker to fit SiPM
   time_binning_    (1. * microsecond),
   visibility_      (true),
   sipm_visibility_ (false),
