@@ -1,3 +1,6 @@
+tag v6_01_01 - 6 Oct 2020
+	- Fix a bug in the position of SiPMs in the NEXT100 boards.
+
 tag v6_01_00 - 8 Sept 2020
 	- Add NextFlex, a new flexible geometry which configurable sensors and dimensions,
 	meant to be used to study designs of future detectors.
