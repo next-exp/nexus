@@ -36,23 +36,31 @@ namespace nexus {
                     source_pos_x_(0.*mm),
                     source_pos_y_(0.*mm),
                     source_pos_z_(0.*mm),
-                    box_size_(19.2*cm),
+                    box_size_(194.4*mm),
                     box_thickness_(2.*cm),
                     ih_x_size_(4.6*cm),
                     ih_y_size_(12.*cm),
                     ih_z_size_(6*cm),
                     ih_thick_wall_(3.*mm),
                     ih_thick_roof_(6.*mm),
-                    dist_source_roof_(10.*mm),
                     source_tube_thick_wall_(1.*mm),
-                    source_tube_thick_roof_(5.*mm),
                     source_tube_int_radius_(1.1*cm),
-                    active_depth_(3.*cm),
-                    dist_dice_panel_(5.25*mm),
+                    dist_source_roof_(10.*mm),
+                    source_tube_thick_roof_(5.*mm),
+                    n_tile_rows_(2),
+                    n_tile_columns_(2),
                     dist_ihat_panel_(2.*mm),
                     panel_thickness_(1.75*mm),
-                    dist_entry_panel_lat_panel_(13.45*mm),
+                    active_depth_(3.*cm),
+                    entry_panel_width_(86.*mm),
+                    dist_entry_panel_lat_panel_(1.45*mm),
+                    lat_panel_len_(66.5*mm),
+                    lat_panel_width_(50.*mm),
+                    low_lat_panel_width_(40.*mm),
+                    low_lat_panel_height_(40.95*mm),
+                    dist_lat_panels_(69.*mm),
                     max_step_size_(1.*mm)
+
   {
     // Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/PetBox/",
@@ -108,7 +116,7 @@ namespace nexus {
     G4LogicalVolume* box_logic =
       new G4LogicalVolume(box_solid, aluminum, "BOX");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0, 0), box_logic,
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), box_logic,
                       "BOX", lab_logic_, false, 0, false);
 
     // LXe
@@ -148,7 +156,7 @@ namespace nexus {
     G4LogicalVolume* internal_hat_logic =
       new G4LogicalVolume(internal_hat_solid, aluminum, "INTERNAL_HAT");
 
-    new G4PVPlacement(0, G4ThreeVector(0., (-box_size_/2.+box_thickness_+ih_y_size_/2.), 0),
+    new G4PVPlacement(0, G4ThreeVector(0., (-box_size_/2.+box_thickness_+ih_y_size_/2.), 0.),
       internal_hat_logic, "INTERNAL_HAT", LXe_logic_, false, 0, false);
 
     G4double vacuum_hat_xsize = ih_x_size_-2.*ih_thick_wall_;
@@ -232,12 +240,11 @@ namespace nexus {
 
 
     // PYREX PANELS BETWEEN THE INTERNAL HAT AND THE ACTIVE REGIONS
-    G4double entry_panel_width = full_row_size_ + 2* dist_dice_panel_;
     G4double entry_panel_xpos = ih_x_size_/2. + panel_thickness_/2. + dist_ihat_panel_;
     G4double entry_panel_ypos = -box_size_/2. + box_thickness_ + ih_y_size_/2.;
 
     G4Box* entry_panel_solid =
-      new G4Box("ENTRY_PANEL", panel_thickness_/2., ih_y_size_/2., entry_panel_width/2.);
+      new G4Box("ENTRY_PANEL", panel_thickness_/2., ih_y_size_/2., entry_panel_width_/2.);
 
     G4Material* pyrex = G4NistManager::Instance()->FindOrBuildMaterial("G4_Pyrex_Glass");
 
@@ -248,55 +255,64 @@ namespace nexus {
                         "ENTRY_PANEL", LXe_logic_, false, 1, false);
 
     new G4PVPlacement(0, G4ThreeVector(entry_panel_xpos, entry_panel_ypos, 0), entry_panel_logic,
-                        "ENTRY_PANEL", LXe_logic_, false, 2, false);
+                        "ENTRY_PANEL", LXe_logic_, false, 2, );
 
 
-    //PYREX PANELS SURROUNDING THE SIPM DICE BOARDS
-    G4double lat_panel_width = active_depth_ + tile_thickn_;
-    G4double horiz_panel_length = full_row_size_ + 2.*dist_dice_panel_;
-    G4double lat_panel_xpos = entry_panel_xpos + dist_entry_panel_lat_panel_ + lat_panel_width/2.;
-                              // ih_x_size_/2. + dist_ihat_panel_ + panel_thickness_
-                              // + active_depth_ + tile_thickn_ - lat_panel_width/2.;
-    G4double lat_panel_ypos = full_col_size_/2. + dist_dice_panel_ + panel_thickness_/2.;
+    // PYREX PANELS SURROUNDING THE SIPM DICE BOARDS
+    // LOWER HORIZONTAL PANELS ARE SMALLER IN X
+    G4double low_lat_panel_xpos = entry_panel_xpos + dist_entry_panel_lat_panel_ +
+                          (lat_panel_width_-low_lat_panel_width_) + low_lat_panel_width_/2.;
+    G4double low_lat_panel_ypos = - box_size_/2. + box_thickness_ + low_lat_panel_height_ + panel_thickness_/2.;
+
+    G4Box* horiz_low_lat_panel_solid =
+      new G4Box("LAT_PANEL", low_lat_panel_width_/2., panel_thickness_/2., lat_panel_len_/2.);
+
+    G4LogicalVolume* horiz_low_lat_panel_logic =
+      new G4LogicalVolume(horiz_low_lat_panel_solid, pyrex, "LAT_PANEL");
+
+    new G4PVPlacement(0, G4ThreeVector(-low_lat_panel_xpos, low_lat_panel_ypos, 0),
+                      horiz_low_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 1, false);
+
+    new G4PVPlacement(0, G4ThreeVector(low_lat_panel_xpos, low_lat_panel_ypos, 0),
+                      horiz_low_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 2, false);
+
+
+    G4double lat_panel_xpos = entry_panel_xpos + dist_entry_panel_lat_panel_ + lat_panel_width_/2.;
+    G4double lat_panel_ypos = low_lat_panel_ypos + dist_lat_panels_+ panel_thickness_;
 
     G4Box* horiz_lat_panel_solid =
-      new G4Box("LAT_PANEL", lat_panel_width/2., panel_thickness_/2., horiz_panel_length/2.);
+      new G4Box("LAT_PANEL", lat_panel_width_/2., panel_thickness_/2., lat_panel_len_/2.);
 
     G4LogicalVolume* horiz_lat_panel_logic =
       new G4LogicalVolume(horiz_lat_panel_solid, pyrex, "LAT_PANEL");
 
     new G4PVPlacement(0, G4ThreeVector(-lat_panel_xpos, lat_panel_ypos, 0),
-                      horiz_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 1, false);
-
-    new G4PVPlacement(0, G4ThreeVector(-lat_panel_xpos, -lat_panel_ypos, 0),
-                      horiz_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 2, false);
+                      horiz_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 3, false);
 
     new G4PVPlacement(0, G4ThreeVector(lat_panel_xpos, lat_panel_ypos, 0), horiz_lat_panel_logic,
-                      "LAT_PANEL", LXe_logic_, false, 3, false);
-
-    new G4PVPlacement(0, G4ThreeVector(lat_panel_xpos, -lat_panel_ypos, 0), horiz_lat_panel_logic,
                       "LAT_PANEL", LXe_logic_, false, 4, false);
 
 
-    G4double vert_panel_length = full_col_size_ + 2.*dist_dice_panel_;
-    G4double lat_panel_zpos = full_row_size_/2. + dist_dice_panel_ + panel_thickness_/2.;
+
+    G4double vert_lat_panel_ypos = low_lat_panel_ypos + dist_lat_panels_/2. + panel_thickness_/2.;
+    G4double lat_panel_zpos = dist_lat_panels_/2. + panel_thickness_/2.;
 
     G4Box* vert_lat_panel_solid =
-      new G4Box("LAT_PANEL", lat_panel_width/2., vert_panel_length/2., panel_thickness_/2.);
+      new G4Box("LAT_PANEL", lat_panel_width_/2., lat_panel_len_/2., panel_thickness_/2.);
 
     G4LogicalVolume* vert_lat_panel_logic =
       new G4LogicalVolume(vert_lat_panel_solid, pyrex, "LAT_PANEL");
 
-    new G4PVPlacement(0, G4ThreeVector(-lat_panel_xpos, 0, -lat_panel_zpos),
+    new G4PVPlacement(0, G4ThreeVector(-lat_panel_xpos, vert_lat_panel_ypos, -lat_panel_zpos),
                       vert_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 1, false);
 
-    new G4PVPlacement(0, G4ThreeVector(-lat_panel_xpos, 0, lat_panel_zpos),
+    new G4PVPlacement(0, G4ThreeVector(-lat_panel_xpos, vert_lat_panel_ypos, lat_panel_zpos),
                       vert_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 2, false);
 
-    new G4PVPlacement(0, G4ThreeVector(lat_panel_xpos, 0, -lat_panel_zpos),
+    new G4PVPlacement(0, G4ThreeVector(lat_panel_xpos, vert_lat_panel_ypos, -lat_panel_zpos),
                       vert_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 3, false);
 
-    new G4PVPlacement(0, G4ThreeVector(lat_panel_xpos, 0, lat_panel_zpos),
+    new G4PVPlacement(0, G4ThreeVector(lat_panel_xpos, vert_lat_panel_ypos, lat_panel_zpos),
                       vert_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 4, false);
 
 
@@ -309,6 +325,7 @@ namespace nexus {
     panel_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::ReflectantSurface(reflectivity_));
     new G4LogicalSkinSurface("OP_PANEL", entry_panel_logic, panel_opsur);
     new G4LogicalSkinSurface("OP_PANEL_H", horiz_lat_panel_logic, panel_opsur);
+    new G4LogicalSkinSurface("OP_PANEL_LH", horiz_low_lat_panel_logic, panel_opsur);
     new G4LogicalSkinSurface("OP_PANEL_V", vert_lat_panel_logic, panel_opsur);
 
 

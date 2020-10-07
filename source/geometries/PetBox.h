@@ -46,15 +46,20 @@ namespace nexus {
     G4double source_pos_x_, source_pos_y_, source_pos_z_;
     G4double box_size_, box_thickness_;
 
-    G4double ih_x_size_, ih_y_size_, ih_z_size_, ih_thick_wall_, ih_thick_roof_;
-    G4double source_tube_thick_wall_, source_tube_thick_roof_, source_tube_int_radius_, dist_source_roof_;
+    G4double ih_x_size_, ih_y_size_, ih_z_size_;
+    G4double ih_thick_wall_, ih_thick_roof_;
+    G4double source_tube_thick_wall_, source_tube_int_radius_;
+    G4double dist_source_roof_, source_tube_thick_roof_;
 
     G4double n_tile_rows_, n_tile_columns_;
     G4double tile_thickn_, full_row_size_, full_col_size_;
 
-    G4double active_depth_, dist_dice_panel_;
     G4double dist_ihat_panel_, panel_thickness_;
-    G4double dist_entry_panel_lat_panel_;
+    G4double active_depth_;
+    G4double entry_panel_width_, dist_entry_panel_lat_panel_;
+
+    G4double lat_panel_len_, lat_panel_width_;
+    G4double low_lat_panel_width_, low_lat_panel_height_, dist_lat_panels_;
 
     G4double max_step_size_;
 
