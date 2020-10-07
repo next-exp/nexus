@@ -125,6 +125,22 @@ namespace nexus {
                       "LXE", box_logic, false, 0, false);
 
 
+    // Aliminum cylinder
+    G4double aluminum_cyl_rad = 40.*mm;
+    G4double aluminum_cyl_len = 19.*mm;
+    G4Tubs* aluminum_cyl_solid =
+      new G4Tubs("ALUMINUM_CYL", 0, aluminum_cyl_rad, aluminum_cyl_len/2., 0, twopi);
+
+    G4LogicalVolume* aluminum_cyl_logic =
+      new G4LogicalVolume(aluminum_cyl_solid, aluminum, "ALUMINUM_CYL");
+
+    G4RotationMatrix rot;
+    rot.rotateX(pi/2.);
+    G4double aluminum_cyl_ypos = box_size_/2.-box_thickness_-aluminum_cyl_len/2.;
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., aluminum_cyl_ypos, 0.)),
+      aluminum_cyl_logic,"ALUMINUM_CYL", LXe_logic_, false, 0, false);
+
+
     // INTERNAL HAT
     G4Box* internal_hat_solid =
       new G4Box("INTERNAL_HAT", ih_x_size_/2., ih_y_size_/2., ih_z_size_/2.);
@@ -159,8 +175,6 @@ namespace nexus {
     G4LogicalVolume* source_tube_logic =
       new G4LogicalVolume(source_tube_solid, carbon_fiber, "SOURCE_TUBE");
 
-    G4RotationMatrix rot;
-    rot.rotateX(pi/2.);
     G4double source_tube_ypos = source_tube_length/2.-(ih_y_size_-ih_thick_roof_)/2.;
     new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., source_tube_ypos, 0.)),
       source_tube_logic,"SOURCE_TUBE", vacuum_hat_logic, false, 0, false);
@@ -314,6 +328,9 @@ namespace nexus {
     if (visibility_) {
       G4VisAttributes box_col = nexus::White();
       box_logic->SetVisAttributes(box_col);
+      G4VisAttributes al_cyl_col = nexus::DarkGrey();
+      al_cyl_col.SetForceSolid(true);
+      aluminum_cyl_logic->SetVisAttributes(al_cyl_col);
       G4VisAttributes lxe_col = nexus::Blue();
       //lxe_col.SetForceSolid(true);
       LXe_logic_->SetVisAttributes(lxe_col);
