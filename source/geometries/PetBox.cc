@@ -38,9 +38,9 @@ namespace nexus {
                     source_pos_z_(0.*mm),
                     box_size_(194.4*mm),
                     box_thickness_(2.*cm),
-                    ih_x_size_(4.6*cm),
+                    ih_x_size_(4.*cm),
                     ih_y_size_(12.*cm),
-                    ih_z_size_(6*cm),
+                    ih_z_size_(6.*cm),
                     ih_thick_wall_(3.*mm),
                     ih_thick_roof_(6.*mm),
                     source_tube_thick_wall_(1.*mm),
@@ -255,7 +255,7 @@ namespace nexus {
                         "ENTRY_PANEL", LXe_logic_, false, 1, false);
 
     new G4PVPlacement(0, G4ThreeVector(entry_panel_xpos, entry_panel_ypos, 0), entry_panel_logic,
-                        "ENTRY_PANEL", LXe_logic_, false, 2, );
+                        "ENTRY_PANEL", LXe_logic_, false, 2, false);
 
 
     // PYREX PANELS SURROUNDING THE SIPM DICE BOARDS
@@ -289,8 +289,8 @@ namespace nexus {
     new G4PVPlacement(0, G4ThreeVector(-lat_panel_xpos, lat_panel_ypos, 0),
                       horiz_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 3, false);
 
-    new G4PVPlacement(0, G4ThreeVector(lat_panel_xpos, lat_panel_ypos, 0), horiz_lat_panel_logic,
-                      "LAT_PANEL", LXe_logic_, false, 4, false);
+    new G4PVPlacement(0, G4ThreeVector(lat_panel_xpos, lat_panel_ypos, 0),
+                      horiz_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 4, false);
 
 
 
@@ -344,10 +344,10 @@ namespace nexus {
       G4VisAttributes vacuum_col = nexus::Lilla();
       vacuum_hat_logic->SetVisAttributes(vacuum_col);
       G4VisAttributes source_tube_col = nexus::Red();
-      source_tube_col.SetForceSolid(true);
+      //source_tube_col.SetForceSolid(true);
       source_tube_logic->SetVisAttributes(source_tube_col);
       G4VisAttributes air_source_tube_col = nexus::DarkGrey();
-      //air_source_tube_col.SetForceSolid(true);
+      air_source_tube_col.SetForceSolid(true);
       air_source_tube_logic->SetVisAttributes(air_source_tube_col);
       G4VisAttributes air_source_tube_inside_box_col = nexus::White();
       air_source_tube_inside_box_col.SetForceSolid(true);
