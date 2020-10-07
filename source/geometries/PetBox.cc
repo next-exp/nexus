@@ -210,23 +210,11 @@ namespace nexus {
                       "AIR_SOURCE_TUBE", source_tube_inside_box_logic, false, 0, false);
 
 
-
-    // TILE CONSTRUCT
-    n_tile_rows_ = 2;
-    n_tile_columns_ = 2;
-    tile_->Construct();
-    tile_thickn_ = tile_->GetDimensions().z();
-    full_row_size_ = n_tile_columns_ * tile_->GetDimensions().x();
-    full_col_size_ = n_tile_rows_ * tile_->GetDimensions().y();
-
-
     // 2 ACTIVE REGIONS
-    G4double active_y_size = full_col_size_ + 2.*dist_dice_panel_;
-    G4double active_z_size = full_row_size_ + 2.*dist_dice_panel_;
     G4double active_x_pos = ih_x_size_/2. + dist_ihat_panel_ + panel_thickness_ + active_depth_/2.;
 
     G4Box* active_solid =
-      new G4Box("ACTIVE", active_depth_/2., active_y_size/2., active_z_size/2.);
+      new G4Box("ACTIVE", active_depth_/2., dist_lat_panels_/2., dist_lat_panels_/2.);
     G4LogicalVolume* active_logic =
       new G4LogicalVolume(active_solid, LXe, "ACTIVE");
     new G4PVPlacement(0, G4ThreeVector(-active_x_pos, 0., 0.), active_logic,
@@ -360,6 +348,13 @@ namespace nexus {
 
   void PetBox::BuildSensors()
   {
+    // TILE CONSTRUCT
+    tile_->Construct();
+    tile_thickn_ = tile_->GetDimensions().z();
+    full_row_size_ = n_tile_columns_ * tile_->GetDimensions().x();
+    full_col_size_ = n_tile_rows_ * tile_->GetDimensions().y();
+
+
     G4LogicalVolume* tile_logic = tile_->GetLogicalVolume();
     G4double x_pos = ih_x_size_/2. + dist_ihat_panel_ + panel_thickness_ + active_depth_ + tile_thickn_/2.;
 
