@@ -13,7 +13,7 @@
 #define BLACK_BOX_H
 
 #include "BaseGeometry.h"
-#include "NextNewKDB.h"
+#include "KDB_Sensl.h"
 
 class G4Material;
 class G4OpticalSurface;
@@ -49,7 +49,7 @@ namespace nexus {
     // SiPMs per Dice Board
     const G4int SiPM_rows_, SiPM_columns_;
     // Dice board
-    NextNewKDB* kapton_dice_board_;
+    KDB_Sensl* dice_;
     G4ThreeVector kdb_dimensions_;
     G4double dice_board_x_pos_;
     G4double dice_board_y_pos_;

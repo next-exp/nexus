@@ -8,7 +8,7 @@
 // ---------------------------------------------------------------------------- 
 
 #include "BlackBox.h"
-#include "NextNewKDB.h"
+#include "KDB_Sensl.h"
 
 #include "BaseGeometry.h"
 #include "SpherePointSampler.h"
@@ -69,7 +69,7 @@ namespace nexus {
     specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
     specific_vertex_Z_cmd.SetUnitCategory("Length");
 
-    kapton_dice_board_ = new NextNewKDB(SiPM_rows_, SiPM_columns_);
+    dice_ = new KDB_Sensl(SiPM_rows_, SiPM_columns_);
   }
   
   
@@ -99,15 +99,16 @@ namespace nexus {
   
   // DB //////////////////////////////////////////////
 
-  kapton_dice_board_->SetMotherLogicalVolume(world_logic_vol);
-  kapton_dice_board_->Construct();
-  kdb_dimensions_ = kapton_dice_board_->GetDimensions();
-  G4LogicalVolume* dice_board_logic = kapton_dice_board_->GetLogicalVolume();
+  dice_->SetMotherLogicalVolume(world_logic_vol);
+  dice_->Construct();
+  kdb_dimensions_ = dice_->GetDimensions();
+  G4LogicalVolume* dice_board_logic = dice_->GetLogicalVolume();
   G4double db_thickness =kdb_dimensions_.z();
   ////Dice Boards placement
   dice_board_x_pos_ = 0 * cm;  
   dice_board_y_pos_ = 0 * cm;
-  dice_board_z_pos_ = -80* cm;
+  //dice_board_z_pos_ = -80* cm;
+  dice_board_z_pos_ = -53.5* cm;
   G4ThreeVector post(dice_board_x_pos_,dice_board_y_pos_,dice_board_z_pos_);  
 
   new G4PVPlacement(0, post, dice_board_logic,
@@ -127,7 +128,7 @@ namespace nexus {
     // WORLD
     if (region == "WORLD") {
  
-      vertex = G4ThreeVector(0.,0.,1.5*mm);
+      vertex = G4ThreeVector(0.,0.,0.*mm);
  
     }
     else if (region == "AD_HOC") {
