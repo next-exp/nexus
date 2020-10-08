@@ -65,6 +65,8 @@ namespace nexus {
     G4double lat_panel_len_, lat_panel_width_;
     G4double low_lat_panel_width_, low_lat_panel_height_, dist_lat_panels_;
 
+    G4double x_pos_;
+
     G4double max_step_size_;
 
     /// Messenger for the definition of control commands

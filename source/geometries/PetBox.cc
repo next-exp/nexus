@@ -383,7 +383,16 @@ namespace nexus {
 
 
     G4LogicalVolume* tile_logic = tile_->GetLogicalVolume();
-    G4double x_pos = ih_x_size_/2. + dist_ihat_panel_ + panel_thickness_ + active_depth_ + tile_thickn_/2.;
+
+    if (tile_type_ == "HamamatsuVUV") {
+      x_pos_ = ih_x_size_/2. + dist_ihat_panel_ + panel_thickness_ + active_depth_ + tile_thickn_/2.;
+    } else if (tile_type_ == "HamamatsuBlue") {
+      G4double dist_dice_flange = 19.35*mm;
+      x_pos_ = box_size_/2. - box_thickness_ - dist_dice_flange - tile_thickn_/2.;
+    } else if (tile_type_ == "FBK") {
+      G4double dist_dice_flange = 21.05*mm;
+      x_pos_ = box_size_/2. - box_thickness_ - dist_dice_flange - tile_thickn_/2.;
+    }
 
     G4RotationMatrix rot;
     rot.rotateY(-pi/2.);
@@ -398,7 +407,7 @@ namespace nexus {
       G4double y_pos = full_col_size_/2. - tile_size_y/2. - i*tile_size_y;
       for (G4int j=0; j<n_tile_columns_; j++) {
         G4double z_pos = -full_row_size_/2. + tile_size_x/2. + j*tile_size_x;
-        position = G4ThreeVector(x_pos, y_pos, z_pos);
+        position = G4ThreeVector(x_pos_, y_pos, z_pos);
         vol_name = "TILE_" + std::to_string(copy_no);
         new G4PVPlacement(G4Transform3D(rot, position), tile_logic,
                           vol_name, LXe_logic_, false, copy_no, false);
@@ -412,7 +421,7 @@ namespace nexus {
       G4double y_pos = full_col_size_/2. - tile_size_y/2. - i*tile_size_y;
       for (G4int j=0; j<n_tile_columns_; j++) {
         G4double z_pos = full_row_size_/2. - tile_size_x/2. - j*tile_size_x;
-        position = G4ThreeVector(-x_pos, y_pos, z_pos);
+        position = G4ThreeVector(-x_pos_, y_pos, z_pos);
         vol_name = "TILE_" + std::to_string(copy_no);
         new G4PVPlacement(G4Transform3D(rot, position), tile_logic,
                           vol_name, LXe_logic_, false, copy_no, false);
