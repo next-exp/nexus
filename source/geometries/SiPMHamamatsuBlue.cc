@@ -35,9 +35,6 @@ namespace nexus {
 			      visibility_(0),
 			      refr_index_(1.55), //given by Hammamatsu datasheet
                               eff_(1.),
-                              sensor_depth_(-1),
-                              mother_depth_(-1),
-                              naming_order_(-1),
                               time_binning_(200.*nanosecond),
                               box_geom_(false)
 
@@ -47,8 +44,6 @@ namespace nexus {
     msg_->DeclareProperty("visibility", visibility_, "SiPMpet Visibility");
     msg_->DeclareProperty("refr_index", refr_index_, "Refraction index for epoxy");
     msg_->DeclareProperty("efficiency", eff_, "Efficiency of SiPM");
-
-    msg_->DeclareProperty("naming_order", naming_order_, "To start numbering at different place than zero.");
 
     G4GenericMessenger::Command& time_cmd =
       msg_->DeclareProperty("time_binning", time_binning_, "Time binning for the sensor");
@@ -160,19 +155,8 @@ namespace nexus {
 
     if (!sdmgr->FindSensitiveDetector(sdname, false)) {
       ToFSD* sipmsd = new ToFSD(sdname);
-      if (sensor_depth_ == -1)
-        G4Exception("[SiPMHmtsuBlue]", "Construct()", FatalException,
-                    "Sensor Depth must be set before constructing");
       sipmsd->SetDetectorVolumeDepth(sensor_depth_);
-
-      if (mother_depth_ == -1)
-        G4Exception("[SiPMHmtsuBlue]", "Construct()", FatalException,
-                    "Mother Depth must be set before constructing");
       sipmsd->SetMotherVolumeDepth(mother_depth_);
-
-      if (naming_order_ == -1)
-        G4Exception("[SiPMHmtsuBlue]", "Construct()", FatalException,
-                    "Naming Order must be set before constructing");
       sipmsd->SetDetectorNamingOrder(naming_order_);
       sipmsd->SetTimeBinning(time_binning_);
 

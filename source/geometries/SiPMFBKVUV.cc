@@ -35,9 +35,6 @@ namespace nexus {
   SiPMFBKVUV::SiPMFBKVUV(): BaseGeometry(),
 			            visibility_(0),
                                     eff_(1.),
-                                    sensor_depth_(-1),
-                                    mother_depth_(-1),
-                                    naming_order_(-1),
                                     time_binning_(200.*nanosecond),
                                     box_geom_(false)
 
@@ -46,8 +43,6 @@ namespace nexus {
     msg_ = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
     msg_->DeclareProperty("visibility", visibility_, "SiPMpet Visibility");
     msg_->DeclareProperty("efficiency", eff_, "Efficiency of SiPM");
-
-    msg_->DeclareProperty("naming_order", naming_order_, "To start numbering at different place than zero.");
 
     G4GenericMessenger::Command& time_cmd =
       msg_->DeclareProperty("time_binning", time_binning_, "Time binning for the sensor");
@@ -136,19 +131,8 @@ namespace nexus {
 
     if (!sdmgr->FindSensitiveDetector(sdname, false)) {
       ToFSD* sipmsd = new ToFSD(sdname);
-      if (sensor_depth_ == -1)
-        G4Exception("[SiPMFBKVUV]", "Construct()", FatalException,
-                    "Sensor Depth must be set before constructing");
       sipmsd->SetDetectorVolumeDepth(sensor_depth_);
-
-      if (mother_depth_ == -1)
-        G4Exception("[SiPMFBKVUV]", "Construct()", FatalException,
-                    "Mother Depth must be set before constructing");
       sipmsd->SetMotherVolumeDepth(mother_depth_);
-
-      if (naming_order_ == -1)
-        G4Exception("[SiPMFBKVUV]", "Construct()", FatalException,
-                    "Naming Order must be set before constructing");
       sipmsd->SetDetectorNamingOrder(naming_order_);
       sipmsd->SetTimeBinning(time_binning_);
 

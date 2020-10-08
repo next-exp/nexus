@@ -134,19 +134,9 @@ namespace nexus {
 
     if (!sdmgr->FindSensitiveDetector(sdname, false)) {
         ToFSD* sipmsd = new ToFSD(sdname);
-        if (sensor_depth_ == -1)
-          G4Exception("[SiPMHmtsuVUV]", "Construct()", FatalException,
-                      "Sensor Depth must be set before constructing");
+
         sipmsd->SetDetectorVolumeDepth(sensor_depth_);
-
-        if (mother_depth_ == -1)
-          G4Exception("[SiPMHmtsuVUV]", "Construct()", FatalException,
-                      "Mother Depth must be set before constructing");
         sipmsd->SetMotherVolumeDepth(mother_depth_);
-
-        if (naming_order_ == -1)
-          G4Exception("[SiPMHmtsuVUV]", "Construct()", FatalException,
-                      "Naming Order must be set before constructing");
         sipmsd->SetDetectorNamingOrder(naming_order_);
         sipmsd->SetTimeBinning(time_binning_);
         sipmsd->SetBoxGeom(box_geom_);
