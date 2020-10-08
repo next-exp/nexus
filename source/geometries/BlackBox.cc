@@ -108,7 +108,7 @@ namespace nexus {
   dice_board_x_pos_ = 0 * cm;  
   dice_board_y_pos_ = 0 * cm;
   //dice_board_z_pos_ = -80* cm;
-  dice_board_z_pos_ = -53.5* cm;
+  dice_board_z_pos_ = -1.* cm;
   G4ThreeVector post(dice_board_x_pos_,dice_board_y_pos_,dice_board_z_pos_);  
 
   new G4PVPlacement(0, post, dice_board_logic,
