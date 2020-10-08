@@ -1,13 +1,13 @@
 ### GEOMETRY
 /Geometry/PetBox/visibility true
+/Geometry/PetBox/tile_type HamamatsuVUV
 
-/Geometry/Tile/visibility true
+#/Geometry/Tile/visibility true
 
-/Geometry/SiPMpet/efficiency 0.2
-/Geometry/SiPMpet/visibility true
-/Geometry/SiPMpet/time_binning 1. microsecond
-/Geometry/SiPMpet/naming_order 0
-/Geometry/SiPMpet/box_geom true
+#/Geometry/SiPMpet/efficiency 0.2
+#/Geometry/SiPMpet/visibility true
+#/Geometry/SiPMpet/time_binning 1. microsecond
+#/Geometry/SiPMpet/box_geom true
 
 ### GENERATOR
 /Generator/Back2back/region CENTER

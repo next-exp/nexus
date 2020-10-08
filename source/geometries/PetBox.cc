@@ -8,8 +8,8 @@
 
 #include "PetBox.h"
 #include "TileHamamatsuVUV.h"
-//#include "TileHamamatsuBlue.h"
-//#include "TileFBK.h"
+#include "TileHamamatsuBlue.h"
+#include "TileFBK.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
@@ -36,6 +36,7 @@ namespace nexus {
                     source_pos_x_(0.*mm),
                     source_pos_y_(0.*mm),
                     source_pos_z_(0.*mm),
+                    tile_type_("HamamatsuVUV"),
                     box_size_(194.4*mm),
                     box_thickness_(2.*cm),
                     ih_x_size_(4.*cm),
@@ -83,7 +84,8 @@ namespace nexus {
     source_pos_z_cmd.SetUnitCategory("Length");
     source_pos_z_cmd.SetParameterName("source_pos_z", false);
 
-    tile_ = new TileHamamatsuVUV();
+    msg_->DeclareProperty("tile_type", tile_type_, "Type of the tile we want to use");
+
   }
 
   PetBox::~PetBox()
@@ -100,6 +102,14 @@ namespace nexus {
     lab_logic_ = new G4LogicalVolume(lab_solid, air, "LAB");
     lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
     this->SetLogicalVolume(lab_logic_);
+
+    if (tile_type_ == "HamamatsuVUV") {
+      tile_ = new TileHamamatsuVUV();
+    } else if (tile_type_ == "HamamatsuBlue") {
+      tile_ = new TileHamamatsuBlue();
+    } else if (tile_type_ == "FBK") {
+      tile_ = new TileFBK();
+    }
 
      BuildBox();
      BuildSensors();

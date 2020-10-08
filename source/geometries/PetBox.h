@@ -16,6 +16,8 @@ class G4LogicalVolume;
 
 namespace nexus {
   class TileHamamatsuVUV;
+  class TileHamamatsuBlue;
+  class TileFBK;
 }
 
 namespace nexus {
@@ -30,7 +32,7 @@ namespace nexus {
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
-    TileHamamatsuVUV* tile_;
+    BaseGeometry* tile_;
 
     private:
     void Construct();
@@ -44,6 +46,8 @@ namespace nexus {
     G4double reflectivity_;
 
     G4double source_pos_x_, source_pos_y_, source_pos_z_;
+
+    G4String tile_type_;
     G4double box_size_, box_thickness_;
 
     G4double ih_x_size_, ih_y_size_, ih_z_size_;
