@@ -32,7 +32,7 @@ namespace nexus {
   using namespace CLHEP;
 
   SiPMHamamatsuBlue::SiPMHamamatsuBlue(): BaseGeometry(),
-			      visibility_(0),
+			      visibility_(1),
 			      refr_index_(1.55), //given by Hammamatsu datasheet
                               eff_(1.),
                               time_binning_(200.*nanosecond),
