@@ -45,7 +45,6 @@ namespace nexus {
     G4GenericMessenger* msg_;
 
     G4double time_binning_;
-    G4bool   box_geom_;
 
   };
 

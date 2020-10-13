@@ -79,6 +79,7 @@ namespace nexus {
     G4int mother_depth = 2;
     sipm_->SetSensorDepth(sensor_depth);
     sipm_->SetMotherDepth(mother_depth);
+    sipm_->SetBoxGeom(box_geom_);
 
     sipm_->Construct();
     G4ThreeVector sipm_dim = sipm_->GetDimensions();

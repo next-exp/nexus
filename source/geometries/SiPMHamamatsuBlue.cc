@@ -35,8 +35,7 @@ namespace nexus {
 			      visibility_(1),
 			      refr_index_(1.55), //given by Hammamatsu datasheet
                               eff_(1.),
-                              time_binning_(200.*nanosecond),
-                              box_geom_(false)
+                              time_binning_(200.*nanosecond)
 
   {
     /// Messenger
@@ -50,9 +49,6 @@ namespace nexus {
     time_cmd.SetUnitCategory("Time");
     time_cmd.SetParameterName("time_binning", false);
     time_cmd.SetRange("time_binning>0.");
-
-    msg_->DeclareProperty("box_geom", box_geom_,
-      "To indicate whether Box geometry is being used and so the sensor id correctly set.");
 
   }
 
@@ -159,6 +155,7 @@ namespace nexus {
       sipmsd->SetMotherVolumeDepth(mother_depth_);
       sipmsd->SetDetectorNamingOrder(naming_order_);
       sipmsd->SetTimeBinning(time_binning_);
+      sipmsd->SetBoxGeom(box_geom_);
 
       G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
       active_logic->SetSensitiveDetector(sipmsd);

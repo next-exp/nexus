@@ -31,6 +31,8 @@ namespace nexus {
 
     G4ThreeVector GetDimensions();
 
+    void SetBoxGeom (G4bool box_geom);
+
   private:
     // Visibility of the tracking plane
     G4bool visibility_;
@@ -52,6 +54,8 @@ namespace nexus {
     G4double quartz_thick_;
     G4double quartz_transparency_;
 
+    G4bool box_geom_;
+
      // Messenger for the definition of control commands
     G4GenericMessenger* msg_;
 
@@ -59,6 +63,8 @@ namespace nexus {
 
   };
 
+  inline void TileHamamatsuVUV::SetBoxGeom(G4bool box_geom)
+    { box_geom_ = box_geom; }
 
 } // end namespace nexus
 

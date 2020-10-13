@@ -40,8 +40,7 @@ namespace nexus {
                             sipm_size_(3.*mm),
                             sensor_depth_(-1),
 			    mother_depth_(0),
-                            naming_order_(0),
-                            box_geom_(false)
+                            naming_order_(0)
 
   {
     /// Messenger
@@ -61,9 +60,6 @@ namespace nexus {
     size_cmd.SetUnitCategory("Length");
     size_cmd.SetParameterName("size", false);
     size_cmd.SetRange("size>0.");
-
-    msg_->DeclareProperty("box_geom", box_geom_,
-      "To indicate whether Box geometry is being used and so the sensor id correctly set.");
   }
 
   SiPMpetFBK::~SiPMpetFBK()

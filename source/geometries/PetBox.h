@@ -48,6 +48,8 @@ namespace nexus {
     G4double source_pos_x_, source_pos_y_, source_pos_z_;
 
     G4String tile_type_;
+    G4bool box_geom_;
+
     G4double box_size_, box_thickness_;
 
     G4double ih_x_size_, ih_y_size_, ih_z_size_;

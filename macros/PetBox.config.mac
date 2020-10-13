@@ -1,6 +1,7 @@
 ### GEOMETRY
 /Geometry/PetBox/visibility true
 /Geometry/PetBox/tile_type HamamatsuVUV
+/Geometry/PetBox/box_geom true
 
 #/Geometry/Tile/visibility true
 

@@ -28,7 +28,7 @@ namespace nexus {
   ToFSD::ToFSD(G4String sdname):
     G4VSensitiveDetector(sdname),
     naming_order_(0), sensor_depth_(0), mother_depth_(0),
-    boundary_(0), box_geom_(false)
+    boundary_(0)
   {
     // Register the name of the collection of hits
     collectionName.insert(GetCollectionUniqueName());

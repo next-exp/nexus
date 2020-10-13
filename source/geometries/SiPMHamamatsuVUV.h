@@ -34,6 +34,7 @@ namespace nexus {
     void SetSensorDepth (G4int sensor_depth);
     void SetMotherDepth (G4int mother_depth);
     void SetNamingOrder (G4int naming_order);
+    void SetBoxGeom (G4bool box_geom);
 
 
   private:
@@ -67,6 +68,9 @@ namespace nexus {
 
   inline void SiPMHamamatsuVUV::SetNamingOrder(G4int naming_order)
   { naming_order_ = naming_order; }
+
+  inline void SiPMHamamatsuVUV::SetBoxGeom(G4bool box_geom)
+  { box_geom_ = box_geom; }
 
 
 } // end namespace nexus

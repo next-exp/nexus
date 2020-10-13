@@ -36,9 +36,7 @@ namespace nexus {
 			    visibility_(0),
 			    refr_index_(1.54),
                             eff_(1.),
-                            time_binning_(200.*nanosecond),
-                            box_geom_(false)
-
+                            time_binning_(200.*nanosecond)
   {
     /// Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
@@ -51,9 +49,6 @@ namespace nexus {
     time_cmd.SetUnitCategory("Time");
     time_cmd.SetParameterName("time_binning", false);
     time_cmd.SetRange("time_binning>0.");
-
-    msg_->DeclareProperty("box_geom", box_geom_,
-      "To indicate whether Box geometry is being used and so the sensor id correctly set.");
   }
 
   SiPMquadFBK::~SiPMquadFBK()
