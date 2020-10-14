@@ -113,6 +113,10 @@ namespace nexus {
       tile_ = new TileHamamatsuBlue();
     } else if (tile_type_ == "FBK") {
       tile_ = new TileFBK();
+    } else {
+      G4Exception("[PetBox]", "Construct()", FatalException,
+                  "Unknown tile type!");
+
     }
 
      BuildBox();
