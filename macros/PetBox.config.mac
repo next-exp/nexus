@@ -1,19 +1,13 @@
 ### GEOMETRY
 /Geometry/PetBox/visibility true
-/Geometry/PetBox/tile_type HamamatsuVUV
-/Geometry/PetBox/box_geom true
 /Geometry/PetBox/tile_type FBK
-/Geometry/PetBox/box_geom 1
-
-#/Geometry/Tile/visibility true
-
-#/Geometry/SiPMpet/efficiency 0.2
-#/Geometry/SiPMpet/visibility true
-#/Geometry/SiPMpet/time_binning 1. microsecond
-#/Geometry/SiPMpet/box_geom true
 
 ### GENERATOR
 /Generator/Back2back/region CENTER
+#/Generator/SingleParticle/particle geantino
+#/Generator/SingleParticle/min_energy 1  eV
+#/Generator/SingleParticle/max_energy 1 keV
+#/Generator/SingleParticle/region CENTER
 
 ### PHYSICS
 /process/optical/processActivation Scintillation true
