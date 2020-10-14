@@ -53,7 +53,7 @@ namespace nexus {
     /// Translates position to G4 global position
     void CalculateGlobalPos(G4ThreeVector& vertex) const;
 
-    void SetBoxGeom (G4bool box_geom);
+    void SetBoxGeom (G4int box_geom);
 
     /// Destructor
     virtual ~BaseGeometry();
@@ -89,7 +89,7 @@ namespace nexus {
     G4double span_; ///< Maximum dimension of the geometry
     G4bool drift_; ///< True if geometry contains a drift field (for hit coordinates)
     G4double el_z_; ///< Starting point of EL generation in z
-    G4bool box_geom_;
+    G4int box_geom_;
   };
 
 
@@ -137,7 +137,7 @@ namespace nexus {
     vertex += G4ThreeVector(0., 0., GetELzCoord());
   }
 
-  inline void BaseGeometry::SetBoxGeom(G4bool box_geom) { box_geom_ = box_geom; }
+  inline void BaseGeometry::SetBoxGeom(G4int box_geom) { box_geom_ = box_geom; }
 
 } // end namespace nexus
 

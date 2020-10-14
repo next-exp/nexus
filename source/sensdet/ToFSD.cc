@@ -140,8 +140,8 @@ namespace nexus {
       G4int motherid = touchable->GetCopyNumber(mother_depth_);
       pmtid = naming_order_*motherid + pmtid;
     }
-    if (box_geom_) {
       std::vector<G4int> init_ids ({ 0, 4, 32, 36, 64, 68, 96, 100 });
+    if (box_geom_==1) {
       G4int motherid = touchable->GetCopyNumber(mother_depth_);
       G4int first_id = (init_ids)[motherid];
       pmtid = first_id + pmtid;

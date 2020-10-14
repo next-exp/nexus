@@ -80,6 +80,7 @@ namespace nexus {
     G4int mother_depth = 2;
     sipm_->SetSensorDepth(sensor_depth);
     sipm_->SetMotherDepth(mother_depth);
+    G4cout << "Box geom in TILEFBK!: " << box_geom_ << G4endl;
     sipm_->SetBoxGeom(box_geom_);
 
     sipm_->Construct();

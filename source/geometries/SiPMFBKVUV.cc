@@ -131,6 +131,7 @@ namespace nexus {
       sipmsd->SetMotherVolumeDepth(mother_depth_);
       sipmsd->SetDetectorNamingOrder(naming_order_);
       sipmsd->SetTimeBinning(time_binning_);
+      G4cout << "Box geom in SIPMFBK!: " << box_geom_ << G4endl;
       sipmsd->SetBoxGeom(box_geom_);
 
       G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);

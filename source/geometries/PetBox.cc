@@ -37,7 +37,7 @@ namespace nexus {
                     source_pos_y_(0.*mm),
                     source_pos_z_(0.*mm),
                     tile_type_("HamamatsuVUV"),
-                    box_geom_(true),
+                    box_geom_(0),
                     box_size_(194.4*mm),
                     box_thickness_(2.*cm),
                     ih_x_size_(4.*cm),
@@ -384,12 +384,12 @@ namespace nexus {
   void PetBox::BuildSensors()
   {
     // TILE CONSTRUCT
+    G4cout << "Box geom in PETBOX!: " << box_geom_ << G4endl;
+    tile_->SetBoxGeom(box_geom_);
     tile_->Construct();
     tile_thickn_ = tile_->GetDimensions().z();
     full_row_size_ = n_tile_columns_ * tile_->GetDimensions().x();
     full_col_size_ = n_tile_rows_ * tile_->GetDimensions().y();
-
-    tile_->SetBoxGeom(box_geom_);
 
     G4LogicalVolume* tile_logic = tile_->GetLogicalVolume();
 
