@@ -87,8 +87,6 @@ namespace nexus {
 
     msg_->DeclareProperty("tile_type", tile_type_, "Type of the tile we want to use");
 
-    msg_->DeclareProperty("box_geom", box_geom_,
-      "To indicate whether Box geometry is being used and so the sensor id correctly set.");
 
   }
 
@@ -109,10 +107,13 @@ namespace nexus {
 
     if (tile_type_ == "HamamatsuVUV") {
       tile_ = new TileHamamatsuVUV();
+      box_geom_ = 1;
     } else if (tile_type_ == "HamamatsuBlue") {
       tile_ = new TileHamamatsuBlue();
+      box_geom_ = 1;
     } else if (tile_type_ == "FBK") {
       tile_ = new TileFBK();
+      box_geom_ = 2;
     } else {
       G4Exception("[PetBox]", "Construct()", FatalException,
                   "Unknown tile type!");
@@ -384,7 +385,6 @@ namespace nexus {
   void PetBox::BuildSensors()
   {
     // TILE CONSTRUCT
-    G4cout << "Box geom in PETBOX!: " << box_geom_ << G4endl;
     tile_->SetBoxGeom(box_geom_);
     tile_->Construct();
     tile_thickn_ = tile_->GetDimensions().z();

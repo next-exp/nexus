@@ -34,7 +34,7 @@ namespace nexus {
     void SetSensorDepth (G4int sensor_depth);
     void SetMotherDepth (G4int mother_depth);
     void SetNamingOrder (G4int naming_order);
-    void SetBoxGeom (G4bool box_geom);
+    void SetBoxGeom (G4int box_geom);
 
 
   private:
@@ -50,7 +50,7 @@ namespace nexus {
     G4int    mother_depth_;
     G4int    naming_order_;
     G4double time_binning_;
-    G4bool   box_geom_;
+    G4int   box_geom_;
 
      // Messenger for the definition of control commands
     G4GenericMessenger* msg_;
@@ -69,7 +69,7 @@ namespace nexus {
   inline void SiPMHamamatsuVUV::SetNamingOrder(G4int naming_order)
   { naming_order_ = naming_order; }
 
-  inline void SiPMHamamatsuVUV::SetBoxGeom(G4bool box_geom)
+  inline void SiPMHamamatsuVUV::SetBoxGeom(G4int box_geom)
   { box_geom_ = box_geom; }
 
 

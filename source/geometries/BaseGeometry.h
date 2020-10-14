@@ -46,7 +46,7 @@ namespace nexus {
     G4double GetELzCoord() const;
 
     /// Setter for the starting point of EL generation in z
-    void SetELzCoord(G4double z);  
+    void SetELzCoord(G4double z);
 
     G4ThreeVector GetDimensions();
 
@@ -54,6 +54,7 @@ namespace nexus {
     void CalculateGlobalPos(G4ThreeVector& vertex) const;
 
     void SetBoxGeom (G4int box_geom);
+    G4int GetBoxGeom();
 
     /// Destructor
     virtual ~BaseGeometry();
@@ -110,7 +111,7 @@ namespace nexus {
 
   inline std::pair<G4ThreeVector, G4ThreeVector> BaseGeometry::GenerateVertices(const G4String&) const
     { return std::make_pair(G4ThreeVector(0., 0., 0.),G4ThreeVector(0., 0., 0.)); }
-  
+
   inline void BaseGeometry::SetSpan(G4double s) { span_ = s; }
 
   inline G4double BaseGeometry::GetSpan() { return span_; }
@@ -123,9 +124,9 @@ namespace nexus {
   inline G4double BaseGeometry::GetELzCoord() const {return el_z_;}
 
   inline void BaseGeometry::SetELzCoord(G4double z) {el_z_ = z;}
-  
+
   inline void BaseGeometry::SetDimensions(G4ThreeVector dim) {  dimensions_ = dim; }
-  
+
   inline  G4ThreeVector BaseGeometry::GetDimensions()  { return dimensions_; }
 
   inline void BaseGeometry::CalculateGlobalPos(G4ThreeVector& vertex) const
@@ -138,6 +139,7 @@ namespace nexus {
   }
 
   inline void BaseGeometry::SetBoxGeom(G4int box_geom) { box_geom_ = box_geom; }
+  inline  G4int BaseGeometry::GetBoxGeom()  { return box_geom_; }
 
 } // end namespace nexus
 

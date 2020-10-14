@@ -33,8 +33,6 @@ namespace nexus {
 
     G4ThreeVector GetDimensions();
 
-    void SetBoxGeom (G4int box_geom);
-
   private:
     //G4ThreeVector _dimensions; ///< external dimensions of the SiPMpet
 
@@ -61,9 +59,6 @@ namespace nexus {
     SiPMFBKVUV* sipm_;
 
   };
-
-  inline void TileFBK::SetBoxGeom(G4int box_geom)
-    { box_geom_ = box_geom; }
 
 } // end namespace nexus
 

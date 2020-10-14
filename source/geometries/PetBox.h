@@ -32,8 +32,6 @@ namespace nexus {
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
-    //void SetBoxGeom (G4int box_geom);
-
     BaseGeometry* tile_;
 
     private:
@@ -77,8 +75,6 @@ namespace nexus {
     G4GenericMessenger* msg_;
 
   };
-
-  //inline void PetBox::SetBoxGeom(G4int box_geom) { box_geom_ = box_geom; }
 
 }
 #endif

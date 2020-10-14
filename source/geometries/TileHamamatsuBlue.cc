@@ -40,7 +40,8 @@ namespace nexus {
                                           tile_z_(1.35 * mm),
                                           sipm_pitch_(6.2 * mm),
                                           n_rows_(4),
-                                          n_columns_(4)
+                                          n_columns_(4),
+                                          box_geom_(0)
 
   {
     /// Messenger
@@ -66,6 +67,7 @@ namespace nexus {
       new G4LogicalVolume(tile_solid, fr4, "TILE_PLASTIC");
 
     this->SetLogicalVolume(tile_logic);
+    box_geom_ = GetBoxGeom();
 
     // OPTICAL SURFACE FOR REFLECTION
     G4OpticalSurface* fr4_opsurf =

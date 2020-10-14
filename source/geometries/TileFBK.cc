@@ -40,7 +40,8 @@ namespace nexus {
               	       tile_z_(1.6 * mm),
                       sipm_pitch_(3.5 * mm),
               	       n_rows_(8),
-          	       n_columns_(8)
+          	       n_columns_(8),
+                      box_geom_(0)
 
   {
     /// Messenger
@@ -66,6 +67,7 @@ namespace nexus {
       new G4LogicalVolume(tile_solid, fr4, "TILE_PLASTIC");
 
     this->SetLogicalVolume(tile_logic);
+    box_geom_ = GetBoxGeom();
 
 
     // OPTICAL SURFACE FOR REFLECTION
@@ -80,7 +82,6 @@ namespace nexus {
     G4int mother_depth = 2;
     sipm_->SetSensorDepth(sensor_depth);
     sipm_->SetMotherDepth(mother_depth);
-    G4cout << "Box geom in TILEFBK!: " << box_geom_ << G4endl;
     sipm_->SetBoxGeom(box_geom_);
 
     sipm_->Construct();
