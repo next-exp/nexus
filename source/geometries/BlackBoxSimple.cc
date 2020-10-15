@@ -7,7 +7,7 @@
 //  Copyright (c) 2020 NEXT Collaboration. All rights reserved.
 // ---------------------------------------------------------------------------- 
 
-#include "BlackBox.h"
+#include "BlackBoxSimple.h"
 #include "KDB_Sensl.h"
 
 #include "BaseGeometry.h"
@@ -40,7 +40,7 @@ namespace nexus {
   
   using namespace CLHEP;
   
-  BlackBox::BlackBox():
+  BlackBoxSimple::BlackBoxSimple():
     _world_z (2. * m),
     _world_xy (1. *m),
     // SiPMs per Dice Board
@@ -49,8 +49,8 @@ namespace nexus {
 
     _visibility(0)
   {
-    _msg = new G4GenericMessenger(this, "/Geometry/BlackBox/",
-				  "Control commands of BlackBox.");
+    _msg = new G4GenericMessenger(this, "/Geometry/BlackBoxSimple/",
+				  "Control commands of BlackBoxSimple.");
     _msg->DeclareProperty("visibility", _visibility, "Giant detectors visibility");
 
     G4GenericMessenger::Command&  specific_vertex_X_cmd =
@@ -74,20 +74,22 @@ namespace nexus {
   
   
   
-  BlackBox::~BlackBox()
+  BlackBoxSimple::~BlackBoxSimple()
   {
     delete _msg;
   }
     
   
   
-  void BlackBox::Construct()
+  void BlackBoxSimple::Construct()
   {
   // WORLD /////////////////////////////////////////////////
 
   G4String world_name = "WORLD";
   
   G4Material* world_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
+
+  world_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
 
   G4Box* world_solid_vol =
     new G4Box(world_name, _world_xy/2., _world_xy/2., _world_z/2.);
@@ -121,7 +123,7 @@ namespace nexus {
     //} 
   }
 
-    G4ThreeVector BlackBox::GenerateVertex(const G4String& region) const
+    G4ThreeVector BlackBoxSimple::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0.,0.,0.);
 
@@ -136,8 +138,18 @@ namespace nexus {
       vertex = G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
       return vertex;
     }
+    //else if (region == "DICE_BOARD") {
+      //G4ThreeVector ini_vertex = dice_->GenerateVertex(region);
+      //dice_board_x_pos_ = 0 * cm;  
+      //dice_board_y_pos_ = 0 * cm;
+      //dice_board_z_pos_ = -80* cm;
+      //dice_board_z_pos_ = -1.* cm;
+      //G4ThreeVector post(dice_board_x_pos_,dice_board_y_pos_,dice_board_z_pos_);
+      //vertex = ini_vertex + post;
+      //vertex.setZ(vertex.z() + dice_board_z_pos_);
+    //}
     else {
-      G4Exception("[BlackBox]", "GenerateVertex()", FatalException,
+      G4Exception("[BlackBoxSimple]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");
     }
 
@@ -150,7 +162,7 @@ namespace nexus {
 
 
 
-  G4OpticalSurface* BlackBox::GetPhotOptSurf() 
+  G4OpticalSurface* BlackBoxSimple::GetPhotOptSurf() 
   {
 	
   }

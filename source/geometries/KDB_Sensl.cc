@@ -63,7 +63,7 @@ namespace nexus {
   {
     /// Constructing the SiPM ///
     sipm_->SetSensorDepth(3);
-    sipm_->SetMotherDepth(5);
+    sipm_->SetMotherDepth(2);
     sipm_->SetNamingOrder(1000);
     sipm_->Construct();
 
@@ -91,6 +91,8 @@ namespace nexus {
 
     G4Material* air =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
+
+    air->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
 
     G4LogicalVolume* air_logic =
       new G4LogicalVolume(air_solid, air, "DICE_BOARD");

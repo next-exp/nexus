@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-///  \file   BlackBox.h
+///  \file   BlackBox_simple.h
 ///  \brief  ...
 ///
 ///  \author   Miryam Martínez Vara <Miryam.Martinez@ific.uv.es>    
@@ -9,8 +9,8 @@
 ///  Copyright (c) 2020 NEXT Collaboration. All rights reserved.
 // ----------------------------------------------------------------------------
 
-#ifndef BLACK_BOX_H
-#define BLACK_BOX_H
+#ifndef BLACK_BOX_SIMPLE_H
+#define BLACK_BOX_SIMPLE_H
 
 #include "BaseGeometry.h"
 #include "KDB_Sensl.h"
@@ -25,13 +25,13 @@ namespace nexus {
   
   /// Spherical chamber filled with xenon (liquid or gas)
   
-  class BlackBox: public BaseGeometry
+  class BlackBoxSimple: public BaseGeometry
   {
   public:
     /// Constructor
-    BlackBox();
+    BlackBoxSimple();
     /// Destructor
-    ~BlackBox();
+    ~BlackBoxSimple();
 
     /// Return vertex within region <region> of the chamber
     G4ThreeVector GenerateVertex(const G4String& region) const;
