@@ -40,14 +40,6 @@ namespace nexus {
   {
     /// Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
-    msg_->DeclareProperty("visibility", visibility_, "SiPMpet Visibility");
-    msg_->DeclareProperty("efficiency", eff_, "Efficiency of SiPM");
-
-    G4GenericMessenger::Command& time_cmd =
-      msg_->DeclareProperty("time_binning", time_binning_, "Time binning for the sensor");
-    time_cmd.SetUnitCategory("Time");
-    time_cmd.SetParameterName("time_binning", false);
-    time_cmd.SetRange("time_binning>0.");
 
   }
 

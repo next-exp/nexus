@@ -48,8 +48,6 @@ namespace nexus {
   {
     /// Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/Tile/", "Control commands of geometry.");
-    msg_->DeclareProperty("visibility", visibility_, "Tile Visibility");
-    msg_->DeclareProperty("reflectivity", reflectivity_, "Reflectivity for FR4");
 
     sipm_ = new SiPMHamamatsuVUV();
   }
