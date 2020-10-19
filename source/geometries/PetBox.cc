@@ -283,7 +283,7 @@ namespace nexus {
 
     // PYREX PANELS SURROUNDING THE SIPM DICE BOARDS
     // LOWER HORIZONTAL PANELS ARE SMALLER IN X
-    G4double low_lat_panel_xpos = entry_panel_xpos + dist_entry_panel_lat_panel_ +
+    G4double low_lat_panel_xpos = entry_panel_xpos + panel_thickness_/2. + dist_entry_panel_lat_panel_ +
                           (lat_panel_width_-low_lat_panel_width_) + low_lat_panel_width_/2.;
     G4double low_lat_panel_ypos = - box_size_/2. + box_thickness_ + low_lat_panel_height_ + panel_thickness_/2.;
 
@@ -300,7 +300,8 @@ namespace nexus {
                       horiz_low_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 2, false);
 
 
-    G4double lat_panel_xpos = entry_panel_xpos + dist_entry_panel_lat_panel_ + lat_panel_width_/2.;
+    G4double lat_panel_xpos = entry_panel_xpos + panel_thickness_/2. + dist_entry_panel_lat_panel_
+                              + lat_panel_width_/2.;
     G4double lat_panel_ypos = low_lat_panel_ypos + dist_lat_panels_+ panel_thickness_;
 
     G4Box* horiz_lat_panel_solid =
