@@ -26,8 +26,7 @@ class G4Material;
 class G4GenericMessenger;
 
 namespace nexus { class NextDemoFieldCage; }
-//namespace nexus { class NextDemoTrackingPlane; }
-namespace nexus { class NextDemoTrackingPlane1; }
+namespace nexus { class NextDemoTrackingPlane; }
 namespace nexus { class NextDemoEnergyPlane; }
 
 namespace nexus {
@@ -76,8 +75,7 @@ namespace nexus {
 
     // Detector parts
     NextDemoFieldCage*     field_cage_;
-    //NextDemoTrackingPlane* tracking_plane_;
-    NextDemoTrackingPlane1* tracking_plane_;
+    NextDemoTrackingPlane* tracking_plane_;
     NextDemoEnergyPlane*   energy_plane_;
 
     // Visibilities or Verbosity
