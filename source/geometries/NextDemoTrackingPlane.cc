@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
-// nexus | NextDemoTrackingPlane1.cc
+// nexus | NextDemoTrackingPlane.cc
 //
-// Tracking plane 1 of the Demo++ geometry.
+// Tracking plane of the Demo++ geometry.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "NextDemoTrackingPlane1.h"
+#include "NextDemoTrackingPlane.h"
 
 #include "MaterialsList.h"
 #include "NextDemoSiPMBoard.h"
@@ -29,7 +29,7 @@ using namespace nexus;
 
 
 
-NextDemoTrackingPlane1::NextDemoTrackingPlane1():
+NextDemoTrackingPlane::NextDemoTrackingPlane():
   BaseGeometry(),
   verbosity_       (false),
   visibility_      (false),
@@ -62,7 +62,7 @@ NextDemoTrackingPlane1::NextDemoTrackingPlane1():
 
 
 
-NextDemoTrackingPlane1::~NextDemoTrackingPlane1()
+NextDemoTrackingPlane::~NextDemoTrackingPlane()
 {
   delete msg_;
   delete sipm_board_;
@@ -71,7 +71,7 @@ NextDemoTrackingPlane1::~NextDemoTrackingPlane1()
 
 
 
-void NextDemoTrackingPlane1::Construct()
+void NextDemoTrackingPlane::Construct()
 {
   /// Verbosity
 //  if(verbosity_) {
@@ -97,13 +97,13 @@ void NextDemoTrackingPlane1::Construct()
     coating_thickn  = 2.0  * micrometer;
   }
   else
-    G4Exception("[NextDemoTrackingPlane1]", "Construct()",
+    G4Exception("[NextDemoTrackingPlane]", "Construct()",
                 FatalException, "Tracking Plane Type not valid.");
 
 
   /// Make sure the pointer to the mother volume is actually defined
   if (!mother_phys_)
-    G4Exception("[NextDemoTrackingPlane1]", "Construct()",
+    G4Exception("[NextDemoTrackingPlane]", "Construct()",
                 FatalException, "Mother volume is a nullptr.");
 
   G4LogicalVolume* mother_logic = mother_phys_->GetLogicalVolume();
@@ -174,7 +174,7 @@ void NextDemoTrackingPlane1::Construct()
 
 
 
-void NextDemoTrackingPlane1::GenerateBoardPositions(G4double board_posz)
+void NextDemoTrackingPlane::GenerateBoardPositions(G4double board_posz)
 {
   /// Function that computes and stores the XY positions of Dice Boards
   //  From NextNewTrackingPlane: & From Drawing "0000-00 ASSEMBLY NEXT-DEMO++.pdf"
@@ -218,7 +218,7 @@ void NextDemoTrackingPlane1::GenerateBoardPositions(G4double board_posz)
 
 
 
-G4ThreeVector NextDemoTrackingPlane1::GenerateVertex(const G4String& region) const
+G4ThreeVector NextDemoTrackingPlane::GenerateVertex(const G4String& region) const
 {
   G4ThreeVector vertex;
 

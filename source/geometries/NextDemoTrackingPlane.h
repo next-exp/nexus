@@ -1,13 +1,13 @@
 // ----------------------------------------------------------------------------
-// nexus | NextDemoTrackingPlane1.h
+// nexus | NextDemoTrackingPlane.h
 //
-// Tracking plane 1 of the Demo++ geometry.
+// Tracking plane of the Demo++ geometry.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef NEXT100_TRACKING_PLANE_1_H
-#define NEXT100_TRACKING_PLANE_1_H
+#ifndef NEXT100_TRACKING_PLANE_H
+#define NEXT100_TRACKING_PLANE_H
 
 #include "BaseGeometry.h"
 #include <G4ThreeVector.hh>
@@ -24,14 +24,14 @@ namespace nexus {
 
   // Geometry of the tracking plane of the Demo++ detector
 
-  class NextDemoTrackingPlane1: public BaseGeometry
+  class NextDemoTrackingPlane: public BaseGeometry
   {
   public:
     // Constructor
-    NextDemoTrackingPlane1();
+    NextDemoTrackingPlane();
 
     // Destructor
-    ~NextDemoTrackingPlane1();
+    ~NextDemoTrackingPlane();
     
     void SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys);
     
@@ -64,7 +64,7 @@ namespace nexus {
     G4Navigator* geom_navigator_;
   };
 
-  inline void NextDemoTrackingPlane1::SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys)
+  inline void NextDemoTrackingPlane::SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys)
     { mother_phys_ = mother_phys; }
 
 } // namespace nexus

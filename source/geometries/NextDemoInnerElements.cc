@@ -15,8 +15,7 @@
 
 #include "NextDemoInnerElements.h"
 #include "NextDemoFieldCage.h"
-//#include "NextDemoTrackingPlane.h"
-#include "NextDemoTrackingPlane1.h"
+#include "NextDemoTrackingPlane.h"
 #include "NextDemoEnergyPlane.h"
 #include "MaterialsList.h"
 #include "CylinderPointSampler2020.h"
