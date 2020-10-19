@@ -79,6 +79,7 @@ namespace nexus {
     sipm_->SetSensorDepth(1);
     sipm_->SetMotherDepth(2);
     sipm_->SetBoxGeom(box_geom_);
+    sipm_->SetVisibility(visibility_);
 
     sipm_->Construct();
     G4ThreeVector sipm_dim = sipm_->GetDimensions();
