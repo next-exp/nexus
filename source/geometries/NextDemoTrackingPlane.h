@@ -23,7 +23,6 @@ namespace nexus {
   class BoxPointSampler;
 
   // Geometry of the tracking plane of the Demo++ detector
-
   class NextDemoTrackingPlane: public BaseGeometry
   {
   public:
