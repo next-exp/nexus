@@ -2,6 +2,9 @@
 // nexus | NextDemoTrackingPlane.cc
 //
 // Tracking plane of the Demo++ geometry.
+// It implements 2 different TP implementations:
+// "original": the one used from the very beginning with passing-holes masks
+// "type 1": the one used in the so-called Run7, with coated masks and membranes.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
@@ -74,9 +77,6 @@ NextDemoTrackingPlane::~NextDemoTrackingPlane()
 void NextDemoTrackingPlane::Construct()
 {
   /// Verbosity
-//  if(verbosity_) {
-//    G4cout << G4endl << "*** NEXT Demo Tracking Plane ..." << G4endl;
-//  }
   if(verbosity_) G4cout << G4endl << "*** NEXT Demo Tracking Plane ";
 
   /// Defining Tracking Plane Type parameters
