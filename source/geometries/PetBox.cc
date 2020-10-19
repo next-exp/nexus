@@ -156,7 +156,7 @@ namespace nexus {
                       "LXE", box_logic, false, 0, false);
 
 
-    // Aliminum cylinder
+    // Aluminum cylinder
     G4double aluminum_cyl_rad = 40.*mm;
     G4double aluminum_cyl_len = 19.*mm;
     G4Tubs* aluminum_cyl_solid =
@@ -188,7 +188,7 @@ namespace nexus {
     G4Box* vacuum_hat_solid =
       new G4Box("VACUUM_HAT", vacuum_hat_xsize/2.,vacuum_hat_ysize/2., vacuum_hat_zsize/2.);
 
-    G4Material* vacuum = G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");;
+    G4Material* vacuum = G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
     vacuum->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
     G4LogicalVolume* vacuum_hat_logic =
       new G4LogicalVolume(vacuum_hat_solid, vacuum, "VACUUM_HAT");
