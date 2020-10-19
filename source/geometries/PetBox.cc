@@ -51,11 +51,11 @@ namespace nexus {
                     source_tube_thick_roof_(5.*mm),
                     n_tile_rows_(2),
                     n_tile_columns_(2),
-                    dist_ihat_panel_(2.*mm),
+                    dist_ihat_panel_(2.*mm), //x distance between the internal surface of the hat and the external surface of the entry panel
                     panel_thickness_(1.75*mm),
                     active_depth_(3.*cm),
                     entry_panel_width_(86.*mm),
-                    dist_entry_panel_lat_panel_(1.45*mm),
+                    dist_entry_panel_lat_panel_(1.45*mm), //x distance between the internal surface of the entry panel and the edge of the lateral panel
                     lat_panel_len_(66.5*mm),
                     lat_panel_width_(50.*mm),
                     low_lat_panel_width_(40.*mm),
