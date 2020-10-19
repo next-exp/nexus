@@ -264,10 +264,10 @@ namespace nexus {
       if (verbosity_) G4cout << pos.getX() << ", " << pos.getY() << G4endl;
       pos.setZ(pmt_hole_zpos);
       new G4PVPlacement(0, pos, pmt_hole_logic, "PMT_HOLE", mother_logic_,
-                        false, i, false);
+                        false, i+2, false);
       pos.setZ(wndw_ring_zpos);
       new G4PVPlacement(0, pos, wndw_ring_logic, "WINDOW_RING", mother_logic_,
-                        false, i, false);
+                        false, i+2, false);
     }
 
 
