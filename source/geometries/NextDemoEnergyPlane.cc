@@ -261,13 +261,15 @@ namespace nexus {
     G4ThreeVector pos;
     for (int i=0; i<num_PMTs_; i++) {
       pos = pmt_positions_[i];
-      if (verbosity_) G4cout << pos.getX() << ", " << pos.getY() << G4endl;
+      G4int copy_no = i+2;
+      if (verbosity_) G4cout << "PMT " << copy_no << ": "
+                             << pos.getX() << ", " << pos.getY() << G4endl;
       pos.setZ(pmt_hole_zpos);
       new G4PVPlacement(0, pos, pmt_hole_logic, "PMT_HOLE", mother_logic_,
-                        false, i+2, false);
+                        false, copy_no, false);
       pos.setZ(wndw_ring_zpos);
       new G4PVPlacement(0, pos, wndw_ring_logic, "WINDOW_RING", mother_logic_,
-                        false, i+2, false);
+                        false, copy_no, false);
     }
 
 
