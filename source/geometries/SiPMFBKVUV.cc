@@ -23,10 +23,6 @@
 #include <G4SDManager.hh>
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
-#include <G4PhysicalConstants.hh>
-
-#include <CLHEP/Units/SystemOfUnits.h>
-
 
 namespace nexus {
 
