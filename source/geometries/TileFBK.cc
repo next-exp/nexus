@@ -71,7 +71,6 @@ namespace nexus {
 
     sipm_->SetSensorDepth(1);
     sipm_->SetMotherDepth(2);
-    sipm_->SetVisibility(visibility_);
     sipm_->SetBoxGeom(GetBoxGeom());
     sipm_->SetVisibility(GetTileVisibility());
     sipm_->SetTimeBinning(GetTimeBinning());
