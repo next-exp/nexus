@@ -32,21 +32,15 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  TileHamamatsuBlue::TileHamamatsuBlue(): BaseGeometry(),
-                                          visibility_(0),
-                                          reflectivity_(0.),
+  TileHamamatsuBlue::TileHamamatsuBlue(): TileBaseGeometry(),
                                           tile_x_(25. * mm),
                                           tile_y_(25. * mm),
                                           tile_z_(1.35 * mm),
                                           sipm_pitch_(6.2 * mm),
                                           n_rows_(4),
-                                          n_columns_(4),
-                                          box_geom_(0)
+                                          n_columns_(4)
 
   {
-    /// Messenger
-    msg_ = new G4GenericMessenger(this, "/Geometry/Tile/", "Control commands of geometry.");
-
     sipm_ = new SiPMHamamatsuBlue();
   }
 
@@ -65,19 +59,18 @@ namespace nexus {
       new G4LogicalVolume(tile_solid, fr4, "TILE_PLASTIC");
 
     this->SetLogicalVolume(tile_logic);
-    box_geom_ = GetBoxGeom();
+
 
     // OPTICAL SURFACE FOR REFLECTION
     G4OpticalSurface* fr4_opsurf =
       new G4OpticalSurface("FR4_OPSURF", unified, polished, dielectric_metal);
-    fr4_opsurf->SetMaterialPropertiesTable(OpticalMaterialProperties::ReflectantSurface(reflectivity_));
+    fr4_opsurf->SetMaterialPropertiesTable(OpticalMaterialProperties::ReflectantSurface(GetTileReflectivity()));
 
     new G4LogicalSkinSurface("FR4_OPSURF", tile_logic, fr4_opsurf);
 
-
     sipm_->SetSensorDepth(1);
     sipm_->SetMotherDepth(2);
-    sipm_->SetBoxGeom(box_geom_);
+    sipm_->SetBoxGeom(GetBoxGeom());
 
     sipm_->Construct();
     G4ThreeVector sipm_dim = sipm_->GetDimensions();
@@ -103,20 +96,14 @@ namespace nexus {
 
 
     // Visibilities
-    if (visibility_) {
-      G4VisAttributes tile_col = nexus::Lilla();
+    if (GetTileVisibility()) {
+      G4VisAttributes tile_col = nexus::CopperBrown();
+      tile_col.SetForceSolid(true);
       tile_logic->SetVisAttributes(tile_col);
     }
     else {
       tile_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
   }
-
-G4ThreeVector TileHamamatsuBlue::GetDimensions() {
-
-  return G4ThreeVector(tile_x_, tile_y_, tile_z_);
-
-}
-
 
 } // end namespace nexus

@@ -31,24 +31,18 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  TileHamamatsuVUV::TileHamamatsuVUV(): BaseGeometry(),
-		                                    visibility_(0),
-                                        reflectivity_(0.),
-                                		    tile_x_(30.9 * mm),
-                                		    tile_y_(30.7 * mm),
-                                		    tile_z_(3. * mm),
-                                		    sipm_pitch_(7.5 * mm),
-                                		    n_rows_(4),
-                                		    n_columns_(4),
+  TileHamamatsuVUV::TileHamamatsuVUV(): TileBaseGeometry(),
+                                        tile_x_(30.9 * mm),
+                                        tile_y_(30.7 * mm),
+                                        tile_z_(3. * mm),
+                                        sipm_pitch_(7.5 * mm),
+                                        n_rows_(4),
+                                        n_columns_(4),
                                         lxe_thick_(0.6 * mm),
                                         quartz_thick_(0.6 * mm),
-                                        quartz_transparency_(0.9),
-                                        box_geom_(0)
+                                        quartz_transparency_(0.9)
 
   {
-    /// Messenger
-    msg_ = new G4GenericMessenger(this, "/Geometry/Tile/", "Control commands of geometry.");
-
     sipm_ = new SiPMHamamatsuVUV();
   }
 
@@ -67,19 +61,17 @@ namespace nexus {
       new G4LogicalVolume(tile_solid, fr4, "TILE_PLASTIC");
 
     this->SetLogicalVolume(tile_logic);
-    box_geom_ = GetBoxGeom();
 
     // OPTICAL SURFACE FOR REFLECTION
     G4OpticalSurface* fr4_opsurf =
       new G4OpticalSurface("FR4_OPSURF", unified, polished, dielectric_metal);
-    fr4_opsurf->SetMaterialPropertiesTable(OpticalMaterialProperties::ReflectantSurface(reflectivity_));
+    fr4_opsurf->SetMaterialPropertiesTable(OpticalMaterialProperties::ReflectantSurface(GetTileReflectivity()));
 
     new G4LogicalSkinSurface("FR4_OPSURF", tile_logic, fr4_opsurf);
 
-
     sipm_->SetSensorDepth(1);
     sipm_->SetMotherDepth(2);
-    sipm_->SetBoxGeom(box_geom_);
+    sipm_->SetBoxGeom(GetBoxGeom());
 
     sipm_->Construct();
     G4ThreeVector sipm_dim = sipm_->GetDimensions();
@@ -151,8 +143,9 @@ namespace nexus {
     }
 
     // Visibilities
-    if (visibility_) {
+    if (GetTileVisibility()) {
       G4VisAttributes tile_col = nexus::Lilla();
+      tile_col.SetForceSolid(true);
       tile_logic->SetVisAttributes(tile_col);
       G4VisAttributes quartz_col = nexus::Brown();
       //quartz_col.SetForceSolid(true);
@@ -169,12 +162,6 @@ namespace nexus {
       tile_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
   }
-
-G4ThreeVector TileHamamatsuVUV::GetDimensions() {
-
-  return G4ThreeVector(tile_x_, tile_y_, tile_z_);
-
-}
 
 
 } // end namespace nexus

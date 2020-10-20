@@ -10,6 +10,7 @@
 #define PET_BOX_H
 
 #include "BaseGeometry.h"
+#include "TileBaseGeometry.h"
 
 class G4GenericMessenger;
 class G4LogicalVolume;
@@ -32,7 +33,7 @@ namespace nexus {
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
-    BaseGeometry* tile_;
+    TileBaseGeometry* tile_;
 
     private:
     void Construct();
@@ -44,6 +45,9 @@ namespace nexus {
 
     G4bool visibility_;
     G4double reflectivity_;
+    G4bool tile_vis_;
+    G4bool sipm_vis_;
+    G4double tile_refl_;
 
     G4double source_pos_x_, source_pos_y_, source_pos_z_;
 
@@ -70,6 +74,8 @@ namespace nexus {
     G4double dist_dice_flange_;
 
     G4double max_step_size_;
+
+    G4double dist_dice_flange_;
 
     /// Messenger for the definition of control commands
     G4GenericMessenger* msg_;

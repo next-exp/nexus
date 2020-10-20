@@ -33,6 +33,9 @@ namespace nexus {
   PetBox::PetBox(): BaseGeometry(),
                     visibility_(0),
                     reflectivity_(0),
+                    tile_vis_(1),
+                    sipm_vis_(1),
+                    tile_refl_(0.),
                     source_pos_x_(0.*mm),
                     source_pos_y_(0.*mm),
                     source_pos_z_(0.*mm),
@@ -70,6 +73,9 @@ namespace nexus {
                                   "Control commands of geometry PetBox.");
     msg_->DeclareProperty("visibility", visibility_, "Visibility");
     msg_->DeclareProperty("surf_reflectivity", reflectivity_, "Reflectivity of the panels");
+    msg_->DeclareProperty("tile_vis", tile_vis_, "Visibility of tiles");
+    msg_->DeclareProperty("sipm_vis", sipm_vis_, "Visibility of SiPMs");
+    msg_->DeclareProperty("tile_refl", tile_refl_, "Reflectivity of SiPM boards");
 
     G4GenericMessenger::Command& source_pos_x_cmd =
       msg_->DeclareProperty("source_pos_x", source_pos_x_, "X position of the source");
@@ -106,26 +112,8 @@ namespace nexus {
     lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
     this->SetLogicalVolume(lab_logic_);
 
-    if (tile_type_ == "HamamatsuVUV") {
-      tile_ = new TileHamamatsuVUV();
-      box_geom_ = 1;
-      dist_dice_flange_ = 20.*mm;
-    } else if (tile_type_ == "HamamatsuBlue") {
-      tile_ = new TileHamamatsuBlue();
-      box_geom_ = 1;
-      dist_dice_flange_ = 19.35*mm;
-    } else if (tile_type_ == "FBK") {
-      tile_ = new TileFBK();
-      box_geom_ = 2;
-      dist_dice_flange_ = 21.05*mm;
-    } else {
-      G4Exception("[PetBox]", "Construct()", FatalException,
-                  "Unknown tile type!");
-
-    }
-
-     BuildBox();
-     BuildSensors();
+    BuildBox();
+    BuildSensors();
   }
 
   void PetBox::BuildBox()
@@ -379,7 +367,11 @@ namespace nexus {
       G4VisAttributes active_col = nexus::Blue();
       active_logic->SetVisAttributes(active_col);
       G4VisAttributes panel_col = nexus::Red();
+      // panel_col.SetForceSolid(true);
+      vert_lat_panel_logic->SetVisAttributes(panel_col);
+      horiz_lat_panel_logic->SetVisAttributes(panel_col);
       entry_panel_logic->SetVisAttributes(panel_col);
+      horiz_low_lat_panel_logic->SetVisAttributes(panel_col);
     }
     else {
       box_logic->SetVisAttributes(G4VisAttributes::Invisible);
@@ -390,7 +382,23 @@ namespace nexus {
   void PetBox::BuildSensors()
   {
     // TILE CONSTRUCT
-    tile_->SetBoxGeom(box_geom_);
+    if (tile_type_ == "HamamatsuVUV") {
+      tile_ = new TileHamamatsuVUV();
+      tile_->SetBoxGeom(1);
+    } else if (tile_type_ == "HamamatsuBlue") {
+      tile_ = new TileHamamatsuBlue();
+      tile_->SetBoxGeom(1);
+    } else if (tile_type_ == "FBK") {
+      tile_ = new TileFBK();
+      tile_->SetBoxGeom(2);
+    } else {
+      G4Exception("[PetBox]", "Construct()", FatalException,
+                  "Unknown tile type!");
+    }
+
+    tile_->SetTileVisibility(tile_vis_);
+    tile_->SetTileReflectivity(tile_refl_);
+
     tile_->Construct();
     tile_thickn_ = tile_->GetDimensions().z();
     full_row_size_ = n_tile_columns_ * tile_->GetDimensions().x();

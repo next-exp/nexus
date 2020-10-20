@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | TileHamamatsuVUV.cc
+// nexus | TileHamamatsuVUV.h
 //
 // Hamamatsu VUV sensor tile geometry.
 //
@@ -9,7 +9,8 @@
 #ifndef TILE_HAMAMATSU_VUV_H
 #define TILE_HAMAMATSU_VUV_H
 
-#include "BaseGeometry.h"
+#include "TileBaseGeometry.h"
+
 #include <G4ThreeVector.hh>
 
 class G4GenericMessenger;
@@ -18,7 +19,7 @@ namespace nexus {
 
 namespace nexus {
 
-  class TileHamamatsuVUV: public BaseGeometry
+  class TileHamamatsuVUV: public TileBaseGeometry
   {
   public:
     /// Constructor
@@ -32,11 +33,6 @@ namespace nexus {
     G4ThreeVector GetDimensions();
 
   private:
-    // Visibility of the tracking plane
-    G4bool visibility_;
-
-    // Reflectivity of the tile
-    G4double reflectivity_;
 
     // Tile dimensions
     G4double tile_x_, tile_y_, tile_z_;
@@ -51,8 +47,6 @@ namespace nexus {
     G4double lxe_thick_;
     G4double quartz_thick_;
     G4double quartz_transparency_;
-
-    G4int box_geom_;
 
      // Messenger for the definition of control commands
     G4GenericMessenger* msg_;

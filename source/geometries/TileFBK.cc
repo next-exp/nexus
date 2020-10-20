@@ -32,21 +32,15 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  TileFBK::TileFBK(): BaseGeometry(),
-              	       visibility_(0),
-                      reflectivity_(0.),
+  TileFBK::TileFBK(): TileBaseGeometry(),
                       tile_x_(29.0 * mm),
                       tile_y_(29.0 * mm),
-              	       tile_z_(1.6 * mm),
+                      tile_z_(1.6 * mm),
                       sipm_pitch_(3.5 * mm),
-              	       n_rows_(8),
-          	       n_columns_(8),
-                      box_geom_(0)
+                      n_rows_(8),
+                      n_columns_(8)
 
   {
-    /// Messenger
-    msg_ = new G4GenericMessenger(this, "/Geometry/Tile/", "Control commands of geometry.");
-
     sipm_ = new SiPMFBKVUV();
   }
 
@@ -65,21 +59,20 @@ namespace nexus {
       new G4LogicalVolume(tile_solid, fr4, "TILE_PLASTIC");
 
     this->SetLogicalVolume(tile_logic);
-    box_geom_ = GetBoxGeom();
 
 
     // OPTICAL SURFACE FOR REFLECTION
     G4OpticalSurface* fr4_opsurf =
       new G4OpticalSurface("FR4_OPSURF", unified, polished, dielectric_metal);
-    fr4_opsurf->SetMaterialPropertiesTable(OpticalMaterialProperties::ReflectantSurface(reflectivity_));
+    fr4_opsurf->SetMaterialPropertiesTable(OpticalMaterialProperties::ReflectantSurface(GetTileReflectivity()));
 
     new G4LogicalSkinSurface("FR4_OPSURF", tile_logic, fr4_opsurf);
 
 
     sipm_->SetSensorDepth(1);
     sipm_->SetMotherDepth(2);
-    sipm_->SetBoxGeom(box_geom_);
     sipm_->SetVisibility(visibility_);
+    sipm_->SetBoxGeom(GetBoxGeom());
 
     sipm_->Construct();
     G4ThreeVector sipm_dim = sipm_->GetDimensions();
@@ -104,7 +97,7 @@ namespace nexus {
 
 
     // Visibilities
-    if (visibility_) {
+    if (GetTileVisibility()) {
       G4VisAttributes tile_col = nexus::Lilla();
       tile_logic->SetVisAttributes(tile_col);
     }
@@ -112,12 +105,6 @@ namespace nexus {
       tile_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
   }
-
-G4ThreeVector TileFBK::GetDimensions() {
-
-  return G4ThreeVector(tile_x_, tile_y_, tile_z_);
-
-}
 
 
 } // end namespace nexus

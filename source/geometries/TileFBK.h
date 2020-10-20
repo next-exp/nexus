@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | TileFBK.cc
+// nexus | TileFBK.h
 //
 // Geometry of a FBK sensor tile.
 //
@@ -9,7 +9,8 @@
 #ifndef TILE_FBK_H
 #define TILE_FBK_H
 
-#include "BaseGeometry.h"
+#include "TileBaseGeometry.h"
+
 #include <G4ThreeVector.hh>
 
 class G4GenericMessenger;
@@ -17,7 +18,7 @@ namespace nexus {class SiPMFBKVUV;}
 
 namespace nexus {
 
-  class TileFBK: public BaseGeometry
+  class TileFBK: public TileBaseGeometry
   {
   public:
     /// Constructor
@@ -31,16 +32,7 @@ namespace nexus {
     /// Invoke this method to build the volumes of the geometry
     void Construct();
 
-    G4ThreeVector GetDimensions();
-
   private:
-    //G4ThreeVector _dimensions; ///< external dimensions of the SiPMpet
-
-    // Visibility of the tracking plane
-    G4bool visibility_;
-
-    // Reflectivity of the tile
-    G4double reflectivity_;
 
     // Tile dimensions
     G4double tile_x_, tile_y_, tile_z_;
@@ -51,7 +43,6 @@ namespace nexus {
     // Rows and columns of SiPMs
     G4int n_rows_, n_columns_;
 
-    G4int box_geom_;
 
      // Messenger for the definition of control commands
     G4GenericMessenger* msg_;
