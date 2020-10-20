@@ -30,7 +30,7 @@ namespace nexus {
     /// Invoke this method to build the volumes of the geometry
     void Construct();
 
-    void SetVisibility (G4bool visibility);
+    void SetVisibility(G4bool vis);
     void SetTimeBinning (G4double time_binning);
     void SetSensorDepth (G4int sensor_depth);
     void SetMotherDepth (G4int mother_depth);
@@ -39,9 +39,6 @@ namespace nexus {
 
 
   private:
-    //G4ThreeVector _dimensions; ///< external dimensions of the SiPMpet
-
-    // Visibility of the tracking plane
     G4bool visibility_;
 
     // PDE for the sensor
@@ -51,16 +48,16 @@ namespace nexus {
     G4int    mother_depth_;
     G4int    naming_order_;
     G4double time_binning_;
-    G4int   box_geom_;
+    G4int    box_geom_;
 
      // Messenger for the definition of control commands
     G4GenericMessenger* msg_;
 
   };
 
-  inline void SiPMHamamatsuVUV::SetVisibility(G4bool visibility)
-  { visibility_ = visibility; }
-
+  inline void SiPMHamamatsuVUV::SetVisibility(G4bool vis)
+  { visibility_ = vis; }
+  
   inline void SiPMHamamatsuVUV::SetTimeBinning(G4double time_binning)
   { time_binning_ = time_binning; }
 
