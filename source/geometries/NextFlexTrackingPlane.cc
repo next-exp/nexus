@@ -45,6 +45,7 @@ NextFlexTrackingPlane::NextFlexTrackingPlane():
   BaseGeometry(),
   mother_logic_      (nullptr),
   verbosity_         (false),
+  sipm_verbosity_    (false),
   visibility_        (false),
   SiPM_visibility_   (false),
   msg_               (nullptr),
@@ -90,6 +91,9 @@ void NextFlexTrackingPlane::DefineConfigurationParameters()
 {
   // Verbosity
   msg_->DeclareProperty("tp_verbosity", verbosity_, "Verbosity");
+
+  // SiPMs verbosity
+  msg_->DeclareProperty("tp_sipm_verbosity", sipm_verbosity_, "SiPMs verbosity");
 
   // Visibilities
   msg_->DeclareProperty("tp_visibility", visibility_, "TRACKING_PLANE Visibility");
@@ -376,8 +380,8 @@ void NextFlexTrackingPlane::BuildTeflon()
     new G4PVPlacement(nullptr, wls_hole_pos, wls_hole_logic, wls_hole_name,
                       teflon_wls_logic, true, SiPM_id, false);
 
-    if (verbosity_) G4cout << "* TP_SiPM " << SiPM_id << " position: " 
-                           << hole_pos << G4endl;
+    if (sipm_verbosity_) G4cout << "* TP_SiPM " << SiPM_id << " position: " 
+                                << hole_pos << G4endl;
   }
 
   // Placing the overall teflon sub-system

@@ -68,10 +68,11 @@
 /Geometry/NextFlex/ics_thickness  12. cm
 
 # VERBOSITY
-/Geometry/NextFlex/verbosity     true
-/Geometry/NextFlex/fc_verbosity  true
-/Geometry/NextFlex/ep_verbosity  true
-/Geometry/NextFlex/tp_verbosity  true
+/Geometry/NextFlex/verbosity          true
+/Geometry/NextFlex/fc_verbosity       true
+/Geometry/NextFlex/ep_verbosity       true
+/Geometry/NextFlex/tp_verbosity       true
+/Geometry/NextFlex/tp_sipm_verbosity  true
 
 # VISIBILITIES
 /Geometry/NextFlex/fc_visibility           true

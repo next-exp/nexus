@@ -86,8 +86,9 @@ namespace nexus {
     // Physical volume of the neighbouring gas
     G4VPhysicalVolume* neigh_gas_phys_;
 
-    // Verbosity of the geometry
+    // Verbosities of the geometry
     G4bool verbosity_;
+    G4bool sipm_verbosity_;
 
     // Visibilities
     G4bool visibility_;
