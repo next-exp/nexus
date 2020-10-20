@@ -38,8 +38,6 @@ namespace nexus {
                                         time_binning_(200.*nanosecond)
 
   {
-    /// Messenger
-    msg_ = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
   }
 
   SiPMHamamatsuVUV::~SiPMHamamatsuVUV()

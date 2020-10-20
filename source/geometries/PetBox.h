@@ -53,7 +53,6 @@ namespace nexus {
 
     G4String tile_type_;
     G4double time_binning_;
-    G4int box_geom_;
 
     G4double box_size_, box_thickness_;
 
@@ -75,8 +74,6 @@ namespace nexus {
     G4double dist_dice_flange_;
 
     G4double max_step_size_;
-
-    G4double dist_dice_flange_;
 
     /// Messenger for the definition of control commands
     G4GenericMessenger* msg_;

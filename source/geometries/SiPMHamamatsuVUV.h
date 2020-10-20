@@ -24,9 +24,6 @@ namespace nexus {
     /// Destructor
     ~SiPMHamamatsuVUV();
 
-    /// Return dimensions of the SiPM
-    //G4ThreeVector GetDimensions() const;
-
     /// Invoke this method to build the volumes of the geometry
     void Construct();
 
@@ -49,9 +46,6 @@ namespace nexus {
     G4int    naming_order_;
     G4double time_binning_;
     G4int    box_geom_;
-
-     // Messenger for the definition of control commands
-    G4GenericMessenger* msg_;
 
   };
 

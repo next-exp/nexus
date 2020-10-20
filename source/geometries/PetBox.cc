@@ -40,7 +40,6 @@ namespace nexus {
                     source_pos_y_(0.*mm),
                     source_pos_z_(0.*mm),
                     tile_type_("HamamatsuVUV"),
-                    box_geom_(0),
                     box_size_(194.4*mm),
                     box_thickness_(2.*cm),
                     ih_x_size_(4.*cm),

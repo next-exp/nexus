@@ -40,9 +40,6 @@ namespace nexus {
 
 
   private:
-    //G4ThreeVector _dimensions; ///< external dimensions of the SiPMpet
-
-    // Visibility of the sensor
     G4bool visibility_;
 
     // PDE for the sensor
@@ -51,9 +48,6 @@ namespace nexus {
     G4double sensor_depth_, mother_depth_;
     G4double naming_order_, time_binning_;
     G4int box_geom_;
-
-     // Messenger for the definition of control commands
-    G4GenericMessenger* msg_;
 
   };
 

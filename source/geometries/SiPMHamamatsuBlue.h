@@ -44,17 +44,11 @@ namespace nexus {
     // Optical properties to be used for epoxy
     G4double refr_index_;
 
-    // PDE for the sensor
-    G4double eff_;
-
     G4int    sensor_depth_;
     G4int    mother_depth_;
     G4int    naming_order_;
     G4double time_binning_;
-    G4int   box_geom_;
-
-     // Messenger for the definition of control commands
-    G4GenericMessenger* msg_;
+    G4int    box_geom_;
 
   };
 

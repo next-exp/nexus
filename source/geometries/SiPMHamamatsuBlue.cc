@@ -34,12 +34,9 @@ namespace nexus {
   SiPMHamamatsuBlue::SiPMHamamatsuBlue(): BaseGeometry(),
                                           visibility_(1),
                                           refr_index_(1.55), //given by Hammamatsu datasheet
-                                          eff_(1.),
                                           time_binning_(200.*nanosecond)
 
   {
-    /// Messenger
-    msg_ = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
   }
 
   SiPMHamamatsuBlue::~SiPMHamamatsuBlue()

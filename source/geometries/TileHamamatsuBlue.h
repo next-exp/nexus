@@ -34,9 +34,6 @@ namespace nexus {
 
   private:
 
-    // Reflectivity of the tile
-    G4double reflectivity_;
-
     // Tile dimensions
     G4double tile_x_, tile_y_, tile_z_;
 
@@ -45,9 +42,6 @@ namespace nexus {
 
     // Rows and columns of SiPMs
     G4int n_rows_, n_columns_;
-
-     // Messenger for the definition of control commands
-    G4GenericMessenger* msg_;
 
     SiPMHamamatsuBlue* sipm_;
 

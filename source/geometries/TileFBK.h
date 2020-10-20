@@ -43,10 +43,6 @@ namespace nexus {
     // Rows and columns of SiPMs
     G4int n_rows_, n_columns_;
 
-
-     // Messenger for the definition of control commands
-    G4GenericMessenger* msg_;
-
     SiPMFBKVUV* sipm_;
 
   };
