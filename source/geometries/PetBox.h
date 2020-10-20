@@ -46,7 +46,6 @@ namespace nexus {
     G4bool visibility_;
     G4double reflectivity_;
     G4bool tile_vis_;
-    G4bool sipm_vis_;
     G4double tile_refl_;
 
     G4double source_pos_x_, source_pos_y_, source_pos_z_;

@@ -34,7 +34,6 @@ namespace nexus {
                     visibility_(0),
                     reflectivity_(0),
                     tile_vis_(1),
-                    sipm_vis_(1),
                     tile_refl_(0.),
                     source_pos_x_(0.*mm),
                     source_pos_y_(0.*mm),
@@ -73,7 +72,6 @@ namespace nexus {
     msg_->DeclareProperty("visibility", visibility_, "Visibility");
     msg_->DeclareProperty("surf_reflectivity", reflectivity_, "Reflectivity of the panels");
     msg_->DeclareProperty("tile_vis", tile_vis_, "Visibility of tiles");
-    msg_->DeclareProperty("sipm_vis", sipm_vis_, "Visibility of SiPMs");
     msg_->DeclareProperty("tile_refl", tile_refl_, "Reflectivity of SiPM boards");
 
     G4GenericMessenger::Command& source_pos_x_cmd =
@@ -388,14 +386,17 @@ namespace nexus {
     if (tile_type_ == "HamamatsuVUV") {
       tile_ = new TileHamamatsuVUV();
       tile_->SetBoxGeom(1);
+      dist_dice_flange_ = 20.*mm;
     } else if (tile_type_ == "HamamatsuBlue") {
       tile_ = new TileHamamatsuBlue();
       tile_->SetBoxGeom(1);
+      dist_dice_flange_ = 19.35*mm;
     } else if (tile_type_ == "FBK") {
       tile_ = new TileFBK();
       tile_->SetBoxGeom(2);
+      dist_dice_flange_ = 21.05*mm;
     } else {
-      G4Exception("[PetBox]", "Construct()", FatalException,
+      G4Exception("[PetBox]", "BuilsSensors()", FatalException,
                   "Unknown tile type!");
     }
 
