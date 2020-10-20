@@ -49,7 +49,7 @@ NextFlexTrackingPlane::NextFlexTrackingPlane():
   SiPM_visibility_   (false),
   msg_               (nullptr),
   wls_mat_name_      ("TPB"),
-  SiPM_ANODE_dist_   (10.  * mm),   // Distance from ANODE to SiPM surface
+  kapton_anode_dist_ (15.  * mm),   // Distance from ANODE to Kapton surface
   SiPM_size_x_       ( 1.3 * mm),   // Size X (width) of SiPMs
   SiPM_size_y_       ( 1.3 * mm),   // Size Y (height) of SiPMs
   SiPM_size_z_       ( 2.0 * mm),   // Size Z (thickness) of SiPMs
@@ -125,12 +125,12 @@ void NextFlexTrackingPlane::DefineConfigurationParameters()
                         "TP UV wavelength shifting material name");
 
   // SiPMs
-  G4GenericMessenger::Command& sipm_anode_dist_cmd =
-    msg_->DeclareProperty("tp_sipm_anode_dist", SiPM_ANODE_dist_,
-                          "Distance from tracking SiPMs to ANODE.");
-  sipm_anode_dist_cmd.SetParameterName("tp_sipm_anode_dist", false);
-  sipm_anode_dist_cmd.SetUnitCategory("Length");
-  sipm_anode_dist_cmd.SetRange("tp_sipm_anode_dist>=0.");
+  G4GenericMessenger::Command& kapton_anode_dist_cmd =
+    msg_->DeclareProperty("tp_kapton_anode_dist", kapton_anode_dist_,
+                          "Distance from tracking kapton to ANODE.");
+  kapton_anode_dist_cmd.SetParameterName("tp_kapton_anode_dist", false);
+  kapton_anode_dist_cmd.SetUnitCategory("Length");
+  kapton_anode_dist_cmd.SetRange("tp_kapton_anode_dist>=0.");
 
   G4GenericMessenger::Command& sipm_sizeX_cmd =
     msg_->DeclareProperty("tp_sipm_sizeX", SiPM_size_x_,
@@ -179,7 +179,7 @@ void NextFlexTrackingPlane::DefineConfigurationParameters()
 
 void NextFlexTrackingPlane::ComputeDimensions()
 {
-  teflon_iniZ_ = origin_z_ - SiPM_ANODE_dist_ - SiPM_size_z_;
+  teflon_iniZ_ = origin_z_ - kapton_anode_dist_;
   copper_iniZ_ = teflon_iniZ_ - copper_thickness_;
 
   // Generate SiPM positions

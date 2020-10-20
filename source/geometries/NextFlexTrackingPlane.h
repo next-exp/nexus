@@ -112,7 +112,7 @@ namespace nexus {
     // Dimensions & Positions
     G4double origin_z_;
     G4double diameter_;
-    G4double SiPM_ANODE_dist_;
+    G4double kapton_anode_dist_;
 
     G4double SiPM_size_x_;
     G4double SiPM_size_y_;
