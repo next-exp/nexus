@@ -35,6 +35,7 @@ namespace nexus {
                     reflectivity_(0),
                     tile_vis_(1),
                     tile_refl_(0.),
+                    sipm_pde_(0.2),
                     source_pos_x_(0.*mm),
                     source_pos_y_(0.*mm),
                     source_pos_z_(0.*mm),
@@ -73,6 +74,7 @@ namespace nexus {
     msg_->DeclareProperty("surf_reflectivity", reflectivity_, "Reflectivity of the panels");
     msg_->DeclareProperty("tile_vis", tile_vis_, "Visibility of tiles");
     msg_->DeclareProperty("tile_refl", tile_refl_, "Reflectivity of SiPM boards");
+     msg_->DeclareProperty("sipm_pde", sipm_pde_, "SiPM photodetection efficiency");
 
     G4GenericMessenger::Command& source_pos_x_cmd =
       msg_->DeclareProperty("source_pos_x", source_pos_x_, "X position of the source");
@@ -394,6 +396,7 @@ namespace nexus {
     } else if (tile_type_ == "FBK") {
       tile_ = new TileFBK();
       tile_->SetBoxGeom(2);
+      tile_->SetPDE(sipm_pde_);
       dist_dice_flange_ = 21.05*mm;
     } else {
       G4Exception("[PetBox]", "BuilsSensors()", FatalException,
