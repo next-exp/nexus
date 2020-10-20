@@ -74,6 +74,7 @@ namespace nexus {
     sipm_->SetVisibility(visibility_);
     sipm_->SetBoxGeom(GetBoxGeom());
     sipm_->SetVisibility(GetTileVisibility());
+    sipm_->SetTimeBinning(GetTimeBinning());
 
     sipm_->Construct();
     G4ThreeVector sipm_dim = sipm_->GetDimensions();

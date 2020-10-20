@@ -88,7 +88,8 @@ namespace nexus {
 
     const G4int entries = 12;
 
-    G4double energies[entries] = {1.5*eV, 6.19919*eV, 6.35814*eV,                                                 6.52546*eV, 6.70182*eV, 6.88799*eV,
+    G4double energies[entries] = {1.5*eV, 6.19919*eV, 6.35814*eV,
+                                  6.52546*eV, 6.70182*eV, 6.88799*eV,
                                   7.08479*eV, 7.29316*eV, 7.51417*eV,
                                   7.74898*eV, 7.99895*eV, 8.26558*eV};
     G4double reflectivity[entries] = {0., 0., 0.,

@@ -94,7 +94,11 @@ namespace nexus {
 
     msg_->DeclareProperty("tile_type", tile_type_, "Type of the tile we want to use");
 
-
+    G4GenericMessenger::Command& time_cmd =
+      msg_->DeclareProperty("sipm_time_binning", time_binning_, "Time binning for the sensor");
+    time_cmd.SetUnitCategory("Time");
+    time_cmd.SetParameterName("sipm_time_binning", false);
+    time_cmd.SetRange("sipm_time_binning>0.");
   }
 
   PetBox::~PetBox()
@@ -398,6 +402,7 @@ namespace nexus {
 
     tile_->SetTileVisibility(tile_vis_);
     tile_->SetTileReflectivity(tile_refl_);
+    tile_->SetTimeBinning(time_binning_);
 
     tile_->Construct();
     tile_thickn_ = tile_->GetDimensions().z();

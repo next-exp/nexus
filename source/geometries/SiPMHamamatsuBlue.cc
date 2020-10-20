@@ -40,7 +40,6 @@ namespace nexus {
   {
     /// Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
-
   }
 
   SiPMHamamatsuBlue::~SiPMHamamatsuBlue()

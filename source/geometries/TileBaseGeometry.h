@@ -31,6 +31,9 @@ namespace nexus {
     void SetTileReflectivity (G4double refl);
     G4double GetTileReflectivity() const;
 
+    void SetTimeBinning (G4double tb);
+    G4double GetTimeBinning() const;
+
 
   protected:
     /// Default constructor defined as protected so no instance of
@@ -41,6 +44,7 @@ namespace nexus {
     G4int box_geom_;
     G4bool tile_vis_;
     G4double tile_refl_;
+    G4double time_binning_;
 
   };
 
@@ -57,6 +61,9 @@ namespace nexus {
 
   inline void TileBaseGeometry::SetTileReflectivity(G4double refl) { tile_refl_ = refl; }
   inline G4double TileBaseGeometry::GetTileReflectivity() const  { return tile_refl_; }
+
+  inline void TileBaseGeometry::SetTimeBinning(G4double tb) { time_binning_ = tb; }
+  inline G4double TileBaseGeometry::GetTimeBinning() const  { return time_binning_; }
 
  }
 

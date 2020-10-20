@@ -33,14 +33,13 @@ namespace nexus {
   using namespace CLHEP;
 
   SiPMHamamatsuVUV::SiPMHamamatsuVUV(): BaseGeometry(),
-			            visibility_(1),
-			            eff_(1.),
-                                    time_binning_(200.*nanosecond)
+                                        visibility_(1),
+                                        eff_(1.),
+                                        time_binning_(200.*nanosecond)
 
   {
     /// Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
-
   }
 
   SiPMHamamatsuVUV::~SiPMHamamatsuVUV()
