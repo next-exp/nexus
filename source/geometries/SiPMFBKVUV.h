@@ -31,6 +31,7 @@ namespace nexus {
     void Construct();
 
     void SetVisibility(G4bool vis);
+    void SetPDE(G4double eff);
     void SetTimeBinning (G4double time_binning);
     void SetSensorDepth (G4int sensor_depth);
     void SetMotherDepth (G4int mother_depth);
@@ -58,6 +59,9 @@ namespace nexus {
 
   inline void SiPMFBKVUV::SetVisibility(G4bool vis)
   { visibility_ = vis; }
+
+  inline void SiPMFBKVUV::SetPDE(G4double eff)
+  { eff_ = eff; }
 
   inline void SiPMFBKVUV::SetTimeBinning(G4double time_binning)
   { time_binning_ = time_binning; }

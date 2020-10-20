@@ -34,6 +34,9 @@ namespace nexus {
     void SetTimeBinning (G4double tb);
     G4double GetTimeBinning() const;
 
+    void SetPDE (G4double eff);
+    G4double GetPDE() const;
+
 
   protected:
     /// Default constructor defined as protected so no instance of
@@ -45,6 +48,7 @@ namespace nexus {
     G4bool tile_vis_;
     G4double tile_refl_;
     G4double time_binning_;
+    G4double sipm_pde_;
 
   };
 
@@ -64,6 +68,9 @@ namespace nexus {
 
   inline void TileBaseGeometry::SetTimeBinning(G4double tb) { time_binning_ = tb; }
   inline G4double TileBaseGeometry::GetTimeBinning() const  { return time_binning_; }
+
+  inline void TileBaseGeometry::SetPDE(G4double eff) { sipm_pde_ = eff; }
+  inline G4double TileBaseGeometry::GetPDE() const  { return sipm_pde_; }
 
  }
 
