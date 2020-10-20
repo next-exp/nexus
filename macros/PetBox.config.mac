@@ -2,6 +2,11 @@
 /Geometry/PetBox/visibility true
 /Geometry/PetBox/tile_type FBK
 
+/Geometry/PetBox/tile_vis true
+/Geometry/PetBox/tile_refl 0.
+/Geometry/PetBox/sipm_time_binning 1. microsecond
+/Geometry/PetBox/sipm_pde 0.5
+
 ### GENERATOR
 /Generator/Back2back/region CENTER
 #/Generator/SingleParticle/particle geantino
