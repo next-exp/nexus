@@ -150,10 +150,8 @@ namespace nexus {
       G4int motherid = touchable->GetCopyNumber(mother_depth_);
       G4int first_id = (init_ids)[motherid];
       pmtid = first_id + pmtid;
-    } else {
-      G4int motherid = touchable->GetCopyNumber(mother_depth_);
-      pmtid = naming_order_*motherid + pmtid;
     }
+
     return pmtid;
   }
 
