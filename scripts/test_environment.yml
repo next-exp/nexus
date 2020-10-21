@@ -1,0 +1,7 @@
+name: tests
+dependencies:
+  - python
+  - numpy
+  - pandas
+  - pytables
+  - pytest-ordering
