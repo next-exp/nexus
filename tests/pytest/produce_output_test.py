@@ -196,7 +196,7 @@ def test_create_nexus_output_file_flex100(config_tmpdir, output_tmpdir, NEXUSDIR
 /Geometry/NextFlex/tp_teflon_thickness   2.1 mm
 /Geometry/NextFlex/tp_teflon_hole_diam   7. mm
 /Geometry/NextFlex/tp_wls_mat            TPB
-/Geometry/NextFlex/tp_sipm_anode_dist    13.1 mm
+/Geometry/NextFlex/tp_kapton_anode_dist  15. mm
 /Geometry/NextFlex/tp_sipm_sizeX         1.3 mm
 /Geometry/NextFlex/tp_sipm_sizeY         1.3 mm
 /Geometry/NextFlex/tp_sipm_sizeZ         2.0 mm

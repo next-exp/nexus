@@ -56,7 +56,7 @@
 /Geometry/NextFlex/tp_teflon_thickness   5. mm
 /Geometry/NextFlex/tp_teflon_hole_diam   7. mm
 /Geometry/NextFlex/tp_wls_mat           TPB
-/Geometry/NextFlex/tp_sipm_anode_dist   10. mm
+/Geometry/NextFlex/tp_kapton_anode_dist 12. mm
 /Geometry/NextFlex/tp_sipm_sizeX        1.3 mm
 /Geometry/NextFlex/tp_sipm_sizeY        1.3 mm
 /Geometry/NextFlex/tp_sipm_sizeZ        2.0 mm
@@ -68,10 +68,11 @@
 /Geometry/NextFlex/ics_thickness  12. cm
 
 # VERBOSITY
-/Geometry/NextFlex/verbosity     true
-/Geometry/NextFlex/fc_verbosity  true
-/Geometry/NextFlex/ep_verbosity  true
-/Geometry/NextFlex/tp_verbosity  true
+/Geometry/NextFlex/verbosity          true
+/Geometry/NextFlex/fc_verbosity       true
+/Geometry/NextFlex/ep_verbosity       true
+/Geometry/NextFlex/tp_verbosity       true
+/Geometry/NextFlex/tp_sipm_verbosity  true
 
 # VISIBILITIES
 /Geometry/NextFlex/fc_visibility           true
