@@ -36,7 +36,9 @@ namespace nexus {
                                           tile_x_(25. * mm),
                                           tile_y_(25. * mm),
                                           tile_z_(1.35 * mm),
+                                          epoxy_depth_(0.1 * mm),
                                           sipm_pitch_(6.2 * mm),
+                                          refr_index_(1.55), //given by Hammamatsu datasheet
                                           n_rows_(4),
                                           n_columns_(4)
 
@@ -81,18 +83,34 @@ namespace nexus {
     G4double offset_y = (tile_y_ - ((n_rows_ - 1) * sipm_pitch_) - sipm_dim.y())/2.;
 
 
+    // EPOXY PROTECTIVE LAYER ////////////////////////////////////////
+    G4double epoxy_depth = 0.1 * mm;
+
+    G4Box* epoxy_solid =
+      new G4Box("Epoxy", tile_x_/2., tile_y_/2., epoxy_depth/2);
+
+    G4Material* epoxy = MaterialsList::Epoxy();
+      epoxy->SetMaterialPropertiesTable(OpticalMaterialProperties::EpoxyFixedRefr(refr_index_));
+
+    G4LogicalVolume* epoxy_logic =
+      new G4LogicalVolume(epoxy_solid, epoxy, "Epoxy");
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., tile_z_/2. - epoxy_depth/2.),
+    epoxy_logic, "Epoxy", tile_logic, false, 0, false);
+
+
     // SiPMs
     G4LogicalVolume* sipm_logic = sipm_->GetLogicalVolume();
 
     for (int i=0; i<n_rows_; i++){
       for (int j=0; j<n_columns_; j++){
-	G4int copy_no = i*2*n_columns_ + j + 1;
-    G4double x_pos = -tile_x_/2. + offset_x + sipm_dim.x()/2. + j * sipm_pitch_;
-    G4double y_pos = tile_y_/2. - offset_y - sipm_dim.y()/2. - i * sipm_pitch_;
-    G4double z_pos = tile_z_/2. - sipm_dim.z()/2.;
-    G4String vol_name = "SiPMHmtsuBlue_" + std::to_string(copy_no);
-	new G4PVPlacement(0, G4ThreeVector(x_pos, y_pos, z_pos),
-			  sipm_logic, vol_name, tile_logic, false, copy_no, false);
+	       G4int copy_no = i*2*n_columns_ + j + 1;
+         G4double x_pos = -tile_x_/2. + offset_x + sipm_dim.x()/2. + j * sipm_pitch_;
+         G4double y_pos = tile_y_/2. - offset_y - sipm_dim.y()/2. - i * sipm_pitch_;
+         G4double z_pos = tile_z_/2. - epoxy_depth - sipm_dim.z()/2.;
+         G4String vol_name = "SiPMHmtsuBlue_" + std::to_string(copy_no);
+	       new G4PVPlacement(0, G4ThreeVector(x_pos, y_pos, z_pos),
+			       sipm_logic, vol_name, tile_logic, false, copy_no, false);
 	}
       }
 
@@ -100,8 +118,11 @@ namespace nexus {
     // Visibilities
     if (GetTileVisibility()) {
       G4VisAttributes tile_col = nexus::CopperBrown();
-      tile_col.SetForceSolid(true);
+      //tile_col.SetForceSolid(true);
       tile_logic->SetVisAttributes(tile_col);
+      G4VisAttributes epoxy_col = nexus::Red();
+      //epoxy_col.SetForceSolid(true);
+      epoxy_logic->SetVisAttributes(epoxy_col);
     }
     else {
       tile_logic->SetVisAttributes(G4VisAttributes::Invisible);

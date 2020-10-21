@@ -30,7 +30,6 @@ namespace nexus {
 
   SiPMHamamatsuBlue::SiPMHamamatsuBlue(): BaseGeometry(),
                                           visibility_(1),
-                                          refr_index_(1.55), //given by Hammamatsu datasheet
                                           time_binning_(200.*nanosecond)
 
   {
@@ -59,23 +58,6 @@ namespace nexus {
     this->SetLogicalVolume(sipm_logic);
 
 
-    // EPOXY PROTECTIVE LAYER ////////////////////////////////////////
-
-    G4double epoxy_depth = 0.1 * mm;
-
-    G4Box* epoxy_solid =
-      new G4Box("Epoxy", sipm_x/2., sipm_y/2., epoxy_depth/2);
-
-    G4Material* epoxy = MaterialsList::Epoxy();
-      epoxy->SetMaterialPropertiesTable(OpticalMaterialProperties::EpoxyFixedRefr(refr_index_));
-
-    G4LogicalVolume* epoxy_logic =
-      new G4LogicalVolume(epoxy_solid, epoxy, "Epoxy");
-
-    new G4PVPlacement(0, G4ThreeVector(0., 0., sipm_z/2. - epoxy_depth/2.),
-    epoxy_logic, "Epoxy", sipm_logic, false, 0, false);
-
-
     // ACTIVE WINDOW /////////////////////////////////////////////////
 
     G4double active_x = sipm_x;
@@ -91,7 +73,7 @@ namespace nexus {
     G4LogicalVolume* active_logic =
       new G4LogicalVolume(active_solid, silicon, "PHOTODIODES");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., sipm_z/2. - epoxy_depth - active_depth/2.),
+    new G4PVPlacement(0, G4ThreeVector(0., 0., sipm_z/2. - active_depth/2.),
                       active_logic, "PHOTODIODES", sipm_logic, false, 0, false);
 
 
@@ -152,9 +134,6 @@ namespace nexus {
       G4VisAttributes active_col = nexus::Blue();
       active_col.SetForceSolid(true);
       active_logic->SetVisAttributes(active_col);
-      G4VisAttributes epoxy_col = nexus::Red();
-      //epoxy_col.SetForceSolid(true);
-      epoxy_logic->SetVisAttributes(epoxy_col);
     }
     else {
       sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);

@@ -41,9 +41,6 @@ namespace nexus {
   private:
     G4bool visibility_;
 
-    // Optical properties to be used for epoxy
-    G4double refr_index_;
-
     G4int    sensor_depth_;
     G4int    mother_depth_;
     G4int    naming_order_;
@@ -54,7 +51,7 @@ namespace nexus {
 
   inline void SiPMHamamatsuBlue::SetVisibility(G4bool vis)
   { visibility_ = vis; }
-  
+
   inline void SiPMHamamatsuBlue::SetTimeBinning(G4double time_binning)
   { time_binning_ = time_binning; }
 

@@ -40,6 +40,9 @@ namespace nexus {
     // SiPM pitch
     G4double sipm_pitch_;
 
+    // Optical properties to be used for epoxy
+    G4double refr_index_;
+
     // Rows and columns of SiPMs
     G4int n_rows_, n_columns_;
 
