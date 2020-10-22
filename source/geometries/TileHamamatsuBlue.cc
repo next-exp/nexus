@@ -37,6 +37,7 @@ namespace nexus {
                                           tile_y_(25. * mm),
                                           tile_z_(1.35 * mm),
                                           epoxy_depth_(0.1 * mm),
+                                          wls_depth_(0.001 * mm),
                                           sipm_pitch_(6.2 * mm),
                                           refr_index_(1.55), //given by Hammamatsu datasheet
                                           n_rows_(4),
@@ -52,9 +53,10 @@ namespace nexus {
 
   void TileHamamatsuBlue::Construct()
   {
-    SetDimensions(G4ThreeVector(tile_x_, tile_y_, tile_z_));
+    SetDimensions(G4ThreeVector(tile_x_, tile_y_, tile_z_+epoxy_depth_+wls_depth_));
 
-    G4Box* tile_solid = new G4Box("TILE_PLASTIC", tile_x_/2., tile_y_/2., tile_z_/2);
+    G4Box* tile_solid = new G4Box("TILE_PLASTIC", tile_x_/2., tile_y_/2.,
+                                  (tile_z_+epoxy_depth_+wls_depth_)/2);
 
     G4Material* fr4 = MaterialsList::FR4();
     G4LogicalVolume* tile_logic =
@@ -81,6 +83,19 @@ namespace nexus {
 
     G4double offset_x = (tile_x_ - ((n_columns_ - 1) * sipm_pitch_) - sipm_dim.x())/2.;
     G4double offset_y = (tile_y_ - ((n_rows_ - 1) * sipm_pitch_) - sipm_dim.y())/2.;
+
+
+    // WAVELENGTH SHIFTER ////////////////////////////////////////////
+    G4Box* wls_solid =
+      new G4Box("WLS", tile_x_/2., tile_y_/2., wls_depth_/2);
+
+    G4Material* wls = MaterialsList::TPB_LXe();
+
+    G4LogicalVolume* wls_logic =
+      new G4LogicalVolume(wls_solid, wls, "Epoxy");
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., tile_z_/2. - wls_depth_/2.),
+    wls_logic, "WLS", tile_logic, false, 0, false);
 
 
     // EPOXY PROTECTIVE LAYER ////////////////////////////////////////

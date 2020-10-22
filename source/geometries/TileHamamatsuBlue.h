@@ -36,6 +36,7 @@ namespace nexus {
 
     // Tile dimensions
     G4double tile_x_, tile_y_, tile_z_;
+    G4double epoxy_depth_, wls_depth_;
 
     // SiPM pitch
     G4double sipm_pitch_;
