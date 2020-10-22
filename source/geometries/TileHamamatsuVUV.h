@@ -30,8 +30,6 @@ namespace nexus {
     /// Invoke this method to build the volumes of the geometry
     void Construct();
 
-    G4ThreeVector GetDimensions();
-
   private:
 
     // Tile dimensions
