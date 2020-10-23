@@ -117,10 +117,30 @@ namespace nexus {
 
     BuildBox();
     BuildSensors();
+
   }
 
   void PetBox::BuildBox()
   {
+
+    // TILE TYPE
+    if (tile_type_ == "HamamatsuVUV") {
+      tile_ = new TileHamamatsuVUV();
+      tile_->SetBoxGeom(1);
+      dist_dice_flange_ = 20.*mm;
+    } else if (tile_type_ == "HamamatsuBlue") {
+      tile_ = new TileHamamatsuBlue();
+      tile_->SetBoxGeom(1);
+      dist_dice_flange_ = 19.35*mm;
+    } else if (tile_type_ == "FBK") {
+      tile_ = new TileFBK();
+      tile_->SetBoxGeom(2);
+      tile_->SetPDE(sipm_pde_);
+      dist_dice_flange_ = 21.05*mm;
+    } else {
+      G4Exception("[PetBox]", "BuildBox()", FatalException,
+                  "Unknown tile type!");
+    }
 
     // BOX
     G4Box* box_solid =
@@ -231,6 +251,14 @@ namespace nexus {
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), air_source_tube_inside_box_logic,
                       "AIR_SOURCE_TUBE", source_tube_inside_box_logic, false, 0, false);
 
+
+    // Construct the tile for the distances in the active
+    tile_->SetTileVisibility(tile_vis_);
+    tile_->SetTileReflectivity(tile_refl_);
+    tile_->SetTimeBinning(time_binning_);
+
+    tile_->Construct();
+    tile_thickn_ = tile_->GetDimensions().z();
 
     // 2 ACTIVE REGIONS
     G4double active_x_pos = ih_x_size_/2. + dist_ihat_panel_ + panel_thickness_ + active_depth_/2.;
@@ -384,31 +412,6 @@ namespace nexus {
 
   void PetBox::BuildSensors()
   {
-    // TILE CONSTRUCT
-    if (tile_type_ == "HamamatsuVUV") {
-      tile_ = new TileHamamatsuVUV();
-      tile_->SetBoxGeom(1);
-      dist_dice_flange_ = 20.*mm;
-    } else if (tile_type_ == "HamamatsuBlue") {
-      tile_ = new TileHamamatsuBlue();
-      tile_->SetBoxGeom(1);
-      dist_dice_flange_ = 19.35*mm;
-    } else if (tile_type_ == "FBK") {
-      tile_ = new TileFBK();
-      tile_->SetBoxGeom(2);
-      tile_->SetPDE(sipm_pde_);
-      dist_dice_flange_ = 21.05*mm;
-    } else {
-      G4Exception("[PetBox]", "BuilsSensors()", FatalException,
-                  "Unknown tile type!");
-    }
-
-    tile_->SetTileVisibility(tile_vis_);
-    tile_->SetTileReflectivity(tile_refl_);
-    tile_->SetTimeBinning(time_binning_);
-
-    tile_->Construct();
-    tile_thickn_ = tile_->GetDimensions().z();
     full_row_size_ = n_tile_columns_ * tile_->GetDimensions().x();
     full_col_size_ = n_tile_rows_ * tile_->GetDimensions().y();
 
