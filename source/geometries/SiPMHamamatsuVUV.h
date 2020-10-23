@@ -41,17 +41,17 @@ namespace nexus {
     // PDE for the sensor
     G4double eff_;
 
+    G4double time_binning_;
     G4int    sensor_depth_;
     G4int    mother_depth_;
     G4int    naming_order_;
-    G4double time_binning_;
     G4int    box_geom_;
 
   };
 
   inline void SiPMHamamatsuVUV::SetVisibility(G4bool vis)
   { visibility_ = vis; }
-  
+
   inline void SiPMHamamatsuVUV::SetTimeBinning(G4double time_binning)
   { time_binning_ = time_binning; }
 

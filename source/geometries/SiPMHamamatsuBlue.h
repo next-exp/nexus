@@ -41,10 +41,10 @@ namespace nexus {
   private:
     G4bool visibility_;
 
+    G4double time_binning_;
     G4int    sensor_depth_;
     G4int    mother_depth_;
     G4int    naming_order_;
-    G4double time_binning_;
     G4int    box_geom_;
 
   };

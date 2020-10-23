@@ -42,9 +42,11 @@ namespace nexus {
     // PDE for the sensor
     G4double eff_;
 
-    G4double sensor_depth_, mother_depth_;
-    G4double naming_order_, time_binning_;
-    G4int box_geom_;
+    G4double time_binning_;
+    G4int    sensor_depth_;
+    G4int    mother_depth_;
+    G4int    naming_order_;
+    G4int    box_geom_;
 
   };
 

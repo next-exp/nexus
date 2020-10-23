@@ -31,7 +31,10 @@ namespace nexus {
   SiPMFBKVUV::SiPMFBKVUV(): BaseGeometry(),
                             visibility_(1),
                             eff_(1.),
-                            time_binning_(200.*nanosecond)
+                            time_binning_(200.*nanosecond),
+                            sensor_depth_(-1),
+                            mother_depth_(0),
+                            naming_order_(0)
 
   {
   }
