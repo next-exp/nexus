@@ -123,6 +123,9 @@ namespace nexus {
 
     if (!sdmgr->FindSensitiveDetector(sdname, false)) {
         ToFSD* sipmsd = new ToFSD(sdname);
+        if (sensor_depth_ == -1)
+          G4Exception("[SiPMHamamatsuVUV]", "Construct()", FatalException,
+                      "Sensor Depth must be set before constructing");
 
         sipmsd->SetDetectorVolumeDepth(sensor_depth_);
         sipmsd->SetMotherVolumeDepth(mother_depth_);
