@@ -34,7 +34,8 @@ namespace nexus {
                             time_binning_(200.*nanosecond),
                             sensor_depth_(-1),
                             mother_depth_(0),
-                            naming_order_(0)
+                            naming_order_(0),
+                            box_geom_(0)
 
   {
   }
