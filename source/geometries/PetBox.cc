@@ -55,7 +55,6 @@ namespace nexus {
                     n_tile_columns_(2),
                     dist_ihat_panel_(2.*mm), //x distance between the internal surface of the hat and the external surface of the entry panel
                     panel_thickness_(1.75*mm),
-                    active_depth_(3.*cm),
                     entry_panel_width_(86.*mm),
                     dist_entry_panel_lat_panel_(1.45*mm), //x distance between the internal surface of the entry panel and the edge of the lateral panel
                     lat_panel_len_(66.5*mm),
@@ -260,11 +259,15 @@ namespace nexus {
     tile_->Construct();
     tile_thickn_ = tile_->GetDimensions().z();
 
+
     // 2 ACTIVE REGIONS
-    G4double active_x_pos = ih_x_size_/2. + dist_ihat_panel_ + panel_thickness_ + active_depth_/2.;
+    G4double active_x_pos_max = box_size_/2. - box_thickness_ - dist_dice_flange_ - tile_thickn_;
+    G4double active_x_pos_min = ih_x_size_/2. + dist_ihat_panel_ + panel_thickness_;
+    G4double active_depth = active_x_pos_max - active_x_pos_min;
+    G4double active_x_pos = active_x_pos_min + active_depth/2.;
 
     G4Box* active_solid =
-      new G4Box("ACTIVE", active_depth_/2., dist_lat_panels_/2., dist_lat_panels_/2.);
+      new G4Box("ACTIVE", active_depth/2., dist_lat_panels_/2., dist_lat_panels_/2.);
     G4LogicalVolume* active_logic =
       new G4LogicalVolume(active_solid, LXe, "ACTIVE");
     new G4PVPlacement(0, G4ThreeVector(-active_x_pos, 0., 0.), active_logic,
