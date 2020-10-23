@@ -89,7 +89,8 @@ namespace nexus {
     G4Box* wls_solid =
       new G4Box("WLS", tile_x_/2., tile_y_/2., wls_depth_/2);
 
-    G4Material* wls = MaterialsList::TPB_LXe();
+    G4Material* wls = MaterialsList::TPB();
+    wls->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB_LXe());
 
     G4LogicalVolume* wls_logic =
       new G4LogicalVolume(wls_solid, wls, "Epoxy");
