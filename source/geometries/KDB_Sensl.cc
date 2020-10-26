@@ -24,6 +24,7 @@
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
 #include <G4GenericMessenger.hh>
+#include <G4RotationMatrix.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 
@@ -109,12 +110,15 @@ namespace nexus {
       new G4LogicalVolume(board_solid, kapton, "KAPTON");
 
     // Placing the Kapton
-    new G4PVPlacement(0, G4ThreeVector(0, 0., -db_z / 2.), board_logic,
+    new G4PVPlacement(0, G4ThreeVector(0, 0., -db_case_z /2. + db_z / 2.), board_logic,
                       "KAPTON", air_logic, false, 0, false);
 
     // Placing the SiPMs inside the hole.
     G4LogicalVolume* sipm_logic = sipm_->GetLogicalVolume();
-    G4double         sipm_pos_z = sipm_->GetDimensions().z() / 2.;
+    G4double         sipm_pos_z = -db_case_z /2. + db_z / 2. + db_z/2. + sipm_->GetDimensions().z() / 2.;
+
+    G4RotationMatrix* rot = new G4RotationMatrix();
+    rot -> rotateY(180*deg);
 
     G4int sipm_no = 0;
     for (G4int i=0; i<columns_; i++) {
@@ -122,19 +126,18 @@ namespace nexus {
       for (G4int j=0; j<rows_; j++) {
         G4double pos_y = -db_y/2. + offset + j * sipm_pitch;
 
-        new G4PVPlacement(0, G4ThreeVector(pos_x, pos_y, sipm_pos_z), sipm_logic,
+        new G4PVPlacement(rot, G4ThreeVector(pos_x, pos_y, sipm_pos_z), sipm_logic,
                           "SiPM", air_logic, false, sipm_no, false);
 
         std::pair<int, G4ThreeVector> mypos;
         mypos.first = sipm_no;
         mypos.second = G4ThreeVector(pos_x, pos_y, 0.);
         positions_.push_back(mypos);
-        //G4cout << "  SiPM " << sipm_no << " : (" << pos_x << ", " << pos_y
-        //       << ", " << pos_z << " )" << G4endl;
+        G4cout << "  SiPM " << sipm_no << " : (" << pos_x << ", " << pos_y
+               << " )" << G4endl;
         sipm_no++;
       }
     }
-
 
     /// SETTING VISIBILITIES   //////////
     if (visibility_) {

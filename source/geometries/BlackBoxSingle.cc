@@ -33,6 +33,7 @@
 #include <Randomize.hh>
 #include <G4LogicalSkinSurface.hh>
 #include <G4OpticalSurface.hh>
+#include <G4RotationMatrix.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 
@@ -110,12 +111,15 @@ namespace nexus {
   ////SiPM placement
   sipm_x_pos_ = 0 * cm;  
   sipm_y_pos_ = 0 * cm;
-  sipm_z_pos_ = -30.* cm;
+  sipm_z_pos_ = -5.* cm;
   G4ThreeVector post(sipm_x_pos_,sipm_y_pos_,sipm_z_pos_);  
+  G4RotationMatrix* rot = new G4RotationMatrix();
+  rot -> rotateY(180*deg);
 
-  new G4PVPlacement(0, post, sipm_logic,
-	            "SILICON_PM", world_logic_vol, false, 0, false);
+  new G4PVPlacement(rot, post, sipm_logic,
+	            "SiPM", world_logic_vol, false, 0, false);
 
+  delete rot;
   // VISIBILITIES ///////////////////////////////////////////////////
     
     //if (_visibility) {

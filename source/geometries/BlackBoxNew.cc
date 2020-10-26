@@ -33,6 +33,7 @@
 #include <Randomize.hh>
 #include <G4LogicalSkinSurface.hh>
 #include <G4OpticalSurface.hh>
+#include <G4RotationMatrix.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 
@@ -89,6 +90,8 @@ namespace nexus {
   
   G4Material* world_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
 
+  world_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
+
   G4Box* world_solid_vol =
     new G4Box(world_name, _world_xy/2., _world_xy/2., _world_z/2.);
 
@@ -108,10 +111,14 @@ namespace nexus {
   dice_board_x_pos_ = 0 * cm;  
   dice_board_y_pos_ = 0 * cm;
   //dice_board_z_pos_ = -80* cm;
-  dice_board_z_pos_ = -1.* cm;
+  dice_board_z_pos_ = -3.5* cm;
   G4ThreeVector post(dice_board_x_pos_,dice_board_y_pos_,dice_board_z_pos_);  
+  G4RotationMatrix* rot = new G4RotationMatrix();
+  rot -> rotateY(180*deg);
 
-  new G4PVPlacement(0, post, dice_board_logic,
+  //new G4PVPlacement(0, post, dice_board_logic,
+	//            "DICE_BOARD", world_logic_vol, false, 0, false);
+  new G4PVPlacement(rot, post, dice_board_logic,
 	            "DICE_BOARD", world_logic_vol, false, 0, false);
 
   // VISIBILITIES ///////////////////////////////////////////////////
