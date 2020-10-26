@@ -78,7 +78,7 @@ namespace nexus {
     const G4double el_gap_length_plate_, el_gap_length_mesh_;
     const G4double elgap_ring_diam_;
     const G4double light_tube_drift_start_z_, light_tube_drift_end_z_;
-    const G4double ltube_thickn_;
+    const G4double light_tube_thickn_;
     const G4double light_tube_buff_start_z_, light_tube_buff_end_z_;
     const G4double anode_length_, anode_diam_;
     const G4double tpb_thickn_;
@@ -97,7 +97,7 @@ namespace nexus {
     G4double max_step_size_;
 
     G4double active_length_, active_zpos_;
-    G4double ltube_drift_length_, ltube_buff_length_;
+    G4double light_tube_drift_length_, light_tube_buff_length_;
     G4double bar_length_;
     G4double cathode_grid_zpos_;
     G4double drift_transv_diff_, drift_long_diff_;

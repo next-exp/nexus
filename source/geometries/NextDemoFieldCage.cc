@@ -54,7 +54,7 @@ namespace nexus {
     elgap_ring_diam_ (232. * mm),
     light_tube_drift_start_z_ (16. * mm),
     light_tube_drift_end_z_ (304. * mm),
-    ltube_thickn_ ( 8.0 * mm),
+    light_tube_thickn_ ( 8.0 * mm),
     light_tube_buff_start_z_ (317.6 * mm),
     light_tube_buff_end_z_ (420.6 * mm),
     anode_length_ (3.2 * mm),
@@ -168,8 +168,8 @@ namespace nexus {
   {
     /// Calculate derived lengths of specific volumes
     active_length_      = gate_cathode_centre_dist_ - grid_thickn_/2.;
-    ltube_drift_length_ = light_tube_drift_end_z_ - light_tube_drift_start_z_;
-    ltube_buff_length_  = light_tube_buff_end_z_ - light_tube_buff_start_z_;
+    light_tube_drift_length_ = light_tube_drift_end_z_ - light_tube_drift_start_z_;
+    light_tube_buff_length_  = light_tube_buff_end_z_ - light_tube_buff_start_z_;
     bar_length_         = bar_end_z_ - bar_start_z_;
 
     /// Calculate derived positions in mother volume
@@ -409,21 +409,21 @@ void NextDemoFieldCage::BuildCathodeGrid()
   void NextDemoFieldCage::BuildFieldCage()
   {
     /// Drift light tube
-    G4double drift_zplane[2] = {-ltube_drift_length_/2., ltube_drift_length_/2.};
+    G4double drift_zplane[2] = {-light_tube_drift_length_/2., light_tube_drift_length_/2.};
     G4double rinner[2] = {active_diam_/2., active_diam_/2.};
     G4double router[2] =
-      {active_diam_/2. + ltube_thickn_, active_diam_/2. + ltube_thickn_};
+      {active_diam_/2. + light_tube_thickn_, active_diam_/2. + light_tube_thickn_};
 
-    G4Polyhedra* ltube_drift_solid =
+    G4Polyhedra* light_tube_drift_solid =
       new G4Polyhedra("LIGHT_TUBE_DRIFT", 0., twopi, 10, 2, drift_zplane,
                       rinner, router);
-    G4LogicalVolume* ltube_drift_logic =
-      new G4LogicalVolume(ltube_drift_solid, teflon_, "LIGHT_TUBE_DRIFT");
+    G4LogicalVolume* light_tube_drift_logic =
+      new G4LogicalVolume(light_tube_drift_solid, teflon_, "LIGHT_TUBE_DRIFT");
 
     G4double lt_drift_zpos =
-      GetELzCoord() + light_tube_drift_start_z_ + ltube_drift_length_/2.;
+      GetELzCoord() + light_tube_drift_start_z_ + light_tube_drift_length_/2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., lt_drift_zpos),
-                      ltube_drift_logic, "LIGHT_TUBE_DRIFT", mother_logic_,
+                      light_tube_drift_logic, "LIGHT_TUBE_DRIFT", mother_logic_,
                       false, 0, false);
 
     G4double router_tpb[2] =
@@ -436,20 +436,20 @@ void NextDemoFieldCage::BuildCathodeGrid()
       new G4LogicalVolume(tpb_drift_solid, tpb_, "DRIFT_TPB");
     G4VPhysicalVolume* tpb_drift_phys =
       new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), tpb_drift_logic,
-		      "DRIFT_TPB", ltube_drift_logic, false, 0, false);
+		      "DRIFT_TPB", light_tube_drift_logic, false, 0, false);
 
     /// Buffer light tube
-    G4double buff_zplane[2] = {-ltube_buff_length_/2., ltube_buff_length_/2.};
-    G4Polyhedra* ltube_buff_solid =
+    G4double buff_zplane[2] = {-light_tube_buff_length_/2., light_tube_buff_length_/2.};
+    G4Polyhedra* light_tube_buff_solid =
       new G4Polyhedra("LIGHT_TUBE_BUFFER", 0., twopi, 10, 2, buff_zplane,
                       rinner, router);
-    G4LogicalVolume* ltube_buff_logic =
-      new G4LogicalVolume(ltube_buff_solid, teflon_, "LIGHT_TUBE_BUFFER");
+    G4LogicalVolume* light_tube_buff_logic =
+      new G4LogicalVolume(light_tube_buff_solid, teflon_, "LIGHT_TUBE_BUFFER");
 
     G4double lt_buffer_zpos =
-      GetELzCoord() + light_tube_buff_start_z_ + ltube_buff_length_/2.;
+      GetELzCoord() + light_tube_buff_start_z_ + light_tube_buff_length_/2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., lt_buffer_zpos),
-                      ltube_buff_logic, "LIGHT_TUBE_BOTTOM", mother_logic_,
+                      light_tube_buff_logic, "LIGHT_TUBE_BOTTOM", mother_logic_,
                       false, 0, false);
 
     G4Polyhedra* tpb_buff_solid =
@@ -459,7 +459,7 @@ void NextDemoFieldCage::BuildCathodeGrid()
       new G4LogicalVolume(tpb_buff_solid, tpb_, "BUFFER_TPB");
     G4VPhysicalVolume* tpb_buff_phys =
       new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), tpb_buff_logic,
-		      "BUFFER_TPB", ltube_buff_logic, false, 0, false);
+		      "BUFFER_TPB", light_tube_buff_logic, false, 0, false);
 
     /// Optical surfaces
     G4OpticalSurface* lt_drift_opsur = new G4OpticalSurface("LIGHT_TUBE_DRIFT");
@@ -469,7 +469,7 @@ void NextDemoFieldCage::BuildCathodeGrid()
     lt_drift_opsur->SetSigmaAlpha(0.1);
     lt_drift_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
     new G4LogicalSkinSurface("LIGHT_TUBE_DRIFT",
-                             ltube_drift_logic, lt_drift_opsur);
+                             light_tube_drift_logic, lt_drift_opsur);
 
     G4OpticalSurface* lt_buff_opsur = new G4OpticalSurface("LIGHT_TUBE_BUFFER");
     lt_buff_opsur->SetType(dielectric_metal);
@@ -478,7 +478,7 @@ void NextDemoFieldCage::BuildCathodeGrid()
     lt_buff_opsur->SetSigmaAlpha(0.1);
     lt_buff_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
     new G4LogicalSkinSurface("LIGHT_TUBE_BUFFER",
-                             ltube_buff_logic, lt_buff_opsur);
+                             light_tube_buff_logic, lt_buff_opsur);
 
     G4OpticalSurface* gas_tpb_teflon_surf =
       new G4OpticalSurface("GAS_TPB_TEFLON_OPSURF", glisur, ground,
@@ -498,11 +498,11 @@ void NextDemoFieldCage::BuildCathodeGrid()
     if (visibility_) {
       G4VisAttributes teflon_col = nexus::White();
       teflon_col.SetForceSolid(true);
-      ltube_drift_logic->SetVisAttributes(teflon_col);
-      ltube_buff_logic->SetVisAttributes(teflon_col);
+      light_tube_drift_logic->SetVisAttributes(teflon_col);
+      light_tube_buff_logic->SetVisAttributes(teflon_col);
     } else {
-      ltube_drift_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      ltube_buff_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      light_tube_drift_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      light_tube_buff_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
     /// Field shaping rings
@@ -546,7 +546,7 @@ void NextDemoFieldCage::BuildCathodeGrid()
     G4LogicalVolume* bar_logic =
       new G4LogicalVolume(bar_solid, MaterialsList::HDPE(), "SUPPORT_BAR");
 
-    G4double bar_rpos = active_diam_/2. + ltube_thickn_ + bar_thickn_/2.;
+    G4double bar_rpos = active_diam_/2. + light_tube_thickn_ + bar_thickn_/2.;
     G4double bar_zpos = GetELzCoord() + bar_start_z_ + bar_length_/2.;
 
     G4RotationMatrix rotbar;
