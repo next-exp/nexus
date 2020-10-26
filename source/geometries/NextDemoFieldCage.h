@@ -68,6 +68,7 @@ namespace nexus {
     G4Material* teflon_;    ///< PTFE (Teflon)
     G4Material* tpb_;       /// tpb
     G4Material* quartz_;    /// FusedSilica()
+    G4Material* ito_;       /// ITO
 
 
     // Dimensions
@@ -82,6 +83,7 @@ namespace nexus {
     const G4double light_tube_buff_start_z_, light_tube_buff_end_z_;
     const G4double anode_length_, anode_diam_;
     const G4double tpb_thickn_;
+    const G4double ito_thickness_;
     const G4double active_diam_;
     const G4int    num_drift_rings_, num_rings_;
     const G4double ring_diam_, ring_height_, ring_thickn_;
