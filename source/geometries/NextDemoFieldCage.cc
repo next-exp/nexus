@@ -60,6 +60,7 @@ namespace nexus {
     anode_length_ (3.2 * mm),
     anode_diam_ (256.3 * mm),
     tpb_thickn_ (3 * micrometer),
+    ito_thickness_ (15. * nanometer),
     active_diam_ (194.2 * mm),
     num_drift_rings_ (19),
     num_rings_ (23),
@@ -214,6 +215,10 @@ namespace nexus {
     /// TPB coating
     tpb_ = MaterialsList::TPB();
     tpb_->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+
+    //ITO coating
+    ito_ = MaterialsList::ITO();
+    ito_->SetMaterialPropertiesTable(OpticalMaterialProperties::ITO());
   }
 
   void NextDemoFieldCage::BuildActive()
@@ -376,7 +381,7 @@ void NextDemoFieldCage::BuildCathodeGrid()
     G4LogicalVolume* anode_logic = nullptr;
     if (plate_) {
       G4Tubs* anode_quartz_solid =
-        new G4Tubs("ANODE_PLATE", 0., anode_diam_/2. , anode_length_/2.,
+        new G4Tubs("ANODE_PLATE", 0., anode_diam_/2., anode_length_/2.,
                    0, twopi);
       anode_logic =
         new G4LogicalVolume(anode_quartz_solid, quartz_, "ANODE_PLATE");
@@ -384,6 +389,29 @@ void NextDemoFieldCage::BuildCathodeGrid()
       G4double anode_zpos = GetELzCoord() - el_gap_length - anode_length_/2.;
       new G4PVPlacement(0, G4ThreeVector(0., 0., anode_zpos), anode_logic,
                         "ANODE_PLATE", mother_logic_, false, 0, false);
+
+      // Add TPB
+      G4Tubs* tpb_anode_solid =
+        new G4Tubs("TPB_ANODE", 0., anode_diam_/2., tpb_thickn_/2., 0, twopi);
+      G4LogicalVolume* tpb_anode_logic =
+        new G4LogicalVolume(tpb_anode_solid, tpb_, "TPB_ANODE");
+      new G4PVPlacement(nullptr, G4ThreeVector(0., 0., anode_length_/2.-tpb_thickn_/2.),
+                        tpb_anode_logic, "TPB_ANODE", anode_logic, false, 0, false);
+
+      // Optical surface between gas and TPB
+      G4OpticalSurface* tpb_anode_surf =
+        new G4OpticalSurface("TPB_ANODE_OPSURF", glisur, ground,
+                             dielectric_dielectric, .01);
+      new G4LogicalSkinSurface("TPB_ANODE_OPSURF", tpb_anode_logic, tpb_anode_surf);
+
+      // Add ITO
+      G4Tubs* ito_anode_solid =
+        new G4Tubs("ITO_ANODE", 0., anode_diam_/2., ito_thickness_/2., 0, twopi);
+      G4LogicalVolume* ito_anode_logic =
+        new G4LogicalVolume(ito_anode_solid, ito_, "ITO_ANODE");
+      new G4PVPlacement(nullptr, G4ThreeVector(0., 0., anode_length_/2.-tpb_thickn_-ito_thickness_/2.),
+                        ito_anode_logic, "ITO_ANODE", anode_logic, false, 0, false);
+
     } else {
       grid_zpos = -grid_zpos;
       new G4PVPlacement(0, G4ThreeVector(0., 0., grid_zpos), gate_grid_logic,
