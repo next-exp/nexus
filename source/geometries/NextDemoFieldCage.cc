@@ -72,7 +72,7 @@ namespace nexus {
     dist_buff_ring_centres_ (20. * mm),
     dist_gate_first_ring_ (18.4 * mm),
     bar_start_z_ (14. * mm),
-    bar_end_z_ (403.5 * mm),
+    bar_end_z_ (403.5 * mm), // check if it's 413.5 or 403.5 mm
     bar_width_ (19. * mm),
     bar_thickn_ (11. * mm),
     visibility_ (0),
