@@ -174,7 +174,7 @@ namespace nexus {
                       pmt_hole_logic, false, 0, false);
 
 
-    /// TPB coating on pedot ///
+    /// TPB coating on PEDOT ///
     G4Tubs* tpb_solid =
       new G4Tubs("SAPPHIRE_WNDW_TPB", 0., sapphire_window_diam_/2,
                  tpb_thickness_/2., 0., twopi);
@@ -185,6 +185,13 @@ namespace nexus {
     new G4PVPlacement(0, G4ThreeVector(0., 0., tpb_posz), tpb_logic,
                       "SAPPHIRE_WNDW_TPB", sapphire_window_logic,
                       false, 0, false);
+
+    /// Add optical surface to TPB ///
+    G4OpticalSurface* tpb_coating_opsurf =
+      new G4OpticalSurface("SAPPHIRE_WNDW_TPB_OPSURF", glisur, ground,
+                           dielectric_dielectric, .01);
+    new G4LogicalSkinSurface("SAPPHIRE_WNDW_TPB_OPSURF",
+                             tpb_logic, tpb_coating_opsurf);
 
     /// PEDOT coating on sapphire windows ///
     G4Tubs* pedot_coating_solid =
@@ -199,6 +206,13 @@ namespace nexus {
     new G4PVPlacement(nullptr, G4ThreeVector(0., 0., pedot_coating_zpos),
                       pedot_coating_logic, "SAPPHIRE_WNDW_PEDOT",
                       sapphire_window_logic, false, 0, false);
+
+    /// Add optical surface to PEDOT ///
+    G4OpticalSurface* pedot_coating_opsurf =
+      new G4OpticalSurface("SAPPHIRE_WNDW_PEDOT_OPSURF", glisur, ground,
+                           dielectric_dielectric, .01);
+    new G4LogicalSkinSurface("SAPPHIRE_WNDW_PEDOT_OPSURF",
+                             pedot_coating_logic, pedot_coating_opsurf);
 
     /// Optical pad ///
     G4Tubs* optical_pad_solid =
