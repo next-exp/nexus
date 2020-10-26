@@ -179,7 +179,6 @@ namespace nexus {
 
     if (verbosity_) {
       G4cout << "Active length = " << active_length_/mm << " mm" << G4endl;
-      G4cout << "Buffer length = " << buffer_length_/mm << " mm" << G4endl;
       G4cout << G4endl;
     }
 
@@ -300,7 +299,10 @@ void NextDemoFieldCage::BuildCathodeGrid()
   void NextDemoFieldCage::BuildBuffer()
   {
     /// Position of z planes
-    G4double zplane[2] = {-buffer_length_/2., buffer_length_/2.};
+    // The length of the BUFFER sensitive detector is shorter by the same amount
+    // as the stand-out of copper rings around sapphire windows
+    G4double buffer_sd_length = buffer_length_ - 1.5 * mm;
+    G4double zplane[2] = {-buffer_sd_length/2., buffer_sd_length/2.};
     /// Inner radius
     G4double rinner[2] = {0., 0.};
     /// Outer radius
@@ -312,7 +314,7 @@ void NextDemoFieldCage::BuildCathodeGrid()
       new G4LogicalVolume(buffer_solid, gas_, "BUFFER");
 
     G4double buffer_zpos =
-      active_zpos_ + active_length_/2. + grid_thickn_ + buffer_length_/2.;
+      active_zpos_ + active_length_/2. + grid_thickn_ + buffer_sd_length/2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_zpos), buffer_logic,
 		      "BUFFER", mother_logic_, false, 0, false);
 
