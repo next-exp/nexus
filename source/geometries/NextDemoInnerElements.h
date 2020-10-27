@@ -71,7 +71,6 @@ namespace nexus {
 
     // Can internal length <> From NextDemo.cc -> transfer to NextDemoFieldCage.cc
     G4double vessel_length_;
-    G4double anode_z_pos_;
 
     // Detector parts
     NextDemoFieldCage*     field_cage_;
