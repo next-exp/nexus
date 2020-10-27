@@ -38,7 +38,6 @@ namespace nexus {
   NextDemoInnerElements::NextDemoInnerElements(const G4double vessel_length):
     BaseGeometry(),
     gate_sapphire_wdw_distance_(427.5 * mm),
-    gate_tp_copper_distance_(10.8 * mm + 5.79 * mm), // to be checked
     mother_logic_(nullptr),
     mother_phys_(nullptr),
     verbosity_(0)
@@ -85,7 +84,6 @@ namespace nexus {
 
     tracking_plane_->SetMotherPhysicalVolume(mother_phys_);
     tracking_plane_->SetELzCoord(gate_zpos);
-    //tracking_plane_->SetTPGateDistance(gate_tp_copper_distance_);
     tracking_plane_->Construct();
 
     energy_plane_->SetMotherLogicalVolume(mother_logic_);
