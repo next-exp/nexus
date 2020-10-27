@@ -61,7 +61,6 @@ namespace nexus {
   private:
 
     G4double gate_sapphire_wdw_distance_;
-    G4double gate_tp_copper_distance_;
 
     G4LogicalVolume* mother_logic_;
     G4VPhysicalVolume* mother_phys_;
