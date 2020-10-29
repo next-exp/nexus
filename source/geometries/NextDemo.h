@@ -95,7 +95,6 @@ namespace nexus {
     
   private:
     CylinderPointSampler* source_gen_side_;
-    MuonsPointSampler* muons_sampling_;
 
  
     // Pointers to materials definition

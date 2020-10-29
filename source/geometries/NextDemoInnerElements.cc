@@ -105,26 +105,21 @@ namespace nexus {
     G4ThreeVector vertex(0.,0.,0.);
 
     // Field Cage
-    if ((region == "ACTIVE") ||
-      // (region == "DRIFT_TUBE") ||
-	    // (region == "ANODE_QUARTZ") ||
-	    // (region == "CENTER") ||
-	    // (region == "CATHODE") ||
-	    // (region == "XENON") ||
-	    // (region == "BUFFER") ||
-	     (region == "EL_TABLE") ||
-	     (region == "AD_HOC")) {
+    if (region == "ACTIVE") {
       vertex = field_cage_->GenerateVertex(region);
     }
+
     // Tracking PLane
     else if ((region == "TP_PLATE") ||
              (region == "SIPM_BOARD")) {
       vertex = tracking_plane_->GenerateVertex(region);
     }
+    
     else {
       G4Exception("[NextDemoInnerElements]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");
     }
+    
     return vertex;
   }
 
