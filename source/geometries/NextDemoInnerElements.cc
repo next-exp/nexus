@@ -38,7 +38,6 @@ namespace nexus {
   NextDemoInnerElements::NextDemoInnerElements(const G4double vessel_length):
     BaseGeometry(),
     gate_sapphire_wdw_distance_(427.5 * mm),
-    gate_tp_copper_distance_(10.8 * mm + 5.79 * mm), // to be checked
     mother_logic_(nullptr),
     mother_phys_(nullptr),
     verbosity_(0)
@@ -73,8 +72,8 @@ namespace nexus {
     G4double gate_zpos = GetELzCoord();
 
     // Reading material
-    gas_ = mother_logic_->GetMaterial();
-    pressure_ =    gas_->GetPressure();
+    gas_         = mother_logic_->GetMaterial();
+    pressure_    = gas_->GetPressure();
     temperature_ = gas_->GetTemperature();
 
     //INNER ELEMENTS
@@ -83,9 +82,8 @@ namespace nexus {
     field_cage_->SetELzCoord(gate_zpos);
     field_cage_->Construct();
 
-    tracking_plane_->SetLogicalVolume(mother_logic_);
+    tracking_plane_->SetMotherPhysicalVolume(mother_phys_);
     tracking_plane_->SetELzCoord(gate_zpos);
-    tracking_plane_->SetTPGateDistance(gate_tp_copper_distance_);
     tracking_plane_->Construct();
 
     energy_plane_->SetMotherLogicalVolume(mother_logic_);
@@ -106,16 +104,22 @@ namespace nexus {
   {
     G4ThreeVector vertex(0.,0.,0.);
 
-   if       ( (region == "ACTIVE") ||
-            // (region == "DRIFT_TUBE") ||
+    // Field Cage
+    if ((region == "ACTIVE") ||
+      // (region == "DRIFT_TUBE") ||
 	    // (region == "ANODE_QUARTZ") ||
 	    // (region == "CENTER") ||
 	    // (region == "CATHODE") ||
 	    // (region == "XENON") ||
 	    // (region == "BUFFER") ||
-	     (region== "EL_TABLE") ||
+	     (region == "EL_TABLE") ||
 	     (region == "AD_HOC")) {
       vertex = field_cage_->GenerateVertex(region);
+    }
+    // Tracking PLane
+    else if ((region == "TP_PLATE") ||
+             (region == "SIPM_BOARD")) {
+      vertex = tracking_plane_->GenerateVertex(region);
     }
     else {
       G4Exception("[NextDemoInnerElements]", "GenerateVertex()", FatalException,
@@ -123,4 +127,5 @@ namespace nexus {
     }
     return vertex;
   }
+
 }//end namespace nexus

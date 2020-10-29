@@ -24,6 +24,7 @@ class G4LogicalVolume;
 class G4VPhysicalVolume;
 class G4Material;
 class G4GenericMessenger;
+
 namespace nexus { class NextDemoFieldCage; }
 namespace nexus { class NextDemoTrackingPlane; }
 namespace nexus { class NextDemoEnergyPlane; }
@@ -60,7 +61,6 @@ namespace nexus {
   private:
 
     G4double gate_sapphire_wdw_distance_;
-    G4double gate_tp_copper_distance_;
 
     G4LogicalVolume* mother_logic_;
     G4VPhysicalVolume* mother_phys_;

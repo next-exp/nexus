@@ -1,108 +1,71 @@
 // ----------------------------------------------------------------------------
-///  \file   
-///  \brief  
-///
-///  \author   <jmunoz@ific.uv.es>
-///  \date     25 Apr 2012
-///  \version  $Id$
-///
-///  Copyright (c) 2012 NEXT Collaboration
+// nexus | NextDemoTrackingPlane.h
 //
-//  Updated to NextDemo++  by  Ruth Weiss Babai  <ruty.wb@gmail.com>
-//  From:   Next100TrackingPlane.h
-//  Date:       Aug 2019
+// Tracking plane of the Demo++ geometry.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __NEXT_DEMO_TRACKING_PLANE__
-#define __NEXT_DEMO_TRACKING_PLANE__
+#ifndef NEXT100_TRACKING_PLANE_H
+#define NEXT100_TRACKING_PLANE_H
 
+#include "BaseGeometry.h"
+#include <G4ThreeVector.hh>
+#include <vector>
 
-#include <G4LogicalVolume.hh>
-#include <G4Navigator.hh>
-#include <G4TransportationManager.hh>
-
-#include "CylinderPointSampler.h"
-#include "BoxPointSampler.h"
-//#include "NextNewKDB.h"
-#include "NextDemoKDB.h"
-
-
-class G4Material;
-class G4LogicalVolume;
+class G4VPhysicalVolume;
 class G4GenericMessenger;
-
+class G4Navigator;
 
 namespace nexus {
 
-  /// This is a geometry formed by all the components of the tracking plane
+  class NextDemoSiPMBoard;
+  class BoxPointSampler;
 
+  // Geometry of the tracking plane of the Demo++ detector
   class NextDemoTrackingPlane: public BaseGeometry
   {
-
   public:
-    /// Constructor
+    // Constructor
     NextDemoTrackingPlane();
-    //NextDemoTrackingPlane(const G4double el_gap_z_edge);
 
-    /// Destructor
+    // Destructor
     ~NextDemoTrackingPlane();
-
-    // Sets the Logical Volume where Inner Elements will be placed
-    void SetLogicalVolume(G4LogicalVolume* mother_logic);
-
-    // Set the distance between the surface of the copper support and the gate
-    void SetTPGateDistance(G4double tp_z);
-
-    /// Generate a vertex within a given region of the geometry
-    G4ThreeVector GenerateVertex(const G4String& region) const;
-
-    /// Builder
-    void Construct();
-
+    
+    void SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys);
+    
+    void Construct() override;
+    
+    G4ThreeVector GenerateVertex(const G4String&) const override;
 
   private:
-    void GenerateDBPositions();
-    void PrintAbsoluteSiPMPos();
-
+    void GenerateBoardPositions(G4double board_posz);
 
   private:
+    G4bool verbosity_;
+    G4bool visibility_;
 
-    // Logical Volume where whole Tracking Plane is placed
-    G4LogicalVolume* mother_logic_;
+    const G4double plate_side_, plate_thickn_, plate_hole_side_;
 
-    // Dice board
-    //   NextElDB* _dice_board;
-    //  NextNewKDB* _dice_board;
-    NextDemoKDB* dice_board_;
+    G4String           tp_type_;
+    G4int              num_boards_;
+    NextDemoSiPMBoard* sipm_board_;
+    G4ThreeVector      board_size_;
+    std::vector<G4ThreeVector> board_pos_;
 
-    // Dimensions
-    // G4double _support_diam, _support_thickness;
-    G4double support_side_, support_thickness_;
-    G4double z_displ_;
-    G4double hole_size_;
+    BoxPointSampler*    plate_gen_;
 
-    G4int SiPM_rows_, SiPM_columns_;
-    G4int DB_columns_, num_DBs_;                // Ruty
-    G4int dice_side_x_, dice_side_,dice_gap_;   // Ruty
-    std::vector<G4ThreeVector> DB_positions_;
+    G4VPhysicalVolume*  mother_phys_;
 
-    // Visibility of the tracking plane
-    G4bool visibility_, verbosity_, verb_sipmPos_;
-
-    // Vertex generators
-    //CylinderPointSampler* _support_gen;
-    BoxPointSampler* support_gen_;
-    BoxPointSampler* dice_board_gen_;
+    G4GenericMessenger* msg_;
 
     // Geometry Navigator
     G4Navigator* geom_navigator_;
-
-    // Messenger for the definition of control commands
-    G4GenericMessenger* msg_; 
-
-    // Container to store the absolute position of SiPMs in gas
-    std::vector<std::pair<int, G4ThreeVector> > absSiPMpos_;
   };
 
-} //end namespace nexus
+  inline void NextDemoTrackingPlane::SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys)
+    { mother_phys_ = mother_phys; }
+
+} // namespace nexus
+
 #endif

@@ -486,12 +486,14 @@ G4ThreeVector NextDemo::GenerateVertex(const G4String& region) const
 
   //INNER ELEMENTS
   else if ( (region == "ACTIVE")  ||
+            (region == "TP_PLATE") ||
+            (region == "SIPM_BOARD") ||
             //(region == "CENTER") ||
             //(region == "XENON") ||
             //(region == "DRIFT_TUBE") ||
             //(region == "BUFFER") ||
             (region == "EL_TABLE")
-            ){
+            ) {
     vertex = inner_elements_->GenerateVertex(region);
   }
   else if (region == "AD_HOC") {
