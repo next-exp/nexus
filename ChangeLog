@@ -1,3 +1,11 @@
+tag_p7_00_00 - 29 Oct 2020
+	- Change definition of sensitive detectors from pre to post step.
+	- Modify hdf5 output.
+	- Update the whole code with new nexus conventions.
+	- Add python-based tests.
+	- Remove creation of history files.
+	- Update IonGun generator.
+
 tag_p6_01_00 - 3 Mar 2020
 	- Add generator to create sensitivity maps.
 	- Add generator of an arbitrary distribution.
