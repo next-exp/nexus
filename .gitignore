@@ -22,3 +22,6 @@ cmake
 nexus
 nexus-test
 *.o
+
+# test caches
+__pycache__
