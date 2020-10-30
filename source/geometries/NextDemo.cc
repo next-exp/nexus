@@ -145,7 +145,6 @@ NextDemo::NextDemo():
 NextDemo::~NextDemo()
 {
   delete source_gen_side_;
-  delete muons_sampling_;
   delete msg_;
   delete vessel_;
   delete inner_elements_;
@@ -440,10 +439,6 @@ void NextDemo::BuildMuons()
 
   G4double yMuonsOrigin = 400.;
 
-  //sampling position in a surface above the detector
-  muons_sampling_ = new MuonsPointSampler(xMuons, yMuonsOrigin, zMuons);
-
-
   // To visualize the muon generation surface
 
   //visualization sphere
@@ -465,54 +460,6 @@ void NextDemo::BuildMuons()
 }
 
 
-
-G4ThreeVector NextDemo::GenerateVertex(const G4String& region) const
-{
-  G4ThreeVector vertex(0., 0., 0.);
-  if (region == "MUONS") {
-    //generate muons sampling the plane
-    vertex = muons_sampling_->GenerateVertex();
-  }
-  // Extended sources with the shape of a disk outside port
-  else if (region == "SOURCE_PORT_LATERAL_DISK") {
-    vertex =  source_gen_side_->GenerateVertex("BODY_VOL");
-  } else if (region == "SIDEPORT") {
-    vertex = sideport_ext_position_;
-    //} else if (region == "AXIALPORT") {
-    //  vertex = _axialport_position;
-    //} else if (region == "Na22LATERAL") {
-    //  vertex = _sideNa_pos;
-  }
-
-  //INNER ELEMENTS
-  else if ( (region == "ACTIVE")  ||
-            (region == "TP_PLATE") ||
-            (region == "SIPM_BOARD") ||
-            //(region == "CENTER") ||
-            //(region == "XENON") ||
-            //(region == "DRIFT_TUBE") ||
-            //(region == "BUFFER") ||
-            (region == "EL_TABLE")
-            ) {
-    vertex = inner_elements_->GenerateVertex(region);
-  }
-  else if (region == "AD_HOC") {
-    vertex = G4ThreeVector(specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_);
-    return vertex;
-  }
-  else {
-    G4Exception("[NextDemo]", "GenerateVertex()", FatalException,
-                "Unknown vertex generation region!");
-  }
-
-  G4ThreeVector displacement = G4ThreeVector(0., 0., -gate_zpos_in_vessel_);
-  vertex = vertex + displacement;
-
-  return vertex;
-
-}
-
-
 void NextDemo::BuildExtScintillator(G4ThreeVector pos, const G4RotationMatrix& rot)
 {
 naI_->Construct();
@@ -525,7 +472,6 @@ new G4PVPlacement(G4Transform3D(rot, pos_scint), sc_logic, "NaI",
 }
 
 
-
 void NextDemo::BuildExtSource(G4ThreeVector pos, const G4RotationMatrix& rot)
 {
  source_->Construct();
@@ -535,4 +481,41 @@ G4ThreeVector pos_source =
   G4ThreeVector(pos.getX(), pos.getY(), pos.getZ());
 new G4PVPlacement(G4Transform3D(rot, pos_source), source_logic, "SOURCE_Na",
       lab_logic_, false, 0, true);
+}
+
+
+G4ThreeVector NextDemo::GenerateVertex(const G4String& region) const
+{
+  G4ThreeVector vertex(0., 0., 0.);
+
+  // AD_HOC region
+  if (region == "AD_HOC") {
+    vertex = G4ThreeVector(specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_);
+    return vertex;
+  }
+
+  // VESSEL VERTICES
+  else if (region == "SOURCE_PORT_LATERAL_DISK") {
+    vertex =  source_gen_side_->GenerateVertex("BODY_VOL");
+  }
+  else if (region == "SIDEPORT") {
+    vertex = sideport_ext_position_;
+  }
+
+  //INNER ELEMENTS
+  else if ( (region == "ACTIVE")  ||
+            (region == "TP_PLATE") ||
+            (region == "SIPM_BOARD") ) {
+    vertex = inner_elements_->GenerateVertex(region);
+  }
+
+  else {
+    G4Exception("[NextDemo]", "GenerateVertex()", FatalException,
+                "Unknown vertex generation region!");
+  }
+
+  G4ThreeVector displacement = G4ThreeVector(0., 0., -gate_zpos_in_vessel_);
+  vertex = vertex + displacement;
+
+  return vertex;
 }
