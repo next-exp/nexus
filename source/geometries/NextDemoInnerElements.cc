@@ -1,25 +1,21 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | NextDemoInnerElements.cc
 //
-//  Authors: <miquel.nebot@ific.uv.es>
-//  Created: 18 Sept 2013
+// Geometry
 //
-//  Copyright (c) 2013 NEXT Collaboration
-//
-//  Original NextNewInnerElements.cc
-//
-//  Updated to NextDemo++  by  Ruth Weiss Babai  <ruty.wb@gmail.com>
-//  From: NextNewInnerElements.cc
-//  Date:      June-Aug 2019
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "NextDemoInnerElements.h"
+
 #include "NextDemoFieldCage.h"
 #include "NextDemoTrackingPlane.h"
 #include "NextDemoEnergyPlane.h"
 #include "MaterialsList.h"
 #include "CylinderPointSampler2020.h"
 
+#include <G4SystemOfUnits.hh>
+#include <G4PhysicalConstants.hh>
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
 #include <G4Material.hh>
@@ -28,99 +24,78 @@
 #include <G4UserLimits.hh>
 #include <G4SDManager.hh>
 
-#include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
+using namespace nexus;
 
-namespace nexus {
 
-  using namespace CLHEP;
+NextDemoInnerElements::NextDemoInnerElements():
+  BaseGeometry(),
+  gate_sapphire_wdw_distance_(427.5 * mm),
+  mother_logic_vol_(nullptr),
+  mother_phys_vol_(nullptr),
+  verbosity_(0)
+{
+  msg_ = new G4GenericMessenger(this, "/Geometry/NextDemo/", "Control commands of geometry NextDemo.");
+  msg_->DeclareProperty("inner_elements_verbosity", verbosity_, "Inner Elements verbosity");
 
-  NextDemoInnerElements::NextDemoInnerElements(const G4double vessel_length):
-    BaseGeometry(),
-    gate_sapphire_wdw_distance_(427.5 * mm),
-    mother_logic_(nullptr),
-    mother_phys_(nullptr),
-    verbosity_(0)
+  // Build the internal objects that live there
+  field_cage_ = new NextDemoFieldCage();
+  tracking_plane_ = new NextDemoTrackingPlane();
+  energy_plane_ = new NextDemoEnergyPlane();
+}
 
-  {
 
-    msg_ = new G4GenericMessenger(this, "/Geometry/NextDemo/", "Control commands of geometry NextDemo.");
-    msg_->DeclareProperty("inner_elements_verbosity", verbosity_, "Inner Elements verbosity");
+void NextDemoInnerElements::Construct()
+{
+  // Position in Z of the beginning of the drift region
+  G4double gate_zpos = GetELzCoord();
 
-   /// Needed External variables
-    vessel_length_ = vessel_length;
+  // Reading material
+  gas_         = mother_logic_vol_->GetMaterial();
+  pressure_    = gas_->GetPressure();
+  temperature_ = gas_->GetTemperature();
 
-    // Build the internal objects that live there
-    field_cage_ = new NextDemoFieldCage();
-    tracking_plane_ = new NextDemoTrackingPlane();
-    energy_plane_ = new NextDemoEnergyPlane();
+  //INNER ELEMENTS
+  field_cage_->SetMotherLogicalVolume(mother_logic_vol_);
+  field_cage_->SetMotherPhysicalVolume(mother_phys_vol_);
+  field_cage_->SetELzCoord(gate_zpos);
+  field_cage_->Construct();
+
+  tracking_plane_->SetMotherPhysicalVolume(mother_phys_vol_);
+  tracking_plane_->SetELzCoord(gate_zpos);
+  tracking_plane_->Construct();
+
+  energy_plane_->SetMotherLogicalVolume(mother_logic_vol_);
+  energy_plane_->SetELzCoord(gate_zpos);
+  energy_plane_->SetGateSapphireSurfaceDistance(gate_sapphire_wdw_distance_);
+  energy_plane_->Construct();
+}
+
+
+NextDemoInnerElements::~NextDemoInnerElements()
+{
+  delete field_cage_;
+  delete tracking_plane_;
+  delete energy_plane_;
+}
+
+
+G4ThreeVector NextDemoInnerElements::GenerateVertex(const G4String& region) const
+{
+  G4ThreeVector vertex(0.,0.,0.);
+
+  // Field Cage
+  if (region == "ACTIVE") {
+    vertex = field_cage_->GenerateVertex(region);
   }
 
-  void NextDemoInnerElements::SetLogicalVolume(G4LogicalVolume* mother_logic)
-  {
-    mother_logic_ = mother_logic;
+  // Tracking PLane
+  else if ((region == "TP_PLATE") || (region == "SIPM_BOARD")) {
+    vertex = tracking_plane_->GenerateVertex(region);
+  }
+  else {
+    G4Exception("[NextDemoInnerElements]", "GenerateVertex()", FatalException,
+                "Unknown vertex generation region!");
   }
 
-  void NextDemoInnerElements::SetPhysicalVolume(G4VPhysicalVolume* mother_phys)
-  {
-    mother_phys_ = mother_phys;
-  }
-
-  void NextDemoInnerElements::Construct()
-  {
-    // Position in Z of the beginning of the drift region
-    G4double gate_zpos = GetELzCoord();
-
-    // Reading material
-    gas_         = mother_logic_->GetMaterial();
-    pressure_    = gas_->GetPressure();
-    temperature_ = gas_->GetTemperature();
-
-    //INNER ELEMENTS
-    field_cage_->SetMotherLogicalVolume(mother_logic_);
-    field_cage_->SetMotherPhysicalVolume(mother_phys_);
-    field_cage_->SetELzCoord(gate_zpos);
-    field_cage_->Construct();
-
-    tracking_plane_->SetMotherPhysicalVolume(mother_phys_);
-    tracking_plane_->SetELzCoord(gate_zpos);
-    tracking_plane_->Construct();
-
-    energy_plane_->SetMotherLogicalVolume(mother_logic_);
-    energy_plane_->SetELzCoord(gate_zpos);
-    energy_plane_->SetGateSapphireSurfaceDistance(gate_sapphire_wdw_distance_);
-    energy_plane_->Construct();
-  }
-
-  NextDemoInnerElements::~NextDemoInnerElements()
-  {
-    delete field_cage_;
-    delete tracking_plane_;
-    delete energy_plane_;
-  }
-
-
-  G4ThreeVector NextDemoInnerElements::GenerateVertex(const G4String& region) const
-  {
-    G4ThreeVector vertex(0.,0.,0.);
-
-    // Field Cage
-    if (region == "ACTIVE") {
-      vertex = field_cage_->GenerateVertex(region);
-    }
-
-    // Tracking PLane
-    else if ((region == "TP_PLATE") ||
-             (region == "SIPM_BOARD")) {
-      vertex = tracking_plane_->GenerateVertex(region);
-    }
-    
-    else {
-      G4Exception("[NextDemoInnerElements]", "GenerateVertex()", FatalException,
-		  "Unknown vertex generation region!");
-    }
-    
-    return vertex;
-  }
-
-}//end namespace nexus
+  return vertex;
+}
