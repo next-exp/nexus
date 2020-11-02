@@ -48,8 +48,8 @@ def nexus_full_output_file_demopp(output_tmpdir, full_base_name_demopp):
 
 @pytest.fixture(scope = 'session')
 def new_detector(nexus_full_output_file_new):
-    pmt_ids         = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-    board_ids       = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28]
+    pmt_ids         = [i for i in range(12)]
+    board_ids       = [i for i in range(1, 29)]
     sipms_per_board = 64
     board_ordering  = 1000
     return nexus_full_output_file_new, pmt_ids, board_ids, sipms_per_board, board_ordering
@@ -57,8 +57,8 @@ def new_detector(nexus_full_output_file_new):
 
 @pytest.fixture(scope = 'session')
 def next100_detector(nexus_full_output_file_next100):
-    pmt_ids         = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59]
-    board_ids       = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56]
+    pmt_ids         = [i for i in range(60)]
+    board_ids       = [i for i in range(1, 57)]
     sipms_per_board = 64
     board_ordering  = 1000
     return nexus_full_output_file_next100, pmt_ids, board_ids, sipms_per_board, board_ordering
