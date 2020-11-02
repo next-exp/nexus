@@ -1,5 +1,5 @@
 ## ----------------------------------------------------------------------------
-## nexus | DEMO_fullKr.config.mac
+## nexus | DEMOPP_fullKr.config.mac
 ##
 ## Configuration macro to simulate Kr-83 decays in the DEMO++ geometry
 ## with generation and transportation of optical photons.
@@ -15,7 +15,7 @@
 
 # GEOMETRY
 /Geometry/NextDemo/elfield true
-/Geometry/NextDemo/pressure 10. bar
+/Geometry/NextDemo/pressure 8.5 bar
 /Geometry/NextDemo/max_step_size 1. mm
 /Geometry/NextDemo/EL_field_intensity 10 kV/cm
 /Geometry/NextDemo/max_step_size 1. mm
