@@ -370,7 +370,7 @@ void NextDemoFieldCage::BuildCathodeGrid()
                                                                              grid_thickn_));
 
     G4Tubs* gate_grid_solid =
-      new G4Tubs("GRID_GATE", 0., elgap_ring_diam_/2., grid_thickn_/2.,
+      new G4Tubs("GATE_GRID", 0., elgap_ring_diam_/2., grid_thickn_/2.,
                  0, twopi);
     G4LogicalVolume* gate_grid_logic =
       new G4LogicalVolume(gate_grid_solid, grid_mat, "GATE_GRID");
