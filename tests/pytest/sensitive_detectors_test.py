@@ -16,11 +16,11 @@ def test_sensors_numbering(detectors):
     assert len(sns_positions.sensor_name.unique()) == 2
 
     # Assert the total number of sensors is correct
-    sns_pmt_ids  = sns_positions[sns_positions.sensor_name == "PmtR11410"].sensor_id
     sns_sipm_ids = sns_positions[sns_positions.sensor_name == "SiPM"].sensor_id
     assert 1 < len(sns_sipm_ids) <= num_sipms
 
     # Assert PMT numbering is correct
+    sns_pmt_ids = sns_positions[sns_positions.sensor_name == "PmtR11410"].sensor_id
     assert np.all(sns_pmt_ids.sort_values().tolist() == pmt_ids)
 
     # Assert SiPM-Boards numbering is correct
