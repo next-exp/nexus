@@ -370,7 +370,7 @@ void NextDemoFieldCage::BuildCathodeGrid()
                                                                              grid_thickn_));
 
     G4Tubs* gate_grid_solid =
-      new G4Tubs("GRID_GATE", 0., elgap_ring_diam_/2., grid_thickn_/2.,
+      new G4Tubs("GATE_GRID", 0., elgap_ring_diam_/2., grid_thickn_/2.,
                  0, twopi);
     G4LogicalVolume* gate_grid_logic =
       new G4LogicalVolume(gate_grid_solid, grid_mat, "GATE_GRID");
@@ -388,7 +388,8 @@ void NextDemoFieldCage::BuildCathodeGrid()
       anode_logic =
         new G4LogicalVolume(anode_quartz_solid, quartz_, "ANODE_PLATE");
 
-      G4double anode_zpos = GetELzCoord() - el_gap_length - anode_length_/2.;
+      // A tiny offset is needed because EL is produced only if the PostStepVolume is GAS material.
+      G4double anode_zpos = GetELzCoord() - el_gap_length - anode_length_/2. - 0.1*mm;
       new G4PVPlacement(0, G4ThreeVector(0., 0., anode_zpos), anode_logic,
                         "ANODE_PLATE", mother_logic_, false, 0, false);
 
