@@ -388,7 +388,8 @@ void NextDemoFieldCage::BuildCathodeGrid()
       anode_logic =
         new G4LogicalVolume(anode_quartz_solid, quartz_, "ANODE_PLATE");
 
-      G4double anode_zpos = GetELzCoord() - el_gap_length - anode_length_/2.;
+      // A tiny offset is needed because EL is produced only if the PostStepVolume is GAS material.
+      G4double anode_zpos = GetELzCoord() - el_gap_length - anode_length_/2. - 0.1*mm;
       new G4PVPlacement(0, G4ThreeVector(0., 0., anode_zpos), anode_logic,
                         "ANODE_PLATE", mother_logic_, false, 0, false);
 
