@@ -46,7 +46,7 @@ namespace nexus {
     mother_phys_(nullptr),
     gate_cathode_centre_dist_ (309.6 * mm), // distance between gate and the centre of cathode grid
     grid_thickn_ (0.1 * mm),
-    gate_transparency_ (0.76),
+    gate_transparency_ (0.83),
     buffer_length_ (117.85 * mm),
     cath_grid_transparency_ (0.98),
     el_gap_length_plate_ (9.8 * mm), // when there's the plate
