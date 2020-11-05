@@ -133,8 +133,8 @@ namespace nexus {
         mypos.first = sipm_no;
         mypos.second = G4ThreeVector(pos_x, pos_y, 0.);
         positions_.push_back(mypos);
-        G4cout << "  SiPM " << sipm_no << " : (" << pos_x << ", " << pos_y
-               << " )" << G4endl;
+        //G4cout << "  SiPM " << sipm_no << " : (" << pos_x << ", " << pos_y
+          //     << " )" << G4endl;
         sipm_no++;
       }
     }

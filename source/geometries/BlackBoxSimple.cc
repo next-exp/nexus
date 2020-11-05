@@ -110,7 +110,7 @@ namespace nexus {
   dice_board_x_pos_ = 0 * cm;  
   dice_board_y_pos_ = 0 * cm;
   //dice_board_z_pos_ = -80* cm;
-  dice_board_z_pos_ = -3.5* cm;
+  dice_board_z_pos_ = -53.5* cm;
   G4ThreeVector post(dice_board_x_pos_,dice_board_y_pos_,dice_board_z_pos_);  
   //G4RotationMatrix* rot = new G4RotationMatrix();
   //rot -> rotateY(180*deg);

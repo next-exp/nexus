@@ -21,6 +21,9 @@
 #/Generator/SingleParticle/momentum_X 0.
 #/Generator/SingleParticle/momentum_Y 0.
 #/Generator/SingleParticle/momentum_Z -1.
+/Generator/SingleParticle/min_costheta -1.
+/Generator/SingleParticle/max_costheta -0.025
+#phi no lo ponemos poque por defecto está de 0 a 2pi
 
 /Geometry/BlackBoxNew/specific_vertex_X 0. mm
 /Geometry/BlackBoxNew/specific_vertex_Y 0. mm
@@ -34,4 +37,4 @@
 ### JOB CONTROL
 /nexus/random_seed            -1
 /nexus/persistency/start_id   0
-/nexus/persistency/outputFile testing_blackbox_new_2_9eV_3_5cm.next
+/nexus/persistency/outputFile testing_blackbox_new_2_9eV_53_5cm_stat.next
