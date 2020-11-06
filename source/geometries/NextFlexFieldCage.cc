@@ -845,11 +845,11 @@ void NextFlexFieldCage::BuildFiberSensors()
   /// Constructing the sensors
   // Optical Properties of the sensor
   G4MaterialPropertiesTable* photosensor_mpt = new G4MaterialPropertiesTable();
-  G4double energy[]       = {0.2 * eV, 11.5 * eV};
-  G4double reflectivity[] = {0.0     ,  0.0};
-  G4double efficiency[]   = {1.0     ,  1.0};
-  photosensor_mpt->AddProperty("REFLECTIVITY", energy, reflectivity, 2);
-  photosensor_mpt->AddProperty("EFFICIENCY",   energy, efficiency,   2);
+  G4double energy[]       = {0.2 * eV, 3.5 * eV, 3.6 * eV, 11.5 * eV};
+  G4double reflectivity[] = {0.0     , 0.0     , 0.0     ,  0.0     };
+  G4double efficiency[]   = {1.0     , 1.0     , 0.0     ,  0.0     };
+  photosensor_mpt->AddProperty("REFLECTIVITY", energy, reflectivity, 4);
+  photosensor_mpt->AddProperty("EFFICIENCY",   energy, efficiency,   4);
   left_sensor_ ->SetOpticalProperties(photosensor_mpt);
   right_sensor_->SetOpticalProperties(photosensor_mpt);
 
