@@ -30,19 +30,22 @@ GenericPhotosensor::GenericPhotosensor(G4String name,
                                        G4double width,
                                        G4double height,
                                        G4double thickness):
-  BaseGeometry     (),
-  name_            (name),
-  width_           (width),      // Width of the Sensitive Area
-  height_          (height),     // Height of the Sensitive Area
-  thickness_       (thickness),  // Thickness of the whole sensor
-  with_wls_coating_ (false),
-  window_rindex_   (nullptr),
-  sensitive_mpt_   (nullptr),
-  sensor_depth_    (-1),
-  mother_depth_    (0),
-  naming_order_    (0),
-  time_binning_    (1.0 * us),
-  visibility_      (false)
+  BaseGeometry        (),
+  name_               (name),
+  width_              (width),           // Width of the Sensitive Area
+  height_             (height),          // Height of the Sensitive Area
+  thickness_          (thickness),       // Thickness of the whole sensor
+  window_thickness_   (0.2 * mm),        // Window thickness    (similar to Sensl SiPMs)
+  sensarea_thickness_ (0.2 * mm),        // Sensitive thickness (similar to Sensl SiPMs)
+  wls_thickness_      (1. * micrometer), // WLS thickness = 1 micron by definition)
+  with_wls_coating_   (false),
+  window_rindex_      (nullptr),
+  sensitive_mpt_      (nullptr),
+  sensor_depth_       (-1),
+  mother_depth_       (0),
+  naming_order_       (0),
+  time_binning_       (1.0 * us),
+  visibility_         (false)
 {
 }
 
@@ -60,24 +63,19 @@ GenericPhotosensor::~GenericPhotosensor()
 
 void GenericPhotosensor::ComputeDimensions()
 {
-  // Window thickness of 0.2 mm (Similar to Sensl SiPMs)
-  window_thickness_ = 0.2 * mm;
+  // Reduced size for components inside the case except the WLS
+  reduced_width_  = width_  - 1. * micrometer;
+  reduced_height_ = height_ - 1. * micrometer;
 
-  // Sensitive thickness of 0.2 mm (Similar to Sensl SiPMs)
-  // Sensitive area smaller than case in 1 micron
-  sensarea_thickness_ = 0.2 * mm;
-  sensarea_width_     = width_  - 1. * micrometer;
-  sensarea_height_    = height_ - 1. * micrometer;
+  if (!with_wls_coating_) wls_thickness_ = 0.;
 
-  // Check that window + sensitive fits into the case
-  if ((window_thickness_ + sensarea_thickness_) > thickness_) {
+  // Check that components (window + sensitive + wls) fits into the case
+  if ((window_thickness_ + sensarea_thickness_ + wls_thickness_) > thickness_) {
     G4Exception("[GenericPhotosensor]", "ComputeDimensions()", FatalException,
                 ("Sensor size too small. Required thickness >= " +
-                 std::to_string(window_thickness_ + sensarea_thickness_) + " mm").data());
+                 std::to_string(window_thickness_ + sensarea_thickness_ + wls_thickness_) + 
+                 " mm").data());
   }
-
-  // WLS coating dimensions (thickness = 1 micron by definition)
-  wls_thickness_ = 1. * micrometer;
 }
 
 
@@ -150,14 +148,14 @@ void GenericPhotosensor::Construct()
   name = name_ + "_WINDOW";
 
   G4Box* window_solid_vol =
-    new G4Box(name, width_/2., height_/2., window_thickness_/2.);
+    new G4Box(name, reduced_width_/2., reduced_height_/2., window_thickness_/2.);
 
   G4LogicalVolume* window_logic_vol =
     new G4LogicalVolume(window_solid_vol, window_mat_, name);
 
-  G4double zpos = thickness_/2. - window_thickness_/2.;
+  G4double window_zpos = thickness_/2. - wls_thickness_ - window_thickness_/2.;
 
-  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., zpos), window_logic_vol,
+  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., window_zpos), window_logic_vol,
                     name, case_logic_vol, false, 0, false);
 
 
@@ -165,14 +163,15 @@ void GenericPhotosensor::Construct()
   name = name_ + "_SENSAREA";
 
   G4Box* sensarea_solid_vol =
-    new G4Box(name, sensarea_width_/2., sensarea_height_/2., sensarea_thickness_/2.);
+    new G4Box(name, reduced_width_/2., reduced_height_/2., sensarea_thickness_/2.);
 
   G4LogicalVolume* sensarea_logic_vol =
     new G4LogicalVolume(sensarea_solid_vol, sensitive_mat_, name);
 
-  zpos = thickness_/2. - window_thickness_ - sensarea_thickness_/2.;
+  G4double sensarea_zpos = thickness_/2. - wls_thickness_ - window_thickness_ -
+                           sensarea_thickness_/2.;
 
-  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., zpos), sensarea_logic_vol,
+  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., sensarea_zpos), sensarea_logic_vol,
                     name, case_logic_vol, false, 0, false);
 
 
@@ -186,10 +185,10 @@ void GenericPhotosensor::Construct()
 
     wls_logic_vol = new G4LogicalVolume(wls_solid_vol, wls_mat_, name);
 
-    zpos = window_thickness_/2. - wls_thickness_/2.;
+    G4double wls_zpos = thickness_/2. - wls_thickness_/2.;
 
-    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., zpos), wls_logic_vol,
-                      name, window_logic_vol, false, 0, false);
+    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., wls_zpos), wls_logic_vol,
+                      name, case_logic_vol, false, 0, false);
 
     G4OpticalSurface* wls_optSurf = new G4OpticalSurface(name + "_OPSURF",
                                                          glisur, ground,
