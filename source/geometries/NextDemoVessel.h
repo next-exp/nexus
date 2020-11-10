@@ -33,6 +33,8 @@ namespace nexus {
     G4double gas_pressure_, gas_temperature_;
     G4double sc_yield_;
 
+    G4double calsrc_position_, calsrc_angle_;
+
     G4GenericMessenger* msg_;
 
     G4VPhysicalVolume* gas_phys_vol_;
