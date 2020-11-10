@@ -48,8 +48,9 @@ void NextDemo::Construct()
                       BaseGeometry::GetLogicalVolume(),
                       false, 0, false);
 
-  inner_geom_->SetMotherLogicalVolume(vessel_geom_->GetLogicalVolume());
-  inner_geom_->SetMotherPhysicalVolume(vessel_phys_vol);
+  inner_geom_->SetELzCoord(vessel_geom_->GetGateEndcapDistance());
+  inner_geom_->SetMotherLogicalVolume(vessel_geom_->GetGasPhysicalVolume()->GetLogicalVolume());
+  inner_geom_->SetMotherPhysicalVolume(vessel_geom_->GetGasPhysicalVolume());
   inner_geom_->Construct();
 }
 
