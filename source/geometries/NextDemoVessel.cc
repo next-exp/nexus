@@ -29,6 +29,8 @@ NextDemoVessel::NextDemoVessel():
   gas_pressure_(15.*bar),
   gas_temperature_(300.*kelvin),
   sc_yield_(0.),
+  calsrc_position_(0),
+  calsrc_angle_(0),
   msg_(nullptr),
   gas_phys_vol_(nullptr)
 {
@@ -46,6 +48,14 @@ NextDemoVessel::NextDemoVessel():
                            "Scintillation yield (photons/MeV) of xenon gas.");
   sc_yield_cmd.SetParameterName("sc_yield", true);
   sc_yield_cmd.SetUnitCategory("1/Energy");
+
+  G4GenericMessenger::Command& calsrc_position_cmd =
+    msg_->DeclareProperty("calsrc_position", calsrc_position_,
+                          "Position of calibration with respect to anode endcap.");
+
+  G4GenericMessenger::Command& calsrc_angle_cmd =
+    msg_->DeclareProperty("calsrc_angle", calsrc_angle_,
+                          "Angle of calibration with respect to horizontal plane.");
 }
 
 
@@ -92,7 +102,16 @@ void NextDemoVessel::Construct()
 }
 
 
-G4ThreeVector NextDemoVessel::GenerateVertex(const G4String& /*region*/) const
+G4ThreeVector NextDemoVessel::GenerateVertex(const G4String& region) const
 {
+  G4ThreeVector vtx;
+
+  if (region == "CALIBRATION_SOURCE") {
+    G4double radius = vessel_diam_/2. + vessel_thickn_;
+    vtx.setX(radius * std::cos(calsrc_angle_));
+    vtx.setY(radius * std::sin(calsrc_angle_));
+    vtx.setZ(-vessel_length_/2. + calsrc_position_);
+  }
+
   return G4ThreeVector();
 }
