@@ -116,5 +116,5 @@ G4ThreeVector NextDemoVessel::GenerateVertex(const G4String& region) const
     vtx.setZ(-vessel_length_/2. + calsrc_position_);
   }
 
-  return G4ThreeVector();
+  return vtx;
 }

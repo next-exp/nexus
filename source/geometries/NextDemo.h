@@ -11,6 +11,8 @@
 
 #include "BaseGeometry.h"
 
+class G4GenericMessenger;
+
 namespace nexus {
 
   class NextDemoVessel;
@@ -30,9 +32,10 @@ namespace nexus {
 
   private:
     const G4double lab_size_;
-
+    G4double specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_;
     NextDemoVessel* vessel_geom_;
     NextDemoInnerElements* inner_geom_;
+    G4GenericMessenger* msg_;
   };
 
 } // end namespace nexus
