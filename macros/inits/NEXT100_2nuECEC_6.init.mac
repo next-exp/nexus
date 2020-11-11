@@ -1,0 +1,23 @@
+
+### -------------------------------------------------------
+###  This init macro simulates bb0nu decays
+###  in the NEXT100 detector geometry
+### --------------------------------------------------------
+## ----------------------------------------------------------------------------
+
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+/PhysicsList/RegisterPhysics G4OpticalPhysics
+/PhysicsList/RegisterPhysics NexusPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
+
+/Geometry/RegisterGeometry NEXT100_OPT
+
+/Generator/RegisterGenerator 2NU2K
+
+/Actions/RegisterTrackingAction DEFAULT
+/Actions/RegisterEventAction DEFAULT
+/Actions/RegisterRunAction DEFAULT
+
+/nexus/RegisterMacro /data5/users/miryam/nexus/macros/configs/NEXT100_2nuECEC_6.config.mac

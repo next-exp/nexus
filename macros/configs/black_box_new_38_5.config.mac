@@ -1,0 +1,40 @@
+### -----------------------------------------------------------
+### 
+### -----------------------------------------------------------
+
+#/control/execute macros/geometries/BlackBoxNew38_5.mac
+
+/control/execute macros/generators/SingleParticle.mac
+
+#/control/execute macros/physics/IonizationElectron.mac
+
+#/Generator/SingleParticle/particle e-
+/Generator/SingleParticle/particle opticalphoton
+#/Generator/SingleParticle/particle geantino
+#/Generator/SingleParticle/min_energy 1.5 MeV
+#/Generator/SingleParticle/max_energy 2.5 MeV
+#/Generator/SingleParticle/min_energy 7.2 eV
+#/Generator/SingleParticle/max_energy 7.2 eV
+/Generator/SingleParticle/min_energy 2.9 eV
+/Generator/SingleParticle/max_energy 2.9 eV
+/Generator/SingleParticle/region AD_HOC
+#/Generator/SingleParticle/momentum_X 0.
+#/Generator/SingleParticle/momentum_Y 0.
+#/Generator/SingleParticle/momentum_Z -1.
+/Generator/SingleParticle/min_costheta -1.
+/Generator/SingleParticle/max_costheta -0.025
+#phi no lo ponemos poque por defecto está de 0 a 2pi
+
+/Geometry/BlackBoxNew38_5/specific_vertex_X 0. mm
+/Geometry/BlackBoxNew38_5/specific_vertex_Y 0. mm
+/Geometry/BlackBoxNew38_5/specific_vertex_Z 0. mm
+
+/run/verbose 0
+/event/verbose 0
+#/tracking/verbose 0
+#/tracking/verbose 1
+
+### JOB CONTROL
+/nexus/random_seed            -1
+/nexus/persistency/start_id   0
+/nexus/persistency/outputFile testing_blackbox_new_2_9eV_38_5cm_stat.next

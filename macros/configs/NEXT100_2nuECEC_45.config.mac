@@ -1,0 +1,32 @@
+
+### --------------------------------------------------------
+###  This init macro simulates bb0nu decays
+###  in the NEXT100 detector geometry
+### --------------------------------------------------------
+
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+##### GEOMETRY #####
+/Geometry/Next100/elfield true
+/Geometry/Next100/EL_field 16 kV/cm
+/Geometry/Next100/pressure 15. bar
+/Geometry/Next100/max_step_size 1. mm
+/Geometry/PmtR11410/time_binning 25. ns
+/Geometry/Next100/sipm_time_binning 1. microsecond
+/Geometry/Next100/sc_yield 25510. 1/MeV
+/Geometry/Next100/drift_transv_diff 1. mm/sqrt(cm)
+/Geometry/Next100/drift_long_diff 0.2 mm/sqrt(cm)
+/Geometry/Next100/e_lifetime 12. ms
+
+
+##### GENERATOR #####
+/Generator/2NU2K/region ACTIVE
+
+/nexus/persistency/outputFile /data5/users/miryam/nexus/output/ecec_next100_45.nexus
+#/nexus/persistency/outputFile /data5/users/miryam/nexus/output/ecec_next100_45_0diff.nexus
+#/nexus/persistency/historyFile myHistory.macro ## must be the same as /nexus/historyFile
+
+/nexus/random_seed 9651954
+
