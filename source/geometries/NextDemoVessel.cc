@@ -12,6 +12,7 @@
 #include "OpticalMaterialProperties.h"
 
 #include <G4GenericMessenger.hh>
+#include <G4UnitsTable.hh>
 #include <G4Tubs.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
@@ -42,6 +43,8 @@ NextDemoVessel::NextDemoVessel():
   gas_pressure_cmd.SetUnitCategory("Pressure");
   gas_pressure_cmd.SetParameterName("pressure", false);
   gas_pressure_cmd.SetRange("pressure>0.");
+
+  new G4UnitDefinition("1/MeV", "1/MeV", "1/Energy", 1./MeV);
 
   G4GenericMessenger::Command& sc_yield_cmd =
      msg_->DeclareProperty("sc_yield", sc_yield_,
