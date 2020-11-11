@@ -1,7 +1,8 @@
 // ----------------------------------------------------------------------------
 // nexus | NextDemoInnerElements.h
 //
-// Geometry
+// Wrapper for the placement of the inner elements (field cage and photosensor
+// arrays) of the NEXT-DEMO detector.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
