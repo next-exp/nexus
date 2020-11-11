@@ -72,7 +72,8 @@ void NextDemoVessel::Construct()
   G4String vessel_name = "VESSEL";
 
   G4Tubs* vessel_solid_vol =
-    new G4Tubs(vessel_name, 0., vessel_diam_/2., vessel_length_/2., 0, twopi);
+    new G4Tubs(vessel_name, 0., (vessel_diam_/2.+vessel_thickn_),
+               vessel_length_/2., 0, twopi);
 
   G4LogicalVolume* vessel_logic_vol =
     new G4LogicalVolume(vessel_solid_vol, MaterialsList::Steel(), vessel_name);
@@ -89,9 +90,8 @@ void NextDemoVessel::Construct()
                                                               gas_temperature_,
                                                               sc_yield_));
 
-  G4Tubs* gas_solid_vol = new G4Tubs(gas_name,
-                                     0., (vessel_diam_/2.+vessel_thickn_),
-                                     vessel_length_/2., 0, twopi);
+  G4Tubs* gas_solid_vol =
+    new G4Tubs(gas_name, 0., vessel_diam_/2., vessel_length_/2., 0, twopi);
 
   G4LogicalVolume* gas_logic_vol =
     new G4LogicalVolume(gas_solid_vol, MaterialsList::Steel(), gas_name);
