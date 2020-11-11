@@ -26,7 +26,7 @@ NextDemoVessel::NextDemoVessel():
   vessel_length_(840.0*mm), // Internal length
   vessel_thickn_(  3.0*mm),
   gate_endcap_distance_(-vessel_length_/2. + 92.1*mm),
-  gas_pressure_(15.*bar),
+  gas_pressure_(10.*bar),
   gas_temperature_(300.*kelvin),
   sc_yield_(0.),
   calsrc_position_(0),
