@@ -41,12 +41,11 @@ void NextDemo::Construct()
   ConstructLab();
 
   vessel_geom_->Construct();
-  G4VPhysicalVolume* vessel_phys_vol =
-    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., 0.),
-                      vessel_geom_->GetLogicalVolume(),
-                      vessel_geom_->GetLogicalVolume()->GetName(),
-                      BaseGeometry::GetLogicalVolume(),
-                      false, 0, false);
+  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., 0.),
+                    vessel_geom_->GetLogicalVolume(),
+                    vessel_geom_->GetLogicalVolume()->GetName(),
+                    BaseGeometry::GetLogicalVolume(),
+                    false, 0, false);
 
   inner_geom_->SetELzCoord(vessel_geom_->GetGateEndcapDistance());
   inner_geom_->SetMotherLogicalVolume(vessel_geom_->GetGasPhysicalVolume()->GetLogicalVolume());
