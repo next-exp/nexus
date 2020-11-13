@@ -45,8 +45,24 @@ def nexus_output_file_ring_tiles(output_tmpdir, base_name_ring_tiles):
     return os.path.join(output_tmpdir, base_name_ring_tiles+'.h5'), n_sipm, n_boards, sipms_per_board, board_ordering
 
 
+@pytest.fixture(scope = 'session')
+def base_name_pet_box():
+    return 'PET_box_sd_test'
+
+
+@pytest.fixture(scope = 'session')
+def nexus_output_file_pet_box(output_tmpdir, base_name_pet_box):
+    n_sipm          = 128
+    n_boards        = 0
+    sipms_per_board = 0
+    board_ordering  = 0
+    return os.path.join(output_tmpdir, base_name_pet_box+'.h5'), n_sipm, n_boards, sipms_per_board, board_ordering
+
+
 @pytest.fixture(scope="module",
-         params=["nexus_output_file_full_body", "nexus_output_file_ring_tiles"],
-         ids=["full_body", "ring_tiles"])
+         params=["nexus_output_file_full_body", "nexus_output_file_ring_tiles", "nexus_output_file_pet_box"],
+         ids=["full_body", "ring_tiles", "pet_box"])
 def nexus_files(request):
     return request.getfixturevalue(request.param)
+
+
