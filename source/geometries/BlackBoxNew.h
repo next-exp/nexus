@@ -53,7 +53,7 @@ namespace nexus {
     G4ThreeVector kdb_dimensions_;
     G4double dice_board_x_pos_;
     G4double dice_board_y_pos_;
-    G4double dice_board_z_pos_;
+    //G4double dice_board_z_pos_;
 
     G4bool _visibility;
 
@@ -64,6 +64,8 @@ namespace nexus {
     G4double _specific_vertex_X;
     G4double _specific_vertex_Y;
     G4double _specific_vertex_Z;
+
+    G4double _dice_board_z_pos;
 
   };
 

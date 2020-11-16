@@ -22,12 +22,15 @@
 #/Generator/SingleParticle/momentum_Y 0.
 #/Generator/SingleParticle/momentum_Z -1
 /Generator/SingleParticle/min_costheta -1.
-/Generator/SingleParticle/max_costheta -0.025
+/Generator/SingleParticle/max_costheta -0.95
+#/Generator/SingleParticle/max_costheta -0.025
 #phi no lo ponemos poque por defecto está de 0 a 2pi
 
 /Geometry/BlackBoxSimple/specific_vertex_X 0. mm
 /Geometry/BlackBoxSimple/specific_vertex_Y 0. mm
 /Geometry/BlackBoxSimple/specific_vertex_Z 0. mm
+
+/Geometry/BlackBoxSimple/dice_board_z_pos -23.5 cm
 
 /run/verbose 0
 /event/verbose 0

@@ -69,6 +69,12 @@ namespace nexus {
     specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
     specific_vertex_Z_cmd.SetUnitCategory("Length");
 
+    G4GenericMessenger::Command&  dice_board_z_pos_cmd =
+      _msg->DeclareProperty("dice_board_z_pos", _dice_board_z_pos,
+                            "Distance between dice and photon source");
+    specific_vertex_Z_cmd.SetParameterName("dice_board_z_pos", true);
+    specific_vertex_Z_cmd.SetUnitCategory("Length");
+
     dice_ = new KDB_Sensl(SiPM_rows_, SiPM_columns_);
   }
   
@@ -105,13 +111,13 @@ namespace nexus {
   dice_->Construct();
   kdb_dimensions_ = dice_->GetDimensions();
   G4LogicalVolume* dice_board_logic = dice_->GetLogicalVolume();
-  G4double db_thickness =kdb_dimensions_.z();
+  //G4double db_thickness =kdb_dimensions_.z();
   ////Dice Boards placement
   dice_board_x_pos_ = 0 * cm;  
   dice_board_y_pos_ = 0 * cm;
   //dice_board_z_pos_ = -80* cm;
-  dice_board_z_pos_ = -1.5* cm;
-  G4ThreeVector post(dice_board_x_pos_,dice_board_y_pos_,dice_board_z_pos_);  
+  //dice_board_z_pos_ = -1.5* cm;
+  G4ThreeVector post(dice_board_x_pos_,dice_board_y_pos_,_dice_board_z_pos);  
   //G4RotationMatrix* rot = new G4RotationMatrix();
   //rot -> rotateY(180*deg);
 
