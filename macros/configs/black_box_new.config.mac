@@ -4,7 +4,7 @@
 
 #/control/execute macros/geometries/BlackBoxNew.mac
 
-/control/execute macros/generators/SingleParticle.mac
+#/control/execute macros/generators/SingleParticle.mac
 
 #/control/execute macros/physics/IonizationElectron.mac
 
