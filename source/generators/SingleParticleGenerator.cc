@@ -35,7 +35,8 @@ using namespace CLHEP;
 SingleParticleGenerator::SingleParticleGenerator():
 G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
 energy_min_(0.), energy_max_(0.), geom_(0), momentum_X_(0.),
-momentum_Y_(0.), momentum_Z_(0.)
+momentum_Y_(0.), momentum_Z_(0.), costheta_min_(-1.), 
+costheta_max_(1.), phi_min_(0.), phi_max_(2.*pi)
 {
   msg_ = new G4GenericMessenger(this, "/Generator/SingleParticle/",
     "Control commands of single-particle generator.");
@@ -66,6 +67,15 @@ momentum_Y_(0.), momentum_Z_(0.)
 			"y coord of momentum");
   msg_->DeclareProperty("momentum_Z", momentum_Z_,
 			"z coord of momentum");
+
+  msg_->DeclareProperty("min_costheta", costheta_min_,
+			"Set minimum cosTheta for the direction of the particle.");
+  msg_->DeclareProperty("max_costheta", costheta_max_,
+			"Set maximum cosTheta for the direction of the particle.");
+  msg_->DeclareProperty("min_phi", phi_min_,
+			"Set minimum phi for the direction of the particle.");
+  msg_->DeclareProperty("max_phi", phi_max_,
+			"Set maximum phi for the direction of the particle.");
 
 
   DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
@@ -127,6 +137,25 @@ void SingleParticleGenerator::GeneratePrimaryVertex(G4Event* event)
     px = pmod * momentum_X_/mom_mod;
     py = pmod * momentum_Y_/mom_mod;
     pz = pmod * momentum_Z_/mom_mod;
+  } else if (costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. || phi_max_ !=2.*pi) {
+    G4bool mom_dir = false;
+    while (mom_dir == false) {
+      G4double cosTheta  = 2.*G4UniformRand()-1.;
+      if (cosTheta > costheta_min_ && cosTheta < costheta_max_){
+	G4double sinTheta2 = 1. - cosTheta*cosTheta;
+	if( sinTheta2 < 0.)  sinTheta2 = 0.;
+	G4double sinTheta  = std::sqrt(sinTheta2);
+	G4double phi = twopi*G4UniformRand();
+	  if (phi > phi_min_ && phi < phi_max_){
+	    mom_dir = true;
+	    _momentum_direction = G4ThreeVector(sinTheta*std::cos(phi),
+						sinTheta*std::sin(phi), cosTheta).unit();
+	    px = pmod * _momentum_direction.x();
+	    py = pmod * _momentum_direction.y();
+	    pz = pmod * _momentum_direction.z();
+	  }
+      }
+    }
   }
 
   // Create the new primary particle and set it some properties
