@@ -60,8 +60,9 @@ namespace nexus {
     
     G4double width_, height_, thickness_;
     G4double window_thickness_;
-    G4double sensarea_width_, sensarea_height_, sensarea_thickness_;
+    G4double sensarea_thickness_;
     G4double wls_thickness_;
+    G4double reduced_width_, reduced_height_;
 
     G4Material* case_mat_;
     G4Material* window_mat_;
