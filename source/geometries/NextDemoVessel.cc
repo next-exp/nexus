@@ -30,6 +30,7 @@ NextDemoVessel::NextDemoVessel():
   gas_pressure_(10.*bar),
   gas_temperature_(300.*kelvin),
   sc_yield_(0.),
+  e_lifetime_(1.*s),
   calsrc_position_(0),
   calsrc_angle_(0),
   msg_(nullptr),
@@ -52,11 +53,17 @@ NextDemoVessel::NextDemoVessel():
   sc_yield_cmd.SetParameterName("sc_yield", true);
   sc_yield_cmd.SetUnitCategory("1/Energy");
 
-  G4GenericMessenger::Command& calsrc_position_cmd =
+  G4GenericMessenger::Command& e_lifetime_cmd =
+    msg_->DeclareProperty("e_lifetime", e_lifetime_, "Electron lifetime in gas.");
+  e_lifetime_cmd.SetParameterName("e_lifetime", false);
+  e_lifetime_cmd.SetUnitCategory("Time");
+  e_lifetime_cmd.SetRange("e_lifetime>0.");
+
+  //G4GenericMessenger::Command& calsrc_position_cmd =
     msg_->DeclareProperty("calsrc_position", calsrc_position_,
                           "Position of calibration with respect to anode endcap.");
 
-  G4GenericMessenger::Command& calsrc_angle_cmd =
+  //G4GenericMessenger::Command& calsrc_angle_cmd =
     msg_->DeclareProperty("calsrc_angle", calsrc_angle_,
                           "Angle of calibration with respect to horizontal plane.");
 }
@@ -91,13 +98,14 @@ void NextDemoVessel::Construct()
   gas_material->
     SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(gas_pressure_,
                                                               gas_temperature_,
-                                                              sc_yield_));
+                                                              sc_yield_,
+                                                              e_lifetime_));
 
   G4Tubs* gas_solid_vol =
     new G4Tubs(gas_name, 0., vessel_diam_/2., vessel_length_/2., 0, twopi);
 
   G4LogicalVolume* gas_logic_vol =
-    new G4LogicalVolume(gas_solid_vol, MaterialsList::Steel(), gas_name);
+    new G4LogicalVolume(gas_solid_vol, gas_material, gas_name);
 
   gas_phys_vol_ = new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.),
                                     gas_logic_vol, gas_name, vessel_logic_vol,
