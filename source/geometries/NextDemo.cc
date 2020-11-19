@@ -66,7 +66,7 @@ void NextDemo::Construct()
   ConstructLab();
 
   vessel_geom_->Construct();
-  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., 0.),
+  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., -vessel_geom_->GetGateEndcapDistance()),
                     vessel_geom_->GetLogicalVolume(),
                     vessel_geom_->GetLogicalVolume()->GetName(),
                     BaseGeometry::GetLogicalVolume(),
@@ -116,6 +116,8 @@ G4ThreeVector NextDemo::GenerateVertex(const G4String& region) const
             (region == "TP_PLATE") ||
             (region == "SIPM_BOARD") ) {
     vtx = inner_geom_->GenerateVertex(region);
+    G4ThreeVector displacement = G4ThreeVector(0., 0., -vessel_geom_->GetGateEndcapDistance());
+    vtx = vtx + displacement;
   }
   else {
     G4Exception("[NextDemo]", "GenerateVertex()", FatalException,
