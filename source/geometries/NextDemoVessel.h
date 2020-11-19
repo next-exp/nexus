@@ -31,7 +31,7 @@ namespace nexus {
     const G4double gate_endcap_distance_;
 
     G4double gas_pressure_, gas_temperature_;
-    G4double sc_yield_;
+    G4double sc_yield_, e_lifetime_;
 
     G4double calsrc_position_, calsrc_angle_;
 
