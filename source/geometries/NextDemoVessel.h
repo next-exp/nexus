@@ -27,6 +27,8 @@ namespace nexus {
     G4double GetGateEndcapDistance() const;
 
   private:
+    G4bool vessel_vis_;
+
     const G4double vessel_diam_, vessel_length_, vessel_thickn_;
     const G4double gate_endcap_distance_;
 
