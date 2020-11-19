@@ -23,6 +23,7 @@ using namespace nexus;
 
 NextDemoVessel::NextDemoVessel():
   BaseGeometry(),
+  vessel_vis_(true),
   vessel_diam_  (298.8*mm), // Internal diameter
   vessel_length_(840.0*mm), // Internal length
   vessel_thickn_(  3.0*mm),
@@ -38,6 +39,9 @@ NextDemoVessel::NextDemoVessel():
 {
   msg_ = new G4GenericMessenger(this, "/Geometry/NextDemo/",
                                 "Control commands of the NEXT-DEMO geometry.");
+
+  msg_->DeclareProperty("vessel_vis", vessel_vis_,
+                        "Visibility of pressure vessel.");
 
   G4GenericMessenger::Command& gas_pressure_cmd =
     msg_->DeclareProperty("pressure", gas_pressure_, "Xenon gas pressure.");
@@ -88,6 +92,8 @@ void NextDemoVessel::Construct()
   G4LogicalVolume* vessel_logic_vol =
     new G4LogicalVolume(vessel_solid_vol, MaterialsList::Steel(), vessel_name);
 
+  if (!vessel_vis_) vessel_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+    
   BaseGeometry::SetLogicalVolume(vessel_logic_vol);
 
   ////////////////////////////////////////////////////////////////////
@@ -110,6 +116,8 @@ void NextDemoVessel::Construct()
   gas_phys_vol_ = new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.),
                                     gas_logic_vol, gas_name, vessel_logic_vol,
                                     false, 0, false);
+
+  gas_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
 }
 
 
