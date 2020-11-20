@@ -206,4 +206,23 @@ namespace nexus {
     return real_pos;
   }
 
+  G4ThreeVector BoxPointSampler::GetIntersect(const G4ThreeVector& point,
+					      const G4ThreeVector& dir)
+  {
+    // Get the +ve movements to intersect with the faces of the box.
+    G4double tx = (-inner_x_ - point.x())  / dir.x();
+    if (tx < 0) tx = (inner_x_ - point.x()) / dir.x();
+
+    G4double ty = (-inner_y_ - point.y()) / dir.y();
+    if (ty < 0) ty = (inner_y_ - point.y()) / dir.y();
+
+    G4double tz = (-inner_z_ - point.z()) / dir.z();
+    if (tz < 0) tz = (inner_z_ - point.z()) / dir.z();
+
+    // The minimum of the tx, ty, tz gives the intersection point.
+    G4double tmin = std::min({tx, ty, tz});
+
+    return RotateAndTranslate(point + tmin * dir);
+  }
+
 } // end namespace nexus

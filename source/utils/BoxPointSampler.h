@@ -32,6 +32,10 @@ namespace nexus {
     /// Return vertex within region <region> of the chamber
     G4ThreeVector GenerateVertex(const G4String& region);
 
+    /// Return the intersect point along dir
+    G4ThreeVector GetIntersect(const G4ThreeVector& point,
+			       const G4ThreeVector& dir);
+
   private:
     G4double GetLength(G4double origin, G4double max_length);
     G4ThreeVector RotateAndTranslate(G4ThreeVector position);
