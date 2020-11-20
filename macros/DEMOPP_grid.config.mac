@@ -1,8 +1,8 @@
 ## ----------------------------------------------------------------------------
-## nexus | DEMOPP_plate.config.mac
+## nexus | DEMOPP_grid.config.mac
 ##
 ## Configuration macro to simulate electrons in the DEMO++ geometry
-## with a quartz plate as anode.
+## with a grid as anode.
 ##
 ## The NEXT Collaboration
 ## ----------------------------------------------------------------------------
