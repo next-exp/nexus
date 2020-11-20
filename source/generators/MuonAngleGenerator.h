@@ -16,7 +16,7 @@
 class G4GenericMessenger;
 class G4Event;
 class G4ParticleDefinition;
-class G4VSolid;
+//class G4VSolid;
 
 class TH2F;
 
@@ -52,8 +52,7 @@ namespace nexus {
 
     void GetDirection(G4ThreeVector& dir);
 
-    G4bool CheckOverlap(const G4ThreeVector& vtx,
-    			const G4ThreeVector& dir);
+    G4ThreeVector ProjectToVertex(const G4ThreeVector& dir);
 
   private:
     G4GenericMessenger* msg_;
@@ -70,12 +69,11 @@ namespace nexus {
     G4String region_; ///< Name of generator region
     G4String ang_file_; ///< Name of file with distributions
     G4String dist_name_; ///< Name of distribution in file
+    G4double gen_rad_; ///< Radius of disc for generation
 
     TH2F * distribution_; ///< Anglular distribution
 
     const BaseGeometry* geom_; ///< Pointer to the detector geometry
-
-    G4VSolid * geom_solid_;
 
   };
 
