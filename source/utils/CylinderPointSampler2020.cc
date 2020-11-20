@@ -104,6 +104,46 @@ namespace nexus {
   }
 
 
+  G4ThreeVector
+  CylinderPointSampler2020::GetIntersect(const G4ThreeVector& point,
+					 const G4ThreeVector& dir)
+  {
+    // Projects for +ve direction (for backwards send -ve dir)
+    // To find the intersection with the Cylinder.
+    // First we want to solve for the ray intersection with
+    // an infinite barrel, so where point + tdir satisfies
+    // x^2 + y^2 - r^2 = 0 (valid for all z before rotation).
+    // Solve the quadratic equation and take the +ve t
+    G4double a = dir.x()*dir.x() + dir.y()*dir.y();
+    G4double b = 2 * (point.x()*dir.x() + point.y()*dir.y());
+    G4double c = point.x()*point.x() + point.y()*point.y() - minRad_*minRad_;
+    G4double determinant = b*b - 4*a*c;
+    if (determinant < 0)
+      // No intersection return origin.
+      return RotateAndTranslate(G4ThreeVector(0., 0., 0.));
+
+    G4double t = -b + std::sqrt(determinant) / (2 * a);
+    if (t < 0) t = -b - std::sqrt(determinant) / (2 * a);
+    // If still -ve we're outside the volume giv origin
+    if (t < 0)
+      return RotateAndTranslate(G4ThreeVector(0., 0., 0.));
+
+    G4ThreeVector barrel_intersect = point + t * dir;
+
+    // If the z of the prediction is within the barrel limits we're done.
+    if (std::abs(barrel_intersect.z()) <= halfLength_)
+      return RotateAndTranslate(barrel_intersect);
+
+    // If not, we need to check the endcaps.
+    if (barrel_intersect.z() < 0)
+      // We're beyond the -ve endcap.
+      t = (-halfLength_ - point.z()) / dir.z();
+    else
+      t = (halfLength_ - point.z()) / dir.z();
+    return RotateAndTranslate(point + t * dir);
+  }
+
+
 
   G4double CylinderPointSampler2020::GetRadius(G4double innerRad, G4double outerRad)
   {
