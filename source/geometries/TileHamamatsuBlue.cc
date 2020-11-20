@@ -95,7 +95,7 @@ namespace nexus {
     G4LogicalVolume* wls_logic =
       new G4LogicalVolume(wls_solid, wls, "Epoxy");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., tile_z_/2. - wls_depth_/2.),
+    new G4PVPlacement(0, G4ThreeVector(0., 0., (tile_z_+epoxy_depth_+wls_depth_)/2. - wls_depth_/2.),
     wls_logic, "WLS", tile_logic, false, 0, false);
 
 
@@ -111,7 +111,7 @@ namespace nexus {
     G4LogicalVolume* epoxy_logic =
       new G4LogicalVolume(epoxy_solid, epoxy, "Epoxy");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., tile_z_/2. - epoxy_depth/2. - wls_depth_),
+    new G4PVPlacement(0, G4ThreeVector(0., 0., (tile_z_+epoxy_depth_+wls_depth_)/2. - epoxy_depth/2. - wls_depth_),
     epoxy_logic, "Epoxy", tile_logic, false, 0, false);
 
 
