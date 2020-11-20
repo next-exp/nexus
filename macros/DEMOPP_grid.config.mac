@@ -1,8 +1,8 @@
 ## ----------------------------------------------------------------------------
-## nexus | DEMOPP_plate.config.mac
+## nexus | DEMOPP_grid.config.mac
 ##
 ## Configuration macro to simulate electrons in the DEMO++ geometry
-## with a quartz plate as anode.
+## with a grid as anode.
 ##
 ## The NEXT Collaboration
 ## ----------------------------------------------------------------------------
@@ -15,9 +15,9 @@
 
 # GEOMETRY
 /Geometry/NextDemo/max_step_size 1. mm
-/Geometry/NextDemo/pressure 10. bar
-/Geometry/NextDemo/plate true
-/Geometry/NextDemo/tracking_plane_type original
+/Geometry/NextDemo/pressure 8. bar
+/Geometry/NextDemo/plate false
+/Geometry/NextDemo/tracking_plane_type type1
 
 ######################################################
 
