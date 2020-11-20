@@ -129,3 +129,59 @@ def test_create_nexus_output_file_ring_tiles(config_tmpdir, output_tmpdir, NEXUS
      p         = subprocess.run(command, check=True, env=my_env)
 
      return nexus_output_file_ring_tiles
+
+
+@pytest.mark.first
+def test_create_nexus_output_file_pet_box(config_tmpdir, output_tmpdir, NEXUSDIR, base_name_pet_box, nexus_output_file_pet_box):
+
+     init_text = f"""
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+/PhysicsList/RegisterPhysics G4OpticalPhysics
+/PhysicsList/RegisterPhysics NexusPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
+
+/Geometry/RegisterGeometry PETBOX
+
+/Generator/RegisterGenerator BACK2BACK
+
+/Actions/RegisterTrackingAction DEFAULT
+/Actions/RegisterEventAction DEFAULT
+/Actions/RegisterRunAction DEFAULT
+
+/nexus/RegisterMacro {config_tmpdir}/{base_name_pet_box}.config.mac
+"""
+     init_path = os.path.join(config_tmpdir, base_name_pet_box+'.init.mac')
+     init_file = open(init_path,'w')
+     init_file.write(init_text)
+     init_file.close()
+
+     config_text = f"""
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+/Geometry/PetBox/tile_type HamamatsuVUV
+/Geometry/PetBox/tile_refl 0.
+/Geometry/PetBox/sipm_time_binning 1. microsecond
+/Geometry/PetBox/sipm_pde 0.5
+
+/Generator/Back2back/region CENTER
+
+/nexus/persistency/outputFile {output_tmpdir}/{base_name_pet_box}
+/nexus/random_seed 23102020
+
+"""
+
+     config_path = os.path.join(config_tmpdir, base_name_pet_box+'.config.mac')
+     config_file = open(config_path,'w')
+     config_file.write(config_text)
+     config_file.close()
+
+     my_env    = os.environ
+     nexus_exe = NEXUSDIR + '/nexus'
+     command   = [nexus_exe, '-b', '-n', '20', init_path]
+     p         = subprocess.run(command, check=True, env=my_env)
+
+     return nexus_output_file_pet_box
