@@ -111,6 +111,8 @@ G4ThreeVector NextDemo::GenerateVertex(const G4String& region) const
   }
   else if (region == "CALIBRATION_SOURCE") {
     vtx = vessel_geom_->GenerateVertex("CALIBRATION_SOURCE");
+    G4ThreeVector displacement = G4ThreeVector(0., 0., -vessel_geom_->GetGateEndcapDistance());
+    vtx = vtx + displacement;
   }
   else if ( (region == "ACTIVE")  ||
             (region == "TP_PLATE") ||
