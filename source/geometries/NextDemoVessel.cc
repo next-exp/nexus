@@ -17,6 +17,7 @@
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4Material.hh>
+#include <G4VisAttributes.hh>
 
 using namespace nexus;
 
@@ -93,7 +94,7 @@ void NextDemoVessel::Construct()
     new G4LogicalVolume(vessel_solid_vol, MaterialsList::Steel(), vessel_name);
 
   if (!vessel_vis_) vessel_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
-    
+
   BaseGeometry::SetLogicalVolume(vessel_logic_vol);
 
   ////////////////////////////////////////////////////////////////////
