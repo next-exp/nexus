@@ -34,7 +34,7 @@ using namespace CLHEP;
 MuonAngleGenerator::MuonAngleGenerator():
   G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
   angular_generation_(true), rPhi_(NULL), energy_min_(0.),
-  energy_max_(0.), distribution_(0), geom_(0), geom_solid_(0)
+  energy_max_(0.), gen_rad_(223.33*cm), distribution_(0), geom_(0)//, geom_solid_(0)
 {
   msg_ = new G4GenericMessenger(this, "/Generator/MuonAngleGenerator/",
 				"Control commands of muongenerator.");
@@ -50,6 +50,13 @@ MuonAngleGenerator::MuonAngleGenerator():
   max_energy.SetUnitCategory("Energy");
   max_energy.SetParameterName("max_energy", false);
   max_energy.SetRange("max_energy>0.");
+
+  // defaults to length of the NEXT100 shielding diagonal if not present.
+  G4GenericMessenger::Command& generation_radius =
+    msg_->DeclareProperty("gen_rad", gen_rad_, "Set radius for generation disc");
+  generation_radius.SetUnitCategory("Length");
+  generation_radius.SetParameterName("gen_rad", false);
+  generation_radius.SetRange("gen_rad>0.");
 
   msg_->DeclareProperty("region", region_,
 			"Set the region of the geometry where the vertex will be generated.");
@@ -95,10 +102,6 @@ void MuonAngleGenerator::SetupAngles()
   distribution_->SetDirectory(0);
   angle_file.Close();
 
-  // Get the solid to check overlap
-  geom_solid_ =
-    geom_->GetLogicalVolume()->GetDaughter(0)->GetLogicalVolume()->GetSolid();
-
 }
 
 
@@ -122,14 +125,10 @@ void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
   G4double energy = kinetic_energy + mass;
   G4double pmod   = std::sqrt(energy*energy - mass*mass);
 
-  G4ThreeVector position = geom_->GenerateVertex(region_);
   G4ThreeVector p_dir(0., -1., 0.);
-  if (angular_generation_){
+  if (angular_generation_)
     GetDirection(p_dir);
-    while ( !CheckOverlap(position, p_dir) )
-      position = geom_->GenerateVertex(region_);
-  }
-
+  G4ThreeVector position = ProjectToVertex(p_dir);
   G4double px = pmod * p_dir.x();
   G4double py = pmod * p_dir.y();
   G4double pz = pmod * p_dir.z();
@@ -187,14 +186,17 @@ void MuonAngleGenerator::GetDirection(G4ThreeVector& dir)
 }
 
 
-G4bool MuonAngleGenerator::CheckOverlap(const G4ThreeVector& vtx,
-					const G4ThreeVector& dir)
+G4ThreeVector MuonAngleGenerator::ProjectToVertex(const G4ThreeVector& dir)
 {
-  // Check for overlap between generated vertex+direction
-  // and the geometry.
+  // Postion in disc (need to sort size, member function)
+  G4double rad = gen_rad_ * std::sqrt(G4UniformRand());
+  G4double ang = 2 * G4UniformRand() * pi;
 
-  if (geom_solid_->DistanceToIn(vtx, dir) == kInfinity)
-    return false;
+  // Continue assuming that Y is vertical and z drift,
+  // valid for NEW and NEXT-100 (at least)
+  G4ThreeVector point(rad * std::cos(ang), 0., rad * std::sin(ang));
+  point.rotate(pi / 2 - dir.angle(point), dir.cross(point));
 
-  return true;
+  // Now project back to the requested region intersection.
+  return geom_->ProjectToRegion(region_, point, -dir);
 }
