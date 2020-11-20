@@ -1,8 +1,7 @@
 // ----------------------------------------------------------------------------
 // nexus | Next100FieldCage.h
 //
-// Field cage geometry of the NEXT-100 detector. It include the elements in
-// the drift and the buffer part of the detector.
+// Geometry of the NEXT-100 field cage.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
@@ -11,47 +10,35 @@
 #define NEXT100_FIELDCAGE_H
 
 #include "BaseGeometry.h"
-
-#include <G4Navigator.hh>
 #include <vector>
 
 class G4Material;
 class G4LogicalVolume;
 class G4VPhysicalVolume;
 class G4GenericMessenger;
+class G4Navigator;
 
 namespace nexus {
 
   class CylinderPointSampler2020;
 
-  /// This is a geometry formed by the reflector tube and
-  /// TPB layer if needed
 
   class Next100FieldCage: public BaseGeometry
   {
-
   public:
-    /// Constructor
     Next100FieldCage();
-    /// Destructor
     ~Next100FieldCage();
+    G4ThreeVector GenerateVertex(const G4String& region) const override;
 
-    /// Generate a vertex within a given region of the geometry
-    G4ThreeVector GenerateVertex(const G4String& region) const;
-
-    ///
     G4ThreeVector GetActivePosition() const;
     G4double GetDistanceGateSapphireWindows() const;
 
-    /// Builder
     void Construct();
 
-    /// Sets as mother volume of all the elements the volume where the class is placed
     void SetMotherLogicalVolume(G4LogicalVolume* mother_logic);
     void SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys);
 
   private:
-
     void DefineMaterials();
     void BuildActive();
     void BuildCathodeGrid();
