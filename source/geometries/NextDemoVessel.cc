@@ -33,8 +33,8 @@ NextDemoVessel::NextDemoVessel():
   gas_temperature_(300.*kelvin),
   sc_yield_(0.),
   e_lifetime_(1.*s),
-  calsrc_position_(0),
-  calsrc_angle_(0),
+  calsrc_zpos_(0.),
+  calsrc_angle_(0.),
   msg_(nullptr),
   gas_phys_vol_(nullptr)
 {
@@ -64,13 +64,15 @@ NextDemoVessel::NextDemoVessel():
   e_lifetime_cmd.SetUnitCategory("Time");
   e_lifetime_cmd.SetRange("e_lifetime>0.");
 
-  //G4GenericMessenger::Command& calsrc_position_cmd =
-    msg_->DeclareProperty("calsrc_position", calsrc_position_,
-                          "Position of calibration with respect to anode endcap.");
+  G4GenericMessenger::Command& calsrc_zpos_cmd =
+    msg_->DeclarePropertyWithUnit("calsrc_zpos", "mm", calsrc_zpos_,
+                                  "Longitudinal position of calibration source wrt to anode endcap.");
+  calsrc_zpos_cmd.SetParameterName("calsrc_zpos", false);
+  calsrc_zpos_cmd.SetUnitCategory("Length");
 
-  //G4GenericMessenger::Command& calsrc_angle_cmd =
-    msg_->DeclareProperty("calsrc_angle", calsrc_angle_,
-                          "Angle of calibration with respect to horizontal plane.");
+  msg_->DeclarePropertyWithUnit("calsrc_angle", "deg", calsrc_angle_,
+                                "Angular position of calibration source wrt to horizontal plane");
+
 }
 
 
@@ -130,7 +132,7 @@ G4ThreeVector NextDemoVessel::GenerateVertex(const G4String& region) const
     G4double radius = vessel_diam_/2. + vessel_thickn_;
     vtx.setX(radius * std::cos(calsrc_angle_));
     vtx.setY(radius * std::sin(calsrc_angle_));
-    vtx.setZ(-vessel_length_/2. + calsrc_position_);
+    vtx.setZ(-vessel_length_/2. + calsrc_zpos_);
   }
 
   return vtx;
