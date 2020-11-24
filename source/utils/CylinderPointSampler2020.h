@@ -50,6 +50,7 @@ namespace nexus {
     G4double      GetPhi();
     G4double      GetLength(G4double halfLength);
     G4ThreeVector RotateAndTranslate(G4ThreeVector position);
+    void InvertRotationAndTranslation(G4ThreeVector& vec, bool translate=true);
 
   private:
     G4double          minRad_, maxRad_, halfLength_;  // Solid Dimensions
