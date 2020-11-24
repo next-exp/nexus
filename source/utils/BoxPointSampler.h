@@ -39,6 +39,7 @@ namespace nexus {
   private:
     G4double GetLength(G4double origin, G4double max_length);
     G4ThreeVector RotateAndTranslate(G4ThreeVector position);
+    void InvertRotationAndTranslation(G4ThreeVector& vec, bool translate=true);
 
   private:
     G4double inner_x_, inner_y_, inner_z_; ///< Internal dimensions
