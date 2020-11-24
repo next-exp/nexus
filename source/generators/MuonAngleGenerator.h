@@ -16,7 +16,6 @@
 class G4GenericMessenger;
 class G4Event;
 class G4ParticleDefinition;
-//class G4VSolid;
 
 class TH2F;
 
