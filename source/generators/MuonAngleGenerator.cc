@@ -19,7 +19,6 @@
 #include <G4RandomDirection.hh>
 #include <Randomize.hh>
 #include <G4OpticalPhoton.hh>
-#include "MuonsPointSampler.h"
 #include "AddUserInfoToPV.h"
 
 #include <TMath.h>
@@ -34,7 +33,7 @@ using namespace CLHEP;
 MuonAngleGenerator::MuonAngleGenerator():
   G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
   angular_generation_(true), rPhi_(NULL), energy_min_(0.),
-  energy_max_(0.), gen_rad_(223.33*cm), distribution_(0), geom_(0)//, geom_solid_(0)
+  energy_max_(0.), gen_rad_(223.33*cm), distribution_(0), geom_(0)
 {
   msg_ = new G4GenericMessenger(this, "/Generator/MuonAngleGenerator/",
 				"Control commands of muongenerator.");
@@ -188,7 +187,7 @@ void MuonAngleGenerator::GetDirection(G4ThreeVector& dir)
 
 G4ThreeVector MuonAngleGenerator::ProjectToVertex(const G4ThreeVector& dir)
 {
-  // Postion in disc (need to sort size, member function)
+  // Postion in disc
   G4double rad = gen_rad_ * std::sqrt(G4UniformRand());
   G4double ang = 2 * G4UniformRand() * pi;
 
