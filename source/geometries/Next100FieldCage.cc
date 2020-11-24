@@ -72,9 +72,9 @@ Next100FieldCage::Next100FieldCage():
   visibility_ (1),
   verbosity_(0),
   // EL gap generation disk parameters
-  el_gap_gen_disk_diam_(0.)
+  el_gap_gen_disk_diam_(0.),
   el_gap_gen_disk_x_(0.), el_gap_gen_disk_y_(0.),
-  G4double el_gap_gen_disk_zmin_(0.), el_gap_gen_disk_zmax_(1.)
+  el_gap_gen_disk_zmin_(0.), el_gap_gen_disk_zmax_(1.)
 {
   /// Define new categories
   new G4UnitDefinition("kilovolt/cm","kV/cm","Electric field", kilovolt/cm);
@@ -137,6 +137,41 @@ Next100FieldCage::Next100FieldCage():
   pitch_cmd.SetRange("el_table_binning>0.");
 
   msg_->DeclareProperty("el_table_point_id", el_table_point_id_, "");
+
+  G4GenericMessenger::Command& el_gap_gen_disk_diam_cmd =
+    msg_->DeclareProperty("el_gap_gen_disk_diam", el_gap_gen_disk_diam_,
+                          "Diameter of the EL gap vertex generation disk.");
+  el_gap_gen_disk_diam_cmd.SetUnitCategory("Length");
+  el_gap_gen_disk_diam_cmd.SetParameterName("el_gap_gen_disk_diam", false);
+  el_gap_gen_disk_diam_cmd.SetRange("el_gap_gen_disk_diam>0.");
+
+  G4GenericMessenger::Command& el_gap_gen_disk_x_cmd =
+    msg_->DeclareProperty("el_gap_gen_disk_x", el_gap_gen_disk_x_,
+                          "X position of the center of the EL gap vertex generation disk.");
+  el_gap_gen_disk_x_cmd.SetUnitCategory("Length");
+  el_gap_gen_disk_x_cmd.SetParameterName("el_gap_gen_disk_x", false);
+  el_gap_gen_disk_x_cmd.SetRange("el_gap_gen_disk_x>0.");
+
+  G4GenericMessenger::Command& el_gap_gen_disk_y_cmd =
+    msg_->DeclareProperty("el_gap_gen_disk_y", el_gap_gen_disk_y_,
+                          "Y position of the center of the EL gap vertex generation disk.");
+  el_gap_gen_disk_y_cmd.SetUnitCategory("Length");
+  el_gap_gen_disk_y_cmd.SetParameterName("el_gap_gen_disk_y", false);
+  el_gap_gen_disk_y_cmd.SetRange("el_gap_gen_disk_y>0.");
+
+  G4GenericMessenger::Command& el_gap_gen_disk_zmin_cmd =
+    msg_->DeclareProperty("el_gap_gen_disk_zmin", el_gap_gen_disk_zmin_,
+                          "Minimum Z range of the EL gap vertex generation disk.");
+  el_gap_gen_disk_zmin_cmd.SetUnitCategory("Length");
+  el_gap_gen_disk_zmin_cmd.SetParameterName("el_gap_gen_disk_zmin", false);
+  el_gap_gen_disk_zmin_cmd.SetRange("el_gap_gen_disk_zmin>=0. && el_gap_gen_disk_zmin<=1.0");
+
+  G4GenericMessenger::Command& el_gap_gen_disk_zmax_cmd =
+    msg_->DeclareProperty("el_gap_gen_disk_zmax", el_gap_gen_disk_zmax_,
+                          "Maximum Z range of the EL gap vertex generation disk.");
+  el_gap_gen_disk_zmax_cmd.SetUnitCategory("Length");
+  el_gap_gen_disk_zmax_cmd.SetParameterName("el_gap_gen_disk_zmax", false);
+  el_gap_gen_disk_zmax_cmd.SetRange("el_gap_gen_disk_zmax>=0. && el_gap_gen_disk_zmax<=1.0");
 }
 
 
@@ -418,6 +453,21 @@ void Next100FieldCage::BuildELRegion()
   new G4PVPlacement(0, G4ThreeVector(0., 0., posz2), diel_grid_logic,
                     "EL_GRID_ANODE", el_gap_logic, false, 1, false);
 
+  // Vertex generator
+  G4double el_gap_gen_disk_thickn =
+    el_gap_length_ * (el_gap_gen_disk_zmax_ - el_gap_gen_disk_zmin_);
+
+  G4double el_gap_gen_disk_z = el_gap_zpos_ + el_gap_length_/2.
+    - el_gap_length_ * el_gap_gen_disk_zmin_ + el_gap_gen_disk_thickn/2.;
+
+  G4ThreeVector el_gap_gen_pos(el_gap_gen_disk_x_,
+                               el_gap_gen_disk_y_,
+                               el_gap_gen_disk_z);
+
+  el_gap_gen_ = new CylinderPointSampler2020(0., el_gap_gen_disk_diam_/2.,
+                                             el_gap_gen_disk_thickn/2., 0., twopi,
+                                             nullptr, el_gap_gen_pos);
+
   /// Visibilities
   if (visibility_) {
     G4VisAttributes light_blue = nexus::LightBlue();
@@ -570,6 +620,7 @@ Next100FieldCage::~Next100FieldCage()
   delete buffer_gen_;
   delete xenon_gen_;
   delete teflon_gen_;
+  delete el_gap_gen_;
 }
 
 
@@ -643,6 +694,10 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
       G4Exception("[Next100FieldCage]", "GenerateVertex()", FatalErrorInArgument,
       "EL lookup table point out of range.");
     }
+  }
+
+  else if (region == "EL_GAP") {
+    vertex = el_gap_gen_->GenerateVertex("VOLUME");
   }
 
   else {

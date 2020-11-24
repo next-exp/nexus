@@ -28,12 +28,11 @@ namespace nexus {
   public:
     Next100FieldCage();
     ~Next100FieldCage();
+    void Construct() override;
     G4ThreeVector GenerateVertex(const G4String& region) const override;
 
     G4ThreeVector GetActivePosition() const;
     G4double GetDistanceGateSapphireWindows() const;
-
-    void Construct();
 
     void SetMotherLogicalVolume(G4LogicalVolume* mother_logic);
     void SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys);
@@ -89,6 +88,7 @@ namespace nexus {
     CylinderPointSampler2020* buffer_gen_;
     CylinderPointSampler2020* teflon_gen_;
     CylinderPointSampler2020* xenon_gen_;
+    CylinderPointSampler2020* el_gap_gen_;
 
     // Geometry Navigator
     G4Navigator* geom_navigator_;
@@ -109,6 +109,9 @@ namespace nexus {
     G4Material* teflon_;
     G4Material* copper_;
 
+    G4double el_gap_gen_disk_diam_;
+    G4double el_gap_gen_disk_x_, el_gap_gen_disk_y_;
+    G4double el_gap_gen_disk_zmin_, el_gap_gen_disk_zmax_;
   };
 
 } //end namespace nexus
