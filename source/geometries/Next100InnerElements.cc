@@ -100,6 +100,7 @@ namespace nexus {
 	(region == "ACTIVE") ||
 	(region == "BUFFER") ||
 	(region == "XENON") ||
+  (region == "EL_GAP") ||
 	(region == "LIGHT_TUBE")) {
       vertex = field_cage_->GenerateVertex(region);
     }
