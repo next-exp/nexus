@@ -143,33 +143,31 @@ Next100FieldCage::Next100FieldCage():
                           "Diameter of the EL gap vertex generation disk.");
   el_gap_gen_disk_diam_cmd.SetUnitCategory("Length");
   el_gap_gen_disk_diam_cmd.SetParameterName("el_gap_gen_disk_diam", false);
-  el_gap_gen_disk_diam_cmd.SetRange("el_gap_gen_disk_diam>0.");
+  el_gap_gen_disk_diam_cmd.SetRange("el_gap_gen_disk_diam>=0.");
 
   G4GenericMessenger::Command& el_gap_gen_disk_x_cmd =
     msg_->DeclareProperty("el_gap_gen_disk_x", el_gap_gen_disk_x_,
                           "X position of the center of the EL gap vertex generation disk.");
   el_gap_gen_disk_x_cmd.SetUnitCategory("Length");
   el_gap_gen_disk_x_cmd.SetParameterName("el_gap_gen_disk_x", false);
-  el_gap_gen_disk_x_cmd.SetRange("el_gap_gen_disk_x>0.");
+  el_gap_gen_disk_x_cmd.SetRange("el_gap_gen_disk_x>=0.");
 
   G4GenericMessenger::Command& el_gap_gen_disk_y_cmd =
     msg_->DeclareProperty("el_gap_gen_disk_y", el_gap_gen_disk_y_,
                           "Y position of the center of the EL gap vertex generation disk.");
   el_gap_gen_disk_y_cmd.SetUnitCategory("Length");
   el_gap_gen_disk_y_cmd.SetParameterName("el_gap_gen_disk_y", false);
-  el_gap_gen_disk_y_cmd.SetRange("el_gap_gen_disk_y>0.");
+  el_gap_gen_disk_y_cmd.SetRange("el_gap_gen_disk_y>=0.");
 
   G4GenericMessenger::Command& el_gap_gen_disk_zmin_cmd =
     msg_->DeclareProperty("el_gap_gen_disk_zmin", el_gap_gen_disk_zmin_,
                           "Minimum Z range of the EL gap vertex generation disk.");
-  el_gap_gen_disk_zmin_cmd.SetUnitCategory("Length");
   el_gap_gen_disk_zmin_cmd.SetParameterName("el_gap_gen_disk_zmin", false);
-  el_gap_gen_disk_zmin_cmd.SetRange("el_gap_gen_disk_zmin>=0. && el_gap_gen_disk_zmin<=1.0");
+  el_gap_gen_disk_zmin_cmd.SetRange("el_gap_gen_disk_zmin>=0.0 && el_gap_gen_disk_zmin<=1.0");
 
   G4GenericMessenger::Command& el_gap_gen_disk_zmax_cmd =
     msg_->DeclareProperty("el_gap_gen_disk_zmax", el_gap_gen_disk_zmax_,
                           "Maximum Z range of the EL gap vertex generation disk.");
-  el_gap_gen_disk_zmax_cmd.SetUnitCategory("Length");
   el_gap_gen_disk_zmax_cmd.SetParameterName("el_gap_gen_disk_zmax", false);
   el_gap_gen_disk_zmax_cmd.SetRange("el_gap_gen_disk_zmax>=0. && el_gap_gen_disk_zmax<=1.0");
 }
