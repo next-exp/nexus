@@ -458,7 +458,7 @@ void Next100FieldCage::BuildELRegion()
     el_gap_length_ * (el_gap_gen_disk_zmax_ - el_gap_gen_disk_zmin_);
 
   G4double el_gap_gen_disk_z = el_gap_zpos_ + el_gap_length_/2.
-    - el_gap_length_ * el_gap_gen_disk_zmin_ + el_gap_gen_disk_thickn/2.;
+    - el_gap_length_ * el_gap_gen_disk_zmin_ - el_gap_gen_disk_thickn/2.;
 
   G4ThreeVector el_gap_gen_pos(el_gap_gen_disk_x_,
                                el_gap_gen_disk_y_,
