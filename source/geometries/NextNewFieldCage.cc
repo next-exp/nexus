@@ -83,7 +83,10 @@ namespace nexus {
     elfield_(0),
     el_table_index_(0),
     el_table_binning_(5. * mm),
-
+    // EL gap generation disk parameters
+    el_gap_gen_disk_diam_(0.),
+    el_gap_gen_disk_x_(0.), el_gap_gen_disk_y_(0.),
+    el_gap_gen_disk_zmin_(0.), el_gap_gen_disk_zmax_(1.),
     photoe_prob_(0)
   {
     // Derived dimensions
@@ -189,9 +192,41 @@ namespace nexus {
     eltable_z_cmd.SetUnitCategory("Length");
     eltable_z_cmd.SetParameterName("el_table_z", false);
 
+    G4GenericMessenger::Command& el_gap_gen_disk_diam_cmd =
+      msg_->DeclareProperty("el_gap_gen_disk_diam", el_gap_gen_disk_diam_,
+                            "Diameter of the EL gap vertex generation disk.");
+    el_gap_gen_disk_diam_cmd.SetUnitCategory("Length");
+    el_gap_gen_disk_diam_cmd.SetParameterName("el_gap_gen_disk_diam", false);
+    el_gap_gen_disk_diam_cmd.SetRange("el_gap_gen_disk_diam>=0.");
+
+    G4GenericMessenger::Command& el_gap_gen_disk_x_cmd =
+      msg_->DeclareProperty("el_gap_gen_disk_x", el_gap_gen_disk_x_,
+                            "X position of the center of the EL gap vertex generation disk.");
+    el_gap_gen_disk_x_cmd.SetUnitCategory("Length");
+    el_gap_gen_disk_x_cmd.SetParameterName("el_gap_gen_disk_x", false);
+    el_gap_gen_disk_x_cmd.SetRange("el_gap_gen_disk_x>=0.");
+
+    G4GenericMessenger::Command& el_gap_gen_disk_y_cmd =
+      msg_->DeclareProperty("el_gap_gen_disk_y", el_gap_gen_disk_y_,
+                            "Y position of the center of the EL gap vertex generation disk.");
+    el_gap_gen_disk_y_cmd.SetUnitCategory("Length");
+    el_gap_gen_disk_y_cmd.SetParameterName("el_gap_gen_disk_y", false);
+    el_gap_gen_disk_y_cmd.SetRange("el_gap_gen_disk_y>=0.");
+
+    G4GenericMessenger::Command& el_gap_gen_disk_zmin_cmd =
+      msg_->DeclareProperty("el_gap_gen_disk_zmin", el_gap_gen_disk_zmin_,
+                            "Minimum Z range of the EL gap vertex generation disk.");
+    el_gap_gen_disk_zmin_cmd.SetParameterName("el_gap_gen_disk_zmin", false);
+    el_gap_gen_disk_zmin_cmd.SetRange("el_gap_gen_disk_zmin>=0.0 && el_gap_gen_disk_zmin<=1.0");
+
+    G4GenericMessenger::Command& el_gap_gen_disk_zmax_cmd =
+      msg_->DeclareProperty("el_gap_gen_disk_zmax", el_gap_gen_disk_zmax_,
+                            "Maximum Z range of the EL gap vertex generation disk.");
+    el_gap_gen_disk_zmax_cmd.SetParameterName("el_gap_gen_disk_zmax", false);
+    el_gap_gen_disk_zmax_cmd.SetRange("el_gap_gen_disk_zmax>=0. && el_gap_gen_disk_zmax<=1.0");
+
     msg_->DeclareProperty("photoe_prob", photoe_prob_,
           "Probability of photon to ie- conversion");
-
   }
 
 
@@ -200,6 +235,7 @@ namespace nexus {
     delete drift_tube_gen_;
     delete hdpe_tube_gen_;
     delete active_gen_;
+    delete el_gap_gen_;
     delete buffer_gen_;
     delete xenon_gen_;
     delete anode_quartz_gen_;
@@ -451,6 +487,20 @@ void NextNewFieldCage::BuildBuffer()
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., poszInner), gate_logic,
 		      "EL_GRID_GATE", el_gap_logic, false, 0, false);
+
+    // Vertex generator
+    G4double el_gap_gen_disk_thickn =
+      el_gap_length_ * (el_gap_gen_disk_zmax_ - el_gap_gen_disk_zmin_);
+
+    G4double el_gap_gen_disk_z = el_gap_z_pos_ - el_gap_length_/2.
+      + el_gap_length_ * el_gap_gen_disk_zmin_ + el_gap_gen_disk_thickn/2.;
+
+    G4ThreeVector el_gap_gen_pos(el_gap_gen_disk_x_,
+                                 el_gap_gen_disk_y_,
+                                 el_gap_gen_disk_z);
+
+    el_gap_gen_ = new CylinderPointSampler(0., el_gap_gen_disk_thickn, el_gap_gen_disk_diam_/2.,
+                                           0., el_gap_gen_pos);
 
     /// Visibilities
     if (visibility_) {
@@ -745,6 +795,9 @@ void NextNewFieldCage::BuildBuffer()
     }
     else if (region == "ACTIVE") {
       vertex = active_gen_->GenerateVertex("BODY_VOL");
+    }
+    else if (region == "EL_GAP") {
+      vertex = el_gap_gen_->GenerateVertex("BODY_VOL");
     }
     else if (region == "ANODE_QUARTZ") {
       vertex = anode_quartz_gen_->GenerateVertex("BODY_VOL");
