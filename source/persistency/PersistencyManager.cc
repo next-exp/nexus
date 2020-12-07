@@ -166,7 +166,9 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
       std::string key, value;
       std::getline(init_read, key, ' ');
       std::getline(init_read, value);
-      if ((key == "/Actions/RegisterTrackingAction") && (value == "OPTICAL")) {
+      auto found_key   = key.find("/Actions/RegisterTrackingAction");
+      auto found_value = value.find("OPTICAL");
+      if ((found_key != std::string::npos) && (found_value != std::string::npos)) {
         save_opt_phot = true;
         break;
       }
