@@ -12,6 +12,7 @@
 #include "BaseGeometry.h"
 #include <G4RotationMatrix.hh>
 
+namespace nexus {class LSCHallA; }
 namespace nexus {class Next100Shielding; }
 namespace nexus {class NextNewPedestal; }
 namespace nexus {class NextNewMiniCastle; }
@@ -60,8 +61,10 @@ namespace nexus {
     G4LogicalVolume* lab_logic_;
     //  G4LogicalVolume* shielding_air_logic_;
     G4LogicalVolume* air_logic_;
+    G4LogicalVolume* hallA_logic_;
 
     //Detector parts
+    LSCHallA* hallA_walls_;
     Next100Shielding* shielding_;
     NextNewPedestal* pedestal_;
     NextNewMiniCastle* mini_castle_;
@@ -100,6 +103,7 @@ namespace nexus {
     //   G4double ext_source_distance_;
 
     G4bool lead_castle_; ///< false if castle is open (e.g., lead collimator in axial port)
+    G4bool lab_walls_; ///< false (default) if no wall simulation
 
     G4bool disk_source_; ///< true if external disk-like calibration source
     G4String source_mat_; ///< Kind of external disk-like calibration source (Na/Th so far)
