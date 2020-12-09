@@ -132,6 +132,9 @@ namespace nexus {
     // Fake dielectric (to be deprecated)
     static G4Material* FakeDielectric(G4Material*, G4String);
 
+    // Limestone (calcium carbonate)
+    static G4Material* Limestone();
+
     static G4Material* CopyMaterial(G4Material*, const G4String&);
 
   private:
