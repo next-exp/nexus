@@ -24,6 +24,7 @@ namespace nexus {
   class Next100Vessel;
   class Next100Ics;
   class Next100InnerElements;
+  class LSCHallA;
 
   class Next100: public BaseGeometry
   {
@@ -54,8 +55,10 @@ namespace nexus {
     // Pointers to logical volumes
     G4LogicalVolume* lab_logic_;
     G4LogicalVolume* buffer_gas_logic_;
+    G4LogicalVolume* hallA_logic_;
 
     // Detector parts
+    LSCHallA* hallA_walls_;
     Next100Shielding* shielding_;
     Next100Vessel*    vessel_;
     Next100Ics*       ics_;
@@ -73,6 +76,9 @@ namespace nexus {
 
     /// Position of gate in its mother volume
     G4double gate_zpos_in_vessel_;
+
+    /// Whether or not to build LSC HallA.
+    G4bool lab_walls_;
   };
 
 } // end namespace nexus

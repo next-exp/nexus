@@ -9,6 +9,7 @@
 #include "Next100.h"
 #include "BoxPointSampler.h"
 #include "MuonsPointSampler.h"
+#include "LSCHallA.h"
 #include "Next100Shielding.h"
 #include "Next100Vessel.h"
 #include "Next100Ics.h"
@@ -40,7 +41,8 @@ namespace nexus {
     up_nozzle_ypos_ (20. * cm),
     central_nozzle_ypos_ (0. * cm),
     down_nozzle_ypos_ (-20. * cm),
-    bottom_nozzle_ypos_(-53. * cm)
+    bottom_nozzle_ypos_(-53. * cm),
+    lab_walls_(false)
   {
 
     msg_ = new G4GenericMessenger(this, "/Geometry/Next100/",
@@ -62,12 +64,17 @@ namespace nexus {
     specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
     specific_vertex_Z_cmd.SetUnitCategory("Length");
 
+    msg_->DeclareProperty("lab_walls", lab_walls_, "Placement of Hall A walls");
+
 
   // The following methods must be invoked in this particular
   // order since some of them depend on the previous ones
 
   // Shielding
   shielding_ = new Next100Shielding();
+
+  //Lab walls
+  hallA_walls_ = new LSCHallA();
 
   // Vessel
   vessel_ = new Next100Vessel(nozzle_ext_diam_, up_nozzle_ypos_, central_nozzle_ypos_,
@@ -91,6 +98,7 @@ namespace nexus {
     delete vessel_;
     delete shielding_;
     delete lab_gen_;
+    delete hallA_walls_;
   }
 
 
@@ -101,13 +109,27 @@ namespace nexus {
     // This is just a volume of air surrounding the detector so that
     // events (from calibration sources or cosmic rays) can be generated
     // on the outside.
+    if (lab_walls_){
+      // We want to simulate the walls (for muons in most cases).
+      hallA_walls_->Construct();
+      hallA_logic_ = hallA_walls_->GetLogicalVolume();
+      G4double hallA_length = hallA_walls_->GetLSCHallALength();
+      // Since the walls will be displaced need to make the
+      // "lab" double sized to be sure.
+      G4Box* lab_solid = new G4Box("LAB", hallA_length,
+				   hallA_length, hallA_length);
+      G4Material *vacuum =
+	G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
+      lab_logic_ = new G4LogicalVolume(lab_solid, vacuum, "LAB");
+      this->SetSpan(2 * hallA_length);
+    } else {
+      G4Box* lab_solid =
+	new G4Box("LAB", lab_size_/2., lab_size_/2., lab_size_/2.);
 
-    G4Box* lab_solid =
-      new G4Box("LAB", lab_size_/2., lab_size_/2., lab_size_/2.);
-
-    lab_logic_ =
-      new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
-			  "LAB");
+      lab_logic_ =
+	new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
+			    "LAB");
+    }
     lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
 
     // Set this volume as the wrapper for the whole geometry
@@ -140,8 +162,18 @@ namespace nexus {
     ics_->SetLogicalVolume(vessel_internal_logic);
     ics_->Construct();
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., -gate_zpos_in_vessel_), shielding_logic,
-     		      "LEAD_BOX", lab_logic_, false, 0);
+    if (lab_walls_){
+      G4ThreeVector castle_pos(0., hallA_walls_->GetLSCHallACastleY(),
+			       hallA_walls_->GetLSCHallACastleZ());
+      new G4PVPlacement(0, castle_pos, shielding_logic, "LEAD_BOX",
+       			hallA_logic_, false, 0);
+      G4ThreeVector gate_pos(0., 0., -gate_zpos_in_vessel_);
+      new G4PVPlacement(0, gate_pos - castle_pos, hallA_logic_, "Hall_A",
+      			lab_logic_, false, 0, false);
+    } else {
+      new G4PVPlacement(0, G4ThreeVector(0., 0., -gate_zpos_in_vessel_), shielding_logic,
+			"LEAD_BOX", lab_logic_, false, 0);
+    }
 
 
     //// VERTEX GENERATORS   //
@@ -204,6 +236,13 @@ namespace nexus {
       vertex =
 	G4ThreeVector(specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_);
       return vertex;
+    }
+    // Lab walls
+    else if ((region == "HALLA_INNER") || (region == "HALLA_OUTER")){
+      if (!lab_walls_)
+	G4Exception("[Next100]", "GenerateVertex()", FatalException,
+                    "This vertex generation region must be used with lab_walls == true!");
+      vertex = hallA_walls_->GenerateVertex(region);
     }
     else {
       G4Exception("[Next100]", "GenerateVertex()", FatalException,
