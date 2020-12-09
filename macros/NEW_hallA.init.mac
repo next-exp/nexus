@@ -1,0 +1,26 @@
+## ----------------------------------------------------------------------------
+## nexus | NEW_hallA.init.mac
+##
+## Initialization macro to simulate neutrons from inside the HallA walls
+## with NEW as the detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+/PhysicsList/RegisterPhysics NexusPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
+
+/Geometry/RegisterGeometry NEXT_NEW
+
+/Generator/RegisterGenerator SINGLE_PARTICLE
+
+/Actions/RegisterTrackingAction VALIDATION
+/Actions/RegisterEventAction DEFAULT
+/Actions/RegisterRunAction DEFAULT
+
+/nexus/RegisterMacro macros/NEW_hallA.config.mac
+# this delayed macro is necessary only when Xe137 is expected.
+/nexus/RegisterDelayedMacro macros/physics/Xe137.mac
