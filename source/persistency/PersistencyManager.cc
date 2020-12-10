@@ -15,6 +15,7 @@
 #include "PmtSD.h"
 #include "NexusApp.h"
 #include "DetectorConstruction.h"
+#include "SaveAllSteppingAction.h"
 #include "BaseGeometry.h"
 #include "HDF5Writer.h"
 
@@ -43,8 +44,8 @@ PersistencyManager::PersistencyManager(G4String init_macro,
                                        std::vector<G4String>& delayed_macros):
   G4VPersistencyManager(), msg_(0), init_macro_(init_macro), macros_(macros),
   delayed_macros_(delayed_macros), ready_(false), store_evt_(true),
-  interacting_evt_(false), event_type_("other"), saved_evts_(0),
-  interacting_evts_(0), nevt_(0), start_id_(0), first_evt_(true),
+  store_steps_(false), interacting_evt_(false), event_type_("other"),
+  saved_evts_(0), interacting_evts_(0), nevt_(0), start_id_(0), first_evt_(true),
   thr_charge_(0), tof_time_(50.*nanosecond), sns_only_(false),
   save_tot_charge_(true), h5writer_(0)
 {
@@ -99,7 +100,7 @@ void PersistencyManager::OpenFile(G4String filename)
 {
   h5writer_ = new HDF5Writer();
   G4String hdf5file = filename + ".h5";
-  h5writer_->Open(hdf5file);
+  h5writer_->Open(hdf5file, store_steps_);
   return;
 }
 
@@ -121,6 +122,11 @@ G4bool PersistencyManager::Store(const G4Event* event)
 
   if (!store_evt_) {
     TrajectoryMap::Clear();
+    if (store_steps_) {
+      SaveAllSteppingAction* sa = (SaveAllSteppingAction*)
+        G4RunManager::GetRunManager()->GetUserSteppingAction();
+      sa->Reset();
+    }
     return false;
   }
 
@@ -131,6 +137,9 @@ G4bool PersistencyManager::Store(const G4Event* event)
     first_evt_ = false;
     nevt_ = start_id_;
   }
+
+  if (store_steps_)
+    StoreSteps();
 
   if (sns_only_ == false) {
     StoreTrajectories(event->GetTrajectoryContainer());
@@ -402,7 +411,38 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
   }
 }
 
+void PersistencyManager::StoreSteps()
+{
+  SaveAllSteppingAction* sa = (SaveAllSteppingAction*)
+    G4RunManager::GetRunManager()->GetUserSteppingAction();
 
+  StepContainer<G4String> initial_volumes = sa->get_initial_volumes();
+  StepContainer<G4String>   final_volumes = sa->get_final_volumes  ();
+  StepContainer<G4String>      proc_names = sa->get_proc_names     ();
+
+  StepContainer<G4ThreeVector> initial_poss = sa->get_initial_poss();
+  StepContainer<G4ThreeVector>   final_poss = sa->get_final_poss  ();
+
+  for (auto it = initial_volumes.begin(); it != initial_volumes.end(); ++it) {
+    std::pair<G4int, G4String> key           = it->first;
+    G4int                      track_id      = key.first;
+    G4String                   particle_name = key.second;
+
+    for (size_t step_id=0; step_id < it->second.size(); ++step_id) {
+      h5writer_->WriteStep(nevt_, track_id, particle_name, step_id,
+                           initial_volumes[key][step_id],
+                             final_volumes[key][step_id],
+                                proc_names[key][step_id],
+                           initial_poss   [key][step_id].x(),
+                           initial_poss   [key][step_id].y(),
+                           initial_poss   [key][step_id].z(),
+                             final_poss   [key][step_id].x(),
+                             final_poss   [key][step_id].y(),
+                             final_poss   [key][step_id].z());
+    }
+  }
+  sa->Reset();
+}
 
 G4bool PersistencyManager::Store(const G4Run*)
 {

@@ -33,7 +33,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
   // Create and configure a generic messenger for the app
   msg_ = new G4GenericMessenger(this, "/nexus/", "Nexus control commands.");
 
-  // Define the command to register a configuration macro. 
+  // Define the command to register a configuration macro.
   // The user may invoke the command as many times as needed.
   msg_->DeclareMethod("RegisterMacro", &NexusApp::RegisterMacro, "");
 
@@ -49,7 +49,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
 
   /////////////////////////////////////////////////////////
 
-  // We will set now the user initialization class instances 
+  // We will set now the user initialization class instances
   // in the run manager. In order to do so, we create first the factories
   // (the objects that construct the appropriate instances according
   // to user's input) so that the messenger commands are already defined
@@ -67,7 +67,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
   batch->SessionStart();
 
   // Set the physics list in the run manager
-  this->SetUserInitialization(physicsList); 
+  this->SetUserInitialization(physicsList);
 
   // G4ComptonScattering* cs = new G4ComptonScattering();
   // G4ProcessManager* pm = G4Gamma::Definition()->GetProcessManager();
@@ -89,6 +89,8 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
 
   G4UImanager* UI = G4UImanager::GetUIpointer();
 
+  PersistencyManager::Initialize(init_macro, macros_, delayed_);
+
   if (UI->GetCurrentValues("/Actions/RegisterRunAction") != "")
     this->SetUserAction(actfctr.CreateRunAction());
 
@@ -109,8 +111,6 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
   // Set by default a random seed (system time) for the random
   // number generator
   SetRandomSeed(-1);
-
-  PersistencyManager::Initialize(init_macro, macros_, delayed_);
 }
 
 

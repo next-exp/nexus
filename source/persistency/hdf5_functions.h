@@ -81,12 +81,29 @@ typedef struct{
     float z;
   } sns_pos_t;
 
+  typedef struct{
+    int32_t event_id;
+    int32_t particle_id;
+    char    particle_name[STRLEN];
+    int     step_id;
+    char    initial_volume[STRLEN];
+    char      final_volume[STRLEN];
+    char         proc_name[STRLEN];
+    float   initial_x;
+    float   initial_y;
+    float   initial_z;
+    float     final_x;
+    float     final_y;
+    float     final_z;
+  } step_info_t;
+
   hsize_t createRunType();
   hsize_t createSensorDataType();
   hsize_t createSensorTofType();
   hsize_t createHitInfoType();
   hsize_t createParticleInfoType();
   hsize_t createSensorPosType();
+  hsize_t createStepType();
 
   hid_t createTable(hid_t group, std::string& table_name, hsize_t memtype);
   hid_t createGroup(hid_t file, std::string& groupName);
@@ -97,6 +114,7 @@ typedef struct{
   void writeHit(hit_info_t* hitInfo, hid_t dataset, hid_t memtype, hsize_t counter);
   void writeParticle(particle_info_t* particleInfo, hid_t dataset, hid_t memtype, hsize_t counter);
   void writeSnsPos(sns_pos_t* snsPos, hid_t dataset, hid_t memtype, hsize_t counter);
+  void writeStep(step_info_t* step, hid_t dataset, hid_t memtype, hsize_t counter);
 
 
 #endif

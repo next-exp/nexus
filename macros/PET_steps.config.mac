@@ -1,0 +1,41 @@
+### GEOMETRY
+
+/Geometry/FullRingInfinity/depth 3. cm
+/Geometry/FullRingInfinity/pitch 7. mm
+/Geometry/FullRingInfinity/inner_radius 380. mm
+/Geometry/FullRingInfinity/sipm_rows 278
+/Geometry/FullRingInfinity/instrumented_faces 1
+/Geometry/FullRingInfinity/cryostat_width 200 cm
+/Geometry/FullRingInfinity/specific_vertex_X 0. cm
+/Geometry/FullRingInfinity/specific_vertex_Y 0. cm
+/Geometry/FullRingInfinity/specific_vertex_Z 0. cm
+
+#/Geometry/FullRingInfinity/pointFile /home/jrenner/production/petalo/phantoms/phantom_cylinder.dat
+
+/Geometry/SiPMpet/efficiency 0.2
+/Geometry/SiPMpet/visibility true
+/Geometry/SiPMpet/time_binning 1. microsecond
+/Geometry/SiPMpet/size 6. mm
+
+
+### GENERATOR
+/Generator/Back2back/region CENTER
+#/Generator/Back2back/region CUSTOM
+
+#/Actions/DefaultEventAction/energy_threshold .511 MeV
+
+/Actions/SaveAllSteppingAction/select_particle opticalphoton
+
+### VERBOSITIES
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+/nexus/random_seed 132312
+
+### OUTPUT FILE
+
+/nexus/persistency/start_id 0
+/nexus/persistency/sns_only false
+/nexus/persistency/tof_time 50. nanosecond
+/nexus/persistency/outputFile steps.pet
