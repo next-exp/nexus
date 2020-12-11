@@ -5,7 +5,7 @@
 /control/execute macros/physics/DefaultPhysicsList.mac
 
 /Geometry/RegisterGeometry BLACK_BOX_SINGLE
-/Generator/RegisterGenerator SINGLE_PARTICLE
+/Generator/RegisterGenerator SINGLE_PARTICLE_ANG
 /PhysicsList/RegisterPhysics G4OpticalPhysics
 
 ### ACTIONS
@@ -15,4 +15,5 @@
 /Actions/RegisterTrackingAction OPTICAL
 /Actions/RegisterSteppingAction ANALYSIS
 
-/nexus/RegisterMacro /data5/users/miryam/nexus/macros/configs/black_box_single.config.mac
+/nexus/RegisterMacro macros/configs/black_box_single.config.mac
+#/nexus/RegisterMacro /data5/users/miryam/nexus/macros/configs/black_box_single.config.mac

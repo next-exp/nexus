@@ -66,6 +66,12 @@ namespace nexus {
     specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
     specific_vertex_Z_cmd.SetUnitCategory("Length");
 
+    G4GenericMessenger::Command&  sipm_z_pos_cmd =
+      _msg->DeclareProperty("sipm_z_pos", _sipm_z_pos,
+                            "Distance between dice and photon source");
+    specific_vertex_Z_cmd.SetParameterName("sipm_z_pos", true);
+    specific_vertex_Z_cmd.SetUnitCategory("Length");
+
     sipm_ = new SiPMSensl;
   }
   
@@ -111,8 +117,8 @@ namespace nexus {
   ////SiPM placement
   sipm_x_pos_ = 0 * cm;  
   sipm_y_pos_ = 0 * cm;
-  sipm_z_pos_ = -5.* cm;
-  G4ThreeVector post(sipm_x_pos_,sipm_y_pos_,sipm_z_pos_);  
+  //sipm_z_pos_ = -5.* cm;
+  G4ThreeVector post(sipm_x_pos_,sipm_y_pos_,_sipm_z_pos);  
   G4RotationMatrix* rot = new G4RotationMatrix();
   rot -> rotateY(180*deg);
 

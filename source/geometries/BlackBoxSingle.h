@@ -62,6 +62,8 @@ namespace nexus {
     G4double _specific_vertex_Y;
     G4double _specific_vertex_Z;
 
+    G4double _sipm_z_pos;
+
   };
 
 } // end namespace nexus

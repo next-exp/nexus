@@ -28,6 +28,8 @@
 /Geometry/BlackBoxSingle/specific_vertex_Y 0. mm
 /Geometry/BlackBoxSingle/specific_vertex_Z 0. mm
 
+/Geometry/BlackBoxSingle/sipm_z_pos -5 cm
+
 /run/verbose 0
 /event/verbose 0
 #/tracking/verbose 0
