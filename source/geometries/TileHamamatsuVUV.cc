@@ -39,6 +39,7 @@ namespace nexus {
                                         n_rows_(4),
                                         n_columns_(4),
                                         lxe_thick_(0.6 * mm),
+                                        quartz_rindex_(1.6), //Given by Hamamatsu
                                         quartz_thick_(0.6 * mm),
                                         quartz_transparency_(0.9)
 
@@ -105,7 +106,7 @@ namespace nexus {
                                     quartz_thick_/2);
 
     G4Material* quartz = MaterialsList::FusedSilica();
-    quartz->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGenericMaterial(quartz_transparency_, quartz_thick_));
+    quartz->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGenericMaterial(quartz_rindex_));
 
     G4LogicalVolume* quartz_logic =
     new G4LogicalVolume(quartz_solid, quartz, "TILE_QUARTZ_WINDOW");

@@ -43,6 +43,7 @@ namespace nexus {
 
     // Thickness of the LXe and quartz in front of the sensors
     G4double lxe_thick_;
+    G4double quartz_rindex_;
     G4double quartz_thick_;
     G4double quartz_transparency_;
 

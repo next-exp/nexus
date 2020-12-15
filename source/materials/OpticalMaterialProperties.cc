@@ -265,7 +265,8 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeFusedSilica(G4double t
   return mpt;
 }
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::FakeGenericMaterial(G4double transparency, G4double thickness)
+
+G4MaterialPropertiesTable* OpticalMaterialProperties::FakeGenericMaterial(G4double quartz_rindex)
 {
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
@@ -280,23 +281,20 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeGenericMaterial(G4doub
   XenonLiquidProperties LXe_prop;
   G4double rindex[ri_entries];
   for (G4int i=0; i<ri_entries; i++) {
-    rindex[i] = LXe_prop.RefractiveIndex(ri_energy[i]);
+    rindex[i] = quartz_rindex;
   }
 
   mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
 
-  // ABSORPTION LENGTH /////////////////////////////////////////////////////////
-  // It matches the transparency
 
-  G4double abs_length = -thickness/log(transparency);
-  const G4int NUMENTRIES  = 2;
-  G4double abs_energy[NUMENTRIES] = { .1*eV, 100.*eV };
-  G4double ABSL[NUMENTRIES]  = {abs_length, abs_length};
-
-  mpt->AddProperty("ABSLENGTH", abs_energy, ABSL, NUMENTRIES);
+  // Absorption length:
+  G4double energy[2] = {0.01*eV, 100.*eV};
+  G4double abslen[2] = {1.e8*m, 1.e8*m};
+  mpt->AddProperty("ABSLENGTH", energy, abslen, 2);
 
   return mpt;
 }
+
 
 G4MaterialPropertiesTable* OpticalMaterialProperties::GlassEpoxy()
 {
