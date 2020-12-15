@@ -45,7 +45,6 @@ namespace nexus {
     G4double lxe_thick_;
     G4double quartz_rindex_;
     G4double quartz_thick_;
-    G4double quartz_transparency_;
 
      // Messenger for the definition of control commands
     G4GenericMessenger* msg_;

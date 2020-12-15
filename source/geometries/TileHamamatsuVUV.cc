@@ -40,8 +40,7 @@ namespace nexus {
                                         n_columns_(4),
                                         lxe_thick_(0.6 * mm),
                                         quartz_rindex_(1.6), //Given by Hamamatsu
-                                        quartz_thick_(0.6 * mm),
-                                        quartz_transparency_(0.9)
+                                        quartz_thick_(0.6 * mm)
 
   {
     sipm_ = new SiPMHamamatsuVUV();
