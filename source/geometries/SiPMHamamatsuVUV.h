@@ -38,9 +38,6 @@ namespace nexus {
   private:
     G4bool visibility_;
 
-    // PDE for the sensor
-    G4double eff_;
-
     G4double time_binning_;
     G4int    sensor_depth_;
     G4int    mother_depth_;
