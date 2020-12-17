@@ -14,6 +14,7 @@
 
 class G4GenericMessenger;
 class G4LogicalVolume;
+class G4VPhysicalVolume;
 
 namespace nexus {
   class TileHamamatsuVUV;
@@ -42,6 +43,8 @@ namespace nexus {
 
     G4LogicalVolume* lab_logic_;
     G4LogicalVolume* LXe_logic_;
+
+    G4VPhysicalVolume* mpv_;
 
     G4bool visibility_;
     G4double reflectivity_;

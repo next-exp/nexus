@@ -162,8 +162,8 @@ namespace nexus {
     LXe_logic_ =
       new G4LogicalVolume(LXe_solid, LXe, "LXE");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), LXe_logic_,
-                      "LXE", box_logic, false, 0, false);
+    mpv_ = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.),
+                                      LXe_logic_, "LXE", box_logic, false, 0, false);
 
 
     // Aluminum cylinder
@@ -255,6 +255,7 @@ namespace nexus {
     tile_->SetTileVisibility(tile_vis_);
     tile_->SetTileReflectivity(tile_refl_);
     tile_->SetTimeBinning(time_binning_);
+    tile_->SetMotherPhysicalVolume(mpv_);
 
     tile_->Construct();
     tile_thickn_ = tile_->GetDimensions().z();
