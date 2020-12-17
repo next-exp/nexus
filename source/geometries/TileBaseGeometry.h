@@ -13,6 +13,7 @@
 #include <G4ThreeVector.hh>
 //#include <CLHEP/Units/SystemOfUnits.h>
 
+class G4VPhysicalVolume;
 namespace nexus {
 
   class TileBaseGeometry : public BaseGeometry
@@ -37,6 +38,8 @@ namespace nexus {
     void SetPDE (G4double eff);
     G4double GetPDE() const;
 
+    void SetMotherPhysicalVolume(G4VPhysicalVolume* mpv);
+
 
   protected:
     /// Default constructor defined as protected so no instance of
@@ -49,6 +52,7 @@ namespace nexus {
     G4double tile_refl_;
     G4double time_binning_;
     G4double sipm_pde_;
+    G4VPhysicalVolume* mpv_;
 
   };
 
@@ -71,6 +75,9 @@ namespace nexus {
 
   inline void TileBaseGeometry::SetPDE(G4double eff) { sipm_pde_ = eff; }
   inline G4double TileBaseGeometry::GetPDE() const  { return sipm_pde_; }
+
+  inline void TileBaseGeometry::SetMotherPhysicalVolume(G4VPhysicalVolume* mpv)
+    { mpv_ = mpv; }
 
  }
 
