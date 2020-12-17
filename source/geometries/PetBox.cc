@@ -143,9 +143,8 @@ namespace nexus {
     LXe_logic_ =
       new G4LogicalVolume(LXe_solid, LXe, "LXE");
 
-    mpv_ = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.),
+    G4VPhysicalVolume* mpv = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.),
                                       LXe_logic_, "LXE", box_logic, false, 0, false);
-
 
     // Aluminum cylinder
     G4double aluminum_cyl_rad = 40.*mm;
