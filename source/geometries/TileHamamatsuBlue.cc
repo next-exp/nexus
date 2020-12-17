@@ -100,10 +100,13 @@ namespace nexus {
     wls->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
 
     G4LogicalVolume* wls_logic =
-      new G4LogicalVolume(wls_solid, wls, "Epoxy");
+      new G4LogicalVolume(wls_solid, wls, "WLS");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., (tile_z_+epoxy_depth_+wls_depth_)/2. - wls_depth_/2.),
-    wls_logic, "WLS", tile_logic, false, 0, false);
+    G4double wls_zpos = (tile_z_+epoxy_depth_+wls_depth_)/2. - wls_depth_/2.;
+
+    G4VPhysicalVolume* wls_phys_vol =
+      new G4PVPlacement(0, G4ThreeVector(0., 0., wls_zpos), wls_logic,
+                      "WLS", tile_logic, false, 0, false);
 
 
     // EPOXY PROTECTIVE LAYER ////////////////////////////////////////
