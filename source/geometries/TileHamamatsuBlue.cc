@@ -23,6 +23,7 @@
 #include <G4SDManager.hh>
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
+#include <G4LogicalBorderSurface.hh>
 #include <G4PhysicalConstants.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
@@ -41,7 +42,8 @@ namespace nexus {
                                           sipm_pitch_(6.2 * mm),
                                           refr_index_(1.55), //given by Hammamatsu datasheet
                                           n_rows_(4),
-                                          n_columns_(4)
+                                          n_columns_(4),
+                                          mpv_(nullptr)
 
   {
     sipm_ = new SiPMHamamatsuBlue();
@@ -53,6 +55,11 @@ namespace nexus {
 
   void TileHamamatsuBlue::Construct()
   {
+    // Make sure the pointer to the mother volume is actually defined
+    if (!mpv_)
+    G4Exception("[TileHamamatsuBlue]", "Construct()",
+                FatalException, "Mother volume is a nullptr.");
+
     SetDimensions(G4ThreeVector(tile_x_, tile_y_, tile_z_+epoxy_depth_+wls_depth_));
 
     G4Box* tile_solid = new G4Box("TILE_PLASTIC", tile_x_/2., tile_y_/2.,
@@ -111,8 +118,23 @@ namespace nexus {
     G4LogicalVolume* epoxy_logic =
       new G4LogicalVolume(epoxy_solid, epoxy, "Epoxy");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., (tile_z_+epoxy_depth_+wls_depth_)/2. - epoxy_depth/2. - wls_depth_),
-    epoxy_logic, "Epoxy", tile_logic, false, 0, false);
+    G4double epoxy_zpos = (tile_z_+epoxy_depth_+wls_depth_)/2. - epoxy_depth/2. - wls_depth_;
+
+    G4VPhysicalVolume* epoxy_phys_vol =
+    new G4PVPlacement(0, G4ThreeVector(0., 0., epoxy_zpos), epoxy_logic,
+                      "Epoxy", tile_logic, false, 0, false);
+
+
+    // Optical surface for WLS
+    G4OpticalSurface* wls_opsurf =
+    new G4OpticalSurface("WLS_OPSURF", glisur, ground, dielectric_dielectric, .01);
+
+    new G4LogicalBorderSurface("LXE_OPSURF", mpv_,
+                               wls_phys_vol, wls_opsurf);
+    new G4LogicalBorderSurface("WLS_OPSURF", wls_phys_vol,
+                               epoxy_phys_vol, wls_opsurf);
+    new G4LogicalBorderSurface("EPOXY_OPSURF", epoxy_phys_vol,
+                               wls_phys_vol, wls_opsurf);
 
 
     // SiPMs
