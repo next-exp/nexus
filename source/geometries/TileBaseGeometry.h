@@ -39,6 +39,9 @@ namespace nexus {
     G4double GetPDE() const;
 
     void SetMotherPhysicalVolume(G4VPhysicalVolume* mpv);
+    G4VPhysicalVolume* GetMotherPhysicalVolume() const;
+
+    G4VPhysicalVolume* mpv_;
 
 
   protected:
@@ -52,7 +55,6 @@ namespace nexus {
     G4double tile_refl_;
     G4double time_binning_;
     G4double sipm_pde_;
-    G4VPhysicalVolume* mpv_;
 
   };
 
@@ -76,8 +78,8 @@ namespace nexus {
   inline void TileBaseGeometry::SetPDE(G4double eff) { sipm_pde_ = eff; }
   inline G4double TileBaseGeometry::GetPDE() const  { return sipm_pde_; }
 
-  inline void TileBaseGeometry::SetMotherPhysicalVolume(G4VPhysicalVolume* mpv)
-    { mpv_ = mpv; }
+  inline void TileBaseGeometry::SetMotherPhysicalVolume(G4VPhysicalVolume* mpv) { mpv_ = mpv; }
+  inline G4VPhysicalVolume* TileBaseGeometry::GetMotherPhysicalVolume() const  { return mpv_; }
 
  }
 

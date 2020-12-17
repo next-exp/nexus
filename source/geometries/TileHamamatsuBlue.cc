@@ -42,8 +42,7 @@ namespace nexus {
                                           sipm_pitch_(6.2 * mm),
                                           refr_index_(1.55), //given by Hammamatsu datasheet
                                           n_rows_(4),
-                                          n_columns_(4),
-                                          mpv_(nullptr)
+                                          n_columns_(4)
 
   {
     sipm_ = new SiPMHamamatsuBlue();
@@ -127,6 +126,7 @@ namespace nexus {
     new G4PVPlacement(0, G4ThreeVector(0., 0., epoxy_zpos), epoxy_logic,
                       "Epoxy", tile_logic, false, 0, false);
 
+    this->SetMotherPhysicalVolume(GetMotherPhysicalVolume());
 
     // Optical surface for WLS
     G4OpticalSurface* wls_opsurf =

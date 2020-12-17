@@ -48,7 +48,6 @@ namespace nexus {
     G4int n_rows_, n_columns_;
 
     SiPMHamamatsuBlue* sipm_;
-    G4VPhysicalVolume*  mpv_;
 
   };
 
