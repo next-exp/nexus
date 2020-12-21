@@ -54,11 +54,6 @@ namespace nexus {
 
   void TileHamamatsuBlue::Construct()
   {
-    // Make sure the pointer to the mother volume is actually defined
-    if (!mpv_)
-    G4Exception("[TileHamamatsuBlue]", "Construct()",
-                FatalException, "Mother volume is a nullptr.");
-
     SetDimensions(G4ThreeVector(tile_x_, tile_y_, tile_z_+epoxy_depth_+wls_depth_));
 
     G4Box* tile_solid = new G4Box("TILE_PLASTIC", tile_x_/2., tile_y_/2.,

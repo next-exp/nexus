@@ -143,8 +143,8 @@ namespace nexus {
     LXe_logic_ =
       new G4LogicalVolume(LXe_solid, LXe, "LXE");
 
-    G4VPhysicalVolume* mpv = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.),
-                                      LXe_logic_, "LXE", box_logic, false, 0, false);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.),
+                      LXe_logic_, "LXE", box_logic, false, 0, false);
 
     // Aluminum cylinder
     G4double aluminum_cyl_rad = 40.*mm;
@@ -239,7 +239,6 @@ namespace nexus {
     } else if (tile_type_ == "HamamatsuBlue") {
       tile_ = new TileHamamatsuBlue();
       tile_->SetBoxGeom(1);
-      tile_->SetMotherPhysicalVolume(mpv);
       dist_dice_flange_ = 19.35*mm;
     } else if (tile_type_ == "FBK") {
       tile_ = new TileFBK();
