@@ -58,11 +58,14 @@ namespace nexus {
                     entry_panel_width_(86.*mm),
                     dist_entry_panel_lat_panel_(1.45*mm), //x distance between the internal surface of the entry panel and the edge of the lateral panel
                     lat_panel_len_(66.5*mm),
-                    lat_panel_width_(50.*mm),
-                    low_lat_panel_width_(40.*mm),
+                    lat_panel_width_(46.7*mm),
+                    low_lat_panel_width_(42.*mm),
                     low_lat_panel_height_(40.95*mm),
                     dist_lat_panels_(69.*mm),
                     dist_dice_flange_(20.*mm),
+                    panel_sipm_side_(66.*mm),
+                    dist_panel_sipm_entry_panel_(28.8*mm),
+                    dist_sipms_panel_sipms_(0.3*mm),
                     max_step_size_(1.*mm)
 
   {
@@ -261,6 +264,11 @@ namespace nexus {
 
     // 2 ACTIVE REGIONS
     G4double active_x_pos_max = box_size_/2. - box_thickness_ - dist_dice_flange_ - tile_thickn_;
+    if (tile_type_ == "HamamatsuBlue") {
+      active_x_pos_max = box_size_/2. - box_thickness_ - dist_dice_flange_ - tile_thickn_
+                         - dist_sipms_panel_sipms_ - panel_thickness_;
+    }
+
     G4double active_x_pos_min = ih_x_size_/2. + dist_ihat_panel_ + panel_thickness_;
     G4double active_depth = active_x_pos_max - active_x_pos_min;
     G4double active_x_pos = active_x_pos_min + active_depth/2.;
@@ -372,6 +380,25 @@ namespace nexus {
     new G4LogicalSkinSurface("OP_PANEL_H", horiz_lat_panel_logic, panel_opsur);
     new G4LogicalSkinSurface("OP_PANEL_LH", horiz_low_lat_panel_logic, panel_opsur);
     new G4LogicalSkinSurface("OP_PANEL_V", vert_lat_panel_logic, panel_opsur);
+
+
+    // Panel in front of the sensors just for the Hamamatsu Blue SiPMs
+    if (tile_type_ == "HamamatsuBlue") {
+      G4Box* panel_sipms_solid =
+        new G4Box("PANEL_SiPMs", panel_thickness_/2., panel_sipm_side_/2., panel_sipm_side_/2.);
+
+      G4LogicalVolume* panel_sipms_logic =
+        new G4LogicalVolume(panel_sipms_solid, pyrex, "PANEL_SiPMs");
+
+      //G4double x_panel_sipms = entry_panel_xpos + dist_panel_sipm_entry_panel + panel_thickness_;
+      G4double x_panel_sipms = box_size_/2. - box_thickness_ - dist_dice_flange_ - tile_thickn_
+                                - dist_sipms_panel_sipms_ - panel_thickness_/2.;
+      new G4PVPlacement(0, G4ThreeVector(-x_panel_sipms, 0., 0.),
+                        panel_sipms_logic, "PANEL_SiPMs", LXe_logic_, false, 1, false);
+
+      new G4PVPlacement(0, G4ThreeVector(x_panel_sipms, 0., 0.),
+                        panel_sipms_logic, "PANEL_SiPMs", LXe_logic_, false, 2, false);
+    }
 
 
     // Visibilities
