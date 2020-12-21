@@ -66,6 +66,7 @@ namespace nexus {
                     panel_sipm_side_(66.*mm),
                     dist_panel_sipm_entry_panel_(28.8*mm),
                     dist_sipms_panel_sipms_(0.3*mm),
+                    wls_depth_(0.001 * mm),
                     max_step_size_(1.*mm)
 
   {
@@ -266,7 +267,7 @@ namespace nexus {
     G4double active_x_pos_max = box_size_/2. - box_thickness_ - dist_dice_flange_ - tile_thickn_;
     if (tile_type_ == "HamamatsuBlue") {
       active_x_pos_max = box_size_/2. - box_thickness_ - dist_dice_flange_ - tile_thickn_
-                         - dist_sipms_panel_sipms_ - panel_thickness_;
+                         - dist_sipms_panel_sipms_ - panel_thickness_ - wls_depth_;
     }
 
     G4double active_x_pos_min = ih_x_size_/2. + dist_ihat_panel_ + panel_thickness_;
@@ -398,6 +399,30 @@ namespace nexus {
 
       new G4PVPlacement(0, G4ThreeVector(x_panel_sipms, 0., 0.),
                         panel_sipms_logic, "PANEL_SiPMs", LXe_logic_, false, 2, false);
+
+
+      // WAVELENGTH SHIFTER ////////////////////////////////////////////
+      G4Box* wls_solid =
+        new G4Box("WLS", wls_depth_/2., panel_sipm_side_/2., panel_sipm_side_/2);
+
+      G4Material* wls = MaterialsList::TPB();
+      wls->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+
+      G4LogicalVolume* wls_logic =
+        new G4LogicalVolume(wls_solid, wls, "WLS");
+
+      G4double wls_xpos = box_size_/2. - box_thickness_ - dist_dice_flange_ - tile_thickn_
+                                - dist_sipms_panel_sipms_ - panel_thickness_ - wls_depth_/2.;
+
+      new G4PVPlacement(0, G4ThreeVector(wls_xpos, 0., 0.), wls_logic,
+                        "WLS", LXe_logic_, false, 0, false);
+
+      // Optical surface for WLS
+      G4OpticalSurface* wls_optSurf = new G4OpticalSurface("WLS_OPSURF",
+                                                           glisur, ground,
+                                                           dielectric_dielectric, .01);
+
+      new G4LogicalSkinSurface("WLS_OPSURF", wls_logic, wls_optSurf);
     }
 
 

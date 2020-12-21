@@ -73,6 +73,7 @@ namespace nexus {
 
     G4double dist_dice_flange_;
     G4double panel_sipm_side_, dist_panel_sipm_entry_panel_, dist_sipms_panel_sipms_;
+    G4double wls_depth_;
 
     G4double max_step_size_;
 

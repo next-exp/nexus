@@ -38,7 +38,6 @@ namespace nexus {
                                           tile_y_(25. * mm),
                                           tile_z_(1.35 * mm),
                                           epoxy_depth_(0.1 * mm),
-                                          wls_depth_(0.001 * mm),
                                           sipm_pitch_(6.2 * mm),
                                           refr_index_(1.55), //given by Hammamatsu datasheet
                                           n_rows_(4),
@@ -54,10 +53,10 @@ namespace nexus {
 
   void TileHamamatsuBlue::Construct()
   {
-    SetDimensions(G4ThreeVector(tile_x_, tile_y_, tile_z_+epoxy_depth_+wls_depth_));
+    SetDimensions(G4ThreeVector(tile_x_, tile_y_, tile_z_+epoxy_depth_));
 
     G4Box* tile_solid = new G4Box("TILE_PLASTIC", tile_x_/2., tile_y_/2.,
-                                  (tile_z_+epoxy_depth_+wls_depth_)/2);
+                                  (tile_z_+epoxy_depth_)/2);
 
     G4Material* fr4 = MaterialsList::FR4();
     G4LogicalVolume* tile_logic =
@@ -86,29 +85,6 @@ namespace nexus {
     G4double offset_y = (tile_y_ - ((n_rows_ - 1) * sipm_pitch_) - sipm_dim.y())/2.;
 
 
-    // WAVELENGTH SHIFTER ////////////////////////////////////////////
-    G4Box* wls_solid =
-      new G4Box("WLS", tile_x_/2., tile_y_/2., wls_depth_/2);
-
-    G4Material* wls = MaterialsList::TPB();
-    wls->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
-
-    G4LogicalVolume* wls_logic =
-      new G4LogicalVolume(wls_solid, wls, "WLS");
-
-    G4double wls_zpos = (tile_z_+epoxy_depth_+wls_depth_)/2. - wls_depth_/2.;
-
-    new G4PVPlacement(0, G4ThreeVector(0., 0., wls_zpos), wls_logic,
-                      "WLS", tile_logic, false, 0, false);
-
-    // Optical surface for WLS
-    G4OpticalSurface* wls_optSurf = new G4OpticalSurface("WLS_OPSURF",
-                                                         glisur, ground,
-                                                         dielectric_dielectric, .01);
-
-    new G4LogicalSkinSurface("WLS_OPSURF", wls_logic, wls_optSurf);
-
-
     // EPOXY PROTECTIVE LAYER ////////////////////////////////////////
     G4double epoxy_depth = 0.1 * mm;
 
@@ -121,7 +97,7 @@ namespace nexus {
     G4LogicalVolume* epoxy_logic =
       new G4LogicalVolume(epoxy_solid, epoxy, "Epoxy");
 
-    G4double epoxy_zpos = (tile_z_+epoxy_depth_+wls_depth_)/2. - epoxy_depth/2. - wls_depth_;
+    G4double epoxy_zpos = (tile_z_+epoxy_depth_)/2. - epoxy_depth/2.;
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., epoxy_zpos), epoxy_logic,
                       "Epoxy", tile_logic, false, 0, false);
@@ -135,7 +111,7 @@ namespace nexus {
 	       G4int copy_no = i*2*n_columns_ + j + 1;
          G4double x_pos = -tile_x_/2. + offset_x + sipm_dim.x()/2. + j * sipm_pitch_;
          G4double y_pos = tile_y_/2. - offset_y - sipm_dim.y()/2. - i * sipm_pitch_;
-         G4double z_pos = (tile_z_+epoxy_depth_+wls_depth_)/2. - epoxy_depth - wls_depth_ - sipm_dim.z()/2.;
+         G4double z_pos = (tile_z_+epoxy_depth_)/2. - epoxy_depth - sipm_dim.z()/2.;
          G4String vol_name = "SiPMHmtsuBlue_" + std::to_string(copy_no);
 	       new G4PVPlacement(0, G4ThreeVector(x_pos, y_pos, z_pos),
 			       sipm_logic, vol_name, tile_logic, false, copy_no, false);
