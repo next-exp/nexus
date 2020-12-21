@@ -103,9 +103,15 @@ namespace nexus {
 
     G4double wls_zpos = (tile_z_+epoxy_depth_+wls_depth_)/2. - wls_depth_/2.;
 
-    G4VPhysicalVolume* wls_phys_vol =
-      new G4PVPlacement(0, G4ThreeVector(0., 0., wls_zpos), wls_logic,
+    new G4PVPlacement(0, G4ThreeVector(0., 0., wls_zpos), wls_logic,
                       "WLS", tile_logic, false, 0, false);
+
+    // Optical surface for WLS
+    G4OpticalSurface* wls_optSurf = new G4OpticalSurface("WLS_OPSURF",
+                                                         glisur, ground,
+                                                         dielectric_dielectric, .01);
+
+    new G4LogicalSkinSurface("WLS_OPSURF", wls_logic, wls_optSurf);
 
 
     // EPOXY PROTECTIVE LAYER ////////////////////////////////////////
@@ -122,22 +128,8 @@ namespace nexus {
 
     G4double epoxy_zpos = (tile_z_+epoxy_depth_+wls_depth_)/2. - epoxy_depth/2. - wls_depth_;
 
-    G4VPhysicalVolume* epoxy_phys_vol =
     new G4PVPlacement(0, G4ThreeVector(0., 0., epoxy_zpos), epoxy_logic,
                       "Epoxy", tile_logic, false, 0, false);
-
-    this->SetMotherPhysicalVolume(GetMotherPhysicalVolume());
-
-    // Optical surface for WLS
-    G4OpticalSurface* wls_opsurf =
-    new G4OpticalSurface("WLS_OPSURF", glisur, ground, dielectric_dielectric, .01);
-
-    new G4LogicalBorderSurface("LXE_OPSURF", mpv_,
-                               wls_phys_vol, wls_opsurf);
-    new G4LogicalBorderSurface("WLS_OPSURF", wls_phys_vol,
-                               epoxy_phys_vol, wls_opsurf);
-    new G4LogicalBorderSurface("EPOXY_OPSURF", epoxy_phys_vol,
-                               wls_phys_vol, wls_opsurf);
 
 
     // SiPMs
