@@ -1,6 +1,7 @@
 ### --------------------------------------------------------
-###  Configuration macro for the NEW detector geometry
-###  This macro simulates a 1 MeV electron in the active volume
+###  Configuration macro for the NEW detector geometry.
+###  This macro simulates a 1 MeV electron
+###  in the active volume.
 ### --------------------------------------------------------
 
 /run/verbose 0

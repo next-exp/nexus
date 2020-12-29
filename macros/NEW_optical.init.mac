@@ -1,11 +1,9 @@
 ### --------------------------------------------------------
-###  NextNew: Initialization macro of nexus.
-###  $Id: NextNew.init.mac  2013-09-09 13:05 minegui $
+###  Initialization macro for the NEW detector geometry.
+###  This macro simulates individual particles
+###  in the active volume. It simulates only the inner
+###  part of the detector.
 ### --------------------------------------------------------
-
-### This macro simulates individual particles in the NEW detector geometry
-### It simulates only the inner part of the detector
-
 
 /control/execute macros/physics/DefaultPhysicsList.mac
 

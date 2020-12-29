@@ -1,8 +1,7 @@
-### ------------------------------------------------------------------
-###  $Id$
-###
-###  Default macro file for the interactive (visual) mode of NEXUS.
-### ------------------------------------------------------------------
+### --------------------------------------------------------
+###  Default macro file for the interactive (visual) mode
+###  of NEXUS.
+### --------------------------------------------------------
 
 ### Set some default verbosity
 /control/verbose 2
