@@ -46,9 +46,6 @@ namespace nexus {
     G4double quartz_rindex_;
     G4double quartz_thick_;
 
-     // Messenger for the definition of control commands
-    G4GenericMessenger* msg_;
-
     SiPMHamamatsuVUV* sipm_;
 
   };

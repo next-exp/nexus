@@ -64,7 +64,6 @@ namespace nexus {
                     dist_lat_panels_(69.*mm),
                     dist_dice_flange_(20.*mm),
                     panel_sipm_side_(66.*mm),
-                    dist_panel_sipm_entry_panel_(28.8*mm),
                     dist_sipms_panel_sipms_(0.3*mm),
                     wls_depth_(0.001 * mm),
                     max_step_size_(1.*mm)
