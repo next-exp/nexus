@@ -53,7 +53,7 @@ namespace nexus {
                     source_tube_thick_roof_(5.*mm),
                     n_tile_rows_(2),
                     n_tile_columns_(2),
-                    dist_ihat_panel_(2.*mm), //x distance between the internal surface of the hat and the external surface of the entry panel
+                    dist_ihat_panel_(5.25*mm), //x distance between the external surface of the hat and the internal surface of the entry panel
                     panel_thickness_(1.75*mm),
                     entry_panel_width_(86.*mm),
                     dist_entry_panel_lat_panel_(1.45*mm), //x distance between the internal surface of the entry panel and the edge of the lateral panel
@@ -293,7 +293,7 @@ namespace nexus {
 
 
     // PYREX PANELS BETWEEN THE INTERNAL HAT AND THE ACTIVE REGIONS
-    G4double entry_panel_xpos = ih_x_size_/2. + panel_thickness_/2. + dist_ihat_panel_;
+    G4double entry_panel_xpos = ih_x_size_/2. + dist_ihat_panel_ + panel_thickness_/2.;
     G4double entry_panel_ypos = -box_size_/2. + box_thickness_ + ih_y_size_/2.;
 
     G4Box* entry_panel_solid =
