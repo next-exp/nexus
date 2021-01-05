@@ -53,10 +53,12 @@ namespace nexus {
                     source_tube_thick_roof_(5.*mm),
                     n_tile_rows_(2),
                     n_tile_columns_(2),
-                    dist_ihat_panel_(5.25*mm), //x distance between the external surface of the hat and the internal surface of the entry panel
+                    dist_ihat_entry_panel_(5.25*mm), //x distance between the external surface of the hat and the internal surface of the entry panel
                     panel_thickness_(1.75*mm),
-                    entry_panel_width_(86.*mm),
                     dist_entry_panel_lat_panel_(1.45*mm), //x distance between the internal surface of the entry panel and the edge of the lateral panel
+                    entry_panel_width_(77.5*mm),
+                    entry_panel_len_(120*mm),
+                    dist_entry_panel_ground_(12*mm),
                     lat_panel_len_(66.5*mm),
                     lat_panel_width_(46.7*mm),
                     low_lat_panel_width_(42.*mm),
@@ -269,7 +271,7 @@ namespace nexus {
                          - dist_sipms_panel_sipms_ - panel_thickness_ - wls_depth_;
     }
 
-    G4double active_x_pos_min = ih_x_size_/2. + dist_ihat_panel_ + panel_thickness_;
+    G4double active_x_pos_min = ih_x_size_/2. + dist_ihat_entry_panel_ + panel_thickness_;
     G4double active_depth = active_x_pos_max - active_x_pos_min;
     G4double active_x_pos = active_x_pos_min + active_depth/2.;
 
@@ -292,16 +294,17 @@ namespace nexus {
 
 
     // PYREX PANELS BETWEEN THE INTERNAL HAT AND THE ACTIVE REGIONS
-    G4double entry_panel_xpos = ih_x_size_/2. + dist_ihat_panel_ + panel_thickness_/2.;
-    G4double entry_panel_ypos = -box_size_/2. + box_thickness_ + ih_y_size_/2.;
-
     G4Box* entry_panel_solid =
-      new G4Box("ENTRY_PANEL", panel_thickness_/2., ih_y_size_/2., entry_panel_width_/2.);
+      new G4Box("ENTRY_PANEL", panel_thickness_/2., entry_panel_len_/2., entry_panel_width_/2.);
 
     G4Material* pyrex = G4NistManager::Instance()->FindOrBuildMaterial("G4_Pyrex_Glass");
 
     G4LogicalVolume* entry_panel_logic =
       new G4LogicalVolume(entry_panel_solid, pyrex, "ENTRY_PANEL");
+
+    G4double entry_panel_xpos = ih_x_size_/2. + dist_ihat_entry_panel_ + panel_thickness_/2.;
+    G4double entry_panel_ypos = -box_size_/2. + box_thickness_ +
+                                dist_entry_panel_ground_ + entry_panel_len_/2.;
 
     new G4PVPlacement(0, G4ThreeVector(-entry_panel_xpos, entry_panel_ypos, 0), entry_panel_logic,
                         "ENTRY_PANEL", LXe_logic_, false, 1, false);

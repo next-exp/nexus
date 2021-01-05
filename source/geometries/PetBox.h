@@ -65,8 +65,9 @@ namespace nexus {
     G4double n_tile_rows_, n_tile_columns_;
     G4double tile_thickn_, full_row_size_, full_col_size_;
 
-    G4double dist_ihat_panel_, panel_thickness_;
-    G4double entry_panel_width_, dist_entry_panel_lat_panel_;
+    G4double dist_ihat_entry_panel_, panel_thickness_;
+    G4double entry_panel_width_, entry_panel_len_;
+    G4double dist_entry_panel_ground_, dist_entry_panel_lat_panel_;
 
     G4double lat_panel_len_, lat_panel_width_;
     G4double low_lat_panel_width_, low_lat_panel_height_, dist_lat_panels_;
