@@ -53,16 +53,18 @@ namespace nexus {
                     source_tube_thick_roof_(5.*mm),
                     n_tile_rows_(2),
                     n_tile_columns_(2),
+                    dist_lat_panels_(69.*mm),
                     dist_ihat_entry_panel_(5.25*mm), //x distance between the external surface of the hat and the internal surface of the entry panel
                     panel_thickness_(1.75*mm),
                     entry_panel_width_(77.5*mm),
                     entry_panel_len_(120*mm),
                     dist_entry_panel_ground_(12*mm),
                     dist_entry_panel_horiz_panel_(6.2*mm), //x distance between the internal surface of the entry panel and the edge of the horizontal lateral panel
+                    dist_entry_panel_vert_panel_(1.5*mm),  //x distance between the internal surface of the entry panel and the edge of the vertical lateral panel
                     lat_panel_len_(66.5*mm),
                     horiz_lat_panel_width_(42.*mm),
                     horiz_lat_panel_height_(40.95*mm),
-                    dist_lat_panels_(69.*mm),
+                    vert_lat_panel_width_(46.7*mm),
                     dist_dice_flange_(20.*mm),
                     panel_sipm_side_(66.*mm),
                     dist_sipms_panel_sipms_(0.3*mm),
@@ -336,26 +338,27 @@ namespace nexus {
                       horiz_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 4, false);
 
 
-
-    G4double vert_lat_panel_ypos = low_lat_panel_ypos + dist_lat_panels_/2. + panel_thickness_/2.;
-    G4double lat_panel_zpos = dist_lat_panels_/2. + panel_thickness_/2.;
-
     G4Box* vert_lat_panel_solid =
-      new G4Box("LAT_PANEL", lat_panel_width_/2., lat_panel_len_/2., panel_thickness_/2.);
+      new G4Box("LAT_PANEL", vert_lat_panel_width_/2., lat_panel_len_/2., panel_thickness_/2.);
 
     G4LogicalVolume* vert_lat_panel_logic =
       new G4LogicalVolume(vert_lat_panel_solid, pyrex, "LAT_PANEL");
 
-    new G4PVPlacement(0, G4ThreeVector(-lat_panel_xpos, vert_lat_panel_ypos, -lat_panel_zpos),
+    G4double vert_lat_panel_xpos = entry_panel_xpos + panel_thickness_/2. +
+                                   dist_entry_panel_vert_panel_ + vert_lat_panel_width_/2.;
+    G4double vert_lat_panel_ypos = horiz_lat_panel_ypos + dist_lat_panels_/2. + panel_thickness_/2.;
+    G4double vert_lat_panel_zpos = dist_lat_panels_/2. + panel_thickness_/2.;
+
+    new G4PVPlacement(0, G4ThreeVector(-vert_lat_panel_xpos, vert_lat_panel_ypos, -vert_lat_panel_zpos),
                       vert_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 1, false);
 
-    new G4PVPlacement(0, G4ThreeVector(-lat_panel_xpos, vert_lat_panel_ypos, lat_panel_zpos),
+    new G4PVPlacement(0, G4ThreeVector(-vert_lat_panel_xpos, vert_lat_panel_ypos, vert_lat_panel_zpos),
                       vert_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 2, false);
 
-    new G4PVPlacement(0, G4ThreeVector(lat_panel_xpos, vert_lat_panel_ypos, -lat_panel_zpos),
+    new G4PVPlacement(0, G4ThreeVector(vert_lat_panel_xpos, vert_lat_panel_ypos, -vert_lat_panel_zpos),
                       vert_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 3, false);
 
-    new G4PVPlacement(0, G4ThreeVector(lat_panel_xpos, vert_lat_panel_ypos, lat_panel_zpos),
+    new G4PVPlacement(0, G4ThreeVector(vert_lat_panel_xpos, vert_lat_panel_ypos, vert_lat_panel_zpos),
                       vert_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 4, false);
 
 
