@@ -1,11 +1,11 @@
 // ----------------------------------------------------------------------------
 //  $Id$
 //
-//  Author:  Miryam Martínez Vara <Miryam.Martinez@ific.uv.es>    
+//  Author:  Miryam Martínez Vara <Miryam.Martinez@ific.uv.es>
 //  Created: 2 Oct 2020
-//  
+//
 //  Copyright (c) 2020 NEXT Collaboration. All rights reserved.
-// ---------------------------------------------------------------------------- 
+// ----------------------------------------------------------------------------
 
 #include "BlackBoxSingle.h"
 #include "SiPMSensl.h"
@@ -38,9 +38,9 @@
 #include <CLHEP/Units/SystemOfUnits.h>
 
 namespace nexus {
-  
+
   using namespace CLHEP;
-  
+
    BlackBoxSingle::BlackBoxSingle():
     _world_z (2. * m),
     _world_xy (1. *m),
@@ -69,22 +69,22 @@ namespace nexus {
     G4GenericMessenger::Command&  sipm_z_pos_cmd =
       _msg->DeclareProperty("sipm_z_pos", _sipm_z_pos,
                             "Distance between dice and photon source");
-    specific_vertex_Z_cmd.SetParameterName("sipm_z_pos", true);
-    specific_vertex_Z_cmd.SetUnitCategory("Length");
+    sipm_z_pos_cmd.SetParameterName("sipm_z_pos", true);
+    sipm_z_pos_cmd.SetUnitCategory("Length");
 
     sipm_ = new SiPMSensl;
   }
-  
-  
-  
+
+
+
   BlackBoxSingle::~BlackBoxSingle()
   {
     delete _msg;
     delete sipm_;
   }
-    
-  
-  
+
+
+
   void BlackBoxSingle::Construct()
   {
   /// Constructing the SiPM ///
@@ -96,7 +96,7 @@ namespace nexus {
   // WORLD /////////////////////////////////////////////////
 
   G4String world_name = "WORLD";
-  
+
   G4Material* world_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
 
   world_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
@@ -108,29 +108,29 @@ namespace nexus {
     new G4LogicalVolume(world_solid_vol, world_mat, world_name);
   world_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
   BaseGeometry::SetLogicalVolume(world_logic_vol);
-  
+
   // SiPM //////////////////////////////////////////////
 
   //sipm_->SetLogicalVolume(world_logic_vol);
   //sipm_->Construct();
   G4LogicalVolume* sipm_logic = sipm_->GetLogicalVolume();
   ////SiPM placement
-  sipm_x_pos_ = 0 * cm;  
+  sipm_x_pos_ = 0 * cm;
   sipm_y_pos_ = 0 * cm;
   //sipm_z_pos_ = -5.* cm;
-  G4ThreeVector post(sipm_x_pos_,sipm_y_pos_,_sipm_z_pos);  
+  G4ThreeVector post(sipm_x_pos_,sipm_y_pos_,_sipm_z_pos);
   G4RotationMatrix* rot = new G4RotationMatrix();
   rot -> rotateY(180*deg);
 
   new G4PVPlacement(rot, post, sipm_logic,
 	            "SiPM", world_logic_vol, false, 0, false);
 
-  delete rot;
+  //delete rot;
   // VISIBILITIES ///////////////////////////////////////////////////
-    
+
     //if (_visibility) {
       //detector_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
-    //} 
+    //}
   }
 
     G4ThreeVector BlackBoxSingle::GenerateVertex(const G4String& region) const
@@ -139,9 +139,9 @@ namespace nexus {
 
     // WORLD
     if (region == "WORLD") {
- 
+
       vertex = G4ThreeVector(0.,0.,0.*mm);
- 
+
     }
     else if (region == "AD_HOC") {
       // AD_HOC does not need to be shifted because it is passed by the user
@@ -150,7 +150,7 @@ namespace nexus {
     }
     //else if (region == "DICE_BOARD") {
       //G4ThreeVector ini_vertex = dice_->GenerateVertex(region);
-      //dice_board_x_pos_ = 0 * cm;  
+      //dice_board_x_pos_ = 0 * cm;
       //dice_board_y_pos_ = 0 * cm;
       //dice_board_z_pos_ = -80* cm;
       //dice_board_z_pos_ = -1.* cm;
@@ -163,7 +163,7 @@ namespace nexus {
 		  "Unknown vertex generation region!");
     }
 
-    G4ThreeVector displacement = G4ThreeVector(0., 0., 0.); 
+    G4ThreeVector displacement = G4ThreeVector(0., 0., 0.);
     vertex = vertex + displacement;
 
     return vertex;
@@ -172,10 +172,10 @@ namespace nexus {
 
 
 
-  G4OpticalSurface* BlackBoxSingle::GetPhotOptSurf() 
+  G4OpticalSurface* BlackBoxSingle::GetPhotOptSurf()
   {
-	
+
   }
-  
+
 
 } // end namespace nexus
