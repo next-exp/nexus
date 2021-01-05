@@ -67,10 +67,12 @@ namespace nexus {
 
     G4double dist_ihat_entry_panel_, panel_thickness_;
     G4double entry_panel_width_, entry_panel_len_;
-    G4double dist_entry_panel_ground_, dist_entry_panel_lat_panel_;
+    G4double dist_entry_panel_ground_;
 
-    G4double lat_panel_len_, lat_panel_width_;
-    G4double low_lat_panel_width_, low_lat_panel_height_, dist_lat_panels_;
+    G4double dist_entry_panel_horiz_panel_, dist_entry_panel_vert_panel_;
+
+    G4double lat_panel_len_, dist_lat_panels_;
+    G4double horiz_lat_panel_width_, horiz_lat_panel_height_;
 
     G4double dist_dice_flange_;
     G4double panel_sipm_side_, dist_sipms_panel_sipms_;
