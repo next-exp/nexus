@@ -1,8 +1,7 @@
 ### -----------------------------------------------------------
-###
+### This init macro simulates the response of a SensL SiPM 
+### in the black box.
 ### -----------------------------------------------------------
-
-#/control/execute macros/generators/SingleParticle.mac
 
 /Generator/SingleParticle/particle opticalphoton
 /Generator/SingleParticle/min_energy 2.9 eV

@@ -1,20 +1,9 @@
 ### -----------------------------------------------------------
-### 
+### This init macro simulates the response of a SensL SiPM DICE
+### board in the black box.
 ### -----------------------------------------------------------
 
-#/control/execute macros/geometries/BlackBoxSimple.mac
-
-#/control/execute macros/generators/SingleParticle.mac
-
-#/control/execute macros/physics/IonizationElectron.mac
-
-#/Generator/SingleParticle/particle e-
 /Generator/SingleParticle/particle opticalphoton
-#/Generator/SingleParticle/particle geantino
-#/Generator/SingleParticle/min_energy 1.5 MeV
-#/Generator/SingleParticle/max_energy 2.5 MeV
-#/Generator/SingleParticle/min_energy 7.2 eV
-#/Generator/SingleParticle/max_energy 7.2 eV
 /Generator/SingleParticle/min_energy 2.9 eV
 /Generator/SingleParticle/max_energy 2.9 eV
 /Generator/SingleParticle/region AD_HOC
@@ -23,19 +12,15 @@
 #/Generator/SingleParticle/momentum_Z -1
 /Generator/SingleParticle/min_costheta -1.
 /Generator/SingleParticle/max_costheta -0.95
-#/Generator/SingleParticle/max_costheta -0.025
-#phi no lo ponemos poque por defecto está de 0 a 2pi
 
 /Geometry/BlackBoxSimple/specific_vertex_X 0. mm
 /Geometry/BlackBoxSimple/specific_vertex_Y 0. mm
 /Geometry/BlackBoxSimple/specific_vertex_Z 0. mm
-
 /Geometry/BlackBoxSimple/dice_board_z_pos -23.5 cm
 
 /run/verbose 0
 /event/verbose 0
-#/tracking/verbose 0
-#/tracking/verbose 1
+/tracking/verbose 0
 
 ### JOB CONTROL
 /nexus/random_seed            -1
