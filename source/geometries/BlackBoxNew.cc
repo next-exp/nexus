@@ -1,8 +1,7 @@
 // ----------------------------------------------------------------------------
 //  nexus | BlackBoxNew.cc
-//
+//  NEXT-NEW KDB in a black box.
 //  Author:  Miryam Martínez Vara
-//
 // ----------------------------------------------------------------------------
 
 #include "BlackBoxNew.h"
@@ -77,14 +76,10 @@ namespace nexus {
     dice_ = new NextNewKDB(SiPM_rows_, SiPM_columns_);
   }
 
-
-
   BlackBoxNew::~BlackBoxNew()
   {
     delete _msg;
   }
-
-
 
   void BlackBoxNew::Construct()
   {
@@ -110,26 +105,17 @@ namespace nexus {
   dice_->Construct();
   kdb_dimensions_ = dice_->GetDimensions();
   G4LogicalVolume* dice_board_logic = dice_->GetLogicalVolume();
-  //G4double db_thickness =kdb_dimensions_.z();
+
   ////Dice Boards placement
   dice_board_x_pos_ = 0 * cm;
   dice_board_y_pos_ = 0 * cm;
-  //dice_board_z_pos_ = -80* cm;
-  //dice_board_z_pos_ = -1.5* cm;
   G4ThreeVector post(dice_board_x_pos_,dice_board_y_pos_,_dice_board_z_pos);
   G4RotationMatrix* rot = new G4RotationMatrix();
   rot -> rotateY(180*deg);
 
-  //new G4PVPlacement(0, post, dice_board_logic,
-	//            "DICE_BOARD", world_logic_vol, false, 0, false);
   new G4PVPlacement(rot, post, dice_board_logic,
 	            "DICE_BOARD", world_logic_vol, false, 0, false);
 
-  // VISIBILITIES ///////////////////////////////////////////////////
-
-    //if (_visibility) {
-      //detector_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
-    //}
   }
 
     G4ThreeVector BlackBoxNew::GenerateVertex(const G4String& region) const
@@ -138,9 +124,7 @@ namespace nexus {
 
     // WORLD
     if (region == "WORLD") {
-
       vertex = G4ThreeVector(0.,0.,0.*mm);
-
     }
     else if (region == "AD_HOC") {
       // AD_HOC does not need to be shifted because it is passed by the user
@@ -154,17 +138,7 @@ namespace nexus {
 
     G4ThreeVector displacement = G4ThreeVector(0., 0., 0.);
     vertex = vertex + displacement;
-
     return vertex;
   }
-
-
-
-
-  G4OpticalSurface* BlackBoxNew::GetPhotOptSurf()
-  {
-
-  }
-
 
 } // end namespace nexus
