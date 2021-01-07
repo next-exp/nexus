@@ -148,7 +148,7 @@ namespace nexus {
     // Visibilities
     if (GetTileVisibility()) {
       G4VisAttributes tile_col = nexus::Lilla();
-      tile_col.SetForceSolid(true);
+      //tile_col.SetForceSolid(true);
       tile_logic->SetVisAttributes(tile_col);
       G4VisAttributes quartz_col = nexus::Brown();
       //quartz_col.SetForceSolid(true);

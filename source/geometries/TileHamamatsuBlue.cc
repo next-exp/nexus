@@ -124,7 +124,7 @@ namespace nexus {
       G4VisAttributes tile_col = nexus::CopperBrown();
       //tile_col.SetForceSolid(true);
       tile_logic->SetVisAttributes(tile_col);
-      G4VisAttributes epoxy_col = nexus::Red();
+      G4VisAttributes epoxy_col = nexus::White();
       //epoxy_col.SetForceSolid(true);
       epoxy_logic->SetVisAttributes(epoxy_col);
     }
