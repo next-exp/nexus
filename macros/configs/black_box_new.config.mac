@@ -11,12 +11,12 @@
 #/Generator/SingleParticle/momentum_Y 0.
 #/Generator/SingleParticle/momentum_Z -1
 /Generator/SingleParticle/min_costheta -1.
-/Generator/SingleParticle/max_costheta -0.95
+/Generator/SingleParticle/max_costheta -0.9935
 
 /Geometry/BlackBoxNew/specific_vertex_X 0. mm
 /Geometry/BlackBoxNew/specific_vertex_Y 0. mm
 /Geometry/BlackBoxNew/specific_vertex_Z 0. mm
-/Geometry/BlackBoxNew/dice_board_z_pos -23.5 cm
+/Geometry/BlackBoxNew/dice_board_z_pos -50. cm
 
 /run/verbose 0
 /event/verbose 0
@@ -25,4 +25,4 @@
 ### JOB CONTROL
 /nexus/random_seed            -1
 /nexus/persistency/start_id   0
-/nexus/persistency/outputFile prueba_new.next
+/nexus/persistency/outputFile front_50_new.next
