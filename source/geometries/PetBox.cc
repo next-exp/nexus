@@ -379,21 +379,13 @@ namespace nexus {
     // Panel in front of the sensors just for the Hamamatsu Blue SiPMs
     if (tile_type_ == "HamamatsuBlue") {
       G4Box* panel_sipms_solid =
-        new G4Box("PANEL_SiPMs", panel_sipm_xy_size_/2., panel_sipm_xy_size_/2., panel_thickness_/2.);
+        new G4Box("PANEL_SiPMs", panel_sipm_xy_size_/2., panel_sipm_xy_size_/2., (panel_thickness_+wls_depth_)/2.);
 
       G4LogicalVolume* panel_sipms_logic =
         new G4LogicalVolume(panel_sipms_solid, pyrex, "PANEL_SiPMs");
 
-      G4double panel_sipms_zpos = box_size_/2. - box_thickness_ - dist_dice_flange_ - tile_thickn_
-                                  - dist_sipms_panel_sipms_ - panel_thickness_/2.;
-      new G4PVPlacement(0, G4ThreeVector(0., 0., -panel_sipms_zpos),
-                        panel_sipms_logic, "PANEL_SiPMs", LXe_logic_, false, 1, false);
 
-      new G4PVPlacement(0, G4ThreeVector(0., 0., panel_sipms_zpos),
-                        panel_sipms_logic, "PANEL_SiPMs", LXe_logic_, false, 2, false);
-
-
-      // WAVELENGTH SHIFTER ////////////////////////////////////////////
+      // WAVELENGTH SHIFTER LAYER ON THE PANEL /////////////////////////////////
       G4Box* wls_solid =
         new G4Box("WLS", panel_sipm_xy_size_/2., panel_sipm_xy_size_/2., wls_depth_/2);
 
@@ -403,18 +395,25 @@ namespace nexus {
       G4LogicalVolume* wls_logic =
         new G4LogicalVolume(wls_solid, wls, "WLS");
 
-      G4double wls_zpos = box_size_/2. - box_thickness_ - dist_dice_flange_ - tile_thickn_
-                                - dist_sipms_panel_sipms_ - panel_thickness_ - wls_depth_/2.;
-
-      new G4PVPlacement(0, G4ThreeVector(0., 0., wls_zpos), wls_logic,
-                        "WLS", LXe_logic_, false, 0, false);
+      new G4PVPlacement(0, G4ThreeVector(0., 0., panel_thickness_/2.), wls_logic,
+                        "WLS", panel_sipms_logic, false, 0, false);
 
       // Optical surface for WLS
       G4OpticalSurface* wls_optSurf = new G4OpticalSurface("WLS_OPSURF",
                                                            glisur, ground,
                                                            dielectric_dielectric, .01);
-
       new G4LogicalSkinSurface("WLS_OPSURF", wls_logic, wls_optSurf);
+
+      // PLACEMENT OF THE PANEL
+      G4double panel_sipms_zpos = box_size_/2. - box_thickness_ - dist_dice_flange_ - tile_thickn_
+                                  - dist_sipms_panel_sipms_ - (panel_thickness_+wls_depth_)/2.;
+      new G4PVPlacement(0, G4ThreeVector(0., 0., -panel_sipms_zpos),
+                        panel_sipms_logic, "PANEL_SiPMs", LXe_logic_, false, 1, false);
+
+      G4RotationMatrix rot;
+      rot.rotateY(pi);
+      new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., 0., panel_sipms_zpos)),
+                         panel_sipms_logic, "PANEL_SiPMs", LXe_logic_, false, 2, false);
 
       if (visibility_){
         G4VisAttributes panel_col = nexus::Red();
