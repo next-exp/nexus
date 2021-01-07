@@ -415,6 +415,15 @@ namespace nexus {
                                                            dielectric_dielectric, .01);
 
       new G4LogicalSkinSurface("WLS_OPSURF", wls_logic, wls_optSurf);
+
+      if (visibility_){
+        G4VisAttributes panel_col = nexus::Red();
+        //panel_col.SetForceSolid(true);
+        panel_sipms_logic->SetVisAttributes(panel_col);
+        G4VisAttributes wls_col = nexus::LightBlue();
+        //wls_col.SetForceSolid(true);
+        wls_logic->SetVisAttributes(wls_col);
+      }
     }
 
 
