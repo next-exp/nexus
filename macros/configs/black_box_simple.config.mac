@@ -17,6 +17,7 @@
 /Geometry/BlackBoxSimple/specific_vertex_Y 0. mm
 /Geometry/BlackBoxSimple/specific_vertex_Z 0. mm
 /Geometry/BlackBoxSimple/dice_board_z_pos -50. cm
+/Geometry/BlackBoxSimple/rotation 80 deg
 
 /run/verbose 0
 /event/verbose 0
@@ -25,4 +26,4 @@
 ### JOB CONTROL
 /nexus/random_seed            -1
 /nexus/persistency/start_id   0
-/nexus/persistency/outputFile front_50_simple.next
+/nexus/persistency/outputFile 80deg_50cm_simple.next

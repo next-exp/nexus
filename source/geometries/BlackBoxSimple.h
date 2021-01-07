@@ -52,6 +52,7 @@ namespace nexus {
     G4double _specific_vertex_Y;
     G4double _specific_vertex_Z;
     G4double _dice_board_z_pos;
+    G4double _rotation;
 
   };
 

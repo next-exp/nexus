@@ -72,6 +72,12 @@ namespace nexus {
     dice_board_z_pos_cmd.SetParameterName("dice_board_z_pos", true);
     dice_board_z_pos_cmd.SetUnitCategory("Length");
 
+    G4GenericMessenger::Command&  rotation_cmd =
+      _msg->DeclareProperty("rotation", _rotation,
+                            "Angle of rotation of the DICE");
+    rotation_cmd.SetParameterName("rotation", true);
+    rotation_cmd.SetUnitCategory("Angle");
+
     dice_ = new NextNewKDB(SiPM_rows_, SiPM_columns_);
   }
 
@@ -110,7 +116,7 @@ namespace nexus {
   dice_board_y_pos_ = 0 * cm;
   G4ThreeVector post(dice_board_x_pos_,dice_board_y_pos_,_dice_board_z_pos);
   G4RotationMatrix* rot = new G4RotationMatrix();
-  rot -> rotateY(180*deg);
+  rot -> rotateY(180*deg-_rotation);
 
   new G4PVPlacement(rot, post, dice_board_logic,
 	            "DICE_BOARD", world_logic_vol, false, 0, false);
