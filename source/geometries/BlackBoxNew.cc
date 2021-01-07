@@ -8,7 +8,6 @@
 #include "NextNewKDB.h"
 
 #include "BaseGeometry.h"
-//#include "SpherePointSampler.h"
 #include "MaterialsList.h"
 #include "IonizationSD.h"
 #include "OpticalMaterialProperties.h"

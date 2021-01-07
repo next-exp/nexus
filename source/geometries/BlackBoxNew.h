@@ -13,8 +13,6 @@
 class G4Material;
 class G4OpticalSurface;
 class G4GenericMessenger;
-//namespace nexus { class SpherePointSampler; } //PUEDE QUE QUITE ESTO
-
 
 namespace nexus {
 
