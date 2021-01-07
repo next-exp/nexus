@@ -1,17 +1,14 @@
 // ----------------------------------------------------------------------------
-//  $Id$
-//
-//  Author:  Miryam Martínez Vara <Miryam.Martinez@ific.uv.es>    
-//  Created: 2 Oct 2020
-//  
-//  Copyright (c) 2020 NEXT Collaboration. All rights reserved.
-// ---------------------------------------------------------------------------- 
+//  nexus | BlackBoxSimple.cc
+//  SensL KDB (no mask) in a black box.
+//  Author:  Miryam Martínez Vara
+// ----------------------------------------------------------------------------
 
 #include "BlackBoxSimple.h"
 #include "KDB_Sensl.h"
 
 #include "BaseGeometry.h"
-#include "SpherePointSampler.h"
+//#include "SpherePointSampler.h"
 #include "MaterialsList.h"
 #include "IonizationSD.h"
 #include "OpticalMaterialProperties.h"
@@ -37,9 +34,9 @@
 #include <CLHEP/Units/SystemOfUnits.h>
 
 namespace nexus {
-  
+
   using namespace CLHEP;
-  
+
   BlackBoxSimple::BlackBoxSimple():
     _world_z (2. * m),
     _world_xy (1. *m),
@@ -72,27 +69,23 @@ namespace nexus {
     G4GenericMessenger::Command&  dice_board_z_pos_cmd =
       _msg->DeclareProperty("dice_board_z_pos", _dice_board_z_pos,
                             "Distance between dice and photon source");
-    specific_vertex_Z_cmd.SetParameterName("dice_board_z_pos", true);
-    specific_vertex_Z_cmd.SetUnitCategory("Length");
+    dice_board_z_pos_cmd.SetParameterName("dice_board_z_pos", true);
+    dice_board_z_pos_cmd.SetUnitCategory("Length");
 
     dice_ = new KDB_Sensl(SiPM_rows_, SiPM_columns_);
   }
-  
-  
-  
+
   BlackBoxSimple::~BlackBoxSimple()
   {
     delete _msg;
   }
-    
-  
-  
+
   void BlackBoxSimple::Construct()
   {
   // WORLD /////////////////////////////////////////////////
 
   G4String world_name = "WORLD";
-  
+
   G4Material* world_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
 
   world_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
@@ -104,35 +97,27 @@ namespace nexus {
     new G4LogicalVolume(world_solid_vol, world_mat, world_name);
   world_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
   BaseGeometry::SetLogicalVolume(world_logic_vol);
-  
+
   // DB //////////////////////////////////////////////
 
   dice_->SetMotherLogicalVolume(world_logic_vol);
   dice_->Construct();
   kdb_dimensions_ = dice_->GetDimensions();
   G4LogicalVolume* dice_board_logic = dice_->GetLogicalVolume();
-  //G4double db_thickness =kdb_dimensions_.z();
   ////Dice Boards placement
-  dice_board_x_pos_ = 0 * cm;  
+  dice_board_x_pos_ = 0 * cm;
   dice_board_y_pos_ = 0 * cm;
-  //dice_board_z_pos_ = -80* cm;
-  //dice_board_z_pos_ = -1.5* cm;
-  G4ThreeVector post(dice_board_x_pos_,dice_board_y_pos_,_dice_board_z_pos);  
+  G4ThreeVector post(dice_board_x_pos_,dice_board_y_pos_,_dice_board_z_pos);
   //G4RotationMatrix* rot = new G4RotationMatrix();
   //rot -> rotateY(180*deg);
 
   //new G4PVPlacement(rot, post, dice_board_logic,
 	//            "DICE_BOARD", world_logic_vol, false, 0, false);
 
-  
+
   new G4PVPlacement(0, post, dice_board_logic,
 	            "DICE_BOARD", world_logic_vol, false, 0, false);
 
-  // VISIBILITIES ///////////////////////////////////////////////////
-    
-    //if (_visibility) {
-      //detector_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
-    //} 
   }
 
     G4ThreeVector BlackBoxSimple::GenerateVertex(const G4String& region) const
@@ -141,43 +126,22 @@ namespace nexus {
 
     // WORLD
     if (region == "WORLD") {
- 
       vertex = G4ThreeVector(0.,0.,0.*mm);
- 
     }
     else if (region == "AD_HOC") {
       // AD_HOC does not need to be shifted because it is passed by the user
       vertex = G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
       return vertex;
     }
-    //else if (region == "DICE_BOARD") {
-      //G4ThreeVector ini_vertex = dice_->GenerateVertex(region);
-      //dice_board_x_pos_ = 0 * cm;  
-      //dice_board_y_pos_ = 0 * cm;
-      //dice_board_z_pos_ = -80* cm;
-      //dice_board_z_pos_ = -1.* cm;
-      //G4ThreeVector post(dice_board_x_pos_,dice_board_y_pos_,dice_board_z_pos_);
-      //vertex = ini_vertex + post;
-      //vertex.setZ(vertex.z() + dice_board_z_pos_);
-    //}
     else {
       G4Exception("[BlackBoxSimple]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");
     }
 
-    G4ThreeVector displacement = G4ThreeVector(0., 0., 0.); 
+    G4ThreeVector displacement = G4ThreeVector(0., 0., 0.);
     vertex = vertex + displacement;
 
     return vertex;
   }
-
-
-
-
-  G4OpticalSurface* BlackBoxSimple::GetPhotOptSurf() 
-  {
-	
-  }
-  
 
 } // end namespace nexus

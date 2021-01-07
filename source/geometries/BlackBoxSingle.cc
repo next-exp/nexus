@@ -1,17 +1,14 @@
 // ----------------------------------------------------------------------------
-//  $Id$
-//
-//  Author:  Miryam Martínez Vara <Miryam.Martinez@ific.uv.es>
-//  Created: 2 Oct 2020
-//
-//  Copyright (c) 2020 NEXT Collaboration. All rights reserved.
+//  nexus | BlackBoxSingle.cc
+//  SensL SiPM in a black box.
+//  Author:  Miryam Martínez Vara
 // ----------------------------------------------------------------------------
 
 #include "BlackBoxSingle.h"
 #include "SiPMSensl.h"
 
 #include "BaseGeometry.h"
-#include "SpherePointSampler.h"
+//#include "SpherePointSampler.h"
 #include "MaterialsList.h"
 #include "IonizationSD.h"
 #include "OpticalMaterialProperties.h"
@@ -75,8 +72,6 @@ namespace nexus {
     sipm_ = new SiPMSensl;
   }
 
-
-
   BlackBoxSingle::~BlackBoxSingle()
   {
     delete _msg;
@@ -117,7 +112,6 @@ namespace nexus {
   ////SiPM placement
   sipm_x_pos_ = 0 * cm;
   sipm_y_pos_ = 0 * cm;
-  //sipm_z_pos_ = -5.* cm;
   G4ThreeVector post(sipm_x_pos_,sipm_y_pos_,_sipm_z_pos);
   G4RotationMatrix* rot = new G4RotationMatrix();
   rot -> rotateY(180*deg);
@@ -139,9 +133,7 @@ namespace nexus {
 
     // WORLD
     if (region == "WORLD") {
-
       vertex = G4ThreeVector(0.,0.,0.*mm);
-
     }
     else if (region == "AD_HOC") {
       // AD_HOC does not need to be shifted because it is passed by the user
@@ -165,17 +157,16 @@ namespace nexus {
 
     G4ThreeVector displacement = G4ThreeVector(0., 0., 0.);
     vertex = vertex + displacement;
-
     return vertex;
   }
 
 
 
 
-  G4OpticalSurface* BlackBoxSingle::GetPhotOptSurf()
-  {
+  //G4OpticalSurface* BlackBoxSingle::GetPhotOptSurf()
+  //{
 
-  }
+  //}
 
 
 } // end namespace nexus

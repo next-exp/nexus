@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
 //  nexus | BlackBoxNew.h
-//  NEXT-NEW KDB in a black box.
+//  NEXT-NEW KDB (mask) in a black box.
 //  Author:  Miryam Martínez Vara
 // ----------------------------------------------------------------------------
 
@@ -13,12 +13,10 @@
 class G4Material;
 class G4OpticalSurface;
 class G4GenericMessenger;
-namespace nexus { class SpherePointSampler; } //PUEDE QUE QUITE ESTO
+//namespace nexus { class SpherePointSampler; } //PUEDE QUE QUITE ESTO
 
 
 namespace nexus {
-
-  /// Spherical chamber filled with xenon (liquid or gas)
 
   class BlackBoxNew: public BaseGeometry
   {
@@ -55,7 +53,6 @@ namespace nexus {
     G4double _specific_vertex_X;
     G4double _specific_vertex_Y;
     G4double _specific_vertex_Z;
-
     G4double _dice_board_z_pos;
 
   };

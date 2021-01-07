@@ -1,12 +1,7 @@
 // ----------------------------------------------------------------------------
-///  \file   BlackBox_simple.h
-///  \brief  ...
-///
-///  \author   Miryam Martínez Vara <Miryam.Martinez@ific.uv.es>    
-///  \date     2 Oct 2020
-///  \version  $Id$
-///
-///  Copyright (c) 2020 NEXT Collaboration. All rights reserved.
+//  nexus | BlackBoxSimple.h
+//  SensL KDB (no mask) in a black box.
+//  Author:  Miryam Martínez Vara
 // ----------------------------------------------------------------------------
 
 #ifndef BLACK_BOX_SIMPLE_H
@@ -18,13 +13,11 @@
 class G4Material;
 class G4OpticalSurface;
 class G4GenericMessenger;
-namespace nexus { class SpherePointSampler; } //PUEDE QUE QUITE ESTO
+//namespace nexus { class SpherePointSampler; } //PUEDE QUE QUITE ESTO
 
 
 namespace nexus {
-  
-  /// Spherical chamber filled with xenon (liquid or gas)
-  
+
   class BlackBoxSimple: public BaseGeometry
   {
   public:
@@ -40,9 +33,6 @@ namespace nexus {
     void Construct();
 
   private:
-    G4OpticalSurface* GetPhotOptSurf();
-
-  private:
     // Dimensions
     G4double _world_z;
     G4double _world_xy;
@@ -53,7 +43,6 @@ namespace nexus {
     G4ThreeVector kdb_dimensions_;
     G4double dice_board_x_pos_;
     G4double dice_board_y_pos_;
-    //G4double dice_board_z_pos_;
 
     G4bool _visibility;
 
@@ -64,7 +53,6 @@ namespace nexus {
     G4double _specific_vertex_X;
     G4double _specific_vertex_Y;
     G4double _specific_vertex_Z;
-
     G4double _dice_board_z_pos;
 
   };

@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
 //  nexus | BlackBoxNew.cc
-//  NEXT-NEW KDB in a black box.
+//  NEXT-NEW KDB (mask) in a black box.
 //  Author:  Miryam Martínez Vara
 // ----------------------------------------------------------------------------
 
@@ -8,7 +8,7 @@
 #include "NextNewKDB.h"
 
 #include "BaseGeometry.h"
-#include "SpherePointSampler.h"
+//#include "SpherePointSampler.h"
 #include "MaterialsList.h"
 #include "IonizationSD.h"
 #include "OpticalMaterialProperties.h"
@@ -105,7 +105,6 @@ namespace nexus {
   dice_->Construct();
   kdb_dimensions_ = dice_->GetDimensions();
   G4LogicalVolume* dice_board_logic = dice_->GetLogicalVolume();
-
   ////Dice Boards placement
   dice_board_x_pos_ = 0 * cm;
   dice_board_y_pos_ = 0 * cm;
