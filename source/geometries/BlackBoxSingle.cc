@@ -77,8 +77,6 @@ namespace nexus {
     delete sipm_;
   }
 
-
-
   void BlackBoxSingle::Construct()
   {
   /// Constructing the SiPM ///
@@ -105,8 +103,6 @@ namespace nexus {
 
   // SiPM //////////////////////////////////////////////
 
-  //sipm_->SetLogicalVolume(world_logic_vol);
-  //sipm_->Construct();
   G4LogicalVolume* sipm_logic = sipm_->GetLogicalVolume();
   ////SiPM placement
   sipm_x_pos_ = 0 * cm;
@@ -117,13 +113,6 @@ namespace nexus {
 
   new G4PVPlacement(rot, post, sipm_logic,
 	            "SiPM", world_logic_vol, false, 0, false);
-
-  //delete rot;
-  // VISIBILITIES ///////////////////////////////////////////////////
-
-    //if (_visibility) {
-      //detector_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
-    //}
   }
 
     G4ThreeVector BlackBoxSingle::GenerateVertex(const G4String& region) const
@@ -139,16 +128,6 @@ namespace nexus {
       vertex = G4ThreeVector(_specific_vertex_X, _specific_vertex_Y, _specific_vertex_Z);
       return vertex;
     }
-    //else if (region == "DICE_BOARD") {
-      //G4ThreeVector ini_vertex = dice_->GenerateVertex(region);
-      //dice_board_x_pos_ = 0 * cm;
-      //dice_board_y_pos_ = 0 * cm;
-      //dice_board_z_pos_ = -80* cm;
-      //dice_board_z_pos_ = -1.* cm;
-      //G4ThreeVector post(dice_board_x_pos_,dice_board_y_pos_,dice_board_z_pos_);
-      //vertex = ini_vertex + post;
-      //vertex.setZ(vertex.z() + dice_board_z_pos_);
-    //}
     else {
       G4Exception("[BlackBoxSingle]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");
@@ -158,14 +137,5 @@ namespace nexus {
     vertex = vertex + displacement;
     return vertex;
   }
-
-
-
-
-  //G4OpticalSurface* BlackBoxSingle::GetPhotOptSurf()
-  //{
-
-  //}
-
 
 } // end namespace nexus

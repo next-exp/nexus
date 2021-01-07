@@ -27,11 +27,7 @@ namespace nexus {
     /// Return vertex within region <region> of the chamber
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
-
     void Construct();
-
-  //private:
-    //G4OpticalSurface* GetPhotOptSurf();
 
   private:
     // Dimensions
