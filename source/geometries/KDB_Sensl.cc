@@ -32,7 +32,6 @@ namespace nexus {
 
   using namespace CLHEP;
 
-
   KDB_Sensl::KDB_Sensl(G4int rows, G4int columns):
     BaseGeometry (),
     rows_        (rows),
@@ -45,8 +44,6 @@ namespace nexus {
     sipm_ = new SiPMSensl;
   }
 
-
-
   KDB_Sensl::~KDB_Sensl()
   {
     delete msg_;
@@ -54,11 +51,9 @@ namespace nexus {
     delete dice_gen_;
   }
 
-
   void KDB_Sensl::SetMotherLogicalVolume(G4LogicalVolume* mother_logic) {
     mother_logic_ = mother_logic;
   }
-
 
   void KDB_Sensl::Construct()
   {
@@ -98,7 +93,7 @@ namespace nexus {
     G4LogicalVolume* air_logic =
       new G4LogicalVolume(air_solid, air, "DICE_BOARD");
 
-    this->SetLogicalVolume(air_logic);     
+    this->SetLogicalVolume(air_logic);
 
     /// KAPTON BOARD ///  This is the volume that contains everything
     G4Box* board_solid = new G4Box("KAPTON", db_x/2., db_y/2., db_z/2.);

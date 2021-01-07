@@ -78,6 +78,7 @@ namespace nexus {
   BlackBoxNew::~BlackBoxNew()
   {
     delete _msg;
+    delete dice_;
   }
 
   void BlackBoxNew::Construct()
