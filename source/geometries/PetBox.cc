@@ -56,17 +56,17 @@ namespace nexus {
                     dist_lat_panels_(69.*mm),
                     dist_ihat_entry_panel_(5.25*mm), //x distance between the external surface of the hat and the internal surface of the entry panel
                     panel_thickness_(1.75*mm),
-                    entry_panel_width_(77.5*mm),
-                    entry_panel_len_(120*mm),
+                    entry_panel_x_size_(77.5*mm),
+                    entry_panel_y_size_(120*mm),
                     dist_entry_panel_ground_(12*mm),
                     dist_entry_panel_horiz_panel_(6.2*mm), //x distance between the internal surface of the entry panel and the edge of the horizontal lateral panel
                     dist_entry_panel_vert_panel_(1.5*mm),  //x distance between the internal surface of the entry panel and the edge of the vertical lateral panel
                     lat_panel_len_(66.5*mm),
-                    horiz_lat_panel_width_(42.*mm),
-                    horiz_lat_panel_height_(40.95*mm),
-                    vert_lat_panel_width_(46.7*mm),
+                    horiz_lat_panel_z_size_(42.*mm),
+                    horiz_lat_panel_y_pos_(40.95*mm),
+                    vert_lat_panel_z_size_(46.7*mm),
                     dist_dice_flange_(20.*mm),
-                    panel_sipm_side_(66.*mm),
+                    panel_sipm_xy_size_(66.*mm),
                     dist_sipms_panel_sipms_(0.3*mm),
                     wls_depth_(0.001 * mm),
                     max_step_size_(1.*mm)
@@ -296,7 +296,7 @@ namespace nexus {
 
     // PYREX PANELS BETWEEN THE INTERNAL HAT AND THE ACTIVE REGIONS
     G4Box* entry_panel_solid =
-      new G4Box("ENTRY_PANEL", entry_panel_width_/2., entry_panel_len_/2., panel_thickness_/2.);
+      new G4Box("ENTRY_PANEL", entry_panel_x_size_/2., entry_panel_y_size_/2., panel_thickness_/2.);
 
     G4Material* pyrex = G4NistManager::Instance()->FindOrBuildMaterial("G4_Pyrex_Glass");
 
@@ -304,7 +304,7 @@ namespace nexus {
       new G4LogicalVolume(entry_panel_solid, pyrex, "ENTRY_PANEL");
 
     G4double entry_panel_ypos = -box_size_/2. + box_thickness_ +
-                                dist_entry_panel_ground_ + entry_panel_len_/2.;
+                                dist_entry_panel_ground_ + entry_panel_y_size_/2.;
     G4double entry_panel_zpos = ih_z_size_/2. + dist_ihat_entry_panel_ + panel_thickness_/2.;
 
     new G4PVPlacement(0, G4ThreeVector(0., entry_panel_ypos, -entry_panel_zpos), entry_panel_logic,
@@ -316,15 +316,15 @@ namespace nexus {
 
     // PYREX PANELS SURROUNDING THE SIPM DICE BOARDS
     G4Box* horiz_lat_panel_solid =
-      new G4Box("LAT_PANEL", lat_panel_len_/2., panel_thickness_/2., horiz_lat_panel_width_/2.);
+      new G4Box("LAT_PANEL", lat_panel_len_/2., panel_thickness_/2., horiz_lat_panel_z_size_/2.);
 
     G4LogicalVolume* horiz_lat_panel_logic =
       new G4LogicalVolume(horiz_lat_panel_solid, pyrex, "LAT_PANEL");
 
-    G4double horiz_lat_panel_ypos_bot = -box_size_/2. + box_thickness_ + horiz_lat_panel_height_ + panel_thickness_/2.;
+    G4double horiz_lat_panel_ypos_bot = -box_size_/2. + box_thickness_ + horiz_lat_panel_y_pos_ + panel_thickness_/2.;
     G4double horiz_lat_panel_ypos_top = horiz_lat_panel_ypos_bot + panel_thickness_ + dist_lat_panels_;
     G4double horiz_lat_panel_zpos = entry_panel_zpos + panel_thickness_/2. +
-                                    dist_entry_panel_horiz_panel_ + horiz_lat_panel_width_/2.;
+                                    dist_entry_panel_horiz_panel_ + horiz_lat_panel_z_size_/2.;
 
     new G4PVPlacement(0, G4ThreeVector(0., horiz_lat_panel_ypos_bot, -horiz_lat_panel_zpos),
                       horiz_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 1, false);
@@ -340,7 +340,7 @@ namespace nexus {
 
 
     G4Box* vert_lat_panel_solid =
-      new G4Box("LAT_PANEL", panel_thickness_/2., lat_panel_len_/2., vert_lat_panel_width_/2.);
+      new G4Box("LAT_PANEL", panel_thickness_/2., lat_panel_len_/2., vert_lat_panel_z_size_/2.);
 
     G4LogicalVolume* vert_lat_panel_logic =
       new G4LogicalVolume(vert_lat_panel_solid, pyrex, "LAT_PANEL");
@@ -349,7 +349,7 @@ namespace nexus {
     G4double vert_lat_panel_xpos = dist_lat_panels_/2. + panel_thickness_/2.;
     G4double vert_lat_panel_ypos = horiz_lat_panel_ypos_bot + dist_lat_panels_/2. + panel_thickness_/2.;
     G4double vert_lat_panel_zpos = entry_panel_zpos + panel_thickness_/2. +
-                                   dist_entry_panel_vert_panel_ + vert_lat_panel_width_/2.;
+                                   dist_entry_panel_vert_panel_ + vert_lat_panel_z_size_/2.;
 
     new G4PVPlacement(0, G4ThreeVector(-vert_lat_panel_xpos, vert_lat_panel_ypos, -vert_lat_panel_zpos),
                       vert_lat_panel_logic, "LAT_PANEL", LXe_logic_, false, 1, false);
@@ -379,7 +379,7 @@ namespace nexus {
     // Panel in front of the sensors just for the Hamamatsu Blue SiPMs
     if (tile_type_ == "HamamatsuBlue") {
       G4Box* panel_sipms_solid =
-        new G4Box("PANEL_SiPMs", panel_sipm_side_/2., panel_sipm_side_/2., panel_thickness_/2.);
+        new G4Box("PANEL_SiPMs", panel_sipm_xy_size_/2., panel_sipm_xy_size_/2., panel_thickness_/2.);
 
       G4LogicalVolume* panel_sipms_logic =
         new G4LogicalVolume(panel_sipms_solid, pyrex, "PANEL_SiPMs");
@@ -395,7 +395,7 @@ namespace nexus {
 
       // WAVELENGTH SHIFTER ////////////////////////////////////////////
       G4Box* wls_solid =
-        new G4Box("WLS", panel_sipm_side_/2., panel_sipm_side_/2., wls_depth_/2);
+        new G4Box("WLS", panel_sipm_xy_size_/2., panel_sipm_xy_size_/2., wls_depth_/2);
 
       G4Material* wls = MaterialsList::TPB();
       wls->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
