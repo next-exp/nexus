@@ -74,7 +74,7 @@ def execute_example_jobs(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, macro_l
         p  = subprocess.run(command, check=True, env=my_env)
 
 
-@pytest.mark.second_to_last
+@pytest.mark.order('second_to_last')
 def test_run_fast_examples(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, macro_list):
     """Run fast simulation macros"""
 
@@ -85,7 +85,7 @@ def test_run_fast_examples(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, macro
     execute_example_jobs(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, macro_list[0])
 
 
-@pytest.mark.last
+@pytest.mark.order('last')
 def test_run_full_examples(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, macro_list):
     """Run full simulation macros"""
 

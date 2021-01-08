@@ -1,6 +1,4 @@
 import pandas     as pd
-#from   pytest import mark
-
 
 
 def test_sensors_numbering(detectors):
