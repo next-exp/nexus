@@ -32,6 +32,9 @@ namespace nexus {
     /// Destructor
     ~NextDemoFieldCage();
 
+    /// Sets the FieldCage configuration
+    void SetConfig(G4String config);
+
     /// Sets as mother the volume where the class is placed
     void SetMotherLogicalVolume(G4LogicalVolume* mother_logic);
 
@@ -55,6 +58,9 @@ namespace nexus {
   private:
 
     G4Navigator* geom_navigator_;
+
+    // Configuration
+    G4String config_;
 
     // Logical volume where the class is placed
     G4LogicalVolume* mother_logic_;
@@ -106,7 +112,6 @@ namespace nexus {
     G4double ELtransv_diff_, ELlong_diff_;
     G4bool elfield_;
     G4double ELelectric_field_;
-    G4bool plate_;
 
     // Vertex generators
     CylinderPointSampler2020* active_gen_;
@@ -115,6 +120,15 @@ namespace nexus {
     G4GenericMessenger* msg_;
 
   };
+
+  inline void NextDemoFieldCage::SetConfig(G4String config)
+  { config_ = config; }
+
+  inline void NextDemoFieldCage::SetMotherLogicalVolume(G4LogicalVolume* mother_logic)
+  { mother_logic_ = mother_logic; }
+
+  inline void NextDemoFieldCage::SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys)
+  { mother_phys_ = mother_phys; }
 
 } //end namespace nexus
 #endif

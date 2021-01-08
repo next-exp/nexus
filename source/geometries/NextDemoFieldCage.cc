@@ -42,6 +42,7 @@ namespace nexus {
 
   NextDemoFieldCage::NextDemoFieldCage():
     BaseGeometry(),
+    config_ (""),
     mother_logic_(nullptr),
     mother_phys_(nullptr),
     gate_cathode_centre_dist_ (309.6 * mm), // distance between gate and the centre of cathode grid
@@ -84,8 +85,7 @@ namespace nexus {
     ELtransv_diff_ (1. * mm / sqrt(cm)),
     ELlong_diff_ (0.5 * mm / sqrt(cm)),
     elfield_(0),
-    ELelectric_field_ (23.2857 * kilovolt / cm),
-    plate_(false)
+    ELelectric_field_ (23.2857 * kilovolt / cm)
   {
     /// Define new categories ///
     new G4UnitDefinition("kilovolt/cm","kV/cm","Electric field", kilovolt/cm);
@@ -142,32 +142,22 @@ namespace nexus {
                             "Electric field in the EL region");
     El_field_intensity_cmd.SetParameterName("EL_field_intensity", true);
     El_field_intensity_cmd.SetUnitCategory("Electric field");
-
-    msg_->DeclareProperty("plate", plate_,
-                          "True if the anode is a quartz plate, false if it's a mesh.");
   }
 
 
   NextDemoFieldCage::~NextDemoFieldCage()
   {
-    //delete msg_;
-  }
-
-
-  void NextDemoFieldCage::SetMotherLogicalVolume(G4LogicalVolume* mother_logic)
-  {
-    mother_logic_ = mother_logic;
-  }
-
-
-  void NextDemoFieldCage::SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys)
-  {
-    mother_phys_ = mother_phys;
+    delete msg_;
   }
 
 
   void NextDemoFieldCage::Construct()
   {
+    /// Check that the configuration has been set
+    if (config_ == "")
+      G4Exception("[NextDemoFieldCage]", "Construct()", FatalException,
+                  "NextDemoFieldCage configuration has not been set.");
+
     /// Calculate derived lengths of specific volumes
     active_length_      = gate_cathode_centre_dist_ - grid_thickn_/2.;
     light_tube_drift_length_ = light_tube_drift_end_z_ - light_tube_drift_start_z_;
@@ -192,8 +182,8 @@ namespace nexus {
     BuildBuffer();
     BuildELRegion();
     BuildFieldCage();
-
   }
+
 
   void NextDemoFieldCage::DefineMaterials()
   {
@@ -220,6 +210,7 @@ namespace nexus {
     ito_ = MaterialsList::ITO();
     ito_->SetMaterialPropertiesTable(OpticalMaterialProperties::ITO());
   }
+
 
   void NextDemoFieldCage::BuildActive()
   {
@@ -266,7 +257,7 @@ namespace nexus {
   }
 
 
-void NextDemoFieldCage::BuildCathodeGrid()
+  void NextDemoFieldCage::BuildCathodeGrid()
   {
     G4Material* cathode_mat =
       MaterialsList::FakeDielectric(gas_, "cathode_mat");
@@ -298,6 +289,7 @@ void NextDemoFieldCage::BuildCathodeGrid()
     }
   }
 
+
   void NextDemoFieldCage::BuildBuffer()
   {
     /// Position of z planes
@@ -321,7 +313,6 @@ void NextDemoFieldCage::BuildCathodeGrid()
     new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_zpos), buffer_logic,
                       "BUFFER", mother_logic_, false, 0, false);
 
-
     /// Set the volume as an ionization sensitive detector
     IonizationSD* buffsd = new IonizationSD("/NEXT100/BUFFER");
     buffsd->IncludeInTotalEnergyDeposit(false);
@@ -336,9 +327,10 @@ void NextDemoFieldCage::BuildCathodeGrid()
   void NextDemoFieldCage::BuildELRegion()
   {
     G4double el_gap_length = 0. * mm;
-    if (plate_) {
+    if (config_ == "run5") {
       el_gap_length = el_gap_length_plate_;
-    } else {
+    }
+    else if (config_ == "run7") {
       el_gap_length = el_gap_length_mesh_;
     }
 
@@ -382,22 +374,29 @@ void NextDemoFieldCage::BuildCathodeGrid()
 
     G4double grid_zpos = el_gap_length/2. - grid_thickn_/2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., grid_zpos), gate_grid_logic,
-                       "GATE_GRID", elgap_logic, false, 0, false);
+                      "GATE_GRID", elgap_logic, false, 0, false);
+
+    /// Visibilities
+    if (visibility_) {
+      elgap_logic->SetVisAttributes(nexus::LightBlue());
+      gate_grid_logic->SetVisAttributes(nexus::LightGrey());
+    } else {
+      elgap_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      gate_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
 
 
-    // Building the ANODE
-    G4LogicalVolume* anode_logic = nullptr;
-
-    if (plate_) {
-      G4Tubs* anode_quartz_solid =
+    // Building the ANODE plate corresponding to "run5" configuration
+    if (config_ == "run5") {
+      G4Tubs* quartz_anode_solid =
         new G4Tubs("ANODE_PLATE", 0., anode_diam_/2., anode_length_/2.,
                    0, twopi);
-      anode_logic =
-        new G4LogicalVolume(anode_quartz_solid, quartz_, "ANODE_PLATE");
+      G4LogicalVolume* quartz_anode_logic =
+        new G4LogicalVolume(quartz_anode_solid, quartz_, "ANODE_PLATE");
 
       // A tiny offset is needed because EL is produced only if the PostStepVolume is GAS material.
       G4double anode_zpos = GetELzCoord() - el_gap_length - anode_length_/2. - 0.1*mm;
-      new G4PVPlacement(0, G4ThreeVector(0., 0., anode_zpos), anode_logic,
+      new G4PVPlacement(0, G4ThreeVector(0., 0., anode_zpos), quartz_anode_logic,
                         "ANODE_PLATE", mother_logic_, false, 0, false);
 
       // Add TPB
@@ -406,7 +405,7 @@ void NextDemoFieldCage::BuildCathodeGrid()
       G4LogicalVolume* tpb_anode_logic =
         new G4LogicalVolume(tpb_anode_solid, tpb_, "TPB_ANODE");
       new G4PVPlacement(nullptr, G4ThreeVector(0., 0., anode_length_/2.-tpb_thickn_/2.),
-                        tpb_anode_logic, "TPB_ANODE", anode_logic, false, 0, false);
+                        tpb_anode_logic, "TPB_ANODE", quartz_anode_logic, false, 0, false);
 
       // Optical surface around TPB
       G4OpticalSurface* tpb_anode_surf =
@@ -420,11 +419,17 @@ void NextDemoFieldCage::BuildCathodeGrid()
       G4LogicalVolume* ito_anode_logic =
         new G4LogicalVolume(ito_anode_solid, ito_, "ITO_ANODE");
       new G4PVPlacement(nullptr, G4ThreeVector(0., 0., anode_length_/2.-tpb_thickn_-ito_thickness_/2.),
-                        ito_anode_logic, "ITO_ANODE", anode_logic, false, 0, false);
+                        ito_anode_logic, "ITO_ANODE", quartz_anode_logic, false, 0, false);
 
+      // Run5 Visibilities
+      tpb_anode_logic   ->SetVisAttributes(G4VisAttributes::Invisible);
+      ito_anode_logic   ->SetVisAttributes(G4VisAttributes::Invisible);
+      if (visibility_) quartz_anode_logic->SetVisAttributes(nexus::Yellow());
+      else             quartz_anode_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    } 
 
-    // Building the ANODE grid
-    } else {
+    // Building the ANODE grid corresponding to "run7" configuration
+    else if (config_ == "run7") {
       G4Material* anode_mat = MaterialsList::FakeDielectric(gas_, "anode_mat");
       anode_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_,
                                                                                temperature_,
@@ -438,23 +443,13 @@ void NextDemoFieldCage::BuildCathodeGrid()
 
       new G4PVPlacement(0, G4ThreeVector(0., 0., -grid_zpos), anode_grid_logic,
                         "ANODE_GRID", elgap_logic, false, 0, false);
-    }
 
-    /// Visibilities
-    if (visibility_) {
-      G4VisAttributes light_blue = nexus::LightBlue();
-      elgap_logic->SetVisAttributes(light_blue);
-      G4VisAttributes grey = nexus::LightGrey();
-      gate_grid_logic->SetVisAttributes(grey);
-      G4VisAttributes yellow = nexus::Yellow();
-      if (plate_) {
-        anode_logic->SetVisAttributes(yellow);
-      }
-    } else {
-      elgap_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      // Run7 Visibilities
+      if (visibility_) anode_grid_logic->SetVisAttributes(nexus::LightGrey());
+      else             anode_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
-
   }
+
 
   void NextDemoFieldCage::BuildFieldCage()
   {
@@ -545,6 +540,8 @@ void NextDemoFieldCage::BuildCathodeGrid()
 
 
     /// Visibilities
+    tpb_drift_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    tpb_buff_logic->SetVisAttributes(G4VisAttributes::Invisible);
     if (visibility_) {
       G4VisAttributes teflon_col = nexus::White();
       teflon_col.SetForceSolid(true);
