@@ -4,7 +4,7 @@ import os
 import subprocess
 
 
-@pytest.mark.first
+@pytest.mark.order(1)
 def test_create_nexus_output_file_next100(config_tmpdir, output_tmpdir, NEXUSDIR,
                                           full_base_name_next100,
                                           nexus_full_output_file_next100):
@@ -67,7 +67,7 @@ def test_create_nexus_output_file_next100(config_tmpdir, output_tmpdir, NEXUSDIR
 
 
 
-@pytest.mark.first
+@pytest.mark.order(2)
 def test_create_nexus_output_file_new(config_tmpdir, output_tmpdir, NEXUSDIR,
                                       full_base_name_new,
                                       nexus_full_output_file_new):
@@ -130,7 +130,7 @@ def test_create_nexus_output_file_new(config_tmpdir, output_tmpdir, NEXUSDIR,
 
 
 
-@pytest.mark.first
+@pytest.mark.order(3)
 def test_create_nexus_output_file_flex100(config_tmpdir, output_tmpdir, NEXUSDIR,
                                           full_base_name_flex100,
                                           nexus_full_output_file_flex100):
