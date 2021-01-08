@@ -288,7 +288,7 @@ namespace nexus {
 
 
     /// Visibilities ///
-    pmt_hole_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    pedot_coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
     if (visibility_) {
       G4VisAttributes vacuum_col = nexus::Red();
       pmt_hole_logic->SetVisAttributes(vacuum_col);
@@ -309,6 +309,7 @@ namespace nexus {
       tpb_col.SetForceSolid(true);
       tpb_logic->SetVisAttributes(tpb_col);
     } else {
+      pmt_hole_logic->SetVisAttributes(G4VisAttributes::Invisible);
       carrier_plate_logic->SetVisAttributes(G4VisAttributes::Invisible);
       wndw_ring_logic->SetVisAttributes(G4VisAttributes::Invisible);
       sapphire_window_logic->SetVisAttributes(G4VisAttributes::Invisible);
