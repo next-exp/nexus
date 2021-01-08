@@ -4,7 +4,7 @@ import os
 import subprocess
 
 
-@pytest.mark.first
+@pytest.mark.order(1)
 def test_create_nexus_output_file_full_body(config_tmpdir, output_tmpdir, NEXUSDIR, base_name_full_body, nexus_output_file_full_body):
 
      init_text = f"""
@@ -70,7 +70,7 @@ def test_create_nexus_output_file_full_body(config_tmpdir, output_tmpdir, NEXUSD
      return nexus_output_file_full_body
 
 
-@pytest.mark.first
+@pytest.mark.order(2)
 def test_create_nexus_output_file_ring_tiles(config_tmpdir, output_tmpdir, NEXUSDIR, base_name_ring_tiles, nexus_output_file_ring_tiles):
 
      init_text = f"""

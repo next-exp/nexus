@@ -61,7 +61,7 @@ def copy_and_modify_macro(config_tmpdir, output_tmpdir, init_macro):
     return cp_init_macro
 
 
-@pytest.mark.last
+@pytest.mark.order('last')
 def test_run_examples(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, macro_list):
     """Run example macros"""
 
