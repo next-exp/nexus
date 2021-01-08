@@ -34,7 +34,7 @@ namespace nexus {
 
   NexusPhysics::NexusPhysics():
     G4VPhysicsConstructor("NexusPhysics"),
-    clustering_(true), drift_(true), electroluminescence_(true)
+    clustering_(true), drift_(true), electroluminescence_(true), photoelectric_(false)
   {
     msg_ = new G4GenericMessenger(this, "/PhysicsList/Nexus/",
       "Control commands of the nexus physics list.");
@@ -47,6 +47,10 @@ namespace nexus {
 
     msg_->DeclareProperty("electroluminescence", electroluminescence_,
       "Switch on/off the electroluminescence.");
+
+    msg_->DeclareProperty("photoelectric", photoelectric_,
+      "Switch on/off the photoelectric effect.");
+
   }
 
 
@@ -79,9 +83,6 @@ namespace nexus {
     }
     WavelengthShifting* wls = new WavelengthShifting();
     pmanager->AddDiscreteProcess(wls);
-
-    OpPhotoelectricEffect* photoe = new OpPhotoelectricEffect();
-    pmanager->AddDiscreteProcess(photoe);
 
     pmanager = IonizationElectron::Definition()->GetProcessManager();
     if (!pmanager) {
@@ -128,8 +129,22 @@ namespace nexus {
       }
     }
 
+    // Add photoelectric effect to optical photons
+
+    if (photoelectric_) {
+      OpPhotoelectricEffect* photoe = new OpPhotoelectricEffect();
+
+      auto aParticleIterator = GetParticleIterator();
+      aParticleIterator->reset();
+      while ((*aParticleIterator)()) {
+        G4ParticleDefinition* particle = aParticleIterator->value();
+
+        if (photoe->IsApplicable(*particle)){
+          pmanager = particle->GetProcessManager();
+          pmanager->AddDiscreteProcess(photoe);
+        }
+      }
+    }
   }
-
-
 
 } // end namespace nexus

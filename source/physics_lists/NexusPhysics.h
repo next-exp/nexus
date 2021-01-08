@@ -33,6 +33,7 @@ namespace nexus {
     G4bool clustering_;          ///< Switch on/of the ionization clustering
     G4bool drift_;               ///< Switch on/of the ionization drift
     G4bool electroluminescence_; ///< Switch on/off the electroluminescence
+    G4bool photoelectric_;       ///< Switch on/off the photoelectric effect
 
     G4GenericMessenger* msg_;
   };
