@@ -46,20 +46,6 @@ def nexus_output_file_ring_tiles(output_tmpdir, base_name_ring_tiles):
 
 
 @pytest.fixture(scope = 'session')
-def base_name_pet_box():
-    return 'PET_box_sd_test'
-
-
-@pytest.fixture(scope = 'session')
-def nexus_output_file_pet_box(output_tmpdir, base_name_pet_box):
-    n_sipm          = 128
-    n_boards        = 0
-    sipms_per_board = 0
-    board_ordering  = 0
-    return os.path.join(output_tmpdir, base_name_pet_box+'.h5'), n_sipm, n_boards, sipms_per_board, board_ordering
-
-
-@pytest.fixture(scope = 'session')
 def base_name_pet_box_HamamatsuVUV():
     return 'PET_box_HamamatsuVUV_sd_test'
 
@@ -72,15 +58,29 @@ def base_name_pet_box_FBK():
     return 'PET_box_FBK_sd_test'
 
 
+@pytest.fixture(scope = 'session')
+def nexus_output_file_pet_box_HamamatsuVUV(output_tmpdir, base_name_pet_box_HamamatsuVUV):
+    return os.path.join(output_tmpdir, base_name_pet_box_HamamatsuVUV+'.h5')
+
+@pytest.fixture(scope = 'session')
+def nexus_output_file_pet_box_HamamatsuBlue(output_tmpdir, base_name_pet_box_HamamatsuBlue):
+    return os.path.join(output_tmpdir, base_name_pet_box_HamamatsuBlue+'.h5')
+
+@pytest.fixture(scope = 'session')
+def nexus_output_file_pet_box_FBK(output_tmpdir, base_name_pet_box_FBK):
+    return os.path.join(output_tmpdir, base_name_pet_box_FBK+'.h5')
+
+
 @pytest.fixture(scope="module",
-         params=["nexus_output_file_full_body", "nexus_output_file_ring_tiles", "nexus_output_file_pet_box"],
-         ids=["full_body", "ring_tiles", "pet_box"])
+                params=["nexus_output_file_full_body", "nexus_output_file_ring_tiles"],
+                ids=["full_body", "ring_tiles"])
 def nexus_files(request):
     return request.getfixturevalue(request.param)
 
 
 @pytest.fixture(scope="module",
-         params=["base_name_full_body", "base_name_ring_tiles", "base_name_pet_box"],
-         ids=["full_body", "ring_tiles", "pet_box"])
+                params=["base_name_full_body", "base_name_ring_tiles", "base_name_pet_box_HamamatsuVUV",
+                        "base_name_pet_box_HamamatsuBlue", "base_name_pet_box_FBK"],
+                ids=["full_body", "ring_tiles", "pet_box_HamamatsuVUV", "pet_box_HamamatsuBlue", "pet_box_FBK"])
 def nexus_filenames(request, output_tmpdir):
     return os.path.join(output_tmpdir, request.getfixturevalue(request.param)+'.h5')
