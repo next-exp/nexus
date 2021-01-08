@@ -73,9 +73,9 @@ namespace nexus {
 
     // Dimensions
     const G4double gate_cathode_centre_dist_;
-    const G4double grid_thickn_, gate_transparency_;
+    const G4double grid_thickn_, gate_transparency_, anode_transparency_;
+    const G4double cathode_transparency_;
     const G4double buffer_length_;
-    const G4double cath_grid_transparency_;
     const G4double el_gap_length_plate_, el_gap_length_mesh_;
     const G4double elgap_ring_diam_;
     const G4double light_tube_drift_start_z_, light_tube_drift_end_z_;
