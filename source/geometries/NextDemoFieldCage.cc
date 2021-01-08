@@ -46,11 +46,12 @@ namespace nexus {
     mother_phys_(nullptr),
     gate_cathode_centre_dist_ (309.6 * mm), // distance between gate and the centre of cathode grid
     grid_thickn_ (0.1 * mm),
-    gate_transparency_ (0.83),
+    gate_transparency_    (0.83),
+    anode_transparency_   (0.83),
+    cathode_transparency_ (0.98),
     buffer_length_ (117.85 * mm),
-    cath_grid_transparency_ (0.98),
-    el_gap_length_plate_ (9.8 * mm), // when there's the plate
-    el_gap_length_mesh_ (5. * mm), // when there's the mesh
+    el_gap_length_plate_ (9.8 * mm), // when there's the plate (run 5)
+    el_gap_length_mesh_ (5. * mm),   // when there's the mesh  (run 7)
     elgap_ring_diam_ (232. * mm),
     light_tube_drift_start_z_ (16. * mm),
     light_tube_drift_end_z_ (304. * mm),
@@ -267,25 +268,26 @@ namespace nexus {
 
 void NextDemoFieldCage::BuildCathodeGrid()
   {
-    G4Material* grid_mat =
-      MaterialsList::FakeDielectric(gas_, "cath_grid_mat");
-    grid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_,
-                                                                             temperature_,
-                                                                             cath_grid_transparency_,
-                                                                             grid_thickn_));
+    G4Material* cathode_mat =
+      MaterialsList::FakeDielectric(gas_, "cathode_mat");
+    cathode_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_,
+                                                                                temperature_,
+                                                                                cathode_transparency_,
+                                                                                grid_thickn_));
 
     G4double cath_zplane[2] = {-grid_thickn_/2., grid_thickn_/2.};
-    G4double rinner[2] = {0., 0.};
-    G4double router[2] = {active_diam_/2., active_diam_/2.};
+    G4double rinner[2]      = {0., 0.};
+    G4double router[2]      = {active_diam_/2., active_diam_/2.};
 
     G4Polyhedra* cathode_grid_solid =
-      new G4Polyhedra("CATHODE_GRID", 0., twopi, 10, 2, cath_zplane,
-                      rinner, router);
+      new G4Polyhedra("CATHODE_GRID", 0., twopi, 10, 2, cath_zplane, rinner, router);
+
     G4LogicalVolume* cathode_grid_logic =
-      new G4LogicalVolume(cathode_grid_solid, grid_mat, "CATHODE_GRID");
+      new G4LogicalVolume(cathode_grid_solid, cathode_mat, "CATHODE_GRID");
+
     new G4PVPlacement(0, G4ThreeVector(0., 0., cathode_grid_zpos_),
-		      cathode_grid_logic, "CATHODE_GRID", mother_logic_,
-		      false, 0, false);
+                      cathode_grid_logic, "CATHODE_GRID", mother_logic_,
+                      false, 0, false);
 
     /// Visibilities
     if (visibility_) {
@@ -310,13 +312,14 @@ void NextDemoFieldCage::BuildCathodeGrid()
 
     G4Polyhedra* buffer_solid =
       new G4Polyhedra("BUFFER", 0., twopi, 10, 2, zplane, rinner, router);
+
     G4LogicalVolume* buffer_logic =
       new G4LogicalVolume(buffer_solid, gas_, "BUFFER");
 
     G4double buffer_zpos =
       active_zpos_ + active_length_/2. + grid_thickn_ + buffer_sd_length/2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_zpos), buffer_logic,
-		      "BUFFER", mother_logic_, false, 0, false);
+                      "BUFFER", mother_logic_, false, 0, false);
 
 
     /// Set the volume as an ionization sensitive detector
@@ -363,8 +366,9 @@ void NextDemoFieldCage::BuildCathodeGrid()
       el_region->AddRootLogicalVolume(elgap_logic);
     }
 
-    G4Material* grid_mat = MaterialsList::FakeDielectric(gas_, "grid_mat");
-    grid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_,
+    // Building the GATE
+    G4Material* gate_mat = MaterialsList::FakeDielectric(gas_, "gate_mat");
+    gate_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_,
                                                                              temperature_,
                                                                              gate_transparency_,
                                                                              grid_thickn_));
@@ -372,15 +376,18 @@ void NextDemoFieldCage::BuildCathodeGrid()
     G4Tubs* gate_grid_solid =
       new G4Tubs("GATE_GRID", 0., elgap_ring_diam_/2., grid_thickn_/2.,
                  0, twopi);
+
     G4LogicalVolume* gate_grid_logic =
-      new G4LogicalVolume(gate_grid_solid, grid_mat, "GATE_GRID");
+      new G4LogicalVolume(gate_grid_solid, gate_mat, "GATE_GRID");
 
     G4double grid_zpos = el_gap_length/2. - grid_thickn_/2.;
-    new G4PVPlacement(0, G4ThreeVector(0., 0., grid_zpos),
-                      gate_grid_logic, "GATE_GRID",
-                      elgap_logic, false, 0, false);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., grid_zpos), gate_grid_logic,
+                       "GATE_GRID", elgap_logic, false, 0, false);
 
+
+    // Building the ANODE
     G4LogicalVolume* anode_logic = nullptr;
+
     if (plate_) {
       G4Tubs* anode_quartz_solid =
         new G4Tubs("ANODE_PLATE", 0., anode_diam_/2., anode_length_/2.,
@@ -401,7 +408,7 @@ void NextDemoFieldCage::BuildCathodeGrid()
       new G4PVPlacement(nullptr, G4ThreeVector(0., 0., anode_length_/2.-tpb_thickn_/2.),
                         tpb_anode_logic, "TPB_ANODE", anode_logic, false, 0, false);
 
-      // Optical surface between gas and TPB
+      // Optical surface around TPB
       G4OpticalSurface* tpb_anode_surf =
         new G4OpticalSurface("TPB_ANODE_OPSURF", glisur, ground,
                              dielectric_dielectric, .01);
@@ -415,10 +422,22 @@ void NextDemoFieldCage::BuildCathodeGrid()
       new G4PVPlacement(nullptr, G4ThreeVector(0., 0., anode_length_/2.-tpb_thickn_-ito_thickness_/2.),
                         ito_anode_logic, "ITO_ANODE", anode_logic, false, 0, false);
 
+
+    // Building the ANODE grid
     } else {
-      grid_zpos = -grid_zpos;
-      new G4PVPlacement(0, G4ThreeVector(0., 0., grid_zpos), gate_grid_logic,
-		      "ANODE_GRID", elgap_logic, false, 1, false);
+      G4Material* anode_mat = MaterialsList::FakeDielectric(gas_, "anode_mat");
+      anode_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_,
+                                                                               temperature_,
+                                                                               anode_transparency_,
+                                                                               grid_thickn_));
+      G4Tubs* anode_grid_solid =
+        new G4Tubs("ANODE_GRID", 0., elgap_ring_diam_/2., grid_thickn_/2., 0, twopi);
+
+      G4LogicalVolume* anode_grid_logic =
+        new G4LogicalVolume(anode_grid_solid, anode_mat, "ANODE_GRID");
+
+      new G4PVPlacement(0, G4ThreeVector(0., 0., -grid_zpos), anode_grid_logic,
+                        "ANODE_GRID", elgap_logic, false, 0, false);
     }
 
     /// Visibilities
