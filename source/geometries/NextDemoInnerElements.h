@@ -36,6 +36,8 @@ namespace nexus {
     void SetMotherPhysicalVolume(G4VPhysicalVolume*);
 
   private:
+    G4String config_;
+
     G4double gate_sapphire_wdw_distance_;
 
     G4LogicalVolume* mother_logic_vol_;
@@ -57,6 +59,7 @@ namespace nexus {
 
   inline void NextDemoInnerElements::SetMotherLogicalVolume(G4LogicalVolume* v)
   { mother_logic_vol_ = v; }
+
   inline void NextDemoInnerElements::SetMotherPhysicalVolume(G4VPhysicalVolume* v)
   { mother_phys_vol_ = v; }
 

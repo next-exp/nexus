@@ -14,12 +14,10 @@
 
 
 # GEOMETRY
+/Geometry/NextDemo/config run5
 /Geometry/NextDemo/max_step_size 1. mm
 /Geometry/NextDemo/pressure 10. bar
-/Geometry/NextDemo/plate true
-/Geometry/NextDemo/tracking_plane_type original
 
-######################################################
 
 # GENERATION
 /Generator/SingleParticle/particle e-

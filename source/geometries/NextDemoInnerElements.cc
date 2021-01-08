@@ -30,23 +30,37 @@ using namespace nexus;
 
 NextDemoInnerElements::NextDemoInnerElements():
   BaseGeometry(),
-  gate_sapphire_wdw_distance_(427.5 * mm),
-  mother_logic_vol_(nullptr),
-  mother_phys_vol_(nullptr),
-  verbosity_(0)
+  config_                     (""),
+  gate_sapphire_wdw_distance_ (427.5 * mm),
+  mother_logic_vol_           (nullptr),
+  mother_phys_vol_            (nullptr),
+  verbosity_                  (0)
 {
   msg_ = new G4GenericMessenger(this, "/Geometry/NextDemo/", "Control commands of geometry NextDemo.");
+
   msg_->DeclareProperty("inner_elements_verbosity", verbosity_, "Inner Elements verbosity");
 
+  msg_->DeclareProperty("config", config_, "NextDemo configuration");
+
   // Build the internal objects that live there
-  field_cage_ = new NextDemoFieldCage();
+  field_cage_     = new NextDemoFieldCage();
   tracking_plane_ = new NextDemoTrackingPlane();
-  energy_plane_ = new NextDemoEnergyPlane();
+  energy_plane_   = new NextDemoEnergyPlane();
 }
 
 
 void NextDemoInnerElements::Construct()
 {
+  // Make sure that the configuration has been set, and properly set
+  if (config_ == "")
+    G4Exception("[NextDemoInnerElements]", "Construct()",
+                FatalException, "NextDemo configuration has not been set.");
+  else if ((config_ != "run5") &
+           (config_ != "run7"))
+    G4Exception("[NextDemoInnerElements]", "Construct()",
+                FatalException, "Wrong NextDemo configuration.");
+
+
   // Position in Z of the beginning of the drift region
   G4double gate_zpos = GetELzCoord();
 
@@ -59,10 +73,12 @@ void NextDemoInnerElements::Construct()
   field_cage_->SetMotherLogicalVolume(mother_logic_vol_);
   field_cage_->SetMotherPhysicalVolume(mother_phys_vol_);
   field_cage_->SetELzCoord(gate_zpos);
+  field_cage_->SetConfig(config_);
   field_cage_->Construct();
 
   tracking_plane_->SetMotherPhysicalVolume(mother_phys_vol_);
   tracking_plane_->SetELzCoord(gate_zpos);
+  tracking_plane_->SetConfig(config_);
   tracking_plane_->Construct();
 
   energy_plane_->SetMotherLogicalVolume(mother_logic_vol_);

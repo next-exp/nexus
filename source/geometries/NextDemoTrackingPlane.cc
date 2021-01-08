@@ -36,21 +36,18 @@ NextDemoTrackingPlane::NextDemoTrackingPlane():
   BaseGeometry(),
   verbosity_       (false),
   visibility_      (false),
+  config_          (""),
   plate_side_      (16. * cm),
   plate_thickn_    (12. * mm),
   plate_hole_side_ (49. * mm),
-  tp_type_         ("original"),
   num_boards_      (4),
   sipm_board_      (new NextDemoSiPMBoard()),
-  plate_gen_(nullptr),
-  mother_phys_(nullptr),
-  msg_(nullptr)
+  plate_gen_       (nullptr),
+  mother_phys_     (nullptr),
+  msg_             (nullptr)
 {
   msg_ = new G4GenericMessenger(this, "/Geometry/NextDemo/",
                                 "Control commands of the NextDemo geometry.");
-
-  msg_->DeclareProperty("tracking_plane_type", tp_type_,
-                        "Tracking Plane type");
 
   msg_->DeclareProperty("tracking_plane_verbosity", verbosity_,
                         "Tracking Plane verbosity");
@@ -79,27 +76,28 @@ void NextDemoTrackingPlane::Construct()
   /// Verbosity
   if(verbosity_) G4cout << G4endl << "*** NEXT Demo Tracking Plane ";
 
-  /// Defining Tracking Plane Type parameters
+  /// Check that the configuration has been set
+  if (config_ == "")
+    G4Exception("[NextDemoTrackingPlane]", "Construct()", FatalException,
+                "NextDemoTrackingPlane configuration has not been set.");
+
+  /// Defining Tracking Plane parameters
   G4double gate_board_dist = 0.; // Distance from GATE to SiPM Board kapton surface
   G4double membrane_thickn = 0.;
   G4double coating_thickn  = 0.;
 
-  if (tp_type_ == "original") {
-    if(verbosity_) G4cout << "(original) ..." << G4endl;
+  if (config_ == "run5") {
+    if(verbosity_) G4cout << "run5 ..." << G4endl;
     gate_board_dist = 16.76 * mm;
     membrane_thickn = 0.;
     coating_thickn  = 0.;
   }
-  else if (tp_type_ == "type1") {
-    if(verbosity_) G4cout << "(type1) ..." << G4endl;
+  else if (config_ == "run7") {
+    if(verbosity_) G4cout << "run7 ..." << G4endl;
     gate_board_dist = 9.16 * mm;
     membrane_thickn = 0.25 * mm;
     coating_thickn  = 2.0  * micrometer;
   }
-  else
-    G4Exception("[NextDemoTrackingPlane]", "Construct()",
-                FatalException, "Tracking Plane Type not valid.");
-
 
   /// Make sure the pointer to the mother volume is actually defined
   if (!mother_phys_)
