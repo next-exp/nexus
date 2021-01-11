@@ -38,7 +38,7 @@
 # VESSEL_TRACKING_ENDCAP, VESSEL_ENERGY_ENDCAP, ICS,
 # DB_PLUG, CENTER, ACTIVE, BUFFER, XENON, LIGHT_TUBE,
 # EP_COPPER_PLATE, SAPPHIRE_WINDOW, OPTICAL_PAD,
-# PMT_BODY, PMT, INTERNAL_PMT_BASE, EXTERNAL_PMT_BASE, 
+# PMT_BODY, PMT, INTERNAL_PMT_BASE, EXTERNAL_PMT_BASE,
 # TP_COPPER_PLATE, DICE_BOARD, AXIAL_PORT, AD_HOC
 
 # Some of possible regions for NEW:
@@ -92,6 +92,7 @@
 /PhysicsList/Nexus/clustering          false
 /PhysicsList/Nexus/drift               false
 /PhysicsList/Nexus/electroluminescence false
+/PhysicsList/Nexus/photoelectric       false
 
 
 ##### PERSISTENCY #####
