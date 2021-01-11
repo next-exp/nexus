@@ -855,6 +855,30 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB()
 
 
 
+/// Degraded TPB ///
+G4MaterialPropertiesTable* OpticalMaterialProperties::DegradedTPB(G4double wls_eff)
+{
+  // It has all the same properties of TPB except the WaveLengthShifting robability
+  // that is set by parameter, trying to model a degraded behaviour of the TPB coating
+
+  G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
+
+  // All Optical Material Properties from normal TPB ...
+  mpt->AddProperty("RINDEX",       OpticalMaterialProperties::TPB()->GetProperty("RINDEX"));
+  mpt->AddProperty("ABSLENGTH",    OpticalMaterialProperties::TPB()->GetProperty("ABSLENGTH"));
+  mpt->AddProperty("WLSABSLENGTH", OpticalMaterialProperties::TPB()->GetProperty("WLSABSLENGTH"));
+  mpt->AddProperty("WLSCOMPONENT", OpticalMaterialProperties::TPB()->GetProperty("WLSCOMPONENT"));
+  mpt->AddConstProperty("WLSTIMECONSTANT",
+                        OpticalMaterialProperties::TPB()->GetConstProperty("WLSTIMECONSTANT"));
+  
+  // Except WLS Quantum Efficiency
+  mpt->AddConstProperty("WLSMEANNUMBERPHOTONS", wls_eff);
+
+  return mpt;
+}
+
+
+
 /// TPH ///
 G4MaterialPropertiesTable* OpticalMaterialProperties::TPH()
 {

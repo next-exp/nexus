@@ -65,6 +65,8 @@ namespace nexus {
 
     static G4MaterialPropertiesTable* TPB();
 
+    static G4MaterialPropertiesTable* DegradedTPB(G4double wls_eff);
+
     static G4MaterialPropertiesTable* TPH();
 
     static G4MaterialPropertiesTable* PTFE();
