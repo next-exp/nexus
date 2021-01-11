@@ -102,9 +102,9 @@ namespace nexus {
   {
     G4ThreeVector vertex(0., 0., 0.);
     if (region == "HALLA_INNER")
-      return hallA_vertex_gen_->GenerateVertex("WHOLE_SURF");
+      return hallA_vertex_gen_->GenerateVertex("INNER_SURFACE");
     else if (region == "HALLA_OUTER")
-      return hallA_outer_gen_->GenerateVertex("WHOLE_SURF");
+      return hallA_outer_gen_->GenerateVertex("INNER_SURFACE");
     // Unknown region
     else {
       G4Exception("[HALLA]", "GenerateVertex()", FatalException,
