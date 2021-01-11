@@ -1,0 +1,35 @@
+## ----------------------------------------------------------------------------
+## nexus | DEMOPP_fullKr.config.mac
+##
+## Configuration macro to simulate Kr-83 decays in the DEMO++ geometry
+## with generation and transportation of optical photons.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+# VERBOSITY
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+
+# GEOMETRY
+/Geometry/NextDemo/config run5
+/Geometry/NextDemo/elfield true
+/Geometry/NextDemo/pressure 8.5 bar
+/Geometry/NextDemo/max_step_size 1. mm
+/Geometry/NextDemo/EL_field_intensity 10 kV/cm
+/Geometry/NextDemo/max_step_size 1. mm
+/Geometry/PmtR11410/time_binning 100. nanosecond
+/Geometry/SiPMSensl/time_binning 1. microsecond
+
+
+# GENERATION
+/Generator/Kr83mGenerator/region  ACTIVE
+
+
+# PERSISTENCY
+/nexus/persistency/outputFile out_Kr83.sim
+
+/nexus/random_seed 14562
+

@@ -61,7 +61,7 @@ namespace nexus {
 
   void NextNewKDB::Construct()
   {
-    /// Constructing the SiPM ///
+    /// Constructing the SiPM ///  
     sipm_->SetSensorDepth(3);
     sipm_->SetMotherDepth(5);
     sipm_->SetNamingOrder(1000);

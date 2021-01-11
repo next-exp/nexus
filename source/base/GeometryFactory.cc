@@ -11,6 +11,7 @@
 
 #include "BaseGeometry.h"
 #include <G4GenericMessenger.hh>
+#include "NextDemo.h"
 
 
 using namespace nexus;
@@ -62,6 +63,9 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
   else if (name_ == "TON_SCALE") p = new NextTonScale();
 
   else if (name_ == "NEXT_FLEX") p = new NextFlex();
+
+  else if (name_ == "NEXT_DEMO") p = new NextDemo();
+
 
   else {
     G4String err = "The user selected an unknown geometry: " + name_;

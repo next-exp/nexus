@@ -1,0 +1,36 @@
+
+
+/Geometry/NextDemo/ext_scint false
+/Geometry/NextDemo/elfield false
+/Geometry/NextDemo/pressure 10. bar
+/Geometry/NextDemo/plate true
+
+# Choice of 4 side ports
+#/Geometry/NextDemo/sideport_posz -201.4 mm
+/Geometry/NextDemo/sideport_posz -71.5 mm
+#/Geometry/NextDemo/sideport_posz 58.4 mm
+#/Geometry/NextDemo/sideport_posz 188.3 mm
+#
+/Geometry/NextDemo/sideport_angle 30. deg
+
+
+#/Geometry/NextDemo/specific_vertex_X 10. mm
+#/Geometry/NextDemo/specific_vertex_Y 10. mm
+#/Geometry/NextDemo/specific_vertex_Z 10. mm
+
+/Geometry/NextDemo/vessel_vis false
+/Geometry/NextDemo/field_cage_vis false
+/Geometry/NextDemo/energy_plane_vis false
+/Geometry/NextDemo/tracking_plane_vis false
+
+/Geometry/NextDemo/demo_main_verbosity false
+/Geometry/NextDemo/vessel_verbosity false
+/Geometry/NextDemo/field_cage_verbosity false
+/Geometry/NextDemo/inner_elements_verbosity false
+/Geometry/NextDemo/energy_plane_verbosity false
+/Geometry/NextDemo/tracking_plane_verbosity false
+/Geometry/NextDemo/SiPMPos_verbosity false
+
+/Geometry/KDB/visibility false
+/Geometry/SiPMSensl/visibility false
+/Geometry/PmtR11410/visibility false

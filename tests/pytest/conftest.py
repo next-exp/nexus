@@ -47,36 +47,56 @@ def nexus_full_output_file_flex100(output_tmpdir, full_base_name_flex100):
 
 
 @pytest.fixture(scope = 'session')
+def full_base_name_demopp():
+    return 'DEMOPP_full_electron'
+
+
+@pytest.fixture(scope = 'session')
+def nexus_full_output_file_demopp(output_tmpdir, full_base_name_demopp):
+    return os.path.join(output_tmpdir, full_base_name_demopp + '.h5')
+
+
+@pytest.fixture(scope = 'session')
 def new_detector(nexus_full_output_file_new):
-    num_pmts        = 12
-    num_boards      = 28
+    pmt_ids         = [i for i in range(12)]
+    board_ids       = [i for i in range(1, 29)]
     sipms_per_board = 64
     board_ordering  = 1000
-    return nexus_full_output_file_new, num_pmts, num_boards, sipms_per_board, board_ordering
+    return nexus_full_output_file_new, pmt_ids, board_ids, sipms_per_board, board_ordering
 
 
 @pytest.fixture(scope = 'session')
 def next100_detector(nexus_full_output_file_next100):
-    num_pmts        = 60
-    num_boards      = 56
+    pmt_ids         = [i for i in range(60)]
+    board_ids       = [i for i in range(1, 57)]
     sipms_per_board = 64
     board_ordering  = 1000
-    return nexus_full_output_file_next100, num_pmts, num_boards, sipms_per_board, board_ordering
+    return nexus_full_output_file_next100, pmt_ids, board_ids, sipms_per_board, board_ordering
 
 
 @pytest.fixture(scope = 'session')
 def flex100_detector(nexus_full_output_file_flex100):
-    num_pmts        = 60
-    num_boards      = 1
+    pmt_ids         = [i for i in range(60)]
+    board_ids       = [1]
     sipms_per_board = 3093
     board_ordering  = 3093
-    return nexus_full_output_file_flex100, num_pmts, num_boards, sipms_per_board, board_ordering
+    return nexus_full_output_file_flex100, pmt_ids,  board_ids, sipms_per_board, board_ordering
+
+
+@pytest.fixture(scope = 'session')
+def demopp_detector(nexus_full_output_file_demopp):
+    pmt_ids         = [10, 11, 12]
+    board_ids       = [14, 15, 16, 17]
+    sipms_per_board = 64
+    board_ordering  = 1000
+    return nexus_full_output_file_demopp, pmt_ids, board_ids, sipms_per_board, board_ordering
 
 
 @pytest.fixture(scope = "module",
                 params= ["new_detector",
                          "next100_detector",
-                         "flex100_detector"],
-                ids   = ["new", "next100", "flex100"])
+                         "flex100_detector",
+                         "demopp_detector"],
+                ids   = ["new", "next100", "flex100", "demopp"])
 def detectors(request):
     return request.getfixturevalue(request.param)
