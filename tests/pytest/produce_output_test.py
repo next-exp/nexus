@@ -164,7 +164,6 @@ def test_create_nexus_output_file_flex100(config_tmpdir, output_tmpdir, NEXUSDIR
 /event/verbose 0
 /tracking/verbose 0
 
-<<<<<<< HEAD
 /Geometry/NextFlex/gas                   enrichedXe
 /Geometry/NextFlex/gas_pressure          15. bar
 /Geometry/NextFlex/gas_temperature       300. kelvin
@@ -232,7 +231,7 @@ def test_create_nexus_output_file_flex100(config_tmpdir, output_tmpdir, NEXUSDIR
     return nexus_full_output_file_flex100
 
 
-@pytest.mark.first
+@pytest.mark.order(4)
 def test_create_nexus_output_file_demopp(config_tmpdir, output_tmpdir, NEXUSDIR, full_base_name_demopp, nexus_full_output_file_demopp):
 
      init_text = f"""
@@ -263,6 +262,7 @@ def test_create_nexus_output_file_demopp(config_tmpdir, output_tmpdir, NEXUSDIR,
 /event/verbose 0
 /tracking/verbose 0
 
+/Geometry/NextDemo/config run7
 /Geometry/NextDemo/elfield true
 /Geometry/NextDemo/EL_field_intensity 13 kV/cm
 /Geometry/NextDemo/max_step_size 1. mm

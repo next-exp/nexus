@@ -7,7 +7,7 @@ def test_sensors_numbering(detectors):
     Check that sensors are correctly numbered.
     """
 
-    det_fname, pmt_ids, board_ids, sipms_per_board, board_ordering = detectors
+    fname, pmt_ids, board_ids, sipms_per_board, board_ordering = detectors
 
     num_sipms = len(board_ids) * sipms_per_board
 
@@ -16,7 +16,8 @@ def test_sensors_numbering(detectors):
     assert len(sns_positions.sensor_name.unique()) == 2
 
     # Assert the total number of sensors is correct
-    sns_sipm_ids = sns_positions[sns_positions.sensor_name == "SiPM"].sensor_id
+    sns_sipm_ids = sns_positions[sns_positions.sensor_name.str.contains("SiPM")].sensor_id
+    print(sns_sipm_ids)
     assert 1 < len(sns_sipm_ids) <= num_sipms
 
     # Assert PMT numbering is correct
@@ -24,12 +25,14 @@ def test_sensors_numbering(detectors):
     assert np.all(sns_pmt_ids.sort_values().tolist() == pmt_ids)
 
     # Assert SiPM-Boards numbering is correct
-    assert (sns_sipm_ids // board_ordering).min() >= 1
-    assert (sns_sipm_ids // board_ordering).max() in board_ids
+    if 'FLEX100' not in fname:
+        assert (sns_sipm_ids // board_ordering).min() >= 1
+        assert (sns_sipm_ids // board_ordering).max() in board_ids
 
     # Assert SiPM number inside Boards is correct
-    assert (sns_sipm_ids % board_ordering).min() >= 0
-    assert (sns_sipm_ids % board_ordering).max() <  sipms_per_board
+    if 'FLEX100' not in fname:
+        assert (sns_sipm_ids % board_ordering).min() >= 0
+        assert (sns_sipm_ids % board_ordering).max() <  sipms_per_board
 
     # Assert there is no sensor positions repeated
     assert len(sns_positions) == len(sns_positions.sensor_id.unique())

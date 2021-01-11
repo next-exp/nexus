@@ -76,11 +76,11 @@ def next100_detector(nexus_full_output_file_next100):
 
 @pytest.fixture(scope = 'session')
 def flex100_detector(nexus_full_output_file_flex100):
-    num_pmts        = 60
-    num_boards      = 1
+    pmt_ids         = [i for i in range(60)]
+    board_ids       = [1]
     sipms_per_board = 3093
     board_ordering  = 3093
-    return nexus_full_output_file_flex100, num_pmts, num_boards, sipms_per_board, board_ordering
+    return nexus_full_output_file_flex100, pmt_ids,  board_ids, sipms_per_board, board_ordering
 
 
 @pytest.fixture(scope = 'session')
