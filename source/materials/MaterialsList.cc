@@ -642,6 +642,27 @@ G4Material* MaterialsList::FR4()
 }
 
 
+G4Material* MaterialsList::Limestone()
+{
+  // Limestone modelled as pure calcium carbonate
+  G4String name = "Limestone";
+
+  G4Material* mat = G4Material::GetMaterial(name, false);
+  if (mat == 0) {
+    G4NistManager* nist = G4NistManager::Instance();
+
+    G4Element* Ca = nist->FindOrBuildElement("Ca");
+    G4Element* C  = nist->FindOrBuildElement("C");
+    G4Element* O  = nist->FindOrBuildElement("O");
+    mat = new G4Material(name, 2.711*g/cm3, 3, kStateSolid);
+    mat->AddElement(Ca, 1);
+    mat->AddElement(C , 1);
+    mat->AddElement(O , 1);
+  }
+  return mat;
+}
+
+
 G4Material* MaterialsList::CopyMaterial(G4Material* original, const G4String& newname)
 {
   G4Material* newmat = G4Material::GetMaterial(newname, false);

@@ -8,6 +8,7 @@
 
 #include "NextNew.h"
 
+#include "LSCHallA.h"
 #include "Next100Shielding.h"
 #include "NextNewPedestal.h"
 #include "NextNewMiniCastle.h"
@@ -59,6 +60,7 @@ namespace nexus {
     calib_port_(""),
     dist_scint_(25.*cm),
     lead_castle_(true),
+    lab_walls_(false),
     disk_source_(false),
     source_mat_(""),
     source_dist_from_anode_(15.*cm),
@@ -66,6 +68,8 @@ namespace nexus {
     //   ext_source_distance_(0.*mm)
     // Buffer gas dimensions
   {
+    //Lab walls
+    hallA_walls_ = new LSCHallA();
     //Shielding
     shielding_ = new Next100Shielding();
     //Pedestal
@@ -101,6 +105,7 @@ namespace nexus {
     scint_dist_cmd.SetRange("scint_distance>=0.");
 
     msg_->DeclareProperty("lead_castle", lead_castle_, "Placement of lead castle");
+    msg_->DeclareProperty("lab_walls", lab_walls_, "Placement of Hall A walls");
     msg_->DeclareProperty("disk_source", disk_source_, "External disk-shape calibration source");
     msg_->DeclareProperty("source_material", source_mat_, "Kind of external disk-shape calibration source");
 
@@ -126,6 +131,7 @@ namespace nexus {
   NextNew::~NextNew()
   {
     //deletes
+    delete hallA_walls_;
     delete shielding_;
     delete pedestal_;
     delete mini_castle_;
@@ -155,12 +161,25 @@ namespace nexus {
     // LAB /////////////////////////////////////////////////////////////
     // This is just a volume of air surrounding the detector so that events
     //(from calibration sources or cosmic rays) can be generated on the outside.
-
-    G4Box* lab_solid =
-      new G4Box("LAB", lab_size_/2., lab_size_/2., lab_size_/2.);
-
-    lab_logic_ = new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
-
+    if (lab_walls_){
+      // We want to simulate the walls (for muons in most cases).
+      hallA_walls_->Construct();
+      hallA_logic_ = hallA_walls_->GetLogicalVolume();
+      G4double hallA_length = hallA_walls_->GetLSCHallALength();
+      // Since the walls will be displaced need to make the
+      // "lab" double sized to be sure.
+      G4Box* lab_solid = new G4Box("LAB", hallA_length,
+				   hallA_length, hallA_length);
+      G4Material *vacuum =
+	G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
+      lab_logic_ = new G4LogicalVolume(lab_solid, vacuum, "LAB");
+      this->SetSpan(2 * hallA_length);
+    } else {
+      G4Box* lab_solid =
+	new G4Box("LAB", lab_size_/2., lab_size_/2., lab_size_/2.);
+      
+      lab_logic_ = new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
+    }
     lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
 
     // Set this volume as the wrapper for the whole geometry
@@ -208,9 +227,19 @@ namespace nexus {
     displ_ = G4ThreeVector(0., 0., inner_elements_->GetELzCoord());
     G4RotationMatrix rot;
     rot.rotateY(rot_angle_);
-    new G4PVPlacement(G4Transform3D(rot, displ_),
-                      surroundings_logic, surroundings_name,
-                      lab_logic_, false, 0, false);
+    if (lab_walls_){
+      G4ThreeVector castle_pos(0., hallA_walls_->GetLSCHallACastleY(),
+			       hallA_walls_->GetLSCHallACastleZ());
+      new G4PVPlacement(G4Transform3D(rot, castle_pos),
+       			surroundings_logic, surroundings_name,
+       			hallA_logic_, false, 0, false);
+      new G4PVPlacement(0, displ_ - castle_pos, hallA_logic_, "Hall_A",
+      			lab_logic_, false, 0, false);
+    } else {
+      new G4PVPlacement(G4Transform3D(rot, displ_),
+			surroundings_logic, surroundings_name,
+			lab_logic_, false, 0, false);
+    }
 
      //ICS
     ics_->SetLogicalVolume(vessel_gas_logic);
@@ -466,6 +495,14 @@ namespace nexus {
       ini_vertex.rotate(pi/2., G4ThreeVector(1., 0., 0.));
       vertex = ini_vertex + extra_pos_;
     }
+    // Lab walls
+    else if ((region == "HALLA_INNER") || (region == "HALLA_OUTER")){
+      if (!lab_walls_)
+	G4Exception("[NextNew]", "GenerateVertex()", FatalException,
+                    "This vertex generation region must be used with lab_walls == true!");
+      vertex = hallA_walls_->GenerateVertex(region);
+      vertex = displ_ + vertex;
+    }
 
     //  MINI CASTLE and RADON
     // on the inner lead surface (SHIELDING_GAS) and on the outer mini lead castle surface (RN_MINI_CASTLE)
@@ -518,8 +555,11 @@ namespace nexus {
 		  "Unknown vertex generation region!");
     }
 
-    // AD_HOC is the only vertex that is not rotated and shifted because it is passed by the user
-    if  (region == "AD_HOC")
+    // AD_HOC is not rotated and shifted because it is passed by the user
+    // The LSC HallA vertices are already corrected so no need.
+    if  ((region == "AD_HOC") ||
+	 (region == "HALLA_OUTER") ||
+	 (region == "HALLA_INNER"))
       return vertex;
 
     // First rotate, then shift
