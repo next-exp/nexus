@@ -265,6 +265,21 @@ G4Material* MaterialsList::GXeHe(G4double pressure,
 }
 
 
+G4Material* MaterialsList::StandardRock(){
+
+  G4String name = "StandardRock";
+
+  G4Material* mat = G4Material::GetMaterial(name, false);
+
+  if (mat == 0){
+    G4double Z = 11;
+    G4double A = 22;
+    G4double rho = 2.65 * g / cm3;
+    mat = new G4Material(name, Z, A, rho, kStateSolid);
+  }
+  return mat;
+}
+
 
 
 

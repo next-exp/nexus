@@ -21,8 +21,8 @@ namespace nexus {
   using namespace CLHEP;
 
   MuonsPointSampler::MuonsPointSampler
-  (G4double x, G4double yPoint, G4double z):
-    x_(x),yPoint_(yPoint),z_(z)
+  (G4double x, G4double yPoint, G4double z, G4bool disc):
+    x_(x),yPoint_(yPoint),z_(z),disc_(disc)
   {
   }
 
@@ -42,6 +42,12 @@ namespace nexus {
     // y is fixed
     G4double x = -x_ + G4UniformRand()*2*x_;
     G4double z = -z_ + G4UniformRand()*2*z_;
+    if (disc_){
+      while (x*x / (x_*x_) + z*z / (z_*z_) > 1){
+	x = -x_ + G4UniformRand()*2*x_;
+	z = -z_ + G4UniformRand()*2*z_;
+      }
+    }
 
     G4ThreeVector mypoint(x, yPoint_, z);
 
