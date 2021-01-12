@@ -162,16 +162,16 @@ namespace nexus {
     ics_->SetLogicalVolume(vessel_internal_logic);
     ics_->Construct();
 
+    G4ThreeVector gate_pos(0., 0., -gate_zpos_in_vessel_);
     if (lab_walls_){
       G4ThreeVector castle_pos(0., hallA_walls_->GetLSCHallACastleY(),
 			       hallA_walls_->GetLSCHallACastleZ());
       new G4PVPlacement(0, castle_pos, shielding_logic, "LEAD_BOX",
        			hallA_logic_, false, 0);
-      G4ThreeVector gate_pos(0., 0., -gate_zpos_in_vessel_);
       new G4PVPlacement(0, gate_pos - castle_pos, hallA_logic_, "Hall_A",
       			lab_logic_, false, 0, false);
     } else {
-      new G4PVPlacement(0, G4ThreeVector(0., 0., -gate_zpos_in_vessel_), shielding_logic,
+      new G4PVPlacement(0, gate_pos, shielding_logic,
 			"LEAD_BOX", lab_logic_, false, 0);
     }
 
