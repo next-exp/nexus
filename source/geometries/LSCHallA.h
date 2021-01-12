@@ -6,8 +6,8 @@
 // The NEXT Collaboration
 // -----------------------------------------------------------------------------
 
-#ifndef HALLA_H
-#define HALLA_H
+#ifndef LSCHALLA_H
+#define LSCHALLA_H
 
 #include "BaseGeometry.h"
 
@@ -44,6 +44,9 @@ namespace nexus {
 
     // Messenger for the definition of control commands
     G4GenericMessenger* msg_;
+
+    // Visibility of the walls
+    G4bool visibility_;
 
     // Dimensions
     G4double lab_radius_, lab_length_, lab_wall_thickn_;

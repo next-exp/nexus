@@ -9,6 +9,7 @@
 #include "LSCHallA.h"
 #include "CylinderPointSampler2020.h"
 #include "MaterialsList.h"
+#include "Visibilities.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
@@ -19,10 +20,6 @@
 #include <G4SubtractionSolid.hh>
 #include <G4Tubs.hh>
 #include <G4VisAttributes.hh>
-#include <Randomize.hh>
-
-#include <CLHEP/Units/PhysicalConstants.h>
-#include <CLHEP/Units/SystemOfUnits.h>
 
 
 namespace nexus {
@@ -31,6 +28,7 @@ namespace nexus {
 
   LSCHallA::LSCHallA():
     BaseGeometry(),
+    visibility_(0),
     lab_radius_(7.64 * m),
     lab_length_(39.3 * m),
     lab_wall_thickn_(3. * m),
@@ -46,6 +44,8 @@ namespace nexus {
     rock_thickn_cmd.SetUnitCategory("Length");
     rock_thickn_cmd.SetParameterName("wall_thickness", false);
     rock_thickn_cmd.SetRange("wall_thickness>=0.");
+
+    msg_->DeclareProperty("rock_vis", visibility_, "Rock Visibility");
   }
 
   LSCHallA::~LSCHallA()
@@ -78,6 +78,11 @@ namespace nexus {
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), rock_logic,
 		      "lab_walls", lab_air_logic, false, 0, false);
 
+    if (visibility_)
+      rock_logic->SetVisAttributes(nexus::DarkGrey());
+    else
+      rock_logic->SetVisAttributes(G4VisAttributes::Invisible);
+
     // Limit tracking detail in the rock
     G4Region* rock_region = new G4Region("LAB_ROCK");
     G4ProductionCuts *rock_prod_cut = new G4ProductionCuts();
@@ -107,7 +112,7 @@ namespace nexus {
       return hallA_outer_gen_->GenerateVertex("INNER_SURFACE");
     // Unknown region
     else {
-      G4Exception("[HALLA]", "GenerateVertex()", FatalException,
+      G4Exception("[LSCHallA]", "GenerateVertex()", FatalException,
 		  "Unknown Region!");
     }
 
