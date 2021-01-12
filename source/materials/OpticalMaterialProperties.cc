@@ -616,7 +616,8 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeGrid(G4double pressure
                                                                G4double transparency,
                                                                G4double thickness,
                                                                G4int    sc_yield,
-                                                               G4double e_lifetime)
+                                                               G4double e_lifetime,
+                                                               G4double photoe_p)
 {
   XenonGasProperties GXe_prop(pressure, temperature);
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
@@ -659,6 +660,14 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeGrid(G4double pressure
   //         << " eV -> " << intensity[i] << G4endl;
   mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
   mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
+
+
+  // PHOTOELECTRIC REEMISSION
+  // https://aip.scitation.org/doi/10.1063/1.1708797
+  G4double stainless_wf = 4.3 * eV; // work function
+  mpt->AddConstProperty("WORK_FUNCTION", stainless_wf);
+  mpt->AddConstProperty("OP_PHOTOELECTRIC_PROBABILITY", photoe_p);
+
 
   // CONST PROPERTIES
   mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield);

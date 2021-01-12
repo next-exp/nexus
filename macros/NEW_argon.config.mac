@@ -30,5 +30,6 @@
 /PhysicsList/Nexus/clustering          false
 /PhysicsList/Nexus/drift               false
 /PhysicsList/Nexus/electroluminescence false
+/PhysicsList/Nexus/photoelectric       false
 
 /nexus/persistency/outputFile New.Na22_Ar.next

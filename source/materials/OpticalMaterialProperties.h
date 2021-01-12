@@ -61,7 +61,8 @@ namespace nexus {
                                                G4double transparency=.9,
                                                G4double thickness=1.*mm,
                                                G4int sc_yield=25510/MeV,
-                                               G4double e_lifetime=1000.*ms);
+                                               G4double e_lifetime=1000.*ms,
+                                               G4double photoe_p=0);
 
     static G4MaterialPropertiesTable* TPB();
 

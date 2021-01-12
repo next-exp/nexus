@@ -21,6 +21,8 @@
 /Geometry/PmtR11410/time_binning 100. nanosecond
 /Geometry/SiPMSensl/time_binning 1. microsecond
 
+/PhysicsList/Nexus/photoelectric false
+
 # GENERATOR
 /Generator/Kr83mGenerator/region ACTIVE
 

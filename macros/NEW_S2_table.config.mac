@@ -21,4 +21,6 @@
 
 /Generator/ELTableGenerator/num_ie 100
 
+/PhysicsList/Nexus/photoelectric false
+
 /nexus/persistency/outputFile table.NEW.next
