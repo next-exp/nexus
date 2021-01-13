@@ -1,11 +1,11 @@
 import pandas as pd
 
 
-def test_sensor_ids(nexus_files):
+def test_sensor_ids(nexus_params):
      """
      Check that sensors are correctly numbered.
      """
-     filename, nsipms, n_boards, sipms_per_board, board_ordering = nexus_files
+     filename, nsipms, n_boards, sipms_per_board, board_ordering = nexus_params
 
      sns_response = pd.read_hdf(filename, 'MC/sns_response')
      sipm_ids     = sns_response.sensor_id.unique()
