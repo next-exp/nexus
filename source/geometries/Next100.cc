@@ -260,7 +260,7 @@ namespace nexus {
 					 const G4ThreeVector& point,
 					 const G4ThreeVector& dir) const
   {
-    // Project backwards along dir from point to find the first intersection
+    // Project along dir from point to find the first intersection
     // with region.
     G4ThreeVector vertex(0., 0., 0.);
     if (region == "EXTERNAL"){
