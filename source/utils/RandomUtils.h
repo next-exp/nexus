@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
-// nexus | Visibilities.h
+// nexus | RandomUtils.h
 //
-// This class define colors for geometry display.
+// This class defines commonly used functions.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
@@ -32,9 +32,8 @@ namespace nexus {
 	G4double sinTheta  = std::sqrt(sinTheta2);
 	G4double phi = twopi*G4UniformRand();
 	  if (phi > phi_min && phi < phi_max){
-	    dir = true;
             return G4ThreeVector (sinTheta*std::cos(phi),
-		                  sinTheta*std::sin(phi), 
+		                  sinTheta*std::sin(phi),
                                   cosTheta).unit();
 	  }
       }
