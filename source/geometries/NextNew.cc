@@ -609,6 +609,12 @@ namespace nexus {
     if (region == "EXTERNAL"){
       return shielding_->ProjectToRegion(region, point, dir);
     }
+    else if ((region == "HALLA_OUTER") || (region == "HALLA_INNER")){
+      if (!lab_walls_)
+	G4Exception("[NextNew]", "ProjectToRegion()", FatalException,
+                    "To project to this region you need lab_walls == true!");
+      return hallA_walls_->ProjectToRegion(region, point, dir);
+    }
     else {
       G4Exception("[NextNew]", "ProjectToRegion()", FatalException,
 		  "Unknown vertex generation region!");
