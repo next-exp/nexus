@@ -36,7 +36,7 @@ using namespace CLHEP;
 SingleParticleGenerator::SingleParticleGenerator():
 G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
 energy_min_(0.), energy_max_(0.), geom_(0), momentum_X_(0.),
-momentum_Y_(0.), momentum_Z_(0.), costheta_min_(-1.), 
+momentum_Y_(0.), momentum_Z_(0.), costheta_min_(-1.),
 costheta_max_(1.), phi_min_(0.), phi_max_(2.*pi)
 {
   msg_ = new G4GenericMessenger(this, "/Generator/SingleParticle/",
@@ -140,9 +140,9 @@ void SingleParticleGenerator::GeneratePrimaryVertex(G4Event* event)
     pz = pmod * momentum_Z_/mom_mod;
   }else if (costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. || phi_max_ !=2.*pi) {
     G4ThreeVector p = nexus::Direction(costheta_min_, costheta_max_, phi_min_, phi_max_);
-    px = p.x();
-    py = p.y();
-    pz = p.z();
+    px = p.x() * pmod;
+    py = p.y() * pmod;
+    pz = p.z() * pmod;
   }
 
   // Create the new primary particle and set it some properties
@@ -159,13 +159,3 @@ void SingleParticleGenerator::GeneratePrimaryVertex(G4Event* event)
   vertex->SetPrimary(particle);
   event->AddPrimaryVertex(vertex);
 }
-
-
-
-//G4double SingleParticleGenerator::RandomEnergy() const
-//{
-//  if (energy_max_ == energy_min_)
-//    return energy_min_;
-//  else
-//    return (G4UniformRand()*(energy_max_ - energy_min_) + energy_min_);
-//}
