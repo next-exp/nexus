@@ -31,7 +31,6 @@ GeneratorFactory::~GeneratorFactory()
 //////////////////////////////////////////////////////////////////////
 
 #include "SingleParticleGenerator.h"
-#include "SingleParticle.h"
 #include "Decay0Interface.h"
 #include "IonGenerator.h"
 #include "Na22Generator.h"
@@ -69,8 +68,6 @@ G4VPrimaryGenerator* GeneratorFactory::CreateGenerator() const
   else if (name_ == "SCINTILLATION")   p = new ScintillationGenerator();
 
   else if (name_ == "E+E-PAIR")        p = new ElecPositronPairGenerator();
-
-  else if (name_ == "SINGLE_PARTICLE_ANG") p = new SingleParticle();
 
   else {
     G4String err = "The user specified an unknown generator: " + name_;
