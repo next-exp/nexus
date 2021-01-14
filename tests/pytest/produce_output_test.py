@@ -131,7 +131,7 @@ def test_create_nexus_output_file_ring_tiles(config_tmpdir, output_tmpdir, NEXUS
      return nexus_output_file_ring_tiles
 
 
-@pytest.mark.first
+@pytest.mark.order(3)
 def test_create_nexus_output_file_pet_box_HamamatsuVUV(config_tmpdir, output_tmpdir, NEXUSDIR, base_name_pet_box_HamamatsuVUV, nexus_output_file_pet_box_HamamatsuVUV):
 
      init_text = f"""
@@ -187,7 +187,7 @@ def test_create_nexus_output_file_pet_box_HamamatsuVUV(config_tmpdir, output_tmp
      return nexus_output_file_pet_box_HamamatsuVUV
 
 
-@pytest.mark.first
+@pytest.mark.order(4)
 def test_create_nexus_output_file_pet_box_HamamatsuBlue(config_tmpdir, output_tmpdir, NEXUSDIR, base_name_pet_box_HamamatsuBlue, nexus_output_file_pet_box_HamamatsuBlue):
 
      init_text = f"""
@@ -243,7 +243,7 @@ def test_create_nexus_output_file_pet_box_HamamatsuBlue(config_tmpdir, output_tm
      return nexus_output_file_pet_box_HamamatsuBlue
 
 
-@pytest.mark.first
+@pytest.mark.order(5)
 def test_create_nexus_output_file_pet_box_FBK(config_tmpdir, output_tmpdir, NEXUSDIR, base_name_pet_box_FBK, nexus_output_file_pet_box_FBK):
 
      init_text = f"""
