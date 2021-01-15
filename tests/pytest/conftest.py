@@ -23,7 +23,7 @@ def base_name_full_body():
 
 
 @pytest.fixture(scope = 'session')
-def nexus_output_file_full_body(output_tmpdir, base_name_full_body):
+def nexus_params_full_body(output_tmpdir, base_name_full_body):
     n_sipm          = 102304
     n_boards        = 0
     sipms_per_board = 0
@@ -37,7 +37,7 @@ def base_name_ring_tiles():
 
 
 @pytest.fixture(scope = 'session')
-def nexus_output_file_ring_tiles(output_tmpdir, base_name_ring_tiles):
+def nexus_params_ring_tiles(output_tmpdir, base_name_ring_tiles):
     n_sipm          = 3840
     n_boards        = 120
     sipms_per_board = 32
@@ -59,7 +59,7 @@ def base_name_pet_box_FBK():
 
 
 @pytest.fixture(scope = 'session')
-def nexus_output_file_pet_box_HamamatsuVUV(output_tmpdir, base_name_pet_box_HamamatsuVUV):
+def nexus_params_pet_box_HamamatsuVUV(output_tmpdir, base_name_pet_box_HamamatsuVUV):
     n_sipm         = 128
     sipms_per_tile = 16
     init_sns_id    = 1
@@ -67,7 +67,7 @@ def nexus_output_file_pet_box_HamamatsuVUV(output_tmpdir, base_name_pet_box_Hama
     return os.path.join(output_tmpdir, base_name_pet_box_HamamatsuVUV+'.h5'), n_sipm, sipms_per_tile, init_sns_id, sensor_name
 
 @pytest.fixture(scope = 'session')
-def nexus_output_file_pet_box_HamamatsuBlue(output_tmpdir, base_name_pet_box_HamamatsuBlue):
+def nexus_params_pet_box_HamamatsuBlue(output_tmpdir, base_name_pet_box_HamamatsuBlue):
     n_sipm         = 128
     sipms_per_tile = 16
     init_sns_id    = 1
@@ -75,7 +75,7 @@ def nexus_output_file_pet_box_HamamatsuBlue(output_tmpdir, base_name_pet_box_Ham
     return os.path.join(output_tmpdir, base_name_pet_box_HamamatsuBlue+'.h5'), n_sipm, sipms_per_tile, init_sns_id, sensor_name
 
 @pytest.fixture(scope = 'session')
-def nexus_output_file_pet_box_FBK(output_tmpdir, base_name_pet_box_FBK):
+def nexus_params_pet_box_FBK(output_tmpdir, base_name_pet_box_FBK):
     n_sipm         = 512
     sipms_per_tile = 64
     init_sns_id    = 1
@@ -87,7 +87,7 @@ def nexus_output_file_pet_box_FBK(output_tmpdir, base_name_pet_box_FBK):
                 params=["base_name_full_body", "base_name_ring_tiles", "base_name_pet_box_HamamatsuVUV",
                         "base_name_pet_box_HamamatsuBlue", "base_name_pet_box_FBK"],
                 ids=["full_body", "ring_tiles", "pet_box_HamamatsuVUV", "pet_box_HamamatsuBlue", "pet_box_FBK"])
-def nexus_filenames(request, output_tmpdir):
+def nexus_files(request, output_tmpdir):
     return os.path.join(output_tmpdir, request.getfixturevalue(request.param)+'.h5')
 
 
@@ -106,7 +106,7 @@ def nexus_params(request):
 
 
 @pytest.fixture(scope="module",
-                params=["nexus_output_file_pet_box_HamamatsuVUV", "nexus_output_file_pet_box_HamamatsuBlue", "nexus_output_file_pet_box_FBK"],
+                params=["nexus_params_pet_box_HamamatsuVUV", "nexus_params_pet_box_HamamatsuBlue", "nexus_params_pet_box_FBK"],
                 ids=["pet_box_HamamatsuVUV", "pet_box_HamamatsuBlue", "pet_box_FBK"])
 def nexus_pet_box_params(request):
     return request.getfixturevalue(request.param)

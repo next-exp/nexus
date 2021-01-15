@@ -5,7 +5,7 @@ import subprocess
 
 
 @pytest.mark.order(1)
-def test_create_nexus_output_file_full_body(config_tmpdir, output_tmpdir, NEXUSDIR, base_name_full_body, nexus_output_file_full_body):
+def test_create_nexus_output_file_full_body(config_tmpdir, output_tmpdir, NEXUSDIR, base_name_full_body):
 
      init_text = f"""
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
@@ -67,11 +67,9 @@ def test_create_nexus_output_file_full_body(config_tmpdir, output_tmpdir, NEXUSD
      command   = [nexus_exe, '-b', '-n', '20', init_path]
      p         = subprocess.run(command, check=True, env=my_env)
 
-     return nexus_output_file_full_body
-
 
 @pytest.mark.order(2)
-def test_create_nexus_output_file_ring_tiles(config_tmpdir, output_tmpdir, NEXUSDIR, base_name_ring_tiles, nexus_output_file_ring_tiles):
+def test_create_nexus_output_file_ring_tiles(config_tmpdir, output_tmpdir, NEXUSDIR, base_name_ring_tiles):
 
      init_text = f"""
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
