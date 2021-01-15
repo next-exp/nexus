@@ -70,6 +70,8 @@ namespace nexus {
     G4Material* gas_;
     G4double pressure_;
     G4double temperature_;
+    G4double sc_yield_;
+    G4double e_lifetime_;
 
     // Pointers to materials definition
     G4Material* hdpe_;
