@@ -619,26 +619,23 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeGrid(G4double pressure
                                                                G4double e_lifetime,
                                                                G4double photoe_p)
 {
-  XenonGasProperties GXe_prop(pressure, temperature);
-  G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
+  G4MaterialPropertiesTable* mpt      = new G4MaterialPropertiesTable();
 
-  // REFRACTIVE INDEX
-  const G4int ri_entries = 200;
-  G4double eWidth = (optPhotMaxE_ - optPhotMinE_) / ri_entries;
+  // PROPERTIES FROM XENON
+  G4MaterialPropertiesTable* xenon_pt = GXe(pressure, temperature, sc_yield, e_lifetime);
 
-  G4double ri_energy[ri_entries];
-  for (int i=0; i<ri_entries; i++) {
-    ri_energy[i] = optPhotMinE_ + i * eWidth;
-  }
+  mpt->AddProperty("RINDEX",        xenon_pt->GetProperty("RINDEX"));
+  mpt->AddProperty("FASTCOMPONENT", xenon_pt->GetProperty("FASTCOMPONENT"));
+  mpt->AddProperty("SLOWCOMPONENT", xenon_pt->GetProperty("SLOWCOMPONENT"));
+  mpt->AddProperty("ELSPECTRUM",    xenon_pt->GetProperty("ELSPECTRUM"));
 
-  G4double rIndex[ri_entries];
-  for (int i=0; i<ri_entries; i++) {
-    rIndex[i] = GXe_prop.RefractiveIndex(ri_energy[i]);
-    // G4cout << "* FakeGrid rIndex:  " << std::setw(7)
-    //        << ri_energy[i]/eV << " eV -> " << rIndex[i] << G4endl;
-  }
-  assert(sizeof(rIndex) == sizeof(ri_energy));
-  mpt->AddProperty("RINDEX", ri_energy, rIndex, ri_entries);
+  mpt->AddConstProperty("SCINTILLATIONYIELD", xenon_pt->GetConstProperty("SCINTILLATIONYIELD"));
+  mpt->AddConstProperty("RESOLUTIONSCALE",    xenon_pt->GetConstProperty("RESOLUTIONSCALE"));
+  mpt->AddConstProperty("FASTTIMECONSTANT",   xenon_pt->GetConstProperty("FASTTIMECONSTANT"));
+  mpt->AddConstProperty("SLOWTIMECONSTANT",   xenon_pt->GetConstProperty("SLOWTIMECONSTANT"));
+  //mpt->AddConstProperty("ELTIMECONSTANT",     xenon_pt->GetConstProperty("ELTIMECONSTANT"));
+  mpt->AddConstProperty("YIELDRATIO",         xenon_pt->GetConstProperty("YIELDRATIO"));
+  mpt->AddConstProperty("ATTACHMENT",         xenon_pt->GetConstProperty("ATTACHMENT"));
 
   // ABSORPTION LENGTH
   G4double abs_length   = -thickness/log(transparency);
@@ -646,36 +643,11 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeGrid(G4double pressure
   G4double absLength[]  = {abs_length, abs_length};
   mpt->AddProperty("ABSLENGTH", abs_energy, absLength, 2);
 
-  // EMISSION SPECTRUM
-  // Sampling from ~150 nm to 200 nm <----> from 6.20625 eV to 8.20625 eV
-  const G4int sc_entries = 200;
-  G4double sc_energy[sc_entries];
-  for (int i=0; i<sc_entries; i++){
-    sc_energy[i] = 6.20625 * eV + 0.01 * i * eV;
-  }
-  G4double intensity[sc_entries];
-  GXe_prop.Scintillation(sc_entries, sc_energy, intensity);
-  //for (int i=0; i<sc_entries; i++)
-  //  G4cout << "* FakeGrid Scint:  " << std::setw(7) << sc_energy[i]/eV
-  //         << " eV -> " << intensity[i] << G4endl;
-  mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
-  mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
-
-
   // PHOTOELECTRIC REEMISSION
   // https://aip.scitation.org/doi/10.1063/1.1708797
   G4double stainless_wf = 4.3 * eV; // work function
   mpt->AddConstProperty("WORK_FUNCTION", stainless_wf);
   mpt->AddConstProperty("OP_PHOTOELECTRIC_PROBABILITY", photoe_p);
-
-
-  // CONST PROPERTIES
-  mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield);
-  mpt->AddConstProperty("RESOLUTIONSCALE",    1.0);
-  mpt->AddConstProperty("FASTTIMECONSTANT",   4.5  * ns);
-  mpt->AddConstProperty("SLOWTIMECONSTANT",   100. * ns);
-  mpt->AddConstProperty("YIELDRATIO",         .1);
-  mpt->AddConstProperty("ATTACHMENT",         e_lifetime);
 
   return mpt;
 }
@@ -873,12 +845,11 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::DegradedTPB(G4double wls_e
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
   // All Optical Material Properties from normal TPB ...
-  mpt->AddProperty("RINDEX",       OpticalMaterialProperties::TPB()->GetProperty("RINDEX"));
-  mpt->AddProperty("ABSLENGTH",    OpticalMaterialProperties::TPB()->GetProperty("ABSLENGTH"));
-  mpt->AddProperty("WLSABSLENGTH", OpticalMaterialProperties::TPB()->GetProperty("WLSABSLENGTH"));
-  mpt->AddProperty("WLSCOMPONENT", OpticalMaterialProperties::TPB()->GetProperty("WLSCOMPONENT"));
-  mpt->AddConstProperty("WLSTIMECONSTANT",
-                        OpticalMaterialProperties::TPB()->GetConstProperty("WLSTIMECONSTANT"));
+  mpt->AddProperty("RINDEX",       TPB()->GetProperty("RINDEX"));
+  mpt->AddProperty("ABSLENGTH",    TPB()->GetProperty("ABSLENGTH"));
+  mpt->AddProperty("WLSABSLENGTH", TPB()->GetProperty("WLSABSLENGTH"));
+  mpt->AddProperty("WLSCOMPONENT", TPB()->GetProperty("WLSCOMPONENT"));
+  mpt->AddConstProperty("WLSTIMECONSTANT",TPB()->GetConstProperty("WLSTIMECONSTANT"));
   
   // Except WLS Quantum Efficiency
   mpt->AddConstProperty("WLSMEANNUMBERPHOTONS", wls_eff);
