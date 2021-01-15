@@ -92,7 +92,14 @@ def nexus_filenames(request, output_tmpdir):
 
 
 @pytest.fixture(scope="module",
-                params=["nexus_output_file_full_body", "nexus_output_file_ring_tiles"],
+                params=["base_name_pet_box_HamamatsuVUV", "base_name_pet_box_HamamatsuBlue", "base_name_pet_box_FBK"],
+                ids=["pet_box_HamamatsuVUV", "pet_box_HamamatsuBlue", "pet_box_FBK"])
+def nexus_pet_box_basenames(request, output_tmpdir):
+    return request.getfixturevalue(request.param)
+
+
+@pytest.fixture(scope="module",
+                params=["nexus_params_full_body", "nexus_params_ring_tiles"],
                 ids=["full_body", "ring_tiles"])
 def nexus_params(request):
     return request.getfixturevalue(request.param)
