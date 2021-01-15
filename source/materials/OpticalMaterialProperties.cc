@@ -539,7 +539,6 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GAr(G4double sc_yield,
   mpt->AddConstProperty("SLOWTIMECONSTANT",   37.*ns);
   mpt->AddConstProperty("YIELDRATIO",         .52);
   mpt->AddConstProperty("RESOLUTIONSCALE",    1.0);
-  //mpt->AddConstProperty("ELTIMECONSTANT",     1260.*ns);
   mpt->AddConstProperty("ATTACHMENT",         e_lifetime);
 
   return mpt;
@@ -601,7 +600,6 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
   mpt->AddConstProperty("RESOLUTIONSCALE",    1.0);
   mpt->AddConstProperty("FASTTIMECONSTANT",   4.5  * ns);
   mpt->AddConstProperty("SLOWTIMECONSTANT",   100. * ns);
-  //mpt->AddConstProperty("ELTIMECONSTANT",     50.  * ns);
   mpt->AddConstProperty("YIELDRATIO",         .1);
   mpt->AddConstProperty("ATTACHMENT",         e_lifetime);
 
@@ -633,7 +631,6 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeGrid(G4double pressure
   mpt->AddConstProperty("RESOLUTIONSCALE",    xenon_pt->GetConstProperty("RESOLUTIONSCALE"));
   mpt->AddConstProperty("FASTTIMECONSTANT",   xenon_pt->GetConstProperty("FASTTIMECONSTANT"));
   mpt->AddConstProperty("SLOWTIMECONSTANT",   xenon_pt->GetConstProperty("SLOWTIMECONSTANT"));
-  //mpt->AddConstProperty("ELTIMECONSTANT",     xenon_pt->GetConstProperty("ELTIMECONSTANT"));
   mpt->AddConstProperty("YIELDRATIO",         xenon_pt->GetConstProperty("YIELDRATIO"));
   mpt->AddConstProperty("ATTACHMENT",         xenon_pt->GetConstProperty("ATTACHMENT"));
 
