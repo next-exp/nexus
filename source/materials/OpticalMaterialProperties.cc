@@ -625,7 +625,6 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::FakeGrid(G4double pressure
   mpt->AddProperty("RINDEX",        xenon_pt->GetProperty("RINDEX"));
   mpt->AddProperty("FASTCOMPONENT", xenon_pt->GetProperty("FASTCOMPONENT"));
   mpt->AddProperty("SLOWCOMPONENT", xenon_pt->GetProperty("SLOWCOMPONENT"));
-  mpt->AddProperty("ELSPECTRUM",    xenon_pt->GetProperty("ELSPECTRUM"));
 
   mpt->AddConstProperty("SCINTILLATIONYIELD", xenon_pt->GetConstProperty("SCINTILLATIONYIELD"));
   mpt->AddConstProperty("RESOLUTIONSCALE",    xenon_pt->GetConstProperty("RESOLUTIONSCALE"));
