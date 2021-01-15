@@ -59,6 +59,7 @@ NextFlexFieldCage::NextFlexFieldCage():
   el_long_diff_            (0. * mm/sqrt(cm)),   // EL field longitudinal diffusion
   anode_transparency_      (0.95),               // Anode transparency
   gate_transparency_       (0.95),               // Gate transparency
+  photoe_prob_             (0),                  // OpticalPhotoElectric Probability
   fiber_claddings_         (2),                  // Number of fiber claddings (0, 1 or 2)
   fiber_sensor_binning_    (100. * ns),          // Size of fiber sensors time binning
   wls_mat_name_            ("TPB"),              // UV wls material name
@@ -196,6 +197,10 @@ void NextFlexFieldCage::DefineConfigurationParameters()
   msg_->DeclareProperty("gate_transparency", gate_transparency_,
                         "Gate transparency");
 
+  // PHOTOELECTRIC PROBABILITY
+  msg_->DeclareProperty("photoe_prob", photoe_prob_,
+                        "Probability of optical photon to ie- conversion");
+
   // LIGHT TUBE
   msg_->DeclareProperty("fc_wls_mat", wls_mat_name_,
                         "FIELD_CAGE UV wavelength shifting material name");
@@ -243,6 +248,10 @@ void NextFlexFieldCage::DefineMaterials()
   xenon_gas_       = mother_logic_->GetMaterial();
   gas_pressure_    = xenon_gas_->GetPressure();
   gas_temperature_ = xenon_gas_->GetTemperature();
+  gas_e_lifetime_  = xenon_gas_->GetMaterialPropertiesTable()
+                               ->GetConstProperty("ATTACHMENT");
+  gas_sc_yield_    = xenon_gas_->GetMaterialPropertiesTable()
+                               ->GetConstProperty("SCINTILLATIONYIELD");
 
   // Teflon
   teflon_mat_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
@@ -267,15 +276,18 @@ void NextFlexFieldCage::DefineMaterials()
   // Meshes materials
   cathode_mat_ = MaterialsList::FakeDielectric(xenon_gas_, "cathode_mat");
   cathode_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(gas_pressure_,
-    gas_temperature_, cathode_transparency_, cathode_thickness_));
+                gas_temperature_, cathode_transparency_, cathode_thickness_,
+                gas_sc_yield_, gas_e_lifetime_, photoe_prob_));
 
   gate_mat_ = MaterialsList::FakeDielectric(xenon_gas_, "gate_mat");
   gate_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(gas_pressure_,
-    gas_temperature_, gate_transparency_, gate_thickness_));
+             gas_temperature_, gate_transparency_, gate_thickness_,
+             gas_sc_yield_, gas_e_lifetime_, photoe_prob_));
 
   anode_mat_ = MaterialsList::FakeDielectric(xenon_gas_, "anode_mat");
   anode_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(gas_pressure_,
-    gas_temperature_, anode_transparency_, anode_thickness_));
+              gas_temperature_, anode_transparency_, anode_thickness_,
+              gas_sc_yield_, gas_e_lifetime_, photoe_prob_));
 
 
   // Fiber core material
@@ -522,6 +534,8 @@ void NextFlexFieldCage::BuildELgap()
     }
     else
       G4cout << "* EL field OFF" << G4endl;
+
+    G4cout << "* Photoelectric Probability: " << photoe_prob_ << G4endl;    
   }
 
 
