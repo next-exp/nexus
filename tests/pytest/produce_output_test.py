@@ -160,7 +160,7 @@ def test_create_nexus_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdir
 /Geometry/PetBox/sipm_time_binning 1. microsecond
 /Geometry/PetBox/sipm_pde 0.5
 /Generator/Back2back/region CENTER
-/nexus/persistency/outputFile {output_tmpdir}/{nexus_pet_box_basenames}.h5
+/nexus/persistency/outputFile {output_tmpdir}/{nexus_pet_box_basenames}
 /nexus/random_seed 23102020
 """
 
