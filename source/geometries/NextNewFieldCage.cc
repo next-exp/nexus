@@ -204,14 +204,12 @@ namespace nexus {
                             "X position of the center of the EL gap vertex generation disk.");
     el_gap_gen_disk_x_cmd.SetUnitCategory("Length");
     el_gap_gen_disk_x_cmd.SetParameterName("el_gap_gen_disk_x", false);
-    el_gap_gen_disk_x_cmd.SetRange("el_gap_gen_disk_x>=0.");
 
     G4GenericMessenger::Command& el_gap_gen_disk_y_cmd =
       msg_->DeclareProperty("el_gap_gen_disk_y", el_gap_gen_disk_y_,
                             "Y position of the center of the EL gap vertex generation disk.");
     el_gap_gen_disk_y_cmd.SetUnitCategory("Length");
     el_gap_gen_disk_y_cmd.SetParameterName("el_gap_gen_disk_y", false);
-    el_gap_gen_disk_y_cmd.SetRange("el_gap_gen_disk_y>=0.");
 
     G4GenericMessenger::Command& el_gap_gen_disk_zmin_cmd =
       msg_->DeclareProperty("el_gap_gen_disk_zmin", el_gap_gen_disk_zmin_,
