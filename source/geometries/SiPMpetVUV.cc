@@ -37,7 +37,6 @@ namespace nexus {
 			    refr_index_(1),
 			    eff_(1.),
                             time_binning_(1.*microsecond)
-
   {
     /// Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");

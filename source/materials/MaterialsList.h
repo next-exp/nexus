@@ -58,6 +58,9 @@ namespace nexus {
     // Epoxy resin
     static G4Material* Epoxy();
 
+    // Carbon Fiber
+    static G4Material* CarbonFiber();
+
     // Kovar (nickel-cobalt ferrous alloy)
     static G4Material* Kovar();
 

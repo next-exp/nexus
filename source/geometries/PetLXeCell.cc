@@ -12,10 +12,10 @@
 #include "PetPlainDice.h"
 #include "OpticalMaterialProperties.h"
 #include "BoxPointSampler.h"
-//#include "SiPMpetBlue.h"
+//#include "SiPMHamamatsuBlue.h"
 #include "SiPMpetVUV.h"
 #include "Visibilities.h"
-//#include "SiPMpetBlue.h"
+//#include "SiPMHamamatsuBlue.h"
 //#include "SiPMpetTPB.h"
 //#include "SiPMpetPlots.h"
 //#include "Photocathode.h"
@@ -322,7 +322,7 @@ namespace nexus {
 
  // 	if ((i+j) % 2 == 0) {
  // 	  new G4PVPlacement(0, G4ThreeVector(pos_x, pos_y, pos_z),
- // 			    sipmBlue_logic, "SIPMpetBlue", lXe_logic_, false, sipm_no, true);
+ // 			    sipmBlue_logic, "SiPMHamamatsuBlue", lXe_logic_, false, sipm_no, true);
  // 	} else {
  // 	  new G4PVPlacement(0, G4ThreeVector(pos_x, pos_y, pos_z),
  // 			    sipmTPB_logic, "SIPMpet", lXe_logic_, false, sipm_no, true);
@@ -354,7 +354,7 @@ namespace nexus {
 
  // 	if ((i+j) % 2 == 0) {
  // 	  new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(pos_x, pos_y, pos_z)),
- // 			    sipmBlue_logic, "SIPMpetBlue", lXe_logic_, false, sipm_no, true);
+ // 			    sipmBlue_logic, "SiPMHamamatsuBlue", lXe_logic_, false, sipm_no, true);
  // 	} else {
  // 	  new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(pos_x, pos_y, pos_z)),
  // 			    sipmTPB_logic, "SIPMpet", lXe_logic_, false, sipm_no, true);

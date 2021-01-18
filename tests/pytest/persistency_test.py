@@ -6,7 +6,7 @@ import numpy as np
 def test_hdf5_structure(nexus_files):
      """Check that the hdf5 table structure is the correct one."""
 
-     filename, _, _, _, _ = nexus_files
+     filename = nexus_files
 
      with tb.open_file(filename) as h5out:
 
@@ -91,7 +91,7 @@ def test_particle_ids_of_hits_exist_in_particle_table(nexus_files):
     Check that the particle IDs of the hits are also contained
     in the particle table.
     """
-    filename, _, _, _, _ = nexus_files
+    filename = nexus_files
 
     hits = pd.read_hdf(filename, 'MC/hits')
     hit_pids = hits.particle_id.unique()
@@ -104,8 +104,7 @@ def test_particle_ids_of_hits_exist_in_particle_table(nexus_files):
 
 def test_hit_labels(nexus_files):
      """Check that there is at least one hit in the ACTIVE volume."""
-     filename, _, _, _, _ = nexus_files
-
+     filename = nexus_files
      hits = pd.read_hdf(filename, 'MC/hits')
      hit_labels = hits.label.unique()
 
@@ -114,7 +113,7 @@ def test_hit_labels(nexus_files):
 
 def test_primary_always_exists(nexus_files):
      """Check that there is at least one primary particle."""
-     filename, _, _, _, _ = nexus_files
+     filename = nexus_files
      particles = pd.read_hdf(filename, 'MC/particles')
      primary   = particles.primary.unique()
 
@@ -123,7 +122,7 @@ def test_primary_always_exists(nexus_files):
 
 def test_sensor_binning_is_saved(nexus_files):
      """Check that the sensor binning is saved in the configuration table."""
-     filename, _, _, _, _ = nexus_files
+     filename = nexus_files
      conf = pd.read_hdf(filename, 'MC/configuration')
      parameters = conf.param_key.values
 

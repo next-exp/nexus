@@ -35,7 +35,6 @@ namespace nexus {
   SiPMpet::SiPMpet(): BaseGeometry(),
                       visibility_(0),
                       time_binning_(1.*microsecond)
-
   {
     /// Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");

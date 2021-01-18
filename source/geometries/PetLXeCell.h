@@ -18,7 +18,7 @@ class G4Material;
 namespace nexus{class PetPlainDice;}
 namespace nexus {class BoxPointSampler;}
 //namespace nexus {class SiPMbase;}
-namespace nexus {class SiPMpetBlue;}
+namespace nexus {class SiPMHamamatsuBlue;}
 namespace nexus {class SiPMpetTPB;}
 namespace nexus {class SiPMpetVUV;}
 namespace nexus {class SiPMpetPlots;}
@@ -79,7 +79,7 @@ namespace nexus {
     /* SiPMpetVUV* sipmVUV_; */
     /* SiPMpetTPB* sipmTPB_; */
     /* SiPMpetPlots* sipmPlots_; */
-    /* SiPMpetBlue* sipmBlue_; */
+    /* SiPMHamamatsuBlue* sipmBlue_; */
 
 
     G4double  pdb_z_;
