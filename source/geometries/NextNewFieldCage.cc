@@ -252,9 +252,11 @@ namespace nexus {
 
   void  NextNewFieldCage::DefineMaterials()
   {
-    gas_ = mother_logic_->GetMaterial();
-    pressure_ =    gas_->GetPressure();
+    gas_         = mother_logic_->GetMaterial();
+    pressure_    = gas_->GetPressure();
     temperature_ = gas_->GetTemperature();
+    sc_yield_    = gas_->GetMaterialPropertiesTable()->GetConstProperty("SCINTILLATIONYIELD");
+    e_lifetime_  = gas_->GetMaterialPropertiesTable()->GetConstProperty("ATTACHMENT");
 
     // High density polyethylene for the field cage
     hdpe_ = MaterialsList::HDPE();
@@ -434,8 +436,8 @@ void NextNewFieldCage::BuildBuffer()
                                                                               temperature_,
                                                                               gate_transparency_,
                                                                               grid_thickness_,
-                                                                              25510/MeV,
-                                                                              1000.*ms,
+                                                                              sc_yield_,
+                                                                              e_lifetime_,
                                                                               photoe_prob_));
 
     // Dimensions & position: the grids are simulated inside the EL gap.

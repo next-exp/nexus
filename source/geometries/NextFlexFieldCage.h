@@ -121,6 +121,7 @@ namespace nexus {
     G4double el_transv_diff_, el_long_diff_;
     G4double anode_thickness_, anode_transparency_;
     G4double gate_thickness_,  gate_transparency_;
+    G4double photoe_prob_;
 
     // LIGHT_TUBE
     G4double light_tube_thickness_;
@@ -151,8 +152,9 @@ namespace nexus {
 
 
     // Materials
-    G4double    gas_pressure_, gas_temperature_;
     G4Material* xenon_gas_;
+    G4double    gas_pressure_, gas_temperature_;
+    G4double    gas_e_lifetime_, gas_sc_yield_;
 
     G4Material* teflon_mat_;
     G4String    wls_mat_name_;
