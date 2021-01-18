@@ -498,7 +498,7 @@ namespace nexus {
     // Lab walls
     else if ((region == "HALLA_INNER") || (region == "HALLA_OUTER")){
       if (!lab_walls_)
-	G4Exception("[NextNew]", "GenerateVertex()", FatalException,
+        G4Exception("[NextNew]", "GenerateVertex()", FatalException,
                     "This vertex generation region must be used with lab_walls == true!");
       vertex = hallA_walls_->GenerateVertex(region);
       vertex = displ_ + vertex;
@@ -545,7 +545,7 @@ namespace nexus {
              (region == "EL_TABLE") ||
              (region == "AD_HOC") ||
              (region == "CATHODE")||
-	     (region == "TRACKING_FRAMES") ||
+             (region == "TRACKING_FRAMES") ||
              (region == "SUPPORT_PLATE") ||
              (region == "DICE_BOARD") ||
              (region == "DB_PLUG")) {
@@ -558,9 +558,11 @@ namespace nexus {
 
     // AD_HOC is not rotated and shifted because it is passed by the user
     // The LSC HallA vertices are already corrected so no need.
-    if  ((region == "AD_HOC") ||
-	 (region == "HALLA_OUTER") ||
-	 (region == "HALLA_INNER"))
+    // The EL_GAP vertices are already corrected so no need.
+    if ((region == "AD_HOC") ||
+        (region == "HALLA_OUTER") ||
+        (region == "HALLA_INNER") ||
+        (region == "EL_GAP"))
       return vertex;
 
     // First rotate, then shift

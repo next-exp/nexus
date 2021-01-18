@@ -411,9 +411,8 @@ void NextNewFieldCage::BuildBuffer()
 
     // VERTEX GENERATOR
     buffer_gen_ =
-      new CylinderPointSampler(0., buffer_length_,
-			       hdpe_in_diam_/2.,
-			       0., G4ThreeVector (0., 0., buffer_posz));
+      new CylinderPointSampler(0., buffer_length_, hdpe_in_diam_/2.,
+                               0., G4ThreeVector (0., 0., buffer_posz));
 
     // VERTEX GENERATOR FOR ALL XENON
     G4double xenon_posz = (buffer_length_ * buffer_posz +
@@ -781,11 +780,11 @@ void NextNewFieldCage::BuildBuffer()
         G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
       G4String volume_name;
       do {
-	vertex = xenon_gen_->GenerateVertex("BODY_VOL");
-	G4ThreeVector glob_vtx(vertex);
-	CalculateGlobalPos(glob_vtx);
-	volume_name =
-	  geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false)->GetName();
+        vertex = xenon_gen_->GenerateVertex("BODY_VOL");
+        G4ThreeVector glob_vtx(vertex);
+        CalculateGlobalPos(glob_vtx);
+        volume_name =
+          geom_navigator->LocateGlobalPointAndSetup(glob_vtx, 0, false)->GetName();
       } while (volume_name == "CATHODE_GRID" || volume_name == "EL_GRID_GATE");
     }
     else if (region == "BUFFER") {
@@ -820,7 +819,8 @@ void NextNewFieldCage::BuildBuffer()
         el_table_index_++;
       }
       catch (const std::out_of_range& oor) {
-        G4Exception("[NextNewFieldCage]", "GenerateVertex()", FatalErrorInArgument, "EL lookup table point out of range.");
+        G4Exception("[NextNewFieldCage]", "GenerateVertex()", FatalErrorInArgument,
+                    "EL lookup table point out of range.");
       }
     }
 
