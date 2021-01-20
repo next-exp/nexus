@@ -12,7 +12,9 @@
 # writing this is nixos-20.03.
 let
   nixpkgs-url = "https://github.com/nixos/nixpkgs/archive/${nixpkgs-commit-id}.tar.gz";
-  pkgs = import (builtins.fetchTarball { url = nixpkgs-url; }) {};
+  pkgs = import (builtins.fetchTarball { url = nixpkgs-url; }) {
+    overlays = [ (import ./nix/geant4.nix) ];
+  };
   python = builtins.getAttr ("python" + py) pkgs;
   pypkgs = python.pkgs;
 
