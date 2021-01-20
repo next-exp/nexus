@@ -15,18 +15,14 @@ TEST_CASE("Direction Function") {
     auto costheta_min = 2*(G4UniformRand()-0.5);
     auto phi_max = 2*3.14*G4UniformRand();
     auto phi_min = 2*3.14*G4UniformRand();
-    G4double x;
-    G4double y;
+
     if (costheta_max < costheta_min) {
-      x = costheta_max;
-      costheta_max = costheta_min;
-      costheta_min = x;
+      std::swap(costheta_max,costheta_min);
     }
     if (phi_max < phi_min) {
-      y = phi_max;
-      phi_max = phi_min;
-      phi_min = y;
+      std::swap(phi_max,phi_min);
     }
+    
     auto direction = nexus::Direction(costheta_min,costheta_max,phi_min,phi_max);
     G4double costheta_test = direction.z();
     G4double phi_test = asin(direction.y() / std::sin(acos(costheta_test)));
