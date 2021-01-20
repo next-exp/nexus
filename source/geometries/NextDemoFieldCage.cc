@@ -330,7 +330,7 @@ namespace nexus {
     if (config_ == "run5") {
       el_gap_length = el_gap_length_plate_;
     }
-    else if (config_ == "run7") {
+    else if ((config_ == "run7") || (config_ == "run8")) {
       el_gap_length = el_gap_length_mesh_;
     }
 
@@ -428,8 +428,8 @@ namespace nexus {
       else             quartz_anode_logic->SetVisAttributes(G4VisAttributes::Invisible);
     } 
 
-    // Building the ANODE grid corresponding to "run7" configuration
-    else if (config_ == "run7") {
+    // Building the ANODE grid corresponding to "run7" and "run8" configuration
+    else if ((config_ == "run7") || (config_ == "run8")) {
       G4Material* anode_mat = MaterialsList::FakeDielectric(gas_, "anode_mat");
       anode_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_,
                                                                                temperature_,
@@ -444,7 +444,7 @@ namespace nexus {
       new G4PVPlacement(0, G4ThreeVector(0., 0., -grid_zpos), anode_grid_logic,
                         "ANODE_GRID", elgap_logic, false, 0, false);
 
-      // Run7 Visibilities
+      // Run7-Run8 Visibilities
       if (visibility_) anode_grid_logic->SetVisAttributes(nexus::LightGrey());
       else             anode_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }

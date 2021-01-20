@@ -3,8 +3,8 @@
 //
 // Tracking plane of the Demo++ geometry.
 // It implements 2 different TP implementations:
-// "original": the one used from the very beginning with passing-holes masks
-// "type 1": the one used in the so-called Run7, with coated masks and membranes.
+// "run5": the one used from the very beginning with passing-holes masks
+// "run7" and "run8": the ones used with coated masks and membranes.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
@@ -91,18 +91,26 @@ void NextDemoTrackingPlane::Construct()
   if (config_ == "run5") {
     if(verbosity_) G4cout << "run5 ..." << G4endl;
     gate_board_dist = 16.76 * mm;
-    mask_thickn     = 2. * mm;
-    membrane_thickn = 0.;
-    coating_thickn  = 0.;
+    mask_thickn     = 2.0 * mm;
+    membrane_thickn = 0.0 * mm;
+    coating_thickn  = 0.0 * mm;
     hole_diameter   = 3.5 * mm;
   }
   else if (config_ == "run7") {
     if(verbosity_) G4cout << "run7 ..." << G4endl;
     gate_board_dist = 9.16 * mm;
-    mask_thickn     = 2. * mm;
+    mask_thickn     = 2.0  * mm;
     membrane_thickn = 0.25 * mm;
     coating_thickn  = 2.0  * micrometer;
-    hole_diameter   = 3.5 * mm;
+    hole_diameter   = 3.5  * mm;
+  }
+  else if (config_ == "run8") {
+    if(verbosity_) G4cout << "run8 ..." << G4endl;
+    gate_board_dist = 14.7 * mm;
+    mask_thickn     = 5.0  * mm;
+    membrane_thickn = 0.2  * mm;
+    coating_thickn  = 2.0  * micrometer;
+    hole_diameter   = 4.0  * mm;
   }
 
   /// Make sure the pointer to the mother volume is actually defined
