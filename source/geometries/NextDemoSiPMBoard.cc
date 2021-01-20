@@ -46,9 +46,9 @@ NextDemoSiPMBoard::NextDemoSiPMBoard():
   side_reduction_  (0.5  * mm),
   kapton_thickn_   (0.3  * mm),
   mask_thickn_     (2.0  * mm),
-  hole_diam_       (3.5  * mm),
   membrane_thickn_ (0.),
   coating_thickn_  (0.),
+  hole_diam_       (3.5  * mm),
   mother_phys_     (nullptr),
   kapton_gen_      (nullptr)
 {
