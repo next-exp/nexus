@@ -25,3 +25,6 @@ nexus-test
 
 # test caches
 __pycache__
+/.cache/
+/.direnv/
+/compile_commands.json
