@@ -3,6 +3,9 @@
 #include "CLHEP/Units/SystemOfUnits.h"
 
 #include <catch.hpp>
+#include <iostream>
+#include <cmath>
+using namespace std;
 
 TEST_CASE("Direction Function") {
 
@@ -13,8 +16,10 @@ TEST_CASE("Direction Function") {
 
     auto costheta_max = 2*(G4UniformRand()-0.5);
     auto costheta_min = 2*(G4UniformRand()-0.5);
-    auto phi_max = 2*3.14*G4UniformRand();
-    auto phi_min = 2*3.14*G4UniformRand();
+    auto phi_max = 2*CLHEP::pi*G4UniformRand();
+    auto phi_min = 2*CLHEP::pi*G4UniformRand();
+    //auto phi_max = CLHEP::pi*G4UniformRand();
+    //auto phi_min = CLHEP::pi*G4UniformRand();
 
     if (costheta_max < costheta_min) {
       std::swap(costheta_max,costheta_min);
@@ -22,10 +27,20 @@ TEST_CASE("Direction Function") {
     if (phi_max < phi_min) {
       std::swap(phi_max,phi_min);
     }
-    
-    auto direction = nexus::Direction(costheta_min,costheta_max,phi_min,phi_max);
+
+    //auto direction = nexus::Direction(costheta_min,costheta_max,phi_min,phi_max);
+    G4ThreeVector direction = nexus::Direction(costheta_min,costheta_max,phi_min,phi_max);
     G4double costheta_test = direction.z();
-    G4double phi_test = asin(direction.y() / std::sin(acos(costheta_test)));
+    G4double phi_test;
+
+    G4double tang = direction.y() / direction.x();
+
+    if (tang >= 0){
+       phi_test = std::acos(direction.x() / std::sin(std::acos(costheta_test)));
+    }
+    else{
+       phi_test = 2*CLHEP::pi - std::acos(direction.x() / std::sin(std::acos(costheta_test)));
+    }
 
     REQUIRE(costheta_max >= costheta_test);
     REQUIRE(costheta_min <= costheta_test);
