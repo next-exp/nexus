@@ -166,8 +166,6 @@ namespace nexus {
     G4Material* fiber_mat_;
     G4Material* iClad_mat_;
     G4Material* oClad_mat_;
-    G4Material* fiber_sensor_case_mat_;
-    G4Material* fiber_sensor_mat_;
 
     // Sensor IDs
     G4int first_left_sensor_id_;

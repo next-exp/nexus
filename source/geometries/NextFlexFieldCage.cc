@@ -314,12 +314,6 @@ void NextFlexFieldCage::DefineMaterials()
 
   iClad_mat_ = MaterialsList::PMMA();
   iClad_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::PMMA());
-
-  // Fiber sensor case material
-  fiber_sensor_case_mat_ = MaterialsList::CopyMaterial(MaterialsList::Epoxy(), "FC_Epoxy");
-
-  // Fiber sensor material
-  fiber_sensor_mat_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Si");
 }
 
 
