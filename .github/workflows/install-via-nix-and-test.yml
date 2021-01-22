@@ -24,9 +24,3 @@ jobs:
           authToken: '${{ secrets.CACHIX_JACG_NEXT_EXP }}'
       - name: Install dependencies via Nix
         run: nix-shell --argstr py ${{ matrix.py }}
-      - name: Build Nexus with SCons
-        run: nix-shell --argstr py ${{ matrix.py }} --run "scons"
-      - name: Run bin/nexus-test
-        run: nix-shell --argstr py ${{ matrix.py }} --run "bin/nexus-test"
-      - name: Run pytests
-        run: nix-shell --argstr py ${{ matrix.py }} --run "pytest -x"
