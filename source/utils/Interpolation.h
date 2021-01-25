@@ -19,15 +19,11 @@ namespace nexus {
     G4double result = 0.0;
 
     if (xmax == xmin){
-      G4Exception("[Interpolation]", "LinearInterpolation()", JustWarning,
-      "x interval not valid, result is NAN");
-      result = NAN;
+      throw "x interval not valid";
     }
 
     else if (x < xmin || x > xmax){
-      G4Exception("[Interpolation]", "LinearInterpolation()", JustWarning,
-      "x is not in the given interval, result is NAN");
-      result = NAN;
+      throw "x is not in the given interval";
     }
 
     else {
@@ -45,15 +41,11 @@ namespace nexus {
     G4double result = 0.0;
 
     if ((xmax == xmin) || (ymax == ymin)){
-      G4Exception("[Interpolation]", "BilinearInterpolation()", JustWarning,
-      "One or more interval is invalid, result is NAN");
-      result = NAN;
+      throw "One or more interval is invalid";
     }
 
     else if ((x<xmin) || (x>xmax) || (y<ymin) || (y>ymax)){
-      G4Exception("[Interpolation]", "BilinearInterpolation()", JustWarning,
-      "x or y is not in the given interval, result is NAN");
-      result = NAN;
+      throw "x or y is not in the given interval";
     }
 
     else {
