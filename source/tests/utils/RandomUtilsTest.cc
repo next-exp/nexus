@@ -31,16 +31,7 @@ TEST_CASE("Direction Function") {
     //auto direction = nexus::Direction(costheta_min,costheta_max,phi_min,phi_max);
     G4ThreeVector direction = nexus::Direction(costheta_min,costheta_max,phi_min,phi_max);
     G4double costheta_test = direction.z();
-    G4double phi_test;
-
-    G4double tang = direction.y() / direction.x();
-
-    if (tang >= 0){
-       phi_test = std::acos(direction.x() / std::sin(std::acos(costheta_test)));
-    }
-    else{
-       phi_test = 2*CLHEP::pi - std::acos(direction.x() / std::sin(std::acos(costheta_test)));
-    }
+    G4double phi_test = std::atan2(direction.y(), direction.x());
 
     REQUIRE(costheta_max >= costheta_test);
     REQUIRE(costheta_min <= costheta_test);
