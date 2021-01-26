@@ -222,7 +222,6 @@ G4double XenonGasProperties::ELLightYield(G4double field_strength) const
 
   // Updating the slope
   if (pressure_ >= 2. * bar) a = 141. / kilovolt;
-  if (pressure_ >= 3. * bar) a = 141. / kilovolt;
   if (pressure_ >= 4. * bar) a = 142. / kilovolt;
   if (pressure_ >= 5. * bar) a = 151. / kilovolt;
   if (pressure_ >= 6. * bar) a = 161. / kilovolt;
