@@ -60,9 +60,12 @@ TEST_CASE("Cylinder Arbitrary valid intersect") {
   auto sampler = nexus::CylinderPointSampler2020(minRad, maxRad, halfLen,
 						 0., CLHEP::twopi,
 						 rotation, origin);
-  auto point   = G4ThreeVector(minRad * G4UniformRand(),
-			       minRad * G4UniformRand(),
-			       minRad * G4UniformRand());
+  auto point   = G4ThreeVector(minRad  * (2 * G4UniformRand() - 1),
+			       minRad  * (2 * G4UniformRand() - 1),
+			       halfLen * (2 * G4UniformRand() - 1));
+  // Rotate and translate so inside Sampler Volume.
+  point       *= *rotation;
+  point       += origin;
   auto dir     = G4ThreeVector(G4UniformRand(),
 			       G4UniformRand(),
 			       G4UniformRand()).unit();
