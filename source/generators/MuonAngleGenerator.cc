@@ -187,12 +187,26 @@ void MuonAngleGenerator::GetDirection(G4ThreeVector& dir)
 
 G4ThreeVector MuonAngleGenerator::ProjectToVertex(const G4ThreeVector& dir)
 {
+  /////////////////////////////////////////////////////////////////////////
+  // This method of vertex generation decides the starting vertex
+  // of the primary particle in three steps:
+  // 1) A random point is generated on a disc centred on the main
+  //    volumes.
+  // 2) This disc is rotated so that it is perpendicular to the
+  //    direction vector which is the only argument of the function.
+  //    The new point is a point through which the vector passes.
+  // 3) The vertex is found by projecting backwards along the direction
+  //    vector from that point to find the point where the ray
+  //    (point - t*dir) intersects with the region configured as the
+  //    starting point for all vertices.
+  /////////////////////////////////////////////////////////////////////////
   // Postion in disc
   G4double rad = gen_rad_ * std::sqrt(G4UniformRand());
   G4double ang = 2 * G4UniformRand() * pi;
 
   // Continue assuming that Y is vertical and z drift,
-  // valid for NEW and NEXT-100 (at least)
+  // valid for NEW and NEXT-100 (at least).
+  // Rotate the disc (origin-point vector) to be perpendicular to dir.
   G4ThreeVector point(rad * std::cos(ang), 0., rad * std::sin(ang));
   point.rotate(pi / 2 - dir.angle(point), dir.cross(point));
 
