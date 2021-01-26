@@ -62,6 +62,11 @@ namespace nexus {
     G4double momentum_Y_;
     G4double momentum_Z_;
 
+    G4double costheta_min_;
+    G4double costheta_max_;
+    G4double phi_min_;
+    G4double phi_max_;
+
 
   };
 
