@@ -3,7 +3,7 @@
 //
 // Tracking plane of the Demo++ geometry.
 // It implements 2 different TP implementations:
-// "run5": the one used from the very beginning with passing-holes masks
+// "run5": the one used at the beginning with passing-holes masks
 // "run7" and "run8": the ones used with coated masks and membranes.
 //
 // The NEXT Collaboration
