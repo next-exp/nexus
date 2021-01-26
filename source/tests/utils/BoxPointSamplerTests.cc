@@ -92,12 +92,10 @@ TEST_CASE("Box Arbitrary valid intersect") {
   rotation->rotateY(CLHEP::twopi * G4UniformRand());
   rotation->rotateZ(CLHEP::twopi * G4UniformRand());
   
-  auto sampler = nexus::BoxPointSampler(inner_dim, inner_dim, inner_dim, thickness,
-					origin, rotation);
+  auto sampler = nexus::BoxPointSampler(inner_dim, inner_dim, inner_dim,
+					thickness, origin, rotation);
   
-  auto point = G4ThreeVector(inner_dim * G4UniformRand(),
-			     inner_dim * G4UniformRand(),
-			     inner_dim * G4UniformRand());
+  auto point = sampler.GenerateVertex("INSIDE");
   auto dir   = G4ThreeVector(G4UniformRand(),
 			     G4UniformRand(),
 			     G4UniformRand()).unit();
