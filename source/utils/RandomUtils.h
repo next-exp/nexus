@@ -24,6 +24,7 @@ namespace nexus {
 
   inline G4ThreeVector Direction(G4double costheta_min, G4double costheta_max,
                                  G4double phi_min, G4double phi_max)
+  //phi_max and phi_min are intended to be angles in the range [0,2*pi].
   {G4bool dir = false;
     while (dir == false) {
       G4double cosTheta  = 2.*G4UniformRand()-1.;
