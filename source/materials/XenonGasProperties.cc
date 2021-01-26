@@ -212,12 +212,22 @@ G4double XenonGasProperties::ELLightYield(G4double field_strength) const
 
   // Y/x = (a E/p - b) p,
   // where Y/x is the number of photons per unit lenght (cm),
-  // E is the electric field strength, p is the pressure, and a and b
-  // are empirically determined constants:
+  // E is the electric field strength, p is the pressure
+  // a and b are empirically determined constants depending on pressure.
+  // Values for different pressures are found in: Freitas-2010
+  // Physics Letters B 684 (2010) 205–210
 
-  const G4double a = 140. / kilovolt;
   const G4double b = 116. / (bar*cm);
+  G4double a = 140. / kilovolt;
 
+  // Updating the slope
+  if (pressure_ >= 2. * bar) a = 141. / kilovolt;
+  if (pressure_ >= 4. * bar) a = 142. / kilovolt;
+  if (pressure_ >= 5. * bar) a = 151. / kilovolt;
+  if (pressure_ >= 6. * bar) a = 161. / kilovolt;
+  if (pressure_ >= 8. * bar) a = 170. / kilovolt;
+
+  // Getting the yield
   G4double yield = (a * field_strength/pressure_ - b) * pressure_;
   if (yield < 0.) yield = 0.;
 
