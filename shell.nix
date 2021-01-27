@@ -3,7 +3,7 @@
 #   nix-shell shell.nix --argstr py 39
 #
 { py ? "38"
-, nixpkgs-commit-id ? "88f00e7e12d2669583fffd3f33aae01101464386"
+, nixpkgs-commit-id ? "15a64b2facc1b91f4361bdd101576e8886ef834b"
 }:
 
 # To update `nixpkgs-commit-id` go to https://status.nixos.org/, which lists the
@@ -13,7 +13,7 @@
 let
   nixpkgs-url = "https://github.com/nixos/nixpkgs/archive/${nixpkgs-commit-id}.tar.gz";
   pkgs = import (builtins.fetchTarball { url = nixpkgs-url; }) {
-    overlays = [ (import ./nix/geant4.nix) ];
+    #overlays = [ (import ./nix/geant4.nix) ];
   };
   python = builtins.getAttr ("python" + py) pkgs;
   pypkgs = python.pkgs;
