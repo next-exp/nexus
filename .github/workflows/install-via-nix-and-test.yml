@@ -29,4 +29,4 @@ jobs:
       - name: Run bin/nexus-test
         run: nix-shell --argstr py ${{ matrix.py }} --run "bin/nexus-test"
       - name: Run pytests
-        run: nix-shell --argstr py ${{ matrix.py }} --run "pytest -x"
+        run: nix-shell --argstr py ${{ matrix.py }} --run "pytest"
