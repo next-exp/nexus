@@ -411,9 +411,9 @@ namespace nexus {
       new G4PVPlacement(0, G4ThreeVector(0., 0., -panel_sipms_zpos),
                         panel_sipms_logic, "PANEL_SiPMs", LXe_logic_, false, 1, false);
 
-      G4RotationMatrix rot;
-      rot.rotateY(pi);
-      new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., 0., panel_sipms_zpos)),
+      G4RotationMatrix rot_panel;
+      rot_panel.rotateY(pi);
+      new G4PVPlacement(G4Transform3D(rot_panel, G4ThreeVector(0., 0., panel_sipms_zpos)),
                          panel_sipms_logic, "PANEL_SiPMs", LXe_logic_, false, 2, false);
 
       if (visibility_){
