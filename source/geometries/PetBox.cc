@@ -491,7 +491,9 @@ namespace nexus {
 
     /// ASYMMETRIC GEOMETRY
     vol_name = "TILE_" + std::to_string(copy_no);
-    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(0., 0., -z_pos)), tile_logic,
+    G4double x_pos = -full_row_size_/2. + tile_size_x/2.;
+    G4double y_pos = full_col_size_/2. - tile_size_y/2.;
+    new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos)), tile_logic,
                           vol_name, LXe_logic_, false, copy_no, false);
 
     /// SYMMETRIC GEOMETRY
