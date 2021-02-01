@@ -18,18 +18,14 @@ class G4Track;
 
 namespace nexus {
 
-  // General-purpose user tracking action
-
   class LightTableTrackingAction: public G4UserTrackingAction
   {
   public:
-    /// Constructor
     LightTableTrackingAction();
-    /// Destructor
-    virtual ~LightTableTrackingAction();
+    ~LightTableTrackingAction() override;
 
-    virtual void PreUserTrackingAction(const G4Track*);
-    virtual void PostUserTrackingAction(const G4Track*);
+    void PreUserTrackingAction(const G4Track*) override;
+    void PostUserTrackingAction(const G4Track*) override;
   };
 
 }

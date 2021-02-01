@@ -20,10 +20,7 @@
 #include <G4ParticleDefinition.hh>
 #include <G4OpticalPhoton.hh>
 
-
-
 using namespace nexus;
-
 
 
 LightTableTrackingAction::LightTableTrackingAction(): G4UserTrackingAction()
@@ -31,11 +28,9 @@ LightTableTrackingAction::LightTableTrackingAction(): G4UserTrackingAction()
 }
 
 
-
 LightTableTrackingAction::~LightTableTrackingAction()
 {
 }
-
 
 
 void LightTableTrackingAction::PreUserTrackingAction(const G4Track* track)
@@ -66,6 +61,7 @@ void LightTableTrackingAction::PostUserTrackingAction(const G4Track* track)
   else                        trj->SetFinalVolume(track->GetVolume()->GetName());
 
   // Record last process of the track
-  G4String proc_name = track->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
+  G4String proc_name =
+    track->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
   trj->SetFinalProcess(proc_name);
 }
