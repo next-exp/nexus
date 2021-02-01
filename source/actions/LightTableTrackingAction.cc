@@ -1,14 +1,12 @@
 // ----------------------------------------------------------------------------
 // nexus | LightTableTrackingAction.cc
 //
-// This class is the tracking action to be used when runing simulations
-// to create the LightTables.
-// It stores in memory just the trajectory of the first photon of each event
-// as its initial vertex is shared by all of them.
+// Tracking action to be used for the generation of light (look-up) tables.
+// It creates a trajectory for the first optical photon of each event, so that
+// the initial vertex (shared by all photons in an event) gets registered.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
-
 
 #include "LightTableTrackingAction.h"
 
