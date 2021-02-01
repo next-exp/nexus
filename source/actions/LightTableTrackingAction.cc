@@ -35,7 +35,7 @@ LightTableTrackingAction::~LightTableTrackingAction()
 
 void LightTableTrackingAction::PreUserTrackingAction(const G4Track* track)
 {
-  if (track->GetTrackID != 1) return;
+  if (track->GetTrackID() != 1) return;
 
   G4VTrajectory* trj = new Trajectory(track);
   fpTrackingManager->SetStoreTrajectory(true);
