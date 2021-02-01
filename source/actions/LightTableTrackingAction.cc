@@ -35,13 +35,12 @@ LightTableTrackingAction::~LightTableTrackingAction()
 
 void LightTableTrackingAction::PreUserTrackingAction(const G4Track* track)
 {
-  if (track->GetTrackID() == 1) {
-    G4VTrajectory* trj = new Trajectory(track);
-    fpTrackingManager->SetStoreTrajectory(true);
-    fpTrackingManager->SetTrajectory(trj);
-  }
-}
+  if (track->GetTrackID != 1) return;
 
+  G4VTrajectory* trj = new Trajectory(track);
+  fpTrackingManager->SetStoreTrajectory(true);
+  fpTrackingManager->SetTrajectory(trj);
+}
 
 
 void LightTableTrackingAction::PostUserTrackingAction(const G4Track* track)
