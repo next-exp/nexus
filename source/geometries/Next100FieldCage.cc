@@ -167,7 +167,11 @@ Next100FieldCage::Next100FieldCage():
     msg_->DeclareProperty("el_gap_gen_disk_zmax", el_gap_gen_disk_zmax_,
                           "Maximum Z range of the EL gap vertex generation disk.");
   el_gap_gen_disk_zmax_cmd.SetParameterName("el_gap_gen_disk_zmax", false);
-  el_gap_gen_disk_zmax_cmd.SetRange("el_gap_gen_disk_zmax>=0. && el_gap_gen_disk_zmax<=1.0");
+  el_gap_gen_disk_zmax_cmd.SetRange("el_gap_gen_disk_zmax>=0.0 && el_gap_gen_disk_zmax<=1.0");
+
+  if (el_gap_gen_disk_zmin_ > el_gap_gen_disk_zmax_)
+    G4Exception("[Next100FieldCage]", "Next100FieldCage()", FatalErrorInArgument,
+                "Error in configuration of EL gap generator: zmax < zmin");
 }
 
 
