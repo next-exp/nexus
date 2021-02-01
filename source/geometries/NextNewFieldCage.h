@@ -119,6 +119,7 @@ namespace nexus {
     CylinderPointSampler* xenon_gen_;
     CylinderPointSampler* buffer_gen_;
     CylinderPointSampler* active_gen_;
+    CylinderPointSampler* el_gap_gen_;
     CylinderPointSampler* anode_quartz_gen_;
     CylinderPointSampler* cathode_gen_;
     CylinderPointSampler* tracking_frames_gen_;
@@ -136,6 +137,10 @@ namespace nexus {
     mutable std::vector<G4ThreeVector> el_table_vertices_;
     G4double el_table_binning_;
     G4double el_table_z_;
+
+    G4double el_gap_gen_disk_diam_;
+    G4double el_gap_gen_disk_x_, el_gap_gen_disk_y_;
+    G4double el_gap_gen_disk_zmin_, el_gap_gen_disk_zmax_;
 
     G4double photoe_prob_;
   };

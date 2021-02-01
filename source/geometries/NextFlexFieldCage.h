@@ -179,6 +179,12 @@ namespace nexus {
     CylinderPointSampler2020* light_tube_gen_;
     CylinderPointSampler2020* fiber_gen_;
 
+
+    // Parameters related with EL_GAP vertex generator
+    G4double el_gap_gen_disk_diam_;
+    G4double el_gap_gen_disk_x_, el_gap_gen_disk_y_;
+    G4double el_gap_gen_disk_zmin_, el_gap_gen_disk_zmax_;
+
   }; // class NextFlexFieldCage
 
 

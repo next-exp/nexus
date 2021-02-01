@@ -63,7 +63,12 @@ NextFlexFieldCage::NextFlexFieldCage():
   fiber_claddings_         (2),                  // Number of fiber claddings (0, 1 or 2)
   fiber_sensor_binning_    (100. * ns),          // Size of fiber sensors time binning
   wls_mat_name_            ("TPB"),              // UV wls material name
-  fiber_mat_name_          ("EJ280")             // Fiber core material name
+  fiber_mat_name_          ("EJ280"),            // Fiber core material name
+  el_gap_gen_disk_diam_    (0.),                 // EL_GAP generator diameter
+  el_gap_gen_disk_x_       (0.),                 // EL_GAP generator x centre
+  el_gap_gen_disk_y_       (0.),                 // EL_GAP generator y centre
+  el_gap_gen_disk_zmin_    (0.),                 // EL_GAP generator initial z fraction 
+  el_gap_gen_disk_zmax_    (1.)                  // EL_GAP generator final   z fraction
 {
 
   // Messenger
@@ -220,6 +225,38 @@ void NextFlexFieldCage::DefineConfigurationParameters()
   fiber_sensor_binning_cmd.SetParameterName("fiber_sensor_time_binning", false);
   fiber_sensor_binning_cmd.SetUnitCategory("Time");
   fiber_sensor_binning_cmd.SetRange("fiber_sensor_time_binning>=0.");
+
+  // EL_GAP GENERATOR
+  G4GenericMessenger::Command& el_gap_gen_disk_diam_cmd =
+    msg_->DeclareProperty("el_gap_gen_disk_diam", el_gap_gen_disk_diam_,
+                          "Diameter of the EL gap vertex generation disk.");
+  el_gap_gen_disk_diam_cmd.SetUnitCategory("Length");
+  el_gap_gen_disk_diam_cmd.SetParameterName("el_gap_gen_disk_diam", false);
+  el_gap_gen_disk_diam_cmd.SetRange("el_gap_gen_disk_diam>=0.");
+
+  G4GenericMessenger::Command& el_gap_gen_disk_x_cmd =
+    msg_->DeclareProperty("el_gap_gen_disk_x", el_gap_gen_disk_x_,
+                          "X position of the center of the EL gap vertex generation disk.");
+  el_gap_gen_disk_x_cmd.SetUnitCategory("Length");
+  el_gap_gen_disk_x_cmd.SetParameterName("el_gap_gen_disk_x", false);
+
+  G4GenericMessenger::Command& el_gap_gen_disk_y_cmd =
+    msg_->DeclareProperty("el_gap_gen_disk_y", el_gap_gen_disk_y_,
+                          "Y position of the center of the EL gap vertex generation disk.");
+  el_gap_gen_disk_y_cmd.SetUnitCategory("Length");
+  el_gap_gen_disk_y_cmd.SetParameterName("el_gap_gen_disk_y", false);
+
+  G4GenericMessenger::Command& el_gap_gen_disk_zmin_cmd =
+    msg_->DeclareProperty("el_gap_gen_disk_zmin", el_gap_gen_disk_zmin_,
+                          "Minimum Z range of the EL gap vertex generation disk.");
+  el_gap_gen_disk_zmin_cmd.SetParameterName("el_gap_gen_disk_zmin", false);
+  el_gap_gen_disk_zmin_cmd.SetRange("el_gap_gen_disk_zmin>=0.0 && el_gap_gen_disk_zmin<=1.0");
+
+  G4GenericMessenger::Command& el_gap_gen_disk_zmax_cmd =
+    msg_->DeclareProperty("el_gap_gen_disk_zmax", el_gap_gen_disk_zmax_,
+                          "Maximum Z range of the EL gap vertex generation disk.");
+  el_gap_gen_disk_zmax_cmd.SetParameterName("el_gap_gen_disk_zmax", false);
+  el_gap_gen_disk_zmax_cmd.SetRange("el_gap_gen_disk_zmax>=0. && el_gap_gen_disk_zmax<=1.0");
 }
 
 
@@ -513,8 +550,31 @@ void NextFlexFieldCage::BuildELgap()
   if (visibility_) el_gap_logic->SetVisAttributes(nexus::LightBlue());
   else             el_gap_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
+
+
+
   // Vertex generator
-  el_gap_gen_ = new CylinderPointSampler2020(el_gap_phys);
+  //el_gap_gen_ = new CylinderPointSampler2020(el_gap_phys);
+
+  G4double el_gap_gen_disk_thickn =
+    el_gap_length_ * (el_gap_gen_disk_zmax_ - el_gap_gen_disk_zmin_);
+
+  G4double el_gap_gen_disk_z = el_gap_posZ + el_gap_length_/2.
+    - el_gap_length_ * el_gap_gen_disk_zmin_ - el_gap_gen_disk_thickn/2.;
+
+  G4ThreeVector el_gap_gen_pos(el_gap_gen_disk_x_,
+                               el_gap_gen_disk_y_,
+                               el_gap_gen_disk_z);
+
+  el_gap_gen_ = new CylinderPointSampler2020(0., el_gap_gen_disk_diam_/2.,
+                                             el_gap_gen_disk_thickn/2., 0., twopi,
+                                             nullptr, el_gap_gen_pos);
+
+
+
+
+
+
 
   // Verbosity
   if (verbosity_) {
