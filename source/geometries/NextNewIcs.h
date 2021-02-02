@@ -51,7 +51,8 @@ namespace nexus {
     // Dimensions coming from outside
     G4double  lat_nozzle_in_diam_, lat_nozzle_x_pos_, lat_nozzle_z_pos_;
     G4double  up_small_nozzle_in_diam_, up_big_nozzle_in_diam_, up_nozzle_y_pos_, up_nozzle_z_pos_;
-
+    G4double  center_nozzle_z_pos_;
+    
     // Visibility of the shielding
     G4bool visibility_;
 
