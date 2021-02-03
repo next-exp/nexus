@@ -275,7 +275,7 @@ namespace nexus {
     G4ThreeVector pos;
     for (int i=0; i<num_PMTs_; i++) {
       pos = pmt_positions_[i];
-      G4int copy_no = i+10;
+      G4int copy_no = i;
       if (verbosity_) G4cout << "PMT " << copy_no << ": "
                              << pos.getX() << ", " << pos.getY() << G4endl;
       pos.setZ(pmt_hole_zpos);
