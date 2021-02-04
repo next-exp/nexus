@@ -558,11 +558,9 @@ namespace nexus {
 
     // AD_HOC is not rotated and shifted because it is passed by the user
     // The LSC HallA vertices are already corrected so no need.
-    // The EL_GAP vertices are already corrected so no need.
     if ((region == "AD_HOC") ||
         (region == "HALLA_OUTER") ||
-        (region == "HALLA_INNER") ||
-        (region == "EL_GAP"))
+        (region == "HALLA_INNER"))
       return vertex;
 
     // First rotate, then shift
