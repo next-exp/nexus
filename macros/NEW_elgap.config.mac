@@ -1,0 +1,17 @@
+/control/verbose  0
+/run/verbose      0
+/event/verbose    0
+/tracking/verbose 1
+
+/Generator/ScintGenerator/region EL_GAP
+/Generator/ScintGenerator/nphotons 1
+
+/Geometry/NextNew/el_gap_gen_disk_diam 10 mm
+/Geometry/NextNew/el_gap_gen_disk_x    10 mm
+/Geometry/NextNew/el_gap_gen_disk_y    10 mm
+/Geometry/NextNew/el_gap_gen_disk_zmin 0.0
+/Geometry/NextNew/el_gap_gen_disk_zmax 1.0
+
+/nexus/random_seed 1
+/nexus/persistency/start_id 0
+/nexus/persistency/outputFile new_elgap.nexus
