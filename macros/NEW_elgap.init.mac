@@ -1,0 +1,14 @@
+/Geometry/RegisterGeometry NEXT_NEW
+
+/Generator/RegisterGenerator    SCINTILLATION
+
+/Actions/RegisterTrackingAction LIGHT_TABLE
+
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+/PhysicsList/RegisterPhysics G4OpticalPhysics
+/PhysicsList/RegisterPhysics NexusPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
+
+/nexus/RegisterMacro macros/NEW_elgap.config.mac

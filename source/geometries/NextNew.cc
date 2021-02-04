@@ -558,12 +558,25 @@ namespace nexus {
 
     // AD_HOC is not rotated and shifted because it is passed by the user
     // The LSC HallA vertices are already corrected so no need.
-    // The EL_GAP vertices are already corrected so no need.
     if ((region == "AD_HOC") ||
         (region == "HALLA_OUTER") ||
-        (region == "HALLA_INNER") ||
-        (region == "EL_GAP"))
+        (region == "HALLA_INNER"))
       return vertex;
+
+    // In EL_GAP, x and y coordinates are passed by the user,
+    // but the z coordinate is not. Therefore, rotation + displacement
+    // must be applied to get the correct z, but x and y must be left
+    // unchanged.
+    if (region == "EL_GAP") {
+      // First rotate, then shift to return the correct z coordinate
+      vertex.rotate(rot_angle_, G4ThreeVector(0., 1., 0.));
+      vertex = vertex + displ_;
+
+      // Change back x coordinate alone (y is not touched).
+      vertex.setX(-vertex.x());
+
+      return vertex;
+    }
 
     // First rotate, then shift
     vertex.rotate(rot_angle_, G4ThreeVector(0., 1., 0.));
