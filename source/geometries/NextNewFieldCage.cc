@@ -494,9 +494,7 @@ void NextNewFieldCage::BuildBuffer()
     G4double el_gap_gen_disk_z = el_gap_z_pos_ - el_gap_length_/2.
       + el_gap_length_ * el_gap_gen_disk_zmin_ + el_gap_gen_disk_thickn/2.;
 
-    // (We change below the sign of x to correct the effect that a rotation
-    //  will introduce later.)
-    G4ThreeVector el_gap_gen_pos(-el_gap_gen_disk_x_,
+    G4ThreeVector el_gap_gen_pos(el_gap_gen_disk_x_,
                                  el_gap_gen_disk_y_,
                                  el_gap_gen_disk_z);
 

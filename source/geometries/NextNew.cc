@@ -563,6 +563,21 @@ namespace nexus {
         (region == "HALLA_INNER"))
       return vertex;
 
+    // In EL_GAP, x and y coordinates are passed by the user,
+    // but the z coordinate is not. Therefore, rotation + displacement
+    // must be applied to get the correct z, but x and y must be left
+    // unchanged.
+    if (region == "EL_GAP") {
+      // First rotate, then shift to return the correct z coordinate
+      vertex.rotate(rot_angle_, G4ThreeVector(0., 1., 0.));
+      vertex = vertex + displ_;
+
+      // Change back x coordinate alone (y is not touched).
+      vertex.setX(-vertex.x());
+
+      return vertex;
+    }
+
     // First rotate, then shift
     vertex.rotate(rot_angle_, G4ThreeVector(0., 1., 0.));
     vertex = vertex + displ_;
