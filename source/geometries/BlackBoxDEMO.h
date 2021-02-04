@@ -9,7 +9,7 @@
 
 #include "BaseGeometry.h"
 //#include "KDB_Sensl.h"
-#include "NextDemoSiPMBoard.h"
+#include "BlackBoxSiPMBoard.h"
 
 class G4Material;
 class G4OpticalSurface;
@@ -17,7 +17,7 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class NextDemoSiPMBoard;
+  class BlackBoxSiPMBoard;
 
   class BlackBoxDEMO: public BaseGeometry
   {
@@ -26,6 +26,7 @@ namespace nexus {
     BlackBoxDEMO();
     /// Destructor
     ~BlackBoxDEMO();
+
     void SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys);
 
     /// Return vertex within region <region> of the chamber
@@ -38,15 +39,16 @@ namespace nexus {
     // Dimensions
     G4double _world_z;
     G4double _world_xy;
+    G4double _box_z;
+    G4double _box_xy;
     // SiPMs per Dice Board
     //const G4int SiPM_rows_, SiPM_columns_;
     // Dice board
     //KDB_Sensl* dice_;
-    NextDemoSiPMBoard* dice_;
+    BlackBoxSiPMBoard* dice_;
     G4ThreeVector kdb_dimensions_;
     G4double dice_board_x_pos_;
     G4double dice_board_y_pos_;
-    G4VPhysicalVolume*  mother_phys_;
 
     G4bool _visibility;
 
@@ -59,9 +61,9 @@ namespace nexus {
     G4double _specific_vertex_Z;
     G4double _dice_board_z_pos;
     G4double _rotation;
+    G4VPhysicalVolume*  mother_phys_;
 
   };
-
   inline void BlackBoxDEMO::SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys)
     { mother_phys_ = mother_phys; }
 

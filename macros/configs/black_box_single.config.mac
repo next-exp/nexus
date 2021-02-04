@@ -1,0 +1,27 @@
+### -----------------------------------------------------------
+### This init macro simulates the response of a SensL SiPM
+### in the black box.
+### -----------------------------------------------------------
+
+/Generator/SingleParticle/particle opticalphoton
+/Generator/SingleParticle/min_energy 2.9 eV
+/Generator/SingleParticle/max_energy 2.9 eV
+/Generator/SingleParticle/region AD_HOC
+/Generator/SingleParticle/momentum_X 0.
+/Generator/SingleParticle/momentum_Y 0.
+/Generator/SingleParticle/momentum_Z -1
+
+/Geometry/BlackBoxSingle/specific_vertex_X 0. mm
+/Geometry/BlackBoxSingle/specific_vertex_Y 0. mm
+/Geometry/BlackBoxSingle/specific_vertex_Z 0. mm
+
+/Geometry/BlackBoxSingle/sipm_z_pos -5. cm
+
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+### JOB CONTROL
+/nexus/random_seed            -1
+/nexus/persistency/start_id   0
+/nexus/persistency/outputFile perpendicular_photon_test.next

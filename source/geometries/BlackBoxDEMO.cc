@@ -6,7 +6,7 @@
 
 #include "BlackBoxDEMO.h"
 //#include "KDB_Sensl.h"
-#include "NextDemoSiPMBoard.h"
+#include "BlackBoxSiPMBoard.h"
 
 #include "BaseGeometry.h"
 #include "MaterialsList.h"
@@ -39,12 +39,14 @@ namespace nexus {
   using namespace CLHEP;
 
   BlackBoxDEMO::BlackBoxDEMO():
-    _world_z (2. * m),
-    _world_xy (1. *m),
+    _world_z (3. * m),
+    _world_xy (2. *m),
+    _box_z (2. * m),
+    _box_xy (1. *m),
     // SiPMs per Dice Board
     //SiPM_rows_ (8),
     //SiPM_columns_ (8),
-    mother_phys_     (nullptr),
+    //mother_phys_     (nullptr),
 
     _visibility(0)
   {
@@ -90,11 +92,15 @@ namespace nexus {
 
   void BlackBoxDEMO::Construct()
   {
-  dice_ = new NextDemoSiPMBoard();
-  G4double mask_thickn     = 0.;
-  G4double membrane_thickn = 0.;
-  G4double coating_thickn  = 0.;
-  G4double hole_diameter   = 0.;
+  dice_ = new BlackBoxSiPMBoard();
+  //G4double mask_thickn     = 0.;
+  //G4double membrane_thickn = 0.;
+  //G4double coating_thickn  = 0.;
+  //G4double hole_diameter   = 0.;
+  G4double mask_thickn     = 2.0 * mm;
+  G4double membrane_thickn = 0.0 * mm;
+  G4double coating_thickn  = 0.0 * mm;
+  G4double hole_diameter   = 3.5 * mm;
   // WORLD /////////////////////////////////////////////////
 
   G4String world_name = "WORLD";
@@ -111,16 +117,31 @@ namespace nexus {
   world_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
   BaseGeometry::SetLogicalVolume(world_logic_vol);
 
-  // DB //////////////////////////////////////////////
-  if (!mother_phys_)
-    G4Exception("[NextDemoTrackingPlane]", "Construct()",
-                FatalException, "Mother volume is a nullptr.");
+  // BLACK BOX /////////////////////////////////////////////////
 
-  G4LogicalVolume* mother_logic = mother_phys_->GetLogicalVolume();
+  G4String box_name = "BLACK BOX";
+
+  G4Material* box_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
+
+  box_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
+
+  G4Box* box_solid_vol =
+    new G4Box(box_name, _box_xy/2., _box_xy/2., _box_z/2.);
+
+  G4LogicalVolume* box_logic_vol =
+    new G4LogicalVolume(box_solid_vol, box_mat, box_name);
+  box_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+
+  G4VPhysicalVolume* box_phys_vol =
+   new G4PVPlacement(0, G4ThreeVector(0.,0.,0.),
+                     box_logic_vol, box_name, world_logic_vol,
+                     false, 0, false);
+
+  // DB //////////////////////////////////////////////
 
   /// SiPM BOARDs
   G4String board_name = "DICE_BOARD";
-  dice_->SetMotherPhysicalVolume(mother_phys_);
+  dice_->SetMotherPhysicalVolume(box_phys_vol);
   dice_->SetMaskThickness    (mask_thickn);
   dice_->SetMembraneThickness(membrane_thickn);
   dice_->SetCoatingThickness (coating_thickn);
@@ -151,7 +172,7 @@ namespace nexus {
   //new G4PVPlacement(rot, post, dice_board_logic,
 	  //          "DICE_BOARD", world_logic_vol, false, 0, false);
   new G4PVPlacement(rot, post, dice_board_logic,
-            	      board_name, mother_logic, false, 0, false);
+            	      board_name, box_logic_vol, false, 0, false);
   /////////////////////////////////////////////////////////
 
   }
