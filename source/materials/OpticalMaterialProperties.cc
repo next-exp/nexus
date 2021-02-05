@@ -1074,10 +1074,10 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Pyrex_vidrasa(G4double thi
                                     3.9114*eV, 3.9585*eV, 4.0562*eV, 4.3003*eV, 4.3198*eV,
                                     4.3394*eV, 4.3792*eV, 4.4403*eV, 4.5678*eV, 6.1992*eV};
 
-  G4double transparencies[ri_entries] = {0.910581, 0.917073, 0.910843, 0.905295, 0.893837,
-                                        0.874847, 0.848417, 0.807379, 0.747031, 0.701202,
-                                        0.65286,  0.597306, 0.505553, 0.071773, 0.054838,
-                                        0.037903, 0.025806, 0.013709, 0.004032, 0.0};
+  G4double transparencies[ri_entries] = {0.9800, 0.9800, 0.9800, 0.9700, 0.9600,
+                                         0.9400, 0.9100, 0.8850, 0.8000, 0.7500,
+                                         0.7000, 0.6500, 0.5500, 0.0718, 0.0548, 
+                                         0.0379, 0.0258, 0.0137, 0.0040, 0.};
   G4double abs_length[ri_entries];
   G4double ri_index[ri_entries];
   for (int i=0; i<ri_entries; i++) {
