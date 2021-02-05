@@ -80,6 +80,7 @@ namespace nexus {
     G4double    e_lifetime_;
     G4Material* xenon_gas_;
     G4Material* copper_mat_;
+    G4Material* air_mat_;
 
     // Dimensions
     G4double lightTube_ICS_gap_;

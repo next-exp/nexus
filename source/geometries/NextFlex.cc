@@ -158,6 +158,9 @@ void NextFlex::DefineMaterials()
   // Copper
   copper_mat_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
 
+  // Air
+  air_mat_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
+
   // Defining the gas xenon
   if (gas_name_ == "naturalXe")
     xenon_gas_ = MaterialsList::GXe(gas_pressure_, gas_temperature_);
@@ -201,7 +204,7 @@ void NextFlex::Construct()
                                    lab_size/2., lab_size/2.);
 
   G4LogicalVolume* lab_logic_vol = new G4LogicalVolume(lab_solid_vol,
-                                                       xenon_gas_, lab_name);
+                                                       air_mat_, lab_name);
 
   BaseGeometry::SetLogicalVolume(lab_logic_vol);
 
