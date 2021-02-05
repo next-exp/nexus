@@ -478,6 +478,9 @@ G4Material* MaterialsList::TPB()
 
 G4Material* MaterialsList::ITO()
 {
+  // Density data from  https://doi.org/10.1116/1.1371326
+  // Composition data from: https://en.wikipedia.org/wiki/Indium_tin_oxide
+
   G4String name = "ITO";
 
   G4Material* mat = G4Material::GetMaterial(name, false);
@@ -486,11 +489,13 @@ G4Material* MaterialsList::ITO()
     G4NistManager* nist = G4NistManager::Instance();
 
     G4Element* In = nist->FindOrBuildElement("In");
-    G4Element* O = nist->FindOrBuildElement("O");
+    G4Element* O  = nist->FindOrBuildElement("O");
+    G4Element* Sn = nist->FindOrBuildElement("Sn");
 
-    mat = new G4Material(name, 7.14*g/cm3, 2, kStateSolid);
-    mat->AddElement(In, 2);
-    mat->AddElement(O, 3);
+    mat = new G4Material(name, 6.8*g/cm3, 3, kStateSolid);
+    mat->AddElement(In, 74. * perCent);
+    mat->AddElement(O , 18. * perCent);
+    mat->AddElement(Sn,  8. * perCent);
   }
   return mat;
 }
