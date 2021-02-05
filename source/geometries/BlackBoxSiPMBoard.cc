@@ -10,7 +10,6 @@
 // The NEXT Collaboration
 // -----------------------------------------------------------------------------
 
-
 #include "BlackBoxSiPMBoard.h"
 
 #include "MaterialsList.h"
@@ -37,7 +36,7 @@ using namespace nexus;
 BlackBoxSiPMBoard::BlackBoxSiPMBoard():
   BaseGeometry     (),
   verbosity_       (false),
-  sipm_verbosity_  (false),
+  sipm_verbosity_  (true),
   visibility_      (false),
   num_columns_     (8),
   num_rows_        (8),
@@ -49,6 +48,7 @@ BlackBoxSiPMBoard::BlackBoxSiPMBoard():
   membrane_thickn_ (),
   coating_thickn_  (),
   hole_diam_       (),
+  hole_thickn_     (),
   //mask_thickn_     (2.0  * mm),
   //membrane_thickn_ (0.),
   //coating_thickn_  (0.),
@@ -68,7 +68,7 @@ BlackBoxSiPMBoard::BlackBoxSiPMBoard():
   msg_->DeclareProperty("sipm_board_vis", visibility_,
                         "BlackBoxSiPMBoard visibility.");
 
-  //sipm_ = new SiPMSensl;
+  sipm_ = new SiPMSensl;
 }
 
 
@@ -180,7 +180,7 @@ void BlackBoxSiPMBoard::Construct()
   G4String hole_name = "BOARD_MASK_HOLE";
 
   G4Tubs* hole_solid = new G4Tubs(hole_name, 0., hole_diam_/2.,
-                                  mask_thickn_/2., 0, 360.*deg);
+                                  hole_thickn_/2., 0, 360.*deg);
 
   hole_logic = new G4LogicalVolume(hole_solid, mother_gas, hole_name);
 
@@ -193,7 +193,7 @@ void BlackBoxSiPMBoard::Construct()
   //else{
   //  for_sipm_logic = hole_logic;
   //}
-  sipm_ = new SiPMSensl;
+  //sipm_ = new SiPMSensl;
   /// SiPMs construction
   sipm_->SetSensorDepth(3);
   sipm_->SetMotherDepth(5);
@@ -207,7 +207,7 @@ void BlackBoxSiPMBoard::Construct()
   G4RotationMatrix* sipm_rot = new G4RotationMatrix();
   sipm_rot->rotateY(pi);
 
-  G4double sipm_posz = - mask_thickn_/2. + sipm_->GetDimensions().z()/2.;
+  G4double sipm_posz = - hole_thickn_/2. + sipm_->GetDimensions().z()/2.;
 
   new G4PVPlacement(sipm_rot, G4ThreeVector(0., 0., sipm_posz), sipm_->GetLogicalVolume(),
                     sipm_->GetLogicalVolume()->GetName(), hole_logic,
@@ -216,7 +216,6 @@ void BlackBoxSiPMBoard::Construct()
 
   if (mask_thickn_!=0.){
     /// Membranes
-
     if (membrane_thickn_ > 0.) {
       G4String membrane_name = "BOARD_MASK_MEMB";
 
@@ -232,24 +231,26 @@ void BlackBoxSiPMBoard::Construct()
 
       new G4PVPlacement(nullptr, G4ThreeVector(0., 0., membrane_posz), membrane_logic,
                         membrane_name, hole_logic, false, 0, true);
-    }
+     }
+   }
 
+  for (G4int sipm_id=0; sipm_id<num_sipms_; sipm_id++) {
     if (mask_thickn_!=0.){
-      /// Placing the Holes with SiPMs & membranes inside
-      for (G4int sipm_id=0; sipm_id<num_sipms_; sipm_id++) {
-        new G4PVPlacement(nullptr, sipm_positions_[sipm_id], hole_logic,
+    /// Placing the Holes with SiPMs & membranes inside
+    //for (G4int sipm_id=0; sipm_id<num_sipms_; sipm_id++) {
+      new G4PVPlacement(nullptr, sipm_positions_[sipm_id], hole_logic,
                           hole_name, mask_logic, false, sipm_id, false);
-      }
-    } else{
-      for (G4int sipm_id=0; sipm_id<num_sipms_; sipm_id++) {
-        new G4PVPlacement(nullptr, sipm_positions_[sipm_id], hole_logic,
-                          hole_name, board_logic, false, sipm_id, false);
-      }
     }
+    else{
+    //for (G4int sipm_id=0; sipm_id<num_sipms_; sipm_id++) {
+      new G4PVPlacement(nullptr, sipm_positions_[sipm_id], hole_logic,
+                          hole_name, board_logic, false, sipm_id, false);
+    }
+  }
 
 
     /// COATING
-
+   if (mask_thickn_!=0.){
     if (coating_thickn_ > 0.) {
       G4String coating_name = "BOARD_COATING";
 
@@ -278,7 +279,7 @@ void BlackBoxSiPMBoard::Construct()
                                   coating_phys, coating_opsurf);
 
     }
-  }
+   }
 
 
   /// VERTEX GENERATOR

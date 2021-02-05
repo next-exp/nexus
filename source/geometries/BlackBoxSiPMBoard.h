@@ -39,6 +39,7 @@ namespace nexus {
     void SetMembraneThickness(G4double thickn);
     void SetCoatingThickness (G4double thickn);
     void SetHoleDiameter     (G4double diam);
+    void SetHoleThickness    (G4double hole_thickn);
 
     G4ThreeVector GetBoardSize() const;
     G4double      GetKaptonThickness() const;
@@ -58,6 +59,7 @@ namespace nexus {
     G4double membrane_thickn_;
     G4double coating_thickn_;
     G4double hole_diam_;
+    G4double hole_thickn_;
 
     G4ThreeVector board_size_;
     SiPMSensl* sipm_;
@@ -82,6 +84,9 @@ namespace nexus {
 
   inline void BlackBoxSiPMBoard::SetHoleDiameter(G4double diam)
   { hole_diam_ = diam; }
+
+  inline void BlackBoxSiPMBoard::SetHoleThickness(G4double hole_thickn)
+  { hole_thickn_ = hole_thickn; }
 
   inline G4ThreeVector BlackBoxSiPMBoard::GetBoardSize() const
   { return board_size_; }

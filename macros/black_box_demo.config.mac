@@ -3,8 +3,8 @@
 ### board in the black box.
 ### -----------------------------------------------------------
 
-#/Generator/SingleParticle/particle opticalphoton
-/Generator/SingleParticle/particle geantino
+/Generator/SingleParticle/particle opticalphoton
+#/Generator/SingleParticle/particle geantino
 /Generator/SingleParticle/min_energy 2.9 eV
 /Generator/SingleParticle/max_energy 2.9 eV
 /Generator/SingleParticle/region AD_HOC
@@ -18,13 +18,18 @@
 /Geometry/BlackBoxDEMO/specific_vertex_Y 0. mm
 /Geometry/BlackBoxDEMO/specific_vertex_Z 0. mm
 /Geometry/BlackBoxDEMO/dice_board_z_pos -50. cm
-/Geometry/BlackBoxDEMO/rotation 0 deg
+/Geometry/BlackBoxDEMO/rotation 80 deg
+/Geometry/BlackBoxDEMO/mask_thickn 0. mm
+/Geometry/BlackBoxDEMO/membrane_thickn 0. mm
+/Geometry/BlackBoxDEMO/coating_thickn 0. mm
+/Geometry/BlackBoxDEMO/hole_thickn 2. mm
+/Geometry/BlackBoxDEMO/hole_diameter 3.5 mm
 
 /run/verbose 0
 /event/verbose 0
-/tracking/verbose 1
+/tracking/verbose 0
 
 ### JOB CONTROL
 /nexus/random_seed            -1
 /nexus/persistency/start_id   0
-/nexus/persistency/outputFile testing_bbdemo.next
+/nexus/persistency/outputFile black_box_80deg_nomask.next

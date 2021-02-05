@@ -37,30 +37,31 @@ namespace nexus {
 
   private:
     // Dimensions
-    G4double _world_z;
-    G4double _world_xy;
-    G4double _box_z;
-    G4double _box_xy;
-    // SiPMs per Dice Board
-    //const G4int SiPM_rows_, SiPM_columns_;
-    // Dice board
-    //KDB_Sensl* dice_;
+    G4double world_z_;
+    G4double world_xy_;
+    G4double box_z_;
+    G4double box_xy_;
+
     BlackBoxSiPMBoard* dice_;
     G4ThreeVector kdb_dimensions_;
     G4double dice_board_x_pos_;
     G4double dice_board_y_pos_;
 
-    G4bool _visibility;
+    G4bool visibility_;
 
     //Messenger for configuration parameters
-    G4GenericMessenger* _msg;
+    G4GenericMessenger* msg_;
 
-    /// Specific vertex for AD_HOC region
-    G4double _specific_vertex_X;
-    G4double _specific_vertex_Y;
-    G4double _specific_vertex_Z;
-    G4double _dice_board_z_pos;
-    G4double _rotation;
+    G4double specific_vertex_X_;
+    G4double specific_vertex_Y_;
+    G4double specific_vertex_Z_;
+    G4double dice_board_z_pos_;
+    G4double rotation_;
+    G4double mask_thickn_;
+    G4double membrane_thickn_;
+    G4double coating_thickn_;
+    G4double hole_thickn_;
+    G4double hole_diameter_;
     G4VPhysicalVolume*  mother_phys_;
 
   };
