@@ -73,8 +73,7 @@ G4double XenonGasProperties::Density(G4double pressure)
       density = data[n_pressures-1][1];
     }
     else {
-      G4Exception("[XenonGaseousProperties]", "Density()", FatalException,
-      "Unknown xenon density for this pressure!");
+      throw "Unknown xenon density for this pressure!";
     }
   }
 
@@ -244,11 +243,11 @@ void XenonGasProperties::MakeDataTable()
   // Open file
   G4String path(std::getenv("NEXUSDIR"));
   G4String filename = path + "/data/gxe_density_table.txt";
+
   std::ifstream inFile;
   inFile.open(filename);
   if (!inFile) {
-    G4Exception("[XenonGaseousProperties]", "Density()", FatalErrorInArgument,
-    "File could not be opened!");
+    throw "File could not be opened";
   }
 
   std::vector<std::vector<G4double>> data;
@@ -261,6 +260,7 @@ void XenonGasProperties::MakeDataTable()
   G4double thistemp = 0;
   G4double temp, press, dens;
   char comma;
+
   while (inFile>>temp>>comma>>press>>comma>>dens){
     std::vector<G4double> thisdata {temp*kelvin, press*bar, dens*(kg/m3)};
     data_.push_back(thisdata);
@@ -289,7 +289,6 @@ G4double XenonGasProperties::GetDensity(G4double pressure, G4double temperature)
 {
   // Interpolate to calculate the density
   // at a given pressure and temperature
-
   G4double density = 5.324 * kg/m3;
   MakeDataTable();
 
@@ -301,7 +300,6 @@ G4double XenonGasProperties::GetDensity(G4double pressure, G4double temperature)
   G4double t1, t2, p1, p2, d11, d12, d21, d22, d1, d2;
 
   while (tcount < ntemps_-1) {
-
     t1 = data_[count][0];
     t2 = data_[count+npressures_][0];
 
@@ -333,8 +331,7 @@ G4double XenonGasProperties::GetDensity(G4double pressure, G4double temperature)
           density = LinearInterpolation(temperature, t1, t2, d1, d2);
           found = true;
         } else {
-          G4Exception("[XenonGaseousProperties]", "GetDensity()", FatalErrorInArgument,
-                      "Unknown xenon density for this pressure!");
+          throw "Unknown xenon density for this pressure!";
         }
       }
 
@@ -367,15 +364,12 @@ G4double XenonGasProperties::GetDensity(G4double pressure, G4double temperature)
           density = data_[count][2];
           found = true;
         } else {
-          G4Exception("[XenonGaseousProperties]", "GetDensity()", FatalErrorInArgument,
-                      "Unknown xenon density for this pressure!");
+          throw "Unknown xenon density for this pressure!";
         }
       }
     } else {
-        G4Exception("[XenonGaseousProperties]", "GetDensity()", FatalErrorInArgument,
-                    "Unknown xenon density for this temperature!");
+        throw "Unknown xenon density for this temperature";
     }
   }
-
   return density;
 }

@@ -1,6 +1,8 @@
 #include <Interpolation.h>
 
 #include <catch.hpp>
+using Catch::Matchers::Contains;
+
 
 TEST_CASE("Linear Interpolation") {
   // These tests check thet Interpolation::LinearInterpolation
@@ -41,19 +43,15 @@ TEST_CASE("Linear Interpolation") {
     y = nexus::LinearInterpolation(2.0, 1.0, 2.0, 3.0, 4.0);
     REQUIRE (y == 4.0);
 
-    y = nexus::LinearInterpolation(1.0, 1.0, 1.0, 1.0, 2.0);
-    REQUIRE (std::isnan(y));
+    REQUIRE_THROWS (nexus::LinearInterpolation(1.0, 1.0, 1.0, 1.0, 2.0), Contains("x interval not valid"));
 
     y = nexus::LinearInterpolation(1.5, 1.0, 2.0, 2.0, 2.0);
     REQUIRE (y == 2.0);
   }
 
   SECTION ("x not in range"){
-    G4double y = nexus::LinearInterpolation(5.0, 1.0, 2.0, 3.0, 4.0);
-    REQUIRE (std::isnan(y));
-
-    y = nexus::LinearInterpolation(0.0, 1.0, 2.0, 3.0, 4.0);
-    REQUIRE (std::isnan(y));
+    REQUIRE_THROWS (nexus::LinearInterpolation(5.0, 1.0, 2.0, 3.0, 4.0),
+                    Contains("x is not in the given interval"));
   }
 
 }
@@ -93,7 +91,6 @@ TEST_CASE("Bilinear Interpolation"){
   }
 
   SECTION ("Input zeros"){
-    // FIXME
     Approx target = Approx(0.1).epsilon(0.1);
     G4double y = nexus::BilinearInterpolation(0.5, 0.0, 1.0,
                                               0.5, 0.0, 1.0,
@@ -102,7 +99,6 @@ TEST_CASE("Bilinear Interpolation"){
   }
 
   SECTION ("Edge cases"){
-    // FIXME
     G4double y = nexus::BilinearInterpolation(1.0, 1.0, 2.0,
                                               1.0, 1.0, 2.0,
                                               1.0, 2.0, 3.0, 4.0);
@@ -122,27 +118,42 @@ TEST_CASE("Bilinear Interpolation"){
                                      2.0, 1.0, 2.0,
                                      1.0, 2.0, 3.0, 4.0);
     REQUIRE (y == 4.0);
+
+    REQUIRE_THROWS (nexus::BilinearInterpolation(1.0, 1.0, 1.0,
+                                                 1.5, 1.0, 2.0,
+                                                1.0, 2.0, 3.0, 4.0),
+                    "One or more interval is invalid");
+
+    REQUIRE_THROWS (nexus::BilinearInterpolation(1.5, 1.0, 2.0,
+                                                 1.0, 1.0, 1.0,
+                                                 1.0, 2.0, 3.0, 4.0),
+                    "One or more interval is invalid");
+
+    REQUIRE_THROWS (nexus::BilinearInterpolation(1.0, 1.0, 1.0,
+                                                 1.0, 1.0, 1.0,
+                                                 1.0, 2.0, 3.0, 4.0),
+                    "One or more interval is invalid");
   }
 
   SECTION ("x or y not in input range"){
-    G4double y = nexus::BilinearInterpolation(0.0, 1.0, 2.0,
-                                              1.5, 1.0, 2.0,
-                                              1.0, 2.0, 3.0, 4.0);
-    REQUIRE (std::isnan(y));
+    REQUIRE_THROWS (nexus::BilinearInterpolation(0.0, 1.0, 2.0,
+                                                 1.5, 1.0, 2.0,
+                                                 1.0, 2.0, 3.0, 4.0),
+                    "x or y is not in the given interval");
 
-    y = nexus::BilinearInterpolation(3.0, 1.0, 2.0,
-                                     1.5, 1.0, 2.0,
-                                     1.0, 2.0, 3.0, 4.0);
-    REQUIRE (std::isnan(y));
+    REQUIRE_THROWS (nexus::BilinearInterpolation(3.0, 1.0, 2.0,
+                                                 1.5, 1.0, 2.0,
+                                                 1.0, 2.0, 3.0, 4.0),
+                    "x or y is not in the given interval");
 
-    y = nexus::BilinearInterpolation(1.5, 1.0, 2.0,
-                                     0.0, 1.0, 2.0,
-                                     1.0, 2.0, 3.0, 4.0);
-    REQUIRE (std::isnan(y));
+    REQUIRE_THROWS (nexus::BilinearInterpolation(1.5, 1.0, 2.0,
+                                                 0.0, 1.0, 2.0,
+                                                 1.0, 2.0, 3.0, 4.0),
+                    "x or y is not in the given interval");
 
-    y = nexus::BilinearInterpolation(1.5, 1.0, 2.0,
-                                     3.0, 1.0, 2.0,
-                                     1.0, 2.0, 3.0, 4.0);
-    REQUIRE (std::isnan(y));
+    REQUIRE_THROWS (nexus::BilinearInterpolation(1.5, 1.0, 2.0,
+                                                 3.0, 1.0, 2.0,
+                                                 1.0, 2.0, 3.0, 4.0),
+                    "x or y is not in the given interval");
   }
 }

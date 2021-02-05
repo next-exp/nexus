@@ -2,19 +2,12 @@
 
 #include <G4SystemOfUnits.hh>
 
-#include <setjmp.h>
-
-#include <csignal>
-
 #include <catch.hpp>
 
-int val;
-jmp_buf env_buffer;
 
-void handle_sigabrt(int sig){
-  // Handles SIGABRT being raised, by restoring environment
-  // saved in env_buffer and returns sig
-  longjmp(env_buffer, sig);
+TEST_CASE("XenonGasProperties::MakeDataTable"){
+  auto props = nexus::XenonGasProperties();
+  REQUIRE_NOTHROW(props.MakeDataTable());
 }
 
 TEST_CASE("XenonGasProperties::Density") {
@@ -29,47 +22,24 @@ TEST_CASE("XenonGasProperties::Density") {
     REQUIRE (density/(kg/m3) == target);
   }
 
-  //  go to handle_sigabrt when SIGABRT is raised (raised by G4Exceptions)
-  signal(SIGABRT, handle_sigabrt);
-
   SECTION ("Pressure is too big") {
-    val = setjmp(env_buffer);
-    if (val != 0){
-      goto test1;
-    }
-    props.GetDensity(51 * bar, 295 * kelvin);
-    test1:
-      REQUIRE(val == SIGABRT);
+    REQUIRE_THROWS (props.GetDensity(51 * bar, 295 * kelvin),
+                    "Unknown xenon density for this pressure");
   }
 
   SECTION ("Pressure is too small") {
-    val = setjmp(env_buffer);
-    if (val != 0){
-      goto test2;
-    }
-    props.GetDensity(-15 * bar, 295 * kelvin);
-    test2:
-      REQUIRE(val == SIGABRT);
+    REQUIRE_THROWS (props.GetDensity(-15 * bar, 295 * kelvin),
+                    "Unknown xenon density for this pressure");
   }
 
   SECTION ("Temperature is too big"){
-    val = setjmp(env_buffer);
-    if (val != 0){
-      goto test3;
-    }
-    props.GetDensity(15 * bar, 410 * kelvin);
-    test3:
-      REQUIRE(val == SIGABRT);
+    REQUIRE_THROWS (props.GetDensity(15 * bar, 410 * kelvin),
+                    "Unknown xenon density for this temperature");
   }
 
   SECTION ("Temperature is too small"){
-    val = setjmp(env_buffer);
-    if (val != 0){
-      goto test4;
-    }
-    props.GetDensity(15 * bar, -295 * kelvin);
-    test4:
-      REQUIRE(val == SIGABRT);
+    REQUIRE_THROWS (props.GetDensity(15 * bar, -295 * kelvin),
+                    "Unknown xenon density for this temperature");
   }
 
 }
