@@ -1,7 +1,6 @@
 // ----------------------------------------------------------------------------
-//  nexus | BlackBoxSimple.h
-//  SensL KDB (no mask) in a black box.
-//  Author:  Miryam Martínez Vara
+//  nexus | BlackBoxDEMO.h
+//  DICE in a black box.
 // ----------------------------------------------------------------------------
 
 #ifndef BLACK_BOX_DEMO_H

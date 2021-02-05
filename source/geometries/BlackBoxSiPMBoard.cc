@@ -1,13 +1,7 @@
 // -----------------------------------------------------------------------------
-// nexus | NextDemoSiPMBoard.cc
+// nexus | BlackBoxSiPMBoard.cc
 //
-// Geometry of the DEMO++ SiPM board.
-// It consists of an 8x8 array of SensL SiPMs on a kapton board.
-// The board can be covered with a teflon mask, or not.
-// The teflon mask may have membranes covering the holes, or not.
-// The teflon mask may be coated with TPB or not.
-//
-// The NEXT Collaboration
+// SiPM Board used in BlackBox.
 // -----------------------------------------------------------------------------
 
 #include "BlackBoxSiPMBoard.h"
@@ -49,10 +43,6 @@ BlackBoxSiPMBoard::BlackBoxSiPMBoard():
   coating_thickn_  (),
   hole_diam_       (),
   hole_thickn_     (),
-  //mask_thickn_     (2.0  * mm),
-  //membrane_thickn_ (0.),
-  //coating_thickn_  (0.),
-  //hole_diam_       (3.5  * mm),
   mother_phys_     (nullptr),
   kapton_gen_      (nullptr)
 {
@@ -184,16 +174,6 @@ void BlackBoxSiPMBoard::Construct()
 
   hole_logic = new G4LogicalVolume(hole_solid, mother_gas, hole_name);
 
-
-  //G4LogicalVolume* for_sipm_logic;
-
-  //if (mask_thickn_==0.){
-  //  for_sipm_logic = board_logic;
-  //}
-  //else{
-  //  for_sipm_logic = hole_logic;
-  //}
-  //sipm_ = new SiPMSensl;
   /// SiPMs construction
   sipm_->SetSensorDepth(3);
   sipm_->SetMotherDepth(5);
@@ -225,8 +205,6 @@ void BlackBoxSiPMBoard::Construct()
                                           membrane_thickn_/2., 0, 360.*deg);
 
       membrane_logic =
-      //new G4LogicalVolume(membrane_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON"),
-      //                    membrane_name);
         new G4LogicalVolume(membrane_solid, mother_gas, membrane_name);
 
       new G4PVPlacement(nullptr, G4ThreeVector(0., 0., membrane_posz), membrane_logic,
@@ -237,17 +215,14 @@ void BlackBoxSiPMBoard::Construct()
   for (G4int sipm_id=0; sipm_id<num_sipms_; sipm_id++) {
     if (mask_thickn_!=0.){
     /// Placing the Holes with SiPMs & membranes inside
-    //for (G4int sipm_id=0; sipm_id<num_sipms_; sipm_id++) {
       new G4PVPlacement(nullptr, sipm_positions_[sipm_id], hole_logic,
                           hole_name, mask_logic, false, sipm_id, false);
     }
     else{
-    //for (G4int sipm_id=0; sipm_id<num_sipms_; sipm_id++) {
       new G4PVPlacement(nullptr, sipm_positions_[sipm_id], hole_logic,
                           hole_name, board_logic, false, sipm_id, false);
     }
   }
-
 
     /// COATING
    if (mask_thickn_!=0.){

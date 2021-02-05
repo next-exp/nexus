@@ -1,13 +1,7 @@
 // -----------------------------------------------------------------------------
-// nexus | NextDemoSiPMBoard.h
+// nexus | BlackBoxSiPMBoard.h
 //
-// Geometry of the DEMO++ SiPM board.
-// It consists of an 8x8 array of SensL SiPMs on a kapton board.
-// The board can be covered with a teflon mask, or not.
-// The teflon mask may have membranes covering the holes, or not.
-// The teflon mask may be coated with TPB or not.
-//
-// The NEXT Collaboration
+// SiPM Board used in BlackBox.
 // -----------------------------------------------------------------------------
 
 #ifndef BLACKBOX_SIPM_BOARD_H
