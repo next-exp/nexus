@@ -106,7 +106,7 @@ void NextDemoTrackingPlane::Construct()
   }
   else if (config_ == "run8") {
     if(verbosity_) G4cout << "run8 ..." << G4endl;
-    gate_board_dist = 14.7 * mm;
+    gate_board_dist = 19.66 * mm;
     mask_thickn     = 5.0  * mm;
     membrane_thickn = 0.2  * mm;
     coating_thickn  = 2.0  * micrometer;
