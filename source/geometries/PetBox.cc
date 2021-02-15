@@ -476,10 +476,10 @@ namespace nexus {
     G4int copy_no = 0;
 
     G4double z_pos = -box_size_/2. + box_thickness_ + dist_dice_flange_ + tile_thickn_/2.;
-    for (G4int i=0; i<n_tile_columns_; i++) {
-      G4double x_pos = -full_row_size_/2. + tile_size_x/2. + i*tile_size_x;
-      for (G4int j=0; j<n_tile_rows_; j++) {
-        G4double y_pos = full_col_size_/2. - tile_size_y/2. - j*tile_size_y;
+    for (G4int j=0; j<n_tile_rows_; j++) {
+      G4double y_pos = full_col_size_/2. - tile_size_y/2. - j*tile_size_y;
+      for (G4int i=0; i<n_tile_columns_; i++) {
+        G4double x_pos = -full_row_size_/2. + tile_size_x/2. + i*tile_size_x;
         vol_name = "TILE_" + std::to_string(copy_no);
         new G4PVPlacement(0, G4ThreeVector(x_pos, y_pos, z_pos), tile_logic,
                           vol_name, LXe_logic_, false, copy_no, false);
@@ -492,16 +492,16 @@ namespace nexus {
 
     /// ASYMMETRIC GEOMETRY
     vol_name = "TILE_" + std::to_string(copy_no);
-    G4double x_pos = -full_row_size_/2. + tile_size_x/2.;
+    G4double x_pos = full_row_size_/2. - tile_size_x/2.;
     G4double y_pos = full_col_size_/2. - tile_size_y/2.;
     new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos)), tile_logic,
                           vol_name, LXe_logic_, false, copy_no, false);
 
     /// SYMMETRIC GEOMETRY
-    // for (G4int i=0; i<n_tile_columns_; i++) {
-    //   G4double x_pos = -full_row_size_/2. + tile_size_x/2. + i*tile_size_x;
-    //   for (G4int j=0; j<n_tile_columns_; j++) {
-    //     G4double y_pos = full_col_size_/2. - tile_size_y/2. - j*tile_size_y;
+    // for (G4int j=0; j<n_tile_rows_; j++) {
+    //   G4double y_pos = full_col_size_/2. - tile_size_y/2. - j*tile_size_y;
+    //   for (G4int i=0; i<n_tile_columns_; i++) {
+    //     G4double x_pos = full_row_size_/2. - tile_size_x/2. - i*tile_size_x;
     //     vol_name = "TILE_" + std::to_string(copy_no);
     //     new G4PVPlacement(G4Transform3D(rot, G4ThreeVector(x_pos, y_pos, -z_pos)), tile_logic,
     //                       vol_name, LXe_logic_, false, copy_no, false);
