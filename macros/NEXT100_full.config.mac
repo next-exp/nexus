@@ -18,6 +18,8 @@
 /Geometry/Next100/pressure 10. bar
 /Geometry/Next100/max_step_size 5. mm
 
+/process/optical/processActivation Cerenkov false
+
 ##### GENERATOR #####
 /Generator/Kr83mGenerator/region ACTIVE
 

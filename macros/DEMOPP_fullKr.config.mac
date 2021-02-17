@@ -23,6 +23,8 @@
 /Geometry/PmtR11410/time_binning 100. nanosecond
 /Geometry/SiPMSensl/time_binning 1. microsecond
 
+/process/optical/processActivation Cerenkov false
+
 
 # GENERATION
 /Generator/Kr83mGenerator/region  ACTIVE
