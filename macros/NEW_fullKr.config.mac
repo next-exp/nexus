@@ -22,6 +22,7 @@
 /Geometry/SiPMSensl/time_binning 1. microsecond
 
 /PhysicsList/Nexus/photoelectric false
+/process/optical/processActivation Cerenkov false
 
 # GENERATOR
 /Generator/Kr83mGenerator/region ACTIVE

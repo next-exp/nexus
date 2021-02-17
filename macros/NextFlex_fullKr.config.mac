@@ -84,6 +84,8 @@
 /Geometry/NextFlex/ics_visibility          false
 
 
+/process/optical/processActivation Cerenkov false
+
 ### GENERATOR
 # Kripton
 /Generator/Kr83mGenerator/region  AD_HOC
