@@ -1,3 +1,14 @@
+tag v6_02_00 - 17 Feb 2021
+	- Add a new generator in the EL gap for light table production.
+	- Fix the composition of ITO to the best of our knowledge.
+	- Fix the position of the holes in the ICS of NEW.
+	- Add nix to nexus.
+	- Add the possibility of generating a single particle in a limited range of directions.
+	- Add the LSC rock geometry.
+	- Add photoelectric process.
+	- Simulate DEMO++ geometry.
+	- Fix GenericPhotosensor geometry to prevent photons from entering through the sides of the active area.
+
 tag v6_01_01 - 6 Oct 2020
 	- Fix a bug in the position of SiPMs in the NEXT100 boards.
 
