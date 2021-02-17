@@ -49,8 +49,8 @@ namespace nexus {
     _lat_nozzle_x_pos   (_body_inner_diam/2. + _body_thickness/2.), // lat_cathode_nozzle_xpos;
     _up_small_nozzle_in_diam  ( 5. * mm),      // The upper central nozzle
     _up_big_nozzle_in_diam    (62. * mm),      // The upper anode & cathode nozzles
-    _up_nozzle_y_pos    (_lat_nozzle_x_pos)
-    
+    _up_nozzle_y_pos    (_lat_nozzle_x_pos),
+    _center_nozzle_z_pos (25. *mm)   //  position of the nozzles (lateral and upper side) with respect to the center of the volume 
   {
     // Initializing the geometry navigator (used in vertex generation)
     _geom_navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
@@ -98,11 +98,12 @@ namespace nexus {
     
     // Lateral anode nozzle  
     ics_solid = new G4SubtractionSolid("ICS", ics_solid, lateral_nozzle_hole_solid, roty,
-   				                             G4ThreeVector(_lat_nozzle_x_pos, 0., 50. * mm - _lat_nozzle_z_pos));
+   				                             G4ThreeVector(_lat_nozzle_x_pos, 0., _center_nozzle_z_pos - _lat_nozzle_z_pos));
     // Lateral cathode nozzle
     ics_solid = new G4SubtractionSolid("ICS", ics_solid, lateral_nozzle_hole_solid, roty,
-   				                             G4ThreeVector(_lat_nozzle_x_pos, 0., 50. * mm + _lat_nozzle_z_pos));
+   				                             G4ThreeVector(_lat_nozzle_x_pos, 0., _center_nozzle_z_pos + _lat_nozzle_z_pos));
     
+
     // UPPER NOZZLES HOLES
     G4Tubs* up_small_nozzle_hole_solid =
       new G4Tubs("UP_SMALL_NOZZLE_HOLE", 0., _up_small_nozzle_in_diam/2.,
@@ -118,13 +119,14 @@ namespace nexus {
     
     // Upper anode nozzle
     ics_solid = new G4SubtractionSolid("ICS", ics_solid, up_big_nozzle_hole_solid, rotx,
-				                               G4ThreeVector( 0., _up_nozzle_y_pos, 50. * mm -_up_nozzle_z_pos));
+				                               G4ThreeVector( 0., _up_nozzle_y_pos, _center_nozzle_z_pos -_up_nozzle_z_pos));
     // Upper central nozzle
     ics_solid = new G4SubtractionSolid("ICS", ics_solid, up_small_nozzle_hole_solid, rotx,
-				                               G4ThreeVector( 0., _up_nozzle_y_pos, 50. * mm));
+				                               G4ThreeVector( 0., _up_nozzle_y_pos, _center_nozzle_z_pos));
     // Upper cathode nozzle
     ics_solid = new G4SubtractionSolid("ICS", ics_solid, up_big_nozzle_hole_solid, rotx,
-				                               G4ThreeVector( 0., _up_nozzle_y_pos, 50. * mm +_up_nozzle_z_pos));
+				                               G4ThreeVector( 0., _up_nozzle_y_pos, _center_nozzle_z_pos +_up_nozzle_z_pos));
+
 
     
     G4LogicalVolume* ics_logic =
