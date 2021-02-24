@@ -8,7 +8,7 @@
 // ----------------------------------------------------------------------------
 
 #include "FullRingInfinity.h"
-#include "SiPMpetFBK.h"
+#include "SiPMpetVUV.h"
 #include "SpherePointSampler.h"
 #include "MaterialsList.h"
 #include "IonizationSD.h"
@@ -161,8 +161,7 @@ namespace nexus {
     sns_z_max_cmd.SetUnitCategory("Length");
     sns_z_max_cmd.SetParameterName("sens_z_max", false);
 
-
-    sipm_ = new SiPMpetFBK();
+    sipm_ = new SiPMpetVUV();
   }
 
   FullRingInfinity::~FullRingInfinity()
