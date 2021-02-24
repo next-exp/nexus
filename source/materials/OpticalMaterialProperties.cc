@@ -1068,6 +1068,9 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Pyrex_vidrasa()
 {
   G4MaterialPropertiesTable* pyrex_mpt = new G4MaterialPropertiesTable();
 
+  // Refractive index and absorption lenth taken from:
+  // http://www.vidrasa.com/esp/productos/borofloat/borofloat_pf.html#:~:text=Borofloat%20(vidrio%20plano%20borosilicato%203.3)%3A%20Propiedades%20f%C3%ADsicas%20y%20qu%C3%ADmicas&text=Las%20planchas%20de%20BOROFLOAT%C2%AE,tiempo%20es%20de%20500%20%C2%BAC.
+
   const G4int ri_entries = 20;
   G4double ri_energy[ri_entries] = {0.9263*eV, 2.2542*eV, 2.6338*eV, 3.2370*eV, 3.4768*eV,
                                     3.6304*eV, 3.7125*eV, 3.7549*eV, 3.8204*eV, 3.8882*eV,
