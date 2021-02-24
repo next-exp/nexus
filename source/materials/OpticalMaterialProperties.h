@@ -79,7 +79,7 @@ namespace nexus {
     static G4MaterialPropertiesTable* PTFE_LXe(G4double reflectivity=0.95);
     static G4MaterialPropertiesTable* PTFE_with_TPB();
     static G4MaterialPropertiesTable* PTFE_non_reflectant();
-    static G4MaterialPropertiesTable* Pyrex_vidrasa(G4double thickness=1.75*mm);
+    static G4MaterialPropertiesTable* Pyrex_vidrasa();
     static G4MaterialPropertiesTable* LYSO();
     static G4MaterialPropertiesTable* LYSO_nconst();
     static G4MaterialPropertiesTable* FakeLYSO();

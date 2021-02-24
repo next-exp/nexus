@@ -1064,7 +1064,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::PTFE_non_reflectant()
 }
 
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::Pyrex_vidrasa(G4double thickness)
+G4MaterialPropertiesTable* OpticalMaterialProperties::Pyrex_vidrasa()
 {
   G4MaterialPropertiesTable* pyrex_mpt = new G4MaterialPropertiesTable();
 
@@ -1074,14 +1074,13 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Pyrex_vidrasa(G4double thi
                                     3.9114*eV, 3.9585*eV, 4.0562*eV, 4.3003*eV, 4.3198*eV,
                                     4.3394*eV, 4.3792*eV, 4.4403*eV, 4.5678*eV, 6.1992*eV};
 
-  G4double transparencies[ri_entries] = {0.9800, 0.9800, 0.9800, 0.9700, 0.9600,
-                                         0.9400, 0.9100, 0.8850, 0.8000, 0.7500,
-                                         0.7000, 0.6500, 0.5500, 0.0718, 0.0548, 
-                                         0.0379, 0.0258, 0.0137, 0.0040, 0.};
-  G4double abs_length[ri_entries];
+  G4double abs_length[ri_entries] = {99.800*mm, 99.999*mm, 95.000*mm, 70.000*mm,
+                                     48.500*mm, 32.323*mm, 22.000*mm, 14.000*mm,
+                                      8.963*mm, 7.170*mm,  5.800*mm,   4.643*mm,
+                                      3.345*mm, 0.800*mm,  0.710*mm,   0.630*mm,
+                                      0.570*mm, 0.485*mm,  0.370*mm,   0.0*mm};
   G4double ri_index[ri_entries];
   for (int i=0; i<ri_entries; i++) {
-    abs_length[i] = -thickness/log(transparencies[i]);
     ri_index[i] = 1.472;
   }
 
@@ -1090,6 +1089,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Pyrex_vidrasa(G4double thi
 
   return pyrex_mpt;
 }
+
 
 G4MaterialPropertiesTable* OpticalMaterialProperties::TPB(G4double pressure, G4double temperature)
 {
