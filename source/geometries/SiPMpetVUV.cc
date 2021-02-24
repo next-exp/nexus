@@ -1,7 +1,8 @@
 // ----------------------------------------------------------------------------
 // nexus | SiPMpetVUV.cc
 //
-// Basic 3x3 mm2 SiPM geometry without TPB coating.
+// Variable size SiPM geometry with no wavelength shifter
+// and a window with perfect transparency and configurable refractive index.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
@@ -23,9 +24,6 @@
 #include <G4SDManager.hh>
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
-#include <G4PhysicalConstants.hh>
-
-#include <CLHEP/Units/SystemOfUnits.h>
 
 
 namespace nexus {
@@ -36,12 +34,15 @@ namespace nexus {
 			    visibility_(0),
 			    refr_index_(1),
 			    eff_(1.),
-                            time_binning_(1.*microsecond)
+                            time_binning_(1.*microsecond),
+                            sensor_depth_(-1),
+			    mother_depth_(0),
+                            naming_order_(0)
   {
     /// Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/SiPMpet/", "Control commands of geometry.");
     msg_->DeclareProperty("visibility", visibility_, "SiPMpet Visibility");
-    msg_->DeclareProperty("refr_index", refr_index_, "Refraction index for epoxy");
+    msg_->DeclareProperty("refr_index", refr_index_, "Refraction index for sipm window");
     msg_->DeclareProperty("efficiency", eff_, "Efficiency of SiPM");
 
     G4GenericMessenger::Command& time_cmd =
@@ -49,6 +50,12 @@ namespace nexus {
     time_cmd.SetUnitCategory("Time");
     time_cmd.SetParameterName("time_binning", false);
     time_cmd.SetRange("time_binning>0.");
+
+    G4GenericMessenger::Command& size_cmd =
+      msg_->DeclareProperty("size", sipm_size_, "Size of SiPMs");
+    size_cmd.SetUnitCategory("Length");
+    size_cmd.SetParameterName("size", false);
+    size_cmd.SetRange("size>0.");
   }
 
   SiPMpetVUV::~SiPMpetVUV()
@@ -57,56 +64,48 @@ namespace nexus {
 
   void SiPMpetVUV::Construct()
   {
-
-    // PACKAGE ///////////////////////////////////////////////////////
-
-    // Hamamatsu 3X3MM-50UM VUV3
-    // G4double sipm_x = 6.5* mm;
-    // G4double sipm_y = 6.5 * mm;
-    // G4double sipm_z = 1.55 * mm;
-
-    // array-style
-    G4double sipm_x = 3.* mm;
-    G4double sipm_y = 3. * mm;
-    G4double sipm_z = 1.55 * mm;
+    G4double sipm_x = sipm_size_;
+    G4double sipm_y = sipm_size_;
+    G4double sipm_z = 0.7 * mm;
 
     SetDimensions(G4ThreeVector(sipm_x, sipm_y, sipm_z));
 
     G4Box* sipm_solid = new G4Box("SIPMpet", sipm_x/2., sipm_y/2., sipm_z/2);
 
-    G4Material* epoxy = MaterialsList::Epoxy();
-    G4cout << "Epoxy used with constant refraction index = " <<  refr_index_ << G4endl;
-    epoxy->SetMaterialPropertiesTable(OpticalMaterialProperties::EpoxyFixedRefr(refr_index_));
-
+    G4Material* sipm_mat = MaterialsList::FR4();
     G4LogicalVolume* sipm_logic =
-      new G4LogicalVolume(sipm_solid, epoxy, "SIPMpet");
+      new G4LogicalVolume(sipm_solid, sipm_mat, "SIPMpet");
+
+    G4Material* window_mat = MaterialsList::FusedSilica();
+    G4cout << "Quartz used with constant refraction index = " <<  refr_index_ << G4endl;
+    window_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGenericMaterial(refr_index_));
 
     this->SetLogicalVolume(sipm_logic);
 
+    
+    // QUARTZ WINDOW
+    
+    G4double window_thickness = 0.6 * mm;
+    G4Box* window_solid_vol =
+    new G4Box("SIPM_WNDW", sipm_size_/2., sipm_size_/2., window_thickness/2.);
 
-    // PCB ///////////////////////////////////////////////////////
+    G4LogicalVolume* window_logic_vol =
+      new G4LogicalVolume(window_solid_vol, window_mat, "SIPM_WNDW");
+    
+    G4double window_zpos = sipm_z/2. - window_thickness/2.;
+    
+    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., window_zpos), window_logic_vol,
+                      "SIPM_WNDW", sipm_logic, false, 0, true);
 
-    // G4double pcb_z = 0.550 * mm;
-
-    // G4Material* plastic = G4NistManager::Instance()->FindOrBuildMaterial("G4_POLYCARBONATE");
-
-    // G4Box* plastic_solid = new G4Box("PLASTIC", sipm_x/2., sipm_y/2., pcb_z/2);
-
-    // G4LogicalVolume* plastic_logic =
-    // new G4LogicalVolume(plastic_solid, plastic, "PLASTIC");
-
-    // G4double epoxy_z = 0.300 * mm;
-
-    // new G4PVPlacement(0, G4ThreeVector(0, 0., epoxy_z/2), plastic_logic,
-    // 		      "PLASTIC", sipm_logic, false, 0, false);
-
+   
     // ACTIVE WINDOW /////////////////////////////////////////////////
 
-    G4double active_side     = 3.0   * mm;
+    G4double active_x = sipm_x - 0.001 * mm;
+    G4double active_y = sipm_y - 0.001 * mm;
     G4double active_depth    = 0.01   * mm;
 
     G4Box* active_solid =
-      new G4Box("PHOTODIODES", active_side/2., active_side/2., active_depth/2);
+      new G4Box("PHOTODIODES", active_x/2., active_y/2., active_depth/2);
 
     G4Material* silicon =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_Si");
@@ -114,8 +113,8 @@ namespace nexus {
     G4LogicalVolume* active_logic =
       new G4LogicalVolume(active_solid, silicon, "PHOTODIODES");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., sipm_z/2. - active_depth/2. - .1*mm), active_logic,
-		      "PHOTODIODES", sipm_logic, false, 0, true);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., sipm_z/2. - window_thickness - active_depth/2.),
+                      active_logic, "PHOTODIODES", sipm_logic, false, 0, true);
 
 
     // OPTICAL SURFACES //////////////////////////////////////////////
@@ -140,7 +139,6 @@ namespace nexus {
 
 
     G4MaterialPropertiesTable* sipm_mt = new G4MaterialPropertiesTable();
-    //sipm_mt->AddProperty("EFFICIENCY", energies, efficiency_red, entries);
     sipm_mt->AddProperty("EFFICIENCY", energies, efficiency, entries);
     sipm_mt->AddProperty("REFLECTIVITY", energies, reflectivity, entries);
 
@@ -157,17 +155,17 @@ namespace nexus {
     G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
 
     if (!sdmgr->FindSensitiveDetector(sdname, false)) {
-      PmtSD* sipmsd = new PmtSD(sdname);
-      sipmsd->SetDetectorVolumeDepth(0);
-      sipmsd->SetDetectorNamingOrder(1000.);
-      sipmsd->SetTimeBinning(5.*picosecond);
-      //sipmsd->SetMotherVolumeDepth(1);
-      //     sipmsd->SetGrandMotherVolumeDepth(3);
-      sipmsd->SetMotherVolumeDepth(2);
-      //sipmsd->SetGrandMotherVolumeDepth(2);
+      ToFSD* sipmsd = new ToFSD(sdname);
 
+      if (sensor_depth_ == -1) 
+        G4Exception("[SiPMpetVUV]", "Construct()", FatalException,
+                    "Sensor depth must be set before constructing");
+      sipmsd->SetDetectorVolumeDepth(sensor_depth_);
+      sipmsd->SetMotherVolumeDepth(mother_depth_);
+      sipmsd->SetDetectorNamingOrder(naming_order_);
+      sipmsd->SetTimeBinning(time_binning_);
       G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
-      sipm_logic->SetSensitiveDetector(sipmsd);
+      active_logic->SetSensitiveDetector(sipmsd);
     }
 
     // Visibilities
