@@ -1064,6 +1064,36 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::PTFE_non_reflectant()
 }
 
 
+G4MaterialPropertiesTable* OpticalMaterialProperties::Pyrex_vidrasa()
+{
+  G4MaterialPropertiesTable* pyrex_mpt = new G4MaterialPropertiesTable();
+
+  // Refractive index and absorption lenth taken from:
+  // http://www.vidrasa.com/esp/productos/borofloat/borofloat_pf.html
+
+  const G4int ri_entries = 20;
+  G4double ri_energy[ri_entries] = {0.9263*eV, 2.2542*eV, 2.6338*eV, 3.2370*eV, 3.4768*eV,
+                                    3.6304*eV, 3.7125*eV, 3.7549*eV, 3.8204*eV, 3.8882*eV,
+                                    3.9114*eV, 3.9585*eV, 4.0562*eV, 4.3003*eV, 4.3198*eV,
+                                    4.3394*eV, 4.3792*eV, 4.4403*eV, 4.5678*eV, 6.1992*eV};
+
+  G4double abs_length[ri_entries] = {99.800*mm, 99.999*mm, 95.000*mm, 70.000*mm,
+                                     48.500*mm, 32.323*mm, 22.000*mm, 14.000*mm,
+                                      8.963*mm, 7.170*mm,  5.800*mm,   4.643*mm,
+                                      3.345*mm, 0.800*mm,  0.710*mm,   0.630*mm,
+                                      0.570*mm, 0.485*mm,  0.370*mm,   0.0*mm};
+  G4double ri_index[ri_entries];
+  for (int i=0; i<ri_entries; i++) {
+    ri_index[i] = 1.472;
+  }
+
+  pyrex_mpt->AddProperty("RINDEX", ri_energy, ri_index, ri_entries);
+  pyrex_mpt->AddProperty("ABSLENGTH", ri_energy, abs_length, ri_entries);
+
+  return pyrex_mpt;
+}
+
+
 G4MaterialPropertiesTable* OpticalMaterialProperties::TPB(G4double pressure, G4double temperature)
 {
 
