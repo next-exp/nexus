@@ -1,3 +1,8 @@
+tag_p7_01_00 - 26 Feb 2021
+	- Add PetBox geometry for the first set-up.
+	- Add possibility to store information about steps.
+	- Change the geometry of the SiPMs in the full body geometry.
+
 tag_p7_00_00 - 29 Oct 2020
 	- Change definition of sensitive detectors from pre to post step.
 	- Modify hdf5 output.
