@@ -697,41 +697,23 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
 
 G4MaterialPropertiesTable* OpticalMaterialProperties::LXe()
 {
+  /// The time constants are taken from E. Hogenbirk et al 2018 JINST 13 P10031
   XenonLiquidProperties LXe_prop;
   G4MaterialPropertiesTable* LXe_mpt = new G4MaterialPropertiesTable();
 
-   const G4int ri_entries = 18;
-   G4double ri_energy[ri_entries]
-  = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV,
-     7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV, 8*eV, 8.2*eV, 8.21*eV};
-
-  //  const G4int ri_entries = 38;
-  // G4double ri_energy[ri_entries]
-  //   = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV,
-  //      7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV, 8*eV, 8.2*eV, 8.4*eV, 8.6*eV, 8.8*eV,
-  //      9.*eV, 9.2*eV, 9.4*eV, 9.6*eV, 9.8*eV, 10.*eV, 10.2*eV, 10.4*eV, 10.6*eV, 10.8*eV,
-  //      11.*eV, 11.2*eV, 11.4*eV, 11.6*eV, 11.8*eV, 12.*eV, 12.2*eV, 12.4*eV};
-
-
-
-  // G4int ri_entries = 15;
-  // G4double ri_energy[ri_entries]
-  //   = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV, 7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV};
+  const G4int ri_entries = 18;
+  G4double ri_energy[ri_entries]
+    = {1*eV, 2*eV, 3*eV, 4*eV, 5*eV, 6*eV, 6.2*eV, 6.4*eV, 6.6*eV, 6.8*eV,
+       7*eV, 7.2*eV, 7.4*eV, 7.6*eV, 7.8*eV, 8*eV, 8.2*eV, 8.21*eV};
 
   G4double rindex[ri_entries];
-
-  //  XenonGasProperties GXe_prop(10.*bar, STP_Temperature);
 
   for (G4int i=0; i<ri_entries; i++) {
     rindex[i] = LXe_prop.RefractiveIndex(ri_energy[i]);
   }
 
   // for (G4int i=ri_entries-1; i>=0; i--) {
-  //   G4cout << h_Planck*c_light/ri_energy[i]/nanometer << ", " << G4endl;
-  // }
-
-  // for (G4int i=ri_entries-1; i>=0; i--) {
-  //   G4cout  << rindex[i] << ", " << G4endl;
+  //   G4cout << h_Planck*c_light/ri_energy[i]/nanometer << " nm, " << rindex[i] << G4endl;
   // }
 
   // Sampling from ~150 nm to 200 nm <----> from 6.20625 eV to 8.20625 eV
@@ -743,26 +725,15 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LXe()
   G4double intensity[sc_entries];
   LXe_prop.Scintillation(sc_entries, sc_energy, intensity);
 
-  // G4double int2[ri_entries];
-  //LXe_prop.Scintillation(ri_entries, ri_energy, int2);
-
-  // for (G4int i=0; i<ri_entries; i++) {
-  //   G4cout << ri_energy[i] << ", " << rindex[i] << ", " << int2[i] << G4endl;
-  // }
-
   LXe_mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
   LXe_mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
   LXe_mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
-  // LXe_mpt->AddProperty("ELSPECTRUM", sc_energy, intensity, sc_entries);
   LXe_mpt->AddConstProperty("SCINTILLATIONYIELD", 58708./MeV);
   LXe_mpt->AddConstProperty("RESOLUTIONSCALE", 1);
   LXe_mpt->AddConstProperty("RAYLEIGH", 36.*cm);
-  // check constants with the Aprile
-  LXe_mpt->AddConstProperty("FASTTIMECONSTANT", 2.2*ns);
-  LXe_mpt->AddConstProperty("SLOWTIMECONSTANT", 27.*ns);
-  //  LXe_mpt->AddConstProperty("SLOWTIMECONSTANT",40.*ns);
-  //  LXe_mpt->AddConstProperty("ELTIMECONSTANT", 50.*ns);
-  LXe_mpt->AddConstProperty("YIELDRATIO", 0.065);
+  LXe_mpt->AddConstProperty("FASTTIMECONSTANT", 2.*ns);
+  LXe_mpt->AddConstProperty("SLOWTIMECONSTANT", 43.5*ns);
+  LXe_mpt->AddConstProperty("YIELDRATIO", 0.03);
   LXe_mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
 
   G4double energy[2] = {0.01*eV, 100.*eV};
@@ -1339,9 +1310,9 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LYSO()
 
   // Refractive index taken by "Optical and Scintillation Properties of Inorganic Scintillators in High Energy Physics", R. Mao, Liyuan Zhang, and Ren-Yuan Zhu, IEEE TRANSACTIONS ON NUCLEAR SCIENCE, VOL. 55, NO. 4, AUGUST 2008
   // http://www.hep.caltech.edu/~zhu/papers/08_tns_crystal.pdf
+  // Scintillation spectrum extracted from
+  // https://www.crystals.saint-gobain.com/sites/imdf.crystals.com/files/documents/lyso-material-data-sheet.pdf
   const G4int ri_entries = 16;
-  // G4double ri_energy[ri_entries] = {1.9074*eV, 2.2708*eV, 2.4028*eV, 2.5511*eV, 2.6895*eV, 2.8437*eV, 2.9520*eV, 3.0613*eV, 3.2542*eV};
-  // G4double rindex[ri_entries] = { 1.802, 1.806, 1.810, 1.813, 1.818, 1.822, 1.827, 1.833, 1.842};
   G4double ri_energy[ri_entries] = {1.9074*eV, 2.0891*eV, 2.2708*eV,
 				    2.3368*eV, 2.4028*eV, 2.5511*eV, 2.6203*eV,
 				    2.6895*eV, 2.7665*eV, 2.8437*eV, 2.89785*eV,
@@ -1353,55 +1324,55 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LYSO()
 				  1.827, 1.830, 1.833,
 				  1.838, 1.842};
 
-  // for (G4int i=ri_entries-1; i>0; i--) {
-  //   G4cout << h_Planck*c_light/ri_energy[i]/nanometer << ", " << c_light/( rindex[i] + (rindex[i]-rindex[i-1])/(std::log(ri_energy[i]) - std::log(ri_energy[i-1]) ))/mm*picosecond << ": " << rindex[i]-rindex[i-1] << ", "
-  // 	   << std::log(ri_energy[i]) - std::log(ri_energy[i-1]) << G4endl;
-  // }
 
-  //  for (G4int i=ri_entries-1; i>=0; i--) {
   for (G4int i=1; i<ri_entries; i++) {
     G4cout  << rindex[i] << ", " << G4endl;
   }
 
- //  for (G4int i=1; i<ri_entries; i++) {
-//      G4cout  << ri_energy[i]/eV<< ", ";
-//    }
-//   G4cout << G4endl;
+  const G4int sc_entries = 63;
 
-// for (G4int i=1; i<ri_entries; i++) {
-//   G4cout << (rindex[i]-rindex[i-1])/(std::log(ri_energy[i]) - std::log(ri_energy[i-1]) ) << ", ";
-//  }
+ G4double sc_energy[] =
+   {1.9629408004008015*eV, 1.9908574214449701*eV, 2.017487971587794*eV, 2.049118407065618*eV,
+    2.075153360986118*eV, 2.1108921203127564*eV, 2.131530815691394*eV, 2.1549516183402426*eV,
+    2.1788791714153226*eV, 2.2008686890176556*eV, 2.225818446565337*eV, 2.2461704051922378*eV,
+    2.2774394451688957*eV, 2.2933838194379406*eV, 2.309537681443672*eV, 2.3287011454278184*eV,
+    2.34534235398821*eV, 2.365099103796332*eV, 2.382250183859144*eV, 2.4085359216953424*eV,
+    2.4233406375845*eV, 2.456622921785144*eV, 2.4782281493172356*eV, 2.503411781001508*eV,
+    2.52588828700936*eV, 2.5487533714262676*eV, 2.572055225192039*eV, 2.588926183988832*eV,
+    2.6025967807599906*eV, 2.623400276029348*eV, 2.6374283564632037*eV, 2.6588048713474666*eV,
+    2.6623164236046244*eV, 2.6877929388662145*eV, 2.713729981831732*eV, 2.7325282355525173*eV,
+    2.7593839494903407*eV, 2.7907427243849288*eV, 2.83096946231753*eV, 2.885218973585188*eV,
+    2.9197414497478893*eV, 2.9417873478198326*eV, 2.9732295992116424*eV, 2.991505736849123*eV,
+    3.005429157443019*eV, 3.0194959021101067*eV, 3.0242886485355824*eV, 3.0432131984421833*eV,
+    3.048094952090428*eV, 3.057784590715629*eV, 3.0675360309025064*eV, 3.0870759513756334*eV,
+    3.1271371999622284*eV, 3.1373650393337758*eV, 3.1527828353680922*eV, 3.1734564909877436*eV,
+    3.189158818959311*eV, 3.199797076377322*eV, 3.2210492254756646*eV, 3.242646039884366*eV,
+    3.2699528217360423*eV, 3.2976765066977722*eV, 3.3428842485014827*eV};
 
-  // const G4int sc_entries = 11;
-  // G4double sc_energy[sc_entries] =
-  //   {1.9074*eV, 2.2543*eV, 2.4797*eV, 2.5511*eV, 2.6436*eV, 2.6895*eV, 2.8437*eV, 2.8700*eV, 2.9520*eV, 3.0996*eV, 3.2542*eV};
 
-  // G4double intensity[sc_entries] = {0., 0.0643, 0.1929, 0.2500, 0.4, 0.5214, 0.9571, 1, 0.8286, 0.4071, 0.};
-const G4int sc_entries = 13;
-  G4double sc_energy[sc_entries] =
-    {1.9074*eV, 2.2543*eV, 2.4797*eV, 2.5511*eV, 2.6436*eV, 2.6895*eV, 2.8437*eV,
-      2.8700*eV, 2.9520*eV, 3.0258*eV, 3.0996*eV, 3.1769*eV, 3.2542*eV};
-
-  G4double intensity[sc_entries] = {0., 0.0643, 0.1929, 0.2500, 0.4, 0.5214, 0.9571,
-                                    1, 0.8286, 0.6, 0.4071, 0.2, 0.};
-
+ G4double intensity[sc_entries] = {0., 0.0704225352112644, 0.3521126760563362, 0.633802816901401,
+0.7746478873239369, 1.1971830985915446, 1.5492957746478881, 1.8309859154929529, 2.2535211267605604,
+2.676056338028168, 3.2394366197183047, 3.8732394366197203, 4.507042253521121, 5.0,
+5.633802816901407, 6.126760563380272, 6.901408450704224, 7.464788732394362, 8.38028169014084,
+9.014084507042256, 9.788732394366193, 10.985915492957744, 12.183098591549294, 13.38028169014084,
+14.29577464788732, 15.352112676056334, 16.267605633802816, 17.183098591549292, 17.816901408450704,
+18.591549295774648, 19.295774647887324, 20.0, 20.704225352112672, 21.338028169014088,
+22.183098591549296, 23.02816901408451, 23.59154929577465, 24.15492957746479, 24.788732394366196,
+24.507042253521124, 23.80281690140845, 23.09859154929577, 22.04225352112676, 21.408450704225352,
+20.56338028169014, 19.64788732394366, 18.943661971830984, 18.239436619718308,
+17.464788732394368, 16.549295774647888, 15.633802816901408, 14.577464788732392, 11.338028169014079,
+10.281690140845065, 8.943661971830984, 7.746478873239432, 6.760563380281688, 5.7042253521126725,
+4.718309859154921, 3.450704225352105, 2.3239436619718252, 1.4084507042253518, 0.};
 
 
 
   mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
   mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
-  mpt->AddConstProperty("FASTSCINTILLATIONRISETIME", 0.773703*ns); //1.7/Ln(9)
-  // mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
+  // S Seifert et al 2012 JINST 7 P09004
+  mpt->AddConstProperty("FASTSCINTILLATIONRISETIME", 0.072*ns); //1.7/Ln(9)
   mpt->AddConstProperty("SCINTILLATIONYIELD", 32000./MeV);
-  // mpt->AddConstProperty("SCINTILLATIONYIELD", 100./MeV);
   mpt->AddConstProperty("RESOLUTIONSCALE", 1);
-  //mpt->AddConstProperty("RAYLEIGH", 36000.*cm);
-  // check constants with the Aprile
   mpt->AddConstProperty("FASTTIMECONSTANT", 41*ns);
-  // mpt->AddConstProperty("SLOWTIMECONSTANT", 27.*ns);
-  //  LXe_mpt->AddConstProperty("SLOWTIMECONSTANT",40.*ns);
-  //  LXe_mpt->AddConstProperty("ELTIMECONSTANT", 50.*ns);
-  // mpt->AddConstProperty("YIELDRATIO", 1.);
 
   G4double energy[2] = {0.01*eV, 100.*eV};
   G4double abslen[2] = {41.2*cm, 41.2*cm};
