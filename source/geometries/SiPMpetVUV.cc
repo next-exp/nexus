@@ -32,7 +32,7 @@ namespace nexus {
 
   SiPMpetVUV::SiPMpetVUV(): BaseGeometry(),
 			    visibility_(0),
-			    refr_index_(1),
+			    refr_index_(1.6),
 			    eff_(1.),
                             time_binning_(1.*microsecond),
                             sensor_depth_(-1),
