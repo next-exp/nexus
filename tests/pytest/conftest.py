@@ -62,7 +62,7 @@ def base_name_pet_box_FBK():
 def nexus_params_pet_box_HamamatsuVUV(output_tmpdir, base_name_pet_box_HamamatsuVUV):
     n_sipm         = 128
     sipms_per_tile = 16
-    init_sns_id    = 1
+    init_sns_id    = 11
     sensor_name    = 'SiPMHmtsuVUV'
     return os.path.join(output_tmpdir, base_name_pet_box_HamamatsuVUV+'.h5'), n_sipm, sipms_per_tile, init_sns_id, sensor_name
 
@@ -70,7 +70,7 @@ def nexus_params_pet_box_HamamatsuVUV(output_tmpdir, base_name_pet_box_Hamamatsu
 def nexus_params_pet_box_HamamatsuBlue(output_tmpdir, base_name_pet_box_HamamatsuBlue):
     n_sipm         = 128
     sipms_per_tile = 16
-    init_sns_id    = 1
+    init_sns_id    = 11
     sensor_name    = 'SiPMHmtsuBlue'
     return os.path.join(output_tmpdir, base_name_pet_box_HamamatsuBlue+'.h5'), n_sipm, sipms_per_tile, init_sns_id, sensor_name
 
@@ -78,7 +78,7 @@ def nexus_params_pet_box_HamamatsuBlue(output_tmpdir, base_name_pet_box_Hamamats
 def nexus_params_pet_box_FBK(output_tmpdir, base_name_pet_box_FBK):
     n_sipm         = 512
     sipms_per_tile = 64
-    init_sns_id    = 1
+    init_sns_id    = 11
     sensor_name    = 'SiPMFBKVUV'
     return os.path.join(output_tmpdir, base_name_pet_box_FBK+'.h5'), n_sipm, sipms_per_tile, init_sns_id, sensor_name
 

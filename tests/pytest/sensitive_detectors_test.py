@@ -44,8 +44,9 @@ def test_sensor_ids_pet_box(nexus_pet_box_params):
      assert min(sipm_ids) >= init_sns_id
      assert sns_positions.sensor_name.unique() == sensor_name
 
-     sns_z_pos_left  = sns_positions[ sns_positions.sensor_id<nsipms/2].z.values
-     sns_z_pos_right = sns_positions[~sns_positions.sensor_id<nsipms/2].z.values
+     first_id_second_plane = 111
+     sns_z_pos_left  = sns_positions[ sns_positions.sensor_id<first_id_second_plane].z.values
+     sns_z_pos_right = sns_positions[~sns_positions.sensor_id<first_id_second_plane].z.values
      if len(sns_z_pos_left) > 0:
          assert len(np.unique(sns_z_pos_left)) == 1
          assert     np.unique(sns_z_pos_left)  < 0
