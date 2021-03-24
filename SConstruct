@@ -1,20 +1,19 @@
-### ------------------------------------------------------------------
+### ----------------------------------------------------------------------------
 ###  SConstruct - Building script for NEXUS
 ###
-###  Author : J. Martin-Albo <jmalbos@ific.uv.es>
-###  Created: 23 July 2009
-###  Version: $Id$
+###  Note.- The first time this script is executed, a configure-like step
+###  tries to find out where the header and libraries
+###  of all NEXUS dependencies are located. If it succeeds,
+###  this configuration is stored in a file and used in future builds
+###  until a clean is performed. The script tries to locate the dependencies
+###  by using pkg-config scripts or searching at common paths.
+###  This should work in most systems. However, if needed,
+###  users can provide via command-line (or the BUILDVARS_FILE)
+###  the system path to any dependency.
 ###
-###  Note.- First time this script is executed, a configure-like step
-###  tries to find out where are located the header and libraries
-###  of all NEXUS dependencies. If it succeeds, this configuration is
-###  stored in a file and used in future builds until a clean is
-###  performed. The script tries to locate the dependencies by using
-###  pkg-config scripts or searching at common paths. This should work
-###  in most systems. However, if needed, users can provide via
-###  command-line (or the BUILDVARS_FILE) the system path to any
-###  dependency.
-### ------------------------------------------------------------------
+### The NEXT Collaboration
+### ----------------------------------------------------------------------------
+
 from __future__ import print_function
 import os
 import subprocess
