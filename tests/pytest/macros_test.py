@@ -76,7 +76,7 @@ def test_run_examples(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, macro_list
             n = 1
         else:
             n = 20
-        nexus_exe  = NEXUSDIR + '/nexus'
+        nexus_exe  = NEXUSDIR + '/bin/nexus'
         command = [nexus_exe, '-b', '-n', str(n), init_macro]
         with capsys.disabled():
             print(f'Running {macro}')
