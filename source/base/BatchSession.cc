@@ -159,7 +159,7 @@ G4int BatchSession::ExecCommand(const G4String& command)
       break;
     default:
       G4int pn = rc%100;
-      msg = "Illegal parameter: ";
+      msg = "Illegal parameter: " + command;
       G4Exception("[BatchSession]", "ExecCommand()", FatalException, msg);
       G4cerr << "(" << pn << ") <" << command << ">" << G4endl;
   }
