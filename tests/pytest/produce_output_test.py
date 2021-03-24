@@ -63,7 +63,7 @@ def test_create_nexus_output_file_full_body(config_tmpdir, output_tmpdir, NEXUSD
      config_file.close()
 
      my_env    = os.environ
-     nexus_exe = NEXUSDIR + '/nexus'
+     nexus_exe = NEXUSDIR + '/bin/nexus'
      command   = [nexus_exe, '-b', '-n', '20', init_path]
      p         = subprocess.run(command, check=True, env=my_env)
 
@@ -122,7 +122,7 @@ def test_create_nexus_output_file_ring_tiles(config_tmpdir, output_tmpdir, NEXUS
      config_file.close()
 
      my_env    = os.environ
-     nexus_exe = NEXUSDIR + '/nexus'
+     nexus_exe = NEXUSDIR + '/bin/nexus'
      command   = [nexus_exe, '-b', '-n', '20', init_path]
      p         = subprocess.run(command, check=True, env=my_env)
 
@@ -170,6 +170,6 @@ def test_create_nexus_output_file_pet_box_all_tiles(config_tmpdir, output_tmpdir
      config_file.close()
 
      my_env    = os.environ
-     nexus_exe = NEXUSDIR + '/nexus'
+     nexus_exe = NEXUSDIR + '/bin/nexus'
      command   = [nexus_exe, '-b', '-n', '20', init_path]
      p         = subprocess.run(command, check=True, env=my_env)
