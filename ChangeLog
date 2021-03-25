@@ -1,3 +1,6 @@
+tag v6_02_01 - 25 Mar 2021
+	- Fix IDs of DEMO++ PMTs.
+
 tag v6_02_00 - 17 Feb 2021
 	- Add a new generator in the EL gap for light table production.
 	- Fix the composition of ITO to the best of our knowledge.
