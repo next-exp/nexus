@@ -85,7 +85,7 @@ def flex100_detector(nexus_full_output_file_flex100):
 
 @pytest.fixture(scope = 'session')
 def demopp_detector(nexus_full_output_file_demopp):
-    pmt_ids         = [0, 1, 2]
+    pmt_ids         = [2, 3, 4]
     board_ids       = [14, 15, 16, 17]
     sipms_per_board = 64
     board_ordering  = 1000
