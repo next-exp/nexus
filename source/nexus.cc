@@ -1,12 +1,9 @@
 // ----------------------------------------------------------------------------
-///  \file   nexus.cc
-///  \brief  Main program
-///
-///  \author   Justo Martin-Albo <jmalbos@ific.uv.es>    
-///  \date     2 Apr 2009
-///  \version  $Id$
-///
-///  Copyright (c) 2009-2013 NEXT Collaboration. All rights reserved.
+// nexus | nexus.cc
+//
+// This is the main program of nexus.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "NexusApp.h"
@@ -14,11 +11,9 @@
 #include <G4UImanager.hh>   
 #include <G4UIterminal.hh>  
 #include <G4UItcsh.hh> 
-//#include <Randomize.hh>
 #include <G4VisExecutive.hh>
 
 #include <getopt.h>
-//#include <time.h>
 
 using namespace nexus;
 
