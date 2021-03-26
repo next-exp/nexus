@@ -135,7 +135,7 @@ namespace nexus {
     db_opsur->SetSigmaAlpha(0.1);
 
     //db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_with_TPB());
-    db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE_LXe(refl_));
+    db_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::ReflectantSurface(refl_));
 
     new G4LogicalSkinSurface("DICE_BOARD", board_logic, db_opsur);
 
