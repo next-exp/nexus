@@ -83,8 +83,6 @@ namespace nexus {
 
     G4ParticleDefinition* particle_definition =
       G4ParticleTable::GetParticleTable()->FindParticle("gamma");
-    // Set charges to PDG value
-    G4double charge = particle_definition->GetPDGCharge();
 
     G4ThreeVector momentum_direction = G4RandomDirection();
 
