@@ -97,14 +97,13 @@ namespace nexus {
     }
 
 
-    G4ThreeVector position = geom_->GenerateVertex(region_);
-    G4double time = 0.;
-    G4PrimaryVertex* vertex = new G4PrimaryVertex(position, time);
+    auto position = geom_->GenerateVertex(region_);
+    auto time = 0 * sec;
+    auto vertex = new G4PrimaryVertex(position, time);
 
-    G4ParticleDefinition* gamma =
-      G4ParticleTable::GetParticleTable()->FindParticle("gamma");
+    auto gamma = G4ParticleTable::GetParticleTable()->FindParticle("gamma");
 
-    G4double p = 510.999*keV * G4RandomDirection();
+    auto p = 510.999*keV * G4RandomDirection();
 
     vertex->SetPrimary(new G4PrimaryParticle(gamma,  p.x(),  p.y(),  p.z()));
     vertex->SetPrimary(new G4PrimaryParticle(gamma, -p.x(), -p.y(), -p.z()));
