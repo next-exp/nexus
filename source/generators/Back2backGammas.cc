@@ -103,16 +103,10 @@ namespace nexus {
       }
     }
 
-    G4ThreeVector momentum_direction = G4RandomDirection();
+    G4double p = 510.999*keV * G4RandomDirection();
 
-    // Calculate cartesian components of momentum
-    G4double pmod = 510.999*keV;
-    G4double px = pmod * momentum_direction.x();
-    G4double py = pmod * momentum_direction.y();
-    G4double pz = pmod * momentum_direction.z();
-
-    vertex->SetPrimary(new G4PrimaryParticle(particle_definition,  px,  py,  pz));
-    vertex->SetPrimary(new G4PrimaryParticle(particle_definition, -px, -py, -pz));
+    vertex->SetPrimary(new G4PrimaryParticle(particle_definition,  p.x(),  p.y(),  p.z()));
+    vertex->SetPrimary(new G4PrimaryParticle(particle_definition, -p.x(), -p.y(), -p.z()));
 
     evt->AddPrimaryVertex(vertex);
 
