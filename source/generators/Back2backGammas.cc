@@ -114,13 +114,8 @@ namespace nexus {
       }
     }
 
-     G4PrimaryParticle* particle1 =
-       new G4PrimaryParticle(particle_definition, px, py, pz);
-    vertex->SetPrimary(particle1);
-
-    G4PrimaryParticle* particle2 =
-      new G4PrimaryParticle(particle_definition, -px, -py, -pz);
-    vertex->SetPrimary(particle2);
+    vertex->SetPrimary(new G4PrimaryParticle(particle_definition,  px,  py,  pz));
+    vertex->SetPrimary(new G4PrimaryParticle(particle_definition, -px, -py, -pz));
 
     evt->AddPrimaryVertex(vertex);
 
