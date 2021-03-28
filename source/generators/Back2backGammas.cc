@@ -96,7 +96,7 @@ namespace nexus {
     }
 
     auto position = geom_->GenerateVertex(region_);
-    auto time = 0 * sec;
+    auto time = 0.;
     auto vertex = new G4PrimaryVertex(position, time);
     auto gamma = G4ParticleTable::GetParticleTable()->FindParticle("gamma");
     auto p = 510.999*keV * G4RandomDirection();
