@@ -81,7 +81,7 @@ namespace nexus {
     G4PrimaryVertex* vertex =
         new G4PrimaryVertex(position, time);
 
-    G4ParticleDefinition* particle_definition =
+    G4ParticleDefinition* gamma =
       G4ParticleTable::GetParticleTable()->FindParticle("gamma");
 
     if (costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. || phi_max_ != 2.*pi) {
