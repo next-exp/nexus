@@ -76,6 +76,8 @@ namespace nexus {
   {
     // Ask the geometry to generate a position for the particle
 
+    G4ThreeVector momentum_direction = G4RandomDirection();
+
     if (costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. || phi_max_ != 2.*pi) {
       G4bool mom_dir = false;
       while (mom_dir == false) {
@@ -99,7 +101,7 @@ namespace nexus {
     auto time = 0.;
     auto vertex = new G4PrimaryVertex(position, time);
     auto gamma = G4ParticleTable::GetParticleTable()->FindParticle("gamma");
-    auto p = 510.999*keV * G4RandomDirection();
+    auto p = 510.999*keV * momentum_direction;
 
     vertex->SetPrimary(new G4PrimaryParticle(gamma,  p.x(),  p.y(),  p.z()));
     vertex->SetPrimary(new G4PrimaryParticle(gamma, -p.x(), -p.y(), -p.z()));
