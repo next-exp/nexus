@@ -83,16 +83,13 @@ namespace nexus {
 
     G4ParticleDefinition* particle_definition =
       G4ParticleTable::GetParticleTable()->FindParticle("gamma");
-    // Set masses to PDG values
-    G4double mass = particle_definition->GetPDGMass();
     // Set charges to PDG value
     G4double charge = particle_definition->GetPDGCharge();
 
     G4ThreeVector momentum_direction = G4RandomDirection();
 
     // Calculate cartesian components of momentum
-    G4double energy = 510.999*keV + mass;
-    G4double pmod = std::sqrt(energy*energy - mass*mass);
+    G4double pmod = 510.999*keV;
     G4double px = pmod * momentum_direction.x();
     G4double py = pmod * momentum_direction.y();
     G4double pz = pmod * momentum_direction.z();
