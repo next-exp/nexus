@@ -84,14 +84,6 @@ namespace nexus {
     G4ParticleDefinition* particle_definition =
       G4ParticleTable::GetParticleTable()->FindParticle("gamma");
 
-    G4ThreeVector momentum_direction = G4RandomDirection();
-
-    // Calculate cartesian components of momentum
-    G4double pmod = 510.999*keV;
-    G4double px = pmod * momentum_direction.x();
-    G4double py = pmod * momentum_direction.y();
-    G4double pz = pmod * momentum_direction.z();
-
     if (costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. || phi_max_ != 2.*pi) {
       G4bool mom_dir = false;
       while (mom_dir == false) {
@@ -106,13 +98,18 @@ namespace nexus {
             momentum_direction = G4ThreeVector(sinTheta*std::cos(phi),
                                                sinTheta*std::sin(phi),
                                                cosTheta).unit();
-            px = pmod * momentum_direction.x();
-            py = pmod * momentum_direction.y();
-            pz = pmod * momentum_direction.z();
           }
         }
       }
     }
+
+    G4ThreeVector momentum_direction = G4RandomDirection();
+
+    // Calculate cartesian components of momentum
+    G4double pmod = 510.999*keV;
+    G4double px = pmod * momentum_direction.x();
+    G4double py = pmod * momentum_direction.y();
+    G4double pz = pmod * momentum_direction.z();
 
     vertex->SetPrimary(new G4PrimaryParticle(particle_definition,  px,  py,  pz));
     vertex->SetPrimary(new G4PrimaryParticle(particle_definition, -px, -py, -pz));
