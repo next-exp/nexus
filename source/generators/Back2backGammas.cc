@@ -74,15 +74,8 @@ namespace nexus {
 
   void Back2backGammas::GeneratePrimaryVertex(G4Event* evt)
   {
+
     // Ask the geometry to generate a position for the particle
-
-    G4ThreeVector position = geom_->GenerateVertex(region_);
-    G4double time = 0.;
-    G4PrimaryVertex* vertex =
-        new G4PrimaryVertex(position, time);
-
-    G4ParticleDefinition* gamma =
-      G4ParticleTable::GetParticleTable()->FindParticle("gamma");
 
     if (costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. || phi_max_ != 2.*pi) {
       G4bool mom_dir = false;
@@ -103,10 +96,18 @@ namespace nexus {
       }
     }
 
+
+    G4ThreeVector position = geom_->GenerateVertex(region_);
+    G4double time = 0.;
+    G4PrimaryVertex* vertex = new G4PrimaryVertex(position, time);
+
+    G4ParticleDefinition* gamma =
+      G4ParticleTable::GetParticleTable()->FindParticle("gamma");
+
     G4double p = 510.999*keV * G4RandomDirection();
 
-    vertex->SetPrimary(new G4PrimaryParticle(particle_definition,  p.x(),  p.y(),  p.z()));
-    vertex->SetPrimary(new G4PrimaryParticle(particle_definition, -p.x(), -p.y(), -p.z()));
+    vertex->SetPrimary(new G4PrimaryParticle(gamma,  p.x(),  p.y(),  p.z()));
+    vertex->SetPrimary(new G4PrimaryParticle(gamma, -p.x(), -p.y(), -p.z()));
 
     evt->AddPrimaryVertex(vertex);
 
