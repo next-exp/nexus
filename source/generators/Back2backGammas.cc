@@ -121,16 +121,10 @@ namespace nexus {
 
      G4PrimaryParticle* particle1 =
        new G4PrimaryParticle(particle_definition, px, py, pz);
-    particle1->SetMass(mass);
-    particle1->SetCharge(charge);
-    particle1->SetPolarization(0.,0.,0.);
     vertex->SetPrimary(particle1);
 
     G4PrimaryParticle* particle2 =
       new G4PrimaryParticle(particle_definition, -px, -py, -pz);
-    particle2->SetMass(mass);
-    particle2->SetCharge(charge);
-    particle2->SetPolarization(0.,0.,0.);
     vertex->SetPrimary(particle2);
 
     evt->AddPrimaryVertex(vertex);
