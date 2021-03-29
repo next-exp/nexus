@@ -100,9 +100,10 @@ namespace nexus {
 
     if (costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. || phi_max_ != 2.*pi) {
       G4ThreeVector p = nexus::Direction(costheta_min_, costheta_max_, phi_min_, phi_max_);
-      px = p.x() * pmod;
-      py = p.y() * pmod;
-      pz = p.z() * pmod;
+      p = p * pmod;
+      px = p.x();
+      py = p.y();
+      pz = p.z();
     }
 
      G4PrimaryParticle* particle1 =
