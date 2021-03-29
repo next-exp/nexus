@@ -15,6 +15,7 @@
 
 #include "DetectorConstruction.h"
 #include "BaseGeometry.h"
+#include "RandomUtils.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4ParticleDefinition.hh>
@@ -120,7 +121,7 @@ void SingleParticle::GeneratePrimaryVertex(G4Event* event)
   G4PrimaryVertex* vertex = new G4PrimaryVertex(position, time);
 
   // Generate uniform random energy in [E_min, E_max]
-  G4double kinetic_energy = RandomEnergy();
+  G4double kinetic_energy = nexus::RandomEnergy(energy_max_,energy_min_); //////////////////////changes here
 
   // Generate random direction by default
   G4ThreeVector momentum_direction_ = G4RandomDirection();
@@ -143,24 +144,10 @@ void SingleParticle::GeneratePrimaryVertex(G4Event* event)
     py = pmod * momentum_Y_/mom_mod;
     pz = pmod * momentum_Z_/mom_mod;
   } else if (costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. || phi_max_ !=2.*pi) {
-    G4bool mom_dir = false;
-    while (mom_dir == false) {
-      G4double cosTheta  = 2.*G4UniformRand()-1.;
-      if (cosTheta > costheta_min_ && cosTheta < costheta_max_){
-	G4double sinTheta2 = 1. - cosTheta*cosTheta;
-	if( sinTheta2 < 0.)  sinTheta2 = 0.;
-	G4double sinTheta  = std::sqrt(sinTheta2);
-	G4double phi = twopi*G4UniformRand();
-	  if (phi > phi_min_ && phi < phi_max_){
-	    mom_dir = true;
-	    momentum_direction_ = G4ThreeVector(sinTheta*std::cos(phi),
-						sinTheta*std::sin(phi), cosTheta).unit();
-	    px = pmod * momentum_direction_.x();
-	    py = pmod * momentum_direction_.y();
-	    pz = pmod * momentum_direction_.z();
-	  }
-      }
-    }
+    G4ThreeVector p = nexus::Direction(costheta_min_, costheta_max_, phi_min_, phi_max_);
+    px = p.x();
+    py = p.y();
+    pz = p.z();
   }
 
   // Create the new primary particle and set it some properties
@@ -176,14 +163,4 @@ void SingleParticle::GeneratePrimaryVertex(G4Event* event)
     // Add particle to the vertex and this to the event
   vertex->SetPrimary(particle);
   event->AddPrimaryVertex(vertex);
-}
-
-
-
-G4double SingleParticle::RandomEnergy() const
-{
-  if (energy_max_ == energy_min_)
-    return energy_min_;
-  else
-    return (G4UniformRand()*(energy_max_ - energy_min_) + energy_min_);
 }
