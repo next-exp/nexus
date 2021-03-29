@@ -75,55 +75,25 @@ namespace nexus {
 
   void Back2backGammas::GeneratePrimaryVertex(G4Event* evt)
   {
-    // Ask the geometry to generate a position for the particle
+    G4ParticleDefinition* gamma =
+      G4ParticleTable::GetParticleTable()->FindParticle("gamma");
+
+    auto p = 510.999 * keV * (
+      (costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. || phi_max_ != 2.*pi) ?
+      nexus::Direction(costheta_min_, costheta_max_, phi_min_, phi_max_)                   :
+      G4RandomDirection());
 
     G4ThreeVector position = geom_->GenerateVertex(region_);
     G4double time = 0.;
-    G4PrimaryVertex* vertex =
-        new G4PrimaryVertex(position, time);
+    auto vertex = new G4PrimaryVertex(position, time);
 
-    G4ParticleDefinition* particle_definition =
-      G4ParticleTable::GetParticleTable()->FindParticle("gamma");
-    // Set masses to PDG values
-    G4double mass = particle_definition->GetPDGMass();
-    // Set charges to PDG value
-    G4double charge = particle_definition->GetPDGCharge();
-
-    G4ThreeVector momentum_direction = G4RandomDirection();
-
-    // Calculate cartesian components of momentum
-    G4double energy = 510.999*keV + mass;
-    G4double pmod = std::sqrt(energy*energy - mass*mass);
-    G4double px = pmod * momentum_direction.x();
-    G4double py = pmod * momentum_direction.y();
-    G4double pz = pmod * momentum_direction.z();
-
-    if (costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. || phi_max_ != 2.*pi) {
-      G4ThreeVector p = nexus::Direction(costheta_min_, costheta_max_, phi_min_, phi_max_);
-      p = p * pmod;
-      px = p.x();
-      py = p.y();
-      pz = p.z();
-    }
-
-     G4PrimaryParticle* particle1 =
-       new G4PrimaryParticle(particle_definition, px, py, pz);
-    particle1->SetMass(mass);
-    particle1->SetCharge(charge);
-    particle1->SetPolarization(0.,0.,0.);
-    vertex->SetPrimary(particle1);
-
-    G4PrimaryParticle* particle2 =
-      new G4PrimaryParticle(particle_definition, -px, -py, -pz);
-    particle2->SetMass(mass);
-    particle2->SetCharge(charge);
-    particle2->SetPolarization(0.,0.,0.);
-    vertex->SetPrimary(particle2);
+    vertex->SetPrimary(new G4PrimaryParticle(gamma,  p.x(),  p.y(),  p.z()));
+    vertex->SetPrimary(new G4PrimaryParticle(gamma, -p.x(), -p.y(), -p.z()));
 
     evt->AddPrimaryVertex(vertex);
 
-    theta_angle_->Fill(pz);
-    phi_angle_->Fill(std::atan2(py, px));
+    theta_angle_->Fill(p.z());
+    phi_angle_->Fill(std::atan2(p.y(), p.x()));
   }
 
 }
