@@ -121,8 +121,8 @@ namespace nexus {
 
     evt->AddPrimaryVertex(vertex);
 
-    theta_angle_->Fill(momentum_direction.z());
-    phi_angle_->Fill(std::atan2(momentum_direction.y(), momentum_direction.x()));
+    theta_angle_->Fill(pz);
+    phi_angle_->Fill(std::atan2(py, px));
   }
 
 }
