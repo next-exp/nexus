@@ -26,15 +26,13 @@ namespace nexus {
   G4ThreeVector Direction(G4double costheta_min, G4double costheta_max,
                           G4double phi_min, G4double phi_max)
   {
-    G4bool dir = false;
-    while (dir == false) {
+    while (true) {
       G4double cosTheta  = 2.*G4UniformRand()-1.;
       if (cosTheta > costheta_min && cosTheta < costheta_max){
         G4double sinTheta2 = 1. - cosTheta*cosTheta;
         if (sinTheta2 < 0.)  sinTheta2 = 0.;
         G4double sinTheta  = std::sqrt(sinTheta2);
-        G4bool phi_component = false;
-        while (phi_component == false) {
+        while (true) {
           G4double phi = CLHEP::twopi*G4UniformRand();
           if (phi > phi_min && phi < phi_max){
             return G4ThreeVector (sinTheta*std::cos(phi),
