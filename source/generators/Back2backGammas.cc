@@ -72,36 +72,43 @@ namespace nexus {
     out_file_->Close();
   }
 
+  // Make this a free function which takes all its inputs as parameters. In that
+  // way it can be placed in a collection of utilities and used wherever this
+  // angle-restriction idea is needed. The previous implementation, by depending
+  // on attributes of this class, coupled it tightly to this class, thereby
+  // encouraging copy-paste code reuse ... which is the root of all evil in HEP
+  // programming. An added benefit of it being a simple, pure function is that
+  // it becomes very easy to test, in isolation of any other concerns.
+  G4ThreeVector AngleConstrainedRandomDirection(G4double costheta_min, G4double costheta_max, G4double phi_min, G4double phi_max) {
+    while (true) {
+      G4double cosTheta = 2 * G4UniformRand() - 1;
+      if (cosTheta > costheta_min && cosTheta < costheta_max) {
+        G4double sinTheta2 = 1 - cosTheta*cosTheta;
+        if (sinTheta2 < 0) {sinTheta2 = 0;}
+        G4double sinTheta = std::sqrt(sinTheta2);
+        G4double phi = twopi*G4UniformRand();
+        if (phi > phi_min && phi < phi_max){
+          return G4ThreeVector{sinTheta*std::cos(phi),
+                               sinTheta*std::sin(phi),
+                               cosTheta}.unit();
+        }
+      }
+    }
+  }
+
   void Back2backGammas::GeneratePrimaryVertex(G4Event* evt)
   {
     // Ask the geometry to generate a position for the particle
 
-    G4ThreeVector momentum_direction = G4RandomDirection();
-
-    if (costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. || phi_max_ != 2.*pi) {
-      G4bool mom_dir = false;
-      while (mom_dir == false) {
-        G4double cosTheta  = 2.*G4UniformRand()-1.;
-        if (cosTheta > costheta_min_ && cosTheta < costheta_max_){
-          G4double sinTheta2 = 1. - cosTheta*cosTheta;
-          if( sinTheta2 < 0.)  sinTheta2 = 0.;
-          G4double sinTheta  = std::sqrt(sinTheta2);
-          G4double phi = twopi*G4UniformRand();
-          if (phi > phi_min_ && phi < phi_max_){
-            mom_dir = true;
-            momentum_direction = G4ThreeVector(sinTheta*std::cos(phi),
-                                               sinTheta*std::sin(phi),
-                                               cosTheta).unit();
-          }
-        }
-      }
-    }
-
+    G4ThreeVector momentum_direction =
+     (costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. || phi_max_ != 2.*pi)   ?
+      AngleConstrainedRandomDirection(costheta_min_, costheta_max_, phi_min_, phi_max_)     :
+      G4RandomDirection();
+    auto p = 510.999*keV * momentum_direction;
     auto position = geom_->GenerateVertex(region_);
     auto time = 0.;
     auto vertex = new G4PrimaryVertex(position, time);
     auto gamma = G4ParticleTable::GetParticleTable()->FindParticle("gamma");
-    auto p = 510.999*keV * momentum_direction;
 
     vertex->SetPrimary(new G4PrimaryParticle(gamma,  p.x(),  p.y(),  p.z()));
     vertex->SetPrimary(new G4PrimaryParticle(gamma, -p.x(), -p.y(), -p.z()));
