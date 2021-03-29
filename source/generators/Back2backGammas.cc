@@ -14,6 +14,7 @@
 #include "G4Event.hh"
 #include "DetectorConstruction.h"
 #include "BaseGeometry.h"
+#include "RandomUtils.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4RunManager.hh>
@@ -98,25 +99,10 @@ namespace nexus {
     G4double pz = pmod * momentum_direction.z();
 
     if (costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. || phi_max_ != 2.*pi) {
-      G4bool mom_dir = false;
-      while (mom_dir == false) {
-	G4double cosTheta  = 2.*G4UniformRand()-1.;
-	if (cosTheta > costheta_min_ && cosTheta < costheta_max_){
-	  G4double sinTheta2 = 1. - cosTheta*cosTheta;
-	  if( sinTheta2 < 0.)  sinTheta2 = 0.;
-	  G4double sinTheta  = std::sqrt(sinTheta2);
-	  G4double phi = twopi*G4UniformRand();
-	  if (phi > phi_min_ && phi < phi_max_){
-	    mom_dir = true;
-	    momentum_direction = G4ThreeVector(sinTheta*std::cos(phi),
-					       sinTheta*std::sin(phi),
-                                               cosTheta).unit();
-	    px = pmod * momentum_direction.x();
-	    py = pmod * momentum_direction.y();
-	    pz = pmod * momentum_direction.z();
-	  }
-	}
-      }
+      G4ThreeVector p = nexus::Direction(costheta_min_, costheta_max_, phi_min_, phi_max_);
+      px = p.x() * pmod;
+      py = p.y() * pmod;
+      pz = p.z() * pmod;
     }
 
      G4PrimaryParticle* particle1 =
