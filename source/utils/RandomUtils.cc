@@ -33,11 +33,14 @@ namespace nexus {
         G4double sinTheta2 = 1. - cosTheta*cosTheta;
         if (sinTheta2 < 0.)  sinTheta2 = 0.;
         G4double sinTheta  = std::sqrt(sinTheta2);
-        G4double phi = CLHEP::twopi*G4UniformRand();
-        if (phi > phi_min && phi < phi_max){
-          return G4ThreeVector (sinTheta*std::cos(phi),
-                                sinTheta*std::sin(phi),
-                                cosTheta).unit();
+        G4bool phi_component = false;
+        while (phi_component == false) {
+          G4double phi = CLHEP::twopi*G4UniformRand();
+          if (phi > phi_min && phi < phi_max){
+            return G4ThreeVector (sinTheta*std::cos(phi),
+                                  sinTheta*std::sin(phi),
+                                  cosTheta).unit();
+          }
         }
       }
     }
