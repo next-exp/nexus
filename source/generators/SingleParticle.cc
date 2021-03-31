@@ -35,7 +35,7 @@ using namespace CLHEP;
 
 SingleParticle::SingleParticle():
 G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
-energy_min_(0.), energy_max_(0.), geom_(0),
+energy_min_(0.), energy_max_(0.), geom_(0), momentum_{},
 costheta_min_(-1.), costheta_max_(1.),
 phi_min_(0.), phi_max_(2.*pi)
 {
