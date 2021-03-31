@@ -130,8 +130,7 @@ void SingleParticle::GeneratePrimaryVertex(G4Event* event)
   G4ThreeVector p = pmod * p_dir;
 
   // Create the new primary particle and set it some properties
-  G4PrimaryParticle* particle =
-    new G4PrimaryParticle(particle_definition_, p.x(), p.y(), p.z());
+  auto particle = new G4PrimaryParticle(particle_definition_, p.x(), p.y(), p.z());
 
   // Set random polarization
   if (particle_definition_ == G4OpticalPhoton::Definition()) {
