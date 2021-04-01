@@ -122,7 +122,7 @@ void SingleParticle::GeneratePrimaryVertex(G4Event* event)
   if (fixed_momentum) { // if the user provides a momentum direction
     p_dir = momentum_.unit();
   } else if (restrict_angle) { // if the user provides a range of angles
-    p_dir = nexus::Direction(costheta_min_, costheta_max_, phi_min_, phi_max_);
+    p_dir = Direction(costheta_min_, costheta_max_, phi_min_, phi_max_);
   } else {
     p_dir = G4RandomDirection();
   }
