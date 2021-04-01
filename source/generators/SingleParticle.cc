@@ -108,7 +108,7 @@ void SingleParticle::SetParticleDefinition(G4String particle_name)
 void SingleParticle::GeneratePrimaryVertex(G4Event* event)
 {
   // Generate uniform random energy in [E_min, E_max]
-  G4double kinetic_energy = nexus::RandomEnergy(energy_max_, energy_min_);
+  G4double kinetic_energy = nexus::UniformRandomInRange(energy_max_, energy_min_);
 
   // Calculate cartesian components of momentum
   G4double mass   = particle_definition_->GetPDGMass();
