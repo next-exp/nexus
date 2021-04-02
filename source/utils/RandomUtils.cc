@@ -13,7 +13,7 @@
 
 namespace nexus {
 
-  G4double UniformRandomInRange(G4double max_value,G4double min_value)
+  G4double UniformRandomInRange(G4double max_value, G4double min_value)
   {
     if (max_value == min_value){
       return min_value;
