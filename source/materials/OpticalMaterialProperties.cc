@@ -13,7 +13,7 @@
 
 #include <G4MaterialPropertiesTable.hh>
 
-#include <assert.h>
+#include <cassert>
 
 using namespace nexus;
 using namespace CLHEP;
@@ -122,7 +122,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::EpoxyLXeRefr()
   // ABSORPTION LENGTH
 
   std::vector<G4double> abs_energy = {optPhotMinE_, optPhotMaxE_};
-  std::vector<G4double> abs_length  = {noAbsLength_, noAbsLength_};
+  std::vector<G4double> abs_length = {noAbsLength_, noAbsLength_};
 
   assert(abs_energy.size() == abs_length.size());
   mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
