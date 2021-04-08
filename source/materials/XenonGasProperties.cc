@@ -242,7 +242,7 @@ namespace nexus {
   void XenonGasProperties::Scintillation
   (std::vector<G4double>& energy, std::vector<G4double>& intensity)
   {
-    for (G4int i=0; i<energy.size(); i++)
+    for (unsigned i=0; i<energy.size(); i++)
       intensity.push_back(Scintillation(energy[i]));
   }
 
