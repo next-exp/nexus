@@ -31,7 +31,6 @@ namespace nexus {
     G4double RefractiveIndex(G4double energy);
 
     G4double Scintillation(G4double energy);
-    void Scintillation(G4int entries, G4double* energy, G4double* intensity);
     void Scintillation(std::vector<G4double>& energy, std::vector<G4double>& intensity);
 
   private:
