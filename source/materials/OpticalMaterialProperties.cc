@@ -58,13 +58,11 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Epoxy()
   std::vector<G4double> abs_energy =
     {optPhotMinE_, 2.132*eV, 2.735*eV, 2.908*eV, 3.119*eV,
      3.320*eV, 3.476*eV, 3.588*eV, 3.749*eV, 3.869*eV,
-     3.973*eV, 4.120*eV, 4.224*eV, 4.320*eV, 4.420*eV,
-     5.018*eV, 8.*eV, optPhotMaxE_};
+     3.973*eV, 4.120*eV, optPhotMaxE_};
   std::vector<G4double> abs_length =
     {15000.*cm, 326.*mm, 117.68*mm, 85.89*mm, 50.93*mm,
      31.25*mm, 17.19*mm, 10.46*mm, 5.26*mm, 3.77*mm,
-     2.69*mm, 1.94*mm, 1.94*mm, 1.94*mm, 1.94*mm,
-     1.94*mm, 1.94*mm, 1.94*mm};
+     2.69*mm, 1.94*mm, 1.94*mm};
 
   assert(abs_energy.size() == abs_length.size());
   mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
