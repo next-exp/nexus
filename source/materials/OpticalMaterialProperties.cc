@@ -332,27 +332,32 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GAr(G4double sc_yield)
   // REFRACTIVE INDEX
   const G4int ri_entries = 200;
 
-  G4double ri_energy[ri_entries];
+  std::vector<G4double> ri_energy;
   for (int i=0; i<ri_entries; i++) {
-    ri_energy[i] = (1 + i*0.049)*eV;
+    ri_energy.push_back((1 + i*0.049)*eV);
   }
 
-  G4double rindex[ri_entries];
+  std::vector<G4double> ri_index;
 
   for (int i=0; i<ri_entries; i++) {
     G4double lambda = h_Planck*c_light/ri_energy[i]*1000; // in micron
-    rindex[i] = 1 + 0.012055*(0.2075*pow(lambda,2)/(91.012*pow(lambda,2)-1) +
-    0.0415*pow(lambda,2)/(87.892*pow(lambda,2)-1) + 4.3330*pow(lambda,2)/(214.02*pow(lambda,2)-1)); // From refractiveindex.info
+    ri_index.push_back(1 + 0.012055*(0.2075*pow(lambda,2)/(91.012*pow(lambda,2)-1) +
+                                     0.0415*pow(lambda,2)/(87.892*pow(lambda,2)-1) +
+                                     4.3330*pow(lambda,2)/(214.02*pow(lambda,2)-1)));
+    // From refractiveindex.info
     //    std::cout << "rindex = " << rindex[i] << std::endl;
   }
+
+  assert(ri_energy.size() == ri_index.size());
+  mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
 
   // EMISSION SPECTRUM
   // Sampling from ~110 nm to 150 nm <----> from ~11.236 eV to 8.240 eV
   const G4int sc_entries = 380;
-  G4double sc_energy[sc_entries];
-  G4double intensity[sc_entries];
+  std::vector<G4double> sc_energy;
+  std::vector<G4double> intensity;
 
-  G4double Wavelength_peak = 128.*nm;
+  G4double Wavelength_peak  = 128.*nm;
   G4double Wavelength_sigma = 2.929*nm;
 
   G4double Energy_peak = (h_Planck*c_light/Wavelength_peak);
@@ -361,23 +366,24 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GAr(G4double sc_yield)
   //  std::cout << "Energy_peak = " << Energy_peak << std::endl;
 
   for (int j=0;j<sc_entries;j++){
-    sc_energy[j] = 8.240*eV + 0.008*j*eV;
-    intensity[j] = exp(-pow(Energy_peak/eV-sc_energy[j]/eV,2)/(2*pow(Energy_sigma/eV, 2)))/(Energy_sigma/eV*sqrt(pi*2.));
+    sc_energy.push_back(8.240*eV + 0.008*j*eV);
+    intensity.push_back(exp(-pow(Energy_peak/eV-sc_energy[j]/eV,2)/(2*pow(Energy_sigma/eV, 2)))/(Energy_sigma/eV*sqrt(pi*2.)));
     //    std::cout << "(energy, intensity) = (" << sc_energy[j] << "," << intensity[j] << ")" << std::endl;
   }
 
+  assert(sc_energy.size() == intensity.size());
+  mpt->AddProperty("SLOWCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
+  mpt->AddProperty("FASTCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
+  mpt->AddProperty("ELSPECTRUM", sc_energy.data(), intensity.data(), sc_energy.size());
+
   // ABSORTION LENGTH
-  G4double energy[2] = {0.01*eV, 100.*eV};
-  G4double abslen[2] = {1.e8*m, 1.e8*m};
-  mpt->AddProperty("ABSLENGTH", energy, abslen, 2);
+  std::vector<G4double> energy = {0.01*eV, 100.*eV};
+  std::vector<G4double> abslen = {1.e8*m, 1.e8*m};
+  mpt->AddProperty("ABSLENGTH", energy.data(), abslen.data(), energy.size());
 
 //An argon gas proportional scintillation counter with UV avalanche photodiode scintillation readout C.M.B. Monteiro, J.A.M. Lopes, P.C.P.S. Simoes, J.M.F. dos Santos, C.A.N. Conde
 
-  mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
-  mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
-  mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
   mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield);
-  mpt->AddProperty("ELSPECTRUM", sc_energy, intensity, sc_entries);
   mpt->AddConstProperty("FASTTIMECONSTANT",6.*ns);
   mpt->AddConstProperty("SLOWTIMECONSTANT",37.*ns);
   mpt->AddConstProperty("YIELDRATIO",.52);
@@ -400,12 +406,12 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LAr()
   // REFRACTIVE INDEX
   const G4int ri_entries = 200;
 
-  G4double ri_energy[ri_entries];
+  std::vector<G4double> ri_energy;
   for (int i=0; i<ri_entries; i++) {
-    ri_energy[i] = (1 + i*0.049)*eV;
+    ri_energy.push_back((1 + i*0.049)*eV);
   }
 
-  G4double rindex[ri_entries];
+  std::vector<G4double> ri_index;
 
   for (int i=0; i<ri_entries; i++) {
     G4double epsilon;
@@ -426,15 +432,11 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LAr()
       else
 	epsilon = (1.0 + 2.0 * epsilon) / (1.0 - epsilon); // solve Clausius-Mossotti
     }
-    rindex[i] = sqrt(epsilon);
+    ri_index.push_back(sqrt(epsilon));
   }
 
-  mpt->AddProperty("RINDEX", ri_energy, rindex, ri_entries);
-
-  // ABSORTION LENGTH
-  G4double energy[2] = {0.01*eV, 100.*eV};
-  G4double abslen[2] = {1.e8*m, 1.e8*m};
-  mpt->AddProperty("ABSLENGTH", energy, abslen, 2);
+  assert(ri_energy.size() == ri_index.size());
+  mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
 
   G4double fano = 0.11;// Doke et al, NIM 134 (1976)353
   mpt->AddConstProperty("RESOLUTIONSCALE",fano);
@@ -443,21 +445,33 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LAr()
   // EMISSION SPECTRUM
   // Sampling from ~110 nm to 150 nm <----> from ~11.236 eV to 8.240 eV
   const G4int sc_entries = 500;
-  G4double sc_energy[sc_entries];
-  G4double intensity[sc_entries];
 
-  G4double Wavelength_peak = 128.*nm;
+  std::vector<G4double> sc_energy;
+  std::vector<G4double> intensity;
+
+  G4double Wavelength_peak  = 128.*nm;
   G4double Wavelength_sigma = 2.929*nm;
 
   G4double Energy_peak = (h_Planck*c_light/Wavelength_peak);
   G4double Energy_sigma = (h_Planck*c_light*Wavelength_sigma/pow(Wavelength_peak,2));
 
+  //  std::cout << "Energy_peak = " << Energy_peak << std::endl;
+
   for (int j=0;j<sc_entries;j++){
-    sc_energy[j] = 8.240*eV + 0.008*j*eV;
-    intensity[j] = exp(-pow(Energy_peak/eV-sc_energy[j]/eV,2)/(2*pow(Energy_sigma/eV, 2)))/(Energy_sigma/eV*sqrt(pi*2.));
+    sc_energy.push_back(8.240*eV + 0.008*j*eV);
+    intensity.push_back(exp(-pow(Energy_peak/eV-sc_energy[j]/eV,2)/(2*pow(Energy_sigma/eV, 2)))/(Energy_sigma/eV*sqrt(pi*2.)));
+    //    std::cout << "(energy, intensity) = (" << sc_energy[j] << "," << intensity[j] << ")" << std::endl;
   }
 
-  mpt->AddProperty("ELSPECTRUM", sc_energy, intensity, sc_entries);
+  assert(sc_energy.size() == intensity.size());
+  mpt->AddProperty("SLOWCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
+  mpt->AddProperty("FASTCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
+  mpt->AddProperty("ELSPECTRUM", sc_energy.data(), intensity.data(), sc_energy.size());
+
+  // ABSORTION LENGTH
+  std::vector<G4double> energy = {0.01*eV, 100.*eV};
+  std::vector<G4double> abslen = {1.e8*m, 1.e8*m};
+  mpt->AddProperty("ABSLENGTH", energy.data(), abslen.data(), energy.size());
 
   mpt->AddConstProperty("ELTIMECONSTANT", 1260.*ns);
   mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
