@@ -72,12 +72,9 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Epoxy()
 
 G4MaterialPropertiesTable* OpticalMaterialProperties::EpoxyFixedRefr(G4double n)
 {
-  // Optical properties adjusted in order not to absorb photons
-  // before they meet the photocathode.
+  // Costum refractive index.
 
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
-
-  XenonLiquidProperties LXe_prop;
 
   std::vector<G4double> ri_energy = {optPhotMinE_, optPhotMaxE_};
   std::vector<G4double> ri_index  = {n, n};
@@ -329,7 +326,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GlassEpoxy()
 G4MaterialPropertiesTable* OpticalMaterialProperties::GAr(G4double sc_yield)
 {
   // WARNING: before using GAr properties, check that we know the
- // properties of the rest of materials at its scintillation wavelengths.
+  // properties of the rest of materials at its scintillation wavelengths.
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
   // REFRACTIVE INDEX
@@ -594,7 +591,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LXe_nconst()
   G4MaterialPropertiesTable* LXe_mpt = new G4MaterialPropertiesTable();
 
   std::vector<G4double> ri_energy = {optPhotMinE_, optPhotMaxE_};
-  std::vector<G4double> ri_index  = {1.7, 1.7};
+  std::vector<G4double> ri_index  = {1.69, 1.69};
 
   assert(ri_energy.size() == ri_index.size());
   LXe_mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
