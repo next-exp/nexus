@@ -56,9 +56,9 @@ namespace nexus {
     static G4MaterialPropertiesTable* Pyrex_vidrasa();
 
 
-    static G4MaterialPropertiesTable* TPB(G4double decay=2.2*nanosecond);
-    static G4MaterialPropertiesTable* TPB_LXe(G4double decay=2.2*nanosecond);
-    static G4MaterialPropertiesTable* TPB_LXe_nconst(G4double decay=2.2*nanosecond);
+    static G4MaterialPropertiesTable* TPB(G4double decay_time=2.2*nanosecond);
+    static G4MaterialPropertiesTable* TPB_LXe(G4double decay_time=2.2*nanosecond);
+    static G4MaterialPropertiesTable* TPB_LXe_nconst(G4double decay_time=2.2*nanosecond);
 
     static G4MaterialPropertiesTable* LYSO();
     static G4MaterialPropertiesTable* LYSO_nconst();

@@ -708,7 +708,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::Pyrex_vidrasa()
 }
 
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::TPB(G4double decay)
+G4MaterialPropertiesTable* OpticalMaterialProperties::TPB(G4double decay_time)
 {
 
   /// This is the simulation of the optical properties of TPB (tetraphenyl butadiene)
@@ -795,7 +795,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB(G4double decay)
                    WLS_emiSpectrum.data(), WLS_emi_energy.size());
 
   // WLS Delay
-  mpt->AddConstProperty("WLSTIMECONSTANT", decay);
+  mpt->AddConstProperty("WLSTIMECONSTANT", decay_time);
 
   // WLS Quantum Efficiency
   // According to the paper, the QE of TPB depends on the incident wavelength.
@@ -808,7 +808,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB(G4double decay)
 }
 
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::TPB_LXe(G4double decay)
+G4MaterialPropertiesTable* OpticalMaterialProperties::TPB_LXe(G4double decay_time)
 {
   /// This is the simulation of the optical properties of TPB (tetraphenyl butadiene)
   /// a wavelength shifter which allows to converts VUV photons to blue photons.
@@ -909,7 +909,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB_LXe(G4double decay)
                    WLS_emiSpectrum.data(), WLS_emi_energy.size());
 
   // WLS Delay
-  mpt->AddConstProperty("WLSTIMECONSTANT", decay);
+  mpt->AddConstProperty("WLSTIMECONSTANT", decay_time);
 
   // WLS Quantum Efficiency
   // According to the paper, the QE of TPB depends on the incident wavelength.
@@ -922,7 +922,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB_LXe(G4double decay)
 }
 
 
-G4MaterialPropertiesTable* OpticalMaterialProperties::TPB_LXe_nconst(G4double decay)
+G4MaterialPropertiesTable* OpticalMaterialProperties::TPB_LXe_nconst(G4double decay_time)
 {
     /// This is the simulation of the optical properties of TPB (tetraphenyl butadiene)
   /// a wavelength shifter which allows to converts VUV photons to blue photons.
@@ -1010,7 +1010,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::TPB_LXe_nconst(G4double de
                    WLS_emiSpectrum.data(), WLS_emi_energy.size());
 
   // WLS Delay
-  mpt->AddConstProperty("WLSTIMECONSTANT", decay);
+  mpt->AddConstProperty("WLSTIMECONSTANT", decay_time);
 
   // WLS Quantum Efficiency
   // According to the paper, the QE of TPB depends on the incident wavelength.
