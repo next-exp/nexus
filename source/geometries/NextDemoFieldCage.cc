@@ -85,7 +85,11 @@ namespace nexus {
     ELtransv_diff_ (1. * mm / sqrt(cm)),
     ELlong_diff_ (0.5 * mm / sqrt(cm)),
     elfield_(0),
-    ELelectric_field_ (23.2857 * kilovolt / cm)
+    ELelectric_field_ (23.2857 * kilovolt / cm),
+    // EL gap generation disk parameters
+    el_gap_gen_disk_diam_(0.),
+    el_gap_gen_disk_x_(0.), el_gap_gen_disk_y_(0.),
+    el_gap_gen_disk_zmin_(0.), el_gap_gen_disk_zmax_(1.)
   {
     /// Define new categories ///
     new G4UnitDefinition("kilovolt/cm","kV/cm","Electric field", kilovolt/cm);
@@ -142,6 +146,38 @@ namespace nexus {
                             "Electric field in the EL region");
     El_field_intensity_cmd.SetParameterName("EL_field_intensity", true);
     El_field_intensity_cmd.SetUnitCategory("Electric field");
+
+    // el gap generator params
+    G4GenericMessenger::Command& el_gap_gen_disk_diam_cmd =
+      msg_->DeclareProperty("el_gap_gen_disk_diam", el_gap_gen_disk_diam_,
+                            "Diameter of the EL gap vertex generation disk.");
+    el_gap_gen_disk_diam_cmd.SetUnitCategory("Length");
+    el_gap_gen_disk_diam_cmd.SetParameterName("el_gap_gen_disk_diam", false);
+    el_gap_gen_disk_diam_cmd.SetRange("el_gap_gen_disk_diam>=0.");
+
+    G4GenericMessenger::Command& el_gap_gen_disk_x_cmd =
+      msg_->DeclareProperty("el_gap_gen_disk_x", el_gap_gen_disk_x_,
+                            "X position of the center of the EL gap vertex generation disk.");
+    el_gap_gen_disk_x_cmd.SetUnitCategory("Length");
+    el_gap_gen_disk_x_cmd.SetParameterName("el_gap_gen_disk_x", false);
+
+    G4GenericMessenger::Command& el_gap_gen_disk_y_cmd =
+      msg_->DeclareProperty("el_gap_gen_disk_y", el_gap_gen_disk_y_,
+                            "Y position of the center of the EL gap vertex generation disk.");
+    el_gap_gen_disk_y_cmd.SetUnitCategory("Length");
+    el_gap_gen_disk_y_cmd.SetParameterName("el_gap_gen_disk_y", false);
+
+    G4GenericMessenger::Command& el_gap_gen_disk_zmin_cmd =
+      msg_->DeclareProperty("el_gap_gen_disk_zmin", el_gap_gen_disk_zmin_,
+                            "Minimum Z range of the EL gap vertex generation disk.");
+    el_gap_gen_disk_zmin_cmd.SetParameterName("el_gap_gen_disk_zmin", false);
+    el_gap_gen_disk_zmin_cmd.SetRange("el_gap_gen_disk_zmin>=0.0 && el_gap_gen_disk_zmin<=1.0");
+
+    G4GenericMessenger::Command& el_gap_gen_disk_zmax_cmd =
+      msg_->DeclareProperty("el_gap_gen_disk_zmax", el_gap_gen_disk_zmax_,
+                            "Maximum Z range of the EL gap vertex generation disk.");
+    el_gap_gen_disk_zmax_cmd.SetParameterName("el_gap_gen_disk_zmax", false);
+    el_gap_gen_disk_zmax_cmd.SetRange("el_gap_gen_disk_zmax>=0.0 && el_gap_gen_disk_zmax<=1.0");
   }
 
 
@@ -426,7 +462,7 @@ namespace nexus {
       ito_anode_logic   ->SetVisAttributes(G4VisAttributes::Invisible);
       if (visibility_) quartz_anode_logic->SetVisAttributes(nexus::Yellow());
       else             quartz_anode_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    } 
+    }
 
     // Building the ANODE grid corresponding to "run7" and "run8" configuration
     else if ((config_ == "run7") || (config_ == "run8")) {
@@ -448,6 +484,25 @@ namespace nexus {
       if (visibility_) anode_grid_logic->SetVisAttributes(nexus::LightGrey());
       else             anode_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
+
+    // Vertex generator
+    if (el_gap_gen_disk_zmin_ > el_gap_gen_disk_zmax_)
+      G4Exception("[NextDemoFieldCage]", "NextDemoFieldCage()", FatalErrorInArgument,
+                  "Error in configuration of EL gap generator: zmax < zmin");
+
+    G4double el_gap_gen_disk_thickn =
+      el_gap_length * (el_gap_gen_disk_zmax_ - el_gap_gen_disk_zmin_);
+
+    G4double el_gap_gen_disk_z = el_gap_zpos + el_gap_length/2.
+      - el_gap_length * el_gap_gen_disk_zmin_ - el_gap_gen_disk_thickn/2.;
+
+    G4ThreeVector el_gap_gen_pos(el_gap_gen_disk_x_,
+                                 el_gap_gen_disk_y_,
+                                 el_gap_gen_disk_z);
+
+    el_gap_gen_ = new CylinderPointSampler2020(0., el_gap_gen_disk_diam_/2.,
+                                               el_gap_gen_disk_thickn/2., 0., twopi,
+                                               nullptr, el_gap_gen_pos);
   }
 
 
@@ -635,6 +690,9 @@ namespace nexus {
          VertexVolume =
            geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
        } while (VertexVolume->GetName() != region);
+     }
+     else if (region == "EL_GAP") {
+       vertex = el_gap_gen_->GenerateVertex("VOLUME");
      }
      else {
       G4Exception("[NextDemoFieldCage]", "GenerateVertex()", FatalException,
