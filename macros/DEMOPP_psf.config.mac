@@ -1,0 +1,42 @@
+## ----------------------------------------------------------------------------
+## nexus | DEMOPP_psf.config.mac
+##
+## Configuration macro for psf generator.
+##
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+# VERBOSITY
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+
+# GEOMETRY
+/Geometry/NextDemo/config run8
+/Geometry/NextDemo/elfield true
+/Geometry/NextDemo/pressure 8.5 bar
+/Geometry/NextDemo/max_step_size 1. mm
+/Geometry/NextDemo/EL_field_intensity 14 kV/cm
+/Geometry/NextDemo/max_step_size 1. mm
+/Geometry/PmtR11410/time_binning 100. nanosecond
+/Geometry/SiPMSensl/time_binning 1. microsecond
+
+/process/optical/processActivation Cerenkov false
+
+# GENERATION
+/Generator/ScintGenerator/region EL_GAP
+/Generator/ScintGenerator/nphotons 1
+
+/Geometry/NextDemo/el_gap_gen_disk_diam  10.0 mm
+/Geometry/NextDemo/el_gap_gen_disk_x      0.0 mm
+/Geometry/NextDemo/el_gap_gen_disk_y      0.0 mm
+/Geometry/NextDemo/el_gap_gen_disk_zmin   0.0
+/Geometry/NextDemo/el_gap_gen_disk_zmax   1.0
+
+# PERSISTENCY
+/nexus/persistency/outputFile demopp_psf_generation
+
+/nexus/random_seed 12345
+
