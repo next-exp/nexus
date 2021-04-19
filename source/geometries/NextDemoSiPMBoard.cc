@@ -48,7 +48,10 @@ NextDemoSiPMBoard::NextDemoSiPMBoard():
   mask_thickn_     (2.0  * mm),
   membrane_thickn_ (0.),
   coating_thickn_  (0.),
+  hole_type_       ("rounded"),
   hole_diam_       (3.5  * mm),
+  hole_x_          (0.0  * mm),
+  hole_y_          (0.0  * mm),
   mother_phys_     (nullptr),
   kapton_gen_      (nullptr)
 {
@@ -140,7 +143,7 @@ void NextDemoSiPMBoard::Construct()
                         G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON"),
                         kapton_name);
 
-  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., kapton_posz), kapton_logic, 
+  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., kapton_posz), kapton_logic,
                     kapton_name, board_logic, false, 0, true);
 
 
@@ -152,12 +155,12 @@ void NextDemoSiPMBoard::Construct()
   G4Box* mask_solid = new G4Box(mask_name, board_size_x/2.,
                                 board_size_y/2., mask_thickn_/2.);
 
-  G4LogicalVolume* mask_logic = 
+  G4LogicalVolume* mask_logic =
     new G4LogicalVolume(mask_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON"),
                         mask_name);
 
   // Adding the optical surface
-  G4OpticalSurface* mask_opsurf = 
+  G4OpticalSurface* mask_opsurf =
     new G4OpticalSurface(mask_name, unified, ground, dielectric_metal);
   mask_opsurf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
   new G4LogicalSkinSurface(mask_name + "_OPSURF", mask_logic, mask_opsurf);
@@ -167,11 +170,13 @@ void NextDemoSiPMBoard::Construct()
 
 
   /// Mask Holes
+  G4VSolid* hole_solid = nullptr;
   G4String hole_name = "BOARD_MASK_HOLE";
-
-  G4Tubs* hole_solid = new G4Tubs(hole_name, 0., hole_diam_/2.,
-                                  mask_thickn_/2., 0, 360.*deg);
-
+  if (hole_type_ == "rounded"){
+    hole_solid = new G4Tubs(hole_name, 0., hole_diam_/2., mask_thickn_/2., 0, 360.*deg);}
+  else if (hole_type_ == "rectangular"){
+    hole_solid = new G4Box(hole_name, hole_x_/2., hole_y_/2., mask_thickn_/2.);}
+    
   G4LogicalVolume* hole_logic =
     new G4LogicalVolume(hole_solid, mother_gas, hole_name);
 
@@ -191,7 +196,7 @@ void NextDemoSiPMBoard::Construct()
 
   G4double sipm_posz = - mask_thickn_/2. + sipm_->GetDimensions().z()/2.;
 
-  new G4PVPlacement(sipm_rot, G4ThreeVector(0., 0., sipm_posz), sipm_->GetLogicalVolume(), 
+  new G4PVPlacement(sipm_rot, G4ThreeVector(0., 0., sipm_posz), sipm_->GetLogicalVolume(),
                     sipm_->GetLogicalVolume()->GetName(), hole_logic,
                     false, 0, false);
 
@@ -212,7 +217,7 @@ void NextDemoSiPMBoard::Construct()
       //                    membrane_name);
       new G4LogicalVolume(membrane_solid, mother_gas, membrane_name);
 
-    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., membrane_posz), membrane_logic, 
+    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., membrane_posz), membrane_logic,
                       membrane_name, hole_logic, false, 0, true);
   }
 
@@ -240,7 +245,7 @@ void NextDemoSiPMBoard::Construct()
 
     coating_logic = new G4LogicalVolume(coating_solid, tpb, coating_name);
 
-    G4PVPlacement* coating_phys =     
+    G4PVPlacement* coating_phys =
       new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,coating_posz), coating_logic,
                         coating_name, board_logic, false, 0, true);
 
@@ -294,7 +299,7 @@ void NextDemoSiPMBoard::Construct()
     hole_logic   ->SetVisAttributes(G4VisAttributes::Invisible);
   }
   if (membrane_thickn_ > 0.) membrane_logic->SetVisAttributes(G4VisAttributes::Invisible);
-  if (coating_thickn_  > 0.) coating_logic ->SetVisAttributes(G4VisAttributes::Invisible);  
+  if (coating_thickn_  > 0.) coating_logic ->SetVisAttributes(G4VisAttributes::Invisible);
 }
 
 
@@ -321,4 +326,3 @@ void NextDemoSiPMBoard::GenerateSiPMPositions()
     }
   }
 }
-

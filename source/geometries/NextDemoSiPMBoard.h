@@ -33,12 +33,15 @@ namespace nexus {
 
     void Construct() override;
     G4ThreeVector GenerateVertex(const G4String&) const override;
-    
+
     void SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys);
     void SetMaskThickness    (G4double thickn);
     void SetMembraneThickness(G4double thickn);
     void SetCoatingThickness (G4double thickn);
+    void SetHoleType         (G4String type);
     void SetHoleDiameter     (G4double diam);
+    void SetHoleX            (G4double x);
+    void SetHoleY            (G4double y);
 
     G4ThreeVector GetBoardSize() const;
     G4double      GetKaptonThickness() const;
@@ -57,7 +60,10 @@ namespace nexus {
     G4double mask_thickn_;
     G4double membrane_thickn_;
     G4double coating_thickn_;
+    G4String hole_type_;
     G4double hole_diam_;
+    G4double hole_x_;
+    G4double hole_y_;
 
     G4ThreeVector board_size_;
     SiPMSensl* sipm_;
@@ -80,8 +86,17 @@ namespace nexus {
   inline void NextDemoSiPMBoard::SetCoatingThickness(G4double thickn)
   { coating_thickn_ = thickn; }
 
+  inline void NextDemoSiPMBoard::SetHoleType(G4String type)
+  { hole_type_ = type; }
+
   inline void NextDemoSiPMBoard::SetHoleDiameter(G4double diam)
   { hole_diam_ = diam; }
+
+  inline void NextDemoSiPMBoard::SetHoleX(G4double x)
+  { hole_x_ = x; }
+
+  inline void NextDemoSiPMBoard::SetHoleY(G4double y)
+  { hole_y_ = y; }
 
   inline G4ThreeVector NextDemoSiPMBoard::GetBoardSize() const
   { return board_size_; }

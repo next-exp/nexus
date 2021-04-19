@@ -86,7 +86,10 @@ void NextDemoTrackingPlane::Construct()
   G4double mask_thickn     = 0.;
   G4double membrane_thickn = 0.;
   G4double coating_thickn  = 0.;
+  G4String hole_type       = "";
   G4double hole_diameter   = 0.;
+  G4double hole_x          = 0.;
+  G4double hole_y          = 0.;
 
   if (config_ == "run5") {
     if(verbosity_) G4cout << "run5 ..." << G4endl;
@@ -94,6 +97,7 @@ void NextDemoTrackingPlane::Construct()
     mask_thickn     = 2.0 * mm;
     membrane_thickn = 0.0 * mm;
     coating_thickn  = 0.0 * mm;
+    hole_type       = "rounded";
     hole_diameter   = 3.5 * mm;
   }
   else if (config_ == "run7") {
@@ -102,6 +106,7 @@ void NextDemoTrackingPlane::Construct()
     mask_thickn     = 2.0  * mm;
     membrane_thickn = 0.25 * mm;
     coating_thickn  = 2.0  * micrometer;
+    hole_type       = "rounded";
     hole_diameter   = 3.5  * mm;
   }
   else if (config_ == "run8") {
@@ -110,15 +115,18 @@ void NextDemoTrackingPlane::Construct()
     mask_thickn     = 5.0  * mm;
     membrane_thickn = 0.2  * mm;
     coating_thickn  = 2.0  * micrometer;
+    hole_type       = "rounded";
     hole_diameter   = 4.0  * mm;
   }
   else if (config_ == "run9") {
     if(verbosity_) G4cout << "run9 ..." << G4endl;
     gate_board_dist = 19.66 * mm;
-    mask_thickn     = 5.0  * mm;
-    membrane_thickn = 0.2  * mm;
-    coating_thickn  = 2.0  * micrometer;
-    hole_diameter   = 4.0  * mm;
+    mask_thickn     = 6.0 * mm;
+    membrane_thickn = 0.2 * mm;
+    coating_thickn  = 2.0 * micrometer;
+    hole_type       = "rectangular";
+    hole_x          = 6.0 * mm;
+    hole_y          = 5.0 * mm;
   }
 
   /// Make sure the pointer to the mother volume is actually defined
@@ -135,7 +143,14 @@ void NextDemoTrackingPlane::Construct()
   sipm_board_->SetMaskThickness    (mask_thickn);
   sipm_board_->SetMembraneThickness(membrane_thickn);
   sipm_board_->SetCoatingThickness (coating_thickn);
-  sipm_board_->SetHoleDiameter     (hole_diameter);
+  // configure mask holes
+  sipm_board_->SetHoleType         (hole_type);
+  if (hole_type == "rounded"){
+    sipm_board_->SetHoleDiameter(hole_diameter);}
+  else if (hole_type == "rectangular"){
+    sipm_board_->SetHoleX(hole_x);
+    sipm_board_->SetHoleY(hole_y);}
+
   sipm_board_->Construct();
   G4LogicalVolume* board_logic = sipm_board_->GetLogicalVolume();
   board_size_                  = sipm_board_->GetBoardSize();
