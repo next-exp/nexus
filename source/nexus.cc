@@ -109,13 +109,11 @@ G4int main(int argc, char** argv)
 
   // visual mode
   if (!batch) {
-    G4UIExecutive* ui = new G4UIExecutive(argc, argv);
-    G4VisManager* visManager = new G4VisExecutive;
+    std::unique_ptr<G4UIExecutive> ui{new G4UIExecutive{argc, argv}};
+    std::unique_ptr<G4VisManager> visManager{new G4VisExecutive};
     visManager->Initialize();
     UI->ApplyCommand("/control/execute macros/vis.mac");
     ui->SessionStart();
-    delete ui;
-    delete visManager;
   }
   else {
     app->BeamOn(nevents);
