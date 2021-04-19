@@ -11,8 +11,8 @@
 
 ### Create an empty scene and a scene handles (OpenGL)
 /vis/scene/create
-/vis/open OGLIX
-/vis/viewer/create ! ! 900
+/vis/open OGL
+#/vis/viewer/create ! ! 900
 
 ### Setting drawing style to "wireframe" / "surface"
 /vis/viewer/set/style wireframe
