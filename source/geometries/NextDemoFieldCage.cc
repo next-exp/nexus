@@ -366,7 +366,9 @@ namespace nexus {
     if (config_ == "run5") {
       el_gap_length = el_gap_length_plate_;
     }
-    else if ((config_ == "run7") || (config_ == "run8")) {
+    else if ((config_ == "run7") ||
+             (config_ == "run8") ||
+             (config_ == "run9")) {
       el_gap_length = el_gap_length_mesh_;
     }
 

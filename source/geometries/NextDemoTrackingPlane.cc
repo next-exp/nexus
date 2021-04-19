@@ -112,6 +112,14 @@ void NextDemoTrackingPlane::Construct()
     coating_thickn  = 2.0  * micrometer;
     hole_diameter   = 4.0  * mm;
   }
+  else if (config_ == "run9") {
+    if(verbosity_) G4cout << "run9 ..." << G4endl;
+    gate_board_dist = 19.66 * mm;
+    mask_thickn     = 5.0  * mm;
+    membrane_thickn = 0.2  * mm;
+    coating_thickn  = 2.0  * micrometer;
+    hole_diameter   = 4.0  * mm;
+  }
 
   /// Make sure the pointer to the mother volume is actually defined
   if (!mother_phys_)
