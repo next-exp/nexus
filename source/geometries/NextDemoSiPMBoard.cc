@@ -48,7 +48,10 @@ NextDemoSiPMBoard::NextDemoSiPMBoard():
   mask_thickn_     (2.0  * mm),
   membrane_thickn_ (0.),
   coating_thickn_  (0.),
+  hole_type_       ("rounded"),
   hole_diam_       (3.5  * mm),
+  hole_x_          (0.0  * mm),
+  hole_y_          (0.0  * mm),
   mother_phys_     (nullptr),
   kapton_gen_      (nullptr)
 {
@@ -167,11 +170,13 @@ void NextDemoSiPMBoard::Construct()
 
 
   /// Mask Holes
+  G4VSolid* hole_solid = nullptr;
   G4String hole_name = "BOARD_MASK_HOLE";
-
-  G4Tubs* hole_solid = new G4Tubs(hole_name, 0., hole_diam_/2.,
-                                  mask_thickn_/2., 0, 360.*deg);
-
+  if (hole_type_ == "rounded"){
+    hole_solid = new G4Tubs(hole_name, 0., hole_diam_/2., mask_thickn_/2., 0, 360.*deg);}
+  else if (hole_type_ == "rectangular"){
+    hole_solid = new G4Box(hole_name, hole_x_/2., hole_y_/2., mask_thickn_/2.);}
+    
   G4LogicalVolume* hole_logic =
     new G4LogicalVolume(hole_solid, mother_gas, hole_name);
 
@@ -321,4 +326,3 @@ void NextDemoSiPMBoard::GenerateSiPMPositions()
     }
   }
 }
-
