@@ -7,7 +7,6 @@
 // -----------------------------------------------------------------------------
 
 #include "NextDemo.h"
-
 #include "NextDemoVessel.h"
 #include "NextDemoInnerElements.h"
 
@@ -114,9 +113,10 @@ G4ThreeVector NextDemo::GenerateVertex(const G4String& region) const
     G4ThreeVector displacement = G4ThreeVector(0., 0., -vessel_geom_->GetGateEndcapDistance());
     vtx = vtx + displacement;
   }
-  else if ( (region == "ACTIVE")  ||
-            (region == "TP_PLATE") ||
-            (region == "SIPM_BOARD") ) {
+  else if ((region == "ACTIVE")  ||
+           (region == "TP_PLATE") ||
+           (region == "SIPM_BOARD") ||
+           (region == "EL_GAP")) {
     vtx = inner_geom_->GenerateVertex(region);
     G4ThreeVector displacement = G4ThreeVector(0., 0., -vessel_geom_->GetGateEndcapDistance());
     vtx = vtx + displacement;

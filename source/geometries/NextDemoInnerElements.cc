@@ -102,7 +102,8 @@ G4ThreeVector NextDemoInnerElements::GenerateVertex(const G4String& region) cons
   G4ThreeVector vertex(0.,0.,0.);
 
   // Field Cage
-  if (region == "ACTIVE") {
+  if ((region == "ACTIVE") ||
+      (region == "EL_GAP")) {
     vertex = field_cage_->GenerateVertex(region);
   }
 

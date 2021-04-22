@@ -115,9 +115,15 @@ namespace nexus {
 
     // Vertex generators
     CylinderPointSampler2020* active_gen_;
+    CylinderPointSampler2020* el_gap_gen_;
 
     // Messenger for the definition of control commands
     G4GenericMessenger* msg_;
+
+    // el generator params
+    G4double el_gap_gen_disk_diam_;
+    G4double el_gap_gen_disk_x_, el_gap_gen_disk_y_;
+    G4double el_gap_gen_disk_zmin_, el_gap_gen_disk_zmax_;
 
   };
 
