@@ -322,17 +322,17 @@ if env['PREFIX'] == DEFAULT_PATH:
 WriteNexusConfig(w_prefix_dir)
 
 env.Execute(Chmod(w_prefix_dir+'/bin/nexus-config', 755))
-#nexus = env.Program('bin/nexus', ['source/nexus.cc']+src)
+nexus = env.Program('bin/nexus', ['source/nexus.cc']+src)
 
-#TSTDIR = ['utils',
-#	  'example']
-#TSTDIR = ['source/tests/' + dir for dir in TSTDIR]
+TSTDIR = ['utils',
+	  'example']
+TSTDIR = ['source/tests/' + dir for dir in TSTDIR]
 
-#tst = []
-#for d in TSTDIR:
-#    tst += Glob(d+'/*.cc')
+tst = []
+for d in TSTDIR:
+    tst += Glob(d+'/*.cc')
 
-#env.Append(CPPPATH = ['source/tests'])
-#nexus_test = env.Program('bin/nexus-test', ['source/nexus-test.cc']+tst+src)
+env.Append(CPPPATH = ['source/tests'])
+nexus_test = env.Program('bin/nexus-test', ['source/nexus-test.cc']+tst+src)
 
-#Clean(nexus, 'buildvars.scons')
+Clean(nexus, 'buildvars.scons')

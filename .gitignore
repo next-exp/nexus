@@ -19,9 +19,12 @@ bin
 build
 buildvars.scons
 cmake
+lib
+include
 nexus
 nexus-test
 *.o
+*.os
 
 # test caches
 __pycache__
