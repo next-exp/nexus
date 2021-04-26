@@ -321,7 +321,7 @@ if env['PREFIX'] == DEFAULT_PATH:
 
 WriteNexusConfig(w_prefix_dir)
 
-env.Execute(Chmod(w_prefix_dir+'/bin/nexus-config', 755))
+env.Execute(Chmod(w_prefix_dir+'/bin/nexus-config', 0o755))
 nexus = env.Program('bin/nexus', ['source/nexus.cc']+src)
 
 TSTDIR = ['utils',
