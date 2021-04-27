@@ -116,7 +116,7 @@ void SingleParticleGenerator::GeneratePrimaryVertex(G4Event* event)
   G4PrimaryVertex* vertex = new G4PrimaryVertex(position, time);
 
   // Generate uniform random energy in [E_min, E_max]
-  G4double kinetic_energy = nexus::RandomEnergy(energy_max_,energy_min_); //////////////////////changes here
+  G4double kinetic_energy = nexus::UniformRandomInRange(energy_max_, energy_min_);
 
   // Generate random direction by default
   G4ThreeVector _momentum_direction = G4RandomDirection();
