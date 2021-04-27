@@ -96,11 +96,12 @@ namespace nexus {
 
   G4double XenonLiquidProperties::Scintillation(G4double energy)
   {
-     // A. Baldini et al., "Liquid Xe scintillation calorimetry
-    // and Xe optical properties", arXiv:physics/0401072v1 [physics.ins-det]
-    // Everybody cites Jirtner, Meyer,Rice, Wilson, J. Chem. Phys. 42, 4250 (1965)
-    G4double Wavelength_peak = 178*nm;
-    G4double Wavelength_FWHM = 14.*nm;
+    // K. Fuji et al., "High accuracy measurement of the emission spectrum of liquid xenon
+    // in the vacuum ultraviolet region",
+    // Nuclear Instruments and Methods in Physics Research A 795 (2015) 293–297
+    // http://ac.els-cdn.com/S016890021500724X/1-s2.0-S016890021500724X-main.pdf?_tid=83d56f0a-3aff-11e7-bf7d-00000aacb361&acdnat=1495025656_407067006589f99ae136ef18b8b35a04
+    G4double Wavelength_peak = 174.8*nm;
+    G4double Wavelength_FWHM = 10.2*nm;
     G4double Wavelength_sigma = Wavelength_FWHM/2.35;
 
     G4double Energy_peak = (h_Planck*c_light/Wavelength_peak);
