@@ -31,6 +31,7 @@ namespace nexus {
 
     G4double Scintillation(G4double energy);
     void Scintillation(G4int entries, G4double* energy, G4double* intensity);
+    void Scintillation(std::vector<G4double>& energy, std::vector<G4double>& intensity);
 
     void MakeDataTable();
     G4double GetDensity(G4double pressure, G4double temperature);

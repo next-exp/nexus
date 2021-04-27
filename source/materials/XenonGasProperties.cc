@@ -203,6 +203,13 @@ void XenonGasProperties::Scintillation(G4int entries, G4double* energy, G4double
   intensity[i] = Scintillation(energy[i]);
 }
 
+void XenonGasProperties::Scintillation
+   (std::vector<G4double>& energy, std::vector<G4double>& intensity)
+   {
+     for (G4int i=0; i<energy.size(); i++)
+       intensity.push_back(Scintillation(energy[i]));
+   }
+
 
 G4double XenonGasProperties::ELLightYield(G4double field_strength) const
 {
