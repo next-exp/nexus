@@ -15,4 +15,4 @@
 /Actions/RegisterTrackingAction OPTICAL
 /Actions/RegisterSteppingAction ANALYSIS
 
-/nexus/RegisterMacro macros/configs/black_box_new.config.mac
+/nexus/RegisterMacro macros/black_box_new.config.mac

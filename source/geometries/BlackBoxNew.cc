@@ -110,6 +110,7 @@ namespace nexus {
   dice_->SetMotherLogicalVolume(world_logic_vol);
   dice_->Construct();
   kdb_dimensions_ = dice_->GetDimensions();
+  G4cout << "dice_->GetDimensions() " << dice_->GetDimensions() << G4endl;
   G4LogicalVolume* dice_board_logic = dice_->GetLogicalVolume();
   ////Dice Boards placement
   dice_board_x_pos_ = 0 * cm;

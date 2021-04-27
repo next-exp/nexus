@@ -94,12 +94,6 @@ namespace nexus {
     coating_thickn_cmd.SetParameterName("coating_thickn", true);
     coating_thickn_cmd.SetUnitCategory("Length");
 
-    G4GenericMessenger::Command&  hole_thickn_cmd =
-      msg_->DeclareProperty("hole_thickn", hole_thickn_,
-                            "Hole Thickness");
-    hole_thickn_cmd.SetParameterName("hole_thickn", true);
-    hole_thickn_cmd.SetUnitCategory("Length");
-
     G4GenericMessenger::Command&  hole_diameter_cmd =
       msg_->DeclareProperty("hole_diameter", hole_diameter_,
                             "Hole Diameter");
@@ -155,12 +149,10 @@ namespace nexus {
 
   // DICE BOARD //////////////////////////////////////////////
 
-  G4String board_name = "DICE_BOARD";
   dice_->SetMotherPhysicalVolume(box_phys_vol);
   dice_->SetMaskThickness    (mask_thickn_);
   dice_->SetMembraneThickness(membrane_thickn_);
   dice_->SetCoatingThickness (coating_thickn_);
-  dice_->SetHoleThickness    (hole_thickn_);
   dice_->SetHoleDiameter     (hole_diameter_);
   dice_->Construct();
   G4LogicalVolume* dice_board_logic = dice_->GetLogicalVolume();
@@ -172,7 +164,7 @@ namespace nexus {
   G4RotationMatrix* rot = new G4RotationMatrix();
   rot -> rotateY(rotation_);
   new G4PVPlacement(rot, post, dice_board_logic,
-            	      board_name, box_logic_vol, false, 0, false);
+            	      dice_board_logic->GetName(), box_logic_vol, false, 0, false);
   /////////////////////////////////////////////////////////
 
   }
