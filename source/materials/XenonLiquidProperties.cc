@@ -14,7 +14,7 @@
 
 #include "CLHEP/Units/SystemOfUnits.h"
 #include "CLHEP/Units/PhysicalConstants.h"
-
+#include <stdexcept>
 
 namespace nexus {
 
@@ -57,7 +57,7 @@ namespace nexus {
     // A is the first refractivity viral coefficient:
     // A(E) = \sum_i^3 P_i / (E^2 - E_i^2),   (2)
     // with:
-    G4double P[3] = {71.23, 77.75, 1384.89}; // [eV^3 cm3 / mole]
+    G4double P[3] = {71.23, 77.75, 1384.89}; // [eV^2 cm3 / mole]
     G4double E[3] = {8.4, 8.81, 13.2};       // [eV]
 
     // Note.- Equation (1) has, actually, a sign difference with respect
@@ -65,6 +65,7 @@ namespace nexus {
     // for the refractive index below 1.
 
     // Let's calculate the virial coefficient.
+
     // We won't use the implicit system of units of Geant4 because
     // it results in loss of numerical precision.
 
@@ -72,22 +73,22 @@ namespace nexus {
     G4double virial = 0.;
 
     for (G4int i=0; i<3; i++)
-      virial = virial + P[i] / (energy*energy - E[i]*E[i]);
+      virial = virial + P[i] / (energy*energy - E[i]*E[i]); // eV²*cm3/mol/eV² = cm3/mol
 
-    G4double mol_density = Density() / 131.29;
-    G4double alpha = virial * mol_density;
+    G4double mol_density =  2.953  / 131.29; // (g/cm3)/g*mol = mol/cm3
+    G4double alpha = virial * mol_density; // (cm3/mol)*mol/cm3 = 1
 
     // Isolating now the n2 from equation (1) and taking the square root
     G4double n2 = (1. - 2*alpha) / (1. + alpha);
 
     if (n2 < 1.) {
- //      G4String msg = "Non-physical refractive index for energy "
+      G4String msg = "Non-physical refractive index for energy. Use n=1 instead. ";
 	// + bhep::to_string(energy) + " eV. Use n=1 instead.";
- //      G4Exception("[XenonLiquidProperties]", "RefractiveIndex()",
-	// 	  JustWarning, msg);
+      //     G4cout << "refractive index = " << n2 << G4endl;
+      G4Exception("[XenonLiquidProperties]", "RefractiveIndex()",
+      	 	  JustWarning, msg);
       n2 = 1.;
     }
-
     return sqrt(n2);
   }
 
