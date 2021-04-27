@@ -1,10 +1,9 @@
 // ----------------------------------------------------------------------------
-//  $Id$
+// nexus | XenonLiquidProperties.cc
 //
-//  Author:  <justo.martin-albo@ific.uv.es>
-//  Created: 25 Dec 2010
+// This class collects the relevant physical properties of liquid xenon.
 //
-//  Copyright (c) 2010-2012 NEXT Collaboration. All rights reserved.
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "XenonLiquidProperties.h"
@@ -36,9 +35,9 @@ namespace nexus {
   {
 
     // Density at 1 atm, T ~ 160 K
-    _density = 2.953 * g/cm3;
+    density_ = 2.953 * g/cm3;
 
-    return _density;
+    return density_;
   }
 
 

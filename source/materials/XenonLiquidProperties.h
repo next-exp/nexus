@@ -1,16 +1,13 @@
 // ----------------------------------------------------------------------------
-///  \file   XenonLiquidProperties.h
-///  \brief
-///
-///  \author  <paola.ferrario@ific.uv.es>
-///  \date    1 Jun 2015
-///  \version $Id$
-///
-///  Copyright (c) 2010-2015 NEXT Collaboration. All rights reserved.
+// nexus | XenonLiquidProperties.h
+//
+// This class collects the relevant physical properties of liquid xenon.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef __XENON_LIQUID_PROPERTIES__
-#define __XENON_LIQUID_PROPERTIES__
+#ifndef XENON_LIQUID_PROPERTIES__
+#define XENON_LIQUID_PROPERTIES__
 
 #include <globals.hh>
 #include <vector>
@@ -38,7 +35,7 @@ namespace nexus {
 
 
   private:
-    G4double _density;
+    G4double density_;
 
     //static const G4double _densities[100];
 
