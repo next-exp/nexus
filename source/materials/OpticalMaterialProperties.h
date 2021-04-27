@@ -49,12 +49,12 @@ namespace nexus {
     static G4MaterialPropertiesTable* GAr(G4double sc_yield,
                                           G4double e_lifetime=1000.*ms);
 
-    static G4MaterialPropertiesTable* LAr();
-
     static G4MaterialPropertiesTable* GXe(G4double pressure=1.*bar,
                                           G4double temperature=STP_Temperature,
                                           G4int sc_yield=25510/MeV,
                                           G4double e_lifetime=1000.*ms);
+
+    static G4MaterialPropertiesTable* LXe();
 
     static G4MaterialPropertiesTable* FakeGrid(G4double pressure=1.*bar,
                                                G4double temperature=STP_Temperature,

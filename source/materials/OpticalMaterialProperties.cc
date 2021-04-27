@@ -8,7 +8,7 @@
 
 #include "OpticalMaterialProperties.h"
 #include "XenonGasProperties.h"
-#include "XenonGasProperties.h"
+#include "XenonLiquidProperties.h"
 #include "SellmeierEquation.h"
 
 #include <G4MaterialPropertiesTable.hh>
@@ -606,6 +606,66 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
   return mpt;
 }
 
+G4MaterialPropertiesTable* OpticalMaterialProperties::LXe()
+{
+  /// The time constants are taken from E. Hogenbirk et al 2018 JINST 13 P10031
+  XenonLiquidProperties LXe_prop;
+  G4MaterialPropertiesTable* LXe_mpt = new G4MaterialPropertiesTable();
+
+  const G4int ri_entries = 200;
+  G4double eWidth = (optPhotMaxE_ - optPhotMinE_) / ri_entries;
+
+  std::vector<G4double> ri_energy;
+  for (int i=0; i<ri_entries; i++) {
+    ri_energy.push_back(optPhotMinE_ + i * eWidth);
+  }
+
+  std::vector<G4double> ri_index;
+
+  for (G4int i=0; i<ri_entries; i++) {
+    ri_index.push_back(LXe_prop.RefractiveIndex(ri_energy[i]));
+  }
+
+  assert(ri_energy.size() == ri_index.size());
+  LXe_mpt->AddProperty("RINDEX", ri_energy.data(), ri_index.data(), ri_energy.size());
+
+  // for (G4int i=ri_entries-1; i>=0; i--) {
+  //   G4cout << h_Planck*c_light/ri_energy[i]/nanometer << " nm, " << rindex[i] << G4endl;
+  // }
+
+  // Sampling from ~151 nm to 200 nm <----> from 6.20625 eV to 8.21 eV
+  const G4int sc_entries = 500;
+  const G4double minE = 6.20625*eV;
+  eWidth = (optPhotMaxE_ - minE) / sc_entries;
+
+  std::vector<G4double> sc_energy;
+  for (int j=0; j<sc_entries; j++){
+    sc_energy.push_back(minE + j * eWidth);
+  }
+  std::vector<G4double> intensity;
+  LXe_prop.Scintillation(sc_energy, intensity);
+
+  assert(sc_energy.size() == intensity.size());
+  LXe_mpt->AddProperty("FASTCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
+  LXe_mpt->AddProperty("SLOWCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
+
+  LXe_mpt->AddConstProperty("SCINTILLATIONYIELD", 58708./MeV);
+  LXe_mpt->AddConstProperty("RESOLUTIONSCALE", 1);
+  LXe_mpt->AddConstProperty("RAYLEIGH", 36.*cm);
+  LXe_mpt->AddConstProperty("FASTTIMECONSTANT", 2.*ns);
+  LXe_mpt->AddConstProperty("SLOWTIMECONSTANT", 43.5*ns);
+  LXe_mpt->AddConstProperty("YIELDRATIO", 0.03);
+  LXe_mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
+
+  std::vector<G4double> abs_energy = {optPhotMinE_, optPhotMaxE_};
+  std::vector<G4double> abs_length = {noAbsLength_, noAbsLength_};
+
+  assert(abs_energy.size() == abs_length.size());
+  LXe_mpt->AddProperty("ABSLENGTH", abs_energy.data(), abs_length.data(), abs_energy.size());
+
+  return LXe_mpt;
+}
+
 
 
 /// Fake Grid ///
@@ -846,7 +906,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::DegradedTPB(G4double wls_e
   mpt->AddProperty("WLSABSLENGTH", TPB()->GetProperty("WLSABSLENGTH"));
   mpt->AddProperty("WLSCOMPONENT", TPB()->GetProperty("WLSCOMPONENT"));
   mpt->AddConstProperty("WLSTIMECONSTANT",TPB()->GetConstProperty("WLSTIMECONSTANT"));
-  
+
   // Except WLS Quantum Efficiency
   mpt->AddConstProperty("WLSMEANNUMBERPHOTONS", wls_eff);
 
