@@ -17,6 +17,8 @@
 #include "PrimaryGeneration.h"
 #include "PersistencyManager.h"
 #include "BatchSession.h"
+#include "FactoryBase.h"
+#include "SingleParticleGenerator.h"
 
 #include <G4GenericPhysicsList.hh>
 #include <G4UImanager.hh>
@@ -75,6 +77,18 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
   PrimaryGeneration* pg = new PrimaryGeneration();
   pg->SetGenerator(genfctr.CreateGenerator());
   this->SetUserAction(pg);
+
+  // FactoryBase /////////////////////////////////
+
+  G4VPrimaryGenerator* primary_generator =
+    ObjFactory<G4VPrimaryGenerator>::Instance().CreateObject("SINGLE_PARTICLE_GENERATOR");
+
+  SingleParticleGenerator* spg = dynamic_cast<SingleParticleGenerator*>(primary_generator);
+
+  if (spg) {
+    //std::cout << spg << std::endl;
+    delete spg;
+  }
 
   // User interface
   G4UImanager* UI = G4UImanager::GetUIpointer();

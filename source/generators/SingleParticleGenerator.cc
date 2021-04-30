@@ -16,6 +16,7 @@
 #include "DetectorConstruction.h"
 #include "BaseGeometry.h"
 #include "RandomUtils.h"
+#include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4ParticleDefinition.hh>
@@ -31,6 +32,8 @@
 
 using namespace nexus;
 using namespace CLHEP;
+
+REGISTER_CLASS(SingleParticleGenerator, G4VPrimaryGenerator)
 
 
 SingleParticleGenerator::SingleParticleGenerator():
