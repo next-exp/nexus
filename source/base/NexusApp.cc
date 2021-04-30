@@ -75,20 +75,9 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
 
   // Set the primary generation instance in the run manager
   PrimaryGeneration* pg = new PrimaryGeneration();
-  pg->SetGenerator(genfctr.CreateGenerator());
+  //pg->SetGenerator(genfctr.CreateGenerator());
+  pg->SetGenerator(ObjFactory<G4VPrimaryGenerator>::Instance().CreateObject("SingleParticleGenerator"));
   this->SetUserAction(pg);
-
-  // FactoryBase /////////////////////////////////
-
-  G4VPrimaryGenerator* primary_generator =
-    ObjFactory<G4VPrimaryGenerator>::Instance().CreateObject("SINGLE_PARTICLE_GENERATOR");
-
-  SingleParticleGenerator* spg = dynamic_cast<SingleParticleGenerator*>(primary_generator);
-
-  if (spg) {
-    //std::cout << spg << std::endl;
-    delete spg;
-  }
 
   // User interface
   G4UImanager* UI = G4UImanager::GetUIpointer();
