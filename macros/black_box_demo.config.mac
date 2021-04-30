@@ -8,17 +8,17 @@
 /Generator/SingleParticle/min_energy 2.9 eV
 /Generator/SingleParticle/max_energy 2.9 eV
 /Generator/SingleParticle/region AD_HOC
-/Generator/SingleParticle/momentum_X 0.
-/Generator/SingleParticle/momentum_Y 0.
-/Generator/SingleParticle/momentum_Z -1.
-#/Generator/SingleParticle/min_costheta -1.
-#/Generator/SingleParticle/max_costheta -0.9935
+#/Generator/SingleParticle/momentum_X 0.
+#/Generator/SingleParticle/momentum_Y 0.
+#/Generator/SingleParticle/momentum_Z -1.
+/Generator/SingleParticle/min_costheta -1.
+/Generator/SingleParticle/max_costheta -0.9935
 
-/Geometry/BlackBoxDEMO/specific_vertex_X 35 mm
-/Geometry/BlackBoxDEMO/specific_vertex_Y -35 mm
-/Geometry/BlackBoxDEMO/specific_vertex_Z 10. mm
-/Geometry/BlackBoxDEMO/dice_board_z_pos 0. cm
-/Geometry/BlackBoxDEMO/rotation 0 deg
+/Geometry/BlackBoxDEMO/specific_vertex_X 0. mm
+/Geometry/BlackBoxDEMO/specific_vertex_Y 0. mm
+/Geometry/BlackBoxDEMO/specific_vertex_Z 0. mm
+/Geometry/BlackBoxDEMO/dice_board_z_pos -50. cm
+/Geometry/BlackBoxDEMO/rotation 75 deg
 /Geometry/BlackBoxDEMO/mask_thickn 0. mm
 /Geometry/BlackBoxDEMO/membrane_thickn 0. mm
 /Geometry/BlackBoxDEMO/coating_thickn 0. mm
@@ -26,9 +26,9 @@
 
 /run/verbose 0
 /event/verbose 0
-/tracking/verbose 1
+/tracking/verbose 0
 
 ### JOB CONTROL
 /nexus/random_seed            -1
 /nexus/persistency/start_id   0
-/nexus/persistency/outputFile testing_new_bb.next
+/nexus/persistency/outputFile bb_75deg_noepoxy.next

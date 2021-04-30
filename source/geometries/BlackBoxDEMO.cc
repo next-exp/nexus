@@ -164,7 +164,7 @@ namespace nexus {
   G4RotationMatrix* rot = new G4RotationMatrix();
   rot -> rotateY(rotation_);
   new G4PVPlacement(rot, post, dice_board_logic,
-            	      dice_board_logic->GetName(), box_logic_vol, false, 0, false);
+            	      dice_board_logic->GetName(), box_logic_vol, false, 1, false);
   /////////////////////////////////////////////////////////
 
   }

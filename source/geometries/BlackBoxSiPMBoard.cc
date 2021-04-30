@@ -103,8 +103,7 @@ void BlackBoxSiPMBoard::Construct()
       G4Exception("[BlackBoxSiPMBoard]", "Construct()", FatalException,
       "Masks require holes");
 
-  //sipm_->SetSensorDepth(3);
-  sipm_->SetSensorDepth(4);
+  sipm_->SetSensorDepth(2);
   sipm_->SetMotherDepth(3);
   sipm_->SetNamingOrder(1000);
   sipm_->Construct();
@@ -126,7 +125,7 @@ void BlackBoxSiPMBoard::Construct()
   G4LogicalVolume* board_logic =
     new G4LogicalVolume(board_solid, mother_gas, board_name);
 
-  BaseGeometry::SetLogicalVolume(board_logic);///ESto no sé para qué sirve
+  BaseGeometry::SetLogicalVolume(board_logic);
 
 
   /// Kapton
@@ -156,7 +155,9 @@ void BlackBoxSiPMBoard::Construct()
   for (G4int sipm_id=0; sipm_id<num_sipms_; sipm_id++) {
        sipm_pos = sipm_positions_[sipm_id] + G4ThreeVector(0., 0., sipm_posz);
        G4cout << "SiPM" << sipm_id << ":" << sipm_pos << G4endl;
-       new G4PVPlacement(nullptr, sipm_pos, sipm_->GetLogicalVolume(),
+       //new G4PVPlacement(nullptr, sipm_pos, sipm_->GetLogicalVolume(),
+        //                 sipm_->GetLogicalVolume()->GetName(), board_logic, false, sipm_id, true);
+       new G4PVPlacement(sipm_rot, sipm_pos, sipm_->GetLogicalVolume(),
                          sipm_->GetLogicalVolume()->GetName(), board_logic, false, sipm_id, true);
   }
 
@@ -213,14 +214,17 @@ void BlackBoxSiPMBoard::Construct()
     if (membrane_thickn_ > 0. && mask_thickn_ >= membrane_thickn_+ sipm_->GetDimensions().z()){
         G4String membrane_name = "BOARD_MASK_MEMB";
 
-        G4double membrane_posz = mask_thickn_/2. - membrane_thickn_/2.;
+        //G4double membrane_posz = mask_thickn_/2. - membrane_thickn_/2.;
+        G4double membrane_posz = - board_size_z/2. + kapton_thickn_ + mask_thickn_ - membrane_thickn_/2.;
 
         G4Tubs* membrane_solid = new G4Tubs(membrane_name, 0., hole_diam_/2.,
                                           membrane_thickn_/2., 0, 360.*deg);
 
         membrane_logic =
-          new G4LogicalVolume(membrane_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON"),
-                              membrane_name);
+          //new G4LogicalVolume(membrane_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON"),
+          //                    membrane_name);
+          new G4LogicalVolume(membrane_solid, mother_gas, membrane_name);
+
         G4ThreeVector membrane_pos;
         for (G4int sipm_id=0; sipm_id<num_sipms_; sipm_id++) {
              membrane_pos = sipm_positions_[sipm_id]+G4ThreeVector(0., 0., membrane_posz);
