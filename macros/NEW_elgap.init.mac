@@ -4,7 +4,7 @@
 
 /nexus/RegisterPersistencyManager PersistencyManager
 
-/Actions/RegisterTrackingAction LIGHT_TABLE
+/nexus/RegisterTrackingAction LightTableTrackingAction
 
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
 /PhysicsList/RegisterPhysics G4DecayPhysics

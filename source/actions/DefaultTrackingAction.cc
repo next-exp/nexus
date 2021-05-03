@@ -15,6 +15,7 @@
 #include "Trajectory.h"
 #include "TrajectoryMap.h"
 #include "IonizationElectron.h"
+#include "FactoryBase.h"
 
 #include <G4Track.hh>
 #include <G4TrackingManager.hh>
@@ -26,7 +27,7 @@
 
 using namespace nexus;
 
-
+REGISTER_CLASS(DefaultTrackingAction, G4UserTrackingAction)
 
 DefaultTrackingAction::DefaultTrackingAction(): G4UserTrackingAction()
 {

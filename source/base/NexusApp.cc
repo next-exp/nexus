@@ -21,13 +21,21 @@
 #include <G4UImanager.hh>
 #include <G4StateManager.hh>
 #include <G4VPersistencyManager.hh>
+#include <G4UserRunAction.hh>
+#include <G4UserEventAction.hh>
+#include <G4UserTrackingAction.hh>
+#include <G4UserSteppingAction.hh>
+#include <G4UserStackingAction.hh>
 
 using namespace nexus;
 
 
 
-NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""), pm_name_(""),
-                                         geo_name_("")
+NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
+                                         geo_name_(""), pm_name_(""),
+                                         runact_name_(""), evtact_name_(""),
+                                         stepact_name_(""), trkact_name_(""),
+                                         stkact_name_("")
 {
   // Create and configure a generic messenger for the app
   msg_ = new G4GenericMessenger(this, "/nexus/", "Nexus control commands.");
@@ -54,6 +62,14 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""), pm_name_
 
 // Define the command to set the desired persistency manager
   msg_->DeclareProperty("RegisterPersistencyManager", pm_name_, "");
+
+// Define the commands to set the desired actions
+  msg_->DeclareProperty("RegisterRunAction", runact_name_, "");
+  msg_->DeclareProperty("RegisterEventAction", evtact_name_, "");
+  msg_->DeclareProperty("RegisterSteppingAction", stepact_name_, "");
+  msg_->DeclareProperty("RegisterTrackingAction", trkact_name_, "");
+  msg_->DeclareProperty("RegisterStackingAction", stkact_name_, "");
+
 
   /////////////////////////////////////////////////////////
 
@@ -88,26 +104,27 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""), pm_name_
   pm->SetMacros(init_macro, macros_, delayed_);
 
   // User interface
-  G4UImanager* UI = G4UImanager::GetUIpointer();
+  //G4UImanager* UI = G4UImanager::GetUIpointer();
 
  // PersistencyManager::Initialize(init_macro, macros_, delayed_);
 
   // Set the user action instances, if any, in the run manager
 
-  if (UI->GetCurrentValues("/Actions/RegisterRunAction") != "")
-    this->SetUserAction(actfctr.CreateRunAction());
+  //if (UI->GetCurrentValues("/Actions/RegisterRunAction") != "")
+  if (runact_name_ != "")
+    this->SetUserAction(ObjFactory<G4UserRunAction>::Instance().CreateObject(runact_name_));
 
-  if (UI->GetCurrentValues("/Actions/RegisterEventAction") != "")
-    this->SetUserAction(actfctr.CreateEventAction());
+  if (evtact_name_ != "")
+    this->SetUserAction(ObjFactory<G4UserEventAction>::Instance().CreateObject(evtact_name_));
 
-  if (UI->GetCurrentValues("/Actions/RegisterStackingAction") != "")
-    this->SetUserAction(actfctr.CreateStackingAction());
+  if (stkact_name_ != "")
+    this->SetUserAction(ObjFactory<G4UserStackingAction>::Instance().CreateObject(stkact_name_));
 
-  if (UI->GetCurrentValues("/Actions/RegisterTrackingAction") != "")
-    this->SetUserAction(actfctr.CreateTrackingAction());
+  if (trkact_name_ != "")
+    this->SetUserAction(ObjFactory<G4UserTrackingAction>::Instance().CreateObject(trkact_name_));
 
-  if (UI->GetCurrentValues("/Actions/RegisterSteppingAction") != "")
-    this->SetUserAction(actfctr.CreateSteppingAction());
+  if (stepact_name_ != "")
+    this->SetUserAction(ObjFactory<G4UserSteppingAction>::Instance().CreateObject(stepact_name_));
 
   /////////////////////////////////////////////////////////
 

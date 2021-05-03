@@ -21,6 +21,6 @@
 
 /nexus/RegisterPersistencyManager PersistencyManager
 
-/Actions/RegisterTrackingAction LIGHT_TABLE
+/nexus/RegisterTrackingAction LightTableTrackingAction
 
 /nexus/RegisterMacro macros/DEMOPP_psf.config.mac

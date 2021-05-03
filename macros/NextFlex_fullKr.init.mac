@@ -20,10 +20,10 @@
 
 
 ### ACTIONS
-/Actions/RegisterRunAction      DEFAULT
-/Actions/RegisterEventAction    DEFAULT
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterSteppingAction ANALYSIS
+/nexus/RegisterRunAction      DefaultRunAction
+/nexus/RegisterEventAction    DefaultEventAction
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterSteppingAction AnalysisSteppingAction
 
 
 ### PHYSICS

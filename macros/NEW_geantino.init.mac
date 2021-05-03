@@ -17,9 +17,9 @@
 
 /nexus/RegisterPersistencyManager PersistencyManager
 
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction SAVE_ALL
-/Actions/RegisterSteppingAction SAVE_ALL
-/Actions/RegisterRunAction DEFAULT
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterEventAction SaveAllEventAction
+/nexus/RegisterSteppingAction SaveAllSteppingAction
+/nexus/RegisterRunAction DefaultRunAction
 
 /nexus/RegisterMacro macros/NEW_geantino.config.mac

@@ -15,8 +15,8 @@
 
 /nexus/RegisterPersistencyManager PersistencyManager
 
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterSteppingAction ANALYSIS
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterSteppingAction AnalysisSteppingAction
 
 /nexus/RegisterMacro macros/nexus_example3.config.mac

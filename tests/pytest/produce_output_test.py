@@ -23,9 +23,9 @@ def test_create_nexus_output_file_next100(config_tmpdir, output_tmpdir, NEXUSDIR
 
 /nexus/RegisterPersistencyManager PersistencyManager
 
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterRunAction DEFAULT
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterRunAction DefaultRunAction
 
 /nexus/RegisterMacro {config_tmpdir}/{full_base_name_next100}.config.mac
 """
@@ -88,9 +88,9 @@ def test_create_nexus_output_file_new(config_tmpdir, output_tmpdir, NEXUSDIR,
 
 /nexus/RegisterPersistencyManager PersistencyManager
 
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterRunAction DEFAULT
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterRunAction DefaultRunAction
 
 /nexus/RegisterMacro {config_tmpdir}/{full_base_name_new}.config.mac
 """
@@ -153,9 +153,9 @@ def test_create_nexus_output_file_flex100(config_tmpdir, output_tmpdir, NEXUSDIR
 
 /nexus/RegisterPersistencyManager PersistencyManager
 
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterRunAction DEFAULT
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterRunAction DefaultRunAction
 
 /nexus/RegisterMacro {config_tmpdir}/{full_base_name_flex100}.config.mac
 """
@@ -254,9 +254,9 @@ def test_create_nexus_output_file_demopp(config_tmpdir, output_tmpdir, NEXUSDIR,
 
 /nexus/RegisterPersistencyManager PersistencyManager
 
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterRunAction DEFAULT
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterRunAction DefaultRunAction
 
 /nexus/RegisterMacro {config_tmpdir}/{full_base_name_demopp}.config.mac
 """

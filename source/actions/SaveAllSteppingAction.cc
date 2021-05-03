@@ -9,6 +9,7 @@
 
 #include "SaveAllSteppingAction.h"
 #include "PersistencyManager.h"
+#include "FactoryBase.h"
 
 #include <G4Step.hh>
 #include <G4VPersistencyManager.hh>
@@ -17,7 +18,7 @@
 
 using namespace nexus;
 
-
+REGISTER_CLASS(SaveAllSteppingAction, G4UserSteppingAction)
 
 SaveAllSteppingAction::SaveAllSteppingAction():
 G4UserSteppingAction(),

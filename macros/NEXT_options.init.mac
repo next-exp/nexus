@@ -36,15 +36,15 @@
 /nexus/RegisterPersistencyManager PersistencyManager
 
 ##### ACTIONS #####
-/Actions/RegisterRunAction DEFAULT
+/nexus/RegisterRunAction DefaultRunAction
 
-/Actions/RegisterEventAction DEFAULT
-#/Actions/RegisterEventAction SAVE_ALL
+/nexus/RegisterEventAction DefaultEventAction
+#/nexus/RegisterEventAction SaveAllEventAction
 
-#/Actions/RegisterSteppingAction ANALYSIS
+#/nexus/RegisterSteppingAction AnalysisSteppingAction
 
-/Actions/RegisterTrackingAction DEFAULT
-#/Actions/RegisterTrackingAction OPTICAL
+/nexus/RegisterTrackingAction DefaultTrackingAction
+#/nexus/RegisterTrackingAction OpticalTrackingAction
 
 ##### CONFIGURATION MACRO #####
 /nexus/RegisterMacro macros/NEXT_options.config.mac

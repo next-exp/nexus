@@ -1,6 +1,7 @@
 #ifndef FACTORY_BASE_H
 #define FACTORY_BASE_H
 
+#include <G4Exception.hh>
 #include <map>
 
 

@@ -52,8 +52,13 @@ namespace nexus {
   private:
     G4GenericMessenger* msg_;
     G4String gen_name_; ///< Name of the chosen primary generator
-    G4String pm_name_;  ///< Name of the chosen persistency manager
     G4String geo_name_;  ///< Name of the chosen geometry
+    G4String pm_name_;  ///< Name of the chosen persistency manager
+    G4String runact_name_; ///< Name of the chosen run action
+    G4String evtact_name_; ///< Name of the chosen event action
+    G4String stepact_name_; ///< Name of the chosen stepping action
+    G4String trkact_name_; ///< Name of the chosen tracking action
+    G4String stkact_name_; ///< Name of the chosen stacking action
 
     std::vector<G4String> macros_;
     std::vector<G4String> delayed_;

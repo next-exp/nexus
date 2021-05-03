@@ -11,6 +11,7 @@
 #include "Trajectory.h"
 #include "PersistencyManager.h"
 #include "IonizationHit.h"
+#include "FactoryBase.h"
 
 #include <G4Event.hh>
 #include <G4VVisManager.hh>
@@ -31,13 +32,14 @@
 using namespace CLHEP;
 namespace nexus {
 
+REGISTER_CLASS(MuonsEventAction, G4UserEventAction)
 
-  MuonsEventAction::MuonsEventAction(): 
+  MuonsEventAction::MuonsEventAction():
     G4UserEventAction(), nevt_(0), nupdate_(10), energy_threshold_(0.), stringHist_("")
   {
     msg_ = new G4GenericMessenger(this, "/Actions/MuonsEventAction/");
     msg_->DeclareProperty("stringHist", stringHist_, "");
-    
+
     G4GenericMessenger::Command& thresh_cmd =
        msg_->DeclareProperty("energy_threshold", energy_threshold_,
                              "Minimum deposited energy to save the event to file.");
@@ -49,13 +51,13 @@ namespace nexus {
     hist1_ = new TH1D ("Edepo","Energy_deposited",100,-1.0,3.4);
     hist2_ = new TH1D ("Theta","Theta generated",100,-pi,pi);
     hist3_ = new TH1D ("Phi","Phi generated",100,0.,twopi);
-    tree_  = new TTree("Tree nexus","Flat tree with some nexus info");  
+    tree_  = new TTree("Tree nexus","Flat tree with some nexus info");
     tree_->Branch("tree_theta", &tree_theta_, "tree_theta/D");
     tree_->Branch("tree_phi", &tree_phi_, "tree_phi/D");
   }
-  
-  
-  
+
+
+
   MuonsEventAction::~MuonsEventAction()
   {
     //added for muons
@@ -68,7 +70,7 @@ namespace nexus {
     file->Close();
 
   }
-    
+
   void MuonsEventAction::BeginOfEventAction(const G4Event* /*event*/)
   {
    // Print out event number info
@@ -83,7 +85,7 @@ namespace nexus {
   {
     nevt_++;
 
-    // Determine whether total energy deposit in ionization sensitive 
+    // Determine whether total energy deposit in ionization sensitive
     // detectors is above threshold
     if (energy_threshold_ >= 0.) {
 
@@ -103,10 +105,10 @@ namespace nexus {
       }
       //control plot for energy
       hist1_->Fill(edep);
- 
+
       PersistencyManager* pm = dynamic_cast<PersistencyManager*>
         (G4VPersistencyManager::GetPersistencyManager());
- 
+
       if (edep > energy_threshold_) pm->StoreCurrentEvent(true);
       else pm->StoreCurrentEvent(false);
 
@@ -116,7 +118,7 @@ namespace nexus {
     G4PrimaryVertex* my_vertex = event->GetPrimaryVertex();
     G4VUserPrimaryVertexInformation *getinfo2 = my_vertex->GetUserInformation();
     AddUserInfoToPV *my_getinfo2 = dynamic_cast<AddUserInfoToPV*>(getinfo2);
-    
+
     Double_t my_theta = my_getinfo2->GetTheta();
     Double_t my_phi = my_getinfo2->GetPhi();
     //    std::cout<<"get the info back in MuonsEventAction: "<<my_getinfo2->GetTheta()<<std::endl;
