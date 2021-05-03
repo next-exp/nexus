@@ -14,19 +14,20 @@
 #include "ActionsFactory.h"
 #include "DetectorConstruction.h"
 #include "PrimaryGeneration.h"
-#include "PersistencyManager.h"
+#include "BasePersistencyManager.h"
 #include "BatchSession.h"
 #include "FactoryBase.h"
 
 #include <G4GenericPhysicsList.hh>
 #include <G4UImanager.hh>
 #include <G4StateManager.hh>
+#include <G4VPersistencyManager.hh>
 
 using namespace nexus;
 
 
 
-NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_("")
+NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""), pm_name_("")
 {
   // Create and configure a generic messenger for the app
   msg_ = new G4GenericMessenger(this, "/nexus/", "Nexus control commands.");
@@ -47,6 +48,9 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_("")
 
 // Define the command to set the desired generator
   msg_->DeclareProperty("RegisterGenerator", gen_name_, "");
+
+// Define the command to set the desired persistency manager
+  msg_->DeclareProperty("RegisterPersistencyManager", pm_name_, "");
 
   /////////////////////////////////////////////////////////
 
@@ -78,10 +82,13 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_("")
   pg->SetGenerator(ObjFactory<G4VPrimaryGenerator>::Instance().CreateObject(gen_name_));
   this->SetUserAction(pg);
 
+  BasePersistencyManager* pm = ObjFactory<BasePersistencyManager>::Instance().CreateObject(pm_name_);
+  pm->SetMacros(init_macro, macros_, delayed_);
+
   // User interface
   G4UImanager* UI = G4UImanager::GetUIpointer();
 
-  PersistencyManager::Initialize(init_macro, macros_, delayed_);
+ // PersistencyManager::Initialize(init_macro, macros_, delayed_);
 
   // Set the user action instances, if any, in the run manager
 
@@ -113,7 +120,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_("")
 NexusApp::~NexusApp()
 {
   // Close output file before finishing
-  PersistencyManager* current = dynamic_cast<PersistencyManager*>
+  BasePersistencyManager* current = dynamic_cast<BasePersistencyManager*>
     (G4VPersistencyManager::GetPersistencyManager());
   current->CloseFile();
 

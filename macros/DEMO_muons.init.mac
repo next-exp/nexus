@@ -12,6 +12,8 @@
 
 /nexus/RegisterGenerator MuonGenerator
 
+/nexus/RegisterPersistencyManager PersistencyManager
+
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction MUONS
 /Actions/RegisterRunAction DEFAULT

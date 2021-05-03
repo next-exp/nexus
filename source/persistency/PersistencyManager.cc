@@ -18,6 +18,8 @@
 #include "SaveAllSteppingAction.h"
 #include "BaseGeometry.h"
 #include "HDF5Writer.h"
+#include "BasePersistencyManager.h"
+#include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Event.hh>
@@ -36,11 +38,11 @@
 using namespace nexus;
 
 
-PersistencyManager::PersistencyManager(G4String init_macro,
-                                       std::vector<G4String>& macros,
-                                       std::vector<G4String>& delayed_macros):
-  G4VPersistencyManager(), msg_(0), init_macro_(init_macro), macros_(macros),
-  delayed_macros_(delayed_macros), ready_(false),
+REGISTER_CLASS(PersistencyManager, BasePersistencyManager)
+
+
+PersistencyManager::PersistencyManager():
+  BasePersistencyManager(), msg_(0), ready_(false),
   store_evt_(true), store_steps_(false),
   interacting_evt_(false), event_type_("other"), saved_evts_(0),
   interacting_evts_(0), pmt_bin_size_(-1), sipm_bin_size_(-1),
@@ -53,6 +55,9 @@ PersistencyManager::PersistencyManager(G4String init_macro,
   msg_->DeclareProperty("start_id", start_id_,
                         "Starting event ID for this job.");
 
+  init_macro_ = "";
+  macros_.clear();
+  delayed_macros_.clear();
   secondary_macros_.clear();
 }
 
@@ -66,7 +71,7 @@ PersistencyManager::~PersistencyManager()
 
 
 
-void PersistencyManager::Initialize(G4String init_macro, std::vector<G4String>& macros,
+/* void PersistencyManager::Initialize(G4String init_macro, std::vector<G4String>& macros,
                                     std::vector<G4String>& delayed_macros)
 {
 
@@ -82,7 +87,7 @@ void PersistencyManager::Initialize(G4String init_macro, std::vector<G4String>& 
   // accessible.)
   if (!current) current =
                   new PersistencyManager(init_macro, macros, delayed_macros);
-}
+} */
 
 
 void PersistencyManager::OpenFile(G4String filename)
