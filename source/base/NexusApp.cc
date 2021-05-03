@@ -10,7 +10,6 @@
 
 #include "NexusApp.h"
 
-#include "ActionsFactory.h"
 #include "DetectorConstruction.h"
 #include "PrimaryGeneration.h"
 #include "BasePersistencyManager.h"
@@ -79,8 +78,6 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
   // to user's input) so that the messenger commands are already defined
   // by the time we process the initialization macro.
 
-  ActionsFactory   actfctr;
-
   // The physics lists are handled with Geant4's own 'factory'
   physicsList = new G4GenericPhysicsList();
 
@@ -103,14 +100,9 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
   BasePersistencyManager* pm = ObjFactory<BasePersistencyManager>::Instance().CreateObject(pm_name_);
   pm->SetMacros(init_macro, macros_, delayed_);
 
-  // User interface
-  //G4UImanager* UI = G4UImanager::GetUIpointer();
-
  // PersistencyManager::Initialize(init_macro, macros_, delayed_);
 
   // Set the user action instances, if any, in the run manager
-
-  //if (UI->GetCurrentValues("/Actions/RegisterRunAction") != "")
   if (runact_name_ != "")
     this->SetUserAction(ObjFactory<G4UserRunAction>::Instance().CreateObject(runact_name_));
 
