@@ -19,6 +19,8 @@
 
 /nexus/RegisterGenerator IonGenerator
 
+/nexus/RegisterPersistencyManager PersistencyManager
+
 /nexus/RegisterTrackingAction ValidationTrackingAction
 /nexus/RegisterEventAction DefaultEventAction
 
