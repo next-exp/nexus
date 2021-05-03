@@ -15,6 +15,8 @@
 
 /nexus/RegisterGenerator SingleParticleGenerator
 
+/nexus/RegisterPersistencyManager PersistencyManager
+
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction SAVE_ALL
 /Actions/RegisterSteppingAction SAVE_ALL

@@ -19,6 +19,8 @@
 
 /nexus/RegisterGenerator ScintillationGenerator
 
+/nexus/RegisterPersistencyManager PersistencyManager
+
 /Actions/RegisterTrackingAction LIGHT_TABLE
 
 /nexus/RegisterMacro macros/DEMOPP_psf.config.mac

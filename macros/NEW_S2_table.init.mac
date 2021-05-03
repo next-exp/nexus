@@ -16,6 +16,8 @@
 
 /nexus/RegisterGenerator ELTableGenerator
 
+/nexus/RegisterPersistencyManager PersistencyManager
+
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction SAVE_ALL
 /Actions/RegisterRunAction DEFAULT

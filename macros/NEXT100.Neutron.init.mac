@@ -27,6 +27,9 @@
 ### GENERATOR
 /nexus/RegisterGenerator SingleParticleGenerator
 
+### PERSISTENCY MANAGER
+/nexus/RegisterPersistencyManager PersistencyManager
+
 ### ACTIONS
 /Actions/RegisterRunAction DEFAULT
 /Actions/RegisterEventAction DEFAULT

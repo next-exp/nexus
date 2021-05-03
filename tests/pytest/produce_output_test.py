@@ -21,6 +21,8 @@ def test_create_nexus_output_file_next100(config_tmpdir, output_tmpdir, NEXUSDIR
 
 /nexus/RegisterGenerator SingleParticleGenerator
 
+/nexus/RegisterPersistencyManager PersistencyManager
+
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction DEFAULT
 /Actions/RegisterRunAction DEFAULT
@@ -84,6 +86,8 @@ def test_create_nexus_output_file_new(config_tmpdir, output_tmpdir, NEXUSDIR,
 
 /nexus/RegisterGenerator SingleParticleGenerator
 
+/nexus/RegisterPersistencyManager PersistencyManager
+
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction DEFAULT
 /Actions/RegisterRunAction DEFAULT
@@ -146,6 +150,8 @@ def test_create_nexus_output_file_flex100(config_tmpdir, output_tmpdir, NEXUSDIR
 /nexus/RegisterGeometry NextFlex
 
 /nexus/RegisterGenerator SingleParticleGenerator
+
+/nexus/RegisterPersistencyManager PersistencyManager
 
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction DEFAULT
@@ -245,6 +251,8 @@ def test_create_nexus_output_file_demopp(config_tmpdir, output_tmpdir, NEXUSDIR,
 /nexus/RegisterGeometry NextDemo
 
 /nexus/RegisterGenerator SingleParticleGenerator
+
+/nexus/RegisterPersistencyManager PersistencyManager
 
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction DEFAULT

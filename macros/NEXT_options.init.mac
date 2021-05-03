@@ -32,6 +32,9 @@
 #/nexus/RegisterGenerator ScintillationGenerator
 #/nexus/RegisterGenerator MuonAngleGenerator
 
+### PERSISTENCY MANAGER
+/nexus/RegisterPersistencyManager PersistencyManager
+
 ##### ACTIONS #####
 /Actions/RegisterRunAction DEFAULT
 

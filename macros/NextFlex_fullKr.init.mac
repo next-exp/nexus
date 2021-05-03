@@ -15,6 +15,10 @@
 /nexus/RegisterGenerator Kr83mGenerator
 
 
+### PERSISTENCY MANAGER
+/nexus/RegisterPersistencyManager PersistencyManager
+
+
 ### ACTIONS
 /Actions/RegisterRunAction      DEFAULT
 /Actions/RegisterEventAction    DEFAULT

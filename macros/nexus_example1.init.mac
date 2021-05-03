@@ -12,6 +12,7 @@
 /nexus/RegisterGeometry XeSphere
 
 /nexus/RegisterGenerator SingleParticleGenerator
+
 /nexus/RegisterPersistencyManager PersistencyManager
 
 /Actions/RegisterRunAction DEFAULT

@@ -25,6 +25,8 @@
 ### GENERATOR
 /nexus/RegisterGenerator MuonAngleGenerator
 
+/nexus/RegisterPersistencyManager PersistencyManager
+
 ### ACTIONS
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction DEFAULT

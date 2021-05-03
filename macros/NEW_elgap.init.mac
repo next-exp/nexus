@@ -2,6 +2,8 @@
 
 /nexus/RegisterGenerator    ScintillationGenerator
 
+/nexus/RegisterPersistencyManager PersistencyManager
+
 /Actions/RegisterTrackingAction LIGHT_TABLE
 
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
