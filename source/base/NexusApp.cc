@@ -10,7 +10,6 @@
 
 #include "NexusApp.h"
 
-#include "GeometryFactory.h"
 #include "ActionsFactory.h"
 #include "DetectorConstruction.h"
 #include "PrimaryGeneration.h"
@@ -27,7 +26,8 @@ using namespace nexus;
 
 
 
-NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""), pm_name_("")
+NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""), pm_name_(""),
+                                         geo_name_("")
 {
   // Create and configure a generic messenger for the app
   msg_ = new G4GenericMessenger(this, "/nexus/", "Nexus control commands.");
@@ -49,6 +49,9 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""), pm_name_
 // Define the command to set the desired generator
   msg_->DeclareProperty("RegisterGenerator", gen_name_, "");
 
+  // Define the command to set the desired geometry
+  msg_->DeclareProperty("RegisterGeometry", geo_name_, "");
+
 // Define the command to set the desired persistency manager
   msg_->DeclareProperty("RegisterPersistencyManager", pm_name_, "");
 
@@ -60,7 +63,6 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""), pm_name_
   // to user's input) so that the messenger commands are already defined
   // by the time we process the initialization macro.
 
-  GeometryFactory  geomfctr;
   ActionsFactory   actfctr;
 
   // The physics lists are handled with Geant4's own 'factory'
@@ -74,7 +76,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""), pm_name_
 
   // Set the detector construction instance in the run manager
   DetectorConstruction* dc = new DetectorConstruction();
-  dc->SetGeometry(geomfctr.CreateGeometry());
+  dc->SetGeometry(ObjFactory<BaseGeometry>::Instance().CreateObject(geo_name_));
   this->SetUserInitialization(dc);
 
   // Set the primary generation instance in the run manager

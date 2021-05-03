@@ -1,4 +1,4 @@
-/Geometry/RegisterGeometry NEXT_NEW
+/nexus/RegisterGeometry NextNew
 
 /nexus/RegisterGenerator    ScintillationGenerator
 

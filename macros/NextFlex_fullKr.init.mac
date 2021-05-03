@@ -8,7 +8,7 @@
 ## ----------------------------------------------------------------------------
 
 ### GEOMETRY
-/Geometry/RegisterGeometry NEXT_FLEX
+/nexus/RegisterGeometry NextFlex
 
 
 ### GENERATOR

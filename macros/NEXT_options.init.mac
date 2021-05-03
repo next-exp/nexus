@@ -20,9 +20,9 @@
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 ##### GEOMETRY #####
-/Geometry/RegisterGeometry NEXT100
-#/Geometry/RegisterGeometry NEXT_NEW
-#/Geometry/RegisterGeometry NEXT100_OPT
+/nexus/RegisterGeometry Next100
+#/nexus/RegisterGeometry NextNew
+#/nexus/RegisterGeometry Next100OpticalGeometry
 
 ##### GENERATOR #####
 /nexus/RegisterGenerator IonGenerator

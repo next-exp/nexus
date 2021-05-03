@@ -10,6 +10,7 @@
 #include "MaterialsList.h"
 #include "IonizationSD.h"
 #include "BoxPointSampler.h"
+#include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -28,6 +29,8 @@
 
 
 namespace nexus {
+
+  REGISTER_CLASS(MagBox, BaseGeometry)
 
   MagBox::MagBox():
     BaseGeometry(),

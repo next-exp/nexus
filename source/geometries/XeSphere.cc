@@ -11,6 +11,7 @@
 #include "SpherePointSampler.h"
 #include "MaterialsList.h"
 #include "IonizationSD.h"
+#include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Orb.hh>
@@ -20,12 +21,16 @@
 #include <G4Material.hh>
 #include <G4VisAttributes.hh>
 #include <G4SDManager.hh>
+#include <G4VUserDetectorConstruction.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 
-namespace nexus {
+using namespace nexus;
+using namespace CLHEP;
 
-  using namespace CLHEP;
+REGISTER_CLASS(XeSphere, BaseGeometry)
+
+namespace nexus {
 
   XeSphere::XeSphere():
     BaseGeometry(), liquid_(true), pressure_(STP_Pressure),

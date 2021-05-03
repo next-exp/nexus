@@ -9,6 +9,7 @@
 #include "NextDemo.h"
 #include "NextDemoVessel.h"
 #include "NextDemoInnerElements.h"
+#include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -18,6 +19,8 @@
 #include <G4PVPlacement.hh>
 
 using namespace nexus;
+
+REGISTER_CLASS(NextDemo, BaseGeometry)
 
 
 NextDemo::NextDemo():

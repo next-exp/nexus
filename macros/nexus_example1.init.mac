@@ -9,9 +9,10 @@
 
 /control/execute macros/physics/DefaultPhysicsList.mac
 
-/Geometry/RegisterGeometry XE_SPHERE
+/nexus/RegisterGeometry XeSphere
 
 /nexus/RegisterGenerator SingleParticleGenerator
+/nexus/RegisterPersistencyManager PersistencyManager
 
 /Actions/RegisterRunAction DEFAULT
 /Actions/RegisterEventAction DEFAULT

@@ -53,6 +53,7 @@ namespace nexus {
     G4GenericMessenger* msg_;
     G4String gen_name_; ///< Name of the chosen primary generator
     G4String pm_name_;  ///< Name of the chosen persistency manager
+    G4String geo_name_;  ///< Name of the chosen geometry
 
     std::vector<G4String> macros_;
     std::vector<G4String> delayed_;

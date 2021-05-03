@@ -17,7 +17,7 @@ def test_create_nexus_output_file_next100(config_tmpdir, output_tmpdir, NEXUSDIR
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
-/Geometry/RegisterGeometry NEXT100_OPT
+/nexus/RegisterGeometry Next100OpticalGeometry
 
 /nexus/RegisterGenerator SingleParticleGenerator
 
@@ -80,7 +80,7 @@ def test_create_nexus_output_file_new(config_tmpdir, output_tmpdir, NEXUSDIR,
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
-/Geometry/RegisterGeometry NEXT_NEW
+/nexus/RegisterGeometry NextNew
 
 /nexus/RegisterGenerator SingleParticleGenerator
 
@@ -143,7 +143,7 @@ def test_create_nexus_output_file_flex100(config_tmpdir, output_tmpdir, NEXUSDIR
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
-/Geometry/RegisterGeometry NEXT_FLEX
+/nexus/RegisterGeometry NextFlex
 
 /nexus/RegisterGenerator SingleParticleGenerator
 
@@ -242,7 +242,7 @@ def test_create_nexus_output_file_demopp(config_tmpdir, output_tmpdir, NEXUSDIR,
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
-/Geometry/RegisterGeometry NEXT_DEMO
+/nexus/RegisterGeometry NextDemo
 
 /nexus/RegisterGenerator SingleParticleGenerator
 

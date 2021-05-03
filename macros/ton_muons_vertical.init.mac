@@ -22,7 +22,7 @@
 /physics_lists/em/MuonNuclear true
 
 ### GEOMETRY
-/Geometry/RegisterGeometry TON_SCALE
+/nexus/RegisterGeometry NextTonScale
 
 ### GENERATOR
 /nexus/RegisterGenerator MuonAngleGenerator

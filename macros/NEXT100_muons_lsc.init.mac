@@ -20,7 +20,7 @@
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 ### GEOMETRY
-/Geometry/RegisterGeometry NEXT100
+/nexus/RegisterGeometry Next100
 
 ### GENERATOR
 /nexus/RegisterGenerator MuonAngleGenerator

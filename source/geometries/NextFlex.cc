@@ -5,7 +5,7 @@
 //  Many of the dimensions of the TrackingPlane, FieldCage and WLS-fibers barrel
 //  are settable by paramater.
 //  A typical use of this geometry can be the performance comparison between
-//  different TrackingPlane configurations(EL, SiPM sizes, pitch ...).  
+//  different TrackingPlane configurations(EL, SiPM sizes, pitch ...).
 //
 //  The NEXT Collaboration
 // -----------------------------------------------------------------------------
@@ -20,6 +20,7 @@
 #include "XenonGasProperties.h"
 #include "CylinderPointSampler2020.h"
 #include "Visibilities.h"
+#include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
@@ -36,6 +37,7 @@
 
 using namespace nexus;
 
+REGISTER_CLASS(NextFlex, BaseGeometry)
 
 NextFlex::NextFlex():
   BaseGeometry(),
@@ -52,7 +54,7 @@ NextFlex::NextFlex():
   adhoc_y_           (0.),              // Vertex-Y in case of AD_HOC region
   adhoc_z_           (0.)               // Vertex-Z in case of AD_HOC region
 {
-  
+
   // Messenger
   msg_ = new G4GenericMessenger(this, "/Geometry/NextFlex/",
                                 "Control commands of the NextFlex geometry.");
@@ -294,7 +296,7 @@ void NextFlex::BuildICS(G4LogicalVolume* mother_logic) {
 
   // Verbosity
   if (verbosity_) {
-    G4cout << "* ICS.  Inner Rad: " << ics_inner_rad << 
+    G4cout << "* ICS.  Inner Rad: " << ics_inner_rad <<
               "   Outer Rad: " << ics_outer_rad << G4endl;
     G4cout << "* ICS Z positions: " << ics_iniZ << " to " << ics_finZ << G4endl;
   }

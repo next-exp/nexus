@@ -8,7 +8,7 @@
 
 /control/execute macros/physics/DefaultPhysicsList.mac
 
-/Geometry/RegisterGeometry NEXT_NEW
+/nexus/RegisterGeometry NextNew
 
 /nexus/RegisterGenerator ElecPositronPairGenerator
 

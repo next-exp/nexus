@@ -14,6 +14,7 @@
 #include "Next100Vessel.h"
 #include "Next100Ics.h"
 #include "Next100InnerElements.h"
+#include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -29,6 +30,8 @@
 #include <stdexcept>
 
 namespace nexus {
+
+  REGISTER_CLASS(Next100, BaseGeometry)
 
   using namespace CLHEP;
 

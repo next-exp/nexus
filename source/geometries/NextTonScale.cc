@@ -13,6 +13,7 @@
 #include "Visibilities.h"
 #include "CylinderPointSampler.h"
 #include "MuonsPointSampler.h"
+#include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4NistManager.hh>
@@ -26,6 +27,8 @@
 #include <G4SDManager.hh>
 
 using namespace nexus;
+
+REGISTER_CLASS(NextTonScale, BaseGeometry)
 
 
 NextTonScale::NextTonScale():

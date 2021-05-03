@@ -28,6 +28,7 @@
 #include "CollProtection.h"
 #include "CollSupport.h"
 #include "ExtraVessel.h"
+#include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -46,6 +47,8 @@
 #include <CLHEP/Units/SystemOfUnits.h>
 
 namespace nexus {
+
+  REGISTER_CLASS(NextNew, BaseGeometry)
 
   using namespace CLHEP;
 
@@ -177,7 +180,7 @@ namespace nexus {
     } else {
       G4Box* lab_solid =
 	new G4Box("LAB", lab_size_/2., lab_size_/2., lab_size_/2.);
-      
+
       lab_logic_ = new G4LogicalVolume(lab_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
     }
     lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);

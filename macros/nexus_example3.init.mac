@@ -9,7 +9,7 @@
 
 /control/execute macros/physics/DefaultPhysicsList.mac
 
-/Geometry/RegisterGeometry NEXT1_EL
+/nexus/RegisterGeometry Next1EL
 
 /nexus/RegisterGenerator SingleParticleGenerator
 

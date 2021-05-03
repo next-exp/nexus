@@ -19,6 +19,7 @@
 #include "CylinderPointSampler.h"
 #include "MuonsPointSampler.h"
 #include "Visibilities.h"
+#include "FactoryBase.h"
 
 #include <G4Box.hh>
 #include <G4Tubs.hh>
@@ -47,6 +48,8 @@
 
 using namespace nexus;
 using namespace CLHEP;
+
+REGISTER_CLASS(Next1EL, BaseGeometry)
 
 Next1EL::Next1EL():
   BaseGeometry(),

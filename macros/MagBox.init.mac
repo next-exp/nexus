@@ -14,7 +14,7 @@
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 ### GEOMETRY
-/Geometry/RegisterGeometry MAG_BOX
+/nexus/RegisterGeometry MagBox
 
 ### GENERATOR
 /nexus/RegisterGenerator SingleParticleGenerator

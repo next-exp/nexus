@@ -23,7 +23,7 @@
 /physics_lists/em/MuonNuclear true
 
 ### GEOMETRY
-/Geometry/RegisterGeometry NEXT100
+/nexus/RegisterGeometry Next100
 
 ### GENERATOR
 /nexus/RegisterGenerator SingleParticleGenerator

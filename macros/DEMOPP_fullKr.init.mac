@@ -15,7 +15,7 @@
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
-/Geometry/RegisterGeometry NEXT_DEMO
+/nexus/RegisterGeometry NextDemo
 
 /nexus/RegisterGenerator Kr83mGenerator
 

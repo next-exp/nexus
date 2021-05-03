@@ -20,7 +20,7 @@
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 ### GEOMETRY
-/Geometry/RegisterGeometry TON_SCALE
+/nexus/RegisterGeometry NextTonScale
 
 ### GENERATOR
 /nexus/RegisterGenerator SingleParticleGenerator
