@@ -11,14 +11,12 @@
 #include "NexusApp.h"
 
 #include "GeometryFactory.h"
-#include "GeneratorFactory.h"
 #include "ActionsFactory.h"
 #include "DetectorConstruction.h"
 #include "PrimaryGeneration.h"
 #include "PersistencyManager.h"
 #include "BatchSession.h"
 #include "FactoryBase.h"
-#include "SingleParticleGenerator.h"
 
 #include <G4GenericPhysicsList.hh>
 #include <G4UImanager.hh>
