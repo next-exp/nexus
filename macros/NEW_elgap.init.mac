@@ -1,6 +1,6 @@
 /Geometry/RegisterGeometry NEXT_NEW
 
-/Generator/RegisterGenerator    SCINTILLATION
+/nexus/RegisterGenerator    ScintillationGenerator
 
 /Actions/RegisterTrackingAction LIGHT_TABLE
 

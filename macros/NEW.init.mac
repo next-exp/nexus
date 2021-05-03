@@ -15,7 +15,7 @@
 
 /Geometry/RegisterGeometry NEXT_NEW
 
-/Generator/RegisterGenerator ION
+/nexus/RegisterGenerator IonGenerator
 
 /Actions/RegisterTrackingAction VALIDATION
 /Actions/RegisterEventAction DEFAULT

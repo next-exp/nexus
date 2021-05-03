@@ -13,7 +13,7 @@
 
 /Geometry/RegisterGeometry NEXT_NEW
 
-/Generator/RegisterGenerator SINGLE_PARTICLE
+/nexus/RegisterGenerator SingleParticleGenerator
 
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction SAVE_ALL

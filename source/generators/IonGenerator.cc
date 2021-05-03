@@ -12,6 +12,7 @@
 
 #include "BaseGeometry.h"
 #include "DetectorConstruction.h"
+#include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4RunManager.hh>
@@ -21,6 +22,7 @@
 
 using namespace nexus;
 
+REGISTER_CLASS(IonGenerator, G4VPrimaryGenerator)
 
 IonGenerator::IonGenerator():
   G4VPrimaryGenerator(),

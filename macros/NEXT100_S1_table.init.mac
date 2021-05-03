@@ -16,7 +16,7 @@
 
 /Geometry/RegisterGeometry NEXT100_OPT
 
-/Generator/RegisterGenerator SCINTILLATION
+/nexus/RegisterGenerator ScintillationGenerator
 
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction SAVE_ALL

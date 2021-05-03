@@ -13,6 +13,7 @@
 #include "DetectorConstruction.h"
 #include "BaseGeometry.h"
 #include "OpticalMaterialProperties.h"
+#include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4ParticleDefinition.hh>
@@ -27,6 +28,8 @@
 
 using namespace nexus;
 using namespace CLHEP;
+
+REGISTER_CLASS(ScintillationGenerator, G4VPrimaryGenerator)
 
 
 ScintillationGenerator::ScintillationGenerator() :

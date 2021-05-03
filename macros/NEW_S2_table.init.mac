@@ -14,7 +14,7 @@
 
 /Geometry/RegisterGeometry NEXT_NEW
 
-/Generator/RegisterGenerator EL_TABLE
+/nexus/RegisterGenerator ELTableGenerator
 
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction SAVE_ALL

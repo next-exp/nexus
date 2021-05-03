@@ -9,6 +9,7 @@
 
 #include "ElecPositronPairGenerator.h"
 #include "BaseGeometry.h"
+#include "FactoryBase.h"
 
 #include "DetectorConstruction.h"
 
@@ -28,6 +29,7 @@
 using namespace nexus;
 using namespace CLHEP;
 
+REGISTER_CLASS(ElecPositronPairGenerator, G4VPrimaryGenerator)
 
 ElecPositronPairGenerator::ElecPositronPairGenerator():
 G4VPrimaryGenerator(), msg_(0), particle_definition_(0),

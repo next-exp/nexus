@@ -15,7 +15,7 @@
 
 /Geometry/RegisterGeometry NEXT100_OPT
 
-/Generator/RegisterGenerator ION
+/nexus/RegisterGenerator IonGenerator
 
 /Actions/RegisterRunAction DEFAULT
 /Actions/RegisterEventAction DEFAULT

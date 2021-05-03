@@ -23,7 +23,7 @@
 /Geometry/RegisterGeometry NEXT100
 
 ### GENERATOR
-/Generator/RegisterGenerator LAB_MUON
+/nexus/RegisterGenerator MuonAngleGenerator
 
 ### ACTIONS
 /Actions/RegisterTrackingAction DEFAULT

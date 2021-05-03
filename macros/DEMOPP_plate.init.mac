@@ -16,7 +16,7 @@
 
 /Geometry/RegisterGeometry NEXT_DEMO
 
-/Generator/RegisterGenerator SINGLE_PARTICLE
+/nexus/RegisterGenerator SingleParticleGenerator
 
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction DEFAULT

@@ -17,7 +17,7 @@
 
 /Geometry/RegisterGeometry NEXT_DEMO
 
-/Generator/RegisterGenerator Kr83m
+/nexus/RegisterGenerator Kr83mGenerator
 
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction DEFAULT

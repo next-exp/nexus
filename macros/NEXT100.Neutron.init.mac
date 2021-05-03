@@ -25,7 +25,7 @@
 /Geometry/RegisterGeometry NEXT100
 
 ### GENERATOR
-/Generator/RegisterGenerator SINGLE_PARTICLE
+/nexus/RegisterGenerator SingleParticleGenerator
 
 ### ACTIONS
 /Actions/RegisterRunAction DEFAULT

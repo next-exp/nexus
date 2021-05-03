@@ -10,10 +10,11 @@
 
 /Geometry/RegisterGeometry NEXT1_EL
 
-/Generator/RegisterGenerator MUON
+/nexus/RegisterGenerator MuonGenerator
 
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction MUONS
 /Actions/RegisterRunAction DEFAULT
 
 /nexus/RegisterMacro macros/DEMO_muons.config.mac
+

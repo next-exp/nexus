@@ -51,6 +51,8 @@ namespace nexus {
 
   private:
     G4GenericMessenger* msg_;
+    G4String gen_name_; ///< Name of the chosen primary generator
+
     std::vector<G4String> macros_;
     std::vector<G4String> delayed_;
 

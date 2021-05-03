@@ -23,7 +23,7 @@
 /Geometry/RegisterGeometry TON_SCALE
 
 ### GENERATOR
-/Generator/RegisterGenerator SINGLE_PARTICLE
+/nexus/RegisterGenerator SingleParticleGenerator
 
 ### ACTIONS
 /Actions/RegisterTrackingAction DEFAULT

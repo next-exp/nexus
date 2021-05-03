@@ -28,7 +28,7 @@ using namespace nexus;
 
 
 
-NexusApp::NexusApp(G4String init_macro): G4RunManager()
+NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_("")
 {
   // Create and configure a generic messenger for the app
   msg_ = new G4GenericMessenger(this, "/nexus/", "Nexus control commands.");
@@ -47,6 +47,9 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
   msg_->DeclareMethod("random_seed", &NexusApp::SetRandomSeed,
                       "Set a seed for the random number generator.");
 
+// Define the command to set the desired generator
+  msg_->DeclareProperty("RegisterGenerator", gen_name_, "");
+
   /////////////////////////////////////////////////////////
 
   // We will set now the user initialization class instances
@@ -56,7 +59,6 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
   // by the time we process the initialization macro.
 
   GeometryFactory  geomfctr;
-  GeneratorFactory genfctr;
   ActionsFactory   actfctr;
 
   // The physics lists are handled with Geant4's own 'factory'
@@ -75,8 +77,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
 
   // Set the primary generation instance in the run manager
   PrimaryGeneration* pg = new PrimaryGeneration();
-  //pg->SetGenerator(genfctr.CreateGenerator());
-  pg->SetGenerator(ObjFactory<G4VPrimaryGenerator>::Instance().CreateObject("SingleParticleGenerator"));
+  pg->SetGenerator(ObjFactory<G4VPrimaryGenerator>::Instance().CreateObject(gen_name_));
   this->SetUserAction(pg);
 
   // User interface

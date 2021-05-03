@@ -11,7 +11,7 @@
 
 /Geometry/RegisterGeometry XE_SPHERE
 
-/Generator/RegisterGenerator SINGLE_PARTICLE
+/nexus/RegisterGenerator SingleParticleGenerator
 
 /Actions/RegisterRunAction DEFAULT
 /Actions/RegisterEventAction DEFAULT

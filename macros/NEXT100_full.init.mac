@@ -16,7 +16,7 @@
 
 /Geometry/RegisterGeometry NEXT100_OPT
 
-/Generator/RegisterGenerator Kr83m
+/nexus/RegisterGenerator Kr83mGenerator
 
 /Actions/RegisterRunAction DEFAULT
 /Actions/RegisterEventAction DEFAULT

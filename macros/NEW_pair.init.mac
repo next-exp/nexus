@@ -10,7 +10,7 @@
 
 /Geometry/RegisterGeometry NEXT_NEW
 
-/Generator/RegisterGenerator E+E-PAIR
+/nexus/RegisterGenerator ElecPositronPairGenerator
 
 /Actions/RegisterTrackingAction DEFAULT
 /Actions/RegisterEventAction DEFAULT

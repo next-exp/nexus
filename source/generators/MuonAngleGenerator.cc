@@ -10,6 +10,11 @@
 #include "MuonAngleGenerator.h"
 #include "DetectorConstruction.h"
 #include "BaseGeometry.h"
+#include "MuonsPointSampler.h"
+#include "AddUserInfoToPV.h"
+#include "FactoryBase.h"
+
+#include <G4Event.hh>
 #include <G4GenericMessenger.hh>
 #include <G4ParticleDefinition.hh>
 #include <G4RunManager.hh>
@@ -19,17 +24,17 @@
 #include <G4RandomDirection.hh>
 #include <Randomize.hh>
 #include <G4OpticalPhoton.hh>
-#include "MuonsPointSampler.h"
-#include "AddUserInfoToPV.h"
 
 #include <TMath.h>
-#include "TFile.h"
-#include "TH2F.h"
+#include <TFile.h>
+#include <TH2F.h>
+
 #include "CLHEP/Units/SystemOfUnits.h"
 
 using namespace nexus;
 using namespace CLHEP;
 
+REGISTER_CLASS(MuonAngleGenerator, G4VPrimaryGenerator)
 
 MuonAngleGenerator::MuonAngleGenerator():
   G4VPrimaryGenerator(), msg_(0), particle_definition_(0),

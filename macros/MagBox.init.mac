@@ -17,7 +17,7 @@
 /Geometry/RegisterGeometry MAG_BOX
 
 ### GENERATOR
-/Generator/RegisterGenerator SINGLE_PARTICLE
+/nexus/RegisterGenerator SingleParticleGenerator
 
 ### ACTIONS
 /Actions/RegisterRunAction DEFAULT
