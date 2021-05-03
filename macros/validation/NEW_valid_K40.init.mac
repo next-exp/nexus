@@ -19,8 +19,8 @@
 
 /nexus/RegisterGenerator IonGenerator
 
-/Actions/RegisterTrackingAction VALIDATION
-/Actions/RegisterEventAction DEFAULT
+/nexus/RegisterTrackingAction ValidationTrackingAction
+/nexus/RegisterEventAction DefaultEventAction
 
 /nexus/RegisterMacro macros/validation/NEW_valid_K40.config.mac
 #/nexus/RegisterDelayedMacro macros/physics/Bi214.mac
