@@ -89,14 +89,23 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
 
   // Set the detector construction instance in the run manager
   DetectorConstruction* dc = new DetectorConstruction();
+  if (geo_name_ == "") {
+    G4Exception("[NexusApp]", "NexusApp()", FatalException, "A geometry must be specified.");
+  }
   dc->SetGeometry(ObjFactory<BaseGeometry>::Instance().CreateObject(geo_name_));
   this->SetUserInitialization(dc);
 
   // Set the primary generation instance in the run manager
   PrimaryGeneration* pg = new PrimaryGeneration();
+  if (gen_name_ == "") {
+    G4Exception("[NexusApp]", "NexusApp()", FatalException, "A generator must be specified.");
+  }
   pg->SetGenerator(ObjFactory<G4VPrimaryGenerator>::Instance().CreateObject(gen_name_));
   this->SetUserAction(pg);
 
+  if (pm_name_ == "") {
+    G4Exception("[NexusApp]", "NexusApp()", FatalException, "A persistency manager must be specified.");
+  }
   BasePersistencyManager* pm = ObjFactory<BasePersistencyManager>::Instance().CreateObject(pm_name_);
   pm->SetMacros(init_macro, macros_, delayed_);
 
