@@ -41,6 +41,7 @@ GeometryFactory::~GeometryFactory()
 #include "MagBox.h"
 #include "NextTonScale.h"
 #include "NextFlex.h"
+#include "SIPM_QE_setup.h"
 
 BaseGeometry* GeometryFactory::CreateGeometry() const
 {
@@ -65,6 +66,8 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
   else if (name_ == "NEXT_FLEX") p = new NextFlex();
 
   else if (name_ == "NEXT_DEMO") p = new NextDemo();
+
+  else if (name_ == "SIPM_QE_setup") p = new SIPM_QE_setup();
 
 
   else {
