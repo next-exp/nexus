@@ -37,6 +37,9 @@ namespace nexus {
     /// Returns the span (maximum dimension) of the geometry
     G4double GetSpan();
 
+    /// Returns the 3 dimensions of the geometry (x, y, z)
+    G4ThreeVector GetDimensions();
+
     /// Returns true if geometry has a drift field
     G4bool GetDrift() const;
 
@@ -66,6 +69,9 @@ namespace nexus {
     /// Sets the drift variable to true if a drift field exists
     void SetDrift(G4bool);
 
+    /// Sets the 3 dimensions of the geometry (x, y, z)
+    void SetDimensions(G4ThreeVector dim);
+
   private:
     /// Copy-constructor (hidden)
     GeometryBase(const GeometryBase&);
@@ -75,6 +81,7 @@ namespace nexus {
   private:
     G4LogicalVolume* logicVol_; ///< Pointer to the logical volume
     G4double span_; ///< Maximum dimension of the geometry
+    G4ThreeVector dimensions_; ///< XYZ dimensions of a regular geometry
     G4bool drift_; ///< True if geometry contains a drift field (for hit coordinates)
     G4double el_z_; ///< Starting point of EL generation in z
   };
@@ -98,6 +105,10 @@ namespace nexus {
   inline void GeometryBase::SetSpan(G4double s) { span_ = s; }
 
   inline G4double GeometryBase::GetSpan() { return span_; }
+
+  inline void GeometryBase::SetDimensions(G4ThreeVector dim) {  dimensions_ = dim; }
+
+  inline  G4ThreeVector GeometryBase::GetDimensions()  { return dimensions_; }
 
   inline void GeometryBase::SetDrift(G4bool drift) { drift_ = drift; }
 
