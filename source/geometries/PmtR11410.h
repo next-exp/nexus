@@ -9,7 +9,7 @@
 #ifndef PMT_R11410_H
 #define PMT_R11410_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include <G4ThreeVector.hh>
 
 class G4OpticalSurface;
@@ -22,7 +22,7 @@ namespace nexus {
 
   /// Geometry model for the Hamamatsu R11410-10 photomultiplier
 
-  class PmtR11410: public BaseGeometry
+  class PmtR11410: public GeometryBase
   {
   public:
     // Constructor

@@ -30,10 +30,10 @@
 
 namespace nexus {
 
-  REGISTER_CLASS(MagBox, BaseGeometry)
+  REGISTER_CLASS(MagBox, GeometryBase)
 
   MagBox::MagBox():
-    BaseGeometry(),
+    GeometryBase(),
 
     // Detector dimensions
     detector_size_ (1.*m)

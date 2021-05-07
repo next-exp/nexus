@@ -9,7 +9,7 @@
 #ifndef NEXT100_SHIELDING_H
 #define NEXT100_SHIELDING_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 #include <G4Navigator.hh>
 
@@ -21,7 +21,7 @@ namespace nexus {
 
   class BoxPointSampler;
 
-  class Next100Shielding: public BaseGeometry
+  class Next100Shielding: public GeometryBase
   {
   public:
     /// Constructor

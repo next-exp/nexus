@@ -38,7 +38,7 @@ namespace nexus {
 
   NextNewVessel::NextNewVessel():
 
-    BaseGeometry(),
+    GeometryBase(),
 
     // Body dimensions
     vessel_in_diam_ (64.0  * cm),

@@ -9,10 +9,10 @@
 #ifndef COLL_SUPPORT_H
 #define COLL_SUPPORT_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 namespace nexus {
-  class CollSupport : public BaseGeometry {
+  class CollSupport : public GeometryBase {
 
   public:
     ///Constructor

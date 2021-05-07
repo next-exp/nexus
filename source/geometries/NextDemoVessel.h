@@ -9,14 +9,14 @@
 #ifndef NEXT_DEMO_VESSEL_H
 #define NEXT_DEMO_VESSEL_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 class G4GenericMessenger;
 class G4VPhysicalVolume;
 
 namespace nexus {
 
-  class NextDemoVessel: public BaseGeometry
+  class NextDemoVessel: public GeometryBase
   {
   public:
     NextDemoVessel();

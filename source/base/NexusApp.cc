@@ -91,7 +91,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
   if (geo_name_ == "") {
     G4Exception("[NexusApp]", "NexusApp()", FatalException, "A geometry must be specified.");
   }
-  dc->SetGeometry(ObjFactory<BaseGeometry>::Instance().CreateObject(geo_name_));
+  dc->SetGeometry(ObjFactory<GeometryBase>::Instance().CreateObject(geo_name_));
   this->SetUserInitialization(dc);
 
   // Set the primary generation instance in the run manager

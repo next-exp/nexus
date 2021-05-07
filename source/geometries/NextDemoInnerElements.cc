@@ -29,7 +29,7 @@ using namespace nexus;
 
 
 NextDemoInnerElements::NextDemoInnerElements():
-  BaseGeometry(),
+  GeometryBase(),
   config_                     (""),
   gate_sapphire_wdw_distance_ (427.5 * mm),
   mother_logic_vol_           (nullptr),

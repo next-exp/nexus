@@ -20,11 +20,11 @@
 
 using namespace nexus;
 
-REGISTER_CLASS(NextDemo, BaseGeometry)
+REGISTER_CLASS(NextDemo, GeometryBase)
 
 
 NextDemo::NextDemo():
-  BaseGeometry(),
+  GeometryBase(),
   lab_size_(10.*m),
   specific_vertex_X_(0.), specific_vertex_Y_(0.), specific_vertex_Z_(0.),
   vessel_geom_(new NextDemoVessel),
@@ -71,7 +71,7 @@ void NextDemo::Construct()
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., -vessel_geom_->GetGateEndcapDistance()),
                     vessel_geom_->GetLogicalVolume(),
                     vessel_geom_->GetLogicalVolume()->GetName(),
-                    BaseGeometry::GetLogicalVolume(),
+                    GeometryBase::GetLogicalVolume(),
                     false, 0, false);
 
   inner_geom_->SetELzCoord(vessel_geom_->GetGateEndcapDistance());

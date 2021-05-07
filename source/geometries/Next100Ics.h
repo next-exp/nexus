@@ -9,7 +9,7 @@
 #ifndef NEXT100_ICS_H
 #define NEXT100_ICS_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 #include <G4Navigator.hh>
 
@@ -22,7 +22,7 @@ namespace nexus {
   class SpherePointSampler;
   class BoxPointSampler;
 
-  class Next100Ics: public BaseGeometry
+  class Next100Ics: public GeometryBase
   {
   public:
     /// Constructor
@@ -37,7 +37,7 @@ namespace nexus {
 
     /// Sets the Logical Volume where ICS will be placed
     void SetLogicalVolume(G4LogicalVolume* mother_logic);
-    
+
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
@@ -59,7 +59,7 @@ namespace nexus {
     //    G4double tracking_cone_height_, tracking_irad_;
     G4double energy_theta_, energy_orad_, energy_thickness_, energy_sph_zpos_, energy_cyl_length_;
 
-    // Dimensions coming from outside  
+    // Dimensions coming from outside
     G4double nozzle_ext_diam_, up_nozzle_ypos_, central_nozzle_ypos_;
     G4double down_nozzle_ypos_, bottom_nozzle_ypos_;
 
@@ -82,7 +82,7 @@ namespace nexus {
     G4Navigator* geom_navigator_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* msg_; 
+    G4GenericMessenger* msg_;
 
   };
 

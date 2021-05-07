@@ -9,7 +9,7 @@
 #ifndef GENERIC_PHOTOSENSOR_H
 #define GENERIC_PHOTOSENSOR_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include <G4MaterialPropertyVector.hh>
 
 class G4Material;
@@ -18,7 +18,7 @@ class G4MaterialPropertiesTable;
 
 namespace nexus {
 
-  class GenericPhotosensor: public BaseGeometry
+  class GenericPhotosensor: public GeometryBase
   {
   public:
     // Constructor for a rectangular sensor providing
@@ -26,10 +26,10 @@ namespace nexus {
     // a silicon photomultiplier.
     GenericPhotosensor(G4String name,   G4double width,
                        G4double height, G4double thickness = 2.0 * mm);
-    
+
     // Constructor for a square sensor
     GenericPhotosensor(G4String name, G4double size);
-    
+
     // Destructor
     ~GenericPhotosensor();
 
@@ -57,7 +57,7 @@ namespace nexus {
     void DefineMaterials();
 
     G4String name_;
-    
+
     G4double width_, height_, thickness_;
     G4double window_thickness_;
     G4double sensarea_thickness_;

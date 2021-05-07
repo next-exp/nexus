@@ -30,9 +30,9 @@ using namespace CLHEP;
 
 namespace nexus {
 
-  REGISTER_CLASS(Next100OpticalGeometry, BaseGeometry)
+  REGISTER_CLASS(Next100OpticalGeometry, GeometryBase)
 
-  Next100OpticalGeometry::Next100OpticalGeometry(): BaseGeometry(),
+  Next100OpticalGeometry::Next100OpticalGeometry(): GeometryBase(),
 						    pressure_(15. * bar),
 						    temperature_ (300 * kelvin),
 						    sc_yield_(25510. * 1/MeV),

@@ -31,12 +31,12 @@
 
 namespace nexus {
 
-  REGISTER_CLASS(Next100, BaseGeometry)
+  REGISTER_CLASS(Next100, GeometryBase)
 
   using namespace CLHEP;
 
   Next100::Next100():
-    BaseGeometry(),
+    GeometryBase(),
     // Lab dimensions
     lab_size_ (5. * m),
     // Nozzles external diam and y positions

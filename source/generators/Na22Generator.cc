@@ -10,7 +10,7 @@
 
 #include "Na22Generator.h"
 #include "DetectorConstruction.h"
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include "FactoryBase.h"
 
 #include <G4Event.hh>

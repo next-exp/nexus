@@ -17,7 +17,7 @@ class G4Event;
 
 namespace nexus {
 
-  class BaseGeometry;
+  class GeometryBase;
 
 
   class ELTableGenerator: public G4VPrimaryGenerator
@@ -35,7 +35,7 @@ namespace nexus {
 
   private:
     G4GenericMessenger* msg_; ///< Pointer to UI messenger
-    const BaseGeometry* geom_; ///< Pointer to the detector geometry
+    const GeometryBase* geom_; ///< Pointer to the detector geometry
 
     G4int num_ie_;
   };

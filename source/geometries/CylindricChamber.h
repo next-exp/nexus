@@ -9,14 +9,14 @@
 #ifndef CYLINDRIC_CHAMBER_H
 #define CYLINDRIC_CHAMBER_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 class G4GenericMessenger;
 
 
 namespace nexus {
 
-  class CylindricChamber: public BaseGeometry
+  class CylindricChamber: public GeometryBase
   {
   public:
     /// Constructor

@@ -1,13 +1,13 @@
 // ----------------------------------------------------------------------------
-// nexus | BaseGeometry.h
+// nexus | GeometryBase.h
 //
 // This is an abstract base class for encapsulation of geometries.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef BASE_GEOMETRY_H
-#define BASE_GEOMETRY_H
+#ifndef GEOMETRY_BASE_H
+#define GEOMETRY_BASE_H
 
 #include <G4ThreeVector.hh>
 #include <CLHEP/Units/SystemOfUnits.h>
@@ -20,7 +20,7 @@ namespace nexus {
 
   /// Abstract base class for encapsulation of detector geometries.
 
-  class BaseGeometry
+  class GeometryBase
   {
   public:
     /// The volumes (solid, logical and physical) must be defined
@@ -50,12 +50,12 @@ namespace nexus {
     void CalculateGlobalPos(G4ThreeVector& vertex) const;
 
     /// Destructor
-    virtual ~BaseGeometry();
+    virtual ~GeometryBase();
 
   protected:
     /// Default constructor defined as protected so no instance of
     /// this base class can be created.
-    BaseGeometry();
+    GeometryBase();
 
     /// Sets the logical volume representing the geometry
     void SetLogicalVolume(G4LogicalVolume*);
@@ -68,9 +68,9 @@ namespace nexus {
 
   private:
     /// Copy-constructor (hidden)
-    BaseGeometry(const BaseGeometry&);
+    GeometryBase(const GeometryBase&);
     /// Assignment operator (hidden)
-    const BaseGeometry& operator=(const BaseGeometry&);
+    const GeometryBase& operator=(const GeometryBase&);
 
   private:
     G4LogicalVolume* logicVol_; ///< Pointer to the logical volume
@@ -82,33 +82,33 @@ namespace nexus {
 
   // Inline definitions ///////////////////////////////////
 
-  inline BaseGeometry::BaseGeometry(): logicVol_(0), span_(25.*m), drift_(false), el_z_(0.*mm) {}
+  inline GeometryBase::GeometryBase(): logicVol_(0), span_(25.*m), drift_(false), el_z_(0.*mm) {}
 
-  inline BaseGeometry::~BaseGeometry() {}
+  inline GeometryBase::~GeometryBase() {}
 
-  inline G4LogicalVolume* BaseGeometry::GetLogicalVolume() const
+  inline G4LogicalVolume* GeometryBase::GetLogicalVolume() const
   { return logicVol_; }
 
-  inline void BaseGeometry::SetLogicalVolume(G4LogicalVolume* lv)
+  inline void GeometryBase::SetLogicalVolume(G4LogicalVolume* lv)
   { logicVol_ = lv; }
 
-  inline G4ThreeVector BaseGeometry::GenerateVertex(const G4String&) const
+  inline G4ThreeVector GeometryBase::GenerateVertex(const G4String&) const
   { return G4ThreeVector(0., 0., 0.); }
 
-  inline void BaseGeometry::SetSpan(G4double s) { span_ = s; }
+  inline void GeometryBase::SetSpan(G4double s) { span_ = s; }
 
-  inline G4double BaseGeometry::GetSpan() { return span_; }
+  inline G4double GeometryBase::GetSpan() { return span_; }
 
-  inline void BaseGeometry::SetDrift(G4bool drift) { drift_ = drift; }
+  inline void GeometryBase::SetDrift(G4bool drift) { drift_ = drift; }
 
-  inline G4bool BaseGeometry::GetDrift() const { return drift_; }
+  inline G4bool GeometryBase::GetDrift() const { return drift_; }
 
-  inline G4double BaseGeometry::GetELzCoord() const {return el_z_;}
+  inline G4double GeometryBase::GetELzCoord() const {return el_z_;}
 
-  inline void BaseGeometry::SetELzCoord(G4double z) {el_z_ = z;}
+  inline void GeometryBase::SetELzCoord(G4double z) {el_z_ = z;}
 
   // This methods is to be used only in the Next1EL and NEW geometries
-  inline void BaseGeometry::CalculateGlobalPos(G4ThreeVector& vertex) const
+  inline void GeometryBase::CalculateGlobalPos(G4ThreeVector& vertex) const
   {
     // Rotates and translates into G4 global
     // coordinates, needed for volume checks.

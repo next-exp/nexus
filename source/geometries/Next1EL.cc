@@ -49,10 +49,10 @@
 using namespace nexus;
 using namespace CLHEP;
 
-REGISTER_CLASS(Next1EL, BaseGeometry)
+REGISTER_CLASS(Next1EL, GeometryBase)
 
 Next1EL::Next1EL():
-  BaseGeometry(),
+  GeometryBase(),
   // LABORATORY //////////////////////////////////
   lab_size_ (2. * m),
   // VESSEL //////////////////////////////////////

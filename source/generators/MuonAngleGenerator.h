@@ -23,7 +23,7 @@ class TH2F;
 
 namespace nexus {
 
-  class BaseGeometry;
+  class GeometryBase;
 
   class MuonAngleGenerator: public G4VPrimaryGenerator
   {
@@ -73,7 +73,7 @@ namespace nexus {
 
     TH2F * distribution_; ///< Anglular distribution
 
-    const BaseGeometry* geom_; ///< Pointer to the detector geometry
+    const GeometryBase* geom_; ///< Pointer to the detector geometry
 
     G4VSolid * geom_solid_;
 

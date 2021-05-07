@@ -37,10 +37,10 @@
 
 using namespace nexus;
 
-REGISTER_CLASS(NextFlex, BaseGeometry)
+REGISTER_CLASS(NextFlex, GeometryBase)
 
 NextFlex::NextFlex():
-  BaseGeometry(),
+  GeometryBase(),
   verbosity_         (false),
   ics_visibility_    (false),
   msg_               (nullptr),
@@ -208,7 +208,7 @@ void NextFlex::Construct()
   G4LogicalVolume* lab_logic_vol = new G4LogicalVolume(lab_solid_vol,
                                                        air_mat_, lab_name);
 
-  BaseGeometry::SetLogicalVolume(lab_logic_vol);
+  GeometryBase::SetLogicalVolume(lab_logic_vol);
 
   lab_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
 

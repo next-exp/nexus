@@ -31,7 +31,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  Next1ELDBO::Next1ELDBO(G4int rows, G4int columns): BaseGeometry()
+  Next1ELDBO::Next1ELDBO(G4int rows, G4int columns): GeometryBase()
   {
     DefineGeometry(rows, columns);
   }

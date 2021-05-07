@@ -9,10 +9,10 @@
 #ifndef COLL_PROTECTION_H
 #define COLL_PROTECTION_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 namespace nexus {
-  class CollProtection : public BaseGeometry {
+  class CollProtection : public GeometryBase {
 
   public:
     ///Constructor

@@ -23,7 +23,7 @@ class G4ParticleDefinition;
 
 namespace nexus {
 
-  class BaseGeometry;
+  class GeometryBase;
 
   class SingleParticleGenerator: public G4VPrimaryGenerator
   {
@@ -54,7 +54,7 @@ namespace nexus {
     G4double energy_min_; ///< Minimum kinetic energy
     G4double energy_max_; ///< Maximum kinetic energy
 
-    const BaseGeometry* geom_; ///< Pointer to the detector geometry
+    const GeometryBase* geom_; ///< Pointer to the detector geometry
 
     G4String region_;
 

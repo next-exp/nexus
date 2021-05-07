@@ -48,12 +48,12 @@
 
 namespace nexus {
 
-  REGISTER_CLASS(NextNew, BaseGeometry)
+  REGISTER_CLASS(NextNew, GeometryBase)
 
   using namespace CLHEP;
 
   NextNew::NextNew():
-    BaseGeometry(),
+    GeometryBase(),
     // Lab dimensions
     lab_size_ (5. * m),
     rot_angle_(pi),

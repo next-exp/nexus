@@ -9,7 +9,7 @@
 #ifndef NEXT_TON_SCALE_H
 #define NEXT_TON_SCALE_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 class G4GenericMessenger;
 class G4Material;
@@ -20,7 +20,7 @@ namespace nexus { class CylinderPointSampler; }
 
 namespace nexus {
 
-  class NextTonScale: public BaseGeometry
+  class NextTonScale: public GeometryBase
   {
   public:
     // Constructor

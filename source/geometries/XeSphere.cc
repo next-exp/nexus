@@ -28,12 +28,12 @@
 using namespace nexus;
 using namespace CLHEP;
 
-REGISTER_CLASS(XeSphere, BaseGeometry)
+REGISTER_CLASS(XeSphere, GeometryBase)
 
 namespace nexus {
 
   XeSphere::XeSphere():
-    BaseGeometry(), liquid_(true), pressure_(STP_Pressure),
+    GeometryBase(), liquid_(true), pressure_(STP_Pressure),
     radius_(1.*m), sphere_vertex_gen_(0)
   {
     msg_ = new G4GenericMessenger(this, "/Geometry/XeSphere/",
@@ -88,7 +88,7 @@ namespace nexus {
     // and the solid volume defined above
     G4LogicalVolume* sphere_logic =
     new G4LogicalVolume(sphere_solid, xenon, name);
-    BaseGeometry::SetLogicalVolume(sphere_logic);
+    GeometryBase::SetLogicalVolume(sphere_logic);
 
     // Set the logical volume of the sphere as an ionization
     // sensitive detector, i.e. position, time and energy deposition

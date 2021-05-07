@@ -9,11 +9,11 @@
 #ifndef DISK_SOURCE_H
 #define DISK_SOURCE_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 namespace nexus {
 
-  class DiskSource: public BaseGeometry {
+  class DiskSource: public GeometryBase {
   public:
     /// Constructor
     DiskSource() {}

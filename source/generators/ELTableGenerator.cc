@@ -9,7 +9,7 @@
 #include "ELTableGenerator.h"
 
 #include "DetectorConstruction.h"
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include "IonizationElectron.h"
 #include "FactoryBase.h"
 

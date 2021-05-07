@@ -9,7 +9,7 @@
 
 #include "MuonAngleGenerator.h"
 #include "DetectorConstruction.h"
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include "MuonsPointSampler.h"
 #include "AddUserInfoToPV.h"
 #include "FactoryBase.h"

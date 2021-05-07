@@ -10,7 +10,7 @@
 #ifndef NEXT_DEMO_INNER_ELEMENTS_H
 #define NEXT_DEMO_INNER_ELEMENTS_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include <G4ThreeVector.hh>
 
 class G4LogicalVolume;
@@ -25,7 +25,7 @@ namespace nexus {
   class NextDemoEnergyPlane;
   class NextDemoTrackingPlane;
 
-  class NextDemoInnerElements: public BaseGeometry
+  class NextDemoInnerElements: public GeometryBase
   {
   public:
     NextDemoInnerElements();

@@ -9,7 +9,7 @@
 #ifndef LSCHALLA_H
 #define LSCHALLA_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 namespace nexus {class CylinderPointSampler2020;}
 
@@ -19,7 +19,7 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class LSCHallA: public BaseGeometry {
+  class LSCHallA: public GeometryBase {
   public:
     /// Constructor
     LSCHallA();

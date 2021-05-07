@@ -9,7 +9,7 @@
 #ifndef NEXT_FLEX_TRACKING_PLANE_H
 #define NEXT_FLEX_TRACKING_PLANE_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include <G4ThreeVector.hh>
 #include <vector>
 
@@ -28,7 +28,7 @@ namespace nexus {
   class GenericPhotosensor;
 
 
-  class NextFlexTrackingPlane: public BaseGeometry {
+  class NextFlexTrackingPlane: public GeometryBase {
 
   public:
 
@@ -37,7 +37,7 @@ namespace nexus {
     virtual ~NextFlexTrackingPlane();
 
     virtual void Construct();
-    
+
     virtual G4ThreeVector GenerateVertex(const G4String&) const;
 
     // Sets as mother volume of all the elements the volume where the class is placed
@@ -131,7 +131,7 @@ namespace nexus {
     G4double teflon_thickness_;
     G4double teflon_hole_diam_;
     G4double teflon_iniZ_;
-    
+
     G4double wls_thickness_;
 
     // Sensor IDs

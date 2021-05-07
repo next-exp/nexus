@@ -14,7 +14,7 @@
 #include "SingleParticleGenerator.h"
 
 #include "DetectorConstruction.h"
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include "RandomUtils.h"
 #include "FactoryBase.h"
 

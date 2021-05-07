@@ -9,7 +9,7 @@
 #ifndef NEXTNEW_MINI_CASTLE_H
 #define NEXTNEW_MINI_CASTLE_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 #include <G4Navigator.hh>
 #include <G4TransportationManager.hh>
@@ -20,7 +20,7 @@ namespace nexus {
 
   class BoxPointSampler;
 
-  class NextNewMiniCastle: public BaseGeometry
+  class NextNewMiniCastle: public GeometryBase
   {
   public:
     /// Constructor
@@ -55,7 +55,7 @@ namespace nexus {
     BoxPointSampler* mini_castle_box_gen_;
     BoxPointSampler* mini_castle_external_surf_gen_;
     BoxPointSampler* steel_box_gen_;
-    
+
     // Geometry Navigator
     G4Navigator* geom_navigator_;
 

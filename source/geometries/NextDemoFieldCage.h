@@ -15,7 +15,7 @@
 #include <G4Navigator.hh>
 #include <G4TransportationManager.hh>
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 class G4GenericMessenger;
 
@@ -23,7 +23,7 @@ namespace nexus {
 
   class CylinderPointSampler2020;
 
-  class NextDemoFieldCage: public BaseGeometry
+  class NextDemoFieldCage: public GeometryBase
   {
 
   public:

@@ -8,7 +8,7 @@
 // ----------------------------------------------------------------------------
 
 #include "ElecPositronPairGenerator.h"
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include "FactoryBase.h"
 
 #include "DetectorConstruction.h"

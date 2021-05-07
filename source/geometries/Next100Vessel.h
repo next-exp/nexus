@@ -9,7 +9,7 @@
 #ifndef NEXT100_VESSEL_H
 #define NEXT100_VESSEL_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 #include <G4Navigator.hh>
 
@@ -22,7 +22,7 @@ namespace nexus {
   class CylinderPointSampler;
   class SpherePointSampler;
 
-  class Next100Vessel: public BaseGeometry
+  class Next100Vessel: public GeometryBase
   {
   public:
     /// Constructor

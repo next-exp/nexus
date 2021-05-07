@@ -35,13 +35,13 @@
 namespace nexus {
 
   using namespace CLHEP;
-  
+
   Next100Ics::Next100Ics(const G4double nozzle_ext_diam,
 			 const G4double up_nozzle_ypos,
 			 const G4double central_nozzle_ypos,
 			 const G4double down_nozzle_ypos,
 			 const G4double bottom_nozzle_ypos):
-    BaseGeometry(),
+    GeometryBase(),
 
     // Body dimensions
     body_in_rad_ (56.0  * cm),
@@ -51,11 +51,11 @@ namespace nexus {
     // Tracking plane dimensions  (thin version without substractions)
     tracking_orad_ (65.0 * cm),        // To be checked
     tracking_length_ (10.0 * cm),
-  
+
     //KDB plugs constructed here because the copper tracking plane is divided in two parts,
     // one hosted in the Next100Trackingplane class (support) and the proper shielding hosted here.
     plug_x_ (40. *mm),
-    plug_y_ (4. *mm), //two union conectors   
+    plug_y_ (4. *mm), //two union conectors
     plug_z_ (6. *mm),
     // Number of Dice Boards, DB columns
     DB_columns_ (11),
@@ -87,13 +87,13 @@ namespace nexus {
     msg_->DeclareProperty("ics_vis", visibility_, "ICS Visibility");
 
   }
-  
+
   void Next100Ics::SetLogicalVolume(G4LogicalVolume* mother_logic)
   {
     mother_logic_ = mother_logic;
   }
 
-  
+
   void Next100Ics::Construct()
   {
 
@@ -113,50 +113,50 @@ namespace nexus {
 
     // // Making DB tails holes
     // G4Box* ics_tracking_hole_solid = new G4Box("ICS_TRACKING_HOLE", plug_x_/2., plug_y_,  tracking_length_);
-      
+
     // G4SubtractionSolid* ics_tracking_solid = new G4SubtractionSolid("ICS_TRACKING", ics_tracking_nh_solid,
     //  								    ics_tracking_hole_solid, 0,DB_positions_[0]);
     // for (int i=1; i<num_DBs_; i++) {
     //   ics_tracking_solid = new G4SubtractionSolid("ICS_TRACKING", ics_tracking_solid,
     //  						  ics_tracking_hole_solid, 0, DB_positions_[i]);
     // }
-    
+
     // Energy plane
     G4Sphere* ics_energy_sph_nh_solid = new G4Sphere("ICS_ENERGY_SPH_NH",
 						     energy_orad_ - energy_thickness_,  energy_orad_,   //radius
 						     0. * deg, 360. * deg,                              // phi
 						     180. * deg - energy_theta_, energy_theta_);        // theta
-    
+
     G4double hole_diam = nozzle_ext_diam_ + 1.*cm;
     G4double hole_length = energy_thickness_ + 50.*cm;
     G4double hole_zpos = -1. * (body_length_/2. + hole_length/2.);
 
     G4Tubs* nozzle_hole_solid = new G4Tubs("NOZZLE_HOLE", 0.*cm, hole_diam/2., hole_length/2., 0.*deg, 360.*deg);
 
-    G4SubtractionSolid* ics_energy_sph_solid = 
+    G4SubtractionSolid* ics_energy_sph_solid =
       new G4SubtractionSolid("ICS_ENERGY_SPH", ics_energy_sph_nh_solid,
 			     nozzle_hole_solid, 0, G4ThreeVector(0., up_nozzle_ypos_, hole_zpos) );
 
-    ics_energy_sph_solid = 
+    ics_energy_sph_solid =
       new G4SubtractionSolid("ICS_ENERGY_SPH", ics_energy_sph_solid,
 			     nozzle_hole_solid, 0, G4ThreeVector(0., central_nozzle_ypos_, hole_zpos) );
 
-    ics_energy_sph_solid = 
+    ics_energy_sph_solid =
       new G4SubtractionSolid("ICS_ENERGY_SPH", ics_energy_sph_solid,
 			     nozzle_hole_solid, 0, G4ThreeVector(0., down_nozzle_ypos_, hole_zpos) );
 
-    ics_energy_sph_solid = 
+    ics_energy_sph_solid =
       new G4SubtractionSolid("ICS_ENERGY_SPH", ics_energy_sph_solid,
 			     nozzle_hole_solid, 0, G4ThreeVector(0., bottom_nozzle_ypos_, hole_zpos) );
 
 
-    G4Tubs* ics_energy_cyl_solid = 
+    G4Tubs* ics_energy_cyl_solid =
       new G4Tubs("ICS_ENERGY_CYL",  body_in_rad_, body_in_rad_ + energy_thickness_,  energy_cyl_length_/2., 0.*deg, 360.*deg);
 
 
     // Unions of parts
     G4double ics_tracking_zpos = body_length_/2. - tracking_length_/2.;
-    G4UnionSolid* ics_solid = 
+    G4UnionSolid* ics_solid =
       new G4UnionSolid("ICS", ics_body_solid, ics_tracking_solid,
 		       0, G4ThreeVector(0., 0., ics_tracking_zpos) );
 
@@ -167,14 +167,14 @@ namespace nexus {
     ics_solid = new G4UnionSolid("ICS", ics_solid, ics_energy_cyl_solid,
 				 0, G4ThreeVector(0., 0., energy_cyl_zpos) );
 
-    G4LogicalVolume* ics_logic = 
+    G4LogicalVolume* ics_logic =
       new G4LogicalVolume(ics_solid,
 			  G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"), "ICS");
 
     //this->SetLogicalVolume(ics_logic);
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), ics_logic, "ICS", mother_logic_, false, 0, false);
 
-    
+
     ///// DB plugs placement
     G4Box* plug_solid = new G4Box("DB_PLUG", plug_x_/2., plug_y_/2., plug_z_/2.);
     G4LogicalVolume* plug_logic = new G4LogicalVolume(plug_solid,  MaterialsList::PEEK(), "DB_PLUG");
@@ -197,7 +197,7 @@ namespace nexus {
       ics_logic->SetVisAttributes(copper_col);
       G4VisAttributes dirty_white_col =nexus::DirtyWhite();
       dirty_white_col.SetForceSolid(true);
-      plug_logic->SetVisAttributes(dirty_white_col); 
+      plug_logic->SetVisAttributes(dirty_white_col);
 
     }
     else {
@@ -207,14 +207,14 @@ namespace nexus {
 
 
     // VERTEX GENERATORS   //////////
-    body_gen_ = 
+    body_gen_ =
       new CylinderPointSampler(body_in_rad_, body_length_, body_thickness_, 0.);
 
-    tracking_gen_ = 
+    tracking_gen_ =
       new CylinderPointSampler(0.*cm, tracking_length_, tracking_orad_, 0.,
 					     G4ThreeVector(0., 0., ics_tracking_zpos));
 
-    energy_cyl_gen_ = 
+    energy_cyl_gen_ =
       new CylinderPointSampler(body_in_rad_, energy_cyl_length_, energy_thickness_, 0.,  G4ThreeVector(0., 0., energy_cyl_zpos));
 
     energy_sph_gen_ = new SpherePointSampler(energy_orad_ - energy_thickness_, energy_thickness_, G4ThreeVector(0., 0., energy_sph_zpos_),
@@ -244,7 +244,7 @@ namespace nexus {
     delete body_gen_;
     delete plug_gen_;
   }
-  
+
 
 
   G4ThreeVector Next100Ics::GenerateVertex(const G4String& region) const
@@ -260,7 +260,7 @@ namespace nexus {
 	vertex = body_gen_->GenerateVertex("BODY_VOL");        // Body
       }
 
-   
+
       else if  (rand < perc_tracking_vol_){
 	G4VPhysicalVolume *VertexVolume;
 	do {
@@ -302,13 +302,13 @@ namespace nexus {
       vertex.setY(vertex.y()- 10.*mm);
       vertex.setZ(vertex.z() + plug_posz_);
     }
- 
+
 
     else {
       G4Exception("[Next100Ics]", "GenerateVertex()", FatalException,
-		  "Unknown vertex generation region!");     
+		  "Unknown vertex generation region!");
     }
-     
+
 
     return vertex;
   }

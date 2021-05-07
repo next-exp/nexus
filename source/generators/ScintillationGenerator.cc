@@ -11,7 +11,7 @@
 #include "ScintillationGenerator.h"
 
 #include "DetectorConstruction.h"
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include "OpticalMaterialProperties.h"
 #include "FactoryBase.h"
 

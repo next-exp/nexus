@@ -9,7 +9,7 @@
 #ifndef NEXT100_TRACKING_PLANE_H
 #define NEXT100_TRACKING_PLANE_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include <G4ThreeVector.hh>
 #include <vector>
 
@@ -23,7 +23,7 @@ namespace nexus {
   class BoxPointSampler;
 
   // Geometry of the tracking plane of the Demo++ detector
-  class NextDemoTrackingPlane: public BaseGeometry
+  class NextDemoTrackingPlane: public GeometryBase
   {
   public:
     // Constructor
@@ -35,9 +35,9 @@ namespace nexus {
     void SetConfig(G4String config);
 
     void SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys);
-    
+
     void Construct() override;
-    
+
     G4ThreeVector GenerateVertex(const G4String&) const override;
 
   private:

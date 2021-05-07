@@ -28,12 +28,12 @@
 
 namespace nexus {
 
-  REGISTER_CLASS(CylindricChamber, BaseGeometry)
+  REGISTER_CLASS(CylindricChamber, GeometryBase)
 
   using namespace CLHEP;
 
   CylindricChamber::CylindricChamber():
-    BaseGeometry(), msg_(0)
+    GeometryBase(), msg_(0)
   {
   }
 

@@ -26,7 +26,7 @@ namespace nexus {
 
   class CylinderPointSampler2020;
 
-  class Next100EnergyPlane: public BaseGeometry
+  class Next100EnergyPlane: public GeometryBase
   {
 
   public:

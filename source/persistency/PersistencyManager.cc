@@ -16,7 +16,7 @@
 #include "NexusApp.h"
 #include "DetectorConstruction.h"
 #include "SaveAllSteppingAction.h"
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include "HDF5Writer.h"
 #include "BasePersistencyManager.h"
 #include "FactoryBase.h"

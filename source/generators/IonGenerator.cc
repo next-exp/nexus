@@ -10,7 +10,7 @@
 
 #include "IonGenerator.h"
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include "DetectorConstruction.h"
 #include "FactoryBase.h"
 

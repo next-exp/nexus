@@ -9,7 +9,7 @@
 #ifndef PMT_R7378A_H
 #define PMT_R7378A_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 #include <G4ThreeVector.hh>
 
@@ -18,7 +18,7 @@ namespace nexus {
 
   /// Geometry model for the Hamamatsu R7378A photomultiplier (PMT).
 
-  class PmtR7378A: public BaseGeometry
+  class PmtR7378A: public GeometryBase
   {
   public:
     /// Constructor

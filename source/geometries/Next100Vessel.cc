@@ -37,7 +37,7 @@ namespace nexus {
 			       const G4double central_nozzle_ypos,
 			       const G4double down_nozzle_ypos,
 			       const G4double bottom_nozzle_ypos):
-    BaseGeometry(),
+    GeometryBase(),
 
     // Body dimensions
     vessel_in_rad_ (68.0  * cm),

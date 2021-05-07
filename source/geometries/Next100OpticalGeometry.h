@@ -11,7 +11,7 @@
 #define NEXT100_OPT_GEO_H
 
 #include <G4ThreeVector.hh>
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 class G4GenericMessenger;
 
@@ -20,7 +20,7 @@ namespace nexus {
 
   class Next100InnerElements;
 
-  class Next100OpticalGeometry : public BaseGeometry
+  class Next100OpticalGeometry : public GeometryBase
   {
 
   public:

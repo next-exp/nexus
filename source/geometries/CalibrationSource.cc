@@ -27,7 +27,7 @@ namespace nexus {
   using namespace CLHEP;
 
   CalibrationSource::CalibrationSource():
-    BaseGeometry(),
+    GeometryBase(),
     source_diam_ (6.*mm),
     source_thick_ (2.*mm),
     capsule_diam_ (7.*mm),

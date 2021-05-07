@@ -30,7 +30,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  PMT_QE_setup::PMT_QE_setup(): BaseGeometry()
+  PMT_QE_setup::PMT_QE_setup(): GeometryBase()
   {
     msg_ = new G4GenericMessenger(this, "/Geometry/PMT_QE_setup/",
 				"Control commands of geometry PMT_QE_setup.");
