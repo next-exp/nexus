@@ -73,9 +73,8 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
   /////////////////////////////////////////////////////////
 
   // We will set now the user initialization class instances
-  // in the run manager. In order to do so, we create first the factories
-  // (the objects that construct the appropriate instances according
-  // to user's input) so that the messenger commands are already defined
+  // in the run manager. In order to do so, we use our own factory
+  // so that the messenger commands are already defined
   // by the time we process the initialization macro.
 
   // The physics lists are handled with Geant4's own 'factory'
