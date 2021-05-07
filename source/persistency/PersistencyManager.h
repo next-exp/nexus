@@ -10,7 +10,7 @@
 #ifndef PERSISTENCY_MANAGER_H
 #define PERSISTENCY_MANAGER_H
 
-#include "BasePersistencyManager.h"
+#include "PersistencyManagerBase.h"
 
 #include <G4VPersistencyManager.hh>
 #include <map>
@@ -29,7 +29,7 @@ namespace nexus {
 
 namespace nexus {
 
-  class PersistencyManager: public BasePersistencyManager
+  class PersistencyManager: public PersistencyManagerBase
   {
   public:
     PersistencyManager();

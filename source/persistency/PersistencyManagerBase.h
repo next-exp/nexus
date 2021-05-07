@@ -7,7 +7,7 @@
 #include <vector>
 
 
-class BasePersistencyManager: public G4VPersistencyManager
+class PersistencyManagerBase: public G4VPersistencyManager
   {
   public:
 

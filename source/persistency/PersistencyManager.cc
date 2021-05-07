@@ -18,7 +18,7 @@
 #include "SaveAllSteppingAction.h"
 #include "GeometryBase.h"
 #include "HDF5Writer.h"
-#include "BasePersistencyManager.h"
+#include "PersistencyManagerBase.h"
 #include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
@@ -38,11 +38,11 @@
 using namespace nexus;
 
 
-REGISTER_CLASS(PersistencyManager, BasePersistencyManager)
+REGISTER_CLASS(PersistencyManager, PersistencyManagerBase)
 
 
 PersistencyManager::PersistencyManager():
-  BasePersistencyManager(), msg_(0), ready_(false),
+  PersistencyManagerBase(), msg_(0), ready_(false),
   store_evt_(true), store_steps_(false),
   interacting_evt_(false), event_type_("other"), saved_evts_(0),
   interacting_evts_(0), pmt_bin_size_(-1), sipm_bin_size_(-1),

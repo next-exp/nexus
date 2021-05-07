@@ -12,7 +12,7 @@
 
 #include "DetectorConstruction.h"
 #include "PrimaryGeneration.h"
-#include "BasePersistencyManager.h"
+#include "PersistencyManagerBase.h"
 #include "BatchSession.h"
 #include "FactoryBase.h"
 
@@ -105,7 +105,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
   if (pm_name_ == "") {
     G4Exception("[NexusApp]", "NexusApp()", FatalException, "A persistency manager must be specified.");
   }
-  BasePersistencyManager* pm = ObjFactory<BasePersistencyManager>::Instance().CreateObject(pm_name_);
+  PersistencyManagerBase* pm = ObjFactory<PersistencyManagerBase>::Instance().CreateObject(pm_name_);
   pm->SetMacros(init_macro, macros_, delayed_);
 
  // PersistencyManager::Initialize(init_macro, macros_, delayed_);
@@ -139,7 +139,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
 NexusApp::~NexusApp()
 {
   // Close output file before finishing
-  BasePersistencyManager* current = dynamic_cast<BasePersistencyManager*>
+  PersistencyManagerBase* current = dynamic_cast<PersistencyManagerBase*>
     (G4VPersistencyManager::GetPersistencyManager());
   current->CloseFile();
 
