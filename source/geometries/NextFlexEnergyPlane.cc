@@ -10,7 +10,7 @@
 
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
-#include "XenonGasProperties.h"
+#include "XenonProperties.h"
 #include "PmtR11410.h"
 #include "IonizationSD.h"
 #include "UniformElectricDriftField.h"

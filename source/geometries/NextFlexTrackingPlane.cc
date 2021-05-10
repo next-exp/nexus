@@ -10,7 +10,7 @@
 
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
-#include "XenonGasProperties.h"
+#include "XenonProperties.h"
 #include "IonizationSD.h"
 #include "UniformElectricDriftField.h"
 #include "CylinderPointSampler2020.h"

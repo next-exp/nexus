@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------------------
 
 #include "OpticalMaterialProperties.h"
-#include "XenonGasProperties.h"
+#include "XenonProperties.h"
 #include "XenonLiquidProperties.h"
 #include "SellmeierEquation.h"
 
@@ -552,7 +552,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
                                                           G4int    sc_yield,
                                                           G4double e_lifetime)
 {
-  XenonGasProperties GXe_prop(pressure, temperature);
+  XenonProperties GXe_prop(pressure, temperature);
   G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
   // REFRACTIVE INDEX
@@ -566,7 +566,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
 
   G4double rIndex[ri_entries];
   for (int i=0; i<ri_entries; i++) {
-    rIndex[i] = GXe_prop.RefractiveIndex(ri_energy[i]);
+    rIndex[i] = GXe_prop.RefractiveIndex(ri_energy[i], GXe_prop.GasDensity(pressure));
     // G4cout << "* GXe rIndex:  " << std::setw(7)
     //        << ri_energy[i]/eV << " eV -> " << rIndex[i] << G4endl;
   }
@@ -609,7 +609,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
 G4MaterialPropertiesTable* OpticalMaterialProperties::LXe()
 {
   /// The time constants are taken from E. Hogenbirk et al 2018 JINST 13 P10031
-  XenonLiquidProperties LXe_prop;
+  XenonProperties LXe_prop;
   G4MaterialPropertiesTable* LXe_mpt = new G4MaterialPropertiesTable();
 
   const G4int ri_entries = 200;
@@ -623,7 +623,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LXe()
   std::vector<G4double> ri_index;
 
   for (G4int i=0; i<ri_entries; i++) {
-    ri_index.push_back(LXe_prop.RefractiveIndex(ri_energy[i]));
+    ri_index.push_back(LXe_prop.RefractiveIndex(ri_energy[i], LXe_prop.LiquidDensity()));
   }
 
   assert(ri_energy.size() == ri_index.size());
@@ -643,7 +643,7 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LXe()
     sc_energy.push_back(minE + j * eWidth);
   }
   std::vector<G4double> intensity;
-  LXe_prop.Scintillation(sc_energy, intensity);
+  LXe_prop.Scintillation(sc_energy, intensity, false);
 
   assert(sc_energy.size() == intensity.size());
   LXe_mpt->AddProperty("FASTCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());

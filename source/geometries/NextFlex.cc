@@ -17,7 +17,7 @@
 
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
-#include "XenonGasProperties.h"
+#include "XenonProperties.h"
 #include "CylinderPointSampler2020.h"
 #include "Visibilities.h"
 #include "FactoryBase.h"

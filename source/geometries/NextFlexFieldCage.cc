@@ -10,7 +10,7 @@
 
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
-#include "XenonGasProperties.h"
+#include "XenonProperties.h"
 #include "IonizationSD.h"
 #include "UniformElectricDriftField.h"
 #include "CylinderPointSampler2020.h"
@@ -531,7 +531,7 @@ void NextFlexFieldCage::BuildELgap()
                     el_gap_name, mother_logic_, false, 0, verbosity_);
 
   // Define EL electric field
-  XenonGasProperties xgp(gas_pressure_, gas_temperature_);
+  XenonProperties xgp(gas_pressure_, gas_temperature_);
   G4double yield = xgp.ELLightYield(el_field_int_);
   if (el_field_on_) {
     UniformElectricDriftField* el_field = new UniformElectricDriftField();

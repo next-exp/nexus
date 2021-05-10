@@ -1,13 +1,13 @@
 // ----------------------------------------------------------------------------
-// nexus | XenonGasProperties.h
+// nexus | XenonProperties.h
 //
-// This class collects the relevant physical properties of gaseous xenon.
+// This class collects the relevant physical properties of xenon.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef XENON_GAS_PROPERTIES_H
-#define XENON_GAS_PROPERTIES_H
+#ifndef XENON_PROPERTIES_H
+#define XENON_PROPERTIES_H
 
 #include <globals.hh>
 #include <vector>
@@ -17,26 +17,28 @@ class G4MaterialPropertiesTable;
 
 namespace nexus {
 
-  class XenonGasProperties
+  class XenonProperties
   {
   public:
     /// Constructor
-    XenonGasProperties(G4double pressure, G4double temperature);
-    XenonGasProperties();
+    XenonProperties(G4double pressure, G4double temperature);
+    XenonProperties();
     /// Destructor
-    ~XenonGasProperties();
+    ~XenonProperties();
 
     /// Return the refractive index of xenon gas for a given photon energy
-    G4double RefractiveIndex(G4double energy);
+    G4double RefractiveIndex(G4double energy, G4double density);
 
-    G4double Scintillation(G4double energy);
-    void Scintillation(G4int entries, G4double* energy, G4double* intensity);
-    void Scintillation(std::vector<G4double>& energy, std::vector<G4double>& intensity);
+    G4double GasScintillation(G4double energy);
+    G4double LiquidScintillation(G4double energy);
+    void Scintillation(G4int entries, G4double* energy, G4double* intensity, G4bool gas=true);
+    void Scintillation(std::vector<G4double>& energy, std::vector<G4double>& intensity, G4bool gas=true);
 
     void MakeDataTable();
-    G4double GetDensity(G4double pressure, G4double temperature);
+    G4double GetGasDensity(G4double pressure, G4double temperature);
 
-    static G4double Density(G4double pressure);
+    static G4double GasDensity(G4double pressure);
+    static G4double LiquidDensity();
     static G4double MassPerMole(G4int a);
 
     /// Electroluminescence yield of pure xenon gas

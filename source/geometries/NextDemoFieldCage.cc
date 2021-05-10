@@ -12,7 +12,7 @@
 #include "OpticalMaterialProperties.h"
 #include "IonizationSD.h"
 #include "UniformElectricDriftField.h"
-#include "XenonGasProperties.h"
+#include "XenonProperties.h"
 #include "CylinderPointSampler2020.h"
 #include "Visibilities.h"
 
@@ -383,7 +383,7 @@ namespace nexus {
       el_field->SetDriftVelocity(2.5*mm/microsecond);
       el_field->SetTransverseDiffusion(ELtransv_diff_);
       el_field->SetLongitudinalDiffusion(ELlong_diff_);
-      XenonGasProperties xgp(pressure_, temperature_);
+      XenonProperties xgp(pressure_, temperature_);
       el_field->SetLightYield(xgp.ELLightYield(ELelectric_field_));
       G4Region* el_region = new G4Region("EL_REGION");
       el_region->SetUserInformation(el_field);

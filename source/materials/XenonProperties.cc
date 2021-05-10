@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
-//  nexus | XenonGasProperties.cc
+//  nexus | XenonProperties.cc
 //
-//  This class collects the relevant physical properties of gaseous xenon.
+//  This class collects the relevant physical properties of xenon.
 //
 //  The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "XenonGasProperties.h"
+#include "XenonProperties.h"
 #include "Interpolation.h"
 
 #include <G4SystemOfUnits.hh>
@@ -17,7 +17,7 @@
 using namespace nexus;
 
 
-XenonGasProperties::XenonGasProperties(G4double pressure, G4double temperature):
+XenonProperties::XenonProperties(G4double pressure, G4double temperature):
   pressure_(pressure),
   //temperature_(temperature),
   data_()
@@ -25,7 +25,7 @@ XenonGasProperties::XenonGasProperties(G4double pressure, G4double temperature):
 }
 
 
-XenonGasProperties::XenonGasProperties():
+XenonProperties::XenonProperties():
   pressure_(),
   //temperature_(),
   data_()
@@ -33,12 +33,12 @@ XenonGasProperties::XenonGasProperties():
 }
 
 
-XenonGasProperties::~XenonGasProperties()
+XenonProperties::~XenonProperties()
 {
 }
 
 
-G4double XenonGasProperties::Density(G4double pressure)
+G4double XenonProperties::GasDensity(G4double pressure)
 {
   G4double density = 5.324 * kg/m3;
 
@@ -80,8 +80,17 @@ G4double XenonGasProperties::Density(G4double pressure)
   return density;
 }
 
+G4double XenonProperties::LiquidDensity()
+  {
 
-G4double XenonGasProperties::MassPerMole(G4int a)
+    // Density at ~0.9 bar, T ~ 163 K
+    G4double density = 2.953 * g/cm3;
+
+    return density;
+  }
+
+
+G4double XenonProperties::MassPerMole(G4int a)
 {
   // Isotopic mass per mole taken from
   // http://rushim.ru/books/spravochniki/handbook-chemistry-and-physics.pdf
@@ -117,7 +126,7 @@ G4double XenonGasProperties::MassPerMole(G4int a)
 
 
 
-G4double XenonGasProperties::RefractiveIndex(G4double energy)
+G4double XenonProperties::RefractiveIndex(G4double energy, G4double density)
 {
   // Formula for the refractive index taken from
   // A. Baldini et al., "Liquid Xe scintillation calorimetry
@@ -148,7 +157,7 @@ G4double XenonGasProperties::RefractiveIndex(G4double energy)
   virial = virial + P[i] / (energy*energy - E[i]*E[i]);
 
   // Need to use g/cm3
-  G4double density = Density(pressure_) / g * cm3;
+  density = density / g * cm3;
 
   G4double mol_density = density / 131.29;
   G4double alpha = virial * mol_density;
@@ -158,7 +167,7 @@ G4double XenonGasProperties::RefractiveIndex(G4double energy)
   if (n2 < 1.) {
     //      G4String msg = "Non-physical refractive index for energy "
     // + bhep::to_string(energy) + " eV. Use n=1 instead.";
-    //      G4Exception("[XenonGasProperties]", "RefractiveIndex()",
+    //      G4Exception("[XenonProperties]", "RefractiveIndex()",
     // 	  JustWarning, msg);
     n2 = 1.;
   }
@@ -168,7 +177,7 @@ G4double XenonGasProperties::RefractiveIndex(G4double energy)
 
 
 
-G4double XenonGasProperties::Scintillation(G4double energy)
+G4double XenonProperties::GasScintillation(G4double energy)
 {
   // FWHM and peak of emission extracted from paper:
   // Physical review A, Volume 9, Number 2,
@@ -196,22 +205,48 @@ G4double XenonGasProperties::Scintillation(G4double energy)
   return intensity;
 }
 
+G4double XenonProperties::LiquidScintillation(G4double energy)
+  {
+    // K. Fuji et al., "High accuracy measurement of the emission spectrum of liquid xenon
+    // in the vacuum ultraviolet region",
+    // Nuclear Instruments and Methods in Physics Research A 795 (2015) 293–297
+    // http://ac.els-cdn.com/S016890021500724X/1-s2.0-S016890021500724X-main.pdf?_tid=83d56f0a-3aff-11e7-bf7d-00000aacb361&acdnat=1495025656_407067006589f99ae136ef18b8b35a04
+    G4double Wavelength_peak = 174.8*nm;
+    G4double Wavelength_FWHM = 10.2*nm;
+    G4double Wavelength_sigma = Wavelength_FWHM/2.35;
 
-void XenonGasProperties::Scintillation(G4int entries, G4double* energy, G4double* intensity)
+    G4double Energy_peak = (h_Planck*c_light/Wavelength_peak);
+    G4double Energy_sigma = (h_Planck*c_light*Wavelength_sigma/pow(Wavelength_peak,2));
+    // G4double bin = 6*Energy_sigma/500;
+
+    G4double intensity =
+	  exp(-pow(Energy_peak/eV-energy/eV,2)/(2*pow(Energy_sigma/eV, 2)))/(Energy_sigma/eV*sqrt(pi*2.));
+
+    return intensity;
+  }
+
+
+void XenonProperties::Scintillation(G4int entries, G4double* energy, G4double* intensity, G4bool gas)
 {
-  for (G4int i=0; i<entries; i++)
-  intensity[i] = Scintillation(energy[i]);
+  for (G4int i=0; i<entries; i++) {
+    if (gas) intensity[i] = GasScintillation(energy[i]);
+    else intensity[i] = LiquidScintillation(energy[i]);
+  }
+
 }
 
-void XenonGasProperties::Scintillation
-   (std::vector<G4double>& energy, std::vector<G4double>& intensity)
+void XenonProperties::Scintillation
+   (std::vector<G4double>& energy, std::vector<G4double>& intensity, G4bool gas)
    {
-     for (unsigned i=0; i<energy.size(); i++)
-       intensity.push_back(Scintillation(energy[i]));
+     for (unsigned i=0; i<energy.size(); i++) {
+       if (gas) intensity.push_back(GasScintillation(energy[i]));
+       else intensity.push_back(LiquidScintillation(energy[i]));
+     }
+
    }
 
 
-G4double XenonGasProperties::ELLightYield(G4double field_strength) const
+G4double XenonProperties::ELLightYield(G4double field_strength) const
 {
   // Empirical formula taken from
   // C.M.B. Monteiro et al., JINST 2 (2007) P05001.
@@ -241,7 +276,7 @@ G4double XenonGasProperties::ELLightYield(G4double field_strength) const
 }
 
 
-void XenonGasProperties::MakeDataTable()
+void XenonProperties::MakeDataTable()
 {
   // Fills the data_ vector with temperature, pressure, and density data
   // Assumes the data file goes up in pressure then temperature
@@ -292,7 +327,7 @@ void XenonGasProperties::MakeDataTable()
 }
 
 
-G4double XenonGasProperties::GetDensity(G4double pressure, G4double temperature)
+G4double XenonProperties::GetGasDensity(G4double pressure, G4double temperature)
 {
   // Interpolate to calculate the density
   // at a given pressure and temperature
