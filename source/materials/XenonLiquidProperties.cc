@@ -35,9 +35,9 @@ namespace nexus {
   {
 
     // Density at 1 atm, T ~ 160 K
-    density_ = 2.953 * g/cm3;
+    G4double density = 2.943 * g/cm3;
 
-    return density_;
+    return density;
   }
 
 
@@ -73,7 +73,7 @@ namespace nexus {
     for (G4int i=0; i<3; i++)
       virial = virial + P[i] / (energy*energy - E[i]*E[i]); // eV²*cm3/mol/eV² = cm3/mol
 
-    G4double mol_density =  2.953  / 131.29; // (g/cm3)/g*mol = mol/cm3
+    G4double mol_density =  Density()  / 131.29; // (g/cm3)/g*mol = mol/cm3
     G4double alpha = virial * mol_density; // (cm3/mol)*mol/cm3 = 1
 
     // Isolating now the n2 from equation (1) and taking the square root

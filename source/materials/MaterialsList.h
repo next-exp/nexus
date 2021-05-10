@@ -45,6 +45,9 @@ namespace nexus {
 					     G4double temperature=STP_Temperature,
 					     G4double pressure=STP_Pressure);
 
+    // Liquid xenon
+    static G4Material* LXe();
+
     // Argon
     static G4Material* GAr(G4double pressure=STP_Pressure,
 			   G4double temperature=STP_Temperature);

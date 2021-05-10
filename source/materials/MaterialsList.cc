@@ -8,6 +8,7 @@
 
 #include "MaterialsList.h"
 #include "XenonGasProperties.h"
+#include "XenonLiquidProperties.h"
 #include "ArgonGasProperties.h"
 #include "HeliumGasProperties.h"
 
@@ -138,6 +139,27 @@ G4Material* MaterialsList::GXeDepleted_bydensity(G4double density,
 
 
     mat->AddElement(Xe,1);
+  }
+
+  return mat;
+}
+
+G4Material* MaterialsList::LXe()
+{
+  G4String name = "LXe";
+
+  G4Material* mat = G4Material::GetMaterial(name, false);
+
+  if (mat == 0) {
+    G4NistManager* nist = G4NistManager::Instance();
+
+    G4double density = XenonLiquidProperties::Density();
+    mat = new G4Material(name, density, 1,
+			 kStateLiquid, 164.85*kelvin, 1*bar);
+
+    G4Element* Xe = nist->FindOrBuildElement("Xe");
+
+    mat->AddElement(Xe, 1);
   }
 
   return mat;

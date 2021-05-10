@@ -25,7 +25,7 @@ namespace nexus {
     /// Destructor
     ~XenonLiquidProperties();
 
-    G4double Density();
+    static G4double Density();
 
     /// Return the refractive index of xenon gas for a given photon energy
     G4double RefractiveIndex(G4double energy);
@@ -33,11 +33,6 @@ namespace nexus {
     G4double Scintillation(G4double energy);
     void Scintillation(G4int entries, G4double* energy, G4double* intensity);
     void Scintillation(std::vector<G4double>& energy, std::vector<G4double>& intensity);
-
-  private:
-    G4double density_;
-
-    //static const G4double _densities[100];
 
   };
 
