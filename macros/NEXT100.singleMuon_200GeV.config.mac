@@ -33,9 +33,7 @@
 /Generator/SingleParticle/min_energy 200. GeV
 /Generator/SingleParticle/max_energy 200. GeV
 /Generator/SingleParticle/region AD_HOC
-/Generator/SingleParticle/momentum_X 0.
-/Generator/SingleParticle/momentum_Y -1.
-/Generator/SingleParticle/momentum_Z 0.
+/Generator/SingleParticle/momentum 0 -1 0
 
 ### ACTIONS
 #/Actions/SaveAllEventAction/max_energy 3. MeV

@@ -65,9 +65,7 @@
 #/Generator/SingleParticle/min_energy 1.0 MeV
 #/Generator/SingleParticle/max_energy 2.0 MeV
 #/Generator/SingleParticle/region DICE_BOARD
-#/Generator/SingleParticle/momentum_X 0.
-#/Generator/SingleParticle/momentum_Y 0.
-#/Generator/SingleParticle/momentum_Z 1.
+#/Generator/SingleParticle/momentum 0 0 1
 
 # Decay0 Interface for bb0nu/bb2nu decays - (BB0nu: Xe136DecayMode 1), (BB2nu: Xe136DecayMode 4)
 #/Generator/Decay0Interface/region ACTIVE

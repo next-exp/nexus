@@ -61,12 +61,8 @@ costheta_min_(-1.), costheta_max_(1.), phi_min_(0.), phi_max_(2.*pi)
   msg_->DeclareProperty("region", region_,
     "Set the region of the geometry where the vertex will be generated.");
 
-  msg_->DeclareProperty("momentum_X", momentum_[0],
-			"x coord of momentum");
-  msg_->DeclareProperty("momentum_Y", momentum_[1],
-			"y coord of momentum");
-  msg_->DeclareProperty("momentum_Z", momentum_[2],
-			"z coord of momentum");
+
+  msg_->DeclarePropertyWithUnit("momentum", "mm",  momentum_, "Set particle 3-momentum.");
 
   msg_->DeclareProperty("min_costheta", costheta_min_,
 			"Set minimum cosTheta for the direction of the particle.");
