@@ -21,6 +21,8 @@
 #include <G4NistManager.hh>
 #include <G4VisAttributes.hh>
 #include <G4SDManager.hh>
+#include <G4OpticalSurface.hh>
+#include <G4LogicalSkinSurface.hh>
 
 using namespace nexus;
 
@@ -97,6 +99,42 @@ void Next100SiPM::Construct()
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., sens_zpos),
                     sens_logic_vol, sens_name, sipm_logic_vol, false, 0, false);
 
+  // OPTICAL SURFACES //////////////////////////////////////
+  const G4int entries = 36;
+  G4double energies[entries] = {1.3776022  * eV, 1.4472283  * eV, 1.52041305 * eV, 1.59290956 * eV, 1.66341179 * eV,
+                                1.72546158 * eV, 1.78169885 * eV, 1.8473836  * eV, 1.90593775 * eV, 1.94918431 * eV,
+                                1.99443901 * eV, 2.05580636 * eV, 2.12107005 * eV, 2.17476803 * eV, 2.23125551 * eV,
+                                2.29951572 * eV, 2.37208426 * eV, 2.46950045 * eV, 2.75730000 * eV, 3.04467524 * eV,
+                                3.14006977 * eV, 3.20705792 * eV, 3.2592052  * eV, 3.31307637 * eV, 3.38773724 * eV,
+                                3.44597914 * eV, 3.50625866 * eV, 3.54763044 * eV, 3.58999021 * eV, 3.61155171 * eV,
+                                3.65546116 * eV, 3.67781872 * eV, 3.72336446 * eV, 3.74656299 * eV, 3.79383824 * eV,
+                                3.86703126 * eV};
+
+  G4double reflectivity[entries] = {0.0,  0.0, 0.0, 0.0, 0.0,
+                                    0.0,  0.0, 0.0, 0.0, 0.0,
+                                    0.0,  0.0, 0.0, 0.0, 0.0,
+                                    0.0,  0.0, 0.0, 0.0, 0.0,
+                                    0.0,  0.0, 0.0, 0.0, 0.0,
+                                    0.0,  0.0, 0.0, 0.0, 0.0,
+                                    0.0,  0.0, 0.0, 0.0, 0.0,
+                                    0.0};
+
+  G4double efficiency[entries]   = {1.0,  1.0, 1.0, 1.0, 1.0,
+                                    1.0,  1.0, 1.0, 1.0, 1.0,
+                                    1.0,  1.0, 1.0, 1.0, 1.0,
+                                    1.0,  1.0, 1.0, 1.0, 1.0,
+                                    1.0,  1.0, 1.0, 1.0, 1.0,
+                                    1.0,  1.0, 1.0, 1.0, 1.0,
+                                    1.0,  1.0, 1.0, 1.0, 1.0,
+                                    1.0};
+
+  G4MaterialPropertiesTable* sipm_mt = new G4MaterialPropertiesTable();
+  sipm_mt->AddProperty("EFFICIENCY", energies, efficiency, entries);
+  sipm_mt->AddProperty("REFLECTIVITY", energies, reflectivity, entries);
+  G4OpticalSurface* sipm_opsurf =
+    new G4OpticalSurface("SIPM_OPSURF", unified, polished, dielectric_metal);
+  sipm_opsurf->SetMaterialPropertiesTable(sipm_mt);
+  new G4LogicalSkinSurface("SIPM_OPSURF", sens_logic_vol, sipm_opsurf);
 
   // SENSITIVE DETECTOR ////////////////////////////////////
 
@@ -107,7 +145,7 @@ void Next100SiPM::Construct()
   // sensdet->SetTimeBinning(time_binning_);
 
   G4SDManager::GetSDMpointer()->AddNewDetector(sensdet);
-  window_logic_vol->SetSensitiveDetector(sensdet);
+  sens_logic_vol->SetSensitiveDetector(sensdet);
 
 
   // VISIBILITY ////////////////////////////////////////////
