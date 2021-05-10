@@ -23,8 +23,8 @@ namespace nexus {
   }
 
 
-  G4ThreeVector Direction(G4double costheta_min, G4double costheta_max,
-                          G4double phi_min, G4double phi_max)
+  G4ThreeVector RandomDirectionInRange(G4double costheta_min, G4double costheta_max,
+                                       G4double phi_min, G4double phi_max)
   {
     G4double cosTheta  = UniformRandomInRange(costheta_min, costheta_max);
     G4double sinTheta2 = 1. - cosTheta*cosTheta;
