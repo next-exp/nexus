@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // nexus | XenonProperties.h
 //
-// This class collects the relevant physical properties of xenon.
+// Functions to calculate relevant relevant physical properties of xenon.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
@@ -14,46 +14,24 @@
 
 class G4MaterialPropertiesTable;
 
+G4double GXeDensity(G4double pressure);
+G4double LXeDensity();
+G4double XenonMassPerMole(G4int a);
 
-namespace nexus {
+/// Return the refractive index of xenon gas for a given photon energy
+G4double XenonRefractiveIndex(G4double energy, G4double density);
 
-  class XenonProperties
-  {
-  public:
-    /// Constructor
-    XenonProperties(G4double pressure, G4double temperature);
-    XenonProperties();
-    /// Destructor
-    ~XenonProperties();
+G4double GXeScintillation(G4double energy, G4double pressure);
+G4double LXeScintillation(G4double energy);
 
-    /// Return the refractive index of xenon gas for a given photon energy
-    G4double RefractiveIndex(G4double energy, G4double density);
+void XenonScintillation(G4int entries, G4double *energy, G4double *intensity, G4double pressure);
+void XenonScintillation(std::vector<G4double> &energy, std::vector<G4double> &intensity, G4double pressure);
+void XenonScintillation(std::vector<G4double> &energy, std::vector<G4double> &intensity);
 
-    G4double GasScintillation(G4double energy);
-    G4double LiquidScintillation(G4double energy);
-    void Scintillation(G4int entries, G4double* energy, G4double* intensity, G4bool gas=true);
-    void Scintillation(std::vector<G4double>& energy, std::vector<G4double>& intensity, G4bool gas=true);
+std::pair<G4int, G4int> MakeXeDensityDataTable(std::vector<std::vector<G4double>> &data);
+G4double GetGasDensity(G4double pressure, G4double temperature);
 
-    void MakeDataTable();
-    G4double GetGasDensity(G4double pressure, G4double temperature);
-
-    static G4double GasDensity(G4double pressure);
-    static G4double LiquidDensity();
-    static G4double MassPerMole(G4int a);
-
-    /// Electroluminescence yield of pure xenon gas
-    G4double ELLightYield(G4double field_strength) const;
-
-
-  private:
-    G4double pressure_;
-    //G4double temperature_;
-    G4int npressures_;
-    G4int ntemps_;
-    std::vector<std::vector<G4double>> data_; // temp, press, density
-
-  };
-
-} // end namespace nexus
+/// Electroluminescence yield of pure xenon gas
+G4double XenonELLightYield(G4double field_strength, G4double pressure);
 
 #endif

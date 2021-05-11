@@ -761,9 +761,8 @@ void Next1EL::BuildFieldCage()
     el_field->SetDriftVelocity(2.5*mm/microsecond);
     el_field->SetTransverseDiffusion(1.*mm/sqrt(cm));
     el_field->SetLongitudinalDiffusion(.5*mm/sqrt(cm));
-    XenonProperties xgp(pressure_, 303);
     // el_field->SetLightYield(xgp.ELLightYield(24.8571*kilovolt/cm));//value for E that gives Y=1160 photons per ie- in normal conditions
-    el_field->SetLightYield(xgp.ELLightYield(23.2857*kilovolt/cm));
+    el_field->SetLightYield(XenonELLightYield(23.2857*kilovolt/cm, pressure_));
     G4Region* el_region = new G4Region("EL_REGION");
     el_region->SetUserInformation(el_field);
     el_region->AddRootLogicalVolume(elgap_logic);

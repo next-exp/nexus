@@ -436,8 +436,7 @@ void NextNewFieldCage::BuildBuffer()
       el_field->SetDriftVelocity(2.5 * mm/microsecond);
       el_field->SetTransverseDiffusion(ELtransv_diff_);
       el_field->SetLongitudinalDiffusion(ELlong_diff_);
-      XenonProperties xgp(pressure_, temperature_);
-      el_field->SetLightYield(xgp.ELLightYield(ELelectric_field_));
+      el_field->SetLightYield(XenonELLightYield(ELelectric_field_, pressure_));
       G4Region* el_region = new G4Region("EL_REGION");
       el_region->SetUserInformation(el_field);
       el_region->AddRootLogicalVolume(el_gap_logic);

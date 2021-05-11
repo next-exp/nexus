@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 //  nexus | XenonProperties.cc
 //
-//  This class collects the relevant physical properties of xenon.
+//  Functions to calculate relevant physical properties of xenon.
 //
 //  The NEXT Collaboration
 // ----------------------------------------------------------------------------
@@ -17,28 +17,7 @@
 using namespace nexus;
 
 
-XenonProperties::XenonProperties(G4double pressure, G4double temperature):
-  pressure_(pressure),
-  //temperature_(temperature),
-  data_()
-{
-}
-
-
-XenonProperties::XenonProperties():
-  pressure_(),
-  //temperature_(),
-  data_()
-{
-}
-
-
-XenonProperties::~XenonProperties()
-{
-}
-
-
-G4double XenonProperties::GasDensity(G4double pressure)
+G4double GXeDensity(G4double pressure)
 {
   G4double density = 5.324 * kg/m3;
 
@@ -80,7 +59,7 @@ G4double XenonProperties::GasDensity(G4double pressure)
   return density;
 }
 
-G4double XenonProperties::LiquidDensity()
+G4double LXeDensity()
   {
 
     // Density at ~0.9 bar, T ~ 163 K
@@ -90,7 +69,7 @@ G4double XenonProperties::LiquidDensity()
   }
 
 
-G4double XenonProperties::MassPerMole(G4int a)
+G4double XenonMassPerMole(G4int a)
 {
   // Isotopic mass per mole taken from
   // http://rushim.ru/books/spravochniki/handbook-chemistry-and-physics.pdf
@@ -126,7 +105,7 @@ G4double XenonProperties::MassPerMole(G4int a)
 
 
 
-G4double XenonProperties::RefractiveIndex(G4double energy, G4double density)
+G4double XenonRefractiveIndex(G4double energy, G4double density)
 {
   // Formula for the refractive index taken from
   // A. Baldini et al., "Liquid Xe scintillation calorimetry
@@ -177,7 +156,7 @@ G4double XenonProperties::RefractiveIndex(G4double energy, G4double density)
 
 
 
-G4double XenonProperties::GasScintillation(G4double energy)
+G4double GXeScintillation(G4double energy, G4double pressure)
 {
   // FWHM and peak of emission extracted from paper:
   // Physical review A, Volume 9, Number 2,
@@ -185,7 +164,7 @@ G4double XenonProperties::GasScintillation(G4double energy)
   // Pressure must be in atm = bar
   // XXX Check if there is some newest results.
 
-  G4double pressure = pressure_ / atmosphere;
+  pressure = pressure / atmosphere;
 
   G4double Wavelength_peak  = (0.05 * pressure + 169.45) * nm;
 
@@ -205,7 +184,7 @@ G4double XenonProperties::GasScintillation(G4double energy)
   return intensity;
 }
 
-G4double XenonProperties::LiquidScintillation(G4double energy)
+G4double LXeScintillation(G4double energy)
   {
     // K. Fuji et al., "High accuracy measurement of the emission spectrum of liquid xenon
     // in the vacuum ultraviolet region",
@@ -226,27 +205,25 @@ G4double XenonProperties::LiquidScintillation(G4double energy)
   }
 
 
-void XenonProperties::Scintillation(G4int entries, G4double* energy, G4double* intensity, G4bool gas)
+void XenonScintillation(G4int entries, G4double* energy, G4double* intensity, G4double pressure)
 {
   for (G4int i=0; i<entries; i++) {
-    if (gas) intensity[i] = GasScintillation(energy[i]);
-    else intensity[i] = LiquidScintillation(energy[i]);
+    intensity[i] = GXeScintillation(energy[i], pressure);
   }
 
 }
 
-void XenonProperties::Scintillation
-   (std::vector<G4double>& energy, std::vector<G4double>& intensity, G4bool gas)
+void XenonScintillation
+   (std::vector<G4double>& energy, std::vector<G4double>& intensity)
    {
      for (unsigned i=0; i<energy.size(); i++) {
-       if (gas) intensity.push_back(GasScintillation(energy[i]));
-       else intensity.push_back(LiquidScintillation(energy[i]));
+      intensity.push_back(LXeScintillation(energy[i]));
      }
 
    }
 
 
-G4double XenonProperties::ELLightYield(G4double field_strength) const
+G4double XenonELLightYield(G4double field_strength, G4double pressure)
 {
   // Empirical formula taken from
   // C.M.B. Monteiro et al., JINST 2 (2007) P05001.
@@ -262,21 +239,21 @@ G4double XenonProperties::ELLightYield(G4double field_strength) const
   G4double a = 140. / kilovolt;
 
   // Updating the slope
-  if (pressure_ >= 2. * bar) a = 141. / kilovolt;
-  if (pressure_ >= 4. * bar) a = 142. / kilovolt;
-  if (pressure_ >= 5. * bar) a = 151. / kilovolt;
-  if (pressure_ >= 6. * bar) a = 161. / kilovolt;
-  if (pressure_ >= 8. * bar) a = 170. / kilovolt;
+  if (pressure >= 2. * bar) a = 141. / kilovolt;
+  if (pressure >= 4. * bar) a = 142. / kilovolt;
+  if (pressure >= 5. * bar) a = 151. / kilovolt;
+  if (pressure >= 6. * bar) a = 161. / kilovolt;
+  if (pressure >= 8. * bar) a = 170. / kilovolt;
 
   // Getting the yield
-  G4double yield = (a * field_strength/pressure_ - b) * pressure_;
+  G4double yield = (a * field_strength/pressure - b) * pressure;
   if (yield < 0.) yield = 0.;
 
   return yield;
 }
 
 
-void XenonProperties::MakeDataTable()
+std::pair<G4int, G4int> MakeXeDensityDataTable(std::vector<std::vector<G4double>>& data)
 {
   // Fills the data_ vector with temperature, pressure, and density data
   // Assumes the data file goes up in pressure then temperature
@@ -292,7 +269,6 @@ void XenonProperties::MakeDataTable()
     throw "File could not be opened";
   }
 
-  std::vector<std::vector<G4double>> data;
   // Read lines in file
   G4String thisline;
   getline(inFile, thisline); // don't use first line
@@ -305,7 +281,7 @@ void XenonProperties::MakeDataTable()
 
   while (inFile>>temp>>comma>>press>>comma>>dens){
     std::vector<G4double> thisdata {temp*kelvin, press*bar, dens*(kg/m3)};
-    data_.push_back(thisdata);
+    data.push_back(thisdata);
 
     // Figure out how many temperature and pressures we have
     if (temp == thistemp){
@@ -319,20 +295,25 @@ void XenonProperties::MakeDataTable()
     count++;
   }
 
-  npressures_ = npressures-1;
-  ntemps_ = ntemps;
+  npressures = npressures-1;
 
   inFile.close();
-  return;
+
+  std::pair<G4int, G4int> nkeys = std::make_pair(npressures, ntemps);
+
+  return nkeys;
 }
 
 
-G4double XenonProperties::GetGasDensity(G4double pressure, G4double temperature)
+G4double GetGasDensity(G4double pressure, G4double temperature)
 {
   // Interpolate to calculate the density
   // at a given pressure and temperature
   G4double density = 5.324 * kg/m3;
-  MakeDataTable();
+  std::vector<std::vector<G4double>> data;
+  std::pair<G4int, G4int> nkeys = MakeXeDensityDataTable(data);
+  G4int npressures = nkeys.first;
+  G4int ntemps     = nkeys.second;
 
   // Find correct interval and use bilinear interpolation
   G4bool found = false;
@@ -341,20 +322,20 @@ G4double XenonProperties::GetGasDensity(G4double pressure, G4double temperature)
   G4int count = 0;
   G4double t1, t2, p1, p2, d11, d12, d21, d22, d1, d2;
 
-  while (tcount < ntemps_-1) {
-    t1 = data_[count][0];
-    t2 = data_[count+npressures_][0];
+  while (tcount < ntemps-1) {
+    t1 = data[count][0];
+    t2 = data[count+npressures][0];
 
     if (temperature >= t1 && temperature < t2) {
-      while (pcount < npressures_-1) {
-        p1 = data_[count][1];
-        p2 = data_[count+1][1];
+      while (pcount < npressures-1) {
+        p1 = data[count][1];
+        p2 = data[count+1][1];
 
         if (pressure >= p1 && pressure < p2) {
-          d11 = data_[count][2];
-          d12 = data_[count+1][2];
-          d21 = data_[count+npressures_][2];
-          d22 = data_[count+npressures_+1][2];
+          d11 = data[count][2];
+          d12 = data[count+1][2];
+          d21 = data[count+npressures][2];
+          d22 = data[count+npressures+1][2];
 
           density = BilinearInterpolation(temperature, t1, t2,
             pressure, p1, p2,
@@ -367,9 +348,9 @@ G4double XenonProperties::GetGasDensity(G4double pressure, G4double temperature)
       }
 
       if (!found) {
-        if (pressure == data_[count][1]) {
-          d1 = data_[count][2];
-          d2 = data_[count+npressures_][2];
+        if (pressure == data[count][1]) {
+          d1 = data[count][2];
+          d2 = data[count+npressures][2];
           density = LinearInterpolation(temperature, t1, t2, d1, d2);
           found = true;
         } else {
@@ -381,18 +362,18 @@ G4double XenonProperties::GetGasDensity(G4double pressure, G4double temperature)
     }
     tcount++;
     pcount = 0;
-    count += npressures_;
+    count += npressures;
   }
 
   if (!found) {
-    if (temperature == data_[count][0]) {
-      while (pcount< npressures_-1) {
-        p1 = data_[count][1];
-        p2 = data_[count+1][1];
+    if (temperature == data[count][0]) {
+      while (pcount< npressures-1) {
+        p1 = data[count][1];
+        p2 = data[count+1][1];
 
         if (pressure >= p1 && pressure < p2){
-          d1 = data_[count][2];
-          d2 = data_[count+1][2];
+          d1 = data[count][2];
+          d2 = data[count+1][2];
 
           density = LinearInterpolation(pressure, p1, p2, d1, d2);
           found = true;
@@ -402,8 +383,8 @@ G4double XenonProperties::GetGasDensity(G4double pressure, G4double temperature)
         count++;
       }
       if (!found) {
-        if (pressure == data_[count][1]) {
-          density = data_[count][2];
+        if (pressure == data[count][1]) {
+          density = data[count][2];
           found = true;
         } else {
           throw "Unknown xenon density for this pressure!";

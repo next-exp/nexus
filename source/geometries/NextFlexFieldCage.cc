@@ -531,8 +531,7 @@ void NextFlexFieldCage::BuildELgap()
                     el_gap_name, mother_logic_, false, 0, verbosity_);
 
   // Define EL electric field
-  XenonProperties xgp(gas_pressure_, gas_temperature_);
-  G4double yield = xgp.ELLightYield(el_field_int_);
+  G4double yield = XenonELLightYield(el_field_int_, gas_pressure_);
   if (el_field_on_) {
     UniformElectricDriftField* el_field = new UniformElectricDriftField();
     el_field->SetCathodePosition(el_gap_posZ + el_gap_length_/2.);
