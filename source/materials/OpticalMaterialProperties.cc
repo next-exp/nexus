@@ -8,7 +8,6 @@
 
 #include "OpticalMaterialProperties.h"
 #include "XenonProperties.h"
-#include "XenonLiquidProperties.h"
 #include "SellmeierEquation.h"
 
 #include <G4MaterialPropertiesTable.hh>
