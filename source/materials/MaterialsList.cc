@@ -154,7 +154,7 @@ G4Material* MaterialsList::LXe()
 
     G4double density = LXeDensity();
     mat = new G4Material(name, density, 1,
-			 kStateLiquid, 164.85*kelvin, 1*bar);
+			 kStateLiquid, 163.*kelvin, 0.9*bar);
 
     G4Element* Xe = nist->FindOrBuildElement("Xe");
 
