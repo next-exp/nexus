@@ -58,9 +58,7 @@ namespace nexus {
 
     G4String region_;
 
-    G4double momentum_X_;
-    G4double momentum_Y_;
-    G4double momentum_Z_;
+    G4ThreeVector momentum_;
 
     G4double costheta_min_;
     G4double costheta_max_;

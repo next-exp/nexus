@@ -26,7 +26,7 @@ TEST_CASE("Direction Function") {
       std::swap(phi_max,phi_min);
     }
 
-    G4ThreeVector direction = nexus::Direction(costheta_min,costheta_max,phi_min,phi_max);
+    G4ThreeVector direction = nexus::RandomDirectionInRange(costheta_min,costheta_max,phi_min,phi_max);
     G4double costheta_test = direction.z();
     G4double phi_test = std::atan2(direction.y(), direction.x());
 
