@@ -40,6 +40,8 @@ def test_create_nexus_output_file_next100(config_tmpdir, output_tmpdir, NEXUSDIR
 /event/verbose 0
 /tracking/verbose 0
 
+/process/em/verbose 0
+
 /Geometry/Next100/elfield true
 /Geometry/Next100/EL_field 13 kV/cm
 /Geometry/Next100/max_step_size 1. mm
@@ -105,6 +107,8 @@ def test_create_nexus_output_file_new(config_tmpdir, output_tmpdir, NEXUSDIR,
 /event/verbose 0
 /tracking/verbose 0
 
+/process/em/verbose 0
+
 /Geometry/NextNew/elfield true
 /Geometry/NextNew/EL_field 13 kV/cm
 /Geometry/NextNew/max_step_size 1. mm
@@ -169,6 +173,8 @@ def test_create_nexus_output_file_flex100(config_tmpdir, output_tmpdir, NEXUSDIR
 /run/verbose 1
 /event/verbose 0
 /tracking/verbose 0
+
+/process/em/verbose 0
 
 /Geometry/NextFlex/gas                   enrichedXe
 /Geometry/NextFlex/gas_pressure          15. bar
@@ -269,6 +275,8 @@ def test_create_nexus_output_file_demopp(config_tmpdir, output_tmpdir, NEXUSDIR,
 /run/verbose 1
 /event/verbose 0
 /tracking/verbose 0
+
+/process/em/verbose 0
 
 /Geometry/NextDemo/config run7
 /Geometry/NextDemo/elfield true
