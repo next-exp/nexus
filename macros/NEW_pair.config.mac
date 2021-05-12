@@ -10,6 +10,8 @@
 /event/verbose 0
 /tracking/verbose 0
 
+/process/em/verbose 0
+
 # Geometry
 /Geometry/NextNew/elfield 0
 /Geometry/NextNew/max_step_size 1. mm

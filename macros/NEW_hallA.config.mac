@@ -11,6 +11,8 @@
 /event/verbose 0
 /tracking/verbose 0
 
+/process/em/verbose 0
+
 /Geometry/NextNew/pressure 10. bar
 /Geometry/NextNew/elfield false
 /Geometry/NextNew/lab_walls true
