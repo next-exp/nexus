@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // nexus | RandomUtils.h
 //
-// This class defines commonly used functions to generate random quantities.
+// Commonly used functions to generate random quantities.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
