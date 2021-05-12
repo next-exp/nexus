@@ -173,7 +173,7 @@ G4Material* MaterialsList::GAr(G4double pressure, G4double temperature)
   if (mat == 0) {
     G4NistManager* nist = G4NistManager::Instance();
 
-    mat = new G4Material(name, ArgonGasProperties::Density(pressure), 1,
+    mat = new G4Material(name, ArgonDensity(pressure), 1,
 			 kStateGas, temperature, pressure);
 
     G4Element* Ar = nist->FindOrBuildElement("Ar");
@@ -193,7 +193,7 @@ G4Material* MaterialsList::GXeAr(G4double pressure, G4double temperature, G4doub
   if (mat == 0) {
 
     mat = new G4Material(name,
-			 (1-(percXe/100.))*ArgonGasProperties::Density(pressure) +
+			 (1-(percXe/100.))*ArgonDensity(pressure) +
 			 percXe/100.*GXeDensity(pressure),
 			 2, kStateGas, temperature, pressure);
 
@@ -246,7 +246,7 @@ G4Material* MaterialsList::GXeHe(G4double pressure,
 
     mat = new G4Material(name,
 			 prop_xe * GXeDensity(pressure)
-			 + prop_he * HeliumGasProperties::Density(pressure),
+			 + prop_he * HeliumDensity(pressure),
 			 2, kStateGas, temperature, pressure);
 
 
@@ -273,7 +273,7 @@ G4Material* MaterialsList::GXeHe(G4double pressure,
 
     G4Element * Helium = new G4Element("Helium", "Helium", 1);
     G4Isotope * He     = new G4Isotope("He", 2, mass_num,
-				       HeliumGasProperties::MassPerMole(mass_num));
+				       HeliumMassPerMole(mass_num));
     Helium->AddIsotope(He, 100 * perCent);
 
     mat->AddElement(Helium, prop_he);
