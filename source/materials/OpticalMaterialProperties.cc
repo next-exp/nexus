@@ -562,9 +562,10 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::GXe(G4double pressure,
     ri_energy[i] = optPhotMinE_ + i * eWidth;
   }
 
+  G4double density = GXeDensity(pressure);
   G4double rIndex[ri_entries];
   for (int i=0; i<ri_entries; i++) {
-    rIndex[i] = XenonRefractiveIndex(ri_energy[i], GXeDensity(pressure));
+    rIndex[i] = XenonRefractiveIndex(ri_energy[i], density);
     // G4cout << "* GXe rIndex:  " << std::setw(7)
     //        << ri_energy[i]/eV << " eV -> " << rIndex[i] << G4endl;
   }
@@ -617,10 +618,10 @@ G4MaterialPropertiesTable* OpticalMaterialProperties::LXe()
     ri_energy.push_back(optPhotMinE_ + i * eWidth);
   }
 
+  G4double density = LXeDensity();
   std::vector<G4double> ri_index;
-
   for (G4int i=0; i<ri_entries; i++) {
-    ri_index.push_back(XenonRefractiveIndex(ri_energy[i], LXeDensity()));
+    ri_index.push_back(XenonRefractiveIndex(ri_energy[i], density));
   }
 
   assert(ri_energy.size() == ri_index.size());
