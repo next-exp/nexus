@@ -28,7 +28,12 @@ using namespace nexus;
 
 
 Next100SiPM::Next100SiPM():
-  BaseGeometry()
+  BaseGeometry(),
+  sensor_depth_       (-1),
+  mother_depth_       (0),
+  naming_order_       (0),
+  time_binning_       (1.0 * us),
+  visibility_         (true)
 {
 }
 
@@ -100,15 +105,16 @@ void Next100SiPM::Construct()
                     sens_logic_vol, sens_name, sipm_logic_vol, false, 0, false);
 
   // OPTICAL SURFACES //////////////////////////////////////
-  const G4int entries = 36;
-  G4double energies[entries] = {1.3776022  * eV, 1.4472283  * eV, 1.52041305 * eV, 1.59290956 * eV, 1.66341179 * eV,
+  const G4int entries = 42;
+  G4double energies[entries] = {0.2 * eV, 1.0 * eV, 1.3 * eV,
+                                1.3776022  * eV, 1.4472283  * eV, 1.52041305 * eV, 1.59290956 * eV, 1.66341179 * eV,
                                 1.72546158 * eV, 1.78169885 * eV, 1.8473836  * eV, 1.90593775 * eV, 1.94918431 * eV,
                                 1.99443901 * eV, 2.05580636 * eV, 2.12107005 * eV, 2.17476803 * eV, 2.23125551 * eV,
                                 2.29951572 * eV, 2.37208426 * eV, 2.46950045 * eV, 2.75730000 * eV, 3.04467524 * eV,
                                 3.14006977 * eV, 3.20705792 * eV, 3.2592052  * eV, 3.31307637 * eV, 3.38773724 * eV,
                                 3.44597914 * eV, 3.50625866 * eV, 3.54763044 * eV, 3.58999021 * eV, 3.61155171 * eV,
                                 3.65546116 * eV, 3.67781872 * eV, 3.72336446 * eV, 3.74656299 * eV, 3.79383824 * eV,
-                                3.86703126 * eV};
+                                3.86703126 * eV, 4.0 * eV, 4.2 * eV, 11.5 * eV};
 
   G4double reflectivity[entries] = {0.0,  0.0, 0.0, 0.0, 0.0,
                                     0.0,  0.0, 0.0, 0.0, 0.0,
@@ -117,16 +123,18 @@ void Next100SiPM::Construct()
                                     0.0,  0.0, 0.0, 0.0, 0.0,
                                     0.0,  0.0, 0.0, 0.0, 0.0,
                                     0.0,  0.0, 0.0, 0.0, 0.0,
-                                    0.0};
+                                    0.0, 0.0, 0.0, 0.0, 0.0,
+                                    0.0, 0.0};
 
-  G4double efficiency[entries]   = {0.03506431, 0.0560223 , 0.07944598, 0.10291004, 0.12607905,
+  G4double efficiency[entries]   = {0.0, 0.0, 0.0,
+                                    0.03506431, 0.0560223 , 0.07944598, 0.10291004, 0.12607905,
                                     0.14954693, 0.17061431, 0.193974  , 0.21740781, 0.23843982,
                                     0.26178898, 0.28501443, 0.30860135, 0.33010702, 0.35361856,
                                     0.37751412, 0.40109223, 0.42743901, 0.43779628, 0.41021884,
                                     0.38111716, 0.36057765, 0.33517116, 0.31491576, 0.28931617,
                                     0.26968918, 0.24455707, 0.22893024, 0.20156831, 0.18538152,
                                     0.15444223, 0.12549548, 0.1040183 , 0.0902669 , 0.05498552,
-                                    0.02944706};
+                                    0.02944706, 0.0, 0.0, 0.0};
 
   G4MaterialPropertiesTable* sipm_mt = new G4MaterialPropertiesTable();
   sipm_mt->AddProperty("EFFICIENCY", energies, efficiency, entries);
@@ -138,19 +146,37 @@ void Next100SiPM::Construct()
 
   // SENSITIVE DETECTOR ////////////////////////////////////
 
-  PmtSD* sensdet = new PmtSD("/" + sipm_name + "/");
-  // sensdet->SetDetectorVolumeDepth(sensor_depth_);
-  // sensdet->SetMotherVolumeDepth(mother_depth_);
-  // sensdet->SetDetectorNamingOrder(naming_order_);
-  // sensdet->SetTimeBinning(time_binning_);
+  G4String sdname = "/" + sipm_name + "/";
+  G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
 
-  G4SDManager::GetSDMpointer()->AddNewDetector(sensdet);
-  sens_logic_vol->SetSensitiveDetector(sensdet);
+  if (!sdmgr->FindSensitiveDetector(sdname, false)) {
+    PmtSD* sensdet = new PmtSD(sdname);
+
+    if (sensor_depth_ == -1)
+      G4Exception("[Next100SiPM]", "Construct()", FatalException,
+                  "Sensor Depth must be set before constructing");
+    sensdet->SetDetectorVolumeDepth(sensor_depth_);
+
+    if (mother_depth_ == -1)
+      G4Exception("[Next100SiPM]", "Construct()", FatalException,
+                  "Mother Depth must be set before constructing");
+    sensdet->SetMotherVolumeDepth(mother_depth_);
+
+    if (naming_order_ == -1)
+      G4Exception("[Next100SiPM]", "Construct()", FatalException,
+                  "Naming Order must be set before constructing");
+    sensdet->SetDetectorNamingOrder(naming_order_);
+
+    sensdet->SetTimeBinning(time_binning_);
+
+    G4SDManager::GetSDMpointer()->AddNewDetector(sensdet);
+    sens_logic_vol->SetSensitiveDetector(sensdet);
+  }
 
 
   // VISIBILITY ////////////////////////////////////////////
 
-  if (true) {
+  if (visibility_) {
     sipm_logic_vol  ->SetVisAttributes(G4VisAttributes::Invisible);
     window_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
     G4VisAttributes red = Red();

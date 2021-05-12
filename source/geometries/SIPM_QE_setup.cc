@@ -89,6 +89,7 @@ namespace nexus {
 		      chamber_logic, false, 0, true);
 
     // SIPM /////////////////////////////////////////
+    sipm_.SetSensorDepth(2);
     sipm_.Construct();
 
     G4LogicalVolume* sipm_logic = sipm_.GetLogicalVolume();
