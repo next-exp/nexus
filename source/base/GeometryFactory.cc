@@ -66,7 +66,6 @@ BaseGeometry* GeometryFactory::CreateGeometry() const
 
   else if (name_ == "NEXT_DEMO") p = new NextDemo();
 
-
   else {
     G4String err = "The user selected an unknown geometry: " + name_;
     G4Exception("[GeometryFactory]", "CreateGeometry", FatalException, err);
