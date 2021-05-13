@@ -30,6 +30,7 @@ namespace nexus {
     void SetMotherDepth (G4int mother_depth);
     void SetNamingOrder (G4int naming_order);
     void SetTimeBinning (G4double time_binning);
+    void SetVisibility  (G4bool visibility)
 
   private:
 
@@ -53,6 +54,9 @@ namespace nexus {
 
   inline void Next100SiPM::SetNamingOrder(G4int naming_order)
   { naming_order_ = naming_order; }
+
+  inline void Next100SiPM::SetVisibility(G4bool visibility)
+  { visibility_ = visibility; }
 
 }
 
