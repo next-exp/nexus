@@ -155,18 +155,14 @@ void Next100SiPM::Construct()
     if (sensor_depth_ == -1)
       G4Exception("[Next100SiPM]", "Construct()", FatalException,
                   "Sensor Depth must be set before constructing");
+
+    if ((naming_order_ > 0) & (mother_depth_ == 0))
+      G4Exception("[Next100SiPM]", "Construct()", FatalException,
+                  "Naming Order set without setting Mother Depth");
+
     sensdet->SetDetectorVolumeDepth(sensor_depth_);
-
-    if (mother_depth_ == -1)
-      G4Exception("[Next100SiPM]", "Construct()", FatalException,
-                  "Mother Depth must be set before constructing");
     sensdet->SetMotherVolumeDepth(mother_depth_);
-
-    if (naming_order_ == -1)
-      G4Exception("[Next100SiPM]", "Construct()", FatalException,
-                  "Naming Order must be set before constructing");
     sensdet->SetDetectorNamingOrder(naming_order_);
-
     sensdet->SetTimeBinning(time_binning_);
 
     G4SDManager::GetSDMpointer()->AddNewDetector(sensdet);
