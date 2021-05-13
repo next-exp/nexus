@@ -30,7 +30,7 @@ namespace nexus {
     void SetMotherDepth (G4int mother_depth);
     void SetNamingOrder (G4int naming_order);
     void SetTimeBinning (G4double time_binning);
-    void SetVisibility  (G4bool visibility)
+    void SetVisibility  (G4bool visibility);
 
   private:
 
