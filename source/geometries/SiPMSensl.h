@@ -36,16 +36,15 @@ namespace nexus {
     void SetSensorDepth (G4int sensor_depth);
     void SetMotherDepth (G4int mother_depth);
     void SetNamingOrder (G4int naming_order);
+    void SetTimeBinning (G4double time_binning);
+    void SetVisibility  (G4bool visibility);
 
 
   private:
     G4ThreeVector dimensions_; ///< external dimensions of the SiPMSensl
 
-     // Messenger for the definition of control commands
-    G4GenericMessenger* msg_;
-
     // Time binning of sensors
-    G4double binning_;
+    G4double time_binning_;
 
     // Numbering
     G4int sensor_depth_;
@@ -57,6 +56,9 @@ namespace nexus {
 
   };
 
+  inline void SiPMSensl::SetTimeBinning(G4double time_binning)
+  { time_binning_ = time_binning; }
+
   inline void SiPMSensl::SetSensorDepth(G4int sensor_depth)
   { sensor_depth_ = sensor_depth; }
 
@@ -65,6 +67,9 @@ namespace nexus {
 
   inline void SiPMSensl::SetNamingOrder(G4int naming_order)
   { naming_order_ = naming_order; }
+
+  inline void SiPMSensl::SetVisibility(G4bool visibility)
+  { visibility_ = visibility; }
 
 } // end namespace nexus
 

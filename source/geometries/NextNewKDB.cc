@@ -36,11 +36,18 @@ namespace nexus {
     BaseGeometry (),
     rows_        (rows),
     columns_     (columns),
+    time_binning_(1. * microsecond),
     visibility_  (true)
   {
     /// Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/KDB/", "Control commands of kapton dice board geometry.");
     msg_->DeclareProperty("visibility", visibility_, "Kapton Dice Boards Visibility");
+
+    G4GenericMessenger::Command& time_binning_cmd = msg_->DeclareProperty("sipm_time_binning", time_binning_, "TP SiPMs time binning.");
+    time_binning_cmd.SetParameterName("sipm_time_binning", false);
+    time_binning_cmd.SetUnitCategory("Time");
+    time_binning_cmd.SetRange("sipm_time_binning>0.");
+    
     sipm_ = new SiPMSensl;
   }
 
@@ -61,7 +68,8 @@ namespace nexus {
 
   void NextNewKDB::Construct()
   {
-    /// Constructing the SiPM ///  
+    /// Constructing the SiPM ///
+    sipm_->SetTimeBinning(time_binning_);
     sipm_->SetSensorDepth(3);
     sipm_->SetMotherDepth(5);
     sipm_->SetNamingOrder(1000);
