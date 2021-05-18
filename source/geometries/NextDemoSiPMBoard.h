@@ -23,7 +23,6 @@ class G4GenericMessenger;
 namespace nexus {
 
   class BoxPointSampler;
-  class SiPMSensl;
 
   class NextDemoSiPMBoard: public GeometryBase
   {
@@ -42,6 +41,7 @@ namespace nexus {
     void SetHoleDiameter     (G4double diam);
     void SetHoleX            (G4double x);
     void SetHoleY            (G4double y);
+    void SetSiPMType         (G4String type);
 
     G4ThreeVector GetBoardSize() const;
     G4double      GetKaptonThickness() const;
@@ -64,9 +64,10 @@ namespace nexus {
     G4double hole_diam_;
     G4double hole_x_;
     G4double hole_y_;
+    G4String sipm_type_;
 
     G4ThreeVector board_size_;
-    SiPMSensl* sipm_;
+    BaseGeometry* sipm_;
     std::vector<G4ThreeVector> sipm_positions_;
     G4VPhysicalVolume* mother_phys_;
     BoxPointSampler* kapton_gen_;
@@ -97,6 +98,9 @@ namespace nexus {
 
   inline void NextDemoSiPMBoard::SetHoleY(G4double y)
   { hole_y_ = y; }
+
+  inline void NextDemoSiPMBoard::SetSiPMType(G4String type)
+  { sipm_type_ = type; }
 
   inline G4ThreeVector NextDemoSiPMBoard::GetBoardSize() const
   { return board_size_; }

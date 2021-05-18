@@ -15,6 +15,7 @@
 
 #include "MaterialsList.h"
 #include "SiPMSensl.h"
+#include "Next100SiPM.h"
 #include "OpticalMaterialProperties.h"
 #include "BoxPointSampler.h"
 #include "Visibilities.h"
@@ -48,10 +49,11 @@ NextDemoSiPMBoard::NextDemoSiPMBoard():
   mask_thickn_     (2.0  * mm),
   membrane_thickn_ (0.),
   coating_thickn_  (0.),
-  hole_type_       ("rounded"),
+  hole_type_       (""),
   hole_diam_       (3.5  * mm),
   hole_x_          (0.0  * mm),
   hole_y_          (0.0  * mm),
+  sipm_type_       (""),
   mother_phys_     (nullptr),
   kapton_gen_      (nullptr)
 {
@@ -67,7 +69,7 @@ NextDemoSiPMBoard::NextDemoSiPMBoard():
   msg_->DeclareProperty("sipm_board_vis", visibility_,
                         "NextDemoSiPMBoard visibility.");
 
-  sipm_ = new SiPMSensl;
+  // sipm_ = new SiPMSensl;
 }
 
 
@@ -81,6 +83,33 @@ NextDemoSiPMBoard::~NextDemoSiPMBoard()
 
 void NextDemoSiPMBoard::Construct()
 {
+
+  G4double sipm_z_dim = 0.;
+
+  if (sipm_type_ == "sensl"){
+    SiPMSensl* sipm = new SiPMSensl();
+
+    sipm->SetSensorDepth(3);
+    sipm->SetMotherDepth(5);
+    sipm->SetNamingOrder(1000);
+    sipm->Construct();
+
+    sipm_ = sipm;
+
+    sipm_z_dim = sipm->GetDimensions().z();
+  }
+  else if (sipm_type_ == "next100"){
+    Next100SiPM* sipm = new Next100SiPM();
+
+    sipm->SetSensorDepth(3);
+    sipm->SetMotherDepth(5);
+    sipm->SetNamingOrder(1000);
+    sipm->Construct();
+
+    sipm_ = sipm;
+
+    sipm_z_dim = sipm->GetDimensions().z();
+  }
 
   /// Make sure the mother physical volume is actually valid
   if (!mother_phys_)
@@ -117,7 +146,7 @@ void NextDemoSiPMBoard::Construct()
   G4double board_size_x = num_columns_ * sipm_pitch_ - 2. * side_reduction_;
   G4double board_size_y = num_rows_    * sipm_pitch_ - 2. * side_reduction_;
   G4double board_size_z = kapton_thickn_ + coating_thickn_ +
-                          std::max(sipm_->GetDimensions().z(), mask_thickn_);
+                          std::max(sipm_z_dim, mask_thickn_);
 
   board_size_ = G4ThreeVector(board_size_x, board_size_y, board_size_z);
 
@@ -176,16 +205,16 @@ void NextDemoSiPMBoard::Construct()
     hole_solid = new G4Tubs(hole_name, 0., hole_diam_/2., mask_thickn_/2., 0, 360.*deg);}
   else if (hole_type_ == "rectangular"){
     hole_solid = new G4Box(hole_name, hole_x_/2., hole_y_/2., mask_thickn_/2.);}
-    
+
   G4LogicalVolume* hole_logic =
     new G4LogicalVolume(hole_solid, mother_gas, hole_name);
 
 
   /// SiPMs construction
-  sipm_->SetSensorDepth(3);
-  sipm_->SetMotherDepth(5);
-  sipm_->SetNamingOrder(1000);
-  sipm_->Construct();
+  // sipm_->SetSensorDepth(3);
+  // sipm_->SetMotherDepth(5);
+  // sipm_->SetNamingOrder(1000);
+  // sipm_->Construct();
 
   // Generate SiPM positions
   GenerateSiPMPositions();
@@ -194,7 +223,7 @@ void NextDemoSiPMBoard::Construct()
   G4RotationMatrix* sipm_rot = new G4RotationMatrix();
   sipm_rot->rotateY(pi);
 
-  G4double sipm_posz = - mask_thickn_/2. + sipm_->GetDimensions().z()/2.;
+  G4double sipm_posz = - mask_thickn_/2. + sipm_z_dim/2.;
 
   new G4PVPlacement(sipm_rot, G4ThreeVector(0., 0., sipm_posz), sipm_->GetLogicalVolume(),
                     sipm_->GetLogicalVolume()->GetName(), hole_logic,
