@@ -12,6 +12,8 @@
 
 #include "GeometryBase.h"
 
+#include <G4ThreeVector.hh>
+
 namespace nexus {
 
   class Next100SiPM: public GeometryBase
@@ -21,6 +23,9 @@ namespace nexus {
     Next100SiPM();
     /// Destructor
     ~Next100SiPM();
+
+    // Return dimensions of the SiPM
+    G4ThreeVector GetDimensions() const;
 
     // Invoke this method to build the volumes of the geometry
     void Construct() override;
@@ -33,6 +38,7 @@ namespace nexus {
     void SetVisibility  (G4bool visibility);
 
   private:
+    G4ThreeVector dimensions_;
 
     G4int    sensor_depth_;
     G4int    mother_depth_;
