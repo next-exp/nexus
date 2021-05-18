@@ -8,13 +8,15 @@
 
 /control/execute macros/physics/DefaultPhysicsList.mac
 
-/Geometry/RegisterGeometry NEXT_NEW
+/nexus/RegisterGeometry NextNew
 
-/Generator/RegisterGenerator DECAY0
+/nexus/RegisterGenerator Decay0Interface
 
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterRunAction DEFAULT
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterRunAction DefaultRunAction
 
 /nexus/RegisterMacro macros/NEW_translated_bb0nu.config.mac
 

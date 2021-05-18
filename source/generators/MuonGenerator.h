@@ -19,7 +19,7 @@ class G4ParticleDefinition;
 
 namespace nexus {
 
-  class BaseGeometry;
+  class GeometryBase;
 
   class MuonGenerator: public G4VPrimaryGenerator
   {
@@ -53,7 +53,7 @@ namespace nexus {
 
     G4String region_;
 
-    const BaseGeometry* geom_; ///< Pointer to the detector geometry
+    const GeometryBase* geom_; ///< Pointer to the detector geometry
 
     G4double momentum_X_;
     G4double momentum_Y_;

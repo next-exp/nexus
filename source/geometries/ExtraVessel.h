@@ -11,7 +11,7 @@
 #ifndef EXTRA_VESSEL_H
 #define EXTRA_VESSEL_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include <G4ThreeVector.hh>
 
 class G4GenericMessenger;
@@ -20,7 +20,7 @@ namespace nexus {
 
   class CylinderPointSampler;
 
-  class ExtraVessel: public BaseGeometry
+  class ExtraVessel: public GeometryBase
   {
   public:
     /// Constructor

@@ -33,7 +33,7 @@ using namespace nexus;
 
 
 NextDemoTrackingPlane::NextDemoTrackingPlane():
-  BaseGeometry(),
+  GeometryBase(),
   verbosity_       (false),
   visibility_      (false),
   config_          (""),
@@ -203,7 +203,7 @@ void NextDemoTrackingPlane::GenerateBoardPositions(G4double board_posz)
   pos1.setY( pos_y);
   pos1.setZ( board_posz);
   board_pos_.push_back(pos1);
-  if (verbosity_) G4cout << "* SiPM board 1 position: " << pos1 << G4endl; 
+  if (verbosity_) G4cout << "* SiPM board 1 position: " << pos1 << G4endl;
 
   // Placing board 2
   G4ThreeVector pos2(0., 0., 0.);
@@ -211,7 +211,7 @@ void NextDemoTrackingPlane::GenerateBoardPositions(G4double board_posz)
   pos2.setY( pos_y);
   pos2.setZ( board_posz);
   board_pos_.push_back(pos2);
-  if (verbosity_) G4cout << "* SiPM board 2 position: " << pos2 << G4endl; 
+  if (verbosity_) G4cout << "* SiPM board 2 position: " << pos2 << G4endl;
 
   // Placing board 3
   G4ThreeVector pos3(0., 0., 0.);
@@ -219,7 +219,7 @@ void NextDemoTrackingPlane::GenerateBoardPositions(G4double board_posz)
   pos3.setY(-pos_y);
   pos3.setZ( board_posz);
   board_pos_.push_back(pos3);
-  if (verbosity_) G4cout << "* SiPM board 3 position: " << pos3 << G4endl; 
+  if (verbosity_) G4cout << "* SiPM board 3 position: " << pos3 << G4endl;
 
   // Placing board 4
   G4ThreeVector pos4(0., 0., 0.);
@@ -227,7 +227,7 @@ void NextDemoTrackingPlane::GenerateBoardPositions(G4double board_posz)
   pos4.setY(-pos_y);
   pos4.setZ( board_posz);
   board_pos_.push_back(pos4);
-  if (verbosity_) G4cout << "* SiPM board 4 position: " << pos4 << G4endl; 
+  if (verbosity_) G4cout << "* SiPM board 4 position: " << pos4 << G4endl;
 }
 
 

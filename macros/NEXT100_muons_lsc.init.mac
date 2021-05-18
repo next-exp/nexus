@@ -20,15 +20,17 @@
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 ### GEOMETRY
-/Geometry/RegisterGeometry NEXT100
+/nexus/RegisterGeometry Next100
 
 ### GENERATOR
-/Generator/RegisterGenerator LAB_MUON
+/nexus/RegisterGenerator MuonAngleGenerator
+
+/nexus/RegisterPersistencyManager PersistencyManager
 
 ### ACTIONS
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterRunAction DEFAULT
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterRunAction DefaultRunAction
 
 /physics_lists/em/MuonNuclear true
 

@@ -3,6 +3,8 @@
 /event/verbose    0
 /tracking/verbose 0
 
+/process/em/verbose 0
+
 /Generator/ScintGenerator/region EL_GAP
 /Generator/ScintGenerator/nphotons 1
 

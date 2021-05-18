@@ -8,12 +8,15 @@
 
 /control/execute macros/physics/DefaultPhysicsList.mac
 
-/Geometry/RegisterGeometry NEXT1_EL
+/nexus/RegisterGeometry Next1EL
 
-/Generator/RegisterGenerator MUON
+/nexus/RegisterGenerator MuonGenerator
 
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction MUONS
-/Actions/RegisterRunAction DEFAULT
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterEventAction MuonsEventAction
+/nexus/RegisterRunAction DefaultRunAction
 
 /nexus/RegisterMacro macros/DEMO_muons.config.mac
+

@@ -18,7 +18,7 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class BaseGeometry;
+  class GeometryBase;
 
   class Na22Generator: public G4VPrimaryGenerator
   {
@@ -33,7 +33,7 @@ namespace nexus {
   private:
 
     G4GenericMessenger* msg_;
-    const BaseGeometry* geom_;
+    const GeometryBase* geom_;
 
     G4String region_;
 

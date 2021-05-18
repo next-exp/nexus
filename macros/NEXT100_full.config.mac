@@ -12,6 +12,8 @@
 /event/verbose 0
 /tracking/verbose 0
 
+/process/em/verbose 0
+
 ##### GEOMETRY #####
 /Geometry/Next100/elfield true
 /Geometry/Next100/EL_field 13 kV/cm

@@ -10,6 +10,8 @@
 /event/verbose 0
 /tracking/verbose 0
 
+/process/em/verbose 0
+
 /nexus/random_seed 542862
 
 /Geometry/NextNew/pressure 15. bar

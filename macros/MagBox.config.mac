@@ -11,6 +11,8 @@
 /event/verbose 0
 /tracking/verbose 0
 
+/process/em/verbose 0
+
 ### GEOMETRY
 /Geometry/MagBox/gas_name Xenon #(Xenon, Hydrogen, SeF6)
 /Geometry/MagBox/pressure 20. bar

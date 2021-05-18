@@ -1,8 +1,10 @@
-/Geometry/RegisterGeometry NEXT_NEW
+/nexus/RegisterGeometry NextNew
 
-/Generator/RegisterGenerator    SCINTILLATION
+/nexus/RegisterGenerator    ScintillationGenerator
 
-/Actions/RegisterTrackingAction LIGHT_TABLE
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterTrackingAction LightTableTrackingAction
 
 /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
 /PhysicsList/RegisterPhysics G4DecayPhysics

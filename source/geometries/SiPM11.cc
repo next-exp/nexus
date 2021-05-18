@@ -30,7 +30,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  SiPM11::SiPM11(): BaseGeometry(),
+  SiPM11::SiPM11(): GeometryBase(),
 		    visibility_(0)
 
   {

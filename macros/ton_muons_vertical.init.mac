@@ -22,15 +22,18 @@
 /physics_lists/em/MuonNuclear true
 
 ### GEOMETRY
-/Geometry/RegisterGeometry TON_SCALE
+/nexus/RegisterGeometry NextTonScale
 
 ### GENERATOR
-/Generator/RegisterGenerator LAB_MUON
+/nexus/RegisterGenerator MuonAngleGenerator
+
+### PERSISTENCY MANAGER
+/nexus/RegisterPersistencyManager PersistencyManager
 
 ### ACTIONS
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterRunAction DEFAULT
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterRunAction DefaultRunAction
 
 /nexus/RegisterDelayedMacro macros/physics/Xe137.mac
 /nexus/RegisterMacro macros/ton_muons_vertical.config.mac

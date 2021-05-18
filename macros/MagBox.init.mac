@@ -14,15 +14,18 @@
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 ### GEOMETRY
-/Geometry/RegisterGeometry MAG_BOX
+/nexus/RegisterGeometry MagBox
 
 ### GENERATOR
-/Generator/RegisterGenerator SINGLE_PARTICLE
+/nexus/RegisterGenerator SingleParticleGenerator
+
+### PERSISTENCY MANAGER
+/nexus/RegisterPersistencyManager PersistencyManager
 
 ### ACTIONS
-/Actions/RegisterRunAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterTrackingAction DEFAULT
+/nexus/RegisterRunAction DefaultRunAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterTrackingAction DefaultTrackingAction
 
 ### CONFIGURATION
 /nexus/RegisterMacro macros/MagBox.config.mac

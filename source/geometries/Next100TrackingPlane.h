@@ -9,7 +9,7 @@
 #ifndef NEXT100_TRACKING_PLANE_H
 #define NEXT100_TRACKING_PLANE_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include <G4ThreeVector.hh>
 #include <vector>
 
@@ -23,7 +23,7 @@ namespace nexus {
 
   // Geometry of the tracking plane of the NEXT-100 detector
 
-  class Next100TrackingPlane: public BaseGeometry
+  class Next100TrackingPlane: public GeometryBase
   {
   public:
     // Constructor

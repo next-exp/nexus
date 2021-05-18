@@ -13,6 +13,8 @@
 /event/verbose 0
 /tracking/verbose 0
 
+/process/em/verbose 0
+
 # Geometry
 /Geometry/NextNew/pressure 7. bar
 /Geometry/NextNew/elfield false

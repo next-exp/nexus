@@ -42,7 +42,7 @@ namespace nexus {
 
 
   NextNewFieldCage::NextNewFieldCage():
-    BaseGeometry(),
+    GeometryBase(),
     mother_logic_(nullptr), mother_phys_(nullptr),
     // Field cage dimensions
     dist_feedthroughs_(514. * mm), // distance between the centres of the feedthroughs

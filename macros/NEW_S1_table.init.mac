@@ -14,12 +14,14 @@
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
-/Geometry/RegisterGeometry NEXT_NEW
+/nexus/RegisterGeometry NextNew
 
-/Generator/RegisterGenerator SCINTILLATION
+/nexus/RegisterGenerator ScintillationGenerator
 
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction SAVE_ALL
-/Actions/RegisterRunAction DEFAULT
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterEventAction SaveAllEventAction
+/nexus/RegisterRunAction DefaultRunAction
 
 /nexus/RegisterMacro macros/NEW_S1_table.config.mac

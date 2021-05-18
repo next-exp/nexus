@@ -9,7 +9,9 @@
 # VERBOSITY
 /run/verbose 0
 /event/verbose 0
-/tracking/verbose 0  
+/tracking/verbose 0
+
+/process/em/verbose 0
 
 # GEOMETRY
 /Geometry/Next1EL/elfield false

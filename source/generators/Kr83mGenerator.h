@@ -19,7 +19,7 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class BaseGeometry;
+  class GeometryBase;
 
   /// This state decays into the fundamental state of Kr 83 in two steps,
   ///  (JP 1/2- --> Jp 7/2+ -> 9/2+), with transition energies of 32.15 and 9.4 keV
@@ -60,7 +60,7 @@ namespace nexus {
   private:
 
     G4GenericMessenger* msg_;
-    const BaseGeometry* geom_;
+    const GeometryBase* geom_;
 
     G4double energy_32_; // Transition energy from the 1/2- state to the intermediate state, 7/2+
     G4double energy_9_; // ... from the JP 7/2+ to the Kr83 fundamental state.

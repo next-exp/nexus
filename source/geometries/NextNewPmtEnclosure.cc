@@ -31,7 +31,7 @@
 namespace nexus{
 
   NextNewPmtEnclosure::NextNewPmtEnclosure():
-    BaseGeometry(),
+    GeometryBase(),
     // Enclosures dimensions
     enclosure_in_diam_ (80. * mm),
     enclosure_length_ (200.0 * mm),
@@ -108,7 +108,7 @@ namespace nexus{
       new G4LogicalVolume(enclosure_solid,
                           G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
                           "ENCLOSURE");
-    BaseGeometry::SetLogicalVolume(enclosure_logic);
+    GeometryBase::SetLogicalVolume(enclosure_logic);
 
     // Filling the enclosure with vacuum
     G4double gas_diam = enclosure_in_diam_ ;

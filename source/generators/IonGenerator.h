@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // nexus | IonGenerator.h
 //
-// This class is the primary generator for events consisting in the decay 
+// This class is the primary generator for events consisting in the decay
 // of a radioactive ion. The user must specify via configuration parameters
 // the atomic number, mass number and energy level of the isotope of interest.
 //
@@ -20,7 +20,7 @@ class G4ParticleDefinition;
 
 namespace nexus{
 
-  class BaseGeometry;
+  class GeometryBase;
 
   class IonGenerator: public G4VPrimaryGenerator
   {
@@ -43,7 +43,7 @@ namespace nexus{
     G4bool decay_at_time_zero_;
     G4String region_;
     G4GenericMessenger* msg_;
-    const BaseGeometry* geom_;
+    const GeometryBase* geom_;
   };
 
 } // end namespace nexus

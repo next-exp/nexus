@@ -9,7 +9,7 @@
 #ifndef NEXT_FLEX_H
 #define NEXT_FLEX_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include <G4ThreeVector.hh>
 
 class G4LogicalVolume;
@@ -29,7 +29,7 @@ namespace nexus {
   // The ENERGY_PLANE   (Considering all the variety it may consist of)
   // The TRACKING_PLANE (Considering all the variety it may consist of)
 
-  class NextFlex : public BaseGeometry
+  class NextFlex : public GeometryBase
   {
 
   public:

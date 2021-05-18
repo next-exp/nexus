@@ -8,12 +8,14 @@
 
 /control/execute macros/physics/DefaultPhysicsList.mac
 
-/Geometry/RegisterGeometry NEXT_NEW
+/nexus/RegisterGeometry NextNew
 
-/Generator/RegisterGenerator E+E-PAIR
+/nexus/RegisterGenerator ElecPositronPairGenerator
 
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterRunAction DEFAULT
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterRunAction DefaultRunAction
 
 /nexus/RegisterMacro macros/NEW_pair.config.mac

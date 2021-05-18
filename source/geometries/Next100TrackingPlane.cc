@@ -24,7 +24,7 @@ using namespace nexus;
 
 
 Next100TrackingPlane::Next100TrackingPlane(G4double origin_z_coord):
-  BaseGeometry(),
+  GeometryBase(),
   z0_(origin_z_coord), // Distance between gate and inner face of copper plate
   copper_plate_diameter_  (1340.*mm),
   copper_plate_thickness_ ( 120.*mm),

@@ -14,7 +14,7 @@
 #include "SingleParticle2PiGenerator.h"
 
 #include "DetectorConstruction.h"
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4ParticleDefinition.hh>

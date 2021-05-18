@@ -13,7 +13,7 @@
 #ifndef NEXTDEMO_SIPM_BOARD_H
 #define NEXTDEMO_SIPM_BOARD_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include <G4ThreeVector.hh>
 #include <vector>
 
@@ -25,7 +25,7 @@ namespace nexus {
   class BoxPointSampler;
   class SiPMSensl;
 
-  class NextDemoSiPMBoard: public BaseGeometry
+  class NextDemoSiPMBoard: public GeometryBase
   {
   public:
     NextDemoSiPMBoard();
@@ -33,7 +33,7 @@ namespace nexus {
 
     void Construct() override;
     G4ThreeVector GenerateVertex(const G4String&) const override;
-    
+
     void SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys);
     void SetMaskThickness    (G4double thickn);
     void SetMembraneThickness(G4double thickn);

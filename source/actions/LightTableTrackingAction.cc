@@ -13,6 +13,7 @@
 #include "Trajectory.h"
 #include "TrajectoryMap.h"
 #include "IonizationElectron.h"
+#include "FactoryBase.h"
 
 #include <G4Track.hh>
 #include <G4TrackingManager.hh>
@@ -22,6 +23,7 @@
 
 using namespace nexus;
 
+REGISTER_CLASS(LightTableTrackingAction, G4UserTrackingAction)
 
 LightTableTrackingAction::LightTableTrackingAction(): G4UserTrackingAction()
 {

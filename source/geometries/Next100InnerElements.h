@@ -12,7 +12,7 @@
 
 #include <G4ThreeVector.hh>
 #include <vector>
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 class G4LogicalVolume;
 class G4VPhysicalVolume;
@@ -26,7 +26,7 @@ namespace nexus {
   class Next100EnergyPlane;
   class Next100TrackingPlane;
 
-  class Next100InnerElements : public BaseGeometry
+  class Next100InnerElements : public GeometryBase
   {
 
   public:

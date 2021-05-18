@@ -9,11 +9,11 @@
 #ifndef LEAD_COLL_H
 #define LEAD_COLL_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 namespace nexus {
 
-  class LeadCollimator : public BaseGeometry
+  class LeadCollimator : public GeometryBase
   {
 
   public:

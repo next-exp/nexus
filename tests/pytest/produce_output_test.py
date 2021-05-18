@@ -17,13 +17,15 @@ def test_create_nexus_output_file_next100(config_tmpdir, output_tmpdir, NEXUSDIR
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
-/Geometry/RegisterGeometry NEXT100_OPT
+/nexus/RegisterGeometry Next100OpticalGeometry
 
-/Generator/RegisterGenerator SINGLE_PARTICLE
+/nexus/RegisterGenerator SingleParticleGenerator
 
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterRunAction DEFAULT
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterRunAction DefaultRunAction
 
 /nexus/RegisterMacro {config_tmpdir}/{full_base_name_next100}.config.mac
 """
@@ -37,6 +39,8 @@ def test_create_nexus_output_file_next100(config_tmpdir, output_tmpdir, NEXUSDIR
 /run/verbose 1
 /event/verbose 0
 /tracking/verbose 0
+
+/process/em/verbose 0
 
 /Geometry/Next100/elfield true
 /Geometry/Next100/EL_field 13 kV/cm
@@ -80,13 +84,15 @@ def test_create_nexus_output_file_new(config_tmpdir, output_tmpdir, NEXUSDIR,
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
-/Geometry/RegisterGeometry NEXT_NEW
+/nexus/RegisterGeometry NextNew
 
-/Generator/RegisterGenerator SINGLE_PARTICLE
+/nexus/RegisterGenerator SingleParticleGenerator
 
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterRunAction DEFAULT
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterRunAction DefaultRunAction
 
 /nexus/RegisterMacro {config_tmpdir}/{full_base_name_new}.config.mac
 """
@@ -100,6 +106,8 @@ def test_create_nexus_output_file_new(config_tmpdir, output_tmpdir, NEXUSDIR,
 /run/verbose 1
 /event/verbose 0
 /tracking/verbose 0
+
+/process/em/verbose 0
 
 /Geometry/NextNew/elfield true
 /Geometry/NextNew/EL_field 13 kV/cm
@@ -143,13 +151,15 @@ def test_create_nexus_output_file_flex100(config_tmpdir, output_tmpdir, NEXUSDIR
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
-/Geometry/RegisterGeometry NEXT_FLEX
+/nexus/RegisterGeometry NextFlex
 
-/Generator/RegisterGenerator SINGLE_PARTICLE
+/nexus/RegisterGenerator SingleParticleGenerator
 
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterRunAction DEFAULT
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterRunAction DefaultRunAction
 
 /nexus/RegisterMacro {config_tmpdir}/{full_base_name_flex100}.config.mac
 """
@@ -163,6 +173,8 @@ def test_create_nexus_output_file_flex100(config_tmpdir, output_tmpdir, NEXUSDIR
 /run/verbose 1
 /event/verbose 0
 /tracking/verbose 0
+
+/process/em/verbose 0
 
 /Geometry/NextFlex/gas                   enrichedXe
 /Geometry/NextFlex/gas_pressure          15. bar
@@ -242,13 +254,15 @@ def test_create_nexus_output_file_demopp(config_tmpdir, output_tmpdir, NEXUSDIR,
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
-/Geometry/RegisterGeometry NEXT_DEMO
+/nexus/RegisterGeometry NextDemo
 
-/Generator/RegisterGenerator SINGLE_PARTICLE
+/nexus/RegisterGenerator SingleParticleGenerator
 
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterRunAction DEFAULT
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterRunAction DefaultRunAction
 
 /nexus/RegisterMacro {config_tmpdir}/{full_base_name_demopp}.config.mac
 """
@@ -261,6 +275,8 @@ def test_create_nexus_output_file_demopp(config_tmpdir, output_tmpdir, NEXUSDIR,
 /run/verbose 1
 /event/verbose 0
 /tracking/verbose 0
+
+/process/em/verbose 0
 
 /Geometry/NextDemo/config run7
 /Geometry/NextDemo/elfield true

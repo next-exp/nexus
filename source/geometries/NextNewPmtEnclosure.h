@@ -12,7 +12,7 @@
 #include <G4ThreeVector.hh>
 #include <G4Navigator.hh>
 #include <G4TransportationManager.hh>
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 class G4Material;
 class G4LogicalVolume;
@@ -25,18 +25,18 @@ namespace nexus{
 
   class CylinderPointSampler;
   class PmtR11410;
-  
-  class NextNewPmtEnclosure: public BaseGeometry
+
+  class NextNewPmtEnclosure: public GeometryBase
   {
   public:
     //Constructor
     NextNewPmtEnclosure();
     //Destructor
     ~NextNewPmtEnclosure();
- 
+
     G4ThreeVector GetObjectCenter();
     G4double GetWindowDiameter();
-   
+
 
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
@@ -67,16 +67,16 @@ namespace nexus{
     CylinderPointSampler* enclosure_surf_gen_;
     CylinderPointSampler* enclosure_cap_surf_gen_;
 
-    
+
     G4double body_perc_;
     G4double flange_perc_;
     G4double int_surf_perc_, int_cap_surf_perc_;
-    
+
     // Geometry Navigator
     G4Navigator* geom_navigator_;
 
     // Messenger for the definition of control commands
-    G4GenericMessenger* msg_; 
+    G4GenericMessenger* msg_;
 
   };
 

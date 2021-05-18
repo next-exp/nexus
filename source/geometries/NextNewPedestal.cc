@@ -24,7 +24,7 @@ namespace nexus {
 
   NextNewPedestal::NextNewPedestal():
 
-    BaseGeometry(),
+    GeometryBase(),
 
     // Body dimensions
     table_x_ (1200. *mm),

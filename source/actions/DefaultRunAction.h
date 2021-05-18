@@ -15,8 +15,6 @@
 
 namespace nexus {
 
-  /// TODO. CLASS DESCRIPTION
-
   class DefaultRunAction: public G4UserRunAction
   {
   public:

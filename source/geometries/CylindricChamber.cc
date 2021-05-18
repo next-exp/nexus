@@ -14,6 +14,7 @@
 #include "OpticalMaterialProperties.h"
 #include "UniformElectricDriftField.h"
 #include "IonizationSD.h"
+#include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Tubs.hh>
@@ -27,10 +28,12 @@
 
 namespace nexus {
 
+  REGISTER_CLASS(CylindricChamber, GeometryBase)
+
   using namespace CLHEP;
 
   CylindricChamber::CylindricChamber():
-    BaseGeometry(), msg_(0)
+    GeometryBase(), msg_(0)
   {
   }
 

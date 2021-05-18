@@ -14,6 +14,7 @@
 #include "Next100Vessel.h"
 #include "Next100Ics.h"
 #include "Next100InnerElements.h"
+#include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -30,10 +31,12 @@
 
 namespace nexus {
 
+  REGISTER_CLASS(Next100, GeometryBase)
+
   using namespace CLHEP;
 
   Next100::Next100():
-    BaseGeometry(),
+    GeometryBase(),
     // Lab dimensions
     lab_size_ (5. * m),
     // Nozzles external diam and y positions

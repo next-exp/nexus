@@ -9,7 +9,7 @@
 #ifndef XE_SPHERE_H
 #define XE_SPHERE_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 class G4Material;
 class G4GenericMessenger;
@@ -20,7 +20,7 @@ namespace nexus {
 
   /// Spherical chamber filled with xenon (liquid or gas)
 
-  class XeSphere: public BaseGeometry
+  class XeSphere: public GeometryBase
   {
   public:
     /// Constructor

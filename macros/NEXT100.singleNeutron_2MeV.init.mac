@@ -23,15 +23,18 @@
 /physics_lists/em/MuonNuclear true
 
 ### GEOMETRY
-/Geometry/RegisterGeometry NEXT100
+/nexus/RegisterGeometry Next100
 
 ### GENERATOR
-/Generator/RegisterGenerator SINGLE_PARTICLE
+/nexus/RegisterGenerator SingleParticleGenerator
+
+### PERSISTENCY MANAGER
+/nexus/RegisterPersistencyManager PersistencyManager
 
 ### ACTIONS
-/Actions/RegisterRunAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterTrackingAction DEFAULT
+/nexus/RegisterRunAction DefaultRunAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterTrackingAction DefaultTrackingAction
 
 ### CONFIGURATION
 /nexus/RegisterDelayedMacro macros/physics/Xe137.mac

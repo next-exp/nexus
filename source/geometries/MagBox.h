@@ -9,7 +9,7 @@
 #ifndef MAGBOX_H
 #define MAGBOX_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 class G4LogicalVolume;
 class G4GenericMessenger;
@@ -20,7 +20,7 @@ namespace nexus {
 
   class BoxPointSampler;
 
-  class MagBox: public BaseGeometry {
+  class MagBox: public GeometryBase {
   public:
     /// Constructor
     MagBox();

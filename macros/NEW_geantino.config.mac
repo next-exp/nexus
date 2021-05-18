@@ -8,6 +8,8 @@
 /event/verbose 0
 /tracking/verbose 0
 
+/process/em/verbose 0
+
 # GENERATION
 /Generator/SingleParticle/particle geantino
 /Generator/SingleParticle/min_energy 1  eV

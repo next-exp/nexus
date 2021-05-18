@@ -9,7 +9,7 @@
 #ifndef NEXT_DEMO_H
 #define NEXT_DEMO_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 class G4GenericMessenger;
 
@@ -19,7 +19,7 @@ namespace nexus {
   class NextDemoInnerElements;
 
 
-  class NextDemo: public BaseGeometry
+  class NextDemo: public GeometryBase
   {
   public:
     NextDemo();

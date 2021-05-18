@@ -9,13 +9,13 @@
 #ifndef NEXT1_EL_DBO_H
 #define NEXT1_EL_DBO_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include <vector>
 
 
 namespace nexus {
 
-  class Next1ELDBO: public BaseGeometry
+  class Next1ELDBO: public GeometryBase
   {
   public:
     /// Constructor

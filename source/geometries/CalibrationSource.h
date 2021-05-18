@@ -11,13 +11,13 @@
 #ifndef CAL_SOURCE_H
 #define CAL_SOURCE_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 class G4GenericMessenger;
 
 namespace nexus {
 
-  class CalibrationSource: public BaseGeometry {
+  class CalibrationSource: public GeometryBase {
   public:
     /// Constructor
     CalibrationSource();

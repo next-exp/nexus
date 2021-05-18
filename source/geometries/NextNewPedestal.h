@@ -9,7 +9,7 @@
 #ifndef NEXTNEW_PEDESTAL_H
 #define NEXTNEW_PEDESTAL_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include "BoxPointSampler.h"
 
 #include <G4Navigator.hh>
@@ -18,7 +18,7 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class NextNewPedestal: public BaseGeometry
+  class NextNewPedestal: public GeometryBase
   {
   public:
     /// Constructor

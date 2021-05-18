@@ -10,23 +10,31 @@
 
 #include "NexusApp.h"
 
-#include "GeometryFactory.h"
-#include "GeneratorFactory.h"
-#include "ActionsFactory.h"
 #include "DetectorConstruction.h"
 #include "PrimaryGeneration.h"
-#include "PersistencyManager.h"
+#include "PersistencyManagerBase.h"
 #include "BatchSession.h"
+#include "FactoryBase.h"
 
 #include <G4GenericPhysicsList.hh>
 #include <G4UImanager.hh>
 #include <G4StateManager.hh>
+#include <G4VPersistencyManager.hh>
+#include <G4UserRunAction.hh>
+#include <G4UserEventAction.hh>
+#include <G4UserTrackingAction.hh>
+#include <G4UserSteppingAction.hh>
+#include <G4UserStackingAction.hh>
 
 using namespace nexus;
 
 
 
-NexusApp::NexusApp(G4String init_macro): G4RunManager()
+NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
+                                         geo_name_(""), pm_name_(""),
+                                         runact_name_(""), evtact_name_(""),
+                                         stepact_name_(""), trkact_name_(""),
+                                         stkact_name_("")
 {
   // Create and configure a generic messenger for the app
   msg_ = new G4GenericMessenger(this, "/nexus/", "Nexus control commands.");
@@ -45,17 +53,29 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
   msg_->DeclareMethod("random_seed", &NexusApp::SetRandomSeed,
                       "Set a seed for the random number generator.");
 
+// Define the command to set the desired generator
+  msg_->DeclareProperty("RegisterGenerator", gen_name_, "");
+
+  // Define the command to set the desired geometry
+  msg_->DeclareProperty("RegisterGeometry", geo_name_, "");
+
+// Define the command to set the desired persistency manager
+  msg_->DeclareProperty("RegisterPersistencyManager", pm_name_, "");
+
+// Define the commands to set the desired actions
+  msg_->DeclareProperty("RegisterRunAction", runact_name_, "");
+  msg_->DeclareProperty("RegisterEventAction", evtact_name_, "");
+  msg_->DeclareProperty("RegisterSteppingAction", stepact_name_, "");
+  msg_->DeclareProperty("RegisterTrackingAction", trkact_name_, "");
+  msg_->DeclareProperty("RegisterStackingAction", stkact_name_, "");
+
+
   /////////////////////////////////////////////////////////
 
   // We will set now the user initialization class instances
-  // in the run manager. In order to do so, we create first the factories
-  // (the objects that construct the appropriate instances according
-  // to user's input) so that the messenger commands are already defined
+  // in the run manager. In order to do so, we use our own factory
+  // so that the messenger commands are already defined
   // by the time we process the initialization macro.
-
-  GeometryFactory  geomfctr;
-  GeneratorFactory genfctr;
-  ActionsFactory   actfctr;
 
   // The physics lists are handled with Geant4's own 'factory'
   physicsList = new G4GenericPhysicsList();
@@ -68,35 +88,43 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
 
   // Set the detector construction instance in the run manager
   DetectorConstruction* dc = new DetectorConstruction();
-  dc->SetGeometry(geomfctr.CreateGeometry());
+  if (geo_name_ == "") {
+    G4Exception("[NexusApp]", "NexusApp()", FatalException, "A geometry must be specified.");
+  }
+  dc->SetGeometry(ObjFactory<GeometryBase>::Instance().CreateObject(geo_name_));
   this->SetUserInitialization(dc);
 
   // Set the primary generation instance in the run manager
   PrimaryGeneration* pg = new PrimaryGeneration();
-  pg->SetGenerator(genfctr.CreateGenerator());
+  if (gen_name_ == "") {
+    G4Exception("[NexusApp]", "NexusApp()", FatalException, "A generator must be specified.");
+  }
+  pg->SetGenerator(ObjFactory<G4VPrimaryGenerator>::Instance().CreateObject(gen_name_));
   this->SetUserAction(pg);
 
-  // User interface
-  G4UImanager* UI = G4UImanager::GetUIpointer();
+  if (pm_name_ == "") {
+    G4Exception("[NexusApp]", "NexusApp()", FatalException, "A persistency manager must be specified.");
+  }
+  PersistencyManagerBase* pm = ObjFactory<PersistencyManagerBase>::Instance().CreateObject(pm_name_);
+  pm->SetMacros(init_macro, macros_, delayed_);
 
-  PersistencyManager::Initialize(init_macro, macros_, delayed_);
+ // PersistencyManager::Initialize(init_macro, macros_, delayed_);
 
   // Set the user action instances, if any, in the run manager
+  if (runact_name_ != "")
+    this->SetUserAction(ObjFactory<G4UserRunAction>::Instance().CreateObject(runact_name_));
 
-  if (UI->GetCurrentValues("/Actions/RegisterRunAction") != "")
-    this->SetUserAction(actfctr.CreateRunAction());
+  if (evtact_name_ != "")
+    this->SetUserAction(ObjFactory<G4UserEventAction>::Instance().CreateObject(evtact_name_));
 
-  if (UI->GetCurrentValues("/Actions/RegisterEventAction") != "")
-    this->SetUserAction(actfctr.CreateEventAction());
+  if (stkact_name_ != "")
+    this->SetUserAction(ObjFactory<G4UserStackingAction>::Instance().CreateObject(stkact_name_));
 
-  if (UI->GetCurrentValues("/Actions/RegisterStackingAction") != "")
-    this->SetUserAction(actfctr.CreateStackingAction());
+  if (trkact_name_ != "")
+    this->SetUserAction(ObjFactory<G4UserTrackingAction>::Instance().CreateObject(trkact_name_));
 
-  if (UI->GetCurrentValues("/Actions/RegisterTrackingAction") != "")
-    this->SetUserAction(actfctr.CreateTrackingAction());
-
-  if (UI->GetCurrentValues("/Actions/RegisterSteppingAction") != "")
-    this->SetUserAction(actfctr.CreateSteppingAction());
+  if (stepact_name_ != "")
+    this->SetUserAction(ObjFactory<G4UserSteppingAction>::Instance().CreateObject(stepact_name_));
 
   /////////////////////////////////////////////////////////
 
@@ -111,7 +139,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager()
 NexusApp::~NexusApp()
 {
   // Close output file before finishing
-  PersistencyManager* current = dynamic_cast<PersistencyManager*>
+  PersistencyManagerBase* current = dynamic_cast<PersistencyManagerBase*>
     (G4VPersistencyManager::GetPersistencyManager());
   current->CloseFile();
 

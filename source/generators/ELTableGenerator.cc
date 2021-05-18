@@ -9,8 +9,9 @@
 #include "ELTableGenerator.h"
 
 #include "DetectorConstruction.h"
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include "IonizationElectron.h"
+#include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4ParticleDefinition.hh>
@@ -27,7 +28,7 @@
 using namespace nexus;
 using namespace CLHEP;
 
-
+REGISTER_CLASS(ELTableGenerator, G4VPrimaryGenerator)
 
 ELTableGenerator::ELTableGenerator():
   G4VPrimaryGenerator(), msg_(0), num_ie_(1)

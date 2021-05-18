@@ -9,12 +9,14 @@
 
 /control/execute macros/physics/DefaultPhysicsList.mac
 
-/Geometry/RegisterGeometry NEXT1_EL
+/nexus/RegisterGeometry Next1EL
 
-/Generator/RegisterGenerator SINGLE_PARTICLE
+/nexus/RegisterGenerator SingleParticleGenerator
 
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterSteppingAction ANALYSIS
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterSteppingAction AnalysisSteppingAction
 
 /nexus/RegisterMacro macros/nexus_example3.config.mac

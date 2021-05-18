@@ -8,18 +8,22 @@
 ## ----------------------------------------------------------------------------
 
 ### GEOMETRY
-/Geometry/RegisterGeometry NEXT_FLEX
+/nexus/RegisterGeometry NextFlex
 
 
 ### GENERATOR
-/Generator/RegisterGenerator Kr83m
+/nexus/RegisterGenerator Kr83mGenerator
+
+
+### PERSISTENCY MANAGER
+/nexus/RegisterPersistencyManager PersistencyManager
 
 
 ### ACTIONS
-/Actions/RegisterRunAction      DEFAULT
-/Actions/RegisterEventAction    DEFAULT
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterSteppingAction ANALYSIS
+/nexus/RegisterRunAction      DefaultRunAction
+/nexus/RegisterEventAction    DefaultEventAction
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterSteppingAction AnalysisSteppingAction
 
 
 ### PHYSICS

@@ -31,7 +31,7 @@ namespace nexus {
   using namespace CLHEP;
 
   SiPMSensl::SiPMSensl():
-    BaseGeometry   (),
+    GeometryBase   (),
     msg_           (nullptr),
     binning_       (1.*microsecond),
     sensor_depth_  (-1),
@@ -178,17 +178,17 @@ namespace nexus {
     if (!sdmgr->FindSensitiveDetector(sdname, false)) {
       PmtSD* sipmsd = new PmtSD(sdname);
 
-      if (sensor_depth_ == -1) 
+      if (sensor_depth_ == -1)
         G4Exception("[SiPMSensl]", "Construct()", FatalException,
                     "Sensor Depth must be set before constructing");
       sipmsd->SetDetectorVolumeDepth(sensor_depth_);
 
-      if (mother_depth_ == -1) 
+      if (mother_depth_ == -1)
         G4Exception("[SiPMSensl]", "Construct()", FatalException,
                     "Mother Depth must be set before constructing");
       sipmsd->SetMotherVolumeDepth(mother_depth_);
 
-      if (naming_order_ == -1) 
+      if (naming_order_ == -1)
         G4Exception("[SiPMSensl]", "Construct()", FatalException,
                     "Naming Order must be set before constructing");
       sipmsd->SetDetectorNamingOrder(naming_order_);

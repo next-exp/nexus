@@ -28,7 +28,7 @@ namespace nexus {
   using namespace CLHEP;
 
   NextNewMiniCastle::NextNewMiniCastle():
-    BaseGeometry(),
+    GeometryBase(),
     // Body dimensions
     x_ (1447.*mm),
     y_ (1150.*mm),

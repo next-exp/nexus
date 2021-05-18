@@ -11,6 +11,7 @@
 #include "SpherePointSampler.h"
 #include "MaterialsList.h"
 #include "IonizationSD.h"
+#include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Orb.hh>
@@ -20,15 +21,19 @@
 #include <G4Material.hh>
 #include <G4VisAttributes.hh>
 #include <G4SDManager.hh>
+#include <G4VUserDetectorConstruction.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 
+using namespace nexus;
+using namespace CLHEP;
+
+REGISTER_CLASS(XeSphere, GeometryBase)
+
 namespace nexus {
 
-  using namespace CLHEP;
-
   XeSphere::XeSphere():
-    BaseGeometry(), liquid_(true), pressure_(STP_Pressure),
+    GeometryBase(), liquid_(true), pressure_(STP_Pressure),
     radius_(1.*m), sphere_vertex_gen_(0)
   {
     msg_ = new G4GenericMessenger(this, "/Geometry/XeSphere/",
@@ -83,7 +88,7 @@ namespace nexus {
     // and the solid volume defined above
     G4LogicalVolume* sphere_logic =
     new G4LogicalVolume(sphere_solid, xenon, name);
-    BaseGeometry::SetLogicalVolume(sphere_logic);
+    GeometryBase::SetLogicalVolume(sphere_logic);
 
     // Set the logical volume of the sphere as an ionization
     // sensitive detector, i.e. position, time and energy deposition

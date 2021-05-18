@@ -30,7 +30,7 @@ namespace nexus {
   using namespace CLHEP;
 
   NextNewIcs::NextNewIcs():
-    BaseGeometry(),
+    GeometryBase(),
 
     // Body dimensions
     body_inner_diam_ (50.62 * cm), // inner diameter of the barrel. The design value is 50.72 cm, slightly changed to avoid overlaps
@@ -48,7 +48,7 @@ namespace nexus {
     up_small_nozzle_in_diam_  ( 5. * mm),      // The upper central nozzle
     up_big_nozzle_in_diam_    (62. * mm),      // The upper anode & cathode nozzles
     up_nozzle_y_pos_    (lat_nozzle_x_pos_),
-    center_nozzle_z_pos_ (25. *mm)   //  position of the nozzles (lateral and upper side) with respect to the center of the volume 
+    center_nozzle_z_pos_ (25. *mm)   //  position of the nozzles (lateral and upper side) with respect to the center of the volume
 
   {
     // Initializing the geometry navigator (used in vertex generation)
