@@ -51,6 +51,8 @@ namespace nexus {
     G4bool verbosity_;
     G4bool sipm_verbosity_;
     G4bool visibility_;
+    G4bool sipm_visibility_;
+    G4double time_binning_;
 
     G4int    num_columns_, num_rows_, num_sipms_;
     G4double sipm_pitch_;

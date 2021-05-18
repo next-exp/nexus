@@ -40,6 +40,8 @@ NextDemoSiPMBoard::NextDemoSiPMBoard():
   verbosity_       (false),
   sipm_verbosity_  (false),
   visibility_      (false),
+  sipm_visibility_ (true),
+  time_binning_    (1. * microsecond),
   num_columns_     (8),
   num_rows_        (8),
   num_sipms_       (num_rows_ * num_columns_),
@@ -60,16 +62,15 @@ NextDemoSiPMBoard::NextDemoSiPMBoard():
   msg_ = new G4GenericMessenger(this, "/Geometry/NextDemo/",
                                 "Control commands of the NextDemo geometry.");
 
-  msg_->DeclareProperty("sipm_board_verbosity", verbosity_,
-                        "NextDemoSiPMBoard verbosity");
+  msg_->DeclareProperty("sipm_board_verbosity",       verbosity_, "NextDemoSiPMBoard verbosity");
+  msg_->DeclareProperty("sipm_verbosity"      ,  sipm_verbosity_, "NextDemo SiPMs verbosity");
+  msg_->DeclareProperty("sipm_board_vis"      ,      visibility_, "NextDemoSiPMBoard visibility.");
+  msg_->DeclareProperty("sipm_visibility"     , sipm_visibility_, "SiPMs Visibility");
 
-  msg_->DeclareProperty("sipm_verbosity", sipm_verbosity_,
-                        "NextDemo SiPMs verbosity");
-
-  msg_->DeclareProperty("sipm_board_vis", visibility_,
-                        "NextDemoSiPMBoard visibility.");
-
-  // sipm_ = new SiPMSensl;
+  G4GenericMessenger::Command& time_binning_cmd = msg_->DeclareProperty("sipm_time_binning", time_binning_, "TP SiPMs time binning.");
+  time_binning_cmd.SetParameterName("sipm_time_binning", false);
+  time_binning_cmd.SetUnitCategory("Time");
+  time_binning_cmd.SetRange("sipm_time_binning>0.");
 }
 
 
@@ -89,6 +90,8 @@ void NextDemoSiPMBoard::Construct()
   if (sipm_type_ == "sensl"){
     SiPMSensl* sipm = new SiPMSensl();
 
+    sipm->SetVisibility(sipm_visibility_);
+    sipm->SetTimeBinning(time_binning_);
     sipm->SetSensorDepth(3);
     sipm->SetMotherDepth(5);
     sipm->SetNamingOrder(1000);
@@ -101,6 +104,8 @@ void NextDemoSiPMBoard::Construct()
   else if (sipm_type_ == "next100"){
     Next100SiPM* sipm = new Next100SiPM();
 
+    sipm->SetVisibility(sipm_visibility_);
+    sipm->SetTimeBinning(time_binning_);
     sipm->SetSensorDepth(3);
     sipm->SetMotherDepth(5);
     sipm->SetNamingOrder(1000);
@@ -110,6 +115,9 @@ void NextDemoSiPMBoard::Construct()
 
     sipm_z_dim = sipm->GetDimensions().z();
   }
+  else
+    G4Exception("[NextDemoSiPMBoard]", "Construct()",
+                FatalException, "Unknown sipm type.");
 
   /// Make sure the mother physical volume is actually valid
   if (!mother_phys_)
