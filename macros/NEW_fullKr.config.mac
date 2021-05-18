@@ -19,7 +19,7 @@
 /Geometry/NextNew/EL_field 10 kV/cm
 /Geometry/NextNew/elfield true
 /Geometry/PmtR11410/time_binning 100. nanosecond
-/Geometry/SiPMSensl/time_binning 1. microsecond
+/Geometry/KDB/sipm_time_binning 1. microsecond
 
 /PhysicsList/Nexus/photoelectric false
 /process/optical/processActivation Cerenkov false

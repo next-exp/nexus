@@ -32,23 +32,12 @@ namespace nexus {
 
   SiPMSensl::SiPMSensl():
     BaseGeometry   (),
-    msg_           (nullptr),
-    binning_       (1.*microsecond),
+    time_binning_  (1.0 * us),
     sensor_depth_  (-1),
-    mother_depth_  (-1),
-    naming_order_  (-1),
+    mother_depth_  (0),
+    naming_order_  (0),
     visibility_    (1)
   {
-    /// Messenger
-    msg_ = new G4GenericMessenger(this, "/Geometry/SiPMSensl/", "Control commands of SiPMSensl geometry.");
-    msg_->DeclareProperty("visibility", visibility_, "SiPMSensl visibility");
-
-    G4GenericMessenger::Command& bin_cmd =
-      msg_->DeclareProperty("time_binning", binning_,
-			    "Time binning of SensL SiPM");
-    bin_cmd.SetUnitCategory("Time");
-    bin_cmd.SetParameterName("time_binning", false);
-    bin_cmd.SetRange("time_binning>0.");
   }
 
 
@@ -178,22 +167,18 @@ namespace nexus {
     if (!sdmgr->FindSensitiveDetector(sdname, false)) {
       PmtSD* sipmsd = new PmtSD(sdname);
 
-      if (sensor_depth_ == -1) 
+      if (sensor_depth_ == -1)
         G4Exception("[SiPMSensl]", "Construct()", FatalException,
                     "Sensor Depth must be set before constructing");
+
+      if ((naming_order_ > 0) & (mother_depth_ == 0))
+        G4Exception("[SiPMSensl]", "Construct()", FatalException,
+                    "Naming Order set without setting Mother Depth");
+
       sipmsd->SetDetectorVolumeDepth(sensor_depth_);
-
-      if (mother_depth_ == -1) 
-        G4Exception("[SiPMSensl]", "Construct()", FatalException,
-                    "Mother Depth must be set before constructing");
       sipmsd->SetMotherVolumeDepth(mother_depth_);
-
-      if (naming_order_ == -1) 
-        G4Exception("[SiPMSensl]", "Construct()", FatalException,
-                    "Naming Order must be set before constructing");
       sipmsd->SetDetectorNamingOrder(naming_order_);
-
-      sipmsd->SetTimeBinning(binning_);
+      sipmsd->SetTimeBinning(time_binning_);
 
       G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
       active_logic->SetSensitiveDetector(sipmsd);

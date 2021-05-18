@@ -34,7 +34,7 @@
 /Geometry/NextNew/field_cage_vis false
 /Geometry/NaIScintillator/visibility true
 /Geometry/KDB/visibility false
-/Geometry/SiPMSensl/visibility false
+/Geometry/KDB/sipm_visibility false
 /Geometry/PmtR11410/visibility false
 
 # Generator

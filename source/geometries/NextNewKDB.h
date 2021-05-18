@@ -48,8 +48,11 @@ namespace nexus {
     // Neighbour gas logical volume
     G4LogicalVolume* mother_logic_;
 
-    // Visibility of the shielding
-    G4bool visibility_;
+    //TP SiPMs time binning
+    G4double time_binning_;
+
+    // Visibility 
+    G4bool visibility_, sipm_visibility_;
 
     // Messenger for the definition of control commands
     G4GenericMessenger* msg_;

@@ -32,5 +32,5 @@
 /Geometry/NextDemo/SiPMPos_verbosity false
 
 /Geometry/KDB/visibility false
-/Geometry/SiPMSensl/visibility false
+#/Geometry/SiPMSensl/sipm_visibility false
 /Geometry/PmtR11410/visibility false

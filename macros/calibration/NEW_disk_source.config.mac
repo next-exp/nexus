@@ -31,7 +31,7 @@
 /Geometry/NextNew/tracking_plane_vis false
 /Geometry/NextNew/field_cage_vis false
 /Geometry/KDB/visibility false
-/Geometry/SiPMSensl/visibility false
+/Geometry/KDB/sipm_visibility false
 /Geometry/PmtR11410/visibility false
 
 ## Generator
