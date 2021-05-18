@@ -21,7 +21,7 @@
 /Geometry/NextDemo/EL_field_intensity 10 kV/cm
 /Geometry/NextDemo/max_step_size 1. mm
 /Geometry/PmtR11410/time_binning 100. nanosecond
-/Geometry/SiPMSensl/time_binning 1. microsecond
+#/Geometry/SiPMSensl/time_binning 1. microsecond
 
 /process/optical/processActivation Cerenkov false
 
@@ -34,4 +34,3 @@
 /nexus/persistency/outputFile out_Kr83.sim
 
 /nexus/random_seed 14562
-

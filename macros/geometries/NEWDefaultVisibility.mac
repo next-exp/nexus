@@ -15,5 +15,5 @@
 /Geometry/NextNew/enclosure_vis      true
 /Geometry/NextNew/tracking_plane_vis true
 /Geometry/KDB/visibility            false
-/Geometry/SiPMSensl/visibility      false
+/Geometry/KDB/sipm_visibility       false
 /Geometry/PmtR11410/visibility       true
