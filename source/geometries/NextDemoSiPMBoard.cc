@@ -222,7 +222,10 @@ void NextDemoSiPMBoard::Construct()
 
   // SiPM placement inside the hole
   G4RotationMatrix* sipm_rot = new G4RotationMatrix();
-  sipm_rot->rotateY(pi);
+  if (sipm_type_ == "sensl")
+    sipm_rot->rotateY(pi);
+  else
+    sipm_rot->rotateY(0.0);
 
   G4double sipm_posz = - mask_thickn_/2. + sipm_z_dim/2.;
 
