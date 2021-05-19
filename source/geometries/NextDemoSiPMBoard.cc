@@ -87,7 +87,7 @@ void NextDemoSiPMBoard::Construct()
 
   G4double sipm_z_dim = 0.;
   G4RotationMatrix* sipm_rot = new G4RotationMatrix();
-  
+
   if (sipm_type_ == "sensl"){
     SiPMSensl* sipm = new SiPMSensl();
 
@@ -118,9 +118,6 @@ void NextDemoSiPMBoard::Construct()
     sipm_z_dim = sipm->GetDimensions().z();
     sipm_rot->rotateY(0.0);
   }
-  else
-    G4Exception("[NextDemoSiPMBoard]", "Construct()",
-                FatalException, "Unknown sipm type.");
 
   /// Make sure the mother physical volume is actually valid
   if (!mother_phys_)

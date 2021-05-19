@@ -150,9 +150,6 @@ void NextDemoTrackingPlane::Construct()
   else if (hole_type == "rectangular"){
     sipm_board_->SetHoleX(hole_x);
     sipm_board_->SetHoleY(hole_y);}
-  else
-    G4Exception("[NextDemoTrackingPlane]", "Construct()",
-                FatalException, "Invalid board hole type.");
   sipm_board_->SetSiPMType(sipm_type);
 
   sipm_board_->Construct();
