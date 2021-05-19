@@ -217,13 +217,6 @@ void NextDemoSiPMBoard::Construct()
   G4LogicalVolume* hole_logic =
     new G4LogicalVolume(hole_solid, mother_gas, hole_name);
 
-
-  /// SiPMs construction
-  // sipm_->SetSensorDepth(3);
-  // sipm_->SetMotherDepth(5);
-  // sipm_->SetNamingOrder(1000);
-  // sipm_->Construct();
-
   // Generate SiPM positions
   GenerateSiPMPositions();
 
