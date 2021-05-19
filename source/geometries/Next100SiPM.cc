@@ -156,7 +156,7 @@ void Next100SiPM::Construct()
 
   // SENSITIVE DETECTOR ////////////////////////////////////
 
-  G4String sdname = "/" + sipm_name + "/";
+  G4String sdname = "/" + sipm_name + "/SiPM";
   G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
 
   if (!sdmgr->FindSensitiveDetector(sdname, false)) {
