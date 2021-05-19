@@ -106,8 +106,8 @@ void NextDemoSiPMBoard::Construct()
 
     sipm->SetVisibility(sipm_visibility_);
     sipm->SetTimeBinning(time_binning_);
-    sipm->SetSensorDepth(3);
-    sipm->SetMotherDepth(5);
+    sipm->SetSensorDepth(2);
+    sipm->SetMotherDepth(4);
     sipm->SetNamingOrder(1000);
     sipm->Construct();
 
