@@ -86,7 +86,8 @@ void NextDemoSiPMBoard::Construct()
 {
 
   G4double sipm_z_dim = 0.;
-
+  G4RotationMatrix* sipm_rot = new G4RotationMatrix();
+  
   if (sipm_type_ == "sensl"){
     SiPMSensl* sipm = new SiPMSensl();
 
@@ -100,6 +101,7 @@ void NextDemoSiPMBoard::Construct()
     sipm_ = sipm;
 
     sipm_z_dim = sipm->GetDimensions().z();
+    sipm_rot->rotateY(pi);
   }
   else if (sipm_type_ == "next100"){
     Next100SiPM* sipm = new Next100SiPM();
@@ -114,6 +116,7 @@ void NextDemoSiPMBoard::Construct()
     sipm_ = sipm;
 
     sipm_z_dim = sipm->GetDimensions().z();
+    sipm_rot->rotateY(0.0);
   }
   else
     G4Exception("[NextDemoSiPMBoard]", "Construct()",
@@ -219,13 +222,6 @@ void NextDemoSiPMBoard::Construct()
 
   // Generate SiPM positions
   GenerateSiPMPositions();
-
-  // SiPM placement inside the hole
-  G4RotationMatrix* sipm_rot = new G4RotationMatrix();
-  if (sipm_type_ == "sensl")
-    sipm_rot->rotateY(pi);
-  else
-    sipm_rot->rotateY(0.0);
 
   G4double sipm_posz = - mask_thickn_/2. + sipm_z_dim/2.;
 
