@@ -76,11 +76,6 @@ void NextDemoTrackingPlane::Construct()
   /// Verbosity
   if(verbosity_) G4cout << G4endl << "*** NEXT Demo Tracking Plane ";
 
-  /// Check that the configuration has been set
-  if (config_ == "")
-    G4Exception("[NextDemoTrackingPlane]", "Construct()", FatalException,
-                "NextDemoTrackingPlane configuration has not been set.");
-
   /// Defining Tracking Plane parameters
   G4double gate_board_dist = 0.; // Distance from GATE to SiPM Board kapton surface
   G4double mask_thickn     = 0.;
