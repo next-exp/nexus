@@ -63,9 +63,9 @@ NextDemoSiPMBoard::NextDemoSiPMBoard():
                                 "Control commands of the NextDemo geometry.");
 
   msg_->DeclareProperty("sipm_board_verbosity",       verbosity_, "NextDemoSiPMBoard verbosity");
-  msg_->DeclareProperty("sipm_verbosity"      ,  sipm_verbosity_, "NextDemo SiPMs verbosity");
+  msg_->DeclareProperty("sipm_verbosity"      ,  sipm_verbosity_, "NextDemoSiPMBoard SiPMs verbosity");
   msg_->DeclareProperty("sipm_board_vis"      ,      visibility_, "NextDemoSiPMBoard visibility.");
-  msg_->DeclareProperty("sipm_visibility"     , sipm_visibility_, "SiPMs Visibility");
+  msg_->DeclareProperty("sipm_visibility"     , sipm_visibility_, "NextDemoSiPMBoard SiPMs visibility");
 
   G4GenericMessenger::Command& time_binning_cmd = msg_->DeclareProperty("sipm_time_binning", time_binning_, "TP SiPMs time binning.");
   time_binning_cmd.SetParameterName("sipm_time_binning", false);
