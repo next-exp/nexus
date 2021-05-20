@@ -13,6 +13,7 @@
 #include "Visibilities.h"
 #include "CylinderPointSampler.h"
 #include "MuonsPointSampler.h"
+#include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4NistManager.hh>
@@ -27,9 +28,11 @@
 
 using namespace nexus;
 
+REGISTER_CLASS(NextTonScale, GeometryBase)
+
 
 NextTonScale::NextTonScale():
-  BaseGeometry(),
+  GeometryBase(),
   msg_(nullptr),
   gas_("naturalXe"), gas_pressure_(15.*bar), gas_temperature_(300.*kelvin),
   detector_diam_(0.), detector_length_(0.),
@@ -86,7 +89,7 @@ void NextTonScale::Construct()
   G4Box* lab_solid_vol = new G4Box(lab_name, lab_size/2., lab_size/2., lab_size/2.);
   G4LogicalVolume* lab_logic_vol = new G4LogicalVolume(lab_solid_vol, lab_material, lab_name);
   lab_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
-  BaseGeometry::SetLogicalVolume(lab_logic_vol);
+  GeometryBase::SetLogicalVolume(lab_logic_vol);
 
   //////////////////////////////////////////////////////////
   // We construct now the tank and detector volumes.

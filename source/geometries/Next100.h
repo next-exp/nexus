@@ -9,7 +9,7 @@
 #ifndef NEXT100_H
 #define NEXT100_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 class G4LogicalVolume;
 class G4GenericMessenger;
@@ -26,7 +26,7 @@ namespace nexus {
   class Next100InnerElements;
   class LSCHallA;
 
-  class Next100: public BaseGeometry
+  class Next100: public GeometryBase
   {
   public:
     /// Constructor

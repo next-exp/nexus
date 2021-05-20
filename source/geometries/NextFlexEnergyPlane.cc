@@ -40,13 +40,13 @@ using namespace nexus;
 
 
 NextFlexEnergyPlane::NextFlexEnergyPlane():
-  BaseGeometry(),
+  GeometryBase(),
   mother_logic_      (nullptr),
   verbosity_         (false),
   visibility_        (false),
   msg_               (nullptr),
   ep_with_PMTs_      (true),    // Implement PMTs arranged ala NEXT100
-  ep_with_teflon_    (false),   // Implement a teflon mask to reflect light 
+  ep_with_teflon_    (false),   // Implement a teflon mask to reflect light
   wls_matName_       ("TPB"),
   copper_thickness_  (12 * cm)  // Thickness of the copper plate
 {
@@ -221,7 +221,7 @@ void NextFlexEnergyPlane::BuildCopper()
   G4SubtractionSolid* copper_solid = MakeHoles(copper_solid_no_holes);
 
   G4LogicalVolume* copper_logic =
-    new G4LogicalVolume(copper_solid, copper_mat_, copper_name);  
+    new G4LogicalVolume(copper_solid, copper_mat_, copper_name);
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., copper_posZ), copper_logic,
                     copper_name, mother_logic_, false, 0, verbosity_);
@@ -263,7 +263,7 @@ void NextFlexEnergyPlane::BuildTeflon()
                     teflon_name, mother_logic_, false, 0, verbosity_);
 
   // Adding the optical surface
-  G4OpticalSurface* teflon_optSurf = 
+  G4OpticalSurface* teflon_optSurf =
     new G4OpticalSurface(teflon_name, unified, ground, dielectric_metal);
 
   teflon_optSurf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
@@ -314,7 +314,7 @@ void NextFlexEnergyPlane::BuildTeflon()
   if (verbosity_) {
     G4cout << "* EP Teflon Z positions: " << teflon_iniZ_
            << " to " << teflon_iniZ_ + teflon_thickness_ << G4endl;
-  } 
+  }
 }
 
 
@@ -385,7 +385,7 @@ void NextFlexEnergyPlane::BuildPMTs()
                     window_wls_name, window_logic, false, 0, verbosity_);
 
   // Optical surface
-  G4OpticalSurface* window_wls_optSurf = 
+  G4OpticalSurface* window_wls_optSurf =
     new G4OpticalSurface("EP_WINDOW_WLS_OPSURF", glisur, ground, dielectric_dielectric, .01);
 
   new G4LogicalSkinSurface("EP_WINDOW_WLS_OPSURF", window_wls_logic, window_wls_optSurf);
@@ -412,7 +412,7 @@ void NextFlexEnergyPlane::BuildPMTs()
 
   pmt_->SetSensorDepth(3);
   pmt_->Construct();
-  
+
   G4double pmt_posz = - pmt_hole_length/2.     + window_thickness_
                       + optical_pad_thickness_ + pmt_->GetRelPosition().z();
 

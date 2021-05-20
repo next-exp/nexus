@@ -27,7 +27,7 @@ namespace nexus {
   using namespace CLHEP;
 
   NextElDB::NextElDB(G4int rows, G4int columns):
-    BaseGeometry(),
+    GeometryBase(),
     rows_(rows),
     columns_(columns)
   {

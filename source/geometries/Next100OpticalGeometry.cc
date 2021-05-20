@@ -11,6 +11,7 @@
 #include "Next100InnerElements.h"
 #include "OpticalMaterialProperties.h"
 #include "MaterialsList.h"
+#include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
@@ -29,7 +30,9 @@ using namespace CLHEP;
 
 namespace nexus {
 
-  Next100OpticalGeometry::Next100OpticalGeometry(): BaseGeometry(),
+  REGISTER_CLASS(Next100OpticalGeometry, GeometryBase)
+
+  Next100OpticalGeometry::Next100OpticalGeometry(): GeometryBase(),
 						    pressure_(15. * bar),
 						    temperature_ (300 * kelvin),
 						    sc_yield_(25510. * 1/MeV),

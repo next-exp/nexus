@@ -33,7 +33,7 @@ namespace nexus {
 
 
   NextNewKDB::NextNewKDB(G4int rows, G4int columns):
-    BaseGeometry (),
+    GeometryBase (),
     rows_            (rows),
     columns_         (columns),
     time_binning_    (1. * microsecond),

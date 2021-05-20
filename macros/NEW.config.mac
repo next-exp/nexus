@@ -29,3 +29,5 @@
 
 /nexus/persistency/eventType background
 /nexus/persistency/outputFile NextNew.Bi214.DICE_BOARD.next
+
+/process/em/verbose 0

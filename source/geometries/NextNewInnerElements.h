@@ -10,7 +10,7 @@
 #ifndef NEXTNEW_INNER_ELEMENTS_H
 #define NEXTNEW_INNER_ELEMENTS_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include <G4ThreeVector.hh>
 
 class G4LogicalVolume;
@@ -23,7 +23,7 @@ namespace nexus { class NextNewTrackingPlane; }
 
 namespace nexus {
 
-  class NextNewInnerElements: public BaseGeometry
+  class NextNewInnerElements: public GeometryBase
   {
 
   public:

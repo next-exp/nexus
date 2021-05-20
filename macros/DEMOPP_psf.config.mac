@@ -12,6 +12,7 @@
 /event/verbose 0
 /tracking/verbose 0
 
+/process/em/verbose 0
 
 # GEOMETRY
 /Geometry/NextDemo/config run8

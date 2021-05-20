@@ -39,13 +39,13 @@ using namespace nexus;
 
 
 NextFlexFieldCage::NextFlexFieldCage():
-  BaseGeometry(),
+  GeometryBase(),
   mother_logic_            (nullptr),
   verbosity_               (false),
   visibility_              (false),
   fiber_sensor_visibility_ (false),
   msg_                     (nullptr),
-  fc_with_fibers_          (true), 
+  fc_with_fibers_          (true),
   active_diam_             (984. * mm),          // Same as NEXT100 (something btwn 1000 & 984 mm)
   active_length_           (116. * cm),          // Distance GATE - CATHODE (meshes not included)
   drift_transv_diff_       (1. * mm/sqrt(cm)),   // Drift field transversal diffusion
@@ -67,7 +67,7 @@ NextFlexFieldCage::NextFlexFieldCage():
   el_gap_gen_disk_diam_    (0.),                 // EL_GAP generator diameter
   el_gap_gen_disk_x_       (0.),                 // EL_GAP generator x centre
   el_gap_gen_disk_y_       (0.),                 // EL_GAP generator y centre
-  el_gap_gen_disk_zmin_    (0.),                 // EL_GAP generator initial z fraction 
+  el_gap_gen_disk_zmin_    (0.),                 // EL_GAP generator initial z fraction
   el_gap_gen_disk_zmax_    (1.)                  // EL_GAP generator final   z fraction
 {
 
@@ -371,7 +371,7 @@ void NextFlexFieldCage::Construct()
   // Define materials.
   DefineMaterials();
 
-  // Build the sensors 
+  // Build the sensors
   left_sensor_  = new GenericPhotosensor("F_SENSOR_L", fiber_sensor_size_,
                                          fiber_sensor_size_, fiber_sensor_thickness_);
   right_sensor_ = new GenericPhotosensor("F_SENSOR_R", fiber_sensor_size_,
@@ -379,9 +379,9 @@ void NextFlexFieldCage::Construct()
 
   // Build components
   BuildActive();
-  
+
   BuildCathode();
-  
+
   BuildBuffer();
 
   BuildELgap();
@@ -431,7 +431,7 @@ void NextFlexFieldCage::BuildActive()
 
   // Limit the step size in this volume for better tracking precision
   active_logic->SetUserLimits(new G4UserLimits(1.*mm));
-  
+
   // Set the ACTIVE volume as an ionization sensitive detector
   IonizationSD* active_sd = new IonizationSD("/NEXT_FLEX/ACTIVE");
   active_logic->SetSensitiveDetector(active_sd);
@@ -467,7 +467,7 @@ void NextFlexFieldCage::BuildCathode()
   else             cathode_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
   // Verbosity
-  if (verbosity_) 
+  if (verbosity_)
     G4cout << "* CATHODE Z positions: " << cathode_posZ - cathode_thickness_/2. <<
               " to " << cathode_posZ + cathode_thickness_/2. << G4endl;
 }
@@ -502,7 +502,7 @@ void NextFlexFieldCage::BuildBuffer()
   IonizationSD* buffer_sd = new IonizationSD("/NEXT_FLEX/BUFFER");
   buffer_sd->IncludeInTotalEnergyDeposit(false);
   buffer_logic->SetSensitiveDetector(buffer_sd);
-  G4SDManager::GetSDMpointer()->AddNewDetector(buffer_sd);  
+  G4SDManager::GetSDMpointer()->AddNewDetector(buffer_sd);
 
   // Verbosity
   if (verbosity_)
@@ -589,7 +589,7 @@ void NextFlexFieldCage::BuildELgap()
     else
       G4cout << "* EL field OFF" << G4endl;
 
-    G4cout << "* Photoelectric Probability: " << photoe_prob_ << G4endl;    
+    G4cout << "* Photoelectric Probability: " << photoe_prob_ << G4endl;
   }
 
 
@@ -645,7 +645,7 @@ void NextFlexFieldCage::BuildLightTube()
   G4String light_tube_name = "LIGHT_TUBE";
 
   light_tube_outer_rad_ = light_tube_inner_rad_ + light_tube_thickness_;
-  
+
 //  G4double light_tube_iniZ = - el_gap_length_;
   G4double light_tube_iniZ = 0.;
 
@@ -663,7 +663,7 @@ void NextFlexFieldCage::BuildLightTube()
                       light_tube_name, mother_logic_, false, 0, verbosity_);
 
   // Adding the optical surface
-  G4OpticalSurface* light_tube_optSurf = 
+  G4OpticalSurface* light_tube_optSurf =
     new G4OpticalSurface(light_tube_name, unified, ground, dielectric_metal);
   light_tube_optSurf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
 
@@ -685,25 +685,25 @@ void NextFlexFieldCage::BuildLightTube()
   // Only if there are no fibers barrel
   if (not fc_with_fibers_) {
     G4String light_tube_wls_name = "LIGHT_TUBE_WLS";
-  
+
     G4double light_tube_wls_length    = fc_length_;
     G4double light_tube_wls_inner_rad = light_tube_inner_rad_;
     G4double light_tube_wls_outer_rad = light_tube_wls_inner_rad + wls_thickness_;
-  
+
     G4Tubs* light_tube_wls_solid =
       new G4Tubs(light_tube_wls_name, light_tube_wls_inner_rad, light_tube_wls_outer_rad,
                  light_tube_wls_length/2., 0, twopi);
-  
+
     G4LogicalVolume* light_tube_wls_logic =
       new G4LogicalVolume(light_tube_wls_solid, wls_mat_, light_tube_wls_name);
-  
+
     G4VPhysicalVolume* light_tube_wls_phys =
       new G4PVPlacement(nullptr, G4ThreeVector(0., 0., 0.), light_tube_wls_logic,
                         light_tube_wls_name, light_tube_logic, false, 0, verbosity_);
-  
+
     // Visibility
     light_tube_wls_logic->SetVisAttributes(G4VisAttributes::Invisible);
-  
+
     // Optical surface
     G4OpticalSurface* light_tube_wls_optSurf =
       new G4OpticalSurface("LIGHT_TUBE_WLS_OPSURF", glisur, ground,
@@ -724,11 +724,11 @@ void NextFlexFieldCage::BuildLightTube()
 
   /// Verbosity ///
   if (verbosity_) {
-    G4cout << "* Light Tube.  Inner Rad: " << light_tube_inner_rad_ << 
+    G4cout << "* Light Tube.  Inner Rad: " << light_tube_inner_rad_ <<
               "   Outer Rad: " << light_tube_outer_rad_ << G4endl;
     G4cout << "* Light Tube Z positions: " << light_tube_iniZ <<
               " to " << light_tube_iniZ + fc_length_ << G4endl;
-  } 
+  }
 }
 
 
@@ -886,11 +886,11 @@ void NextFlexFieldCage::BuildFibers()
   /// Verbosity ///
   if (verbosity_) {
     G4cout << "* Number of fibers: " << num_fibers_ << G4endl;
-    G4cout << "* Fiber.  Inner Rad: " << fiber_inner_rad_ << 
+    G4cout << "* Fiber.  Inner Rad: " << fiber_inner_rad_ <<
               "   Outer Rad: " << fiber_inner_rad_ + fiber_thickness_ << G4endl;
     G4cout << "* Fiber Z positions: " << fiber_iniZ_ <<
               " to " << fiber_finZ_ << G4endl;
-  } 
+  }
 }
 
 
@@ -922,7 +922,7 @@ void NextFlexFieldCage::BuildFiberSensors()
   right_sensor_->SetOpticalProperties(photosensor_mpt);
 
   // Adding to sensors encasing, the Refractive Index of fibers to avoid reflections
-  G4MaterialPropertyVector* fibers_rindex = 
+  G4MaterialPropertyVector* fibers_rindex =
     fiber_mat_->GetMaterialPropertiesTable()->GetProperty("RINDEX");
   left_sensor_ ->SetWindowRefractiveIndex(fibers_rindex);
   right_sensor_->SetWindowRefractiveIndex(fibers_rindex);
@@ -972,7 +972,7 @@ void NextFlexFieldCage::BuildFiberSensors()
     new G4PVPlacement(G4Transform3D(sensor_left_rot, case_left_pos), left_sensor_logic,
                       left_sensor_logic->GetName(), mother_logic_, true,
                       first_left_sensor_id_ + sensor_id, false);
-  
+
     // Right Sensors
     if (sensor_id > 0) sensor_right_rot.rotateZ(-fiber_sensor_phi);
 
@@ -995,10 +995,10 @@ void NextFlexFieldCage::BuildFiberSensors()
            << 1. * num_fibers_ / num_fiber_sensors_ << G4endl;
     G4cout << "* Fiber sensor phi (deg): " << fiber_sensor_phi / deg << G4endl;
     G4cout << "* LEFT  sensors Z positions: "
-           << sensor_left_posZ - fiber_sensor_thickness_/2. << " to " 
+           << sensor_left_posZ - fiber_sensor_thickness_/2. << " to "
            << sensor_left_posZ + fiber_sensor_thickness_/2. << G4endl;
     G4cout << "* RIGHT sensors Z positions: "
-           << sensor_right_posZ - fiber_sensor_thickness_/2. << " to " 
+           << sensor_right_posZ - fiber_sensor_thickness_/2. << " to "
            << sensor_right_posZ + fiber_sensor_thickness_/2. << G4endl;
   }
 }

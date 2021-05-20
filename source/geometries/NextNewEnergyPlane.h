@@ -26,7 +26,7 @@ namespace nexus {
   class CylinderPointSampler;
 
   /// This is a class to place all the components of the energy plane
-  class NextNewEnergyPlane: public BaseGeometry
+  class NextNewEnergyPlane: public GeometryBase
   {
 
   public:

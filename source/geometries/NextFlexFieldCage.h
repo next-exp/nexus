@@ -9,7 +9,7 @@
 #ifndef NEXT_FLEX_FIELD_CAGE_H
 #define NEXT_FLEX_FIELD_CAGE_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include <G4ThreeVector.hh>
 
 class G4LogicalVolume;
@@ -24,7 +24,7 @@ namespace nexus {
   class GenericPhotosensor;
 
 
-  class NextFlexFieldCage: public BaseGeometry {
+  class NextFlexFieldCage: public GeometryBase {
 
   public:
 
@@ -33,7 +33,7 @@ namespace nexus {
     virtual ~NextFlexFieldCage();
 
     virtual void Construct();
-    
+
     virtual G4ThreeVector GenerateVertex(const G4String&) const;
 
     // Sets as mother volume of all the elements the volume where the class is placed
@@ -59,7 +59,7 @@ namespace nexus {
 
     // Setting the First Right Sensor ID (of the fibers barrel).
     void SetFirstRightSensorID(const G4int first_id);
-    
+
 
   private:
 

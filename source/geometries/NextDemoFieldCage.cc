@@ -41,7 +41,7 @@ namespace nexus {
   using namespace CLHEP;
 
   NextDemoFieldCage::NextDemoFieldCage():
-    BaseGeometry(),
+    GeometryBase(),
     config_ (""),
     mother_logic_(nullptr),
     mother_phys_(nullptr),

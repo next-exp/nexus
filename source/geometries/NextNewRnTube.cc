@@ -26,7 +26,7 @@ namespace nexus {
   using namespace CLHEP;
 
   NextNewRnTube::NextNewRnTube():
-    BaseGeometry(),
+    GeometryBase(),
     // Body dimensions
     inner_diam_ (970. *mm),
     length_ (1800. *mm),

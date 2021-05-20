@@ -10,7 +10,7 @@
 #ifndef NEXTNEW_RN_TUBE_H
 #define NEXTNEW_RN_TUBE_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 #include <G4Navigator.hh>
 
@@ -20,7 +20,7 @@ namespace nexus {
 
   class CylinderPointSampler;
 
-  class NextNewRnTube: public BaseGeometry
+  class NextNewRnTube: public GeometryBase
   {
   public:
     /// Constructor

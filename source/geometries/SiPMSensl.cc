@@ -31,7 +31,7 @@ namespace nexus {
   using namespace CLHEP;
 
   SiPMSensl::SiPMSensl():
-    BaseGeometry   (),
+    GeometryBase   (),
     time_binning_  (1.0 * us),
     sensor_depth_  (-1),
     mother_depth_  (0),

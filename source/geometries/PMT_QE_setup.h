@@ -9,7 +9,7 @@
 #ifndef PMT_QE_SETUP_H
 #define PMT_QE_SETUP_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include "PmtR7378A.h"
 #include "PmtR11410.h"
 
@@ -19,7 +19,7 @@ namespace nexus {
 
   /// Geometry of a square tracking chamber filled with gaseous xenon
 
-  class PMT_QE_setup: public BaseGeometry
+  class PMT_QE_setup: public GeometryBase
   {
   public:
     /// Constructor

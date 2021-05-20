@@ -9,7 +9,7 @@
 #ifndef NEXTNEW_H
 #define NEXTNEW_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include <G4RotationMatrix.hh>
 
 namespace nexus {class LSCHallA; }
@@ -35,7 +35,7 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class NextNew: public BaseGeometry {
+  class NextNew: public GeometryBase {
   public:
     /// Constructor
     NextNew();

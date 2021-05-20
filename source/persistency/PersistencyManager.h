@@ -10,6 +10,8 @@
 #ifndef PERSISTENCY_MANAGER_H
 #define PERSISTENCY_MANAGER_H
 
+#include "PersistencyManagerBase.h"
+
 #include <G4VPersistencyManager.hh>
 #include <map>
 #include <vector>
@@ -27,12 +29,16 @@ namespace nexus {
 
 namespace nexus {
 
-  class PersistencyManager: public G4VPersistencyManager
+  class PersistencyManager: public PersistencyManagerBase
   {
   public:
+    PersistencyManager();
+    ~PersistencyManager();
+    PersistencyManager(const PersistencyManager&);
+
     /// Create the singleton instance of the persistency manager
-    static void Initialize(G4String init_macro, std::vector<G4String>& macros,
-                           std::vector<G4String>& delayed_macros);
+   // static void Initialize(G4String init_macro, std::vector<G4String>& macros,
+    //                       std::vector<G4String>& delayed_macros);
 
     /// Set whether to store or not the current event
     void StoreCurrentEvent(G4bool);
@@ -54,11 +60,6 @@ namespace nexus {
 
 
   private:
-    PersistencyManager(G4String init_macro, std::vector<G4String>& macros,
-                           std::vector<G4String>& delayed_macros);
-    ~PersistencyManager();
-    PersistencyManager(const PersistencyManager&);
-
     void StoreTrajectories(G4TrajectoryContainer*);
     void StoreHits(G4HCofThisEvent*);
     void StoreIonizationHits(G4VHitsCollection*);
@@ -71,9 +72,9 @@ namespace nexus {
   private:
     G4GenericMessenger* msg_; ///< User configuration messenger
 
-    G4String init_macro_;
-    std::vector<G4String> macros_;
-    std::vector<G4String> delayed_macros_;
+   // G4String init_macro_;
+   // std::vector<G4String> macros_;
+    //std::vector<G4String> delayed_macros_;
     std::vector<G4String> secondary_macros_;
 
     G4bool ready_;     ///< Is the PersistencyManager ready to go?

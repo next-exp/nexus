@@ -13,6 +13,9 @@
 /event/verbose 0
 /tracking/verbose 0
 
+/process/em/verbose 0
+#/process/had/verbose 0
+
 ### JOB CONTROL
 /nexus/random_seed 12345
 
@@ -33,9 +36,7 @@
 /Generator/SingleParticle/min_energy 2. MeV
 /Generator/SingleParticle/max_energy 2. MeV
 /Generator/SingleParticle/region AD_HOC
-/Generator/SingleParticle/momentum_X 0.
-/Generator/SingleParticle/momentum_Y -1.
-/Generator/SingleParticle/momentum_Z 0.
+/Generator/SingleParticle/momentum 0 -1 0
 
 ### ACTIONS
 #/Actions/SaveAllEventAction/max_energy 3. MeV

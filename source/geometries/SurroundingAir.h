@@ -9,11 +9,11 @@
 #ifndef SURROUNDING_AIR_H
 #define SURROUNDING_AIR_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 namespace nexus {
 
-  class SurroundingAir : public BaseGeometry
+  class SurroundingAir : public GeometryBase
   {
   public:
     ///Constructor
@@ -24,9 +24,9 @@ namespace nexus {
 
     void Construct();
 
-    
+
   private:
-    
+
   };
 }
 

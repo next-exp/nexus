@@ -9,15 +9,17 @@
 
 #include "Kr83mGenerator.h"
 
-#include "G4Event.hh"
 #include "DetectorConstruction.h"
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
+#include "FactoryBase.h"
 
+#include <G4Event.hh>
 #include <G4GenericMessenger.hh>
 #include <G4RunManager.hh>
 #include <G4ParticleTable.hh>
 #include <G4RandomDirection.hh>
 #include <Randomize.hh>
+
 #include "CLHEP/Units/SystemOfUnits.h"
 #include "CLHEP/Units/PhysicalConstants.h"
 //
@@ -25,6 +27,10 @@
 //
 // #include <fstream>
 // std::ofstream fOutCheckKr83mTmp;
+
+using namespace nexus;
+
+REGISTER_CLASS(Kr83mGenerator, G4VPrimaryGenerator)
 
 namespace nexus {
 

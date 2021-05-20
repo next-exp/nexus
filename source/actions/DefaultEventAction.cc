@@ -11,6 +11,7 @@
 #include "Trajectory.h"
 #include "PersistencyManager.h"
 #include "IonizationHit.h"
+#include "FactoryBase.h"
 
 #include <G4Event.hh>
 #include <G4VVisManager.hh>
@@ -24,6 +25,7 @@
 
 namespace nexus {
 
+REGISTER_CLASS(DefaultEventAction, G4UserEventAction)
 
   DefaultEventAction::DefaultEventAction():
     G4UserEventAction(), nevt_(0), nupdate_(10), energy_threshold_(0.), energy_max_(DBL_MAX)

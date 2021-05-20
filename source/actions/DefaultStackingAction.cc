@@ -9,11 +9,12 @@
 
 
 #include "DefaultStackingAction.h"
+#include "FactoryBase.h"
 
 
 using namespace nexus;
 
-
+REGISTER_CLASS(DefaultStackingAction, G4UserStackingAction)
 
 DefaultStackingAction::DefaultStackingAction(): G4UserStackingAction()
 {

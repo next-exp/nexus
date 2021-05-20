@@ -39,7 +39,7 @@ using namespace nexus;
 
 
 Next100FieldCage::Next100FieldCage():
-  BaseGeometry(),
+  GeometryBase(),
   // Dimensions
   active_diam_ (984 * mm), // distance between the centers of two opposite panels
   gate_cathode_centre_dist_ (1205. * mm), // distance between gate and the centre of cathode grid

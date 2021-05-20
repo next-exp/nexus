@@ -11,6 +11,8 @@
 /event/verbose 0
 /tracking/verbose 0
 
+/process/em/verbose 0
+
 ### GEOMETRY
 /Geometry/MagBox/gas_name Xenon #(Xenon, Hydrogen, SeF6)
 /Geometry/MagBox/pressure 20. bar
@@ -22,9 +24,7 @@
 /Generator/SingleParticle/particle e-
 /Generator/SingleParticle/min_energy 2447. keV
 /Generator/SingleParticle/max_energy 2447. keV
-#/Generator/SingleParticle/momentum_X  0.
-#/Generator/SingleParticle/momentum_Y  1.
-#/Generator/SingleParticle/momentum_Z  0.
+#/Generator/SingleParticle/momentum_X  0 1 0
 
 ### PHYSICS
 /PhysicsList/Nexus/clustering          false

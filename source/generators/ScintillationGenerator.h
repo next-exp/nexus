@@ -21,7 +21,7 @@ class G4PhysicsOrderedFreeVector;
 
 namespace nexus {
 
-  class BaseGeometry;
+  class GeometryBase;
 
 
 
@@ -45,7 +45,7 @@ namespace nexus {
 
     G4GenericMessenger* msg_;
     G4Navigator* geom_navigator_; ///< Geometry Navigator
-    const BaseGeometry* geom_; ///< Pointer to the detector geometry
+    const GeometryBase* geom_; ///< Pointer to the detector geometry
 
     G4String region_;
     G4int    nphotons_;

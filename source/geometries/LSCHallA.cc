@@ -27,7 +27,7 @@ namespace nexus {
   using namespace CLHEP;
 
   LSCHallA::LSCHallA():
-    BaseGeometry(),
+    GeometryBase(),
     visibility_(0),
     lab_radius_(7.64 * m),
     lab_length_(39.3 * m),

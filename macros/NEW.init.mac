@@ -13,13 +13,15 @@
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
-/Geometry/RegisterGeometry NEXT_NEW
+/nexus/RegisterGeometry NextNew
 
-/Generator/RegisterGenerator ION
+/nexus/RegisterGenerator IonGenerator
 
-/Actions/RegisterTrackingAction VALIDATION
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterRunAction DEFAULT
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterTrackingAction ValidationTrackingAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterRunAction DefaultRunAction
 
 /nexus/RegisterMacro macros/NEW.config.mac
 # this delayed macro is necessary only when Bi-214 is simulated

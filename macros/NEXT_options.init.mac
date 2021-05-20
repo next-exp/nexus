@@ -20,28 +20,31 @@
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
 ##### GEOMETRY #####
-/Geometry/RegisterGeometry NEXT100
-#/Geometry/RegisterGeometry NEXT_NEW
-#/Geometry/RegisterGeometry NEXT100_OPT
+/nexus/RegisterGeometry Next100
+#/nexus/RegisterGeometry NextNew
+#/nexus/RegisterGeometry Next100OpticalGeometry
 
 ##### GENERATOR #####
-/Generator/RegisterGenerator ION
-#/Generator/RegisterGenerator SINGLE_PARTICLE
-#/Generator/RegisterGenerator DECAY0
-#/Generator/RegisterGenerator Kr83m
-#/Generator/RegisterGenerator SCINTILLATION
-#/Generator/RegisterGenerator LAB_MUON
+/nexus/RegisterGenerator IonGenerator
+#/nexus/RegisterGenerator SingleParticleGenerator
+#/nexus/RegisterGenerator Decay0Interface
+#/nexus/RegisterGenerator Kr83mGenerator
+#/nexus/RegisterGenerator ScintillationGenerator
+#/nexus/RegisterGenerator MuonAngleGenerator
+
+### PERSISTENCY MANAGER
+/nexus/RegisterPersistencyManager PersistencyManager
 
 ##### ACTIONS #####
-/Actions/RegisterRunAction DEFAULT
+/nexus/RegisterRunAction DefaultRunAction
 
-/Actions/RegisterEventAction DEFAULT
-#/Actions/RegisterEventAction SAVE_ALL
+/nexus/RegisterEventAction DefaultEventAction
+#/nexus/RegisterEventAction SaveAllEventAction
 
-#/Actions/RegisterSteppingAction ANALYSIS
+#/nexus/RegisterSteppingAction AnalysisSteppingAction
 
-/Actions/RegisterTrackingAction DEFAULT
-#/Actions/RegisterTrackingAction OPTICAL
+/nexus/RegisterTrackingAction DefaultTrackingAction
+#/nexus/RegisterTrackingAction OpticalTrackingAction
 
 ##### CONFIGURATION MACRO #####
 /nexus/RegisterMacro macros/NEXT_options.config.mac

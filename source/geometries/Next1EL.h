@@ -9,7 +9,7 @@
 #ifndef NEXT1_EL_H
 #define NEXT1_EL_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include <G4RotationMatrix.hh>
 #include <vector>
 
@@ -27,7 +27,7 @@ namespace nexus {
 
   /// Geometry of the NEXT1-EL detector
 
-  class Next1EL: public BaseGeometry
+  class Next1EL: public GeometryBase
   {
   public:
     /// Constructor

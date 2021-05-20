@@ -10,11 +10,11 @@
 #ifndef NEXT100_SIPM_H
 #define NEXT100_SIPM_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 namespace nexus {
 
-  class Next100SiPM: public BaseGeometry
+  class Next100SiPM: public GeometryBase
   {
   public:
     // Constructor

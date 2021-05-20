@@ -9,14 +9,14 @@
 #ifndef NEXT_EL_DB_H
 #define NEXT_EL_DB_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include <vector>
 
 namespace nexus {
 
   class SiPM11;
 
-  class NextElDB: public BaseGeometry
+  class NextElDB: public GeometryBase
   {
   public:
     /// Constructor

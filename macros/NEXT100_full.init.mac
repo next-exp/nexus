@@ -14,12 +14,14 @@
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
-/Geometry/RegisterGeometry NEXT100_OPT
+/nexus/RegisterGeometry Next100OpticalGeometry
 
-/Generator/RegisterGenerator Kr83m
+/nexus/RegisterGenerator Kr83mGenerator
 
-/Actions/RegisterRunAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterTrackingAction DEFAULT
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterRunAction DefaultRunAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterTrackingAction DefaultTrackingAction
 
 /nexus/RegisterMacro macros/NEXT100_full.config.mac

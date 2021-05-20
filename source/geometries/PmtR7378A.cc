@@ -31,7 +31,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  PmtR7378A::PmtR7378A(): BaseGeometry()
+  PmtR7378A::PmtR7378A(): GeometryBase()
   {
   }
 

@@ -11,7 +11,7 @@
 #ifndef NEXT100_SIPM_BOARD_H
 #define NEXT100_SIPM_BOARD_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include <G4ThreeVector.hh>
 #include <vector>
 
@@ -25,7 +25,7 @@ namespace nexus {
 
   // Geometry of the 8x8 SiPM boards used in the tracking plane of NEXT-100
 
-  class Next100SiPMBoard: public BaseGeometry
+  class Next100SiPMBoard: public GeometryBase
   {
   public:
     // Default constructor

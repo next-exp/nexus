@@ -27,7 +27,7 @@ namespace nexus {
   using namespace CLHEP;
 
   ExtraVessel::ExtraVessel():
-    BaseGeometry(),
+    GeometryBase(),
     // Dimensions
     diameter_ (10. * cm),
     thickness_ (1. * mm),

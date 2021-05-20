@@ -33,7 +33,7 @@ namespace nexus {
   using namespace CLHEP;
 
   Next100Shielding::Next100Shielding():
-    BaseGeometry(),
+    GeometryBase(),
 
     // Shielding internal dimensions
     shield_x_ (155.  * cm),

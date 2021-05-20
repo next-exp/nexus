@@ -23,7 +23,7 @@ namespace nexus {
   using namespace CLHEP;
 
   NextNewInnerElements::NextNewInnerElements():
-    BaseGeometry(),
+    GeometryBase(),
     mother_logic_(nullptr), mother_phys_(nullptr)
   {
     // Build the internal objects that live there

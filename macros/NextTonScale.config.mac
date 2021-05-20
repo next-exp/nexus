@@ -13,6 +13,8 @@
 /event/verbose 0
 /tracking/verbose 0
 
+/process/em/verbose 0
+
 ### JOB CONTROL
 /nexus/random_seed 1
 
@@ -44,9 +46,7 @@
 /Generator/SingleParticle/particle geantino
 /Generator/SingleParticle/min_energy 1. GeV
 /Generator/SingleParticle/max_energy 1. GeV
-/Generator/SingleParticle/momentum_X 0.
-/Generator/SingleParticle/momentum_Y 0.
-/Generator/SingleParticle/momentum_Z 1.
+/Generator/SingleParticle/momentum 0 0 1
 
 # Ion Generator for background decays... (Bi214: Z=83, A=214), (Tl208: Z=81, A=208)
 #/Generator/IonGenerator/region READOUT_PLANES

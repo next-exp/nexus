@@ -28,7 +28,7 @@ using namespace nexus;
 
 
 Next100SiPM::Next100SiPM():
-  BaseGeometry(),
+  GeometryBase(),
   sensor_depth_       (-1),
   mother_depth_       (0),
   naming_order_       (0),
@@ -59,7 +59,7 @@ void Next100SiPM::Construct()
   G4LogicalVolume* sipm_logic_vol =
     new G4LogicalVolume(sipm_solid_vol, MaterialsList::FR4(), sipm_name);
 
-  BaseGeometry::SetLogicalVolume(sipm_logic_vol);
+  GeometryBase::SetLogicalVolume(sipm_logic_vol);
 
 
   // WINDOW ////////////////////////////////////////////////

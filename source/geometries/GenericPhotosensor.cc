@@ -30,7 +30,7 @@ GenericPhotosensor::GenericPhotosensor(G4String name,
                                        G4double width,
                                        G4double height,
                                        G4double thickness):
-  BaseGeometry        (),
+  GeometryBase        (),
   name_               (name),
   width_              (width),           // Width of the Sensitive Area
   height_             (height),          // Height of the Sensitive Area
@@ -73,7 +73,7 @@ void GenericPhotosensor::ComputeDimensions()
   if ((window_thickness_ + sensarea_thickness_ + wls_thickness_) > thickness_) {
     G4Exception("[GenericPhotosensor]", "ComputeDimensions()", FatalException,
                 ("Sensor size too small. Required thickness >= " +
-                 std::to_string(window_thickness_ + sensarea_thickness_ + wls_thickness_) + 
+                 std::to_string(window_thickness_ + sensarea_thickness_ + wls_thickness_) +
                  " mm").data());
   }
 }
@@ -141,7 +141,7 @@ void GenericPhotosensor::Construct()
   G4LogicalVolume* case_logic_vol =
     new G4LogicalVolume(case_solid_vol, case_mat_, name);
 
-  BaseGeometry::SetLogicalVolume(case_logic_vol);
+  GeometryBase::SetLogicalVolume(case_logic_vol);
 
 
   // OPTICAL WINDOW ////////////////////////////////////////

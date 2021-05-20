@@ -10,7 +10,8 @@
 
 #include "Na22Generator.h"
 #include "DetectorConstruction.h"
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
+#include "FactoryBase.h"
 
 #include <G4Event.hh>
 #include <G4GenericMessenger.hh>
@@ -21,6 +22,10 @@
 
 #include "CLHEP/Units/SystemOfUnits.h"
 #include "CLHEP/Units/PhysicalConstants.h"
+
+using namespace nexus;
+
+REGISTER_CLASS(Na22Generator, G4VPrimaryGenerator)
 
 namespace nexus {
 

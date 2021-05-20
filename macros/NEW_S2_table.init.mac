@@ -12,13 +12,15 @@
 /PhysicsList/RegisterPhysics G4OpticalPhysics
 /PhysicsList/RegisterPhysics NexusPhysics
 
-/Geometry/RegisterGeometry NEXT_NEW
+/nexus/RegisterGeometry NextNew
 
-/Generator/RegisterGenerator EL_TABLE
+/nexus/RegisterGenerator ELTableGenerator
 
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction SAVE_ALL
-/Actions/RegisterRunAction DEFAULT
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterEventAction SaveAllEventAction
+/nexus/RegisterRunAction DefaultRunAction
 
 /nexus/RegisterMacro macros/NEW_S2_table.config.mac
 

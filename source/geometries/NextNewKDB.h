@@ -10,7 +10,7 @@
 #ifndef NEXT_NEW_KDB_H
 #define NEXT_NEW_KDB_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include <vector>
 
 class G4GenericMessenger;
@@ -23,7 +23,7 @@ namespace nexus {
 
   /// Geometry of the Kapton Dice Boards (KDB) used in the NEW detector
 
-  class NextNewKDB: public BaseGeometry
+  class NextNewKDB: public GeometryBase
   {
   public:
     /// Constructor

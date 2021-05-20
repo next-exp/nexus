@@ -31,7 +31,7 @@ using namespace nexus;
 
 
 Next100SiPMBoard::Next100SiPMBoard():
-  BaseGeometry     (),
+  GeometryBase     (),
   size_            (123.40  * mm),
   pitch_           ( 15.55  * mm),
   margin_          (  7.275 * mm),
@@ -94,7 +94,7 @@ void Next100SiPMBoard::Construct()
                         G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON"),
                         board_name);
 
-  BaseGeometry::SetLogicalVolume(board_logic_vol);
+  GeometryBase::SetLogicalVolume(board_logic_vol);
 
 
   // TEFLON MASK /////////////////////////////////////////////////////
@@ -251,7 +251,7 @@ void Next100SiPMBoard::Construct()
   }
   else{
     board_logic_vol ->SetVisAttributes(G4VisAttributes::Invisible);
-    mask_logic_vol  ->SetVisAttributes(G4VisAttributes::Invisible);    
+    mask_logic_vol  ->SetVisAttributes(G4VisAttributes::Invisible);
   }
   mask_hole_logic_vol    ->SetVisAttributes(G4VisAttributes::Invisible);
   mask_wls_logic_vol     ->SetVisAttributes(G4VisAttributes::Invisible);

@@ -9,7 +9,7 @@
 #ifndef NEXT100_FIELDCAGE_H
 #define NEXT100_FIELDCAGE_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include <vector>
 
 class G4Material;
@@ -23,7 +23,7 @@ namespace nexus {
   class CylinderPointSampler2020;
 
 
-  class Next100FieldCage: public BaseGeometry
+  class Next100FieldCage: public GeometryBase
   {
   public:
     Next100FieldCage();

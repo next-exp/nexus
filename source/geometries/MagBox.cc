@@ -10,6 +10,7 @@
 #include "MaterialsList.h"
 #include "IonizationSD.h"
 #include "BoxPointSampler.h"
+#include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -29,8 +30,10 @@
 
 namespace nexus {
 
+  REGISTER_CLASS(MagBox, GeometryBase)
+
   MagBox::MagBox():
-    BaseGeometry(),
+    GeometryBase(),
 
     // Detector dimensions
     detector_size_ (1.*m)

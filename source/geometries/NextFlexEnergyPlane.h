@@ -9,7 +9,7 @@
 #ifndef NEXT_FLEX_ENERGY_PLANE_H
 #define NEXT_FLEX_ENERGY_PLANE_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include <G4ThreeVector.hh>
 #include <vector>
 
@@ -27,7 +27,7 @@ namespace nexus {
   class PmtR11410;
   class CylinderPointSampler2020;
 
-  class NextFlexEnergyPlane: public BaseGeometry {
+  class NextFlexEnergyPlane: public GeometryBase {
 
   public:
 
@@ -36,7 +36,7 @@ namespace nexus {
     virtual ~NextFlexEnergyPlane();
 
     virtual void Construct();
-    
+
     virtual G4ThreeVector GenerateVertex(const G4String&) const;
 
     // Sets as mother volume of all the elements the volume where the class is placed

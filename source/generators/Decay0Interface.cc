@@ -14,7 +14,8 @@
 #include "Decay0Interface.h"
 
 #include "DetectorConstruction.h"
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
+#include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4RunManager.hh>
@@ -24,7 +25,7 @@
 #include <iostream>
 using namespace nexus;
 
-
+REGISTER_CLASS(Decay0Interface, G4VPrimaryGenerator)
 
 
 Decay0Interface::Decay0Interface():

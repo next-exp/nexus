@@ -15,12 +15,14 @@
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
-/Geometry/RegisterGeometry NEXT_NEW
+/nexus/RegisterGeometry NextNew
 
-/Generator/RegisterGenerator ION
+/nexus/RegisterGenerator IonGenerator
 
-/Actions/RegisterTrackingAction VALIDATION
-/Actions/RegisterEventAction DEFAULT
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterTrackingAction ValidationTrackingAction
+/nexus/RegisterEventAction DefaultEventAction
 
 /nexus/RegisterMacro macros/validation/NEW_valid_K40.config.mac
 #/nexus/RegisterDelayedMacro macros/physics/Bi214.mac

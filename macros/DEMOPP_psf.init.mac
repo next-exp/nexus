@@ -1,7 +1,7 @@
 ## ----------------------------------------------------------------------------
 ## nexus | DEMOPP_psf.init.mac
 ##
-## Initialization macro to simulate scintillation photons from the 
+## Initialization macro to simulate scintillation photons from the
 ## el region inside a seteable cilinder.
 ##
 ## The NEXT Collaboration
@@ -15,10 +15,12 @@
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
-/Geometry/RegisterGeometry NEXT_DEMO
+/nexus/RegisterGeometry NextDemo
 
-/Generator/RegisterGenerator SCINTILLATION
+/nexus/RegisterGenerator ScintillationGenerator
 
-/Actions/RegisterTrackingAction LIGHT_TABLE
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterTrackingAction LightTableTrackingAction
 
 /nexus/RegisterMacro macros/DEMOPP_psf.config.mac

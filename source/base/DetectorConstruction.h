@@ -16,7 +16,7 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class BaseGeometry;
+  class GeometryBase;
 
   class DetectorConstruction: public G4VUserDetectorConstruction
   {
@@ -31,21 +31,21 @@ namespace nexus {
     virtual G4VPhysicalVolume* Construct();
 
     /// Set a detector geometry
-    void SetGeometry(BaseGeometry*);
+    void SetGeometry(GeometryBase*);
     /// Get the detector geometry
-    const BaseGeometry* GetGeometry() const;
+    const GeometryBase* GetGeometry() const;
 
   private:
-    BaseGeometry* geometry_;
+    GeometryBase* geometry_;
   };
 
 
   // INLINE DEFINITIONS /////////////////////////////////////////////
 
-  inline void DetectorConstruction::SetGeometry(BaseGeometry* g)
+  inline void DetectorConstruction::SetGeometry(GeometryBase* g)
   { geometry_ = g; }
 
-  inline const BaseGeometry* DetectorConstruction::GetGeometry() const
+  inline const GeometryBase* DetectorConstruction::GetGeometry() const
   { return geometry_; }
 
 } // end namespace nexus

@@ -13,13 +13,15 @@
 /PhysicsList/RegisterPhysics NexusPhysics
 /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
-/Geometry/RegisterGeometry NEXT_NEW
+/nexus/RegisterGeometry NextNew
 
-/Generator/RegisterGenerator SINGLE_PARTICLE
+/nexus/RegisterGenerator SingleParticleGenerator
 
-/Actions/RegisterTrackingAction DEFAULT
-/Actions/RegisterEventAction DEFAULT
-/Actions/RegisterRunAction DEFAULT
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterRunAction DefaultRunAction
 
 /nexus/RegisterMacro macros/NEW_hallA.config.mac
 # this delayed macro is necessary only when Xe137 is expected.

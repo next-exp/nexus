@@ -23,7 +23,7 @@ class decay0;
 
 namespace nexus {
 
-  class BaseGeometry;
+  class GeometryBase;
 
 
   /// This primary generator sets the G4Event objects according to the
@@ -70,7 +70,7 @@ namespace nexus {
     double energyThreshold_;
 
     std::ofstream fOutDebug_; // for debugging...
-    const BaseGeometry* geom_;
+    const GeometryBase* geom_;
 
 
     inline void SetEnergyThreshold(double e) { energyThreshold_ = e;}

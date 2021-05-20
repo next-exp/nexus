@@ -8,12 +8,13 @@
 // ----------------------------------------------------------------------------
 
 #include "DefaultRunAction.h"
+#include "FactoryBase.h"
 
 #include <G4Run.hh>
 
 using namespace nexus;
 
-
+REGISTER_CLASS(DefaultRunAction, G4UserRunAction)
 
 DefaultRunAction::DefaultRunAction(): G4UserRunAction()
 {

@@ -9,7 +9,7 @@
 #ifndef SILICON_PM_11_H
 #define SILICON_PM_11_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include <G4ThreeVector.hh>
 
 class G4GenericMessenger;
@@ -19,7 +19,7 @@ namespace nexus {
 
   /// Geometry of the Hamamatsu surface-mounted 1x1 mm2 MPPC (SiPM)
 
-  class SiPM11: public BaseGeometry
+  class SiPM11: public GeometryBase
   {
   public:
     /// Constructor

@@ -23,7 +23,7 @@ using namespace nexus;
 
 
 NextDemoVessel::NextDemoVessel():
-  BaseGeometry(),
+  GeometryBase(),
   vessel_vis_(true),
   vessel_diam_  (298.8*mm), // Internal diameter
   vessel_length_(840.0*mm), // Internal length
@@ -97,7 +97,7 @@ void NextDemoVessel::Construct()
 
   if (!vessel_vis_) vessel_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
 
-  BaseGeometry::SetLogicalVolume(vessel_logic_vol);
+  GeometryBase::SetLogicalVolume(vessel_logic_vol);
 
   ////////////////////////////////////////////////////////////////////
 

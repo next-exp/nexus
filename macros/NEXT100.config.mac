@@ -12,6 +12,8 @@
 /event/verbose 0
 /tracking/verbose 0
 
+/process/em/verbose 0
+
 ##### GEOMETRY #####
 /Geometry/Next100/elfield false
 /Geometry/Next100/pressure 15. bar

@@ -10,6 +10,7 @@
 // ----------------------------------------------------------------------------
 
 #include "AnalysisSteppingAction.h"
+#include "FactoryBase.h"
 
 #include <G4Step.hh>
 #include <G4SteppingManager.hh>
@@ -20,7 +21,7 @@
 
 using namespace nexus;
 
-
+REGISTER_CLASS(AnalysisSteppingAction, G4UserSteppingAction)
 
 AnalysisSteppingAction::AnalysisSteppingAction(): G4UserSteppingAction()
 {

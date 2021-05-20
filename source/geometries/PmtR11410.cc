@@ -34,7 +34,7 @@ namespace nexus {
   using namespace CLHEP;
 
   PmtR11410::PmtR11410():
-    BaseGeometry(),
+    GeometryBase(),
     // Dimensions
     front_body_diam_ (76. * mm),
     front_body_length_ (38. * mm),
@@ -150,7 +150,7 @@ namespace nexus {
 
     // Sensitive detector
     PmtSD* pmtsd = new PmtSD("/PMT_R11410/PmtR11410");
-    if (sd_depth_ == -1) 
+    if (sd_depth_ == -1)
       G4Exception("[PmtR11410]", "Construct()", FatalException,
                   "Sensor Depth must be set before constructing");
     pmtsd->SetDetectorVolumeDepth(sd_depth_);

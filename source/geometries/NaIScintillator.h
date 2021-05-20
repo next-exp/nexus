@@ -9,13 +9,13 @@
 #ifndef NAI_SCINT_H
 #define NAI_SCINT_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 
 class G4GenericMessenger;
 
 namespace nexus {
 
-  class NaIScintillator : public BaseGeometry
+  class NaIScintillator : public GeometryBase
   {
   public:
     ///Constructor

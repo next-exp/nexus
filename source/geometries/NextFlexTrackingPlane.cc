@@ -42,7 +42,7 @@ using namespace nexus;
 
 
 NextFlexTrackingPlane::NextFlexTrackingPlane():
-  BaseGeometry(),
+  GeometryBase(),
   mother_logic_      (nullptr),
   verbosity_         (false),
   sipm_verbosity_    (false),
@@ -300,7 +300,7 @@ void NextFlexTrackingPlane::BuildTeflon()
     new G4LogicalVolume(teflon_solid, teflon_mat_, teflon_name);
 
   // Adding the teflon optical surface
-  G4OpticalSurface* teflon_optSurf = 
+  G4OpticalSurface* teflon_optSurf =
     new G4OpticalSurface(teflon_name, unified, ground, dielectric_metal);
   teflon_optSurf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
 
@@ -345,7 +345,7 @@ void NextFlexTrackingPlane::BuildTeflon()
   G4Tubs* wls_hole_solid =
     new G4Tubs(wls_hole_name, 0., wls_hole_diam/2., wls_hole_length/2., 0, twopi);
 
-  G4LogicalVolume* wls_hole_logic = 
+  G4LogicalVolume* wls_hole_logic =
     new G4LogicalVolume(wls_hole_solid, xenon_gas_, wls_hole_name);
 
 
@@ -358,7 +358,7 @@ void NextFlexTrackingPlane::BuildTeflon()
   G4Tubs* hole_solid =
     new G4Tubs(hole_name, 0., hole_diam/2., hole_length/2., 0, twopi);
 
-  G4LogicalVolume* hole_logic = 
+  G4LogicalVolume* hole_logic =
     new G4LogicalVolume(hole_solid, xenon_gas_, hole_name);
 
   // Placing the SiPM into the teflon hole
@@ -380,7 +380,7 @@ void NextFlexTrackingPlane::BuildTeflon()
     new G4PVPlacement(nullptr, wls_hole_pos, wls_hole_logic, wls_hole_name,
                       teflon_wls_logic, true, SiPM_id, false);
 
-    if (sipm_verbosity_) G4cout << "* TP_SiPM " << SiPM_id << " position: " 
+    if (sipm_verbosity_) G4cout << "* TP_SiPM " << SiPM_id << " position: "
                                 << hole_pos << G4endl;
   }
 
@@ -392,9 +392,9 @@ void NextFlexTrackingPlane::BuildTeflon()
   if (verbosity_) {
     G4cout << "* Teflon Z positions: " << teflon_iniZ_
            << " to " << teflon_iniZ_ + teflon_thickness_ << G4endl;
-    G4cout << "* SiPM Z positions: " << teflon_iniZ_ 
+    G4cout << "* SiPM Z positions: " << teflon_iniZ_
            << " to " << teflon_iniZ_ + SiPM_size_z_ << G4endl;
-  } 
+  }
 
   /// Visibilities ///
   if (visibility_) {
@@ -436,7 +436,7 @@ G4LogicalVolume* NextFlexTrackingPlane::BuildSiPM()
 
   // Set visibility
   SiPM_->SetVisibility(SiPM_visibility_);
-  
+
   // Construct
   SiPM_->Construct();
 

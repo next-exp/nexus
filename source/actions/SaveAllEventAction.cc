@@ -8,6 +8,7 @@
 // ----------------------------------------------------------------------------
 
 #include "SaveAllEventAction.h"
+#include "FactoryBase.h"
 
 #include <G4Event.hh>
 #include <G4VVisManager.hh>
@@ -16,6 +17,7 @@
 
 namespace nexus {
 
+REGISTER_CLASS(SaveAllEventAction, G4UserEventAction)
 
   SaveAllEventAction::SaveAllEventAction():
     G4UserEventAction(), nevt_(0), nupdate_(10)

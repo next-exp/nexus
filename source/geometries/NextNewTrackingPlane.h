@@ -25,7 +25,7 @@ namespace nexus {
   class BoxPointSampler;
 
   /// This is a geometry formed by all the components of the tracking plane
-  class NextNewTrackingPlane: public BaseGeometry
+  class NextNewTrackingPlane: public GeometryBase
   {
 
   public:
