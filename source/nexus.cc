@@ -109,7 +109,7 @@ G4int main(int argc, char** argv)
 
   // visual mode
   if (!batch) {
-    std::unique_ptr<G4UIExecutive> ui{new G4UIExecutive{argc, argv}};
+    std::unique_ptr<G4UIExecutive> ui{new G4UIExecutive{1, argv}};
     std::unique_ptr<G4VisManager> visManager{new G4VisExecutive};
     visManager->Initialize();
     UI->ApplyCommand("/control/execute macros/vis.mac");
