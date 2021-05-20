@@ -69,7 +69,7 @@ namespace nexus {
     G4String sipm_type_;
 
     G4ThreeVector board_size_;
-    BaseGeometry* sipm_;
+    GeometryBase* sipm_;
     std::vector<G4ThreeVector> sipm_positions_;
     G4VPhysicalVolume* mother_phys_;
     BoxPointSampler* kapton_gen_;
