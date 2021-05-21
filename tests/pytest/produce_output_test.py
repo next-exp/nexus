@@ -49,8 +49,8 @@ def test_create_nexus_output_file_next100(config_tmpdir, output_tmpdir, NEXUSDIR
 /Geometry/Next100/sc_yield 10000 1/MeV
 
 /Generator/SingleParticle/particle e-
-/Generator/SingleParticle/min_energy 100. keV
-/Generator/SingleParticle/max_energy 100. keV
+/Generator/SingleParticle/min_energy 10. keV
+/Generator/SingleParticle/max_energy 10. keV
 /Generator/SingleParticle/region CENTER
 
 /nexus/persistency/outputFile {output_tmpdir}/{full_base_name_next100}
@@ -116,8 +116,8 @@ def test_create_nexus_output_file_new(config_tmpdir, output_tmpdir, NEXUSDIR,
 /Geometry/NextNew/sc_yield 10000 1/MeV
 
 /Generator/SingleParticle/particle e-
-/Generator/SingleParticle/min_energy 100. keV
-/Generator/SingleParticle/max_energy 100. keV
+/Generator/SingleParticle/min_energy 10. keV
+/Generator/SingleParticle/max_energy 10. keV
 /Generator/SingleParticle/region CENTER
 
 /nexus/persistency/outputFile {output_tmpdir}/{full_base_name_new}
@@ -218,8 +218,8 @@ def test_create_nexus_output_file_flex100(config_tmpdir, output_tmpdir, NEXUSDIR
 /Geometry/NextFlex/ics_thickness         12. cm
 
 /Generator/SingleParticle/particle       e-
-/Generator/SingleParticle/min_energy     100. keV
-/Generator/SingleParticle/max_energy     100. keV
+/Generator/SingleParticle/min_energy     10. keV
+/Generator/SingleParticle/max_energy     10. keV
 /Generator/SingleParticle/region         AD_HOC
 /Geometry/NextFlex/specific_vertex       0. 0. 500. mm
 
@@ -285,8 +285,8 @@ def test_create_nexus_output_file_demopp(config_tmpdir, output_tmpdir, NEXUSDIR,
     /Geometry/NextDemo/specific_vertex 0. 0. 10. cm
 
     /Generator/SingleParticle/particle e-
-    /Generator/SingleParticle/min_energy 100. keV
-    /Generator/SingleParticle/max_energy 100. keV
+    /Generator/SingleParticle/min_energy 10. keV
+    /Generator/SingleParticle/max_energy 10. keV
     /Generator/SingleParticle/region AD_HOC
 
     /nexus/persistency/outputFile {output_tmpdir}/{full_base_name_demopp.format(run=run)}
