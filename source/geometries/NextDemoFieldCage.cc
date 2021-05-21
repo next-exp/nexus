@@ -189,11 +189,7 @@ namespace nexus {
 
   void NextDemoFieldCage::Construct()
   {
-    /// Check that the configuration has been set
-    if (config_ == "")
-      G4Exception("[NextDemoFieldCage]", "Construct()", FatalException,
-                  "NextDemoFieldCage configuration has not been set.");
-
+    
     /// Calculate derived lengths of specific volumes
     active_length_      = gate_cathode_centre_dist_ - grid_thickn_/2.;
     light_tube_drift_length_ = light_tube_drift_end_z_ - light_tube_drift_start_z_;
@@ -366,7 +362,9 @@ namespace nexus {
     if (config_ == "run5") {
       el_gap_length = el_gap_length_plate_;
     }
-    else if ((config_ == "run7") || (config_ == "run8")) {
+    else if ((config_ == "run7") ||
+             (config_ == "run8") ||
+             (config_ == "run9")) {
       el_gap_length = el_gap_length_mesh_;
     }
 

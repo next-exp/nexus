@@ -23,7 +23,6 @@ class G4GenericMessenger;
 namespace nexus {
 
   class BoxPointSampler;
-  class SiPMSensl;
 
   class NextDemoSiPMBoard: public GeometryBase
   {
@@ -38,7 +37,11 @@ namespace nexus {
     void SetMaskThickness    (G4double thickn);
     void SetMembraneThickness(G4double thickn);
     void SetCoatingThickness (G4double thickn);
+    void SetHoleType         (G4String type);
     void SetHoleDiameter     (G4double diam);
+    void SetHoleX            (G4double x);
+    void SetHoleY            (G4double y);
+    void SetSiPMType         (G4String type);
 
     G4ThreeVector GetBoardSize() const;
     G4double      GetKaptonThickness() const;
@@ -48,6 +51,8 @@ namespace nexus {
     G4bool verbosity_;
     G4bool sipm_verbosity_;
     G4bool visibility_;
+    G4bool sipm_visibility_;
+    G4double time_binning_;
 
     G4int    num_columns_, num_rows_, num_sipms_;
     G4double sipm_pitch_;
@@ -57,10 +62,14 @@ namespace nexus {
     G4double mask_thickn_;
     G4double membrane_thickn_;
     G4double coating_thickn_;
+    G4String hole_type_;
     G4double hole_diam_;
+    G4double hole_x_;
+    G4double hole_y_;
+    G4String sipm_type_;
 
     G4ThreeVector board_size_;
-    SiPMSensl* sipm_;
+    GeometryBase* sipm_;
     std::vector<G4ThreeVector> sipm_positions_;
     G4VPhysicalVolume* mother_phys_;
     BoxPointSampler* kapton_gen_;
@@ -80,8 +89,20 @@ namespace nexus {
   inline void NextDemoSiPMBoard::SetCoatingThickness(G4double thickn)
   { coating_thickn_ = thickn; }
 
+  inline void NextDemoSiPMBoard::SetHoleType(G4String type)
+  { hole_type_ = type; }
+
   inline void NextDemoSiPMBoard::SetHoleDiameter(G4double diam)
   { hole_diam_ = diam; }
+
+  inline void NextDemoSiPMBoard::SetHoleX(G4double x)
+  { hole_x_ = x; }
+
+  inline void NextDemoSiPMBoard::SetHoleY(G4double y)
+  { hole_y_ = y; }
+
+  inline void NextDemoSiPMBoard::SetSiPMType(G4String type)
+  { sipm_type_ = type; }
 
   inline G4ThreeVector NextDemoSiPMBoard::GetBoardSize() const
   { return board_size_; }

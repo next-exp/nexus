@@ -43,6 +43,12 @@ Next100SiPM::~Next100SiPM()
 }
 
 
+G4ThreeVector Next100SiPM::GetDimensions() const
+{
+  return dimensions_;
+}
+
+
 void Next100SiPM::Construct()
 {
   // ENCASING //////////////////////////////////////////////
@@ -52,6 +58,10 @@ void Next100SiPM::Construct()
   G4double sipm_width  = 3.0 * mm;
   G4double sipm_length = 4.0 * mm;
   G4double sipm_thickn = 1.3 * mm;
+
+  dimensions_.setX(sipm_width);
+  dimensions_.setY(sipm_length);
+  dimensions_.setZ(sipm_thickn);
 
   G4Box* sipm_solid_vol =
     new G4Box(sipm_name, sipm_width/2., sipm_length/2., sipm_thickn/2.);
@@ -146,7 +156,7 @@ void Next100SiPM::Construct()
 
   // SENSITIVE DETECTOR ////////////////////////////////////
 
-  G4String sdname = "/" + sipm_name + "/";
+  G4String sdname = "/" + sipm_name + "/SiPM";
   G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
 
   if (!sdmgr->FindSensitiveDetector(sdname, false)) {
