@@ -203,7 +203,7 @@ void NextDemoSiPMBoard::Construct()
   // Adding the optical surface
   G4OpticalSurface* mask_opsurf =
     new G4OpticalSurface(mask_name, unified, ground, dielectric_metal);
-  mask_opsurf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+  mask_opsurf->SetMaterialPropertiesTable(opticalprops::PTFE());
   new G4LogicalSkinSurface(mask_name + "_OPSURF", mask_logic, mask_opsurf);
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., mask_posz), mask_logic,
@@ -212,8 +212,8 @@ void NextDemoSiPMBoard::Construct()
 
   /// Mask Holes
   G4String coating_name = "BOARD_COATING";
-  G4Material* tpb = MaterialsList::TPB();
-  tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+  G4Material* tpb = materials::TPB();
+    tpb->SetMaterialPropertiesTable(opticalprops::TPB());
   G4OpticalSurface* coating_opsurf =
     new G4OpticalSurface(coating_name + "_OPSURF", glisur, ground,
                          dielectric_dielectric, .01);

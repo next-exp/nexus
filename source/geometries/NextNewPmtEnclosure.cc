@@ -77,20 +77,20 @@ namespace nexus{
   {
     // MATERIALS ///////////////////////////////////////////
 
-    G4Material* sapphire = MaterialsList::Sapphire();
-    sapphire->SetMaterialPropertiesTable(OpticalMaterialProperties::Sapphire());
+    G4Material* sapphire = materials::Sapphire();
+    sapphire->SetMaterialPropertiesTable(opticalprops::Sapphire());
 
     G4Material* vacuum = G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
-    vacuum->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
+    vacuum->SetMaterialPropertiesTable(opticalprops::Vacuum());
 
-    G4Material* optical_coupler = MaterialsList::OpticalSilicone();
-    optical_coupler->SetMaterialPropertiesTable(OpticalMaterialProperties::OptCoupler());
+    G4Material* optical_coupler = materials::OpticalSilicone();
+    optical_coupler->SetMaterialPropertiesTable(opticalprops::OptCoupler());
 
-    G4Material* tpb = MaterialsList::TPB();
-    tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+    G4Material* tpb = materials::TPB();
+    tpb->SetMaterialPropertiesTable(opticalprops::TPB());
 
-    G4Material* pedot = MaterialsList::PEDOT();
-    pedot->SetMaterialPropertiesTable(OpticalMaterialProperties::PEDOT());
+    G4Material* pedot = materials::PEDOT();
+    pedot->SetMaterialPropertiesTable(opticalprops::PEDOT());
 
     /////   ENCLOSURES  /////
     G4Tubs* enclosure_body =

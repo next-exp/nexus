@@ -82,14 +82,14 @@ void GenericPhotosensor::ComputeDimensions()
 void GenericPhotosensor::DefineMaterials()
 {
   // Case /////
-  case_mat_ = MaterialsList::FR4();
+  case_mat_ = materials::FR4();
 
   // Window /////
   // The optical properties of a given material, is common for the whole geometry so,
   // making a copy of the window material restricts its use to this photosensor
   // and prevents interferences with other possible uses.
   window_mat_ =
-    MaterialsList::CopyMaterial(MaterialsList::OpticalSilicone(),
+    materials::CopyMaterial(materials::OpticalSilicone(),
                                 name_ + "_WINDOW_MATERIAL");
   G4MaterialPropertiesTable* window_optProp = new G4MaterialPropertiesTable();
 
@@ -102,7 +102,7 @@ void GenericPhotosensor::DefineMaterials()
                   "Window rindex set, but NOT USED. Using TPB rindex.");
 
     window_optProp->AddProperty("RINDEX",
-                                OpticalMaterialProperties::TPB()->GetProperty("RINDEX"));
+                                opticalprops::TPB()->GetProperty("RINDEX"));
     window_mat_->SetMaterialPropertiesTable(window_optProp);
   }
 
@@ -121,8 +121,8 @@ void GenericPhotosensor::DefineMaterials()
   sensitive_mat_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Si");
 
   // WLS coating /////
-  wls_mat_ = MaterialsList::TPB();
-  wls_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+  wls_mat_ = materials::TPB();
+  wls_mat_->SetMaterialPropertiesTable(opticalprops::TPB());
 }
 
 

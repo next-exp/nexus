@@ -54,7 +54,7 @@ namespace nexus {
       new G4Box("TABLE", table_x_/2., table_y_/2., table_z_/2.);
 
     G4LogicalVolume* table_logic = new G4LogicalVolume(table_solid,
-						       MaterialsList::Steel316Ti(),
+						       materials::Steel316Ti(),
 						       "TABLE");
     new G4PVPlacement(0, G4ThreeVector(0.,y_pos_,0.), table_logic, "TABLE", mother_logic_, false, 0,false);
 

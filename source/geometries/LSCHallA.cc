@@ -74,7 +74,7 @@ namespace nexus {
 
     // The walls
     G4LogicalVolume* rock_logic =
-      new G4LogicalVolume(lab_walls, MaterialsList::Limestone(), "lab_walls");
+      new G4LogicalVolume(lab_walls, materials::Limestone(), "lab_walls");
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), rock_logic,
 		      "lab_walls", lab_air_logic, false, 0, false);
 

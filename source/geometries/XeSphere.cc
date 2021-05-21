@@ -82,7 +82,7 @@ namespace nexus {
     if (liquid_)
       xenon = G4NistManager::Instance()->FindOrBuildMaterial("G4_lXe");
     else
-      xenon = MaterialsList::GXe(pressure_);
+      xenon = materials::GXe(pressure_);
 
     // Define the logical volume of the sphere using the material
     // and the solid volume defined above

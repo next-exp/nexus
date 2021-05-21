@@ -58,7 +58,7 @@ namespace nexus {
     // Feedthrough, adapter boards and connectors are made of FR4.
     // The O-rings are made of metal (some of them) and nitrile or viton.
 
-    G4Material* mat = MaterialsList::FR4();
+    G4Material* mat = materials::FR4();
 
     G4LogicalVolume* generic_logic =
       new G4LogicalVolume(generic_solid, mat, "EXTRA_VESSEL");

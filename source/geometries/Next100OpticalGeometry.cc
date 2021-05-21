@@ -102,20 +102,20 @@ namespace nexus {
   G4Material* gas_mat = nullptr;
 
   if (gas_ == "naturalXe") {
-    gas_mat = MaterialsList::GXe(pressure_, temperature_);
-    gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(pressure_,
+    gas_mat = materials::GXe(pressure_, temperature_);
+    gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_,
 								       temperature_,
 								       sc_yield_,
                                                                        e_lifetime_));
   } else if (gas_ == "enrichedXe") {
-    gas_mat =  MaterialsList::GXeEnriched(pressure_, temperature_);
-    gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(pressure_,
+    gas_mat =  materials::GXeEnriched(pressure_, temperature_);
+    gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_,
 								       temperature_,
 								       sc_yield_,
                                                                        e_lifetime_));
   } else if  (gas_ == "depletedXe") {
-    gas_mat =  MaterialsList::GXeDepleted(pressure_, temperature_);
-    gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(pressure_,
+    gas_mat =  materials::GXeDepleted(pressure_, temperature_);
+    gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_,
 								       temperature_,
 								       sc_yield_,
                                                                        e_lifetime_));

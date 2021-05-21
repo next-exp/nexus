@@ -227,7 +227,7 @@ void Next100FieldCage::DefineMaterials()
   temperature_ = gas_->GetTemperature();
 
   /// High density polyethylene for the field cage
-  hdpe_ = MaterialsList::HDPE();
+  hdpe_ = materials::HDPE();
 
   /// Copper for field rings
   copper_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
@@ -237,8 +237,8 @@ void Next100FieldCage::DefineMaterials()
   G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
 
   /// TPB coating
-  tpb_ = MaterialsList::TPB();
-  tpb_->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+  tpb_ = materials::TPB();
+  tpb_->SetMaterialPropertiesTable(opticalprops::TPB());
 }
 
 
@@ -307,8 +307,8 @@ void Next100FieldCage::BuildActive()
 
 void Next100FieldCage::BuildCathodeGrid()
 {
-  G4Material* fgrid_mat = MaterialsList::FakeDielectric(gas_, "cath_grid_mat");
-  fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_, temperature_, cath_grid_transparency_, grid_thickn_));
+  G4Material* fgrid_mat = materials::FakeDielectric(gas_, "cath_grid_mat");
+  fgrid_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_, temperature_, cath_grid_transparency_, grid_thickn_));
 
   G4Tubs* diel_grid_solid =
   new G4Tubs("CATHODE_GRID", 0., cathode_diam_/2., grid_thickn_/2., 0, twopi);
@@ -428,8 +428,8 @@ void Next100FieldCage::BuildELRegion()
   }
 
   /// EL grids
-  G4Material* fgrid_mat = MaterialsList::FakeDielectric(gas_, "el_grid_mat");
-  fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_, temperature_, el_grid_transparency_, grid_thickn_));
+  G4Material* fgrid_mat = materials::FakeDielectric(gas_, "el_grid_mat");
+  fgrid_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_, temperature_, el_grid_transparency_, grid_thickn_));
 
   /// Dimensions & position: the grids are simulated inside the EL gap.
   /// Their thickness is symbolic.
@@ -562,7 +562,7 @@ void Next100FieldCage::BuildFieldCage()
   /// Optical surface on teflon ///
   G4OpticalSurface* refl_Surf =
     new G4OpticalSurface("refl_Surf", unified, ground, dielectric_metal, .01);
-  refl_Surf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+  refl_Surf->SetMaterialPropertiesTable(opticalprops::PTFE());
   new G4LogicalSkinSurface("refl_teflon_surf", teflon_drift_logic, refl_Surf);
   new G4LogicalSkinSurface("refl_teflon_surf", teflon_buffer_logic, refl_Surf);
 
