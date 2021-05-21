@@ -49,7 +49,7 @@ namespace nexus {
     // Dimensions
     G4double lead_x_, lead_y_, lead_z_;
     G4double shield_x_, shield_y_, shield_z_;
-    G4double  beam_base_thickness_, lateral_z_separation_, roof_z_separation_ , front_x_separation_;
+    G4double beam_base_thickness_, lateral_z_separation_, roof_z_separation_ , front_x_separation_;
     G4double lead_thickness_, steel_thickness_;
 
     // Visibility of the shielding
