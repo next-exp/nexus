@@ -37,8 +37,7 @@ REGISTER_CLASS(MuonGenerator, G4VPrimaryGenerator)
 
 MuonGenerator::MuonGenerator():
   G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
-  energy_min_(0.), energy_max_(0.), geom_(0), momentum_X_(0.),
-  momentum_Y_(0.), momentum_Z_(0.)
+  energy_min_(0.), energy_max_(0.), geom_(0), momentum_{}
 {
   msg_ = new G4GenericMessenger(this, "/Generator/MuonGenerator/",
 				"Control commands of muongenerator.");
@@ -58,9 +57,8 @@ MuonGenerator::MuonGenerator():
   msg_->DeclareProperty("region", region_,
 			"Set the region of the geometry where the vertex will be generated.");
 
-  msg_->DeclareProperty("momentum_X", momentum_X_,"x coord of momentum");
-  msg_->DeclareProperty("momentum_Y", momentum_Y_,"y coord of momentum");
-  msg_->DeclareProperty("momentum_Z", momentum_Z_,"z coord of momentum");
+  msg_->DeclarePropertyWithUnit("momentum", "mm",  momentum_,
+    "Set particle 3-momentum.");
 
 
   DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
@@ -101,34 +99,24 @@ void MuonGenerator::GeneratePrimaryVertex(G4Event* event)
   G4double theta = GetTheta();
   G4double phi   = GetPhi();
 
-  G4double x, y, z;
-
   // NEXT axis convention (z<->y) and generate with -y! towards the detector
-  x = sin(theta) * cos(phi);
-  y = -cos(theta);
-  z = sin(theta) * sin(phi);
+  G4double x = sin(theta) * cos(phi);
+  G4double y = -cos(theta);
+  G4double z = sin(theta) * sin(phi);
 
-  G4ThreeVector _p_dir(x,y,z);
+  G4ThreeVector p_dir(x,y,z);
 
-  G4double px = pmod * _p_dir.x();
-  G4double py = pmod * _p_dir.y();
-  G4double pz = pmod * _p_dir.z();
-
-
+  bool fixed_momentum = momentum_ != G4ThreeVector{};
   // If user provides a momentum direction, this one is used
-  if (momentum_X_ != 0. || momentum_Y_ != 0. || momentum_Z_ != 0.) {
-    // Normalize if needed
-    G4double mom_mod = std::sqrt(momentum_X_ * momentum_X_ +
-				 momentum_Y_ * momentum_Y_ +
-				 momentum_Z_ * momentum_Z_);
-    px = pmod * momentum_X_/mom_mod;
-    py = pmod * momentum_Y_/mom_mod;
-    pz = pmod * momentum_Z_/mom_mod;
+  if (fixed_momentum) {
+    p_dir = momentum_.unit();
   }
+
+  G4ThreeVector p = pmod * p_dir;
 
   // Create the new primary particle and set it some properties
   G4PrimaryParticle* particle =
-    new G4PrimaryParticle(particle_definition_, px, py, pz);
+    new G4PrimaryParticle(particle_definition_, p.x(), p.y(), p.z());
 
   // Add info to PrimaryVertex to be accessed from EventAction type class to make histos of variables generated here.
   AddUserInfoToPV *info = new AddUserInfoToPV(theta, phi);
