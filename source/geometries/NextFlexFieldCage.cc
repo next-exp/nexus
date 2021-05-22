@@ -526,9 +526,9 @@ void NextFlexFieldCage::BuildELgap()
   G4LogicalVolume* el_gap_logic =
     new G4LogicalVolume(el_gap_solid, xenon_gas_, el_gap_name);
 
-  G4VPhysicalVolume* el_gap_phys =
-    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., el_gap_posZ), el_gap_logic,
-                      el_gap_name, mother_logic_, false, 0, verbosity_);
+
+  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., el_gap_posZ), el_gap_logic,
+                    el_gap_name, mother_logic_, false, 0, verbosity_);
 
   // Define EL electric field
   XenonGasProperties xgp(gas_pressure_, gas_temperature_);
