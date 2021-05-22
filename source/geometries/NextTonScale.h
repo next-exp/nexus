@@ -59,7 +59,7 @@ namespace nexus {
     G4bool tank_vis_, vessel_vis_, ics_vis_,
            fcage_vis_, cathode_vis_, anode_vis_, readout_vis_;
 
-    G4double specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_;
+    G4ThreeVector specific_vertex_;
 
     CylinderPointSampler* active_gen_;
     CylinderPointSampler* field_cage_gen_;

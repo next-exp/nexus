@@ -36,7 +36,8 @@ namespace nexus {
 						    pressure_(15. * bar),
 						    temperature_ (300 * kelvin),
 						    sc_yield_(25510. * 1/MeV),
-                                                    e_lifetime_(1000. * ms),
+                e_lifetime_(1000. * ms),
+                specific_vertex_{},
 						    gas_("naturalXe")
   {
     /// Messenger
@@ -64,21 +65,8 @@ namespace nexus {
     e_lifetime_cmd.SetUnitCategory("Time");
     e_lifetime_cmd.SetRange("e_lifetime>0.");
 
-    G4GenericMessenger::Command&  specific_vertex_X_cmd =
-      msg_->DeclareProperty("specific_vertex_X", specific_vertex_X_,
-                            "If region is AD_HOC, x coord of primary particles");
-    specific_vertex_X_cmd.SetParameterName("specific_vertex_X", true);
-    specific_vertex_X_cmd.SetUnitCategory("Length");
-    G4GenericMessenger::Command&  specific_vertex_Y_cmd =
-      msg_->DeclareProperty("specific_vertex_Y", specific_vertex_Y_,
-                            "If region is AD_HOC, y coord of primary particles");
-    specific_vertex_Y_cmd.SetParameterName("specific_vertex_Y", true);
-    specific_vertex_Y_cmd.SetUnitCategory("Length");
-    G4GenericMessenger::Command&  specific_vertex_Z_cmd =
-      msg_->DeclareProperty("specific_vertex_Z", specific_vertex_Z_,
-                            "If region is AD_HOC, z coord of primary particles");
-    specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
-    specific_vertex_Z_cmd.SetUnitCategory("Length");
+    msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
+      "Set generation vertex.");
 
     msg_->DeclareProperty("gas", gas_, "Gas being used");
 
@@ -168,8 +156,7 @@ namespace nexus {
     G4ThreeVector vertex(0.,0.,0.);
     if (region == "AD_HOC") {
       // AD_HOC does not need to be shifted because it is passed by the user
-      vertex =
-	G4ThreeVector(specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_);
+      vertex = specific_vertex_;
       return vertex;
     }
     else {

@@ -130,22 +130,6 @@ namespace nexus {
     step_cmd.SetParameterName("max_step_size", false);
     step_cmd.SetRange("max_step_size>0.");
 
-    G4GenericMessenger::Command&  specific_vertex_X_cmd =
-      msg_->DeclareProperty("specific_vertex_X", specific_vertex_X_,
-			    "If region is AD_HOC, x coord where particles are generated");
-    specific_vertex_X_cmd.SetParameterName("specific_vertex_X", true);
-    specific_vertex_X_cmd.SetUnitCategory("Length");
-    G4GenericMessenger::Command&  specific_vertex_Y_cmd =
-      msg_->DeclareProperty("specific_vertex_Y", specific_vertex_Y_,
-			    "If region is AD_HOC, y coord where particles are generated");
-    specific_vertex_Y_cmd.SetParameterName("specific_vertex_Y", true);
-    specific_vertex_Y_cmd.SetUnitCategory("Length");
-    G4GenericMessenger::Command&  specific_vertex_Z_cmd =
-      msg_->DeclareProperty("specific_vertex_Z", specific_vertex_Z_,
-			    "If region is AD_HOC, z coord where particles are generated");
-    specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
-    specific_vertex_Z_cmd.SetUnitCategory("Length");
-
     G4GenericMessenger::Command&  ELtransv_diff_cmd =
       msg_->DeclareProperty("ELtransv_diff", ELtransv_diff_,
 			    "Tranvsersal diffusion in the EL region");
@@ -806,9 +790,6 @@ void NextNewFieldCage::BuildBuffer()
     }
     else if (region == "TRACKING_FRAMES") {
       vertex = tracking_frames_gen_->GenerateVertex("BODY_VOL");
-    }
-    else if (region == "AD_HOC") {
-      vertex = G4ThreeVector(specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_);
     }
     else if (region == "EL_TABLE") {
       unsigned int i = el_table_point_id_ + el_table_index_;

@@ -124,7 +124,8 @@ Next1EL::Next1EL():
   // DEFAULT VALUES FOR SOME PARAMETERS///////////
   max_step_size_(1.*mm),
   sc_yield_(13889/MeV),
-  e_lifetime_(1000.*ms)
+  e_lifetime_(1000.*ms),
+  specific_vertex_{}
 {
 
   msg_ = new G4GenericMessenger(this, "/Geometry/Next1EL/",
@@ -158,22 +159,8 @@ Next1EL::Next1EL():
   e_lifetime_cmd.SetUnitCategory("Time");
   e_lifetime_cmd.SetRange("e_lifetime>0.");
 
-  /// Temporary
-  G4GenericMessenger::Command&  specific_vertex_X_cmd =
-    msg_->DeclareProperty("specific_vertex_X", specific_vertex_X_,
-   			  "If region is AD_HOC, x coord where particles are generated");
-  specific_vertex_X_cmd.SetParameterName("specific_vertex_X", true);
-  specific_vertex_X_cmd.SetUnitCategory("Length");
-  G4GenericMessenger::Command&  specific_vertex_Y_cmd =
-    msg_->DeclareProperty("specific_vertex_Y", specific_vertex_Y_,
-   			  "If region is AD_HOC, y coord where particles are generated");
-  specific_vertex_Y_cmd.SetParameterName("specific_vertex_Y", true);
-  specific_vertex_Y_cmd.SetUnitCategory("Length");
-  G4GenericMessenger::Command&  specific_vertex_Z_cmd =
-    msg_->DeclareProperty("specific_vertex_Z", specific_vertex_Z_,
-   			  "If region is AD_HOC, z coord where particles are generated");
-  specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
-  specific_vertex_Z_cmd.SetUnitCategory("Length");
+  msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
+      "Set generation vertex.");
 
    // Other properties (dimension and dimensionless)
   G4GenericMessenger::Command& pressure_cmd =
@@ -249,9 +236,6 @@ void Next1EL::Construct()
     BuildSiPMTrackingPlane();
   else
     BuildPMTTrackingPlane();
-
-  G4ThreeVector v(specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_);
-  specific_vertex_ = v;
 
    // For EL Table generation
   idx_table_ = 0;

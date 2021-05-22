@@ -45,27 +45,15 @@ namespace nexus {
     central_nozzle_ypos_ (0. * cm),
     down_nozzle_ypos_ (-20. * cm),
     bottom_nozzle_ypos_(-53. * cm),
+    specific_vertex_{},
     lab_walls_(false)
   {
 
     msg_ = new G4GenericMessenger(this, "/Geometry/Next100/",
 				  "Control commands of geometry Next100.");
 
-    G4GenericMessenger::Command&  specific_vertex_X_cmd =
-      msg_->DeclareProperty("specific_vertex_X", specific_vertex_X_,
-                            "If region is AD_HOC, x coord of primary particles");
-    specific_vertex_X_cmd.SetParameterName("specific_vertex_X", true);
-    specific_vertex_X_cmd.SetUnitCategory("Length");
-    G4GenericMessenger::Command&  specific_vertex_Y_cmd =
-      msg_->DeclareProperty("specific_vertex_Y", specific_vertex_Y_,
-                            "If region is AD_HOC, y coord of primary particles");
-    specific_vertex_Y_cmd.SetParameterName("specific_vertex_Y", true);
-    specific_vertex_Y_cmd.SetUnitCategory("Length");
-    G4GenericMessenger::Command&  specific_vertex_Z_cmd =
-      msg_->DeclareProperty("specific_vertex_Z", specific_vertex_Z_,
-                            "If region is AD_HOC, z coord of primary particles");
-    specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
-    specific_vertex_Z_cmd.SetUnitCategory("Length");
+    msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
+      "Set generation vertex.");
 
     msg_->DeclareProperty("lab_walls", lab_walls_, "Placement of Hall A walls");
 
@@ -236,8 +224,7 @@ namespace nexus {
     }
     else if (region == "AD_HOC") {
       // AD_HOC does not need to be shifted because it is passed by the user
-      vertex =
-	G4ThreeVector(specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_);
+      vertex = specific_vertex_;
       return vertex;
     }
     // Lab walls

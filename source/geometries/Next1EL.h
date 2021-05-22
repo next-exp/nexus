@@ -163,7 +163,6 @@ namespace nexus {
     G4double elgrid_transparency_;
     G4double gate_transparency_;
     G4ThreeVector specific_vertex_;
-    G4double specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_;
     G4bool muonsGenerator_;
 
     // Positions in the detector geometry relevant for event vertex generation

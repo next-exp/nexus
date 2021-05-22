@@ -11,7 +11,7 @@
 ##### VERBOSITIES #####
 /run/verbose 0
 /event/verbose 0
-/tracking/verbose 0
+/tracking/verbose 1
 
 /process/em/verbose 0
 
@@ -22,6 +22,8 @@
 /Geometry/Next100/elfield false
 /Geometry/Next100/pressure 15. bar
 /Geometry/Next100/max_step_size 1. mm
+
+#/Geometry/Next100/specific_vertex 35 40 60 cm
 
 /Geometry/Next100/shielding_vis      false
 /Geometry/Next100/vessel_vis         false
@@ -61,6 +63,7 @@
 /Generator/IonGenerator/atomic_number 83
 /Generator/IonGenerator/mass_number 214
 /Generator/IonGenerator/region SAPPHIRE_WINDOW
+
 
 # Single Particle
 #/Generator/SingleParticle/particle e-

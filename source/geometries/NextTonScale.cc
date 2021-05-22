@@ -44,7 +44,7 @@ NextTonScale::NextTonScale():
   xe_perc_(100.), helium_mass_num_(4),
   tank_vis_(true), vessel_vis_(true), ics_vis_(true),
   fcage_vis_(true), cathode_vis_(true), anode_vis_(true), readout_vis_(true),
-  specific_vertex_X_(0.), specific_vertex_Y_(0.), specific_vertex_Z_(0.),
+  specific_vertex_{},
   active_gen_(nullptr), field_cage_gen_(nullptr), cathode_gen_(nullptr),
   ics_gen_(nullptr), vessel_gen_(nullptr), readout_plane_gen_(nullptr),
   outer_plane_gen_(nullptr), external_gen_(nullptr), muon_gen_(nullptr)
@@ -409,7 +409,7 @@ G4ThreeVector NextTonScale::GenerateVertex(const G4String& region) const
   G4ThreeVector vertex;
 
   if (region == "AD_HOC") {
-    vertex = G4ThreeVector(specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_);
+    vertex = specific_vertex_;
   }
   else if (region == "ACTIVE") {
     vertex = active_gen_->GenerateVertex("BODY_VOL");
@@ -528,23 +528,8 @@ void NextTonScale::DefineConfigurationParameters()
   water_thickn_cmd.SetRange("water_thickn>=0.");
 
   // Specific vertex in case region to shoot from is AD_HOC
-  G4GenericMessenger::Command& specific_vertex_X_cmd =
-    msg_->DeclareProperty("specific_vertex_X", specific_vertex_X_,
-      "If region is AD_HOC, x coord where particles are generated");
-  specific_vertex_X_cmd.SetParameterName("specific_vertex_X", true);
-  specific_vertex_X_cmd.SetUnitCategory("Length");
-
-  G4GenericMessenger::Command& specific_vertex_Y_cmd =
-    msg_->DeclareProperty("specific_vertex_Y", specific_vertex_Y_,
-      "If region is AD_HOC, y coord where particles are generated");
-  specific_vertex_Y_cmd.SetParameterName("specific_vertex_Y", true);
-  specific_vertex_Y_cmd.SetUnitCategory("Length");
-
-  G4GenericMessenger::Command& specific_vertex_Z_cmd =
-    msg_->DeclareProperty("specific_vertex_Z", specific_vertex_Z_,
-      "If region is AD_HOC, z coord where particles are generated");
-  specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
-  specific_vertex_Z_cmd.SetUnitCategory("Length");
+  msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
+    "Set generation vertex.");
 
   // Percentage xenon for mixtures /////////////////////////
   G4GenericMessenger::Command& Xe_percent_cmd =

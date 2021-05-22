@@ -26,7 +26,7 @@ REGISTER_CLASS(NextDemo, GeometryBase)
 NextDemo::NextDemo():
   GeometryBase(),
   lab_size_(10.*m),
-  specific_vertex_X_(0.), specific_vertex_Y_(0.), specific_vertex_Z_(0.),
+  specific_vertex_{},
   vessel_geom_(new NextDemoVessel),
   inner_geom_(new NextDemoInnerElements),
   msg_(nullptr)
@@ -34,23 +34,8 @@ NextDemo::NextDemo():
   msg_ = new G4GenericMessenger(this, "/Geometry/NextDemo/",
                                 "Control commands of geometry NextDemo.");
 
-  G4GenericMessenger::Command&  specific_vertex_X_cmd =
-    msg_->DeclareProperty("specific_vertex_X", specific_vertex_X_,
-                          "If region is AD_HOC, x coord where particles are generated");
-  specific_vertex_X_cmd.SetParameterName("specific_vertex_X", true);
-  specific_vertex_X_cmd.SetUnitCategory("Length");
-
-  G4GenericMessenger::Command&  specific_vertex_Y_cmd =
-    msg_->DeclareProperty("specific_vertex_Y", specific_vertex_Y_,
-                          "If region is AD_HOC, y coord where particles are generated");
-  specific_vertex_Y_cmd.SetParameterName("specific_vertex_Y", true);
-  specific_vertex_Y_cmd.SetUnitCategory("Length");
-
-  G4GenericMessenger::Command&  specific_vertex_Z_cmd =
-    msg_->DeclareProperty("specific_vertex_Z", specific_vertex_Z_,
-                            "If region is AD_HOC, z coord where particles are generated");
-  specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
-  specific_vertex_Z_cmd.SetUnitCategory("Length");
+  msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
+      "Set generation vertex.");
 
 }
 
@@ -109,7 +94,7 @@ G4ThreeVector NextDemo::GenerateVertex(const G4String& region) const
   G4ThreeVector vtx;
 
   if (region == "AD_HOC") {
-    vtx = G4ThreeVector(specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_);
+    vtx = specific_vertex_;
   }
   else if (region == "CALIBRATION_SOURCE") {
     vtx = vessel_geom_->GenerateVertex("CALIBRATION_SOURCE");
