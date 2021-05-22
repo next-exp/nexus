@@ -89,9 +89,7 @@
 ### GENERATOR
 # Kripton
 /Generator/Kr83mGenerator/region  AD_HOC
-/Geometry/NextFlex/specific_vertex_X  0. mm
-/Geometry/NextFlex/specific_vertex_Y  0. mm
-/Geometry/NextFlex/specific_vertex_Z  580. mm
+/Geometry/NextFlex/specific_vertex  0. 0. 580. mm
 
 
 ### PHYSICS

@@ -40,9 +40,7 @@
 ### GENERATOR
 # Single Particle
 /Generator/SingleParticle/region AD_HOC
-/Geometry/NextTonScale/specific_vertex_X 0. mm
-/Geometry/NextTonScale/specific_vertex_Y 0. mm
-/Geometry/NextTonScale/specific_vertex_Z 0. mm
+/Geometry/NextTonScale/specific_vertex 0. 0. 0. mm
 /Generator/SingleParticle/particle geantino
 /Generator/SingleParticle/min_energy 1. GeV
 /Generator/SingleParticle/max_energy 1. GeV
