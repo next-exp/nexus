@@ -220,11 +220,8 @@ def test_create_nexus_output_file_flex100(config_tmpdir, output_tmpdir, NEXUSDIR
 /Generator/SingleParticle/particle       e-
 /Generator/SingleParticle/min_energy     100. keV
 /Generator/SingleParticle/max_energy     100. keV
-/Generator/SingleParticle/region         CENTER
 /Generator/SingleParticle/region         AD_HOC
-/Geometry/NextFlex/specific_vertex_X     0. mm
-/Geometry/NextFlex/specific_vertex_Y     0. mm
-/Geometry/NextFlex/specific_vertex_Z     500. mm
+/Geometry/NextFlex/specific_vertex       0. 0. 500. mm
 
 /nexus/persistency/outputFile {output_tmpdir}/{full_base_name_flex100}
 /nexus/random_seed 21051817
@@ -285,9 +282,7 @@ def test_create_nexus_output_file_demopp(config_tmpdir, output_tmpdir, NEXUSDIR,
 /Geometry/NextDemo/pressure 10. bar
 /Geometry/NextDemo/sc_yield 10000 1/MeV
 
-/Geometry/NextDemo/specific_vertex_X 0. mm
-/Geometry/NextDemo/specific_vertex_Y 0. mm
-/Geometry/NextDemo/specific_vertex_Z 10. cm
+/Geometry/NextDemo/specific_vertex 0. 0. 10. cm
 
 /Generator/SingleParticle/particle e-
 /Generator/SingleParticle/min_energy 100. keV
