@@ -70,9 +70,7 @@ namespace nexus {
     G4GenericMessenger* msg_;
 
     /// Specific vertex for AD_HOC region
-    G4double specific_vertex_X_;
-    G4double specific_vertex_Y_;
-    G4double specific_vertex_Z_;
+    G4ThreeVector specific_vertex_;
 
     /// Position of gate in its mother volume
     G4double gate_zpos_in_vessel_;

@@ -95,7 +95,7 @@ namespace nexus {
     CylinderPointSampler2020* copper_gen_;
 
     // AD-HOC vertex
-    G4double adhoc_x_, adhoc_y_, adhoc_z_;
+    G4ThreeVector specific_vertex_;
   };
 
 } // end namespace nexus

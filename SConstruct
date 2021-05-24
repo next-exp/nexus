@@ -304,7 +304,6 @@ for d in SRCDIR:
 env['CXXCOMSTR']  = "Compiling $SOURCE"
 env['LINKCOMSTR'] = "Linking $TARGET"
 
-
 LIBDIR = env['PREFIX'] + '/lib/nexus'
 libnexus = env.SharedLibrary(LIBDIR, src)
 
@@ -325,7 +324,7 @@ env.Execute(Chmod(w_prefix_dir+'/bin/nexus-config', 0o755))
 nexus = env.Program('bin/nexus', ['source/nexus.cc']+src)
 
 TSTDIR = ['utils',
-	  'example']
+          'example']
 TSTDIR = ['source/tests/' + dir for dir in TSTDIR]
 
 tst = []

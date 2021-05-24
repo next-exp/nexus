@@ -50,9 +50,7 @@ NextFlex::NextFlex():
   sc_yield_          (25510. * 1 / MeV),
   e_lifetime_        (1000. * ms),
   ics_thickness_     (12. * cm),
-  adhoc_x_           (0.),              // Vertex-X in case of AD_HOC region
-  adhoc_y_           (0.),              // Vertex-Y in case of AD_HOC region
-  adhoc_z_           (0.)               // Vertex-Z in case of AD_HOC region
+  specific_vertex_{}
 {
 
   // Messenger
@@ -124,23 +122,8 @@ void NextFlex::DefineConfigurationParameters()
   e_lifetime_cmd.SetRange("e_lifetime>0.");
 
   // Specific vertex in case region to shoot from is AD_HOC
-  G4GenericMessenger::Command& adhoc_x_cmd =
-    msg_->DeclareProperty("specific_vertex_X", adhoc_x_,
-      "If region is AD_HOC, x coord where particles are generated");
-  adhoc_x_cmd.SetParameterName("specific_vertex_X", false);
-  adhoc_x_cmd.SetUnitCategory("Length");
-
-  G4GenericMessenger::Command& adhoc_y_cmd =
-    msg_->DeclareProperty("specific_vertex_Y", adhoc_y_,
-      "If region is AD_HOC, y coord where particles are generated");
-  adhoc_y_cmd.SetParameterName("specific_vertex_Y", false);
-  adhoc_y_cmd.SetUnitCategory("Length");
-
-  G4GenericMessenger::Command& adhoc_z_cmd =
-    msg_->DeclareProperty("specific_vertex_Z", adhoc_z_,
-      "If region is AD_HOC, z coord where particles are generated");
-  adhoc_z_cmd.SetParameterName("specific_vertex_Z", false);
-  adhoc_z_cmd.SetUnitCategory("Length");
+  msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
+      "Set generation vertex.");
 
   // ICS
   G4GenericMessenger::Command& ics_thickness_cmd =
@@ -309,7 +292,7 @@ G4ThreeVector NextFlex::GenerateVertex(const G4String& region) const
   G4ThreeVector vertex;
 
   if (region == "AD_HOC") {
-    vertex = G4ThreeVector(adhoc_x_, adhoc_y_, adhoc_z_);
+    vertex = specific_vertex_;
   }
 
   // ICS region

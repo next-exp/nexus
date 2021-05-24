@@ -55,10 +55,7 @@ namespace nexus {
 
     const GeometryBase* geom_; ///< Pointer to the detector geometry
 
-    G4double momentum_X_;
-    G4double momentum_Y_;
-    G4double momentum_Z_;
-
+    G4ThreeVector momentum_;
   };
 
 } // end namespace nexus

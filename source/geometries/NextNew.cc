@@ -67,7 +67,8 @@ namespace nexus {
     disk_source_(false),
     source_mat_(""),
     source_dist_from_anode_(15.*cm),
-    pedestal_pos_(-568.*mm)
+    pedestal_pos_(-568.*mm),
+    specific_vertex_{}
     //   ext_source_distance_(0.*mm)
     // Buffer gas dimensions
   {
@@ -118,6 +119,9 @@ namespace nexus {
     source_dist_cmd.SetUnitCategory("Length");
     source_dist_cmd.SetParameterName("distance_from_anode", false);
     source_dist_cmd.SetRange("distance_from_anode>=0.");
+
+    msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
+      "Set generation vertex.");
 
     cal_ = new CalibrationSource();
 
@@ -546,7 +550,6 @@ namespace nexus {
              (region == "BUFFER") ||
              (region == "EL_GAP") ||
              (region == "EL_TABLE") ||
-             (region == "AD_HOC") ||
              (region == "CATHODE")||
              (region == "TRACKING_FRAMES") ||
              (region == "SUPPORT_PLATE") ||
@@ -554,15 +557,17 @@ namespace nexus {
              (region == "DB_PLUG")) {
       vertex = inner_elements_->GenerateVertex(region);
     }
+    // AD_HOC is not rotated and shifted because it is passed by the user
+    else if (region == "AD_HOC") {
+      return specific_vertex_;
+    }
     else {
       G4Exception("[NextNew]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");
     }
 
-    // AD_HOC is not rotated and shifted because it is passed by the user
     // The LSC HallA vertices are already corrected so no need.
-    if ((region == "AD_HOC") ||
-        (region == "HALLA_OUTER") ||
+    if ((region == "HALLA_OUTER") ||
         (region == "HALLA_INNER"))
       return vertex;
 

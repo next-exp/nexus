@@ -124,10 +124,6 @@ namespace nexus {
     CylinderPointSampler* cathode_gen_;
     CylinderPointSampler* tracking_frames_gen_;
 
-    G4double specific_vertex_X_;
-    G4double specific_vertex_Y_;
-    G4double specific_vertex_Z_;
-
     // Messenger for the definition of control commands
     G4GenericMessenger* msg_;
 

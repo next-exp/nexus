@@ -114,6 +114,8 @@ namespace nexus {
     G4ThreeVector extra_pos_; ///< position of the external elements outside the vessel, behind the tracking plane
 
     G4double pedestal_pos_;
+
+    G4ThreeVector specific_vertex_;
   };
 
 } // end namespace nexus

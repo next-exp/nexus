@@ -32,7 +32,7 @@ namespace nexus {
 
   private:
     const G4double lab_size_;
-    G4double specific_vertex_X_, specific_vertex_Y_, specific_vertex_Z_;
+    G4ThreeVector specific_vertex_;
     NextDemoVessel* vessel_geom_;
     NextDemoInnerElements* inner_geom_;
     G4GenericMessenger* msg_;
