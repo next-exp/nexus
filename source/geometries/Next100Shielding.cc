@@ -51,9 +51,12 @@ namespace nexus {
     visibility_ (0)
 
   {
-    /// Shielding is compound by two boxes, the external made of lead,
-    /// and the internal, made of a mix of Steel & Titanium
-    /// The Steel beam structure is placed inside the lead
+    
+    // The shielding is made of two boxes.
+    // The external one is made of lead and the internal one is made of a mix of stainless steel AISI-316Ti.
+    // Besides, inside the lead we have the castle steel beams (steel S-275) that support the lead.
+    // This steel beam structure is composed by tree regions: the lateral beams, the roof, and the
+    // beam structure above the roof.
 
     /// Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/Next100/", "Control commands of geometry Next100.");
