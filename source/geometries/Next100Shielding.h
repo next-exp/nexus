@@ -52,8 +52,8 @@ namespace nexus {
     G4double beam_base_thickness_, lateral_z_separation_, roof_z_separation_ , front_x_separation_;
     G4double lead_thickness_, steel_thickness_;
 
-    // Visibility of the shielding
     G4bool visibility_;
+    G4bool verbosity_;
 
     // Vertex generators
     BoxPointSampler* lead_gen_;

@@ -48,19 +48,21 @@ namespace nexus {
     // Box thickness
     lead_thickness_ (20. * cm),
     steel_thickness_(2.0 * mm),
-    visibility_ (0)
+    visibility_ (0),
+    verbosity_(false)
 
   {
-    
+
     // The shielding is made of two boxes.
     // The external one is made of lead and the internal one is made of a mix of stainless steel AISI-316Ti.
     // Besides, inside the lead we have the castle steel beams (steel S-275) that support the lead.
     // This steel beam structure is composed by tree regions: the lateral beams, the roof, and the
     // beam structure above the roof.
 
-    /// Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/Next100/", "Control commands of geometry Next100.");
+
     msg_->DeclareProperty("shielding_vis", visibility_, "Shielding Visibility");
+    msg_->DeclareProperty("shielding_verbosity", verbosity_, "Verbosity");
 
     // Initializing the geometry navigator (used in vertex generation)
     geom_navigator_ = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
@@ -258,15 +260,11 @@ namespace nexus {
                                           G4ThreeVector(-front_x_separation_/2., -lead_thickness_/2., front_beam_z), 0);
 
 
-    // Calculating some probs
-    G4double roof_vol = roof_beam_solid->GetCubicVolume();
-    //std::cout<<"ROOF BEAM VOLUME "<<roof_vol<<std::endl;
-    G4double struct_top_vol = struct_solid->GetCubicVolume();
-    //std::cout<<"TOP STRUCT VOLUME "<<struct_top_vol<<std::endl;
-    G4double lateral_vol = lat_beam_solid->GetCubicVolume();
-    //std::cout<<"LAT BEAM STRUCT VOLUME "<<lateral_vol<<"\t TOTAL LATERAL BEAMS VOL "<<8*lateral_vol<<std::endl;
-    G4double total_vol = roof_vol + struct_top_vol + (8*lateral_vol);
-    //std::cout<<"TOTAL STRUCTURE VOLUME "<<total_vol<<std::endl;
+    // Compute relative volumes
+    G4double roof_vol       = roof_beam_solid->GetCubicVolume();
+    G4double struct_top_vol = struct_solid   ->GetCubicVolume();
+    G4double lateral_vol    = lat_beam_solid ->GetCubicVolume();
+    G4double total_vol      = roof_vol + struct_top_vol + (8*lateral_vol);
 
     perc_roof_vol_       = roof_vol/total_vol;
     perc_front_roof_vol_ = 2*(lead_x_*beam_base_thickness_*lead_thickness_)/roof_vol;
@@ -275,10 +273,21 @@ namespace nexus {
     G4double lat_beam_x_vol = (shield_x_ + 2.*lead_thickness_ + 2.*steel_thickness_)*(lead_thickness_ - beam_base_thickness_)*beam_base_thickness_;
     perc_struc_x_vol_    = 4*lat_beam_x_vol/struct_top_vol;
 
-    // std::cout<<"SHIELDING LEAD VOLUME:\t"<<lead_box_solid->GetCubicVolume()<<std::endl;
-    // std::cout<<"SHIELDING STEEL VOLUME:\t"<<steel_box_solid->GetCubicVolume()<<std::endl;
-    // std::cout<<"VOLUME INSIDE THE SHIELDING CASTLE:\t"<<shielding_box_solid->GetCubicVolume()<<std::endl;
+    if (verbosity_){
+      std::cout<<"STEEL STRUCTURE VOLUME (m3)" <<std::endl;
+      std::cout<<"ROOF BEAM     "<< roof_vol      /1.e9 <<std::endl;
+      std::cout<<"TOP STRUCT    "<< struct_top_vol/1.e9 <<std::endl;
+      std::cout<<"LATERAL BEAMS "<< 8*lateral_vol /1.e9 <<std::endl;
+      std::cout<<"TOTAL         "<< total_vol     /1.e9 <<std::endl;
 
+      G4double inner_vol = air_box_solid  ->GetCubicVolume();
+      G4double steel_vol = steel_box_solid->GetCubicVolume() - inner_vol;
+      G4double lead_vol  = lead_box_solid ->GetCubicVolume() - steel_vol;
+
+      std::cout<<"INNER AIR VOLUME   (m3) "<< inner_vol/1.e9 <<std::endl;
+      std::cout<<"INNER STEEL VOLUME (m3) "<< steel_vol/1.e9 <<std::endl;
+      std::cout<<"LEAD VOLUME        (m3) "<< lead_vol /1.e9 <<std::endl;
+    }
   }
 
 
