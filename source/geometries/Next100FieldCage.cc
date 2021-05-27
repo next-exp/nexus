@@ -207,7 +207,7 @@ void Next100FieldCage::Construct()
   BuildCathodeGrid();
   BuildBuffer();
   BuildELRegion();
-  BuildFieldCage();
+  BuildLightTube();
 
   /// Calculate EL table vertices
   G4double z = el_gap_zpos_ + el_gap_length_/2.;
@@ -487,7 +487,7 @@ void Next100FieldCage::BuildELRegion()
 }
 
 
-void Next100FieldCage::BuildFieldCage()
+void Next100FieldCage::BuildLightTube()
 {
   /// DRIFT PART ///
   G4double teflon_drift_length = gate_cathode_centre_dist_ - gate_teflon_dist_ - cathode_gap_/2.;
