@@ -189,7 +189,7 @@ namespace nexus {
 
   void NextDemoFieldCage::Construct()
   {
-    
+
     /// Calculate derived lengths of specific volumes
     active_length_      = gate_cathode_centre_dist_ - grid_thickn_/2.;
     light_tube_drift_length_ = light_tube_drift_end_z_ - light_tube_drift_start_z_;
@@ -362,9 +362,7 @@ namespace nexus {
     if (config_ == "run5") {
       el_gap_length = el_gap_length_plate_;
     }
-    else if ((config_ == "run7") ||
-             (config_ == "run8") ||
-             (config_ == "run9")) {
+    else {
       el_gap_length = el_gap_length_mesh_;
     }
 
@@ -463,7 +461,7 @@ namespace nexus {
     }
 
     // Building the ANODE grid corresponding to "run7" and "run8" configuration
-    else if ((config_ == "run7") || (config_ == "run8")) {
+    else {
       G4Material* anode_mat = MaterialsList::FakeDielectric(gas_, "anode_mat");
       anode_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_,
                                                                                temperature_,
