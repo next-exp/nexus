@@ -54,11 +54,14 @@ Next100FieldCage::Next100FieldCage():
   tpb_thickn_ (1 * micrometer),
   el_gap_diam_ (1009. * mm), // internal diameter of EL meshes
   el_gap_length_ (1. * cm),
+  hdpe_tube_int_diam_ (1080. * mm),
+  hdpe_tube_ext_diam_ (1105.4 * mm),
+  hdpe_length_ (1192. * mm), //check this value
   ring_ext_diam_ (1038. * mm),
   ring_int_diam_ (1014. * mm),
   ring_thickn_  (10. * mm),
   drift_ring_dist_  (24. * mm),
-  buffer_ring_dist_  (48. *mm),
+  buffer_ring_dist_  (48. * mm),
   // Diffusion constants
   drift_transv_diff_ (1. * mm/sqrt(cm)),
   drift_long_diff_ (.3 * mm/sqrt(cm)),
@@ -620,9 +623,24 @@ void Next100FieldCage::BuildLightTube()
 
 void Next100FieldCage::BuildFieldCage()//////////////////////////////////////////
 {
+  // HDPE cilinder.
+  G4double hdpe_tube_z_pos = -hdpe_length_/2. + teflon_total_length_ + gate_teflon_dist_ + GetELzCoord();
+
+  G4Material* hdpe_tube_mat = MaterialsList::HDPE();
+
+  G4Tubs* hdpe_tube_solid =
+    new G4Tubs("HDPE_TUBE", hdpe_tube_int_diam_/2.,
+               hdpe_tube_ext_diam_/2., hdpe_length_/2., 0, twopi);
+
+  G4LogicalVolume* hdpe_tube_logic = new G4LogicalVolume(hdpe_tube_solid,
+                                                         hdpe_tube_mat, "HDPE_TUBE");
+
+  new G4PVPlacement(0, G4ThreeVector(0., 0., hdpe_tube_z_pos), hdpe_tube_logic,
+                                     "HDPE_TUBE", mother_logic_, false, 0, true);
+
   G4double first_ring_drif_z_pos = ring_thickn_/2. + drift_ring_dist_ - ring_thickn_ + gate_teflon_dist_ + GetELzCoord();
   G4double first_ring_buff_z_pos = 1224.25 *mm + gate_teflon_dist_ + GetELzCoord();
-  //G4double teflon_drift_zpos = GetELzCoord() + gate_teflon_dist_ + teflon_drift_length/2.;
+
   G4Material* ring_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
 
   G4Tubs* ring_solid =
@@ -653,8 +671,11 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
   if (visibility_) {
     G4VisAttributes ring_col = nexus::CopperBrown();
     ring_logic->SetVisAttributes(ring_col);
+    G4VisAttributes hdpe_col = nexus::White();
+    hdpe_tube_logic->SetVisAttributes(hdpe_col);
   } else {
     ring_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    hdpe_tube_logic->SetVisAttributes(G4VisAttributes::Invisible);
   }
 }
 

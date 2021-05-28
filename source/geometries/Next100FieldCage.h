@@ -56,6 +56,7 @@ namespace nexus {
     const G4double gate_teflon_dist_;
     const G4int n_panels_;
     const G4double tpb_thickn_, el_gap_diam_, el_gap_length_;
+    const G4double hdpe_tube_int_diam_, hdpe_tube_ext_diam_, hdpe_length_;
     const G4double ring_ext_diam_, ring_int_diam_, ring_thickn_;
     const  G4double drift_ring_dist_, buffer_ring_dist_;
     // Diffusion constants
