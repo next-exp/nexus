@@ -54,6 +54,11 @@ Next100FieldCage::Next100FieldCage():
   tpb_thickn_ (1 * micrometer),
   el_gap_diam_ (1009. * mm), // internal diameter of EL meshes
   el_gap_length_ (1. * cm),
+  ring_ext_diam_ (1038. * mm),
+  ring_int_diam_ (1014. * mm),
+  ring_thickn_  (10. * mm),
+  drift_ring_dist_  (24. * mm),
+  buffer_ring_dist_  (48. *mm),
   // Diffusion constants
   drift_transv_diff_ (1. * mm/sqrt(cm)),
   drift_long_diff_ (.3 * mm/sqrt(cm)),
@@ -208,6 +213,7 @@ void Next100FieldCage::Construct()
   BuildBuffer();
   BuildELRegion();
   BuildLightTube();
+  BuildFieldCage();
 
   /// Calculate EL table vertices
   G4double z = el_gap_zpos_ + el_gap_length_/2.;
@@ -609,6 +615,46 @@ void Next100FieldCage::BuildLightTube()
     teflon_buffer_logic->SetVisAttributes(G4VisAttributes::Invisible);
     tpb_drift_logic->SetVisAttributes(G4VisAttributes::Invisible);
     tpb_buffer_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  }
+}
+
+void Next100FieldCage::BuildFieldCage()//////////////////////////////////////////
+{
+  G4double first_ring_drif_z_pos = ring_thickn_/2. + drift_ring_dist_ - ring_thickn_ + gate_teflon_dist_ + GetELzCoord();
+  G4double first_ring_buff_z_pos = 1224.25 *mm + gate_teflon_dist_ + GetELzCoord();
+  //G4double teflon_drift_zpos = GetELzCoord() + gate_teflon_dist_ + teflon_drift_length/2.;
+  G4Material* ring_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
+
+  G4Tubs* ring_solid =
+  new G4Tubs("RING", ring_int_diam_/2., ring_ext_diam_/2., ring_thickn_/2., 0, twopi);
+
+  G4LogicalVolume* ring_logic =
+  new G4LogicalVolume(ring_solid, ring_mat, "RING");
+
+  G4int num_drift_rings = 48;
+  G4int num_buffer_rings = 4;
+  G4double posz;
+
+  //Placement of the drift rings.
+  for (G4int i=0; i<num_drift_rings; i++) {
+    posz = first_ring_drif_z_pos + i*drift_ring_dist_;
+    new G4PVPlacement(0, G4ThreeVector(0., 0., posz), ring_logic,
+                      "RING", mother_logic_, false, i, true);
+  }
+
+  //Placement of the buffer rings.
+  for (G4int i=0; i<num_buffer_rings; i++) {
+    posz = first_ring_buff_z_pos + i*buffer_ring_dist_;
+    new G4PVPlacement(0, G4ThreeVector(0., 0., posz), ring_logic,
+                      "RING", mother_logic_, false, i, true);
+  }
+
+  /// Visibilities
+  if (visibility_) {
+    G4VisAttributes ring_col = nexus::CopperBrown();
+    ring_logic->SetVisAttributes(ring_col);
+  } else {
+    ring_logic->SetVisAttributes(G4VisAttributes::Invisible);
   }
 }
 
