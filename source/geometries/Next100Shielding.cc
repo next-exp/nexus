@@ -33,23 +33,23 @@ namespace nexus {
   using namespace CLHEP;
 
   Next100Shielding::Next100Shielding():
-    GeometryBase(),
+    GeometryBase{},
 
     // Shielding internal dimensions
-    shield_x_ (158.  * cm),
-    shield_y_ (166.6 * cm),
-    shield_z_ (259.4 * cm),
+    shield_x_ {158.  * cm},
+    shield_y_ {166.6 * cm},
+    shield_z_ {259.4 * cm},
 
     //Steel Structure
-    beam_thickness_      (4.   * mm),
-    lateral_z_separation_(1010.* mm), //distance between the two lateral beams
-    roof_z_separation_   (760. * mm), //distance between x beams
-    front_x_separation_  (156. * mm), //distance between the two front beams
+    beam_thickness_      {4.   * mm},
+    lateral_z_separation_{1010.* mm}, //distance between the two lateral beams
+    roof_z_separation_   {760. * mm}, //distance between x beams
+    front_x_separation_  {156. * mm}, //distance between the two front beams
     // Box thickness
-    lead_thickness_ (20. * cm),
-    steel_thickness_(2.0 * mm),
-    visibility_ (0),
-    verbosity_(false)
+    lead_thickness_ {20. * cm},
+    steel_thickness_{2.0 * mm},
+    visibility_ {0},
+    verbosity_{false}
 
   {
     // The shielding is made of two boxes.
