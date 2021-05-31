@@ -37,7 +37,7 @@ namespace nexus {
 
     // Shielding internal dimensions
     shield_x_ (158.  * cm),
-    shield_y_ (166.  * cm),
+    shield_y_ (166.6 * cm),
     shield_z_ (259.4 * cm),
 
     //Steel Structure
