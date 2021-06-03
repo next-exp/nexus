@@ -99,6 +99,18 @@ namespace nexus {
                             "Hole Diameter");
     hole_diameter_cmd.SetParameterName("hole_diameter", true);
     hole_diameter_cmd.SetUnitCategory("Length");
+
+    G4GenericMessenger::Command&  hole_x_cmd =
+      msg_->DeclareProperty("hole_x", hole_x_,
+                            "Hole X");
+    hole_x_cmd.SetParameterName("hole_x", true);
+    hole_x_cmd.SetUnitCategory("Length");
+
+    G4GenericMessenger::Command&  hole_y_cmd =
+      msg_->DeclareProperty("hole_y", hole_y_,
+                            "Hole Y");
+    hole_y_cmd.SetParameterName("hole_y", true);
+    hole_y_cmd.SetUnitCategory("Length");
   }
 
   BlackBoxDEMO::~BlackBoxDEMO()
@@ -154,6 +166,8 @@ namespace nexus {
   dice_->SetMembraneThickness(membrane_thickn_);
   dice_->SetCoatingThickness (coating_thickn_);
   dice_->SetHoleDiameter     (hole_diameter_);
+  dice_->SetHoleX            (hole_x_);
+  dice_->SetHoleY            (hole_y_);
   dice_->Construct();
   G4LogicalVolume* dice_board_logic = dice_->GetLogicalVolume();
 

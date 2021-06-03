@@ -60,6 +60,8 @@ namespace nexus {
     G4double membrane_thickn_;
     G4double coating_thickn_;
     G4double hole_diameter_;
+    G4double hole_x_;
+    G4double hole_y_;
     G4VPhysicalVolume*  mother_phys_;
 
   };

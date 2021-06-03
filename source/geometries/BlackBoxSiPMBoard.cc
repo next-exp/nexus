@@ -46,6 +46,8 @@ BlackBoxSiPMBoard::BlackBoxSiPMBoard():
   membrane_thickn_ (),
   coating_thickn_  (),
   hole_diam_       (),
+  hole_x_          (),
+  hole_y_          (),
   mother_phys_     (nullptr),
   kapton_gen_      (nullptr)
 {
@@ -99,7 +101,7 @@ void BlackBoxSiPMBoard::Construct()
 
   // Masks require holes
   if (mask_thickn_ > 0.)
-    if (hole_diam_ == 0.)
+    if (hole_diam_ == 0. && hole_x_ ==0.)
       G4Exception("[BlackBoxSiPMBoard]", "Construct()", FatalException,
       "Masks require holes");
 
@@ -177,7 +179,14 @@ void BlackBoxSiPMBoard::Construct()
 
     /// Define mask holes.
 
-    G4Tubs* hole_solid = new G4Tubs("HOLE", 0., hole_diam_/2., mask_thickn_, 0., 360.*deg);
+    G4VSolid* hole_solid = nullptr;
+
+    if (hole_diam_!=0.){
+      hole_solid = new G4Tubs("HOLE", 0., hole_diam_/2., mask_thickn_/2., 0., 360.*deg);}
+
+    else {
+      hole_solid = new G4Box("HOLE", hole_x_/2., hole_y_/2., mask_thickn_/2.);}
+
 
     /// Create mask with holes.
     //G4SubtractionSolid* mask_with_holes1;
