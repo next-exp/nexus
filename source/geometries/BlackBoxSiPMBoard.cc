@@ -51,8 +51,8 @@ BlackBoxSiPMBoard::BlackBoxSiPMBoard():
   mother_phys_     (nullptr),
   kapton_gen_      (nullptr)
 {
-  msg_ = new G4GenericMessenger(this, "/Geometry/BlackBoxDEMO/",
-                                "Control commands of the BlackBoxDEMO geometry.");
+  msg_ = new G4GenericMessenger(this, "/Geometry/BlackBox/",
+                                "Control commands of the BlackBox geometry.");
 
   msg_->DeclareProperty("sipm_board_verbosity", verbosity_,
                         "BlackBoxSiPMBoard verbosity");
