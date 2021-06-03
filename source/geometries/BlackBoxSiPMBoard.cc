@@ -32,7 +32,7 @@ using namespace nexus;
 
 
 BlackBoxSiPMBoard::BlackBoxSiPMBoard():
-  BaseGeometry     (),
+  GeometryBase     (),
   verbosity_       (true),
   sipm_verbosity_  (true),
   visibility_      (true),
@@ -127,7 +127,7 @@ void BlackBoxSiPMBoard::Construct()
   G4LogicalVolume* board_logic =
     new G4LogicalVolume(board_solid, mother_gas, board_name);
 
-  BaseGeometry::SetLogicalVolume(board_logic);
+  GeometryBase::SetLogicalVolume(board_logic);
 
 
   /// Kapton

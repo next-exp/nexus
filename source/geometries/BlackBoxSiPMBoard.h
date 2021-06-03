@@ -7,7 +7,7 @@
 #ifndef BLACKBOX_SIPM_BOARD_H
 #define BLACKBOX_SIPM_BOARD_H
 
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include <G4ThreeVector.hh>
 #include <vector>
 
@@ -19,7 +19,7 @@ namespace nexus {
   class BoxPointSampler;
   class SiPMSensl;
 
-  class BlackBoxSiPMBoard: public BaseGeometry
+  class BlackBoxSiPMBoard: public GeometryBase
   {
   public:
     BlackBoxSiPMBoard();
