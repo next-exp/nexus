@@ -40,7 +40,7 @@ namespace nexus {
   private:
     void DefineMaterials();
     void BuildActive();
-    void BuildCathodeGrid();
+    void BuildCathode();
     void BuildBuffer();
     void BuildELRegion();
     void BuildLightTube();
@@ -51,6 +51,7 @@ namespace nexus {
     // Dimensions
     const G4double active_diam_;
     const G4double gate_cathode_centre_dist_, gate_sapphire_wdw_dist_;
+    const G4double cathode_int_diam_, cathode_ext_diam_, cathode_thickn_;
     const G4double cathode_diam_, grid_thickn_, cathode_gap_;
     const G4double teflon_total_length_, teflon_thickn_;
     const G4double gate_teflon_dist_;
@@ -84,7 +85,7 @@ namespace nexus {
     G4bool verbosity_;
 
     G4double active_length_, active_zpos_, buffer_length_;
-    G4double el_gap_zpos_, cathode_grid_zpos_;
+    G4double el_gap_zpos_, cathode_zpos_;
 
 
     // Vertex generators
