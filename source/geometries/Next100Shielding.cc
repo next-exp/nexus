@@ -202,6 +202,57 @@ namespace nexus {
                       air_box_logic_, "INNER_AIR", steel_box_logic, false, 0);
 
 
+    // PEDESTAL BEAMS
+
+    // T shape beams that support the vessel
+
+    // change beam_thickness by real thicknesses
+    G4double pedestal_support_bottom_thickness = beam_thickness_; // 10. mm
+    G4double pedestal_support_top_thickness = beam_thickness_;    // 15. mm
+
+    G4Box* pedestal_support_beam_bottom = new G4Box("PEDESTAL_SUPPORT_BEAM_BOTTOM",
+                                                    shield_x_/2.,
+                                                    lead_thickness_/2.,
+                                                    pedestal_support_bottom_thickness/2.);
+
+    G4Box* pedestal_support_beam_top = new G4Box("PEDESTAL_SUPPORT_BEAM_TOP",
+                                                 shield_x_/2.,
+                                                 pedestal_support_top_thickness/2.,
+                                                 (150. * mm)/2.);
+
+    G4Box* pedestal_support_beam_lat = new G4Box("PEDESTAL_SUPPORT_BEAM_LAT",
+                                                 shield_x_/2.,
+                                                 lead_thickness_/2.,
+                                                 pedestal_support_bottom_thickness);
+
+    G4LogicalVolume* pedestal_support_beam_bottom_logic = new G4LogicalVolume(pedestal_support_beam_bottom,
+                                                                              MaterialsList::Steel(), "PEDESTAL_SUPPORT_BOTTOM"); // steel inox
+
+    G4LogicalVolume* pedestal_support_beam_top_logic = new G4LogicalVolume(pedestal_support_beam_top,
+                                                                           MaterialsList::Steel(), "PEDESTAL_SUPPORT_TOP"); // steel inox
+
+    G4LogicalVolume* pedestal_support_beam_lat_logic = new G4LogicalVolume(pedestal_support_beam_lat,
+                                                                           MaterialsList::Steel(), "PEDESTAL_SUPPORT_LAT"); // steel inox
+
+    G4double pedestal_y_pos = -lead_y_/2. + lead_thickness_/2.;
+    new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos, (1027. * mm)/2.),
+                      pedestal_support_beam_bottom_logic, "PEDESTAL_SUPPORT_BEAM_BOTTOM_1", lead_box_logic, false, 0);
+
+    new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos, (-1027. * mm)/2.),
+                      pedestal_support_beam_bottom_logic, "PEDESTAL_SUPPORT_BEAM_BOTTOM_2", lead_box_logic, false, 0);
+
+    new G4PVPlacement(0, G4ThreeVector(0., -(shield_y_/2. + steel_thickness_/2.) + pedestal_support_top_thickness/2., (1027. * mm)/2.),
+                      pedestal_support_beam_top_logic, "PEDESTAL_SUPPORT_BEAM_TOP_1", air_box_logic_, false, 0);
+
+    new G4PVPlacement(0, G4ThreeVector(0., -(shield_y_/2. + steel_thickness_/2.) + pedestal_support_top_thickness/2., -(1027. * mm)/2.),
+                      pedestal_support_beam_top_logic, "PEDESTAL_SUPPORT_BEAM_TOP_2", air_box_logic_, false, 0);
+
+    new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos, (1027. * mm)/2. + 732 * mm),
+                      pedestal_support_beam_lat_logic, "PEDESTAL_SUPPORT_BEAM_LAT_1", lead_box_logic, false, 0);
+
+    new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos, (-1027. * mm)/2. - 732 * mm),
+                      pedestal_support_beam_lat_logic, "PEDESTAL_SUPPORT_BEAM_LAT_2", lead_box_logic, false, 0);
+
     // SETTING VISIBILITIES   //////////
     if (visibility_) {
       G4VisAttributes dark_grey_col = nexus::DarkGrey();
