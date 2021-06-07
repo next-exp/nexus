@@ -41,13 +41,13 @@ namespace nexus {
     shield_z_ {259.4 * cm},
 
     //Steel Structure
-    beam_thickness_      {5.   * cm}, // 4 and 6 mm
+    beam_thickness_      {4.   * mm},
     lateral_z_separation_{1010.* mm}, //distance between the two lateral beams
     roof_z_separation_   {760. * mm}, //distance between x beams
     front_x_separation_  {156. * mm}, //distance between the two front beams
     // Box thickness
-    lead_thickness_ {20. * cm}, // 2 * mm
-    steel_thickness_{10.0 * cm},
+    lead_thickness_ {20.* cm},
+    steel_thickness_{2. * mm},
     visibility_ {0},
     verbosity_{false}
 
@@ -203,12 +203,10 @@ namespace nexus {
 
 
     // PEDESTAL BEAMS
-
     // T shape beams that support the vessel
-
     // change beam_thickness by real thicknesses
-    G4double pedestal_support_bottom_thickness = beam_thickness_; // 10. mm
-    G4double pedestal_support_top_thickness = beam_thickness_;    // 15. mm
+    G4double pedestal_support_bottom_thickness = 10. * mm;
+    G4double pedestal_support_top_thickness = 15. * mm;
 
     G4Box* pedestal_support_beam_bottom = new G4Box("PEDESTAL_SUPPORT_BEAM_BOTTOM",
                                                     shield_x_/2.,
