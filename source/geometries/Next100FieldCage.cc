@@ -26,6 +26,7 @@
 #include <G4VPhysicalVolume.hh>
 #include <G4Tubs.hh>
 #include <G4Polyhedra.hh>
+#include <G4SubtractionSolid.hh>
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
 #include <G4LogicalBorderSurface.hh>
@@ -47,7 +48,7 @@ Next100FieldCage::Next100FieldCage():
   cathode_int_diam_ (960. * mm),
   cathode_ext_diam_ (1020. * mm),
   cathode_thickn_ (10. * mm),
-  cathode_diam_ (980. * mm), // internal diameter of cathode mesh
+  cathode_diam_ (980. * mm), // internal diameter of cathode mesh //////////
   grid_thickn_ (.1 * mm),
   cathode_gap_ (27. * mm),
   teflon_total_length_ (1431. * mm),
@@ -264,10 +265,18 @@ void Next100FieldCage::BuildActive()
   G4double router[2] = {active_diam_/2., active_diam_/2.};
 
   G4Polyhedra* active_solid =
-  new G4Polyhedra("ACTIVE", 0., twopi, n_panels_, 2, zplane, rinner, router);
+  new G4Polyhedra("ACTIVE_POLY", 0., twopi, n_panels_, 2, zplane, rinner, router);
 
+  G4Tubs* cathode_solid =
+  new G4Tubs("CATHODE_RING", cathode_int_diam_/2., cathode_ext_diam_/2., cathode_thickn_/2., 0, twopi);
+
+  G4ThreeVector cathode_pos = G4ThreeVector(0., 0., active_length_/2.+grid_thickn_/2.);
+
+  G4SubtractionSolid* subs_active =
+                      new G4SubtractionSolid("ACTIVE", active_solid,
+                                             cathode_solid, 0, cathode_pos);
   G4LogicalVolume* active_logic =
-  new G4LogicalVolume(active_solid, gas_, "ACTIVE");
+  new G4LogicalVolume(subs_active, gas_, "ACTIVE");
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., active_zpos_), active_logic,
   "ACTIVE", mother_logic_, false, 0, true);
@@ -302,11 +311,10 @@ void Next100FieldCage::BuildActive()
 
 
   /// Visibilities
+  //G4VisAttributes active_col = nexus::Yellow();
+  //active_col.SetForceSolid(true);
+  //active_logic->SetVisAttributes(active_col);
   active_logic->SetVisAttributes(G4VisAttributes::Invisible);
-
-  // G4VisAttributes active_col = nexus::Red();
-  // active_col.SetForceSolid(true);
-  // active_logic->SetVisAttributes(active_col);
 
   /// Verbosity
   if (verbosity_) {
@@ -320,13 +328,13 @@ void Next100FieldCage::BuildActive()
 void Next100FieldCage::BuildCathode()
 {
   G4Tubs* cathode_solid =
-  new G4Tubs("RING", cathode_int_diam_/2., cathode_ext_diam_/2., cathode_thickn_/2., 0, twopi);
+  new G4Tubs("CATHODE_RING", cathode_int_diam_/2., cathode_ext_diam_/2., cathode_thickn_/2., 0, twopi);
 
   G4LogicalVolume* cathode_logic =
-  new G4LogicalVolume(cathode_solid, copper_, "CATHODE RING");
+  new G4LogicalVolume(cathode_solid, copper_, "CATHODE_RING");
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., cathode_zpos_),
-  cathode_logic, "RING", mother_logic_,
+  cathode_logic, "CATHODE_RING", mother_logic_,
   false, 0, true);
 
   G4Material* fgrid_mat = materials::FakeDielectric(gas_, "cath_grid_mat");
@@ -346,9 +354,12 @@ void Next100FieldCage::BuildCathode()
   /// Visibilities
   if (visibility_) {
     G4VisAttributes grey = nexus::LightGrey();
+    G4VisAttributes copper_col = nexus::CopperBrown();
     diel_grid_logic->SetVisAttributes(grey);
+    cathode_logic->SetVisAttributes(copper_col);
   } else {
     diel_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    cathode_logic->SetVisAttributes(G4VisAttributes::Invisible);
   }
 
 
@@ -373,10 +384,19 @@ void Next100FieldCage::BuildBuffer()
   G4double router[2] = {active_diam_/2., active_diam_/2.};
 
   G4Polyhedra* buffer_solid =
-  new G4Polyhedra("BUFFER", 0., twopi, n_panels_, 2, zplane, rinner, router);
+  new G4Polyhedra("BUFFER_POLY", 0., twopi, n_panels_, 2, zplane, rinner, router);
+
+  G4Tubs* cathode_solid =
+  new G4Tubs("CATHODE_RING", cathode_int_diam_/2., cathode_ext_diam_/2., cathode_thickn_/2., 0, twopi);
+
+  G4ThreeVector cathode_pos = G4ThreeVector(0., 0., -buffer_length_/2.-grid_thickn_/2.);
+
+  G4SubtractionSolid* subs_buffer =
+                      new G4SubtractionSolid("BUFFER", buffer_solid,
+                                             cathode_solid, 0, cathode_pos);
 
   G4LogicalVolume* buffer_logic =
-  new G4LogicalVolume(buffer_solid, gas_, "BUFFER");
+  new G4LogicalVolume(subs_buffer, gas_, "BUFFER");
   new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_zpos), buffer_logic,
   "BUFFER", mother_logic_, false, 0, true);
 
@@ -408,9 +428,9 @@ void Next100FieldCage::BuildBuffer()
   /// Visibilities
   buffer_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
-  // G4VisAttributes active_col = nexus::Yellow();
-  // active_col.SetForceSolid(true);
-  // buffer_logic->SetVisAttributes(active_col);
+  //G4VisAttributes active_col = nexus::Yellow();
+  //active_col.SetForceSolid(true);
+  //buffer_logic->SetVisAttributes(active_col);
 
   /// Verbosity
   if (verbosity_) {
