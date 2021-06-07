@@ -11,15 +11,16 @@
 #/Generator/SingleParticle/momentum_X 0.
 #/Generator/SingleParticle/momentum_Y 0.
 #/Generator/SingleParticle/momentum_Z -1.
-/Generator/SingleParticle/min_costheta -1.
-/Generator/SingleParticle/max_costheta -0.9935
+/Generator/SingleParticle/momentum 0 0 -1
+#/Generator/SingleParticle/min_costheta -1.
+#/Generator/SingleParticle/max_costheta -0.9935
 
-/Geometry/BlackBox/specific_vertex_X 0. mm
-/Geometry/BlackBox/specific_vertex_Y 0. mm
+/Geometry/BlackBox/specific_vertex_X 25. mm
+/Geometry/BlackBox/specific_vertex_Y -25. mm
 /Geometry/BlackBox/specific_vertex_Z 0. mm
-/Geometry/BlackBox/dice_board_z_pos 0. cm
+/Geometry/BlackBox/dice_board_z_pos 10. cm
 /Geometry/BlackBox/rotation 0 deg
-/Geometry/BlackBox/mask_thickn 3. mm
+/Geometry/BlackBox/mask_thickn 1.5 mm
 /Geometry/BlackBox/membrane_thickn 0. mm
 /Geometry/BlackBox/coating_thickn 0. mm
 /Geometry/BlackBox/coating_thickn 0. mm
@@ -34,4 +35,4 @@
 ### JOB CONTROL
 /nexus/random_seed            -1
 /nexus/persistency/start_id   0
-/nexus/persistency/outputFile bb_75deg_noepoxy.next
+/nexus/persistency/outputFile mask3mmtest.next
