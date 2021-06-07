@@ -41,13 +41,13 @@ namespace nexus {
     shield_z_ {259.4 * cm},
 
     //Steel Structure
-    beam_thickness_      {4.   * mm},
+    beam_thickness_      {5.   * cm}, // 4 and 6 mm
     lateral_z_separation_{1010.* mm}, //distance between the two lateral beams
     roof_z_separation_   {760. * mm}, //distance between x beams
     front_x_separation_  {156. * mm}, //distance between the two front beams
     // Box thickness
-    lead_thickness_ {20. * cm},
-    steel_thickness_{2.0 * mm},
+    lead_thickness_ {20. * cm}, // 2 * mm
+    steel_thickness_{10.0 * cm},
     visibility_ {0},
     verbosity_{false}
 
@@ -187,11 +187,10 @@ namespace nexus {
                       steel_box_logic, "STEEL_BOX", lead_box_logic, false, 0);
 
     // AIR INSIDE
-    G4Box* air_box_solid = new G4Box("INNER_AIR", shield_x_/2., shield_y_/2., shield_z_/2.);
+    G4Box* air_box_solid = new G4Box("INNER_AIR", shield_x_/2., shield_y_/2. + steel_thickness_/2., shield_z_/2.);
 
     air_box_logic_ = new G4LogicalVolume(air_box_solid,
-                                         G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
-                                			   "INNER_AIR");
+                                         G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "INNER_AIR");
 
     ////Limit the uStepMax=Maximum step length, uTrakMax=Maximum total track length,
     //uTimeMax= Maximum global time for a track, uEkinMin= Minimum remaining kinetic energy for a track
@@ -199,7 +198,7 @@ namespace nexus {
     air_box_logic_->SetUserLimits(new G4UserLimits( DBL_MAX, DBL_MAX, DBL_MAX,100.*keV,0.));
     air_box_logic_->SetVisAttributes(G4VisAttributes::Invisible);
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.),
+    new G4PVPlacement(0, G4ThreeVector(0., -steel_thickness_/2., 0.),
                       air_box_logic_, "INNER_AIR", steel_box_logic, false, 0);
 
 
