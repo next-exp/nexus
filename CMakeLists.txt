@@ -26,19 +26,27 @@ set_target_properties(lib PROPERTIES OUTPUT_NAME nexus)
 
 add_executable(exe)
 set_target_properties(exe PROPERTIES OUTPUT_NAME nexus)
+target_sources(exe PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source/nexus.cc)
+
+add_executable(test)
+set_target_properties(test PROPERTIES OUTPUT nexus-test)
+target_sources(test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source/nexus-test.cc)
 
 set(SRC_DIRS  actions base generators geometries materials
               persistency physics physics_lists sensdet utils)
 
 foreach(DIR ${SRC_DIRS})
-  target_include_directories(lib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source/${DIR})
-  target_include_directories(exe PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source/${DIR})
+  target_include_directories(lib  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source/${DIR})
+  target_include_directories(exe  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source/${DIR})
+  target_include_directories(test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source/${DIR})
   file(GLOB SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/source/${DIR}/*.cc)
   target_sources(lib PRIVATE ${SRC_FILES})
 endforeach()
 
+file(GLOB TEST_FILES ${CMAKE_CURRENT_SOURCE_DIR}/source/tests/*/*.cc)
+target_include_directories(test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source/tests)
+
 target_link_libraries(lib ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} 
                           ${GSL_LIBRARIES} ${HDF5_LIBRARIES})
-
-target_sources(exe PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source/nexus.cc)
 target_link_libraries(exe lib)
+
