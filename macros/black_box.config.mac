@@ -15,10 +15,10 @@
 #/Generator/SingleParticle/min_costheta -1.
 #/Generator/SingleParticle/max_costheta -0.9935
 
-/Geometry/BlackBox/specific_vertex_X 25. mm
-/Geometry/BlackBox/specific_vertex_Y -25. mm
+/Geometry/BlackBox/specific_vertex_X 5. mm
+/Geometry/BlackBox/specific_vertex_Y 25. mm
 /Geometry/BlackBox/specific_vertex_Z 0. mm
-/Geometry/BlackBox/dice_board_z_pos 10. cm
+/Geometry/BlackBox/dice_board_z_pos -10. cm
 /Geometry/BlackBox/rotation 0 deg
 /Geometry/BlackBox/mask_thickn 1.5 mm
 /Geometry/BlackBox/membrane_thickn 0. mm
