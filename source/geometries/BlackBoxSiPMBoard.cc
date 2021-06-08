@@ -183,10 +183,12 @@ void BlackBoxSiPMBoard::Construct()
     G4VSolid* hole_solid = nullptr;
 
     if (hole_diam_!=0.){
-      hole_solid = new G4Tubs("HOLE", 0., hole_diam_/2., mask_thickn_/2., 0., 360.*deg);}
+      //hole_solid = new G4Tubs("HOLE", 0., hole_diam_/2., mask_thickn_/2., 0., 360.*deg);}
+      hole_solid = new G4Tubs("HOLE", 0., hole_diam_/2., mask_thickn_, 0., 360.*deg);}
 
     else {
-      hole_solid = new G4Box("HOLE", hole_x_/2., hole_y_/2., mask_thickn_/2.);}
+      //hole_solid = new G4Box("HOLE", hole_x_/2., hole_y_/2., mask_thickn_/2.);}
+      hole_solid = new G4Box("HOLE", hole_x_/2., hole_y_/2., mask_thickn_);}
 
 
     /// Create mask with holes.
