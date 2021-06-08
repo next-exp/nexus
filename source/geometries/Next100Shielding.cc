@@ -234,13 +234,13 @@ namespace nexus {
                                                  pedestal_support_bottom_thickness);
 
     G4LogicalVolume* pedestal_support_beam_bottom_logic = new G4LogicalVolume(pedestal_support_beam_bottom,
-                                                                              MaterialsList::Steel(), "PEDESTAL_SUPPORT_BOTTOM"); // steel inox
+                                                                              MaterialsList::Steel316Ti(), "PEDESTAL_SUPPORT_BOTTOM");
 
     G4LogicalVolume* pedestal_support_beam_top_logic = new G4LogicalVolume(pedestal_support_beam_top,
-                                                                           MaterialsList::Steel(), "PEDESTAL_SUPPORT_TOP"); // steel inox
+                                                                           MaterialsList::Steel316Ti(), "PEDESTAL_SUPPORT_TOP");
 
     G4LogicalVolume* pedestal_support_beam_lat_logic = new G4LogicalVolume(pedestal_support_beam_lat,
-                                                                           MaterialsList::Steel(), "PEDESTAL_SUPPORT_LAT"); // steel inox
+                                                                           MaterialsList::Steel316Ti(), "PEDESTAL_SUPPORT_LAT");
 
     G4double pedestal_y_pos = -lead_y_/2. + lead_thickness_/2.;
     new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos, (1027. * mm)/2.),
