@@ -41,10 +41,12 @@ namespace nexus {
     shield_z_ {259.4 * cm},
 
     //Steel Structure
-    beam_thickness_      {4.   * mm},
+    beam_thickness_1     {4.   * mm},
+    beam_thickness_2     {6.   * mm},
     lateral_z_separation_{1010.* mm}, //distance between the two lateral beams
     roof_z_separation_   {760. * mm}, //distance between x beams
     front_x_separation_  {156. * mm}, //distance between the two front beams
+
     // Box thickness
     lead_thickness_ {20.* cm},
     steel_thickness_{2. * mm},
@@ -74,7 +76,7 @@ namespace nexus {
 
     // LEAD BOX   ///////////
     lead_x_ = shield_x_ + 2. * steel_thickness_ + 2. * lead_thickness_;
-    lead_y_ = shield_y_ + 2. * steel_thickness_ + 2. * lead_thickness_ + beam_thickness_;
+    lead_y_ = shield_y_ + 2. * steel_thickness_ + 2. * lead_thickness_ + beam_thickness_2;
     lead_z_ = shield_z_ + 2. * steel_thickness_ + 2. * lead_thickness_;
 
     G4Box* lead_box_solid = new G4Box("LEAD_BOX", lead_x_/2., lead_y_/2., lead_z_/2.);
@@ -88,26 +90,33 @@ namespace nexus {
     // auxiliar positions used in translations
     G4double lat_beam_x   = shield_x_/2. + steel_thickness_ + lead_thickness_/2.;
     G4double front_beam_z = shield_z_/2. + steel_thickness_ + lead_thickness_/2.;
-    G4double top_beam_y   = (shield_y_-beam_thickness_)/2. + steel_thickness_ + beam_thickness_ + lead_thickness_/2.;
-    G4double lat_beam_y   = -(lead_thickness_ + beam_thickness_)/2.;
-    G4double roof_y       = (shield_y_-beam_thickness_)/2. + steel_thickness_ + beam_thickness_/2.;
+    G4double top_beam_y   = (shield_y_-beam_thickness_2)/2. + steel_thickness_ + beam_thickness_2 + lead_thickness_/2.;
+    G4double lat_beam_y   = -(lead_thickness_ + beam_thickness_2)/2.;
+    G4double roof_y       = (shield_y_-beam_thickness_2)/2. + steel_thickness_ + beam_thickness_2/2.;
 
-    G4Box* roof_beam = new G4Box("STRUCT_BEAM", lead_x_/2.                     , beam_thickness_/2., lead_z_/2.);
-    G4Box* aux_box   = new G4Box("AUX_box"    , shield_x_/2. + steel_thickness_, beam_thickness_   , shield_z_/2.+ steel_thickness_);
+    G4Box* roof_beam = new G4Box("STRUCT_BEAM", lead_x_/2.                     , beam_thickness_2/2., lead_z_/2.);
+    G4Box* aux_box   = new G4Box("AUX_box"    , shield_x_/2. + steel_thickness_, beam_thickness_2   , shield_z_/2.+ steel_thickness_);
     G4SubtractionSolid* roof_beam_solid = new G4SubtractionSolid("STRUCT_BEAM", roof_beam, aux_box);
 
+    // vertical bottom beams
     G4Box* lat_beam_solid  = new G4Box("STRUCT_BEAM",
                                        lead_thickness_/2.,
                                        (shield_y_ + 2. * steel_thickness_+ lead_thickness_)/2.,
-                                       beam_thickness_/2.);
+                                       beam_thickness_1/2.);
 
+    G4Box* front_beam_solid = new G4Box("STRUCT_BEAM",
+                                        beam_thickness_2/2.,
+                                        (shield_y_ + 2. * steel_thickness_+ lead_thickness_)/2.,
+                                        lead_thickness_/2.);
+
+    // horizontal top beams
     G4Box* top_xbeam_solid = new G4Box("STRUCT_BEAM",
                                        (shield_x_ + 2.*lead_thickness_ + 2.*steel_thickness_)/2.,
                                        lead_thickness_/2.,
-                                       beam_thickness_/2.);
+                                       beam_thickness_1/2.);
 
     G4Box* top_zbeam_solid = new G4Box("STRUCT_BEAM",
-                                       beam_thickness_/2.,
+                                       beam_thickness_2/2.,
                                        lead_thickness_/2.,
                                        (shield_z_ + 2.*lead_thickness_ + 2.*steel_thickness_)/2.);
 
@@ -135,6 +144,9 @@ namespace nexus {
     G4LogicalVolume* lat_beam_logic  = new G4LogicalVolume(lat_beam_solid,
                                                            MaterialsList::Steel(), "STEEL_BEAM_STRUCTURE_LAT");
 
+    G4LogicalVolume* front_beam_logic = new G4LogicalVolume(front_beam_solid,
+                                                            MaterialsList::Steel(), "STEEL_BEAM_STRUCTURE_FRONT");
+
      G4LogicalVolume* struct_logic   = new G4LogicalVolume(struct_solid,
                                                            MaterialsList::Steel(), "STEEL_BEAM_STRUCTURE_TOP");
 
@@ -158,19 +170,17 @@ namespace nexus {
                       lat_beam_logic, "STEEL_BEAM_STRUCTURE_lat4", lead_box_logic, false, 0, false);
 
     // front beams
-    G4RotationMatrix* rot_beam = new G4RotationMatrix();
-    rot_beam->rotateY(pi/2.);
-    new G4PVPlacement(rot_beam, G4ThreeVector(-front_x_separation_/2., lat_beam_y, front_beam_z),
-                      lat_beam_logic, "STEEL_BEAM_STRUCTURE_lat5", lead_box_logic, false, 0, false);
+    new G4PVPlacement(0, G4ThreeVector(-front_x_separation_/2., lat_beam_y, front_beam_z),
+                      front_beam_logic, "STEEL_BEAM_STRUCTURE_front1", lead_box_logic, false, 0, false);
 
-    new G4PVPlacement(rot_beam, G4ThreeVector(front_x_separation_/2., lat_beam_y, front_beam_z),
-                      lat_beam_logic, "STEEL_BEAM_STRUCTURE_lat6", lead_box_logic, false, 0, false);
+    new G4PVPlacement(0, G4ThreeVector(front_x_separation_/2., lat_beam_y, front_beam_z),
+                      front_beam_logic, "STEEL_BEAM_STRUCTURE_front2", lead_box_logic, false, 0, false);
 
-    new G4PVPlacement(rot_beam, G4ThreeVector(-front_x_separation_/2., lat_beam_y, -front_beam_z),
-                      lat_beam_logic, "STEEL_BEAM_STRUCTURE_lat7", lead_box_logic, false, 0, false);
+    new G4PVPlacement(0, G4ThreeVector(-front_x_separation_/2., lat_beam_y, -front_beam_z),
+                      front_beam_logic, "STEEL_BEAM_STRUCTURE_front3", lead_box_logic, false, 0, false);
 
-    new G4PVPlacement(rot_beam, G4ThreeVector(front_x_separation_/2., lat_beam_y, -front_beam_z),
-                      lat_beam_logic,"STEEL_BEAM_STRUCTURE_lat8", lead_box_logic, false, 0, false);
+    new G4PVPlacement(0, G4ThreeVector(front_x_separation_/2., lat_beam_y, -front_beam_z),
+                      front_beam_logic,"STEEL_BEAM_STRUCTURE_front4", lead_box_logic, false, 0, false);
 
 
     // STEEL BOX   ///////////
@@ -183,7 +193,7 @@ namespace nexus {
     G4LogicalVolume* steel_box_logic = new G4LogicalVolume(steel_box_solid,
                                                            MaterialsList::Steel(), "STEEL_BOX");
 
-    new G4PVPlacement(0, G4ThreeVector(0., -beam_thickness_/2., 0.),
+    new G4PVPlacement(0, G4ThreeVector(0., -beam_thickness_2/2., 0.),
                       steel_box_logic, "STEEL_BOX", lead_box_logic, false, 0);
 
     // AIR INSIDE
@@ -283,28 +293,29 @@ namespace nexus {
                                         G4ThreeVector(0., 0., 0.), 0);
 
     steel_gen_ = new BoxPointSampler(shield_x_, shield_y_, shield_z_, steel_thickness_,
-                                     G4ThreeVector(0., -beam_thickness_/2., 0.), 0);
+                                     G4ThreeVector(0., -beam_thickness_1/2., 0.), 0);
 
     G4double inn_offset = .5 * cm;
     inner_air_gen_ = new BoxPointSampler(shield_x_ - inn_offset, shield_y_ - inn_offset, shield_z_ - inn_offset, 1. * mm,
-                                         G4ThreeVector(0., -beam_thickness_/2., 0.), 0);
+                                         G4ThreeVector(0., -beam_thickness_1/2., 0.), 0);
 
-    lat_roof_gen_ = new BoxPointSampler(lead_thickness_, beam_thickness_, shield_z_ + 2.*steel_thickness_, 0.,
+    // Steel structure generators
+    lat_roof_gen_ = new BoxPointSampler(lead_thickness_, beam_thickness_2, shield_z_ + 2.*steel_thickness_, 0.,
                                         G4ThreeVector(0., roof_y, 0.), 0);
 
-    front_roof_gen_ = new BoxPointSampler(lead_x_, beam_thickness_, lead_thickness_, 0.,
+    front_roof_gen_ = new BoxPointSampler(lead_x_, beam_thickness_2, lead_thickness_, 0.,
                                           G4ThreeVector(0., roof_y, 0.), 0);
 
-    struct_x_gen_ = new BoxPointSampler(shield_x_ + 2.*lead_thickness_ + 2.*steel_thickness_, lead_thickness_, beam_thickness_, 0.,
+    struct_x_gen_ = new BoxPointSampler(shield_x_ + 2.*lead_thickness_ + 2.*steel_thickness_, lead_thickness_, beam_thickness_1, 0.,
                                         G4ThreeVector(0., top_beam_y, roof_z_separation_+lateral_z_separation_/2.), 0);
 
-    struct_z_gen_ = new BoxPointSampler(beam_thickness_, lead_thickness_, shield_z_ + 2.*lead_thickness_ + 2.*steel_thickness_, 0.,
+    struct_z_gen_ = new BoxPointSampler(beam_thickness_2, lead_thickness_, shield_z_ + 2.*lead_thickness_ + 2.*steel_thickness_, 0.,
                                         G4ThreeVector(-front_x_separation_/2., top_beam_y, 0.), 0);
 
-    lat_beam_gen_ = new BoxPointSampler(lead_thickness_, shield_y_ + 2. * steel_thickness_+ lead_thickness_, beam_thickness_, 0.,
+    lat_beam_gen_ = new BoxPointSampler(lead_thickness_, shield_y_ + 2. * steel_thickness_+ lead_thickness_, beam_thickness_1, 0.,
                                         G4ThreeVector(lat_beam_x, -lead_thickness_/2., lateral_z_separation_/2.), 0);
 
-    front_beam_gen_ = new BoxPointSampler(beam_thickness_, shield_y_ + 2. * steel_thickness_+ lead_thickness_, lead_thickness_, 0.,
+    front_beam_gen_ = new BoxPointSampler(beam_thickness_2, shield_y_ + 2. * steel_thickness_+ lead_thickness_, lead_thickness_, 0.,
                                           G4ThreeVector(-front_x_separation_/2., -lead_thickness_/2., front_beam_z), 0);
 
 
@@ -315,10 +326,10 @@ namespace nexus {
     G4double total_vol      = roof_vol + struct_top_vol + (8*lateral_vol);
 
     perc_roof_vol_       = roof_vol/total_vol;
-    perc_front_roof_vol_ = 2*(lead_x_*beam_thickness_*lead_thickness_)/roof_vol;
+    perc_front_roof_vol_ = 2*(lead_x_*beam_thickness_1*lead_thickness_)/roof_vol;
     perc_top_struct_vol_ = struct_top_vol /total_vol;
 
-    G4double struc_beam_x_vol = (shield_x_ + 2.*lead_thickness_ + 2.*steel_thickness_)*lead_thickness_*beam_thickness_;
+    G4double struc_beam_x_vol = (shield_x_ + 2.*lead_thickness_ + 2.*steel_thickness_)*lead_thickness_*beam_thickness_1;
     perc_struc_x_vol_    = 4*struc_beam_x_vol/struct_top_vol;
 
     if (verbosity_){
@@ -462,41 +473,41 @@ namespace nexus {
             	G4double rand_beam = int (8 * G4UniformRand());
             	// std::cout<< "viga numero "<<rand_beam<<std::endl; //0-7
             	if (rand_beam == 0) {
-            	  //lat_1 (lat_beam_x,-beam_thickness_/2.,lateral_z_separation_/2.)
+            	  //lat_1 (lat_beam_x,-beam_thickness_1/2.,lateral_z_separation_/2.)
             	  vertex = lat_beam_gen_->GenerateVertex("INSIDE");
             	}
             	else if (rand_beam ==1){
-            	  // //lat_2 (lat_beam_x,-beam_thickness_/2.,-lateral_z_separation_/2.)
+            	  // //lat_2 (lat_beam_x,-beam_thickness_1/2.,-lateral_z_separation_/2.)
             	  vertex = lat_beam_gen_->GenerateVertex("INSIDE");
             	  vertex.setZ(vertex.z() - lateral_z_separation_);
             	}
             	else if (rand_beam ==2){
-            	  // //lat_3 	(-lat_beam_x,-beam_thickness_/2.,lateral_z_separation_/2.)
+            	  // //lat_3 	(-lat_beam_x,-beam_thickness_1/2.,lateral_z_separation_/2.)
             	  vertex = lat_beam_gen_->GenerateVertex("INSIDE");
             	  vertex.setX(vertex.x() - (shield_x_ + 2*steel_thickness_ + lead_thickness_));
             	}
             	else if (rand_beam ==3){
-            	  // //lat_4 (-lat_beam_x,-beam_thickness_/2.,-lateral_z_separation_/2.)
+            	  // //lat_4 (-lat_beam_x,-beam_thickness_1/2.,-lateral_z_separation_/2.)
             	  vertex = lat_beam_gen_->GenerateVertex("INSIDE");
             	  vertex.setX(vertex.x() - (shield_x_ + 2*steel_thickness_ + lead_thickness_));
             	  vertex.setZ(vertex.z() - lateral_z_separation_);
             	}
             	else if (rand_beam ==4){
-            	  // //lat_5 front_beam (-front_x_separation_/2.,-beam_thickness_/2.,front_beam_z)
+            	  // //lat_5 front_beam (-front_x_separation_/2.,-beam_thickness_1/2.,front_beam_z)
             	  vertex = front_beam_gen_->GenerateVertex("INSIDE");
             	}
             	else if (rand_beam ==5){
-            	  // //lat_6 front_beam (front_x_separation_/2.,-beam_thickness_/2.,front_beam_z)
+            	  // //lat_6 front_beam (front_x_separation_/2.,-beam_thickness_1/2.,front_beam_z)
             	  vertex = front_beam_gen_->GenerateVertex("INSIDE");
             	  vertex.setX(vertex.x() + front_x_separation_);
             	}
             	else if (rand_beam ==6){
-            	  // //lat_7 front_beam (-front_x_separation_/2.,-beam_thickness_/2.,-front_beam_z)
+            	  // //lat_7 front_beam (-front_x_separation_/2.,-beam_thickness_1/2.,-front_beam_z)
             	  vertex = front_beam_gen_->GenerateVertex("INSIDE");
             	  vertex.setZ(vertex.z() - (shield_z_+2*steel_thickness_+lead_thickness_));
             	}
             	else if (rand_beam ==7){
-            	  //lat_8 front_beam (front_x_separation_/2.,-beam_thickness_/2.,-front_beam_z)
+            	  //lat_8 front_beam (front_x_separation_/2.,-beam_thickness_1/2.,-front_beam_z)
             	  vertex = front_beam_gen_->GenerateVertex("INSIDE");
             	  vertex.setX(vertex.x() + front_x_separation_);
             	  vertex.setZ(vertex.z() - (shield_z_+2*steel_thickness_+lead_thickness_));
