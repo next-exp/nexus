@@ -192,32 +192,16 @@ void BlackBoxSiPMBoard::Construct()
 
 
     /// Create mask with holes.
-    //G4SubtractionSolid* mask_with_holes1;
-    //G4ThreeVector hole_pos = sipm_positions_[0] + G4ThreeVector(0., 0., mask_thickn_/2.);
     G4ThreeVector hole_pos = sipm_positions_[0];
-    G4cout << "sipm_positions_[0][2] " << sipm_positions_[0][2] << G4endl;
     G4SubtractionSolid* mask_with_holes =
                         new G4SubtractionSolid("BOARD_MASK", mask_solid,
                                                hole_solid, 0, hole_pos);
-    //G4SubtractionSolid* mask_with_holes = new G4SubtractionSolid("BOARD_MASK", mask_solid,
-      //                                                           hole_solid, 0, sipm_positions_[0]);
     for (G4int sipm_id=1; sipm_id<num_sipms_; sipm_id++) {
-         //hole_pos = sipm_positions_[sipm_id] + G4ThreeVector(0., 0., mask_thickn_/2.);
-         G4cout << "sipm_positions_[sipm_id] " << sipm_positions_[sipm_id] << G4endl;
-         G4cout << "sipm_positions_[sipm_id][2] " << sipm_positions_[sipm_id][2] << G4endl;
          hole_pos = sipm_positions_[sipm_id];
          G4cout << "hole" << sipm_id << ":" << hole_pos << G4endl;
 
-         //if (sipm_id==0){
          mask_with_holes = new G4SubtractionSolid("BOARD_MASK", mask_with_holes,
                                                   hole_solid, 0, hole_pos);
-         //mask_with_holes = new G4SubtractionSolid("BOARD_MASK", mask_with_holes,
-                //                                  hole_solid, 0, sipm_positions_[sipm_id]);
-         //}
-         //else{
-          //   mask_with_holes = new G4SubtractionSolid("BOARD_MASK", mask_with_holes1,
-            //                                          hole_solid, 0, hole_pos);
-         //}
     }
     mask_logic =
       new G4LogicalVolume(mask_with_holes, G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON"),
