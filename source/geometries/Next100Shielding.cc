@@ -50,6 +50,11 @@ namespace nexus {
     // Box thickness
     lead_thickness_ {20.* cm},
     steel_thickness_{2. * mm},
+
+    // Pedestal
+    support_beam_dist_ {1027. * mm},
+    support_lat_dist_  {732.  * mm},
+
     visibility_ {0},
     verbosity_{false}
 
@@ -213,11 +218,13 @@ namespace nexus {
 
 
     // PEDESTAL BEAMS
-    // T shape beams that support the vessel
-    // change beam_thickness by real thicknesses
-    G4double pedestal_support_bottom_thickness = 10. * mm;
-    G4double pedestal_support_top_thickness = 15. * mm;
-
+    // there are two kind of beams: the support T-shaped beams (support) and plain beams. The T-shaped beams are composed by
+    // two parts: the vertical part called "support-bottom" and the horizantal top part called "support-top". The plain beams are
+    // called "lateral".
+    G4double pedestal_support_bottom_thickness = 10.  * mm;
+    G4double pedestal_support_top_thickness    = 15.  * mm;
+    G4double pedestal_support_top_length       = 150. * mm;
+    G4double pedestal_lateral_beam_thickness   = 20.  * mm;
     G4Box* pedestal_support_beam_bottom = new G4Box("PEDESTAL_SUPPORT_BEAM_BOTTOM",
                                                     shield_x_/2.,
                                                     lead_thickness_/2.,
@@ -226,12 +233,12 @@ namespace nexus {
     G4Box* pedestal_support_beam_top = new G4Box("PEDESTAL_SUPPORT_BEAM_TOP",
                                                  shield_x_/2.,
                                                  pedestal_support_top_thickness/2.,
-                                                 (150. * mm)/2.);
+                                                 pedestal_support_top_length/2.);
 
-    G4Box* pedestal_support_beam_lat = new G4Box("PEDESTAL_SUPPORT_BEAM_LAT",
-                                                 shield_x_/2.,
-                                                 lead_thickness_/2.,
-                                                 pedestal_support_bottom_thickness);
+    G4Box* pedestal_beam_lat = new G4Box("PEDESTAL_BEAM_LAT",
+                                         shield_x_/2.,
+                                         lead_thickness_/2.,
+                                         pedestal_lateral_beam_thickness/2.);
 
     G4LogicalVolume* pedestal_support_beam_bottom_logic = new G4LogicalVolume(pedestal_support_beam_bottom,
                                                                               MaterialsList::Steel316Ti(), "PEDESTAL_SUPPORT_BOTTOM");
@@ -239,27 +246,28 @@ namespace nexus {
     G4LogicalVolume* pedestal_support_beam_top_logic = new G4LogicalVolume(pedestal_support_beam_top,
                                                                            MaterialsList::Steel316Ti(), "PEDESTAL_SUPPORT_TOP");
 
-    G4LogicalVolume* pedestal_support_beam_lat_logic = new G4LogicalVolume(pedestal_support_beam_lat,
-                                                                           MaterialsList::Steel316Ti(), "PEDESTAL_SUPPORT_LAT");
+    G4LogicalVolume* pedestal_beam_lat_logic = new G4LogicalVolume(pedestal_beam_lat,
+                                                                   MaterialsList::Steel316Ti(), "PEDESTAL_SUPPORT_LAT");
 
     G4double pedestal_y_pos = -lead_y_/2. + lead_thickness_/2.;
-    new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos, (1027. * mm)/2.),
+    G4double pedestal_top_y_pos = -(shield_y_/2. + steel_thickness_/2.) + pedestal_support_top_thickness/2.; //caution: it is refered to air-box
+    new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos, support_beam_dist_/2.),
                       pedestal_support_beam_bottom_logic, "PEDESTAL_SUPPORT_BEAM_BOTTOM_1", lead_box_logic, false, 0);
 
-    new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos, (-1027. * mm)/2.),
+    new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos, -support_beam_dist_/2.),
                       pedestal_support_beam_bottom_logic, "PEDESTAL_SUPPORT_BEAM_BOTTOM_2", lead_box_logic, false, 0);
 
-    new G4PVPlacement(0, G4ThreeVector(0., -(shield_y_/2. + steel_thickness_/2.) + pedestal_support_top_thickness/2., (1027. * mm)/2.),
+    new G4PVPlacement(0, G4ThreeVector(0., pedestal_top_y_pos, support_beam_dist_/2.),
                       pedestal_support_beam_top_logic, "PEDESTAL_SUPPORT_BEAM_TOP_1", air_box_logic_, false, 0);
 
-    new G4PVPlacement(0, G4ThreeVector(0., -(shield_y_/2. + steel_thickness_/2.) + pedestal_support_top_thickness/2., -(1027. * mm)/2.),
+    new G4PVPlacement(0, G4ThreeVector(0., pedestal_top_y_pos, -support_beam_dist_/2.),
                       pedestal_support_beam_top_logic, "PEDESTAL_SUPPORT_BEAM_TOP_2", air_box_logic_, false, 0);
 
-    new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos, (1027. * mm)/2. + 732 * mm),
-                      pedestal_support_beam_lat_logic, "PEDESTAL_SUPPORT_BEAM_LAT_1", lead_box_logic, false, 0);
+    new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos, support_beam_dist_/2. + support_lat_dist_),
+                      pedestal_beam_lat_logic, "PEDESTAL_BEAM_LAT_1", lead_box_logic, false, 0);
 
-    new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos, (-1027. * mm)/2. - 732 * mm),
-                      pedestal_support_beam_lat_logic, "PEDESTAL_SUPPORT_BEAM_LAT_2", lead_box_logic, false, 0);
+    new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos, -support_beam_dist_/2. - support_lat_dist_),
+                      pedestal_beam_lat_logic, "PEDESTAL_BEAM_LAT_2", lead_box_logic, false, 0);
 
     // SETTING VISIBILITIES   //////////
     if (visibility_) {
@@ -299,7 +307,7 @@ namespace nexus {
     inner_air_gen_ = new BoxPointSampler(shield_x_ - inn_offset, shield_y_ - inn_offset, shield_z_ - inn_offset, 1. * mm,
                                          G4ThreeVector(0., -beam_thickness_1/2., 0.), 0);
 
-    // Steel structure generators
+    // STEEL STRUCTURE GENERATORS
     lat_roof_gen_ = new BoxPointSampler(lead_thickness_, beam_thickness_2, shield_z_ + 2.*steel_thickness_, 0.,
                                         G4ThreeVector(0., roof_y, 0.), 0);
 
@@ -318,7 +326,6 @@ namespace nexus {
     front_beam_gen_ = new BoxPointSampler(beam_thickness_2, shield_y_ + 2. * steel_thickness_+ lead_thickness_, lead_thickness_, 0.,
                                           G4ThreeVector(-front_x_separation_/2., -lead_thickness_/2., front_beam_z), 0);
 
-
     // Compute relative volumes
     G4double roof_vol       = roof_beam_solid->GetCubicVolume();
     G4double struct_top_vol = struct_solid   ->GetCubicVolume();
@@ -326,11 +333,34 @@ namespace nexus {
     G4double total_vol      = roof_vol + struct_top_vol + (8*lateral_vol);
 
     perc_roof_vol_       = roof_vol/total_vol;
-    perc_front_roof_vol_ = 2*(lead_x_*beam_thickness_1*lead_thickness_)/roof_vol;
+    perc_front_roof_vol_ = 2*(lead_x_*beam_thickness_2*lead_thickness_)/roof_vol;
     perc_top_struct_vol_ = struct_top_vol /total_vol;
 
     G4double struc_beam_x_vol = (shield_x_ + 2.*lead_thickness_ + 2.*steel_thickness_)*lead_thickness_*beam_thickness_1;
     perc_struc_x_vol_    = 4*struc_beam_x_vol/struct_top_vol;
+
+
+    // PEDESTAL GENERATORS
+    ped_support_bottom_gen_ = new BoxPointSampler(shield_x_, lead_thickness_, pedestal_support_bottom_thickness, 0.,
+                                                  G4ThreeVector(0., pedestal_y_pos, support_beam_dist_/2.), 0);
+
+    G4double ped_gen_y_ = -lead_y_/2. + lead_thickness_ + pedestal_support_top_thickness/2.;
+    ped_support_top_gen_ = new BoxPointSampler(shield_x_, pedestal_support_top_thickness, pedestal_support_top_length, 0.,
+                                               G4ThreeVector(0., ped_gen_y_, support_beam_dist_/2.), 0);
+
+    ped_lat_gen_ = new BoxPointSampler(shield_x_, lead_thickness_, pedestal_lateral_beam_thickness, 0.,
+                                       G4ThreeVector(0., pedestal_y_pos, support_beam_dist_/2. + support_lat_dist_), 0);
+
+    // Compute relative volumes
+    G4double ped_support_bottom_vol = pedestal_support_beam_bottom->GetCubicVolume();
+    G4double ped_support_top_vol    = pedestal_support_beam_top   ->GetCubicVolume();
+    G4double ped_lat_vol            = pedestal_beam_lat           ->GetCubicVolume();
+    G4double ped_total_vol = 2*(ped_support_bottom_vol + ped_support_top_vol + ped_lat_vol);
+
+    perc_ped_bottom_vol_ = 2*ped_support_bottom_vol/ped_total_vol;
+    perc_ped_top_vol_    = 2*ped_support_top_vol   /ped_total_vol;
+    perc_ped_lat_vol_    = 2*ped_lat_vol           /ped_total_vol;
+
 
     if (verbosity_){
       std::cout<<"STEEL STRUCTURE VOLUME (m3)" <<std::endl;
@@ -363,6 +393,9 @@ namespace nexus {
     delete struct_z_gen_;
     delete lat_beam_gen_;
     delete front_beam_gen_;
+    delete ped_support_bottom_gen_;
+    delete ped_support_top_gen_;
+    delete ped_lat_gen_;
   }
 
   G4LogicalVolume* Next100Shielding::GetAirLogicalVolume() const
@@ -514,6 +547,38 @@ namespace nexus {
             	}
             }
         }
+
+    else if(region=="PEDESTAL"){
+        G4double rand = G4UniformRand();
+
+        if (rand < perc_ped_bottom_vol_) { //SUPPORT-BOTTOM
+      	  if (G4UniformRand() < 0.5) {
+      	    vertex = ped_support_bottom_gen_->GenerateVertex("INSIDE");
+      	  }
+      	  else{
+      	    vertex = ped_support_bottom_gen_->GenerateVertex("INSIDE");
+      	    vertex.setZ(vertex.z() - support_beam_dist_);
+      	  }
+        }
+        else if (rand < (perc_ped_bottom_vol_ + perc_ped_top_vol_)) { //SUPPORT-TOP
+          if (G4UniformRand() < 0.5) {
+      	    vertex = ped_support_top_gen_->GenerateVertex("INSIDE");
+      	  }
+      	  else{
+      	    vertex = ped_support_top_gen_->GenerateVertex("INSIDE");
+      	    vertex.setZ(vertex.z() - support_beam_dist_);
+      	  }
+        }
+        else{//LATERAL BEAM
+          if (G4UniformRand() < 0.5) {
+      	    vertex = ped_lat_gen_->GenerateVertex("INSIDE");
+      	  }
+      	  else{
+      	    vertex = ped_lat_gen_->GenerateVertex("INSIDE");
+      	    vertex.setZ(vertex.z() - (2.*support_lat_dist_ + support_beam_dist_));
+      	  }
+        }
+      }
     else {
       G4Exception("[Next100Shielding]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");
