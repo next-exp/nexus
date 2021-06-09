@@ -52,6 +52,7 @@ namespace nexus {
     steel_thickness_{2. * mm},
 
     // Pedestal
+    pedestal_x_        {1534. * mm},
     support_beam_dist_ {1027. * mm},
     support_lat_dist_  {732.  * mm},
 
@@ -226,17 +227,17 @@ namespace nexus {
     G4double pedestal_support_top_length       = 150. * mm;
     G4double pedestal_lateral_beam_thickness   = 20.  * mm;
     G4Box* pedestal_support_beam_bottom = new G4Box("PEDESTAL_SUPPORT_BEAM_BOTTOM",
-                                                    shield_x_/2.,
+                                                    pedestal_x_/2.,
                                                     lead_thickness_/2.,
                                                     pedestal_support_bottom_thickness/2.);
 
     G4Box* pedestal_support_beam_top = new G4Box("PEDESTAL_SUPPORT_BEAM_TOP",
-                                                 shield_x_/2.,
+                                                 pedestal_x_/2.,
                                                  pedestal_support_top_thickness/2.,
                                                  pedestal_support_top_length/2.);
 
     G4Box* pedestal_beam_lat = new G4Box("PEDESTAL_BEAM_LAT",
-                                         shield_x_/2.,
+                                         pedestal_x_/2.,
                                          lead_thickness_/2.,
                                          pedestal_lateral_beam_thickness/2.);
 
@@ -341,14 +342,14 @@ namespace nexus {
 
 
     // PEDESTAL GENERATORS
-    ped_support_bottom_gen_ = new BoxPointSampler(shield_x_, lead_thickness_, pedestal_support_bottom_thickness, 0.,
+    ped_support_bottom_gen_ = new BoxPointSampler(pedestal_x_, lead_thickness_, pedestal_support_bottom_thickness, 0.,
                                                   G4ThreeVector(0., pedestal_y_pos, support_beam_dist_/2.), 0);
 
     G4double ped_gen_y_ = -lead_y_/2. + lead_thickness_ + pedestal_support_top_thickness/2.;
-    ped_support_top_gen_ = new BoxPointSampler(shield_x_, pedestal_support_top_thickness, pedestal_support_top_length, 0.,
+    ped_support_top_gen_ = new BoxPointSampler(pedestal_x_, pedestal_support_top_thickness, pedestal_support_top_length, 0.,
                                                G4ThreeVector(0., ped_gen_y_, support_beam_dist_/2.), 0);
 
-    ped_lat_gen_ = new BoxPointSampler(shield_x_, lead_thickness_, pedestal_lateral_beam_thickness, 0.,
+    ped_lat_gen_ = new BoxPointSampler(pedestal_x_, lead_thickness_, pedestal_lateral_beam_thickness, 0.,
                                        G4ThreeVector(0., pedestal_y_pos, support_beam_dist_/2. + support_lat_dist_), 0);
 
     // Compute relative volumes
@@ -376,6 +377,11 @@ namespace nexus {
       std::cout<<"INNER AIR VOLUME   (m3) "<< inner_vol/1.e9 <<std::endl;
       std::cout<<"INNER STEEL VOLUME (m3) "<< steel_vol/1.e9 <<std::endl;
       std::cout<<"LEAD VOLUME        (m3) "<< lead_vol /1.e9 <<std::endl;
+
+      std::cout << "PEDESTAL GENERATOR PERCENTS" << std::endl;
+      std::cout << "BOTTOM " << perc_ped_bottom_vol_ * 100 << std::endl;
+      std::cout << "TOP "    << perc_ped_top_vol_    * 100 << std::endl;
+      std::cout << "LAT "    << perc_ped_lat_vol_    * 100 << std::endl;
     }
   }
 

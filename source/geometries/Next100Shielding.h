@@ -52,7 +52,7 @@ namespace nexus {
     G4double beam_thickness_1, beam_thickness_2;
     G4double lateral_z_separation_, roof_z_separation_ , front_x_separation_;
     G4double lead_thickness_, steel_thickness_;
-    G4double support_beam_dist_, support_lat_dist_;
+    G4double pedestal_x_, support_beam_dist_, support_lat_dist_;
 
     G4bool visibility_;
     G4bool verbosity_;
