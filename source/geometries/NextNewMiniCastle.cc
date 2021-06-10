@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
 // nexus | NextNewMiniCastle.cc
 //
-// Copper castle placed inside the lead castle at LSC.
+// Smaller lead castle placed inside the main lead castle at LSC.
 //
 // The NEXT Collaboration
 // -----------------------------------------------------------------------------
@@ -36,9 +36,14 @@ namespace nexus {
     thickness_ (50.*mm),
     open_space_z_(78*mm),
     steel_thickn_(2*mm),
-    pedestal_surf_y_(-560.5 * mm)
+    pedestal_surf_y_(-560.5 * mm),
+    visibility_(0)
 
   {
+    msg_ = new G4GenericMessenger(this, "/Geometry/NextNew/",
+                                  "Control commands of geometry NextNew.");
+    msg_->DeclareProperty("minicastle_vis", visibility_, "NEW pedestal visibility");
+
     /// Initializing the geometry navigator (used in vertex generation)
     geom_navigator_ = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
   }
@@ -160,9 +165,6 @@ namespace nexus {
     new G4PVPlacement(0, G4ThreeVector(0., y_pos, 0.), steel_logic,
 		      "MINI_CASTLE_STEEL", mother_logic_, false, 0, false);
 
-    steel_logic->SetVisAttributes(G4VisAttributes::Invisible);
-
-
     // VERTEX GENERATORS   //////////
     mini_castle_box_gen_ =
       new BoxPointSampler(x_-2.*thickness_, y_-2.*thickness_, z_-2.*thickness_,
@@ -179,6 +181,11 @@ namespace nexus {
     //G4double castle_vol = castle_solid->GetCubicVolume();
     //G4double inner_vol= (x_-2*thickness_)*(y_-2*thickness_)*(z_-2*thickness_);
     //std::cout<<"MINI CASTLE VOLUME:\t"<<castle_vol<<"\t INNER VOLUME:\t"<<inner_vol<<std::endl;
+
+    if (!visibility_) {
+      steel_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      castle_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    }
 
   }
 
