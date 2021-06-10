@@ -42,7 +42,7 @@ namespace nexus {
   {
     msg_ = new G4GenericMessenger(this, "/Geometry/NextNew/",
                                   "Control commands of geometry NextNew.");
-    msg_->DeclareProperty("minicastle_vis", visibility_, "NEW pedestal visibility");
+    msg_->DeclareProperty("minicastle_vis", visibility_, "NEW mini castle visibility");
 
     /// Initializing the geometry navigator (used in vertex generation)
     geom_navigator_ = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
