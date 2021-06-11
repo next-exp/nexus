@@ -52,9 +52,13 @@ namespace nexus {
     steel_thickness_{2. * mm},
 
     // Pedestal
-    pedestal_x_        {1384. * mm},
+    pedestal_x_        {1518. * mm},
+    pedestal_top_x_    {1384. * mm},
     support_beam_dist_ {1027. * mm},
     support_front_dist_{732.  * mm},
+    pedestal_lateral_beam_thickness {8. * mm},
+    pedestal_roof_thickness {75. * mm},
+    pedestal_lateral_length {2511. * mm},
 
     visibility_ {0},
     verbosity_{false}
@@ -219,8 +223,9 @@ namespace nexus {
 
 
     // PEDESTAL BEAMS
-    // there are two kind of beams: the support T-shaped beams (support), plain "front" beams (x-direction) and plain
-    // "lateral" beams (z-direction). The T-shaped beams are composed by two parts: the vertical part called "support-bottom"
+    // there are two kind of beams: the support T-shaped beams (support), plain "front" beams (x-direction), plain
+    // "lateral" beams (z-direction) and the roof. The roof completes the semi-T shaped "front" and "lateral" beams.
+    // The T-shaped beams are composed by two parts: the vertical part called "support-bottom"
     // and the horizantal top part called "support-top".
     G4double pedestal_support_bottom_thickness = 10.  * mm;
     G4double pedestal_support_top_thickness    = 15.  * mm;
@@ -232,7 +237,7 @@ namespace nexus {
                                                     pedestal_support_bottom_thickness/2.);
 
     G4Box* pedestal_support_beam_top = new G4Box("PEDESTAL_SUPPORT_BEAM_TOP",
-                                                 pedestal_x_/2.,
+                                                 pedestal_top_x_/2.,
                                                  pedestal_support_top_thickness/2.,
                                                  pedestal_support_top_length/2.);
 
@@ -240,6 +245,17 @@ namespace nexus {
                                            pedestal_x_/2.,
                                            lead_thickness_/2.,
                                            pedestal_front_beam_thickness/2.);
+
+    G4Box* pedestal_beam_lateral = new G4Box("PEDESTAL_BEAM_LATERAL",
+                                             pedestal_lateral_beam_thickness/2.,
+                                             lead_thickness_/2.,
+                                             pedestal_lateral_length/2.);
+
+    G4Box* pedestal_roof_ = new G4Box("PEDESTAL_ROOF", pedestal_x_/2. + pedestal_lateral_beam_thickness,
+                                                       pedestal_lateral_beam_thickness/2., pedestal_lateral_length/2.);
+    G4Box* ped_aux_box    = new G4Box("AUX_box"      , pedestal_x_/2. + pedestal_lateral_beam_thickness - pedestal_roof_thickness,
+                                                       pedestal_lateral_beam_thickness, pedestal_lateral_length/2.-pedestal_roof_thickness);
+    G4SubtractionSolid* pedestal_roof = new G4SubtractionSolid("PEDESTAL_ROOF", pedestal_roof_, ped_aux_box);
 
     G4LogicalVolume* pedestal_support_beam_bottom_logic = new G4LogicalVolume(pedestal_support_beam_bottom,
                                                                               MaterialsList::Steel316Ti(), "PEDESTAL_SUPPORT_BOTTOM");
@@ -250,8 +266,16 @@ namespace nexus {
     G4LogicalVolume* pedestal_beam_front_logic = new G4LogicalVolume(pedestal_beam_front,
                                                                      MaterialsList::Steel316Ti(), "PEDESTAL_SUPPORT_FRONT");
 
+    G4LogicalVolume* pedestal_beam_lateral_logic = new G4LogicalVolume(pedestal_beam_lateral,
+                                                                       MaterialsList::Steel316Ti(), "PEDESTAL_SUPPORT_FRONT");
+
+    G4LogicalVolume* pedestal_roof_logic = new G4LogicalVolume(pedestal_roof,
+                                                               MaterialsList::Steel316Ti(), "PEDESTAL_ROOF");
+
+    G4double pedestal_x_pos = pedestal_x_/2. + pedestal_lateral_beam_thickness/2.;
     G4double pedestal_y_pos = -lead_y_/2. + lead_thickness_/2.;
-    G4double pedestal_top_y_pos = -(shield_y_/2. + steel_thickness_/2.) + pedestal_support_top_thickness/2.; //caution: it is refered to air-box
+    G4double pedestal_top_y_pos  = -(shield_y_/2. + steel_thickness_/2.) + pedestal_support_top_thickness/2.;  //caution: it is refered to air-box
+    G4double pedestal_roof_y_pos = -(shield_y_/2. + steel_thickness_/2.) + pedestal_lateral_beam_thickness/2.; //caution: it is refered to air-box
     new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos, support_beam_dist_/2.),
                       pedestal_support_beam_bottom_logic, "PEDESTAL_SUPPORT_BEAM_BOTTOM_1", lead_box_logic, false, 0);
 
@@ -269,6 +293,15 @@ namespace nexus {
 
     new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos, -support_beam_dist_/2. - support_front_dist_),
                       pedestal_beam_front_logic, "PEDESTAL_BEAM_FRONT_2", lead_box_logic, false, 0);
+
+    new G4PVPlacement(0, G4ThreeVector(pedestal_x_pos, pedestal_y_pos, 0.),
+                      pedestal_beam_lateral_logic, "PEDESTAL_BEAM_LAT_1", lead_box_logic, false, 0);
+
+    new G4PVPlacement(0, G4ThreeVector(-pedestal_x_pos, pedestal_y_pos, 0.),
+                      pedestal_beam_lateral_logic, "PEDESTAL_BEAM_LAT_2", lead_box_logic, false, 0);
+
+    new G4PVPlacement(0, G4ThreeVector(0., pedestal_roof_y_pos, 0.),
+                      pedestal_roof_logic, "PEDESTAL_ROOF", air_box_logic_, false, 0);
 
     // SETTING VISIBILITIES   //////////
     if (visibility_) {
@@ -346,22 +379,38 @@ namespace nexus {
                                                   G4ThreeVector(0., pedestal_y_pos, support_beam_dist_/2.), 0);
 
     G4double ped_gen_y_ = -lead_y_/2. + lead_thickness_ + pedestal_support_top_thickness/2.;
-    ped_support_top_gen_ = new BoxPointSampler(pedestal_x_, pedestal_support_top_thickness, pedestal_support_top_length, 0.,
+    ped_support_top_gen_ = new BoxPointSampler(pedestal_top_x_, pedestal_support_top_thickness, pedestal_support_top_length, 0.,
                                                G4ThreeVector(0., ped_gen_y_, support_beam_dist_/2.), 0);
 
     ped_front_gen_ = new BoxPointSampler(pedestal_x_, lead_thickness_, pedestal_front_beam_thickness, 0.,
                                        G4ThreeVector(0., pedestal_y_pos, support_beam_dist_/2. + support_front_dist_), 0);
 
+    ped_lateral_gen_ = new BoxPointSampler(pedestal_lateral_beam_thickness, lead_thickness_, pedestal_lateral_length, 0.,
+                                           G4ThreeVector(pedestal_x_pos, pedestal_y_pos, 0.), 0);
+
+    // pedestal roof
+    G4double ped_roof_gen_x_ = pedestal_top_x_/2. + pedestal_roof_thickness/2.;
+    G4double ped_roof_gen_y_ = -lead_y_/2. + lead_thickness_ + pedestal_lateral_beam_thickness/2.;
+    G4double ped_roof_gen_z_ = pedestal_lateral_length/2. - pedestal_roof_thickness/2.;
+    ped_roof_lat_gen_ = new BoxPointSampler(pedestal_roof_thickness, pedestal_lateral_beam_thickness, pedestal_lateral_length, 0.,
+                                            G4ThreeVector(ped_roof_gen_x_, ped_roof_gen_y_, 0.), 0);
+
+    ped_roof_front_gen_ = new BoxPointSampler(pedestal_top_x_, pedestal_lateral_beam_thickness, pedestal_roof_thickness, 0.,
+                                              G4ThreeVector(0., ped_roof_gen_y_, ped_roof_gen_z_), 0);
     // Compute relative volumes
     G4double ped_support_bottom_vol = pedestal_support_beam_bottom->GetCubicVolume();
     G4double ped_support_top_vol    = pedestal_support_beam_top   ->GetCubicVolume();
-    G4double ped_front_vol          = pedestal_beam_front          ->GetCubicVolume();
-    G4double ped_total_vol = 2*(ped_support_bottom_vol + ped_support_top_vol + ped_front_vol);
+    G4double ped_front_vol          = pedestal_beam_front         ->GetCubicVolume();
+    G4double ped_lateral_vol        = pedestal_beam_lateral       ->GetCubicVolume();
+    G4double ped_roof_vol           = pedestal_roof               ->GetCubicVolume();
+
+    G4double ped_total_vol = ped_roof_vol + 2*(ped_support_bottom_vol + ped_support_top_vol + ped_front_vol + ped_lateral_vol);
 
     perc_ped_bottom_vol_ = 2*ped_support_bottom_vol/ped_total_vol;
     perc_ped_top_vol_    = 2*ped_support_top_vol   /ped_total_vol;
-    perc_ped_front_vol_    = 2*ped_front_vol       /ped_total_vol;
-
+    perc_ped_front_vol_  = 2*ped_front_vol         /ped_total_vol;
+    perc_ped_lateral_vol_= 2*ped_lateral_vol       /ped_total_vol;
+    perc_ped_roof_vol_   = ped_roof_vol            /ped_total_vol;
 
     if (verbosity_){
       std::cout<<"STEEL STRUCTURE VOLUME (m3)" <<std::endl;
@@ -382,6 +431,8 @@ namespace nexus {
       std::cout << "BOTTOM " << perc_ped_bottom_vol_ * 100 << std::endl;
       std::cout << "TOP "    << perc_ped_top_vol_    * 100 << std::endl;
       std::cout << "FRONT "  << perc_ped_front_vol_  * 100 << std::endl;
+      std::cout << "LATERAL "<< perc_ped_lateral_vol_* 100 << std::endl;
+      std::cout << "ROOF "   << perc_ped_roof_vol_   * 100 << std::endl;
     }
   }
 
@@ -402,6 +453,9 @@ namespace nexus {
     delete ped_support_bottom_gen_;
     delete ped_support_top_gen_;
     delete ped_front_gen_;
+    delete ped_lateral_gen_;
+    delete ped_roof_lat_gen_;
+    delete ped_roof_front_gen_;
   }
 
   G4LogicalVolume* Next100Shielding::GetAirLogicalVolume() const
@@ -575,7 +629,7 @@ namespace nexus {
       	    vertex.setZ(vertex.z() - support_beam_dist_);
       	  }
         }
-        else{//FRONT BEAM
+        else if (rand < (perc_ped_bottom_vol_ + perc_ped_top_vol_ + perc_ped_front_vol_)){ //FRONT BEAM
           if (G4UniformRand() < 0.5) {
       	    vertex = ped_front_gen_->GenerateVertex("INSIDE");
       	  }
@@ -584,6 +638,35 @@ namespace nexus {
       	    vertex.setZ(vertex.z() - (2.*support_front_dist_ + support_beam_dist_));
       	  }
         }
+        else if (rand < (perc_ped_bottom_vol_ + perc_ped_top_vol_ + perc_ped_front_vol_ + perc_ped_lateral_vol_)){ // LATERAL BEAM
+          if (G4UniformRand() < 0.5) {
+            vertex = ped_lateral_gen_->GenerateVertex("INSIDE");
+          }
+          else{
+            vertex = ped_lateral_gen_->GenerateVertex("INSIDE");
+            vertex.setX(vertex.x() - (pedestal_x_ + pedestal_lateral_beam_thickness));
+          }
+         }
+        else { // ROOF
+          if (G4UniformRand() < 0.5) {
+            if (G4UniformRand() < 0.5){
+              vertex = ped_roof_lat_gen_->GenerateVertex("INSIDE");
+            }
+            else{
+              vertex = ped_roof_lat_gen_->GenerateVertex("INSIDE");
+              vertex.setX(vertex.x() - pedestal_top_x_ - pedestal_roof_thickness);
+            }
+          }
+          else{
+            if (G4UniformRand() < 0.5){
+              vertex = ped_roof_front_gen_->GenerateVertex("INSIDE");
+            }
+            else{
+              vertex = ped_roof_front_gen_->GenerateVertex("INSIDE");
+              vertex.setZ(vertex.z() - pedestal_lateral_length + pedestal_roof_thickness);
+            }
+          }
+         }
       }
     else {
       G4Exception("[Next100Shielding]", "GenerateVertex()", FatalException,
@@ -592,5 +675,4 @@ namespace nexus {
 
     return vertex;
   }
-
 } //end namespace nexus

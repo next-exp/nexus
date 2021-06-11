@@ -52,7 +52,11 @@ namespace nexus {
     G4double beam_thickness_1, beam_thickness_2;
     G4double lateral_z_separation_, roof_z_separation_ , front_x_separation_;
     G4double lead_thickness_, steel_thickness_;
-    G4double pedestal_x_, support_beam_dist_, support_front_dist_;
+    G4double pedestal_x_, pedestal_top_x_;
+    G4double support_beam_dist_, support_front_dist_;
+    G4double pedestal_lateral_beam_thickness;
+    G4double pedestal_roof_thickness;
+    G4double pedestal_lateral_length;
 
     G4bool visibility_;
     G4bool verbosity_;
@@ -68,9 +72,13 @@ namespace nexus {
     BoxPointSampler* struct_z_gen_;
     BoxPointSampler* lat_beam_gen_;
     BoxPointSampler* front_beam_gen_;
+
     BoxPointSampler* ped_support_bottom_gen_;
     BoxPointSampler* ped_support_top_gen_;
     BoxPointSampler* ped_front_gen_;
+    BoxPointSampler* ped_lateral_gen_;
+    BoxPointSampler* ped_roof_lat_gen_;
+    BoxPointSampler* ped_roof_front_gen_;
 
     G4double perc_roof_vol_;
     G4double perc_front_roof_vol_;
@@ -79,6 +87,8 @@ namespace nexus {
     G4double perc_ped_bottom_vol_;
     G4double perc_ped_top_vol_;
     G4double perc_ped_front_vol_;
+    G4double perc_ped_lateral_vol_;
+    G4double perc_ped_roof_vol_;
 
 
     // Geometry Navigator
