@@ -62,6 +62,11 @@ namespace nexus {
     // Position of the pedestal surface in y
     G4double pedestal_surf_y_;
 
+    // Visibility
+    G4bool visibility_;
+
+    G4GenericMessenger* msg_;
+
   };
 
 } // end namespace nexus

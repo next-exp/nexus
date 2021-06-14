@@ -8,6 +8,7 @@
 
 /Geometry/Next100/shielding_vis     false
 /Geometry/NextNew/table_vis         false
+/Geometry/NextNew/minicastle_vis    false
 /Geometry/NextNew/ics_vis           false
 /Geometry/NextNew/vessel_vis        false
 /Geometry/NextNew/field_cage_vis    false
