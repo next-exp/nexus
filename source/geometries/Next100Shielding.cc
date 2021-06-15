@@ -264,10 +264,10 @@ namespace nexus {
                                                                            MaterialsList::Steel316Ti(), "PEDESTAL_SUPPORT_TOP");
 
     G4LogicalVolume* pedestal_beam_front_logic = new G4LogicalVolume(pedestal_beam_front,
-                                                                     MaterialsList::Steel316Ti(), "PEDESTAL_SUPPORT_FRONT");
+                                                                     MaterialsList::Steel316Ti(), "PEDESTAL_BEAM_FRONT");
 
     G4LogicalVolume* pedestal_beam_lateral_logic = new G4LogicalVolume(pedestal_beam_lateral,
-                                                                       MaterialsList::Steel316Ti(), "PEDESTAL_SUPPORT_FRONT");
+                                                                       MaterialsList::Steel316Ti(), "PEDESTAL_BEAM_LATERAL");
 
     G4LogicalVolume* pedestal_roof_logic = new G4LogicalVolume(pedestal_roof,
                                                                MaterialsList::Steel316Ti(), "PEDESTAL_ROOF");
@@ -321,6 +321,12 @@ namespace nexus {
       roof_logic     ->SetVisAttributes(G4VisAttributes::Invisible);
       struct_logic   ->SetVisAttributes(G4VisAttributes::Invisible);
       lat_beam_logic ->SetVisAttributes(G4VisAttributes::Invisible);
+
+      pedestal_support_beam_bottom_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      pedestal_support_beam_top_logic   ->SetVisAttributes(G4VisAttributes::Invisible);
+      pedestal_beam_front_logic         ->SetVisAttributes(G4VisAttributes::Invisible);
+      pedestal_beam_lateral_logic       ->SetVisAttributes(G4VisAttributes::Invisible);
+      pedestal_roof_logic               ->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
 
