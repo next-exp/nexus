@@ -189,7 +189,8 @@ namespace nexus {
              (region == "EXTERNAL") ||
              (region == "INNER_AIR") ||
              (region == "SHIELDING_STRUCT") ||
-             (region == "PEDESTAL")) {
+             (region == "PEDESTAL") ||
+             (region == "BUBBLE_SEAL")) {
       vertex = shielding_->GenerateVertex(region);
     }
     // Vessel regions

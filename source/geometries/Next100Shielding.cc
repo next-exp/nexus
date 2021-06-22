@@ -57,8 +57,12 @@ namespace nexus {
     support_beam_dist_ {1027. * mm},
     support_front_dist_{732.  * mm},
     pedestal_lateral_beam_thickness {8. * mm},
+    pedestal_front_beam_thickness   {20.* mm},
     pedestal_roof_thickness {75. * mm},
     pedestal_lateral_length {2511. * mm},
+
+    // Seals
+    bubble_seal_thickness {1. * mm},
 
     visibility_ {0},
     verbosity_{false}
@@ -230,7 +234,6 @@ namespace nexus {
     G4double pedestal_support_bottom_thickness = 10.  * mm;
     G4double pedestal_support_top_thickness    = 15.  * mm;
     G4double pedestal_support_top_length       = 150. * mm;
-    G4double pedestal_front_beam_thickness     = 20.  * mm;
     G4Box* pedestal_support_beam_bottom = new G4Box("PEDESTAL_SUPPORT_BEAM_BOTTOM",
                                                     pedestal_x_/2.,
                                                     lead_thickness_/2.,
@@ -420,6 +423,20 @@ namespace nexus {
     perc_ped_lateral_vol_= 2*ped_lateral_vol       /ped_total_vol;
     perc_ped_roof_vol_   = ped_roof_vol            /ped_total_vol;
 
+
+    // BUBBLE SEAL
+    bubble_seal_front_gen_ = new BoxPointSampler(pedestal_x_ + 2*pedestal_lateral_beam_thickness, bubble_seal_thickness, bubble_seal_thickness, 0.,
+                                                 G4ThreeVector(0., ped_gen_y_, 0.), 0);
+
+    bubble_seal_lateral_gen_ = new BoxPointSampler(bubble_seal_thickness, bubble_seal_thickness, pedestal_lateral_length, 0.,
+                                                   G4ThreeVector(0., ped_gen_y_, 0.), 0);
+
+    G4double bubble_front_vol_   = 2*(pedestal_x_ + 2*pedestal_lateral_beam_thickness)*(bubble_seal_thickness)*(bubble_seal_thickness);
+    G4double bubble_lateral_vol_ = 2*(bubble_seal_thickness)*(bubble_seal_thickness)*(pedestal_lateral_length);
+
+    perc_bubble_front_vol_  = bubble_front_vol_  /(bubble_front_vol_ + bubble_lateral_vol_);
+    perc_buble_lateral_vol_ = bubble_lateral_vol_/(bubble_front_vol_ + bubble_lateral_vol_);
+
     if (verbosity_){
       std::cout<<"STEEL STRUCTURE VOLUME (m3)" <<std::endl;
       std::cout<<"ROOF BEAM     "<< roof_vol      /1.e9 <<std::endl;
@@ -464,6 +481,8 @@ namespace nexus {
     delete ped_lateral_gen_;
     delete ped_roof_lat_gen_;
     delete ped_roof_front_gen_;
+    delete bubble_seal_front_gen_;
+    delete bubble_seal_lateral_gen_;
   }
 
   G4LogicalVolume* Next100Shielding::GetAirLogicalVolume() const
@@ -683,6 +702,30 @@ namespace nexus {
             }
           }
          }
+      }
+
+    else if(region=="BUBBLE_SEAL"){
+      G4double rand = G4UniformRand();
+      if (rand<perc_bubble_front_vol_){ // front
+        if (G4UniformRand() < 0.5){
+          vertex = bubble_seal_front_gen_->GenerateVertex("INSIDE");
+          vertex.setZ(vertex.z() + (support_beam_dist_/2. + support_front_dist_ + pedestal_front_beam_thickness/2. + bubble_seal_thickness/2.));
+        }
+        else{
+          vertex = bubble_seal_front_gen_->GenerateVertex("INSIDE");
+          vertex.setZ(vertex.z() - (support_beam_dist_/2. + support_front_dist_ + pedestal_front_beam_thickness/2. + bubble_seal_thickness/2.));
+        }
+      }
+      else{ // lateral
+        if (G4UniformRand() < 0.5){
+          vertex = bubble_seal_lateral_gen_->GenerateVertex("INSIDE");
+          vertex.setX(vertex.x() + (pedestal_x_/2. + pedestal_lateral_beam_thickness + bubble_seal_thickness/2.));
+        }
+        else{
+          vertex = bubble_seal_lateral_gen_->GenerateVertex("INSIDE");
+          vertex.setX(vertex.x() - (pedestal_x_/2. + pedestal_lateral_beam_thickness + bubble_seal_thickness/2.));
+        }
+      }
       }
     else {
       G4Exception("[Next100Shielding]", "GenerateVertex()", FatalException,
