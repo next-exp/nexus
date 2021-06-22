@@ -429,7 +429,7 @@ namespace nexus {
 
       G4double inner_vol = air_box_solid  ->GetCubicVolume();
       G4double steel_vol = steel_box_solid->GetCubicVolume() - inner_vol;
-      G4double lead_vol  = lead_box_solid ->GetCubicVolume() - steel_vol;
+      G4double lead_vol  = lead_box_solid ->GetCubicVolume() - inner_vol - steel_vol;
 
       std::cout<<"INNER AIR VOLUME   (m3) "<< inner_vol/1.e9 <<std::endl;
       std::cout<<"INNER STEEL VOLUME (m3) "<< steel_vol/1.e9 <<std::endl;
