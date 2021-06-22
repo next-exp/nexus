@@ -311,16 +311,18 @@ namespace nexus {
       steel_box_logic->SetVisAttributes(grey_col);
       G4VisAttributes antiox_col = nexus::BloodRed();
       //  antiox.SetForceSolid(true);
-      roof_logic    ->SetVisAttributes(antiox_col);
-      lat_beam_logic->SetVisAttributes(antiox_col);
-      struct_logic  ->SetVisAttributes(antiox_col);
+      roof_logic      ->SetVisAttributes(antiox_col);
+      lat_beam_logic  ->SetVisAttributes(antiox_col);
+      front_beam_logic->SetVisAttributes(antiox_col);
+      struct_logic    ->SetVisAttributes(antiox_col);
     }
     else {
-      lead_box_logic ->SetVisAttributes(G4VisAttributes::Invisible);
-      steel_box_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      roof_logic     ->SetVisAttributes(G4VisAttributes::Invisible);
-      struct_logic   ->SetVisAttributes(G4VisAttributes::Invisible);
-      lat_beam_logic ->SetVisAttributes(G4VisAttributes::Invisible);
+      lead_box_logic  ->SetVisAttributes(G4VisAttributes::Invisible);
+      steel_box_logic ->SetVisAttributes(G4VisAttributes::Invisible);
+      roof_logic      ->SetVisAttributes(G4VisAttributes::Invisible);
+      struct_logic    ->SetVisAttributes(G4VisAttributes::Invisible);
+      lat_beam_logic  ->SetVisAttributes(G4VisAttributes::Invisible);
+      front_beam_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
       pedestal_support_beam_bottom_logic->SetVisAttributes(G4VisAttributes::Invisible);
       pedestal_support_beam_top_logic   ->SetVisAttributes(G4VisAttributes::Invisible);
