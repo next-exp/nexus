@@ -59,6 +59,7 @@ namespace nexus {
     G4double pedestal_roof_thickness;
     G4double pedestal_lateral_length;
     G4double bubble_seal_thickness;
+    G4double edpm_seal_thickness;
 
     G4bool visibility_;
     G4bool verbosity_;
@@ -84,6 +85,8 @@ namespace nexus {
 
     BoxPointSampler* bubble_seal_front_gen_;
     BoxPointSampler* bubble_seal_lateral_gen_;
+    BoxPointSampler* edpm_seal_front_gen_;
+    BoxPointSampler* edpm_seal_lateral_gen_;
 
     G4double perc_roof_vol_;
     G4double perc_front_roof_vol_;
@@ -97,6 +100,8 @@ namespace nexus {
 
     G4double perc_bubble_front_vol_;
     G4double perc_buble_lateral_vol_;
+    G4double perc_edpm_front_vol_;
+    G4double perc_edpm_lateral_vol_;
 
 
     // Geometry Navigator

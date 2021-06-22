@@ -63,6 +63,7 @@ namespace nexus {
 
     // Seals
     bubble_seal_thickness {1. * mm},
+    edpm_seal_thickness   {1. * mm},
 
     visibility_ {0},
     verbosity_{false}
@@ -437,6 +438,20 @@ namespace nexus {
     perc_bubble_front_vol_  = bubble_front_vol_  /(bubble_front_vol_ + bubble_lateral_vol_);
     perc_buble_lateral_vol_ = bubble_lateral_vol_/(bubble_front_vol_ + bubble_lateral_vol_);
 
+    // EDPM SEAL
+    edpm_seal_front_gen_ = new BoxPointSampler(edpm_seal_thickness, steel_y, edpm_seal_thickness, 0.,
+                                               G4ThreeVector(0., -beam_thickness_2/2., 0.), 0);
+
+    edpm_seal_lateral_gen_ = new BoxPointSampler(edpm_seal_thickness, edpm_seal_thickness, steel_z, 0.,
+                                                G4ThreeVector(0., -beam_thickness_2/2., 0.), 0);
+
+    G4double edpm_front_vol_   = 2*edpm_seal_thickness * steel_y * edpm_seal_thickness;
+    G4double edpm_lateral_vol_ =   edpm_seal_thickness * edpm_seal_thickness * (steel_z + 2*steel_thickness_);
+
+    perc_edpm_front_vol_   = edpm_front_vol_  /(edpm_front_vol_ + edpm_lateral_vol_);
+    perc_edpm_lateral_vol_ = edpm_lateral_vol_/(edpm_front_vol_ + edpm_lateral_vol_);
+
+
     if (verbosity_){
       std::cout<<"STEEL STRUCTURE VOLUME (m3)" <<std::endl;
       std::cout<<"ROOF BEAM     "<< roof_vol      /1.e9 <<std::endl;
@@ -483,6 +498,8 @@ namespace nexus {
     delete ped_roof_front_gen_;
     delete bubble_seal_front_gen_;
     delete bubble_seal_lateral_gen_;
+    delete edpm_seal_front_gen_;
+    delete edpm_seal_lateral_gen_;
   }
 
   G4LogicalVolume* Next100Shielding::GetAirLogicalVolume() const
@@ -727,6 +744,25 @@ namespace nexus {
         }
       }
       }
+
+    else if(region=="EDPM_SEAL"){
+      G4double rand = G4UniformRand();
+      if (rand<perc_edpm_front_vol_){ // front
+        if (G4UniformRand() < 0.5){
+          vertex = edpm_seal_front_gen_->GenerateVertex("INSIDE");
+          vertex.setZ(vertex.z() + (shield_z_/2. + steel_thickness_ + edpm_seal_thickness/2.));
+        }
+        else{
+          vertex = edpm_seal_front_gen_->GenerateVertex("INSIDE");
+          vertex.setZ(vertex.z() - (shield_z_/2. + steel_thickness_ + edpm_seal_thickness/2.));
+        }
+      }
+      else{ // lateral
+        vertex = edpm_seal_lateral_gen_->GenerateVertex("INSIDE");
+        vertex.setY(vertex.y() + (shield_y_/2. + steel_thickness_ + edpm_seal_thickness/2.));
+      }
+    }
+
     else {
       G4Exception("[Next100Shielding]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");
