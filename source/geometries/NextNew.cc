@@ -493,7 +493,7 @@ namespace nexus {
       vertex = shielding_->GenerateVertex(region);
     }
     //PEDESTAL
-    else if (region == "PEDESTAL") {
+    else if (region == "PEDESTAL_BOARD") {
       vertex = pedestal_->GenerateVertex(region);
     }
     // EXTRA ELEMENTS
