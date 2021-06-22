@@ -495,7 +495,15 @@ namespace nexus {
     }
 
     else if (region == "SHIELDING_STEEL") {
-      vertex = steel_gen_->GenerateVertex("WHOLE_VOL");
+      G4VPhysicalVolume *VertexVolume;
+      do {
+          vertex = steel_gen_->GenerateVertex("WHOLE_VOL");
+
+          G4ThreeVector glob_vtx(vertex);
+          glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
+          glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
+          VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+      } while (VertexVolume->GetName() != "STEEL_BOX");
     }
 
     else if (region == "INNER_AIR") {
