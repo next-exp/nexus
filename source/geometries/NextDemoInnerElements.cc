@@ -58,7 +58,8 @@ void NextDemoInnerElements::Construct()
   else if ((config_ != "run5") &
            (config_ != "run7") &
            (config_ != "run8") &
-           (config_ != "run9"))
+           (config_ != "run9") &
+           (config_ != "run10"))
     G4Exception("[NextDemoInnerElements]", "Construct()",
                 FatalException, "Wrong NextDemo configuration.");
 

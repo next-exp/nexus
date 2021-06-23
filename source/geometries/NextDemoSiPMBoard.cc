@@ -31,6 +31,7 @@
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
 #include <G4LogicalBorderSurface.hh>
+#include <G4UnionSolid.hh>
 
 using namespace nexus;
 
@@ -56,6 +57,7 @@ NextDemoSiPMBoard::NextDemoSiPMBoard():
   hole_diam_       (3.5  * mm),
   hole_x_          (0.0  * mm),
   hole_y_          (0.0  * mm),
+  hole_coated_     (true),
   sipm_type_       (""),
   mother_phys_     (nullptr),
   kapton_gen_      (nullptr)
@@ -129,12 +131,12 @@ void NextDemoSiPMBoard::Construct()
   G4Material* mother_gas = mother_phys_->GetLogicalVolume()->GetMaterial();
 
 
-  /// Board configuration checks
-  // Coating require membranes
-  if (coating_thickn_ > 0.)
-    if (membrane_thickn_ == 0.)
-      G4Exception("[NextDemoSiPMBoard]", "Construct()", FatalException,
-      "Coating require membranes");
+  // /// Board configuration checks
+  // // Coating require membranes
+  // if (coating_thickn_ > 0.)
+  //   if (membrane_thickn_ == 0.)
+  //     G4Exception("[NextDemoSiPMBoard]", "Construct()", FatalException,
+  //     "Coating require membranes");
 
   // Membranes require masks
   if (membrane_thickn_ > 0.)
@@ -208,6 +210,13 @@ void NextDemoSiPMBoard::Construct()
 
 
   /// Mask Holes
+  G4String coating_name = "BOARD_COATING";
+  G4Material* tpb = MaterialsList::TPB();
+  tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+  G4OpticalSurface* coating_opsurf =
+    new G4OpticalSurface(coating_name + "_OPSURF", glisur, ground,
+                         dielectric_dielectric, .01);
+
   G4VSolid* hole_solid = nullptr;
   G4String hole_name = "BOARD_MASK_HOLE";
   if (hole_type_ == "rounded"){
@@ -215,18 +224,45 @@ void NextDemoSiPMBoard::Construct()
   else if (hole_type_ == "rectangular"){
     hole_solid = new G4Box(hole_name, hole_x_/2., hole_y_/2., mask_thickn_/2.);}
 
-  G4LogicalVolume* hole_logic =
-    new G4LogicalVolume(hole_solid, mother_gas, hole_name);
+  G4LogicalVolume* hole_logic = new G4LogicalVolume(hole_solid, mother_gas, hole_name);
 
   // Generate SiPM positions
   GenerateSiPMPositions();
 
   G4double sipm_posz = - mask_thickn_/2. + sipm_z_dim/2.;
 
-  new G4PVPlacement(sipm_rot, G4ThreeVector(0., 0., sipm_posz), sipm_->GetLogicalVolume(),
-                    sipm_->GetLogicalVolume()->GetName(), hole_logic,
-                    false, 0, false);
+  G4VPhysicalVolume* hole_phys_ = new G4PVPlacement(sipm_rot, G4ThreeVector(0., 0., sipm_posz), sipm_->GetLogicalVolume(),
+                                                    sipm_->GetLogicalVolume()->GetName(), hole_logic,
+                                                    false, 0, false);
 
+  if (hole_coated_ && (hole_type_ == "rectangular")){
+
+    G4Box* hole_coating_top = new G4Box("HOLE_COATING", hole_x_/2., coating_thickn_/2., mask_thickn_/2.);
+    G4Box* hole_coating_lat = new G4Box("HOLE_COATING", coating_thickn_/2., hole_y_/2., mask_thickn_/2.);
+
+    G4UnionSolid* hole_coating = new G4UnionSolid("HOLE_COATING", hole_coating_top, hole_coating_lat, 0,
+                                                  G4ThreeVector(hole_x_/2.-coating_thickn_/2., -hole_y_/2. + coating_thickn_/2., 0.));
+
+    hole_coating = new G4UnionSolid("HOLE_COATING", hole_coating, hole_coating_lat, 0,
+                                    G4ThreeVector(-hole_x_/2.+coating_thickn_/2., -hole_y_/2. + coating_thickn_/2., 0.));
+
+    hole_coating = new G4UnionSolid("HOLE_COATING", hole_coating, hole_coating_top, 0,
+                                    G4ThreeVector(0., -hole_y_ + coating_thickn_, 0.));
+
+    G4LogicalVolume* hole_coating_logic = new G4LogicalVolume(hole_coating, tpb, "HOLE_COATING");
+
+    G4VPhysicalVolume* hole_coating_phys_ =
+          new G4PVPlacement(nullptr, G4ThreeVector(0., hole_y_/2. - coating_thickn_/2., 0.), hole_coating_logic,
+                            "HOLE_COATING", hole_logic, false, 0, false);
+
+    new G4LogicalBorderSurface("TEFLON_WLS_HOLE_GAS_OPSURF", hole_coating_phys_,
+                               hole_phys_, coating_opsurf);
+    new G4LogicalBorderSurface("GAS_TEFLON_WLS_HOLE_OPSURF", hole_phys_,
+                               hole_coating_phys_, coating_opsurf);
+  }
+  else if (hole_coated_ && (hole_type_ == "rounded")){
+    G4Exception("[NextDemoSiPMBoard]", "Construct()", FatalException, "Coated rounded holes not implemented");
+  }
 
   /// Membranes
   G4LogicalVolume* membrane_logic;
@@ -240,8 +276,6 @@ void NextDemoSiPMBoard::Construct()
                                         membrane_thickn_/2., 0, 360.*deg);
 
     membrane_logic =
-      //new G4LogicalVolume(membrane_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON"),
-      //                    membrane_name);
       new G4LogicalVolume(membrane_solid, mother_gas, membrane_name);
 
     new G4PVPlacement(nullptr, G4ThreeVector(0., 0., membrane_posz), membrane_logic,
@@ -260,15 +294,11 @@ void NextDemoSiPMBoard::Construct()
   G4LogicalVolume* coating_logic;
 
   if (coating_thickn_ > 0.) {
-    G4String coating_name = "BOARD_COATING";
 
     G4double coating_posz = board_size_z/2. - coating_thickn_/2.;
 
     G4Box* coating_solid = new G4Box(coating_name, board_size_x/2.,
                                      board_size_y/2., coating_thickn_/2.);
-
-    G4Material* tpb = MaterialsList::TPB();
-    tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
 
     coating_logic = new G4LogicalVolume(coating_solid, tpb, coating_name);
 
@@ -276,16 +306,28 @@ void NextDemoSiPMBoard::Construct()
       new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,coating_posz), coating_logic,
                         coating_name, board_logic, false, 0, true);
 
-    // Optical surface
-    G4OpticalSurface* coating_opsurf =
-      new G4OpticalSurface(coating_name + "_OPSURF", glisur, ground,
-                           dielectric_dielectric, .01);
-
     new G4LogicalBorderSurface("TEFLON_WLS_GAS_OPSURF", coating_phys,
                                mother_phys_, coating_opsurf);
     new G4LogicalBorderSurface("GAS_TEFLON_WLS_OPSURF", mother_phys_,
                                coating_phys, coating_opsurf);
 
+    // Coating holes
+    if (membrane_thickn_ == 0.){
+      if (hole_type_ == "rectangular"){
+
+        G4Box* board_coating_hole_solid = new G4Box("BOARD_COATING_HOLE", hole_x_/2., hole_y_/2., coating_thickn_/2.);
+        G4LogicalVolume* board_coating_hole_logic =
+                new G4LogicalVolume(board_coating_hole_solid, mother_gas, "BOARD_COATING_HOLE");
+
+        G4ThreeVector position (0., 0., 0.);
+        for (G4int sipm_id=0; sipm_id<num_sipms_; sipm_id++){
+          position.setX(sipm_positions_[sipm_id].x());
+          position.setY(sipm_positions_[sipm_id].y());
+          new G4PVPlacement(nullptr, position, board_coating_hole_logic,
+                           "BOARD_COATING_HOLE", coating_logic, false, sipm_id, false);
+        }
+      }
+    }
   }
 
 
