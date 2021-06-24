@@ -42,6 +42,7 @@ namespace nexus {
     void SetHoleX            (G4double x);
     void SetHoleY            (G4double y);
     void SetSiPMType         (G4String type);
+    void SetSiPMCoating      (G4bool coating);
 
     G4ThreeVector GetBoardSize() const;
     G4double      GetKaptonThickness() const;
@@ -52,6 +53,7 @@ namespace nexus {
     G4bool sipm_verbosity_;
     G4bool visibility_;
     G4bool sipm_visibility_;
+    G4bool sipm_coating_;
     G4double time_binning_;
 
     G4int    num_columns_, num_rows_, num_sipms_;
@@ -103,6 +105,9 @@ namespace nexus {
 
   inline void NextDemoSiPMBoard::SetSiPMType(G4String type)
   { sipm_type_ = type; }
+
+  inline void NextDemoSiPMBoard::SetSiPMCoating(G4bool coating)
+  { sipm_coating_ = coating; }
 
   inline G4ThreeVector NextDemoSiPMBoard::GetBoardSize() const
   { return board_size_; }

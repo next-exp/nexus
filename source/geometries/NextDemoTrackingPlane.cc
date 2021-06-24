@@ -86,6 +86,7 @@ void NextDemoTrackingPlane::Construct()
   G4double hole_x          = 0.;
   G4double hole_y          = 0.;
   G4String sipm_type       = "";
+  G4bool   sipm_coating    = false;
 
   if (config_ == "run5") {
     if(verbosity_) G4cout << "run5 ..." << G4endl;
@@ -127,6 +128,7 @@ void NextDemoTrackingPlane::Construct()
     hole_x          = 6.0 * mm;
     hole_y          = 5.0 * mm;
     sipm_type       = "next100";
+    sipm_coating    = false;
   }
 
   /// Make sure the pointer to the mother volume is actually defined
@@ -151,6 +153,8 @@ void NextDemoTrackingPlane::Construct()
     sipm_board_->SetHoleX(hole_x);
     sipm_board_->SetHoleY(hole_y);}
   sipm_board_->SetSiPMType(sipm_type);
+  if (sipm_type == "next100"){
+    sipm_board_->SetSiPMCoating(sipm_coating);}
 
   sipm_board_->Construct();
   G4LogicalVolume* board_logic = sipm_board_->GetLogicalVolume();

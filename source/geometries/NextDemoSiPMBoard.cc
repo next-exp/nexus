@@ -41,6 +41,7 @@ NextDemoSiPMBoard::NextDemoSiPMBoard():
   sipm_verbosity_  (false),
   visibility_      (false),
   sipm_visibility_ (true),
+  sipm_coating_    (false),
   time_binning_    (1. * microsecond),
   num_columns_     (8),
   num_rows_        (8),
@@ -66,6 +67,7 @@ NextDemoSiPMBoard::NextDemoSiPMBoard():
   msg_->DeclareProperty("sipm_verbosity"      ,  sipm_verbosity_, "NextDemoSiPMBoard SiPMs verbosity");
   msg_->DeclareProperty("sipm_board_vis"      ,      visibility_, "NextDemoSiPMBoard visibility.");
   msg_->DeclareProperty("sipm_visibility"     , sipm_visibility_, "NextDemoSiPMBoard SiPMs visibility");
+  msg_->DeclareProperty("sipm_coating"        ,    sipm_coating_, "NextDemoSiPMBoard SiPMs coating");
 
   G4GenericMessenger::Command& time_binning_cmd = msg_->DeclareProperty("sipm_time_binning", time_binning_, "TP SiPMs time binning.");
   time_binning_cmd.SetParameterName("sipm_time_binning", false);
@@ -107,6 +109,7 @@ void NextDemoSiPMBoard::Construct()
     Next100SiPM* sipm = new Next100SiPM();
 
     sipm->SetVisibility(sipm_visibility_);
+    sipm->SetSiPMCoating(sipm_coating_);
     sipm->SetTimeBinning(time_binning_);
     sipm->SetSensorDepth(2);
     sipm->SetMotherDepth(4);

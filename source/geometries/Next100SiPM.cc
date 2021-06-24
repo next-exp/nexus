@@ -33,7 +33,8 @@ Next100SiPM::Next100SiPM():
   mother_depth_       (0),
   naming_order_       (0),
   time_binning_       (1.0 * us),
-  visibility_         (true)
+  visibility_         (true),
+  with_coating_       (false)
 {
 }
 
@@ -71,6 +72,35 @@ void Next100SiPM::Construct()
 
   GeometryBase::SetLogicalVolume(sipm_logic_vol);
 
+  // COATING /////////////////////////////////////////////
+
+  G4LogicalVolume* coating_logic_vol;
+  if (with_coating_) {
+    G4String coating_name = sipm_name + "_WLS";
+
+    G4double coating_thickn_  = 1. * micrometer;
+
+    G4Box* coating_solid_vol =
+      new G4Box(coating_name, sipm_width/2., sipm_length/2., coating_thickn_/2.);
+
+    G4Material* coating_mt_ = MaterialsList::TPB();
+    coating_mt_->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+
+    coating_logic_vol = new G4LogicalVolume(coating_solid_vol, coating_mt_, coating_name);
+
+    G4double coating_zpos = sipm_thickn/2. + coating_thickn_/2.;
+
+    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., coating_zpos), coating_logic_vol,
+                      coating_name, sipm_logic_vol, false, 0, false);
+
+    G4OpticalSurface* coating_optSurf = new G4OpticalSurface(coating_name + "_OPSURF",
+                                                         glisur, ground,
+                                                         dielectric_dielectric, .01);
+
+    new G4LogicalSkinSurface(coating_name + "_OPSURF", coating_logic_vol, coating_optSurf);
+
+    coating_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+  }
 
   // WINDOW ////////////////////////////////////////////////
 
@@ -178,7 +208,6 @@ void Next100SiPM::Construct()
     G4SDManager::GetSDMpointer()->AddNewDetector(sensdet);
     sens_logic_vol->SetSensitiveDetector(sensdet);
   }
-
 
   // VISIBILITY ////////////////////////////////////////////
 
