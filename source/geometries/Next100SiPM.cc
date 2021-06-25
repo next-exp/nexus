@@ -34,7 +34,7 @@ Next100SiPM::Next100SiPM():
   naming_order_       (0),
   time_binning_       (1.0 * us),
   with_coating_       (false),
-  coating_thickn_     (2. * micrometer), 
+  coating_thickn_     (2. * micrometer),
   visibility_         (true)
 {
 }
@@ -54,12 +54,15 @@ G4ThreeVector Next100SiPM::GetDimensions() const
 void Next100SiPM::Construct()
 {
   // ENCASING //////////////////////////////////////////////
-
+  //dimensions are increased in case of SiPM coating
   G4String sipm_name = "SIPM_S13372";
 
   G4double sipm_width  = 3.0 * mm;
   G4double sipm_length = 4.0 * mm;
   G4double sipm_thickn = 1.3 * mm;
+
+  if(with_coating_) sipm_thickn = sipm_thickn + coating_thickn_;
+  else coating_thickn_ = 0.;
 
   dimensions_.setX(sipm_width);
   dimensions_.setY(sipm_length);
@@ -88,7 +91,7 @@ void Next100SiPM::Construct()
 
     coating_logic_vol = new G4LogicalVolume(coating_solid_vol, coating_mt_, coating_name);
 
-    G4double coating_zpos = sipm_thickn/2. + coating_thickn_/2.;
+    G4double coating_zpos = sipm_thickn/2. - coating_thickn_/2;
 
     new G4PVPlacement(nullptr, G4ThreeVector(0., 0., coating_zpos), coating_logic_vol,
                       coating_name, sipm_logic_vol, false, 0, false);
@@ -109,7 +112,7 @@ void Next100SiPM::Construct()
   G4double window_width  = sipm_width;
   G4double window_length = sipm_length;
   G4double window_thickn = 0.5 * mm;
-  G4double window_zpos   = sipm_thickn/2. - window_thickn/2.;
+  G4double window_zpos   = sipm_thickn/2. - coating_thickn_ - window_thickn/2.;
 
   G4Material* optical_silicone = MaterialsList::OpticalSilicone();
   optical_silicone->SetMaterialPropertiesTable(OpticalMaterialProperties::GlassEpoxy());
