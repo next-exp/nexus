@@ -77,16 +77,17 @@ void NextDemoTrackingPlane::Construct()
   if(verbosity_) G4cout << G4endl << "*** NEXT Demo Tracking Plane ";
 
   /// Defining Tracking Plane parameters
-  G4double gate_board_dist = 0.; // Distance from GATE to SiPM Board kapton surface
-  G4double mask_thickn     = 0.;
-  G4double membrane_thickn = 0.;
-  G4double coating_thickn  = 0.;
-  G4String hole_type       = "";
-  G4double hole_diameter   = 0.;
-  G4double hole_x          = 0.;
-  G4double hole_y          = 0.;
-  G4String sipm_type       = "";
-  G4bool   sipm_coating    = false;
+  G4double gate_board_dist  = 0.; // Distance from GATE to SiPM Board kapton surface
+  G4double mask_thickn      = 0.;
+  G4double membrane_thickn  = 0.;
+  G4double coating_thickn   = 0.;
+  G4String hole_type        = "";
+  G4double hole_diameter    = 0.;
+  G4double hole_x           = 0.;
+  G4double hole_y           = 0.;
+  G4String sipm_type        = "";
+  G4bool   sipm_coating     = false;
+  G4double sipm_coat_thickn = 0.;
 
   if (config_ == "run5") {
     if(verbosity_) G4cout << "run5 ..." << G4endl;
@@ -97,6 +98,8 @@ void NextDemoTrackingPlane::Construct()
     hole_type       = "rounded";
     hole_diameter   = 3.5 * mm;
     sipm_type       = "sensl";
+    sipm_coating    = false;
+
   }
   else if (config_ == "run7") {
     if(verbosity_) G4cout << "run7 ..." << G4endl;
@@ -107,6 +110,7 @@ void NextDemoTrackingPlane::Construct()
     hole_type       = "rounded";
     hole_diameter   = 3.5  * mm;
     sipm_type       = "sensl";
+    sipm_coating    = false;
   }
   else if (config_ == "run8") {
     if(verbosity_) G4cout << "run8 ..." << G4endl;
@@ -117,6 +121,7 @@ void NextDemoTrackingPlane::Construct()
     hole_type       = "rounded";
     hole_diameter   = 4.0  * mm;
     sipm_type       = "sensl";
+    sipm_coating    = false;
   }
   else if (config_ == "run9") {
     if(verbosity_) G4cout << "run9 ..." << G4endl;
@@ -153,8 +158,8 @@ void NextDemoTrackingPlane::Construct()
     sipm_board_->SetHoleX(hole_x);
     sipm_board_->SetHoleY(hole_y);}
   sipm_board_->SetSiPMType(sipm_type);
-  if (sipm_type == "next100"){
-    sipm_board_->SetSiPMCoating(sipm_coating);}
+  sipm_board_->SetSiPMCoating(sipm_coating);
+  sipm_board_->SetSiPMCoatThick(sipm_coat_thickn);
 
   sipm_board_->Construct();
   G4LogicalVolume* board_logic = sipm_board_->GetLogicalVolume();

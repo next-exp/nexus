@@ -34,6 +34,7 @@ Next100SiPM::Next100SiPM():
   naming_order_       (0),
   time_binning_       (1.0 * us),
   with_coating_       (false),
+  coating_thickn_     (2. * micrometer), 
   visibility_         (true)
 {
 }
@@ -78,7 +79,6 @@ void Next100SiPM::Construct()
   if (with_coating_) {
     G4String coating_name = sipm_name + "_WLS";
 
-    G4double coating_thickn_  = 1. * micrometer;
 
     G4Box* coating_solid_vol =
       new G4Box(coating_name, sipm_width/2., sipm_length/2., coating_thickn_/2.);

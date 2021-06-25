@@ -42,6 +42,7 @@ NextDemoSiPMBoard::NextDemoSiPMBoard():
   visibility_      (false),
   sipm_visibility_ (true),
   sipm_coating_    (false),
+  sipm_coat_thick_ (0.),
   time_binning_    (1. * microsecond),
   num_columns_     (8),
   num_rows_        (8),
@@ -110,6 +111,7 @@ void NextDemoSiPMBoard::Construct()
 
     sipm->SetVisibility(sipm_visibility_);
     sipm->SetSiPMCoating(sipm_coating_);
+    sipm->SetSiPMCoatThick(sipm_coat_thick_);
     sipm->SetTimeBinning(time_binning_);
     sipm->SetSensorDepth(2);
     sipm->SetMotherDepth(4);
@@ -148,6 +150,12 @@ void NextDemoSiPMBoard::Construct()
     if (hole_diam_ == 0.)
       G4Exception("[NextDemoSiPMBoard]", "Construct()", FatalException,
       "Masks require holes");
+
+  // SiPM coating require thickness
+  if (sipm_coating_)
+    if(sipm_coat_thick_== 0.)
+      G4Exception("[NextDemoSiPMBoard]", "Construct()", FatalException,
+      "SiPM coating require thickness");
 
 
   /// Board-Wrapper volume that contains all other elements

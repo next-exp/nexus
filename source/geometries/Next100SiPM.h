@@ -31,12 +31,13 @@ namespace nexus {
     void Construct() override;
 
     // Needed settings for correct numbering
-    void SetSensorDepth (G4int sensor_depth);
-    void SetMotherDepth (G4int mother_depth);
-    void SetNamingOrder (G4int naming_order);
-    void SetTimeBinning (G4double time_binning);
-    void SetSiPMCoating (G4bool with_coating);
-    void SetVisibility  (G4bool visibility);
+    void SetSensorDepth   (G4int sensor_depth);
+    void SetMotherDepth   (G4int mother_depth);
+    void SetNamingOrder   (G4int naming_order);
+    void SetTimeBinning   (G4double time_binning);
+    void SetSiPMCoating   (G4bool with_coating);
+    void SetSiPMCoatThick (G4bool coating_thickn);
+    void SetVisibility    (G4bool visibility);
 
   private:
     G4ThreeVector dimensions_;
@@ -47,6 +48,7 @@ namespace nexus {
     G4double time_binning_;
 
     G4bool with_coating_;
+    G4double coating_thickn_;
     G4bool visibility_;
 
   };
@@ -65,6 +67,9 @@ namespace nexus {
 
   inline void Next100SiPM::SetSiPMCoating(G4bool with_coating)
   { with_coating_ = with_coating; }
+
+  inline void Next100SiPM::SetSiPMCoatThick(G4bool coating_thickn)
+  { coating_thickn_ = coating_thickn; }
 
   inline void Next100SiPM::SetVisibility(G4bool visibility)
   { visibility_ = visibility; }
