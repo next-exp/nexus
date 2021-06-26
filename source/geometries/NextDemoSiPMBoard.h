@@ -55,7 +55,7 @@ namespace nexus {
     G4bool visibility_;
     G4bool sipm_visibility_;
     G4bool sipm_coating_;
-    G4bool sipm_coat_thick_;
+    G4double sipm_coat_thick_;
     G4double time_binning_;
 
     G4int    num_columns_, num_rows_, num_sipms_;
