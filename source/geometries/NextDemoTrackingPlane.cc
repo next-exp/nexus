@@ -86,7 +86,6 @@ void NextDemoTrackingPlane::Construct()
   G4double hole_x           = 0.;
   G4double hole_y           = 0.;
   G4String sipm_type        = "";
-  G4bool   sipm_coating     = false;
   G4double sipm_coat_thickn = 0.;
 
   if (config_ == "run5") {
@@ -98,8 +97,6 @@ void NextDemoTrackingPlane::Construct()
     hole_type       = "rounded";
     hole_diameter   = 3.5 * mm;
     sipm_type       = "sensl";
-    sipm_coating    = false;
-
   }
   else if (config_ == "run7") {
     if(verbosity_) G4cout << "run7 ..." << G4endl;
@@ -110,7 +107,6 @@ void NextDemoTrackingPlane::Construct()
     hole_type       = "rounded";
     hole_diameter   = 3.5  * mm;
     sipm_type       = "sensl";
-    sipm_coating    = false;
   }
   else if (config_ == "run8") {
     if(verbosity_) G4cout << "run8 ..." << G4endl;
@@ -121,7 +117,6 @@ void NextDemoTrackingPlane::Construct()
     hole_type       = "rounded";
     hole_diameter   = 4.0  * mm;
     sipm_type       = "sensl";
-    sipm_coating    = false;
   }
   else if (config_ == "run9") {
     if(verbosity_) G4cout << "run9 ..." << G4endl;
@@ -133,7 +128,6 @@ void NextDemoTrackingPlane::Construct()
     hole_x          = 6.0 * mm;
     hole_y          = 5.0 * mm;
     sipm_type       = "next100";
-    sipm_coating    = false;
   }
 
   /// Make sure the pointer to the mother volume is actually defined
@@ -158,8 +152,7 @@ void NextDemoTrackingPlane::Construct()
     sipm_board_->SetHoleX(hole_x);
     sipm_board_->SetHoleY(hole_y);}
   sipm_board_->SetSiPMType(sipm_type);
-  sipm_board_->SetSiPMCoating(sipm_coating);
-  sipm_board_->SetSiPMCoatThick(sipm_coat_thickn);
+  sipm_board_->SetSiPMCoatingThickness(sipm_coat_thickn);
 
   sipm_board_->Construct();
   G4LogicalVolume* board_logic = sipm_board_->GetLogicalVolume();

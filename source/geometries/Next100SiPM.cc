@@ -33,7 +33,6 @@ Next100SiPM::Next100SiPM():
   mother_depth_       (0),
   naming_order_       (0),
   time_binning_       (1.0 * us),
-  with_coating_       (false),
   coating_thickn_     (2. * micrometer),
   visibility_         (true)
 {
@@ -61,7 +60,6 @@ void Next100SiPM::Construct()
   G4double sipm_length = 4.0 * mm;
   G4double sipm_thickn = 1.3 * mm;
 
-  if(!with_coating_) coating_thickn_ = 0.;
   sipm_thickn = sipm_thickn + coating_thickn_;
 
   dimensions_.setX(sipm_width);
@@ -77,11 +75,8 @@ void Next100SiPM::Construct()
   GeometryBase::SetLogicalVolume(sipm_logic_vol);
 
   // COATING /////////////////////////////////////////////
-
-  G4LogicalVolume* coating_logic_vol;
-  if (with_coating_) {
+  if (coating_thickn_ > 0.) {
     G4String coating_name = sipm_name + "_WLS";
-
 
     G4Box* coating_solid_vol =
       new G4Box(coating_name, sipm_width/2., sipm_length/2., coating_thickn_/2.);
@@ -89,7 +84,7 @@ void Next100SiPM::Construct()
     G4Material* coating_mt = MaterialsList::TPB();
     coating_mt->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
 
-    coating_logic_vol = new G4LogicalVolume(coating_solid_vol, coating_mt, coating_name);
+    G4LogicalVolume* coating_logic_vol = new G4LogicalVolume(coating_solid_vol, coating_mt, coating_name);
 
     G4double coating_zpos = sipm_thickn/2. - coating_thickn_/2;
 
