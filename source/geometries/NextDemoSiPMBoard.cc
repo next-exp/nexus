@@ -344,8 +344,7 @@ void NextDemoSiPMBoard::Construct()
   /// VERBOSITY
   if (verbosity_)
     G4cout << "* SiPM board size:    " << board_size_      << G4endl;
-    G4cout << "* " << num_sipms_ << " SiPMs from Sensl"    << G4endl;
-
+    
     if (sipm_verbosity_) {
       for (G4int sipm_num=0; sipm_num<num_sipms_; sipm_num++)
         G4cout << "* SiPM " << sipm_num << " position: " << sipm_positions_[sipm_num] << G4endl;
@@ -353,9 +352,18 @@ void NextDemoSiPMBoard::Construct()
 
     G4cout << "* Kapton thickness:   " << kapton_thickn_   << G4endl;
     G4cout << "* Mask thickness:     " << mask_thickn_     << G4endl;
-    G4cout << "* Mask hole diameter: " << hole_diam_       << G4endl;
     G4cout << "* Membrane thickness: " << membrane_thickn_ << G4endl;
-    G4cout << "* Coating thickness: "  << coating_thickn_  << G4endl;
+    G4cout << "* Coating thickness:  " << coating_thickn_  << G4endl;
+    G4cout << "* SiPM type:          " << sipm_type_       << G4endl;
+    G4cout << "* Hole type:          " << hole_type_       << G4endl;
+
+    if (hole_type_ == "rectangular"){
+    G4cout << "* Mask hole X size:   " << hole_x_          << G4endl;
+    G4cout << "* Mask hole Y size:   " << hole_y_          << G4endl;
+    }
+    else if (hole_type_ == "rounded"){
+    G4cout << "* Mask hole diameter: " << hole_diam_       << G4endl;
+    }
 
 
   /// VISIBILITIES
