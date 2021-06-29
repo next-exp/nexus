@@ -2,9 +2,10 @@
 // nexus | NextDemoTrackingPlane.cc
 //
 // Tracking plane of the Demo++ geometry.
-// It implements 2 different TP implementations:
+// It describes 3 different TP implementations:
 // "run5": the one used at the beginning with passing-holes masks
-// "run7" and "run8": the ones used with coated masks and membranes.
+// "run7", "run8" and "run9": the ones used with coated masks and membranes.
+// "run10" (next100-like): no membranes and inner coating (both in sipm and hole)
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------

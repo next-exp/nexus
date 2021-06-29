@@ -4,8 +4,9 @@
 // Geometry of the DEMO++ SiPM board.
 // It consists of an 8x8 array of SensL SiPMs on a kapton board.
 // The board can be covered with a teflon mask, or not.
-// The teflon mask may have membranes covering the holes, or not.
-// The teflon mask may be coated with TPB or not.
+// The teflon mask might have membranes covering the holes, or not.
+// The teflon mask might be coated with TPB or not.
+// The teflon holes might be coated with TPB or not.
 //
 // The NEXT Collaboration
 // -----------------------------------------------------------------------------
@@ -344,7 +345,7 @@ void NextDemoSiPMBoard::Construct()
   /// VERBOSITY
   if (verbosity_)
     G4cout << "* SiPM board size:    " << board_size_      << G4endl;
-    
+
     if (sipm_verbosity_) {
       for (G4int sipm_num=0; sipm_num<num_sipms_; sipm_num++)
         G4cout << "* SiPM " << sipm_num << " position: " << sipm_positions_[sipm_num] << G4endl;
