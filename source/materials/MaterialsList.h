@@ -99,8 +99,13 @@ namespace materials {
   /// High density polyethylene
   G4Material* HDPE();
 
+<<<<<<< HEAD
   /// Optical Silicone
   G4Material* OpticalSilicone();
+=======
+    /// PE1000 (PE UHMW, ultra-high molecular weight polyethylene)
+    static G4Material* PE1000();
+    
 
   /// Selenium Hexafluoride
     G4Material* SeF6(G4double pressure=STP_Pressure,
