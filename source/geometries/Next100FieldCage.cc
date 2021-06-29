@@ -45,7 +45,6 @@ Next100FieldCage::Next100FieldCage():
   GeometryBase(),
   // Dimensions
   active_diam_ (984 * mm), // distance between the centers of two opposite panels
-  gate_cathode_centre_dist_ (1205. * mm), // distance between gate and the centre of cathode grid
   active_cathode_dist_ (1178.*mm), //distance from the  beginning of the teflon drift panels to the first side of the cathode.
   gate_sapphire_wdw_dist_ (1460.5 * mm), // distance between gate and the surface of sapphire windows
   cathode_int_diam_ (960. * mm),

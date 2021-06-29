@@ -50,7 +50,7 @@ namespace nexus {
 
     // Dimensions
     const G4double active_diam_;
-    const G4double gate_cathode_centre_dist_, active_cathode_dist_, gate_sapphire_wdw_dist_;
+    const G4double active_cathode_dist_, gate_sapphire_wdw_dist_;
     const G4double cathode_int_diam_, cathode_ext_diam_, cathode_thickn_;
     const G4double grid_thickn_;
     const G4double teflon_total_length_, teflon_thickn_;
