@@ -312,6 +312,10 @@ void NextDemoSiPMBoard::Construct()
                                coating_phys, coating_opsurf);
 
     // Coating holes
+    // If there are no membranes, the mask holes are open to the xe gas, namely the hole mask openings
+    // are not covered and exposed to the gas. There is no membrane to support the coating, therefore
+    // we have to open the corresponding holes in the coating volume at the hole (sipm) positions. This is done
+    // through a xe volume with hole dimensions placed inside the coating at the hole (sipm) positions.
     if (membrane_thickn_ == 0.){
       if (hole_type_ == "rectangular"){
 
