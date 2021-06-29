@@ -48,7 +48,7 @@ def nexus_full_output_file_flex100(output_tmpdir, full_base_name_flex100):
 
 @pytest.fixture(scope = 'session')
 def full_base_name_demopp():
-    return 'DEMOPP_full_electron'
+    return 'DEMOPP_full_electron_{run}'
 
 
 @pytest.fixture(scope = 'session')

@@ -49,8 +49,8 @@ def test_create_nexus_output_file_next100(config_tmpdir, output_tmpdir, NEXUSDIR
 /Geometry/Next100/sc_yield 10000 1/MeV
 
 /Generator/SingleParticle/particle e-
-/Generator/SingleParticle/min_energy 100. keV
-/Generator/SingleParticle/max_energy 100. keV
+/Generator/SingleParticle/min_energy 10. keV
+/Generator/SingleParticle/max_energy 10. keV
 /Generator/SingleParticle/region CENTER
 
 /nexus/persistency/outputFile {output_tmpdir}/{full_base_name_next100}
@@ -116,8 +116,8 @@ def test_create_nexus_output_file_new(config_tmpdir, output_tmpdir, NEXUSDIR,
 /Geometry/NextNew/sc_yield 10000 1/MeV
 
 /Generator/SingleParticle/particle e-
-/Generator/SingleParticle/min_energy 100. keV
-/Generator/SingleParticle/max_energy 100. keV
+/Generator/SingleParticle/min_energy 10. keV
+/Generator/SingleParticle/max_energy 10. keV
 /Generator/SingleParticle/region CENTER
 
 /nexus/persistency/outputFile {output_tmpdir}/{full_base_name_new}
@@ -218,8 +218,8 @@ def test_create_nexus_output_file_flex100(config_tmpdir, output_tmpdir, NEXUSDIR
 /Geometry/NextFlex/ics_thickness         12. cm
 
 /Generator/SingleParticle/particle       e-
-/Generator/SingleParticle/min_energy     100. keV
-/Generator/SingleParticle/max_energy     100. keV
+/Generator/SingleParticle/min_energy     10. keV
+/Generator/SingleParticle/max_energy     10. keV
 /Generator/SingleParticle/region         AD_HOC
 /Geometry/NextFlex/specific_vertex       0. 0. 500. mm
 
@@ -243,65 +243,65 @@ def test_create_nexus_output_file_flex100(config_tmpdir, output_tmpdir, NEXUSDIR
 @pytest.mark.order(4)
 def test_create_nexus_output_file_demopp(config_tmpdir, output_tmpdir, NEXUSDIR, full_base_name_demopp, nexus_full_output_file_demopp):
 
-     init_text = f"""
-/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
-/PhysicsList/RegisterPhysics G4DecayPhysics
-/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
-/PhysicsList/RegisterPhysics G4OpticalPhysics
-/PhysicsList/RegisterPhysics NexusPhysics
-/PhysicsList/RegisterPhysics G4StepLimiterPhysics
+    for run in ["run5", "run7", "run8", "run9"]:
 
-/nexus/RegisterGeometry NextDemo
+        init_text = f"""
+    /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+    /PhysicsList/RegisterPhysics G4DecayPhysics
+    /PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+    /PhysicsList/RegisterPhysics G4OpticalPhysics
+    /PhysicsList/RegisterPhysics NexusPhysics
+    /PhysicsList/RegisterPhysics G4StepLimiterPhysics
 
-/nexus/RegisterGenerator SingleParticleGenerator
+    /nexus/RegisterGeometry NextDemo
 
-/nexus/RegisterPersistencyManager PersistencyManager
+    /nexus/RegisterGenerator SingleParticleGenerator
 
-/nexus/RegisterTrackingAction DefaultTrackingAction
-/nexus/RegisterEventAction DefaultEventAction
-/nexus/RegisterRunAction DefaultRunAction
+    /nexus/RegisterPersistencyManager PersistencyManager
 
-/nexus/RegisterMacro {config_tmpdir}/{full_base_name_demopp}.config.mac
-"""
-     init_path = os.path.join(config_tmpdir, full_base_name_demopp+'.init.mac')
-     init_file = open(init_path,'w')
-     init_file.write(init_text)
-     init_file.close()
+    /nexus/RegisterTrackingAction DefaultTrackingAction
+    /nexus/RegisterEventAction DefaultEventAction
+    /nexus/RegisterRunAction DefaultRunAction
 
-     config_text = f"""
-/run/verbose 1
-/event/verbose 0
-/tracking/verbose 0
+    /nexus/RegisterMacro {config_tmpdir}/{full_base_name_demopp.format(run=run)}.config.mac
+    """
+        init_path = os.path.join(config_tmpdir, full_base_name_demopp.format(run=run) +'.init.mac')
+        init_file = open(init_path,'w')
+        init_file.write(init_text)
+        init_file.close()
 
-/process/em/verbose 0
+        config_text = f"""
+    /run/verbose 1
+    /event/verbose 0
+    /tracking/verbose 0
 
-/Geometry/NextDemo/config run7
-/Geometry/NextDemo/elfield true
-/Geometry/NextDemo/EL_field_intensity 13 kV/cm
-/Geometry/NextDemo/max_step_size 1. mm
-/Geometry/NextDemo/pressure 10. bar
-/Geometry/NextDemo/sc_yield 10000 1/MeV
+    /Geometry/NextDemo/config {run}
+    /Geometry/NextDemo/elfield true
+    /Geometry/NextDemo/EL_field_intensity 13 kV/cm
+    /Geometry/NextDemo/max_step_size 1. mm
+    /Geometry/NextDemo/pressure 10. bar
+    /Geometry/NextDemo/sc_yield 10000 1/MeV
 
-/Geometry/NextDemo/specific_vertex 0. 0. 10. cm
+    /Geometry/NextDemo/specific_vertex 0. 0. 10. cm
 
-/Generator/SingleParticle/particle e-
-/Generator/SingleParticle/min_energy 100. keV
-/Generator/SingleParticle/max_energy 100. keV
-/Generator/SingleParticle/region AD_HOC
+    /Generator/SingleParticle/particle e-
+    /Generator/SingleParticle/min_energy 10. keV
+    /Generator/SingleParticle/max_energy 10. keV
+    /Generator/SingleParticle/region AD_HOC
 
-/nexus/persistency/outputFile {output_tmpdir}/{full_base_name_demopp}
-/nexus/random_seed 21051817
+    /nexus/persistency/outputFile {output_tmpdir}/{full_base_name_demopp.format(run=run)}
+    /nexus/random_seed 21051817
 
-"""
+    """
 
-     config_path = os.path.join(config_tmpdir, full_base_name_demopp+'.config.mac')
-     config_file = open(config_path,'w')
-     config_file.write(config_text)
-     config_file.close()
+        config_path = os.path.join(config_tmpdir, full_base_name_demopp.format(run=run) +'.config.mac')
+        config_file = open(config_path,'w')
+        config_file.write(config_text)
+        config_file.close()
 
-     my_env    = os.environ
-     nexus_exe = NEXUSDIR + '/bin/nexus'
-     command   = [nexus_exe, '-b', '-n', '1', init_path]
-     p         = subprocess.run(command, check=True, env=my_env)
+        my_env    = os.environ
+        nexus_exe = NEXUSDIR + '/bin/nexus'
+        command   = [nexus_exe, '-b', '-n', '1', init_path]
+        p         = subprocess.run(command, check=True, env=my_env)
 
-     return nexus_full_output_file_demopp
+    return nexus_full_output_file_demopp
