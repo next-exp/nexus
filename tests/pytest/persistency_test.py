@@ -78,7 +78,7 @@ def test_hdf5_structure(detectors):
 
     filename, _, _, _, _ = detectors
     if "DEMOPP" in filename:
-        for run in ["run5", "run7", "run8", "run9"]:
+        for run in ["run5", "run7", "run8", "run9", "run10"]:
             test(filename.format(run=run))
     else:
         test(filename)
@@ -101,7 +101,7 @@ def test_particle_ids_of_hits_exist_in_particle_table(detectors):
 
     filename, _, _, _, _ = detectors
     if "DEMOPP" in filename:
-        for run in ["run5", "run7", "run8", "run9"]:
+        for run in ["run5", "run7", "run8", "run9", "run10"]:
             test(filename.format(run=run))
     else:
         test(filename)
@@ -118,7 +118,7 @@ def test_hit_labels(detectors):
 
     filename, _, _, _, _ = detectors
     if "DEMOPP" in filename:
-        for run in ["run5", "run7", "run8", "run9"]:
+        for run in ["run5", "run7", "run8", "run9", "run10"]:
             test(filename.format(run=run))
     else:
         test(filename)
@@ -136,7 +136,7 @@ def test_primary_always_exists(detectors):
 
     filename, _, _, _, _ = detectors
     if "DEMOPP" in filename:
-        for run in ["run5", "run7", "run8", "run9"]:
+        for run in ["run5", "run7", "run8", "run9", "run10"]:
             test(filename.format(run=run))
     else:
         test(filename)
@@ -154,7 +154,7 @@ def test_sensor_binning_is_saved(detectors):
 
     filename, _, _, _, _ = detectors
     if "DEMOPP" in filename:
-        for run in ["run5", "run7", "run8", "run9"]:
+        for run in ["run5", "run7", "run8", "run9", "run10"]:
             test(filename.format(run=run))
     else:
         test(filename)
@@ -180,7 +180,7 @@ def test_sensor_names_are_the_same_across_tables(detectors):
 
     filename, _, _, _, _ = detectors
     if "DEMOPP" in filename:
-        for run in ["run5", "run7", "run8", "run9"]:
+        for run in ["run5", "run7", "run8", "run9", "run10"]:
             test(filename.format(run=run))
     else:
         test(filename)

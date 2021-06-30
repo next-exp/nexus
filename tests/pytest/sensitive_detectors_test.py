@@ -41,7 +41,7 @@ def test_sensors_numbering(detectors):
     filename, pmt_ids, board_ids, sipms_per_board, board_ordering = detectors
 
     if "DEMOPP" in filename:
-        for run in ["run5", "run7", "run8", "run9"]:
+        for run in ["run5", "run7", "run8", "run9", "run10"]:
             test(filename.format(run=run), pmt_ids, board_ids, sipms_per_board, board_ordering)
     else:
         test(filename, pmt_ids, board_ids, sipms_per_board, board_ordering)
