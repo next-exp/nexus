@@ -110,6 +110,7 @@ namespace nexus {
 
     // Pointers to materials definition
     G4Material* hdpe_;
+    G4Material* pe1000_;
     G4Material* tpb_;
     G4Material* teflon_;
     G4Material* copper_;
