@@ -232,9 +232,9 @@ void NextDemoSiPMBoard::Construct()
 
   G4double sipm_posz = - mask_thickn_/2. + sipm_z_dim/2.;
 
-  G4VPhysicalVolume* hole_phys_ = new G4PVPlacement(sipm_rot, G4ThreeVector(0., 0., sipm_posz), sipm_->GetLogicalVolume(),
-                                                    sipm_->GetLogicalVolume()->GetName(), hole_logic,
-                                                    false, 0, false);
+  G4VPhysicalVolume* sipm_phys = new G4PVPlacement(sipm_rot, G4ThreeVector(0., 0., sipm_posz), sipm_->GetLogicalVolume(),
+                                                   sipm_->GetLogicalVolume()->GetName(), hole_logic,
+                                                   false, 0, false);
 
   if (hole_coated_ && (hole_type_ == "rectangular")){
 
@@ -257,8 +257,8 @@ void NextDemoSiPMBoard::Construct()
                             "HOLE_COATING", hole_logic, false, 0, false);
 
     new G4LogicalBorderSurface("TEFLON_WLS_HOLE_GAS_OPSURF", hole_coating_phys_,
-                               hole_phys_, coating_opsurf);
-    new G4LogicalBorderSurface("GAS_TEFLON_WLS_HOLE_OPSURF", hole_phys_,
+                               sipm_phys, coating_opsurf);
+    new G4LogicalBorderSurface("GAS_TEFLON_WLS_HOLE_OPSURF", sipm_phys,
                                hole_coating_phys_, coating_opsurf);
   }
   else if (hole_coated_ && (hole_type_ == "rounded")){
