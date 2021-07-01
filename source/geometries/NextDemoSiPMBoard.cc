@@ -232,10 +232,11 @@ void NextDemoSiPMBoard::Construct()
 
   G4double sipm_posz = - mask_thickn_/2. + sipm_z_dim/2.;
 
-  G4VPhysicalVolume* sipm_phys = new G4PVPlacement(sipm_rot, G4ThreeVector(0., 0., sipm_posz), sipm_->GetLogicalVolume(),
-                                                   sipm_->GetLogicalVolume()->GetName(), hole_logic,
-                                                   false, 0, false);
+  new G4PVPlacement(sipm_rot, G4ThreeVector(0., 0., sipm_posz), sipm_->GetLogicalVolume(),
+                                            sipm_->GetLogicalVolume()->GetName(), hole_logic,
+                                            false, 0, false);
 
+  G4VPhysicalVolume* hole_coating_phys;
   if (hole_coated_ && (hole_type_ == "rectangular")){
 
     G4Box* hole_coating_top = new G4Box("HOLE_COATING", hole_x_/2., coating_thickn_/2., mask_thickn_/2.);
@@ -252,14 +253,9 @@ void NextDemoSiPMBoard::Construct()
 
     G4LogicalVolume* hole_coating_logic = new G4LogicalVolume(hole_coating, tpb, "HOLE_COATING");
 
-    G4VPhysicalVolume* hole_coating_phys_ =
+    hole_coating_phys =
           new G4PVPlacement(nullptr, G4ThreeVector(0., hole_y_/2. - coating_thickn_/2., 0.), hole_coating_logic,
                             "HOLE_COATING", hole_logic, false, 0, false);
-
-    new G4LogicalBorderSurface("TEFLON_WLS_HOLE_GAS_OPSURF", hole_coating_phys_,
-                               sipm_phys, coating_opsurf);
-    new G4LogicalBorderSurface("GAS_TEFLON_WLS_HOLE_OPSURF", sipm_phys,
-                               hole_coating_phys_, coating_opsurf);
   }
   else if (hole_coated_ && (hole_type_ == "rounded")){
     G4Exception("[NextDemoSiPMBoard]", "Construct()", FatalException, "Coated rounded holes not implemented");
@@ -285,9 +281,17 @@ void NextDemoSiPMBoard::Construct()
 
 
   /// Placing the Holes with SiPMs & membranes inside
+  G4VPhysicalVolume* hole_phys;
   for (G4int sipm_id=0; sipm_id<num_sipms_; sipm_id++) {
-    new G4PVPlacement(nullptr, sipm_positions_[sipm_id], hole_logic,
-                      hole_name, mask_logic, false, sipm_id, false);
+    hole_phys = new G4PVPlacement(nullptr, sipm_positions_[sipm_id], hole_logic,
+                                  hole_name, mask_logic, false, sipm_id, false);
+
+    if (hole_coated_ && (hole_type_ == "rectangular")){
+      new G4LogicalBorderSurface("HOLE_COATING_GAS_OPSURF", hole_coating_phys,
+                                 hole_phys, coating_opsurf);
+      new G4LogicalBorderSurface("GAS_HOLE_COATING_OPSURF", hole_phys,
+                                 hole_coating_phys, coating_opsurf);
+    }
   }
 
 
