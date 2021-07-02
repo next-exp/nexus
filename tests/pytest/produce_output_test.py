@@ -243,7 +243,7 @@ def test_create_nexus_output_file_flex100(config_tmpdir, output_tmpdir, NEXUSDIR
 @pytest.mark.order(4)
 def test_create_nexus_output_file_demopp(config_tmpdir, output_tmpdir, NEXUSDIR, full_base_name_demopp, nexus_full_output_file_demopp):
 
-    for run in ["run5", "run7", "run8", "run9"]:
+    for run in ["run5", "run7", "run8", "run9", "run10"]:
 
         init_text = f"""
     /PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
