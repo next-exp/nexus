@@ -58,7 +58,7 @@ NextDemoSiPMBoard::NextDemoSiPMBoard():
   hole_diam_       (3.5  * mm),
   hole_x_          (0.0  * mm),
   hole_y_          (0.0  * mm),
-  hole_coated_     (true),
+  hole_coated_     (false),
   sipm_type_       (""),
   mother_phys_     (nullptr),
   kapton_gen_      (nullptr)
@@ -132,12 +132,12 @@ void NextDemoSiPMBoard::Construct()
   G4Material* mother_gas = mother_phys_->GetLogicalVolume()->GetMaterial();
 
 
-  // /// Board configuration checks
-  // // Coating require membranes
-  // if (coating_thickn_ > 0.)
-  //   if (membrane_thickn_ == 0.)
-  //     G4Exception("[NextDemoSiPMBoard]", "Construct()", FatalException,
-  //     "Coating require membranes");
+  /// Board configuration checks
+  // Coating require membranes
+  if ((!hole_coated_) && (coating_thickn_ > 0.))
+    if (membrane_thickn_ == 0.)
+      G4Exception("[NextDemoSiPMBoard]", "Construct()", FatalException,
+      "Coating require membranes");
 
   // Membranes require masks
   if (membrane_thickn_ > 0.)
