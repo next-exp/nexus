@@ -54,12 +54,12 @@ namespace nexus {
     G4double lead_thickness_, steel_thickness_;
     G4double pedestal_x_, pedestal_top_x_;
     G4double support_beam_dist_, support_front_dist_;
-    G4double pedestal_lateral_beam_thickness;
-    G4double pedestal_front_beam_thickness;
-    G4double pedestal_roof_thickness;
-    G4double pedestal_lateral_length;
-    G4double bubble_seal_thickness;
-    G4double edpm_seal_thickness;
+    G4double pedestal_lateral_beam_thickness_;
+    G4double pedestal_front_beam_thickness_;
+    G4double pedestal_roof_thickness_;
+    G4double pedestal_lateral_length_;
+    G4double bubble_seal_thickness_;
+    G4double edpm_seal_thickness_;
 
     G4bool visibility_;
     G4bool verbosity_;
