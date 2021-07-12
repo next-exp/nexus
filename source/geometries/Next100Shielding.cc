@@ -496,16 +496,15 @@ namespace nexus {
 
     // EDPM SEAL
     edpm_seal_front_gen_ =
-      new BoxPointSampler(edpm_seal_thickness_, steel_y, edpm_seal_thickness_, 0.,
-                          G4ThreeVector(0., -beam_thickness_2/2., 0.), 0);
+      new BoxPointSampler(edpm_seal_thickness_, shield_y_, edpm_seal_thickness_, 0.,
+                          G4ThreeVector(0., -(beam_thickness_2+steel_thickness_)/2., 0.), 0);
 
     edpm_seal_lateral_gen_ =
-      new BoxPointSampler(edpm_seal_thickness_, edpm_seal_thickness_, steel_z, 0.,
-                          G4ThreeVector(0., -beam_thickness_2/2., 0.), 0);
+      new BoxPointSampler(edpm_seal_thickness_, edpm_seal_thickness_, shield_z_, 0.,
+                          G4ThreeVector(0., -(beam_thickness_2+steel_thickness_)/2., 0.), 0);
 
-    G4double edpm_front_vol   = 2*edpm_seal_thickness_ * steel_y * edpm_seal_thickness_;
-    G4double edpm_lateral_vol =   edpm_seal_thickness_ * edpm_seal_thickness_
-                                 * (steel_z + 2*steel_thickness_);
+    G4double edpm_front_vol   = 2*edpm_seal_thickness_ * shield_y_ * edpm_seal_thickness_;
+    G4double edpm_lateral_vol =   edpm_seal_thickness_ * edpm_seal_thickness_ * shield_z_;
 
     perc_edpm_front_vol_   = edpm_front_vol  /(edpm_front_vol + edpm_lateral_vol);
     perc_edpm_lateral_vol_ = edpm_lateral_vol/(edpm_front_vol + edpm_lateral_vol);
@@ -768,15 +767,15 @@ namespace nexus {
       if (rand<perc_edpm_front_vol_){ // front
         vertex = edpm_seal_front_gen_->GenerateVertex("INSIDE");
         if (G4UniformRand() < 0.5){
-          vertex.setZ(vertex.z() + (shield_z_/2. + steel_thickness_ + edpm_seal_thickness_/2.));
+          vertex.setZ(vertex.z() + (shield_z_/2. - edpm_seal_thickness_/2.));
         }
         else{
-          vertex.setZ(vertex.z() - (shield_z_/2. + steel_thickness_ + edpm_seal_thickness_/2.));
+          vertex.setZ(vertex.z() - (shield_z_/2. - edpm_seal_thickness_/2.));
         }
       }
       else{ // lateral
         vertex = edpm_seal_lateral_gen_->GenerateVertex("INSIDE");
-        vertex.setY(vertex.y() + (shield_y_/2. + steel_thickness_ + edpm_seal_thickness_/2.));
+        vertex.setY(vertex.y() + (shield_y_/2. - edpm_seal_thickness_/2.));
       }
     }
 
