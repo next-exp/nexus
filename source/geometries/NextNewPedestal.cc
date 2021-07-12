@@ -85,7 +85,7 @@ namespace nexus {
   G4ThreeVector NextNewPedestal::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);
-    if (region == "PEDESTAL") {
+    if (region == "PEDESTAL_BOARD") {
       vertex = table_gen_->GenerateVertex("INSIDE");
     }
     else {
