@@ -258,39 +258,6 @@ namespace nexus {
       new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_gas_logic,
                         "VESSEL_GAS", vessel_logic, false, 0);
 
-
-    //// Vacuum Manifold
-    G4double vacuum_manifold_rad = nozzle_ext_diam_/2. - vessel_thickness_;
-    G4double vacuum_manifold_length = (large_nozzle_length_ - vessel_body_length_) / 2. + 9.4*cm; // 10.6 cm comes from Derek's drawings
-                                                                                                  // Switched to 9.4 to be aligned with Energy Plane
-    G4double vacuum_manifold_zpos = -1. * (large_nozzle_length_ - vacuum_manifold_length) / 2.;
-
-    G4Tubs* vacuum_manifold_solid = new G4Tubs("VACUUM_MANIFOLD", 0.*cm, vacuum_manifold_rad,
-					       vacuum_manifold_length/2., 0.*deg, 360.*deg);
-
-    G4LogicalVolume* vacuum_manifold_logic = new G4LogicalVolume(vacuum_manifold_solid,
-								 G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
-								 "VACUUM_MANIFOLD");
-
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,vacuum_manifold_zpos), vacuum_manifold_logic,
-		      "VACUUM_MANIFOLD", vessel_gas_logic, false, 0);
-
-
-    G4double vacuum_manifold_gas_rad = vacuum_manifold_rad - vessel_thickness_;
-    G4double vacuum_manifold_gas_length = vacuum_manifold_length - 2. * vessel_thickness_;
-
-    G4Tubs* vacuum_manifold_gas_solid = new G4Tubs("VACUUM_MANIFOLD_GAS", 0.*cm, vacuum_manifold_gas_rad,
-						   vacuum_manifold_gas_length/2., 0.*deg, 360.*deg);
-
-    G4LogicalVolume* vacuum_manifold_gas_logic = new G4LogicalVolume(vacuum_manifold_gas_solid,
-								     G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic"),
-								     "VACUUM_MANIFOLD_GAS");
-
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vacuum_manifold_gas_logic,
-		      "VACUUM_MANIFOLD_GAS", vacuum_manifold_logic, false, 0);
-
-
-
     // SETTING VISIBILITIES   //////////
     if (visibility_) {
       G4VisAttributes grey = DarkGrey();
@@ -299,15 +266,10 @@ namespace nexus {
       grey.SetForceSolid(true);
       vessel_gas_logic->SetVisAttributes(grey);
       //grey.SetForceSolid(true);
-      vacuum_manifold_logic->SetVisAttributes(grey);
-      //grey.SetForceSolid(true);
-      vacuum_manifold_gas_logic->SetVisAttributes(grey);
     }
     else {
       vessel_logic->SetVisAttributes(G4VisAttributes::Invisible);
       vessel_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      vacuum_manifold_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      vacuum_manifold_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
 
