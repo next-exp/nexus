@@ -17,95 +17,78 @@
 class G4MaterialPropertiesTable;
 
 
-namespace nexus {
+namespace opticalprops {
 
   using namespace CLHEP;
 
-  // This is a stateless class where all methods are static functions.
 
-  class OpticalMaterialProperties
-  {
-  public:
+  G4MaterialPropertiesTable* Vacuum();
 
-    static G4MaterialPropertiesTable* Vacuum();
+  G4MaterialPropertiesTable* GlassEpoxy();
 
-    static G4MaterialPropertiesTable* GlassEpoxy();
+  G4MaterialPropertiesTable* FusedSilica();
 
-    // Synthetic fused silica (suprasil) with transmission in the deep
-    // ultraviolet down to 160 nm
-    static G4MaterialPropertiesTable* FusedSilica();
+  G4MaterialPropertiesTable* FakeFusedSilica(G4double transparency = .9,
+                                            G4double thickness    = 1. * mm);
 
-    static G4MaterialPropertiesTable* FakeFusedSilica(G4double transparency = .9,
-                                                      G4double thickness    = 1. * mm);
+  G4MaterialPropertiesTable* ITO();
 
-    static G4MaterialPropertiesTable* ITO();
+  G4MaterialPropertiesTable* PEDOT();
 
-    static G4MaterialPropertiesTable* PEDOT();
+  G4MaterialPropertiesTable* Sapphire();
 
-    static G4MaterialPropertiesTable* Sapphire();
+  G4MaterialPropertiesTable* OptCoupler();
 
-    static G4MaterialPropertiesTable* OptCoupler();
+  G4MaterialPropertiesTable* GAr(G4double sc_yield,
+                                G4double e_lifetime=1000.*ms);
 
-    static G4MaterialPropertiesTable* GAr(G4double sc_yield,
-                                          G4double e_lifetime=1000.*ms);
+  G4MaterialPropertiesTable* GXe(G4double pressure=1.*bar,
+                                G4double temperature=STP_Temperature,
+                                G4int sc_yield=25510/MeV,
+                                G4double e_lifetime=1000.*ms);
 
-    static G4MaterialPropertiesTable* LAr();
+  G4MaterialPropertiesTable* LXe();
 
-    static G4MaterialPropertiesTable* GXe(G4double pressure=1.*bar,
-                                          G4double temperature=STP_Temperature,
-                                          G4int sc_yield=25510/MeV,
-                                          G4double e_lifetime=1000.*ms);
+  G4MaterialPropertiesTable* FakeGrid(G4double pressure=1.*bar,
+                                      G4double temperature=STP_Temperature,
+                                      G4double transparency=.9,
+                                      G4double thickness=1.*mm,
+                                      G4int sc_yield=25510/MeV,
+                                      G4double e_lifetime=1000.*ms,
+                                      G4double photoe_p=0);
 
-    static G4MaterialPropertiesTable* FakeGrid(G4double pressure=1.*bar,
-                                               G4double temperature=STP_Temperature,
-                                               G4double transparency=.9,
-                                               G4double thickness=1.*mm,
-                                               G4int sc_yield=25510/MeV,
-                                               G4double e_lifetime=1000.*ms,
-                                               G4double photoe_p=0);
+  G4MaterialPropertiesTable* TPB();
 
-    static G4MaterialPropertiesTable* TPB();
+  G4MaterialPropertiesTable* DegradedTPB(G4double wls_eff);
 
-    static G4MaterialPropertiesTable* DegradedTPB(G4double wls_eff);
+  G4MaterialPropertiesTable* TPH();
 
-    static G4MaterialPropertiesTable* TPH();
+  G4MaterialPropertiesTable* PTFE();
 
-    static G4MaterialPropertiesTable* PTFE();
+  G4MaterialPropertiesTable* EJ280();
 
-    static G4MaterialPropertiesTable* EJ280();
+  G4MaterialPropertiesTable* EJ286();
 
-    static G4MaterialPropertiesTable* EJ286();
+  G4MaterialPropertiesTable* Y11();
 
-    static G4MaterialPropertiesTable* Y11();
+  G4MaterialPropertiesTable* Pethylene();
 
-    static G4MaterialPropertiesTable* Pethylene();
+  G4MaterialPropertiesTable* FPethylene();
 
-    static G4MaterialPropertiesTable* FPethylene();
+  G4MaterialPropertiesTable* PMMA();
 
-    static G4MaterialPropertiesTable* PMMA();
-
-    static G4MaterialPropertiesTable* XXX();
+  G4MaterialPropertiesTable* XXX();
 
 
-  private:
+  constexpr G4double optPhotMinE_ =  0.2  * eV;
+  constexpr G4double optPhotMaxE_ = 11.5  * eV;
+  constexpr G4double noAbsLength_ = 1.e8  * m;
 
-    static constexpr G4double optPhotMinE_ =  0.2  * eV;
-    static constexpr G4double optPhotMaxE_ = 11.5  * eV;
-    static constexpr G4double noAbsLength_ = 1.e8  * m;
-
-    // Constant that allows to convert nm to eV:
-    // nm_to_eV_ / wavelength (nm) = energy (eV)
-    static constexpr G4double nm_to_eV_ = h_Planck * c_light * 1.e6;
+  // Constant that allows to convert nm to eV:
+  // nm_to_eV_ / wavelength (nm) = energy (eV)
+  constexpr G4double nm_to_eV_ = h_Planck * c_light * 1.e6;
 
 
-  private:
-    // Constructor (hidden)
-    OpticalMaterialProperties();
-
-    // Destructor (hidden)
-    ~OpticalMaterialProperties();
-  };
-
-} // end namespace nexus
+} // end namespace opticalprops
 
 #endif

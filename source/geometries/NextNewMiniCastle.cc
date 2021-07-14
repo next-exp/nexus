@@ -159,7 +159,7 @@ namespace nexus {
       		       G4ThreeVector(0., -steel_y/2.+steel_thickn_/2., steel_z/2.-steel_thickn_/2.));
 
     G4LogicalVolume* steel_logic =
-      new G4LogicalVolume (steel_solid, MaterialsList::Steel(), "MINI_CASTLE_STEEL");
+      new G4LogicalVolume (steel_solid, materials::Steel(), "MINI_CASTLE_STEEL");
 
     y_pos = pedestal_surf_y_ + y_ -thickness_ - steel_thickn_/2.;
     new G4PVPlacement(0, G4ThreeVector(0., y_pos, 0.), steel_logic,

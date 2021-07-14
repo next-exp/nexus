@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // nexus | HeliumGasProperties.h
 //
-// This class collects the relevant physical properties of gaseous helium.
+// Relevant physical properties of gaseous helium.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
@@ -18,26 +18,12 @@ class G4MaterialPropertiesTable;
 
 namespace nexus {
 
-  class HeliumGasProperties
-  {
-  public:
-    /// Constructor
-    HeliumGasProperties(G4double pressure, G4double /*temperature=300*CLHEP::kelvin*/);
-    /// Destructor
-    ~HeliumGasProperties();
 
-    static G4double Density(G4double pressure=15.*CLHEP::bar);
-    static G4double MassPerMole(G4int mass_num=4);
+  G4double HeliumDensity(G4double pressure=15.*CLHEP::bar);
+  G4double HeliumMassPerMole(G4int mass_num=4);
 
-    /// Electroluminescence yield of pure xenon gas
-    G4double ELLightYield(G4double field_strength) const;
-
-
-  private:
-    G4double pressure_;
-    //    G4double temperature_;
-
-  };
+  /// Electroluminescence yield of pure helium gas
+  G4double ELLightYield(G4double field_strength);
 
 } // end namespace nexus
 

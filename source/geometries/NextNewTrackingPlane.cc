@@ -142,7 +142,7 @@ namespace nexus {
 
     //PIGGY TAIL PLUG/////////////////////////////////////////////////////
     G4Box* plug_solid = new G4Box("DB_CONNECTOR", plug_x_/2., plug_y_/2., plug_z_/2.);
-    G4LogicalVolume* plug_logic = new G4LogicalVolume(plug_solid,  MaterialsList::PEEK(), "DB_PLUG");
+    G4LogicalVolume* plug_logic = new G4LogicalVolume(plug_solid,  materials::PEEK(), "DB_PLUG");
     //G4PVPlacement * plug_physi;
     G4ThreeVector positn;
     for (int i=0; i<num_DBs_; i++) {

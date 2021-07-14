@@ -248,15 +248,15 @@ namespace nexus {
 
 
     /// Assign optical properties to materials ///
-    G4Material* sapphire = MaterialsList::Sapphire();
-    sapphire->SetMaterialPropertiesTable(OpticalMaterialProperties::Sapphire());
-    G4Material* tpb = MaterialsList::TPB();
-    tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+    G4Material* sapphire = materials::Sapphire();
+    sapphire->SetMaterialPropertiesTable(opticalprops::Sapphire());
+    G4Material* tpb = materials::TPB();
+    tpb->SetMaterialPropertiesTable(opticalprops::TPB());
     G4Material* vacuum =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
-    vacuum->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
-    G4Material* optical_coupler = MaterialsList::OpticalSilicone();
-    optical_coupler->SetMaterialPropertiesTable(OpticalMaterialProperties::OptCoupler());
+    vacuum->SetMaterialPropertiesTable(opticalprops::Vacuum());
+    G4Material* optical_coupler = materials::OpticalSilicone();
+    optical_coupler->SetMaterialPropertiesTable(opticalprops::OptCoupler());
 
 
     /// Vacuum volume that encapsulates all elements related to PMTs. ///

@@ -93,7 +93,7 @@ void NextDemoVessel::Construct()
                vessel_length_/2., 0, twopi);
 
   G4LogicalVolume* vessel_logic_vol =
-    new G4LogicalVolume(vessel_solid_vol, MaterialsList::Steel(), vessel_name);
+    new G4LogicalVolume(vessel_solid_vol, materials::Steel(), vessel_name);
 
   if (!vessel_vis_) vessel_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
 
@@ -103,9 +103,9 @@ void NextDemoVessel::Construct()
 
   G4String gas_name = "GAS";
 
-  G4Material* gas_material = MaterialsList::GXe(gas_pressure_, gas_temperature_);
+  G4Material* gas_material = materials::GXe(gas_pressure_, gas_temperature_);
   gas_material->
-    SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(gas_pressure_,
+    SetMaterialPropertiesTable(opticalprops::GXe(gas_pressure_,
                                                               gas_temperature_,
                                                               sc_yield_,
                                                               e_lifetime_));

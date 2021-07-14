@@ -78,8 +78,8 @@ namespace nexus {
     G4Box* coating_solid =
       new G4Box("DB_WLS_COATING", dbo_x/2., dbo_y/2., coating_thickn/2.);
 
-    G4Material* TPB = MaterialsList::TPB();
-    TPB->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+    G4Material* TPB = materials::TPB();
+    TPB->SetMaterialPropertiesTable(opticalprops::TPB());
 
     G4LogicalVolume* coating_logic =
       new G4LogicalVolume(coating_solid, TPB, "DB_WLS_COATING");
@@ -120,7 +120,7 @@ namespace nexus {
     dboard_opsur->SetModel(unified);
     dboard_opsur->SetFinish(ground);
     dboard_opsur->SetSigmaAlpha(0.1);
-    dboard_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+    dboard_opsur->SetMaterialPropertiesTable(opticalprops::PTFE());
 
     new G4LogicalSkinSurface("DB", board_logic, dboard_opsur);
 

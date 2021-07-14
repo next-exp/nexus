@@ -16,134 +16,126 @@
 
 class G4Material;
 
-namespace nexus {
+namespace materials {
 
   using namespace CLHEP;
 
-  /// (This is a stateless class. All methods must be defined as static.)
 
-  class MaterialsList
-  {
-  public:
+  // Gaseous xenon
+  G4Material* GXe(G4double pressure=STP_Pressure,
+			            G4double temperature=STP_Temperature);
+  G4Material* GXeEnriched(G4double pressure=STP_Pressure,
+			                    G4double temperature=STP_Temperature);
+  G4Material* GXeDepleted(G4double pressure=STP_Pressure,
+				                  G4double temperature=STP_Temperature);
 
-    // Gaseous xenon
-    static G4Material* GXe(G4double pressure=STP_Pressure,
-			   G4double temperature=STP_Temperature);
-    static G4Material* GXeEnriched(G4double pressure=STP_Pressure,
-			   G4double temperature=STP_Temperature);
-    static G4Material* GXeDepleted(G4double pressure=STP_Pressure,
-				   G4double temperature=STP_Temperature);
+  // Gaseous xenon set by density rather than temperature (maybe temp.)
+  G4Material* GXe_bydensity(G4double density,
+				                    G4double temperature=STP_Temperature,
+				                    G4double pressure=STP_Pressure);
+  G4Material* GXeEnriched_bydensity(G4double density,
+					                          G4double temperature=STP_Temperature,
+					                          G4double pressure=STP_Pressure);
+  G4Material* GXeDepleted_bydensity(G4double density,
+					                          G4double temperature=STP_Temperature,
+					                          G4double pressure=STP_Pressure);
 
-    // Gaseous xenon set by density rather than temperature (maybe temp.)
-    static G4Material* GXe_bydensity(G4double density,
-				     G4double temperature=STP_Temperature,
-				     G4double pressure=STP_Pressure);
-    static G4Material* GXeEnriched_bydensity(G4double density,
-					     G4double temperature=STP_Temperature,
-					     G4double pressure=STP_Pressure);
-    static G4Material* GXeDepleted_bydensity(G4double density,
-					     G4double temperature=STP_Temperature,
-					     G4double pressure=STP_Pressure);
+  // Liquid xenon
+  G4Material* LXe();
 
-    // Argon
-    static G4Material* GAr(G4double pressure=STP_Pressure,
-			   G4double temperature=STP_Temperature);
-    // Mixture Xe+Ar
-    static G4Material* GXeAr(G4double pressure=STP_Pressure,
-			     G4double temperature=STP_Temperature, G4double percXe=0.);
+  // Argon
+  G4Material* GAr(G4double pressure=STP_Pressure,
+			            G4double temperature=STP_Temperature);
+  // Mixture Xe+Ar
+  G4Material* GXeAr(G4double pressure=STP_Pressure,
+			              G4double temperature=STP_Temperature, G4double percXe=0.);
 
-    // Mixture Xe+He
-    static G4Material* GXeHe(G4double pressure=STP_Pressure,
-                             G4double temperature=STP_Temperature,
-			     G4double percXe=98,
-			     G4int mass_num=4);
+  // Mixture Xe+He
+  G4Material* GXeHe(G4double pressure=STP_Pressure,
+                    G4double temperature=STP_Temperature,
+			              G4double percXe=98,
+			              G4int mass_num=4);
 
 
-    // Stainless Steel (grade 304L)
-    static G4Material* Steel();
+  // Stainless Steel (grade 304L)
+  G4Material* Steel();
 
-    // Stainless steel grade 316Ti
-    static G4Material* Steel316Ti();
+  // Stainless steel grade 316Ti
+  G4Material* Steel316Ti();
 
-    // Epoxy resin
-    static G4Material* Epoxy();
+  // Epoxy resin
+  G4Material* Epoxy();
 
-    // Kovar (nickel-cobalt ferrous alloy)
-    static G4Material* Kovar();
+  // Kovar (nickel-cobalt ferrous alloy)
+  G4Material* Kovar();
 
-    // PEEK (Polyether ether ketone)
-    static G4Material* PEEK();
+  // PEEK (Polyether ether ketone)
+  G4Material* PEEK();
 
-    /// Sapphire
-    static G4Material* Sapphire();
+  /// Sapphire
+  G4Material* Sapphire();
 
-    // Fused silica (synthetic quartz)
-    static G4Material* FusedSilica();
+  // Fused silica (synthetic quartz)
+  G4Material* FusedSilica();
 
-    // PS (Polystyrene)
-    static G4Material* PS();
+  // PS (Polystyrene)
+  G4Material* PS();
 
-    // TPB (tetraphenyl butadiene)
-    static G4Material* TPB();
+  // TPB (tetraphenyl butadiene)
+  G4Material* TPB();
 
-    // ITO (indium tin oxide)
-    static G4Material* ITO();
+  // ITO (indium tin oxide)
+  G4Material* ITO();
 
-    // PTH (p-terphenyl)
-    static G4Material* TPH();
+  // PTH (p-terphenyl)
+  G4Material* TPH();
 
-    // PVT (Polyvinyltoluene)
-    static G4Material* PVT();
+  // PVT (Polyvinyltoluene)
+  G4Material* PVT();
 
-    // KEVLAR (-NH-C6H4-NH-CO-C6H4-CO-)*n
-    static G4Material* Kevlar();
+  // KEVLAR (-NH-C6H4-NH-CO-C6H4-CO-)*n
+  G4Material* Kevlar();
 
-    /// High density polyethylene
-    static G4Material* HDPE();
+  /// High density polyethylene
+  G4Material* HDPE();
 
-    /// Optical Silicone
-    static G4Material* OpticalSilicone();
+  /// Optical Silicone
+  G4Material* OpticalSilicone();
 
-    /// Selenium Hexafluoride
-    static G4Material* SeF6(G4double pressure=STP_Pressure,
-			   G4double temperature=STP_Temperature);
+  /// Selenium Hexafluoride
+    G4Material* SeF6(G4double pressure=STP_Pressure,
+			               G4double temperature=STP_Temperature);
 
-    // FR4
-    static G4Material* FR4();
+  // FR4
+  G4Material* FR4();
 
-    // WLS EJ-280
-    static G4Material* EJ280();
+  // WLS EJ-280
+  G4Material* EJ280();
 
-    // Kuraray Fiber Y11
-    static G4Material* Y11();
+  // Kuraray Fiber Y11
+  G4Material* Y11();
 
-    // Pethylene (cladding)
-    static G4Material* Pethylene();
+  // Pethylene (cladding)
+  G4Material* Pethylene();
 
-    // FPethylene Fluorated Phethylene (cladding)
-    static G4Material* FPethylene();
+  // FPethylene Fluorated Phethylene (cladding)
+  G4Material* FPethylene();
 
-    // PolyMethylmethacrylate (cladding)
-    static G4Material* PMMA();
+  // PolyMethylmethacrylate (cladding)
+  G4Material* PMMA();
 
-    // Poly(3,4-ethylenedioxythiophene) a.k.a. PEDOT
-    static G4Material* PEDOT();
+  // Poly(3,4-ethylenedioxythiophene) a.k.a. PEDOT
+  G4Material* PEDOT();
 
-    // Fake dielectric (to be deprecated)
-    static G4Material* FakeDielectric(G4Material*, G4String);
+  // Fake dielectric (to be deprecated)
+  G4Material* FakeDielectric(G4Material*, G4String);
 
-    // Limestone (calcium carbonate)
-    static G4Material* Limestone();
+  // Limestone (calcium carbonate)
+  G4Material* Limestone();
 
-    static G4Material* CopyMaterial(G4Material*, const G4String&);
+  G4Material* CopyMaterial(G4Material*, const G4String&);
 
-  private:
-    /// Constructor (hidden)
-    MaterialsList();
-    /// Destructor (hidden)
-    ~MaterialsList();
-  };
 
-} // end namespace nexus
+} // end namespace materials
 
 #endif

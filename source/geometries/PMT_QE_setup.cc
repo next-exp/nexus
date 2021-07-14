@@ -78,8 +78,8 @@ namespace nexus {
 
     G4Box* gas_solid = new G4Box("GAS", width/2., height/2., length_/2.);
 
-    G4Material* gxe = MaterialsList::GXe(gxe_pressure);
-    gxe->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(gxe_pressure));
+    G4Material* gxe = materials::GXe(gxe_pressure);
+    gxe->SetMaterialPropertiesTable(opticalprops::GXe(gxe_pressure));
     // G4Material* air =
     //   G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
 
@@ -100,7 +100,7 @@ namespace nexus {
 
     // Positioning of the teflon panel
     // G4Box* teflon_solid = new G4Box("GAS", 22.*cm/2., 50.*cm/2., thickn/2.);
-    // G4Material* ptfe = MaterialsList::PEEK();
+    // G4Material* ptfe = materials::PEEK();
     // G4LogicalVolume* teflon_logic = new G4LogicalVolume(teflon_solid, ptfe, "TEFLON");
 
     // G4RotationMatrix* rotdb = new G4RotationMatrix();
@@ -118,7 +118,7 @@ namespace nexus {
     // teflon_opsur->SetModel(unified);
     // teflon_opsur->SetFinish(ground);
     // teflon_opsur->SetSigmaAlpha(0.0000001); // it does not affect, because the reflection is totally lambertian.
-    // teflon_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+    // teflon_opsur->SetMaterialPropertiesTable(opticalprops::PTFE());
 
     // new G4LogicalSkinSurface("TEFLON_OPSURF", teflon_logic, teflon_opsur);
 

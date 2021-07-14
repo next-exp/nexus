@@ -209,7 +209,7 @@ void NextDemoTrackingPlane::Construct()
   }
 
   G4LogicalVolume* plate_logic =
-    new G4LogicalVolume(plate_solid, MaterialsList::Steel(), plate_name);
+    new G4LogicalVolume(plate_solid, materials::Steel(), plate_name);
 
   // We arbitrarily place the TP_PLATE 10 mm away from the SiPMBoards
   G4double plate_posz = board_posz - 10. * mm - plate_thickn_/2.;

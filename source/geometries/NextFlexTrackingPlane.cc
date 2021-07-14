@@ -10,7 +10,7 @@
 
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
-#include "XenonGasProperties.h"
+#include "XenonProperties.h"
 #include "IonizationSD.h"
 #include "UniformElectricDriftField.h"
 #include "CylinderPointSampler2020.h"
@@ -208,12 +208,12 @@ void NextFlexTrackingPlane::DefineMaterials()
     wls_mat_ = mother_logic_->GetMaterial();
   }
   else if (wls_mat_name_ == "TPB") {
-    wls_mat_ = MaterialsList::TPB();
-    wls_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+    wls_mat_ = materials::TPB();
+    wls_mat_->SetMaterialPropertiesTable(opticalprops::TPB());
   }
   else if (wls_mat_name_ == "TPH") {
-    wls_mat_ = MaterialsList::TPH();
-    wls_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::TPH());
+    wls_mat_ = materials::TPH();
+    wls_mat_->SetMaterialPropertiesTable(opticalprops::TPH());
   }
   else {
     G4Exception("[NextFlexTrackingPlane]", "DefineMaterials()", FatalException,
@@ -302,7 +302,7 @@ void NextFlexTrackingPlane::BuildTeflon()
   // Adding the teflon optical surface
   G4OpticalSurface* teflon_optSurf =
     new G4OpticalSurface(teflon_name, unified, ground, dielectric_metal);
-  teflon_optSurf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+  teflon_optSurf->SetMaterialPropertiesTable(opticalprops::PTFE());
 
   new G4LogicalSkinSurface(teflon_name, teflon_logic, teflon_optSurf);
 

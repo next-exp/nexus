@@ -366,7 +366,7 @@ void NextNewVessel::Construct()
 
     //// LOGICS //////
     G4LogicalVolume* vessel_logic =
-      new G4LogicalVolume(vessel_solid,	MaterialsList::Steel316Ti(), "VESSEL");
+      new G4LogicalVolume(vessel_solid,	materials::Steel316Ti(), "VESSEL");
     this->SetLogicalVolume(vessel_logic);
 
     // Place the port air inside the flanges end external tubes for lateral and upper
@@ -402,24 +402,24 @@ void NextNewVessel::Construct()
     G4Material* vessel_gas_mat = nullptr;
 
     if (gas_ == "naturalXe") {
-      vessel_gas_mat = MaterialsList::GXe(pressure_, temperature_);
-      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(pressure_, temperature_, sc_yield_, e_lifetime_));
+      vessel_gas_mat = materials::GXe(pressure_, temperature_);
+      vessel_gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_, temperature_, sc_yield_, e_lifetime_));
     } else if (gas_ == "enrichedXe") {
-      vessel_gas_mat =  MaterialsList::GXeEnriched(pressure_, temperature_);
-      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(pressure_, temperature_, sc_yield_, e_lifetime_));
+      vessel_gas_mat =  materials::GXeEnriched(pressure_, temperature_);
+      vessel_gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_, temperature_, sc_yield_, e_lifetime_));
     } else if  (gas_ == "depletedXe") {
-      vessel_gas_mat =  MaterialsList::GXeDepleted(pressure_, temperature_);
-      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(pressure_, temperature_, sc_yield_, e_lifetime_));
+      vessel_gas_mat =  materials::GXeDepleted(pressure_, temperature_);
+      vessel_gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_, temperature_, sc_yield_, e_lifetime_));
     } else if (gas_ == "Ar") {
-      vessel_gas_mat =  MaterialsList::GAr(pressure_, temperature_);
-      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GAr(sc_yield_, e_lifetime_));
+      vessel_gas_mat =  materials::GAr(pressure_, temperature_);
+      vessel_gas_mat->SetMaterialPropertiesTable(opticalprops::GAr(sc_yield_, e_lifetime_));
     } else if (gas_ == "ArXe") {
-      vessel_gas_mat =  MaterialsList::GXeAr(pressure_, temperature_, xe_perc_);
-      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GAr(sc_yield_, e_lifetime_));
+      vessel_gas_mat =  materials::GXeAr(pressure_, temperature_, xe_perc_);
+      vessel_gas_mat->SetMaterialPropertiesTable(opticalprops::GAr(sc_yield_, e_lifetime_));
     } else if (gas_ == "XeHe") {
-      vessel_gas_mat =  MaterialsList::GXeHe(pressure_, temperature_,
+      vessel_gas_mat =  materials::GXeHe(pressure_, temperature_,
 					     xe_perc_, helium_mass_num_);
-      vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(pressure_, temperature_, sc_yield_, e_lifetime_));
+      vessel_gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_, temperature_, sc_yield_, e_lifetime_));
     } else {
       G4Exception("[NextNewVessel]", "Construct()", FatalException,
 		  "Unknown kind of gas, valid options are: naturalXe, enrichedXe, depletedXe, Ar, ArXe, XeHe.");
@@ -443,7 +443,7 @@ void NextNewVessel::Construct()
 						 simulated_length_lat/2., 0, twopi);
 
     G4LogicalVolume* lateral_port_tube_logic =
-    new G4LogicalVolume(lateral_port_tube_solid, MaterialsList::Steel316Ti(), "LATERAL_PORT");
+    new G4LogicalVolume(lateral_port_tube_solid, materials::Steel316Ti(), "LATERAL_PORT");
 
     // G4ThreeVector pos_lateral_port(lat_nozzle_x_pos_  + lat_nozzle_high_/2. - simulated_length_lat/2.,  0., lat_nozzle_z_pos_);
     G4ThreeVector pos_lateral_port(vessel_in_diam_/2.  + lat_nozzle_high_ - simulated_length_lat/2.,  0., lat_nozzle_z_pos_);
@@ -535,7 +535,7 @@ void NextNewVessel::Construct()
   G4Tubs* upper_port_tube_solid = new G4Tubs("UPPER_PORT", 0., port_tube_diam_/2.+port_tube_thickness_,
 					     simulated_length_up/2., 0, twopi);
   G4LogicalVolume* upper_port_tube_logic =
-    new G4LogicalVolume(upper_port_tube_solid, MaterialsList::Steel316Ti(), "UPPER_PORT");
+    new G4LogicalVolume(upper_port_tube_solid, materials::Steel316Ti(), "UPPER_PORT");
 
   G4ThreeVector pos_upper_port(0., vessel_in_diam_/2. + up_nozzle_high_ - simulated_length_up/2., 0.);
 
@@ -629,7 +629,7 @@ void NextNewVessel::Construct()
     new G4Tubs("AXIAL_PORT", 0., port_tube_diam_/2.+port_tube_thickness_,
 	       simulated_length/2., 0, twopi);
   G4LogicalVolume* axial_port_tube_logic =
-    new G4LogicalVolume(axial_port_tube_solid, MaterialsList::Steel316Ti(), "AXIAL_PORT");
+    new G4LogicalVolume(axial_port_tube_solid, materials::Steel316Ti(), "AXIAL_PORT");
 
   G4ThreeVector pos_axial_port(0.,0.,  - endcap_nozzle_z_pos_ - endcap_nozzle_high_ +  simulated_length/2.);
 

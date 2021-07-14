@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // nexus | HeliumGasProperties.cc
 //
-// This class collects the relevant physical properties of gaseous helium.
+// Relevant physical properties of gaseous helium.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
@@ -21,21 +21,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  HeliumGasProperties::HeliumGasProperties(G4double pressure,
-					 G4double /*temperature*/):
-    pressure_(pressure)
-    //, temperature_(temperature)
-  {
-    //Density();
-  }
-
-
-
-  HeliumGasProperties::~HeliumGasProperties()
-  {
-  }
-
-  G4double HeliumGasProperties::MassPerMole(G4int mass_num)
+  G4double HeliumMassPerMole(G4int mass_num)
   {
     G4double mass_per_mole = 4.0026*g/mole;
     if ( mass_num == 3 )
@@ -50,7 +36,7 @@ namespace nexus {
     return mass_per_mole;
   }
 
-  G4double HeliumGasProperties::Density(G4double pressure)
+  G4double HeliumDensity(G4double pressure)
   {
     //These values are for a temperature of 300 K
     // taken from https://webbook.nist.gov/cgi/fluid.cgi?Action=Data&Wide=on&ID=C7440597&Type=IsoTherm&Digits=5&PLow=1&PHigh=40&PInc=0.1&T=300&RefState=DEF&TUnit=K&PUnit=bar&DUnit=kg%2Fm3&HUnit=kJ%2Fkg&WUnit=m%2Fs&VisUnit=uPa*s&STUnit=N%2Fm

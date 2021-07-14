@@ -12,7 +12,7 @@
 #include "OpticalMaterialProperties.h"
 #include "IonizationSD.h"
 #include "UniformElectricDriftField.h"
-#include "XenonGasProperties.h"
+#include "XenonProperties.h"
 #include "CylinderPointSampler2020.h"
 #include "Visibilities.h"
 
@@ -231,16 +231,16 @@ namespace nexus {
       G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
 
     /// Quartz
-    quartz_ =  MaterialsList::FusedSilica();
-    quartz_->SetMaterialPropertiesTable(OpticalMaterialProperties::FusedSilica());
+    quartz_ =  materials::FusedSilica();
+    quartz_->SetMaterialPropertiesTable(opticalprops::FusedSilica());
 
     /// TPB coating
-    tpb_ = MaterialsList::TPB();
-    tpb_->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+    tpb_ = materials::TPB();
+    tpb_->SetMaterialPropertiesTable(opticalprops::TPB());
 
     //ITO coating
-    ito_ = MaterialsList::ITO();
-    ito_->SetMaterialPropertiesTable(OpticalMaterialProperties::ITO());
+    ito_ = materials::ITO();
+    ito_->SetMaterialPropertiesTable(opticalprops::ITO());
   }
 
 
@@ -292,8 +292,8 @@ namespace nexus {
   void NextDemoFieldCage::BuildCathodeGrid()
   {
     G4Material* cathode_mat =
-      MaterialsList::FakeDielectric(gas_, "cathode_mat");
-    cathode_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_,
+      materials::FakeDielectric(gas_, "cathode_mat");
+    cathode_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_,
                                                                                 temperature_,
                                                                                 cathode_transparency_,
                                                                                 grid_thickn_));
@@ -383,16 +383,15 @@ namespace nexus {
       el_field->SetDriftVelocity(2.5*mm/microsecond);
       el_field->SetTransverseDiffusion(ELtransv_diff_);
       el_field->SetLongitudinalDiffusion(ELlong_diff_);
-      XenonGasProperties xgp(pressure_, temperature_);
-      el_field->SetLightYield(xgp.ELLightYield(ELelectric_field_));
+      el_field->SetLightYield(XenonELLightYield(ELelectric_field_, pressure_));
       G4Region* el_region = new G4Region("EL_REGION");
       el_region->SetUserInformation(el_field);
       el_region->AddRootLogicalVolume(elgap_logic);
     }
 
     // Building the GATE
-    G4Material* gate_mat = MaterialsList::FakeDielectric(gas_, "gate_mat");
-    gate_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_,
+    G4Material* gate_mat = materials::FakeDielectric(gas_, "gate_mat");
+    gate_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_,
                                                                              temperature_,
                                                                              gate_transparency_,
                                                                              grid_thickn_));
@@ -462,11 +461,11 @@ namespace nexus {
 
     // Building the ANODE grid corresponding to "run7" and "run8" configuration
     else {
-      G4Material* anode_mat = MaterialsList::FakeDielectric(gas_, "anode_mat");
-      anode_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_,
-                                                                               temperature_,
-                                                                               anode_transparency_,
-                                                                               grid_thickn_));
+      G4Material* anode_mat = materials::FakeDielectric(gas_, "anode_mat");
+      anode_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_,
+                                                                   temperature_,
+                                                                   anode_transparency_,
+                                                                   grid_thickn_));
       G4Tubs* anode_grid_solid =
         new G4Tubs("ANODE_GRID", 0., elgap_ring_diam_/2., grid_thickn_/2., 0, twopi);
 
@@ -563,7 +562,7 @@ namespace nexus {
     lt_drift_opsur->SetModel(unified);
     lt_drift_opsur->SetFinish(ground);
     lt_drift_opsur->SetSigmaAlpha(0.1);
-    lt_drift_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+    lt_drift_opsur->SetMaterialPropertiesTable(opticalprops::PTFE());
     new G4LogicalSkinSurface("LIGHT_TUBE_DRIFT",
                              light_tube_drift_logic, lt_drift_opsur);
 
@@ -572,7 +571,7 @@ namespace nexus {
     lt_buff_opsur->SetModel(unified);
     lt_buff_opsur->SetFinish(ground);
     lt_buff_opsur->SetSigmaAlpha(0.1);
-    lt_buff_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+    lt_buff_opsur->SetMaterialPropertiesTable(opticalprops::PTFE());
     new G4LogicalSkinSurface("LIGHT_TUBE_BUFFER",
                              light_tube_buff_logic, lt_buff_opsur);
 
@@ -642,7 +641,7 @@ namespace nexus {
     G4Box* bar_solid = new G4Box("SUPPORT_BAR", bar_width_/2.,
                                  bar_thickn_/2., bar_length_/2.);
     G4LogicalVolume* bar_logic =
-      new G4LogicalVolume(bar_solid, MaterialsList::HDPE(), "SUPPORT_BAR");
+      new G4LogicalVolume(bar_solid, materials::HDPE(), "SUPPORT_BAR");
 
     G4double bar_rpos = active_diam_/2. + light_tube_thickn_ + bar_thickn_/2.;
     G4double bar_zpos = GetELzCoord() + bar_start_z_ + bar_length_/2.;

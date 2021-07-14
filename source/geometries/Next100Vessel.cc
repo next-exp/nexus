@@ -230,26 +230,26 @@ namespace nexus {
 
     //// The logics
     G4LogicalVolume* vessel_logic = new G4LogicalVolume(vessel_solid,
-							MaterialsList::Steel316Ti(),
+							materials::Steel316Ti(),
 							"VESSEL");
     this->SetLogicalVolume(vessel_logic);
 
     G4Material* vessel_gas_mat = nullptr;
     if (gas_ == "naturalXe") {
-      vessel_gas_mat = MaterialsList::GXe(pressure_, temperature_);
+      vessel_gas_mat = materials::GXe(pressure_, temperature_);
     } else if (gas_ == "enrichedXe") {
-      vessel_gas_mat =  MaterialsList::GXeEnriched(pressure_, temperature_);
+      vessel_gas_mat =  materials::GXeEnriched(pressure_, temperature_);
     } else if  (gas_ == "depletedXe") {
-      vessel_gas_mat =  MaterialsList::GXeDepleted(pressure_, temperature_);
+      vessel_gas_mat =  materials::GXeDepleted(pressure_, temperature_);
     } else if  (gas_ == "XeHe") {
-      vessel_gas_mat = MaterialsList::GXeHe(pressure_, 300. * kelvin,
+      vessel_gas_mat = materials::GXeHe(pressure_, 300. * kelvin,
 					    xe_perc_, helium_mass_num_);
     } else {
       G4Exception("[Next100Vessel]", "Construct()", FatalException,
 		  "Unknown kind of xenon, valid options are: natural, enriched, depleted, or XeHe.");
     }
 
-    vessel_gas_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(pressure_, temperature_, sc_yield_, e_lifetime_));
+    vessel_gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_, temperature_, sc_yield_, e_lifetime_));
 
     G4LogicalVolume* vessel_gas_logic = new G4LogicalVolume(vessel_gas_solid, vessel_gas_mat, "VESSEL_GAS");
     internal_logic_vol_ = vessel_gas_logic;

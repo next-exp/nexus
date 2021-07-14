@@ -132,7 +132,7 @@ namespace nexus {
     // Adding the optical surface
     G4OpticalSurface* mask_optSurf =
       new G4OpticalSurface("DICE_MASK_OPSURF", unified, ground, dielectric_metal);
-    mask_optSurf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+    mask_optSurf->SetMaterialPropertiesTable(opticalprops::PTFE());
     new G4LogicalSkinSurface("DICE_MASK_OPSURF", mask_logic, mask_optSurf);
 
 

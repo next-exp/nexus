@@ -17,7 +17,7 @@
 
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
-#include "XenonGasProperties.h"
+#include "XenonProperties.h"
 #include "CylinderPointSampler2020.h"
 #include "Visibilities.h"
 #include "FactoryBase.h"
@@ -148,20 +148,20 @@ void NextFlex::DefineMaterials()
 
   // Defining the gas xenon
   if (gas_name_ == "naturalXe")
-    xenon_gas_ = MaterialsList::GXe(gas_pressure_, gas_temperature_);
+    xenon_gas_ = materials::GXe(gas_pressure_, gas_temperature_);
 
   else if (gas_name_ == "enrichedXe")
-    xenon_gas_ = MaterialsList::GXeEnriched(gas_pressure_, gas_temperature_);
+    xenon_gas_ = materials::GXeEnriched(gas_pressure_, gas_temperature_);
 
   else if (gas_name_ == "depletedXe")
-    xenon_gas_ = MaterialsList::GXeDepleted(gas_pressure_, gas_temperature_);
+    xenon_gas_ = materials::GXeDepleted(gas_pressure_, gas_temperature_);
 
   else
     G4Exception("[NextFlex]", "DefineMaterials()", FatalException,
     "Unknown xenon gas type. Valid options are naturalXe, enrichedXe or depletedXe.");
 
   xenon_gas_->
-    SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(gas_pressure_,
+    SetMaterialPropertiesTable(opticalprops::GXe(gas_pressure_,
                                                               gas_temperature_,
                                                               sc_yield_,
                                                               e_lifetime_));

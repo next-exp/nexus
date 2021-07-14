@@ -99,7 +99,7 @@ namespace nexus {
 
     if (gas_name_ == "Xenon") {
       std::cout << "*** Xenon Pressure (atm): " << pressure_/bar << std::endl;
-      gas_ = MaterialsList::GXe(pressure_, 303.*kelvin);
+      gas_ = materials::GXe(pressure_, 303.*kelvin);
     }
     else if (gas_name_ == "Hydrogen") {
       std::cout << "*** Hydrogen Pressure (atm): " << pressure_/bar << std::endl;
@@ -107,7 +107,7 @@ namespace nexus {
     }
     else if (gas_name_ == "SeF6") {
       std::cout << "*** Selenium HexaFluoride (atm): " << pressure_/bar << std::endl;
-      gas_ = MaterialsList::SeF6(pressure_, 303.*kelvin);
+      gas_ = materials::SeF6(pressure_, 303.*kelvin);
     }
     else {
       std::cout << "ERROR: GAS NOT KNOWN" << std::endl;

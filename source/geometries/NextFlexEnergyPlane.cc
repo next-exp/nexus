@@ -10,7 +10,7 @@
 
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
-#include "XenonGasProperties.h"
+#include "XenonProperties.h"
 #include "PmtR11410.h"
 #include "IonizationSD.h"
 #include "UniformElectricDriftField.h"
@@ -148,12 +148,12 @@ void NextFlexEnergyPlane::DefineMaterials()
   teflon_mat_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
 
   // Sapphire
-  sapphire_mat_ = MaterialsList::Sapphire();
-  sapphire_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::Sapphire());
+  sapphire_mat_ = materials::Sapphire();
+  sapphire_mat_->SetMaterialPropertiesTable(opticalprops::Sapphire());
 
   // Optical coupler
-  optical_pad_mat_ = MaterialsList::OpticalSilicone();
-  optical_pad_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::OptCoupler());
+  optical_pad_mat_ = materials::OpticalSilicone();
+  optical_pad_mat_->SetMaterialPropertiesTable(opticalprops::OptCoupler());
 
 
   // UV shifting material
@@ -161,12 +161,12 @@ void NextFlexEnergyPlane::DefineMaterials()
     wls_mat_ = mother_logic_->GetMaterial();
   }
   else if (wls_matName_ == "TPB") {
-    wls_mat_ = MaterialsList::TPB();
-    wls_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+    wls_mat_ = materials::TPB();
+    wls_mat_->SetMaterialPropertiesTable(opticalprops::TPB());
   }
   else if (wls_matName_ == "TPH") {
-    wls_mat_ = MaterialsList::TPH();
-    wls_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::TPH());
+    wls_mat_ = materials::TPH();
+    wls_mat_->SetMaterialPropertiesTable(opticalprops::TPH());
   }
   else {
     G4Exception("[NextFlexEnergyPlane]", "DefineMaterials()", FatalException,
@@ -266,7 +266,7 @@ void NextFlexEnergyPlane::BuildTeflon()
   G4OpticalSurface* teflon_optSurf =
     new G4OpticalSurface(teflon_name, unified, ground, dielectric_metal);
 
-  teflon_optSurf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+  teflon_optSurf->SetMaterialPropertiesTable(opticalprops::PTFE());
 
   new G4LogicalSkinSurface(teflon_name, teflon_logic, teflon_optSurf);
 

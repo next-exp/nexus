@@ -10,7 +10,7 @@
 
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
-#include "XenonGasProperties.h"
+#include "XenonProperties.h"
 #include "IonizationSD.h"
 #include "UniformElectricDriftField.h"
 #include "CylinderPointSampler2020.h"
@@ -298,12 +298,12 @@ void NextFlexFieldCage::DefineMaterials()
     wls_mat_ = mother_logic_->GetMaterial();
   }
   else if (wls_mat_name_ == "TPB") {
-    wls_mat_ = MaterialsList::TPB();
-    wls_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+    wls_mat_ = materials::TPB();
+    wls_mat_->SetMaterialPropertiesTable(opticalprops::TPB());
   }
   else if (wls_mat_name_ == "TPH") {
-    wls_mat_ = MaterialsList::TPH();
-    wls_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::TPH());
+    wls_mat_ = materials::TPH();
+    wls_mat_->SetMaterialPropertiesTable(opticalprops::TPH());
   }
   else {
     G4Exception("[NextFlexFieldCage]", "DefineMaterials()", FatalException,
@@ -311,34 +311,34 @@ void NextFlexFieldCage::DefineMaterials()
   }
 
   // Meshes materials
-  cathode_mat_ = MaterialsList::FakeDielectric(xenon_gas_, "cathode_mat");
-  cathode_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(gas_pressure_,
+  cathode_mat_ = materials::FakeDielectric(xenon_gas_, "cathode_mat");
+  cathode_mat_->SetMaterialPropertiesTable(opticalprops::FakeGrid(gas_pressure_,
                 gas_temperature_, cathode_transparency_, cathode_thickness_,
                 gas_sc_yield_, gas_e_lifetime_, photoe_prob_));
 
-  gate_mat_ = MaterialsList::FakeDielectric(xenon_gas_, "gate_mat");
-  gate_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(gas_pressure_,
+  gate_mat_ = materials::FakeDielectric(xenon_gas_, "gate_mat");
+  gate_mat_->SetMaterialPropertiesTable(opticalprops::FakeGrid(gas_pressure_,
              gas_temperature_, gate_transparency_, gate_thickness_,
              gas_sc_yield_, gas_e_lifetime_, photoe_prob_));
 
-  anode_mat_ = MaterialsList::FakeDielectric(xenon_gas_, "anode_mat");
-  anode_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(gas_pressure_,
+  anode_mat_ = materials::FakeDielectric(xenon_gas_, "anode_mat");
+  anode_mat_->SetMaterialPropertiesTable(opticalprops::FakeGrid(gas_pressure_,
               gas_temperature_, anode_transparency_, anode_thickness_,
               gas_sc_yield_, gas_e_lifetime_, photoe_prob_));
 
 
   // Fiber core material
   if (fiber_mat_name_ == "EJ280") {
-    fiber_mat_ = MaterialsList::EJ280();
-    fiber_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::EJ280());
+    fiber_mat_ = materials::EJ280();
+    fiber_mat_->SetMaterialPropertiesTable(opticalprops::EJ280());
   }
   else if (fiber_mat_name_ == "EJ286") {
-    fiber_mat_ = MaterialsList::EJ280();   // Same base material than EJ280
-    fiber_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::EJ286());
+    fiber_mat_ = materials::EJ280();   // Same base material than EJ280
+    fiber_mat_->SetMaterialPropertiesTable(opticalprops::EJ286());
   }
   else if (fiber_mat_name_ == "Y11") {
-    fiber_mat_ = MaterialsList::Y11();
-    fiber_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::Y11());
+    fiber_mat_ = materials::Y11();
+    fiber_mat_->SetMaterialPropertiesTable(opticalprops::Y11());
   }
   else {
     G4Exception("[NextFlexFieldCage]", "DefineMaterials()", FatalException,
@@ -346,11 +346,11 @@ void NextFlexFieldCage::DefineMaterials()
   }
 
   // Fiber cladding materials (inner: PMMA  outer: FPethylene)
-  oClad_mat_ = MaterialsList::FPethylene();
-  oClad_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::FPethylene());
+  oClad_mat_ = materials::FPethylene();
+  oClad_mat_->SetMaterialPropertiesTable(opticalprops::FPethylene());
 
-  iClad_mat_ = MaterialsList::PMMA();
-  iClad_mat_->SetMaterialPropertiesTable(OpticalMaterialProperties::PMMA());
+  iClad_mat_ = materials::PMMA();
+  iClad_mat_->SetMaterialPropertiesTable(opticalprops::PMMA());
 }
 
 
@@ -531,8 +531,7 @@ void NextFlexFieldCage::BuildELgap()
                     el_gap_name, mother_logic_, false, 0, verbosity_);
 
   // Define EL electric field
-  XenonGasProperties xgp(gas_pressure_, gas_temperature_);
-  G4double yield = xgp.ELLightYield(el_field_int_);
+  G4double yield = XenonELLightYield(el_field_int_, gas_pressure_);
   if (el_field_on_) {
     UniformElectricDriftField* el_field = new UniformElectricDriftField();
     el_field->SetCathodePosition(el_gap_posZ + el_gap_length_/2.);
@@ -665,7 +664,7 @@ void NextFlexFieldCage::BuildLightTube()
   // Adding the optical surface
   G4OpticalSurface* light_tube_optSurf =
     new G4OpticalSurface(light_tube_name, unified, ground, dielectric_metal);
-  light_tube_optSurf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+  light_tube_optSurf->SetMaterialPropertiesTable(opticalprops::PTFE());
 
   new G4LogicalSkinSurface(light_tube_name, light_tube_logic, light_tube_optSurf);
 

@@ -14,7 +14,7 @@
 #include "IonizationSD.h"
 #include "HexagonPointSampler.h"
 #include "UniformElectricDriftField.h"
-#include "XenonGasProperties.h"
+#include "XenonProperties.h"
 #include "NextElDB.h"
 #include "CylinderPointSampler.h"
 #include "MuonsPointSampler.h"
@@ -256,21 +256,21 @@ void Next1EL::DefineMaterials()
   // AIR
   air_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
   // GASEOUS XENON
-  gxe_ = MaterialsList::GXe(pressure_, 303);
-  gxe_->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(pressure_, 303, sc_yield_, e_lifetime_));
+  gxe_ = materials::GXe(pressure_, 303);
+  gxe_->SetMaterialPropertiesTable(opticalprops::GXe(pressure_, 303, sc_yield_, e_lifetime_));
   // PTFE (TEFLON)
   teflon_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
   // STAINLESS STEEL
-  steel_ = MaterialsList::Steel();
+  steel_ = materials::Steel();
   // ALUMINUM
   aluminum_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Al");
   //LEAD
   lead_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb");
   //PLASTIC
-  plastic_ = MaterialsList::PS();
+  plastic_ = materials::PS();
   //TPB
-  tpb_ = MaterialsList::TPB();
-  tpb_->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+  tpb_ = materials::TPB();
+  tpb_->SetMaterialPropertiesTable(opticalprops::TPB());
 }
 
 
@@ -731,11 +731,11 @@ void Next1EL::BuildFieldCage()
 
   G4double diel_thickn = .1*mm;
 
-  G4Material* fgrid = MaterialsList::FakeDielectric(gxe_, "grid_mat");
-  fgrid->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_, 303,
+  G4Material* fgrid = materials::FakeDielectric(gxe_, "grid_mat");
+  fgrid->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_, 303,
 									elgrid_transparency_, diel_thickn, sc_yield_, e_lifetime_));
-  G4Material* fgrid_gate = MaterialsList::FakeDielectric(gxe_, "grid_mat");
-  fgrid_gate->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_, 303,
+  G4Material* fgrid_gate = materials::FakeDielectric(gxe_, "grid_mat");
+  fgrid_gate->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_, 303,
 									gate_transparency_, diel_thickn, sc_yield_, e_lifetime_));
 
   G4Tubs* diel_grid =
@@ -761,9 +761,8 @@ void Next1EL::BuildFieldCage()
     el_field->SetDriftVelocity(2.5*mm/microsecond);
     el_field->SetTransverseDiffusion(1.*mm/sqrt(cm));
     el_field->SetLongitudinalDiffusion(.5*mm/sqrt(cm));
-    XenonGasProperties xgp(pressure_, 303);
     // el_field->SetLightYield(xgp.ELLightYield(24.8571*kilovolt/cm));//value for E that gives Y=1160 photons per ie- in normal conditions
-    el_field->SetLightYield(xgp.ELLightYield(23.2857*kilovolt/cm));
+    el_field->SetLightYield(XenonELLightYield(23.2857*kilovolt/cm, pressure_));
     G4Region* el_region = new G4Region("EL_REGION");
     el_region->SetUserInformation(el_field);
     el_region->AddRootLogicalVolume(elgap_logic);
@@ -926,8 +925,8 @@ void Next1EL::BuildFieldCage()
   diel_thickn = 1. * mm;
   G4double transparency = 0.98;
 
-  G4Material* fcathode = MaterialsList::FakeDielectric(gxe_, "cathode_mat");
-  fcathode->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_, 303,
+  G4Material* fcathode = materials::FakeDielectric(gxe_, "cathode_mat");
+  fcathode->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_, 303,
   									transparency, diel_thickn, sc_yield_, e_lifetime_));
 
   G4Tubs* diel_cathd =
@@ -957,7 +956,7 @@ void Next1EL::BuildFieldCage()
 		     G4ThreeVector(bar_thickn_, 0., (bar_length - bar_addon_length_)/2.));
 
   G4LogicalVolume* bar_logic =
-    new G4LogicalVolume(bar_solid, MaterialsList::PEEK(), "SUPPORT_BAR");
+    new G4LogicalVolume(bar_solid, materials::PEEK(), "SUPPORT_BAR");
 
 
   G4double pos_rad = ring_diam_/2. + ring_thickn_ + bar_thickn_/2.;
@@ -983,14 +982,14 @@ void Next1EL::BuildFieldCage()
   ltubeup_opsur->SetModel(unified);
   ltubeup_opsur->SetFinish(ground);
   ltubeup_opsur->SetSigmaAlpha(0.1);
-  ltubeup_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+  ltubeup_opsur->SetMaterialPropertiesTable(opticalprops::PTFE());
 
   G4OpticalSurface* ltubebt_opsur = new G4OpticalSurface("LIGHT_TUBE_BOTTOM");
   ltubebt_opsur->SetType(dielectric_metal);
   ltubebt_opsur->SetModel(unified);
   ltubebt_opsur->SetFinish(ground);
   ltubebt_opsur->SetSigmaAlpha(0.1);
-  ltubebt_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+  ltubebt_opsur->SetMaterialPropertiesTable(opticalprops::PTFE());
 
   new G4LogicalSkinSurface("LIGHT_TUBE_UP",     ltube_up_logic, ltubeup_opsur);
   new G4LogicalSkinSurface("LIGHT_TUBE_BOTTOM", ltube_bt_logic, ltubebt_opsur);
@@ -1094,7 +1093,7 @@ void Next1EL::BuildEnergyPlane()
   pmtholder_cath_opsur->SetModel(unified);
   pmtholder_cath_opsur->SetFinish(ground);
   pmtholder_cath_opsur->SetSigmaAlpha(0.1);
-  pmtholder_cath_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+  pmtholder_cath_opsur->SetMaterialPropertiesTable(opticalprops::PTFE());
 
   new G4LogicalSkinSurface("PMT_HOLDER_CATHODE", pmtholder_logic, pmtholder_cath_opsur);
 
@@ -1104,8 +1103,8 @@ void Next1EL::BuildEnergyPlane()
   G4double shield_thickn = 1. * mm;
   G4double transparency = 0.96;
 
-  G4Material* fshield = MaterialsList::FakeDielectric(gxe_, "shield_mat");
-  fshield->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_, 303,
+  G4Material* fshield = materials::FakeDielectric(gxe_, "shield_mat");
+  fshield->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_, 303,
   									transparency, shield_thickn, sc_yield_, e_lifetime_));
 
   G4Tubs* shield_solid =
@@ -1322,7 +1321,7 @@ void Next1EL::BuildPMTTrackingPlane()
   pmtholder_anode_opsur->SetModel(unified);
   pmtholder_anode_opsur->SetFinish(ground);
   pmtholder_anode_opsur->SetSigmaAlpha(0.1);
-  pmtholder_anode_opsur->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+  pmtholder_anode_opsur->SetMaterialPropertiesTable(opticalprops::PTFE());
 
   new G4LogicalSkinSurface("PMT_HOLDER_ANODE", pmtholder_logic, pmtholder_anode_opsur);
 }
