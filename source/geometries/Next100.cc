@@ -135,9 +135,12 @@ namespace nexus {
     // VESSEL
     vessel_->Construct();
     G4LogicalVolume* shielding_air_logic = shielding_->GetAirLogicalVolume();
+    // Recall that airbox is slighly displaced in Y dimension. In order to avoid
+    // mistmatch with vertex generators, we place the vessel in the center of the world volume
+    G4ThreeVector vessel_displacement = shielding_->GetAirDisplacement();
     G4LogicalVolume* vessel_logic = vessel_->GetLogicalVolume();
     gate_zpos_in_vessel_ = vessel_->GetELzCoord();
-    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), vessel_logic,
+    new G4PVPlacement(0, -vessel_displacement, vessel_logic,
     		      "VESSEL", shielding_air_logic, false, 0);
 
     G4LogicalVolume* vessel_internal_logic = vessel_->GetInternalLogicalVolume();
