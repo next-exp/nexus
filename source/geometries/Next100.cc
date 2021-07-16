@@ -198,10 +198,11 @@ namespace nexus {
       vertex = shielding_->GenerateVertex(region);
     }
     // Vessel regions
-    else if ((region == "VESSEL") ||
-	     (region == "VESSEL_FLANGES") ||
-	     (region == "VESSEL_TRACKING_ENDCAP") ||
-	     (region == "VESSEL_ENERGY_ENDCAP")) {
+    else if ((region == "VESSEL")  ||
+             (region == "PORT_1a") ||
+             (region == "PORT_2a") ||
+             (region == "PORT_1b") ||
+             (region == "PORT_2b")) {
       vertex = vessel_->GenerateVertex(region);
     }
     // Inner copper shielding
