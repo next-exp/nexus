@@ -570,6 +570,11 @@ namespace nexus {
     return G4ThreeVector(lead_x_, lead_y_, lead_z_);
   }
 
+  G4ThreeVector Next100Shielding::GetAirDisplacement() const
+  {
+    return G4ThreeVector(0., -(steel_thickness_ + beam_thickness_2)/2., 0.);
+  }
+
   G4ThreeVector Next100Shielding::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);

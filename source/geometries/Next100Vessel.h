@@ -49,11 +49,12 @@ namespace nexus {
 
   private:
     // Dimensions
-    G4double vessel_in_rad_, vessel_body_length_, vessel_length_, vessel_thickness_;
-    G4double distance_gate_body_end_;
-    G4double endcap_in_rad_, endcap_theta_, endcap_thickness_, endcap_in_z_width_;
-    G4double flange_out_rad_, flange_length_, flange_z_pos_;
-    G4double large_nozzle_length_, small_nozzle_length_;
+    G4double vessel_in_rad_, vessel_thickness_;
+    G4double body_length_;
+    G4double endcap_in_rad_, endcap_in_body_, endcap_theta_, endcap_in_z_width_, endcap_gate_distance_;
+    // G4double flange_out_rad_, flange_length_, flange_z_pos_;
+    // G4double large_nozzle_length_, small_nozzle_length_;
+    G4double port_gas_x_, port_gas_y_, port_z_1a_, port_z_1b_, port_z_2a_, port_z_2b_;
     G4double sc_yield_, e_lifetime_;
     G4double pressure_, temperature_;
 
@@ -63,7 +64,6 @@ namespace nexus {
     // Dimensions coming from outside
     G4double nozzle_ext_diam_, up_nozzle_ypos_, central_nozzle_ypos_;
     G4double down_nozzle_ypos_, bottom_nozzle_ypos_;
-
 
     // Internal logical and physical volumes
     G4LogicalVolume* internal_logic_vol_;
@@ -75,8 +75,11 @@ namespace nexus {
     SpherePointSampler*   energy_endcap_gen_;
     CylinderPointSampler* tracking_flange_gen_;
     CylinderPointSampler* energy_flange_gen_;
+    CylinderPointSampler* port_gen_;
 
     G4double perc_endcap_vol_;
+    G4double perc_ep_flange_vol_;
+    G4double perc_tp_flange_vol_;
 
     // Geometry Navigator
     G4Navigator* geom_navigator_;

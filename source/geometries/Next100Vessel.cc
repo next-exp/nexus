@@ -28,6 +28,9 @@
 
 #include <CLHEP/Units/SystemOfUnits.h>
 
+#include <math.h>
+#include <algorithm>
+
 namespace nexus {
 
   using namespace CLHEP;
@@ -39,29 +42,32 @@ namespace nexus {
 			       const G4double bottom_nozzle_ypos):
     GeometryBase(),
 
-    // Body dimensions
-    vessel_in_rad_ (68.0  * cm),
-    vessel_body_length_ (160 * cm),
-    vessel_length_ (181.74 * cm),  // Vessel length = 160 cm (from body) + 2. * 10.87cm (from endcaps)
+    // general vessel dimensions
+    vessel_in_rad_    (68.0  * cm),
     vessel_thickness_ (1.  * cm),
-    distance_gate_body_end_ (110. * mm), // to be checked with designs
+
+    // Body
+    body_length_     (198.6 * cm),
 
     // Endcaps dimensions
-    endcap_in_rad_ (108.94 * cm),
-    endcap_theta_ (38.6 * deg),
-    endcap_thickness_ (1. * cm),
-    endcap_in_z_width_ (23.83 * cm),  // in_z_width = 35.7 cm - 1. cm (thickness) - 10.87 cm (from cylindric part)
+    endcap_in_rad_       (123.61 * cm),
+    endcap_in_body_      (15.15  * cm),
+    endcap_theta_        (29.1   * deg),
+    endcap_in_z_width_   (15.6   * cm),
+    endcap_gate_distance_(48.62  * cm),
 
-    // Flange dimensions
-    flange_out_rad_ (73.5 * cm),
-    flange_length_ (8.0 * cm),
-    flange_z_pos_ (80.0 * cm),
+    // Ports (values set on Construct())
+    // They are defined global since are needed at the vertex generation
+    port_gas_x_(0.),
+    port_gas_y_(0.),
+    port_z_1a_ (0.),
+    port_z_1b_ (0.),
+    port_z_2a_ (0.),
+    port_z_2b_ (0.),
 
-    // Nozzle dimensions
-    //  large_nozzle_length_ (320.0 * cm),
-    //  small_nozzle_length_ (240.0 * cm),
-     large_nozzle_length_ (250.0 * cm),
-    small_nozzle_length_ (240.0 * cm),
+    // // Nozzle dimensions
+    // large_nozzle_length_ (250.0 * cm),
+    // small_nozzle_length_ (240.0 * cm),
 
     // Vessel gas
     sc_yield_(16670. * 1/MeV),
@@ -82,10 +88,8 @@ namespace nexus {
     down_nozzle_ypos_ = down_nozzle_ypos;
     bottom_nozzle_ypos_ = bottom_nozzle_ypos;
 
-
     // Initializing the geometry navigator (used in vertex generation)
     geom_navigator_ = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
-
 
     /// Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/Next100/", "Control commands of geometry Next100.");
@@ -120,112 +124,166 @@ namespace nexus {
   }
 
 
-
   void Next100Vessel::Construct()
   {
     // Body solid
     G4double vessel_out_rad = vessel_in_rad_ + vessel_thickness_;
 
-    G4Tubs* vessel_body_solid = new G4Tubs("VESSEL_BODY", 0., vessel_out_rad, vessel_length_/2.,
+    G4Tubs* vessel_body_solid = new G4Tubs("VESSEL_BODY", 0., vessel_out_rad, body_length_/2.,
 					   0.*deg, 360.*deg);
 
-    G4Tubs* vessel_gas_body_solid = new G4Tubs("VESSEL_GAS_BODY", 0., vessel_in_rad_, vessel_length_/2.,
+    G4Tubs* vessel_gas_body_solid = new G4Tubs("VESSEL_GAS_BODY", 0., vessel_in_rad_, body_length_/2.,
 					       0.*deg, 360.*deg);
 
     // Endcaps solids
-    G4double endcap_out_rad = endcap_in_rad_ + endcap_thickness_;
+    G4double endcap_out_rad = endcap_in_rad_ + vessel_thickness_;
 
-    G4Sphere* vessel_tracking_endcap_solid = new G4Sphere("VESSEL_TRACKING_ENDCAP",
-							  0. * cm,  endcap_out_rad,   //radius
-							  0. * deg, 360. * deg,       // phi
-							  0. * deg, endcap_theta_);   // theta
+    G4Sphere* vessel_endcap_solid = new G4Sphere("VESSEL_ENDCAP",
+							  0. * cm,  endcap_out_rad,
+							  0. * deg, 360. * deg,
+							  0. * deg, endcap_theta_);
 
-    G4Sphere* vessel_gas_tracking_endcap_solid = new G4Sphere("VESSEL_GAS_TRACKING_ENDCAP",
-							      0. * cm,  endcap_in_rad_,   //radius
-							      0. * deg, 360. * deg,       // phi
-							      0. * deg, endcap_theta_);   // theta
-
-    G4Sphere* vessel_energy_endcap_solid = new G4Sphere("VESSEL_ENERGY_ENDCAP",
-							0. * cm,  endcap_out_rad,                   //radius
-							0. * deg, 360. * deg,                       // phi
-							180. * deg - endcap_theta_, endcap_theta_); // theta
-
-    G4Sphere* vessel_gas_energy_endcap_solid = new G4Sphere("VESSEL_GAS_ENERGY_ENDCAP",
-							    0. * cm,  endcap_in_rad_,                   //radius
-							    0. * deg, 360. * deg,                       // phi
-							    180. * deg - endcap_theta_, endcap_theta_); // theta
-
+    G4Sphere* vessel_gas_endcap_solid = new G4Sphere("VESSEL_GAS_ENDCAP",
+							      0. * cm,  endcap_in_rad_,
+							      0. * deg, 360. * deg,
+							      0. * deg, endcap_theta_);
 
     // Flange solid
-    G4Tubs* vessel_flange_solid = new G4Tubs("VESSEL_TRACKING_FLANGE", 0., flange_out_rad_,
-						      flange_length_/2., 0.*deg, 360.*deg);
+    G4double flange_out_rad   = 74.0 * cm;
+    G4double flange_tp_length = 41.5 * mm + 41.5 * mm; // 41.5 mm from the endcap
+    G4double flange_ep_length = 77.5 * mm + 41.5 * mm;
+    G4double flange_ep_z_pos  =   body_length_/2. - flange_ep_length/2. - endcap_in_body_;
+    G4double flange_tp_z_pos  = -(body_length_/2. - flange_tp_length/2. - endcap_in_body_);
 
-    // Nozzle solids
-    G4Tubs* large_nozzle_solid = new G4Tubs("LARGE_NOZZLE", 0.*cm, nozzle_ext_diam_/2.,
-					    large_nozzle_length_/2., 0.*deg, 360.*deg);
+    G4Tubs* vessel_tp_flange_solid = new G4Tubs("VESSEL_TRACKING_FLANGE", vessel_in_rad_, flange_out_rad,
+                                                flange_tp_length/2., 0.*deg, 360.*deg);
+    G4Tubs* vessel_ep_flange_solid = new G4Tubs("VESSEL_ENERGY_FLANGE"  , vessel_in_rad_, flange_out_rad,
+                                                flange_ep_length/2., 0.*deg, 360.*deg);
 
-    G4Tubs* small_nozzle_solid = new G4Tubs("SMALL_NOZZLE", 0.*cm, nozzle_ext_diam_/2.,
-					    small_nozzle_length_/2., 0.*deg, 360.*deg);
+    // Calibration ports (approximate values)
+    G4double port_in_rad      = 15.5 * mm;
+    G4double port_cap_height  = 15. * mm;
+    G4double port_cap_rad     = 36. * mm;
+    G4double port_base_height = 37. * mm;
+    G4double port_base_rad    = 21. * mm;
 
-    G4Tubs* large_nozzle_gas_solid = new G4Tubs("LARGE_NOZZLE_GAS", 0.*cm, (nozzle_ext_diam_/2. - vessel_thickness_),
-						large_nozzle_length_/2., 0.*deg, 360.*deg);
+    G4Tubs* port_solid_cap  = new G4Tubs("PORT_cap" , 0., port_cap_rad, port_cap_height/2.,
+                                         0.*deg, 360.*deg);
+    G4Tubs* port_solid_base = new G4Tubs("PORT_base", 0., port_base_rad, port_base_height/2.,
+                                         0.*deg, 360.*deg);
+    G4UnionSolid* port_solid = new G4UnionSolid("PORT", port_solid_base, port_solid_cap,
+                                0, G4ThreeVector(0., 0., (port_base_height + port_cap_height)/2.));
+    G4Tubs* port_gas_solid = new G4Tubs("PORT_GAS", 0., port_in_rad, (port_base_height + vessel_thickness_)/2.,
+                                        0.*deg, 360.*deg);
 
-    G4Tubs* small_nozzle_gas_solid = new G4Tubs("SMALL_NOZZLE_GAS", 0.*cm, (nozzle_ext_diam_/2. - vessel_thickness_),
-						small_nozzle_length_/2., 0.*deg, 360.*deg);
+    // // Nozzle solids
+    // G4Tubs* large_nozzle_solid = new G4Tubs("LARGE_NOZZLE", 0.*cm, nozzle_ext_diam_/2.,
+		// 			    large_nozzle_length_/2., 0.*deg, 360.*deg);
+    //
+    // G4Tubs* small_nozzle_solid = new G4Tubs("SMALL_NOZZLE", 0.*cm, nozzle_ext_diam_/2.,
+		// 			    small_nozzle_length_/2., 0.*deg, 360.*deg);
+    //
+    // G4Tubs* large_nozzle_gas_solid = new G4Tubs("LARGE_NOZZLE_GAS", 0.*cm, (nozzle_ext_diam_/2. - vessel_thickness_),
+		// 				large_nozzle_length_/2., 0.*deg, 360.*deg);
+    //
+    // G4Tubs* small_nozzle_gas_solid = new G4Tubs("SMALL_NOZZLE_GAS", 0.*cm, (nozzle_ext_diam_/2. - vessel_thickness_),
+		// 				small_nozzle_length_/2., 0.*deg, 360.*deg);
 
 
     //// Unions
-    G4double endcap_z_pos = (vessel_length_ / 2.) - (endcap_in_rad_ - endcap_in_z_width_);
-    G4ThreeVector tracking_endcap_pos(0, 0, endcap_z_pos);
-    G4ThreeVector energy_endcap_pos(0, 0, -1. * endcap_z_pos);
-    G4ThreeVector tracking_flange_pos(0, 0, flange_z_pos_);
-    G4ThreeVector energy_flange_pos(0, 0, -1. * flange_z_pos_);
+    G4double endcap_z_pos = (body_length_ / 2.) + endcap_in_z_width_ - endcap_in_rad_;
+    G4ThreeVector energy_endcap_pos  (0, 0,  endcap_z_pos);
+    G4ThreeVector tracking_endcap_pos(0, 0, -endcap_z_pos);
+    G4ThreeVector energy_flange_pos  (0, 0, flange_ep_z_pos);
+    G4ThreeVector tracking_flange_pos(0, 0, flange_tp_z_pos);
 
-    // Body + Tracking endcap
-    G4UnionSolid* vessel_solid = new G4UnionSolid("VESSEL", vessel_body_solid, vessel_tracking_endcap_solid,
-						  0, tracking_endcap_pos);
+    // tracking endcap z --> -z (we can rotate either in X or Y)
+    G4RotationMatrix* xRot = new G4RotationMatrix;
+    xRot->rotateX(180. * deg);
 
-    // Body + Tracking endcap + Energy endcap
-    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, vessel_energy_endcap_solid,
-				    0, energy_endcap_pos);
+    // Body + Energy endcap
+    G4UnionSolid* vessel_solid = new G4UnionSolid("VESSEL", vessel_body_solid, vessel_endcap_solid,
+						  0, energy_endcap_pos);
 
-    // Body + Tracking endcap + Energy endcap + Tracking flange
+    // Body + Energy endcap + Tracking endcap
+    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, vessel_endcap_solid,
+				    xRot, tracking_endcap_pos);
+
+    // Body + Energy endcap + Tracking endcap + Energy flange
     vessel_solid = new G4UnionSolid("VESSEL", vessel_solid,
-				    vessel_flange_solid, 0, tracking_flange_pos);
+				    vessel_ep_flange_solid, 0, energy_flange_pos);
 
-    // Body + Tracking endcap + Energy endcap + Tracking flange + Energy flange
+    // Body + Energy endcap + Tracking endcap + Energy flange + Tracking flange
     vessel_solid = new G4UnionSolid("VESSEL", vessel_solid,
-				    vessel_flange_solid, 0, energy_flange_pos);
+				    vessel_tp_flange_solid, 0, tracking_flange_pos);
 
-    // Adding nozzles
-    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, small_nozzle_solid,
-				    0, G4ThreeVector(0., up_nozzle_ypos_, 0.) );
-    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, large_nozzle_solid,
-				    0, G4ThreeVector(0., central_nozzle_ypos_, 0.) );
-    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, large_nozzle_solid,
-				    0, G4ThreeVector(0., down_nozzle_ypos_, 0.) );
-    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, small_nozzle_solid,
-				    0, G4ThreeVector(0., bottom_nozzle_ypos_, 0.) );
+    // Add ports (x,y at 45*deg)
+    G4double port_x = (vessel_out_rad+port_base_height/2.)/sqrt(2.);
+    G4double port_y = port_x;
+    port_gas_x_ = (vessel_in_rad_+port_base_height/2.+vessel_thickness_/2.)/sqrt(2.);
+    port_gas_y_ = port_gas_x_;
+
+    G4double port_reference_z = -body_length_/2. + endcap_in_body_;
+    port_z_1a_ = port_reference_z +   702. * mm;
+    port_z_2a_ = port_reference_z +  1292. * mm;
+    port_z_1b_ = port_reference_z +  533.6 * mm;
+    port_z_2b_ = port_reference_z + 1033.6 * mm;
+
+    G4RotationMatrix* port_a_Rot = new G4RotationMatrix;
+    port_a_Rot->rotateX( 90. * deg);
+    port_a_Rot->rotateY(-45. * deg);
+
+    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, port_solid,
+                                    port_a_Rot, G4ThreeVector(port_x, port_y, port_z_1a_));
+    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, port_solid,
+                                    port_a_Rot, G4ThreeVector(port_x, port_y, port_z_2a_));
+
+    G4RotationMatrix* port_b_Rot = new G4RotationMatrix;
+    port_b_Rot->rotateX( 90. * deg);
+    port_b_Rot->rotateY( 45. * deg);
+
+    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, port_solid,
+                                    port_b_Rot, G4ThreeVector(-port_x, port_y, port_z_1b_));
+    vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, port_solid,
+                                    port_b_Rot, G4ThreeVector(-port_x, port_y, port_z_2b_));
+
+    // // Adding nozzles
+    // vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, small_nozzle_solid,
+		// 		    0, G4ThreeVector(0., up_nozzle_ypos_, 0.) );
+    // vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, large_nozzle_solid,
+		// 		    0, G4ThreeVector(0., central_nozzle_ypos_, 0.) );
+    // vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, large_nozzle_solid,
+		// 		    0, G4ThreeVector(0., down_nozzle_ypos_, 0.) );
+    // vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, small_nozzle_solid,
+		// 		    0, G4ThreeVector(0., bottom_nozzle_ypos_, 0.) );
 
 
-
-    // Body gas + Tracking endcap gas
+    // Body gas + Energy endcap gas
     G4UnionSolid* vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_body_solid,
-						      vessel_gas_tracking_endcap_solid, 0, tracking_endcap_pos);
+						      vessel_gas_endcap_solid, 0, energy_endcap_pos);
 
-    // Body gas + Tracking endcap gas + Energy endcap gas
+    //  Body gas + Energy endcap gas + Tracking endcap gas
     vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid,
-					vessel_gas_energy_endcap_solid, 0, energy_endcap_pos);
-    // Adding nozzles
-    vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, small_nozzle_gas_solid,
-					0, G4ThreeVector(0., up_nozzle_ypos_, 0.) );
-    vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, large_nozzle_gas_solid,
-					0, G4ThreeVector(0., central_nozzle_ypos_, 0.) );
-    vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, large_nozzle_gas_solid,
-					0, G4ThreeVector(0., down_nozzle_ypos_, 0.) );
-    vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, small_nozzle_gas_solid,
-					0, G4ThreeVector(0., bottom_nozzle_ypos_, 0.) );
+					vessel_gas_endcap_solid, xRot, tracking_endcap_pos);
 
+    // Add gas inside ports
+    vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, port_gas_solid,
+                                        port_a_Rot, G4ThreeVector(port_gas_x_, port_gas_y_, port_z_1a_));
+    vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, port_gas_solid,
+                                        port_a_Rot, G4ThreeVector(port_gas_x_, port_gas_y_, port_z_2a_));
+    vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, port_gas_solid,
+                                        port_b_Rot, G4ThreeVector(-port_gas_x_, port_gas_y_, port_z_1b_));
+    vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, port_gas_solid,
+                                        port_b_Rot, G4ThreeVector(-port_gas_x_, port_gas_y_, port_z_2b_));
+    // // Adding nozzles
+    // vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, small_nozzle_gas_solid,
+		// 			0, G4ThreeVector(0., up_nozzle_ypos_, 0.) );
+    // vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, large_nozzle_gas_solid,
+		// 			0, G4ThreeVector(0., central_nozzle_ypos_, 0.) );
+    // vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, large_nozzle_gas_solid,
+		// 			0, G4ThreeVector(0., down_nozzle_ypos_, 0.) );
+    // vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, small_nozzle_gas_solid,
+		// 			0, G4ThreeVector(0., bottom_nozzle_ypos_, 0.) );
 
 
     //// The logics
@@ -253,86 +311,57 @@ namespace nexus {
 
     G4LogicalVolume* vessel_gas_logic = new G4LogicalVolume(vessel_gas_solid, vessel_gas_mat, "VESSEL_GAS");
     internal_logic_vol_ = vessel_gas_logic;
-    SetELzCoord(-vessel_body_length_/2. + distance_gate_body_end_);
+    SetELzCoord(-body_length_/2. - endcap_in_z_width_ + endcap_gate_distance_);
     internal_phys_vol_ =
       new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_gas_logic,
                         "VESSEL_GAS", vessel_logic, false, 0);
 
-
-    //// Vacuum Manifold
-    G4double vacuum_manifold_rad = nozzle_ext_diam_/2. - vessel_thickness_;
-    G4double vacuum_manifold_length = (large_nozzle_length_ - vessel_body_length_) / 2. + 9.4*cm; // 10.6 cm comes from Derek's drawings
-                                                                                                  // Switched to 9.4 to be aligned with Energy Plane
-    G4double vacuum_manifold_zpos = -1. * (large_nozzle_length_ - vacuum_manifold_length) / 2.;
-
-    G4Tubs* vacuum_manifold_solid = new G4Tubs("VACUUM_MANIFOLD", 0.*cm, vacuum_manifold_rad,
-					       vacuum_manifold_length/2., 0.*deg, 360.*deg);
-
-    G4LogicalVolume* vacuum_manifold_logic = new G4LogicalVolume(vacuum_manifold_solid,
-								 G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
-								 "VACUUM_MANIFOLD");
-
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,vacuum_manifold_zpos), vacuum_manifold_logic,
-		      "VACUUM_MANIFOLD", vessel_gas_logic, false, 0);
-
-
-    G4double vacuum_manifold_gas_rad = vacuum_manifold_rad - vessel_thickness_;
-    G4double vacuum_manifold_gas_length = vacuum_manifold_length - 2. * vessel_thickness_;
-
-    G4Tubs* vacuum_manifold_gas_solid = new G4Tubs("VACUUM_MANIFOLD_GAS", 0.*cm, vacuum_manifold_gas_rad,
-						   vacuum_manifold_gas_length/2., 0.*deg, 360.*deg);
-
-    G4LogicalVolume* vacuum_manifold_gas_logic = new G4LogicalVolume(vacuum_manifold_gas_solid,
-								     G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic"),
-								     "VACUUM_MANIFOLD_GAS");
-
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vacuum_manifold_gas_logic,
-		      "VACUUM_MANIFOLD_GAS", vacuum_manifold_logic, false, 0);
-
-
-
     // SETTING VISIBILITIES   //////////
     if (visibility_) {
       G4VisAttributes grey = DarkGrey();
-      //grey.SetForceSolid(true);
       vessel_logic->SetVisAttributes(grey);
       grey.SetForceSolid(true);
       vessel_gas_logic->SetVisAttributes(grey);
-      //grey.SetForceSolid(true);
-      vacuum_manifold_logic->SetVisAttributes(grey);
-      //grey.SetForceSolid(true);
-      vacuum_manifold_gas_logic->SetVisAttributes(grey);
     }
     else {
       vessel_logic->SetVisAttributes(G4VisAttributes::Invisible);
       vessel_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      vacuum_manifold_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      vacuum_manifold_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
-
     // VERTEX GENERATORS   //////////
-    body_gen_  = new CylinderPointSampler(vessel_in_rad_, vessel_length_, vessel_thickness_, 0.);
+    body_gen_  = new CylinderPointSampler(vessel_in_rad_, body_length_, vessel_thickness_, 0.);
 
-    tracking_endcap_gen_ = new SpherePointSampler( endcap_in_rad_, endcap_thickness_, tracking_endcap_pos, 0,
+    energy_endcap_gen_ = new SpherePointSampler( endcap_in_rad_, vessel_thickness_, energy_endcap_pos, 0,
 						   0., twopi, 0., endcap_theta_);
 
-    energy_endcap_gen_ = new SpherePointSampler( endcap_in_rad_, endcap_thickness_, energy_endcap_pos, 0,
-						 0., twopi, 180.*deg - endcap_theta_, endcap_theta_);
+    tracking_endcap_gen_ = new SpherePointSampler( endcap_in_rad_, vessel_thickness_, tracking_endcap_pos, xRot,
+						 0., twopi, 0., endcap_theta_);
 
-    tracking_flange_gen_  = new CylinderPointSampler(vessel_out_rad, flange_length_,
-						     flange_out_rad_-vessel_out_rad, 0., tracking_flange_pos);
+    tracking_flange_gen_  = new CylinderPointSampler(vessel_out_rad, flange_tp_length,
+						     flange_out_rad-vessel_out_rad, 0., tracking_flange_pos);
 
-    energy_flange_gen_  = new CylinderPointSampler(vessel_out_rad, flange_length_,
-						   flange_out_rad_-vessel_out_rad, 0., energy_flange_pos);
+    energy_flange_gen_  = new CylinderPointSampler(vessel_out_rad, flange_ep_length,
+						   flange_out_rad-vessel_out_rad, 0., energy_flange_pos);
+
+    port_gen_ = new CylinderPointSampler(0., (port_base_height+vessel_thickness_), port_in_rad, 0.);
 
     // Calculating some prob
-    G4double body_vol = vessel_body_solid->GetCubicVolume() - vessel_gas_body_solid->GetCubicVolume();
-    G4double endcap_vol =  vessel_tracking_endcap_solid->GetCubicVolume() - vessel_gas_tracking_endcap_solid->GetCubicVolume();
-    perc_endcap_vol_ = endcap_vol / (body_vol + 2. * endcap_vol);
+    G4double body_vol   = vessel_body_solid  ->GetCubicVolume() - vessel_gas_body_solid  ->GetCubicVolume();
+    G4double endcap_vol = vessel_endcap_solid->GetCubicVolume() - vessel_gas_endcap_solid->GetCubicVolume();
+    G4double flange_ep_vol = vessel_ep_flange_solid->GetCubicVolume();
+    G4double flange_tp_vol = vessel_tp_flange_solid->GetCubicVolume();
+    G4double vessel_vol = body_vol + 2.*endcap_vol + flange_ep_vol + flange_tp_vol;
+
+    perc_endcap_vol_    = 2.*endcap_vol / vessel_vol;
+    perc_ep_flange_vol_ = flange_ep_vol / vessel_vol;
+    perc_tp_flange_vol_ = flange_tp_vol / vessel_vol;
+
+    // G4double body_vol = vessel_body_solid->GetCubicVolume() - vessel_gas_body_solid->GetCubicVolume();
+    // std::cout << "Body vol (cm3)" << body_vol/1e6 << '\n';
+    // G4double endcap_vol = vessel_endcap_solid->GetCubicVolume() - vessel_gas_endcap_solid->GetCubicVolume();
+    // std::cout << "Endcap vol (cm3)" << endcap_vol/1e6 << '\n';
 
   }
-
 
 
   Next100Vessel::~Next100Vessel()
@@ -357,88 +386,78 @@ namespace nexus {
   }
 
 
-
   G4ThreeVector Next100Vessel::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);
 
-    // Vertex in the whole VESSEL volume except flanges
+    // Vertex in the whole VESSEL volume
     if (region == "VESSEL") {
       G4double rand = G4UniformRand();
-      if (rand < perc_endcap_vol_) {
-	G4VPhysicalVolume *VertexVolume;
-	do {
-	  vertex = tracking_endcap_gen_->GenerateVertex("VOLUME");  // Tracking endcap
-	  // To check its volume, one needs to rotate and shift the vertex
-	// because the check is done using global coordinates
-	G4ThreeVector glob_vtx(vertex);
-	// First rotate, then shift
-	glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
-	glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
-	  VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
-	} while (VertexVolume->GetName() != "VESSEL");
+      if (rand < perc_endcap_vol_) { // Endcaps
+        if (G4UniformRand()<0.5){ // Tracking endcap
+        vertex = tracking_endcap_gen_->GenerateVertex("VOLUME");
+        }
+        else{ // Energy endcap
+          vertex = energy_endcap_gen_->GenerateVertex("VOLUME");
+        }
       }
-      else if (rand > 1. - perc_endcap_vol_) {
-	G4VPhysicalVolume *VertexVolume;
-	do {
-	  vertex = energy_endcap_gen_->GenerateVertex("VOLUME");  // Energy endcap
-	  // To check its volume, one needs to rotate and shift the vertex
-	  // because the check is done using global coordinates
-	  G4ThreeVector glob_vtx(vertex);
-	  // First rotate, then shift
-	  glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
-	  glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
-	  VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
-	} while (VertexVolume->GetName() != "VESSEL");
+      else if (rand < (perc_endcap_vol_ + perc_ep_flange_vol_)){// Energy flange
+        vertex = energy_flange_gen_->GenerateVertex("WHOLE_VOL");
       }
-      else
-	vertex = body_gen_->GenerateVertex("BODY_VOL");  // Body
+      else if (rand < (perc_endcap_vol_ + perc_ep_flange_vol_ + perc_tp_flange_vol_)){// Tracking flange
+        vertex = tracking_flange_gen_->GenerateVertex("WHOLE_VOL");
+      }
+      else // Body
+        	vertex = body_gen_->GenerateVertex("WHOLE_VOL");
     }
 
-    // Vertex in FLANGES
-    else if (region == "VESSEL_FLANGES") {
-      if (G4UniformRand() < 0.5)
-      	vertex = tracking_flange_gen_->GenerateVertex("BODY_VOL");
-      else
-      	vertex = energy_flange_gen_->GenerateVertex("BODY_VOL");
+    else if (region == "PORT_1a"){
+      vertex = port_gen_->GenerateVertex("WHOLE_VOL");
+
+      vertex = vertex.rotateX( 90. * deg);
+      vertex = vertex.rotateZ(-45. * deg);
+
+      G4ThreeVector translate (port_gas_x_, port_gas_y_, port_z_1a_);
+      vertex = vertex + translate;
     }
 
-    // Vertex in TRACKING ENDCAP
-    else if (region == "VESSEL_TRACKING_ENDCAP") {
-      G4VPhysicalVolume *VertexVolume;
-      do {
-	vertex = tracking_endcap_gen_->GenerateVertex("VOLUME");  // Tracking endcap
-	// To check its volume, one needs to rotate and shift the vertex
-	// because the check is done using global coordinates
-	G4ThreeVector glob_vtx(vertex);
-	// First rotate, then shift
-	glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
-	glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
-	VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
-      } while (VertexVolume->GetName() != "VESSEL");
+    else if (region == "PORT_2a"){
+      vertex = port_gen_->GenerateVertex("WHOLE_VOL");
+
+      vertex = vertex.rotateX( 90. * deg);
+      vertex = vertex.rotateZ(-45. * deg);
+
+      G4ThreeVector translate (port_gas_x_, port_gas_y_, port_z_2a_);
+      vertex = vertex + translate;
     }
 
-    // Vertex in ENERGY ENDCAP
-    else if (region == "VESSEL_ENERGY_ENDCAP") {
-      G4VPhysicalVolume *VertexVolume;
-      do {
-	vertex = energy_endcap_gen_->GenerateVertex("VOLUME");  // Energy endcap
-	// To check its volume, one needs to rotate and shift the vertex
-	// because the check is done using global coordinates
-	G4ThreeVector glob_vtx(vertex);
-	// First rotate, then shift
-	glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
-	glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
-	VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
-      } while (VertexVolume->GetName() != "VESSEL");
+    else if (region == "PORT_1b"){
+      vertex = port_gen_->GenerateVertex("WHOLE_VOL");
+
+      vertex = vertex.rotateX( 90. * deg);
+      vertex = vertex.rotateZ( 45. * deg);
+
+      G4ThreeVector translate (-port_gas_x_, port_gas_y_, port_z_1b_);
+      vertex = vertex + translate;
     }
-     else {
+
+    else if (region == "PORT_2b"){
+      vertex = port_gen_->GenerateVertex("WHOLE_VOL");
+
+      vertex = vertex.rotateX( 90. * deg);
+      vertex = vertex.rotateZ( 45. * deg);
+
+      G4ThreeVector translate (-port_gas_x_, port_gas_y_, port_z_2b_);
+      vertex = vertex + translate;
+    }
+
+
+    else {
       G4Exception("[Next100Vessel]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");
     }
 
     return vertex;
   }
-
 
 } //end namespace nexus
