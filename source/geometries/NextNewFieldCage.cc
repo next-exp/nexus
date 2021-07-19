@@ -13,7 +13,7 @@
 #include "UniformElectricDriftField.h"
 #include "OpticalMaterialProperties.h"
 #include "IonizationSD.h"
-#include "XenonGasProperties.h"
+#include "XenonProperties.h"
 #include "CylinderPointSampler.h"
 #include "Visibilities.h"
 
@@ -277,7 +277,7 @@ namespace nexus {
     e_lifetime_  = gas_->GetMaterialPropertiesTable()->GetConstProperty("ATTACHMENT");
 
     // High density polyethylene for the field cage
-    hdpe_ = MaterialsList::HDPE();
+    hdpe_ = materials::HDPE();
 
     // Copper for field rings
     copper_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
@@ -285,17 +285,17 @@ namespace nexus {
     teflon_ =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
     // TPB coating
-    tpb_ = MaterialsList::TPB();
-    tpb_->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+    tpb_ = materials::TPB();
+    tpb_->SetMaterialPropertiesTable(opticalprops::TPB());
     //ITO coating
-    ito_ = MaterialsList::ITO();
-    ito_->SetMaterialPropertiesTable(OpticalMaterialProperties::ITO());
+    ito_ = materials::ITO();
+    ito_->SetMaterialPropertiesTable(opticalprops::ITO());
     // PEDOT coating
-    pedot_ = MaterialsList::PEDOT();
-    pedot_->SetMaterialPropertiesTable(OpticalMaterialProperties::PEDOT());
+    pedot_ = materials::PEDOT();
+    pedot_->SetMaterialPropertiesTable(opticalprops::PEDOT());
     // Quartz
-    quartz_ =  MaterialsList::FusedSilica();
-    quartz_->SetMaterialPropertiesTable(OpticalMaterialProperties::FusedSilica());
+    quartz_ =  materials::FusedSilica();
+    quartz_->SetMaterialPropertiesTable(opticalprops::FusedSilica());
   }
 
 
@@ -303,8 +303,8 @@ namespace nexus {
   {
     ///// CATHODE //////
     G4Material* fgrid_mat =
-      MaterialsList::FakeDielectric(gas_, "cath_grid_mat");
-    fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_,
+      materials::FakeDielectric(gas_, "cath_grid_mat");
+    fgrid_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_,
                                                                               temperature_,
                                                                               cathode_grid_transparency_,
                                                                               cathode_thickness_));
@@ -436,8 +436,7 @@ void NextNewFieldCage::BuildBuffer()
       el_field->SetDriftVelocity(2.5 * mm/microsecond);
       el_field->SetTransverseDiffusion(ELtransv_diff_);
       el_field->SetLongitudinalDiffusion(ELlong_diff_);
-      XenonGasProperties xgp(pressure_, temperature_);
-      el_field->SetLightYield(xgp.ELLightYield(ELelectric_field_));
+      el_field->SetLightYield(XenonELLightYield(ELelectric_field_, pressure_));
       G4Region* el_region = new G4Region("EL_REGION");
       el_region->SetUserInformation(el_field);
       el_region->AddRootLogicalVolume(el_gap_logic);
@@ -446,10 +445,10 @@ void NextNewFieldCage::BuildBuffer()
     ///// EL GRIDS /////
 
     G4Material* fgate_mat =
-      MaterialsList::FakeDielectric(gas_, "el_grid_gate_mat");
+      materials::FakeDielectric(gas_, "el_grid_gate_mat");
     // We have to set the defaults explicitely because C++ doesn't support
     // named arguments
-    fgate_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_,
+    fgate_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_,
                                                                               temperature_,
                                                                               gate_transparency_,
                                                                               grid_thickness_,
@@ -631,7 +630,7 @@ void NextNewFieldCage::BuildBuffer()
     reflector_opt_surf->SetModel(unified);
     reflector_opt_surf->SetFinish(ground);
     reflector_opt_surf->SetSigmaAlpha(0.01);
-    reflector_opt_surf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+    reflector_opt_surf->SetMaterialPropertiesTable(opticalprops::PTFE());
     new G4LogicalSkinSurface("DRIFT_TUBE", drift_tube_logic,
     			     reflector_opt_surf);
 
@@ -726,7 +725,7 @@ void NextNewFieldCage::BuildBuffer()
                                               frame_length/2., 0, twopi);
 
     G4LogicalVolume* tracking_frame_logic = new G4LogicalVolume(tracking_frame_solid,
-                                                                MaterialsList::Steel316Ti(),
+                                                                materials::Steel316Ti(),
                                                                 "TRACKING_FRAMES");
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., frame_posz), tracking_frame_logic,

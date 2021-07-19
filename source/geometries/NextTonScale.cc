@@ -450,13 +450,13 @@ G4ThreeVector NextTonScale::GenerateVertex(const G4String& region) const
 void NextTonScale::DefineGas()
 {
   if (gas_ == "naturalXe")
-    xenon_gas_ = MaterialsList::GXe(gas_pressure_, gas_temperature_);
+    xenon_gas_ = materials::GXe(gas_pressure_, gas_temperature_);
   else if (gas_ == "enrichedXe")
-    xenon_gas_ = MaterialsList::GXeEnriched(gas_pressure_, gas_temperature_);
+    xenon_gas_ = materials::GXeEnriched(gas_pressure_, gas_temperature_);
   else if (gas_ == "depletedXe")
-    xenon_gas_ = MaterialsList::GXeDepleted(gas_pressure_, gas_temperature_);
+    xenon_gas_ = materials::GXeDepleted(gas_pressure_, gas_temperature_);
   else if (gas_ == "XeHe")
-    xenon_gas_ = MaterialsList::GXeHe(gas_pressure_, gas_temperature_,
+    xenon_gas_ = materials::GXeHe(gas_pressure_, gas_temperature_,
 				      xe_perc_, helium_mass_num_);
   else
     G4Exception("[NextTonScale]", "DefineGas()", FatalException,

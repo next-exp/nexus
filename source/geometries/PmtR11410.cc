@@ -82,7 +82,7 @@ namespace nexus {
       new G4UnionSolid("PMT_R11410",front_body_solid,rear_body_solid,0,transl);
 
 
-    G4Material* Kovar = MaterialsList::Kovar();
+    G4Material* Kovar = materials::Kovar();
 
     G4LogicalVolume* pmt_logic =
       new G4LogicalVolume(pmt_solid, Kovar, "PMT_R11410");
@@ -121,8 +121,8 @@ namespace nexus {
     G4Tubs* window_solid =
       new G4Tubs("PMT_WINDOW", 0, window_diam_/2., window_thickness_/2., 0., twopi);
 
-    G4Material* silica = MaterialsList::FusedSilica();
-    silica->SetMaterialPropertiesTable(OpticalMaterialProperties::FusedSilica());
+    G4Material* silica = materials::FusedSilica();
+    silica->SetMaterialPropertiesTable(opticalprops::FusedSilica());
     G4LogicalVolume* window_logic = new G4LogicalVolume(window_solid, silica, "PMT_WINDOW");
 
     G4double window_posz = front_body_gas_length/2. - window_thickness_/2.;

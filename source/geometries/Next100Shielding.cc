@@ -161,16 +161,16 @@ namespace nexus {
 
 
     G4LogicalVolume* roof_logic      = new G4LogicalVolume(roof_beam_solid,
-                                           MaterialsList::Steel(), "STEEL_BEAM_ROOF");
+                                           materials::Steel(), "STEEL_BEAM_ROOF");
 
     G4LogicalVolume* lat_beam_logic  = new G4LogicalVolume(lat_beam_solid,
-                                           MaterialsList::Steel(), "STEEL_BEAM_STRUCTURE_LAT");
+                                           materials::Steel(), "STEEL_BEAM_STRUCTURE_LAT");
 
     G4LogicalVolume* front_beam_logic = new G4LogicalVolume(front_beam_solid,
-                                            MaterialsList::Steel(), "STEEL_BEAM_STRUCTURE_FRONT");
+                                            materials::Steel(), "STEEL_BEAM_STRUCTURE_FRONT");
 
      G4LogicalVolume* struct_logic   = new G4LogicalVolume(struct_solid,
-                                           MaterialsList::Steel(), "STEEL_BEAM_STRUCTURE_TOP");
+                                           materials::Steel(), "STEEL_BEAM_STRUCTURE_TOP");
 
     new G4PVPlacement(0, G4ThreeVector(0., top_beam_y, roof_z_separation_ + lateral_z_separation_/2.),
                       struct_logic, "STEEL_BEAM_STRUCTURE_top", lead_box_logic, false, 0, false);
@@ -213,7 +213,7 @@ namespace nexus {
     G4Box* steel_box_solid = new G4Box("STEEL_BOX", steel_x/2., steel_y/2., steel_z/2.);
 
     G4LogicalVolume* steel_box_logic = new G4LogicalVolume(steel_box_solid,
-                                                           MaterialsList::Steel(), "STEEL_BOX");
+                                            materials::Steel(), "STEEL_BOX");
 
     new G4PVPlacement(0, G4ThreeVector(0., -beam_thickness_2/2., 0.),
                       steel_box_logic, "STEEL_BOX", lead_box_logic, false, 0);
@@ -277,23 +277,23 @@ namespace nexus {
 
     G4LogicalVolume* pedestal_support_beam_bottom_logic =
       new G4LogicalVolume(pedestal_support_beam_bottom,
-                          MaterialsList::Steel316Ti(), "PEDESTAL_SUPPORT_BOTTOM");
+                          materials::Steel316Ti(), "PEDESTAL_SUPPORT_BOTTOM");
 
     G4LogicalVolume* pedestal_support_beam_top_logic =
       new G4LogicalVolume(pedestal_support_beam_top,
-                          MaterialsList::Steel316Ti(), "PEDESTAL_SUPPORT_TOP");
+                          materials::Steel316Ti(), "PEDESTAL_SUPPORT_TOP");
 
     G4LogicalVolume* pedestal_beam_front_logic =
       new G4LogicalVolume(pedestal_beam_front,
-                          MaterialsList::Steel316Ti(), "PEDESTAL_BEAM_FRONT");
+                          materials::Steel316Ti(), "PEDESTAL_BEAM_FRONT");
 
     G4LogicalVolume* pedestal_beam_lateral_logic =
       new G4LogicalVolume(pedestal_beam_lateral,
-                          MaterialsList::Steel316Ti(), "PEDESTAL_BEAM_LATERAL");
+                          materials::Steel316Ti(), "PEDESTAL_BEAM_LATERAL");
 
     G4LogicalVolume* pedestal_roof_logic =
       new G4LogicalVolume(pedestal_roof,
-                          MaterialsList::Steel316Ti(), "PEDESTAL_ROOF");
+                          materials::Steel316Ti(), "PEDESTAL_ROOF");
 
     G4double pedestal_x_pos = pedestal_x_/2. + pedestal_lateral_beam_thickness_/2.;
     G4double pedestal_y_pos = -lead_y_/2. + lead_thickness_/2.;

@@ -59,7 +59,7 @@ namespace nexus {
         (chamber_length/2. + chamber_thickn), 0., twopi);
 
     G4LogicalVolume* chamber_logic =
-      new G4LogicalVolume(chamber_solid, MaterialsList::Steel(), "CHAMBER");
+      new G4LogicalVolume(chamber_solid, materials::Steel(), "CHAMBER");
 
     this->SetLogicalVolume(chamber_logic);
 
@@ -69,8 +69,8 @@ namespace nexus {
     G4Tubs* gas_solid =
       new G4Tubs("GAS", 0., chamber_diam/2., chamber_length/2., 0., twopi);
 
-    G4Material* gxe = MaterialsList::GXe(10.*bar);
-    gxe->SetMaterialPropertiesTable(OpticalMaterialProperties::GXe(10.*bar, 303));
+    G4Material* gxe = materials::GXe(10.*bar);
+    gxe->SetMaterialPropertiesTable(opticalprops::GXe(10.*bar, 303));
 
     G4LogicalVolume* gas_logic = new G4LogicalVolume(gas_solid, gxe, "GAS");
 
