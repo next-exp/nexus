@@ -207,11 +207,10 @@ namespace nexus {
 			 0, G4ThreeVector(0., 0., transl_z));
 
     G4Tubs* hole_hut_solid =
-      new G4Tubs("HOLE_HUT", 0., hut_int_diam_/2., (hut_hole_length_ + offset)/2.,
-		 0., twopi);
+      new G4Tubs("HOLE_HUT", 0., hut_int_diam_/2., hut_hole_length_/2.,
+		  0., twopi);
     transl_z =
-      (hole_length_front_ + offset)/2. + hole_length_rear_ + hut_hole_length_/2.
-      - offset/2.;
+      (hole_length_front_ + offset)/2. + hole_length_rear_ + hut_hole_length_/2.;
     hole_solid =
       	new G4UnionSolid("HOLE", hole_solid, hole_hut_solid,
 			 0, G4ThreeVector(0., 0., transl_z));
