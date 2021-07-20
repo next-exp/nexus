@@ -46,24 +46,24 @@ namespace nexus {
     // hole_lat1_posy_ (-203.8 * mm),
     // hole_lat2_posx_ (-415 * mm),
     // hole_lat2_posy_ (-311.2 * mm),
-    hut_int_diam_ (76. * mm),
-    hut_thickn_ (5. * mm),
+    hut_int_diam_ (64. * mm),
+    hut_thickn_ (6. * mm),
     hut_hole_length_ (45. * mm),
     hut_length_long_ (120. * mm),
     hut_length_medium_ (100. * mm),
-    hut_length_short_ (70. * mm),
+    hut_length_short_ (60. * mm),
     last_hut_long_ (17),
     last_hut_medium_ (35),
-    hole_diam_front_ (84. * mm),
-    hole_diam_rear_ (65. * mm),
-    hole_length_front_ (41.75 * mm), //average of 37 mm of front and 46.5 mm of front+medium
-    hole_length_rear_ (78.25 * mm), //sum of front+rear length must give copper thickness
+    hole_diam_front_ (80. * mm),
+    hole_diam_rear_ (62. * mm),
+    hole_length_front_ (49.5 * mm),
+    hole_length_rear_ (copper_plate_thickn_ - hole_length_front_),
     sapphire_window_thickn_ (6. * mm),
     optical_pad_thickn_ (1.0 * mm),
     tpb_thickn_ (1.*micrometer),
-    pmt_stand_out_ (2. * mm), // length that PMTs stand oput of copper, in the front
-    internal_pmt_base_diam_ (54. * mm),
-    internal_pmt_base_thickn_ (0.2 * mm),
+    pmt_stand_out_ (2. * mm), // length that PMTs stand out of copper, in the front
+    internal_pmt_base_diam_ (46.8 * mm),
+    internal_pmt_base_thickn_ (0.5 * mm),
     visibility_(1),
     verbosity_(0)
   {
