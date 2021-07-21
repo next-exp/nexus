@@ -225,8 +225,7 @@ namespace nexus {
 	     (region == "OPTICAL_PAD") ||
 	     (region == "PMT_BODY") ||
 	     (region == "PMT") ||
-	     (region == "INTERNAL_PMT_BASE") ||
-	     (region == "EXTERNAL_PMT_BASE") ||
+	     (region == "PMT_BASE") ||
 	     (region == "TP_COPPER_PLATE") ||
 	     (region == "DICE_BOARD") ||
 	     (region == "AXIAL_PORT") ||

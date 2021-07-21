@@ -72,7 +72,7 @@ namespace nexus {
     const G4double hole_length_front_, hole_length_rear_;
     const G4double sapphire_window_thickn_, optical_pad_thickn_, tpb_thickn_;
     const G4double pmt_stand_out_;
-    const G4double internal_pmt_base_diam_, internal_pmt_base_thickn_;
+    const G4double pmt_base_diam_, pmt_base_thickn_;
 
     // Visibility of the energy plane
     G4bool visibility_, verbosity_;
@@ -99,8 +99,7 @@ namespace nexus {
     CylinderPointSampler2020* copper_gen_;
     CylinderPointSampler2020* sapphire_window_gen_;
     CylinderPointSampler2020* optical_pad_gen_;
-    CylinderPointSampler2020* internal_pmt_base_gen_;
-    CylinderPointSampler2020* external_pmt_base_gen_;
+    CylinderPointSampler2020* pmt_base_gen_;
 
   };
 

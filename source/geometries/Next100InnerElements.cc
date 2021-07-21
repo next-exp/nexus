@@ -108,10 +108,9 @@ namespace nexus {
     else if ((region == "EP_COPPER_PLATE") ||
              (region == "SAPPHIRE_WINDOW") ||
              (region == "OPTICAL_PAD") ||
-	     (region == "PMT") ||
+	           (region == "PMT") ||
              (region == "PMT_BODY") ||
-	     (region == "INTERNAL_PMT_BASE") ||
-	     (region == "EXTERNAL_PMT_BASE")) {
+	           (region == "PMT_BASE")) {
       vertex = energy_plane_->GenerateVertex(region);
     }
     // Tracking Plane regions

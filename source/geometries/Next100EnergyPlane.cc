@@ -62,8 +62,8 @@ namespace nexus {
     optical_pad_thickn_ (1.0 * mm),
     tpb_thickn_ (1.*micrometer),
     pmt_stand_out_ (2. * mm), // length that PMTs stand out of copper, in the front
-    internal_pmt_base_diam_ (46.8 * mm),
-    internal_pmt_base_thickn_ (0.5 * mm),
+    pmt_base_diam_ (46.8 * mm),
+    pmt_base_thickn_ (0.5 * mm),
     visibility_(1),
     verbosity_(0)
   {
@@ -344,19 +344,18 @@ namespace nexus {
 
 
     /// Part of the PMT bases with pins and resistors ///
-    G4Tubs* internal_pmt_base_solid =
-      new G4Tubs("INTERNAL_PMT_BASE", 0., internal_pmt_base_diam_/2.,
-		 internal_pmt_base_thickn_/2., 0., twopi);
+    G4Tubs* pmt_base_solid =
+      new G4Tubs("PMT_BASE", 0., pmt_base_diam_/2., pmt_base_thickn_/2., 0., twopi);
 
-    G4LogicalVolume* internal_pmt_base_logic =
-      new G4LogicalVolume(internal_pmt_base_solid,
-			  G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON"),
-			  "INTERNAL_PMT_BASE");
-    G4double int_pmt_base_posz =
+    G4LogicalVolume* pmt_base_logic =
+      new G4LogicalVolume(pmt_base_solid,
+			     G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON"), "PMT_BASE");
+
+    G4double pmt_base_posz =
       vacuum_front_length/2. + hole_length_rear_ + hut_hole_length_/2.;
-    G4VPhysicalVolume* internal_pmt_base_phys =
-      new G4PVPlacement(0, G4ThreeVector(0., 0., int_pmt_base_posz),
-                        internal_pmt_base_logic, "INTERNAL_PMT_BASE",
+    G4VPhysicalVolume* pmt_base_phys =
+      new G4PVPlacement(0, G4ThreeVector(0., 0., pmt_base_posz),
+                        pmt_base_logic, "PMT_BASE",
                         vacuum_logic, false, 0, false);
 
     /// Placing the encapsulating volume with all internal components in place ///
@@ -404,7 +403,7 @@ namespace nexus {
       tpb_logic->SetVisAttributes(tpb_col);
       G4VisAttributes pmt_base_col = Yellow();
       pmt_base_col.SetForceSolid(true);
-      internal_pmt_base_logic->SetVisAttributes(pmt_base_col);
+      pmt_base_logic->SetVisAttributes(pmt_base_col);
       //G4VisAttributes vacuum_col = Red();
       //vacuum_col.SetForceSolid(true);
       // vacuum_logic->SetVisAttributes(vacuum_col);
@@ -413,7 +412,7 @@ namespace nexus {
       sapphire_window_logic->SetVisAttributes(G4VisAttributes::Invisible);
       optical_pad_logic->SetVisAttributes(G4VisAttributes::Invisible);
       tpb_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      internal_pmt_base_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      pmt_base_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
     //////////////////////////
@@ -434,13 +433,8 @@ namespace nexus {
 
     optical_pad_gen_       = new CylinderPointSampler2020(optical_pad_phys);
 
-    internal_pmt_base_gen_ = new CylinderPointSampler2020(internal_pmt_base_phys);
+    pmt_base_gen_ = new CylinderPointSampler2020(pmt_base_phys);
 
-    external_pmt_base_gen_ =
-      new CylinderPointSampler2020(0., (hut_int_diam_ + 2.*hut_thickn_)/2., 0.1*mm,
-                                   0., twopi, nullptr,
-                                   G4ThreeVector(0., 0., vacuum_posz_ +
-                                                 int_pmt_base_posz + hut_hole_length_/2.));
   }
 
 
@@ -449,8 +443,7 @@ namespace nexus {
     delete copper_gen_;
     delete sapphire_window_gen_;
     delete optical_pad_gen_;
-    delete internal_pmt_base_gen_;
-    delete external_pmt_base_gen_;
+    delete pmt_base_gen_;
   }
 
 
@@ -502,29 +495,14 @@ namespace nexus {
       vertex.setZ(vertex.z() + z_translation);
     }
 
-    // PMT bases - internal part
-    else if (region == "INTERNAL_PMT_BASE") {
-      vertex = internal_pmt_base_gen_->GenerateVertex("VOLUME");
+    // PMT bases
+    else if (region == "PMT_BASE") {
+      vertex = pmt_base_gen_->GenerateVertex("VOLUME");
       G4double rand = num_PMTs_ * G4UniformRand();
       G4ThreeVector pmt_base_pos = pmt_positions_[int(rand)];
       vertex += pmt_base_pos;
       G4double z_translation = vacuum_posz_;
       vertex.setZ(vertex.z() + z_translation);
-    }
-
-    // PMT bases - external part
-    else if (region == "EXTERNAL_PMT_BASE") {
-      vertex = external_pmt_base_gen_->GenerateVertex("VOLUME");
-      G4double rand = num_PMTs_ * G4UniformRand();
-      G4ThreeVector pmt_base_pos = pmt_positions_[int(rand)];
-      if (int(rand) <= last_hut_long_) {
-        pmt_base_pos.setZ(hut_length_long_   + 0.1*mm);
-      } else if (int(rand) <= last_hut_medium_) {
-        pmt_base_pos.setZ(hut_length_medium_ + 0.1*mm);
-      } else {
-        pmt_base_pos.setZ(hut_length_short_  + 0.1*mm);
-      }
-      vertex += pmt_base_pos;
     }
 
     else {
