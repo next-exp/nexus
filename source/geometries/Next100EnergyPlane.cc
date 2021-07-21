@@ -237,7 +237,7 @@ namespace nexus {
 			  "EP_COPPER_PLATE");
 
     G4double stand_out_length =
-      sapphire_window_thickn_ + optical_pad_thickn_ + pmt_stand_out_;
+      sapphire_window_thickn_ + tpb_thickn_ + optical_pad_thickn_ + pmt_stand_out_;
     copper_plate_posz_ =
       GetELzCoord() + end_of_sapphire_posz_ + stand_out_length +
       copper_plate_thickn_/2.;
