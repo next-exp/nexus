@@ -393,11 +393,11 @@ void Next100FieldCage::BuildBuffer()
 
   G4ThreeVector buff_cathode_pos = G4ThreeVector(0., 0., -buffer_length_/2.+(cathode_thickn_/2. - grid_thickn_/2.)/2.);
 
-  G4SubtractionSolid* subs_buffer =
-  new G4SubtractionSolid("BUFFER", buffer_solid, buffer_cathode_solid, 0, buff_cathode_pos);
+  G4UnionSolid* union_buffer =
+  new G4UnionSolid("BUFFER", buffer_solid, buffer_cathode_solid, 0, buff_cathode_pos);
 
   G4LogicalVolume* buffer_logic =
-  new G4LogicalVolume(subs_buffer, gas_, "BUFFER");
+  new G4LogicalVolume(union_buffer, gas_, "BUFFER");
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_zpos),
   buffer_logic, "BUFFER", mother_logic_, false, 0, true);
