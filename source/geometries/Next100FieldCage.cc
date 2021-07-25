@@ -198,7 +198,7 @@ void Next100FieldCage::SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys)
 void Next100FieldCage::Construct()
 {
   /// Calculate lengths of active and buffer regions
-  active_length_ = GetELzCoord() + gate_teflon_dist_ + active_cathode_dist_ + cathode_thickn_/2. - grid_thickn_/2.;
+  active_length_ = gate_teflon_dist_ + active_cathode_dist_ + cathode_thickn_/2. - grid_thickn_/2.;
   buffer_length_ = gate_sapphire_wdw_dist_ - active_length_ - grid_thickn_;
 
   /// Calculate derived positions in mother volume
