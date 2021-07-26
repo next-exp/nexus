@@ -201,7 +201,7 @@ namespace nexus {
     G4Tubs* hole_rear_solid =
       new G4Tubs("HOLE_REAR", 0., hole_diam_rear_/2.,
 		 (hole_length_rear_ + offset)/2., 0., twopi);
-    transl_z = (hole_length_front_ + offset)/2. + hole_length_rear_/2 - offset/2.;
+    transl_z = (hole_length_front_ + offset)/2. + hole_length_rear_/2.;
     G4UnionSolid* hole_solid =
       	new G4UnionSolid("HOLE", hole_front_solid, hole_rear_solid,
 			 0, G4ThreeVector(0., 0., transl_z));
@@ -265,7 +265,7 @@ namespace nexus {
       new G4Tubs("HOLE_FRONT", 0., hole_diam_front_/2., vacuum_front_length/2., 0., twopi);
 
     G4Tubs* vacuum_rear_solid =
-      new G4Tubs("HOLE_REAR", 0., hole_diam_rear_/2., hole_length_rear_/2., 0., twopi);
+      new G4Tubs("HOLE_REAR", 0., hole_diam_rear_/2., (hole_length_rear_+offset)/2., 0., twopi);
 
     G4Tubs* vacuum_hut_solid =
       new G4Tubs("HOLE_HUT", 0., hut_int_diam_/2., hut_hole_length_/2., 0., twopi);
@@ -354,14 +354,15 @@ namespace nexus {
     G4double pmt_base_posz =
       vacuum_front_length/2. + hole_length_rear_ + hut_hole_length_/2.;
     G4VPhysicalVolume* pmt_base_phys =
-      new G4PVPlacement(0, G4ThreeVector(0., 0., pmt_base_posz),
+       new G4PVPlacement(0, G4ThreeVector(0., 0., pmt_base_posz),
                         pmt_base_logic, "PMT_BASE",
                         vacuum_logic, false, 0, false);
 
     /// Placing the encapsulating volume with all internal components in place ///
     vacuum_posz_ = copper_plate_posz_ - copper_plate_thickn_/2.
-                  + vacuum_front_length/2. - sapphire_window_thickn_ - tpb_thickn_
-                  - optical_pad_thickn_ - pmt_stand_out_;
+                    + vacuum_front_length/2. - sapphire_window_thickn_ - tpb_thickn_
+                    - optical_pad_thickn_ - pmt_stand_out_;
+
     G4ThreeVector pos;
     for (int i=0; i<num_PMTs_; i++) {
       pos = pmt_positions_[i];
