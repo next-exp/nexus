@@ -221,7 +221,7 @@ namespace nexus {
              (region == "PMT") ||
              (region == "PMT_BASE") ||
              (region == "TP_COPPER_PLATE") ||
-             (region == "DICE_BOARD") ||
+             (region == "SIPM_BOARD") ||
              (region == "EL_TABLE") ||
              (region == "FIELD_RING") ||
              (region == "GATE_RING") ||
