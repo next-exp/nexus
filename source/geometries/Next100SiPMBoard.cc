@@ -37,7 +37,7 @@ Next100SiPMBoard::Next100SiPMBoard():
   margin_          (  7.275 * mm),
   hole_diam_       (  7.00  * mm),
   board_thickness_ (  0.5   * mm),
-  mask_thickness_  (  2.1   * mm),
+  mask_thickness_  (  6.0   * mm),
   time_binning_    (1. * microsecond),
   visibility_      (true),
   sipm_visibility_ (false),
