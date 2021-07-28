@@ -11,10 +11,10 @@
 #include "Next100SiPMBoard.h"
 
 #include "MaterialsList.h"
-#include "GenericPhotosensor.h"
 #include "OpticalMaterialProperties.h"
 #include "BoxPointSampler.h"
 #include "Visibilities.h"
+#include "Next100SiPM.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Box.hh>
@@ -37,13 +37,13 @@ Next100SiPMBoard::Next100SiPMBoard():
   margin_          (  7.275 * mm),
   hole_diam_       (  7.00  * mm),
   board_thickness_ (  0.5   * mm),
-  mask_thickness_  (  2.1   * mm), // Made slightly thicker to fit SiPM
+  mask_thickness_  (  2.1   * mm),
   time_binning_    (1. * microsecond),
   visibility_      (true),
   sipm_visibility_ (false),
   mpv_             (nullptr),
   vtxgen_          (nullptr),
-  sipm_            (new GenericPhotosensor("SiPM", 1.3 * mm))
+  sipm_            (new Next100SiPM())
 {
   msg_ = new G4GenericMessenger(this, "/Geometry/Next100/",
                                 "Control commands of the NEXT-100 geometry.");
@@ -180,25 +180,17 @@ void Next100SiPMBoard::Construct()
 
   // SILICON PHOTOMULTIPLIER (SIPM) //////////////////////////////////
 
-  // We use for now the generic photosensor until the exact features
-  // of the new Hamamatsu SiPMs are known.
-
-  G4MaterialPropertiesTable* photosensor_mpt = new G4MaterialPropertiesTable();
-  G4double energy[]       = {0.2 * eV, 3.5 * eV, 3.6 * eV, 11.5 * eV};
-  G4double reflectivity[] = {0.0     , 0.0     , 0.0     ,  0.0     };
-  G4double efficiency[]   = {1.0     , 1.0     , 0.0     ,  0.0     };
-  photosensor_mpt->AddProperty("REFLECTIVITY", energy, reflectivity, 4);
-  photosensor_mpt->AddProperty("EFFICIENCY",   energy, efficiency,   4);
   sipm_->SetVisibility(sipm_visibility_);
-  sipm_->SetOpticalProperties(photosensor_mpt);
-  sipm_->SetWithWLSCoating(true);
+  sipm_->SetSiPMCoatingThickness(2. * micrometer);
   sipm_->SetTimeBinning(time_binning_);
   sipm_->SetSensorDepth(2);
   sipm_->SetMotherDepth(4);
   sipm_->SetNamingOrder(1000);
   sipm_->Construct();
 
-  G4double sipm_zpos = - mask_hole_length/2. + sipm_->GetThickness()/2.;
+  G4double sipm_thickn = sipm_->GetDimensions().z();
+
+  G4double sipm_zpos = - mask_hole_length/2. + sipm_thickn/2.;
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., sipm_zpos),
                     sipm_->GetLogicalVolume(), sipm_->GetLogicalVolume()->GetName(), mask_hole_logic_vol,
@@ -209,7 +201,7 @@ void Next100SiPMBoard::Construct()
 
   // Placing now 8x8 replicas of the gas hole and SiPM
 
-  G4double zpos = board_thickness_ + sipm_->GetThickness()/2.;
+  G4double zpos = board_thickness_ + sipm_thickn/2.;
 
   G4int counter = 0;
 
