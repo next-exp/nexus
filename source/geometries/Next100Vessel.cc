@@ -160,7 +160,7 @@ namespace nexus {
     G4Tubs* vessel_ep_flange_solid = new G4Tubs("VESSEL_ENERGY_FLANGE"  , vessel_in_rad_, flange_out_rad,
                                                 flange_ep_length/2., 0.*deg, 360.*deg);
 
-    // Calibration ports
+    // Calibration ports: nozzel and inner tube
     G4double port_in_rad      = 15.5 * mm;
     G4double port_cap_height  = 15.  * mm;
     G4double port_cap_rad     = 37.5 * mm;
@@ -176,6 +176,14 @@ namespace nexus {
                                 0, G4ThreeVector(0., 0., (port_base_height + port_cap_height)/2.));
     G4Tubs* port_gas_solid = new G4Tubs("PORT_GAS", 0., port_in_rad, (port_base_height + offset)/2.,
                                         0.*deg, 360.*deg);
+
+    // Port inner tube
+    G4double port_tube_rad   = 4.  * mm;
+    G4double port_tube_thick = 1.2 * mm;
+    G4Tubs* port_tube_solid = new G4Tubs("PORT_TUBE", 0., (port_tube_rad + port_tube_thick),
+                                         port_base_height/2., 0.*deg, 360.*deg);
+    G4Tubs* port_tube_gas_solid = new G4Tubs("PORT_TUBE_GAS", 0., port_tube_rad,
+                                             port_base_height/2., 0.*deg, 360.*deg);
 
     // // Nozzle solids
     // G4Tubs* large_nozzle_solid = new G4Tubs("LARGE_NOZZLE", 0.*cm, nozzle_ext_diam_/2.,
@@ -218,7 +226,7 @@ namespace nexus {
     vessel_solid = new G4UnionSolid("VESSEL", vessel_solid,
 				    vessel_tp_flange_solid, 0, tracking_flange_pos);
 
-    // Add ports (x,y at 45*deg)
+    // Add port nozzles (x,y at 45*deg)
     port_x_ = (vessel_in_rad_+port_base_height/2.)/sqrt(2.);
     port_y_ = port_x_;
 
@@ -289,6 +297,7 @@ namespace nexus {
 
 
     //// The logics
+    // vessel and vessel gas
     G4LogicalVolume* vessel_logic = new G4LogicalVolume(vessel_solid,
 							materials::Steel316Ti(),
 							"VESSEL");
@@ -318,16 +327,42 @@ namespace nexus {
       new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_gas_logic,
                         "VESSEL_GAS", vessel_logic, false, 0);
 
+    // Port tubes
+    G4LogicalVolume* port_tube_logic =
+      new G4LogicalVolume(port_tube_solid, materials::Steel316Ti(), "PORT_TUBE");
+
+    G4LogicalVolume* port_tube_gas_logic =
+      new G4LogicalVolume(port_tube_gas_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
+                          "PORT_TUBE_AIR");
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), port_tube_gas_logic,
+                      "PORT_TUBE_AIR", port_tube_logic, false, 0);
+
+    new G4PVPlacement(port_a_Rot, G4ThreeVector(port_gas_x, port_gas_y, port_z_1a_), port_tube_logic,
+                      "PORT_TUBE_1a", vessel_gas_logic, false, 0);
+    new G4PVPlacement(port_a_Rot, G4ThreeVector(port_gas_x, port_gas_y, port_z_2a_), port_tube_logic,
+                      "PORT_TUBE_2a", vessel_gas_logic, false, 0);
+    new G4PVPlacement(port_b_Rot, G4ThreeVector(-port_gas_x, port_gas_y, port_z_1b_), port_tube_logic,
+                      "PORT_TUBE_1b", vessel_gas_logic, false, 0);
+    new G4PVPlacement(port_b_Rot, G4ThreeVector(-port_gas_x, port_gas_y, port_z_2b_), port_tube_logic,
+                      "PORT_TUBE_2b", vessel_gas_logic, false, 0);
+
     // SETTING VISIBILITIES   //////////
     if (visibility_) {
       G4VisAttributes grey = DarkGrey();
-      vessel_logic->SetVisAttributes(grey);
-      grey.SetForceSolid(true);
-      vessel_gas_logic->SetVisAttributes(grey);
+      G4VisAttributes yellow = nexus::Yellow();
+      grey  .SetForceSolid(true);
+      yellow.SetForceSolid(true);
+      vessel_logic       ->SetVisAttributes(grey);
+      vessel_gas_logic   ->SetVisAttributes(grey);
+      port_tube_logic    ->SetVisAttributes(grey);
+      port_tube_gas_logic->SetVisAttributes(yellow);
     }
     else {
-      vessel_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      vessel_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      vessel_logic       ->SetVisAttributes(G4VisAttributes::Invisible);
+      vessel_gas_logic   ->SetVisAttributes(G4VisAttributes::Invisible);
+      port_tube_logic    ->SetVisAttributes(G4VisAttributes::Invisible);
+      port_tube_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
     // VERTEX GENERATORS   //////////
@@ -345,7 +380,7 @@ namespace nexus {
     energy_flange_gen_  = new CylinderPointSampler(vessel_out_rad, flange_ep_length,
 						   flange_out_rad-vessel_out_rad, 0., energy_flange_pos);
 
-    port_gen_ = new CylinderPointSampler(0., port_base_height, port_in_rad, 0.);
+    port_gen_ = new CylinderPointSampler(0., port_base_height, port_tube_rad, 0.);
 
     // Calculating some prob
     G4double body_vol   = vessel_body_solid  ->GetCubicVolume() - vessel_gas_body_solid  ->GetCubicVolume();
