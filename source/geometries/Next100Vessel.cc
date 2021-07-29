@@ -392,12 +392,6 @@ namespace nexus {
     perc_endcap_vol_    = 2.*endcap_vol / vessel_vol;
     perc_ep_flange_vol_ = flange_ep_vol / vessel_vol;
     perc_tp_flange_vol_ = flange_tp_vol / vessel_vol;
-
-    // G4double body_vol = vessel_body_solid->GetCubicVolume() - vessel_gas_body_solid->GetCubicVolume();
-    // std::cout << "Body vol (cm3)" << body_vol/1e6 << '\n';
-    // G4double endcap_vol = vessel_endcap_solid->GetCubicVolume() - vessel_gas_endcap_solid->GetCubicVolume();
-    // std::cout << "Endcap vol (cm3)" << endcap_vol/1e6 << '\n';
-
   }
 
 
