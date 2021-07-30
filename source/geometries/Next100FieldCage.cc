@@ -743,12 +743,12 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
       }
 
     G4double buffer_last_z  = 63.2 *mm;
-    G4Box* buffer_last_solid = new G4Box("ACT_LAST", buffer_short_x/2., buffer_short_y/2., buffer_last_z/2.);
+    G4Box* buffer_last_solid = new G4Box("BUFF_LAST", buffer_short_x/2., buffer_short_y/2., buffer_last_z/2.);
 
     buff_holder_solid = new G4UnionSolid("BUFF_HOLDER", buff_holder_solid, buffer_last_solid, 0,
                                       G4ThreeVector(0.,buffer_long_y/2. + buffer_short_y/2., teflon_buffer_length_/2. - buffer_last_z/2.));
 
-    G4LogicalVolume* buff_holder_logic = new G4LogicalVolume(buff_holder_solid,pe1000_, "ACT_HOLDER");
+    G4LogicalVolume* buff_holder_logic = new G4LogicalVolume(buff_holder_solid,pe1000_, "BUFF_HOLDER");
     numbering=0;
     for (G4int i=10; i<360; i +=20){
       //G4cout << "i " << i << G4endl;
