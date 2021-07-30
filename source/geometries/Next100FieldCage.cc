@@ -77,10 +77,6 @@ Next100FieldCage::Next100FieldCage():
   cath_grid_transparency_ (.98), // to check
   el_grid_transparency_ (.88), // to check
   max_step_size_ (1. * mm),
-  // EL table generation
-  el_table_binning_(1.*mm),
-  el_table_point_id_(-1),
-  el_table_index_(0),
   visibility_ (0),
   verbosity_(0),
   // EL gap generation disk parameters
@@ -141,15 +137,6 @@ Next100FieldCage::Next100FieldCage():
   step_cmd.SetParameterName("max_step_size", false);
   step_cmd.SetRange("max_step_size>0.");
 
-  G4GenericMessenger::Command& pitch_cmd =
-    msg_->DeclareProperty("el_table_binning", el_table_binning_,
-                          "Binning of EL lookup tables.");
-  pitch_cmd.SetUnitCategory("Length");
-  pitch_cmd.SetParameterName("el_table_binning", false);
-  pitch_cmd.SetRange("el_table_binning>0.");
-
-  msg_->DeclareProperty("el_table_point_id", el_table_point_id_, "");
-
   G4GenericMessenger::Command& el_gap_gen_disk_diam_cmd =
     msg_->DeclareProperty("el_gap_gen_disk_diam", el_gap_gen_disk_diam_,
                           "Diameter of the EL gap vertex generation disk.");
@@ -201,6 +188,14 @@ void Next100FieldCage::Construct()
   active_length_ = gate_teflon_dist_ + active_cathode_dist_ + cathode_thickn_/2. - grid_thickn_/2.;
   buffer_length_ = gate_sapphire_wdw_dist_ - active_length_ - grid_thickn_;
 
+  /// Calculate lengths of the teflon boards in active and buffer regions.
+  teflon_drift_length_ = active_cathode_dist_;
+  teflon_buffer_length_ = teflon_total_length_ - cathode_thickn_ - teflon_drift_length_;
+
+  /// Calculate z positions of the teflon boards in active and buffer regions.
+  teflon_drift_zpos_ = GetELzCoord() + gate_teflon_dist_ + teflon_drift_length_/2.;
+  teflon_buffer_zpos_ = teflon_drift_zpos_ + teflon_drift_length_/2. + cathode_thickn_ + teflon_buffer_length_/2;
+
   /// Calculate derived positions in mother volume
   active_zpos_       = GetELzCoord() + active_length_/2.;
   cathode_zpos_ = GetELzCoord() + gate_teflon_dist_ + active_cathode_dist_ + cathode_thickn_/2.;
@@ -221,14 +216,6 @@ void Next100FieldCage::Construct()
   BuildELRegion();
   BuildLightTube();
   BuildFieldCage();
-
-  /// Calculate EL table vertices
-  G4double z = el_gap_zpos_ + el_gap_length_/2.;
-  /// 0.1*mm is added because ie- in EL table generation must start inside volume, not on border
-  z = z + .1*mm;
-  G4double max_radius =
-  floor(el_gap_diam_/2./el_table_binning_)*el_table_binning_;
-  CalculateELTableVertices(max_radius, el_table_binning_, z);
 }
 
 
@@ -534,11 +521,8 @@ void Next100FieldCage::BuildELRegion()
 void Next100FieldCage::BuildLightTube()
 {
   /// DRIFT PART ///
-  G4double teflon_drift_length = active_cathode_dist_;
-  G4double teflon_drift_zpos = GetELzCoord() + gate_teflon_dist_ + teflon_drift_length/2.;
-
   /// Position of z planes
-  G4double zplane[2] = {-teflon_drift_length/2., teflon_drift_length/2.};
+  G4double zplane[2] = {-teflon_drift_length_/2., teflon_drift_length_/2.};
   /// Inner radius
   G4double rinner[2] = {active_diam_/2., active_diam_/2.};
   /// Outer radius
@@ -551,7 +535,7 @@ void Next100FieldCage::BuildLightTube()
   G4LogicalVolume* teflon_drift_logic =
   new G4LogicalVolume(teflon_drift_solid, teflon_, "LIGHT_TUBE_DRIFT");
 
-  new G4PVPlacement(0, G4ThreeVector(0., 0., teflon_drift_zpos),
+  new G4PVPlacement(0, G4ThreeVector(0., 0., teflon_drift_zpos_),
                     teflon_drift_logic, "LIGHT_TUBE_DRIFT", mother_logic_,
                     false, 0, true);
 
@@ -570,11 +554,7 @@ void Next100FieldCage::BuildLightTube()
                       "DRIFT_TPB", teflon_drift_logic, false, 0, true);
 
   /// BUFFER PART ///
-  G4double teflon_buffer_length = teflon_total_length_ - cathode_thickn_ - teflon_drift_length;
-  G4double teflon_buffer_zpos = teflon_drift_zpos + teflon_drift_length/2.
-                              + cathode_thickn_ + teflon_buffer_length/2;
-
-  G4double zplane_buff[2] = {-teflon_buffer_length/2., teflon_buffer_length/2.};
+  G4double zplane_buff[2] = {-teflon_buffer_length_/2., teflon_buffer_length_/2.};
   G4double router_buff[2] =
     {(active_diam_ + 2.*teflon_thickn_)/2., (active_diam_ + 2.*teflon_thickn_)/2.};
 
@@ -585,7 +565,7 @@ void Next100FieldCage::BuildLightTube()
   G4LogicalVolume* teflon_buffer_logic =
   new G4LogicalVolume(teflon_buffer_solid, teflon_, "LIGHT_TUBE_BUFFER");
 
-  new G4PVPlacement(0, G4ThreeVector(0., 0., teflon_buffer_zpos),
+  new G4PVPlacement(0, G4ThreeVector(0., 0., teflon_buffer_zpos_),
                     teflon_buffer_logic, "LIGHT_TUBE_BUFFER", mother_logic_,
                     false, 0, true);
 
@@ -627,10 +607,10 @@ void Next100FieldCage::BuildLightTube()
   G4double teflon_ext_radius =
     (active_diam_ + 2.*teflon_thickn_)/2. / cos(pi/n_panels_);
   G4double cathode_gap_zpos =
-    teflon_drift_zpos + teflon_drift_length/2. + cathode_thickn_/2.;
+    teflon_drift_zpos_ + teflon_drift_length_/2. + cathode_thickn_/2.;
   G4double teflon_zpos =
-    (teflon_drift_length * teflon_drift_zpos + cathode_thickn_ * cathode_gap_zpos +
-     teflon_buffer_length * teflon_buffer_zpos) / teflon_total_length_;
+    (teflon_drift_length_ * teflon_drift_zpos_ + cathode_thickn_ * cathode_gap_zpos +
+     teflon_buffer_length_ * teflon_buffer_zpos_) / teflon_total_length_;
 
   teflon_gen_ = new CylinderPointSampler2020(active_diam_/2., teflon_ext_radius,
                                              teflon_total_length_/2., 0., twopi,
@@ -657,7 +637,7 @@ void Next100FieldCage::BuildLightTube()
 
 void Next100FieldCage::BuildFieldCage()//////////////////////////////////////////
 {
-  // HDPE cilinder.
+  // HDPE cylinder.
   G4double hdpe_tube_z_pos = -hdpe_length_/2. + teflon_total_length_ + gate_teflon_dist_ + GetELzCoord();
 
   G4Tubs* hdpe_tube_solid =
@@ -674,10 +654,6 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
   G4double first_ring_drif_z_pos = drift_ring_dist_/2. + active_short_z/2. + gate_teflon_dist_ + GetELzCoord();
   G4double buffer_short_z = 37.*mm;
 
-  G4double teflon_drift_length = active_cathode_dist_;
-  G4double teflon_drift_zpos = GetELzCoord() + gate_teflon_dist_ + teflon_drift_length/2.;
-  G4double teflon_buffer_length = teflon_total_length_ - cathode_thickn_ - teflon_drift_length;
-  G4double teflon_buffer_zpos = teflon_drift_zpos + teflon_drift_length/2. + cathode_thickn_ + teflon_buffer_length/2;
   G4double ring_drift_buffer_dist = 72.*mm;
   G4double first_ring_buff_z_pos = first_ring_drif_z_pos + 47*drift_ring_dist_ + ring_drift_buffer_dist;
 
@@ -715,10 +691,10 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
   G4Box* active_short_solid =
   new G4Box("ACT_SHORT", active_short_x/2., active_short_y/2., active_short_z/2.);
 
-  G4double first_act_short_z = -teflon_drift_length/2.+ active_short_z/2.;
+  G4double first_act_short_z = -teflon_drift_length_/2.+ active_short_z/2.;
 
   G4Box* active_long_solid =
-    new G4Box("ACT_LONG", active_long_x/2., active_long_y/2., teflon_drift_length/2.);
+    new G4Box("ACT_LONG", active_long_x/2., active_long_y/2., teflon_drift_length_/2.);
 
   G4UnionSolid* act_holder_solid =
     new G4UnionSolid ("ACT_HOLDER", active_long_solid, active_short_solid, 0,
@@ -738,7 +714,7 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
     //G4cout << "90-i " << 90-i << G4endl;
     G4RotationMatrix* rot = new G4RotationMatrix();
     rot -> rotateZ((90-i) *deg);
-    new G4PVPlacement(rot, G4ThreeVector(r*cos(i*deg), r*sin(i*deg), teflon_drift_zpos), act_holder_logic,
+    new G4PVPlacement(rot, G4ThreeVector(r*cos(i*deg), r*sin(i*deg), teflon_drift_zpos_), act_holder_logic,
                                        "ACT_HOLDER", mother_logic_, false, numbering, true);
     numbering +=1;}
 
@@ -751,9 +727,9 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
     G4Box* buffer_short_solid =
       new G4Box("BUFF_SHORT", buffer_short_x/2., buffer_short_y/2., buffer_short_z/2.);
 
-    G4double first_buff_short_z = -teflon_buffer_length/2. + (ring_drift_buffer_dist/2. - cathode_thickn_/2.) + buffer_ring_dist_/2.;
+    G4double first_buff_short_z = -teflon_buffer_length_/2. + (ring_drift_buffer_dist/2. - cathode_thickn_/2.) + buffer_ring_dist_/2.;
     G4Box* buffer_long_solid =
-      new G4Box("BUFF_LONG", buffer_long_x/2., buffer_long_y/2., teflon_buffer_length/2.);
+      new G4Box("BUFF_LONG", buffer_long_x/2., buffer_long_y/2., teflon_buffer_length_/2.);
 
     G4UnionSolid* buff_holder_solid = new G4UnionSolid ("BUFF_HOLDER", buffer_long_solid, buffer_short_solid, 0,
                                                 G4ThreeVector(0.,buffer_long_y/2.+buffer_short_y/2.,first_buff_short_z));
@@ -769,7 +745,7 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
     G4Box* buffer_last_solid = new G4Box("ACT_LAST", buffer_short_x/2., buffer_short_y/2., buffer_last_z/2.);
 
     buff_holder_solid = new G4UnionSolid("BUFF_HOLDER", buff_holder_solid, buffer_last_solid, 0,
-                                      G4ThreeVector(0.,buffer_long_y/2. + buffer_short_y/2., teflon_buffer_length/2. - buffer_last_z/2.));
+                                      G4ThreeVector(0.,buffer_long_y/2. + buffer_short_y/2., teflon_buffer_length_/2. - buffer_last_z/2.));
 
     G4LogicalVolume* buff_holder_logic = new G4LogicalVolume(buff_holder_solid,pe1000_, "ACT_HOLDER");
     numbering=0;
@@ -778,7 +754,7 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
       //G4cout << "90-i " << 90-i << G4endl;
       G4RotationMatrix* rot = new G4RotationMatrix();
       rot -> rotateZ((90-i) *deg);
-      new G4PVPlacement(rot, G4ThreeVector(r*cos(i*deg), r*sin(i*deg), teflon_buffer_zpos), buff_holder_logic,
+      new G4PVPlacement(rot, G4ThreeVector(r*cos(i*deg), r*sin(i*deg), teflon_buffer_zpos_), buff_holder_logic,
                                          "BUFF_HOLDER", mother_logic_, false, numbering, true);
       numbering +=1;}
 
@@ -865,21 +841,6 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
     VertexVolume->GetName() != "LIGHT_TUBE_DRIFT" &&
     VertexVolume->GetName() != "LIGHT_TUBE_BUFFER" );
   }
-  else if (region == "EL_TABLE") {
-    unsigned int i = el_table_point_id_ + el_table_index_;
-    if (i == (table_vertices_.size()-1)) {
-      G4Exception("[Next100FieldCage]", "GenerateVertex()",
-      RunMustBeAborted, "Reached last event in EL lookup table.");
-    }
-    try {
-      vertex = table_vertices_.at(i);
-      el_table_index_++;
-    }
-    catch (const std::out_of_range& oor) {
-      G4Exception("[Next100FieldCage]", "GenerateVertex()", FatalErrorInArgument,
-      "EL lookup table point out of range.");
-    }
-  }
 
   else if (region == "EL_GAP") {
     vertex = el_gap_gen_->GenerateVertex("VOLUME");
@@ -891,33 +852,6 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
   }
 
   return vertex;
-}
-
-
-void Next100FieldCage::CalculateELTableVertices(G4double radius, G4double binning, G4double z)
-{
-  /// Calculate the xyz positions of the points of an EL lookup table
-  /// (arranged as a square grid) given a certain binning
-
-  G4ThreeVector xyz(0., 0., z);
-
-  G4int imax = floor(2*radius/binning); // maximum bin number (minus 1)
-
-  for (int i=0; i<imax+1; i++) { // Loop through the x bins
-
-    xyz.setX(-radius + i * binning); // x position
-
-    for (int j=0; j<imax+1; j++) { // Loop through the y bins
-
-      xyz.setY(-radius + j * binning); // y position
-
-      // Store the point if it is inside the active volume defined by the
-      // field cage (of circular cross section). Discard it otherwise.
-      if (sqrt(xyz.x()*xyz.x()+xyz.y()*xyz.y()) <= radius)
-      table_vertices_.push_back(xyz);
-    }
-
-  }
 }
 
 

@@ -46,8 +46,6 @@ namespace nexus {
     void BuildLightTube();
     void BuildFieldCage();
 
-    void CalculateELTableVertices(G4double, G4double, G4double);
-
     // Dimensions
     const G4double active_diam_;
     const G4double active_cathode_dist_, gate_sapphire_wdw_dist_;
@@ -73,19 +71,17 @@ namespace nexus {
     //Step size
     G4double max_step_size_;
 
-    // Variables for the EL table generation
-    G4double el_table_binning_; ///< Binning of EL lookup table
-    G4int el_table_point_id_; ///< Id of the EL point to be simulated
-    mutable G4int el_table_index_; ///< Index for EL lookup table generation
-    mutable std::vector<G4ThreeVector> table_vertices_;
-
     // Visibility of the geometry
     G4bool visibility_;
     // Verbosity of the geometry
     G4bool verbosity_;
 
-    G4double active_length_, active_zpos_, buffer_length_;
-    G4double el_gap_zpos_, cathode_zpos_;
+    G4double active_length_, buffer_length_;
+
+    G4double teflon_drift_length_, teflon_buffer_length_;
+    G4double teflon_drift_zpos_,teflon_buffer_zpos_;
+
+    G4double active_zpos_, cathode_zpos_, el_gap_zpos_;
 
 
     // Vertex generators
