@@ -655,7 +655,10 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
   G4double buffer_short_z = 37.*mm;
 
   G4double ring_drift_buffer_dist = 72.*mm;
-  G4double first_ring_buff_z_pos = first_ring_drif_z_pos + 47*drift_ring_dist_ + ring_drift_buffer_dist;
+  G4int num_drift_rings = 48;
+  G4int num_buffer_rings = 4;
+  G4double posz;
+  G4double first_ring_buff_z_pos = first_ring_drif_z_pos + (num_drift_rings-1)*drift_ring_dist_ + ring_drift_buffer_dist;
 
   G4Tubs* ring_solid =
   new G4Tubs("RING", ring_int_diam_/2., ring_ext_diam_/2., ring_thickn_/2., 0, twopi);
@@ -663,9 +666,7 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
   G4LogicalVolume* ring_logic =
   new G4LogicalVolume(ring_solid, copper_, "RING");
 
-  G4int num_drift_rings = 48;
-  G4int num_buffer_rings = 4;
-  G4double posz;
+
 
   //Placement of the drift rings.
   for (G4int i=0; i<num_drift_rings; i++) {
@@ -700,7 +701,7 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
     new G4UnionSolid ("ACT_HOLDER", active_long_solid, active_short_solid, 0,
                       G4ThreeVector(0.,active_long_y/2.+active_short_y/2.,first_act_short_z));
 
-  for (G4int j=1; j<48; j++) {
+  for (G4int j=1; j<num_drift_rings; j++) {
     posz = first_act_short_z + j*drift_ring_dist_;
 
     act_holder_solid = new G4UnionSolid("ACT_HOLDER", act_holder_solid, active_short_solid, 0,
@@ -734,7 +735,7 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
     G4UnionSolid* buff_holder_solid = new G4UnionSolid ("BUFF_HOLDER", buffer_long_solid, buffer_short_solid, 0,
                                                 G4ThreeVector(0.,buffer_long_y/2.+buffer_short_y/2.,first_buff_short_z));
 
-    for (G4int j=1; j<3; j++) {
+    for (G4int j=1; j<num_buffer_rings-1; j++) {
       posz = first_buff_short_z + j*buffer_ring_dist_;
 
       buff_holder_solid = new G4UnionSolid("BUFF_HOLDER", buff_holder_solid, buffer_short_solid, 0,
