@@ -19,7 +19,7 @@ class G4VPhysicalVolume;
 
 namespace nexus {
 
-  class CylinderPointSampler;
+  class CylinderPointSampler2020;
   class SpherePointSampler;
 
   class Next100Vessel: public GeometryBase
@@ -70,12 +70,12 @@ namespace nexus {
     G4VPhysicalVolume* internal_phys_vol_;
 
     // Vertex generators
-    CylinderPointSampler* body_gen_;
+    CylinderPointSampler2020* body_gen_;
     SpherePointSampler*   tracking_endcap_gen_;
     SpherePointSampler*   energy_endcap_gen_;
-    CylinderPointSampler* tracking_flange_gen_;
-    CylinderPointSampler* energy_flange_gen_;
-    CylinderPointSampler* port_gen_;
+    CylinderPointSampler2020* tracking_flange_gen_;
+    CylinderPointSampler2020* energy_flange_gen_;
+    CylinderPointSampler2020* port_gen_;
 
     G4double perc_endcap_vol_;
     G4double perc_ep_flange_vol_;

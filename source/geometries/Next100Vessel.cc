@@ -10,7 +10,7 @@
 #include "MaterialsList.h"
 #include "Visibilities.h"
 #include "OpticalMaterialProperties.h"
-#include "CylinderPointSampler.h"
+#include "CylinderPointSampler2020.h"
 #include "SpherePointSampler.h"
 
 #include <G4GenericMessenger.hh>
@@ -338,13 +338,13 @@ namespace nexus {
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), port_tube_gas_logic,
                       "PORT_TUBE_AIR", port_tube_logic, false, 0);
 
-    new G4PVPlacement(port_a_Rot, G4ThreeVector(port_gas_x, port_gas_y, port_z_1a_), port_tube_logic,
+    new G4PVPlacement(port_a_Rot, G4ThreeVector(port_x_, port_y_, port_z_1a_), port_tube_logic,
                       "PORT_TUBE_1a", vessel_gas_logic, false, 0);
-    new G4PVPlacement(port_a_Rot, G4ThreeVector(port_gas_x, port_gas_y, port_z_2a_), port_tube_logic,
+    new G4PVPlacement(port_a_Rot, G4ThreeVector(port_x_, port_y_, port_z_2a_), port_tube_logic,
                       "PORT_TUBE_2a", vessel_gas_logic, false, 0);
-    new G4PVPlacement(port_b_Rot, G4ThreeVector(-port_gas_x, port_gas_y, port_z_1b_), port_tube_logic,
+    new G4PVPlacement(port_b_Rot, G4ThreeVector(-port_x_, port_y_, port_z_1b_), port_tube_logic,
                       "PORT_TUBE_1b", vessel_gas_logic, false, 0);
-    new G4PVPlacement(port_b_Rot, G4ThreeVector(-port_gas_x, port_gas_y, port_z_2b_), port_tube_logic,
+    new G4PVPlacement(port_b_Rot, G4ThreeVector(-port_x_, port_y_, port_z_2b_), port_tube_logic,
                       "PORT_TUBE_2b", vessel_gas_logic, false, 0);
 
     // SETTING VISIBILITIES   //////////
@@ -366,7 +366,8 @@ namespace nexus {
     }
 
     // VERTEX GENERATORS   //////////
-    body_gen_  = new CylinderPointSampler(vessel_in_rad_, body_length_, vessel_thickness_, 0.);
+    body_gen_  = new CylinderPointSampler2020(vessel_in_rad_, vessel_out_rad, body_length_/2.,
+                                              0., 360.*deg, 0, G4ThreeVector(0., 0., 0.));
 
     energy_endcap_gen_ = new SpherePointSampler( endcap_in_rad_, vessel_thickness_, energy_endcap_pos, 0,
 						   0., twopi, 0., endcap_theta_);
@@ -374,13 +375,14 @@ namespace nexus {
     tracking_endcap_gen_ = new SpherePointSampler( endcap_in_rad_, vessel_thickness_, tracking_endcap_pos, xRot,
 						 0., twopi, 0., endcap_theta_);
 
-    tracking_flange_gen_  = new CylinderPointSampler(vessel_out_rad, flange_tp_length,
-						     flange_out_rad-vessel_out_rad, 0., tracking_flange_pos);
+    tracking_flange_gen_ = new CylinderPointSampler2020(vessel_in_rad_, flange_out_rad, flange_tp_length/2.,
+                                                        0., 360.*deg, 0, tracking_flange_pos);
 
-    energy_flange_gen_  = new CylinderPointSampler(vessel_out_rad, flange_ep_length,
-						   flange_out_rad-vessel_out_rad, 0., energy_flange_pos);
+    energy_flange_gen_ = new CylinderPointSampler2020(vessel_in_rad_, flange_out_rad, flange_ep_length/2.,
+                                                      0., 360.*deg, 0, energy_flange_pos);
 
-    port_gen_ = new CylinderPointSampler(0., port_base_height, port_tube_rad, 0.);
+    port_gen_ = new CylinderPointSampler2020(0., port_tube_rad, port_base_height/2.,
+                                             0., 360.*deg, 0, G4ThreeVector(0., 0., 0.));
 
     // Calculating some prob
     G4double body_vol   = vessel_body_solid  ->GetCubicVolume() - vessel_gas_body_solid  ->GetCubicVolume();
@@ -433,17 +435,17 @@ namespace nexus {
         }
       }
       else if (rand < (perc_endcap_vol_ + perc_ep_flange_vol_)){// Energy flange
-        vertex = energy_flange_gen_->GenerateVertex("WHOLE_VOL");
+        vertex = energy_flange_gen_->GenerateVertex("VOLUME");
       }
       else if (rand < (perc_endcap_vol_ + perc_ep_flange_vol_ + perc_tp_flange_vol_)){// Tracking flange
-        vertex = tracking_flange_gen_->GenerateVertex("WHOLE_VOL");
+        vertex = tracking_flange_gen_->GenerateVertex("VOLUME");
       }
       else // Body
-        	vertex = body_gen_->GenerateVertex("WHOLE_VOL");
+        	vertex = body_gen_->GenerateVertex("VOLUME");
     }
 
     else if (region == "PORT_1a"){
-      vertex = port_gen_->GenerateVertex("WHOLE_VOL");
+      vertex = port_gen_->GenerateVertex("VOLUME");
 
       vertex = vertex.rotateX( 90. * deg);
       vertex = vertex.rotateZ(-45. * deg);
@@ -453,7 +455,7 @@ namespace nexus {
     }
 
     else if (region == "PORT_2a"){
-      vertex = port_gen_->GenerateVertex("WHOLE_VOL");
+      vertex = port_gen_->GenerateVertex("VOLUME");
 
       vertex = vertex.rotateX( 90. * deg);
       vertex = vertex.rotateZ(-45. * deg);
@@ -463,7 +465,7 @@ namespace nexus {
     }
 
     else if (region == "PORT_1b"){
-      vertex = port_gen_->GenerateVertex("WHOLE_VOL");
+      vertex = port_gen_->GenerateVertex("VOLUME");
 
       vertex = vertex.rotateX( 90. * deg);
       vertex = vertex.rotateZ( 45. * deg);
@@ -473,7 +475,7 @@ namespace nexus {
     }
 
     else if (region == "PORT_2b"){
-      vertex = port_gen_->GenerateVertex("WHOLE_VOL");
+      vertex = port_gen_->GenerateVertex("VOLUME");
 
       vertex = vertex.rotateX( 90. * deg);
       vertex = vertex.rotateZ( 45. * deg);
