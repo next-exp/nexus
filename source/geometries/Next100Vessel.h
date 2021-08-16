@@ -55,7 +55,7 @@ namespace nexus {
     // G4double flange_out_rad_, flange_length_, flange_z_pos_;
     // G4double large_nozzle_length_, small_nozzle_length_;
     G4double port_base_height_, port_tube_height_;
-    G4double port_x_, port_y_, port_z_1a_, port_z_1b_, port_z_2a_, port_z_2b_;
+    G4double port_x_, port_y_, source_height_, port_z_1a_, port_z_1b_, port_z_2a_, port_z_2b_;
     G4double sc_yield_, e_lifetime_;
     G4double pressure_, temperature_;
 

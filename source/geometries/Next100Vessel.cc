@@ -58,10 +58,11 @@ namespace nexus {
 
     // Ports (values set on Construct())
     port_base_height_(37. * mm),
-    port_tube_height_(port_base_height_),
+    port_tube_height_(port_base_height_), // preliminar
     // They are defined global because are needed at the vertex generation
     port_x_ ((vessel_in_rad_ + port_base_height_ - port_tube_height_/2.)/sqrt(2.)), // inner port pos
     port_y_ (port_x_),
+    source_height_ (5. * mm), // preliminar
     port_z_1a_ (0.), // defined in the Construct()
     port_z_1b_ (0.),
     port_z_2a_ (0.),
@@ -382,7 +383,7 @@ namespace nexus {
     energy_flange_gen_ = new CylinderPointSampler2020(vessel_in_rad_, flange_out_rad, flange_ep_length/2.,
                                                       0., 360.*deg, 0, energy_flange_pos);
 
-    port_gen_ = new CylinderPointSampler2020(0., port_tube_rad, port_tube_height_/2.,
+    port_gen_ = new CylinderPointSampler2020(0., port_tube_rad, source_height_/2.,
                                              0., 360.*deg, 0, G4ThreeVector(0., 0., 0.));
 
     // Calculating some prob
@@ -423,6 +424,8 @@ namespace nexus {
   G4ThreeVector Next100Vessel::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);
+    G4double source_x = port_x_ - (port_tube_height_-source_height_)/2./sqrt(2.);
+    G4double source_y = source_x;
 
     // Vertex in the whole VESSEL volume
     if (region == "VESSEL") {
@@ -451,7 +454,7 @@ namespace nexus {
       vertex = vertex.rotateX( 90. * deg);
       vertex = vertex.rotateZ(-45. * deg);
 
-      G4ThreeVector translate (port_x_, port_y_, port_z_1a_);
+      G4ThreeVector translate (source_x, source_y, port_z_1a_);
       vertex = vertex + translate;
     }
 
@@ -461,7 +464,7 @@ namespace nexus {
       vertex = vertex.rotateX( 90. * deg);
       vertex = vertex.rotateZ(-45. * deg);
 
-      G4ThreeVector translate (port_x_, port_y_, port_z_2a_);
+      G4ThreeVector translate (source_x, source_y, port_z_2a_);
       vertex = vertex + translate;
     }
 
@@ -471,7 +474,7 @@ namespace nexus {
       vertex = vertex.rotateX( 90. * deg);
       vertex = vertex.rotateZ( 45. * deg);
 
-      G4ThreeVector translate (-port_x_, port_y_, port_z_1b_);
+      G4ThreeVector translate (-source_x, source_y, port_z_1b_);
       vertex = vertex + translate;
     }
 
@@ -481,10 +484,9 @@ namespace nexus {
       vertex = vertex.rotateX( 90. * deg);
       vertex = vertex.rotateZ( 45. * deg);
 
-      G4ThreeVector translate (-port_x_, port_y_, port_z_2b_);
+      G4ThreeVector translate (-source_x, source_y, port_z_2b_);
       vertex = vertex + translate;
     }
-
 
     else {
       G4Exception("[Next100Vessel]", "GenerateVertex()", FatalException,
