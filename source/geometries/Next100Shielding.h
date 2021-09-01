@@ -33,6 +33,9 @@ namespace nexus {
     // Returns the inner air logical volume to place the vessel into it
     G4LogicalVolume* GetAirLogicalVolume() const;
 
+    // Returns the Air Box global position
+    G4ThreeVector GetAirDisplacement() const;
+
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
