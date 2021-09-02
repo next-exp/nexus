@@ -71,8 +71,7 @@ namespace nexus {
 			      down_nozzle_ypos_, bottom_nozzle_ypos_);
 
   // Internal copper shielding
-  ics_ = new Next100Ics(nozzle_ext_diam_, up_nozzle_ypos_, central_nozzle_ypos_,
-			down_nozzle_ypos_, bottom_nozzle_ypos_);
+  ics_ = new Next100Ics();
 
   // Inner Elements
   inner_elements_ = new Next100InnerElements();

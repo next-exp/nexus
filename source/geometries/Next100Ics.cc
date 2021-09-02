@@ -36,11 +36,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  Next100Ics::Next100Ics(const G4double nozzle_ext_diam,
-			 const G4double up_nozzle_ypos,
-			 const G4double central_nozzle_ypos,
-			 const G4double down_nozzle_ypos,
-			 const G4double bottom_nozzle_ypos):
+  Next100Ics::Next100Ics():
     GeometryBase(),
 
     // Body dimensions
@@ -62,14 +58,6 @@ namespace nexus {
 
     visibility_ (0)
   {
-
-    /// Needed External variables
-    nozzle_ext_diam_ = nozzle_ext_diam;
-    up_nozzle_ypos_ = up_nozzle_ypos;
-    central_nozzle_ypos_ = central_nozzle_ypos;
-    down_nozzle_ypos_ = down_nozzle_ypos;
-    bottom_nozzle_ypos_ = bottom_nozzle_ypos;
-
 
     // Initializing the geometry navigator (used in vertex generation)
     geom_navigator_ = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();

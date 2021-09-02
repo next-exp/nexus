@@ -26,11 +26,7 @@ namespace nexus {
   {
   public:
     /// Constructor
-    Next100Ics(const G4double nozzle_ext_diam,
-	       const G4double up_nozzle_ypos,
-	       const G4double central_nozzle_ypos,
-	       const G4double down_nozzle_ypos,
-	       const G4double bottom_nozzle_ypos);
+    Next100Ics();
 
     /// Destructor
     ~Next100Ics();
@@ -57,12 +53,7 @@ namespace nexus {
     G4double plug_x_, plug_y_, plug_z_, plug_posz_;
     G4double DB_columns_, num_DBs_;
 
-    // Dimensions coming from outside
-    G4double nozzle_ext_diam_, up_nozzle_ypos_, central_nozzle_ypos_;
-    G4double down_nozzle_ypos_, bottom_nozzle_ypos_;
-
     std::vector<G4ThreeVector> DB_positions_;
-
 
     // Visibility of the shielding
     G4bool visibility_;
