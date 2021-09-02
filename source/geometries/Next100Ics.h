@@ -53,11 +53,9 @@ namespace nexus {
     G4LogicalVolume* mother_logic_;
     // Dimensions
     G4double body_in_rad_, body_length_, body_thickness_;
-    G4double tracking_orad_, tracking_length_;
+    G4double tracking_length_;
     G4double plug_x_, plug_y_, plug_z_, plug_posz_;
     G4double DB_columns_, num_DBs_;
-    //    G4double tracking_cone_height_, tracking_irad_;
-    G4double energy_theta_, energy_orad_, energy_thickness_, energy_sph_zpos_, energy_cyl_length_;
 
     // Dimensions coming from outside
     G4double nozzle_ext_diam_, up_nozzle_ypos_, central_nozzle_ypos_;
