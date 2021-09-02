@@ -146,6 +146,7 @@ namespace nexus {
 
     // INNER COPPER SHIELDING
     ics_->SetLogicalVolume(vessel_internal_logic);
+    ics_->SetELzCoord(gate_zpos_in_vessel_);
     ics_->Construct();
 
     G4ThreeVector gate_pos(0., 0., -gate_zpos_in_vessel_);

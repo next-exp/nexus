@@ -77,26 +77,26 @@ namespace nexus {
   void Next100Ics::Construct()
   {
 
+    G4double gate_zpos = GetELzCoord();
+
     // Dice Boards holes positions
     GenerateDBPositions();
 
-    // ICS SOLIDS  ///////////
-    // Body
+    // ICS
     G4Tubs* ics_solid = new G4Tubs("ICS_BODY", body_in_rad_, body_in_rad_ + body_thickness_,
 					body_length_/2., 0.*deg, 360.*deg);
-
-    // Unions of parts
-    G4double ics_tracking_zpos = body_length_/2. - tracking_length_/2.;
 
     G4LogicalVolume* ics_logic =
       new G4LogicalVolume(ics_solid,
 			  G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"), "ICS");
 
-    //this->SetLogicalVolume(ics_logic);
-    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), ics_logic, "ICS", mother_logic_, false, 0, false);
+    G4double ics_z_pos = gate_zpos + body_length_/2.;
+    new G4PVPlacement(0, G4ThreeVector(0., 0., ics_z_pos),
+                      ics_logic, "ICS", mother_logic_, false, 0, false);
 
 
     ///// DB plugs placement
+    G4double ics_tracking_zpos = body_length_/2. - tracking_length_/2.;
     G4Box* plug_solid = new G4Box("DB_PLUG", plug_x_/2., plug_y_/2., plug_z_/2.);
     G4LogicalVolume* plug_logic = new G4LogicalVolume(plug_solid,  materials::PEEK(), "DB_PLUG");
      plug_posz_ = ics_tracking_zpos + tracking_length_/2. + plug_z_ ;
