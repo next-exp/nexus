@@ -58,6 +58,7 @@ namespace nexus {
     const G4double hdpe_tube_int_diam_, hdpe_tube_ext_diam_, hdpe_length_;
     const G4double ring_ext_diam_, ring_int_diam_, ring_thickn_;
     const  G4double drift_ring_dist_, buffer_ring_dist_;
+    const  G4double holder_x_, holder_long_y_, holder_short_y_;
     // Diffusion constants
     G4double drift_transv_diff_, drift_long_diff_;
     G4double ELtransv_diff_; ///< transversal diffusion in the EL gap
@@ -80,6 +81,7 @@ namespace nexus {
 
     G4double teflon_drift_length_, teflon_buffer_length_;
     G4double teflon_drift_zpos_,teflon_buffer_zpos_;
+    G4double holder_r_;
 
     G4double active_zpos_, cathode_zpos_, el_gap_zpos_;
 

@@ -66,6 +66,9 @@ Next100FieldCage::Next100FieldCage():
   ring_thickn_  (10. * mm),
   drift_ring_dist_  (24. * mm),
   buffer_ring_dist_  (48. * mm),
+  holder_x_ (60*mm),  //x dimension of the holders
+  holder_long_y_ (9*mm), // y dim of the base of the ring holders
+  holder_short_y_ (33.15*mm), // y dim of the pieces added over the base of the ring holders
   // Diffusion constants
   drift_transv_diff_ (1. * mm/sqrt(cm)),
   drift_long_diff_ (.3 * mm/sqrt(cm)),
@@ -195,6 +198,9 @@ void Next100FieldCage::Construct()
   /// Calculate z positions of the teflon boards in active and buffer regions.
   teflon_drift_zpos_ = GetELzCoord() + gate_teflon_dist_ + teflon_drift_length_/2.;
   teflon_buffer_zpos_ = teflon_drift_zpos_ + teflon_drift_length_/2. + cathode_thickn_ + teflon_buffer_length_/2;
+
+  /// Calculate radial position of the ring holders.
+  holder_r_ = (active_diam_+2*teflon_thickn_+holder_long_y_)/2.;
 
   /// Calculate derived positions in mother volume
   active_zpos_       = GetELzCoord() + active_length_/2.;
@@ -683,29 +689,23 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
   }
   // Ring holders.
   // ACTIVE holders.
-  //Active_long are the base of the ring holders and active_short are the smaller pieces over the long one.
-  G4double active_long_x = 60*mm;
-  G4double active_long_y = 9*mm;
-  G4double active_short_x = active_long_x;
-  G4double active_short_y = 33.15*mm;
-  G4double r = (active_diam_+2*teflon_thickn_+active_long_y)/2.;
   G4Box* active_short_solid =
-  new G4Box("ACT_SHORT", active_short_x/2., active_short_y/2., active_short_z/2.);
+  new G4Box("ACT_SHORT", holder_x_/2., holder_short_y_/2., active_short_z/2.);
 
   G4double first_act_short_z = -teflon_drift_length_/2.+ active_short_z/2.;
 
   G4Box* active_long_solid =
-    new G4Box("ACT_LONG", active_long_x/2., active_long_y/2., teflon_drift_length_/2.);
+    new G4Box("ACT_LONG", holder_x_/2., holder_long_y_/2., teflon_drift_length_/2.);
 
   G4UnionSolid* act_holder_solid =
     new G4UnionSolid ("ACT_HOLDER", active_long_solid, active_short_solid, 0,
-                      G4ThreeVector(0.,active_long_y/2.+active_short_y/2.,first_act_short_z));
+                      G4ThreeVector(0.,holder_long_y_/2.+holder_short_y_/2.,first_act_short_z));
 
   for (G4int j=1; j<num_drift_rings; j++) {
     posz = first_act_short_z + j*drift_ring_dist_;
 
     act_holder_solid = new G4UnionSolid("ACT_HOLDER", act_holder_solid, active_short_solid, 0,
-                                        G4ThreeVector(0.,active_long_y/2. + active_short_y/2.,posz));
+                                        G4ThreeVector(0.,holder_long_y_/2. + holder_short_y_/2.,posz));
     }
 
   G4LogicalVolume* act_holder_logic = new G4LogicalVolume(act_holder_solid,pe1000_,"ACT_HOLDER");
@@ -715,38 +715,33 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
     //G4cout << "90-i " << 90-i << G4endl;
     G4RotationMatrix* rot = new G4RotationMatrix();
     rot -> rotateZ((90-i) *deg);
-    new G4PVPlacement(rot, G4ThreeVector(r*cos(i*deg), r*sin(i*deg), teflon_drift_zpos_), act_holder_logic,
-                                       "ACT_HOLDER", mother_logic_, false, numbering, true);
+    new G4PVPlacement(rot, G4ThreeVector(holder_r_*cos(i*deg), holder_r_*sin(i*deg), teflon_drift_zpos_),
+                      act_holder_logic, "ACT_HOLDER", mother_logic_, false, numbering, true);
     numbering +=1;}
 
     // BUFFER holders.
-    G4double buffer_long_x = active_long_x;
-    G4double buffer_long_y = active_long_y;
-    G4double buffer_short_x = active_short_x;
-    G4double buffer_short_y = active_short_y;
-    r = (active_diam_+2*teflon_thickn_+buffer_long_y)/2.;
     G4Box* buffer_short_solid =
-      new G4Box("BUFF_SHORT", buffer_short_x/2., buffer_short_y/2., buffer_short_z/2.);
+      new G4Box("BUFF_SHORT", holder_x_/2., holder_short_y_/2., buffer_short_z/2.);
 
     G4double first_buff_short_z = -teflon_buffer_length_/2. + (ring_drift_buffer_dist/2. - cathode_thickn_/2.) + buffer_ring_dist_/2.;
     G4Box* buffer_long_solid =
-      new G4Box("BUFF_LONG", buffer_long_x/2., buffer_long_y/2., teflon_buffer_length_/2.);
+      new G4Box("BUFF_LONG", holder_x_/2., holder_long_y_/2., teflon_buffer_length_/2.);
 
     G4UnionSolid* buff_holder_solid = new G4UnionSolid ("BUFF_HOLDER", buffer_long_solid, buffer_short_solid, 0,
-                                                G4ThreeVector(0.,buffer_long_y/2.+buffer_short_y/2.,first_buff_short_z));
+                                                G4ThreeVector(0.,holder_long_y_/2.+holder_short_y_/2.,first_buff_short_z));
 
     for (G4int j=1; j<num_buffer_rings-1; j++) {
       posz = first_buff_short_z + j*buffer_ring_dist_;
 
       buff_holder_solid = new G4UnionSolid("BUFF_HOLDER", buff_holder_solid, buffer_short_solid, 0,
-                                      G4ThreeVector(0.,buffer_long_y/2. + buffer_short_y/2.,posz));
+                                      G4ThreeVector(0.,holder_long_y_/2. + holder_short_y_/2.,posz));
       }
 
     G4double buffer_last_z  = 63.2 *mm;
-    G4Box* buffer_last_solid = new G4Box("BUFF_LAST", buffer_short_x/2., buffer_short_y/2., buffer_last_z/2.);
+    G4Box* buffer_last_solid = new G4Box("BUFF_LAST", holder_x_/2., holder_short_y_/2., buffer_last_z/2.);
 
     buff_holder_solid = new G4UnionSolid("BUFF_HOLDER", buff_holder_solid, buffer_last_solid, 0,
-                                      G4ThreeVector(0.,buffer_long_y/2. + buffer_short_y/2., teflon_buffer_length_/2. - buffer_last_z/2.));
+                                      G4ThreeVector(0.,holder_long_y_/2. + holder_short_y_/2., teflon_buffer_length_/2. - buffer_last_z/2.));
 
     G4LogicalVolume* buff_holder_logic = new G4LogicalVolume(buff_holder_solid,pe1000_, "BUFF_HOLDER");
     numbering=0;
@@ -755,8 +750,8 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
       //G4cout << "90-i " << 90-i << G4endl;
       G4RotationMatrix* rot = new G4RotationMatrix();
       rot -> rotateZ((90-i) *deg);
-      new G4PVPlacement(rot, G4ThreeVector(r*cos(i*deg), r*sin(i*deg), teflon_buffer_zpos_), buff_holder_logic,
-                                         "BUFF_HOLDER", mother_logic_, false, numbering, true);
+      new G4PVPlacement(rot, G4ThreeVector(holder_r_*cos(i*deg), holder_r_*sin(i*deg), teflon_buffer_zpos_),
+                        buff_holder_logic, "BUFF_HOLDER", mother_logic_, false, numbering, true);
       numbering +=1;}
 
   /// Visibilities
