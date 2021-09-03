@@ -651,14 +651,14 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
                                      "HDPE_TUBE", mother_logic_, false, 0, true);
 
   G4double active_short_z = 13.5*mm; //Thickness for the small piece from the  holder in front of the ring.
-  G4double first_ring_drif_z_pos = drift_ring_dist_/2. + active_short_z/2. + gate_teflon_dist_ + GetELzCoord();
+  G4double first_ring_drift_z_pos = drift_ring_dist_/2. + active_short_z/2. + gate_teflon_dist_ + GetELzCoord();
   G4double buffer_short_z = 37.*mm;
 
   G4double ring_drift_buffer_dist = 72.*mm;
   G4int num_drift_rings = 48;
   G4int num_buffer_rings = 4;
   G4double posz;
-  G4double first_ring_buff_z_pos = first_ring_drif_z_pos + (num_drift_rings-1)*drift_ring_dist_ + ring_drift_buffer_dist;
+  G4double first_ring_buff_z_pos = first_ring_drift_z_pos + (num_drift_rings-1)*drift_ring_dist_ + ring_drift_buffer_dist;
 
   G4Tubs* ring_solid =
   new G4Tubs("RING", ring_int_diam_/2., ring_ext_diam_/2., ring_thickn_/2., 0, twopi);
@@ -670,7 +670,7 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
 
   //Placement of the drift rings.
   for (G4int i=0; i<num_drift_rings; i++) {
-    posz = first_ring_drif_z_pos + i*drift_ring_dist_;
+    posz = first_ring_drift_z_pos + i*drift_ring_dist_;
     new G4PVPlacement(0, G4ThreeVector(0., 0., posz), ring_logic,
                       "RING", mother_logic_, false, i, true);
   }
