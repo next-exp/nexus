@@ -45,7 +45,7 @@ Next100FieldCage::Next100FieldCage():
   GeometryBase(),
   // Dimensions
   active_diam_ (984 * mm), // distance between the centers of two opposite panels
-  active_cathode_dist_ (1178.*mm), //distance from the  beginning of the teflon drift panels to the first side of the cathode.
+  teflon_drift_length_ (1178.*mm), //distance from the gate to the beginning of the cathode volume.
   gate_sapphire_wdw_dist_ (1460.5 * mm), // distance between gate and the surface of sapphire windows
   cathode_int_diam_ (960. * mm),
   cathode_ext_diam_ (1020. * mm),
@@ -188,11 +188,10 @@ void Next100FieldCage::SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys)
 void Next100FieldCage::Construct()
 {
   /// Calculate lengths of active and buffer regions
-  active_length_ = gate_teflon_dist_ + active_cathode_dist_ + cathode_thickn_/2. - grid_thickn_/2.;
+  active_length_ = gate_teflon_dist_ + teflon_drift_length_ + cathode_thickn_/2. - grid_thickn_/2.;
   buffer_length_ = gate_sapphire_wdw_dist_ - active_length_ - grid_thickn_;
 
-  /// Calculate lengths of the teflon boards in active and buffer regions.
-  teflon_drift_length_ = active_cathode_dist_;
+  /// Calculate length of buffer region.
   teflon_buffer_length_ = teflon_total_length_ - cathode_thickn_ - teflon_drift_length_;
 
   /// Calculate z positions of the teflon boards in active and buffer regions.
@@ -204,7 +203,7 @@ void Next100FieldCage::Construct()
 
   /// Calculate derived positions in mother volume
   active_zpos_       = GetELzCoord() + active_length_/2.;
-  cathode_zpos_ = GetELzCoord() + gate_teflon_dist_ + active_cathode_dist_ + cathode_thickn_/2.;
+  cathode_zpos_ = GetELzCoord() + gate_teflon_dist_ + teflon_drift_length_ + cathode_thickn_/2.;
   el_gap_zpos_       = active_zpos_ - active_length_/2. - el_gap_length_/2.;
 
   if (verbosity_) {
