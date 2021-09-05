@@ -156,6 +156,7 @@ namespace nexus {
     ics_->SetELtoTPdistance(gate_tp_distance_);
     // ics_->SetFieldCageLength(inner_elements_->GetFieldCageLength());
     ics_->SetFieldCageLength(1432.*mm + 16.*mm); // gate-teflon distance + teflon length
+    ics_->SetPortZpositions(vessel_->GetPortZpositions());
     ics_->Construct();
 
     G4ThreeVector gate_pos(0., 0., -gate_zpos_in_vessel_);

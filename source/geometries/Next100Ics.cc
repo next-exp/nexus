@@ -78,18 +78,55 @@ namespace nexus {
     G4double gate_zpos = GetELzCoord();
     length_ = gate_tp_distance_ + field_cage_length_;
 
+    G4double offset = 1.* mm;
+
     // Dice Boards holes positions
     GenerateDBPositions();
 
     // ICS
-    G4Tubs* ics_solid = new G4Tubs("ICS", in_rad_, in_rad_ + thickness_,
-                                   length_/2., 0.*deg, 360.*deg);
+    G4double ics_z_pos = gate_zpos + length_/2. - gate_tp_distance_;
+
+    G4Tubs* ics_body = new G4Tubs("ICS", in_rad_, in_rad_ + thickness_,
+                                  length_/2., 0.*deg, 360.*deg);
+    G4SubtractionSolid* ics_solid;
+
+    // Port holes
+    G4double port_hole_rad = 9. * mm;
+    G4double port_x = (in_rad_ + thickness_/2.)/sqrt(2.);
+    G4double port_y = port_x;
+
+    G4RotationMatrix* port_a_Rot = new G4RotationMatrix;
+    port_a_Rot->rotateX( 90. * deg);
+    port_a_Rot->rotateY(-45. * deg);
+
+    G4RotationMatrix* port_b_Rot = new G4RotationMatrix;
+    port_b_Rot->rotateX( 90. * deg);
+    port_b_Rot->rotateY( 45. * deg);
+
+    G4Tubs* port_hole_solid = new G4Tubs("PORT_HOLE", 0., port_hole_rad,
+                                         (thickness_ + offset)/2., 0.*deg, 360.*deg);
+
+    ics_solid = new G4SubtractionSolid("ICS", ics_body, port_hole_solid,
+                port_a_Rot, G4ThreeVector(port_x, port_y, port_z_1a_-ics_z_pos));
+
+    ics_solid = new G4SubtractionSolid("ICS", ics_solid, port_hole_solid,
+                port_a_Rot, G4ThreeVector(port_x, port_y, port_z_2a_-ics_z_pos));
+
+    ics_solid = new G4SubtractionSolid("ICS", ics_solid, port_hole_solid,
+                port_b_Rot, G4ThreeVector(-port_x, port_y, port_z_1b_-ics_z_pos));
+
+    ics_solid = new G4SubtractionSolid("ICS", ics_solid, port_hole_solid,
+                port_b_Rot, G4ThreeVector(-port_x, port_y, port_z_2b_-ics_z_pos));
+
+    // Upper holes
+
+
+
 
     G4LogicalVolume* ics_logic =
       new G4LogicalVolume(ics_solid,
-			  G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"), "ICS");
+        G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"), "ICS");
 
-    G4double ics_z_pos = gate_zpos + length_/2. - gate_tp_distance_;
     new G4PVPlacement(0, G4ThreeVector(0., 0., ics_z_pos),
                       ics_logic, "ICS", mother_logic_, false, 0, false);
 
@@ -182,5 +219,12 @@ namespace nexus {
 
   }
 
+  void Next100Ics::SetPortZpositions(G4double port_positions[])
+  {
+    port_z_1a_ = port_positions[0];
+    port_z_2a_ = port_positions[1];
+    port_z_1b_ = port_positions[2];
+    port_z_2b_ = port_positions[3];
+  }
 
 } //end namespace nexus
