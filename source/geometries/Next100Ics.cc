@@ -37,18 +37,6 @@ namespace nexus {
     in_rad_   (56.0 * cm),
     thickness_(12.0 * cm),
 
-    // Tracking plane dimensions  (thin version without substractions)
-    tracking_length_ (10.0 * cm),
-
-    //KDB plugs constructed here because the copper tracking plane is divided in two parts,
-    // one hosted in the Next100Trackingplane class (support) and the proper shielding hosted here.
-    plug_x_ (40. *mm),
-    plug_y_ (4. *mm), //two union conectors
-    plug_z_ (6. *mm),
-    // Number of Dice Boards, DB columns
-    DB_columns_ (11),
-    num_DBs_ (107),
-
     visibility_ (0)
   {
 
@@ -74,9 +62,6 @@ namespace nexus {
     length_ = gate_tp_distance_ + field_cage_length_;
 
     G4double offset = 1.* mm;
-
-    // Dice Boards holes positions
-    GenerateDBPositions();
 
     // ICS
     G4double ics_z_pos = gate_zpos + length_/2. - gate_tp_distance_;
@@ -153,41 +138,19 @@ namespace nexus {
                       "ICS", mother_logic_, false, 0, false);
 
 
-    ///// DB plugs placement
-    G4double ics_tracking_zpos = length_/2. - tracking_length_/2.;
-    G4Box* plug_solid = new G4Box("DB_PLUG", plug_x_/2., plug_y_/2., plug_z_/2.);
-    G4LogicalVolume* plug_logic = new G4LogicalVolume(plug_solid,  materials::PEEK(), "DB_PLUG");
-     plug_posz_ = ics_tracking_zpos + tracking_length_/2. + plug_z_ ;
-    G4ThreeVector pos;
-    for (int i=0; i<num_DBs_; i++) {
-      pos = DB_positions_[i];
-      pos.setY(pos.y()- 10.*mm);
-      pos.setZ(plug_posz_);
-      new G4PVPlacement(0, pos, plug_logic,
-    			"DB_PLUG", mother_logic_, false, i, false);
-    }
-
-
     // SETTING VISIBILITIES   //////////
     if (visibility_) {
       G4VisAttributes copper_col = nexus::CopperBrown();
-      //copper_col.SetForceSolid(true);
       ics_logic->SetVisAttributes(copper_col);
-      G4VisAttributes dirty_white_col =nexus::DirtyWhite();
-      dirty_white_col.SetForceSolid(true);
-      plug_logic->SetVisAttributes(dirty_white_col);
     }
     else {
       ics_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      plug_logic->SetVisAttributes(G4VisAttributes::Invisible);
-  }
-
+    }
 
     // VERTEX GENERATOR
     ics_gen_ =
       new CylinderPointSampler2020(in_rad_, in_rad_ + thickness_, length_/2., 0.*deg, 360.*deg,
                                    0, G4ThreeVector(0., 0., ics_z_pos));
-
   }
 
 
@@ -215,47 +178,6 @@ namespace nexus {
     return vertex;
   }
 
-
-  void Next100Ics::GenerateDBPositions()
-  {
-    /// Function that computes and stores the XY positions of Dice Boards
-
-    G4int num_rows[] = {6, 9, 10, 11, 12, 11, 12, 11, 10, 9, 6};
-    G4int total_positions = 0;
-
-    // Separation between consecutive columns / rows
-    G4double x_step = (45. + 35.191) * mm;
-    G4double y_step = (45. + 36.718) * mm;
-
-    G4double x_dim = x_step * (DB_columns_ -1);
-
-    G4ThreeVector position(0.,0.,0.);
-
-    // For every column
-    for (G4int col=0; col<DB_columns_; col++) {
-      G4double pos_x = x_dim/2. - col * x_step;
-      G4int rows = num_rows[col];
-      G4double y_dim = y_step * (rows-1);
-      // For every row
-      for (G4int row=0; row<rows; row++) {
-	G4double pos_y = y_dim/2. - row * y_step;
-
-	position.setX(pos_x);
-	position.setY(pos_y);
-	DB_positions_.push_back(position);
-	total_positions++;
-	//G4cout << G4endl << position;
-      }
-    }
-
-    // Checking
-    if (total_positions != num_DBs_) {
-      G4cout << "\n\nERROR: Number of DBs doesn't match with number of positions calculated\n";
-      exit(0);
-    }
-
-
-  }
 
   void Next100Ics::SetPortZpositions(G4double port_positions[])
   {

@@ -43,26 +43,18 @@ namespace nexus {
     void Construct();
 
   private:
-    void GenerateDBPositions();
-
-
-  private:
     // Mother Logical Volume of the ICS
     G4LogicalVolume* mother_logic_;
 
+    // Dimensions
     G4double gate_tp_distance_, field_cage_length_;
     G4double in_rad_, length_, thickness_;
-    G4double tracking_length_;
     G4double port_z_1a_, port_z_2a_, port_z_1b_, port_z_2b_;
-    G4double plug_x_, plug_y_, plug_z_, plug_posz_;
-    G4double DB_columns_, num_DBs_;
-
-    std::vector<G4ThreeVector> DB_positions_;
 
     // Visibility of the shielding
     G4bool visibility_;
 
-    // Vertex generators
+    // Vertex generator
     CylinderPointSampler2020* ics_gen_;
 
     // Geometry Navigator
