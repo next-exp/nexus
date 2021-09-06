@@ -69,6 +69,7 @@ Next100FieldCage::Next100FieldCage():
   holder_x_ (60*mm),  //x dimension of the holders
   holder_long_y_ (9*mm), // y dim of the base of the ring holders
   holder_short_y_ (33.15*mm), // y dim of the pieces added over the base of the ring holders
+  overlap_(1*mm), //defined to be used in G4UnionSolids to ensure there is  a common volume within the two joined solids
   // Diffusion constants
   drift_transv_diff_ (1. * mm/sqrt(cm)),
   drift_long_diff_ (.3 * mm/sqrt(cm)),
@@ -263,9 +264,9 @@ void Next100FieldCage::BuildActive()
   new G4Polyhedra("ACTIVE_POLY", 0., twopi, n_panels_, 2, zplane, rinner, router);
 
   G4Tubs* active_cathode_solid =
-  new G4Tubs("ACT_CATHODE_RING", 0, cathode_int_diam_/2., (cathode_thickn_/2. - grid_thickn_/2.)/2., 0, twopi);
+  new G4Tubs("ACT_CATHODE_RING", 0, cathode_int_diam_/2., (cathode_thickn_/2. - grid_thickn_/2.)/2. +overlap_/2., 0, twopi);
 
-  G4ThreeVector act_cathode_pos = G4ThreeVector(0., 0., active_length_/2.-(cathode_thickn_/2. - grid_thickn_/2.)/2.);
+  G4ThreeVector act_cathode_pos = G4ThreeVector(0., 0., active_length_/2.-(cathode_thickn_/2. - grid_thickn_/2.)/2. -overlap_/2.);
 
   G4UnionSolid* union_active =
   new G4UnionSolid ("ACTIVE", active_solid, active_cathode_solid, 0, act_cathode_pos);
@@ -381,9 +382,9 @@ void Next100FieldCage::BuildBuffer()
   new G4Polyhedra("BUFFER_POLY", 0., twopi, n_panels_, 2, zplane, rinner, router);
 
   G4Tubs* buffer_cathode_solid =
-  new G4Tubs("BUFF_CATHODE_RING", 0, cathode_int_diam_/2., (cathode_thickn_/2. - grid_thickn_/2.)/2., 0, twopi);
+  new G4Tubs("BUFF_CATHODE_RING", 0, cathode_int_diam_/2., (cathode_thickn_/2. - grid_thickn_/2.)/2. +  overlap_/2., 0, twopi);
 
-  G4ThreeVector buff_cathode_pos = G4ThreeVector(0., 0., -buffer_length_/2.+(cathode_thickn_/2. - grid_thickn_/2.)/2.);
+  G4ThreeVector buff_cathode_pos = G4ThreeVector(0., 0., -buffer_length_/2.+(cathode_thickn_/2. - grid_thickn_/2.)/2. + overlap_/2.);
 
   G4UnionSolid* union_buffer =
   new G4UnionSolid("BUFFER", buffer_solid, buffer_cathode_solid, 0, buff_cathode_pos);
@@ -689,7 +690,7 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
   // Ring holders.
   // ACTIVE holders.
   G4Box* active_short_solid =
-  new G4Box("ACT_SHORT", holder_x_/2., holder_short_y_/2., active_short_z/2.);
+  new G4Box("ACT_SHORT", holder_x_/2., holder_short_y_/2.+overlap_/2., active_short_z/2.);
 
   G4double first_act_short_z = -teflon_drift_length_/2.+ active_short_z/2.;
 
@@ -698,13 +699,13 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
 
   G4UnionSolid* act_holder_solid =
     new G4UnionSolid ("ACT_HOLDER", active_long_solid, active_short_solid, 0,
-                      G4ThreeVector(0.,holder_long_y_/2.+holder_short_y_/2.,first_act_short_z));
+                      G4ThreeVector(0.,holder_long_y_/2.+holder_short_y_/2.-overlap_/2.,first_act_short_z));
 
   for (G4int j=1; j<num_drift_rings; j++) {
     posz = first_act_short_z + j*drift_ring_dist_;
 
     act_holder_solid = new G4UnionSolid("ACT_HOLDER", act_holder_solid, active_short_solid, 0,
-                                        G4ThreeVector(0.,holder_long_y_/2. + holder_short_y_/2.,posz));
+                                        G4ThreeVector(0.,holder_long_y_/2. + holder_short_y_/2.-overlap_/2.,posz));
     }
 
   G4LogicalVolume* act_holder_logic = new G4LogicalVolume(act_holder_solid,pe1000_,"ACT_HOLDER");
@@ -720,27 +721,27 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
 
     // BUFFER holders.
     G4Box* buffer_short_solid =
-      new G4Box("BUFF_SHORT", holder_x_/2., holder_short_y_/2., buffer_short_z/2.);
+      new G4Box("BUFF_SHORT", holder_x_/2., holder_short_y_/2.+overlap_/2., buffer_short_z/2.);
 
     G4double first_buff_short_z = -teflon_buffer_length_/2. + (ring_drift_buffer_dist/2. - cathode_thickn_/2.) + buffer_ring_dist_/2.;
     G4Box* buffer_long_solid =
       new G4Box("BUFF_LONG", holder_x_/2., holder_long_y_/2., teflon_buffer_length_/2.);
 
     G4UnionSolid* buff_holder_solid = new G4UnionSolid ("BUFF_HOLDER", buffer_long_solid, buffer_short_solid, 0,
-                                                G4ThreeVector(0.,holder_long_y_/2.+holder_short_y_/2.,first_buff_short_z));
+                                                G4ThreeVector(0.,holder_long_y_/2.+holder_short_y_/2.-overlap_/2.,first_buff_short_z));
 
     for (G4int j=1; j<num_buffer_rings-1; j++) {
       posz = first_buff_short_z + j*buffer_ring_dist_;
 
       buff_holder_solid = new G4UnionSolid("BUFF_HOLDER", buff_holder_solid, buffer_short_solid, 0,
-                                      G4ThreeVector(0.,holder_long_y_/2. + holder_short_y_/2.,posz));
+                                      G4ThreeVector(0.,holder_long_y_/2. + holder_short_y_/2.-overlap_/2.,posz));
       }
 
     G4double buffer_last_z  = 63.2 *mm;
-    G4Box* buffer_last_solid = new G4Box("BUFF_LAST", holder_x_/2., holder_short_y_/2., buffer_last_z/2.);
+    G4Box* buffer_last_solid = new G4Box("BUFF_LAST", holder_x_/2., holder_short_y_/2.+overlap_/2., buffer_last_z/2.);
 
     buff_holder_solid = new G4UnionSolid("BUFF_HOLDER", buff_holder_solid, buffer_last_solid, 0,
-                                      G4ThreeVector(0.,holder_long_y_/2. + holder_short_y_/2., teflon_buffer_length_/2. - buffer_last_z/2.));
+                                      G4ThreeVector(0.,holder_long_y_/2. + holder_short_y_/2.-overlap_/2., teflon_buffer_length_/2. - buffer_last_z/2.));
 
     G4LogicalVolume* buff_holder_logic = new G4LogicalVolume(buff_holder_solid,pe1000_, "BUFF_HOLDER");
     numbering=0;
