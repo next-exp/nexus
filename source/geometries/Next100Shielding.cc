@@ -377,7 +377,7 @@ namespace nexus {
                           G4ThreeVector(0., 0., 0.), 0);
 
     steel_gen_ = new BoxPointSampler(shield_x_, shield_y_, shield_z_, steel_thickness_,
-                                     G4ThreeVector(0., -beam_thickness_1/2., 0.), 0);
+                                     G4ThreeVector(0., -beam_thickness_2/2., 0.), 0);
 
     G4double inn_offset = .5 * cm;
     inner_air_gen_ =
