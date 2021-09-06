@@ -113,9 +113,36 @@ namespace nexus {
     ics_solid = new G4SubtractionSolid("ICS", ics_solid, port_hole_solid,
                 port_b_Rot, G4ThreeVector(-port_x, port_y, port_z_2b_-ics_z_pos));
 
-    // Upper holes
+    /// Upper holes
+    // z distances measured with respect to TP plate, ie the start of ICS
+    G4double upp_hole_rad = 31.  * mm;
+    G4double upp_hole_1_z = 313. * mm;
+    G4double upp_hole_2_z = 313. * mm + 919. * mm;
 
+    G4RotationMatrix* port_upp_Rot = new G4RotationMatrix;
+    port_upp_Rot->rotateX( 90. * deg);
 
+    G4Tubs* upp_hole_solid = new G4Tubs("UPP_HOLE", 0., upp_hole_rad,
+                                        (thickness_ + offset)/2., 0.*deg, 360.*deg);
+
+    ics_solid = new G4SubtractionSolid("ICS", ics_solid, upp_hole_solid,
+                port_upp_Rot, G4ThreeVector(0, (in_rad_ + thickness_/2.), upp_hole_1_z-length_/2.));
+
+    ics_solid = new G4SubtractionSolid("ICS", ics_solid, upp_hole_solid,
+                port_upp_Rot, G4ThreeVector(0, (in_rad_ + thickness_/2.), upp_hole_2_z-length_/2.));
+
+    /// Lateral holes
+    G4double lat_hole_rad = upp_hole_rad;
+    G4double lat_hole_z   = 58.1 * mm;
+
+    G4Tubs* lat_hole_solid = new G4Tubs("LAT_HOLE", 0., lat_hole_rad,
+                                        (thickness_ + offset)/2., 0.*deg, 360.*deg);
+
+    ics_solid = new G4SubtractionSolid("ICS", ics_solid, lat_hole_solid,
+                port_a_Rot, G4ThreeVector(port_x, port_y, lat_hole_z-length_/2.));
+
+    ics_solid = new G4SubtractionSolid("ICS", ics_solid, lat_hole_solid,
+                port_b_Rot, G4ThreeVector(-port_x, port_y, lat_hole_z-length_/2.));
 
 
     G4LogicalVolume* ics_logic =
@@ -156,7 +183,7 @@ namespace nexus {
   }
 
 
-    // VERTEX GENERATORS   //////////
+    // VERTEX GENERATOR
     ics_gen_ =
       new CylinderPointSampler2020(in_rad_, in_rad_ + thickness_, length_/2., 0.*deg, 360.*deg,
                                    0, G4ThreeVector(0., 0., ics_z_pos));
@@ -177,12 +204,11 @@ namespace nexus {
     if (region=="ICS"){
       G4VPhysicalVolume *VertexVolume;
       do {
-        G4ThreeVector glob_vtx(vertex);
-        glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
-        glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
-        VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
-
         vertex = ics_gen_->GenerateVertex("VOLUME");
+
+        G4ThreeVector glob_vtx(vertex);
+        glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+        VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != "ICS");
     }
 
