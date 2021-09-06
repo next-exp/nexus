@@ -236,7 +236,7 @@ void Next100FieldCage::DefineMaterials()
   hdpe_ = materials::HDPE();
 
   /// PE1000 for the holders
-  pe1000_ = MaterialsList::PE1000();
+  pe1000_ = materials::PE1000();
 
   /// Copper for field rings
   copper_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
@@ -334,7 +334,7 @@ void Next100FieldCage::BuildCathode()
   false, 0, true);
 
   G4Material* fgrid_mat = materials::FakeDielectric(gas_, "cath_grid_mat");
-  fgrid_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::FakeGrid(pressure_, temperature_, cath_grid_transparency_, grid_thickn_));
+  fgrid_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_, temperature_, cath_grid_transparency_, grid_thickn_));
 
   G4Tubs* diel_grid_solid =
   new G4Tubs("CATHODE_GRID", 0., cathode_int_diam_/2., grid_thickn_/2., 0, twopi);

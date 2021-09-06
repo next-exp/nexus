@@ -594,7 +594,7 @@ namespace materials {
   }
 
 
-G4Material* MaterialsList::PE1000()
+G4Material* PE1000()
 {
   G4String name = "PE1000";
 
