@@ -18,9 +18,7 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class CylinderPointSampler;
-  class SpherePointSampler;
-  class BoxPointSampler;
+  class CylinderPointSampler2020;
 
   class Next100Ics: public GeometryBase
   {
@@ -65,8 +63,7 @@ namespace nexus {
     G4bool visibility_;
 
     // Vertex generators
-    CylinderPointSampler* body_gen_;
-    BoxPointSampler* plug_gen_;
+    CylinderPointSampler2020* ics_gen_;
 
     // Geometry Navigator
     G4Navigator* geom_navigator_;

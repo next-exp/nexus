@@ -9,20 +9,15 @@
 #include "Next100Ics.h"
 #include "MaterialsList.h"
 #include "Visibilities.h"
-#include "CylinderPointSampler.h"
-#include "SpherePointSampler.h"
-#include "BoxPointSampler.h"
+#include "CylinderPointSampler2020.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4SubtractionSolid.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4VisAttributes.hh>
-#include <G4UnionSolid.hh>
 #include <G4Tubs.hh>
 #include <G4Box.hh>
-#include <G4Cons.hh>
-#include <G4Sphere.hh>
 #include <G4NistManager.hh>
 #include <G4Material.hh>
 #include <Randomize.hh>
@@ -127,8 +122,8 @@ namespace nexus {
       new G4LogicalVolume(ics_solid,
         G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"), "ICS");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., ics_z_pos),
-                      ics_logic, "ICS", mother_logic_, false, 0, false);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., ics_z_pos), ics_logic,
+                      "ICS", mother_logic_, false, 0, false);
 
 
     ///// DB plugs placement
@@ -162,17 +157,34 @@ namespace nexus {
 
 
     // VERTEX GENERATORS   //////////
+    ics_gen_ =
+      new CylinderPointSampler2020(in_rad_, in_rad_ + thickness_, length_/2., 0.*deg, 360.*deg,
+                                   0, G4ThreeVector(0., 0., ics_z_pos));
+
   }
 
 
   Next100Ics::~Next100Ics()
   {
+    delete ics_gen_;
   }
 
 
   G4ThreeVector Next100Ics::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);
+
+    if (region=="ICS"){
+      G4VPhysicalVolume *VertexVolume;
+      do {
+        G4ThreeVector glob_vtx(vertex);
+        glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
+        glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
+        VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+
+        vertex = ics_gen_->GenerateVertex("VOLUME");
+      } while (VertexVolume->GetName() != "ICS");
+    }
 
     return vertex;
   }
