@@ -34,8 +34,8 @@ namespace nexus {
   Next100Ics::Next100Ics():
     GeometryBase(),
 
-    in_rad_   (56.0 * cm),
-    thickness_(12.0 * cm),
+    in_rad_   (55.465 * cm),
+    thickness_(12.0   * cm),
 
     visibility_ (0)
   {
