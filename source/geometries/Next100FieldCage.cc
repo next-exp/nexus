@@ -275,7 +275,7 @@ void Next100FieldCage::BuildActive()
   new G4LogicalVolume(union_active, gas_, "ACTIVE");
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., active_zpos_), active_logic,
-  "ACTIVE", mother_logic_, false, 0, true);
+  "ACTIVE", mother_logic_, false, 0, false);
 
 
   /// Limit the step size in this volume for better tracking precision
@@ -331,7 +331,7 @@ void Next100FieldCage::BuildCathode()
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., cathode_zpos_),
   cathode_logic, "CATHODE_RING", mother_logic_,
-  false, 0, true);
+  false, 0, false);
 
   G4Material* fgrid_mat = materials::FakeDielectric(gas_, "cath_grid_mat");
   fgrid_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_, temperature_, cath_grid_transparency_, grid_thickn_));
@@ -344,7 +344,7 @@ void Next100FieldCage::BuildCathode()
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., cathode_zpos_),
                     diel_grid_logic, "CATHODE_GRID", mother_logic_,
-                    false, 0, true);
+                    false, 0, false);
 
 
   /// Visibilities
@@ -393,7 +393,7 @@ void Next100FieldCage::BuildBuffer()
   new G4LogicalVolume(union_buffer, gas_, "BUFFER");
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_zpos),
-  buffer_logic, "BUFFER", mother_logic_, false, 0, true);
+  buffer_logic, "BUFFER", mother_logic_, false, 0, false);
 
 
   /// Set the volume as an ionization sensitive detector
@@ -481,9 +481,9 @@ void Next100FieldCage::BuildELRegion()
   new G4LogicalVolume(diel_grid_solid, fgrid_mat, "EL_GRID");
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., posz1), diel_grid_logic,
-                    "EL_GRID_GATE", el_gap_logic, false, 0, true);
+                    "EL_GRID_GATE", el_gap_logic, false, 0, false);
   new G4PVPlacement(0, G4ThreeVector(0., 0., posz2), diel_grid_logic,
-                    "EL_GRID_ANODE", el_gap_logic, false, 1, true);
+                    "EL_GRID_ANODE", el_gap_logic, false, 1, false);
 
   // Vertex generator
   if (el_gap_gen_disk_zmin_ > el_gap_gen_disk_zmax_)
@@ -543,7 +543,7 @@ void Next100FieldCage::BuildLightTube()
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., teflon_drift_zpos_),
                     teflon_drift_logic, "LIGHT_TUBE_DRIFT", mother_logic_,
-                    false, 0, true);
+                    false, 0, false);
 
 
   /// TPB on teflon surface
@@ -557,7 +557,7 @@ void Next100FieldCage::BuildLightTube()
     new G4LogicalVolume(tpb_drift_solid, tpb_, "DRIFT_TPB");
   G4VPhysicalVolume* tpb_drift_phys =
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), tpb_drift_logic,
-                      "DRIFT_TPB", teflon_drift_logic, false, 0, true);
+                      "DRIFT_TPB", teflon_drift_logic, false, 0, false);
 
   /// BUFFER PART ///
   G4double zplane_buff[2] = {-teflon_buffer_length_/2., teflon_buffer_length_/2.};
@@ -573,7 +573,7 @@ void Next100FieldCage::BuildLightTube()
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., teflon_buffer_zpos_),
                     teflon_buffer_logic, "LIGHT_TUBE_BUFFER", mother_logic_,
-                    false, 0, true);
+                    false, 0, false);
 
   /// TPB on teflon surface
   G4double router_tpb_buff[2] =
@@ -586,7 +586,7 @@ void Next100FieldCage::BuildLightTube()
     new G4LogicalVolume(tpb_buffer_solid, tpb_, "BUFFER_TPB");
   G4VPhysicalVolume* tpb_buffer_phys =
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), tpb_buffer_logic,
-                      "BUFFER_TPB", teflon_buffer_logic, false, 0, true);
+                      "BUFFER_TPB", teflon_buffer_logic, false, 0, false);
 
   /// Optical surface on teflon ///
   G4OpticalSurface* refl_Surf =
@@ -654,7 +654,7 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
                                                          hdpe_, "HDPE_TUBE");
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., hdpe_tube_z_pos), hdpe_tube_logic,
-                                     "HDPE_TUBE", mother_logic_, false, 0, true);
+                                     "HDPE_TUBE", mother_logic_, false, 0, false);
 
   G4double active_short_z = 13.5*mm; //Thickness for the small piece from the  holder in front of the ring.
   G4double first_ring_drift_z_pos = drift_ring_dist_/2. + active_short_z/2. + gate_teflon_dist_ + GetELzCoord();
@@ -678,14 +678,14 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
   for (G4int i=0; i<num_drift_rings; i++) {
     posz = first_ring_drift_z_pos + i*drift_ring_dist_;
     new G4PVPlacement(0, G4ThreeVector(0., 0., posz), ring_logic,
-                      "RING", mother_logic_, false, i, true);
+                      "RING", mother_logic_, false, i, false);
   }
 
   //Placement of the buffer rings.
   for (G4int i=0; i<num_buffer_rings; i++) {
     posz = first_ring_buff_z_pos + i*buffer_ring_dist_;
     new G4PVPlacement(0, G4ThreeVector(0., 0., posz), ring_logic,
-                      "RING", mother_logic_, false, i, true);
+                      "RING", mother_logic_, false, i, false);
   }
   // Ring holders.
   // ACTIVE holders.
@@ -716,7 +716,7 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
     G4RotationMatrix* rot = new G4RotationMatrix();
     rot -> rotateZ((90-i) *deg);
     new G4PVPlacement(rot, G4ThreeVector(holder_r_*cos(i*deg), holder_r_*sin(i*deg), teflon_drift_zpos_),
-                      act_holder_logic, "ACT_HOLDER", mother_logic_, false, numbering, true);
+                      act_holder_logic, "ACT_HOLDER", mother_logic_, false, numbering, false);
     numbering +=1;}
 
     // BUFFER holders.
@@ -751,7 +751,7 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
       G4RotationMatrix* rot = new G4RotationMatrix();
       rot -> rotateZ((90-i) *deg);
       new G4PVPlacement(rot, G4ThreeVector(holder_r_*cos(i*deg), holder_r_*sin(i*deg), teflon_buffer_zpos_),
-                        buff_holder_logic, "BUFF_HOLDER", mother_logic_, false, numbering, true);
+                        buff_holder_logic, "BUFF_HOLDER", mother_logic_, false, numbering, false);
       numbering +=1;}
 
   /// Visibilities
