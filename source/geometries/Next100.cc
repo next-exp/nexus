@@ -128,31 +128,32 @@ namespace nexus {
     this->SetLogicalVolume(lab_logic_);
 
 
+    // VESSEL (initialize first since it defines EL position)
+    vessel_->Construct();
+    G4LogicalVolume* vessel_logic = vessel_->GetLogicalVolume();
+    G4LogicalVolume* vessel_internal_logic  = vessel_->GetInternalLogicalVolume();
+    G4VPhysicalVolume* vessel_internal_phys = vessel_->GetInternalPhysicalVolume();
+    G4ThreeVector vessel_displacement = shielding_->GetAirDisplacement(); // explained below
+    gate_zpos_in_vessel_ = vessel_->GetELzCoord();
+
     // SHIELDING
     shielding_->Construct();
-    G4LogicalVolume* shielding_logic = shielding_->GetLogicalVolume();
-
-    // VESSEL
-    vessel_->Construct();
+    shielding_->SetELzCoord(gate_zpos_in_vessel_);
+    G4LogicalVolume* shielding_logic     = shielding_->GetLogicalVolume();
     G4LogicalVolume* shielding_air_logic = shielding_->GetAirLogicalVolume();
+
     // Recall that airbox is slighly displaced in Y dimension. In order to avoid
     // mistmatch with vertex generators, we place the vessel in the center of the world volume
-    G4ThreeVector vessel_displacement = shielding_->GetAirDisplacement();
-    G4LogicalVolume* vessel_logic = vessel_->GetLogicalVolume();
-    gate_zpos_in_vessel_ = vessel_->GetELzCoord();
     new G4PVPlacement(0, -vessel_displacement, vessel_logic,
     		      "VESSEL", shielding_air_logic, false, 0);
 
-    G4LogicalVolume* vessel_internal_logic = vessel_->GetInternalLogicalVolume();
-    G4VPhysicalVolume* vessel_internal_phys = vessel_->GetInternalPhysicalVolume();
-
-    // Inner Elements
+    // INNER ELEMENTS
     inner_elements_->SetLogicalVolume(vessel_internal_logic);
     inner_elements_->SetPhysicalVolume(vessel_internal_phys);
     inner_elements_->SetELzCoord(gate_zpos_in_vessel_);
     inner_elements_->Construct();
 
-    // Internal Copper Shielding
+    // INNER COPPER SHIELDING
     ics_->SetLogicalVolume(vessel_internal_logic);
     ics_->Construct();
 
@@ -160,13 +161,13 @@ namespace nexus {
     if (lab_walls_){
       G4ThreeVector castle_pos(0., hallA_walls_->GetLSCHallACastleY(),
 			       hallA_walls_->GetLSCHallACastleZ());
-      new G4PVPlacement(0, castle_pos, shielding_logic, "LEAD_BOX",
-       			hallA_logic_, false, 0);
+      new G4PVPlacement(0, castle_pos, shielding_logic,
+                       "LEAD_BOX", hallA_logic_, false, 0);
       new G4PVPlacement(0, gate_pos - castle_pos, hallA_logic_, "Hall_A",
       			lab_logic_, false, 0, false);
     } else {
       new G4PVPlacement(0, gate_pos, shielding_logic,
-			"LEAD_BOX", lab_logic_, false, 0);
+			                  "LEAD_BOX", lab_logic_, false, 0);
     }
 
 
@@ -189,7 +190,6 @@ namespace nexus {
     // Shielding regions
     else if ((region == "SHIELDING_LEAD")  ||
              (region == "SHIELDING_STEEL") ||
-             (region == "EXTERNAL") ||
              (region == "INNER_AIR") ||
              (region == "SHIELDING_STRUCT") ||
              (region == "PEDESTAL") ||
@@ -241,6 +241,7 @@ namespace nexus {
                     "This vertex generation region must be used with lab_walls == true!");
       vertex = hallA_walls_->GenerateVertex(region);
     }
+
     else {
       G4Exception("[Next100]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");
