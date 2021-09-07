@@ -377,6 +377,11 @@ namespace nexus {
     inner_air_gen_ = new BoxPointSampler(shield_x_, shield_y_, shield_z_, 0,
                                          G4ThreeVector(0., 0., 0.), 0);
 
+    G4double ext_offset = 1. * cm;
+    external_gen_ =
+      new BoxPointSampler(lead_x_ + ext_offset, lead_y_ + ext_offset, lead_z_ + ext_offset, 1. * mm,
+                          G4ThreeVector(0., 0., 0.), 0);
+
     // STEEL STRUCTURE GENERATORS
     lat_roof_gen_ =
       new BoxPointSampler(lead_thickness_, beam_thickness_2, shield_z_ + 2.*steel_thickness_, 0.,
@@ -534,6 +539,7 @@ namespace nexus {
     delete lead_gen_;
     delete steel_gen_;
     delete inner_air_gen_;
+    delete external_gen_;
     delete lat_roof_gen_;
     delete front_roof_gen_;
     delete struct_x_gen_;
@@ -599,6 +605,10 @@ namespace nexus {
           glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
           VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != "INNER_AIR");
+    }
+
+    else if (region == "EXTERNAL") {
+      vertex = external_gen_->GenerateVertex("WHOLE_VOL");
     }
 
     else if(region=="SHIELDING_STRUCT"){
