@@ -307,9 +307,6 @@ void Next100FieldCage::BuildActive()
 
 
   /// Visibilities
-  //G4VisAttributes active_col = nexus::Yellow();
-  //active_col.SetForceSolid(true);
-  //active_logic->SetVisAttributes(active_col);
   active_logic->SetVisAttributes(G4VisAttributes::Invisible);
 
   /// Verbosity
@@ -422,10 +419,6 @@ void Next100FieldCage::BuildBuffer()
 
   /// Visibilities
   buffer_logic->SetVisAttributes(G4VisAttributes::Invisible);
-
-  //G4VisAttributes active_col = nexus::Yellow();
-  //active_col.SetForceSolid(true);
-  //buffer_logic->SetVisAttributes(active_col);
 
   /// Verbosity
   if (verbosity_) {
