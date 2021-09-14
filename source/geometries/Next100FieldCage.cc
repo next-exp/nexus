@@ -862,7 +862,14 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
   }
 
   else if (region == "EL_GAP") {
-    vertex = el_gap_gen_->GenerateVertex("VOLUME");
+    G4VPhysicalVolume *VertexVolume;
+    do {
+      vertex = el_gap_gen_->GenerateVertex("VOLUME");
+      G4ThreeVector glob_vtx(vertex);
+      glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+      VertexVolume =
+        geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+    } while (VertexVolume->GetName() != region);
   }
 
   else {
