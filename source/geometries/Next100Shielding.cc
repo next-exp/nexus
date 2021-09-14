@@ -371,18 +371,16 @@ namespace nexus {
     lead_gen_  = new BoxPointSampler(steel_x, steel_y, steel_z, 5.*cm,
                                      G4ThreeVector(0., 0., 0.), 0);
 
+    steel_gen_ = new BoxPointSampler(shield_x_, shield_y_, shield_z_, steel_thickness_,
+                                     G4ThreeVector(0., -beam_thickness_2/2., 0.), 0);
+
+    inner_air_gen_ = new BoxPointSampler(shield_x_, shield_y_, shield_z_, 0,
+                                         G4ThreeVector(0., 0., 0.), 0);
+
     G4double ext_offset = 1. * cm;
     external_gen_ =
       new BoxPointSampler(lead_x_ + ext_offset, lead_y_ + ext_offset, lead_z_ + ext_offset, 1. * mm,
                           G4ThreeVector(0., 0., 0.), 0);
-
-    steel_gen_ = new BoxPointSampler(shield_x_, shield_y_, shield_z_, steel_thickness_,
-                                     G4ThreeVector(0., -beam_thickness_1/2., 0.), 0);
-
-    G4double inn_offset = .5 * cm;
-    inner_air_gen_ =
-      new BoxPointSampler(shield_x_ - inn_offset, shield_y_ - inn_offset, shield_z_ - inn_offset, 1. * mm,
-                          G4ThreeVector(0., -beam_thickness_1/2., 0.), 0);
 
     // STEEL STRUCTURE GENERATORS
     lat_roof_gen_ =
@@ -539,9 +537,9 @@ namespace nexus {
   Next100Shielding::~Next100Shielding()
   {
     delete lead_gen_;
-    delete external_gen_;
     delete steel_gen_;
     delete inner_air_gen_;
+    delete external_gen_;
     delete lat_roof_gen_;
     delete front_roof_gen_;
     delete struct_x_gen_;
@@ -583,12 +581,8 @@ namespace nexus {
         G4VPhysicalVolume *VertexVolume;
         do {
           	vertex = lead_gen_->GenerateVertex("WHOLE_VOL");
-          	// To check its volume, one needs to rotate and shift the vertex
-          	// because the check is done using global coordinates
           	G4ThreeVector glob_vtx(vertex);
-          	// First rotate, then shift
-          	glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
-          	glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
+          	glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
           	VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
         } while (VertexVolume->GetName() != "LEAD_BOX");
     }
@@ -597,16 +591,20 @@ namespace nexus {
       G4VPhysicalVolume *VertexVolume;
       do {
           vertex = steel_gen_->GenerateVertex("WHOLE_VOL");
-
           G4ThreeVector glob_vtx(vertex);
-          glob_vtx.rotate(pi, G4ThreeVector(0., 1., 0.));
-          glob_vtx = glob_vtx + G4ThreeVector(0, 0, GetELzCoord());
+          glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
           VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != "STEEL_BOX");
     }
 
     else if (region == "INNER_AIR") {
-      vertex = inner_air_gen_->GenerateVertex("WHOLE_VOL");
+      G4VPhysicalVolume *VertexVolume;
+      do {
+          vertex = inner_air_gen_->GenerateVertex("INSIDE");
+          G4ThreeVector glob_vtx(vertex);
+          glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+          VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+      } while (VertexVolume->GetName() != "INNER_AIR");
     }
 
     else if (region == "EXTERNAL") {
@@ -617,8 +615,6 @@ namespace nexus {
         G4double rand = G4UniformRand();
 
         if (rand < perc_roof_vol_) { //ROOF BEAM STRUCTURE
-        	// G4VPhysicalVolume *VertexVolume;
-        	// do {
         	if (G4UniformRand() <  perc_front_roof_vol_){
             vertex = front_roof_gen_->GenerateVertex("INSIDE");
             if (G4UniformRand() < 0.5) {
@@ -637,8 +633,6 @@ namespace nexus {
           	    vertex.setX(vertex.x() - (shield_x_/2.+ steel_thickness_ + lead_thickness_/2.));
           	  }
         	}
-        	// VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(vertex, 0, false);
-        	// } while (VertexVolume->GetName() != "STEEL_BEAM_ROOF");
         }
 
         else if (rand < (perc_top_struct_vol_ + perc_roof_vol_)) { //TOP BEAM STRUCTURE
@@ -741,6 +735,8 @@ namespace nexus {
          }
       }
 
+    // Note: BUBBLE_SEAL and EDPM_SEAL are not implemented as logical volumes, only their
+    // generators. They are placed in INNER_AIR volume.
     else if(region=="BUBBLE_SEAL"){
       G4double rand = G4UniformRand();
       if (rand<perc_bubble_front_vol_){ // front
