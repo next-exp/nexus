@@ -69,7 +69,7 @@ Next100FieldCage::Next100FieldCage():
   holder_x_ (60*mm),  //x dimension of the holders
   holder_long_y_ (9*mm), // y dim of the base of the ring holders
   holder_short_y_ (33.15*mm), // y dim of the pieces added over the base of the ring holders
-  overlap_(1*mm), //defined for G4UnionSolids to ensure a common volume within the two joined solids
+  overlap_(0.001*mm), //defined for G4UnionSolids to ensure a common volume within the two joined solids
   // Diffusion constants
   drift_transv_diff_ (1. * mm/sqrt(cm)),
   drift_long_diff_ (.3 * mm/sqrt(cm)),
@@ -777,6 +777,39 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
                         false, numbering, false);
       numbering +=1;}
 
+    // CATHODE holders.
+    G4double cathode_long_y = 29.*mm;
+    G4double cathode_long_z = 61*mm;
+    G4Box* cathode_large_solid =
+      new G4Box("CATHODE_LARGE", holder_x_/2., cathode_long_y/2., cathode_long_z/2.);
+    G4double cathode_short_z = 24.5*mm;
+    G4Box* cathode_short_solid =
+      new G4Box("CATHODE_SHORT", holder_x_/2., holder_short_y_/2., cathode_short_z/2.);
+
+    G4UnionSolid* cathode_holder_solid =
+      new G4UnionSolid ("CATHODE_HOLDER", cathode_large_solid, cathode_short_solid, 0,
+                        G4ThreeVector(0.,-(holder_short_y_/2.-cathode_long_y/2),
+                                      cathode_long_z/2.-cathode_short_z/2.));
+
+    cathode_holder_solid =
+      new G4UnionSolid("CATHODE_HOLDER", cathode_holder_solid, cathode_short_solid, 0,
+                        G4ThreeVector(0.,-(holder_short_y_/2.-cathode_long_y/2),
+                                      -(cathode_long_z/2.-cathode_short_z/2.)));
+
+    G4LogicalVolume* cathode_holder_logic =
+      new G4LogicalVolume(cathode_holder_solid,pe1000_, "CATHODE_HOLDER");
+
+    numbering=0;
+    G4double cathode_holder_r = (active_diam_+2*teflon_thickn_+ 2*holder_long_y_+
+                                2*holder_short_y_)/2.-cathode_long_y/2.;
+    for (G4int i=10; i<360; i +=20){
+      G4RotationMatrix* rot = new G4RotationMatrix();
+      rot -> rotateZ((90-i) *deg);
+      new G4PVPlacement(rot, G4ThreeVector(cathode_holder_r*cos(i*deg),cathode_holder_r*sin(i*deg),
+                        cathode_zpos_),cathode_holder_logic, "CATHODE_HOLDER", mother_logic_,
+                        false, numbering, false);
+      numbering +=1;}
+
   /// Visibilities
   if (visibility_) {
     G4VisAttributes ring_col = nexus::CopperBrown();
@@ -786,10 +819,12 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
     G4VisAttributes hold_col = nexus::LightGrey();
     act_holder_logic->SetVisAttributes(hold_col);
     buff_holder_logic->SetVisAttributes(hold_col);
+    cathode_holder_logic->SetVisAttributes(hold_col);
   } else {
     ring_logic->SetVisAttributes(G4VisAttributes::Invisible);
     act_holder_logic->SetVisAttributes(G4VisAttributes::Invisible);
     buff_holder_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    cathode_holder_logic->SetVisAttributes(G4VisAttributes::Invisible);
   }
 }
 
