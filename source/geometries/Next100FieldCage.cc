@@ -822,6 +822,7 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
     cathode_holder_logic->SetVisAttributes(hold_col);
   } else {
     ring_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    hdpe_tube_logic->SetVisAttributes(G4VisAttributes::Invisible);
     act_holder_logic->SetVisAttributes(G4VisAttributes::Invisible);
     buff_holder_logic->SetVisAttributes(G4VisAttributes::Invisible);
     cathode_holder_logic->SetVisAttributes(G4VisAttributes::Invisible);
