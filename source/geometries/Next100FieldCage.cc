@@ -72,7 +72,7 @@ Next100FieldCage::Next100FieldCage():
   gate_ext_diam_ (1042. * mm), //preliminary
   gate_int_diam_ (1009. * mm), //preliminary
   gate_thickn_  (15 * mm), // same as anode thickness //preliminary
-  overlap_(1*mm), //defined for G4UnionSolids to ensure a common volume within the two joined solids
+  overlap_(0.001*mm), //defined for G4UnionSolids to ensure a common volume within the two joined solids
   // Diffusion constants
   drift_transv_diff_ (1. * mm/sqrt(cm)),
   drift_long_diff_ (.3 * mm/sqrt(cm)),
