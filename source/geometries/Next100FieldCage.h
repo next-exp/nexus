@@ -54,11 +54,12 @@ namespace nexus {
     const G4double teflon_total_length_, teflon_thickn_;
     const G4double gate_teflon_dist_;
     const G4int n_panels_;
-    const G4double tpb_thickn_, el_gap_diam_, el_gap_length_;
+    const G4double tpb_thickn_, el_gap_length_;
     const G4double hdpe_tube_int_diam_, hdpe_tube_ext_diam_, hdpe_length_;
     const G4double ring_ext_diam_, ring_int_diam_, ring_thickn_;
     const  G4double drift_ring_dist_, buffer_ring_dist_;
     const  G4double holder_x_, holder_long_y_, holder_short_y_;
+    const  G4double active_gate_separation_, gate_ext_diam_, gate_int_diam_, gate_thickn_;
     const  G4double overlap_;
     // Diffusion constants
     G4double drift_transv_diff_, drift_long_diff_;
@@ -84,7 +85,8 @@ namespace nexus {
     G4double teflon_drift_zpos_,teflon_buffer_zpos_;
     G4double holder_r_;
 
-    G4double active_zpos_, cathode_zpos_, el_gap_zpos_;
+    G4double active_zpos_, cathode_zpos_, gate_zpos_, el_gap_zpos_, anode_zpos_;
+    G4double gate_grid_zpos_, anode_grid_zpos_;
 
 
     // Vertex generators
@@ -113,6 +115,7 @@ namespace nexus {
     G4Material* tpb_;
     G4Material* teflon_;
     G4Material* copper_;
+    G4Material* steel_;
 
     G4double el_gap_gen_disk_diam_;
     G4double el_gap_gen_disk_x_, el_gap_gen_disk_y_;

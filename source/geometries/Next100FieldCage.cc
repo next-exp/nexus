@@ -56,8 +56,7 @@ Next100FieldCage::Next100FieldCage():
   gate_teflon_dist_ (16. * mm),
   n_panels_ (18),
   tpb_thickn_ (1 * micrometer),
-  el_gap_diam_ (1009. * mm), // internal diameter of EL meshes
-  el_gap_length_ (1. * cm),
+  el_gap_length_ (10. * mm),
   hdpe_tube_int_diam_ (1080. * mm),
   hdpe_tube_ext_diam_ (1105.4 * mm),
   hdpe_length_ (1192. * mm), //check this value
@@ -69,7 +68,11 @@ Next100FieldCage::Next100FieldCage():
   holder_x_ (60*mm),  //x dimension of the holders
   holder_long_y_ (9*mm), // y dim of the base of the ring holders
   holder_short_y_ (33.15*mm), // y dim of the pieces added over the base of the ring holders
-  overlap_(0.001*mm), //defined for G4UnionSolids to ensure a common volume within the two joined solids
+  active_gate_separation_ (2*mm), //preliminary
+  gate_ext_diam_ (1042. * mm), //preliminary
+  gate_int_diam_ (1009. * mm), //preliminary
+  gate_thickn_  (15 * mm), // same as anode thickness //preliminary
+  overlap_(1*mm), //defined for G4UnionSolids to ensure a common volume within the two joined solids
   // Diffusion constants
   drift_transv_diff_ (1. * mm/sqrt(cm)),
   drift_long_diff_ (.3 * mm/sqrt(cm)),
@@ -138,7 +141,7 @@ Next100FieldCage::Next100FieldCage():
   G4GenericMessenger::Command& step_cmd =
     msg_->DeclareProperty("max_step_size", max_step_size_, "Maximum Step Size");
   step_cmd.SetUnitCategory("Length");
-  step_cmd.SetParameterName("max_step_size", false);
+  step_cmd.SetParameterName("max_step_size", true);
   step_cmd.SetRange("max_step_size>0.");
 
   G4GenericMessenger::Command& el_gap_gen_disk_diam_cmd =
@@ -206,8 +209,11 @@ void Next100FieldCage::Construct()
   /// Calculate derived positions in mother volume
   active_zpos_  = GetELzCoord() + active_length_/2.;
   cathode_zpos_ = GetELzCoord() + gate_teflon_dist_ + teflon_drift_length_ + cathode_thickn_/2.;
-  //el_gap_zpos_  = active_zpos_ - active_length_/2. - el_gap_length_/2.;
-  el_gap_zpos_  = GetELzCoord() - el_gap_length_/2.;
+  gate_zpos_    = GetELzCoord() - active_gate_separation_ - gate_thickn_/2.;
+  el_gap_zpos_  = gate_zpos_ - gate_thickn_/2. - el_gap_length_/2.;
+  anode_zpos_   = el_gap_zpos_ - el_gap_length_/2. - gate_thickn_/2.;
+  gate_grid_zpos_  = gate_zpos_ - gate_thickn_/2. + grid_thickn_/2. ;
+  anode_grid_zpos_ = anode_zpos_ + gate_thickn_/2. -  grid_thickn_;
 
   if (verbosity_) {
     G4cout << "Active length = " << active_length_/mm << " mm" << G4endl;
@@ -250,6 +256,9 @@ void Next100FieldCage::DefineMaterials()
   /// TPB coating
   tpb_ = materials::TPB();
   tpb_->SetMaterialPropertiesTable(opticalprops::TPB());
+
+  /// Steel
+  steel_ = materials::Steel316Ti();
 }
 
 
@@ -275,12 +284,23 @@ void Next100FieldCage::BuildActive()
   G4UnionSolid* union_active =
     new G4UnionSolid ("ACTIVE", active_solid, active_cathode_solid, 0, act_cathode_pos);
 
+  //This volume is added as an extension of the active volume that reaches the gate grid.
+  G4Tubs* active_gate_solid =
+    new G4Tubs("ACT_GATE_GAS", 0, gate_int_diam_/2.,
+              (active_gate_separation_+ gate_thickn_- grid_thickn_ + overlap_)/2., 0, twopi);
+
+  G4ThreeVector act_gate_pos =
+  G4ThreeVector(0., 0., -active_length_/2.-(active_gate_separation_+ gate_thickn_- grid_thickn_)/2. + overlap_/2.);
+
+  union_active =
+    new G4UnionSolid ("ACTIVE", union_active, active_gate_solid, 0, act_gate_pos);
+
   G4LogicalVolume* active_logic =
     new G4LogicalVolume(union_active, gas_, "ACTIVE");
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., active_zpos_),
                     active_logic, "ACTIVE", mother_logic_,
-                    false, 0, false);
+                    false, 0, true);
 
 
   /// Limit the step size in this volume for better tracking precision
@@ -334,7 +354,7 @@ void Next100FieldCage::BuildCathode()
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., cathode_zpos_),
                     cathode_logic, "CATHODE_RING", mother_logic_,
-                    false, 0, false);
+                    false, 0, true);
 
   G4Material* fgrid_mat = materials::FakeDielectric(gas_, "cath_grid_mat");
   fgrid_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_, temperature_,
@@ -349,7 +369,7 @@ void Next100FieldCage::BuildCathode()
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., cathode_zpos_),
                     diel_grid_logic, "CATHODE_GRID", mother_logic_,
-                    false, 0, false);
+                    false, 0, true);
 
 
   /// Visibilities
@@ -401,7 +421,7 @@ void Next100FieldCage::BuildBuffer()
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_zpos),
                     buffer_logic, "BUFFER", mother_logic_,
-                    false, 0, false);
+                    false, 0, true);
 
 
   /// Set the volume as an ionization sensitive detector
@@ -442,16 +462,50 @@ void Next100FieldCage::BuildBuffer()
 
 void Next100FieldCage::BuildELRegion()
 {
-  /// EL gap
+  /// GATE ring.
+  G4Tubs* gate_solid =
+    new G4Tubs("GATE_RING", gate_int_diam_/2., gate_ext_diam_/2., gate_thickn_/2., 0, twopi);
+
+  G4LogicalVolume* gate_logic =
+    new G4LogicalVolume(gate_solid, steel_, "GATE_RING");
+
+  new G4PVPlacement(0, G4ThreeVector(0., 0., gate_zpos_),
+                    gate_logic, "GATE_RING", mother_logic_,
+                    false, 0, true);
+
+  /// EL gap.
   G4Tubs* el_gap_solid =
-    new G4Tubs("EL_GAP", 0., el_gap_diam_/2., el_gap_length_/2., 0, twopi);
+    new G4Tubs("EL_GAP", 0., gate_int_diam_/2., el_gap_length_/2., 0, twopi);
 
   G4LogicalVolume* el_gap_logic =
     new G4LogicalVolume(el_gap_solid, gas_, "EL_GAP");
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., el_gap_zpos_),
                     el_gap_logic, "EL_GAP", mother_logic_,
-                    false, 0);
+                    false, 0, true);
+
+  /// ANODE ring.
+  G4Tubs* anode_solid =
+    new G4Tubs("ANODE_RING", gate_int_diam_/2., gate_ext_diam_/2., gate_thickn_/2., 0, twopi);
+
+  G4LogicalVolume* anode_logic =
+    new G4LogicalVolume(anode_solid, steel_, "ANODE_RING");
+
+  new G4PVPlacement(0, G4ThreeVector(0., 0., anode_zpos_),
+                    anode_logic, "ANODE_RING", mother_logic_,
+                    false, 0, true);
+
+  ///Gas under ANODE.
+  G4Tubs* anode_gas_solid =
+    new G4Tubs("ANODE_GAS", 0, gate_int_diam_/2.,
+              (gate_thickn_-grid_thickn_)/2., 0, twopi);
+
+  G4LogicalVolume* anode_gas_logic =
+    new G4LogicalVolume(anode_gas_solid, gas_, "ANODE_GAS");
+
+  new G4PVPlacement(0, G4ThreeVector(0., 0., anode_grid_zpos_-grid_thickn_-gate_thickn_/2.),
+                    anode_gas_logic, "ANODE_GAS", mother_logic_,
+                    false, 0, true);
 
   if (elfield_) {
     /// Define EL electric field
@@ -476,22 +530,18 @@ void Next100FieldCage::BuildELRegion()
 
   /// Dimensions & position: the grids are simulated inside the EL gap.
   /// Their thickness is symbolic.
-
-  G4double posz1 =  el_gap_length_/2. - grid_thickn_/2.;
-  G4double posz2 = -el_gap_length_/2. + grid_thickn_/2.;
-
   G4Tubs* diel_grid_solid =
-    new G4Tubs("EL_GRID", 0., el_gap_diam_/2., grid_thickn_/2., 0, twopi);
+    new G4Tubs("EL_GRID", 0., gate_int_diam_/2., grid_thickn_/2., 0, twopi);
 
   G4LogicalVolume* diel_grid_logic =
     new G4LogicalVolume(diel_grid_solid, fgrid_mat, "EL_GRID");
 
-  new G4PVPlacement(0, G4ThreeVector(0., 0., posz1),
-                    diel_grid_logic, "EL_GRID_GATE", el_gap_logic,
-                    false, 0, false);
-  new G4PVPlacement(0, G4ThreeVector(0., 0., posz2),
-                    diel_grid_logic, "EL_GRID_ANODE", el_gap_logic,
-                    false, 1, false);
+  new G4PVPlacement(0, G4ThreeVector(0., 0., gate_grid_zpos_),
+                    diel_grid_logic, "EL_GRID_GATE", mother_logic_,
+                    false, 0, true);
+  new G4PVPlacement(0, G4ThreeVector(0., 0., anode_grid_zpos_),
+                    diel_grid_logic, "EL_GRID_ANODE", mother_logic_,
+                    false, 1, true);
 
   // Vertex generator
   if (el_gap_gen_disk_zmin_ > el_gap_gen_disk_zmax_)
@@ -513,12 +563,16 @@ void Next100FieldCage::BuildELRegion()
 
   /// Visibilities
   if (visibility_) {
+    G4VisAttributes grey = nexus::LightGrey();
+    gate_logic->SetVisAttributes(grey);
     G4VisAttributes light_blue = nexus::LightBlue();
     el_gap_logic->SetVisAttributes(light_blue);
-    G4VisAttributes grey = nexus::LightGrey();
+    anode_logic->SetVisAttributes(grey);
     diel_grid_logic->SetVisAttributes(grey);
   } else {
+    gate_logic->SetVisAttributes(G4VisAttributes::Invisible);
     el_gap_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    anode_logic->SetVisAttributes(G4VisAttributes::Invisible);
     diel_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);
   }
 
@@ -550,7 +604,7 @@ void Next100FieldCage::BuildLightTube()
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., teflon_drift_zpos_),
                     teflon_drift_logic, "LIGHT_TUBE_DRIFT", mother_logic_,
-                    false, 0, false);
+                    false, 0, true);
 
 
   /// TPB on teflon surface
@@ -564,7 +618,7 @@ void Next100FieldCage::BuildLightTube()
   G4VPhysicalVolume* tpb_drift_phys =
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.),
                       tpb_drift_logic, "DRIFT_TPB", teflon_drift_logic,
-                      false, 0, false);
+                      false, 0, true);
 
   /// BUFFER PART ///
   G4double zplane_buff[2] = {-teflon_buffer_length_/2., teflon_buffer_length_/2.};
@@ -579,7 +633,7 @@ void Next100FieldCage::BuildLightTube()
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., teflon_buffer_zpos_),
                     teflon_buffer_logic, "LIGHT_TUBE_BUFFER", mother_logic_,
-                    false, 0, false);
+                    false, 0, true);
 
   /// TPB on teflon surface
   G4double router_tpb_buff[2] =
@@ -594,7 +648,7 @@ void Next100FieldCage::BuildLightTube()
   G4VPhysicalVolume* tpb_buffer_phys =
     new G4PVPlacement(0, G4ThreeVector(0., 0., 0.),
                       tpb_buffer_logic, "BUFFER_TPB", teflon_buffer_logic,
-                      false, 0, false);
+                      false, 0, true);
 
   /// Optical surface on teflon ///
   G4OpticalSurface* refl_Surf =
@@ -663,7 +717,7 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., hdpe_tube_z_pos),
                     hdpe_tube_logic, "HDPE_TUBE", mother_logic_,
-                    false, 0, false);
+                    false, 0, true);
 
   G4double active_short_z = 13.5*mm; //Thickness of holder first holder in the active volume.
   G4double first_ring_drift_z_pos = drift_ring_dist_/2. + active_short_z/2. +
@@ -689,7 +743,7 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
     posz = first_ring_drift_z_pos + i*drift_ring_dist_;
     new G4PVPlacement(0, G4ThreeVector(0., 0., posz),
                       ring_logic, "RING", mother_logic_,
-                      false, i, false);
+                      false, i, true);
   }
 
   //Placement of the buffer rings.
@@ -697,7 +751,7 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
     posz = first_ring_buff_z_pos + i*buffer_ring_dist_;
     new G4PVPlacement(0, G4ThreeVector(0., 0., posz),
                       ring_logic, "RING", mother_logic_,
-                      false, i, false);
+                      false, i, true);
   }
   // Ring holders.
   // ACTIVE holders.
@@ -730,7 +784,7 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
     rot -> rotateZ((90-i) *deg);
     new G4PVPlacement(rot,G4ThreeVector(holder_r_*cos(i*deg),holder_r_*sin(i*deg),teflon_drift_zpos_),
                       act_holder_logic, "ACT_HOLDER", mother_logic_,
-                      false, numbering, false);
+                      false, numbering, true);
     numbering +=1;}
 
     // BUFFER holders.
@@ -774,7 +828,7 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
       rot -> rotateZ((90-i) *deg);
       new G4PVPlacement(rot, G4ThreeVector(holder_r_*cos(i*deg), holder_r_*sin(i*deg),
                         teflon_buffer_zpos_),buff_holder_logic, "BUFF_HOLDER", mother_logic_,
-                        false, numbering, false);
+                        false, numbering, true);
       numbering +=1;}
 
     // CATHODE holders.
@@ -807,7 +861,7 @@ void Next100FieldCage::BuildFieldCage()/////////////////////////////////////////
       rot -> rotateZ((90-i) *deg);
       new G4PVPlacement(rot, G4ThreeVector(cathode_holder_r*cos(i*deg),cathode_holder_r*sin(i*deg),
                         cathode_zpos_),cathode_holder_logic, "CATHODE_HOLDER", mother_logic_,
-                        false, numbering, false);
+                        false, numbering, true);
       numbering +=1;}
 
   /// Visibilities
