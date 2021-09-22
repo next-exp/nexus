@@ -213,7 +213,7 @@ void Next100FieldCage::Construct()
   el_gap_zpos_  = gate_zpos_ - gate_thickn_/2. - el_gap_length_/2.;
   anode_zpos_   = el_gap_zpos_ - el_gap_length_/2. - gate_thickn_/2.;
   gate_grid_zpos_  = gate_zpos_ - gate_thickn_/2. + grid_thickn_/2. ;
-  anode_grid_zpos_ = anode_zpos_ + gate_thickn_/2. -  grid_thickn_;
+  anode_grid_zpos_ = anode_zpos_ + gate_thickn_/2. -  grid_thickn_/2.;
 
   if (verbosity_) {
     G4cout << "Active length = " << active_length_/mm << " mm" << G4endl;
@@ -503,7 +503,7 @@ void Next100FieldCage::BuildELRegion()
   G4LogicalVolume* anode_gas_logic =
     new G4LogicalVolume(anode_gas_solid, gas_, "ANODE_GAS");
 
-  new G4PVPlacement(0, G4ThreeVector(0., 0., anode_grid_zpos_-grid_thickn_-gate_thickn_/2.),
+  new G4PVPlacement(0, G4ThreeVector(0., 0., anode_grid_zpos_-gate_thickn_/2.),
                     anode_gas_logic, "ANODE_GAS", mother_logic_,
                     false, 0, true);
 
