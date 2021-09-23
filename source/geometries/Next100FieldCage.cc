@@ -298,10 +298,10 @@ void Next100FieldCage::BuildActive()
   G4LogicalVolume* active_logic =
     new G4LogicalVolume(union_active, gas_, "ACTIVE");
 
-  new G4PVPlacement(0, G4ThreeVector(0., 0., active_zpos_),
-                    active_logic, "ACTIVE", mother_logic_,
-                    false, 0, false);
-
+  active_phys_ =
+    new G4PVPlacement(0, G4ThreeVector(0., 0., active_zpos_),
+                      active_logic, "ACTIVE", mother_logic_,
+                      false, 0, false);
 
   /// Limit the step size in this volume for better tracking precision
   active_logic->SetUserLimits(new G4UserLimits(max_step_size_));
@@ -425,10 +425,10 @@ void Next100FieldCage::BuildBuffer()
   G4LogicalVolume* buffer_logic =
     new G4LogicalVolume(union_buffer, gas_, "BUFFER");
 
-  new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_zpos),
-                    buffer_logic, "BUFFER", mother_logic_,
-                    false, 0, false);
-
+  buffer_phys_ =
+    new G4PVPlacement(0, G4ThreeVector(0., 0., buffer_zpos),
+                      buffer_logic, "BUFFER", mother_logic_,
+                      false, 0, false);
 
   /// Set the volume as an ionization sensitive detector
   IonizationSD* buffsd = new IonizationSD("/NEXT100/BUFFER");
@@ -673,13 +673,13 @@ void Next100FieldCage::BuildLightTube()
     new G4OpticalSurface("gas_tpb_teflon_surf", glisur, ground,
                          dielectric_dielectric, .01);
 
-  new G4LogicalBorderSurface("gas_tpb_teflon_surf", tpb_drift_phys, mother_phys_,
+  new G4LogicalBorderSurface("gas_tpb_teflon_surf", tpb_drift_phys, active_phys_,
                              gas_tpb_teflon_surf);
-  new G4LogicalBorderSurface("gas_tpb_teflon_surf", mother_phys_, tpb_drift_phys,
+  new G4LogicalBorderSurface("gas_tpb_teflon_surf", active_phys_, tpb_drift_phys,
                              gas_tpb_teflon_surf);
-  new G4LogicalBorderSurface("gas_tpb_teflon_surf", tpb_buffer_phys, mother_phys_,
+  new G4LogicalBorderSurface("gas_tpb_teflon_surf", tpb_buffer_phys, buffer_phys_,
                              gas_tpb_teflon_surf);
-  new G4LogicalBorderSurface("gas_tpb_teflon_surf", mother_phys_, tpb_buffer_phys,
+  new G4LogicalBorderSurface("gas_tpb_teflon_surf", buffer_phys_, tpb_buffer_phys,
                              gas_tpb_teflon_surf);
 
   // Vertex generator

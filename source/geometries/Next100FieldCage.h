@@ -104,6 +104,8 @@ namespace nexus {
     // Logical volume where the class is placed
     G4LogicalVolume* mother_logic_;
     G4VPhysicalVolume* mother_phys_;
+    G4VPhysicalVolume* active_phys_;
+    G4VPhysicalVolume* buffer_phys_;
     G4Material* gas_;
     G4double pressure_;
     G4double temperature_;
