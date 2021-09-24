@@ -486,7 +486,7 @@ void Next100FieldCage::BuildELRegion()
 
   /// EL gap.
   G4Tubs* el_gap_solid =
-    new G4Tubs("EL_GAP", 0., gate_int_diam_/2., el_gap_length_/2., 0, twopi);
+    new G4Tubs("EL_GAP", 0., gate_int_diam_/2., (el_gap_length_ + 2*grid_thickn_)/2., 0, twopi);
 
   G4LogicalVolume* el_gap_logic =
     new G4LogicalVolume(el_gap_solid, gas_, "EL_GAP");
@@ -522,8 +522,8 @@ void Next100FieldCage::BuildELRegion()
     /// Define EL electric field
     UniformElectricDriftField* el_field = new UniformElectricDriftField();
     G4double global_el_gap_zpos = el_gap_zpos_ - GetELzCoord();
-    el_field->SetCathodePosition(global_el_gap_zpos + el_gap_length_/2.);
-    el_field->SetAnodePosition  (global_el_gap_zpos - el_gap_length_/2.);
+    el_field->SetCathodePosition(global_el_gap_zpos + el_gap_length_/2. + grid_thickn_);
+    el_field->SetAnodePosition  (global_el_gap_zpos - el_gap_length_/2. - grid_thickn_);
     el_field->SetDriftVelocity(2.5 * mm/microsecond);
     el_field->SetTransverseDiffusion(ELtransv_diff_);
     el_field->SetLongitudinalDiffusion(ELlong_diff_);
@@ -547,11 +547,11 @@ void Next100FieldCage::BuildELRegion()
   G4LogicalVolume* diel_grid_logic =
     new G4LogicalVolume(diel_grid_solid, fgrid_mat, "EL_GRID");
 
-  new G4PVPlacement(0, G4ThreeVector(0., 0., gate_grid_zpos_),
-                    diel_grid_logic, "EL_GRID_GATE", mother_logic_,
+  new G4PVPlacement(0, G4ThreeVector(0., 0., el_gap_length_/2. + grid_thickn_/2.),
+                    diel_grid_logic, "EL_GRID_GATE", el_gap_logic,
                     false, 0, false);
-  new G4PVPlacement(0, G4ThreeVector(0., 0., anode_grid_zpos_),
-                    diel_grid_logic, "EL_GRID_ANODE", mother_logic_,
+  new G4PVPlacement(0, G4ThreeVector(0., 0., -el_gap_length_/2. - grid_thickn_/2.),
+                    diel_grid_logic, "EL_GRID_ANODE", el_gap_logic,
                     false, 1, false);
 
   // Vertex generator
