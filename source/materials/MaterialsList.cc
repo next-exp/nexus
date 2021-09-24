@@ -594,11 +594,31 @@ namespace materials {
   }
 
 
+G4Material* PE1000()
+{
+  G4String name = "PE1000";
+
+  G4Material* mat = G4Material::GetMaterial(name, false);
+
+  if (mat == 0) {
+    G4NistManager* nist = G4NistManager::Instance();
+
+    G4Element* H = nist->FindOrBuildElement("H");
+    G4Element* C = nist->FindOrBuildElement("C");
+
+    mat = new G4Material(name, .93*g/cm3, 2, kStateSolid);
+    mat->AddElement(H, 4);
+    mat->AddElement(C, 2);
+  }
+
+  return mat;
+
+}
+
   G4Material* OpticalSilicone()
   {
     // Silicone resin with a methyl group
     // (https://en.wikipedia.org/wiki/Silicone_resin)
-
     G4String name = "OpticalSilicone";
 
     G4Material* mat = G4Material::GetMaterial(name, false);

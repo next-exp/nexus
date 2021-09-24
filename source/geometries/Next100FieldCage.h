@@ -40,21 +40,26 @@ namespace nexus {
   private:
     void DefineMaterials();
     void BuildActive();
-    void BuildCathodeGrid();
+    void BuildCathode();
     void BuildBuffer();
     void BuildELRegion();
+    void BuildLightTube();
     void BuildFieldCage();
-
-    void CalculateELTableVertices(G4double, G4double, G4double);
 
     // Dimensions
     const G4double active_diam_;
-    const G4double gate_cathode_centre_dist_, gate_sapphire_wdw_dist_;
-    const G4double cathode_diam_, grid_thickn_, cathode_gap_;
+    const G4double teflon_drift_length_, gate_sapphire_wdw_dist_;
+    const G4double cathode_int_diam_, cathode_ext_diam_, cathode_thickn_;
+    const G4double grid_thickn_;
     const G4double teflon_total_length_, teflon_thickn_;
-    const G4double gate_teflon_dist_;
     const G4int n_panels_;
-    const G4double tpb_thickn_, el_gap_diam_, el_gap_length_;
+    const G4double tpb_thickn_, el_gap_length_;
+    const G4double hdpe_tube_int_diam_, hdpe_tube_ext_diam_, hdpe_length_;
+    const G4double ring_ext_diam_, ring_int_diam_, ring_thickn_;
+    const G4double drift_ring_dist_, buffer_ring_dist_;
+    const G4double holder_x_, holder_long_y_, holder_short_y_;
+    const G4double gate_teflon_dist_, gate_ext_diam_, gate_int_diam_, gate_ring_thickn_;
+    const G4double overlap_;
     // Diffusion constants
     G4double drift_transv_diff_, drift_long_diff_;
     G4double ELtransv_diff_; ///< transversal diffusion in the EL gap
@@ -68,19 +73,19 @@ namespace nexus {
     //Step size
     G4double max_step_size_;
 
-    // Variables for the EL table generation
-    G4double el_table_binning_; ///< Binning of EL lookup table
-    G4int el_table_point_id_; ///< Id of the EL point to be simulated
-    mutable G4int el_table_index_; ///< Index for EL lookup table generation
-    mutable std::vector<G4ThreeVector> table_vertices_;
-
     // Visibility of the geometry
     G4bool visibility_;
     // Verbosity of the geometry
     G4bool verbosity_;
 
-    G4double active_length_, active_zpos_, buffer_length_;
-    G4double el_gap_zpos_, cathode_grid_zpos_;
+    G4double active_length_, buffer_length_;
+
+    G4double  teflon_buffer_length_;
+    G4double teflon_drift_zpos_,teflon_buffer_zpos_;
+    G4double holder_r_;
+
+    G4double active_zpos_, cathode_zpos_, gate_zpos_, el_gap_zpos_, anode_zpos_;
+    G4double gate_grid_zpos_, anode_grid_zpos_;
 
 
     // Vertex generators
@@ -99,15 +104,19 @@ namespace nexus {
     // Logical volume where the class is placed
     G4LogicalVolume* mother_logic_;
     G4VPhysicalVolume* mother_phys_;
+    G4VPhysicalVolume* active_phys_;
+    G4VPhysicalVolume* buffer_phys_;
     G4Material* gas_;
     G4double pressure_;
     G4double temperature_;
 
     // Pointers to materials definition
     G4Material* hdpe_;
+    G4Material* pe1000_;
     G4Material* tpb_;
     G4Material* teflon_;
     G4Material* copper_;
+    G4Material* steel_;
 
     G4double el_gap_gen_disk_diam_;
     G4double el_gap_gen_disk_x_, el_gap_gen_disk_y_;
