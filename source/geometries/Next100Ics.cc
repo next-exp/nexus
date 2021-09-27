@@ -128,6 +128,15 @@ namespace nexus {
                 port_b_Rot, G4ThreeVector(-port_x, port_y, lat_hole_z-length/2.));
 
 
+    /// ICS step at the TP end.
+    // This avoids overlap with sipm boards at high radious
+    G4double step_width = 38. * mm; // step lenght in the y dimension
+    G4Tubs* tp_step_solid = new G4Tubs("TP_STEP", (in_rad_ - offset), in_rad_ + step_width,
+                                       gate_tp_distance_, 0.*deg, 360.*deg);
+
+    ics_solid = new G4SubtractionSolid("ICS", ics_solid, tp_step_solid,
+                                      0, G4ThreeVector(0., 0., -length/2.+gate_tp_distance_/2.));
+
     G4LogicalVolume* ics_logic =
       new G4LogicalVolume(ics_solid,
         G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"), "ICS");
