@@ -57,17 +57,15 @@ namespace nexus {
 
   void Next100Ics::Construct()
   {
-
-    G4double gate_zpos = GetELzCoord();
-    length_ = gate_tp_distance_ + field_cage_length_;
+    G4double length = gate_tp_distance_ + gate_sapphire_wdw_dist_;
 
     G4double offset = 1.* mm;
 
     // ICS
-    G4double ics_z_pos = gate_zpos + length_/2. - gate_tp_distance_;
+    G4double ics_z_pos = GetELzCoord() + length/2. - gate_tp_distance_;
 
     G4Tubs* ics_body = new G4Tubs("ICS", in_rad_, in_rad_ + thickness_,
-                                  length_/2., 0.*deg, 360.*deg);
+                                  length/2., 0.*deg, 360.*deg);
     G4SubtractionSolid* ics_solid;
 
     // Port holes
@@ -111,10 +109,10 @@ namespace nexus {
                                         (thickness_ + offset)/2., 0.*deg, 360.*deg);
 
     ics_solid = new G4SubtractionSolid("ICS", ics_solid, upp_hole_solid,
-                port_upp_Rot, G4ThreeVector(0, (in_rad_ + thickness_/2.), upp_hole_1_z-length_/2.));
+                port_upp_Rot, G4ThreeVector(0, (in_rad_ + thickness_/2.), upp_hole_1_z-length/2.));
 
     ics_solid = new G4SubtractionSolid("ICS", ics_solid, upp_hole_solid,
-                port_upp_Rot, G4ThreeVector(0, (in_rad_ + thickness_/2.), upp_hole_2_z-length_/2.));
+                port_upp_Rot, G4ThreeVector(0, (in_rad_ + thickness_/2.), upp_hole_2_z-length/2.));
 
     /// Lateral holes
     G4double lat_hole_rad = upp_hole_rad;
@@ -124,10 +122,10 @@ namespace nexus {
                                         (thickness_ + offset)/2., 0.*deg, 360.*deg);
 
     ics_solid = new G4SubtractionSolid("ICS", ics_solid, lat_hole_solid,
-                port_a_Rot, G4ThreeVector(port_x, port_y, lat_hole_z-length_/2.));
+                port_a_Rot, G4ThreeVector(port_x, port_y, lat_hole_z-length/2.));
 
     ics_solid = new G4SubtractionSolid("ICS", ics_solid, lat_hole_solid,
-                port_b_Rot, G4ThreeVector(-port_x, port_y, lat_hole_z-length_/2.));
+                port_b_Rot, G4ThreeVector(-port_x, port_y, lat_hole_z-length/2.));
 
 
     G4LogicalVolume* ics_logic =
@@ -149,7 +147,7 @@ namespace nexus {
 
     // VERTEX GENERATOR
     ics_gen_ =
-      new CylinderPointSampler2020(in_rad_, in_rad_ + thickness_, length_/2., 0.*deg, 360.*deg,
+      new CylinderPointSampler2020(in_rad_, in_rad_ + thickness_, length/2., 0.*deg, 360.*deg,
                                    0, G4ThreeVector(0., 0., ics_z_pos));
   }
 

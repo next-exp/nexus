@@ -50,7 +50,7 @@ namespace nexus {
     // Dimensions
     G4double gate_tp_distance_, gate_sapphire_wdw_dist_;
     G4double field_cage_length_;
-    G4double in_rad_, length_, thickness_;
+    G4double in_rad_, thickness_;
     G4double port_z_1a_, port_z_2a_, port_z_1b_, port_z_2b_;
 
     // Visibility of the shielding

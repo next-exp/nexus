@@ -30,9 +30,6 @@ namespace nexus {
     mother_logic_(nullptr),
     mother_phys_ (nullptr),
     gas_(nullptr),
-    field_cage_    (new Next100FieldCage()),
-    energy_plane_  (new Next100EnergyPlane()),
-    tracking_plane_(new Next100TrackingPlane(gate_tracking_plane_distance_)),
     msg_(nullptr)
   {
     // Messenger
@@ -55,6 +52,11 @@ namespace nexus {
 
   void Next100InnerElements::Construct()
   {
+
+    field_cage_     = new Next100FieldCage();
+    energy_plane_   = new Next100EnergyPlane();
+    tracking_plane_ = new Next100TrackingPlane(gate_tracking_plane_distance_);
+
     // Position in Z of the beginning of the drift region
     G4double gate_zpos = GetELzCoord();
     // Reading mother material
@@ -66,6 +68,7 @@ namespace nexus {
     field_cage_->SetMotherLogicalVolume(mother_logic_);
     field_cage_->SetMotherPhysicalVolume(mother_phys_);
     field_cage_->SetELzCoord(gate_zpos);
+    field_cage_->SetELtoSapphireWDWdistance(gate_sapphire_wdw_distance_);
     field_cage_->Construct();
 
     // Energy Plane

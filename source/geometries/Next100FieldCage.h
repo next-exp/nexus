@@ -35,7 +35,6 @@ namespace nexus {
 
     void SetMotherLogicalVolume(G4LogicalVolume* mother_logic);
     void SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys);
-    void SetELtoTPdistance(G4double);
     void SetELtoSapphireWDWdistance(G4double);
 
   private:
