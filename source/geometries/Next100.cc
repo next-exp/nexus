@@ -40,8 +40,9 @@ namespace nexus {
     // Lab dimensions
     lab_size_ (5. * m),
 
-    // distance between EL gate and TP copper plate
-    gate_tp_distance_(25.6 * mm), // check
+    // common used variables in geomety components
+    gate_tracking_plane_distance_(35. * mm), // to be confirmed
+    gate_sapphire_wdw_distance_  (1460.5 * mm),
 
     // Nozzles external diam and y positions
     nozzle_ext_diam_ (9. * cm),
@@ -147,14 +148,15 @@ namespace nexus {
     inner_elements_->SetLogicalVolume(vessel_internal_logic);
     inner_elements_->SetPhysicalVolume(vessel_internal_phys);
     inner_elements_->SetELzCoord(gate_zpos_in_vessel_);
-    // inner_elements_->SetELtoTPdistance(gate_tp_distance_);
+    inner_elements_->SetELtoSapphireWDWdistance(gate_sapphire_wdw_distance_);
+    inner_elements_->SetELtoTPdistance         (gate_tracking_plane_distance_);
     inner_elements_->Construct();
 
     // INNER COPPER SHIELDING
     ics_->SetLogicalVolume(vessel_internal_logic);
     ics_->SetELzCoord(gate_zpos_in_vessel_);
-    ics_->SetELtoTPdistance(gate_tp_distance_);
-    // ics_->SetFieldCageLength(inner_elements_->GetFieldCageLength());
+    ics_->SetELtoSapphireWDWdistance(gate_sapphire_wdw_distance_);
+    ics_->SetELtoTPdistance         (gate_tracking_plane_distance_);
     ics_->SetFieldCageLength(1432.*mm + 16.*mm); // gate-teflon distance + teflon length
     ics_->SetPortZpositions(vessel_->GetPortZpositions());
     ics_->Construct();

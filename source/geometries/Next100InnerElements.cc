@@ -27,8 +27,6 @@ namespace nexus {
 
   Next100InnerElements::Next100InnerElements():
     GeometryBase(),
-    gate_sapphire_wdw_distance_  (1460.5 * mm), // active length + cathode thickness + buffer length
-    gate_tracking_plane_distance_(35. * mm), //to be confirmed
     mother_logic_(nullptr),
     mother_phys_ (nullptr),
     gas_(nullptr),

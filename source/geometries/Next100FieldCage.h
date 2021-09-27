@@ -32,10 +32,11 @@ namespace nexus {
     G4ThreeVector GenerateVertex(const G4String& region) const override;
 
     G4ThreeVector GetActivePosition() const;
-    G4double GetDistanceGateSapphireWindows() const;
 
     void SetMotherLogicalVolume(G4LogicalVolume* mother_logic);
     void SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys);
+    void SetELtoTPdistance(G4double);
+    void SetELtoSapphireWDWdistance(G4double);
 
   private:
     void DefineMaterials();
@@ -47,8 +48,9 @@ namespace nexus {
     void BuildFieldCage();
 
     // Dimensions
+    G4double gate_sapphire_wdw_dist_;
     const G4double active_diam_;
-    const G4double teflon_drift_length_, gate_sapphire_wdw_dist_;
+    const G4double teflon_drift_length_;
     const G4double cathode_int_diam_, cathode_ext_diam_, cathode_thickn_;
     const G4double grid_thickn_;
     const G4double teflon_total_length_, teflon_thickn_;
@@ -122,6 +124,11 @@ namespace nexus {
     G4double el_gap_gen_disk_x_, el_gap_gen_disk_y_;
     G4double el_gap_gen_disk_zmin_, el_gap_gen_disk_zmax_;
   };
+
+
+  inline void Next100FieldCage::SetELtoSapphireWDWdistance(G4double distance){
+    gate_sapphire_wdw_dist_ = distance;
+  }
 
 } //end namespace nexus
 #endif

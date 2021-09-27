@@ -32,7 +32,8 @@ namespace nexus {
     /// Sets the Logical Volume where ICS will be placed
     void SetLogicalVolume(G4LogicalVolume* mother_logic);
 
-    void SetELtoTPdistance(G4double z);
+    void SetELtoTPdistance(G4double);
+    void SetELtoSapphireWDWdistance(G4double);
     void SetFieldCageLength(G4double length);
     void SetPortZpositions(G4double port_positions[]);
 
@@ -47,7 +48,8 @@ namespace nexus {
     G4LogicalVolume* mother_logic_;
 
     // Dimensions
-    G4double gate_tp_distance_, field_cage_length_;
+    G4double gate_tp_distance_, gate_sapphire_wdw_dist_;
+    G4double field_cage_length_;
     G4double in_rad_, length_, thickness_;
     G4double port_z_1a_, port_z_2a_, port_z_1b_, port_z_2b_;
 
@@ -65,13 +67,17 @@ namespace nexus {
 
   };
 
-  inline void Next100Ics::SetELtoTPdistance(G4double z){
-    gate_tp_distance_ = z;
-  };
+  inline void Next100Ics::SetELtoTPdistance(G4double distance){
+    gate_tp_distance_ = distance;
+  }
+
+  inline void Next100Ics::SetELtoSapphireWDWdistance(G4double distance){
+    gate_sapphire_wdw_dist_ = distance;
+  }
 
   inline void Next100Ics::SetFieldCageLength(G4double length){
     field_cage_length_ = length;
-  };
+  }
 
 } // end namespace nexus
 
