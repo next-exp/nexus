@@ -33,6 +33,9 @@ namespace nexus {
   REGISTER_CLASS(Next100OpticalGeometry, GeometryBase)
 
   Next100OpticalGeometry::Next100OpticalGeometry(): GeometryBase(),
+                // common used variables in geomety components
+                gate_tracking_plane_distance_(35. * mm), // to be confirmed
+                gate_sapphire_wdw_distance_  (1460.5 * mm),
 						    pressure_(15. * bar),
 						    temperature_ (300 * kelvin),
 						    sc_yield_(25510. * 1/MeV),
@@ -137,6 +140,8 @@ namespace nexus {
   inner_elements_->SetLogicalVolume(gas_logic);
   inner_elements_->SetPhysicalVolume(gas_phys);
   inner_elements_->SetELzCoord(gate_zpos_in_gas_);
+  inner_elements_->SetELtoSapphireWDWdistance(gate_sapphire_wdw_distance_);
+  inner_elements_->SetELtoTPdistance         (gate_tracking_plane_distance_);
   inner_elements_->Construct();
 
   // Visibilities

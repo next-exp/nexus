@@ -23,9 +23,8 @@
 using namespace nexus;
 
 
-Next100TrackingPlane::Next100TrackingPlane(G4double origin_z_coord):
+Next100TrackingPlane::Next100TrackingPlane():
   GeometryBase(),
-  z0_(origin_z_coord), // Distance between gate and inner face of copper plate
   copper_plate_diameter_  (1340.*mm),
   copper_plate_thickness_ ( 120.*mm),
   distance_board_board_   (   1.*mm),
@@ -72,7 +71,7 @@ void Next100TrackingPlane::Construct()
                         G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
                         copper_plate_name);
 
-  G4double zpos = GetELzCoord() - z0_ - copper_plate_thickness_/2.;
+  G4double zpos = GetELzCoord() - gate_tp_dist_ - copper_plate_thickness_/2.;
 
   G4VPhysicalVolume* copper_plate_phys_vol =
     new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,zpos),
@@ -87,7 +86,7 @@ void Next100TrackingPlane::Construct()
   sipm_board_geom_->Construct();
   G4LogicalVolume* sipm_board_logic_vol = sipm_board_geom_->GetLogicalVolume();
 
-  zpos = GetELzCoord() - z0_ + sipm_board_geom_->GetThickness()/2.;
+  zpos = GetELzCoord() - gate_tp_dist_ + sipm_board_geom_->GetThickness()/2.;
 
   // SiPM boards are positioned bottom (negative Y) to top (positive Y)
   // and left (negative X) to right (positive X).
