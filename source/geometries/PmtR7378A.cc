@@ -8,7 +8,7 @@
 
 #include "PmtR7378A.h"
 
-#include "PmtSD.h"
+#include "SensorSD.h"
 #include "OpticalMaterialProperties.h"
 #include "MaterialsList.h"
 #include "Visibilities.h"
@@ -111,7 +111,7 @@ namespace nexus {
 			"PHOTOCATHODE", window_logic, false, 0, false);
 
     // Sensitive detector
-    PmtSD* pmtsd = new PmtSD("/PMT_R7378A/Pmt");
+    SensorSD* pmtsd = new SensorSD("/PMT_R7378A/Pmt");
     pmtsd->SetDetectorVolumeDepth(2);
     pmtsd->SetTimeBinning(100.*nanosecond);
     G4SDManager::GetSDMpointer()->AddNewDetector(pmtsd);

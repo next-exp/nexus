@@ -12,7 +12,7 @@
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
-#include "PmtSD.h"
+#include "SensorSD.h"
 
 #include <G4Box.hh>
 #include <G4LogicalVolume.hh>
@@ -188,7 +188,7 @@ void Next100SiPM::Construct()
   G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
 
   if (!sdmgr->FindSensitiveDetector(sdname, false)) {
-    PmtSD* sensdet = new PmtSD(sdname);
+    SensorSD* sensdet = new SensorSD(sdname);
 
     if (sensor_depth_ == -1)
       G4Exception("[Next100SiPM]", "Construct()", FatalException,

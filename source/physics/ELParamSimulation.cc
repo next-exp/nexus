@@ -92,7 +92,7 @@ namespace nexus {
     // Ask table for the right sensor map
     // ...
 
-    // Fill PmtHits according to this map
+    // Fill SensorHits according to this map
 
   }
 

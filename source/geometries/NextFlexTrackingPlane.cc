@@ -15,7 +15,7 @@
 #include "UniformElectricDriftField.h"
 #include "CylinderPointSampler2020.h"
 #include "GenericPhotosensor.h"
-#include "PmtSD.h"
+#include "SensorSD.h"
 #include "Visibilities.h"
 
 #include <G4UnitsTable.hh>

@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | PmtHit.h
+// nexus | SensorHit.h
 //
 // This class describes the charge detected by a photosensor.
 //
@@ -17,22 +17,22 @@
 
 namespace nexus {
 
-  class PmtHit: public G4VHit
+  class SensorHit: public G4VHit
   {
   public:
     /// Default constructor
-    PmtHit();
+    SensorHit();
     /// Constructor providing the detector ID and position
-    PmtHit(G4int ID, const G4ThreeVector& position, G4double bin_size);
+    SensorHit(G4int ID, const G4ThreeVector& position, G4double bin_size);
     /// Copy-constructor
-    PmtHit(const PmtHit&);
+    SensorHit(const SensorHit&);
     /// Destructor
-    ~PmtHit();
+    ~SensorHit();
 
     /// Assignement operator
-    const PmtHit& operator=(const PmtHit&);
+    const SensorHit& operator=(const SensorHit&);
     /// Equality operator
-    G4int operator==(const PmtHit&) const;
+    G4int operator==(const SensorHit&) const;
 
     /// Memory allocation
     void* operator new(size_t);
@@ -72,29 +72,29 @@ namespace nexus {
 } // namespace nexus
 
 
-typedef G4THitsCollection<nexus::PmtHit> PmtHitsCollection;
-extern G4Allocator<nexus::PmtHit> PmtHitAllocator;
+typedef G4THitsCollection<nexus::SensorHit> SensorHitsCollection;
+extern G4Allocator<nexus::SensorHit> SensorHitAllocator;
 
 
 // INLINE DEFINITIONS ////////////////////////////////////////////////
 
 namespace nexus {
 
-  inline void* PmtHit::operator new(size_t)
-  { return ((void*) PmtHitAllocator.MallocSingle()); }
+  inline void* SensorHit::operator new(size_t)
+  { return ((void*) SensorHitAllocator.MallocSingle()); }
 
-  inline void PmtHit::operator delete(void* hit)
-  { PmtHitAllocator.FreeSingle((PmtHit*) hit); }
+  inline void SensorHit::operator delete(void* hit)
+  { SensorHitAllocator.FreeSingle((SensorHit*) hit); }
 
-  inline G4int PmtHit::GetPmtID() const { return pmt_id_; }
-  inline void PmtHit::SetPmtID(G4int id) { pmt_id_ = id; }
+  inline G4int SensorHit::GetPmtID() const { return pmt_id_; }
+  inline void SensorHit::SetPmtID(G4int id) { pmt_id_ = id; }
 
-  inline G4double PmtHit::GetBinSize() const { return bin_size_; }
+  inline G4double SensorHit::GetBinSize() const { return bin_size_; }
 
-  inline G4ThreeVector PmtHit::GetPosition() const { return position_; }
-  inline void PmtHit::SetPosition(const G4ThreeVector& p) { position_ = p; }
+  inline G4ThreeVector SensorHit::GetPosition() const { return position_; }
+  inline void SensorHit::SetPosition(const G4ThreeVector& p) { position_ = p; }
 
-  inline const std::map<G4double, G4int>& PmtHit::GetHistogram() const
+  inline const std::map<G4double, G4int>& SensorHit::GetHistogram() const
   { return histogram_; }
 
 } // namespace nexus

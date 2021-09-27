@@ -63,7 +63,7 @@ namespace nexus {
     void StoreTrajectories(G4TrajectoryContainer*);
     void StoreHits(G4HCofThisEvent*);
     void StoreIonizationHits(G4VHitsCollection*);
-    void StorePmtHits(G4VHitsCollection*);
+    void StoreSensorHits(G4VHitsCollection*);
     void StoreSteps();
 
     void SaveConfigurationInfo(G4String history);

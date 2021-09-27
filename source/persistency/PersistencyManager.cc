@@ -12,7 +12,7 @@
 #include "Trajectory.h"
 #include "TrajectoryMap.h"
 #include "IonizationSD.h"
-#include "PmtSD.h"
+#include "SensorSD.h"
 #include "NexusApp.h"
 #include "DetectorConstruction.h"
 #include "SaveAllSteppingAction.h"
@@ -233,8 +233,8 @@ void PersistencyManager::StoreHits(G4HCofThisEvent* hce)
 
     if (hcname == IonizationSD::GetCollectionUniqueName())
       StoreIonizationHits(hits);
-    else if (hcname == PmtSD::GetCollectionUniqueName()) {
-      StorePmtHits(hits);
+    else if (hcname == SensorSD::GetCollectionUniqueName()) {
+      StoreSensorHits(hits);
     } else {
       G4String msg =
         "Collection of hits '" + sdname + "/" + hcname
@@ -287,9 +287,9 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
 
 
 
-void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
+void PersistencyManager::StoreSensorHits(G4VHitsCollection* hc)
 {
-  PmtHitsCollection* hits = dynamic_cast<PmtHitsCollection*>(hc);
+  SensorHitsCollection* hits = dynamic_cast<SensorHitsCollection*>(hc);
   if (!hits) return;
 
   std::string sdname = hits->GetSDname();
@@ -297,7 +297,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
   std::map<G4String, G4double>::const_iterator sensdet_it = sensdet_bin_.find(sdname);
   if (sensdet_it == sensdet_bin_.end()) {
     for (size_t j=0; j<hits->entries(); j++) {
-      PmtHit* hit = dynamic_cast<PmtHit*>(hits->GetHit(j));
+      SensorHit* hit = dynamic_cast<SensorHit*>(hits->GetHit(j));
       if (!hit) continue;
       G4double bin_size = hit->GetBinSize();
       sensdet_bin_[sdname] = bin_size;
@@ -307,7 +307,7 @@ void PersistencyManager::StorePmtHits(G4VHitsCollection* hc)
 
   for (size_t i=0; i<hits->entries(); i++) {
 
-    PmtHit* hit = dynamic_cast<PmtHit*>(hits->GetHit(i));
+    SensorHit* hit = dynamic_cast<SensorHit*>(hits->GetHit(i));
     if (!hit) continue;
 
     G4ThreeVector xyz = hit->GetPosition();

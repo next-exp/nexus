@@ -9,7 +9,7 @@
 #include "GenericPhotosensor.h"
 
 #include "MaterialsList.h"
-#include "PmtSD.h"
+#include "SensorSD.h"
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
 
@@ -230,7 +230,7 @@ void GenericPhotosensor::Construct()
   G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
 
   if (!sdmgr->FindSensitiveDetector(sdname, false)) {
-    PmtSD* sensdet = new PmtSD(sdname);
+    SensorSD* sensdet = new SensorSD(sdname);
     if (sensor_depth_ == -1)
       G4Exception("[GenericPhotosensor]", "Construct()", FatalException,
                   "Sensor Depth must be set before constructing");
