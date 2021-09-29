@@ -34,7 +34,6 @@ namespace nexus {
 
     void SetELtoTPdistance(G4double);
     void SetELtoSapphireWDWdistance(G4double);
-    void SetFieldCageLength(G4double length);
     void SetPortZpositions(G4double port_positions[]);
 
     /// Generate a vertex within a given region of the geometry
@@ -49,7 +48,6 @@ namespace nexus {
 
     // Dimensions
     G4double gate_tp_distance_, gate_sapphire_wdw_dist_;
-    G4double field_cage_length_;
     G4double in_rad_, thickness_;
     G4double port_z_1a_, port_z_2a_, port_z_1b_, port_z_2b_;
 
@@ -73,10 +71,6 @@ namespace nexus {
 
   inline void Next100Ics::SetELtoSapphireWDWdistance(G4double distance){
     gate_sapphire_wdw_dist_ = distance;
-  }
-
-  inline void Next100Ics::SetFieldCageLength(G4double length){
-    field_cage_length_ = length;
   }
 
 } // end namespace nexus

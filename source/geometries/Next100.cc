@@ -157,7 +157,6 @@ namespace nexus {
     ics_->SetELzCoord(gate_zpos_in_vessel_);
     ics_->SetELtoSapphireWDWdistance(gate_sapphire_wdw_distance_);
     ics_->SetELtoTPdistance         (gate_tracking_plane_distance_);
-    ics_->SetFieldCageLength(1432.*mm + 16.*mm); // gate-teflon distance + teflon length
     ics_->SetPortZpositions(vessel_->GetPortZpositions());
     ics_->Construct();
 
