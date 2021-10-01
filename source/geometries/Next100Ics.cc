@@ -59,6 +59,8 @@ namespace nexus {
   {
     G4double length = gate_tp_distance_ + gate_sapphire_wdw_dist_;
 
+    // defined for G4UnionSolids to ensure a common volume within the two joined solids
+    // and for G4SubtractionSolids to ensure surface subtraction
     G4double offset = 1.* mm;
 
     // ICS
