@@ -30,6 +30,7 @@
 #include <G4Material.hh>
 #include <G4SDManager.hh>
 #include <G4VisAttributes.hh>
+#include <G4MultiUnion.hh>
 #include <G4PVPlacement.hh>
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
@@ -233,6 +234,7 @@ void NextFlexTrackingPlane::Construct()
   // Verbosity
   if(verbosity_) {
     G4cout << G4endl << "*** NEXT-Flex Tracking Plane ..." << G4endl;
+    G4cout << G4endl << "Teflon Thickness: " << teflon_thickness_ << G4endl;
   }
 
 
@@ -243,13 +245,21 @@ void NextFlexTrackingPlane::Construct()
   DefineMaterials();
 
   // The SiPM
-  SiPM_ = new GenericPhotosensor("TP_SiPM", SiPM_size_x_, SiPM_size_y_, SiPM_size_z_);
+  // SiPM_ = new GenericPhotosensor("TP_SiPM", SiPM_size_x_, SiPM_size_y_, SiPM_size_z_);
 
   // Copper
   BuildCopper();
 
   // Teflon
-  BuildTeflon();
+  if (verbosity_) {
+    G4cout << "Teflon Thickness: " << teflon_thickness_ << G4endl;
+  }
+  if (teflon_thickness_) {
+    if (verbosity_) G4cout << "Building Teflon. Thickness " << teflon_thickness_ << " is NOT 0." << G4endl;
+    BuildTeflon();
+  }
+  // SiPMs
+  BuildSiPMs();
 }
 
 
@@ -293,8 +303,27 @@ void NextFlexTrackingPlane::BuildTeflon()
 
   G4double teflon_posZ = teflon_iniZ_ + teflon_thickness_/2.;
 
-  G4Tubs* teflon_solid =
-    new G4Tubs(teflon_name, 0., diameter_/2., teflon_thickness_/2., 0, twopi);
+  // G4cout << "Teflon thickness: " << teflon_thickness_ << G4endl;
+
+  G4Tubs* teflon_nh_solid =
+    new G4Tubs(teflon_name + "_NOHOLE", 0., diameter_/2., teflon_thickness_/2., 0, twopi);
+
+  // Making the Teflon holes (a little bit thicker to prevent subtraction problems)
+  G4Tubs* teflon_hole_solid =
+    new G4Tubs(teflon_name + "_HOLE", 0., teflon_hole_diam_/2., teflon_thickness_/2. + 0.5*mm, 0, twopi);
+
+  G4MultiUnion* teflon_holes_solid = new G4MultiUnion(teflon_name + "_HOLES");
+
+  G4RotationMatrix rotm = G4RotationMatrix();
+
+  for (G4int i=0; i<num_SiPMs_; i++) {
+    G4Transform3D hole_transform = G4Transform3D(rotm, SiPM_positions_[i]);
+    teflon_holes_solid->AddNode(*teflon_hole_solid, hole_transform);
+  }
+  teflon_holes_solid->Voxelize();
+
+  G4SubtractionSolid* teflon_solid =
+    new G4SubtractionSolid(teflon_name, teflon_nh_solid, teflon_holes_solid);
 
   G4LogicalVolume* teflon_logic =
     new G4LogicalVolume(teflon_solid, teflon_mat_, teflon_name);
@@ -312,8 +341,23 @@ void NextFlexTrackingPlane::BuildTeflon()
 
   G4double teflon_wls_posZ = teflon_thickness_/2. - wls_thickness_/2.;
 
-  G4Tubs* teflon_wls_solid =
+  G4Tubs* teflon_wls_nh_solid =
     new G4Tubs(teflon_wls_name, 0., diameter_/2., wls_thickness_/2., 0, twopi);
+
+  // Making the TEFLON_WLS holes (a little bit thicker to prevent subtraction problems)
+  G4Tubs* wls_hole_solid = 
+    new G4Tubs(teflon_wls_name + "_HOLE", 0., teflon_hole_diam_/2., wls_thickness_/2. + 0.5*mm, 0, twopi);
+
+  G4MultiUnion* wls_holes_solid = new G4MultiUnion(teflon_wls_name + "_HOLES");
+
+  for (G4int i=0; i<num_SiPMs_; i++){
+    G4Transform3D wls_hole_transform = G4Transform3D(rotm, SiPM_positions_[i]);
+    wls_holes_solid->AddNode(*wls_hole_solid, wls_hole_transform); 
+  }
+  wls_holes_solid->Voxelize();
+
+  G4SubtractionSolid* teflon_wls_solid = 
+    new G4SubtractionSolid(teflon_wls_name, teflon_wls_nh_solid, wls_holes_solid);	  
 
   G4LogicalVolume* teflon_wls_logic =
     new G4LogicalVolume(teflon_wls_solid, wls_mat_, teflon_wls_name);
@@ -332,88 +376,34 @@ void NextFlexTrackingPlane::BuildTeflon()
   new G4LogicalBorderSurface("GAS_TEFLON_WLS_OPSURF", neigh_gas_phys_,
                              teflon_wls_phys, teflon_wls_optSurf);
 
-  /// Adding the SiPMs ///
-
-  // The SiPM
-  G4LogicalVolume* SiPM_logic = BuildSiPM();
-
-  // teflon wls hole
-  G4String wls_hole_name   = "TP_TEFLON_WLS_HOLE";
-  G4double wls_hole_diam   = teflon_hole_diam_;
-  G4double wls_hole_length = wls_thickness_;
-
-  G4Tubs* wls_hole_solid =
-    new G4Tubs(wls_hole_name, 0., wls_hole_diam/2., wls_hole_length/2., 0, twopi);
-
-  G4LogicalVolume* wls_hole_logic =
-    new G4LogicalVolume(wls_hole_solid, xenon_gas_, wls_hole_name);
-
-
-  // teflon hole
-  G4String hole_name   = "TP_TEFLON_HOLE";
-  G4double hole_diam   = teflon_hole_diam_;
-  G4double hole_length = teflon_thickness_ - wls_thickness_;
-  G4double hole_posz   = -teflon_thickness_/2. + hole_length/2.;
-
-  G4Tubs* hole_solid =
-    new G4Tubs(hole_name, 0., hole_diam/2., hole_length/2., 0, twopi);
-
-  G4LogicalVolume* hole_logic =
-    new G4LogicalVolume(hole_solid, xenon_gas_, hole_name);
-
-  // Placing the SiPM into the teflon hole
-  G4double SiPM_pos_z = - hole_length/2. + SiPM_size_z_ / 2.;
-
-  new G4PVPlacement(0, G4ThreeVector(0., 0., SiPM_pos_z), SiPM_logic,
-                    SiPM_logic->GetName(), hole_logic, false, 0, verbosity_);
-
-  // Replicating the teflon & wls-teflon holes
-  for (G4int i=0; i<num_SiPMs_; i++) {
-    G4int SiPM_id = first_sensor_id_ + i;
-
-    G4ThreeVector hole_pos = SiPM_positions_[i];
-    hole_pos.setZ(hole_posz);
-    new G4PVPlacement(nullptr, hole_pos, hole_logic, hole_name,
-                      teflon_logic, true, SiPM_id, false);
-
-    G4ThreeVector wls_hole_pos = SiPM_positions_[i];
-    new G4PVPlacement(nullptr, wls_hole_pos, wls_hole_logic, wls_hole_name,
-                      teflon_wls_logic, true, SiPM_id, false);
-
-    if (sipm_verbosity_) G4cout << "* TP_SiPM " << SiPM_id << " position: "
-                                << hole_pos << G4endl;
-  }
-
-  // Placing the overall teflon sub-system
+  // Placing the TEFLON
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., teflon_posZ), teflon_logic,
                     teflon_name, mother_logic_, false, 0, verbosity_);
 
   /// Verbosity ///
-  if (verbosity_) {
+  if (verbosity_)
     G4cout << "* Teflon Z positions: " << teflon_iniZ_
            << " to " << teflon_iniZ_ + teflon_thickness_ << G4endl;
-    G4cout << "* SiPM Z positions: " << teflon_iniZ_
-           << " to " << teflon_iniZ_ + SiPM_size_z_ << G4endl;
-  }
+    G4cout << "**** BuildTeflon() was issued. ****" << G4endl;
 
   /// Visibilities ///
   if (visibility_) {
     teflon_logic->SetVisAttributes(nexus::LightBlue());
-    hole_logic  ->SetVisAttributes(nexus::LightBlue());
+    teflon_wls_logic->SetVisAttributes(G4VisAttributes::Invisible);
   }
   else {
     teflon_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    hole_logic  ->SetVisAttributes(G4VisAttributes::Invisible);
+    teflon_wls_logic->SetVisAttributes(G4VisAttributes::Invisible);
   }
-  teflon_wls_logic->SetVisAttributes(G4VisAttributes::Invisible);
-  wls_hole_logic  ->SetVisAttributes(G4VisAttributes::Invisible);
 }
 
 
 
-G4LogicalVolume* NextFlexTrackingPlane::BuildSiPM()
+void NextFlexTrackingPlane::BuildSiPMs()
 {
   /// Constructing the TP SiPM ///
+  SiPM_ = new GenericPhotosensor("TP_SiPM", SiPM_size_x_, SiPM_size_y_, SiPM_size_z_);
+
   // Optical Properties of the sensor
   G4MaterialPropertiesTable* photosensor_mpt = new G4MaterialPropertiesTable();
   G4double energy[]       = {0.2 * eV, 3.5 * eV, 3.6 * eV, 11.5 * eV};
@@ -439,8 +429,22 @@ G4LogicalVolume* NextFlexTrackingPlane::BuildSiPM()
 
   // Construct
   SiPM_->Construct();
+  G4LogicalVolume* SiPM_logic = SiPM_->GetLogicalVolume();
 
-  return SiPM_->GetLogicalVolume();
+  /// Placing the TP SiPMs ///
+  G4double SiPM_pos_z = teflon_iniZ_ + SiPM_size_z_/2.;
+  if (verbositiy_)
+    G4cout << "* SiPM Z positions: " << teflon_iniZ_
+	   << " to " << teflon_iniZ_ + SiPM_size_z_ << G4endl;
+
+  for (G4int i=0; i<num_SiPMs_; i++){
+    G4int SiPM_id = first_sensor_id_ + i;
+
+    G4ThreeVector sipm_pos = SiPM_positions_[i];
+    sipm_pos.setZ(SiPM_pos_z);
+    new G4PVPlacement(nullptr, sipm_pos, SiPM_logic, SiPM_logic->GetName(), mother_logic, true, SiPM_id, sipm_verbosity_);
+    if (sipm_verbosity_) G4cout << "* TP_SiPM " << SiPM_id << " position: " << sipm_pos << G4endl;
+  }	  
 }
 
 
