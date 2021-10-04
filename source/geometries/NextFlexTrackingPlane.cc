@@ -384,7 +384,6 @@ void NextFlexTrackingPlane::BuildTeflon()
   if (verbosity_)
     G4cout << "* Teflon Z positions: " << teflon_iniZ_
            << " to " << teflon_iniZ_ + teflon_thickness_ << G4endl;
-    G4cout << "**** BuildTeflon() was issued. ****" << G4endl;
 
   /// Visibilities ///
   if (visibility_) {
@@ -433,7 +432,7 @@ void NextFlexTrackingPlane::BuildSiPMs()
 
   /// Placing the TP SiPMs ///
   G4double SiPM_pos_z = teflon_iniZ_ + SiPM_size_z_/2.;
-  if (verbositiy_)
+  if (verbosity_)
     G4cout << "* SiPM Z positions: " << teflon_iniZ_
 	   << " to " << teflon_iniZ_ + SiPM_size_z_ << G4endl;
 
@@ -442,7 +441,7 @@ void NextFlexTrackingPlane::BuildSiPMs()
 
     G4ThreeVector sipm_pos = SiPM_positions_[i];
     sipm_pos.setZ(SiPM_pos_z);
-    new G4PVPlacement(nullptr, sipm_pos, SiPM_logic, SiPM_logic->GetName(), mother_logic, true, SiPM_id, sipm_verbosity_);
+    new G4PVPlacement(nullptr, sipm_pos, SiPM_logic, SiPM_logic->GetName(), mother_logic_, true, SiPM_id, sipm_verbosity_);
     if (sipm_verbosity_) G4cout << "* TP_SiPM " << SiPM_id << " position: " << sipm_pos << G4endl;
   }	  
 }
