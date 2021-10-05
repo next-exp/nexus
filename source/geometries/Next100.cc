@@ -123,6 +123,7 @@ namespace nexus {
     this->SetLogicalVolume(lab_logic_);
 
     // VESSEL (initialize first since it defines EL position)
+    vessel_->SetELtoTPdistance(gate_tracking_plane_distance_);
     vessel_->Construct();
     G4LogicalVolume* vessel_logic = vessel_->GetLogicalVolume();
     G4LogicalVolume* vessel_internal_logic  = vessel_->GetInternalLogicalVolume();
