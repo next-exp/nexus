@@ -56,17 +56,13 @@ namespace nexus {
     endcap_in_z_width_   (15.6   * cm),
     endcap_gate_distance_(48.62  * cm),
 
-    // Ports (values set on Construct())
+    // Ports
     port_base_height_(37. * mm),
-    port_tube_height_(port_base_height_), // preliminar
+    port_tube_height_(154.* mm),
     // They are defined global because are needed at the vertex generation
     port_x_ ((vessel_in_rad_ + port_base_height_ - port_tube_height_/2.)/sqrt(2.)), // inner port pos
     port_y_ (port_x_),
     source_height_ (5. * mm), // preliminar
-    port_z_1a_ (0.), // defined in the Construct()
-    port_z_1b_ (0.),
-    port_z_2a_ (0.),
-    port_z_2b_ (0.),
 
     // // Nozzle dimensions
     // large_nozzle_length_ (250.0 * cm),
@@ -494,6 +490,11 @@ namespace nexus {
     }
 
     return vertex;
+  }
+
+  G4double* Next100Vessel::GetPortZpositions(){
+    static G4double port_positions[]{port_z_1a_, port_z_2a_, port_z_1b_, port_z_2b_};
+    return port_positions;
   }
 
 } //end namespace nexus

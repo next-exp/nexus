@@ -47,6 +47,7 @@ namespace nexus {
   private:
     // Detector dimensions
     const G4double lab_size_;          /// Size of the air box containing the detector
+    const G4double gate_tracking_plane_distance_, gate_sapphire_wdw_distance_;
 
     // External diameter of nozzles and y positions
     const G4double nozzle_ext_diam_;

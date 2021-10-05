@@ -27,14 +27,12 @@ namespace nexus {
 
   Next100InnerElements::Next100InnerElements():
     GeometryBase(),
-    gate_sapphire_wdw_distance_  (1460.5 * mm), // active length + cathode thickness + buffer length
-    gate_tracking_plane_distance_(35. * mm), //to be confirmed
     mother_logic_(nullptr),
     mother_phys_ (nullptr),
     gas_(nullptr),
     field_cage_    (new Next100FieldCage()),
     energy_plane_  (new Next100EnergyPlane()),
-    tracking_plane_(new Next100TrackingPlane(gate_tracking_plane_distance_)),
+    tracking_plane_(new Next100TrackingPlane()),
     msg_(nullptr)
   {
     // Messenger
@@ -68,6 +66,7 @@ namespace nexus {
     field_cage_->SetMotherLogicalVolume(mother_logic_);
     field_cage_->SetMotherPhysicalVolume(mother_phys_);
     field_cage_->SetELzCoord(gate_zpos);
+    field_cage_->SetELtoSapphireWDWdistance(gate_sapphire_wdw_distance_);
     field_cage_->Construct();
 
     // Energy Plane
@@ -79,6 +78,7 @@ namespace nexus {
     // Tracking plane
     tracking_plane_->SetMotherPhysicalVolume(mother_phys_);
     tracking_plane_->SetELzCoord(gate_zpos);
+    tracking_plane_->SetELtoTPdistance(gate_tracking_plane_distance_);
     tracking_plane_->Construct();
   }
 

@@ -25,9 +25,6 @@
 #include <G4NistManager.hh>
 #include <G4UserLimits.hh>
 
-#include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
-#include <stdexcept>
 
 namespace nexus {
 
@@ -39,12 +36,18 @@ namespace nexus {
     GeometryBase(),
     // Lab dimensions
     lab_size_ (5. * m),
+
+    // common used variables in geomety components
+    gate_tracking_plane_distance_(35. * mm), // to be confirmed
+    gate_sapphire_wdw_distance_  (1460.5 * mm),
+
     // Nozzles external diam and y positions
     nozzle_ext_diam_ (9. * cm),
     up_nozzle_ypos_ (20. * cm),
     central_nozzle_ypos_ (0. * cm),
     down_nozzle_ypos_ (-20. * cm),
     bottom_nozzle_ypos_(-53. * cm),
+
     specific_vertex_{},
     lab_walls_(false)
   {
@@ -71,8 +74,7 @@ namespace nexus {
 			      down_nozzle_ypos_, bottom_nozzle_ypos_);
 
   // Internal copper shielding
-  ics_ = new Next100Ics(nozzle_ext_diam_, up_nozzle_ypos_, central_nozzle_ypos_,
-			down_nozzle_ypos_, bottom_nozzle_ypos_);
+  ics_ = new Next100Ics();
 
   // Inner Elements
   inner_elements_ = new Next100InnerElements();
@@ -143,10 +145,16 @@ namespace nexus {
     inner_elements_->SetLogicalVolume(vessel_internal_logic);
     inner_elements_->SetPhysicalVolume(vessel_internal_phys);
     inner_elements_->SetELzCoord(gate_zpos_in_vessel_);
+    inner_elements_->SetELtoSapphireWDWdistance(gate_sapphire_wdw_distance_);
+    inner_elements_->SetELtoTPdistance         (gate_tracking_plane_distance_);
     inner_elements_->Construct();
 
     // INNER COPPER SHIELDING
     ics_->SetLogicalVolume(vessel_internal_logic);
+    ics_->SetELzCoord(gate_zpos_in_vessel_);
+    ics_->SetELtoSapphireWDWdistance(gate_sapphire_wdw_distance_);
+    ics_->SetELtoTPdistance         (gate_tracking_plane_distance_);
+    ics_->SetPortZpositions(vessel_->GetPortZpositions());
     ics_->Construct();
 
     G4ThreeVector gate_pos(0., 0., -gate_zpos_in_vessel_);

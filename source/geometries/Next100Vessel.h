@@ -42,6 +42,9 @@ namespace nexus {
     G4LogicalVolume* GetInternalLogicalVolume();
     G4VPhysicalVolume* GetInternalPhysicalVolume();
 
+    // get Z position of calibration ports
+    G4double* GetPortZpositions();
+
     /// Builder
     void Construct();
 

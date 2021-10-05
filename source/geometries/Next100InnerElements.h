@@ -39,6 +39,8 @@ namespace nexus {
     /// Set the logical and physical volume that encloses the entire geometry
     void SetLogicalVolume(G4LogicalVolume*);
     void SetPhysicalVolume(G4VPhysicalVolume*);
+    void SetELtoTPdistance(G4double);
+    void SetELtoSapphireWDWdistance(G4double);
 
     /// Return the relative position respect to the rest of NEXT100 geometry
     G4ThreeVector GetPosition() const;
@@ -52,8 +54,8 @@ namespace nexus {
 
   private:
 
-    const G4double gate_sapphire_wdw_distance_;
-    const G4double gate_tracking_plane_distance_;
+    G4double gate_sapphire_wdw_distance_;
+    G4double gate_tracking_plane_distance_;
 
 
     G4LogicalVolume* mother_logic_;
@@ -72,6 +74,14 @@ namespace nexus {
     G4GenericMessenger* msg_;
 
   };
+
+  inline void Next100InnerElements::SetELtoTPdistance(G4double distance){
+    gate_tracking_plane_distance_ = distance;
+  }
+
+  inline void Next100InnerElements::SetELtoSapphireWDWdistance(G4double distance){
+    gate_sapphire_wdw_distance_ = distance;
+  }
 
 } // end namespace nexus
 

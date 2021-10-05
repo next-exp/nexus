@@ -27,11 +27,12 @@ namespace nexus {
   {
   public:
     // Constructor
-    Next100TrackingPlane(G4double origin_z_coord=0.);
+    Next100TrackingPlane();
     // Destructor
     ~Next100TrackingPlane();
     //
     void SetMotherPhysicalVolume(G4VPhysicalVolume*);
+    void SetELtoTPdistance(G4double);
     //
     void Construct() override;
     //
@@ -43,7 +44,7 @@ namespace nexus {
     void PlaceSiPMBoardColumns(G4int, G4double, G4double, G4int&, G4LogicalVolume*);
 
   private:
-    const G4double z0_; // Z position of origin of coordinates
+    G4double gate_tp_dist_;
     const G4double copper_plate_diameter_, copper_plate_thickness_;
     const G4double distance_board_board_;
 
@@ -62,6 +63,10 @@ namespace nexus {
 
   inline void Next100TrackingPlane::SetMotherPhysicalVolume(G4VPhysicalVolume* p)
   { mpv_ = p; }
+
+  inline void Next100TrackingPlane::SetELtoTPdistance(G4double distance){
+    gate_tp_dist_ = distance;
+  }
 
 } // namespace nexus
 

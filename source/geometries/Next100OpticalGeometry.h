@@ -42,6 +42,7 @@ namespace nexus {
     // Messenger for the definition of control commands
     G4GenericMessenger* msg_;
 
+    G4double gate_tracking_plane_distance_, gate_sapphire_wdw_distance_;
     G4double pressure_;
     G4double temperature_;
     G4double sc_yield_;

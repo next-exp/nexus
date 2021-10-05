@@ -46,7 +46,6 @@ Next100FieldCage::Next100FieldCage():
   // Dimensions
   active_diam_ (984. * mm), // distance between the centers of two opposite panels
   teflon_drift_length_ (1178.*mm), //distance from the gate to the beginning of the cathode volume.
-  gate_sapphire_wdw_dist_ (1460.5 * mm), //distance between gate and the surface of sapphire windows
   cathode_int_diam_ (960. * mm),
   cathode_ext_diam_ (1020. * mm),
   cathode_thickn_ (10. * mm),
@@ -984,10 +983,4 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
 G4ThreeVector Next100FieldCage::GetActivePosition() const
 {
   return G4ThreeVector (0., 0., active_zpos_);
-}
-
-
-G4double Next100FieldCage::GetDistanceGateSapphireWindows() const
-{
-  return active_length_ + grid_thickn_ +  buffer_length_;
 }
