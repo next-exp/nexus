@@ -25,9 +25,6 @@
 #include <G4NistManager.hh>
 #include <G4UserLimits.hh>
 
-#include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
-#include <stdexcept>
 
 namespace nexus {
 

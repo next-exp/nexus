@@ -23,9 +23,6 @@
 #include <Randomize.hh>
 #include <G4TransportationManager.hh>
 
-#include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
-#include <stdexcept>
 
 namespace nexus {
 
@@ -131,7 +128,7 @@ namespace nexus {
 
 
     /// ICS step at the TP end.
-    // This avoids overlap with sipm boards at high radious
+    // This avoids overlap with sipm boards at high radius
     G4double step_width = 38. * mm; // step lenght in the y dimension
     G4Tubs* tp_step_solid = new G4Tubs("TP_STEP", (in_rad_ - offset), in_rad_ + step_width,
                                        gate_tp_distance_, 0.*deg, 360.*deg);
