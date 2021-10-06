@@ -41,19 +41,19 @@ namespace nexus {
     gas_hole_diam_ (12. * mm),
 
     // copper plate holes
-    hole_diam_front_ (80. * mm),
-    hole_diam_rear_ (62. * mm),
-    hole_length_front_ (49.5 * mm),
+    hole_diam_front_  (80. * mm),
+    hole_diam_rear_   (62. * mm),
+    hole_length_front_(49.5 * mm),
     hole_length_rear_ (copper_plate_thickn_ - hole_length_front_),
 
     // huts
-    hut_int_diam_ (64. * mm),
-    hut_thickn_ (6. * mm),
-    hut_hole_length_ (45. * mm),
-    hut_length_long_ (120. * mm),
-    hut_length_medium_ (100. * mm),
+    hut_int_diam_     (64. * mm),
+    hut_diam_         (76. * mm), // hut external diam
+    hut_hole_length_  (45. * mm),
+    hut_length_long_  (120.* mm),
+    hut_length_medium_(100.* mm),
     hut_length_short_ (60. * mm),
-    last_hut_long_ (17),
+    last_hut_long_   (17),
     last_hut_medium_ (35),
 
     sapphire_window_thickn_ (6. * mm),
@@ -132,13 +132,12 @@ namespace nexus {
     			                   copper_plate_gas_hole_solid, 0, gas_hole_pos);
 
     /// Glue together the different kinds of huts to the copper plate ///
-    G4double hut_diam   = hut_int_diam_ + 2 * hut_thickn_;
     G4ThreeVector hut_pos;
 
     G4double hut_length = hut_hole_length_ + hut_length_short_;
     G4double transl_z = copper_plate_thickn_/2. + hut_length/2 - offset/2.;
     G4Tubs* short_hut_solid =
-      new G4Tubs("SHORT_HUT", 0., hut_diam/2., (hut_length + offset)/2., 0., twopi);
+      new G4Tubs("SHORT_HUT", 0., hut_diam_/2., (hut_length + offset)/2., 0., twopi);
     hut_pos = short_hut_pos_[0];
     hut_pos.setZ(transl_z);
     G4UnionSolid* copper_plate_hut_solid = new G4UnionSolid("EP_COPPER_PLATE", copper_plate_hole_solid,
@@ -153,7 +152,7 @@ namespace nexus {
 
     hut_length = hut_hole_length_ + hut_length_medium_;
     transl_z = copper_plate_thickn_/2. + hut_length/2 - offset/2.;
-    G4Tubs* medium_hut_solid = new G4Tubs("MEDIUM_HUT", 0., hut_diam/2.,
+    G4Tubs* medium_hut_solid = new G4Tubs("MEDIUM_HUT", 0., hut_diam_/2.,
                                           (hut_length + offset)/2., 0., twopi);
 
     for (unsigned int i=0; i<medium_hut_pos_.size(); i++) {
@@ -165,7 +164,7 @@ namespace nexus {
 
     hut_length = hut_hole_length_ + hut_length_long_;
     transl_z = copper_plate_thickn_/2. + hut_length/2 - offset/2.;
-    G4Tubs* long_hut_solid = new G4Tubs("LONG_HUT", 0., hut_diam/2.,
+    G4Tubs* long_hut_solid = new G4Tubs("LONG_HUT", 0., hut_diam_/2.,
                                         (hut_length + offset)/2., 0., twopi);
 
     for (unsigned int i=0; i<long_hut_pos_.size(); i++) {
@@ -245,11 +244,11 @@ namespace nexus {
       new G4Tubs("HOLE_HUT", 0., hut_int_diam_/2., hut_hole_length_/2., 0., twopi);
 
     G4UnionSolid* vacuum_solid =
-      new G4UnionSolid("HOLE", vacuum_front_solid, vacuum_rear_solid, 0,
+      new G4UnionSolid("EP_HOLE", vacuum_front_solid, vacuum_rear_solid, 0,
                       G4ThreeVector(0., 0., (vacuum_front_length+hole_length_rear_)/2.));
 
     vacuum_solid =
-      new G4UnionSolid("HOLE", vacuum_solid, vacuum_hut_solid, 0,
+      new G4UnionSolid("EP_HOLE", vacuum_solid, vacuum_hut_solid, 0,
                        G4ThreeVector(0., 0., vacuum_front_length/2.+hole_length_rear_+hut_hole_length_/2.));
 
     G4LogicalVolume* vacuum_logic = new G4LogicalVolume(vacuum_solid, vacuum, "EP_HOLE");
@@ -337,7 +336,7 @@ namespace nexus {
     for (int i=0; i<num_PMTs_; i++) {
       pos = pmt_positions_[i];
       pos.setZ(vacuum_posz_);
-      new G4PVPlacement(0, pos, vacuum_logic, "HOLE", mother_logic_, false, i, false);
+      new G4PVPlacement(0, pos, vacuum_logic, "EP_HOLE", mother_logic_, false, i, false);
     }
 
 

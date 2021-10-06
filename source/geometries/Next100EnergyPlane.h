@@ -65,7 +65,7 @@ namespace nexus {
     const G4double hole_diam_front_, hole_diam_rear_;
     const G4double hole_length_front_, hole_length_rear_;
 
-    const G4double hut_int_diam_, hut_thickn_, hut_hole_length_;
+    const G4double hut_int_diam_, hut_diam_, hut_hole_length_;
     const G4double hut_length_long_, hut_length_medium_, hut_length_short_;
     const G4int last_hut_long_, last_hut_medium_;
 
