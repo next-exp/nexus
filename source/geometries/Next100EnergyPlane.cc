@@ -27,9 +27,6 @@
 #include <G4TransportationManager.hh>
 #include <Randomize.hh>
 
-#include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
-
 namespace nexus {
 
   using namespace CLHEP;
@@ -251,19 +248,18 @@ namespace nexus {
       new G4UnionSolid("HOLE", vacuum_front_solid, vacuum_rear_solid, 0,
                       G4ThreeVector(0., 0., (vacuum_front_length+hole_length_rear_)/2.));
 
-    vacuum_solid = new G4UnionSolid("HOLE", vacuum_solid, vacuum_hut_solid, 0,
-                      G4ThreeVector(0., 0., vacuum_front_length/2.+hole_length_rear_+hut_hole_length_/2.));
+    vacuum_solid =
+      new G4UnionSolid("HOLE", vacuum_solid, vacuum_hut_solid, 0,
+                       G4ThreeVector(0., 0., vacuum_front_length/2.+hole_length_rear_+hut_hole_length_/2.));
 
-    G4LogicalVolume* vacuum_logic =
-      new G4LogicalVolume(vacuum_solid, vacuum, "EP_HOLE");
+    G4LogicalVolume* vacuum_logic = new G4LogicalVolume(vacuum_solid, vacuum, "EP_HOLE");
 
     /// Sapphire window ///
-    G4Tubs* sapphire_window_solid =
-      new G4Tubs("SAPPHIRE_WINDOW", 0., hole_diam_front_/2.,
-		  (sapphire_window_thickn_ + tpb_thickn_)/2., 0., twopi);
+    G4Tubs* sapphire_window_solid = new G4Tubs("SAPPHIRE_WINDOW", 0., hole_diam_front_/2.,
+                                               (sapphire_window_thickn_ + tpb_thickn_)/2., 0., twopi);
 
-    G4LogicalVolume* sapphire_window_logic =
-      new G4LogicalVolume(sapphire_window_solid, sapphire, "SAPPHIRE_WINDOW");
+    G4LogicalVolume* sapphire_window_logic
+      = new G4LogicalVolume(sapphire_window_solid, sapphire, "SAPPHIRE_WINDOW");
 
     G4double window_posz = -vacuum_front_length/2. + (sapphire_window_thickn_ + tpb_thickn_)/2.;
 
@@ -272,21 +268,19 @@ namespace nexus {
                         "SAPPHIRE_WINDOW", vacuum_logic, false, 0, false);
 
     /// TPB coating on sapphire window ///
-    G4Tubs* tpb_solid = new G4Tubs("SAPPHIRE_WNDW_TPB", 0., hole_diam_front_/2,
-     				   tpb_thickn_/2., 0., twopi);
-    G4LogicalVolume* tpb_logic =
-      new G4LogicalVolume(tpb_solid, tpb, "SAPPHIRE_WNDW_TPB");
+    G4Tubs* tpb_solid = new G4Tubs("SAPPHIRE_WDW_TPB", 0., hole_diam_front_/2, tpb_thickn_/2., 0., twopi);
+
+    G4LogicalVolume* tpb_logic = new G4LogicalVolume(tpb_solid, tpb, "SAPPHIRE_WDW_TPB");
 
     G4double tpb_posz = - (sapphire_window_thickn_ + tpb_thickn_)/2. + tpb_thickn_/2.;
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., tpb_posz), tpb_logic,
-     		      "SAPPHIRE_WNDW_TPB", sapphire_window_logic, false, 0, false);
+                      "SAPPHIRE_WDW_TPB", sapphire_window_logic, false, 0, false);
 
 
     /// Optical surface on TPB to model roughness ///
-    G4OpticalSurface* tpb_surf =
-      new G4OpticalSurface("tpb_sapphire_surf",
-			   glisur, ground, dielectric_dielectric, .01);
+    G4OpticalSurface* tpb_surf = new G4OpticalSurface("tpb_sapphire_surf",
+                                                      glisur, ground, dielectric_dielectric, .01);
     new G4LogicalSkinSurface("tpb_sapphire_surf", tpb_logic, tpb_surf);
 
 
@@ -317,16 +311,16 @@ namespace nexus {
     rot_angle_ = pi;
     pmt_rot_->rotateY(rot_angle_);
     new G4PVPlacement(G4Transform3D(*pmt_rot_, pmt_pos), pmt_logic,
-		      "PMT", vacuum_logic, false, 0, false);
+                      "PMT", vacuum_logic, false, 0, false);
 
 
     /// Part of the PMT bases with pins and resistors ///
-    G4Tubs* pmt_base_solid =
-      new G4Tubs("PMT_BASE", 0., pmt_base_diam_/2., pmt_base_thickn_/2., 0., twopi);
+    G4Tubs* pmt_base_solid = new G4Tubs("PMT_BASE", 0., pmt_base_diam_/2.,
+                                        pmt_base_thickn_/2., 0., twopi);
 
-    G4LogicalVolume* pmt_base_logic =
-      new G4LogicalVolume(pmt_base_solid,
-			     G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON"), "PMT_BASE");
+    G4LogicalVolume* pmt_base_logic
+      = new G4LogicalVolume(pmt_base_solid,
+			                      G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON"), "PMT_BASE");
 
     G4double pmt_base_posz = vacuum_front_length/2. + hole_length_rear_ + hut_hole_length_/2.;
 
@@ -336,8 +330,8 @@ namespace nexus {
 
     /// Placing the encapsulating volume with all internal components in place ///
     vacuum_posz_ = copper_plate_posz_ - copper_plate_thickn_/2.
-                    + vacuum_front_length/2. - sapphire_window_thickn_ - tpb_thickn_
-                    - optical_pad_thickn_ - pmt_stand_out_;
+                   + vacuum_front_length/2. - sapphire_window_thickn_ - tpb_thickn_
+                   - optical_pad_thickn_ - pmt_stand_out_;
 
     G4ThreeVector pos;
     for (int i=0; i<num_PMTs_; i++) {
@@ -367,7 +361,7 @@ namespace nexus {
     vacuum_logic->SetVisAttributes(G4VisAttributes::Invisible);
     if (visibility_) {
       G4VisAttributes copper_col = CopperBrown();
-      //copper_col.SetForceSolid(true);
+      copper_col.SetForceSolid(true);
       copper_plate_logic->SetVisAttributes(copper_col);
       G4VisAttributes sapphire_col = nexus::Lilla();
       sapphire_col.SetForceSolid(true);
@@ -381,15 +375,15 @@ namespace nexus {
       G4VisAttributes pmt_base_col = Yellow();
       pmt_base_col.SetForceSolid(true);
       pmt_base_logic->SetVisAttributes(pmt_base_col);
-      //G4VisAttributes vacuum_col = Red();
-      //vacuum_col.SetForceSolid(true);
-      // vacuum_logic->SetVisAttributes(vacuum_col);
+      G4VisAttributes vacuum_col = White();
+      vacuum_logic->SetVisAttributes(vacuum_col);
     } else {
-      copper_plate_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      copper_plate_logic   ->SetVisAttributes(G4VisAttributes::Invisible);
       sapphire_window_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      optical_pad_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      tpb_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      pmt_base_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      optical_pad_logic    ->SetVisAttributes(G4VisAttributes::Invisible);
+      tpb_logic            ->SetVisAttributes(G4VisAttributes::Invisible);
+      pmt_base_logic       ->SetVisAttributes(G4VisAttributes::Invisible);
+      vacuum_logic         ->SetVisAttributes(G4VisAttributes::Invisible);
     }
 
     //////////////////////////
