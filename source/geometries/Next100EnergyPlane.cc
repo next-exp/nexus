@@ -37,15 +37,19 @@ namespace nexus {
   Next100EnergyPlane::Next100EnergyPlane():
 
     num_PMTs_ (60),
+
+    // copper plate
     copper_plate_thickn_ (120 * mm),
     copper_plate_diam_ (1340. * mm),
     gas_hole_diam_ (12. * mm),
-    // hole_up_posx_ (-62.5 * mm),
-    // hole_up_posy_ (515. * mm),
-    // hole_lat1_posx_ (477 * mm),
-    // hole_lat1_posy_ (-203.8 * mm),
-    // hole_lat2_posx_ (-415 * mm),
-    // hole_lat2_posy_ (-311.2 * mm),
+
+    // copper plate holes
+    hole_diam_front_ (80. * mm),
+    hole_diam_rear_ (62. * mm),
+    hole_length_front_ (49.5 * mm),
+    hole_length_rear_ (copper_plate_thickn_ - hole_length_front_),
+
+    // huts
     hut_int_diam_ (64. * mm),
     hut_thickn_ (6. * mm),
     hut_hole_length_ (45. * mm),
@@ -54,16 +58,15 @@ namespace nexus {
     hut_length_short_ (60. * mm),
     last_hut_long_ (17),
     last_hut_medium_ (35),
-    hole_diam_front_ (80. * mm),
-    hole_diam_rear_ (62. * mm),
-    hole_length_front_ (49.5 * mm),
-    hole_length_rear_ (copper_plate_thickn_ - hole_length_front_),
+
     sapphire_window_thickn_ (6. * mm),
     optical_pad_thickn_ (1.0 * mm),
     tpb_thickn_ (1.*micrometer),
+
     pmt_stand_out_ (2. * mm), // length that PMTs stand out of copper, in the front
     pmt_base_diam_ (46.8 * mm),
     pmt_base_thickn_ (0.5 * mm),
+
     visibility_(1),
     verbosity_(0)
   {
@@ -112,41 +115,24 @@ namespace nexus {
 
   void Next100EnergyPlane::Construct()
   {
-    GeneratePositions();
-
-    /// Copper Plate ///
-    G4Tubs* copper_plate_origin_solid =
-      new G4Tubs("COPPER_PLATE_ORIGIN", 0., copper_plate_diam_/2.,
-		 copper_plate_thickn_/2., 0., twopi);
 
     G4double offset = 1. * cm;
 
-    /// Holes for gas flow ///
+    GeneratePositions();
+
+    /// Copper Plate ///
+    G4Tubs* copper_plate_origin_solid =  new G4Tubs("COPPER_PLATE_ORIGIN", 0., copper_plate_diam_/2.,
+                                                    copper_plate_thickn_/2., 0., twopi);
+
+    /// Hole for gas flow ///
     G4Tubs* copper_plate_gas_hole_solid =
       new G4Tubs("COPPER_PLATE_CENTRAL_HOLE", 0., gas_hole_diam_/2.,
-		 (copper_plate_thickn_ + offset)/2., 0., twopi);
+		             (copper_plate_thickn_ + offset)/2., 0., twopi);
 
     G4ThreeVector gas_hole_pos = G4ThreeVector(0., 0., 0.);
     G4SubtractionSolid* copper_plate_hole_solid =
       new G4SubtractionSolid("EP_COPPER_PLATE", copper_plate_origin_solid,
-    			     copper_plate_gas_hole_solid, 0, gas_hole_pos);
-
-    // gas_hole_pos.setX(hole_up_posx_);
-    // gas_hole_pos.setY(hole_up_posy_);
-    // copper_plate_hole_solid =
-    //   new G4SubtractionSolid("EP_COPPER_PLATE", copper_plate_hole_solid,
-    // 			     copper_plate_gas_hole_solid, 0, gas_hole_pos);
-    // gas_hole_pos.setX(hole_lat1_posx_);
-    // gas_hole_pos.setY(hole_lat1_posy_);
-    // copper_plate_hole_solid =
-    //   new G4SubtractionSolid("EP_COPPER_PLATE", copper_plate_hole_solid,
-    // 			     copper_plate_gas_hole_solid, 0, gas_hole_pos);
-    // gas_hole_pos.setX(hole_lat2_posx_);
-    // gas_hole_pos.setY(hole_lat2_posy_);
-    // copper_plate_hole_solid =
-    //   new G4SubtractionSolid("EP_COPPER_PLATE", copper_plate_hole_solid,
-    // 			     copper_plate_gas_hole_solid, 0, gas_hole_pos);
-
+    			                   copper_plate_gas_hole_solid, 0, gas_hole_pos);
 
     /// Glue together the different kinds of huts to the copper plate ///
     G4double hut_diam   = hut_int_diam_ + 2 * hut_thickn_;
@@ -158,93 +144,84 @@ namespace nexus {
       new G4Tubs("SHORT_HUT", 0., hut_diam/2., (hut_length + offset)/2., 0., twopi);
     hut_pos = short_hut_pos_[0];
     hut_pos.setZ(transl_z);
-    G4UnionSolid* copper_plate_hut_solid =
-      	new G4UnionSolid("EP_COPPER_PLATE", copper_plate_hole_solid,
-			 short_hut_solid, 0, hut_pos);
+    G4UnionSolid* copper_plate_hut_solid = new G4UnionSolid("EP_COPPER_PLATE", copper_plate_hole_solid,
+                                                            short_hut_solid, 0, hut_pos);
+
     for (unsigned int i=1; i<short_hut_pos_.size(); i++) {
       hut_pos = short_hut_pos_[i];
       hut_pos.setZ(transl_z);
-      copper_plate_hut_solid =
-      	new G4UnionSolid("EP_COPPER_PLATE", copper_plate_hut_solid,
-			 short_hut_solid, 0, hut_pos);
+      copper_plate_hut_solid = new G4UnionSolid("EP_COPPER_PLATE", copper_plate_hut_solid,
+			                                          short_hut_solid, 0, hut_pos);
     }
 
     hut_length = hut_hole_length_ + hut_length_medium_;
     transl_z = copper_plate_thickn_/2. + hut_length/2 - offset/2.;
-    G4Tubs* medium_hut_solid =
-      new G4Tubs("MEDIUM_HUT", 0., hut_diam/2., (hut_length + offset)/2., 0., twopi);
+    G4Tubs* medium_hut_solid = new G4Tubs("MEDIUM_HUT", 0., hut_diam/2.,
+                                          (hut_length + offset)/2., 0., twopi);
+
     for (unsigned int i=0; i<medium_hut_pos_.size(); i++) {
       hut_pos = medium_hut_pos_[i];
       hut_pos.setZ(transl_z);
-      copper_plate_hut_solid =
-      	new G4UnionSolid("EP_COPPER_PLATE", copper_plate_hut_solid,
-			 medium_hut_solid, 0, hut_pos);
+      copper_plate_hut_solid = new G4UnionSolid("EP_COPPER_PLATE", copper_plate_hut_solid,
+                                                medium_hut_solid, 0, hut_pos);
     }
 
     hut_length = hut_hole_length_ + hut_length_long_;
     transl_z = copper_plate_thickn_/2. + hut_length/2 - offset/2.;
-    G4Tubs* long_hut_solid =
-      new G4Tubs("LONG_HUT", 0., hut_diam/2., (hut_length + offset)/2., 0., twopi);
+    G4Tubs* long_hut_solid = new G4Tubs("LONG_HUT", 0., hut_diam/2.,
+                                        (hut_length + offset)/2., 0., twopi);
+
     for (unsigned int i=0; i<long_hut_pos_.size(); i++) {
       hut_pos = long_hut_pos_[i];
       hut_pos.setZ(transl_z);
-      copper_plate_hut_solid =
-      	new G4UnionSolid("EP_COPPER_PLATE", copper_plate_hut_solid,
-			 long_hut_solid, 0, hut_pos);
+      copper_plate_hut_solid = new G4UnionSolid("EP_COPPER_PLATE", copper_plate_hut_solid,
+			                                          long_hut_solid, 0, hut_pos);
     }
 
 
     /// Holes in copper ///
-    G4Tubs* hole_front_solid =
-      new G4Tubs("HOLE_FRONT", 0., hole_diam_front_/2.,
-		 (hole_length_front_ + offset)/2., 0., twopi);
-    G4Tubs* hole_rear_solid =
-      new G4Tubs("HOLE_REAR", 0., hole_diam_rear_/2.,
-		 (hole_length_rear_ + offset)/2., 0., twopi);
-    transl_z = (hole_length_front_ + offset)/2. + hole_length_rear_/2.;
-    G4UnionSolid* hole_solid =
-      	new G4UnionSolid("HOLE", hole_front_solid, hole_rear_solid,
-			 0, G4ThreeVector(0., 0., transl_z));
+    G4Tubs* hole_front_solid = new G4Tubs("HOLE_FRONT", 0., hole_diam_front_/2.,
+		                                      (hole_length_front_ + offset)/2., 0., twopi);
 
-    G4Tubs* hole_hut_solid =
-      new G4Tubs("HOLE_HUT", 0., hut_int_diam_/2., hut_hole_length_/2.,
-		  0., twopi);
-    transl_z =
-      (hole_length_front_ + offset)/2. + hole_length_rear_ + hut_hole_length_/2.;
-    hole_solid =
-      	new G4UnionSolid("HOLE", hole_solid, hole_hut_solid,
-			 0, G4ThreeVector(0., 0., transl_z));
+    G4Tubs* hole_rear_solid = new G4Tubs("HOLE_REAR", 0., hole_diam_rear_/2.,
+		                                     (hole_length_rear_ + offset)/2., 0., twopi);
+
+    transl_z = (hole_length_front_ + offset)/2. + hole_length_rear_/2.;
+    G4UnionSolid* hole_solid = new G4UnionSolid("HOLE", hole_front_solid, hole_rear_solid,
+			                                          0, G4ThreeVector(0., 0., transl_z));
+
+    G4Tubs* hole_hut_solid = new G4Tubs("HOLE_HUT", 0., hut_int_diam_/2.,
+                                        hut_hole_length_/2., 0., twopi);
+
+    transl_z = (hole_length_front_ + offset)/2. + hole_length_rear_ + hut_hole_length_/2.;
+    hole_solid = new G4UnionSolid("HOLE", hole_solid, hole_hut_solid,
+			                            0, G4ThreeVector(0., 0., transl_z));
 
     G4ThreeVector hole_pos = pmt_positions_[0];
     transl_z = - copper_plate_thickn_/2. + hole_length_front_/2. - offset/2.;
     hole_pos.setZ(transl_z);
     G4SubtractionSolid* copper_plate_solid =
-      new G4SubtractionSolid("EP_COPPER_PLATE", copper_plate_hut_solid,
-			     hole_solid, 0, hole_pos);;
+      new G4SubtractionSolid("EP_COPPER_PLATE", copper_plate_hut_solid, hole_solid, 0, hole_pos);
 
     for (G4int i=1; i<num_PMTs_; i++) {
       hole_pos = pmt_positions_[i];
       hole_pos.setZ(transl_z);
-      copper_plate_solid =
-	new G4SubtractionSolid("EP_COPPER_PLATE", copper_plate_solid,
-			       hole_solid, 0, hole_pos);
+      copper_plate_solid = new G4SubtractionSolid("EP_COPPER_PLATE", copper_plate_solid,
+			                                            hole_solid, 0, hole_pos);
 
     }
 
     G4LogicalVolume* copper_plate_logic =
       new G4LogicalVolume(copper_plate_solid,
-			  G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
-			  "EP_COPPER_PLATE");
+                          G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"), "EP_COPPER_PLATE");
 
     G4double stand_out_length =
       sapphire_window_thickn_ + tpb_thickn_ + optical_pad_thickn_ + pmt_stand_out_;
-    copper_plate_posz_ =
-      GetELzCoord() + end_of_sapphire_posz_ + stand_out_length +
-      copper_plate_thickn_/2.;
-    new G4PVPlacement(0, G4ThreeVector(0., 0., copper_plate_posz_),
-		      copper_plate_logic, "EP_COPPER_PLATE", mother_logic_,
-		      false, 0, false);
 
+    copper_plate_posz_ = GetELzCoord() + end_of_sapphire_posz_ + stand_out_length + copper_plate_thickn_/2.;
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., copper_plate_posz_), copper_plate_logic,
+                      "EP_COPPER_PLATE", mother_logic_, false, 0, false);
 
     /// Assign optical properties to materials ///
     G4Material* sapphire = materials::Sapphire();
@@ -278,7 +255,7 @@ namespace nexus {
                       G4ThreeVector(0., 0., vacuum_front_length/2.+hole_length_rear_+hut_hole_length_/2.));
 
     G4LogicalVolume* vacuum_logic =
-      new G4LogicalVolume(vacuum_solid, vacuum, "HOLE");
+      new G4LogicalVolume(vacuum_solid, vacuum, "EP_HOLE");
 
     /// Sapphire window ///
     G4Tubs* sapphire_window_solid =
@@ -351,12 +328,11 @@ namespace nexus {
       new G4LogicalVolume(pmt_base_solid,
 			     G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON"), "PMT_BASE");
 
-    G4double pmt_base_posz =
-      vacuum_front_length/2. + hole_length_rear_ + hut_hole_length_/2.;
+    G4double pmt_base_posz = vacuum_front_length/2. + hole_length_rear_ + hut_hole_length_/2.;
+
     G4VPhysicalVolume* pmt_base_phys =
-       new G4PVPlacement(0, G4ThreeVector(0., 0., pmt_base_posz),
-                        pmt_base_logic, "PMT_BASE",
-                        vacuum_logic, false, 0, false);
+       new G4PVPlacement(0, G4ThreeVector(0., 0., pmt_base_posz), pmt_base_logic,
+                         "PMT_BASE", vacuum_logic, false, 0, false);
 
     /// Placing the encapsulating volume with all internal components in place ///
     vacuum_posz_ = copper_plate_posz_ - copper_plate_thickn_/2.
@@ -529,37 +505,36 @@ namespace nexus {
     for (G4int circle=1; circle<=num_conc_circles; circle++) {
       G4double rad     = circle * x_pitch;
       G4double step    = 360.0/num_inner_pmts;
+
       for (G4int place=0; place<num_inner_pmts; place++) {
-	G4double angle = place * step;
-	position.setX(rad * cos(angle*deg));
-	position.setY(rad * sin(angle*deg));
-	pmt_positions_.push_back(position);
-	//G4cout << position << G4endl;
-	total_positions++;
+      	G4double angle = place * step;
+      	position.setX(rad * cos(angle*deg));
+      	position.setY(rad * sin(angle*deg));
+      	pmt_positions_.push_back(position);
+      	total_positions++;
       }
 
       for (G4int i=1; i<circle; i++) {
-	G4double start_x = (circle-(i*0.5))*x_pitch;
-	G4double start_y = i*y_pitch;
-	rad  = std::sqrt(std::pow(start_x, 2) + std::pow(start_y, 2));
-	G4double start_angle = std::atan2(start_y, start_x)/deg;
-      	for (G4int place=0; place<num_inner_pmts; place++) {
-	  G4double angle = start_angle + place * step;
-	  position.setX(rad * cos(angle*deg));
-	  position.setY(rad * sin(angle*deg));
-	  pmt_positions_.push_back(position);
-	  //G4cout << position << G4endl;
-	  total_positions++;
-	}
-      }
+      	G4double start_x = (circle-(i*0.5))*x_pitch;
+      	G4double start_y = i*y_pitch;
+      	rad  = std::sqrt(std::pow(start_x, 2) + std::pow(start_y, 2));
+      	G4double start_angle = std::atan2(start_y, start_x)/deg;
 
+      	for (G4int place=0; place<num_inner_pmts; place++) {
+      	  G4double angle = start_angle + place * step;
+      	  position.setX(rad * cos(angle*deg));
+      	  position.setY(rad * sin(angle*deg));
+      	  pmt_positions_.push_back(position);
+      	  total_positions++;
+	       }
+      }
     }
 
     long_hut_pos_ =
       std::vector<G4ThreeVector>(pmt_positions_.begin(), pmt_positions_.begin()+last_hut_long_+1);
     medium_hut_pos_ =
       std::vector<G4ThreeVector>(pmt_positions_.begin()+last_hut_long_+1,
-				 pmt_positions_.begin()+ last_hut_medium_+1);
+                                 pmt_positions_.begin()+last_hut_medium_+1);
     short_hut_pos_ =
       std::vector<G4ThreeVector>(pmt_positions_.begin()+last_hut_medium_+1, pmt_positions_.end());
 
