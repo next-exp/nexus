@@ -107,9 +107,9 @@ namespace nexus {
   }
 
 
-  void Next100EnergyPlane::SetSapphireSurfaceZPos(G4double z)
+  void Next100EnergyPlane::SetELtoSapphireWDWdistance(G4double z)
   {
-    end_of_sapphire_posz_ = z;
+    gate_sapphire_wdw_dist_ = z;
   }
 
 
@@ -218,7 +218,7 @@ namespace nexus {
     G4double stand_out_length =
       sapphire_window_thickn_ + tpb_thickn_ + optical_pad_thickn_ + pmt_stand_out_;
 
-    copper_plate_posz_ = GetELzCoord() + end_of_sapphire_posz_ + stand_out_length + copper_plate_thickn_/2.;
+    copper_plate_posz_ = GetELzCoord() + gate_sapphire_wdw_dist_ + stand_out_length + copper_plate_thickn_/2.;
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., copper_plate_posz_), copper_plate_logic,
                       "EP_COPPER_PLATE", mother_logic_, false, 0, false);

@@ -72,7 +72,7 @@ namespace nexus {
     // Energy Plane
     energy_plane_->SetMotherLogicalVolume(mother_logic_);
     energy_plane_->SetELzCoord(gate_zpos);
-    energy_plane_->SetSapphireSurfaceZPos(gate_sapphire_wdw_distance_);
+    energy_plane_->SetELtoSapphireWDWdistance(gate_sapphire_wdw_distance_);
     energy_plane_->Construct();
 
     // Tracking plane

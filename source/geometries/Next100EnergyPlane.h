@@ -40,7 +40,7 @@ namespace nexus {
     void SetMotherLogicalVolume(G4LogicalVolume* mother_logic);
 
     /// Sets the z position of the surface of the sapphire windows
-    void SetSapphireSurfaceZPos(G4double z);
+    void SetELtoSapphireWDWdistance(G4double z);
 
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
@@ -85,7 +85,7 @@ namespace nexus {
     // PMT
     PmtR11410*  pmt_;
 
-    G4double end_of_sapphire_posz_;
+    G4double gate_sapphire_wdw_dist_;
     G4double copper_plate_posz_;
     G4double vacuum_posz_;
     std::vector<G4ThreeVector> pmt_positions_;
