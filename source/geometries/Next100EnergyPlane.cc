@@ -399,11 +399,9 @@ namespace nexus {
                                    0., twopi, nullptr,
                                    G4ThreeVector(0., 0., full_copper_posz));
 
-    sapphire_window_gen_   = new CylinderPointSampler2020(sapphire_window_phys);
-
-    optical_pad_gen_       = new CylinderPointSampler2020(optical_pad_phys);
-
-    pmt_base_gen_ = new CylinderPointSampler2020(pmt_base_phys);
+    sapphire_window_gen_ = new CylinderPointSampler2020(sapphire_window_phys);
+    optical_pad_gen_     = new CylinderPointSampler2020(optical_pad_phys);
+    pmt_base_gen_        = new CylinderPointSampler2020(pmt_base_phys);
 
   }
 
@@ -429,19 +427,24 @@ namespace nexus {
         vertex = copper_gen_->GenerateVertex("VOLUME");
         G4ThreeVector glob_vtx(vertex);
         glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
-        VertexVolume =
-          geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+        VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != region);
     }
 
     // Sapphire windows
     else if (region == "SAPPHIRE_WINDOW") {
-      vertex = sapphire_window_gen_->GenerateVertex("VOLUME");
-      G4double rand = num_PMTs_ * G4UniformRand();
-      G4ThreeVector sapphire_pos = pmt_positions_[int(rand)];
-      vertex += sapphire_pos;
-      G4double z_translation = vacuum_posz_;
-      vertex.setZ(vertex.z() + z_translation);
+      G4VPhysicalVolume *VertexVolume;
+      do {
+        vertex = sapphire_window_gen_->GenerateVertex("VOLUME");
+        G4double rand = num_PMTs_ * G4UniformRand();
+        G4ThreeVector sapphire_pos = pmt_positions_[int(rand)];
+        vertex += sapphire_pos;
+        G4double z_translation = vacuum_posz_;
+        vertex.setZ(vertex.z() + z_translation);
+        G4ThreeVector glob_vtx(vertex);
+        glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+        VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+      } while (VertexVolume->GetName() != region);
     }
 
     // Optical pads
