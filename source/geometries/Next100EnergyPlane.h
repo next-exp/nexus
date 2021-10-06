@@ -102,5 +102,11 @@ namespace nexus {
 
   };
 
+  inline void Next100EnergyPlane::SetELtoSapphireWDWdistance(G4double z) {
+    gate_sapphire_wdw_dist_ = z;}
+
+  inline void Next100EnergyPlane::SetMotherLogicalVolume(G4LogicalVolume* mother_logic) {
+      mother_logic_ = mother_logic;}
+
 } //end namespace nexus
 #endif
