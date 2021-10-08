@@ -60,7 +60,7 @@ namespace nexus {
 
     // Dimensions
     const G4int num_PMTs_;
-    const G4double copper_plate_thickn_, copper_plate_diam_, gas_hole_diam_;
+    const G4double copper_plate_thickn_, copper_plate_diam_;
 
     const G4double hole_diam_front_, hole_diam_rear_;
     const G4double hole_length_front_, hole_length_rear_;

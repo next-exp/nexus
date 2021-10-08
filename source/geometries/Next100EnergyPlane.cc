@@ -38,7 +38,6 @@ namespace nexus {
     // copper plate
     copper_plate_thickn_ (120 * mm),
     copper_plate_diam_ (1340. * mm),
-    gas_hole_diam_ (12. * mm),
 
     // copper plate holes
     hole_diam_front_  (80. * mm),
@@ -110,11 +109,13 @@ namespace nexus {
                                                     copper_plate_thickn_/2., 0., twopi);
 
     /// Hole for gas flow ///
+    G4double gas_hole_diam   = 12.  * mm;
+    G4double gas_hole_length = 103. * mm;
     G4Tubs* copper_plate_gas_hole_solid =
-      new G4Tubs("COPPER_PLATE_CENTRAL_HOLE", 0., gas_hole_diam_/2.,
-		             (copper_plate_thickn_ + offset)/2., 0., twopi);
+      new G4Tubs("COPPER_PLATE_CENTRAL_HOLE", 0., gas_hole_diam/2.,
+		             (gas_hole_length + offset)/2., 0., twopi);
 
-    G4ThreeVector gas_hole_pos = G4ThreeVector(0., 0., 0.);
+    G4ThreeVector gas_hole_pos = G4ThreeVector(0., 0., -copper_plate_thickn_/2. + gas_hole_length/2.);
     G4SubtractionSolid* copper_plate_hole_solid =
       new G4SubtractionSolid("EP_COPPER_PLATE", copper_plate_origin_solid,
     			                   copper_plate_gas_hole_solid, 0, gas_hole_pos);
