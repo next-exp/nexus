@@ -38,8 +38,9 @@ namespace nexus {
     lab_size_ (5. * m),
 
     // common used variables in geomety components
-    gate_tracking_plane_distance_(30. * mm), // to be confirmed
-    gate_sapphire_wdw_distance_  (1460.5 * mm),
+    // 0.1 mm gate thickness?
+    gate_tracking_plane_distance_((26.1 + 0.1)   * mm),
+    gate_sapphire_wdw_distance_  ((1458.2 - 0.1) * mm),
 
     specific_vertex_{},
     lab_walls_(false)

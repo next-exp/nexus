@@ -44,33 +44,42 @@ using namespace nexus;
 Next100FieldCage::Next100FieldCage():
   GeometryBase(),
   // Dimensions
-  active_diam_ (984. * mm), // distance between the centers of two opposite panels
+  active_diam_         (984. * mm), // distance between the centers of two opposite panels
+
+  cathode_int_diam_    (960. * mm),
+  cathode_ext_diam_    (1020.* mm),
+  cathode_thickn_      (10.  * mm),
+  // Caution: updating grid-thickn_ will require updating gate-tp and gate-sapphire-window distances
+  grid_thickn_         (0.1  * mm),
+
   teflon_drift_length_ (1178.*mm), //distance from the gate to the beginning of the cathode volume.
-  cathode_int_diam_ (960. * mm),
-  cathode_ext_diam_ (1020. * mm),
-  cathode_thickn_ (10. * mm),
-  grid_thickn_ (.1 * mm),
   teflon_total_length_ (1431. * mm),
-  teflon_thickn_ (5. * mm),
-  n_panels_ (18),
-  tpb_thickn_ (1 * micrometer),
+  teflon_thickn_       (5. * mm),
+  n_panels_            (18),
+
   el_gap_length_ (10. * mm),
+
+  gate_teflon_dist_ (10.2 * mm - grid_thickn_), //distance from gate-grid to teflon
+  gate_ext_diam_    (1042. * mm), //preliminary
+  gate_int_diam_    (1009. * mm), //preliminary
+  gate_ring_thickn_ (9.9   * mm), // maximum possible value to avoid overlap with sipm board masks
+
+  // external to teflon (hdpe + rings + holders)
   hdpe_tube_int_diam_ (1080. * mm),
   hdpe_tube_ext_diam_ (1105.4 * mm),
-  hdpe_length_ (1192. * mm), //check this value
+  hdpe_length_        (1192. * mm),
+
   ring_ext_diam_ (1038. * mm),
   ring_int_diam_ (1014. * mm),
-  ring_thickn_  (10. * mm),
+  ring_thickn_   (10. * mm),
   drift_ring_dist_  (24. * mm),
-  buffer_ring_dist_  (48. * mm),
-  holder_x_ (60.*mm),  //x dimension of the holders
-  holder_long_y_ (9.*mm), // y dim of the base of the ring holders
-  holder_short_y_ (33.15*mm), // y dim of the pieces added over the base of the ring holders
-  gate_teflon_dist_ (2.*mm),    //preliminary
-  gate_ext_diam_ (1042. * mm), //preliminary
-  gate_int_diam_ (1009. * mm), //preliminary
-  gate_ring_thickn_  (15. * mm), // same as anode thickness //preliminary
-  overlap_(0.001*mm), //defined for G4UnionSolids to ensure a common volume within the two joined solids
+  buffer_ring_dist_ (48. * mm),
+  holder_x_         (60. * mm),  //x dimension of the holders
+  holder_long_y_    (9.  * mm),  // y dim of the base of the ring holders
+  holder_short_y_   (33.15 * mm),// y dim of the pieces added over the base of the ring holders
+
+  tpb_thickn_ (1 * micrometer),
+  overlap_    (0.001*mm), //defined for G4UnionSolids to ensure a common volume within the two joined solids
   // Diffusion constants
   drift_transv_diff_ (1. * mm/sqrt(cm)),
   drift_long_diff_ (.3 * mm/sqrt(cm)),
@@ -190,8 +199,7 @@ void Next100FieldCage::SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys)
 void Next100FieldCage::Construct()
 {
   /// Calculate lengths of active and buffer regions
-  active_length_ = (cathode_thickn_ - grid_thickn_)/2. + teflon_drift_length_ + gate_teflon_dist_
-                 + (gate_ring_thickn_    - grid_thickn_);
+  active_length_ = (cathode_thickn_ - grid_thickn_)/2. + teflon_drift_length_ + gate_teflon_dist_;
   buffer_length_ = gate_sapphire_wdw_dist_ - active_length_ - grid_thickn_;
 
   /// Calculate length of teflon in the buffer region
@@ -209,8 +217,7 @@ void Next100FieldCage::Construct()
   anode_zpos_      = el_gap_zpos_ - el_gap_length_/2. - gate_ring_thickn_/2.;
   anode_grid_zpos_ = anode_zpos_ + gate_ring_thickn_/2. - grid_thickn_/2.;
 
-  teflon_drift_zpos_  = gate_grid_zpos_ + grid_thickn_/2. + (gate_ring_thickn_ - grid_thickn_)
-                      + gate_teflon_dist_ + teflon_drift_length_/2.;
+  teflon_drift_zpos_  = gate_grid_zpos_ + grid_thickn_/2. + gate_teflon_dist_ + teflon_drift_length_/2.;
   teflon_buffer_zpos_ = cathode_zpos_ + cathode_thickn_/2. + teflon_buffer_length_/2.;
 
   if (verbosity_) {
@@ -263,7 +270,7 @@ void Next100FieldCage::DefineMaterials()
 void Next100FieldCage::BuildActive()
 {
   /// Position of z planes
-  G4double zplane[2] = {-active_length_/2.+(gate_ring_thickn_   -grid_thickn_ + gate_teflon_dist_)-overlap_,
+  G4double zplane[2] = {-active_length_/2. + gate_teflon_dist_ - overlap_,
                          active_length_/2.-(cathode_thickn_-grid_thickn_)/2.};
   /// Inner radius
   G4double rinner[2] = {0., 0.};
@@ -285,11 +292,10 @@ void Next100FieldCage::BuildActive()
 
   //This volume is added as an extension of the active volume that reaches the gate grid.
   G4Tubs* active_gate_solid =
-    new G4Tubs("ACT_GATE_GAS", 0, gate_int_diam_/2.,
-              (gate_teflon_dist_ + gate_ring_thickn_- grid_thickn_)/2., 0, twopi);
+    new G4Tubs("ACT_GATE_GAS", 0, gate_int_diam_/2., gate_teflon_dist_/2., 0, twopi);
 
   G4ThreeVector act_gate_pos =
-  G4ThreeVector(0., 0., -active_length_/2.+(gate_teflon_dist_ + gate_ring_thickn_- grid_thickn_)/2.);
+  G4ThreeVector(0., 0., -active_length_/2.+ gate_teflon_dist_/2.);
 
   union_active =
     new G4UnionSolid ("ACTIVE", union_active, active_gate_solid, 0, act_gate_pos);
@@ -746,8 +752,7 @@ void Next100FieldCage::BuildFieldCage()
   G4int    num_drift_rings = 48;
   G4int    num_buffer_rings = 4;
   G4double posz;
-  G4double first_ring_drift_z_pos = gate_zpos_ + gate_ring_thickn_/2. + gate_teflon_dist_ +
-                                    drift_ring_dist_/2. + active_short_z/2.;
+  G4double first_ring_drift_z_pos = GetELzCoord() + gate_teflon_dist_ + drift_ring_dist_/2. + active_short_z/2.;
 
   G4double first_ring_buff_z_pos = first_ring_drift_z_pos + (num_drift_rings-1)*drift_ring_dist_ +
                                    ring_drift_buffer_dist;
