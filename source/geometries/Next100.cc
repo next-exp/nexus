@@ -223,6 +223,7 @@ namespace nexus {
              (region == "PMT_BASE") ||
              (region == "TP_COPPER_PLATE") ||
              (region == "SIPM_BOARD") ||
+             (region == "DB_PLUG") ||
              (region == "EL_TABLE") ||
              (region == "FIELD_RING") ||
              (region == "GATE_RING") ||
