@@ -10,7 +10,7 @@
 #define EL_PARAM_SIMULATION_H
 
 #include <G4VFastSimulationModel.hh>
-#include "PmtHit.h"
+#include "SensorHit.h"
 #include <vector>
 
 
@@ -60,7 +60,7 @@ namespace nexus {
 
     ELLookupTable* table_;
 
-    std::vector<PmtHitsCollection*> HCE_;
+    std::vector<SensorHitsCollection*> HCE_;
 
   };
 

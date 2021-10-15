@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | PmtSD.cc
+// nexus | SensorSD.cc
 //
 // This class is the sensitive detector that allows for the registration
 // of the charge detected by a photosensor.
@@ -7,7 +7,7 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "PmtSD.h"
+#include "SensorSD.h"
 
 #include <G4OpticalPhoton.hh>
 #include <G4SDManager.hh>
@@ -20,7 +20,7 @@
 namespace nexus {
 
 
-  PmtSD::PmtSD(G4String sdname):
+  SensorSD::SensorSD(G4String sdname):
     G4VSensitiveDetector(sdname),
     naming_order_(0), sensor_depth_(0), mother_depth_(0),
     boundary_(0)
@@ -31,23 +31,23 @@ namespace nexus {
 
 
 
-  PmtSD::~PmtSD()
+  SensorSD::~SensorSD()
   {
   }
 
 
 
-  G4String PmtSD::GetCollectionUniqueName()
+  G4String SensorSD::GetCollectionUniqueName()
   {
-    return "PmtHitsCollection";
+    return "SensorHitsCollection";
   }
 
 
 
-  void PmtSD::Initialize(G4HCofThisEvent* HCE)
+  void SensorSD::Initialize(G4HCofThisEvent* HCE)
   {
     // Create a new collection of PMT hits
-    HC_ = new PmtHitsCollection(this->GetName(), this->GetCollectionName(0));
+    HC_ = new SensorHitsCollection(this->GetName(), this->GetCollectionName(0));
 
     G4int HCID = G4SDManager::GetSDMpointer()->
       GetCollectionID(this->GetName()+"/"+this->GetCollectionName(0));
@@ -57,7 +57,7 @@ namespace nexus {
 
 
 
-  G4bool PmtSD::ProcessHits(G4Step* step, G4TouchableHistory*)
+  G4bool SensorSD::ProcessHits(G4Step* step, G4TouchableHistory*)
   {
     // Check whether the track is an optical photon
     G4ParticleDefinition* pdef = step->GetTrack()->GetDefinition();
@@ -87,7 +87,7 @@ namespace nexus {
 
 	G4int pmt_id = FindPmtID(touchable);
 
- 	PmtHit* hit = 0;
+ 	SensorHit* hit = 0;
 	for (size_t i=0; i<HC_->entries(); i++) {
  	  if ((*HC_)[i]->GetPmtID() == pmt_id) {
  	    hit = (*HC_)[i];
@@ -98,7 +98,7 @@ namespace nexus {
  	// If no hit associated to this sensor exists already,
  	// create it and set main properties
  	if (!hit) {
- 	  hit = new PmtHit();
+ 	  hit = new SensorHit();
  	  hit->SetPmtID(pmt_id);
  	  hit->SetBinSize(timebinning_);
  	  hit->SetPosition(touchable->GetTranslation());
@@ -115,7 +115,7 @@ namespace nexus {
 
 
 
-  G4int PmtSD::FindPmtID(const G4VTouchable* touchable)
+  G4int SensorSD::FindPmtID(const G4VTouchable* touchable)
   {
     G4int pmtid = touchable->GetCopyNumber(sensor_depth_);
     if (naming_order_ != 0) {
@@ -126,7 +126,7 @@ namespace nexus {
   }
 
 
-  void PmtSD::EndOfEvent(G4HCofThisEvent* /*HCE*/)
+  void SensorSD::EndOfEvent(G4HCofThisEvent* /*HCE*/)
   {
     //  int HCID = G4SDManager::GetSDMpointer()->
     //    GetCollectionID(this->GetCollectionName(0));

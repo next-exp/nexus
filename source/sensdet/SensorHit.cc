@@ -1,49 +1,49 @@
 // ----------------------------------------------------------------------------
-// nexus | PmtHit.cc
+// nexus | SensorHit.cc
 //
 // This class describes the charge detected by a photosensor.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "PmtHit.h"
+#include "SensorHit.h"
 
 
 using namespace nexus;
 
 
-G4Allocator<PmtHit> PmtHitAllocator;
+G4Allocator<SensorHit> SensorHitAllocator;
 
 
 
-PmtHit::PmtHit():
+SensorHit::SensorHit():
   G4VHit(), pmt_id_(-1.), bin_size_(0.)
 {
 }
 
 
 
-PmtHit::PmtHit(G4int id, const G4ThreeVector& position, G4double bin_size):
+SensorHit::SensorHit(G4int id, const G4ThreeVector& position, G4double bin_size):
   G4VHit(), pmt_id_(id),  bin_size_(bin_size), position_(position)
 {
 }
 
 
 
-PmtHit::~PmtHit()
+SensorHit::~SensorHit()
 {
 }
 
 
 
-PmtHit::PmtHit(const PmtHit& other): G4VHit()
+SensorHit::SensorHit(const SensorHit& other): G4VHit()
 {
   *this = other;
 }
 
 
 
-const PmtHit& PmtHit::operator=(const PmtHit& other)
+const SensorHit& SensorHit::operator=(const SensorHit& other)
 {
   pmt_id_    = other.pmt_id_;
   bin_size_  = other.bin_size_;
@@ -55,27 +55,27 @@ const PmtHit& PmtHit::operator=(const PmtHit& other)
 
 
 
-G4int PmtHit::operator==(const PmtHit& other) const
+G4int SensorHit::operator==(const SensorHit& other) const
 {
   return (this==&other) ? 1 : 0;
 }
 
 
 
-void PmtHit::SetBinSize(G4double bin_size)
+void SensorHit::SetBinSize(G4double bin_size)
 {
   if (histogram_.size() == 0) {
     bin_size_ = bin_size;
   }
   else {
-    G4String msg = "A PmtHit cannot be rebinned once it has been filled.";
-    G4Exception("[PmtHit]", "SetBinSize()", JustWarning, msg);
+    G4String msg = "A SensorHit cannot be rebinned once it has been filled.";
+    G4Exception("[SensorHit]", "SetBinSize()", JustWarning, msg);
   }
 }
 
 
 
-void PmtHit::Fill(G4double time, G4int counts)
+void SensorHit::Fill(G4double time, G4int counts)
 {
   G4double time_bin = floor(time/bin_size_) * bin_size_;
   histogram_[time_bin] += counts;

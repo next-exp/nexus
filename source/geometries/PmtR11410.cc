@@ -9,7 +9,7 @@
 #include "PmtR11410.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
-#include "PmtSD.h"
+#include "SensorSD.h"
 #include "CylinderPointSampler.h"
 #include "Visibilities.h"
 
@@ -149,7 +149,7 @@ namespace nexus {
     new G4LogicalSkinSurface("PMT_PHOTOCATHODE", photocathode_logic, pmt_opt_surf);
 
     // Sensitive detector
-    PmtSD* pmtsd = new PmtSD("/PMT_R11410/PmtR11410");
+    SensorSD* pmtsd = new SensorSD("/PMT_R11410/PmtR11410");
     if (sd_depth_ == -1)
       G4Exception("[PmtR11410]", "Construct()", FatalException,
                   "Sensor Depth must be set before constructing");

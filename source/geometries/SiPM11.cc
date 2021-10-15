@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------------------
 
 #include "SiPM11.h"
-#include "PmtSD.h"
+#include "SensorSD.h"
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
@@ -163,7 +163,7 @@ namespace nexus {
     G4SDManager* sdmgr = G4SDManager::GetSDMpointer();
 
     if (!sdmgr->FindSensitiveDetector(sdname, false)) {
-      PmtSD* sipmsd = new PmtSD(sdname);
+      SensorSD* sipmsd = new SensorSD(sdname);
       sipmsd->SetDetectorVolumeDepth(1);
       sipmsd->SetDetectorNamingOrder(1000.);
       sipmsd->SetTimeBinning(1.*microsecond);
