@@ -42,6 +42,7 @@ namespace nexus {
     G4LogicalVolume* GetInternalLogicalVolume();
     G4VPhysicalVolume* GetInternalPhysicalVolume();
 
+    void SetELtoTPdistance(G4double);
     // get Z position of calibration ports
     G4double* GetPortZpositions();
 
@@ -54,7 +55,8 @@ namespace nexus {
     // Dimensions
     G4double vessel_in_rad_, vessel_thickness_;
     G4double body_length_;
-    G4double endcap_in_rad_, endcap_in_body_, endcap_theta_, endcap_in_z_width_, endcap_gate_distance_;
+    G4double endcap_in_rad_, endcap_in_body_, endcap_theta_, endcap_in_z_width_;
+    G4double endcap_tp_distance_, gate_tp_distance_;
     // G4double flange_out_rad_, flange_length_, flange_z_pos_;
     // G4double large_nozzle_length_, small_nozzle_length_;
     G4double port_base_height_, port_tube_height_;
@@ -97,6 +99,10 @@ namespace nexus {
     G4double xe_perc_;
 
   };
+
+  inline void Next100Vessel::SetELtoTPdistance(G4double distance){
+    gate_tp_distance_ = distance;
+  }
 
 } // end namespace nexus
 

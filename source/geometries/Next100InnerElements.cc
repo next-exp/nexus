@@ -72,7 +72,7 @@ namespace nexus {
     // Energy Plane
     energy_plane_->SetMotherLogicalVolume(mother_logic_);
     energy_plane_->SetELzCoord(gate_zpos);
-    energy_plane_->SetSapphireSurfaceZPos(gate_sapphire_wdw_distance_);
+    energy_plane_->SetELtoSapphireWDWdistance(gate_sapphire_wdw_distance_);
     energy_plane_->Construct();
 
     // Tracking plane
@@ -108,10 +108,9 @@ namespace nexus {
     else if ((region == "EP_COPPER_PLATE") ||
              (region == "SAPPHIRE_WINDOW") ||
              (region == "OPTICAL_PAD") ||
-	     (region == "PMT") ||
+	           (region == "PMT") ||
              (region == "PMT_BODY") ||
-	     (region == "INTERNAL_PMT_BASE") ||
-	     (region == "EXTERNAL_PMT_BASE")) {
+	           (region == "PMT_BASE")) {
       vertex = energy_plane_->GenerateVertex(region);
     }
     // Tracking Plane regions

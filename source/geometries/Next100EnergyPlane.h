@@ -40,7 +40,7 @@ namespace nexus {
     void SetMotherLogicalVolume(G4LogicalVolume* mother_logic);
 
     /// Sets the z position of the surface of the sapphire windows
-    void SetSapphireSurfaceZPos(G4double z);
+    void SetELtoSapphireWDWdistance(G4double z);
 
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
@@ -61,18 +61,17 @@ namespace nexus {
     // Dimensions
     const G4int num_PMTs_;
     const G4double copper_plate_thickn_, copper_plate_diam_;
-    const G4double gas_hole_diam_;
-    // const G4double hole_up_posx_, hole_up_posy_;
-    // const G4double hole_lat1_posx_, hole_lat1_posy_;
-    // const G4double hole_lat2_posx_, hole_lat2_posy_;
-    const G4double hut_int_diam_, hut_thickn_, hut_hole_length_;
-    const G4double hut_length_long_, hut_length_medium_, hut_length_short_;
-    const G4int last_hut_long_, last_hut_medium_;
+
     const G4double hole_diam_front_, hole_diam_rear_;
     const G4double hole_length_front_, hole_length_rear_;
+
+    const G4double hut_int_diam_, hut_diam_, hut_hole_length_;
+    const G4double hut_length_long_, hut_length_medium_, hut_length_short_;
+    const G4int last_hut_long_, last_hut_medium_;
+
     const G4double sapphire_window_thickn_, optical_pad_thickn_, tpb_thickn_;
     const G4double pmt_stand_out_;
-    const G4double internal_pmt_base_diam_, internal_pmt_base_thickn_;
+    const G4double pmt_base_diam_, pmt_base_thickn_;
 
     // Visibility of the energy plane
     G4bool visibility_, verbosity_;
@@ -86,7 +85,7 @@ namespace nexus {
     // PMT
     PmtR11410*  pmt_;
 
-    G4double end_of_sapphire_posz_;
+    G4double gate_sapphire_wdw_dist_;
     G4double copper_plate_posz_;
     G4double vacuum_posz_;
     std::vector<G4ThreeVector> pmt_positions_;
@@ -99,10 +98,15 @@ namespace nexus {
     CylinderPointSampler2020* copper_gen_;
     CylinderPointSampler2020* sapphire_window_gen_;
     CylinderPointSampler2020* optical_pad_gen_;
-    CylinderPointSampler2020* internal_pmt_base_gen_;
-    CylinderPointSampler2020* external_pmt_base_gen_;
+    CylinderPointSampler2020* pmt_base_gen_;
 
   };
+
+  inline void Next100EnergyPlane::SetELtoSapphireWDWdistance(G4double z) {
+    gate_sapphire_wdw_dist_ = z;}
+
+  inline void Next100EnergyPlane::SetMotherLogicalVolume(G4LogicalVolume* mother_logic) {
+      mother_logic_ = mother_logic;}
 
 } //end namespace nexus
 #endif
