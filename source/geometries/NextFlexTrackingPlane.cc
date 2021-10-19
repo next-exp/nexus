@@ -244,16 +244,10 @@ void NextFlexTrackingPlane::Construct()
   // Define materials.
   DefineMaterials();
 
-  // The SiPM
-  // SiPM_ = new GenericPhotosensor("TP_SiPM", SiPM_size_x_, SiPM_size_y_, SiPM_size_z_);
-
   // Copper
   BuildCopper();
 
   // Teflon
-  if (verbosity_) {
-    G4cout << "Teflon Thickness: " << teflon_thickness_ << G4endl;
-  }
   if (teflon_thickness_) {
     if (verbosity_) G4cout << "Building Teflon. Thickness " << teflon_thickness_ << " is NOT 0." << G4endl;
     BuildTeflon();
