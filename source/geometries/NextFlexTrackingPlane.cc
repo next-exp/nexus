@@ -297,8 +297,6 @@ void NextFlexTrackingPlane::BuildTeflon()
 
   G4double teflon_posZ = teflon_iniZ_ + teflon_thickness_/2.;
 
-  // G4cout << "Teflon thickness: " << teflon_thickness_ << G4endl;
-
   G4Tubs* teflon_nh_solid =
     new G4Tubs(teflon_name + "_NOHOLE", 0., diameter_/2., teflon_thickness_/2., 0, twopi);
 
