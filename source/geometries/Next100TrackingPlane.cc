@@ -30,7 +30,7 @@ Next100TrackingPlane::Next100TrackingPlane():
   GeometryBase(),
   copper_plate_diameter_  (1340.*mm),
   copper_plate_thickness_ ( 145.*mm),
-  distance_board_board_   (   1.*mm),
+  distance_board_board_   (   2.*mm),
 
   visibility_(true),
   sipm_board_geom_(new Next100SiPMBoard),
