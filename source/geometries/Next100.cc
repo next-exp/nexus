@@ -38,7 +38,8 @@ namespace nexus {
     lab_size_ (5. * m),
 
     // common used variables in geomety components
-    // 0.1 mm gate thickness?
+    // 0.1 mm grid thickness
+    // note that if grid thickness change it must be also changed in Next100FieldCage.cc
     gate_tracking_plane_distance_((26.1 + 0.1)   * mm),
     gate_sapphire_wdw_distance_  ((1458.2 - 0.1) * mm),
 
