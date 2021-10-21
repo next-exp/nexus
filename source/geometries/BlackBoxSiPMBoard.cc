@@ -113,8 +113,10 @@ void BlackBoxSiPMBoard::Construct()
   G4String board_name = "SIPM_BOARD";
 
   // Calculating board wrapper dimensions
-  G4double board_size_x = num_columns_ * sipm_pitch_ - 2. * side_reduction_;
-  G4double board_size_y = num_rows_    * sipm_pitch_ - 2. * side_reduction_;
+  //G4double board_size_x = num_columns_ * sipm_pitch_ - 2. * side_reduction_;
+  //G4double board_size_y = num_rows_    * sipm_pitch_ - 2. * side_reduction_;
+  G4double board_size_x = 7.9*cm;
+  G4double board_size_y = 7.9*cm;
   G4double board_size_z = kapton_thickn_ + coating_thickn_ +
                           std::max(sipm_->GetDimensions().z(), mask_thickn_);
 
@@ -205,11 +207,12 @@ void BlackBoxSiPMBoard::Construct()
     mask_logic =
       new G4LogicalVolume(mask_with_holes, G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON"),
                           mask_name);
+    G4cout << "MASK: " << mask_logic->GetSolid()->GetCubicVolume() << G4endl;
 
     // Adding the optical surface
     G4OpticalSurface* mask_opsurf =
       new G4OpticalSurface(mask_name, unified, ground, dielectric_metal);
-    mask_opsurf->SetMaterialPropertiesTable(OpticalMaterialProperties::PTFE());
+    mask_opsurf->SetMaterialPropertiesTable(opticalprops::PTFE());
     new G4LogicalSkinSurface(mask_name + "_OPSURF", mask_logic, mask_opsurf);
 
     new G4PVPlacement(nullptr, G4ThreeVector(0., 0., mask_posz), mask_logic,
@@ -246,8 +249,8 @@ void BlackBoxSiPMBoard::Construct()
          G4Box* coating_solid = new G4Box(coating_name, board_size_x/2.,
                                        board_size_y/2., coating_thickn_/2.);
 
-         G4Material* tpb = MaterialsList::TPB();
-         tpb->SetMaterialPropertiesTable(OpticalMaterialProperties::TPB());
+         G4Material* tpb = materials::TPB();
+         tpb->SetMaterialPropertiesTable(opticalprops::TPB());
 
          coating_logic = new G4LogicalVolume(coating_solid, tpb, coating_name);
 

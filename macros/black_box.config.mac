@@ -20,13 +20,13 @@
 /Geometry/BlackBox/specific_vertex_Z 0. mm
 /Geometry/BlackBox/dice_board_z_pos -10. cm
 /Geometry/BlackBox/rotation 0 deg
-/Geometry/BlackBox/mask_thickn 1.5 mm
+/Geometry/BlackBox/mask_thickn 6.5 mm
 /Geometry/BlackBox/membrane_thickn 0. mm
 /Geometry/BlackBox/coating_thickn 0. mm
 /Geometry/BlackBox/coating_thickn 0. mm
-/Geometry/BlackBox/hole_diameter 3.5 mm #if set to 0 the holes will be rectangular.
-/Geometry/BlackBox/hole_x 1.25 mm
-/Geometry/BlackBox/hole_y 1.25 mm
+/Geometry/BlackBox/hole_diameter 0. mm #if set to 0 the holes will be rectangular.
+/Geometry/BlackBox/hole_x 6. mm
+/Geometry/BlackBox/hole_y 5. mm
 
 /run/verbose 0
 /event/verbose 0

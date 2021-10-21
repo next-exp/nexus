@@ -129,7 +129,7 @@ namespace nexus {
 
   G4Material* world_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
 
-  world_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
+  world_mat->SetMaterialPropertiesTable(opticalprops::Vacuum());
 
   G4Box* world_solid_vol =
     new G4Box(world_name, world_xy_/2., world_xy_/2., world_z_/2.);
@@ -145,7 +145,7 @@ namespace nexus {
 
   G4Material* box_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
 
-  box_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::Vacuum());
+  box_mat->SetMaterialPropertiesTable(opticalprops::Vacuum());
 
   G4Box* box_solid_vol =
     new G4Box(box_name, box_xy_/2., box_xy_/2., box_z_/2.);
