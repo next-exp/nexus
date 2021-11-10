@@ -234,7 +234,6 @@ void NextFlexTrackingPlane::Construct()
   // Verbosity
   if(verbosity_) {
     G4cout << G4endl << "*** NEXT-Flex Tracking Plane ..." << G4endl;
-    G4cout << G4endl << "Teflon Thickness: " << teflon_thickness_ << G4endl;
   }
 
 
@@ -249,7 +248,6 @@ void NextFlexTrackingPlane::Construct()
 
   // Teflon
   if (teflon_thickness_) {
-    if (verbosity_) G4cout << "Building Teflon. Thickness " << teflon_thickness_ << " is NOT 0." << G4endl;
     BuildTeflon();
   }
   // SiPMs
@@ -298,11 +296,13 @@ void NextFlexTrackingPlane::BuildTeflon()
   G4double teflon_posZ = teflon_iniZ_ + teflon_thickness_/2.;
 
   G4Tubs* teflon_nh_solid =
-    new G4Tubs(teflon_name + "_NOHOLE", 0., diameter_/2., teflon_thickness_/2., 0, twopi);
+    new G4Tubs(teflon_name + "_NOHOLE", 0., diameter_/2.,
+	       teflon_thickness_/2., 0, twopi);
 
   // Making the Teflon holes (a little bit thicker to prevent subtraction problems)
   G4Tubs* teflon_hole_solid =
-    new G4Tubs(teflon_name + "_HOLE", 0., teflon_hole_diam_/2., teflon_thickness_/2. + 0.5*mm, 0, twopi);
+    new G4Tubs(teflon_name + "_HOLE", 0., teflon_hole_diam_/2.,
+	       teflon_thickness_/2. + 0.5*mm, 0, twopi);
 
   G4MultiUnion* teflon_holes_solid = new G4MultiUnion(teflon_name + "_HOLES");
 
@@ -332,13 +332,15 @@ void NextFlexTrackingPlane::BuildTeflon()
   G4String teflon_wls_name = "TP_TEFLON_WLS";
 
   G4double teflon_wls_posZ = teflon_thickness_/2. - wls_thickness_/2.;
-
+ 
   G4Tubs* teflon_wls_nh_solid =
-    new G4Tubs(teflon_wls_name, 0., diameter_/2., wls_thickness_/2., 0, twopi);
+    new G4Tubs(teflon_wls_name + "_NOHOLE", 0., diameter_/2.,
+	       wls_thickness_/2., 0, twopi);
 
   // Making the TEFLON_WLS holes (a little bit thicker to prevent subtraction problems)
   G4Tubs* wls_hole_solid = 
-    new G4Tubs(teflon_wls_name + "_HOLE", 0., teflon_hole_diam_/2., wls_thickness_/2. + 0.5*mm, 0, twopi);
+    new G4Tubs(teflon_wls_name + "_HOLE", 0., teflon_hole_diam_/2.,
+	       wls_thickness_/2. + 0.5*mm, 0, twopi);
 
   G4MultiUnion* wls_holes_solid = new G4MultiUnion(teflon_wls_name + "_HOLES");
 
@@ -433,8 +435,11 @@ void NextFlexTrackingPlane::BuildSiPMs()
 
     G4ThreeVector sipm_pos = SiPM_positions_[i];
     sipm_pos.setZ(SiPM_pos_z);
-    new G4PVPlacement(nullptr, sipm_pos, SiPM_logic, SiPM_logic->GetName(), mother_logic_, true, SiPM_id, sipm_verbosity_);
-    if (sipm_verbosity_) G4cout << "* TP_SiPM " << SiPM_id << " position: " << sipm_pos << G4endl;
+    new G4PVPlacement(nullptr, sipm_pos, SiPM_logic, SiPM_logic->GetName(),
+		      mother_logic_, true, SiPM_id, sipm_verbosity_);
+    if (sipm_verbosity_) 
+      G4cout << "* TP_SiPM " << SiPM_id << " position: " 
+	     << sipm_pos << G4endl;
   }	  
 }
 
