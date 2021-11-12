@@ -76,7 +76,7 @@ namespace nexus {
     // Different builders
     void BuildCopper();
     void BuildTeflon();
-    G4LogicalVolume* BuildSiPM();
+    void BuildSiPMs();
 
   private:
 
