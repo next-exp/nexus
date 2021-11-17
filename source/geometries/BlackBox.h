@@ -42,8 +42,6 @@ namespace nexus {
 
     BlackBoxSiPMBoard* dice_;
     G4ThreeVector kdb_dimensions_;
-    G4double dice_board_x_pos_;
-    G4double dice_board_y_pos_;
 
     G4bool visibility_;
 
@@ -53,6 +51,8 @@ namespace nexus {
     G4double specific_vertex_X_;
     G4double specific_vertex_Y_;
     G4double specific_vertex_Z_;
+    G4double dice_board_x_pos_;
+    G4double dice_board_y_pos_;
     G4double dice_board_z_pos_;
     G4double rotation_;
     G4double mask_thickn_;

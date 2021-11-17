@@ -121,8 +121,8 @@ void BlackBoxSiPMBoard::Construct()
                           std::max(sipm_->GetDimensions().z(), mask_thickn_);
 
   board_size_ = G4ThreeVector(board_size_x, board_size_y, board_size_z);
-  G4cout << "board_size " << board_size_ << G4endl;
-  G4cout << "sipm thickness " << sipm_->GetDimensions().z() << G4endl;
+  //G4cout << "board_size " << board_size_ << G4endl;
+  //G4cout << "sipm thickness " << sipm_->GetDimensions().z() << G4endl;
   G4Box* board_solid = new G4Box(board_name, board_size_x/2.,
                                  board_size_y/2., board_size_z/2.);
 
@@ -158,7 +158,7 @@ void BlackBoxSiPMBoard::Construct()
   G4ThreeVector sipm_pos;
   for (G4int sipm_id=0; sipm_id<num_sipms_; sipm_id++) {
        sipm_pos = sipm_positions_[sipm_id] + G4ThreeVector(0., 0., sipm_posz);
-       G4cout << "SiPM" << sipm_id << ":" << sipm_pos << G4endl;
+       //G4cout << "SiPM" << sipm_id << ":" << sipm_pos << G4endl;
        //new G4PVPlacement(nullptr, sipm_pos, sipm_->GetLogicalVolume(),
         //                 sipm_->GetLogicalVolume()->GetName(), board_logic, false, sipm_id, true);
        new G4PVPlacement(sipm_rot, sipm_pos, sipm_->GetLogicalVolume(),
@@ -199,7 +199,7 @@ void BlackBoxSiPMBoard::Construct()
                                                hole_solid, 0, hole_pos);
     for (G4int sipm_id=1; sipm_id<num_sipms_; sipm_id++) {
          hole_pos = sipm_positions_[sipm_id];
-         G4cout << "hole" << sipm_id << ":" << hole_pos << G4endl;
+         //G4cout << "hole" << sipm_id << ":" << hole_pos << G4endl;
 
          mask_with_holes = new G4SubtractionSolid("BOARD_MASK", mask_with_holes,
                                                   hole_solid, 0, hole_pos);
@@ -207,7 +207,7 @@ void BlackBoxSiPMBoard::Construct()
     mask_logic =
       new G4LogicalVolume(mask_with_holes, G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON"),
                           mask_name);
-    G4cout << "MASK: " << mask_logic->GetSolid()->GetCubicVolume() << G4endl;
+    //G4cout << "MASK: " << mask_logic->GetSolid()->GetCubicVolume() << G4endl;
 
     // Adding the optical surface
     G4OpticalSurface* mask_opsurf =

@@ -64,9 +64,21 @@ namespace nexus {
     specific_vertex_Z_cmd.SetParameterName("specific_vertex_Z", true);
     specific_vertex_Z_cmd.SetUnitCategory("Length");
 
+    G4GenericMessenger::Command&  dice_board_x_pos_cmd =
+      msg_->DeclareProperty("dice_board_x_pos", dice_board_x_pos_,
+                            "X position of the dice");
+    dice_board_x_pos_cmd.SetParameterName("dice_board_x_pos", true);
+    dice_board_x_pos_cmd.SetUnitCategory("Length");
+
+    G4GenericMessenger::Command&  dice_board_y_pos_cmd =
+      msg_->DeclareProperty("dice_board_y_pos", dice_board_y_pos_,
+                            "Y position of the dice");
+    dice_board_y_pos_cmd.SetParameterName("dice_board_y_pos", true);
+    dice_board_y_pos_cmd.SetUnitCategory("Length");
+
     G4GenericMessenger::Command&  dice_board_z_pos_cmd =
       msg_->DeclareProperty("dice_board_z_pos", dice_board_z_pos_,
-                            "Distance between dice and photon source");
+                            "Z position of the dice");
     dice_board_z_pos_cmd.SetParameterName("dice_board_z_pos", true);
     dice_board_z_pos_cmd.SetUnitCategory("Length");
 
@@ -172,8 +184,6 @@ namespace nexus {
   G4LogicalVolume* dice_board_logic = dice_->GetLogicalVolume();
 
   ////Dice Board placement
-  dice_board_x_pos_ = 0 * cm;
-  dice_board_y_pos_ = 0 * cm;
   G4ThreeVector post(dice_board_x_pos_,dice_board_y_pos_,dice_board_z_pos_);
   G4RotationMatrix* rot = new G4RotationMatrix();
   rot -> rotateY(rotation_);
