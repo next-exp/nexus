@@ -373,19 +373,19 @@ void NextDemoSiPMBoard::Construct()
 
   /// VISIBILITIES
   if (visibility_) {
-    board_logic  ->SetVisAttributes(G4VisAttributes::Invisible);
+    board_logic  ->SetVisAttributes(G4VisAttributes::GetInvisible());
     kapton_logic ->SetVisAttributes(Blue());
     mask_logic   ->SetVisAttributes(LightBlue());
-    hole_logic   ->SetVisAttributes(G4VisAttributes::Invisible);
+    hole_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
   else{
-    board_logic  ->SetVisAttributes(G4VisAttributes::Invisible);
-    kapton_logic ->SetVisAttributes(G4VisAttributes::Invisible);
-    mask_logic   ->SetVisAttributes(G4VisAttributes::Invisible);
-    hole_logic   ->SetVisAttributes(G4VisAttributes::Invisible);
+    board_logic  ->SetVisAttributes(G4VisAttributes::GetInvisible());
+    kapton_logic ->SetVisAttributes(G4VisAttributes::GetInvisible());
+    mask_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
+    hole_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
-  if (membrane_thickn_ > 0.) membrane_logic->SetVisAttributes(G4VisAttributes::Invisible);
-  if (coating_thickn_  > 0.) coating_logic ->SetVisAttributes(G4VisAttributes::Invisible);
+  if (membrane_thickn_ > 0.) membrane_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+  if (coating_thickn_  > 0.) coating_logic ->SetVisAttributes(G4VisAttributes::GetInvisible());
 }
 
 

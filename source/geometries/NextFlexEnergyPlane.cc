@@ -233,7 +233,7 @@ void NextFlexEnergyPlane::BuildCopper()
 
   // Visibility
   if (visibility_) copper_logic->SetVisAttributes(nexus::CopperBrown());
-  else             copper_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  else             copper_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // Verbosity
   if (verbosity_) {
@@ -305,9 +305,9 @@ void NextFlexEnergyPlane::BuildTeflon()
     light_blue_col.SetForceSolid(true);
     teflon_logic->SetVisAttributes(light_blue_col);
   }
-  else teflon_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  else teflon_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
-  teflon_wls_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  teflon_wls_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
 
   /// Verbosity ///
@@ -441,11 +441,11 @@ void NextFlexEnergyPlane::BuildPMTs()
     blue_col.SetForceSolid(true);
     window_logic->SetVisAttributes(blue_col);
   }
-  else window_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  else window_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
-  pmt_hole_logic   ->SetVisAttributes(G4VisAttributes::Invisible);
-  window_wls_logic ->SetVisAttributes(G4VisAttributes::Invisible);
-  optical_pad_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  pmt_hole_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
+  window_wls_logic ->SetVisAttributes(G4VisAttributes::GetInvisible());
+  optical_pad_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 }
 
 

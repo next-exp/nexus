@@ -126,8 +126,8 @@ namespace nexus {
 
 
     // Visibilities
-    coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    coating_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    sipm_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   }
 

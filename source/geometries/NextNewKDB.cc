@@ -183,13 +183,13 @@ namespace nexus {
     if (visibility_) {
       G4VisAttributes board_col = nexus::Yellow();
       board_logic->SetVisAttributes(board_col);
-      mask_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      hole_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      mask_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+      hole_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
     } else {
-      board_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      mask_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      hole_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      board_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+      mask_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+      hole_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
     // VERTEX GENERATOR

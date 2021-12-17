@@ -250,12 +250,12 @@ void Next100SiPMBoard::Construct()
     mask_logic_vol  ->SetVisAttributes(light_blue);
   }
   else{
-    board_logic_vol ->SetVisAttributes(G4VisAttributes::Invisible);
-    mask_logic_vol  ->SetVisAttributes(G4VisAttributes::Invisible);
+    board_logic_vol ->SetVisAttributes(G4VisAttributes::GetInvisible());
+    mask_logic_vol  ->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
-  mask_hole_logic_vol    ->SetVisAttributes(G4VisAttributes::Invisible);
-  mask_wls_logic_vol     ->SetVisAttributes(G4VisAttributes::Invisible);
-  mask_wls_hole_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+  mask_hole_logic_vol    ->SetVisAttributes(G4VisAttributes::GetInvisible());
+  mask_wls_logic_vol     ->SetVisAttributes(G4VisAttributes::GetInvisible());
+  mask_wls_hole_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
 }
 
 

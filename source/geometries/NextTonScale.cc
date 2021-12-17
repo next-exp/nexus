@@ -88,7 +88,7 @@ void NextTonScale::Construct()
 
   G4Box* lab_solid_vol = new G4Box(lab_name, lab_size/2., lab_size/2., lab_size/2.);
   G4LogicalVolume* lab_logic_vol = new G4LogicalVolume(lab_solid_vol, lab_material, lab_name);
-  lab_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+  lab_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
   GeometryBase::SetLogicalVolume(lab_logic_vol);
 
   //////////////////////////////////////////////////////////
@@ -121,7 +121,7 @@ G4LogicalVolume* NextTonScale::ConstructWaterTank(G4LogicalVolume* mother_logic_
     new G4LogicalVolume(tank_solid_vol, tank_material, tank_name);
 
   if (tank_vis_) tank_logic_vol->SetVisAttributes(nexus::TitaniumGrey());
-  else tank_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+  else tank_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   G4RotationMatrix* tank_rotation = new G4RotationMatrix();
   tank_rotation->rotateX(90.*deg);
@@ -142,7 +142,7 @@ G4LogicalVolume* NextTonScale::ConstructWaterTank(G4LogicalVolume* mother_logic_
 
   G4LogicalVolume* water_logic_vol =
     new G4LogicalVolume(water_solid_vol, water_material, water_name);
-  water_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+  water_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), water_logic_vol,
                     water_name, tank_logic_vol, false, 0, true);
@@ -187,7 +187,7 @@ G4LogicalVolume* NextTonScale::ConstructVesselAndICS(G4LogicalVolume* mother_log
                     vessel_name, mother_logic_vol, false, 0, true);
 
   if (vessel_vis_) vessel_logic_vol->SetVisAttributes(nexus::TitaniumGrey());
-  else vessel_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+  else vessel_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // XENON GAS /////////////////////////////////////////////
   // Xenon gas mixture filling the vessel defined above.
@@ -204,7 +204,7 @@ G4LogicalVolume* NextTonScale::ConstructVesselAndICS(G4LogicalVolume* mother_log
 
   G4LogicalVolume* gas_logic_vol =
     new G4LogicalVolume(gas_solid_vol, xenon_gas_, gas_name);
-  gas_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+  gas_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), gas_logic_vol,
                     gas_name, vessel_logic_vol, false, 0, true);
@@ -237,7 +237,7 @@ G4LogicalVolume* NextTonScale::ConstructVesselAndICS(G4LogicalVolume* mother_log
 
   // Setting ics visibility
   if (ics_vis_) ics_logic_vol->SetVisAttributes(nexus::CopperBrown());
-  else ics_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+  else ics_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), ics_logic_vol,
                     ics_name, gas_logic_vol, false, 0, true);
@@ -280,7 +280,7 @@ G4LogicalVolume* NextTonScale::ConstructFieldCageAndReadout(G4LogicalVolume* mot
     new G4LogicalVolume(fcage_solid_vol, fcage_material, fcage_name);
 
   if (fcage_vis_) fcage_logic_vol->SetVisAttributes(nexus::LightBlue());
-  else fcage_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+  else fcage_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), fcage_logic_vol,
                     fcage_name, mother_logic_vol, false, 0, true);
@@ -296,7 +296,7 @@ G4LogicalVolume* NextTonScale::ConstructFieldCageAndReadout(G4LogicalVolume* mot
   G4LogicalVolume* active_logic_vol =
     new G4LogicalVolume(active_solid_vol, xenon_gas_, active_name);
 
-  active_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+  active_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // Limit the step size in this volume for better tracking precision
   active_logic_vol->SetUserLimits(new G4UserLimits(1.*mm));
@@ -323,7 +323,7 @@ G4LogicalVolume* NextTonScale::ConstructFieldCageAndReadout(G4LogicalVolume* mot
     new G4LogicalVolume(cathode_solid_vol, cathode_mat, cathode_name);
 
   if (cathode_vis_) cathode_logic_vol->SetVisAttributes(nexus::CopperBrown());
-  else cathode_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+  else cathode_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), cathode_logic_vol,
                     cathode_name, active_logic_vol, false, 0, true);
@@ -341,7 +341,7 @@ G4LogicalVolume* NextTonScale::ConstructFieldCageAndReadout(G4LogicalVolume* mot
     new G4LogicalVolume(anode_solid_vol, xenon_gas_, anode_name);
 
   if (anode_vis_) anode_logic_vol->SetVisAttributes(nexus::CopperBrown());
-  else anode_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+  else anode_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,anode_posZ), anode_logic_vol,
                     anode_name, mother_logic_vol, false, 0, true);
@@ -368,7 +368,7 @@ G4LogicalVolume* NextTonScale::ConstructFieldCageAndReadout(G4LogicalVolume* mot
     new G4LogicalVolume(readout_solid_vol, readout_material, readout_name);
 
   if (readout_vis_) readout_logic_vol->SetVisAttributes(nexus::CopperBrown());
-  else readout_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+  else readout_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,readout_posZ), readout_logic_vol,
                     readout_name, mother_logic_vol, false, 0, true);

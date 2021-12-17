@@ -183,8 +183,8 @@ namespace nexus {
     //std::cout<<"MINI CASTLE VOLUME:\t"<<castle_vol<<"\t INNER VOLUME:\t"<<inner_vol<<std::endl;
 
     if (!visibility_) {
-      steel_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      castle_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      steel_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+      castle_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
   }

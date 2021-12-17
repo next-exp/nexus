@@ -424,7 +424,7 @@ void NextFlexFieldCage::BuildActive()
   drift_region->AddRootLogicalVolume(active_logic);
 
   // Visibility
-  active_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  active_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // Vertex generator
   active_gen_ = new CylinderPointSampler2020(active_phys_);
@@ -464,7 +464,7 @@ void NextFlexFieldCage::BuildCathode()
 
   // Visibility
   if (visibility_) cathode_logic->SetVisAttributes(nexus::LightBlue());
-  else             cathode_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  else             cathode_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // Verbosity
   if (verbosity_)
@@ -493,7 +493,7 @@ void NextFlexFieldCage::BuildBuffer()
                       buffer_name, mother_logic_, false, 0, verbosity_);
 
   // Visibility
-  buffer_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  buffer_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // Vertex generator
   buffer_gen_ = new CylinderPointSampler2020(buffer_phys_);
@@ -547,7 +547,7 @@ void NextFlexFieldCage::BuildELgap()
 
   // Visibility
   if (visibility_) el_gap_logic->SetVisAttributes(nexus::LightBlue());
-  else             el_gap_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  else             el_gap_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
 
 
@@ -608,7 +608,7 @@ void NextFlexFieldCage::BuildELgap()
                     gate_name, el_gap_logic, false, 0, verbosity_);
 
   // Visibility
-  gate_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  gate_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // Verbosity
   if (verbosity_) G4cout << "* GATE Z position: " << el_gap_posZ + gate_posZ << G4endl;
@@ -630,7 +630,7 @@ void NextFlexFieldCage::BuildELgap()
                     anode_name, el_gap_logic, false, 0, verbosity_);
 
   // Visibility
-  anode_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  anode_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // Verbosity
   if (verbosity_) G4cout << "* ANODE Z position: " << el_gap_posZ + anode_posZ << G4endl;
@@ -674,7 +674,7 @@ void NextFlexFieldCage::BuildLightTube()
     //light_blue_col.SetForceSolid(true);
     light_tube_logic->SetVisAttributes(light_blue_col);
   }
-  else light_tube_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  else light_tube_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // Vertex generator
   light_tube_gen_ = new CylinderPointSampler2020(light_tube_phys);
@@ -701,7 +701,7 @@ void NextFlexFieldCage::BuildLightTube()
                         light_tube_wls_name, light_tube_logic, false, 0, verbosity_);
 
     // Visibility
-    light_tube_wls_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    light_tube_wls_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
     // Optical surface
     G4OpticalSurface* light_tube_wls_optSurf =
@@ -768,7 +768,7 @@ void NextFlexFieldCage::BuildFibers()
                       false, 0, verbosity_);
 
     // Visibility
-    oClad_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    oClad_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
     // Updating info
     out_logic_volume = oClad_logic;
@@ -797,7 +797,7 @@ void NextFlexFieldCage::BuildFibers()
                       false, 0, verbosity_);
 
     // Visibility
-    iClad_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    iClad_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
     // Updating info
     if (fiber_claddings_ == 1) out_logic_volume = iClad_logic;
@@ -824,7 +824,7 @@ void NextFlexFieldCage::BuildFibers()
 
   // Visibility
   if (visibility_) core_logic->SetVisAttributes(nexus::LightGreen());
-  else             core_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  else             core_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // Updating info
   if (fiber_claddings_ == 0) out_logic_volume = core_logic;
@@ -868,8 +868,8 @@ void NextFlexFieldCage::BuildFibers()
                     fiber_oWls_name, out_logic_volume, false, 0, verbosity_);
 
   // Visibilities
-  fiber_iWls_logic->SetVisAttributes(G4VisAttributes::Invisible);
-  fiber_oWls_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  fiber_iWls_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+  fiber_oWls_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // Optical surfaces
   G4OpticalSurface* fiber_wls_optSurf =

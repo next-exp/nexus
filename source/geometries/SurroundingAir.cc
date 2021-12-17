@@ -38,7 +38,7 @@ namespace nexus {
                           G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
                           "AIR");
     
-    air_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    air_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
     // Set this volume as the wrapper for the whole geometry 
     // (i.e., this is the volume that will be placed in the world)

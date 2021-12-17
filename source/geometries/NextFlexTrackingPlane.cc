@@ -274,7 +274,7 @@ void NextFlexTrackingPlane::BuildCopper()
 
   // Visibility
   if (visibility_) copper_logic->SetVisAttributes(nexus::CopperBrown());
-  else             copper_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  else             copper_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // Vertex generator
   copper_gen_ = new CylinderPointSampler2020(copper_phys);
@@ -382,11 +382,11 @@ void NextFlexTrackingPlane::BuildTeflon()
   /// Visibilities ///
   if (visibility_) {
     teflon_logic->SetVisAttributes(nexus::LightBlue());
-    teflon_wls_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    teflon_wls_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
   else {
-    teflon_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    teflon_wls_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    teflon_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    teflon_wls_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 }
 

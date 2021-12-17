@@ -285,7 +285,7 @@ namespace nexus {
                                    0., twopi, nullptr,
                                    G4ThreeVector(0., 0., active_zpos_));
 
-    active_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    active_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 
 
@@ -317,7 +317,7 @@ namespace nexus {
       G4VisAttributes grey = nexus::LightGrey();
       cathode_grid_logic->SetVisAttributes(grey);
     } else {
-      cathode_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      cathode_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
   }
 
@@ -352,7 +352,7 @@ namespace nexus {
     G4SDManager::GetSDMpointer()->AddNewDetector(buffsd);
 
     /// Visibilities
-    buffer_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    buffer_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 
 
@@ -412,8 +412,8 @@ namespace nexus {
       elgap_logic->SetVisAttributes(nexus::LightBlue());
       gate_grid_logic->SetVisAttributes(nexus::LightGrey());
     } else {
-      elgap_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      gate_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      elgap_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+      gate_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
 
@@ -453,10 +453,10 @@ namespace nexus {
                         ito_anode_logic, "ITO_ANODE", quartz_anode_logic, false, 0, false);
 
       // Run5 Visibilities
-      tpb_anode_logic   ->SetVisAttributes(G4VisAttributes::Invisible);
-      ito_anode_logic   ->SetVisAttributes(G4VisAttributes::Invisible);
+      tpb_anode_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
+      ito_anode_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
       if (visibility_) quartz_anode_logic->SetVisAttributes(nexus::Yellow());
-      else             quartz_anode_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      else             quartz_anode_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
     // Building the ANODE grid corresponding to "run7" and "run8" configuration
@@ -477,7 +477,7 @@ namespace nexus {
 
       // Run7-Run8 Visibilities
       if (visibility_) anode_grid_logic->SetVisAttributes(nexus::LightGrey());
-      else             anode_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      else             anode_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
     // Vertex generator
@@ -590,16 +590,16 @@ namespace nexus {
 
 
     /// Visibilities
-    tpb_drift_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    tpb_buff_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    tpb_drift_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    tpb_buff_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     if (visibility_) {
       G4VisAttributes teflon_col = nexus::White();
       teflon_col.SetForceSolid(true);
       light_tube_drift_logic->SetVisAttributes(teflon_col);
       light_tube_buff_logic->SetVisAttributes(teflon_col);
     } else {
-      light_tube_drift_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      light_tube_buff_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      light_tube_drift_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+      light_tube_buff_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
     /// Field shaping rings
@@ -632,7 +632,7 @@ namespace nexus {
       ring_logic->SetVisAttributes(yellow_col);
     }
     else {
-      ring_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      ring_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
 
@@ -666,7 +666,7 @@ namespace nexus {
       bar_logic->SetVisAttributes(lilla_col);
     }
     else {
-      bar_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      bar_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
   }

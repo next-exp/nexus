@@ -286,7 +286,7 @@ void Next1EL::BuildLab()
     new G4Box("LAB", lab_size_/2., lab_size_/2., lab_size_/2.);
 
   lab_logic_ = new G4LogicalVolume(lab_solid, air_, "LAB");
-  lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
+  lab_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
   this->SetDrift(true);
 
   // Set this volume as the wrapper for the whole geometry
@@ -491,7 +491,7 @@ void Next1EL::BuildVessel()
 					     G4Transform3D(rotport, posport));
 
   gas_logic_ = new G4LogicalVolume(gas_solid, gxe_, "GAS");
-  gas_logic_->SetVisAttributes(G4VisAttributes::Invisible);
+  gas_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), gas_logic_,
 		    "GAS", vessel_logic, false, 0, false);
@@ -817,7 +817,7 @@ void Next1EL::BuildFieldCage()
   drift_region->SetUserInformation(field);
   drift_region->AddRootLogicalVolume(active_logic);
 
-  active_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  active_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
 
   // LIGHT TUBE //////////////////////////////////////////////////////

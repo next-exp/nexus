@@ -227,8 +227,8 @@ void NextDemoTrackingPlane::Construct()
     plate_logic->SetVisAttributes(CopperBrown());
     board_logic->SetVisAttributes(LightBlue());
   } else {
-    plate_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    board_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    plate_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    board_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 }
 

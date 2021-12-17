@@ -122,8 +122,8 @@ void Next100TrackingPlane::Construct()
     G4VisAttributes copper_brown = CopperBrown();
     copper_plate_logic_vol->SetVisAttributes(copper_brown);
   } else {
-    copper_plate_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
-    sipm_board_logic_vol  ->SetVisAttributes(G4VisAttributes::Invisible);
+    copper_plate_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
+    sipm_board_logic_vol  ->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 
 }

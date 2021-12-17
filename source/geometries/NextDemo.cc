@@ -81,7 +81,7 @@ void NextDemo::ConstructLab()
                         lab_name);
 
   // Make the volume invisible in the visualization
-  lab_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+  lab_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // Set this volume as the wrapper for the whole geometry
   // (i.e., this is the volume that will be placed in the world)

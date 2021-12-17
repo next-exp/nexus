@@ -193,7 +193,7 @@ void NextFlex::Construct()
 
   GeometryBase::SetLogicalVolume(lab_logic_vol);
 
-  lab_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+  lab_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
 
 
   // The Gas
@@ -206,7 +206,7 @@ void NextFlex::Construct()
   G4LogicalVolume* gas_logic_vol = new G4LogicalVolume(gas_solid_vol,
                                                        xenon_gas_, gas_name);
 
-  gas_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+  gas_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   G4VPhysicalVolume* gas_phys_vol =
     new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), gas_logic_vol,
@@ -272,7 +272,7 @@ void NextFlex::BuildICS(G4LogicalVolume* mother_logic) {
 
   // Visibility
   if (ics_visibility_) ics_logic->SetVisAttributes(nexus::CopperBrown());
-  else                 ics_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  else                 ics_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // Vertex generator
   copper_gen_ = new CylinderPointSampler2020(ics_phys);
