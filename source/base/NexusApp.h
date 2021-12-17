@@ -43,7 +43,7 @@ namespace nexus {
 
     void RegisterDelayedMacro(G4String);
 
-    void ExecuteMacroFile(const char*);
+    void ExecuteMacroFile(const G4String);
 
     /// Set a seed for the G4 random number generator.
     /// If a negative value is chosen, the system time is set as seed.

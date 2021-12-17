@@ -13,7 +13,6 @@
 #include "DetectorConstruction.h"
 #include "PrimaryGeneration.h"
 #include "PersistencyManagerBase.h"
-#include "BatchSession.h"
 #include "FactoryBase.h"
 
 #include <G4GenericPhysicsList.hh>
@@ -80,8 +79,8 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
   // The physics lists are handled with Geant4's own 'factory'
   physicsList = new G4GenericPhysicsList();
 
-  BatchSession* batch = new BatchSession(init_macro.c_str());
-  batch->SessionStart();
+  // execute /PhysicList and /nexus/Register* commands
+  ExecuteMacroFile(init_macro);
 
   // Set the physics list in the run manager
   this->SetUserInitialization(physicsList);
@@ -183,14 +182,11 @@ void NexusApp::Initialize()
 
 
 
-void NexusApp::ExecuteMacroFile(const char* filename)
+void NexusApp::ExecuteMacroFile(const G4String filename)
 {
-  G4UImanager* UI = G4UImanager::GetUIpointer();
-  G4UIsession* batchSession = new BatchSession(filename, UI->GetSession());
-  UI->SetSession(batchSession);
-  G4UIsession* previousSession = UI->GetSession()->SessionStart();
-  delete UI->GetSession();
-  UI->SetSession(previousSession);
+  G4UImanager* UImanager = G4UImanager::GetUIpointer();
+  G4String command = "/control/execute ";
+  UImanager->ApplyCommand(command+filename);
 }
 
 
