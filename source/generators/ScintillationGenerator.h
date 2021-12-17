@@ -14,16 +14,14 @@
 #include <G4VPrimaryGenerator.hh>
 #include <G4Navigator.hh>
 #include <G4TransportationManager.hh>
+#include <G4PhysicsOrderedFreeVector.hh>
 
 class G4GenericMessenger;
 class G4Event;
-class G4PhysicsOrderedFreeVector;
 
 namespace nexus {
 
   class GeometryBase;
-
-
 
   class ScintillationGenerator: public G4VPrimaryGenerator
   {
@@ -49,7 +47,6 @@ namespace nexus {
 
     G4String region_;
     G4int    nphotons_;
-
 
   };
 
