@@ -528,17 +528,18 @@ namespace opticalprops {
       //G4cout << "* GAr energy: " << std::setw(6) << sc_energy[i]/eV << " eV  ->  "
       //       << std::setw(6) << intensity[i] << G4endl;
     }
-    mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
-    mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
-    mpt->AddProperty("ELSPECTRUM",    sc_energy, intensity, sc_entries);
+    mpt->AddProperty("SCINTILLATIONCOMPONENT1", sc_energy, intensity, sc_entries);
+    mpt->AddProperty("SCINTILLATIONCOMPONENT2", sc_energy, intensity, sc_entries);
+    mpt->AddProperty("ELSPECTRUM"             , sc_energy, intensity, sc_entries, 1);
 
     // CONST PROPERTIES
     mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield);
-    mpt->AddConstProperty("FASTTIMECONSTANT",   6.*ns);
-    mpt->AddConstProperty("SLOWTIMECONSTANT",   37.*ns);
-    mpt->AddConstProperty("YIELDRATIO",         .52);
+    mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT1",   6.*ns);
+    mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT2",   37.*ns);
+    mpt->AddConstProperty("SCINTILLATIONYIELD1", .342);
+    mpt->AddConstProperty("SCINTILLATIONYIELD2", .658);
     mpt->AddConstProperty("RESOLUTIONSCALE",    1.0);
-    mpt->AddConstProperty("ATTACHMENT",         e_lifetime);
+    mpt->AddConstProperty("ATTACHMENT",         e_lifetime, 1);
 
     return mpt;
   }
@@ -590,17 +591,18 @@ namespace opticalprops {
     //  G4cout << "* GXe Scint:  " << std::setw(7) << sc_energy[i]/eV
     //         << " eV -> " << intensity[i] << G4endl;
     //}
-    mpt->AddProperty("FASTCOMPONENT", sc_energy, intensity, sc_entries);
-    mpt->AddProperty("ELSPECTRUM",    sc_energy, intensity, sc_entries);
-    mpt->AddProperty("SLOWCOMPONENT", sc_energy, intensity, sc_entries);
+    mpt->AddProperty("SCINTILLATIONCOMPONENT1", sc_energy, intensity, sc_entries);
+    mpt->AddProperty("SCINTILLATIONCOMPONENT2", sc_energy, intensity, sc_entries);
+    mpt->AddProperty("ELSPECTRUM"             , sc_energy, intensity, sc_entries, 1);
 
     // CONST PROPERTIES
     mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield);
     mpt->AddConstProperty("RESOLUTIONSCALE",    1.0);
-    mpt->AddConstProperty("FASTTIMECONSTANT",   4.5  * ns);
-    mpt->AddConstProperty("SLOWTIMECONSTANT",   100. * ns);
-    mpt->AddConstProperty("YIELDRATIO",         .1);
-    mpt->AddConstProperty("ATTACHMENT",         e_lifetime);
+    mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT1",   4.5  * ns);
+    mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT2",   100. * ns);
+    mpt->AddConstProperty("SCINTILLATIONYIELD1", .1);
+    mpt->AddConstProperty("SCINTILLATIONYIELD2", .9);
+    mpt->AddConstProperty("ATTACHMENT",         e_lifetime, 1);
 
     return mpt;
   }
@@ -644,16 +646,17 @@ namespace opticalprops {
     XenonScintillation(sc_energy, intensity);
 
     assert(sc_energy.size() == intensity.size());
-    LXe_mpt->AddProperty("FASTCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
-    LXe_mpt->AddProperty("SLOWCOMPONENT", sc_energy.data(), intensity.data(), sc_energy.size());
+    LXe_mpt->AddProperty("SCINTILLATIONCOMPONENT1", sc_energy.data(), intensity.data(), sc_energy.size());
+    LXe_mpt->AddProperty("SCINTILLATIONCOMPONENT2", sc_energy.data(), intensity.data(), sc_energy.size());
 
     LXe_mpt->AddConstProperty("SCINTILLATIONYIELD", 58708./MeV);
     LXe_mpt->AddConstProperty("RESOLUTIONSCALE", 1);
     LXe_mpt->AddConstProperty("RAYLEIGH", 36.*cm);
-    LXe_mpt->AddConstProperty("FASTTIMECONSTANT", 2.*ns);
-    LXe_mpt->AddConstProperty("SLOWTIMECONSTANT", 43.5*ns);
-    LXe_mpt->AddConstProperty("YIELDRATIO", 0.03);
-    LXe_mpt->AddConstProperty("ATTACHMENT", 1000.*ms);
+    LXe_mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT1", 2.*ns);
+    LXe_mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT2", 43.5*ns);
+    LXe_mpt->AddConstProperty("SCINTILLATIONYIELD1", .03);
+    LXe_mpt->AddConstProperty("SCINTILLATIONYIELD2", .97);
+    LXe_mpt->AddConstProperty("ATTACHMENT", 1000.*ms, 1);
 
     std::vector<G4double> abs_energy = {optPhotMinE_, optPhotMaxE_};
     std::vector<G4double> abs_length = {noAbsLength_, noAbsLength_};
@@ -681,15 +684,16 @@ namespace opticalprops {
     G4MaterialPropertiesTable* xenon_pt = opticalprops::GXe(pressure, temperature, sc_yield, e_lifetime);
 
     mpt->AddProperty("RINDEX",        xenon_pt->GetProperty("RINDEX"));
-    mpt->AddProperty("FASTCOMPONENT", xenon_pt->GetProperty("FASTCOMPONENT"));
-    mpt->AddProperty("SLOWCOMPONENT", xenon_pt->GetProperty("SLOWCOMPONENT"));
+    mpt->AddProperty("SCINTILLATIONCOMPONENT1", xenon_pt->GetProperty("SCINTILLATIONCOMPONENT1"));
+    mpt->AddProperty("SCINTILLATIONCOMPONENT2", xenon_pt->GetProperty("SCINTILLATIONCOMPONENT2"));
 
     mpt->AddConstProperty("SCINTILLATIONYIELD", xenon_pt->GetConstProperty("SCINTILLATIONYIELD"));
     mpt->AddConstProperty("RESOLUTIONSCALE",    xenon_pt->GetConstProperty("RESOLUTIONSCALE"));
-    mpt->AddConstProperty("FASTTIMECONSTANT",   xenon_pt->GetConstProperty("FASTTIMECONSTANT"));
-    mpt->AddConstProperty("SLOWTIMECONSTANT",   xenon_pt->GetConstProperty("SLOWTIMECONSTANT"));
-    mpt->AddConstProperty("YIELDRATIO",         xenon_pt->GetConstProperty("YIELDRATIO"));
-    mpt->AddConstProperty("ATTACHMENT",         xenon_pt->GetConstProperty("ATTACHMENT"));
+    mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT1",   xenon_pt->GetConstProperty("SCINTILLATIONTIMECONSTANT1"));
+    mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT2",   xenon_pt->GetConstProperty("SCINTILLATIONTIMECONSTANT2"));
+    mpt->AddConstProperty("SCINTILLATIONYIELD1", xenon_pt->GetConstProperty("SCINTILLATIONYIELD1"));
+    mpt->AddConstProperty("SCINTILLATIONYIELD2", xenon_pt->GetConstProperty("SCINTILLATIONYIELD2"));
+    mpt->AddConstProperty("ATTACHMENT",         xenon_pt->GetConstProperty("ATTACHMENT"), 1);
 
     // ABSORPTION LENGTH
     G4double abs_length   = -thickness/log(transparency);
@@ -700,8 +704,8 @@ namespace opticalprops {
     // PHOTOELECTRIC REEMISSION
     // https://aip.scitation.org/doi/10.1063/1.1708797
     G4double stainless_wf = 4.3 * eV; // work function
-    mpt->AddConstProperty("WORK_FUNCTION", stainless_wf);
-    mpt->AddConstProperty("OP_PHOTOELECTRIC_PROBABILITY", photoe_p);
+    mpt->AddConstProperty("WORK_FUNCTION", stainless_wf, 1);
+    mpt->AddConstProperty("OP_PHOTOELECTRIC_PROBABILITY", photoe_p, 1);
 
     return mpt;
   }
