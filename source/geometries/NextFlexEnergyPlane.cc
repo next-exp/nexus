@@ -509,7 +509,7 @@ G4SubtractionSolid* NextFlexEnergyPlane::MakeHoles(G4Tubs*  ini_solid)
 
   // Making the central gas hole
   G4Tubs* central_hole_solid = new G4Tubs("CENTRAL_HOLE", 0., central_hole_diameter_/2.,
-                                          ini_solid->GetDz() + 1.*cm, 0., twopi);
+                                          ini_solid->GetZHalfLength() + 1.*cm, 0., twopi);
 
   G4SubtractionSolid* solid_with_holes =
     new G4SubtractionSolid(ini_solid->GetName(), ini_solid, central_hole_solid,
@@ -520,7 +520,7 @@ G4SubtractionSolid* NextFlexEnergyPlane::MakeHoles(G4Tubs*  ini_solid)
 
     // Making the pmt hole
     G4Tubs* pmt_hole_solid = new G4Tubs("PMT_HOLE", 0., pmt_hole_diameter_/2.,
-                                        ini_solid->GetDz() + 1.*cm, 0., twopi);
+                                        ini_solid->GetZHalfLength() + 1.*cm, 0., twopi);
 
     // Substracting the holes
     for (G4int i=0; i < num_pmts_; i++) {
