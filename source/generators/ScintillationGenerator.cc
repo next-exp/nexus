@@ -76,7 +76,7 @@ void ScintillationGenerator::GeneratePrimaryVertex(G4Event* event)
   }
   // Using fast or slow component here is irrelevant, since we're not using time
   // and they're are the same in energy.
-  G4MaterialPropertyVector* spectrum = mpt->GetProperty("FASTCOMPONENT");
+  G4MaterialPropertyVector* spectrum = mpt->GetProperty("SCINTILLATIONCOMPONENT1");
 
   if (!spectrum) {
     G4Exception("[ScintillationGenerator]", "GeneratePrimaryVertex()", FatalException,
