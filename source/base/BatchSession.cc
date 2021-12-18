@@ -84,7 +84,7 @@ G4String BatchSession::ReadCommand()
     G4String cmdline(linebuf);
 
     // TAB-> ' ' conversion
-    str_size nb=0;
+    size_t nb = 0;
     while ((nb= cmdline.find('\t',nb)) != G4String::npos) {
       cmdline.replace(nb, 1, " ");
     }
@@ -107,7 +107,7 @@ G4String BatchSession::ReadCommand()
       // string after '#" is ignored
       if(tokens[i][(size_t)0] == '#' ) break;
       // '\' or '_' is treated as continued line.
-      if(tokens[i] == '\\' || tokens[i] == '_' ) {
+      if(tokens[i][(size_t)0] == '\\' || tokens[i][(size_t)0] == '_' ) {
         qcontinued= true;
         // check nothing after line continuation character
         if( i != G4int(tokens.size())-1) {
