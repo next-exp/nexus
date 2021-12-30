@@ -21,10 +21,10 @@ namespace nexus {
   class IonizationDrift: public G4VContinuousDiscreteProcess
   {
   public:
-    
+
     /// Constructor
     IonizationDrift(const G4String& name="Drift",
-		                G4ProcessType type=fUserDefined);
+		                G4ProcessType type=fTransportation);
     /// Destructor
     ~IonizationDrift();
 
@@ -32,20 +32,20 @@ namespace nexus {
     G4bool IsApplicable(const G4ParticleDefinition&);
 
     G4VParticleChange* AlongStepDoIt(const G4Track&, const G4Step&);
-    
+
     G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&);
-        
+
   private:
-    
+
     /// Returns infinity; i.e., the process does not limit the step,
-    /// but sets the 'StronglyForced' condition so that the PostStepDoIt 
+    /// but sets the 'StronglyForced' condition so that the PostStepDoIt
     /// is invoked at every step.
     G4double GetMeanFreePath(const G4Track&, G4double, G4ForceCondition*);
 
     /// Returns zero if no electric field is defined for the region.
-    G4double GetContinuousStepLimit(const G4Track&, G4double, 
+    G4double GetContinuousStepLimit(const G4Track&, G4double,
 				    G4double, G4double&);
-    
+
   private:
     G4LorentzVector xyzt_;
     G4ParticleChangeForTransport* ParticleChange_;
