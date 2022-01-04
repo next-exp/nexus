@@ -741,16 +741,16 @@ void Next100FieldCage::BuildFieldCage()
                                    ring_drift_buffer_dist;
 
   G4Tubs* ring_solid =
-    new G4Tubs("RING", ring_int_diam_/2., ring_ext_diam_/2., ring_thickn_/2., 0, twopi);
+    new G4Tubs("FIELD_RING", ring_int_diam_/2., ring_ext_diam_/2., ring_thickn_/2., 0, twopi);
 
   G4LogicalVolume* ring_logic =
-    new G4LogicalVolume(ring_solid, copper_, "RING");
+    new G4LogicalVolume(ring_solid, copper_, "FIELD_RING");
 
   //Placement of the drift rings.
   for (G4int i=0; i<num_drift_rings; i++) {
     posz = first_ring_drift_z_pos + i*drift_ring_dist_;
     new G4PVPlacement(0, G4ThreeVector(0., 0., posz),
-                      ring_logic, "RING", mother_logic_,
+                      ring_logic, "FIELD_RING", mother_logic_,
                       false, i, false);
   }
 
@@ -758,9 +758,18 @@ void Next100FieldCage::BuildFieldCage()
   for (G4int i=0; i<num_buffer_rings; i++) {
     posz = first_ring_buff_z_pos + i*buffer_ring_dist_;
     new G4PVPlacement(0, G4ThreeVector(0., 0., posz),
-                      ring_logic, "RING", mother_logic_,
+                      ring_logic, "FIELD_RING", mother_logic_,
                       false, i, false);
   }
+
+  // ring vertex generator
+  G4double ring_gen_lenght =   first_ring_buff_z_pos + (num_buffer_rings-1)*buffer_ring_dist_
+                             - first_ring_drift_z_pos + ring_thickn_;
+  G4double ring_gen_zpos = first_ring_drift_z_pos + ring_gen_lenght/2. - ring_thickn_/2.;
+  ring_gen_ = new CylinderPointSampler2020(ring_int_diam_/2., ring_ext_diam_/2., ring_gen_lenght/2.,
+                                           0., twopi, nullptr,
+                                           G4ThreeVector(0., 0., ring_gen_zpos));
+
   // Ring holders.
   // ACTIVE holders.
   G4Box* active_short_solid =
@@ -964,6 +973,17 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
     G4VPhysicalVolume *VertexVolume;
     do {
       vertex = el_gap_gen_->GenerateVertex("VOLUME");
+      G4ThreeVector glob_vtx(vertex);
+      glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+      VertexVolume =
+        geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+    } while (VertexVolume->GetName() != region);
+  }
+
+  else if (region == "FIELD_RING") {
+    G4VPhysicalVolume *VertexVolume;
+    do {
+      vertex = ring_gen_->GenerateVertex("VOLUME");
       G4ThreeVector glob_vtx(vertex);
       glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
       VertexVolume =

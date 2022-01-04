@@ -230,7 +230,8 @@ namespace nexus {
 	     (region == "TP_COPPER_PLATE") ||
 	     (region == "DICE_BOARD") ||
 	     (region == "AXIAL_PORT") ||
-	     (region == "EL_TABLE") ) {
+	     (region == "EL_TABLE") ||
+       (region == "FIELD_RING")) {
       vertex = inner_elements_->GenerateVertex(region);
     }
 
