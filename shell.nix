@@ -16,14 +16,13 @@ let
     #overlays = [ (import ./nix/geant4.nix) ];
   };
   python = builtins.getAttr ("python" + py) pkgs;
-  pypkgs = python.pkgs;
 
   command = pkgs.writeShellScriptBin;
 
-  mkPkgList = (ps: [
+  pythonEnv = python.withPackages (ps: [
     ps.pandas
     ps.numpy
-    ps.geant4
+    ps.tables
     ps.pytest
     ps.flaky
     ps.hypothesis
@@ -31,12 +30,12 @@ let
     ps.pytest-instafail
     ps.pytest-order
   ]);
-
 in
 
 pkgs.mkShell rec {
   name = "nexus";
-  buildInputs = (mkPkgList pypkgs) ++ [
+  buildInputs = [
+    pythonEnv
     pkgs.git
     pkgs.scons
     pkgs.bear
