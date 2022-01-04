@@ -18,32 +18,6 @@ let
   python = builtins.getAttr ("python" + py) pkgs;
   pypkgs = python.pkgs;
 
-  # pytest-instafail was unavailable in nixpkgs at time of writing
-  mk-pytest-instafail = pypkgs:
-    pypkgs.buildPythonPackage rec {
-      pname = "pytest-instafail";
-      version = "0.4.2";
-      src = pypkgs.fetchPypi {
-        inherit pname version;
-        sha256 = "10lpr6mjcinabqynj6v85bvb1xmapnhqmg50nys1r6hg7zgky9qr";
-      };
-      buildInputs = [ pypkgs.pytest ];
-    };
-
-  # pytest-order was unavailable in nixpkgs at time of writing (not to be
-  # confused with pytest-orderING, of which this is a fork)
-  mk-pytest-order = pypkgs:
-    pypkgs.buildPythonPackage rec {
-      pname = "pytest-order";
-      version = "0.9.3";
-      src = pypkgs.fetchPypi {
-        inherit pname version;
-        sha256 = "1qd9zfpcbzm43knkg3ap22wssqabc2wn5ynlgg661xg6r6g6iy4k";
-      };
-      buildInputs = [ pypkgs.pytest ];
-    };
-
-
   command = pkgs.writeShellScriptBin;
 
   mkPkgList = (ps: [
@@ -53,9 +27,9 @@ let
     ps.pytest
     ps.flaky
     ps.hypothesis
-    ps.pytest_xdist
-    (mk-pytest-instafail ps)
-    (mk-pytest-order     ps)
+    ps.pytest-xdist
+    ps.pytest-instafail
+    ps.pytest-order
   ]);
 
 in
