@@ -3,13 +3,13 @@
 #   nix-shell shell.nix --argstr py 39
 #
 { py ? "38"
-, nixpkgs-commit-id ? "15a64b2facc1b91f4361bdd101576e8886ef834b"
+, nixpkgs-commit-id ? "78cd22c1b8604de423546cd49bfe264b786eca13" # nixos-unstable on 2022-01-03.
 }:
 
 # To update `nixpkgs-commit-id` go to https://status.nixos.org/, which lists the
 # latest commit that passes all the tests for any release. Unless there is an
-# overriding reason, pick the latest stable NixOS release, at the time of
-# writing this is nixos-20.03.
+# overriding reason, pick the latest stable NixOS release.
+
 let
   nixpkgs-url = "https://github.com/nixos/nixpkgs/archive/${nixpkgs-commit-id}.tar.gz";
   pkgs = import (builtins.fetchTarball { url = nixpkgs-url; }) {
