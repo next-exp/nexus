@@ -58,9 +58,10 @@ namespace nexus {
 
     // Ports
     port_base_height_(37. * mm),
-    port_tube_height_(154.* mm),
+    port_tube_height_(159.* mm),
+    port_tube_tip_   (4.  * mm),
     // They are defined global because are needed at the vertex generation
-    port_x_ ((vessel_in_rad_ + port_base_height_ - port_tube_height_/2.)/sqrt(2.)), // inner port pos
+    port_x_ ((vessel_in_rad_ + port_base_height_ - (port_tube_height_ + port_tube_tip_)/2.)/sqrt(2.)), // inner port pos
     port_y_ (port_x_),
     source_height_ (5. * mm), // preliminar
 
@@ -179,7 +180,7 @@ namespace nexus {
     G4double port_tube_rad   = 4.  * mm;
     G4double port_tube_thick = 1.2 * mm;
     G4Tubs* port_tube_solid = new G4Tubs("PORT_TUBE", 0., (port_tube_rad + port_tube_thick),
-                                         port_tube_height_/2., 0.*deg, 360.*deg);
+                                         (port_tube_height_ + port_tube_tip_)/2., 0.*deg, 360.*deg);
     G4Tubs* port_tube_gas_solid = new G4Tubs("PORT_TUBE_GAS", 0., port_tube_rad,
                                              port_tube_height_/2., 0.*deg, 360.*deg);
 
@@ -333,7 +334,7 @@ namespace nexus {
       new G4LogicalVolume(port_tube_gas_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
                           "PORT_TUBE_AIR");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), port_tube_gas_logic,
+    new G4PVPlacement(0, G4ThreeVector(0., 0., port_tube_tip_/2.), port_tube_gas_logic,
                       "PORT_TUBE_AIR", port_tube_logic, false, 0);
 
     new G4PVPlacement(port_a_Rot, G4ThreeVector(port_x_, port_y_, port_z_1a_), port_tube_logic,
@@ -420,7 +421,7 @@ namespace nexus {
   G4ThreeVector Next100Vessel::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);
-    G4double source_x = port_x_ - (port_tube_height_-source_height_)/2./sqrt(2.);
+    G4double source_x = port_x_ - (port_tube_height_ - port_tube_tip_ - source_height_)/2./sqrt(2.);
     G4double source_y = source_x;
 
     // Vertex in the whole VESSEL volume
