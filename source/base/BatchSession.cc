@@ -90,8 +90,9 @@ G4String BatchSession::ReadCommand()
     }
 
     // strip
-    cmdline = cmdline.strip(G4String::both);
-    cmdline = cmdline.strip(G4String::trailing, ctrM);
+    cmdline = G4StrUtil::strip_copy (cmdline);
+    cmdline = G4StrUtil::rstrip_copy(cmdline, ctrM);
+
 
     // skip null line if single line
     if (!qcontinued && cmdline.size()==0) continue;
@@ -127,7 +128,7 @@ G4String BatchSession::ReadCommand()
   }
 
   // strip again
-  cmdtotal= cmdtotal.strip(G4String::both);
+  cmdtotal = G4StrUtil::strip_copy(cmdtotal);
 
   // finally,
   if(macrostream_.eof() && cmdtotal.size()==0) {
