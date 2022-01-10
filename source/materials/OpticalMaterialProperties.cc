@@ -1420,7 +1420,6 @@ namespace opticalprops {
     G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
     // REFRACTIVE INDEX
-    const G4int rIndex_numEntries = 2;
     std::vector<G4double> rIndex_energies = {optPhotMinE_, optPhotMaxE_};
     std::vector<G4double> rIndex          = {1.0    , 1.0};
     mpt->AddProperty("RINDEX", rIndex_energies, rIndex);
