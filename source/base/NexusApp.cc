@@ -180,6 +180,9 @@ void NexusApp::Initialize()
     ExecuteMacroFile(delayed_[j].data());
   }
 
+  // Execute command to enable triggering of sensitive detectors.
+  // If the optical physics is not loaded, it is not applied,
+  // but no error is raised.
   G4UImanager* UI = G4UImanager::GetUIpointer();
   UI->ApplyCommand("/process/optical/boundary/setInvokeSD true");
 }
