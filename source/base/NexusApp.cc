@@ -179,6 +179,9 @@ void NexusApp::Initialize()
   for (unsigned int j=0; j<delayed_.size(); j++) {
     ExecuteMacroFile(delayed_[j].data());
   }
+
+  G4UImanager* UI = G4UImanager::GetUIpointer();
+  UI->ApplyCommand("/process/optical/boundary/setInvokeSD true");
 }
 
 
