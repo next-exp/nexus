@@ -216,21 +216,21 @@ namespace nexus {
 
     // Inner elements (photosensors' planes and field cage)
     else if ((region == "CENTER") ||
-	     (region == "ACTIVE") ||
-	     (region == "BUFFER") ||
-	     (region == "XENON") ||
-	     (region == "LIGHT_TUBE") ||
-       (region == "EL_GAP") ||
-	     (region == "EP_COPPER_PLATE") ||
-	     (region == "SAPPHIRE_WINDOW") ||
-	     (region == "OPTICAL_PAD") ||
-	     (region == "PMT_BODY") ||
-	     (region == "PMT") ||
-	     (region == "PMT_BASE") ||
-	     (region == "TP_COPPER_PLATE") ||
-	     (region == "DICE_BOARD") ||
-	     (region == "AXIAL_PORT") ||
-	     (region == "EL_TABLE") ) {
+             (region == "ACTIVE") ||
+             (region == "BUFFER") ||
+             (region == "XENON") ||
+             (region == "LIGHT_TUBE") ||
+             (region == "EL_GAP") ||
+             (region == "EP_COPPER_PLATE") ||
+             (region == "SAPPHIRE_WINDOW") ||
+             (region == "OPTICAL_PAD") ||
+             (region == "PMT_BODY") ||
+             (region == "PMT") ||
+             (region == "PMT_BASE") ||
+             (region == "TP_COPPER_PLATE") ||
+             (region == "DICE_BOARD") ||
+             (region == "EL_TABLE") ||
+             (region == "FIELD_RING")) {
       vertex = inner_elements_->GenerateVertex(region);
     }
 
