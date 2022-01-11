@@ -76,7 +76,7 @@ namespace nexus {
     temperature_ (303 * kelvin),
     // Visibility
     visibility_(0),
-    gas_("naturalXe"),
+    gas_("enrichedXe"),
     helium_mass_num_(4),
     xe_perc_(100.)
   {
