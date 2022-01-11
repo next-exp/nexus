@@ -48,9 +48,10 @@ namespace nexus {
     //Messenger for configuration parameters
     G4GenericMessenger* msg_;
 
-    G4double specific_vertex_X_;
-    G4double specific_vertex_Y_;
-    G4double specific_vertex_Z_;
+    G4ThreeVector specific_vertex_;
+    //G4double specific_vertex_X_;
+    //G4double specific_vertex_Y_;
+    //G4double specific_vertex_Z_;
     G4double dice_board_x_pos_;
     G4double dice_board_y_pos_;
     G4double dice_board_z_pos_;

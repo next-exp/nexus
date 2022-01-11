@@ -8,16 +8,11 @@
 /Generator/SingleParticle/min_energy 2.9 eV
 /Generator/SingleParticle/max_energy 2.9 eV
 /Generator/SingleParticle/region AD_HOC
-#/Generator/SingleParticle/momentum_X 0.
-#/Generator/SingleParticle/momentum_Y 0.
-#/Generator/SingleParticle/momentum_Z -1.
 #/Generator/SingleParticle/momentum 0 0 -1
 /Generator/SingleParticle/min_costheta -1.
 /Generator/SingleParticle/max_costheta -0.9935
 
-/Geometry/BlackBox/specific_vertex_X 0. mm
-/Geometry/BlackBox/specific_vertex_Y 0. mm
-/Geometry/BlackBox/specific_vertex_Z 0. mm
+/Geometry/BlackBox/specific_vertex  0 0 0 mm
 /Geometry/BlackBox/dice_board_x_pos -1.749 cm
 /Geometry/BlackBox/dice_board_y_pos 0 cm
 /Geometry/BlackBox/dice_board_z_pos -50. cm
@@ -36,4 +31,4 @@
 ### JOB CONTROL
 /nexus/random_seed            -1
 /nexus/persistency/start_id   0
-/nexus/persistency/outputFile nomask_air30deg.next
+/nexus/persistency/outputFile test1.next
