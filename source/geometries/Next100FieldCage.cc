@@ -241,8 +241,8 @@ void Next100FieldCage::DefineMaterials()
   /// High density polyethylene for the field cage
   hdpe_ = materials::HDPE();
 
-  /// PE1000 for the holders
-  pe1000_ = materials::PE1000();
+  /// PE500 for the holders
+  pe500_ = materials::PE500();
 
   /// Copper for field rings
   copper_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
@@ -794,7 +794,7 @@ void Next100FieldCage::BuildFieldCage()
     }
 
   G4LogicalVolume* act_holder_logic =
-    new G4LogicalVolume(act_holder_solid,pe1000_,"ACT_HOLDER");
+    new G4LogicalVolume(act_holder_solid, pe500_, "ACT_HOLDER");
   G4int numbering=0;
   for (G4int i=10; i<360; i +=20){
     G4RotationMatrix* rot = new G4RotationMatrix();
@@ -837,7 +837,7 @@ void Next100FieldCage::BuildFieldCage()
                                      teflon_buffer_length_/2. - buffer_last_z/2.));
 
     G4LogicalVolume* buff_holder_logic =
-      new G4LogicalVolume(buff_holder_solid,pe1000_, "BUFF_HOLDER");
+      new G4LogicalVolume(buff_holder_solid, pe500_, "BUFF_HOLDER");
 
     numbering=0;
     for (G4int i=10; i<360; i +=20){
@@ -869,7 +869,7 @@ void Next100FieldCage::BuildFieldCage()
                                       -(cathode_long_z/2.-cathode_short_z/2.)));
 
     G4LogicalVolume* cathode_holder_logic =
-      new G4LogicalVolume(cathode_holder_solid,pe1000_, "CATHODE_HOLDER");
+      new G4LogicalVolume(cathode_holder_solid, pe500_, "CATHODE_HOLDER");
 
     numbering=0;
     G4double cathode_holder_r = (active_diam_+2*teflon_thickn_+ 2*holder_long_y_+
