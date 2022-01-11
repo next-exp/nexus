@@ -35,11 +35,7 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  Next100Vessel::Next100Vessel(const G4double nozzle_ext_diam,
-			       const G4double up_nozzle_ypos,
-			       const G4double central_nozzle_ypos,
-			       const G4double down_nozzle_ypos,
-			       const G4double bottom_nozzle_ypos):
+  Next100Vessel::Next100Vessel():
     GeometryBase(),
 
     // general vessel dimensions
@@ -65,10 +61,6 @@ namespace nexus {
     port_y_ (port_x_),
     source_height_ (5. * mm), // preliminar
 
-    // // Nozzle dimensions
-    // large_nozzle_length_ (250.0 * cm),
-    // small_nozzle_length_ (240.0 * cm),
-
     // Vessel gas
     sc_yield_(16670. * 1/MeV),
     e_lifetime_(1000. * ms),
@@ -80,13 +72,6 @@ namespace nexus {
     helium_mass_num_(4),
     xe_perc_(100.)
   {
-
-    /// Needed External variables
-    nozzle_ext_diam_ = nozzle_ext_diam;
-    up_nozzle_ypos_ = up_nozzle_ypos;
-    central_nozzle_ypos_ = central_nozzle_ypos;
-    down_nozzle_ypos_ = down_nozzle_ypos;
-    bottom_nozzle_ypos_ = bottom_nozzle_ypos;
 
     // Initializing the geometry navigator (used in vertex generation)
     geom_navigator_ = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
@@ -184,20 +169,6 @@ namespace nexus {
     G4Tubs* port_tube_gas_solid = new G4Tubs("PORT_TUBE_GAS", 0., port_tube_rad,
                                              port_tube_height_/2., 0.*deg, 360.*deg);
 
-    // // Nozzle solids
-    // G4Tubs* large_nozzle_solid = new G4Tubs("LARGE_NOZZLE", 0.*cm, nozzle_ext_diam_/2.,
-		// 			    large_nozzle_length_/2., 0.*deg, 360.*deg);
-    //
-    // G4Tubs* small_nozzle_solid = new G4Tubs("SMALL_NOZZLE", 0.*cm, nozzle_ext_diam_/2.,
-		// 			    small_nozzle_length_/2., 0.*deg, 360.*deg);
-    //
-    // G4Tubs* large_nozzle_gas_solid = new G4Tubs("LARGE_NOZZLE_GAS", 0.*cm, (nozzle_ext_diam_/2. - vessel_thickness_),
-		// 				large_nozzle_length_/2., 0.*deg, 360.*deg);
-    //
-    // G4Tubs* small_nozzle_gas_solid = new G4Tubs("SMALL_NOZZLE_GAS", 0.*cm, (nozzle_ext_diam_/2. - vessel_thickness_),
-		// 				small_nozzle_length_/2., 0.*deg, 360.*deg);
-
-
     //// Unions
     G4double endcap_z_pos = (body_length_ / 2.) + endcap_in_z_width_ - endcap_in_rad_;
     G4ThreeVector energy_endcap_pos  (0, 0,  endcap_z_pos);
@@ -253,17 +224,6 @@ namespace nexus {
     vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, port_solid,
                                     port_b_Rot, G4ThreeVector(-port_nozzle_x, port_nozzle_y, port_z_2b_));
 
-    // // Adding nozzles
-    // vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, small_nozzle_solid,
-		// 		    0, G4ThreeVector(0., up_nozzle_ypos_, 0.) );
-    // vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, large_nozzle_solid,
-		// 		    0, G4ThreeVector(0., central_nozzle_ypos_, 0.) );
-    // vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, large_nozzle_solid,
-		// 		    0, G4ThreeVector(0., down_nozzle_ypos_, 0.) );
-    // vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, small_nozzle_solid,
-		// 		    0, G4ThreeVector(0., bottom_nozzle_ypos_, 0.) );
-
-
     // Body gas + Energy endcap gas
     G4UnionSolid* vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_body_solid,
 						      vessel_gas_endcap_solid, 0, energy_endcap_pos);
@@ -284,16 +244,6 @@ namespace nexus {
                                         port_b_Rot, G4ThreeVector(-port_gas_x, port_gas_y, port_z_1b_));
     vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, port_gas_solid,
                                         port_b_Rot, G4ThreeVector(-port_gas_x, port_gas_y, port_z_2b_));
-    // // Adding nozzles
-    // vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, small_nozzle_gas_solid,
-		// 			0, G4ThreeVector(0., up_nozzle_ypos_, 0.) );
-    // vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, large_nozzle_gas_solid,
-		// 			0, G4ThreeVector(0., central_nozzle_ypos_, 0.) );
-    // vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, large_nozzle_gas_solid,
-		// 			0, G4ThreeVector(0., down_nozzle_ypos_, 0.) );
-    // vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, small_nozzle_gas_solid,
-		// 			0, G4ThreeVector(0., bottom_nozzle_ypos_, 0.) );
-
 
     //// The logics
     // vessel and vessel gas

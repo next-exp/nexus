@@ -26,11 +26,7 @@ namespace nexus {
   {
   public:
     /// Constructor
-    Next100Vessel(const G4double nozzle_ext_diam,
-		  const G4double up_nozzle_ypos,
-		  const G4double central_nozzle_ypos,
-		  const G4double down_nozzle_ypos,
-		  const G4double bottom_nozzle_ypos);
+    Next100Vessel();
 
     /// Destructor
     ~Next100Vessel();
@@ -49,16 +45,12 @@ namespace nexus {
     /// Builder
     void Construct();
 
-
-
   private:
     // Dimensions
     G4double vessel_in_rad_, vessel_thickness_;
     G4double body_length_;
     G4double endcap_in_rad_, endcap_in_body_, endcap_theta_, endcap_in_z_width_;
     G4double endcap_tp_distance_, gate_tp_distance_;
-    // G4double flange_out_rad_, flange_length_, flange_z_pos_;
-    // G4double large_nozzle_length_, small_nozzle_length_;
     G4double port_base_height_, port_tube_height_, port_tube_tip_;
     G4double port_x_, port_y_, source_height_, port_z_1a_, port_z_1b_, port_z_2a_, port_z_2b_;
     G4double sc_yield_, e_lifetime_;
@@ -66,10 +58,6 @@ namespace nexus {
 
     // Visibility of the shielding
     G4bool visibility_;
-
-    // Dimensions coming from outside
-    G4double nozzle_ext_diam_, up_nozzle_ypos_, central_nozzle_ypos_;
-    G4double down_nozzle_ypos_, bottom_nozzle_ypos_;
 
     // Internal logical and physical volumes
     G4LogicalVolume* internal_logic_vol_;
