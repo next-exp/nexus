@@ -1,3 +1,10 @@
+tag v6_03_00 - 11 Jan 2022
+	- Full revision of NEXT100 geometry.
+	- Add new configurations of the DEMO geometry.
+	- Use general factory to create geometries, generators and actions.
+	- Change materials and optical properties to functions.
+	- Create nexus library in compilation to be used from a different software.
+
 tag v6_02_01 - 25 Mar 2021
 	- Fix IDs of DEMO++ PMTs.
 
