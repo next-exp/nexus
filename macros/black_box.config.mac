@@ -4,7 +4,6 @@
 ### -----------------------------------------------------------
 
 /Generator/SingleParticle/particle opticalphoton
-#/Generator/SingleParticle/particle geantino
 /Generator/SingleParticle/min_energy 2.9 eV
 /Generator/SingleParticle/max_energy 2.9 eV
 /Generator/SingleParticle/region AD_HOC
