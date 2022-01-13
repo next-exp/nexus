@@ -355,7 +355,7 @@ void Next100FieldCage::BuildCathode()
                cathode_thickn_/2., 0, twopi);
 
   G4LogicalVolume* cathode_logic =
-    new G4LogicalVolume(cathode_solid, copper_, "CATHODE_RING");
+    new G4LogicalVolume(cathode_solid, steel_, "CATHODE_RING");
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., cathode_zpos_),
                     cathode_logic, "CATHODE_RING", mother_logic_,
