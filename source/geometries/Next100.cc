@@ -209,6 +209,7 @@ namespace nexus {
     // Inner elements (photosensors' planes and field cage)
     else if ((region == "CENTER") ||
              (region == "ACTIVE") ||
+             (region == "CATHODE_RING") ||
              (region == "BUFFER") ||
              (region == "XENON") ||
              (region == "LIGHT_TUBE") ||
@@ -222,7 +223,9 @@ namespace nexus {
              (region == "TP_COPPER_PLATE") ||
              (region == "DICE_BOARD") ||
              (region == "EL_TABLE") ||
-             (region == "FIELD_RING")) {
+             (region == "FIELD_RING") ||
+             (region == "GATE_RING") ||
+             (region == "ANODE_RING")) {
       vertex = inner_elements_->GenerateVertex(region);
     }
 
