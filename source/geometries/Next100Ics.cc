@@ -97,24 +97,28 @@ namespace nexus {
 
     /// Upper holes
     // z distances measured with respect to TP plate, ie the start of ICS
-    G4double upp_hole_rad = 31.  * mm;
+    G4double upp_hole_1_rad = 31. * mm;
+    G4double upp_hole_2_rad = 71. * mm;
     G4double upp_hole_1_z = 313. * mm;
-    G4double upp_hole_2_z = 313. * mm + 919. * mm;
+    G4double upp_hole_2_z = upp_hole_1_z + 906.5 * mm;
 
     G4RotationMatrix* port_upp_Rot = new G4RotationMatrix;
     port_upp_Rot->rotateX( 90. * deg);
 
-    G4Tubs* upp_hole_solid = new G4Tubs("UPP_HOLE", 0., upp_hole_rad,
+    G4Tubs* upp_hole_solid_1 = new G4Tubs("UPP_HOLE", 0., upp_hole_1_rad,
                                         (thickness_ + offset)/2., 0.*deg, 360.*deg);
 
-    ics_solid = new G4SubtractionSolid("ICS", ics_solid, upp_hole_solid,
+    ics_solid = new G4SubtractionSolid("ICS", ics_solid, upp_hole_solid_1,
                 port_upp_Rot, G4ThreeVector(0, (in_rad_ + thickness_/2.), upp_hole_1_z-length/2.));
 
-    ics_solid = new G4SubtractionSolid("ICS", ics_solid, upp_hole_solid,
+    G4Tubs* upp_hole_solid_2 = new G4Tubs("UPP_HOLE", 0., upp_hole_2_rad,
+                                        (thickness_ + offset)/2., 0.*deg, 360.*deg);
+
+    ics_solid = new G4SubtractionSolid("ICS", ics_solid, upp_hole_solid_2,
                 port_upp_Rot, G4ThreeVector(0, (in_rad_ + thickness_/2.), upp_hole_2_z-length/2.));
 
     /// Lateral holes
-    G4double lat_hole_rad = upp_hole_rad;
+    G4double lat_hole_rad = upp_hole_1_rad;
     G4double lat_hole_z   = 58.1 * mm;
 
     G4Tubs* lat_hole_solid = new G4Tubs("LAT_HOLE", 0., lat_hole_rad,
