@@ -577,11 +577,11 @@ void Next100FieldCage::BuildELRegion()
                                              nullptr, el_gap_gen_pos);
 
   // Gate ring vertex generator
-  gate_gen_ = new CylinderPointSampler2020(gate_int_diam_/2., gate_ext_diam_/2., gate_ring_thickn_/2.,0., twopi, nullptr,
-                                          G4ThreeVector(0., 0., gate_zpos_));
+  gate_gen_ = new CylinderPointSampler2020(gate_int_diam_/2., gate_ext_diam_/2., gate_ring_thickn_/2.,
+                                           0., twopi, nullptr, G4ThreeVector(0., 0., gate_zpos_));
   // Anode ring vertex generator
-  anode_gen_ = new CylinderPointSampler2020(gate_int_diam_/2., gate_ext_diam_/2., gate_ring_thickn_/2.,0., twopi, nullptr,
-                                          G4ThreeVector(0., 0., anode_zpos_));
+  anode_gen_ = new CylinderPointSampler2020(gate_int_diam_/2., gate_ext_diam_/2., gate_ring_thickn_/2.,
+                                            0., twopi, nullptr, G4ThreeVector(0., 0., anode_zpos_));
 
   /// Visibilities
   if (visibility_) {
