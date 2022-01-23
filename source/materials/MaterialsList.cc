@@ -594,26 +594,49 @@ namespace materials {
   }
 
 
-G4Material* PE1000()
-{
-  G4String name = "PE1000";
+  G4Material* PE1000()
+  {
+    G4String name = "PE1000";
 
-  G4Material* mat = G4Material::GetMaterial(name, false);
+    G4Material* mat = G4Material::GetMaterial(name, false);
 
-  if (mat == 0) {
-    G4NistManager* nist = G4NistManager::Instance();
+    if (mat == 0) {
+      G4NistManager* nist = G4NistManager::Instance();
 
-    G4Element* H = nist->FindOrBuildElement("H");
-    G4Element* C = nist->FindOrBuildElement("C");
+      G4Element* H = nist->FindOrBuildElement("H");
+      G4Element* C = nist->FindOrBuildElement("C");
 
-    mat = new G4Material(name, .93*g/cm3, 2, kStateSolid);
-    mat->AddElement(H, 4);
-    mat->AddElement(C, 2);
+      mat = new G4Material(name, .93*g/cm3, 2, kStateSolid);
+      mat->AddElement(H, 4);
+      mat->AddElement(C, 2);
+    }
+
+    return mat;
+
   }
 
-  return mat;
 
-}
+  G4Material* PE500()
+  {
+    G4String name = "PE500";
+
+    G4Material* mat = G4Material::GetMaterial(name, false);
+
+    if (mat == 0) {
+      G4NistManager* nist = G4NistManager::Instance();
+
+      G4Element* H = nist->FindOrBuildElement("H");
+      G4Element* C = nist->FindOrBuildElement("C");
+
+      mat = new G4Material(name, .96*g/cm3, 2, kStateSolid);
+      mat->AddElement(H, 4);
+      mat->AddElement(C, 2);
+    }
+
+    return mat;
+
+  }
+
 
   G4Material* OpticalSilicone()
   {

@@ -41,13 +41,6 @@ namespace nexus {
     gate_tracking_plane_distance_(30. * mm), // to be confirmed
     gate_sapphire_wdw_distance_  (1460.5 * mm),
 
-    // Nozzles external diam and y positions
-    nozzle_ext_diam_ (9. * cm),
-    up_nozzle_ypos_ (20. * cm),
-    central_nozzle_ypos_ (0. * cm),
-    down_nozzle_ypos_ (-20. * cm),
-    bottom_nozzle_ypos_(-53. * cm),
-
     specific_vertex_{},
     lab_walls_(false)
   {
@@ -70,8 +63,7 @@ namespace nexus {
   hallA_walls_ = new LSCHallA();
 
   // Vessel
-  vessel_ = new Next100Vessel(nozzle_ext_diam_, up_nozzle_ypos_, central_nozzle_ypos_,
-			      down_nozzle_ypos_, bottom_nozzle_ypos_);
+  vessel_ = new Next100Vessel();
 
   // Internal copper shielding
   ics_ = new Next100Ics();

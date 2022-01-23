@@ -105,6 +105,8 @@ namespace materials {
   /// PE1000 (PE UHMW, ultra-high molecular weight polyethylene)
   G4Material* PE1000();
 
+  /// PE500 (PE HD, high density)
+  G4Material* PE500();
 
   /// Selenium Hexafluoride
     G4Material* SeF6(G4double pressure=STP_Pressure,

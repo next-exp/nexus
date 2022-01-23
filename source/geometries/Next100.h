@@ -49,10 +49,6 @@ namespace nexus {
     const G4double lab_size_;          /// Size of the air box containing the detector
     const G4double gate_tracking_plane_distance_, gate_sapphire_wdw_distance_;
 
-    // External diameter of nozzles and y positions
-    const G4double nozzle_ext_diam_;
-    const G4double up_nozzle_ypos_, central_nozzle_ypos_, down_nozzle_ypos_, bottom_nozzle_ypos_;
-
     // Pointers to logical volumes
     G4LogicalVolume* lab_logic_;
     G4LogicalVolume* buffer_gas_logic_;
