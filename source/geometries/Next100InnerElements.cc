@@ -98,11 +98,14 @@ namespace nexus {
     // Field Cage regions
     if ((region == "CENTER") ||
         (region == "ACTIVE") ||
+        (region == "CATHODE_RING") ||
         (region == "BUFFER") ||
         (region == "XENON")  ||
         (region == "EL_GAP") ||
         (region == "LIGHT_TUBE") ||
-        (region == "FIELD_RING")) {
+        (region == "FIELD_RING") ||
+        (region == "GATE_RING") ||
+        (region == "ANODE_RING")) {
       vertex = field_cage_->GenerateVertex(region);
     }
     // Energy Plane regions

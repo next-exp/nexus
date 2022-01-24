@@ -355,7 +355,7 @@ void Next100FieldCage::BuildCathode()
                cathode_thickn_/2., 0, twopi);
 
   G4LogicalVolume* cathode_logic =
-    new G4LogicalVolume(cathode_solid, copper_, "CATHODE_RING");
+    new G4LogicalVolume(cathode_solid, steel_, "CATHODE_RING");
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., cathode_zpos_),
                     cathode_logic, "CATHODE_RING", mother_logic_,
@@ -375,6 +375,11 @@ void Next100FieldCage::BuildCathode()
   new G4PVPlacement(0, G4ThreeVector(0., 0., cathode_zpos_),
                     diel_grid_logic, "CATHODE_GRID", mother_logic_,
                     false, 0, false);
+
+  // Cathode ring vertex generator
+  cathode_gen_ = new CylinderPointSampler2020(cathode_int_diam_/2.,cathode_ext_diam_/2.,
+                                           cathode_thickn_/2.,0., twopi, nullptr,
+                                           G4ThreeVector(0., 0., cathode_zpos_));
 
 
   /// Visibilities
@@ -570,6 +575,13 @@ void Next100FieldCage::BuildELRegion()
   el_gap_gen_ = new CylinderPointSampler2020(0., el_gap_gen_disk_diam_/2.,
                                              el_gap_gen_disk_thickn/2., 0., twopi,
                                              nullptr, el_gap_gen_pos);
+
+  // Gate ring vertex generator
+  gate_gen_ = new CylinderPointSampler2020(gate_int_diam_/2., gate_ext_diam_/2., gate_ring_thickn_/2.,
+                                           0., twopi, nullptr, G4ThreeVector(0., 0., gate_zpos_));
+  // Anode ring vertex generator
+  anode_gen_ = new CylinderPointSampler2020(gate_int_diam_/2., gate_ext_diam_/2., gate_ring_thickn_/2.,
+                                            0., twopi, nullptr, G4ThreeVector(0., 0., anode_zpos_));
 
   /// Visibilities
   if (visibility_) {
@@ -909,6 +921,10 @@ Next100FieldCage::~Next100FieldCage()
   delete xenon_gen_;
   delete teflon_gen_;
   delete el_gap_gen_;
+  delete ring_gen_;
+  delete cathode_gen_;
+  delete gate_gen_;
+  delete anode_gen_;
 }
 
 
@@ -924,6 +940,17 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
     G4VPhysicalVolume *VertexVolume;
     do {
       vertex = active_gen_->GenerateVertex("VOLUME");
+      G4ThreeVector glob_vtx(vertex);
+      glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+      VertexVolume =
+        geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+    } while (VertexVolume->GetName() != region);
+  }
+
+  else if (region == "CATHODE_RING") {
+    G4VPhysicalVolume *VertexVolume;
+    do {
+      vertex = cathode_gen_->GenerateVertex("VOLUME");
       G4ThreeVector glob_vtx(vertex);
       glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
       VertexVolume =
@@ -984,6 +1011,28 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
     G4VPhysicalVolume *VertexVolume;
     do {
       vertex = ring_gen_->GenerateVertex("VOLUME");
+      G4ThreeVector glob_vtx(vertex);
+      glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+      VertexVolume =
+        geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+    } while (VertexVolume->GetName() != region);
+  }
+
+  else if (region == "GATE_RING") {
+    G4VPhysicalVolume *VertexVolume;
+    do {
+      vertex = gate_gen_->GenerateVertex("VOLUME");
+      G4ThreeVector glob_vtx(vertex);
+      glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+      VertexVolume =
+        geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+    } while (VertexVolume->GetName() != region);
+  }
+
+  else if (region == "ANODE_RING") {
+    G4VPhysicalVolume *VertexVolume;
+    do {
+      vertex = anode_gen_->GenerateVertex("VOLUME");
       G4ThreeVector glob_vtx(vertex);
       glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
       VertexVolume =
