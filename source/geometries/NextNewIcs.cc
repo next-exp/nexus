@@ -140,7 +140,7 @@ namespace nexus {
       ics_logic->SetVisAttributes(copper_col);
     }
     else {
-      ics_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      ics_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
 

@@ -12,7 +12,6 @@
 #include "BaseDriftField.h"
 
 #include <G4MaterialPropertiesTable.hh>
-#include <G4PhysicsOrderedFreeVector.hh>
 #include <G4ParticleChange.hh>
 #include <G4OpticalPhoton.hh>
 #include <Randomize.hh>

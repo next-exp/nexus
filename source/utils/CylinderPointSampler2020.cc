@@ -42,11 +42,11 @@ namespace nexus {
     origin_(physVolume->GetObjectTranslation())
   {
     G4Tubs* solidVolume = dynamic_cast<G4Tubs*> (physVolume->GetLogicalVolume()->GetSolid());
-    minRad_     = solidVolume->GetRMin();
-    maxRad_     = solidVolume->GetRMax();
-    halfLength_ = solidVolume->GetDz();
-    iniPhi_     = solidVolume->GetSPhi();
-    deltaPhi_   = solidVolume->GetDPhi();
+    minRad_     = solidVolume->GetInnerRadius();
+    maxRad_     = solidVolume->GetOuterRadius();
+    halfLength_ = solidVolume->GetZHalfLength();
+    iniPhi_     = solidVolume->GetStartPhiAngle();
+    deltaPhi_   = solidVolume->GetDeltaPhiAngle();
   }
 
 

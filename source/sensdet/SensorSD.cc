@@ -63,52 +63,31 @@ namespace nexus {
     G4ParticleDefinition* pdef = step->GetTrack()->GetDefinition();
     if (pdef != G4OpticalPhoton::Definition()) return false;
 
-    // Retrieve the pointer to the optical boundary process, if it has
-    // not been done yet (i.e., if the pointer is not defined)
-    if (!boundary_) {
-      // Get the list of processes defined for the optical photon
-      // and loop through it to find the optical boundary process.
-      G4ProcessVector* pv = pdef->GetProcessManager()->GetProcessList();
-      for (size_t i=0; i<pv->size(); i++) {
-   	if ((*pv)[i]->GetProcessName() == "OpBoundary") {
-   	  boundary_ = (G4OpBoundaryProcess*) (*pv)[i];
-   	  break;
-   	}
+    const G4VTouchable* touchable =
+      step->GetPostStepPoint()->GetTouchable();
+
+    G4int pmt_id = FindPmtID(touchable);
+
+    SensorHit* hit = 0;
+    for (size_t i=0; i<HC_->entries(); i++) {
+      if ((*HC_)[i]->GetPmtID() == pmt_id) {
+        hit = (*HC_)[i];
+        break;
       }
     }
 
-    // Check if the photon has reached a geometry boundary
-    if (step->GetPostStepPoint()->GetStepStatus() == fGeomBoundary) {
-
-      // Check whether the photon has been detected in the boundary
-      if (boundary_->GetStatus() == Detection) {
-	const G4VTouchable* touchable =
-	  step->GetPostStepPoint()->GetTouchable();
-
-	G4int pmt_id = FindPmtID(touchable);
-
- 	SensorHit* hit = 0;
-	for (size_t i=0; i<HC_->entries(); i++) {
- 	  if ((*HC_)[i]->GetPmtID() == pmt_id) {
- 	    hit = (*HC_)[i];
-	    break;
-	  }
- 	}
-
- 	// If no hit associated to this sensor exists already,
- 	// create it and set main properties
- 	if (!hit) {
- 	  hit = new SensorHit();
- 	  hit->SetPmtID(pmt_id);
- 	  hit->SetBinSize(timebinning_);
- 	  hit->SetPosition(touchable->GetTranslation());
- 	  HC_->insert(hit);
- 	}
-
- 	G4double time = step->GetPostStepPoint()->GetGlobalTime();
- 	hit->Fill(time);
-      }
+    // If no hit associated to this sensor exists already,
+    // create it and set main properties
+    if (!hit) {
+      hit = new SensorHit();
+      hit->SetPmtID(pmt_id);
+      hit->SetBinSize(timebinning_);
+      hit->SetPosition(touchable->GetTranslation());
+      HC_->insert(hit);
     }
+
+    G4double time = step->GetPostStepPoint()->GetGlobalTime();
+    hit->Fill(time);
 
     return true;
   }

@@ -68,7 +68,7 @@ namespace nexus {
       tube_logic->SetVisAttributes(steel_col);
     }
     else {
-      tube_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      tube_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
     // VERTEX GENERATORS   //////////

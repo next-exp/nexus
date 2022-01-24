@@ -97,7 +97,7 @@ void Next100SiPM::Construct()
 
     new G4LogicalSkinSurface(coating_name + "_OPSURF", coating_logic_vol, coating_optSurf);
 
-    coating_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+    coating_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 
   // WINDOW ////////////////////////////////////////////////
@@ -210,15 +210,15 @@ void Next100SiPM::Construct()
   // VISIBILITY ////////////////////////////////////////////
 
   if (visibility_) {
-    sipm_logic_vol  ->SetVisAttributes(G4VisAttributes::Invisible);
-    window_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+    sipm_logic_vol  ->SetVisAttributes(G4VisAttributes::GetInvisible());
+    window_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
     G4VisAttributes red = Red();
     red.SetForceSolid(true);
     sens_logic_vol->SetVisAttributes(red);
   }
   else {
-    sipm_logic_vol  ->SetVisAttributes(G4VisAttributes::Invisible);
-    window_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
-    sens_logic_vol  ->SetVisAttributes(G4VisAttributes::Invisible);
+    sipm_logic_vol  ->SetVisAttributes(G4VisAttributes::GetInvisible());
+    window_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
+    sens_logic_vol  ->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 }

@@ -165,8 +165,8 @@ namespace nexus {
       plug_logic->SetVisAttributes(dirty_white_col);
     }
     else {
-      support_plate_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      plug_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      support_plate_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+      plug_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
 

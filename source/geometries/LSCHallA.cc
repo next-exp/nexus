@@ -81,7 +81,7 @@ namespace nexus {
     if (visibility_)
       rock_logic->SetVisAttributes(nexus::DarkGrey());
     else
-      rock_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      rock_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
     // Limit tracking detail in the rock
     G4Region* rock_region = new G4Region("LAB_ROCK");

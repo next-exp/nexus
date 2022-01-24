@@ -95,7 +95,7 @@ void NextDemoVessel::Construct()
   G4LogicalVolume* vessel_logic_vol =
     new G4LogicalVolume(vessel_solid_vol, materials::Steel(), vessel_name);
 
-  if (!vessel_vis_) vessel_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+  if (!vessel_vis_) vessel_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   GeometryBase::SetLogicalVolume(vessel_logic_vol);
 
@@ -120,7 +120,7 @@ void NextDemoVessel::Construct()
                                     gas_logic_vol, gas_name, vessel_logic_vol,
                                     false, 0, false);
 
-  gas_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+  gas_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
 }
 
 

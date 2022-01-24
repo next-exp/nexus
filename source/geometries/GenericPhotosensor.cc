@@ -196,22 +196,22 @@ void GenericPhotosensor::Construct()
 
     new G4LogicalSkinSurface(name + "_OPSURF", wls_logic_vol, wls_optSurf);
 
-    wls_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+    wls_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 
 
   // VISIBILITIES /////////////////////////////////////////////
   if (visibility_) {
-    window_logic_vol  ->SetVisAttributes(G4VisAttributes::Invisible);
+    window_logic_vol  ->SetVisAttributes(G4VisAttributes::GetInvisible());
     G4VisAttributes red = Red();
     red.SetForceSolid(true);
     sensarea_logic_vol->SetVisAttributes(red);
-    case_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+    case_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
   else {
-    window_logic_vol  ->SetVisAttributes(G4VisAttributes::Invisible);
-    sensarea_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
-    case_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+    window_logic_vol  ->SetVisAttributes(G4VisAttributes::GetInvisible());
+    sensarea_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
+    case_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 
 

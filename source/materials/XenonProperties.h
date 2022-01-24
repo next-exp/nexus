@@ -24,10 +24,6 @@ G4double XenonRefractiveIndex(G4double energy, G4double density);
 G4double GXeScintillation(G4double energy, G4double pressure);
 G4double LXeScintillation(G4double energy);
 
-void XenonScintillation(G4int entries, G4double *energy, G4double *intensity, G4double pressure);
-void XenonScintillation(std::vector<G4double> &energy, std::vector<G4double> &intensity, G4double pressure);
-void XenonScintillation(std::vector<G4double> &energy, std::vector<G4double> &intensity);
-
 std::pair<G4int, G4int> MakeXeDensityDataTable(std::vector<std::vector<G4double>> &data);
 G4double GetGasDensity(G4double pressure, G4double temperature);
 

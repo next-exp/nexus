@@ -86,7 +86,7 @@ namespace nexus {
       new G4LogicalVolume(lab_solid,
                           G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
                           "LAB");
-    lab_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    lab_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     this->SetLogicalVolume(lab_logic);
 
     // ACTIVE
@@ -117,7 +117,7 @@ namespace nexus {
 
     G4LogicalVolume* active_logic =
       new G4LogicalVolume(active_solid, gas_, "ACTIVE");
-    active_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    active_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), active_logic,
 		      "ACTIVE", lab_logic, false, 0, false);

@@ -741,7 +741,7 @@ void NextNewVessel::Construct()
   G4VisAttributes titanium_col = nexus::TitaniumGrey();
   titanium_col.SetForceSolid(true);
   lateral_port_tube_logic->SetVisAttributes(titanium_col);
-  vessel_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
+  vessel_gas_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   if (visibility_) {
 
     vessel_logic->SetVisAttributes(titanium_col);
@@ -752,7 +752,7 @@ void NextNewVessel::Construct()
     lateral_port_tube_air_logic->SetVisAttributes(air_col);
     upper_port_tube_air_logic->SetVisAttributes(air_col);
   } else {
-    vessel_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    vessel_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 
 

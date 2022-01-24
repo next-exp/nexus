@@ -335,7 +335,7 @@ void Next100FieldCage::BuildActive()
     G4VisAttributes active_col = nexus::Yellow();
     active_logic->SetVisAttributes(active_col);
   } else {
-    active_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    active_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 
 
@@ -389,8 +389,8 @@ void Next100FieldCage::BuildCathode()
     diel_grid_logic->SetVisAttributes(grey);
     cathode_logic->SetVisAttributes(copper_col);
   } else {
-    diel_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    cathode_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    diel_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    cathode_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 
 
@@ -463,7 +463,7 @@ void Next100FieldCage::BuildBuffer()
     G4VisAttributes buffer_col = nexus::LightGreen();
     buffer_logic->SetVisAttributes(buffer_col);
   } else {
-    buffer_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    buffer_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 
   /// Verbosity
@@ -592,10 +592,10 @@ void Next100FieldCage::BuildELRegion()
     anode_logic->SetVisAttributes(grey);
     diel_grid_logic->SetVisAttributes(grey);
   } else {
-    gate_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    el_gap_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    anode_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    diel_grid_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    gate_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    el_gap_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    anode_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    diel_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 
   /// Verbosity
@@ -716,10 +716,10 @@ void Next100FieldCage::BuildLightTube()
     tpb_buffer_logic->SetVisAttributes(red);
   }
   else {
-    teflon_drift_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    teflon_buffer_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    tpb_drift_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    tpb_buffer_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    teflon_drift_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    teflon_buffer_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    tpb_drift_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    tpb_buffer_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 }
 
@@ -905,11 +905,11 @@ void Next100FieldCage::BuildFieldCage()
     buff_holder_logic->SetVisAttributes(hold_col);
     cathode_holder_logic->SetVisAttributes(hold_col);
   } else {
-    ring_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    hdpe_tube_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    act_holder_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    buff_holder_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    cathode_holder_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    ring_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    hdpe_tube_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    act_holder_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    buff_holder_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    cathode_holder_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 }
 

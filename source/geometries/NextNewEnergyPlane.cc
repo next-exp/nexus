@@ -184,7 +184,7 @@ namespace nexus {
       G4VisAttributes green_col = nexus::DarkGreen();
       green_col.SetForceSolid(true);
     } else {
-      carrier_plate_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      carrier_plate_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
     // VERTEX GENERATORS   //////////

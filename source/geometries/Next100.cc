@@ -108,7 +108,7 @@ namespace nexus {
       lab_logic_ = new G4LogicalVolume(lab_solid,
         G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
     }
-    lab_logic_->SetVisAttributes(G4VisAttributes::Invisible);
+    lab_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
 
     // Set this volume as the wrapper for the whole geometry
     // (i.e., this is the volume that will be placed in the world)

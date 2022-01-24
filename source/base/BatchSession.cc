@@ -84,14 +84,15 @@ G4String BatchSession::ReadCommand()
     G4String cmdline(linebuf);
 
     // TAB-> ' ' conversion
-    str_size nb=0;
+    size_t nb = 0;
     while ((nb= cmdline.find('\t',nb)) != G4String::npos) {
       cmdline.replace(nb, 1, " ");
     }
 
     // strip
-    cmdline = cmdline.strip(G4String::both);
-    cmdline = cmdline.strip(G4String::trailing, ctrM);
+    cmdline = G4StrUtil::strip_copy (cmdline);
+    cmdline = G4StrUtil::rstrip_copy(cmdline, ctrM);
+
 
     // skip null line if single line
     if (!qcontinued && cmdline.size()==0) continue;
@@ -107,7 +108,7 @@ G4String BatchSession::ReadCommand()
       // string after '#" is ignored
       if(tokens[i][(size_t)0] == '#' ) break;
       // '\' or '_' is treated as continued line.
-      if(tokens[i] == '\\' || tokens[i] == '_' ) {
+      if(tokens[i][(size_t)0] == '\\' || tokens[i][(size_t)0] == '_' ) {
         qcontinued= true;
         // check nothing after line continuation character
         if( i != G4int(tokens.size())-1) {
@@ -127,7 +128,7 @@ G4String BatchSession::ReadCommand()
   }
 
   // strip again
-  cmdtotal= cmdtotal.strip(G4String::both);
+  cmdtotal = G4StrUtil::strip_copy(cmdtotal);
 
   // finally,
   if(macrostream_.eof() && cmdtotal.size()==0) {

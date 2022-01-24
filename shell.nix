@@ -3,66 +3,39 @@
 #   nix-shell shell.nix --argstr py 39
 #
 { py ? "38"
-, nixpkgs-commit-id ? "88f00e7e12d2669583fffd3f33aae01101464386"
+, nixpkgs-commit-id ? "78cd22c1b8604de423546cd49bfe264b786eca13" # nixos-unstable on 2022-01-03.
 }:
 
 # To update `nixpkgs-commit-id` go to https://status.nixos.org/, which lists the
 # latest commit that passes all the tests for any release. Unless there is an
-# overriding reason, pick the latest stable NixOS release, at the time of
-# writing this is nixos-20.03.
+# overriding reason, pick the latest stable NixOS release.
+
 let
   nixpkgs-url = "https://github.com/nixos/nixpkgs/archive/${nixpkgs-commit-id}.tar.gz";
   pkgs = import (builtins.fetchTarball { url = nixpkgs-url; }) {
-    overlays = [ (import ./nix/geant4.nix) ];
+    #overlays = [ (import ./nix/geant4.nix) ];
   };
   python = builtins.getAttr ("python" + py) pkgs;
-  pypkgs = python.pkgs;
-
-  # pytest-instafail was unavailable in nixpkgs at time of writing
-  mk-pytest-instafail = pypkgs:
-    pypkgs.buildPythonPackage rec {
-      pname = "pytest-instafail";
-      version = "0.4.2";
-      src = pypkgs.fetchPypi {
-        inherit pname version;
-        sha256 = "10lpr6mjcinabqynj6v85bvb1xmapnhqmg50nys1r6hg7zgky9qr";
-      };
-      buildInputs = [ pypkgs.pytest ];
-    };
-
-  # pytest-order was unavailable in nixpkgs at time of writing (not to be
-  # confused with pytest-orderING, of which this is a fork)
-  mk-pytest-order = pypkgs:
-    pypkgs.buildPythonPackage rec {
-      pname = "pytest-order";
-      version = "0.9.3";
-      src = pypkgs.fetchPypi {
-        inherit pname version;
-        sha256 = "1qd9zfpcbzm43knkg3ap22wssqabc2wn5ynlgg661xg6r6g6iy4k";
-      };
-      buildInputs = [ pypkgs.pytest ];
-    };
-
 
   command = pkgs.writeShellScriptBin;
 
-  mkPkgList = (ps: [
+  pythonEnv = python.withPackages (ps: [
     ps.pandas
     ps.numpy
-    ps.geant4
+    ps.tables
     ps.pytest
     ps.flaky
     ps.hypothesis
-    ps.pytest_xdist
-    (mk-pytest-instafail ps)
-    (mk-pytest-order     ps)
+    ps.pytest-xdist
+    ps.pytest-instafail
+    ps.pytest-order
   ]);
-
 in
 
 pkgs.mkShell rec {
   name = "nexus";
-  buildInputs = (mkPkgList pypkgs) ++ [
+  buildInputs = [
+    pythonEnv
     pkgs.git
     pkgs.scons
     pkgs.bear

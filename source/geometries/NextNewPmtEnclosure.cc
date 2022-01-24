@@ -220,10 +220,10 @@ namespace nexus{
       base_col.SetForceSolid(true);
       pmt_base_logic->SetVisAttributes(base_col);
     } else {
-      enclosure_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      enclosure_window_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      enclosure_pad_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      pmt_base_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      enclosure_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+      enclosure_window_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+      enclosure_pad_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+      pmt_base_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
     // VERTEX GENERATORS   //////////

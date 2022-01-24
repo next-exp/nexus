@@ -71,7 +71,7 @@ namespace nexus {
       generic_col.SetForceSolid(true);
       generic_logic->SetVisAttributes(generic_col);
     } else {
-      generic_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      generic_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
 

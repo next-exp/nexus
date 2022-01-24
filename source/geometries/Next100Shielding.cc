@@ -229,7 +229,7 @@ namespace nexus {
     //uTimeMax= Maximum global time for a track, uEkinMin= Minimum remaining kinetic energy for a track
     //uRangMin=         Minimum remaining range for a track
     air_box_logic_->SetUserLimits(new G4UserLimits( DBL_MAX, DBL_MAX, DBL_MAX,100.*keV,0.));
-    air_box_logic_->SetVisAttributes(G4VisAttributes::Invisible);
+    air_box_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
 
     new G4PVPlacement(0, G4ThreeVector(0., -steel_thickness_/2., 0.),
                       air_box_logic_, "INNER_AIR", steel_box_logic, false, 0);
@@ -350,18 +350,18 @@ namespace nexus {
       struct_logic    ->SetVisAttributes(antiox_col);
     }
     else {
-      lead_box_logic  ->SetVisAttributes(G4VisAttributes::Invisible);
-      steel_box_logic ->SetVisAttributes(G4VisAttributes::Invisible);
-      roof_logic      ->SetVisAttributes(G4VisAttributes::Invisible);
-      struct_logic    ->SetVisAttributes(G4VisAttributes::Invisible);
-      lat_beam_logic  ->SetVisAttributes(G4VisAttributes::Invisible);
-      front_beam_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      lead_box_logic  ->SetVisAttributes(G4VisAttributes::GetInvisible());
+      steel_box_logic ->SetVisAttributes(G4VisAttributes::GetInvisible());
+      roof_logic      ->SetVisAttributes(G4VisAttributes::GetInvisible());
+      struct_logic    ->SetVisAttributes(G4VisAttributes::GetInvisible());
+      lat_beam_logic  ->SetVisAttributes(G4VisAttributes::GetInvisible());
+      front_beam_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
-      pedestal_support_beam_bottom_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      pedestal_support_beam_top_logic   ->SetVisAttributes(G4VisAttributes::Invisible);
-      pedestal_beam_front_logic         ->SetVisAttributes(G4VisAttributes::Invisible);
-      pedestal_beam_lateral_logic       ->SetVisAttributes(G4VisAttributes::Invisible);
-      pedestal_roof_logic               ->SetVisAttributes(G4VisAttributes::Invisible);
+      pedestal_support_beam_bottom_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+      pedestal_support_beam_top_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
+      pedestal_beam_front_logic         ->SetVisAttributes(G4VisAttributes::GetInvisible());
+      pedestal_beam_lateral_logic       ->SetVisAttributes(G4VisAttributes::GetInvisible());
+      pedestal_roof_logic               ->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
 

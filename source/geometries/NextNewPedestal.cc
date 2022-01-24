@@ -65,7 +65,7 @@ namespace nexus {
       table_logic->SetVisAttributes(steel_col);
     }
     else {
-      table_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      table_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
 

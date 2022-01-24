@@ -10,7 +10,7 @@
 #define ELECTROLUMINESCENCE_H
 
 #include <G4VDiscreteProcess.hh>
-
+#include <G4PhysicsOrderedFreeVector.hh>
 
 class G4ParticleChange;
 class G4GenericMessenger;

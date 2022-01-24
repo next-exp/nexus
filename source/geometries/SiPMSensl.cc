@@ -195,9 +195,9 @@ namespace nexus {
       plastic_col.SetForceSolid(true);
       plastic_logic->SetVisAttributes(plastic_col);
     } else {
-      sipm_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      active_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      plastic_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      sipm_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+      active_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+      plastic_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
   }
 

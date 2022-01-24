@@ -308,10 +308,10 @@ namespace nexus {
       port_tube_gas_logic->SetVisAttributes(yellow);
     }
     else {
-      vessel_logic       ->SetVisAttributes(G4VisAttributes::Invisible);
-      vessel_gas_logic   ->SetVisAttributes(G4VisAttributes::Invisible);
-      port_tube_logic    ->SetVisAttributes(G4VisAttributes::Invisible);
-      port_tube_gas_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      vessel_logic       ->SetVisAttributes(G4VisAttributes::GetInvisible());
+      vessel_gas_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
+      port_tube_logic    ->SetVisAttributes(G4VisAttributes::GetInvisible());
+      port_tube_gas_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
     // VERTEX GENERATORS   //////////

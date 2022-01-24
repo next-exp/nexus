@@ -363,7 +363,7 @@ namespace nexus {
     drift_region->AddRootLogicalVolume(active_logic);
 
     /// Visibilities
-    active_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    active_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
     // VERTEX GENERATOR
     active_gen_ =
@@ -494,7 +494,7 @@ void NextNewFieldCage::BuildBuffer()
       gate_logic->SetVisAttributes(gate_col);
     }
     else {
-      gate_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      gate_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
   }
 
@@ -548,8 +548,8 @@ void NextNewFieldCage::BuildBuffer()
       //tpb_col.SetForceSolid(true);
       tpb_anode_logic->SetVisAttributes(tpb_col);
     } else {
-      anode_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      tpb_anode_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      anode_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+      tpb_anode_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
   }
@@ -675,8 +675,8 @@ void NextNewFieldCage::BuildBuffer()
       ring_col.SetForceSolid(true);
       ring_logic->SetVisAttributes(ring_col);
     } else {
-      drift_tube_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      tpb_drift_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      drift_tube_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+      tpb_drift_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
     /// VERTEX GENERATORS   //////////
@@ -737,7 +737,7 @@ void NextNewFieldCage::BuildBuffer()
       frame_col.SetForceSolid(true);
       tracking_frame_logic->SetVisAttributes(frame_col);
     } else {
-      tracking_frame_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      tracking_frame_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
     // Vertex generator
