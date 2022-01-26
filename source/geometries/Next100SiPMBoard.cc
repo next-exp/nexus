@@ -26,6 +26,7 @@
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
 #include <G4LogicalBorderSurface.hh>
+#include <G4UnionSolid.hh>
 
 using namespace nexus;
 
@@ -162,6 +163,35 @@ void Next100SiPMBoard::Construct()
     new G4LogicalVolume(mask_hole_solid_vol, mother_gas, mask_hole_name);
 
   // (Placement of this volume below.)
+
+  // HOLE WALLs WLS ///////////////////////////////////////////////////
+
+  G4String mask_wall_wls_name = "SIPM_BOARD_MASK_WALL_WLS";
+
+  G4Box* latwall_wls_solid_vol =
+    new G4Box(mask_wall_wls_name, wls_thickness/2., mask_hole_y/2., mask_hole_length/2.);
+
+  G4Box* uppwall_wls_solid_vol =
+      new G4Box(mask_wall_wls_name, mask_hole_x/2., wls_thickness/2., mask_hole_length/2.);
+
+  G4UnionSolid* wall_wls_solid_vol =
+    new G4UnionSolid(mask_wall_wls_name, latwall_wls_solid_vol, uppwall_wls_solid_vol, 0,
+                     G4ThreeVector(mask_hole_x/2.-wls_thickness/2., -mask_hole_y/2. + wls_thickness/2., 0.));
+
+  wall_wls_solid_vol =
+    new G4UnionSolid(mask_wall_wls_name, wall_wls_solid_vol, uppwall_wls_solid_vol, 0,
+                     G4ThreeVector(mask_hole_x/2.-wls_thickness/2., mask_hole_y/2. - wls_thickness/2., 0.));
+
+  wall_wls_solid_vol =
+    new G4UnionSolid(mask_wall_wls_name, wall_wls_solid_vol, latwall_wls_solid_vol, 0,
+                     G4ThreeVector(mask_hole_x-wls_thickness, 0., 0.));
+
+  G4LogicalVolume* wall_wls_logic_vol =
+    new G4LogicalVolume(wall_wls_solid_vol, tpb, mask_wall_wls_name);
+
+  G4VPhysicalVolume* wall_wls_phys_vol =
+    new G4PVPlacement(nullptr, G4ThreeVector(-mask_hole_x/2. + wls_thickness/2., 0., 0.), wall_wls_logic_vol,
+                      mask_wall_wls_name, mask_hole_logic_vol, false, 0, false);
 
   // MASK WLS GAS HOLE ///////////////////////////////////////////////
 
