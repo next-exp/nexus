@@ -202,8 +202,7 @@ void Next100SiPMBoard::Construct()
 
   G4LogicalVolume* mask_wls_hole_logic_vol =
     new G4LogicalVolume(mask_wls_hole_solid_vol,
-                        mpv_->GetLogicalVolume()->GetMaterial(),
-                        mask_wls_hole_name);
+                        mother_gas, mask_wls_hole_name);
 
   // (Placement of this volume below.)
 
