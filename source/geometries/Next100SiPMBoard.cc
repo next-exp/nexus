@@ -225,12 +225,12 @@ void Next100SiPMBoard::Construct()
                     sipm_->GetLogicalVolume(), sipm_->GetLogicalVolume()->GetName(), mask_hole_logic_vol,
                     false, 0, false);
 
-
   ////////////////////////////////////////////////////////////////////
 
   // Placing now 8x8 replicas of the gas hole and SiPM
 
   G4double zpos = board_thickness_ + sipm_thickn/2.;
+  G4VPhysicalVolume* mask_hole_phys_vol;
 
   G4int counter = 0;
 
@@ -250,9 +250,14 @@ void Next100SiPMBoard::Construct()
                         mask_wls_hole_logic_vol, mask_wls_hole_name, mask_wls_logic_vol,
                         false, counter, false);
       // Placement of the hole+SiPM
-      new G4PVPlacement(nullptr, G4ThreeVector(xpos, ypos, mask_hole_zpos),
-                        mask_hole_logic_vol, mask_hole_name, mask_logic_vol,
-                        false, counter, false);
+      mask_hole_phys_vol = new G4PVPlacement(nullptr, G4ThreeVector(xpos, ypos, mask_hole_zpos),
+                                             mask_hole_logic_vol, mask_hole_name, mask_logic_vol,
+                                             false, counter, false);
+
+      new G4LogicalBorderSurface(mask_wall_wls_name+"_OPSURF",
+                                 mask_hole_phys_vol, wall_wls_phys_vol, mask_wls_opsurf);
+      new G4LogicalBorderSurface(mask_wls_name+"_OPSURF",
+                                 wall_wls_phys_vol, mask_hole_phys_vol, mask_wls_opsurf);
 
       counter++;
     }
