@@ -47,7 +47,6 @@ namespace nexus {
   private:
     G4GenericMessenger* msg_;
     G4double size_, pitch_, margin_;
-    G4double hole_diam_;
     G4double board_thickness_, mask_thickness_;
     G4double time_binning_;
     std::vector<G4ThreeVector> sipm_positions_;

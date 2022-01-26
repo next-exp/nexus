@@ -35,7 +35,6 @@ Next100SiPMBoard::Next100SiPMBoard():
   size_            (122.40  * mm),
   pitch_           ( 15.55  * mm),
   margin_          (  7.275 * mm),
-  hole_diam_       (  7.00  * mm),
   board_thickness_ (  0.2   * mm),
   mask_thickness_  (  6.0   * mm),
   time_binning_    (1. * microsecond),
@@ -148,33 +147,33 @@ void Next100SiPMBoard::Construct()
                              mpv_, mask_wls_phys_vol, mask_wls_opsurf);
 
 
-  // MASK WLS GAS HOLE ///////////////////////////////////////////////
-
-  G4String mask_wls_hole_name   = "SIPM_BOARD_MASK_WLS_HOLE";
-  G4double mask_wls_hole_length = wls_thickness;
-
-  G4Tubs* mask_wls_hole_solid_vol =
-    new G4Tubs(mask_wls_hole_name, 0., hole_diam_/2.,
-               mask_wls_hole_length/2., 0., 360.*deg);
-
-  G4LogicalVolume* mask_wls_hole_logic_vol =
-    new G4LogicalVolume(mask_wls_hole_solid_vol,
-                        mpv_->GetLogicalVolume()->GetMaterial(),
-                        mask_wls_hole_name);
-
-  // (Placement of this volume below.)
-
   // MASK GAS HOLE ///////////////////////////////////////////////////
 
   G4String mask_hole_name   = "SIPM_BOARD_MASK_HOLE";
   G4double mask_hole_length = mask_thickness_ - wls_thickness;
   G4double mask_hole_zpos   = - mask_thickness_/2. + mask_hole_length/2.;
+  G4double mask_hole_x = 6.0 * mm;
+  G4double mask_hole_y = 5.0 * mm;
 
-  G4Tubs* mask_hole_solid_vol =
-    new G4Tubs(mask_hole_name, 0., hole_diam_/2., mask_hole_length/2., 0, 360.*deg);
+  G4Box* mask_hole_solid_vol =
+    new G4Box(mask_hole_name, mask_hole_x/2., mask_hole_y/2., mask_hole_length/2.);
 
   G4LogicalVolume* mask_hole_logic_vol =
     new G4LogicalVolume(mask_hole_solid_vol, mother_gas, mask_hole_name);
+
+  // (Placement of this volume below.)
+
+  // MASK WLS GAS HOLE ///////////////////////////////////////////////
+
+  G4String mask_wls_hole_name   = "SIPM_BOARD_MASK_WLS_HOLE";
+
+  G4Box* mask_wls_hole_solid_vol =
+    new G4Box(mask_wls_hole_name, mask_hole_x/2., mask_hole_y/2., wls_thickness/2.);
+
+  G4LogicalVolume* mask_wls_hole_logic_vol =
+    new G4LogicalVolume(mask_wls_hole_solid_vol,
+                        mpv_->GetLogicalVolume()->GetMaterial(),
+                        mask_wls_hole_name);
 
   // (Placement of this volume below.)
 
