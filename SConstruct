@@ -183,7 +183,7 @@ vars.AddVariables(
 
     ('CXXFLAGS',
      'c++ compiler options.',
-     ['-std=c++11']),
+     ['-std=c++17']),
 
     ('CPPPATH',
      'List of directories where the include headers are located.',
@@ -280,6 +280,11 @@ if not env['LIBPATH']:
 #    if not conf.CheckLib(library='GSL', language='CXX', autoadd=0):
 #        Abort('GSL library not found.')
 ## ##################################################################
+
+    ## Force nexus to use C++17 standard
+    if '-std=c++11' in env['CXXFLAGS']:
+        env['CXXFLAGS'].remove('-std=c++11')
+
     env = conf.Finish()
 
 vars.Save(BUILDVARS_FILE, env)
