@@ -74,8 +74,6 @@ namespace nexus {
 
     G4double timebinning_; ///< Time bin width
 
-    G4OpBoundaryProcess* boundary_; ///< Pointer to the optical boundary process
-
     SensorHitsCollection* HC_; ///< Pointer to the collection of hits
   };
 

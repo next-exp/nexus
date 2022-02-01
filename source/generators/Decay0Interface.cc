@@ -199,7 +199,7 @@ void Decay0Interface::ProcessHeader()
 {
   G4String line;
 
-  while (!line.contains("First event")) getline(file_, line);
+  while (!G4StrUtil::contains(line, "First event")) getline(file_, line);
 
   getline(file_, line);
   getline(file_, line);
