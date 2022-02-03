@@ -64,7 +64,7 @@ def AssertG4Version(path):
 
     ## If the stdout is empty, the execution of the command failed
     version = p.stdout.read()
-    if version == '':
+    if version == b'':
         Abort("Failed to establish Geant4 version.")
     else:
         g4version = version.decode('utf-8').strip()
