@@ -140,13 +140,13 @@ vars.AddVariables(
     ## Geant4
 
     PathVariable('GEANT4_BINDIR',                     # var name
-                 'Path to Geant4 headers directory',  # var description
+                 'Path to Geant4 bin directory.',  # var description
                  NULL_PATH),                       # var default value
 
     ## ROOT
 
     PathVariable('ROOT_BINDIR',
-                 'Path to ROOT installation.',
+                 'Path to ROOT bin directory.',
                  NULL_PATH),
 
     ## HDF5
