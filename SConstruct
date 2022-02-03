@@ -212,6 +212,8 @@ vars.AddVariables(
 ## propagating the user's external environment
 env = Environment(variables=vars)
 
+## Load the PATH variable of the user environment,
+## to look for third-party library paths
 env.PrependENVPath('PATH', os.environ['PATH'])
 
 ## If the LIBPATH buildvar (for instance) is not defined, the configure
