@@ -119,7 +119,8 @@ namespace nexus {
     }
     // Tracking Plane regions
     else if ((region == "TP_COPPER_PLATE") ||
-             (region == "SIPM_BOARD")) {
+             (region == "SIPM_BOARD") ||
+             (region == "DB_PLUG")) {
       vertex = tracking_plane_->GenerateVertex(region);
     }
     else {

@@ -9,11 +9,14 @@
 #include "Next100TrackingPlane.h"
 
 #include "Next100SiPMBoard.h"
+#include "MaterialsList.h"
 #include "CylinderPointSampler2020.h"
+#include "BoxPointSampler.h"
 #include "Visibilities.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4Tubs.hh>
+#include <G4Box.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
 #include <G4NistManager.hh>
@@ -26,8 +29,9 @@ using namespace nexus;
 Next100TrackingPlane::Next100TrackingPlane():
   GeometryBase(),
   copper_plate_diameter_  (1340.*mm),
-  copper_plate_thickness_ ( 120.*mm),
-  distance_board_board_   (   1.*mm),
+  copper_plate_thickness_ ( 145.*mm),
+  distance_board_board_   (   2.*mm),
+
   visibility_(true),
   sipm_board_geom_(new Next100SiPMBoard),
   copper_plate_gen_(nullptr),
@@ -47,6 +51,7 @@ Next100TrackingPlane::~Next100TrackingPlane()
   delete msg_;
   delete sipm_board_geom_;
   delete copper_plate_gen_;
+  delete plug_gen_;
 }
 
 
@@ -61,69 +66,89 @@ void Next100TrackingPlane::Construct()
 
   G4String copper_plate_name = "TP_COPPER_PLATE";
 
-  G4Tubs* copper_plate_solid_vol = new G4Tubs(copper_plate_name,
-                                             0., copper_plate_diameter_/2.,
-                                             copper_plate_thickness_/2.,
-                                             0., 360.*deg);
+  G4Tubs* copper_plate_solid = new G4Tubs(copper_plate_name,
+                                          0., copper_plate_diameter_/2.,
+                                          copper_plate_thickness_/2.,
+                                          0., 360.*deg);
 
-  G4LogicalVolume* copper_plate_logic_vol =
-    new G4LogicalVolume(copper_plate_solid_vol,
-                        G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
-                        copper_plate_name);
+  G4LogicalVolume* copper_plate_logic =
+    new G4LogicalVolume(copper_plate_solid,
+                        G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"), copper_plate_name);
 
-  G4double zpos = GetELzCoord() - gate_tp_dist_ - copper_plate_thickness_/2.;
+  G4double copper_plate_zpos = GetELzCoord() - gate_tp_dist_ - copper_plate_thickness_/2.;
 
-  G4VPhysicalVolume* copper_plate_phys_vol =
-    new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,zpos),
-                      copper_plate_logic_vol, copper_plate_name, mpv_->GetLogicalVolume(),
+  G4VPhysicalVolume* copper_plate_phys =
+    new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,copper_plate_zpos),
+                      copper_plate_logic, copper_plate_name, mpv_->GetLogicalVolume(),
                       false, 0, false);
 
-  copper_plate_gen_ = new CylinderPointSampler2020(copper_plate_phys_vol);
+  copper_plate_gen_ = new CylinderPointSampler2020(copper_plate_phys);
+
 
   // SIPM BOARDS /////////////////////////////////////////////////////
 
   sipm_board_geom_->SetMotherPhysicalVolume(mpv_);
   sipm_board_geom_->Construct();
-  G4LogicalVolume* sipm_board_logic_vol = sipm_board_geom_->GetLogicalVolume();
+  G4LogicalVolume* sipm_board_logic = sipm_board_geom_->GetLogicalVolume();
 
-  zpos = GetELzCoord() - gate_tp_dist_ + sipm_board_geom_->GetThickness()/2.;
+  G4double zpos = GetELzCoord() - gate_tp_dist_ + sipm_board_geom_->GetThickness()/2.;
 
   // SiPM boards are positioned bottom (negative Y) to top (positive Y)
   // and left (negative X) to right (positive X).
-
   G4int board_index = 1;
 
   // Column on the far left has 5 boards.
   // It is located 3.5 boards away from the center.
-  PlaceSiPMBoardColumns(5, -3.5, zpos, board_index, sipm_board_logic_vol);
+  PlaceSiPMBoardColumns(5, -3.5, zpos, board_index, sipm_board_logic);
 
   // Second column from the left has 7 boards.
   // It is located 2.5 boards away from the center.
-  PlaceSiPMBoardColumns(7, -2.5, zpos, board_index, sipm_board_logic_vol);
+  PlaceSiPMBoardColumns(7, -2.5, zpos, board_index, sipm_board_logic);
 
   // Central block of 4 columns with 8 boards each
-  PlaceSiPMBoardColumns(8, -1.5, zpos, board_index, sipm_board_logic_vol);
-  PlaceSiPMBoardColumns(8, -0.5, zpos, board_index, sipm_board_logic_vol);
-  PlaceSiPMBoardColumns(8,  0.5, zpos, board_index, sipm_board_logic_vol);
-  PlaceSiPMBoardColumns(8,  1.5, zpos, board_index, sipm_board_logic_vol);
+  PlaceSiPMBoardColumns(8, -1.5, zpos, board_index, sipm_board_logic);
+  PlaceSiPMBoardColumns(8, -0.5, zpos, board_index, sipm_board_logic);
+  PlaceSiPMBoardColumns(8,  0.5, zpos, board_index, sipm_board_logic);
+  PlaceSiPMBoardColumns(8,  1.5, zpos, board_index, sipm_board_logic);
 
   // Second column from the right has 7 boards and
   // it's located 2.5 boards away from the center.
-  PlaceSiPMBoardColumns(7,  2.5, zpos, board_index, sipm_board_logic_vol);
+  PlaceSiPMBoardColumns(7,  2.5, zpos, board_index, sipm_board_logic);
 
   // Column on the far right has 5 boards.
   // It is located 3.5 boards away from the center.
-  PlaceSiPMBoardColumns(5,  3.5, zpos, board_index, sipm_board_logic_vol);
+  PlaceSiPMBoardColumns(5,  3.5, zpos, board_index, sipm_board_logic);
+
+  ///// DB PLUGS
+  G4double plug_x = 40. * mm;
+  G4double plug_y =  5. * mm;
+  G4double plug_z =  2. * mm;
+  G4double plug_y_displacement = 90.5 * mm;
+
+  G4Box* plug_solid = new G4Box("DB_PLUG", plug_x/2., plug_y/2., plug_z/2.);
+  G4LogicalVolume* plug_logic = new G4LogicalVolume(plug_solid,  materials::PEEK(), "DB_PLUG");
+  G4double plug_posz = copper_plate_zpos - copper_plate_thickness_/2. - plug_z/2.;
+
+  G4ThreeVector pos;
+  for (int i=0; i<int(board_pos_.size()); i++) {
+    pos = board_pos_[i];
+    pos.setY(pos.getY()-plug_y_displacement);
+    pos.setZ(plug_posz);
+    plug_pos_.push_back(pos);
+    new G4PVPlacement(0, pos, plug_logic, "DB_PLUG", mpv_->GetLogicalVolume(), false, i, false);
+  }
+
+  plug_gen_ = new BoxPointSampler(plug_x, plug_y, plug_z, 0.);
 
 
   // VISIBILITIES //////////////////////////////////////////
-
   if (visibility_) {
     G4VisAttributes copper_brown = CopperBrown();
-    copper_plate_logic_vol->SetVisAttributes(copper_brown);
+    copper_plate_logic->SetVisAttributes(copper_brown);
   } else {
-    copper_plate_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
-    sipm_board_logic_vol  ->SetVisAttributes(G4VisAttributes::GetInvisible());
+    copper_plate_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    sipm_board_logic  ->SetVisAttributes(G4VisAttributes::GetInvisible());
+    plug_logic        ->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 
 }
@@ -141,9 +166,10 @@ void Next100TrackingPlane::PlaceSiPMBoardColumns(G4int num_boards,
 
   for (auto i=0; i<num_boards; i++) {
     G4double ypos = (- 0.5 * (num_boards - 1) + i ) * size;
-    G4ThreeVector position(xpos, ypos, zpos); board_pos_.push_back(position);
-    new G4PVPlacement(nullptr, position,
-                      logic_vol, logic_vol->GetName(), mpv_->GetLogicalVolume(),
+    G4ThreeVector position(xpos, ypos, zpos);
+    board_pos_.push_back(position);
+
+    new G4PVPlacement(nullptr, position, logic_vol, logic_vol->GetName(), mpv_->GetLogicalVolume(),
                       false, board_index, false);
     board_index++;
   }
@@ -172,6 +198,11 @@ G4ThreeVector Next100TrackingPlane::GenerateVertex(const G4String& region) const
     vertex = sipm_board_geom_->GenerateVertex("");
     G4int board_num = G4RandFlat::shootInt((long) 0, board_pos_.size());
     vertex += board_pos_[board_num];
+  }
+  else if (region == "DB_PLUG") {
+    vertex = plug_gen_->GenerateVertex("INSIDE");
+    G4int plug_num = G4RandFlat::shootInt((long) 0, plug_pos_.size());
+    vertex += plug_pos_[plug_num];
   }
   else if (region == "TP_COPPER_PLATE") {
     vertex = copper_plate_gen_->GenerateVertex("VOLUME");

@@ -38,8 +38,10 @@ namespace nexus {
     lab_size_ (5. * m),
 
     // common used variables in geomety components
-    gate_tracking_plane_distance_(30. * mm), // to be confirmed
-    gate_sapphire_wdw_distance_  (1460.5 * mm),
+    // 0.1 mm grid thickness
+    // note that if grid thickness change it must be also changed in Next100FieldCage.cc
+    gate_tracking_plane_distance_((26.1 + 0.1)   * mm),
+    gate_sapphire_wdw_distance_  ((1458.2 - 0.1) * mm),
 
     specific_vertex_{},
     lab_walls_(false)
@@ -221,7 +223,8 @@ namespace nexus {
              (region == "PMT") ||
              (region == "PMT_BASE") ||
              (region == "TP_COPPER_PLATE") ||
-             (region == "DICE_BOARD") ||
+             (region == "SIPM_BOARD") ||
+             (region == "DB_PLUG") ||
              (region == "EL_TABLE") ||
              (region == "FIELD_RING") ||
              (region == "GATE_RING") ||
