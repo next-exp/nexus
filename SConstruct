@@ -262,7 +262,7 @@ if not env['LIBPATH']:
         Abort('HDF5 environment variables could not be found.')
 
 
-    ## GSL configuration --------------------------   -------
+    ## GSL configuration ------------------------------------
 
     if env['GSL_DIR'] != NULL_PATH:
         env.PrependENVPath('PATH', env['GSL_DIR'])
@@ -272,11 +272,10 @@ if not env['LIBPATH']:
     if not conf.CheckCXXHeader('gsl/gsl_errno.h'):
         Abort('GSL headers not found.')
 
+    if not conf.CheckLib(library='gsl', language='CXX', autoadd=0):
+        Abort('GSL library not found.')
+
  #   env.Append(LIBS = ['gsl','gslcblas'])
-
-
-#    if not conf.CheckLib(library='GSL', language='CXX', autoadd=0):
-#        Abort('GSL library not found.')
 ## ##################################################################
 
     ## Force nexus to use C++17 standard
