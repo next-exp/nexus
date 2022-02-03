@@ -136,6 +136,7 @@ vars = Variables(BUILDVARS_FILE)
 ## Definition of the variables
 vars.AddVariables(
 
+
     ## Geant4
 
     PathVariable('GEANT4_BINDIR',                     # var name
@@ -209,7 +210,9 @@ vars.AddVariables(
 
 ## Create a construction environment adding the build vars and
 ## propagating the user's external environment
-env = Environment(variables=vars, ENV=os.environ)
+env = Environment(variables=vars)
+
+env.PrependENVPath('PATH', os.environ['PATH'])
 
 ## If the LIBPATH buildvar (for instance) is not defined, the configure
 ## step has not been run yet
