@@ -149,12 +149,6 @@ vars.AddVariables(
                  'Path to ROOT bin directory.',
                  NULL_PATH),
 
-    ## HDF5
-
-    PathVariable('HDF5_DIR',
-                 'Path to HDF5 installation.',
-                 NULL_PATH),
-
     ## gsl
 
     PathVariable('GSL_DIR',
@@ -258,15 +252,14 @@ if not env['LIBPATH']:
 
     ## HDF5 configuration ----------------------------------
 
-    if env['HDF5_DIR'] != NULL_PATH:
-        env.PrependENVPath('PATH', env['HDF5_DIR'])
     try:
         env['HDF5_LIB'] = os.environ['HDF5_LIB']
         env.Append( LIBPATH = [env['HDF5_LIB']] )
         env.Append(LIBS = ['hdf5'])
         env['HDF5_INC'] = os.environ['HDF5_INC']
         env.Append( CPPPATH = [env['HDF5_INC']] )
-    except KeyError: pass
+    except KeyError:
+        Abort('HDF5 environment variables could not be found.')
 
 
     ## GSL configuration --------------------------   -------
