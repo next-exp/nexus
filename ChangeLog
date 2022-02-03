@@ -1,3 +1,8 @@
+tag v7_00_00 - 3 feb 2022
+	- Adapt nexus to GEANT4-v11. These changes are backward-incompatible.
+	- Review the tracking plane geometry of NEXT-100.
+	- Fix details of the field cage geometry of NEXT-100.
+
 tag v6_03_00 - 11 Jan 2022
 	- Full revision of NEXT100 geometry.
 	- Add new configurations of the DEMO geometry.
