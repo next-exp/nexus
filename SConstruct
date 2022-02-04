@@ -251,18 +251,6 @@ if not env['LIBPATH']:
         Abort('ROOT libraries could not be found.')
 
 
-    ## HDF5 configuration ----------------------------------
-
-    try:
-        env['HDF5_LIB'] = os.environ['HDF5_LIB']
-        env.Append( LIBPATH = [env['HDF5_LIB']] )
-        env.Append(LIBS = ['hdf5'])
-        env['HDF5_INC'] = os.environ['HDF5_INC']
-        env.Append( CPPPATH = [env['HDF5_INC']] )
-    except KeyError:
-        Abort('HDF5 environment variables could not be found.')
-
-
     ## GSL configuration ------------------------------------
 
     if env['GSL_BINDIR'] != NULL_PATH:
@@ -277,6 +265,19 @@ if not env['LIBPATH']:
         Abort('GSL library not found.')
 
  #   env.Append(LIBS = ['gsl','gslcblas'])
+
+
+    ## HDF5 configuration ----------------------------------
+
+    try:
+        env['HDF5_LIB']     = os.environ['HDF5_LIB']
+        env.Append( LIBPATH = [env['HDF5_LIB']] )
+        env.Append(LIBS     = ['hdf5'])
+        env['HDF5_INC']     = os.environ['HDF5_INC']
+        env.Append( CPPPATH = [env['HDF5_INC']] )
+    except KeyError:
+        Abort('HDF5 environment variables could not be found.')
+
 ## ##################################################################
 
     ## Force nexus to use C++17 standard
