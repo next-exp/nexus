@@ -181,7 +181,7 @@ vars.AddVariables(
 
     ('CPPFLAGS',
      'User-specified preprocessor options.',
-     ['-g']),
+     ['-g', '-fdiagnostics-color']),
 
     ('CXXFLAGS',
      'c++ compiler options.',
