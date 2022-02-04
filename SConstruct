@@ -151,11 +151,12 @@ vars.AddVariables(
 
     ## gsl
 
-    PathVariable('GSL_DIR',
-                 'Path to gsl installation.',
+    PathVariable('GSL_BINDIR',
+                 'Path to gsl bin directory.',
                  NULL_PATH),
 
     ## installation directory
+
     PathVariable('PREFIX',
                  'Path to installation directory',
                  DEFAULT_PATH),
@@ -264,7 +265,7 @@ if not env['LIBPATH']:
 
     ## GSL configuration ------------------------------------
 
-    if env['GSL_DIR'] != NULL_PATH:
+    if env['GSL_BINDIR'] != NULL_PATH:
         env.PrependENVPath('PATH', env['GSL_DIR'])
 
     env.ParseConfig('gsl-config --cflags --libs')
