@@ -233,6 +233,12 @@ if not env['LIBPATH']:
 
     env.ParseConfig('geant4-config --cflags --libs')
 
+    if not conf.CheckCXXHeader('G4Event.hh'):
+        Abort('Geant4 headers could not be found.')
+
+    if not conf.CheckLib(library='G4global', language='CXX', autoadd=0):
+        Abort('Geant4 libraries could not be found.')
+
 
     ## ROOT configuration ----------------------------------
 
@@ -240,14 +246,6 @@ if not env['LIBPATH']:
         env.PrependENVPath('PATH', env['ROOT_BINDIR'])
 
     env.ParseConfig('root-config --cflags --libs')
-
-    ## Check for libraries and headers ---------------------
-
-    if not conf.CheckCXXHeader('G4Event.hh'):
-        Abort('Geant4 headers could not be found.')
-
-    if not conf.CheckLib(library='G4global', language='CXX', autoadd=0):
-        Abort('Geant4 libraries could not be found.')
 
     if not conf.CheckCXXHeader('TObject.h'):
         Abort('ROOT headers could not be found.')
