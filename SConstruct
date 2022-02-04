@@ -155,6 +155,12 @@ vars.AddVariables(
                  'Path to gsl bin directory.',
                  NULL_PATH),
 
+    ## hdf5
+
+    PathVariable('HDF5_DIR',
+                 'Path to hdf5 installation directory.',
+                 NULL_PATH),
+
     ## installation directory
 
     PathVariable('PREFIX',
@@ -269,14 +275,21 @@ if not env['LIBPATH']:
 
     ## HDF5 configuration ----------------------------------
 
-    try:
-        env['HDF5_LIB']     = os.environ['HDF5_LIB']
-        env.Append( LIBPATH = [env['HDF5_LIB']] )
-        env.Append(LIBS     = ['hdf5'])
-        env['HDF5_INC']     = os.environ['HDF5_INC']
-        env.Append( CPPPATH = [env['HDF5_INC']] )
-    except KeyError:
-        Abort('HDF5 environment variables could not be found.')
+    if env['HDF5_DIR'] == NULL_PATH:
+        try:
+            env['HDF5_DIR'] = os.environ['HDF5_DIR']
+        except KeyError:
+            Abort('HDF5 installation directory could not be found.')
+
+    env.Append(LIBPATH = [env['HDF5_DIR']+'/lib'])
+    env.Append(LIBS    = ['hdf5'])
+    env.Append(CPPPATH = [env['HDF5_DIR']+'/include'])
+
+    if not conf.CheckCXXHeader('hdf5.h'):
+        Abort('HDF5 headers not found.')
+
+    if not conf.CheckLib(library='hdf5', language='CXX', autoadd=0):
+        Abort('HDF5 library not found.')
 
 ## ##################################################################
 
