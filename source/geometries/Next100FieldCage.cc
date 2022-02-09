@@ -88,8 +88,8 @@ Next100FieldCage::Next100FieldCage():
   // EL electric field
   elfield_ (0),
   ELelectric_field_ (34.5*kilovolt/cm),
-  cath_grid_transparency_ (.95),
-  el_grid_transparency_ (cath_grid_transparency_), // to check
+  cath_grid_transparency_(.95),
+  el_grid_transparency_  (.90),
   max_step_size_ (1. * mm),
   visibility_ (0),
   verbosity_(0),
