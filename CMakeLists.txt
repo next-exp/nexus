@@ -4,49 +4,73 @@
 ## The NEXT Collaboration
 ## --------------------------------------------------------
 
-project(nexus)
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+cmake_minimum_required(VERSION 3.12)
 
-cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
+project(nexus 
+        DESCRIPTION "Geant4 simulation framework of the NEXT experiment" 
+        LANGUAGES C CXX)
 
+#set(CMAKE_CXX_STANDARD 11)
+#set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_MACOSX_RPATH ON)
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+# Find dependencies
 find_package(Geant4 REQUIRED ui_all vis_all)
 find_package(GSL REQUIRED)
-find_package(HDF5 REQUIRED COMPONENTS CXX)
-find_package(ROOT REQUIRED)
+find_package(HDF5 REQUIRED)
+find_package(ROOT 6.23 REQUIRED)
 
-include(${Geant4_USE_FILE})
-include(${ROOT_USE_FILE})
+# Define list with names of source folders
+set(SOURCE_DIRS actions base generators geometries materials
+                persistency physics physics_lists sensdet utils)
 
-include_directories(${GSL_INCLUDE_DIRS})
-include_directories(${HDF5_INCLUDE_DIRS})
+# Create temporary folder to contain headers
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/include)
 
-add_library(lib)
-set_target_properties(lib PROPERTIES OUTPUT_NAME nexus)
 
-add_executable(exe)
-set_target_properties(exe PROPERTIES OUTPUT_NAME nexus)
-target_sources(exe PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source/nexus.cc)
+add_library(lib SHARED)
+set_target_properties(lib PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
 
-add_executable(test)
-set_target_properties(test PROPERTIES OUTPUT nexus-test)
-target_sources(test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source/nexus-test.cc)
+foreach(DIR ${SOURCE_DIRS})
+  # Create lists of *.h and *.cc files
+  file(GLOB HDRS ${CMAKE_SOURCE_DIR}/source/${DIR}/*.h)
+  file(GLOB SRCS ${CMAKE_SOURCE_DIR}/source/${DIR}/*.cc)
+  # Copy header files to the 'include' binary folder
+  file(COPY ${HDRS} DESTINATION ${CMAKE_BINARY_DIR}/include)
 
-set(SRC_DIRS  actions base generators geometries materials
-              persistency physics physics_lists sensdet utils)
+  target_include_directories(lib PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>
+    $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 
-foreach(DIR ${SRC_DIRS})
-  target_include_directories(lib  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source/${DIR})
-  target_include_directories(exe  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source/${DIR})
-  target_include_directories(test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source/${DIR})
-  file(GLOB SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/source/${DIR}/*.cc)
-  target_sources(lib PRIVATE ${SRC_FILES})
+  target_sources(lib PRIVATE ${SRCS})
 endforeach()
 
-file(GLOB TEST_FILES ${CMAKE_CURRENT_SOURCE_DIR}/source/tests/*/*.cc)
-target_include_directories(test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source/tests)
+target_include_directories(lib PRIVATE ${Geant4_INCLUDE_DIRS} ${ROOT_INCLUDE_DIRS} ${GSL_INCLUDE_DIRS} ${HDF5_INCLUDE_DIRS})
+target_link_libraries(lib PUBLIC 
+                      ${Geant4_LIBRARIES} PRIVATE ${ROOT_LIBRARIES} 
+                      ${GSL_LIBRARIES} ${HDF5_LIBRARIES})
 
-target_link_libraries(lib ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} 
-                          ${GSL_LIBRARIES} ${HDF5_LIBRARIES})
-target_link_libraries(exe lib)
+add_executable(exe)
+set_target_properties(exe PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
+target_sources(exe PRIVATE ${CMAKE_SOURCE_DIR}/source/nexus.cc)
+target_link_libraries(exe PRIVATE lib)
+
+add_executable(test)
+set_target_properties(test PROPERTIES OUTPUT_NAME ${PROJECT_NAME}-test)
+
+file(GLOB TESTS ${CMAKE_SOURCE_DIR}/source/tests/*/*.cc)
+target_sources(test PRIVATE ${TESTS} ${CMAKE_SOURCE_DIR}/source/nexus-test.cc)
+target_include_directories(test PRIVATE ${CMAKE_SOURCE_DIR}/source/tests)
+target_link_libraries(test PRIVATE lib)
+
+
+install(TARGETS lib exe test
+        RUNTIME DESTINATION bin  
+        LIBRARY DESTINATION lib)
+
+install(DIRECTORY ${CMAKE_BINARY_DIR}/include DESTINATION include/${PROJECT_NAME}
+        FILES_MATCHING PATTERN "*.h")
 
