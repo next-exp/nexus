@@ -19,20 +19,19 @@ using namespace nexus;
 
 G4double GXeDensity(G4double pressure)
 {
-  G4double density = 5.324 * kg/m3;
+  // Computes Xe (gas) density at T = 293 K
+  // Values are taken from the reference file nexus/data/gxe_density_table.txt
+  // We assume a linear interpolation between any pair of values in the database.
 
-  // These values are taken from O. Sifner and J. Klomfar, "Thermodynamic
-  // Properties of Xenon from the Triple Point to 800 K with Pressures up to
-  // 350 MPa", J. Phys. Chem. Ref. Data, Vol. 23, No. 1, 1994
-  // We assume T = 300 K and perform a linear interpolation between any pair
-  // of values.
+  G4double density;
+
   const G4int n_pressures = 6;
-  G4double data[n_pressures][2] = {{  1.0 * bar,   5.29 * kg/m3},
-                                   {  5.0 * bar,  27.01 * kg/m3},
-                                   { 10.0 * bar,  55.55 * kg/m3},
-                                   { 20.0 * bar, 118.36 * kg/m3},
-                                   { 30.0 * bar, 191.51 * kg/m3},
-                                   { 40.0 * bar, 280.40 * kg/m3}};
+  G4double data[n_pressures][2] = {{  1.0 * bar,   5.419 * kg/m3},
+                                   {  5.0 * bar,  27.721 * kg/m3},
+                                   { 10.0 * bar,  57.160 * kg/m3},
+                                   { 13.5 * bar,  78.949 * kg/m3},
+                                   { 20.0 * bar, 122.510 * kg/m3},
+                                   { 30.0 * bar, 199.920 * kg/m3}};
   G4bool found = false;
 
   for (G4int i=0; i<n_pressures-1; ++i) {
