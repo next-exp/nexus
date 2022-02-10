@@ -21,6 +21,7 @@ G4double GXeDensity(G4double pressure)
 {
   // Computes Xe (gas) density at T = 293 K
   // Values are taken from the reference file nexus/data/gxe_density_table.txt
+  // (which, in turn, is downloaded from https://webbook.nist.gov/chemistry/fluid).
   // We assume a linear interpolation between any pair of values in the database.
 
   G4double density;
