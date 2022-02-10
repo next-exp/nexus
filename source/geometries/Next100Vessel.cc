@@ -65,7 +65,7 @@ namespace nexus {
     sc_yield_(16670. * 1/MeV),
     e_lifetime_(1000. * ms),
     pressure_   (13.5 * bar),
-    temperature_(300  * kelvin),
+    temperature_(293. * kelvin),
     // Visibility
     visibility_(0),
     gas_("enrichedXe"),
