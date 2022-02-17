@@ -103,6 +103,7 @@ namespace nexus {
         (region == "XENON")  ||
         (region == "EL_GAP") ||
         (region == "LIGHT_TUBE") ||
+        (region == "HDPE_TUBE") ||
         (region == "FIELD_RING") ||
         (region == "GATE_RING") ||
         (region == "ANODE_RING")) {
