@@ -1,3 +1,8 @@
+tag v7_01_00 - 18 feb 2022
+	- Fix grid transparency to current value.
+	- Use 293 K as the temperature for NEXT-100.
+	- Add vertex generator for HDPE tube in NEXT-100.
+
 tag v7_00_00 - 3 feb 2022
 	- Adapt nexus to GEANT4-v11. These changes are backward-incompatible.
 	- Review the tracking plane geometry of NEXT-100.
