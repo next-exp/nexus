@@ -516,18 +516,6 @@ void Next100FieldCage::BuildELRegion()
                     anode_logic, "ANODE_RING", mother_logic_,
                     false, 0, false);
 
-  ///Gas under ANODE.
-  G4Tubs* anode_gas_solid =
-    new G4Tubs("ANODE_GAS", 0, gate_int_diam_/2.,
-              (gate_ring_thickn_-grid_thickn_)/2., 0, twopi);
-
-  G4LogicalVolume* anode_gas_logic =
-    new G4LogicalVolume(anode_gas_solid, gas_, "ANODE_GAS");
-
-  new G4PVPlacement(0, G4ThreeVector(0., 0., anode_grid_zpos_-gate_ring_thickn_/2.),
-                    anode_gas_logic, "ANODE_GAS", mother_logic_,
-                    false, 0, false);
-
   if (elfield_) {
     /// Define EL electric field
     UniformElectricDriftField* el_field = new UniformElectricDriftField();
