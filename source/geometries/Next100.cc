@@ -215,6 +215,7 @@ namespace nexus {
              (region == "BUFFER") ||
              (region == "XENON") ||
              (region == "LIGHT_TUBE") ||
+             (region == "HDPE_TUBE") ||
              (region == "EL_GAP") ||
              (region == "EP_COPPER_PLATE") ||
              (region == "SAPPHIRE_WINDOW") ||

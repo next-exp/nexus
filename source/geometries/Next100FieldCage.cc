@@ -746,6 +746,10 @@ void Next100FieldCage::BuildFieldCage()
                     hdpe_tube_logic, "HDPE_TUBE", mother_logic_,
                     false, 0, false);
 
+  hdpe_gen_ = new CylinderPointSampler2020(hdpe_tube_int_diam_/2., hdpe_tube_ext_diam_/2.,
+                                           hdpe_length_/2.,0., twopi, nullptr,
+                                           G4ThreeVector(0., 0., hdpe_tube_z_pos));
+
   G4double active_short_z = 13.5 * mm; //Thickness of holder first holder in the active volume.
   G4double buffer_short_z = 37.  * mm;
   G4double ring_drift_buffer_dist = 72.*mm;
@@ -926,6 +930,7 @@ Next100FieldCage::~Next100FieldCage()
   delete xenon_gen_;
   delete teflon_gen_;
   delete el_gap_gen_;
+  delete hdpe_gen_;
   delete ring_gen_;
   delete cathode_gen_;
   delete gate_gen_;
@@ -999,6 +1004,17 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
     } while (
     VertexVolume->GetName() != "LIGHT_TUBE_DRIFT" &&
     VertexVolume->GetName() != "LIGHT_TUBE_BUFFER" );
+  }
+
+  else if (region == "HDPE_TUBE") {
+    G4VPhysicalVolume *VertexVolume;
+    do {
+      vertex = hdpe_gen_->GenerateVertex("VOLUME");
+      G4ThreeVector glob_vtx(vertex);
+      glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+      VertexVolume =
+        geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+    } while (VertexVolume->GetName() != region);
   }
 
   else if (region == "EL_GAP") {
