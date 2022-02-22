@@ -105,10 +105,11 @@ void Next100SiPMBoard::Construct()
   G4Box* mask_solid_vol =
     new G4Box(mask_name, size_/2., size_/2., mask_thickness_/2.);
 
+  G4Material* teflon = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+  teflon->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
+
   G4LogicalVolume* mask_logic_vol =
-      new G4LogicalVolume(mask_solid_vol,
-                          G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON"),
-                          mask_name);
+      new G4LogicalVolume(mask_solid_vol, teflon, mask_name);
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., mask_zpos),
                     mask_logic_vol, mask_name, board_logic_vol, false, 0, false);

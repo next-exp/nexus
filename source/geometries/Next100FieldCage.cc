@@ -255,8 +255,8 @@ void Next100FieldCage::DefineMaterials()
   copper_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
 
   /// Teflon for the light tube
-  teflon_ =
-  G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+  teflon_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+  teflon_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
   /// TPB coating
   tpb_ = materials::TPB();
