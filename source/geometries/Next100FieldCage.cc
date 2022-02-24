@@ -256,6 +256,9 @@ void Next100FieldCage::DefineMaterials()
 
   /// Teflon for the light tube
   teflon_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+  // teflon is the material used in the light-tube, and is covered by a G4LogicalSkinSurface
+  // In Geant4 11.0.0, a bug in treating the OpBoundaryProcess produced in the surface makes the code fail.
+  // This is avoided by setting an empty G4MaterialPropertiesTable of the G4Material.
   teflon_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
   /// TPB coating

@@ -106,6 +106,9 @@ void Next100SiPMBoard::Construct()
     new G4Box(mask_name, size_/2., size_/2., mask_thickness_/2.);
 
   G4Material* teflon = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+  // teflon is the material used in the sipm-board masks which are covered by a G4LogicalSkinSurface
+  // In Geant4 11.0.0, a bug in treating the OpBoundaryProcess produced in the surface makes the code fail.
+  // This is avoided by setting an empty G4MaterialPropertiesTable of the G4Material.
   teflon->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
   G4LogicalVolume* mask_logic_vol =
