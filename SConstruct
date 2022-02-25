@@ -293,6 +293,8 @@ if not env['LIBPATH']:
     ## Force nexus to use C++17 standard
     if '-std=c++11' in env['CXXFLAGS']:
         env['CXXFLAGS'].remove('-std=c++11')
+    if '-std=c++14' in env['CXXFLAGS']:
+        env['CXXFLAGS'].remove('-std=c++14')
 
     env = conf.Finish()
 
