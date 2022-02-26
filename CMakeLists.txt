@@ -28,7 +28,7 @@ set(SOURCE_DIRS actions base generators geometries materials
                 persistency physics physics_lists sensdet utils)
 
 # Create temporary folder to contain headers
-file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/include)
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/include/${PROJECT_NAME})
 
 
 add_library(lib SHARED)
@@ -39,10 +39,10 @@ foreach(DIR ${SOURCE_DIRS})
   file(GLOB HDRS ${CMAKE_SOURCE_DIR}/source/${DIR}/*.h)
   file(GLOB SRCS ${CMAKE_SOURCE_DIR}/source/${DIR}/*.cc)
   # Copy header files to the 'include' binary folder
-  file(COPY ${HDRS} DESTINATION ${CMAKE_BINARY_DIR}/include)
+  file(COPY ${HDRS} DESTINATION ${CMAKE_BINARY_DIR}/include/${PROJECT_NAME})
 
   target_include_directories(lib PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include/${PROJECT_NAME}>
     $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 
   target_sources(lib PRIVATE ${SRCS})
@@ -71,6 +71,6 @@ install(TARGETS lib exe test
         RUNTIME DESTINATION bin  
         LIBRARY DESTINATION lib)
 
-install(DIRECTORY ${CMAKE_BINARY_DIR}/include DESTINATION include/${PROJECT_NAME}
+install(DIRECTORY ${CMAKE_BINARY_DIR}/include/${PROJECT_NAME} DESTINATION include
         FILES_MATCHING PATTERN "*.h")
 
