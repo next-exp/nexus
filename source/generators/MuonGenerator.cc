@@ -24,9 +24,6 @@
 #include <Randomize.hh>
 #include <G4OpticalPhoton.hh>
 
-#include <TF1.h>
-#include <TMath.h>
-
 #include "CLHEP/Units/SystemOfUnits.h"
 
 using namespace nexus;
@@ -64,8 +61,22 @@ MuonGenerator::MuonGenerator():
   DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
   geom_ = detconst->GetGeometry();
 
-}
+  // Create a vector of values finely spaced from 0 -> pi/2
+  // Then take cos(x)*cos(x) to make a dist to sample from
+  std::vector<G4double> v_angles;
 
+  for (G4double i = 0; i <= pi/2; i+=0.0001){
+      v_angles.push_back(std::cos(i)*std::cos(i));
+  }
+
+  // Convert vector to arr
+  G4double arr_ang[v_angles.size()];
+  std::copy(v_angles.begin(), v_angles.end(), arr_ang);
+
+  // Initialise the Random Number Generator based on cos(x)*cos(x) distribution
+  fRandomGeneral = new RandGeneral( arr_ang, v_angles.size() );
+
+}
 
 
 MuonGenerator::~MuonGenerator()
@@ -151,8 +162,8 @@ G4String MuonGenerator::MuonCharge() const
 
 G4double MuonGenerator::GetTheta() const
 {
-  TF1 *f1 = new TF1("f1","pow(cos(x),2)",0,pi/2);
-  G4double theta = f1->GetRandom();
+  G4double theta;
+  theta = fRandomGeneral->fire()*pi/2;
   return theta;
 }
 

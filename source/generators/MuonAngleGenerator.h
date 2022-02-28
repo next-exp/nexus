@@ -13,12 +13,12 @@
 #include <G4VPrimaryGenerator.hh>
 #include <G4RotationMatrix.hh>
 
+#include <random>
+
 class G4GenericMessenger;
 class G4Event;
 class G4ParticleDefinition;
 class G4VSolid;
-
-class TH2F;
 
 
 namespace nexus {
@@ -50,10 +50,17 @@ namespace nexus {
     G4double RandomEnergy() const;
     G4String MuonCharge() const;
 
+    // Sample the Muon Distribution loaded from file
     void GetDirection(G4ThreeVector& dir);
 
-    G4bool CheckOverlap(const G4ThreeVector& vtx,
-    			const G4ThreeVector& dir);
+    G4bool CheckOverlap(const G4ThreeVector& vtx, const G4ThreeVector& dir);
+
+    /// Load in the Muon Angular/Energy Distribution from CSV file
+    /// and initialise the discrete flux distribution
+    void LoadMuonDistribution();
+
+    /// Get the bin widths for the azimuth and zenith
+    std::vector<G4double> GetBinWidths(std::vector<G4double> bins);
 
   private:
     G4GenericMessenger* msg_;
@@ -71,11 +78,21 @@ namespace nexus {
     G4String ang_file_; ///< Name of file with distributions
     G4String dist_name_; ///< Name of distribution in file
 
-    TH2F * distribution_; ///< Anglular distribution
-
     const GeometryBase* geom_; ///< Pointer to the detector geometry
 
     G4VSolid * geom_solid_;
+
+    std::vector<G4double> flux, azimuths, zeniths; ///< Values of flux, azimuth and zenith from file
+    std::vector<G4double> azimuth_bins; ///< List of Azimuth bin edges
+    std::vector<G4double> zenith_bins;  ///< List of Zenith bin edges
+    std::vector<G4double> az_BW; ///< List of Azimuth bin widths
+    std::vector<G4double> zen_BW; ///< List of Zenith bin widths
+
+    std::mt19937 RN_engine;  ///< Random Number Generator Engine Index
+    std::mt19937 RN_engine_az; ///< Random Number Generator Engine Azimuth
+    std::mt19937 RN_engine_zen; ///< Random Number Generator Engine Zenith
+
+    std::discrete_distribution<G4int> discr_dist; ///< Discrete distribution to sample flux
 
   };
 

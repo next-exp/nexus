@@ -25,10 +25,6 @@
 #include <Randomize.hh>
 #include <G4OpticalPhoton.hh>
 
-#include <TMath.h>
-#include <TFile.h>
-#include <TH2F.h>
-
 #include "CLHEP/Units/SystemOfUnits.h"
 
 using namespace nexus;
@@ -39,7 +35,7 @@ REGISTER_CLASS(MuonAngleGenerator, G4VPrimaryGenerator)
 MuonAngleGenerator::MuonAngleGenerator():
   G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
   angular_generation_(true), rPhi_(NULL), energy_min_(0.),
-  energy_max_(0.), distribution_(0), geom_(0), geom_solid_(0)
+  energy_max_(0.), geom_(0), geom_solid_(0)
 {
   msg_ = new G4GenericMessenger(this, "/Generator/MuonAngleGenerator/",
 				"Control commands of muongenerator.");
@@ -82,10 +78,74 @@ MuonAngleGenerator::MuonAngleGenerator():
 
 MuonAngleGenerator::~MuonAngleGenerator()
 {
-
   delete msg_;
 }
 
+void MuonAngleGenerator::LoadMuonDistribution()
+{
+  
+  // File pointer
+  std::ifstream fin(ang_file_);
+  
+  // Check if file has opened properly
+  if (!fin.is_open()){
+    G4Exception("[MuonAngleGenerator]", "LoadMuonDistribution()",
+                FatalException, " could not read in the input muon distributions from CSV file ");
+  }
+
+  // Read the Data from the file as strings
+  std::string s_flux, s_azimuth, s_zenith;
+
+  // Loop over the lines in the file and add the values to a vector
+  while (fin.peek()!=EOF) {
+
+    std::getline(fin, s_flux, ',');
+
+    // Load in zenith bin edges
+    if (s_flux == "zenith"){
+      std::getline(fin, s_zenith, '\n');
+      zenith_bins.push_back(stod(s_zenith));
+    }
+    // Load in azimuth bin edges
+    else if (s_flux == "azimuth"){
+      std::getline(fin, s_azimuth, '\n');
+      azimuth_bins.push_back(stod(s_azimuth));
+    }
+    // Load in the flux values and positions
+    else {
+      std::getline(fin, s_azimuth, ',');
+      std::getline(fin, s_zenith, '\n');
+
+      flux.push_back(stod(s_flux));
+      azimuths.push_back(stod(s_azimuth));
+      zeniths.push_back(stod(s_zenith));
+    }
+
+  }
+
+  // Calculate and store the bin widths
+  az_BW  = GetBinWidths(azimuth_bins);
+  zen_BW = GetBinWidths(zenith_bins);
+
+  // Discrete distribution with bin index and intensity to sample from
+  discr_dist = std::discrete_distribution<G4int>(std::begin(flux), std::end(flux));
+
+}
+
+std::vector<G4double> MuonAngleGenerator::GetBinWidths(std::vector<G4double> bins)
+{
+
+  // Vector of Bin Widths
+  std::vector<G4double> BW = {};
+
+  // Loop over and store the bin differences
+  for (G4int i = 0; i < bins.size(); i++){
+      BW.push_back((bins[i+1] - bins[i]));
+  }
+
+  return BW;
+
+}
 
 void MuonAngleGenerator::SetupAngles()
 {
@@ -93,12 +153,6 @@ void MuonAngleGenerator::SetupAngles()
   // Rotates anticlockwise about Y.
   rPhi_ = new G4RotationMatrix();
   rPhi_->rotateY(-axis_rotation_);
-
-  // Get the Angular distribution from file.
-  TFile angle_file(ang_file_);
-  angle_file.GetObject(dist_name_, distribution_);
-  distribution_->SetDirectory(0);
-  angle_file.Close();
 
   // Get the solid to check overlap
   geom_solid_ =
@@ -109,6 +163,17 @@ void MuonAngleGenerator::SetupAngles()
 
 void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
 {
+
+  // Initalise RNG seeds and load file on the first event
+  if (event->GetEventID() == 0){ 
+    RN_engine.seed(CLHEP::HepRandom::getTheSeed());
+    RN_engine_az.seed(CLHEP::HepRandom::getTheSeed()+1);   // +1 to keep unique seeds
+    RN_engine_zen.seed(CLHEP::HepRandom::getTheSeed()+2);  // +2 to keep unique seeds
+
+    // Load in the Muon angular distribution from file
+    LoadMuonDistribution();
+
+  }
 
   if (angular_generation_ && rPhi_ == NULL)
     SetupAngles();
@@ -129,6 +194,7 @@ void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
 
   G4ThreeVector position = geom_->GenerateVertex(region_);
   G4ThreeVector p_dir(0., -1., 0.);
+
   if (angular_generation_){
     GetDirection(p_dir);
     while ( !CheckOverlap(position, p_dir) )
@@ -175,20 +241,85 @@ G4String MuonAngleGenerator::MuonCharge() const
 
 void MuonAngleGenerator::GetDirection(G4ThreeVector& dir)
 {
-  // GetAngles from file?? Azimuth defined anticlockwise
-  // From north
-  G4double zenith  = 0.;
-  G4double azimuth = 0.;
-  distribution_->GetRandom2(azimuth, zenith);
-  // !! Current distribution in units of pi
-  zenith  *= pi;
-  azimuth *= pi;
+  
+  // Amount to smear the randomly sampled zenith/azimuth values by
+  G4double zen_BW_smear{1.0e6}; 
+  G4double az_BW_smear{1.0e6};
 
-  dir.setX(sin(zenith) * sin(azimuth));
-  dir.setY(-cos(zenith));
-  dir.setZ(-sin(zenith) * cos(azimuth));
+  // Generate random index weighted by the bin contents
+  G4int RN_indx = discr_dist(RN_engine);
 
+  // Loop over the zenith values and find the corresponding bin width to smear
+  for (G4int i = 0; i < zenith_bins.size()-1; i++){
+      
+      // Catch very last bin
+      if (zen_BW_smear == 1e6 && i == zenith_bins.size()-2){
+        if (zeniths[RN_indx] >= zenith_bins[i] 
+            && zeniths[RN_indx] <= zenith_bins[i+1]){
+          
+            zen_BW_smear = zen_BW[i];
+          }
+      }
+      else {
+        if (zeniths[RN_indx] >= zenith_bins[i] 
+              && zeniths[RN_indx] < zenith_bins[i+1]){
+            
+            zen_BW_smear = zen_BW[i];
+
+        }
+      }
+  
+  }
+
+  // Loop over the azimuth values and find the corresponding bin width to smear
+  for (G4int i = 0; i < azimuth_bins.size()-1; i++){
+      
+      // Include last bin in check
+      if (az_BW_smear == 1e6 && i == azimuth_bins.size()-2){
+        if (azimuths[RN_indx] >= azimuth_bins[i] 
+            && azimuths[RN_indx] <= azimuth_bins[i+1]){
+          
+            az_BW_smear = az_BW[i];
+
+        }
+      }
+      else {
+
+        if (azimuths[RN_indx] >= azimuth_bins[i] 
+              && azimuths[RN_indx] < azimuth_bins[i+1]){
+            
+            az_BW_smear = az_BW[i];
+
+        }
+      }
+
+  }
+
+  // Check if the smear values are set properly
+  if (az_BW_smear == 1.0e6 || zen_BW_smear == 1.0e6 )
+    G4Exception("[MuonAngleGenerator]", "GetDirection()",
+              FatalException, " bin smear value was not set correctly ");
+
+  // Gaussian dist to smear by bin widths in azimuth and zenith
+  std::normal_distribution<G4double> Gauss_az(0, az_BW_smear);
+  std::normal_distribution<G4double> Gauss_zen(0, zen_BW_smear);
+  
+  // Get the Gaussian smear values 
+  G4double az_smear  = Gauss_az(RN_engine_az);
+  G4double zen_smear = Gauss_zen(RN_engine_zen);
+
+  // Correct sampled values by smearing
+  G4double az_samp  = azimuths[RN_indx] + az_smear;
+  G4double zen_samp = zeniths[RN_indx]  + zen_smear;
+
+  // Calculate the vector components of the muon
+  dir.setX(sin(zen_samp) * sin(az_samp));
+  dir.setY(-cos(zen_samp));
+  dir.setZ(-sin(zen_samp) * cos(az_samp));
+
+  // Rotate about the Y-Axis
   dir *= *rPhi_;
+
 }
 
 
