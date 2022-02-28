@@ -13,10 +13,6 @@
 
 #include <G4RunManager.hh>
 
-#include <TRandom2.h>
-#include <TVector3.h>
-
-
 
 namespace nexus {
 

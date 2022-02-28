@@ -21,10 +21,8 @@
 #include <G4SDManager.hh>
 #include <G4HCtable.hh>
 #include <globals.hh>
+#include "g4root_defs.hh"
 
-#include <TFile.h>
-#include <TTree.h>
-#include <TH1.h>
 
 #include "CLHEP/Units/SystemOfUnits.h"
 #include "AddUserInfoToPV.h"
@@ -47,27 +45,33 @@ REGISTER_CLASS(MuonsEventAction, G4UserEventAction)
     thresh_cmd.SetUnitCategory("Energy");
     thresh_cmd.SetRange("energy_threshold>0.");
 
-    // Muons Control plots
-    hist1_ = new TH1D ("Edepo","Energy_deposited",100,-1.0,3.4);
-    hist2_ = new TH1D ("Theta","Theta generated",100,0.,pi);
-    hist3_ = new TH1D ("Phi","Phi generated",100,0.,twopi);
-    tree_  = new TTree("Tree nexus","Flat tree with some nexus info");
-    tree_->Branch("tree_theta", &tree_theta_, "tree_theta/D");
-    tree_->Branch("tree_phi", &tree_phi_, "tree_phi/D");
+
+    // Get analysis manager
+    fG4AnalysisMan = G4AnalysisManager::Instance();
+    
+    // Create histogram(s) for muons
+    fG4AnalysisMan->CreateH1("Edepo","Energy_deposited",100,-1.0,3.4);
+    fG4AnalysisMan->CreateH1("Theta","Theta generated",100,0.,pi);
+    fG4AnalysisMan->CreateH1("Phi","Phi generated",100,0.,twopi);
+
+    // Open a CSV file to write the muon theta and phi events to
+    // Currently G4 Ntuple Functionality does not work
+    fThetaPhi.open ("Muon_Theta_Phi_Events.csv");
+    fThetaPhi << "Theta" << "," << "Phi" << "\n";
+
   }
 
 
 
   MuonsEventAction::~MuonsEventAction()
   {
-    //added for muons
-    const char * suf = stringHist_.c_str();
-    TFile *file = new TFile(suf,"RECREATE","Muons");
-    hist1_->Write();
-    hist2_->Write();
-    hist3_->Write();
-    tree_->Write();
-    file->Close();
+    // Open an output file and write histogram to file
+    fG4AnalysisMan->OpenFile(stringHist_);
+    fG4AnalysisMan->Write();
+    fG4AnalysisMan->CloseFile();
+
+    // Close the CSV file
+    fThetaPhi.close();
 
   }
 
@@ -103,8 +107,8 @@ REGISTER_CLASS(MuonsEventAction, G4UserEventAction)
           if (G4VVisManager::GetConcreteInstance()) trj->DrawTrajectory();
         }
       }
-      //control plot for energy
-      hist1_->Fill(edep);
+      // Control plot for energy
+      fG4AnalysisMan->FillH1(0, edep);
 
       PersistencyManager* pm = dynamic_cast<PersistencyManager*>
         (G4VPersistencyManager::GetPersistencyManager());
@@ -114,20 +118,18 @@ REGISTER_CLASS(MuonsEventAction, G4UserEventAction)
 
     }
 
-    //Retrieving muons generation information
+    // Retrieving muon generation information
     G4PrimaryVertex* my_vertex = event->GetPrimaryVertex();
     G4VUserPrimaryVertexInformation *getinfo2 = my_vertex->GetUserInformation();
     AddUserInfoToPV *my_getinfo2 = dynamic_cast<AddUserInfoToPV*>(getinfo2);
 
-    Double_t my_theta = my_getinfo2->GetTheta();
-    Double_t my_phi = my_getinfo2->GetPhi();
-    //    std::cout<<"get the info back in MuonsEventAction: "<<my_getinfo2->GetTheta()<<std::endl;
-    hist2_->Fill(my_theta);
-    hist3_->Fill(my_phi);
-    tree_theta_ = my_theta;
-    tree_phi_ = my_phi;
-    tree_->Fill();
+    G4double my_theta = my_getinfo2->GetTheta();
+    G4double my_phi = my_getinfo2->GetPhi();
 
+    fG4AnalysisMan->FillH1(1, my_theta);
+    fG4AnalysisMan->FillH1(2, my_phi);
+
+    fThetaPhi << my_theta << "," << my_phi<< "\n"; 
 
   }
 
