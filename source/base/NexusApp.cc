@@ -99,7 +99,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
   if (gen_name_ == "") {
     G4Exception("[NexusApp]", "NexusApp()", FatalException, "A generator must be specified.");
   }
-  pg->SetGenerator(ObjFactory<G4VPrimaryGenerator>::Instance().CreateObject(gen_name_));
+  pg->SetGenerator(std::unique_ptr<G4VPrimaryGenerator>(ObjFactory<G4VPrimaryGenerator>::Instance().CreateObject(gen_name_)));
   this->SetUserAction(pg);
 
   if (pm_name_ == "") {

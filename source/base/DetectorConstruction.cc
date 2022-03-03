@@ -8,8 +8,6 @@
 
 #include "DetectorConstruction.h"
 
-#include "GeometryBase.h"
-
 #include <G4Box.hh>
 #include <G4Material.hh>
 #include <G4NistManager.hh>
@@ -22,7 +20,7 @@ using namespace nexus;
 
 
 
-DetectorConstruction::DetectorConstruction(): geometry_(0)
+DetectorConstruction::DetectorConstruction(): geometry_(nullptr)
 {
 }
 
@@ -30,7 +28,6 @@ DetectorConstruction::DetectorConstruction(): geometry_(0)
 
 DetectorConstruction::~DetectorConstruction()
 {
-  delete geometry_;
 }
 
 

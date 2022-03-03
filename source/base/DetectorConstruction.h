@@ -9,14 +9,14 @@
 #ifndef DETECTOR_CONSTRUCTION_H
 #define DETECTOR_CONSTRUCTION_H
 
+#include "GeometryBase.h"
+
 #include <G4VUserDetectorConstruction.hh>
 
 class G4GenericMessenger;
 
 
 namespace nexus {
-
-  class GeometryBase;
 
   class DetectorConstruction: public G4VUserDetectorConstruction
   {
@@ -31,22 +31,22 @@ namespace nexus {
     virtual G4VPhysicalVolume* Construct();
 
     /// Set a detector geometry
-    void SetGeometry(GeometryBase*);
+    void SetGeometry(std::unique_ptr<GeometryBase>);
     /// Get the detector geometry
     const GeometryBase* GetGeometry() const;
 
   private:
-    GeometryBase* geometry_;
+    std::unique_ptr<GeometryBase> geometry_;
   };
 
 
   // INLINE DEFINITIONS /////////////////////////////////////////////
 
-  inline void DetectorConstruction::SetGeometry(GeometryBase* g)
-  { geometry_ = g; }
+  inline void DetectorConstruction::SetGeometry(std::unique_ptr<GeometryBase> g)
+  { geometry_ = std::move(g); }
 
   inline const GeometryBase* DetectorConstruction::GetGeometry() const
-  { return geometry_; }
+  { return geometry_.get(); }
 
 } // end namespace nexus
 

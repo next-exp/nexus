@@ -9,7 +9,6 @@
 
 #include "PrimaryGeneration.h"
 
-#include <G4VPrimaryGenerator.hh>
 #include <G4Event.hh>
 
 
@@ -18,7 +17,7 @@ using namespace nexus;
 
 
 PrimaryGeneration::PrimaryGeneration():
-  G4VUserPrimaryGeneratorAction(), generator_(0)
+  G4VUserPrimaryGeneratorAction(), generator_(nullptr)
 {
 }
 

@@ -11,8 +11,7 @@
 #define PRIMARY_GENERATION_H
 
 #include <G4VUserPrimaryGeneratorAction.hh>
-
-class G4VPrimaryGenerator;
+#include <G4VPrimaryGenerator.hh>
 
 
 namespace nexus {
@@ -29,21 +28,21 @@ namespace nexus {
     void GeneratePrimaries(G4Event*);
 
     /// Sets the primary generator
-    void SetGenerator(G4VPrimaryGenerator*);
+    void SetGenerator(std::unique_ptr<G4VPrimaryGenerator> pg);
     /// Returns a pointer to the primary generator
     const G4VPrimaryGenerator* GetGenerator() const;
 
   private:
-    G4VPrimaryGenerator* generator_; ///< Pointer to the primary generator
+    std::unique_ptr<G4VPrimaryGenerator> generator_; ///< Pointer to the primary generator
   };
 
   // INLINE DEFINITIONS //////////////////////////////////////////////
 
-  inline void PrimaryGeneration::SetGenerator(G4VPrimaryGenerator* pg)
-  { generator_ = pg; }
+  inline void PrimaryGeneration::SetGenerator(std::unique_ptr<G4VPrimaryGenerator> pg)
+  { generator_ = std::move(pg); }
 
   inline const G4VPrimaryGenerator* PrimaryGeneration::GetGenerator() const
-  { return generator_; }
+  { return generator_.get(); }
 
 } // end namespace nexus
 
