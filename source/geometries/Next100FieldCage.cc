@@ -255,8 +255,11 @@ void Next100FieldCage::DefineMaterials()
   copper_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
 
   /// Teflon for the light tube
-  teflon_ =
-  G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+  teflon_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+  // teflon is the material used in the light-tube, and is covered by a G4LogicalSkinSurface
+  // In Geant4 11.0.0, a bug in treating the OpBoundaryProcess produced in the surface makes the code fail.
+  // This is avoided by setting an empty G4MaterialPropertiesTable of the G4Material.
+  teflon_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
   /// TPB coating
   tpb_ = materials::TPB();
@@ -514,18 +517,6 @@ void Next100FieldCage::BuildELRegion()
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., anode_zpos_),
                     anode_logic, "ANODE_RING", mother_logic_,
-                    false, 0, false);
-
-  ///Gas under ANODE.
-  G4Tubs* anode_gas_solid =
-    new G4Tubs("ANODE_GAS", 0, gate_int_diam_/2.,
-              (gate_ring_thickn_-grid_thickn_)/2., 0, twopi);
-
-  G4LogicalVolume* anode_gas_logic =
-    new G4LogicalVolume(anode_gas_solid, gas_, "ANODE_GAS");
-
-  new G4PVPlacement(0, G4ThreeVector(0., 0., anode_grid_zpos_-gate_ring_thickn_/2.),
-                    anode_gas_logic, "ANODE_GAS", mother_logic_,
                     false, 0, false);
 
   if (elfield_) {
