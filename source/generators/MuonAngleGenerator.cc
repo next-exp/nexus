@@ -241,84 +241,97 @@ G4String MuonAngleGenerator::MuonCharge() const
 
 void MuonAngleGenerator::GetDirection(G4ThreeVector& dir)
 {
+
+  // Bool to check if zenith has a valid value. If not then resample
+  G4bool invalid_evt = true;
+
+  while(invalid_evt){
   
-  // Amount to smear the randomly sampled zenith/azimuth values by
-  G4double zen_BW_smear{1.0e6}; 
-  G4double az_BW_smear{1.0e6};
+    // Amount to smear the randomly sampled zenith/azimuth values by
+    G4double zen_BW_smear{1.0e6}; 
+    G4double az_BW_smear{1.0e6};
 
-  // Generate random index weighted by the bin contents
-  G4int RN_indx = discr_dist(RN_engine);
+    // Generate random index weighted by the bin contents
+    G4int RN_indx = discr_dist(RN_engine);
 
-  // Loop over the zenith values and find the corresponding bin width to smear
-  for (G4int i = 0; i < zenith_bins.size()-1; i++){
-      
-      // Catch very last bin
-      if (zen_BW_smear == 1e6 && i == zenith_bins.size()-2){
-        if (zeniths[RN_indx] >= zenith_bins[i] 
-            && zeniths[RN_indx] <= zenith_bins[i+1]){
-          
-            zen_BW_smear = zen_BW[i];
+    // Loop over the zenith values and find the corresponding bin width to smear
+    for (G4int i = 0; i < zenith_bins.size()-1; i++){
+        
+        // Catch very last bin
+        if (zen_BW_smear == 1e6 && i == zenith_bins.size()-2){
+          if (zeniths[RN_indx] >= zenith_bins[i] 
+              && zeniths[RN_indx] <= zenith_bins[i+1]){
+            
+              zen_BW_smear = zen_BW[i];
+            }
+        }
+        else {
+          if (zeniths[RN_indx] >= zenith_bins[i] 
+                && zeniths[RN_indx] < zenith_bins[i+1]){
+              
+              zen_BW_smear = zen_BW[i];
+
           }
-      }
-      else {
-        if (zeniths[RN_indx] >= zenith_bins[i] 
-              && zeniths[RN_indx] < zenith_bins[i+1]){
-            
-            zen_BW_smear = zen_BW[i];
-
         }
-      }
+    
+    }
+
+    // Loop over the azimuth values and find the corresponding bin width to smear
+    for (G4int i = 0; i < azimuth_bins.size()-1; i++){
+        
+        // Include last bin in check
+        if (az_BW_smear == 1e6 && i == azimuth_bins.size()-2){
+          if (azimuths[RN_indx] >= azimuth_bins[i] 
+              && azimuths[RN_indx] <= azimuth_bins[i+1]){
+            
+              az_BW_smear = az_BW[i];
+
+          }
+        }
+        else {
+
+          if (azimuths[RN_indx] >= azimuth_bins[i] 
+                && azimuths[RN_indx] < azimuth_bins[i+1]){
+              
+              az_BW_smear = az_BW[i];
+
+          }
+        }
+
+    }
+
+    // Check if the smear values are set properly
+    if (az_BW_smear == 1.0e6 || zen_BW_smear == 1.0e6 )
+      G4Exception("[MuonAngleGenerator]", "GetDirection()",
+                FatalException, " bin smear value was not set correctly ");
+
+    // Gaussian dist to smear by bin widths in azimuth and zenith
+    std::normal_distribution<G4double> Gauss_az(0, az_BW_smear);
+    std::normal_distribution<G4double> Gauss_zen(0, zen_BW_smear);
+    
+    // Get the Gaussian smear values 
+    G4double az_smear  = Gauss_az(RN_engine_az);
+    G4double zen_smear = Gauss_zen(RN_engine_zen);
+
+    // Correct sampled values by smearing
+    G4double az_samp  = azimuths[RN_indx] + az_smear;
+    G4double zen_samp = zeniths[RN_indx]  + zen_smear;
+
+    // Catch negative value and resample if so
+    if (zen_samp < 0.0)
+        invalid_evt = true;
+    else
+        invalid_evt = false;
+
+    // Calculate the vector components of the muon
+    dir.setX(sin(zen_samp) * sin(az_samp));
+    dir.setY(-cos(zen_samp));
+    dir.setZ(-sin(zen_samp) * cos(az_samp));
+
+    // Rotate about the Y-Axis
+    dir *= *rPhi_;
   
   }
-
-  // Loop over the azimuth values and find the corresponding bin width to smear
-  for (G4int i = 0; i < azimuth_bins.size()-1; i++){
-      
-      // Include last bin in check
-      if (az_BW_smear == 1e6 && i == azimuth_bins.size()-2){
-        if (azimuths[RN_indx] >= azimuth_bins[i] 
-            && azimuths[RN_indx] <= azimuth_bins[i+1]){
-          
-            az_BW_smear = az_BW[i];
-
-        }
-      }
-      else {
-
-        if (azimuths[RN_indx] >= azimuth_bins[i] 
-              && azimuths[RN_indx] < azimuth_bins[i+1]){
-            
-            az_BW_smear = az_BW[i];
-
-        }
-      }
-
-  }
-
-  // Check if the smear values are set properly
-  if (az_BW_smear == 1.0e6 || zen_BW_smear == 1.0e6 )
-    G4Exception("[MuonAngleGenerator]", "GetDirection()",
-              FatalException, " bin smear value was not set correctly ");
-
-  // Gaussian dist to smear by bin widths in azimuth and zenith
-  std::normal_distribution<G4double> Gauss_az(0, az_BW_smear);
-  std::normal_distribution<G4double> Gauss_zen(0, zen_BW_smear);
-  
-  // Get the Gaussian smear values 
-  G4double az_smear  = Gauss_az(RN_engine_az);
-  G4double zen_smear = Gauss_zen(RN_engine_zen);
-
-  // Correct sampled values by smearing
-  G4double az_samp  = azimuths[RN_indx] + az_smear;
-  G4double zen_samp = zeniths[RN_indx]  + zen_smear;
-
-  // Calculate the vector components of the muon
-  dir.setX(sin(zen_samp) * sin(az_samp));
-  dir.setY(-cos(zen_samp));
-  dir.setZ(-sin(zen_samp) * cos(az_samp));
-
-  // Rotate about the Y-Axis
-  dir *= *rPhi_;
 
 }
 
