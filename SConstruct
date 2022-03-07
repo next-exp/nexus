@@ -14,7 +14,6 @@
 ### The NEXT Collaboration
 ### ----------------------------------------------------------------------------
 
-from __future__ import print_function
 import os
 import subprocess
 
@@ -64,7 +63,7 @@ def AssertG4Version(path):
 
     ## If the stdout is empty, the execution of the command failed
     version = p.stdout.read()
-    if version == '':
+    if version == b'':
         Abort("Failed to establish Geant4 version.")
     else:
         g4version = version.decode('utf-8').strip()
@@ -136,31 +135,33 @@ vars = Variables(BUILDVARS_FILE)
 ## Definition of the variables
 vars.AddVariables(
 
+
     ## Geant4
 
     PathVariable('GEANT4_BINDIR',                     # var name
-                 'Path to Geant4 headers directory',  # var description
+                 'Path to Geant4 bin directory.',  # var description
                  NULL_PATH),                       # var default value
 
     ## ROOT
 
     PathVariable('ROOT_BINDIR',
-                 'Path to ROOT installation.',
-                 NULL_PATH),
-
-    ## HDF5
-
-    PathVariable('HDF5_DIR',
-                 'Path to HDF5 installation.',
+                 'Path to ROOT bin directory.',
                  NULL_PATH),
 
     ## gsl
 
-    PathVariable('GSL_DIR',
-                 'Path to gsl installation.',
+    PathVariable('GSL_BINDIR',
+                 'Path to gsl bin directory.',
+                 NULL_PATH),
+
+    ## hdf5
+
+    PathVariable('HDF5_DIR',
+                 'Path to hdf5 installation directory.',
                  NULL_PATH),
 
     ## installation directory
+
     PathVariable('PREFIX',
                  'Path to installation directory',
                  DEFAULT_PATH),
@@ -179,7 +180,7 @@ vars.AddVariables(
 
     ('CPPFLAGS',
      'User-specified preprocessor options.',
-     ['-g']),
+     ['-g', '-fdiagnostics-color']),
 
     ('CXXFLAGS',
      'c++ compiler options.',
@@ -209,7 +210,11 @@ vars.AddVariables(
 
 ## Create a construction environment adding the build vars and
 ## propagating the user's external environment
-env = Environment(variables=vars, ENV=os.environ)
+env = Environment(variables=vars)
+
+## Load the PATH variable of the user environment,
+## to look for third-party library paths
+env.PrependENVPath('PATH', os.environ['PATH'])
 
 ## If the LIBPATH buildvar (for instance) is not defined, the configure
 ## step has not been run yet
@@ -228,6 +233,12 @@ if not env['LIBPATH']:
 
     env.ParseConfig('geant4-config --cflags --libs')
 
+    if not conf.CheckCXXHeader('G4Event.hh'):
+        Abort('Geant4 headers could not be found.')
+
+    if not conf.CheckLib(library='G4global', language='CXX', autoadd=0):
+        Abort('Geant4 libraries could not be found.')
+
 
     ## ROOT configuration ----------------------------------
 
@@ -236,14 +247,6 @@ if not env['LIBPATH']:
 
     env.ParseConfig('root-config --cflags --libs')
 
-    ## Check for libraries and headers ---------------------
-
-    if not conf.CheckCXXHeader('G4Event.hh'):
-        Abort('Geant4 headers could not be found.')
-
-    if not conf.CheckLib(library='G4global', language='CXX', autoadd=0):
-        Abort('Geant4 libraries could not be found.')
-
     if not conf.CheckCXXHeader('TObject.h'):
         Abort('ROOT headers could not be found.')
 
@@ -251,22 +254,9 @@ if not env['LIBPATH']:
         Abort('ROOT libraries could not be found.')
 
 
-    ## HDF5 configuration ----------------------------------
+    ## GSL configuration ------------------------------------
 
-    if env['HDF5_DIR'] != NULL_PATH:
-        env.PrependENVPath('PATH', env['HDF5_DIR'])
-    try:
-        env['HDF5_LIB'] = os.environ['HDF5_LIB']
-        env.Append( LIBPATH = [env['HDF5_LIB']] )
-        env.Append(LIBS = ['hdf5'])
-        env['HDF5_INC'] = os.environ['HDF5_INC']
-        env.Append( CPPPATH = [env['HDF5_INC']] )
-    except KeyError: pass
-
-
-    ## GSL configuration --------------------------   -------
-
-    if env['GSL_DIR'] != NULL_PATH:
+    if env['GSL_BINDIR'] != NULL_PATH:
         env.PrependENVPath('PATH', env['GSL_DIR'])
 
     env.ParseConfig('gsl-config --cflags --libs')
@@ -274,16 +264,37 @@ if not env['LIBPATH']:
     if not conf.CheckCXXHeader('gsl/gsl_errno.h'):
         Abort('GSL headers not found.')
 
+    if not conf.CheckLib(library='gsl', language='CXX', autoadd=0):
+        Abort('GSL library not found.')
+
  #   env.Append(LIBS = ['gsl','gslcblas'])
 
 
-#    if not conf.CheckLib(library='GSL', language='CXX', autoadd=0):
-#        Abort('GSL library not found.')
+    ## HDF5 configuration ----------------------------------
+
+    if env['HDF5_DIR'] == NULL_PATH:
+        try:
+            env['HDF5_DIR'] = os.environ['HDF5_DIR']
+        except KeyError:
+            Abort('HDF5 installation directory could not be found.')
+
+    env.Append(LIBPATH = [env['HDF5_DIR']+'/lib'])
+    env.Append(LIBS    = ['hdf5'])
+    env.Append(CPPPATH = [env['HDF5_DIR']+'/include'])
+
+    if not conf.CheckCXXHeader('hdf5.h'):
+        Abort('HDF5 headers not found.')
+
+    if not conf.CheckLib(library='hdf5', language='CXX', autoadd=0):
+        Abort('HDF5 library not found.')
+
 ## ##################################################################
 
     ## Force nexus to use C++17 standard
     if '-std=c++11' in env['CXXFLAGS']:
         env['CXXFLAGS'].remove('-std=c++11')
+    if '-std=c++14' in env['CXXFLAGS']:
+        env['CXXFLAGS'].remove('-std=c++14')
 
     env = conf.Finish()
 
