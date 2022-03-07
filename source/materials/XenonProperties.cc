@@ -242,7 +242,14 @@ std::pair<G4int, G4int> MakeXeDensityDataTable(std::vector<std::vector<G4double>
   // with the format: Temperature Pressure Density
 
   // Open file
-  G4String path(std::getenv("NEXUSDIR"));
+
+  char* nexus_path = std::getenv("NEXUSDIR");
+  if (nexus_path == nullptr) {
+    G4Exception("[XenonProperties]", "MakeXeDensityDataTable()", FatalException,
+                  "Environment variable NEXUSDIR not defined!");
+  }
+
+  G4String path(nexus_path);
   G4String filename = path + "/data/gxe_density_table.txt";
 
   std::ifstream inFile;
