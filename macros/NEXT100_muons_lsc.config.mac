@@ -28,7 +28,7 @@
 /Generator/MuonAngleGenerator/region EXTERNAL
 /Generator/MuonAngleGenerator/min_energy 200 GeV
 /Generator/MuonAngleGenerator/max_energy 250 GeV
-/Generator/MuonAngleGenerator/azimuth_rotation 140 deg
+/Generator/MuonAngleGenerator/azimuth_rotation 150 deg
 /Generator/MuonAngleGenerator/angle_dist za
 
 # DataFile: data/MuonAnaAllRuns.csv, # SimulationFile: data/SimulatedMuonsProposalMCEq.csv
