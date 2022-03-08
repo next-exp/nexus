@@ -18,8 +18,6 @@
 #include <G4Trajectory.hh>
 #include <G4GenericMessenger.hh>
 #include <G4HCofThisEvent.hh>
-#include <G4SDManager.hh>
-#include <G4HCtable.hh>
 #include <globals.hh>
 #include "g4root_defs.hh"
 

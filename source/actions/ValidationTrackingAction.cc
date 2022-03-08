@@ -20,7 +20,6 @@
 #include <G4Track.hh>
 #include <G4TrackingManager.hh>
 #include <G4Trajectory.hh>
-#include <G4ParticleDefinition.hh>
 #include <G4OpticalPhoton.hh>
 #include <G4Gamma.hh>
 #include "g4root_defs.hh"
