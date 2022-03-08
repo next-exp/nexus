@@ -88,7 +88,7 @@ void MuonAngleGenerator::LoadMuonDistribution()
   std::ifstream fin(ang_file_);
   
   // Check if file has opened properly
-  if (!fin.is_open()){
+  if (!fin.is_open() && angular_generation_){
     G4Exception("[MuonAngleGenerator]", "LoadMuonDistribution()",
                 FatalException, " could not read in the input muon distributions from CSV file ");
   }
@@ -171,7 +171,8 @@ void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
     RN_engine_zen.seed(CLHEP::HepRandom::getTheSeed()+2);  // +2 to keep unique seeds
 
     // Load in the Muon angular distribution from file
-    LoadMuonDistribution();
+    if (angular_generation_)
+      LoadMuonDistribution();
 
   }
 
