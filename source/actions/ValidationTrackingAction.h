@@ -34,7 +34,7 @@ namespace nexus {
     virtual void PostUserTrackingAction(const G4Track*);
 
   private:
-    G4AnalysisManager* fG4AnalysisMan; ///< Pointer to the Analysis Manager
+    G4AnalysisManager* fG4AnalysisMan_; ///< Pointer to the Analysis Manager
   };
 
 }

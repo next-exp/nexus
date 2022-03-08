@@ -82,17 +82,17 @@ namespace nexus {
 
     G4VSolid * geom_solid_;
 
-    std::vector<G4double> flux, azimuths, zeniths; ///< Values of flux, azimuth and zenith from file
-    std::vector<G4double> azimuth_bins; ///< List of Azimuth bin edges
-    std::vector<G4double> zenith_bins;  ///< List of Zenith bin edges
-    std::vector<G4double> az_BW; ///< List of Azimuth bin widths
-    std::vector<G4double> zen_BW; ///< List of Zenith bin widths
+    std::vector<G4double> flux_, azimuths_, zeniths_; ///< Values of flux, azimuth and zenith from file
+    std::vector<G4double> azimuth_bins_; ///< List of Azimuth bin edges
+    std::vector<G4double> zenith_bins_;  ///< List of Zenith bin edges
+    std::vector<G4double> az_BW_; ///< List of Azimuth bin widths
+    std::vector<G4double> zen_BW_; ///< List of Zenith bin widths
 
-    std::mt19937 RN_engine;  ///< Random Number Generator Engine Index
-    std::mt19937 RN_engine_az; ///< Random Number Generator Engine Azimuth
-    std::mt19937 RN_engine_zen; ///< Random Number Generator Engine Zenith
+    std::mt19937 RN_engine_;  ///< Random Number Generator Engine Index
+    std::mt19937 RN_engine_az_; ///< Random Number Generator Engine Azimuth
+    std::mt19937 RN_engine_zen_; ///< Random Number Generator Engine Zenith
 
-    std::discrete_distribution<G4int> discr_dist; ///< Discrete distribution to sample flux
+    std::discrete_distribution<G4int> discr_dist_; ///< Discrete distribution to sample flux
 
   };
 

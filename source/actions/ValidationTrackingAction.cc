@@ -34,12 +34,12 @@ ValidationTrackingAction::ValidationTrackingAction(): G4UserTrackingAction()
 {
 
   // Get analysis manager
-  fG4AnalysisMan = G4AnalysisManager::Instance();
+  fG4AnalysisMan_ = G4AnalysisManager::Instance();
   
   // Create histogram(s)
-  fG4AnalysisMan->CreateH1("GammaEnergy","GammaEnergy", 10000, 0, 4000.);
-  fG4AnalysisMan->SetH1XAxisTitle(0, "Energy (keV)");
-  fG4AnalysisMan->SetH1YAxisTitle(0, "Entries");
+  fG4AnalysisMan_->CreateH1("GammaEnergy","GammaEnergy", 10000, 0, 4000.);
+  fG4AnalysisMan_->SetH1XAxisTitle(0, "Energy (keV)");
+  fG4AnalysisMan_->SetH1YAxisTitle(0, "Entries");
 }
 
 
@@ -48,9 +48,9 @@ ValidationTrackingAction::~ValidationTrackingAction()
 {
 
   // Open an output file and write histogram to file
-  fG4AnalysisMan->OpenFile("GammaEnergy.root");
-  fG4AnalysisMan->Write();
-  fG4AnalysisMan->CloseFile();
+  fG4AnalysisMan_->OpenFile("GammaEnergy.root");
+  fG4AnalysisMan_->Write();
+  fG4AnalysisMan_->CloseFile();
 }
 
 
@@ -65,7 +65,7 @@ void ValidationTrackingAction::PreUserTrackingAction(const G4Track* track)
   }
 
   if (track->GetDefinition() == G4Gamma::Definition()) {
-    fG4AnalysisMan->FillH1(0, track->GetKineticEnergy()/CLHEP::keV);
+    fG4AnalysisMan_->FillH1(0, track->GetKineticEnergy()/CLHEP::keV);
   }
 
   // Create a new trajectory associated to the track.

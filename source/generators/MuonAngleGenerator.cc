@@ -104,31 +104,31 @@ void MuonAngleGenerator::LoadMuonDistribution()
     // Load in zenith bin edges
     if (s_flux == "zenith"){
       std::getline(fin, s_zenith, '\n');
-      zenith_bins.push_back(stod(s_zenith));
+      zenith_bins_.push_back(stod(s_zenith));
     }
     // Load in azimuth bin edges
     else if (s_flux == "azimuth"){
       std::getline(fin, s_azimuth, '\n');
-      azimuth_bins.push_back(stod(s_azimuth));
+      azimuth_bins_.push_back(stod(s_azimuth));
     }
     // Load in the flux values and positions
     else {
       std::getline(fin, s_azimuth, ',');
       std::getline(fin, s_zenith, '\n');
 
-      flux.push_back(stod(s_flux));
-      azimuths.push_back(stod(s_azimuth));
-      zeniths.push_back(stod(s_zenith));
+      flux_.push_back(stod(s_flux));
+      azimuths_.push_back(stod(s_azimuth));
+      zeniths_.push_back(stod(s_zenith));
     }
 
   }
 
   // Calculate and store the bin widths
-  az_BW  = GetBinWidths(azimuth_bins);
-  zen_BW = GetBinWidths(zenith_bins);
+  az_BW_  = GetBinWidths(azimuth_bins_);
+  zen_BW_ = GetBinWidths(zenith_bins_);
 
   // Discrete distribution with bin index and intensity to sample from
-  discr_dist = std::discrete_distribution<G4int>(std::begin(flux), std::end(flux));
+  discr_dist_ = std::discrete_distribution<G4int>(std::begin(flux_), std::end(flux_));
 
 }
 
@@ -166,9 +166,9 @@ void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
 
   // Initalise RNG seeds and load file on the first event
   if (event->GetEventID() == 0){ 
-    RN_engine.seed(CLHEP::HepRandom::getTheSeed());
-    RN_engine_az.seed(CLHEP::HepRandom::getTheSeed()+1);   // +1 to keep unique seeds
-    RN_engine_zen.seed(CLHEP::HepRandom::getTheSeed()+2);  // +2 to keep unique seeds
+    RN_engine_.seed(CLHEP::HepRandom::getTheSeed());
+    RN_engine_az_.seed(CLHEP::HepRandom::getTheSeed()+1);   // +1 to keep unique seeds
+    RN_engine_zen_.seed(CLHEP::HepRandom::getTheSeed()+2);  // +2 to keep unique seeds
 
     // Load in the Muon angular distribution from file
     if (angular_generation_)
@@ -253,24 +253,24 @@ void MuonAngleGenerator::GetDirection(G4ThreeVector& dir)
     G4double az_BW_smear{1.0e6};
 
     // Generate random index weighted by the bin contents
-    G4int RN_indx = discr_dist(RN_engine);
+    G4int RN_indx = discr_dist_(RN_engine_);
 
     // Loop over the zenith values and find the corresponding bin width to smear
-    for (G4int i = 0; i < zenith_bins.size()-1; i++){
+    for (G4int i = 0; i < zenith_bins_.size()-1; i++){
         
         // Catch very last bin
-        if (zen_BW_smear == 1e6 && i == zenith_bins.size()-2){
-          if (zeniths[RN_indx] >= zenith_bins[i] 
-              && zeniths[RN_indx] <= zenith_bins[i+1]){
+        if (zen_BW_smear == 1e6 && i == zenith_bins_.size()-2){
+          if (zeniths_[RN_indx] >= zenith_bins_[i] 
+              && zeniths_[RN_indx] <= zenith_bins_[i+1]){
             
-              zen_BW_smear = zen_BW[i];
+              zen_BW_smear = zen_BW_[i];
             }
         }
         else {
-          if (zeniths[RN_indx] >= zenith_bins[i] 
-                && zeniths[RN_indx] < zenith_bins[i+1]){
+          if (zeniths_[RN_indx] >= zenith_bins_[i] 
+                && zeniths_[RN_indx] < zenith_bins_[i+1]){
               
-              zen_BW_smear = zen_BW[i];
+              zen_BW_smear = zen_BW_[i];
 
           }
         }
@@ -278,23 +278,23 @@ void MuonAngleGenerator::GetDirection(G4ThreeVector& dir)
     }
 
     // Loop over the azimuth values and find the corresponding bin width to smear
-    for (G4int i = 0; i < azimuth_bins.size()-1; i++){
+    for (G4int i = 0; i < azimuth_bins_.size()-1; i++){
         
         // Include last bin in check
-        if (az_BW_smear == 1e6 && i == azimuth_bins.size()-2){
-          if (azimuths[RN_indx] >= azimuth_bins[i] 
-              && azimuths[RN_indx] <= azimuth_bins[i+1]){
+        if (az_BW_smear == 1e6 && i == azimuth_bins_.size()-2){
+          if (azimuths_[RN_indx] >= azimuth_bins_[i] 
+              && azimuths_[RN_indx] <= azimuth_bins_[i+1]){
             
-              az_BW_smear = az_BW[i];
+              az_BW_smear = az_BW_[i];
 
           }
         }
         else {
 
-          if (azimuths[RN_indx] >= azimuth_bins[i] 
-                && azimuths[RN_indx] < azimuth_bins[i+1]){
+          if (azimuths_[RN_indx] >= azimuth_bins_[i] 
+                && azimuths_[RN_indx] < azimuth_bins_[i+1]){
               
-              az_BW_smear = az_BW[i];
+              az_BW_smear = az_BW_[i];
 
           }
         }
@@ -311,12 +311,12 @@ void MuonAngleGenerator::GetDirection(G4ThreeVector& dir)
     std::normal_distribution<G4double> Gauss_zen(0, zen_BW_smear);
     
     // Get the Gaussian smear values 
-    G4double az_smear  = Gauss_az(RN_engine_az);
-    G4double zen_smear = Gauss_zen(RN_engine_zen);
+    G4double az_smear  = Gauss_az(RN_engine_az_);
+    G4double zen_smear = Gauss_zen(RN_engine_zen_);
 
     // Correct sampled values by smearing
-    G4double az_samp  = azimuths[RN_indx] + az_smear;
-    G4double zen_samp = zeniths[RN_indx]  + zen_smear;
+    G4double az_samp  = azimuths_[RN_indx] + az_smear;
+    G4double zen_samp = zeniths_[RN_indx]  + zen_smear;
 
     // Catch negative value and resample if so
     if (zen_samp < 0.0)

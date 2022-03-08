@@ -58,7 +58,7 @@ namespace nexus {
 
     G4ThreeVector momentum_;
 
-    CLHEP::RandGeneral *fRandomGeneral; ///< Pointer to the RNG for cos(x)*cos(x)
+    CLHEP::RandGeneral *fRandomGeneral_; ///< Pointer to the RNG for cos(x)*cos(x)
 
   };
 

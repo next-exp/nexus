@@ -17,7 +17,6 @@
 #include <G4VVisManager.hh>
 #include <G4Trajectory.hh>
 #include <G4GenericMessenger.hh>
-#include <G4HCofThisEvent.hh>
 #include <globals.hh>
 #include "g4root_defs.hh"
 
@@ -45,7 +44,7 @@ REGISTER_CLASS(MuonsEventAction, G4UserEventAction)
 
 
     // Get analysis manager
-    fG4AnalysisMan = G4AnalysisManager::Instance();
+    fG4AnalysisMan_ = G4AnalysisManager::Instance();
     
     // Create histogram(s) for muons
     fG4AnalysisMan->CreateH1("Edepo","Energy_deposited",100,-1.0,3.4);
@@ -54,8 +53,8 @@ REGISTER_CLASS(MuonsEventAction, G4UserEventAction)
 
     // Open a CSV file to write the muon theta and phi events to
     // Currently G4 Ntuple Functionality does not work
-    fThetaPhi.open ("Muon_Theta_Phi_Events.csv");
-    fThetaPhi << "Theta" << "," << "Phi" << "\n";
+    fThetaPhi_.open ("Muon_Theta_Phi_Events.csv");
+    fThetaPhi_ << "Theta" << "," << "Phi" << "\n";
 
   }
 
@@ -64,12 +63,12 @@ REGISTER_CLASS(MuonsEventAction, G4UserEventAction)
   MuonsEventAction::~MuonsEventAction()
   {
     // Open an output file and write histogram to file
-    fG4AnalysisMan->OpenFile(stringHist_);
-    fG4AnalysisMan->Write();
-    fG4AnalysisMan->CloseFile();
+    fG4AnalysisMan_->OpenFile(stringHist_);
+    fG4AnalysisMan_->Write();
+    fG4AnalysisMan_->CloseFile();
 
     // Close the CSV file
-    fThetaPhi.close();
+    fThetaPhi_.close();
 
   }
 
@@ -106,7 +105,7 @@ REGISTER_CLASS(MuonsEventAction, G4UserEventAction)
         }
       }
       // Control plot for energy
-      fG4AnalysisMan->FillH1(0, edep);
+      fG4AnalysisMan_->FillH1(0, edep);
 
       PersistencyManager* pm = dynamic_cast<PersistencyManager*>
         (G4VPersistencyManager::GetPersistencyManager());
@@ -124,10 +123,10 @@ REGISTER_CLASS(MuonsEventAction, G4UserEventAction)
     G4double my_theta = my_getinfo2->GetTheta();
     G4double my_phi = my_getinfo2->GetPhi();
 
-    fG4AnalysisMan->FillH1(1, my_theta);
-    fG4AnalysisMan->FillH1(2, my_phi);
+    fG4AnalysisMan_->FillH1(1, my_theta);
+    fG4AnalysisMan_->FillH1(2, my_phi);
 
-    fThetaPhi << my_theta << "," << my_phi<< "\n"; 
+    fThetaPhi_ << my_theta << "," << my_phi<< "\n"; 
 
   }
 

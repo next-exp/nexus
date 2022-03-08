@@ -39,8 +39,8 @@ namespace nexus {
     G4GenericMessenger* msg_;
     G4int nevt_, nupdate_;
     G4double energy_threshold_;
-    G4AnalysisManager* fG4AnalysisMan; ///< Pointer to the Analysis Manager
-    std::ofstream fThetaPhi; ///< Output CSV file to save muon theta and phi
+    G4AnalysisManager* fG4AnalysisMan_; ///< Pointer to the Analysis Manager
+    std::ofstream fThetaPhi_; ///< Output CSV file to save muon theta and phi
     G4String stringHist_; ///< Output file name for histograms
   };
   
