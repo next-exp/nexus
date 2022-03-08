@@ -78,6 +78,8 @@ namespace nexus {
     G4String ang_file_; ///< Name of file with distributions
     G4String dist_name_; ///< Name of distribution in file
 
+    G4bool bInitialize_;  ///< Check if initialisation is already done
+
     const GeometryBase* geom_; ///< Pointer to the detector geometry
 
     G4VSolid * geom_solid_;

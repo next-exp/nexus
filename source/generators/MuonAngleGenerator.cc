@@ -35,7 +35,7 @@ REGISTER_CLASS(MuonAngleGenerator, G4VPrimaryGenerator)
 MuonAngleGenerator::MuonAngleGenerator():
   G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
   angular_generation_(true), rPhi_(NULL), energy_min_(0.),
-  energy_max_(0.), geom_(0), geom_solid_(0)
+  energy_max_(0.), geom_(0), geom_solid_(0), bInitialize_(false)
 {
   msg_ = new G4GenericMessenger(this, "/Generator/MuonAngleGenerator/",
 				"Control commands of muongenerator.");
@@ -165,7 +165,7 @@ void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
 {
 
   // Initalise RNG seeds and load file on the first event
-  if (event->GetEventID() == 0){ 
+  if (!bInitialize_){ 
     RN_engine_.seed(CLHEP::HepRandom::getTheSeed());
     RN_engine_az_.seed(CLHEP::HepRandom::getTheSeed()+1);   // +1 to keep unique seeds
     RN_engine_zen_.seed(CLHEP::HepRandom::getTheSeed()+2);  // +2 to keep unique seeds
@@ -173,6 +173,9 @@ void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
     // Load in the Muon angular distribution from file
     if (angular_generation_)
       LoadMuonDistribution();
+
+    // Set Initialisation
+    bInitialize_ = true;
 
   }
 
