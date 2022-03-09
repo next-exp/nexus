@@ -229,7 +229,8 @@ namespace nexus {
              (region == "EL_TABLE") ||
              (region == "FIELD_RING") ||
              (region == "GATE_RING") ||
-             (region == "ANODE_RING")) {
+             (region == "ANODE_RING") ||
+             (region == "RING_HOLDER")) {
       vertex = inner_elements_->GenerateVertex(region);
     }
 

@@ -106,7 +106,8 @@ namespace nexus {
         (region == "HDPE_TUBE") ||
         (region == "FIELD_RING") ||
         (region == "GATE_RING") ||
-        (region == "ANODE_RING")) {
+        (region == "ANODE_RING") ||
+        (region == "RING_HOLDER")) {
       vertex = field_cage_->GenerateVertex(region);
     }
     // Energy Plane regions

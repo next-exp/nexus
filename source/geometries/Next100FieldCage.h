@@ -96,6 +96,7 @@ namespace nexus {
     CylinderPointSampler2020* cathode_gen_;
     CylinderPointSampler2020* gate_gen_;
     CylinderPointSampler2020* anode_gen_;
+    CylinderPointSampler2020* holder_gen_;
 
     // Geometry Navigator
     G4Navigator* geom_navigator_;
