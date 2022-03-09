@@ -12,16 +12,20 @@
 /Generator/SingleParticle/max_costheta -0.9935
 
 /Geometry/BlackBox/specific_vertex  0 0 0 mm
-/Geometry/BlackBox/dice_board_x_pos -1.749 cm
+/Geometry/BlackBox/dice_board_x_pos -3.5 cm
 /Geometry/BlackBox/dice_board_y_pos 0 cm
 /Geometry/BlackBox/dice_board_z_pos -50. cm
-/Geometry/BlackBox/rotation 30 deg
-/Geometry/BlackBox/mask_thickn 0. mm
-/Geometry/BlackBox/membrane_thickn 0. mm
+/Geometry/BlackBox/rotation 90 deg
+/Geometry/BlackBox/mask_thickn 3. mm
+/Geometry/BlackBox/membrane_thickn 3. mm
 /Geometry/BlackBox/coating_thickn 0. mm
 /Geometry/BlackBox/hole_diameter 0. mm #if set to 0 the holes will be rectangular.
 /Geometry/BlackBox/hole_x 6. mm
-/Geometry/BlackBox/hole_y 5. mm
+/Geometry/BlackBox/hole_y 6. mm
+/Geometry/BlackBox/membrane_hole true
+/Geometry/BlackBox/membrane_hole_diameter 2. mm #if set to 0 the holes will be rectangular.
+/Geometry/BlackBox/membrane_hole_x 6. mm
+/Geometry/BlackBox/membrane_hole_y 6. mm
 
 /run/verbose 0
 /event/verbose 0
@@ -30,4 +34,4 @@
 ### JOB CONTROL
 /nexus/random_seed            -1
 /nexus/persistency/start_id   0
-/nexus/persistency/outputFile test1.next
+/nexus/persistency/outputFile round_mask_90.next

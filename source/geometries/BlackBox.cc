@@ -110,6 +110,30 @@ namespace nexus {
                             "Hole Y");
     hole_y_cmd.SetParameterName("hole_y", true);
     hole_y_cmd.SetUnitCategory("Length");
+
+    msg_->DeclareProperty("membrane_hole", membrane_hole_,
+                          "True if membrane has holes, false if not.");
+    //G4GenericMessenger::Command& membrane_hole_cmd =msg_->DeclareProperty("membrane_hole", membrane_hole_,
+    //                      "True if membrane has holes, false if not.");
+    //membrane_hole_cmd.SetParameterName("membrane_hole", false);
+
+    G4GenericMessenger::Command&  membrane_hole_diameter_cmd =
+      msg_->DeclareProperty("membrane_hole_diameter", membrane_hole_diam_,
+                            "Membrane Hole Diameter");
+    membrane_hole_diameter_cmd.SetParameterName("membrane_hole_diameter", true);
+    membrane_hole_diameter_cmd.SetUnitCategory("Length");
+
+    G4GenericMessenger::Command&  membrane_hole_x_cmd =
+      msg_->DeclareProperty("membrane_hole_x", membrane_hole_x_,
+                            "Membrane Hole X");
+    membrane_hole_x_cmd.SetParameterName("membrane_hole_x", true);
+    membrane_hole_x_cmd.SetUnitCategory("Length");
+
+    G4GenericMessenger::Command&  membrane_hole_y_cmd =
+      msg_->DeclareProperty("membrane_hole_y", membrane_hole_y_,
+                            "Membrane Hole Y");
+    membrane_hole_y_cmd.SetParameterName("membrane_hole_y", true);
+    membrane_hole_y_cmd.SetUnitCategory("Length");
   }
 
   BlackBox::~BlackBox()
@@ -135,7 +159,7 @@ namespace nexus {
 
   G4LogicalVolume* world_logic_vol =
     new G4LogicalVolume(world_solid_vol, world_mat, world_name);
-  world_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+  world_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
   GeometryBase::SetLogicalVolume(world_logic_vol);
 
   // BLACK BOX /////////////////////////////////////////////////
@@ -151,7 +175,7 @@ namespace nexus {
 
   G4LogicalVolume* box_logic_vol =
     new G4LogicalVolume(box_solid_vol, box_mat, box_name);
-  box_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+  box_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   G4VPhysicalVolume* box_phys_vol =
    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.),
@@ -167,6 +191,10 @@ namespace nexus {
   dice_->SetHoleDiameter     (hole_diameter_);
   dice_->SetHoleX            (hole_x_);
   dice_->SetHoleY            (hole_y_);
+  dice_->SetHolesMembrane     (membrane_hole_);
+  dice_->SetMembraneHoleDiameter     (membrane_hole_diam_);
+  dice_->SetMembraneHoleX            (membrane_hole_x_);
+  dice_->SetMembraneHoleY            (membrane_hole_y_);
   dice_->Construct();
   G4LogicalVolume* dice_board_logic = dice_->GetLogicalVolume();
 

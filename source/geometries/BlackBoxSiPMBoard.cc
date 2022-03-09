@@ -44,6 +44,10 @@ BlackBoxSiPMBoard::BlackBoxSiPMBoard():
   mask_thickn_     (),
   membrane_thickn_ (),
   coating_thickn_  (),
+  membrane_hole_ (true),
+  membrane_hole_diam_       (),
+  membrane_hole_x_          (),
+  membrane_hole_y_          (),
   hole_diam_       (),
   hole_x_          (),
   hole_y_          (),
@@ -62,6 +66,8 @@ BlackBoxSiPMBoard::BlackBoxSiPMBoard():
   msg_->DeclareProperty("sipm_board_vis", visibility_,
                         "BlackBoxSiPMBoard visibility.");
 
+  msg_->DeclareProperty("sipm_board_mem_holes", membrane_hole_,
+                        "BlackBoxSiPMBoard membrane hole.");
   sipm_ = new SiPMSensl;
 }
 
@@ -117,8 +123,8 @@ void BlackBoxSiPMBoard::Construct()
   //G4double board_size_y = num_rows_    * sipm_pitch_ - 2. * side_reduction_;
   G4double board_size_x = 7.9*cm;
   G4double board_size_y = 7.9*cm;
-  G4double board_size_z = kapton_thickn_ + coating_thickn_ +
-                          std::max(sipm_->GetDimensions().z(), mask_thickn_);
+  G4double board_size_z = kapton_thickn_ + std::max(sipm_->GetDimensions().z(), coating_thickn_ + membrane_thickn_ +
+                          mask_thickn_);
 
   board_size_ = G4ThreeVector(board_size_x, board_size_y, board_size_z);
   //G4cout << "board_size " << board_size_ << G4endl;
@@ -185,11 +191,11 @@ void BlackBoxSiPMBoard::Construct()
 
     if (hole_diam_!=0.){
       //hole_solid = new G4Tubs("HOLE", 0., hole_diam_/2., mask_thickn_/2., 0., 360.*deg);}
-      hole_solid = new G4Tubs("HOLE", 0., hole_diam_/2., mask_thickn_, 0., 360.*deg);}
+      hole_solid = new G4Tubs("MASK_HOLE", 0., hole_diam_/2., mask_thickn_, 0., 360.*deg);}
 
     else {
       //hole_solid = new G4Box("HOLE", hole_x_/2., hole_y_/2., mask_thickn_/2.);}
-      hole_solid = new G4Box("HOLE", hole_x_/2., hole_y_/2., mask_thickn_);}
+      hole_solid = new G4Box("MASK_HOLE", hole_x_/2., hole_y_/2., mask_thickn_);}
 
 
     /// Create mask with holes.
@@ -219,32 +225,65 @@ void BlackBoxSiPMBoard::Construct()
                       mask_name, board_logic, false, 0, true);
 
     /// Membranes
-    if (membrane_thickn_ > 0. && mask_thickn_ >= membrane_thickn_+ sipm_->GetDimensions().z()){
-        G4String membrane_name = "BOARD_MASK_MEMB";
+    if (membrane_thickn_ > 0. && mask_thickn_ >= sipm_->GetDimensions().z()){
+    //if (membrane_thickn_ > 0.){
+        G4String membrane_name = "BOARD_MASK_MEMBRANE";
 
         //G4double membrane_posz = mask_thickn_/2. - membrane_thickn_/2.;
-        G4double membrane_posz = - board_size_z/2. + kapton_thickn_ + mask_thickn_ - membrane_thickn_/2.;
+        G4double membrane_posz = - board_size_z/2. + kapton_thickn_ + mask_thickn_ + membrane_thickn_/2.;
 
-        G4Tubs* membrane_solid = new G4Tubs(membrane_name, 0., hole_diam_/2.,
-                                          membrane_thickn_/2., 0, 360.*deg);
+        G4Box* membrane_solid = new G4Box(membrane_name, board_size_x/2.,board_size_y/2., membrane_thickn_/2.);
+
+        /// Define membrane holes.
+
+        G4VSolid* membrane_hole_solid = nullptr;
+        G4cout << "--------membrane_==true--------" << G4endl;
+        if (membrane_hole_){
+          G4cout << "--------membrane_hole_==true--------" << G4endl;
+
+          if (membrane_hole_diam_!=0.){
+              membrane_hole_solid = new G4Tubs("MEMB_HOLE", 0., membrane_hole_diam_/2., membrane_thickn_, 0., 360.*deg);}
+
+          else {
+              membrane_hole_solid = new G4Box("MEMB_HOLE", membrane_hole_x_/2., membrane_hole_y_/2., membrane_thickn_);}
+
+
+          /// Create membrane with holes.
+          G4ThreeVector membrane_hole_pos = sipm_positions_[0];
+          G4SubtractionSolid* membrane_with_holes = new G4SubtractionSolid("BOARD_MASK_MEMBRANE_W_HOLES", membrane_solid,
+                                                                                     membrane_hole_solid, 0, membrane_hole_pos);
+          for (G4int sipm_id=1; sipm_id<num_sipms_; sipm_id++) {
+              membrane_hole_pos = sipm_positions_[sipm_id];
+              //G4cout << "hole" << sipm_id << ":" << hole_pos << G4endl;
+
+              membrane_with_holes = new G4SubtractionSolid("BOARD_MASK_MEMBRANE_W_HOLES", membrane_with_holes,
+                                                            membrane_hole_solid, 0, membrane_hole_pos);}
 
         membrane_logic =
           //new G4LogicalVolume(membrane_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON"),
           //                    membrane_name);
-          new G4LogicalVolume(membrane_solid, mother_gas, membrane_name);
+          new G4LogicalVolume(membrane_with_holes, mother_gas, membrane_name);
 
-        G4ThreeVector membrane_pos;
-        for (G4int sipm_id=0; sipm_id<num_sipms_; sipm_id++) {
-             membrane_pos = sipm_positions_[sipm_id]+G4ThreeVector(0., 0., membrane_posz);
-             new G4PVPlacement(nullptr, membrane_pos, membrane_logic,
-                               membrane_name, board_logic, false, 0, true);
+        //G4ThreeVector membrane_pos;
+        //for (G4int sipm_id=0; sipm_id<num_sipms_; sipm_id++) {
+             //membrane_pos = sipm_positions_[sipm_id]+G4ThreeVector(0., 0., membrane_posz);
+             //new G4PVPlacement(nullptr, membrane_pos, membrane_logic,
+                               //membrane_name, board_logic, false, 0, true);
         }
+        else{
+          membrane_logic =
+            //new G4LogicalVolume(membrane_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON"),
+            //                    membrane_name);
+            new G4LogicalVolume(membrane_solid, mother_gas, membrane_name);
+        }
+        new G4PVPlacement(nullptr, G4ThreeVector(0., 0., membrane_posz), membrane_logic,
+                          membrane_name, board_logic, false, 0, true);
      }
      /// Coating
      if (coating_thickn_ > 0.) {
          G4String coating_name = "BOARD_COATING";
 
-         G4double coating_posz = -board_size_z/2. + kapton_thickn_ + mask_thickn_ + coating_thickn_/2.;
+         G4double coating_posz = -board_size_z/2. + kapton_thickn_ + mask_thickn_ + membrane_thickn_ + coating_thickn_/2.;
 
          G4Box* coating_solid = new G4Box(coating_name, board_size_x/2.,
                                        board_size_y/2., coating_thickn_/2.);
@@ -306,12 +345,12 @@ void BlackBoxSiPMBoard::Construct()
     }
   }
   else{
-    board_logic  ->SetVisAttributes(G4VisAttributes::Invisible);
-    kapton_logic ->SetVisAttributes(G4VisAttributes::Invisible);
+    board_logic  ->SetVisAttributes(G4VisAttributes::GetInvisible());
+    kapton_logic ->SetVisAttributes(G4VisAttributes::GetInvisible());
     if (mask_thickn_!=0){
-      mask_logic   ->SetVisAttributes(G4VisAttributes::Invisible);
-      if (membrane_thickn_ > 0.) membrane_logic->SetVisAttributes(G4VisAttributes::Invisible);
-      if (coating_thickn_  > 0.) coating_logic ->SetVisAttributes(G4VisAttributes::Invisible);
+      mask_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
+      if (membrane_thickn_ > 0.) membrane_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+      if (coating_thickn_  > 0.) coating_logic ->SetVisAttributes(G4VisAttributes::GetInvisible());
       //hole_logic   ->SetVisAttributes(G4VisAttributes::Invisible);
     }
   }
