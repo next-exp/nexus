@@ -215,6 +215,7 @@ env = Environment(variables=vars)
 ## Load the PATH variable of the user environment,
 ## to look for third-party library paths
 env.PrependENVPath('PATH', os.environ['PATH'])
+env.PrependENVPath('LD_LIBRARY_PATH', os.environ['LD_LIBRARY_PATH'])
 
 ## If the LIBPATH buildvar (for instance) is not defined, the configure
 ## step has not been run yet
