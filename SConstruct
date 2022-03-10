@@ -214,6 +214,9 @@ env = Environment(variables=vars)
 ## Load the PATH variable of the user environment,
 ## to look for third-party library paths
 env.PrependENVPath('PATH', os.environ['PATH'])
+
+## Temporary: this line appears to be necessary in some Linux machines
+## and will not be needed anymore with patch Geant4.11.0.1
 env.PrependENVPath('LD_LIBRARY_PATH', os.environ['LD_LIBRARY_PATH'])
 
 ## If the LIBPATH buildvar (for instance) is not defined, the configure
