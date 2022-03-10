@@ -208,8 +208,7 @@ vars.AddVariables(
 ## ###################################################################
 ## CONFIGURE BUILD
 
-## Create a construction environment adding the build vars and
-## propagating the user's external environment
+## Create a construction environment adding the build vars
 env = Environment(variables=vars)
 
 ## Load the PATH variable of the user environment,
