@@ -63,6 +63,12 @@ namespace nexus {
     std::vector<G4String> macros_;
     std::vector<G4String> delayed_;
 
+    std::unique_ptr<G4UserRunAction> runact_;
+    std::unique_ptr<G4UserEventAction> evtact_;
+    std::unique_ptr<G4UserStackingAction> stkact_;
+    std::unique_ptr<G4UserTrackingAction> trkact_;
+    std::unique_ptr<G4UserSteppingAction> stepact_;
+
   };
 
   // INLINE DEFINITIONS ////////////////////////////////////

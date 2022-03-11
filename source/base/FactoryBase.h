@@ -2,7 +2,9 @@
 #define FACTORY_BASE_H
 
 #include <G4Exception.hh>
+
 #include <map>
+#include <memory>
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -13,7 +15,7 @@ class ObjCreatorBase
 public:
   ObjCreatorBase() {}
   virtual ~ObjCreatorBase() {}
-  virtual T* CreateObject() = 0;
+  virtual std::unique_ptr<T> CreateObject() = 0;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -42,7 +44,7 @@ public:
   }
 
   //
-  T* CreateObject(const std::string& tag) {
+  std::unique_ptr<T> CreateObject(const std::string& tag) {
     return registry_[tag]->CreateObject();
   }
 
@@ -71,7 +73,7 @@ public:
   // Destructor
   virtual ~ObjCreator() {}
   // Return a new object instance
-  Base* CreateObject() { return new Derived; }
+  std::unique_ptr<Base> CreateObject() { return std::make_unique<Derived>(); }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
