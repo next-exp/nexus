@@ -10,9 +10,6 @@
 
 #include "NexusApp.h"
 
-#include "DetectorConstruction.h"
-#include "PrimaryGeneration.h"
-#include "BatchSession.h"
 #include "FactoryBase.h"
 
 #include <G4GenericPhysicsList.hh>
@@ -36,7 +33,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
                                          stkact_name_("")
 {
   // Create and configure a generic messenger for the app
-  msg_ = new G4GenericMessenger(this, "/nexus/", "Nexus control commands.");
+  msg_ = std::make_unique<G4GenericMessenger>(this, "/nexus/", "Nexus control commands.");
 
   // Define the command to register a configuration macro.
   // The user may invoke the command as many times as needed.
@@ -77,29 +74,29 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
   // by the time we process the initialization macro.
 
   // The physics lists are handled with Geant4's own 'factory'
-  physicsList = new G4GenericPhysicsList();
+  auto pl = std::make_unique<G4GenericPhysicsList>();
 
-  BatchSession* batch = new BatchSession(init_macro.c_str());
-  batch->SessionStart();
+  batch_ = std::make_unique<BatchSession>(init_macro.c_str());
+  batch_->SessionStart();
 
   // Set the physics list in the run manager
-  this->SetUserInitialization(physicsList);
+  this->SetUserInitialization(pl.release());
 
   // Set the detector construction instance in the run manager
-  DetectorConstruction* dc = new DetectorConstruction();
+  dc_ = std::make_unique<DetectorConstruction>();
   if (geo_name_ == "") {
     G4Exception("[NexusApp]", "NexusApp()", FatalException, "A geometry must be specified.");
   }
-  dc->SetGeometry(ObjFactory<GeometryBase>::Instance().CreateObject(geo_name_));
-  this->SetUserInitialization(dc);
+  dc_->SetGeometry(ObjFactory<GeometryBase>::Instance().CreateObject(geo_name_));
+  this->SetUserInitialization(dc_.release());
 
   // Set the primary generation instance in the run manager
-  PrimaryGeneration* pg = new PrimaryGeneration();
+  pg_ = std::make_unique<PrimaryGeneration>();
   if (gen_name_ == "") {
     G4Exception("[NexusApp]", "NexusApp()", FatalException, "A generator must be specified.");
   }
-  pg->SetGenerator(ObjFactory<G4VPrimaryGenerator>::Instance().CreateObject(gen_name_));
-  this->SetUserAction(pg);
+  pg_->SetGenerator(ObjFactory<G4VPrimaryGenerator>::Instance().CreateObject(gen_name_));
+  this->SetUserAction(pg_.release());
 
   if (pm_name_ == "") {
     G4Exception("[NexusApp]", "NexusApp()", FatalException, "A persistency manager must be specified.");
@@ -152,8 +149,6 @@ NexusApp::~NexusApp()
   PersistencyManagerBase* current = dynamic_cast<PersistencyManagerBase*>
     (G4VPersistencyManager::GetPersistencyManager());
   current->CloseFile();
-
-  delete msg_;
 }
 
 
@@ -202,10 +197,10 @@ void NexusApp::Initialize()
 void NexusApp::ExecuteMacroFile(const char* filename)
 {
   G4UImanager* UI = G4UImanager::GetUIpointer();
-  G4UIsession* batchSession = new BatchSession(filename, UI->GetSession());
-  UI->SetSession(batchSession);
+  std::unique_ptr<G4UIsession> batchSession =
+    std::make_unique<BatchSession>(filename, UI->GetSession());
+  UI->SetSession(batchSession.get());
   G4UIsession* previousSession = UI->GetSession()->SessionStart();
-  delete UI->GetSession();
   UI->SetSession(previousSession);
 }
 

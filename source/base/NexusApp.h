@@ -11,6 +11,9 @@
 #ifndef NEXUS_APP_H
 #define NEXUS_APP_H
 
+#include "BatchSession.h"
+#include "DetectorConstruction.h"
+#include "PrimaryGeneration.h"
 #include "PersistencyManagerBase.h"
 
 #include <G4RunManager.hh>
@@ -45,7 +48,7 @@ namespace nexus {
     void SetRandomSeed(G4int);
 
   private:
-    G4GenericMessenger* msg_;
+    std::unique_ptr<G4GenericMessenger> msg_;
     G4String gen_name_; ///< Name of the chosen primary generator
     G4String geo_name_;  ///< Name of the chosen geometry
     G4String pm_name_;  ///< Name of the chosen persistency manager
@@ -58,6 +61,9 @@ namespace nexus {
     std::vector<G4String> macros_;
     std::vector<G4String> delayed_;
 
+    std::unique_ptr<BatchSession> batch_;
+    std::unique_ptr<DetectorConstruction> dc_;
+    std::unique_ptr<PrimaryGeneration> pg_;
     std::unique_ptr<PersistencyManagerBase> pm_;
 
     std::unique_ptr<G4UserRunAction> runact_;
