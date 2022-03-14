@@ -11,9 +11,6 @@
 #ifndef NEXUS_APP_H
 #define NEXUS_APP_H
 
-#include "BatchSession.h"
-#include "DetectorConstruction.h"
-#include "PrimaryGeneration.h"
 #include "PersistencyManagerBase.h"
 
 #include <G4RunManager.hh>
@@ -61,16 +58,7 @@ namespace nexus {
     std::vector<G4String> macros_;
     std::vector<G4String> delayed_;
 
-    std::unique_ptr<BatchSession> batch_;
-    std::unique_ptr<DetectorConstruction> dc_;
-    std::unique_ptr<PrimaryGeneration> pg_;
     std::unique_ptr<PersistencyManagerBase> pm_;
-
-    std::unique_ptr<G4UserRunAction> runact_;
-    std::unique_ptr<G4UserEventAction> evtact_;
-    std::unique_ptr<G4UserStackingAction> stkact_;
-    std::unique_ptr<G4UserTrackingAction> trkact_;
-    std::unique_ptr<G4UserSteppingAction> stepact_;
 
   };
 

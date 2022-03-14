@@ -10,6 +10,9 @@
 
 #include "NexusApp.h"
 
+#include "BatchSession.h"
+#include "DetectorConstruction.h"
+#include "PrimaryGeneration.h"
 #include "FactoryBase.h"
 
 #include <G4GenericPhysicsList.hh>
@@ -76,27 +79,27 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
   // The physics lists are handled with Geant4's own 'factory'
   auto pl = std::make_unique<G4GenericPhysicsList>();
 
-  batch_ = std::make_unique<BatchSession>(init_macro.c_str());
-  batch_->SessionStart();
+  auto batch = std::make_unique<BatchSession>(init_macro.c_str());
+  batch->SessionStart();
 
   // Set the physics list in the run manager
   this->SetUserInitialization(pl.release());
 
   // Set the detector construction instance in the run manager
-  dc_ = std::make_unique<DetectorConstruction>();
+  auto dc = std::make_unique<DetectorConstruction>();
   if (geo_name_ == "") {
     G4Exception("[NexusApp]", "NexusApp()", FatalException, "A geometry must be specified.");
   }
-  dc_->SetGeometry(ObjFactory<GeometryBase>::Instance().CreateObject(geo_name_));
-  this->SetUserInitialization(dc_.release());
+  dc->SetGeometry(ObjFactory<GeometryBase>::Instance().CreateObject(geo_name_));
+  this->SetUserInitialization(dc.release());
 
   // Set the primary generation instance in the run manager
-  pg_ = std::make_unique<PrimaryGeneration>();
+  auto pg = std::make_unique<PrimaryGeneration>();
   if (gen_name_ == "") {
     G4Exception("[NexusApp]", "NexusApp()", FatalException, "A generator must be specified.");
   }
-  pg_->SetGenerator(ObjFactory<G4VPrimaryGenerator>::Instance().CreateObject(gen_name_));
-  this->SetUserAction(pg_.release());
+  pg->SetGenerator(ObjFactory<G4VPrimaryGenerator>::Instance().CreateObject(gen_name_));
+  this->SetUserAction(pg.release());
 
   if (pm_name_ == "") {
     G4Exception("[NexusApp]", "NexusApp()", FatalException, "A persistency manager must be specified.");
@@ -108,28 +111,33 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
 
   // Set the user action instances, if any, in the run manager
   if (runact_name_ != "") {
-    runact_ = ObjFactory<G4UserRunAction>::Instance().CreateObject(runact_name_);
-    this->SetUserAction(runact_.release());
+    std::unique_ptr<G4UserRunAction> runact =
+      ObjFactory<G4UserRunAction>::Instance().CreateObject(runact_name_);
+    this->SetUserAction(runact.release());
   }
 
   if (evtact_name_ != "") {
-    evtact_ = ObjFactory<G4UserEventAction>::Instance().CreateObject(evtact_name_);
-    this->SetUserAction(evtact_.release());
+    std::unique_ptr<G4UserEventAction> evtact =
+      ObjFactory<G4UserEventAction>::Instance().CreateObject(evtact_name_);
+    this->SetUserAction(evtact.release());
   }
 
   if (stkact_name_ != "") {
-    stkact_ = ObjFactory<G4UserStackingAction>::Instance().CreateObject(stkact_name_);
-    this->SetUserAction(stkact_.release());
+    std::unique_ptr<G4UserStackingAction> stkact =
+      ObjFactory<G4UserStackingAction>::Instance().CreateObject(stkact_name_);
+    this->SetUserAction(stkact.release());
   }
 
   if (trkact_name_ != "") {
-    trkact_ = ObjFactory<G4UserTrackingAction>::Instance().CreateObject(trkact_name_);
-    this->SetUserAction(trkact_.release());
+    std::unique_ptr<G4UserTrackingAction> trkact =
+      ObjFactory<G4UserTrackingAction>::Instance().CreateObject(trkact_name_);
+    this->SetUserAction(trkact.release());
   }
 
   if (stepact_name_ != "") {
-    stepact_ = ObjFactory<G4UserSteppingAction>::Instance().CreateObject(stepact_name_);
-    this->SetUserAction(stepact_.release());
+    std::unique_ptr<G4UserSteppingAction> stepact =
+      ObjFactory<G4UserSteppingAction>::Instance().CreateObject(stepact_name_);
+    this->SetUserAction(stepact.release());
   }
 
 
