@@ -34,4 +34,4 @@
 ### JOB CONTROL
 /nexus/random_seed            -1
 /nexus/persistency/start_id   0
-/nexus/persistency/outputFile round_mask_90.next
+/nexus/persistency/outputFile 4sipm_round_90deg.next

@@ -1,0 +1,32 @@
+## ----------------------------------------------------------------------------
+## nexus | test.config.mac
+##
+## Configuration macro to test vertices.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+##### GEOMETRY #####
+/Geometry/Next100/pressure 10. bar
+/Geometry/Next100/elfield false
+/Geometry/Next100/specific_vertex 0 5 0.5 m
+
+##### GENERATOR #####
+/Generator/SingleParticle/particle geantino
+/Generator/SingleParticle/min_energy 10 MeV
+/Generator/SingleParticle/max_energy 10 MeV
+/Generator/SingleParticle/region AD_HOC
+/Generator/SingleParticle/momentum 0 -1 0
+
+/PhysicsList/Nexus/clustering false
+/PhysicsList/Nexus/drift false
+/PhysicsList/Nexus/electroluminescence false
+/PhysicsList/Nexus/photoelectric false
+
+/nexus/persistency/outputFile test_geometry
+
+##### VERBOSITY #####
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 1
+/process/em/verbose 0

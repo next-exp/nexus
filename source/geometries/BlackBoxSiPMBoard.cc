@@ -162,9 +162,16 @@ void BlackBoxSiPMBoard::Construct()
   sipm_rot->rotateY(pi);
   G4double sipm_posz = - board_size_z/2. + kapton_thickn_ + sipm_->GetDimensions().z()/2.;
   G4ThreeVector sipm_pos;
-  for (G4int sipm_id=0; sipm_id<num_sipms_; sipm_id++) {
+
+  G4int central_sipms[] = {27, 28, 35, 36};
+
+  for (G4int sipm_id:central_sipms) {
+  //for (G4int sipm_id=0; sipm_id<num_sipms_; sipm_id++) {
+    //if (sipm_id==27 || sipm_id==28 || sipm_id==35 || sipm_id==36) {
+      //  continue;
+    //}
        sipm_pos = sipm_positions_[sipm_id] + G4ThreeVector(0., 0., sipm_posz);
-       //G4cout << "SiPM" << sipm_id << ":" << sipm_pos << G4endl;
+       G4cout << "SiPM" << sipm_id << ":" << sipm_pos << G4endl;
        //new G4PVPlacement(nullptr, sipm_pos, sipm_->GetLogicalVolume(),
         //                 sipm_->GetLogicalVolume()->GetName(), board_logic, false, sipm_id, true);
        new G4PVPlacement(sipm_rot, sipm_pos, sipm_->GetLogicalVolume(),
@@ -237,9 +244,7 @@ void BlackBoxSiPMBoard::Construct()
         /// Define membrane holes.
 
         G4VSolid* membrane_hole_solid = nullptr;
-        G4cout << "--------membrane_==true--------" << G4endl;
         if (membrane_hole_){
-          G4cout << "--------membrane_hole_==true--------" << G4endl;
 
           if (membrane_hole_diam_!=0.){
               membrane_hole_solid = new G4Tubs("MEMB_HOLE", 0., membrane_hole_diam_/2., membrane_thickn_, 0., 360.*deg);}
