@@ -154,9 +154,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
 NexusApp::~NexusApp()
 {
   // Close output file before finishing
-  PersistencyManagerBase* current = dynamic_cast<PersistencyManagerBase*>
-    (G4VPersistencyManager::GetPersistencyManager());
-  current->CloseFile();
+  pm_->CloseFile();
 }
 
 
@@ -208,7 +206,7 @@ void NexusApp::ExecuteMacroFile(const char* filename)
   std::unique_ptr<G4UIsession> batchSession =
     std::make_unique<BatchSession>(filename, UI->GetSession());
   UI->SetSession(batchSession.get());
-  G4UIsession* previousSession = UI->GetSession()->SessionStart();
+  G4UIsession* previousSession = batchSession->SessionStart();
   UI->SetSession(previousSession);
 }
 
