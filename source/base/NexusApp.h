@@ -11,19 +11,14 @@
 #ifndef NEXUS_APP_H
 #define NEXUS_APP_H
 
+#include "PersistencyManagerBase.h"
+
 #include <G4RunManager.hh>
 
 class G4GenericMessenger;
 
 
 namespace nexus {
-
-  class GeometryFactory;
-  class GeneratorFactory;
-  class ActionsFactory;
-
-
-  /// TODO. CLASS DESCRIPTION
 
   class NexusApp: public G4RunManager
   {
@@ -62,6 +57,8 @@ namespace nexus {
 
     std::vector<G4String> macros_;
     std::vector<G4String> delayed_;
+
+    std::unique_ptr<PersistencyManagerBase> pm_;
 
     std::unique_ptr<G4UserRunAction> runact_;
     std::unique_ptr<G4UserEventAction> evtact_;

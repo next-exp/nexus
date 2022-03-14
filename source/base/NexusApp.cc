@@ -12,7 +12,6 @@
 
 #include "DetectorConstruction.h"
 #include "PrimaryGeneration.h"
-#include "PersistencyManagerBase.h"
 #include "BatchSession.h"
 #include "FactoryBase.h"
 
@@ -105,8 +104,8 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
   if (pm_name_ == "") {
     G4Exception("[NexusApp]", "NexusApp()", FatalException, "A persistency manager must be specified.");
   }
-  std::unique_ptr<PersistencyManagerBase> pm = ObjFactory<PersistencyManagerBase>::Instance().CreateObject(pm_name_);
-  pm->SetMacros(init_macro, macros_, delayed_);
+  pm_ = ObjFactory<PersistencyManagerBase>::Instance().CreateObject(pm_name_);
+  pm_->SetMacros(init_macro, macros_, delayed_);
 
  // PersistencyManager::Initialize(init_macro, macros_, delayed_);
 
