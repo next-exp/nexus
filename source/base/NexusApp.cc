@@ -26,7 +26,8 @@
 #include <G4UserStackingAction.hh>
 
 using namespace nexus;
-
+using std::make_unique;
+using std::unique_ptr;
 
 
 NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
@@ -36,7 +37,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
                                          stkact_name_("")
 {
   // Create and configure a generic messenger for the app
-  msg_ = std::make_unique<G4GenericMessenger>(this, "/nexus/", "Nexus control commands.");
+  msg_ = make_unique<G4GenericMessenger>(this, "/nexus/", "Nexus control commands.");
 
   // Define the command to register a configuration macro.
   // The user may invoke the command as many times as needed.
@@ -77,16 +78,17 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
   // by the time we process the initialization macro.
 
   // The physics lists are handled with Geant4's own 'factory'
-  auto pl = std::make_unique<G4GenericPhysicsList>();
+  // The generic physics list must be initialized before
+  // processing the init macro, where the physics lists are registered
+  auto pl = make_unique<G4GenericPhysicsList>();
 
-  auto batch = std::make_unique<BatchSession>(init_macro.c_str());
-  batch->SessionStart();
+  BatchSession(init_macro.c_str()).SessionStart();
 
   // Set the physics list in the run manager
   this->SetUserInitialization(pl.release());
 
   // Set the detector construction instance in the run manager
-  auto dc = std::make_unique<DetectorConstruction>();
+  auto dc = make_unique<DetectorConstruction>();
   if (geo_name_ == "") {
     G4Exception("[NexusApp]", "NexusApp()", FatalException, "A geometry must be specified.");
   }
@@ -94,7 +96,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
   this->SetUserInitialization(dc.release());
 
   // Set the primary generation instance in the run manager
-  auto pg = std::make_unique<PrimaryGeneration>();
+  auto pg = make_unique<PrimaryGeneration>();
   if (gen_name_ == "") {
     G4Exception("[NexusApp]", "NexusApp()", FatalException, "A generator must be specified.");
   }
@@ -111,32 +113,27 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
 
   // Set the user action instances, if any, in the run manager
   if (runact_name_ != "") {
-    std::unique_ptr<G4UserRunAction> runact =
-      ObjFactory<G4UserRunAction>::Instance().CreateObject(runact_name_);
+    auto runact = ObjFactory<G4UserRunAction>::Instance().CreateObject(runact_name_);
     this->SetUserAction(runact.release());
   }
 
   if (evtact_name_ != "") {
-    std::unique_ptr<G4UserEventAction> evtact =
-      ObjFactory<G4UserEventAction>::Instance().CreateObject(evtact_name_);
+    auto evtact = ObjFactory<G4UserEventAction>::Instance().CreateObject(evtact_name_);
     this->SetUserAction(evtact.release());
   }
 
   if (stkact_name_ != "") {
-    std::unique_ptr<G4UserStackingAction> stkact =
-      ObjFactory<G4UserStackingAction>::Instance().CreateObject(stkact_name_);
+    auto stkact = ObjFactory<G4UserStackingAction>::Instance().CreateObject(stkact_name_);
     this->SetUserAction(stkact.release());
   }
 
   if (trkact_name_ != "") {
-    std::unique_ptr<G4UserTrackingAction> trkact =
-      ObjFactory<G4UserTrackingAction>::Instance().CreateObject(trkact_name_);
+    auto trkact = ObjFactory<G4UserTrackingAction>::Instance().CreateObject(trkact_name_);
     this->SetUserAction(trkact.release());
   }
 
   if (stepact_name_ != "") {
-    std::unique_ptr<G4UserSteppingAction> stepact =
-      ObjFactory<G4UserSteppingAction>::Instance().CreateObject(stepact_name_);
+    auto stepact = ObjFactory<G4UserSteppingAction>::Instance().CreateObject(stepact_name_);
     this->SetUserAction(stepact.release());
   }
 
@@ -203,8 +200,7 @@ void NexusApp::Initialize()
 void NexusApp::ExecuteMacroFile(const char* filename)
 {
   G4UImanager* UI = G4UImanager::GetUIpointer();
-  std::unique_ptr<G4UIsession> batchSession =
-    std::make_unique<BatchSession>(filename, UI->GetSession());
+  auto batchSession = make_unique<BatchSession>(filename, UI->GetSession());
   UI->SetSession(batchSession.get());
   G4UIsession* previousSession = batchSession->SessionStart();
   UI->SetSession(previousSession);
