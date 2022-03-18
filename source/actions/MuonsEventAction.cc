@@ -30,7 +30,7 @@ namespace nexus {
 REGISTER_CLASS(MuonsEventAction, G4UserEventAction)
 
   MuonsEventAction::MuonsEventAction():
-    G4UserEventAction(), nevt_(0), nupdate_(10), energy_threshold_(0.), stringHist_("")
+    G4UserEventAction(), nevt_(0), nupdate_(10), energy_threshold_(0.), stringHist_(""), fOpen_(false)
   {
     msg_ = new G4GenericMessenger(this, "/Actions/MuonsEventAction/");
     msg_->DeclareProperty("stringHist", stringHist_, "");
@@ -42,19 +42,19 @@ REGISTER_CLASS(MuonsEventAction, G4UserEventAction)
     thresh_cmd.SetUnitCategory("Energy");
     thresh_cmd.SetRange("energy_threshold>0.");
 
-
     // Get analysis manager
     fG4AnalysisMan_ = G4AnalysisManager::Instance();
     
     // Create histogram(s) for muons
-    fG4AnalysisMan->CreateH1("Edepo","Energy_deposited",100,-1.0,3.4);
-    fG4AnalysisMan->CreateH1("Theta","Theta generated",100,0.,pi);
-    fG4AnalysisMan->CreateH1("Phi","Phi generated",100,0.,twopi);
-
-    // Open a CSV file to write the muon theta and phi events to
-    // Currently G4 Ntuple Functionality does not work
-    fThetaPhi_.open ("Muon_Theta_Phi_Events.csv");
-    fThetaPhi_ << "Theta" << "," << "Phi" << "\n";
+    fG4AnalysisMan_->CreateH1("Edepo","Energy_deposited",100,-1.0,3.4);
+    fG4AnalysisMan_->CreateH1("Theta","Theta generated",100,0.,pi);
+    fG4AnalysisMan_->CreateH1("Phi","Phi generated",100,0.,twopi);
+    
+    // Create Ntuple branches for muons
+    fG4AnalysisMan_->CreateNtuple("Tree nexus","Flat tree of muon theta and phi");
+    fG4AnalysisMan_->CreateNtupleDColumn("tree_theta");
+    fG4AnalysisMan_->CreateNtupleDColumn("tree_phi");
+    fG4AnalysisMan_->FinishNtuple();
 
   }
 
@@ -62,23 +62,29 @@ REGISTER_CLASS(MuonsEventAction, G4UserEventAction)
 
   MuonsEventAction::~MuonsEventAction()
   {
-    // Open an output file and write histogram to file
-    fG4AnalysisMan_->OpenFile(stringHist_);
+    // Write histogram to root file
     fG4AnalysisMan_->Write();
     fG4AnalysisMan_->CloseFile();
-
-    // Close the CSV file
-    fThetaPhi_.close();
 
   }
 
   void MuonsEventAction::BeginOfEventAction(const G4Event* /*event*/)
   {
-   // Print out event number info
+    // Print out event number info
     if ((nevt_ % nupdate_) == 0) {
       G4cout << " >> Event no. " << nevt_  << G4endl;
       if (nevt_  == (10 * nupdate_)) nupdate_ *= 10;
     }
+
+    // Get analysis manager instance
+    fG4AnalysisMan_ = G4AnalysisManager::Instance();
+
+    // Open output file
+    if (!fOpen_) {
+      fG4AnalysisMan_->OpenFile(stringHist_);
+      fOpen_ = true;
+    }
+
   }
 
 
@@ -126,7 +132,9 @@ REGISTER_CLASS(MuonsEventAction, G4UserEventAction)
     fG4AnalysisMan_->FillH1(1, my_theta);
     fG4AnalysisMan_->FillH1(2, my_phi);
 
-    fThetaPhi_ << my_theta << "," << my_phi<< "\n"; 
+    fG4AnalysisMan_->FillNtupleDColumn(0, my_theta);
+    fG4AnalysisMan_->FillNtupleDColumn(1, my_phi);
+    fG4AnalysisMan_->AddNtupleRow();
 
   }
 
