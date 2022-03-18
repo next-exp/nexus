@@ -7,6 +7,7 @@
 // ----------------------------------------------------------------------------
 
 #include "DetectorConstruction.h"
+#include "GeometryBase.h"
 
 #include <G4Box.hh>
 #include <G4Material.hh>

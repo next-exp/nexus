@@ -11,6 +11,7 @@
 #include "NexusApp.h"
 
 #include "BatchSession.h"
+#include "GeometryBase.h"
 #include "DetectorConstruction.h"
 #include "PrimaryGeneration.h"
 #include "FactoryBase.h"
@@ -18,6 +19,7 @@
 #include <G4GenericPhysicsList.hh>
 #include <G4UImanager.hh>
 #include <G4StateManager.hh>
+#include <G4VPrimaryGenerator.hh>
 #include <G4VPersistencyManager.hh>
 #include <G4UserRunAction.hh>
 #include <G4UserEventAction.hh>

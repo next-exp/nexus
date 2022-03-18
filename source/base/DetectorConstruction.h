@@ -9,14 +9,13 @@
 #ifndef DETECTOR_CONSTRUCTION_H
 #define DETECTOR_CONSTRUCTION_H
 
-#include "GeometryBase.h"
-
 #include <G4VUserDetectorConstruction.hh>
 
 class G4GenericMessenger;
 
-
 namespace nexus {
+
+  class GeometryBase;
 
   class DetectorConstruction: public G4VUserDetectorConstruction
   {

@@ -11,8 +11,9 @@
 #define PRIMARY_GENERATION_H
 
 #include <G4VUserPrimaryGeneratorAction.hh>
-#include <G4VPrimaryGenerator.hh>
+#include <globals.hh>
 
+class G4VPrimaryGenerator;
 
 namespace nexus {
 

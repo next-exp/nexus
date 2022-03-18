@@ -10,6 +10,7 @@
 #include "PrimaryGeneration.h"
 
 #include <G4Event.hh>
+#include <G4VPrimaryGenerator.hh>
 
 
 using namespace nexus;
