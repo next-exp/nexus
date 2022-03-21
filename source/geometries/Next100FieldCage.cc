@@ -267,6 +267,9 @@ void Next100FieldCage::DefineMaterials()
 
   /// Steel
   steel_ = materials::Steel316Ti();
+  // In Geant4 11.0.0, a bug in treating the OpBoundaryProcess produced in the surface makes the code fail.
+  // This is avoided by setting an empty G4MaterialPropertiesTable of the G4Material.
+  steel_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 }
 
 
