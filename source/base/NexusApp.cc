@@ -10,15 +10,16 @@
 
 #include "NexusApp.h"
 
+#include "BatchSession.h"
+#include "GeometryBase.h"
 #include "DetectorConstruction.h"
 #include "PrimaryGeneration.h"
-#include "PersistencyManagerBase.h"
-#include "BatchSession.h"
 #include "FactoryBase.h"
 
 #include <G4GenericPhysicsList.hh>
 #include <G4UImanager.hh>
 #include <G4StateManager.hh>
+#include <G4VPrimaryGenerator.hh>
 #include <G4VPersistencyManager.hh>
 #include <G4UserRunAction.hh>
 #include <G4UserEventAction.hh>
@@ -27,7 +28,8 @@
 #include <G4UserStackingAction.hh>
 
 using namespace nexus;
-
+using std::make_unique;
+using std::unique_ptr;
 
 
 NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
@@ -37,7 +39,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
                                          stkact_name_("")
 {
   // Create and configure a generic messenger for the app
-  msg_ = new G4GenericMessenger(this, "/nexus/", "Nexus control commands.");
+  msg_ = make_unique<G4GenericMessenger>(this, "/nexus/", "Nexus control commands.");
 
   // Define the command to register a configuration macro.
   // The user may invoke the command as many times as needed.
@@ -78,53 +80,65 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
   // by the time we process the initialization macro.
 
   // The physics lists are handled with Geant4's own 'factory'
-  physicsList = new G4GenericPhysicsList();
+  // The generic physics list must be initialized before
+  // processing the init macro, where the physics lists are registered
+  auto pl = make_unique<G4GenericPhysicsList>();
 
-  BatchSession* batch = new BatchSession(init_macro.c_str());
-  batch->SessionStart();
+  BatchSession(init_macro.c_str()).SessionStart();
 
   // Set the physics list in the run manager
-  this->SetUserInitialization(physicsList);
+  this->SetUserInitialization(pl.release());
 
   // Set the detector construction instance in the run manager
-  DetectorConstruction* dc = new DetectorConstruction();
+  auto dc = make_unique<DetectorConstruction>();
   if (geo_name_ == "") {
     G4Exception("[NexusApp]", "NexusApp()", FatalException, "A geometry must be specified.");
   }
   dc->SetGeometry(ObjFactory<GeometryBase>::Instance().CreateObject(geo_name_));
-  this->SetUserInitialization(dc);
+  this->SetUserInitialization(dc.release());
 
   // Set the primary generation instance in the run manager
-  PrimaryGeneration* pg = new PrimaryGeneration();
+  auto pg = make_unique<PrimaryGeneration>();
   if (gen_name_ == "") {
     G4Exception("[NexusApp]", "NexusApp()", FatalException, "A generator must be specified.");
   }
   pg->SetGenerator(ObjFactory<G4VPrimaryGenerator>::Instance().CreateObject(gen_name_));
-  this->SetUserAction(pg);
+  this->SetUserAction(pg.release());
 
   if (pm_name_ == "") {
     G4Exception("[NexusApp]", "NexusApp()", FatalException, "A persistency manager must be specified.");
   }
-  PersistencyManagerBase* pm = ObjFactory<PersistencyManagerBase>::Instance().CreateObject(pm_name_);
-  pm->SetMacros(init_macro, macros_, delayed_);
+  pm_ = ObjFactory<PersistencyManagerBase>::Instance().CreateObject(pm_name_);
+  pm_->SetMacros(init_macro, macros_, delayed_);
 
  // PersistencyManager::Initialize(init_macro, macros_, delayed_);
 
   // Set the user action instances, if any, in the run manager
-  if (runact_name_ != "")
-    this->SetUserAction(ObjFactory<G4UserRunAction>::Instance().CreateObject(runact_name_));
+  if (runact_name_ != "") {
+    auto runact = ObjFactory<G4UserRunAction>::Instance().CreateObject(runact_name_);
+    this->SetUserAction(runact.release());
+  }
 
-  if (evtact_name_ != "")
-    this->SetUserAction(ObjFactory<G4UserEventAction>::Instance().CreateObject(evtact_name_));
+  if (evtact_name_ != "") {
+    auto evtact = ObjFactory<G4UserEventAction>::Instance().CreateObject(evtact_name_);
+    this->SetUserAction(evtact.release());
+  }
 
-  if (stkact_name_ != "")
-    this->SetUserAction(ObjFactory<G4UserStackingAction>::Instance().CreateObject(stkact_name_));
+  if (stkact_name_ != "") {
+    auto stkact = ObjFactory<G4UserStackingAction>::Instance().CreateObject(stkact_name_);
+    this->SetUserAction(stkact.release());
+  }
 
-  if (trkact_name_ != "")
-    this->SetUserAction(ObjFactory<G4UserTrackingAction>::Instance().CreateObject(trkact_name_));
+  if (trkact_name_ != "") {
+    auto trkact = ObjFactory<G4UserTrackingAction>::Instance().CreateObject(trkact_name_);
+    this->SetUserAction(trkact.release());
+  }
 
-  if (stepact_name_ != "")
-    this->SetUserAction(ObjFactory<G4UserSteppingAction>::Instance().CreateObject(stepact_name_));
+  if (stepact_name_ != "") {
+    auto stepact = ObjFactory<G4UserSteppingAction>::Instance().CreateObject(stepact_name_);
+    this->SetUserAction(stepact.release());
+  }
+
 
   /////////////////////////////////////////////////////////
 
@@ -139,11 +153,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
 NexusApp::~NexusApp()
 {
   // Close output file before finishing
-  PersistencyManagerBase* current = dynamic_cast<PersistencyManagerBase*>
-    (G4VPersistencyManager::GetPersistencyManager());
-  current->CloseFile();
-
-  delete msg_;
+  pm_->CloseFile();
 }
 
 
@@ -192,10 +202,9 @@ void NexusApp::Initialize()
 void NexusApp::ExecuteMacroFile(const char* filename)
 {
   G4UImanager* UI = G4UImanager::GetUIpointer();
-  G4UIsession* batchSession = new BatchSession(filename, UI->GetSession());
-  UI->SetSession(batchSession);
-  G4UIsession* previousSession = UI->GetSession()->SessionStart();
-  delete UI->GetSession();
+  auto batchSession = make_unique<BatchSession>(filename, UI->GetSession());
+  UI->SetSession(batchSession.get());
+  G4UIsession* previousSession = batchSession->SessionStart();
   UI->SetSession(previousSession);
 }
 
