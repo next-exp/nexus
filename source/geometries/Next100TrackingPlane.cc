@@ -71,9 +71,13 @@ void Next100TrackingPlane::Construct()
                                           copper_plate_thickness_/2.,
                                           0., 360.*deg);
 
+  G4Material* copper = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
+  // In Geant4 11.0.0, a bug in treating the OpBoundaryProcess produced in the surface makes the code fail.
+  // This is avoided by setting an empty G4MaterialPropertiesTable of the G4Material.
+  copper->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
+  
   G4LogicalVolume* copper_plate_logic =
-    new G4LogicalVolume(copper_plate_solid,
-                        G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"), copper_plate_name);
+    new G4LogicalVolume(copper_plate_solid, copper, copper_plate_name);
 
   G4double copper_plate_zpos = GetELzCoord() - gate_tp_dist_ - copper_plate_thickness_/2.;
 
