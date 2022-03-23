@@ -36,8 +36,8 @@ set_target_properties(lib PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
 
 foreach(DIR ${SOURCE_DIRS})
   # Create lists of *.h and *.cc files
-  file(GLOB HDRS ${CMAKE_SOURCE_DIR}/source/${DIR}/*.h)
-  file(GLOB SRCS ${CMAKE_SOURCE_DIR}/source/${DIR}/*.cc)
+  file(GLOB HDRS ${CMAKE_CURRENT_SOURCE_DIR}/source/${DIR}/*.h)
+  file(GLOB SRCS ${CMAKE_CURRENT_SOURCE_DIR}/source/${DIR}/*.cc)
   # Copy header files to the 'include' binary folder
   file(COPY ${HDRS} DESTINATION ${CMAKE_BINARY_DIR}/include/${PROJECT_NAME})
 
@@ -55,15 +55,15 @@ target_link_libraries(lib PUBLIC
 
 add_executable(exe)
 set_target_properties(exe PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
-target_sources(exe PRIVATE ${CMAKE_SOURCE_DIR}/source/nexus.cc)
+target_sources(exe PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source/nexus.cc)
 target_link_libraries(exe PRIVATE lib)
 
 add_executable(test)
 set_target_properties(test PROPERTIES OUTPUT_NAME ${PROJECT_NAME}-test)
 
-file(GLOB TESTS ${CMAKE_SOURCE_DIR}/source/tests/*/*.cc)
-target_sources(test PRIVATE ${TESTS} ${CMAKE_SOURCE_DIR}/source/nexus-test.cc)
-target_include_directories(test PRIVATE ${CMAKE_SOURCE_DIR}/source/tests)
+file(GLOB TESTS ${CMAKE_CURRENT_SOURCE_DIR}/source/tests/*/*.cc)
+target_sources(test PRIVATE ${TESTS} ${CMAKE_CURRENT_SOURCE_DIR}/source/nexus-test.cc)
+target_include_directories(test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source/tests)
 target_link_libraries(test PRIVATE lib)
 
 
