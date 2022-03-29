@@ -51,7 +51,7 @@ namespace nexus {
     G4String MuonCharge() const;
 
     // Sample the Muon Distribution loaded from file
-    void GetDirection(G4ThreeVector& dir);
+    void GetDirection(G4ThreeVector& dir, G4double& zenith, G4double& azimuth);
 
     G4bool CheckOverlap(const G4ThreeVector& vtx, const G4ThreeVector& dir);
 

@@ -197,10 +197,15 @@ void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
   G4double pmod   = std::sqrt(energy*energy - mass*mass);
 
   G4ThreeVector position = geom_->GenerateVertex(region_);
+  
+  // Set default momentum and angular variables
   G4ThreeVector p_dir(0., -1., 0.);
+  G4double zenith  = p_dir.getTheta();
+  G4double azimuth = p_dir.getPhi() + pi; // factor pi to ensure range from 0.->2pi
 
+  // Overwrite default p_dir, zenith and azimuth from angular distribution file
   if (angular_generation_){
-    GetDirection(p_dir);
+    GetDirection(p_dir, zenith, azimuth);
     while ( !CheckOverlap(position, p_dir) )
       position = geom_->GenerateVertex(region_);
   }
@@ -217,6 +222,11 @@ void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
   // Create the new primary particle and set it some properties
   G4PrimaryParticle* particle =
     new G4PrimaryParticle(particle_definition_, px, py, pz);
+
+  // Add info to PrimaryVertex to be accessed from EventAction type class to make histos of variables generated here.
+  AddUserInfoToPV *info = new AddUserInfoToPV(zenith, azimuth);
+
+  vertex->SetUserInformation(info);
 
   // Add particle to the vertex and this to the event
   vertex->SetPrimary(particle);
@@ -243,7 +253,7 @@ G4String MuonAngleGenerator::MuonCharge() const
 }
 
 
-void MuonAngleGenerator::GetDirection(G4ThreeVector& dir)
+void MuonAngleGenerator::GetDirection(G4ThreeVector& dir, G4double& zenith, G4double& azimuth)
 {
 
   // Bool to check if zenith has a valid value. If not then resample
@@ -252,8 +262,8 @@ void MuonAngleGenerator::GetDirection(G4ThreeVector& dir)
   while(invalid_evt){
   
     // Amount to smear the randomly sampled zenith/azimuth values by
-    G4double zen_BW_smear{1.0e6}; 
-    G4double az_BW_smear{1.0e6};
+    G4double zen_BW_smear{std::numeric_limits<G4double>::lowest()}; 
+    G4double az_BW_smear{std::numeric_limits<G4double>::lowest()};
 
     // Generate random index weighted by the bin contents
     G4int RN_indx = discr_dist_(RN_engine_);
@@ -262,7 +272,7 @@ void MuonAngleGenerator::GetDirection(G4ThreeVector& dir)
     for (G4int i = 0; i < zenith_bins_.size()-1; i++){
         
         // Catch very last bin
-        if (zen_BW_smear == 1e6 && i == zenith_bins_.size()-2){
+        if (zen_BW_smear == std::numeric_limits<G4double>::lowest() && i == zenith_bins_.size()-2){
           if (zeniths_[RN_indx] >= zenith_bins_[i] 
               && zeniths_[RN_indx] <= zenith_bins_[i+1]){
             
@@ -284,7 +294,7 @@ void MuonAngleGenerator::GetDirection(G4ThreeVector& dir)
     for (G4int i = 0; i < azimuth_bins_.size()-1; i++){
         
         // Include last bin in check
-        if (az_BW_smear == 1e6 && i == azimuth_bins_.size()-2){
+        if (az_BW_smear == std::numeric_limits<G4double>::lowest() && i == azimuth_bins_.size()-2){
           if (azimuths_[RN_indx] >= azimuth_bins_[i] 
               && azimuths_[RN_indx] <= azimuth_bins_[i+1]){
             
@@ -305,9 +315,11 @@ void MuonAngleGenerator::GetDirection(G4ThreeVector& dir)
     }
 
     // Check if the smear values are set properly
-    if (az_BW_smear == 1.0e6 || zen_BW_smear == 1.0e6 )
-      G4Exception("[MuonAngleGenerator]", "GetDirection()",
-                FatalException, " bin smear value was not set correctly ");
+    if (az_BW_smear == std::numeric_limits<G4double>::lowest() ||
+        zen_BW_smear == std::numeric_limits<G4double>::lowest() ){
+                G4Exception("[MuonAngleGenerator]", "GetDirection()",
+                FatalException, " Sampled angle not inside binning, review input file ");
+    }
 
     // Gaussian dist to smear by bin widths in azimuth and zenith
     std::normal_distribution<G4double> Gauss_az(0, az_BW_smear);
@@ -318,19 +330,19 @@ void MuonAngleGenerator::GetDirection(G4ThreeVector& dir)
     G4double zen_smear = Gauss_zen(RN_engine_zen_);
 
     // Correct sampled values by smearing
-    G4double az_samp  = azimuths_[RN_indx] + az_smear;
-    G4double zen_samp = zeniths_[RN_indx]  + zen_smear;
+    azimuth  = azimuths_[RN_indx] + az_smear;
+    zenith   = zeniths_[RN_indx]  + zen_smear;
 
     // Catch negative value and resample if so
-    if (zen_samp < 0.0)
+    if (zenith < 0.0)
         invalid_evt = true;
     else
         invalid_evt = false;
 
     // Calculate the vector components of the muon
-    dir.setX(sin(zen_samp) * sin(az_samp));
-    dir.setY(-cos(zen_samp));
-    dir.setZ(-sin(zen_samp) * cos(az_samp));
+    dir.setX(sin(zenith) * sin(azimuth));
+    dir.setY(-cos(zenith));
+    dir.setZ(-sin(zenith) * cos(azimuth));
 
     // Rotate about the Y-Axis
     dir *= *rPhi_;

@@ -22,7 +22,6 @@
 #include <G4Trajectory.hh>
 #include <G4OpticalPhoton.hh>
 #include <G4Gamma.hh>
-#include "g4root_defs.hh"
 
 
 

@@ -18,7 +18,6 @@
 #include <G4Trajectory.hh>
 #include <G4GenericMessenger.hh>
 #include <globals.hh>
-#include "g4root_defs.hh"
 
 
 #include "CLHEP/Units/SystemOfUnits.h"
