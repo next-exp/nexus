@@ -55,6 +55,9 @@ namespace nexus {
 
     G4bool CheckOverlap(const G4ThreeVector& vtx, const G4ThreeVector& dir);
 
+    /// Get the corresponding bin width to smear events
+    G4double GetBinSmearValue(std::vector<G4double> bins, G4double sampVal,std::vector<G4double> BinWidths);
+
     /// Load in the Muon Angular/Energy Distribution from CSV file
     /// and initialise the discrete flux distribution
     void LoadMuonDistribution();
