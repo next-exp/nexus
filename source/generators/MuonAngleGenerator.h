@@ -14,6 +14,7 @@
 #include <G4RotationMatrix.hh>
 
 #include <random>
+#include "CLHEP/Random/RandGauss.h"
 
 class G4GenericMessenger;
 class G4Event;
@@ -94,8 +95,11 @@ namespace nexus {
     std::vector<G4double> zen_BW_; ///< List of Zenith bin widths
 
     std::mt19937 RN_engine_;  ///< Random Number Generator Engine Index
-    std::mt19937 RN_engine_az_; ///< Random Number Generator Engine Azimuth
-    std::mt19937 RN_engine_zen_; ///< Random Number Generator Engine Zenith
+    CLHEP::HepRandomEngine* RN_engine_az_; ///< Random Number Generator Engine Azimuth
+    CLHEP::HepRandomEngine* RN_engine_zen_; ///< Random Number Generator Engine Zenith
+
+    CLHEP::RandGauss* Gauss_az_;  ///< Gaussian Random Number Generator Azimuth
+    CLHEP::RandGauss* Gauss_zen_; ///< Gaussian Random Number Generator Zenith
 
     std::discrete_distribution<G4int> discr_dist_; ///< Discrete distribution to sample flux
 

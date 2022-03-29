@@ -167,8 +167,11 @@ void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
   // Initalise RNG seeds and load file on the first event
   if (!bInitialize_){ 
     RN_engine_.seed(CLHEP::HepRandom::getTheSeed());
-    RN_engine_az_.seed(CLHEP::HepRandom::getTheSeed()+1);   // +1 to keep unique seeds
-    RN_engine_zen_.seed(CLHEP::HepRandom::getTheSeed()+2);  // +2 to keep unique seeds
+    
+    RN_engine_az_  = new CLHEP::HepJamesRandom(CLHEP::HepRandom::getTheSeed()+1); // +1 to keep unique seeds
+    RN_engine_zen_ = new CLHEP::HepJamesRandom(CLHEP::HepRandom::getTheSeed()+2); // +2 to keep unique seeds
+    Gauss_az_  = new CLHEP::RandGauss( RN_engine_az_ );
+    Gauss_zen_ = new CLHEP::RandGauss( RN_engine_zen_ );
 
     // Load in the Muon angular distribution from file
     if (angular_generation_)
@@ -265,8 +268,8 @@ void MuonAngleGenerator::GetDirection(G4ThreeVector& dir, G4double& zenith, G4do
     G4int RN_indx = discr_dist_(RN_engine_);
 
     // Get the amount to smear the randomly sampled zenith/azimuth values by
-    G4double zen_BW_smear = GetBinSmearValue(zenith_bins_ , zeniths_[RN_indx] , zenith_bins_);
-    G4double az_BW_smear  = GetBinSmearValue(azimuth_bins_, azimuths_[RN_indx], azimuth_bins_);
+    G4double zen_BW_smear = GetBinSmearValue(zenith_bins_ , zeniths_[RN_indx] , zen_BW_);
+    G4double az_BW_smear  = GetBinSmearValue(azimuth_bins_, azimuths_[RN_indx], az_BW_);
 
     // Check if the smear values are set properly
     if (az_BW_smear == std::numeric_limits<G4double>::lowest() ||
@@ -275,17 +278,9 @@ void MuonAngleGenerator::GetDirection(G4ThreeVector& dir, G4double& zenith, G4do
                 FatalException, " Sampled angle not inside binning, review input file ");
     }
 
-    // Gaussian dist to smear by bin widths in azimuth and zenith
-    std::normal_distribution<G4double> Gauss_az(0, az_BW_smear);
-    std::normal_distribution<G4double> Gauss_zen(0, zen_BW_smear);
-    
-    // Get the Gaussian smear values 
-    G4double az_smear  = Gauss_az(RN_engine_az_);
-    G4double zen_smear = Gauss_zen(RN_engine_zen_);
-
-    // Correct sampled values by smearing
-    azimuth  = azimuths_[RN_indx] + az_smear;
-    zenith   = zeniths_[RN_indx]  + zen_smear;
+    // Correct sampled values by Gaussian smearing
+    azimuth  = azimuths_[RN_indx] + Gauss_az_ ->fire( 0., az_BW_smear );
+    zenith   = zeniths_[RN_indx]  + Gauss_zen_->fire( 0., zen_BW_smear );
 
     // Catch negative value and resample if so
     if (zenith < 0.0)
