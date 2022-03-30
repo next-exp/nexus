@@ -110,6 +110,8 @@ void MuonGenerator::GeneratePrimaryVertex(G4Event* event)
   // If user provides a momentum direction, this one is used
   if (fixed_momentum) {
     p_dir = momentum_.unit();
+    phi   = p_dir.getPhi() + pi; // change phi interval to be between 0, twopi
+    theta = p_dir.getTheta();
   }
 
   G4ThreeVector p = pmod * p_dir;

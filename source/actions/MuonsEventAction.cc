@@ -49,7 +49,7 @@ REGISTER_CLASS(MuonsEventAction, G4UserEventAction)
 
     // Muons Control plots
     hist1_ = new TH1D ("Edepo","Energy_deposited",100,-1.0,3.4);
-    hist2_ = new TH1D ("Theta","Theta generated",100,-pi,pi);
+    hist2_ = new TH1D ("Theta","Theta generated",100,0.,pi);
     hist3_ = new TH1D ("Phi","Phi generated",100,0.,twopi);
     tree_  = new TTree("Tree nexus","Flat tree with some nexus info");
     tree_->Branch("tree_theta", &tree_theta_, "tree_theta/D");
