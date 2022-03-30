@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | SingleParticleGenerator.h
+// nexus | LED450LW.h
 //
 // This class is the primary generator for events consisting of
 // a single particle. The user must specify via configuration
@@ -11,8 +11,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef SINGLE_PARTICLE_GENERATOR_H
-#define SINGLE_PARTICLE_GENERATOR_H
+#ifndef LED450LW_H
+#define LED450LW_H
 
 #include <G4VPrimaryGenerator.hh>
 
@@ -25,13 +25,13 @@ namespace nexus {
 
   class GeometryBase;
 
-  class SingleParticleGenerator: public G4VPrimaryGenerator
+  class LED450LW: public G4VPrimaryGenerator
   {
   public:
     /// Constructor
-    SingleParticleGenerator();
+    LED450LW();
     /// Destructor
-    ~SingleParticleGenerator();
+    ~LED450LW();
 
     /// This method is invoked at the beginning of the event. It sets
     /// a primary vertex (that is, a particle in a given position and time)

@@ -26,6 +26,7 @@
 #include <G4Event.hh>
 #include <G4RandomDirection.hh>
 #include <Randomize.hh>
+#include <G4RandomTools.hh>
 #include <G4OpticalPhoton.hh>
 
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -96,7 +97,7 @@ void LED450LW::SetParticleDefinition(G4String particle_name)
     G4ParticleTable::GetParticleTable()->FindParticle(particle_name);
 
   if (!particle_definition_)
-    G4Exception("[SingleParticleGenerator]", "SetParticleDefinition()",
+    G4Exception("[LED450LW]", "SetParticleDefinition()",
       FatalException, "User gave an unknown particle name.");
 }
 
@@ -115,14 +116,14 @@ void LED450LW::GeneratePrimaryVertex(G4Event* event)
   bool fixed_momentum = momentum_ != G4ThreeVector{};
   bool restrict_angle = costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. || phi_max_ !=2.*pi;
 
-  G4ThreeVector p_dir; // it will be set in the if branches below
+  G4ThreeVector dir; // it will be set in the if branches below
   if (fixed_momentum) { // if the user provides a momentum direction
-    p_dir = momentum_.unit();
+    dir = momentum_.unit();
   } else if (restrict_angle) { // if the user provides a range of angles
-    p_dir = RandomDirectionInRange(costheta_min_, costheta_max_, phi_min_, phi_max_);
-  } else {
-    p_dir = G4RandomDirection();
+    dir = RandomDirectionInRange(costheta_min_, costheta_max_, phi_min_, phi_max_);
   }
+
+  G4ThreeVector p_dir = G4LambertianRand(dir);
 
   G4ThreeVector p = pmod * p_dir;
 
