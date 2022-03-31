@@ -289,6 +289,7 @@ void Next100SiPMBoard::Construct()
   mask_hole_logic_vol    ->SetVisAttributes(G4VisAttributes::GetInvisible());
   mask_wls_logic_vol     ->SetVisAttributes(G4VisAttributes::GetInvisible());
   mask_wls_hole_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
+  wall_wls_logic_vol     ->SetVisAttributes(G4VisAttributes::GetInvisible());
 }
 
 

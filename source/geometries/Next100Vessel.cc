@@ -298,12 +298,12 @@ namespace nexus {
 
     // SETTING VISIBILITIES   //////////
     if (visibility_) {
-      G4VisAttributes grey = DarkGrey();
+      G4VisAttributes grey = nexus::TitaniumGreyAlpha();
       G4VisAttributes yellow = nexus::Yellow();
       grey  .SetForceSolid(true);
       yellow.SetForceSolid(true);
       vessel_logic       ->SetVisAttributes(grey);
-      vessel_gas_logic   ->SetVisAttributes(grey);
+      vessel_gas_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
       port_tube_logic    ->SetVisAttributes(grey);
       port_tube_gas_logic->SetVisAttributes(yellow);
     }
