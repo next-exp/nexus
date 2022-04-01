@@ -9,6 +9,8 @@
 
 #include "SaveAllEventAction.h"
 #include "FactoryBase.h"
+#include "PersistencyManager.h"
+#include "Trajectory.h"
 
 #include <G4Event.hh>
 #include <G4VVisManager.hh>
@@ -48,17 +50,30 @@ REGISTER_CLASS(SaveAllEventAction, G4UserEventAction)
   {
     nevt_++;
 
+    G4double edep = 0.;
 
     // draw tracks in visual mode
-    if (G4VVisManager::GetConcreteInstance()) {
-      G4TrajectoryContainer* tc = event->GetTrajectoryContainer();
-      if (tc) {
-        for (size_t i=0; i<tc->size(); i++) {
-          G4VTrajectory* trj = (*tc)[i];
+    G4TrajectoryContainer* tc = event->GetTrajectoryContainer();
+    if (tc) {
+      for (size_t i=0; i<tc->size(); i++) {
+        Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[i]);
+        edep += trj->GetEnergyDeposit();
+        if (G4VVisManager::GetConcreteInstance()) {
           trj->DrawTrajectory();
         }
       }
     }
+
+    PersistencyManager* pm = dynamic_cast<PersistencyManager*>
+      (G4VPersistencyManager::GetPersistencyManager());
+
+    // Save the number of events that have interacted
+    if (!event->IsAborted() && edep>0) {
+      pm->InteractingEvent(true);
+    } else {
+      pm->InteractingEvent(false);
+    }
+
   }
 
 

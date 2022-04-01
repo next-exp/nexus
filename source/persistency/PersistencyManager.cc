@@ -385,11 +385,11 @@ G4bool PersistencyManager::Store(const G4Run*)
   G4int num_events = app->GetNumberOfEventsToBeProcessed();
 
   key = "num_events";
-  h5writer_->WriteRunInfo(key,  std::to_string(num_events).c_str());
+  h5writer_->WriteRunInfo(key, std::to_string(num_events).c_str());
   key = "saved_events";
-  h5writer_->WriteRunInfo(key,  std::to_string(saved_evts_).c_str());
+  h5writer_->WriteRunInfo(key, std::to_string(saved_evts_).c_str());
   key = "interacting_events";
-  h5writer_->WriteRunInfo(key,  std::to_string(interacting_evts_).c_str());
+  h5writer_->WriteRunInfo(key, std::to_string(interacting_evts_).c_str());
 
   std::map<G4String, G4double>::const_iterator it;
   for (it = sensdet_bin_.begin(); it != sensdet_bin_.end(); ++it) {
