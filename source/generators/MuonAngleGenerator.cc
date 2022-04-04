@@ -134,6 +134,22 @@ void MuonAngleGenerator::LoadMuonDistribution()
   // Initialise the Random Number Generator based on the flux distribution (in bin index)
   fRandomGeneral_ = new G4RandGeneral( arr_flux, flux_.size() );
 
+  // Check the values are within bin ranges
+
+  // Check azimuths
+  for (int i = 0; i < azimuths_.size(); i++){
+    if (azimuths_[i] < azimuth_bins_.front() || azimuths_[i] >  azimuth_bins_.back())
+      G4Exception("[MuonAngleGenerator]", "LoadMuonDistribution()",
+                FatalException, " Loaded azimuth angles not inside binning, review input file ");
+  }
+
+  // Check zeniths
+  for (int i = 0; i < zeniths_.size(); i++){
+    if (zeniths_[i] < zenith_bins_.front() || zeniths_[i] >  zenith_bins_.back())
+      G4Exception("[MuonAngleGenerator]", "LoadMuonDistribution()",
+                FatalException, " Loaded zenith angles not inside binning, review input file ");
+  }
+
 }
 
 std::vector<G4double> MuonAngleGenerator::GetBinWidths(std::vector<G4double> bins)
@@ -269,13 +285,6 @@ void MuonAngleGenerator::GetDirection(G4ThreeVector& dir, G4double& zenith, G4do
     // Get the amount to smear the randomly sampled zenith/azimuth values by
     G4double zen_BW_smear = GetBinSmearValue(zenith_bins_ , zeniths_[RN_indx] , zen_BW_);
     G4double az_BW_smear  = GetBinSmearValue(azimuth_bins_, azimuths_[RN_indx], az_BW_);
-
-    // Check if the smear values are set properly
-    if (az_BW_smear == std::numeric_limits<G4double>::lowest() ||
-        zen_BW_smear == std::numeric_limits<G4double>::lowest() ){
-                G4Exception("[MuonAngleGenerator]", "GetDirection()",
-                FatalException, " Sampled angle not inside binning, review input file ");
-    }
 
     // Correct sampled values by Gaussian smearing
     azimuth  = azimuths_[RN_indx] + G4RandGauss::shoot( 0., az_BW_smear );
