@@ -168,11 +168,6 @@ void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
   if (!bInitialize_){ 
     RN_engine_.seed(CLHEP::HepRandom::getTheSeed());
     
-    RN_engine_az_  = new CLHEP::HepJamesRandom(CLHEP::HepRandom::getTheSeed()+1); // +1 to keep unique seeds
-    RN_engine_zen_ = new CLHEP::HepJamesRandom(CLHEP::HepRandom::getTheSeed()+2); // +2 to keep unique seeds
-    Gauss_az_  = new CLHEP::RandGauss( RN_engine_az_ );
-    Gauss_zen_ = new CLHEP::RandGauss( RN_engine_zen_ );
-
     // Load in the Muon angular distribution from file
     if (angular_generation_)
       LoadMuonDistribution();
@@ -279,8 +274,8 @@ void MuonAngleGenerator::GetDirection(G4ThreeVector& dir, G4double& zenith, G4do
     }
 
     // Correct sampled values by Gaussian smearing
-    azimuth  = azimuths_[RN_indx] + Gauss_az_ ->fire( 0., az_BW_smear );
-    zenith   = zeniths_[RN_indx]  + Gauss_zen_->fire( 0., zen_BW_smear );
+    azimuth  = azimuths_[RN_indx] + G4RandGauss::shoot( 0., az_BW_smear );
+    zenith   = zeniths_[RN_indx]  + G4RandGauss::shoot( 0., zen_BW_smear );
 
     // Catch negative value and resample if so
     if (zenith < 0.0)
