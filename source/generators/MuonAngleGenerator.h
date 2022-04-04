@@ -12,9 +12,7 @@
 
 #include <G4VPrimaryGenerator.hh>
 #include <G4RotationMatrix.hh>
-
-#include <random>
-#include "CLHEP/Random/RandGauss.h"
+#include <Randomize.hh>
 
 class G4GenericMessenger;
 class G4Event;
@@ -93,10 +91,7 @@ namespace nexus {
     std::vector<G4double> zenith_bins_;  ///< List of Zenith bin edges
     std::vector<G4double> az_BW_; ///< List of Azimuth bin widths
     std::vector<G4double> zen_BW_; ///< List of Zenith bin widths
-
-    std::mt19937 RN_engine_;  ///< Random Number Generator Engine Index
-    std::discrete_distribution<G4int> discr_dist_; ///< Discrete distribution to sample flux
-
+    G4RandGeneral *fRandomGeneral_; ///< Pointer to the RNG flux distribution
   };
 
 } // end namespace nexus

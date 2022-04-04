@@ -11,7 +11,7 @@
 #define MUON_GENERATOR_H
 
 #include <G4VPrimaryGenerator.hh>
-#include "CLHEP/Random/RandGeneral.h"
+#include <Randomize.hh>
 
 class G4GenericMessenger;
 class G4Event;
@@ -58,7 +58,7 @@ namespace nexus {
 
     G4ThreeVector momentum_;
 
-    CLHEP::RandGeneral *fRandomGeneral_; ///< Pointer to the RNG for cos(x)*cos(x)
+    G4RandGeneral *fRandomGeneral_; ///< Pointer to the RNG for cos(x)*cos(x)
 
   };
 

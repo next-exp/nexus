@@ -21,7 +21,6 @@
 #include <G4PrimaryVertex.hh>
 #include <G4Event.hh>
 #include <G4RandomDirection.hh>
-#include <Randomize.hh>
 #include <G4OpticalPhoton.hh>
 
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -74,7 +73,7 @@ MuonGenerator::MuonGenerator():
   std::copy(v_angles.begin(), v_angles.end(), arr_ang);
 
   // Initialise the Random Number Generator based on cos(x)*cos(x) distribution
-  fRandomGeneral_ = new RandGeneral( arr_ang, v_angles.size() );
+  fRandomGeneral_ = new G4RandGeneral( arr_ang, v_angles.size() );
 
 }
 

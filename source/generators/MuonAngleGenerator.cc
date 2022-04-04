@@ -127,8 +127,12 @@ void MuonAngleGenerator::LoadMuonDistribution()
   az_BW_  = GetBinWidths(azimuth_bins_);
   zen_BW_ = GetBinWidths(zenith_bins_);
 
-  // Discrete distribution with bin index and intensity to sample from
-  discr_dist_ = std::discrete_distribution<G4int>(std::begin(flux_), std::end(flux_));
+  // Convert flux vector to arr
+  G4double arr_flux[flux_.size()];
+  std::copy(flux_.begin(), flux_.end(), arr_flux);
+
+  // Initialise the Random Number Generator based on the flux distribution (in bin index)
+  fRandomGeneral_ = new G4RandGeneral( arr_flux, flux_.size() );
 
 }
 
@@ -166,7 +170,6 @@ void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
 
   // Initalise RNG seeds and load file on the first event
   if (!bInitialize_){ 
-    RN_engine_.seed(CLHEP::HepRandom::getTheSeed());
     
     // Load in the Muon angular distribution from file
     if (angular_generation_)
@@ -260,7 +263,8 @@ void MuonAngleGenerator::GetDirection(G4ThreeVector& dir, G4double& zenith, G4do
   while(invalid_evt){
   
     // Generate random index weighted by the bin contents
-    G4int RN_indx = discr_dist_(RN_engine_);
+    // Scale by flux vec size, then round to nearest integer to get an index
+    G4int RN_indx = round(fRandomGeneral_->fire()*flux_.size());
 
     // Get the amount to smear the randomly sampled zenith/azimuth values by
     G4double zen_BW_smear = GetBinSmearValue(zenith_bins_ , zeniths_[RN_indx] , zen_BW_);
