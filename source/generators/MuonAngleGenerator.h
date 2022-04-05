@@ -50,19 +50,15 @@ namespace nexus {
     G4String MuonCharge() const;
 
     // Sample the Muon Distribution loaded from file
-    void GetDirection(G4ThreeVector& dir, G4double& zenith, G4double& azimuth);
+    void GetDirection(G4ThreeVector& dir, G4double& zenith, G4double& azimuth,
+                      G4double& energy, G4double& kinetic_energy, G4double mass);
 
     G4bool CheckOverlap(const G4ThreeVector& vtx, const G4ThreeVector& dir);
-
-    /// Get the corresponding bin width to smear events
-    G4double GetBinSmearValue(std::vector<G4double> bins, G4double sampVal,std::vector<G4double> BinWidths);
 
     /// Load in the Muon Angular/Energy Distribution from CSV file
     /// and initialise the discrete flux distribution
     void LoadMuonDistribution();
 
-    /// Get the bin widths for the azimuth and zenith
-    std::vector<G4double> GetBinWidths(std::vector<G4double> bins);
 
   private:
     G4GenericMessenger* msg_;
@@ -86,11 +82,10 @@ namespace nexus {
 
     G4VSolid * geom_solid_;
 
-    std::vector<G4double> flux_, azimuths_, zeniths_; ///< Values of flux, azimuth and zenith from file
-    std::vector<G4double> azimuth_bins_; ///< List of Azimuth bin edges
-    std::vector<G4double> zenith_bins_;  ///< List of Zenith bin edges
-    std::vector<G4double> az_BW_; ///< List of Azimuth bin widths
-    std::vector<G4double> zen_BW_; ///< List of Zenith bin widths
+    std::vector<G4double> flux_, azimuths_, zeniths_, energies_; ///< Values of flux, azimuth and zenith from file
+    std::vector<G4double> azimuth_smear_; ///< List of Azimuth bin smear values
+    std::vector<G4double> zenith_smear_;  ///< List of Zenith bin smear values
+    std::vector<G4double> energy_smear_;  ///< List of Energy bin smear values
     G4RandGeneral *fRandomGeneral_; ///< Pointer to the RNG flux distribution
   };
 

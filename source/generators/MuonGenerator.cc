@@ -21,12 +21,9 @@
 #include <G4PrimaryVertex.hh>
 #include <G4Event.hh>
 #include <G4RandomDirection.hh>
-#include <G4OpticalPhoton.hh>
 
-#include "CLHEP/Units/SystemOfUnits.h"
 
 using namespace nexus;
-using namespace CLHEP;
 
 REGISTER_CLASS(MuonGenerator, G4VPrimaryGenerator)
 
