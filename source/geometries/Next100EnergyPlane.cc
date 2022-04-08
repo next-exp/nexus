@@ -351,6 +351,7 @@ namespace nexus {
     //////////////////////
 
     vacuum_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    pmt_base_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     if (visibility_) {
       G4VisAttributes copper_col = CopperBrownAlpha();
       copper_col.SetForceSolid(true);
@@ -364,18 +365,12 @@ namespace nexus {
       G4VisAttributes tpb_col = nexus::LightBlueAlpha();
       tpb_col.SetForceSolid(true);
       tpb_logic->SetVisAttributes(tpb_col);
-      G4VisAttributes pmt_base_col = YellowAlpha();
-      pmt_base_col.SetForceSolid(true);
-      pmt_base_logic->SetVisAttributes(pmt_base_col);
-      G4VisAttributes vacuum_col = WhiteAlpha();
-      vacuum_logic->SetVisAttributes(vacuum_col);
+      
     } else {
       copper_plate_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
       sapphire_window_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
       optical_pad_logic    ->SetVisAttributes(G4VisAttributes::GetInvisible());
       tpb_logic            ->SetVisAttributes(G4VisAttributes::GetInvisible());
-      pmt_base_logic       ->SetVisAttributes(G4VisAttributes::GetInvisible());
-      vacuum_logic         ->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
     //////////////////////////

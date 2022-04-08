@@ -396,8 +396,10 @@ void Next100FieldCage::BuildCathode()
     diel_grid_logic->SetVisAttributes(grey);
     cathode_logic->SetVisAttributes(cathode_col);
   } else {
+    G4VisAttributes cathode_col = nexus::DarkGrey();
+    cathode_col.SetForceSolid(true);
     diel_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
-    cathode_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    cathode_logic->SetVisAttributes(cathode_col);
   }
 
 
@@ -575,19 +577,17 @@ void Next100FieldCage::BuildELRegion()
 
   /// Visibilities
   if (visibility_) {
-    G4VisAttributes grey = nexus::DarkGrey();
-    grey.SetForceSolid(true);
-    gate_logic->SetVisAttributes(grey);
     G4VisAttributes light_blue = nexus::LightBlue();
     el_gap_logic->SetVisAttributes(light_blue);
-    anode_logic->SetVisAttributes(grey);
     diel_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   } else {
-    gate_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     el_gap_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
-    anode_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     diel_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
+  G4VisAttributes grey = nexus::DarkGrey();
+  grey.SetForceSolid(true);
+  gate_logic->SetVisAttributes(grey);
+  anode_logic->SetVisAttributes(grey);
 
   /// Verbosity
   if (verbosity_) {
