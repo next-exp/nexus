@@ -343,14 +343,8 @@ void Next100FieldCage::BuildActive()
 
 
   /// Visibilities
-  if (visibility_) {
-    G4VisAttributes active_col = nexus::Yellow();
-    active_logic->SetVisAttributes(active_col);
-  } else {
-    active_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
-  }
-
-
+  active_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+  
   /// Verbosity
   if (verbosity_) {
     G4cout << "Active starts in " << (active_zpos_ - active_length_/2.)/mm
@@ -397,12 +391,15 @@ void Next100FieldCage::BuildCathode()
   /// Visibilities
   if (visibility_) {
     G4VisAttributes grey = nexus::LightGrey();
-    G4VisAttributes copper_col = nexus::CopperBrown();
+    G4VisAttributes cathode_col = nexus::DarkGrey();
+    cathode_col.SetForceSolid(true);
     diel_grid_logic->SetVisAttributes(grey);
-    cathode_logic->SetVisAttributes(copper_col);
+    cathode_logic->SetVisAttributes(cathode_col);
   } else {
+    G4VisAttributes cathode_col = nexus::DarkGrey();
+    cathode_col.SetForceSolid(true);
     diel_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
-    cathode_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    cathode_logic->SetVisAttributes(cathode_col);
   }
 
 
@@ -471,12 +468,7 @@ void Next100FieldCage::BuildBuffer()
                                             G4ThreeVector(0., 0., xenon_zpos));
 
   /// Visibilities
-  if (visibility_) {
-    G4VisAttributes buffer_col = nexus::LightGreen();
-    buffer_logic->SetVisAttributes(buffer_col);
-  } else {
-    buffer_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
-  }
+  buffer_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   /// Verbosity
   if (verbosity_) {
@@ -585,18 +577,17 @@ void Next100FieldCage::BuildELRegion()
 
   /// Visibilities
   if (visibility_) {
-    G4VisAttributes grey = nexus::LightGrey();
-    gate_logic->SetVisAttributes(grey);
     G4VisAttributes light_blue = nexus::LightBlue();
     el_gap_logic->SetVisAttributes(light_blue);
-    anode_logic->SetVisAttributes(grey);
-    diel_grid_logic->SetVisAttributes(grey);
+    diel_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   } else {
-    gate_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     el_gap_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
-    anode_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     diel_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
+  G4VisAttributes grey = nexus::DarkGrey();
+  grey.SetForceSolid(true);
+  gate_logic->SetVisAttributes(grey);
+  anode_logic->SetVisAttributes(grey);
 
   /// Verbosity
   if (verbosity_) {
@@ -706,14 +697,12 @@ void Next100FieldCage::BuildLightTube()
 
   // Visibilities
   if (visibility_) {
-    G4VisAttributes light_green = nexus::LightGreen();
-    G4VisAttributes green = nexus::DarkGreen();
-    light_green.SetForceSolid(true);
-    teflon_drift_logic->SetVisAttributes(light_green);
-    teflon_buffer_logic->SetVisAttributes(green);
-    G4VisAttributes red = nexus::Red();
-    tpb_drift_logic->SetVisAttributes(red);
-    tpb_buffer_logic->SetVisAttributes(red);
+    G4VisAttributes light_yellow = nexus::YellowAlpha();
+    light_yellow.SetForceSolid(true);
+    teflon_drift_logic->SetVisAttributes(light_yellow);
+    teflon_buffer_logic->SetVisAttributes(light_yellow);
+    tpb_drift_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    tpb_buffer_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
   else {
     teflon_drift_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
@@ -905,10 +894,13 @@ void Next100FieldCage::BuildFieldCage()
   /// Visibilities
   if (visibility_) {
     G4VisAttributes ring_col = nexus::CopperBrown();
+    ring_col.SetForceSolid(true);
     ring_logic->SetVisAttributes(ring_col);
-    G4VisAttributes hdpe_col = nexus::White();
+    G4VisAttributes hdpe_col =nexus::WhiteAlpha();
+    hdpe_col.SetForceSolid(true);
     hdpe_tube_logic->SetVisAttributes(hdpe_col);
     G4VisAttributes hold_col = nexus::LightGrey();
+    hold_col.SetForceSolid(true);
     act_holder_logic->SetVisAttributes(hold_col);
     buff_holder_logic->SetVisAttributes(hold_col);
     cathode_holder_logic->SetVisAttributes(hold_col);

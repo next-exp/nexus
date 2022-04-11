@@ -150,7 +150,8 @@ namespace nexus {
 
     // SETTING VISIBILITIES   //////////
     if (visibility_) {
-      G4VisAttributes copper_col = nexus::CopperBrown();
+      G4VisAttributes copper_col = nexus::CopperBrownAlpha();
+      copper_col.SetForceSolid(true);
       ics_logic->SetVisAttributes(copper_col);
     }
     else {

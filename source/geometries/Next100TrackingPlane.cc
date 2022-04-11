@@ -146,13 +146,14 @@ void Next100TrackingPlane::Construct()
 
 
   // VISIBILITIES //////////////////////////////////////////
+  plug_logic        ->SetVisAttributes(G4VisAttributes::GetInvisible());
   if (visibility_) {
-    G4VisAttributes copper_brown = CopperBrown();
+    G4VisAttributes copper_brown = CopperBrownAlpha();
+    copper_brown.SetForceSolid(true);
     copper_plate_logic->SetVisAttributes(copper_brown);
   } else {
     copper_plate_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     sipm_board_logic  ->SetVisAttributes(G4VisAttributes::GetInvisible());
-    plug_logic        ->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 
 }
