@@ -18,7 +18,6 @@
 #include <G4Material.hh>
 #include <G4LogicalVolume.hh>
 #include <G4Tubs.hh>
-#include <G4SubtractionSolid.hh>
 #include <G4UnionSolid.hh>
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
@@ -105,20 +104,8 @@ namespace nexus {
     GeneratePositions();
 
     /// Copper Plate ///
-    G4Tubs* copper_plate_origin_solid =  new G4Tubs("COPPER_PLATE_ORIGIN", 0., copper_plate_diam_/2.,
-                                                    copper_plate_thickn_/2., 0., twopi);
-
-    /// Hole for gas flow ///
-    G4double gas_hole_diam   = 12.  * mm;
-    G4double gas_hole_length = 103. * mm;
-    G4Tubs* copper_plate_gas_hole_solid =
-      new G4Tubs("COPPER_PLATE_CENTRAL_HOLE", 0., gas_hole_diam/2.,
-		             (gas_hole_length + offset)/2., 0., twopi);
-
-    G4ThreeVector gas_hole_pos = G4ThreeVector(0., 0., -copper_plate_thickn_/2. + gas_hole_length/2.);
-    G4SubtractionSolid* copper_plate_hole_solid =
-      new G4SubtractionSolid("EP_COPPER_PLATE", copper_plate_origin_solid,
-    			                   copper_plate_gas_hole_solid, 0, gas_hole_pos);
+    G4Tubs* copper_plate_solid =  new G4Tubs("COPPER_PLATE_ORIGIN", 0., copper_plate_diam_/2.,
+                                             copper_plate_thickn_/2., 0., twopi);
 
     /// Glue together the different kinds of huts to the copper plate ///
     G4ThreeVector hut_pos;
@@ -129,7 +116,7 @@ namespace nexus {
       new G4Tubs("SHORT_HUT", 0., hut_diam_/2., (hut_length + offset)/2., 0., twopi);
     hut_pos = short_hut_pos_[0];
     hut_pos.setZ(transl_z);
-    G4UnionSolid* copper_plate_hut_solid = new G4UnionSolid("EP_COPPER_PLATE", copper_plate_hole_solid,
+    G4UnionSolid* copper_plate_hut_solid = new G4UnionSolid("EP_COPPER_PLATE", copper_plate_solid,
                                                             short_hut_solid, 0, hut_pos);
 
     for (unsigned int i=1; i<short_hut_pos_.size(); i++) {
@@ -163,46 +150,13 @@ namespace nexus {
 			                                          long_hut_solid, 0, hut_pos);
     }
 
-
-    /// Holes in copper ///
-    G4Tubs* hole_front_solid = new G4Tubs("HOLE_FRONT", 0., hole_diam_front_/2.,
-		                                      (hole_length_front_ + offset)/2., 0., twopi);
-
-    G4Tubs* hole_rear_solid = new G4Tubs("HOLE_REAR", 0., hole_diam_rear_/2.,
-		                                     (hole_length_rear_ + offset)/2., 0., twopi);
-
-    transl_z = (hole_length_front_ + offset)/2. + hole_length_rear_/2.;
-    G4UnionSolid* hole_solid = new G4UnionSolid("HOLE", hole_front_solid, hole_rear_solid,
-			                                          0, G4ThreeVector(0., 0., transl_z));
-
-    G4Tubs* hole_hut_solid = new G4Tubs("HOLE_HUT", 0., hut_int_diam_/2.,
-                                        hut_hole_length_/2., 0., twopi);
-
-    transl_z = (hole_length_front_ + offset)/2. + hole_length_rear_ + hut_hole_length_/2.;
-    hole_solid = new G4UnionSolid("HOLE", hole_solid, hole_hut_solid,
-			                            0, G4ThreeVector(0., 0., transl_z));
-
-    G4ThreeVector hole_pos = pmt_positions_[0];
-    transl_z = - copper_plate_thickn_/2. + hole_length_front_/2. - offset/2.;
-    hole_pos.setZ(transl_z);
-    G4SubtractionSolid* copper_plate_solid =
-      new G4SubtractionSolid("EP_COPPER_PLATE", copper_plate_hut_solid, hole_solid, 0, hole_pos);
-
-    for (G4int i=1; i<num_PMTs_; i++) {
-      hole_pos = pmt_positions_[i];
-      hole_pos.setZ(transl_z);
-      copper_plate_solid = new G4SubtractionSolid("EP_COPPER_PLATE", copper_plate_solid,
-			                                            hole_solid, 0, hole_pos);
-
-    }
-
     G4Material* copper = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
     // In Geant4 11.0.0, a bug in treating the OpBoundaryProcess produced in the surface makes the code fail.
     // This is avoided by setting an empty G4MaterialPropertiesTable of the G4Material.
     copper->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
-    
+
     G4LogicalVolume* copper_plate_logic =
-      new G4LogicalVolume(copper_plate_solid, copper, "EP_COPPER_PLATE");
+      new G4LogicalVolume(copper_plate_hut_solid, copper, "EP_COPPER_PLATE");
 
     G4double stand_out_length =
       sapphire_window_thickn_ + tpb_thickn_ + optical_pad_thickn_ + pmt_stand_out_;
