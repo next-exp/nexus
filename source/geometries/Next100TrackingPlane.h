@@ -15,6 +15,7 @@
 
 class G4VPhysicalVolume;
 class G4GenericMessenger;
+class G4Navigator;
 
 namespace nexus {
 
@@ -62,6 +63,8 @@ namespace nexus {
     G4VPhysicalVolume* mpv_; // Pointer to mother's physical volume
 
     G4GenericMessenger* msg_;
+    // Geometry Navigator
+    G4Navigator* geom_navigator_;
   };
 
   inline void Next100TrackingPlane::SetMotherPhysicalVolume(G4VPhysicalVolume* p)

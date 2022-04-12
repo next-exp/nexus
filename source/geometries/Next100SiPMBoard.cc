@@ -272,8 +272,8 @@ void Next100SiPMBoard::Construct()
 
   // VERTEX GENERATOR ////////////////////////////////////////////////
 
-  vtxgen_ = new BoxPointSampler(size_, size_, board_thickness_, 0.,
-                                G4ThreeVector(0., 0., -mask_thickness_/2.));
+  vtxgen_ = new BoxPointSampler(size_, size_, board_thickness_+mask_thickness_, 0.,
+                                G4ThreeVector(0., 0., 0));
 
   // VISIBILITIES ////////////////////////////////////////////////////
   if (visibility_) {
