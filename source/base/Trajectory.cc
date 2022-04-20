@@ -43,6 +43,10 @@ Trajectory::Trajectory(const G4Track* track):
   initial_volume_ = track->GetVolume()->GetName();
 
   trjpoints_ = new TrajectoryPointContainer();
+  TrajectoryPoint* first_trj_point = 
+                new TrajectoryPoint(track->GetPosition(), 
+                                    track->GetGlobalTime());
+  trjpoints_->push_back(first_trj_point);
 
   // Add this trajectory in the map, but only if no other
   // trajectory for this track id has been registered yet
