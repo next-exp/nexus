@@ -20,12 +20,9 @@
 #include <G4Track.hh>
 #include <G4TrackingManager.hh>
 #include <G4Trajectory.hh>
-#include <G4ParticleDefinition.hh>
 #include <G4OpticalPhoton.hh>
 #include <G4Gamma.hh>
 
-#include <TFile.h>
-#include <TH1F.h>
 
 
 using namespace nexus;
@@ -34,18 +31,25 @@ REGISTER_CLASS(ValidationTrackingAction, G4UserTrackingAction)
 
 ValidationTrackingAction::ValidationTrackingAction(): G4UserTrackingAction()
 {
-  gamma_energy_ = new TH1F("GammaEnergy", "GammaEnergy", 10000, 0, 4000.);
-  gamma_energy_->GetXaxis()->SetTitle("Energy (keV)");
-  gamma_energy_->GetYaxis()->SetTitle("Entries");
+
+  // Get analysis manager
+  fG4AnalysisMan_ = G4AnalysisManager::Instance();
+  
+  // Create histogram(s)
+  fG4AnalysisMan_->CreateH1("GammaEnergy","GammaEnergy", 10000, 0, 4000.);
+  fG4AnalysisMan_->SetH1XAxisTitle(0, "Energy (keV)");
+  fG4AnalysisMan_->SetH1YAxisTitle(0, "Entries");
 }
 
 
 
 ValidationTrackingAction::~ValidationTrackingAction()
 {
-  out_file_ = new TFile("GammaEnergy.root", "recreate");
-  gamma_energy_->Write();
-  out_file_->Close();
+
+  // Open an output file and write histogram to file
+  fG4AnalysisMan_->OpenFile("GammaEnergy.root");
+  fG4AnalysisMan_->Write();
+  fG4AnalysisMan_->CloseFile();
 }
 
 
@@ -60,7 +64,7 @@ void ValidationTrackingAction::PreUserTrackingAction(const G4Track* track)
   }
 
   if (track->GetDefinition() == G4Gamma::Definition()) {
-    gamma_energy_->Fill(track->GetKineticEnergy()/CLHEP::keV);
+    fG4AnalysisMan_->FillH1(0, track->GetKineticEnergy()/CLHEP::keV);
   }
 
   // Create a new trajectory associated to the track.

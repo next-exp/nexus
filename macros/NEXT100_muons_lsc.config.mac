@@ -26,11 +26,16 @@
 
 ### GENERATOR
 /Generator/MuonAngleGenerator/region EXTERNAL
-/Generator/MuonAngleGenerator/min_energy 200 GeV
-/Generator/MuonAngleGenerator/max_energy 250 GeV
+/Generator/MuonAngleGenerator/min_energy 100 GeV
+/Generator/MuonAngleGenerator/max_energy 2000 GeV
 /Generator/MuonAngleGenerator/azimuth_rotation 150 deg
-/Generator/MuonAngleGenerator/angle_file histos/MuonAnaAllRuns.root
+
+# Angle only: za, # Angle + Energy: zae
 /Generator/MuonAngleGenerator/angle_dist za
+
+# DataFile: data/MuonAnaAllRuns.csv, # SimulationFile: data/SimulatedMuonsProposalMCEq.csv
+# SimulationFile (Angle + Energy): data/SimulatedMuonsProposalMCEqEnergy.csv
+/Generator/MuonAngleGenerator/angle_file data/SimulatedMuonsProposalMCEq.csv
 
 ### ACTIONS
 /Actions/DefaultEventAction/energy_threshold 0.01 MeV

@@ -11,14 +11,12 @@
 #define MUONS_EVENT_ACTION_H
 
 #include <G4UserEventAction.hh>
+#include <G4AnalysisManager.hh>
 #include <globals.hh>
 
 
 class G4Event;
 class G4GenericMessenger;
-
-class TTree;
-class TH1D;
 
 namespace nexus {
     
@@ -41,14 +39,9 @@ namespace nexus {
     G4GenericMessenger* msg_;
     G4int nevt_, nupdate_;
     G4double energy_threshold_;
-
-    TH1D *hist1_;
-    TH1D *hist2_;
-    TH1D *hist3_;
-    TTree *tree_;
-    double_t tree_phi_;
-    double_t tree_theta_;
-    G4String stringHist_;
+    G4AnalysisManager* fG4AnalysisMan_; ///< Pointer to the Analysis Manager
+    G4String stringHist_; ///< Output file name for histograms
+    G4bool fOpen_; ///< Check if output file has been opened already
   };
   
 } // namespace nexus
