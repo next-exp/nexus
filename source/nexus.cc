@@ -13,9 +13,11 @@
 #include <G4VisExecutive.hh>
 
 #include <getopt.h>
+#include <signal.h>
 
 using namespace nexus;
 
+NexusApp* app;
 
 void PrintUsage()
 {
@@ -26,6 +28,13 @@ void PrintUsage()
           << "   -n, --nevents         : Number of events to simulate"
           << G4endl;
   exit(EXIT_FAILURE);
+}
+
+void leave_interactive_mode(int)
+{
+  std::cout << "Leaving interactive mode" << '\n';
+  delete app;
+  exit(0);
 }
 
 
@@ -97,7 +106,7 @@ G4int main(int argc, char** argv)
 
   ////////////////////////////////////////////////////////////////////
 
-  NexusApp* app = new NexusApp(macro_filename);
+  app = new NexusApp(macro_filename);
   app->Initialize();
 
   G4UImanager* UI = G4UImanager::GetUIpointer();
@@ -109,6 +118,9 @@ G4int main(int argc, char** argv)
 
   // visual mode
   if (!batch) {
+
+    signal(SIGINT, leave_interactive_mode);
+
     std::unique_ptr<G4UIExecutive> ui{new G4UIExecutive{1, argv}};
     std::unique_ptr<G4VisManager> visManager{new G4VisExecutive};
     visManager->Initialize();
