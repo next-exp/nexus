@@ -45,6 +45,11 @@ REGISTER_CLASS(DefaultEventAction, G4UserEventAction)
     max_energy_cmd.SetParameterName("max_energy", true);
     max_energy_cmd.SetUnitCategory("Energy");
     max_energy_cmd.SetRange("max_energy>0.");
+
+    PersistencyManager* pm = dynamic_cast<PersistencyManager*>
+      (G4VPersistencyManager::GetPersistencyManager());
+
+    pm->SaveNumbOfInteractingEvents(true);
   }
 
 

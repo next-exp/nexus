@@ -44,8 +44,8 @@ REGISTER_CLASS(PersistencyManager, PersistencyManagerBase)
 PersistencyManager::PersistencyManager():
   PersistencyManagerBase(), msg_(0), ready_(false),
   store_evt_(true), store_steps_(false),
-  interacting_evt_(false), event_type_("other"), saved_evts_(0),
-  interacting_evts_(0), pmt_bin_size_(-1), sipm_bin_size_(-1),
+  interacting_evt_(false), save_ie_numb_(false), event_type_("other"),
+  saved_evts_(0), interacting_evts_(0), pmt_bin_size_(-1), sipm_bin_size_(-1),
   nevt_(0), start_id_(0), first_evt_(true), h5writer_(0)
 {
   msg_ = new G4GenericMessenger(this, "/nexus/persistency/");
@@ -388,8 +388,11 @@ G4bool PersistencyManager::Store(const G4Run*)
   h5writer_->WriteRunInfo(key,  std::to_string(num_events).c_str());
   key = "saved_events";
   h5writer_->WriteRunInfo(key,  std::to_string(saved_evts_).c_str());
-  key = "interacting_events";
-  h5writer_->WriteRunInfo(key,  std::to_string(interacting_evts_).c_str());
+
+  if (save_ie_numb_) {
+    key = "interacting_events";
+    h5writer_->WriteRunInfo(key,  std::to_string(interacting_evts_).c_str());
+  }
 
   std::map<G4String, G4double>::const_iterator it;
   for (it = sensdet_bin_.begin(); it != sensdet_bin_.end(); ++it) {
