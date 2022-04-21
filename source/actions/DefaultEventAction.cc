@@ -84,8 +84,6 @@ REGISTER_CLASS(DefaultEventAction, G4UserEventAction)
         for (unsigned int i=0; i<tc->size(); ++i) {
           Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[i]);
           edep += trj->GetEnergyDeposit();
-          // Draw tracks in visual mode
-          if (G4VVisManager::GetConcreteInstance()) trj->DrawTrajectory();
         }
       }
 
