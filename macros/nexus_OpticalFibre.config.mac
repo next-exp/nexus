@@ -1,0 +1,35 @@
+## ----------------------------------------------------------------------------
+## nexus | nexus_OpticalFibre.config.mac
+##
+## Configuration macro to simulate photons
+## along an optical fibre.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+/process/em/verbose 0
+
+/Geometry/OpticalFibre/length 1. cm
+/Geometry/OpticalFibre/radius 1. cm
+
+/Generator/SingleParticle/particle opticalphoton
+/Generator/SingleParticle/region CENTER
+/Generator/SingleParticle/min_energy 2.8 eV
+/Generator/SingleParticle/max_energy 2.8 eV
+/Generator/SingleParticle/min_costheta 0.9
+/Generator/SingleParticle/max_costheta 1
+/Generator/SingleParticle/min_phi 0
+/Generator/SingleParticle/max_phi 0.1
+
+/process/optical/processActivation Cerenkov false
+
+### PHYSICS
+/PhysicsList/Nexus/clustering           true
+/PhysicsList/Nexus/drift                true
+/PhysicsList/Nexus/electroluminescence  true
+
+/nexus/persistency/outputFile OpticalFibre.next
