@@ -89,10 +89,14 @@ void Next100SiPMBoard::Construct()
   G4Box* board_solid_vol =
     new G4Box(board_name, size_/2., size_/2., (board_thickness_ + mask_thickness_)/2.);
 
+
+  G4Material* kapton = G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
+  // In Geant4 11.0.0, a bug in treating the OpBoundaryProcess produced in the surface makes the code fail.
+  // This is avoided by setting an empty G4MaterialPropertiesTable of the G4Material.
+  kapton->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
+
   G4LogicalVolume* board_logic_vol =
-    new G4LogicalVolume(board_solid_vol,
-                        G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON"),
-                        board_name);
+    new G4LogicalVolume(board_solid_vol, kapton, board_name);
 
   GeometryBase::SetLogicalVolume(board_logic_vol);
 
@@ -268,23 +272,22 @@ void Next100SiPMBoard::Construct()
 
   // VERTEX GENERATOR ////////////////////////////////////////////////
 
-  vtxgen_ = new BoxPointSampler(size_, size_, board_thickness_, 0.,
-                                G4ThreeVector(0., 0., -mask_thickness_/2.));
+  vtxgen_ = new BoxPointSampler(size_, size_, board_thickness_+mask_thickness_, 0.,
+                                G4ThreeVector(0., 0., 0));
 
   // VISIBILITIES ////////////////////////////////////////////////////
   if (visibility_) {
-    G4VisAttributes blue       = Blue();
     G4VisAttributes light_blue = LightBlue();
-    board_logic_vol ->SetVisAttributes(blue);
     mask_logic_vol  ->SetVisAttributes(light_blue);
   }
   else{
-    board_logic_vol ->SetVisAttributes(G4VisAttributes::GetInvisible());
     mask_logic_vol  ->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
   mask_hole_logic_vol    ->SetVisAttributes(G4VisAttributes::GetInvisible());
   mask_wls_logic_vol     ->SetVisAttributes(G4VisAttributes::GetInvisible());
   mask_wls_hole_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
+  wall_wls_logic_vol     ->SetVisAttributes(G4VisAttributes::GetInvisible());
+  board_logic_vol ->SetVisAttributes(G4VisAttributes::GetInvisible());
 }
 
 

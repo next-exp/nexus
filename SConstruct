@@ -142,12 +142,6 @@ vars.AddVariables(
                  'Path to Geant4 bin directory.',  # var description
                  NULL_PATH),                       # var default value
 
-    ## ROOT
-
-    PathVariable('ROOT_BINDIR',
-                 'Path to ROOT bin directory.',
-                 NULL_PATH),
-
     ## gsl
 
     PathVariable('GSL_BINDIR',
@@ -180,7 +174,7 @@ vars.AddVariables(
 
     ('CPPFLAGS',
      'User-specified preprocessor options.',
-     ['-g', '-fdiagnostics-color']),
+     ['-g', '-fdiagnostics-color=always']),
 
     ('CXXFLAGS',
      'c++ compiler options.',
@@ -243,24 +237,10 @@ if not env['LIBPATH']:
         Abort('Geant4 libraries could not be found.')
 
 
-    ## ROOT configuration ----------------------------------
-
-    if env['ROOT_BINDIR'] != NULL_PATH:
-        env.PrependENVPath('PATH', env['ROOT_BINDIR'])
-
-    env.ParseConfig('root-config --cflags --libs')
-
-    if not conf.CheckCXXHeader('TObject.h'):
-        Abort('ROOT headers could not be found.')
-
-    if not conf.CheckLib(library='Core', language='CXX', autoadd=0):
-        Abort('ROOT libraries could not be found.')
-
-
     ## GSL configuration ------------------------------------
 
     if env['GSL_BINDIR'] != NULL_PATH:
-        env.PrependENVPath('PATH', env['GSL_DIR'])
+        env.PrependENVPath('PATH', env['GSL_BINDIR'])
 
     env.ParseConfig('gsl-config --cflags --libs')
 

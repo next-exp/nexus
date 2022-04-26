@@ -11,6 +11,7 @@
 #define MUON_GENERATOR_H
 
 #include <G4VPrimaryGenerator.hh>
+#include <Randomize.hh>
 
 class G4GenericMessenger;
 class G4Event;
@@ -56,6 +57,9 @@ namespace nexus {
     const GeometryBase* geom_; ///< Pointer to the detector geometry
 
     G4ThreeVector momentum_;
+
+    G4RandGeneral *fRandomGeneral_; ///< Pointer to the RNG for cos(x)*cos(x)
+
   };
 
 } // end namespace nexus

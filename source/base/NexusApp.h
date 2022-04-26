@@ -11,19 +11,14 @@
 #ifndef NEXUS_APP_H
 #define NEXUS_APP_H
 
+#include "PersistencyManagerBase.h"
+
 #include <G4RunManager.hh>
 
 class G4GenericMessenger;
 
 
 namespace nexus {
-
-  class GeometryFactory;
-  class GeneratorFactory;
-  class ActionsFactory;
-
-
-  /// TODO. CLASS DESCRIPTION
 
   class NexusApp: public G4RunManager
   {
@@ -50,7 +45,7 @@ namespace nexus {
     void SetRandomSeed(G4int);
 
   private:
-    G4GenericMessenger* msg_;
+    std::unique_ptr<G4GenericMessenger> msg_;
     G4String gen_name_; ///< Name of the chosen primary generator
     G4String geo_name_;  ///< Name of the chosen geometry
     G4String pm_name_;  ///< Name of the chosen persistency manager
@@ -62,6 +57,8 @@ namespace nexus {
 
     std::vector<G4String> macros_;
     std::vector<G4String> delayed_;
+
+    std::unique_ptr<PersistencyManagerBase> pm_;
 
   };
 

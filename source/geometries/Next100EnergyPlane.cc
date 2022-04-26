@@ -196,9 +196,13 @@ namespace nexus {
 
     }
 
+    G4Material* copper = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
+    // In Geant4 11.0.0, a bug in treating the OpBoundaryProcess produced in the surface makes the code fail.
+    // This is avoided by setting an empty G4MaterialPropertiesTable of the G4Material.
+    copper->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
+    
     G4LogicalVolume* copper_plate_logic =
-      new G4LogicalVolume(copper_plate_solid,
-                          G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"), "EP_COPPER_PLATE");
+      new G4LogicalVolume(copper_plate_solid, copper, "EP_COPPER_PLATE");
 
     G4double stand_out_length =
       sapphire_window_thickn_ + tpb_thickn_ + optical_pad_thickn_ + pmt_stand_out_;
@@ -347,31 +351,26 @@ namespace nexus {
     //////////////////////
 
     vacuum_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    pmt_base_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     if (visibility_) {
-      G4VisAttributes copper_col = CopperBrown();
+      G4VisAttributes copper_col = CopperBrownAlpha();
       copper_col.SetForceSolid(true);
       copper_plate_logic->SetVisAttributes(copper_col);
-      G4VisAttributes sapphire_col = nexus::Lilla();
+      G4VisAttributes sapphire_col = nexus::LillaAlpha();
       sapphire_col.SetForceSolid(true);
       sapphire_window_logic->SetVisAttributes(sapphire_col);
-      G4VisAttributes pad_col = nexus::LightGreen();
+      G4VisAttributes pad_col = nexus::LightGreenAlpha();
       pad_col.SetForceSolid(true);
       optical_pad_logic->SetVisAttributes(pad_col);
-      G4VisAttributes tpb_col = nexus::LightBlue();
+      G4VisAttributes tpb_col = nexus::LightBlueAlpha();
       tpb_col.SetForceSolid(true);
       tpb_logic->SetVisAttributes(tpb_col);
-      G4VisAttributes pmt_base_col = Yellow();
-      pmt_base_col.SetForceSolid(true);
-      pmt_base_logic->SetVisAttributes(pmt_base_col);
-      G4VisAttributes vacuum_col = White();
-      vacuum_logic->SetVisAttributes(vacuum_col);
+      
     } else {
       copper_plate_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
       sapphire_window_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
       optical_pad_logic    ->SetVisAttributes(G4VisAttributes::GetInvisible());
       tpb_logic            ->SetVisAttributes(G4VisAttributes::GetInvisible());
-      pmt_base_logic       ->SetVisAttributes(G4VisAttributes::GetInvisible());
-      vacuum_logic         ->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
 
     //////////////////////////

@@ -17,14 +17,8 @@
 #include <G4VVisManager.hh>
 #include <G4Trajectory.hh>
 #include <G4GenericMessenger.hh>
-#include <G4HCofThisEvent.hh>
-#include <G4SDManager.hh>
-#include <G4HCtable.hh>
 #include <globals.hh>
 
-#include <TFile.h>
-#include <TTree.h>
-#include <TH1.h>
 
 #include "CLHEP/Units/SystemOfUnits.h"
 #include "AddUserInfoToPV.h"
@@ -35,7 +29,7 @@ namespace nexus {
 REGISTER_CLASS(MuonsEventAction, G4UserEventAction)
 
   MuonsEventAction::MuonsEventAction():
-    G4UserEventAction(), nevt_(0), nupdate_(10), energy_threshold_(0.), stringHist_("")
+    G4UserEventAction(), nevt_(0), nupdate_(10), energy_threshold_(0.), stringHist_(""), fOpen_(false)
   {
     msg_ = new G4GenericMessenger(this, "/Actions/MuonsEventAction/");
     msg_->DeclareProperty("stringHist", stringHist_, "");
@@ -47,37 +41,49 @@ REGISTER_CLASS(MuonsEventAction, G4UserEventAction)
     thresh_cmd.SetUnitCategory("Energy");
     thresh_cmd.SetRange("energy_threshold>0.");
 
-    // Muons Control plots
-    hist1_ = new TH1D ("Edepo","Energy_deposited",100,-1.0,3.4);
-    hist2_ = new TH1D ("Theta","Theta generated",100,-pi,pi);
-    hist3_ = new TH1D ("Phi","Phi generated",100,0.,twopi);
-    tree_  = new TTree("Tree nexus","Flat tree with some nexus info");
-    tree_->Branch("tree_theta", &tree_theta_, "tree_theta/D");
-    tree_->Branch("tree_phi", &tree_phi_, "tree_phi/D");
+    // Get analysis manager
+    fG4AnalysisMan_ = G4AnalysisManager::Instance();
+    
+    // Create histogram(s) for muons
+    fG4AnalysisMan_->CreateH1("Edepo","Energy_deposited",100,-1.0,3.4);
+    fG4AnalysisMan_->CreateH1("Theta","Theta generated",100,0.,pi);
+    fG4AnalysisMan_->CreateH1("Phi","Phi generated",100,0.,twopi);
+    
+    // Create Ntuple branches for muons
+    fG4AnalysisMan_->CreateNtuple("Tree nexus","Flat tree of muon theta and phi");
+    fG4AnalysisMan_->CreateNtupleDColumn("tree_theta");
+    fG4AnalysisMan_->CreateNtupleDColumn("tree_phi");
+    fG4AnalysisMan_->FinishNtuple();
+
   }
 
 
 
   MuonsEventAction::~MuonsEventAction()
   {
-    //added for muons
-    const char * suf = stringHist_.c_str();
-    TFile *file = new TFile(suf,"RECREATE","Muons");
-    hist1_->Write();
-    hist2_->Write();
-    hist3_->Write();
-    tree_->Write();
-    file->Close();
+    // Write histogram to root file
+    fG4AnalysisMan_->Write();
+    fG4AnalysisMan_->CloseFile();
 
   }
 
   void MuonsEventAction::BeginOfEventAction(const G4Event* /*event*/)
   {
-   // Print out event number info
+    // Print out event number info
     if ((nevt_ % nupdate_) == 0) {
       G4cout << " >> Event no. " << nevt_  << G4endl;
       if (nevt_  == (10 * nupdate_)) nupdate_ *= 10;
     }
+
+    // Get analysis manager instance
+    fG4AnalysisMan_ = G4AnalysisManager::Instance();
+
+    // Open output file
+    if (!fOpen_) {
+      fG4AnalysisMan_->OpenFile(stringHist_);
+      fOpen_ = true;
+    }
+
   }
 
 
@@ -103,8 +109,8 @@ REGISTER_CLASS(MuonsEventAction, G4UserEventAction)
           if (G4VVisManager::GetConcreteInstance()) trj->DrawTrajectory();
         }
       }
-      //control plot for energy
-      hist1_->Fill(edep);
+      // Control plot for energy
+      fG4AnalysisMan_->FillH1(0, edep);
 
       PersistencyManager* pm = dynamic_cast<PersistencyManager*>
         (G4VPersistencyManager::GetPersistencyManager());
@@ -114,20 +120,20 @@ REGISTER_CLASS(MuonsEventAction, G4UserEventAction)
 
     }
 
-    //Retrieving muons generation information
+    // Retrieving muon generation information
     G4PrimaryVertex* my_vertex = event->GetPrimaryVertex();
     G4VUserPrimaryVertexInformation *getinfo2 = my_vertex->GetUserInformation();
     AddUserInfoToPV *my_getinfo2 = dynamic_cast<AddUserInfoToPV*>(getinfo2);
 
-    Double_t my_theta = my_getinfo2->GetTheta();
-    Double_t my_phi = my_getinfo2->GetPhi();
-    //    std::cout<<"get the info back in MuonsEventAction: "<<my_getinfo2->GetTheta()<<std::endl;
-    hist2_->Fill(my_theta);
-    hist3_->Fill(my_phi);
-    tree_theta_ = my_theta;
-    tree_phi_ = my_phi;
-    tree_->Fill();
+    G4double my_theta = my_getinfo2->GetTheta();
+    G4double my_phi = my_getinfo2->GetPhi();
 
+    fG4AnalysisMan_->FillH1(1, my_theta);
+    fG4AnalysisMan_->FillH1(2, my_phi);
+
+    fG4AnalysisMan_->FillNtupleDColumn(0, my_theta);
+    fG4AnalysisMan_->FillNtupleDColumn(1, my_phi);
+    fG4AnalysisMan_->AddNtupleRow();
 
   }
 

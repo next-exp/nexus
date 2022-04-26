@@ -29,6 +29,24 @@ namespace nexus {
   inline G4VisAttributes DarkGrey()     { return { { .3 ,  .3 ,  .3 } }; }
   inline G4VisAttributes LightGrey()    { return { { .7 ,  .7 ,  .7 } }; }
   inline G4VisAttributes TitaniumGrey() { return { { .71,  .69,  .66} }; }
+  
+  // Set colours with alpha for transparency
+  inline G4VisAttributes YellowAlpha()       { return { {1.0 , 1.0 ,  0.0, .5} }; }
+  inline G4VisAttributes WhiteAlpha()        { return { {1.0 , 1.0 ,  1.0, .3} }; }
+  inline G4VisAttributes RedAlpha()          { return { { 1. ,  .0 ,  .0 , .5} }; }
+  inline G4VisAttributes DarkRedAlpha()      { return { { .88,  .87,  .86, .5} }; }
+  inline G4VisAttributes BloodRedAlpha()     { return { { .55,  .09,  .09, .5} }; }
+  inline G4VisAttributes DarkGreenAlpha()    { return { { .0 ,  .6 ,  .0 , .5} }; }
+  inline G4VisAttributes LightGreenAlpha()   { return { { .6 ,  .9 ,  .2 , .3} }; }
+  inline G4VisAttributes DirtyWhiteAlpha()   { return { {1   , 1   ,  .8 , .5} }; }
+  inline G4VisAttributes CopperBrownAlpha()  { return { { .72,  .45,  .20, .2} }; }
+  inline G4VisAttributes BrownAlpha()        { return { { .93,  .87,  .80, .5} }; }
+  inline G4VisAttributes BlueAlpha()         { return { { .0 ,  .0 , 1   , .5} }; }
+  inline G4VisAttributes LightBlueAlpha()    { return { { .6 ,  .8 ,  .79, .5} }; }
+  inline G4VisAttributes LillaAlpha()        { return { { .5 ,  .5 ,  .7 , .5} }; }
+  inline G4VisAttributes DarkGreyAlpha()     { return { { .3 ,  .3 ,  .3 , .5} }; }
+  inline G4VisAttributes LightGreyAlpha()    { return { { .7 ,  .7 ,  .7 , .5} }; }
+  inline G4VisAttributes TitaniumGreyAlpha() { return { { .71,  .69,  .66, .5} }; }
 
 }  // end namespace nexus
 

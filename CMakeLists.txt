@@ -21,7 +21,6 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 find_package(Geant4 REQUIRED ui_all vis_all)
 find_package(GSL REQUIRED)
 find_package(HDF5 REQUIRED)
-find_package(ROOT 6.23 REQUIRED)
 
 # Define list with names of source folders
 set(SOURCE_DIRS actions base generators geometries materials
@@ -48,9 +47,9 @@ foreach(DIR ${SOURCE_DIRS})
   target_sources(lib PRIVATE ${SRCS})
 endforeach()
 
-target_include_directories(lib PRIVATE ${Geant4_INCLUDE_DIRS} ${ROOT_INCLUDE_DIRS} ${GSL_INCLUDE_DIRS} ${HDF5_INCLUDE_DIRS})
+target_include_directories(lib PRIVATE ${Geant4_INCLUDE_DIRS} ${GSL_INCLUDE_DIRS} ${HDF5_INCLUDE_DIRS})
 target_link_libraries(lib PUBLIC 
-                      ${Geant4_LIBRARIES} PRIVATE ${ROOT_LIBRARIES} 
+                      ${Geant4_LIBRARIES} PRIVATE
                       ${GSL_LIBRARIES} ${HDF5_LIBRARIES})
 
 add_executable(exe)

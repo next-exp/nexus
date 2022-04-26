@@ -14,10 +14,9 @@
 #define VALIDATION_TRACKING_ACTION_H
 
 #include <G4UserTrackingAction.hh>
+#include <G4AnalysisManager.hh>
 
 class G4Track;
-class TFile;
-class TH1F;
 
 namespace nexus {
 
@@ -35,8 +34,7 @@ namespace nexus {
     virtual void PostUserTrackingAction(const G4Track*);
 
   private:
-    TH1F* gamma_energy_;
-    TFile* out_file_;
+    G4AnalysisManager* fG4AnalysisMan_; ///< Pointer to the Analysis Manager
   };
 
 }
