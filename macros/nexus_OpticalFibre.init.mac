@@ -21,8 +21,8 @@
 /nexus/RegisterPersistencyManager PersistencyManager
 
 /nexus/RegisterRunAction DefaultRunAction
-/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterEventAction SaveAllEventAction
 /nexus/RegisterTrackingAction DefaultTrackingAction
-##/nexus/RegisterSteppingAction AnalysisSteppingAction
+/nexus/RegisterSteppingAction SaveAllSteppingAction
 
 /nexus/RegisterMacro macros/nexus_OpticalFibre.config.mac

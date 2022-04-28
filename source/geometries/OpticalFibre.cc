@@ -79,7 +79,7 @@ void OpticalFibre::Construct()
                           "LAB");
     lab_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     this->SetLogicalVolume(lab_logic);
-    
+
     G4String name = "OPTICAL_FIBRE";
 
     //define solid volume
@@ -99,26 +99,26 @@ void OpticalFibre::Construct()
     // sensitive detector, i.e. position, time and energy deposition
     // will be stored for each step of any charged particle crossing
     // the volume.
-    IonizationSD* ionizsd = new IonizationSD("/OPTICAL_FIBRE");
-    G4SDManager::GetSDMpointer()->AddNewDetector(ionizsd);
-    Cyl_logic->SetSensitiveDetector(ionizsd);
+//    IonizationSD* ionizsd = new IonizationSD("/OPTICAL_FIBRE");
+//    G4SDManager::GetSDMpointer()->AddNewDetector(ionizsd);
+//    Cyl_logic->SetSensitiveDetector(ionizsd);
 
     // Set the logical volume of the fibre as a sensitive detector
-    SensorSD* senssd = new SensorSD("/OPTICAL_FIBRE_SENS");
-    senssd->SetDetectorVolumeDepth(0);
-    senssd->SetTimeBinning(1.0*us);
-    G4SDManager::GetSDMpointer()->AddNewDetector(senssd);
-    Cyl_logic->SetSensitiveDetector(senssd);
+//    SensorSD* senssd = new SensorSD("/OPTICAL_FIBRE_SENS");
+//    senssd->SetDetectorVolumeDepth(0);
+//    senssd->SetTimeBinning(1.0*us);
+//    G4SDManager::GetSDMpointer()->AddNewDetector(senssd);
+//    Cyl_logic->SetSensitiveDetector(senssd);
 
     //Build the sensor
     sensor_  = new GenericPhotosensor("SENSOR", radius_, radius_, thickness_);
     sensor_ -> SetVisibility(true);
 
     //Set the sensor window material
-    G4Material* window_mat_ = materials::TPB();
-    window_mat_->SetMaterialPropertiesTable(opticalprops::TPB());
+    G4Material* window_mat_ = materials::LXe();
+    window_mat_->SetMaterialPropertiesTable(opticalprops::LXe());
     G4MaterialPropertyVector* window_rindex = window_mat_->GetMaterialPropertiesTable()->GetProperty("RINDEX");
-    //sensor_ -> SetWindowRefractiveIndex(window_rindex);
+    sensor_ -> SetWindowRefractiveIndex(window_rindex);
 
     //Set the optical properties of the sensor
     G4MaterialPropertiesTable* photosensor_mpt = new G4MaterialPropertiesTable();
@@ -130,12 +130,12 @@ void OpticalFibre::Construct()
     sensor_->SetOpticalProperties(photosensor_mpt);
     sensor_->SetTimeBinning(1*us);
 
-    sensor_->SetWithWLSCoating(true);
+    sensor_->SetWithWLSCoating(false);
 
     //Set sensor depth and naming order
     sensor_ ->SetSensorDepth(1);
-    sensor_ ->SetMotherDepth(2);
-    sensor_ ->SetNamingOrder(1);
+    //sensor_ ->SetMotherDepth(0);
+    //sensor_ ->SetNamingOrder(0);
 
     sensor_ -> Construct();
 
@@ -145,11 +145,11 @@ void OpticalFibre::Construct()
     sensor_rot.rotateY(pi);
     G4ThreeVector sensor_pos = G4ThreeVector(0,
                                              0,
-                                             length_);
+                                             length_-thickness_/2);
 
     new G4PVPlacement(G4Transform3D(sensor_rot, sensor_pos), sensor_logic,
-                        sensor_logic->GetName(), lab_logic, true,
-                        0, false);
+                        sensor_logic->GetName(), Cyl_logic, true,
+                        1, true);
 }
 
 G4ThreeVector OpticalFibre::GenerateVertex(const G4String& region) const
