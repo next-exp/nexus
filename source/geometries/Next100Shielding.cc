@@ -173,36 +173,36 @@ namespace nexus {
                                            materials::Steel(), "STEEL_BEAM_STRUCTURE_TOP");
 
     new G4PVPlacement(0, G4ThreeVector(0., top_beam_y, roof_z_separation_ + lateral_z_separation_/2.),
-                      struct_logic, "STEEL_BEAM_STRUCTURE_top", lead_box_logic, false, 0, false);
+                      struct_logic, "SHIELDING_STRUCT", lead_box_logic, false, 0, false);
 
     new G4PVPlacement(0, G4ThreeVector(0., roof_y, 0.),
-                      roof_logic, "STEEL_BEAM_STRUCTURE_roof", lead_box_logic, false, 0, false);
+                      roof_logic, "SHIELDING_STRUCT", lead_box_logic, false, 0, false);
 
     // lateral beams
     new G4PVPlacement(0, G4ThreeVector(lat_beam_x, lat_beam_y, lateral_z_separation_/2.),
-              		    lat_beam_logic, "STEEL_BEAM_STRUCTURE_lat1", lead_box_logic, false, 0, false);
+              		    lat_beam_logic, "SHIELDING_STRUCT", lead_box_logic, false, 0, false);
 
     new G4PVPlacement(0, G4ThreeVector(lat_beam_x, lat_beam_y, -lateral_z_separation_/2.),
-                      lat_beam_logic, "STEEL_BEAM_STRUCTURE_lat2", lead_box_logic, false, 0, false);
+                      lat_beam_logic, "SHIELDING_STRUCT", lead_box_logic, false, 0, false);
 
     new G4PVPlacement(0, G4ThreeVector(-lat_beam_x, lat_beam_y, lateral_z_separation_/2.),
-                      lat_beam_logic, "STEEL_BEAM_STRUCTURE_lat3", lead_box_logic, false, 0, false);
+                      lat_beam_logic, "SHIELDING_STRUCT", lead_box_logic, false, 0, false);
 
     new G4PVPlacement(0, G4ThreeVector(-lat_beam_x, lat_beam_y, -lateral_z_separation_/2.),
-                      lat_beam_logic, "STEEL_BEAM_STRUCTURE_lat4", lead_box_logic, false, 0, false);
+                      lat_beam_logic, "SHIELDING_STRUCT", lead_box_logic, false, 0, false);
 
     // front beams
     new G4PVPlacement(0, G4ThreeVector(-front_x_separation_/2., lat_beam_y, front_beam_z),
-                  front_beam_logic, "STEEL_BEAM_STRUCTURE_front1", lead_box_logic, false, 0, false);
+                  front_beam_logic, "SHIELDING_STRUCT", lead_box_logic, false, 0, false);
 
     new G4PVPlacement(0, G4ThreeVector(front_x_separation_/2., lat_beam_y, front_beam_z),
-                  front_beam_logic, "STEEL_BEAM_STRUCTURE_front2", lead_box_logic, false, 0, false);
+                  front_beam_logic, "SHIELDING_STRUCT", lead_box_logic, false, 0, false);
 
     new G4PVPlacement(0, G4ThreeVector(-front_x_separation_/2., lat_beam_y, -front_beam_z),
-                  front_beam_logic, "STEEL_BEAM_STRUCTURE_front3", lead_box_logic, false, 0, false);
+                  front_beam_logic, "SHIELDING_STRUCT", lead_box_logic, false, 0, false);
 
     new G4PVPlacement(0, G4ThreeVector(front_x_separation_/2., lat_beam_y, -front_beam_z),
-                  front_beam_logic,"STEEL_BEAM_STRUCTURE_front4", lead_box_logic, false, 0, false);
+                  front_beam_logic,"SHIELDING_STRUCT", lead_box_logic, false, 0, false);
 
 
     // STEEL BOX   ///////////
@@ -305,36 +305,36 @@ namespace nexus {
 
     new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos, support_beam_dist_/2.),
                       pedestal_support_beam_bottom_logic,
-                      "PEDESTAL_SUPPORT_BEAM_BOTTOM_1", lead_box_logic, false, 0);
+                      "PEDESTAL", lead_box_logic, false, 0);
 
     new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos, -support_beam_dist_/2.),
                       pedestal_support_beam_bottom_logic,
-                      "PEDESTAL_SUPPORT_BEAM_BOTTOM_2", lead_box_logic, false, 0);
+                      "PEDESTAL", lead_box_logic, false, 0);
 
     new G4PVPlacement(0, G4ThreeVector(0., pedestal_top_y_pos, support_beam_dist_/2.),
                       pedestal_support_beam_top_logic,
-                      "PEDESTAL_SUPPORT_BEAM_TOP_1", air_box_logic_, false, 0);
+                      "PEDESTAL", air_box_logic_, false, 0);
 
     new G4PVPlacement(0, G4ThreeVector(0., pedestal_top_y_pos, -support_beam_dist_/2.),
                       pedestal_support_beam_top_logic,
-                      "PEDESTAL_SUPPORT_BEAM_TOP_2", air_box_logic_, false, 0);
+                      "PEDESTAL", air_box_logic_, false, 0);
 
     new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos, support_beam_dist_/2. + support_front_dist_),
                       pedestal_beam_front_logic,
-                      "PEDESTAL_BEAM_FRONT_1", lead_box_logic, false, 0);
+                      "PEDESTAL", lead_box_logic, false, 0);
 
     new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos, -support_beam_dist_/2. - support_front_dist_),
                       pedestal_beam_front_logic,
-                      "PEDESTAL_BEAM_FRONT_2", lead_box_logic, false, 0);
+                      "PEDESTAL", lead_box_logic, false, 0);
 
     new G4PVPlacement(0, G4ThreeVector(pedestal_x_pos, pedestal_y_pos, 0.),
-                      pedestal_beam_lateral_logic, "PEDESTAL_BEAM_LAT_1", lead_box_logic, false, 0);
+                      pedestal_beam_lateral_logic, "PEDESTAL", lead_box_logic, false, 0);
 
     new G4PVPlacement(0, G4ThreeVector(-pedestal_x_pos, pedestal_y_pos, 0.),
-                      pedestal_beam_lateral_logic, "PEDESTAL_BEAM_LAT_2", lead_box_logic, false, 0);
+                      pedestal_beam_lateral_logic, "PEDESTAL", lead_box_logic, false, 0);
 
     new G4PVPlacement(0, G4ThreeVector(0., pedestal_roof_y_pos, 0.),
-                      pedestal_roof_logic, "PEDESTAL_ROOF", air_box_logic_, false, 0);
+                      pedestal_roof_logic, "PEDESTAL", air_box_logic_, false, 0);
 
     // SETTING VISIBILITIES   //////////
     if (visibility_) {
