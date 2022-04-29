@@ -79,7 +79,6 @@ void OpticalFibre::Construct()
                           "LAB");
     lab_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     this->SetLogicalVolume(lab_logic);
-
     G4String name = "OPTICAL_FIBRE";
 
     //define solid volume
