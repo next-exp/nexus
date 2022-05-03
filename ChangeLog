@@ -1,3 +1,10 @@
+tag v7_02_00 - 3 May 2022
+	- Remove ROOT dependency from the code
+	- Add energy input to MuonAngleGenerator
+	- Fix minor bugs in visualization and optical properties
+	- Generate nexus library with CMake
+	- Review SConstruct building script
+
 tag v7_01_00 - 18 feb 2022
 	- Fix grid transparency to current value.
 	- Use 293 K as the temperature for NEXT-100.
