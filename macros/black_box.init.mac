@@ -6,7 +6,8 @@
 /control/execute macros/physics/DefaultPhysicsList.mac
 
 /nexus/RegisterGeometry BlackBox
-/nexus/RegisterGenerator SingleParticleGenerator
+#/nexus/RegisterGenerator SingleParticleGenerator
+/nexus/RegisterGenerator LED450LW
 /nexus/RegisterPersistencyManager PersistencyManager
 
 /PhysicsList/RegisterPhysics G4OpticalPhysics

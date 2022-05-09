@@ -119,10 +119,10 @@ void BlackBoxSiPMBoard::Construct()
   G4String board_name = "SIPM_BOARD";
 
   // Calculating board wrapper dimensions
-  //G4double board_size_x = num_columns_ * sipm_pitch_ - 2. * side_reduction_;
-  //G4double board_size_y = num_rows_    * sipm_pitch_ - 2. * side_reduction_;
-  G4double board_size_x = 7.9*cm;
-  G4double board_size_y = 7.9*cm;
+  G4double board_size_x = num_columns_ * sipm_pitch_ - 2. * side_reduction_;
+  G4double board_size_y = num_rows_    * sipm_pitch_ - 2. * side_reduction_;
+  //G4double board_size_x = 7.9*cm;
+  //G4double board_size_y = 7.9*cm;
   G4double board_size_z = kapton_thickn_ + std::max(sipm_->GetDimensions().z(), coating_thickn_ + membrane_thickn_ +
                           mask_thickn_);
 
@@ -163,10 +163,10 @@ void BlackBoxSiPMBoard::Construct()
   G4double sipm_posz = - board_size_z/2. + kapton_thickn_ + sipm_->GetDimensions().z()/2.;
   G4ThreeVector sipm_pos;
 
-  G4int central_sipms[] = {27, 28, 35, 36};
+  //G4int central_sipms[] = {27, 28, 35, 36};
 
-  for (G4int sipm_id:central_sipms) {
-  //for (G4int sipm_id=0; sipm_id<num_sipms_; sipm_id++) {
+  //for (G4int sipm_id:central_sipms) {
+  for (G4int sipm_id=0; sipm_id<num_sipms_; sipm_id++) {
     //if (sipm_id==27 || sipm_id==28 || sipm_id==35 || sipm_id==36) {
       //  continue;
     //}
