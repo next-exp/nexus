@@ -292,6 +292,7 @@ void NextFlexFieldCage::DefineMaterials()
 
   // Teflon
   teflon_mat_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+  teflon_mat_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
   // UV shifting material
   if (wls_mat_name_ == "NONE") {
