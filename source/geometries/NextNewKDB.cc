@@ -111,6 +111,7 @@ namespace nexus {
 
     G4Material* kapton =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
+    kapton->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
     G4LogicalVolume* board_logic =
       new G4LogicalVolume(board_solid, kapton, "DICE_BOARD");
@@ -125,6 +126,7 @@ namespace nexus {
 
     G4Material* teflon =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+    teflon->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
     G4LogicalVolume* mask_logic =
       new G4LogicalVolume(mask_solid, teflon, "DICE_MASK");

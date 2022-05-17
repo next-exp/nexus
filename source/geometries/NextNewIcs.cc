@@ -125,10 +125,11 @@ namespace nexus {
     ics_solid = new G4SubtractionSolid("ICS", ics_solid, up_big_nozzle_hole_solid, rotx,
 				                               G4ThreeVector( 0., up_nozzle_y_pos_, center_nozzle_z_pos_ +up_nozzle_z_pos_));
 
+    G4Material* copper_mat_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
+    copper_mat_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
     G4LogicalVolume* ics_logic =
-      new G4LogicalVolume(ics_solid,
-     						          G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"), "ICS");
+      new G4LogicalVolume(ics_solid, copper_mat_, "ICS");
 
     new G4PVPlacement(0, G4ThreeVector(0.,0.,-body_zpos_), ics_logic, "ICS", mother_logic_, false, 0, false);
 

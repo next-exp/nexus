@@ -86,6 +86,8 @@ void NextTonScale::Construct()
   G4Material* lab_material =
     G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
 
+  lab_material->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
+
   G4Box* lab_solid_vol = new G4Box(lab_name, lab_size/2., lab_size/2., lab_size/2.);
   G4LogicalVolume* lab_logic_vol = new G4LogicalVolume(lab_solid_vol, lab_material, lab_name);
   lab_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
@@ -113,6 +115,7 @@ G4LogicalVolume* NextTonScale::ConstructWaterTank(G4LogicalVolume* mother_logic_
   G4String tank_name = "TANK";
   G4Material* tank_material =
     G4NistManager::Instance()->FindOrBuildMaterial("G4_STAINLESS-STEEL");
+  tank_material->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
   G4Tubs* tank_solid_vol =
     new G4Tubs(tank_name, 0., tank_size_/2., tank_size_/2., 0., 360.*deg);
@@ -136,6 +139,7 @@ G4LogicalVolume* NextTonScale::ConstructWaterTank(G4LogicalVolume* mother_logic_
   G4double water_size = tank_size_ - 2.*tank_thickn_;
   G4Material* water_material =
     G4NistManager::Instance()->FindOrBuildMaterial("G4_WATER");
+  water_material->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
   G4Tubs* water_solid_vol =
     new G4Tubs(water_name, 0., water_size/2., water_size/2., 0., 360.*deg);
@@ -174,6 +178,7 @@ G4LogicalVolume* NextTonScale::ConstructVesselAndICS(G4LogicalVolume* mother_log
   G4String vessel_name = "VESSEL";
   G4Material* vessel_material =
     G4NistManager::Instance()->FindOrBuildMaterial("G4_STAINLESS-STEEL");
+  vessel_material->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
   G4Tubs* vessel_solid_vol =
     new G4Tubs(vessel_name, 0., detector_diam_/2., detector_length_/2., 0., 360.*deg);
@@ -223,6 +228,7 @@ G4LogicalVolume* NextTonScale::ConstructVesselAndICS(G4LogicalVolume* mother_log
   G4double ics_diam = gas_diam;
   G4double ics_length = gas_length - 2.*endcap_hollow_;
   G4Material* ics_material = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
+  ics_material->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
   G4Tubs* ics_full_solid_vol =
     new G4Tubs("ICS_FULL", 0., ics_diam/2., ics_length/2., 0., 360.*deg);
@@ -272,6 +278,7 @@ G4LogicalVolume* NextTonScale::ConstructFieldCageAndReadout(G4LogicalVolume* mot
   G4double fcage_length = active_length_;
   G4Material* fcage_material =
     G4NistManager::Instance()->FindOrBuildMaterial("G4_POLYETHYLENE");
+  fcage_material->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
   G4Tubs* fcage_solid_vol = new G4Tubs(fcage_name, active_diam_/2., fcage_diam/2.,
                                        fcage_length/2., 0., 360.*deg);
@@ -315,6 +322,7 @@ G4LogicalVolume* NextTonScale::ConstructFieldCageAndReadout(G4LogicalVolume* mot
 
   G4Material* cathode_mat =
     G4NistManager::Instance()->FindOrBuildMaterial("G4_STAINLESS-STEEL");
+  cathode_mat->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
   G4Tubs* cathode_solid_vol =
     new G4Tubs(cathode_name, 0., cathode_diam/2., cathode_thickn_/2., 0., 360.*deg);
@@ -360,6 +368,7 @@ G4LogicalVolume* NextTonScale::ConstructFieldCageAndReadout(G4LogicalVolume* mot
 
   G4Material* readout_material =
     G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
+  readout_material->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
   G4Tubs* readout_solid_vol =
     new G4Tubs(readout_name, 0., readout_diam/2., readout_thickn/2., 0., 360.*deg);

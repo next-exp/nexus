@@ -225,10 +225,12 @@ namespace nexus {
     temperature_ = gas_->GetTemperature();
 
     aluminum_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Al");
+    aluminum_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
     /// Teflon for the light tube
     teflon_ =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+    teflon_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
     /// Quartz
     quartz_ =  materials::FusedSilica();
