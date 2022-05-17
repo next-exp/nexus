@@ -104,7 +104,7 @@ namespace nexus{
     G4UnionSolid* enclosure_solid =
       new G4UnionSolid("ENCLOSURE_SOLID", enclosure_body, enclosure_endcap, nullptr, transl);
 
-    G4Material* copper = G4NistManager::Instance()->FindOrBuidlMaterial("G4_Cu");
+    G4Material* copper = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
     copper->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
     G4LogicalVolume* enclosure_logic =

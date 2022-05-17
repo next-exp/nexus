@@ -147,7 +147,7 @@ namespace nexus {
     G4Box* plug_solid = new G4Box("DB_CONNECTOR", plug_x_/2., plug_y_/2., plug_z_/2.);
 
     G4Material* peek_mat_ = materials::PEEK();
-    peek_mat->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
+    peek_mat_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
     G4LogicalVolume* plug_logic = new G4LogicalVolume(plug_solid,  peek_mat_, "DB_PLUG");
     //G4PVPlacement * plug_physi;
