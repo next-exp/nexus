@@ -963,11 +963,11 @@ void Next1EL::BuildFieldCage()
     new G4UnionSolid("SUPPORT_BAR", bar_base, addon, 0,
 		     G4ThreeVector(bar_thickn_, 0., (bar_length - bar_addon_length_)/2.));
 
-  G4Material* peek_mat_ = materials::PEEK();
-  peek_mat_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
+  G4Material* peek_mat = materials::PEEK();
+  peek_mat->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
   G4LogicalVolume* bar_logic =
-    new G4LogicalVolume(bar_solid, peek_mat_, "SUPPORT_BAR");
+    new G4LogicalVolume(bar_solid, peek_mat, "SUPPORT_BAR");
 
 
   G4double pos_rad = ring_diam_/2. + ring_thickn_ + bar_thickn_/2.;

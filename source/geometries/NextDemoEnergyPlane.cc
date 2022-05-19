@@ -120,12 +120,12 @@ namespace nexus {
                                pmt_positions_[i]);
     }
 
-    G4Material* aluminum_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Al");
-    aluminum_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
+    G4Material* aluminum = G4NistManager::Instance()->FindOrBuildMaterial("G4_Al");
+    aluminum->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
     G4LogicalVolume* carrier_plate_logic =
       new G4LogicalVolume(carrier_plate_solid,
-                          aluminum_,
+                          aluminum,
                           "EP_PLATE");
     G4double carrier_plate_posz =
       GetELzCoord() + gate_support_surface_dist_ + carrier_plate_thickness_/2.;
@@ -252,12 +252,12 @@ namespace nexus {
       new G4Tubs("PMT_BASE", 0., pmt_base_diam_/2., pmt_base_thickness_,
                  0.,twopi);
 
-    G4Material* kapton_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
-    kapton_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
+    G4Material* kapton = G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
+    kapton->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
     G4LogicalVolume* pmt_base_logic =
       new G4LogicalVolume(pmt_base_solid,
-                          kapton_,
+                          kapton,
 			  "PMT_BASE");
     G4double pmt_base_pos = pmt_hole_length_/2. - pmt_base_thickness_;
     new G4PVPlacement(0, G4ThreeVector(0.,0., pmt_base_pos),

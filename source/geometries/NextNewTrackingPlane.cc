@@ -111,11 +111,11 @@ namespace nexus {
      						   support_plate_cable_hole_solid, 0, pos);
     }
 
-    G4Material* copper_mat_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
-    copper_mat_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
+    G4Material* copper_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
+    copper_mat->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
     G4LogicalVolume* support_plate_logic = new G4LogicalVolume(support_plate_solid,
-							       copper_mat_,
+							       copper_mat,
 							       "SUPPORT_PLATE");
 
     ///// Support Plate placement
@@ -146,10 +146,10 @@ namespace nexus {
     //PIGGY TAIL PLUG/////////////////////////////////////////////////////
     G4Box* plug_solid = new G4Box("DB_CONNECTOR", plug_x_/2., plug_y_/2., plug_z_/2.);
 
-    G4Material* peek_mat_ = materials::PEEK();
-    peek_mat_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
+    G4Material* peek_mat = materials::PEEK();
+    peek_mat->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
-    G4LogicalVolume* plug_logic = new G4LogicalVolume(plug_solid,  peek_mat_, "DB_PLUG");
+    G4LogicalVolume* plug_logic = new G4LogicalVolume(plug_solid,  peek_mat, "DB_PLUG");
     //G4PVPlacement * plug_physi;
     G4ThreeVector positn;
     for (int i=0; i<num_DBs_; i++) {
