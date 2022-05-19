@@ -19,7 +19,6 @@
 /nexus/RegisterPersistencyManager PersistencyManager
 
 /nexus/RegisterRunAction DefaultRunAction
-/nexus/RegisterEventAction SaveAllEventAction
 /nexus/RegisterTrackingAction DefaultTrackingAction
 
 /nexus/RegisterMacro macros/NEXT100_S2_table.config.mac

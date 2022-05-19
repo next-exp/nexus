@@ -32,7 +32,7 @@
 /Generator/MuonGenerator/region MUONS
 
 # ACTIONS
-## /Actions/MuonsEventAction/energy_threshold 0.6 MeV
+## /Actions/MuonsEventAction/min_energy 0.6 MeV
 /Actions/MuonsEventAction/stringHist MuonsHist_1.root
 
 # PHYSICS

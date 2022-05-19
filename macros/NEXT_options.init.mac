@@ -39,7 +39,6 @@
 /nexus/RegisterRunAction DefaultRunAction
 
 /nexus/RegisterEventAction DefaultEventAction
-#/nexus/RegisterEventAction SaveAllEventAction
 
 #/nexus/RegisterSteppingAction AnalysisSteppingAction
 

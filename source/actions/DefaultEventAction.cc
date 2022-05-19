@@ -28,16 +28,16 @@ namespace nexus {
 REGISTER_CLASS(DefaultEventAction, G4UserEventAction)
 
   DefaultEventAction::DefaultEventAction():
-    G4UserEventAction(), nevt_(0), nupdate_(10), energy_threshold_(0.), energy_max_(DBL_MAX)
+    G4UserEventAction(), nevt_(0), nupdate_(10), energy_min_(0.), energy_max_(DBL_MAX)
   {
     msg_ = new G4GenericMessenger(this, "/Actions/DefaultEventAction/");
 
     G4GenericMessenger::Command& thresh_cmd =
-       msg_->DeclareProperty("energy_threshold", energy_threshold_,
+       msg_->DeclareProperty("min_energy", energy_min_,
                              "Minimum deposited energy to save the event to file.");
-    thresh_cmd.SetParameterName("energy_threshold", true);
+    thresh_cmd.SetParameterName("min_energy", true);
     thresh_cmd.SetUnitCategory("Energy");
-    thresh_cmd.SetRange("energy_threshold>0.");
+    thresh_cmd.SetRange("min_energy>0.");
 
     G4GenericMessenger::Command& max_energy_cmd =
       msg_->DeclareProperty("max_energy", energy_max_,
@@ -45,6 +45,11 @@ REGISTER_CLASS(DefaultEventAction, G4UserEventAction)
     max_energy_cmd.SetParameterName("max_energy", true);
     max_energy_cmd.SetUnitCategory("Energy");
     max_energy_cmd.SetRange("max_energy>0.");
+
+    PersistencyManager* pm = dynamic_cast<PersistencyManager*>
+      (G4VPersistencyManager::GetPersistencyManager());
+
+    pm->SaveNumbOfInteractingEvents(true);
   }
 
 
@@ -72,7 +77,7 @@ REGISTER_CLASS(DefaultEventAction, G4UserEventAction)
 
     // Determine whether total energy deposit in ionization sensitive
     // detectors is above threshold
-    if (energy_threshold_ >= 0.) {
+    if (energy_min_ >= 0.) {
 
       // Get the trajectories stored for this event and loop through them
       // to calculate the total energy deposit
@@ -84,22 +89,18 @@ REGISTER_CLASS(DefaultEventAction, G4UserEventAction)
         for (unsigned int i=0; i<tc->size(); ++i) {
           Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[i]);
           edep += trj->GetEnergyDeposit();
-          // Draw tracks in visual mode
-          if (G4VVisManager::GetConcreteInstance()) trj->DrawTrajectory();
         }
       }
 
       PersistencyManager* pm = dynamic_cast<PersistencyManager*>
         (G4VPersistencyManager::GetPersistencyManager());
 
-      // if (edep > energy_threshold_) pm->StoreCurrentEvent(true);
-      // else pm->StoreCurrentEvent(false);
       if (!event->IsAborted() && edep>0) {
 	pm->InteractingEvent(true);
       } else {
 	pm->InteractingEvent(false);
       }
-      if (!event->IsAborted() && edep > energy_threshold_ && edep < energy_max_) {
+      if (!event->IsAborted() && edep > energy_min_ && edep < energy_max_) {
 	pm->StoreCurrentEvent(true);
       } else {
 	pm->StoreCurrentEvent(false);

@@ -24,7 +24,7 @@
 /Generator/IonGenerator/region TP_COPPER_PLATE
 
 ##### ACTIONS #####
-/Actions/DefaultEventAction/energy_threshold 0.6 MeV
+/Actions/DefaultEventAction/min_energy 0.6 MeV
 /Actions/DefaultEventAction/max_energy 2.55 MeV
 
 ##### PHYSICS #####

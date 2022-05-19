@@ -35,7 +35,7 @@
 /Generator/MuonAngleGenerator/angles_on false
 
 ### ACTIONS
-/Actions/DefaultEventAction/energy_threshold 0.01 MeV
+/Actions/DefaultEventAction/min_energy 0.01 MeV
 
 ### PHYSICS (for fast simulation)
 /PhysicsList/Nexus/clustering           false

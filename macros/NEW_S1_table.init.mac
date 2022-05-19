@@ -21,7 +21,6 @@
 /nexus/RegisterPersistencyManager PersistencyManager
 
 /nexus/RegisterTrackingAction DefaultTrackingAction
-/nexus/RegisterEventAction SaveAllEventAction
 /nexus/RegisterRunAction DefaultRunAction
 
 /nexus/RegisterMacro macros/NEW_S1_table.config.mac

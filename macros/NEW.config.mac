@@ -20,7 +20,7 @@
 /Generator/IonGenerator/mass_number 214
 /Generator/IonGenerator/region DICE_BOARD
 
-/Actions/DefaultEventAction/energy_threshold 0.6 MeV
+/Actions/DefaultEventAction/min_energy 0.6 MeV
 
 /PhysicsList/Nexus/clustering          false
 /PhysicsList/Nexus/drift               false
