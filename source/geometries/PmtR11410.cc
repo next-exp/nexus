@@ -83,6 +83,7 @@ namespace nexus {
 
 
     G4Material* Kovar = materials::Kovar();
+    Kovar->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
     G4LogicalVolume* pmt_logic =
       new G4LogicalVolume(pmt_solid, Kovar, "PMT_R11410");
@@ -108,6 +109,7 @@ namespace nexus {
 						   rear_body_gas_solid, 0, gas_transl);
 
     G4Material* pmt_gas_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
+    pmt_gas_mat->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
     G4LogicalVolume* pmt_gas_logic = new G4LogicalVolume(pmt_gas_solid, pmt_gas_mat, "PMT_GAS");
 
     G4double pmt_gas_posz = body_thickness_/2.;
@@ -137,6 +139,7 @@ namespace nexus {
 		 0., twopi);
 
     G4Material* aluminum = G4NistManager::Instance()->FindOrBuildMaterial("G4_Al");
+    aluminum->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
     G4LogicalVolume* photocathode_logic =
       new G4LogicalVolume(photocathode_solid, aluminum, "PMT_PHOTOCATHODE");
 

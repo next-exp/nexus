@@ -83,6 +83,7 @@ void GenericPhotosensor::DefineMaterials()
 {
   // Case /////
   case_mat_ = materials::FR4();
+  case_mat_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
   // Window /////
   // The optical properties of a given material, is common for the whole geometry so,
@@ -119,6 +120,7 @@ void GenericPhotosensor::DefineMaterials()
 
   // Sensitive /////
   sensitive_mat_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Si");
+  sensitive_mat_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
   // WLS coating /////
   wls_mat_ = materials::TPB();
