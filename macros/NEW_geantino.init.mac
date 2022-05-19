@@ -18,7 +18,6 @@
 /nexus/RegisterPersistencyManager PersistencyManager
 
 /nexus/RegisterTrackingAction DefaultTrackingAction
-/nexus/RegisterEventAction SaveAllEventAction
 /nexus/RegisterSteppingAction SaveAllSteppingAction
 /nexus/RegisterRunAction DefaultRunAction
 
