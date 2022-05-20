@@ -255,19 +255,25 @@ void Next1EL::DefineMaterials()
 {
   // AIR
   air_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
+  air_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
   // GASEOUS XENON
   gxe_ = materials::GXe(pressure_, 303);
   gxe_->SetMaterialPropertiesTable(opticalprops::GXe(pressure_, 303, sc_yield_, e_lifetime_));
   // PTFE (TEFLON)
   teflon_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+  teflon_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
   // STAINLESS STEEL
   steel_ = materials::Steel();
+  steel_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
   // ALUMINUM
   aluminum_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Al");
+  aluminum_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
   //LEAD
   lead_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb");
+  lead_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
   //PLASTIC
   plastic_ = materials::PS();
+  plastic_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
   //TPB
   tpb_ = materials::TPB();
   tpb_->SetMaterialPropertiesTable(opticalprops::TPB());
@@ -352,6 +358,7 @@ void Next1EL::BuildExtScintillator()
     new G4Tubs("SOURCE", 0., source_diam/2., source_thick/2., 0., twopi);
   G4Material* sodium22_mat =
     G4NistManager::Instance()->FindOrBuildMaterial("G4_Na");
+  sodium22_mat->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
   G4LogicalVolume* source_logic =
     new G4LogicalVolume(source_solid, sodium22_mat, "SOURCE");
 
@@ -400,6 +407,7 @@ void Next1EL::BuildExtScintillator()
   G4Tubs* sc_solid = new G4Tubs("NaI", 0., radius, length/2., 0., twopi);
   G4Material* mat =
     G4NistManager::Instance()->FindOrBuildMaterial("G4_SODIUM_IODIDE");
+  mat->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
   G4LogicalVolume* sc_logic = new G4LogicalVolume(sc_solid, mat, "NaI");
   sc_logic->SetUserLimits(new G4UserLimits(1.*mm));
 
@@ -955,8 +963,11 @@ void Next1EL::BuildFieldCage()
     new G4UnionSolid("SUPPORT_BAR", bar_base, addon, 0,
 		     G4ThreeVector(bar_thickn_, 0., (bar_length - bar_addon_length_)/2.));
 
+  G4Material* peek_mat = materials::PEEK();
+  peek_mat->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
+
   G4LogicalVolume* bar_logic =
-    new G4LogicalVolume(bar_solid, materials::PEEK(), "SUPPORT_BAR");
+    new G4LogicalVolume(bar_solid, peek_mat, "SUPPORT_BAR");
 
 
   G4double pos_rad = ring_diam_/2. + ring_thickn_ + bar_thickn_/2.;

@@ -138,10 +138,12 @@ namespace nexus {
       new G4SubtractionSolid("CARRIER_PLATE", carrier_plate_solid, axial_port_hole_solid,
 			     0, G4ThreeVector(0., 0., - carrier_plate_front_buffer_thickness_ - axial_port_thickn_));
 
+    G4Material* copper_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
+    copper_mat->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
     G4LogicalVolume* carrier_plate_logic =
       new G4LogicalVolume(carrier_plate_solid,
-			  G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
+			  copper_mat,
 			  "CARRIER_PLATE");
 
 

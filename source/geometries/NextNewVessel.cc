@@ -365,16 +365,24 @@ void NextNewVessel::Construct()
 
 
     //// LOGICS //////
+    
+    G4Material* steel_316_Ti = materials::Steel316Ti();
+    steel_316_Ti->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
+
     G4LogicalVolume* vessel_logic =
-      new G4LogicalVolume(vessel_solid,	materials::Steel316Ti(), "VESSEL");
+      new G4LogicalVolume(vessel_solid,	steel_316_Ti, "VESSEL");
     this->SetLogicalVolume(vessel_logic);
 
     // Place the port air inside the flanges end external tubes for lateral and upper
     G4Tubs* lateral_port_hole_solid =
       new G4Tubs("LATERAL_PORT_AIR_EXT", 0., port_tube_diam_/2.,
     		 (lat_nozzle_flange_high_ + lat_port_tube_out_)/2., 0., twopi);
+    
+    G4Material* air_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
+    air_mat->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
+    
     G4LogicalVolume* lateral_port_hole_logic =
-      new G4LogicalVolume(lateral_port_hole_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
+      new G4LogicalVolume(lateral_port_hole_solid, air_mat,
 			  "LATERAL_PORT_AIR_EXT");
     new G4PVPlacement(G4Transform3D(*rot_lat, G4ThreeVector(vessel_in_diam_/2.+lat_nozzle_high_+(lat_nozzle_flange_high_+lat_port_tube_out_)/2., 0., lat_nozzle_z_pos_)),
 		      lateral_port_hole_logic, "LATERAL_PORT_AIR_EXT", vessel_logic, false, 0, false);
@@ -384,7 +392,7 @@ void NextNewVessel::Construct()
       new G4Tubs("UP_PORT_AIR_EXT", 0., port_tube_diam_/2.,
     		 (up_nozzle_flange_high_ + up_port_tube_out_)/2., 0., twopi);
     G4LogicalVolume* upper_port_hole_logic =
-      new G4LogicalVolume(upper_port_hole_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
+      new G4LogicalVolume(upper_port_hole_solid, air_mat,
 			  "UP_PORT_AIR_EXT");
     new G4PVPlacement(G4Transform3D(*rot_up, G4ThreeVector(0., vessel_in_diam_/2.+ up_nozzle_high_ + (up_nozzle_flange_high_ + up_port_tube_out_)/2. , 0.)), upper_port_hole_logic,
     		      "UP_PORT_AIR_EXT", vessel_logic, false, 0, false);
@@ -393,7 +401,7 @@ void NextNewVessel::Construct()
       new G4Tubs("AXIAL_PORT_AIR_EXT", 0., port_tube_diam_/2.,
     		 (endcap_nozzle_flange_high_ + axial_port_tube_ext)/2., 0., twopi);
     G4LogicalVolume* axial_port_hole_logic =
-      new G4LogicalVolume(axial_port_hole_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
+      new G4LogicalVolume(axial_port_hole_solid, air_mat,
 			  "AXIAL_PORT_AIR_EXT");
     // new G4PVPlacement(G4Transform3D(*rot_endcap, G4ThreeVector(0., 0.,  endcap_nozzle_z_pos_ + endcap_nozzle_high_ + (endcap_nozzle_flange_high_)/2.)), axial_port_hole_logic,
     new G4PVPlacement(G4Transform3D(*rot_endcap, G4ThreeVector(0., 0.,  -endcap_nozzle_z_pos_ - endcap_nozzle_high_ - (endcap_nozzle_flange_high_ + axial_port_tube_ext)/2.)), axial_port_hole_logic,
@@ -443,7 +451,7 @@ void NextNewVessel::Construct()
 						 simulated_length_lat/2., 0, twopi);
 
     G4LogicalVolume* lateral_port_tube_logic =
-    new G4LogicalVolume(lateral_port_tube_solid, materials::Steel316Ti(), "LATERAL_PORT");
+    new G4LogicalVolume(lateral_port_tube_solid, steel_316_Ti, "LATERAL_PORT");
 
     // G4ThreeVector pos_lateral_port(lat_nozzle_x_pos_  + lat_nozzle_high_/2. - simulated_length_lat/2.,  0., lat_nozzle_z_pos_);
     G4ThreeVector pos_lateral_port(vessel_in_diam_/2.  + lat_nozzle_high_ - simulated_length_lat/2.,  0., lat_nozzle_z_pos_);
@@ -458,7 +466,7 @@ void NextNewVessel::Construct()
 
   G4LogicalVolume* lateral_port_tube_air_logic =
     new G4LogicalVolume(lateral_port_tube_air_solid,
-			G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LATERAL_PORT_AIR");
+			air_mat, "LATERAL_PORT_AIR");
 
   new G4PVPlacement(0,G4ThreeVector(0.,0., -port_tube_window_thickn_/2.),
 		    lateral_port_tube_air_logic, "LATERAL_PORT_AIR",
@@ -535,7 +543,7 @@ void NextNewVessel::Construct()
   G4Tubs* upper_port_tube_solid = new G4Tubs("UPPER_PORT", 0., port_tube_diam_/2.+port_tube_thickness_,
 					     simulated_length_up/2., 0, twopi);
   G4LogicalVolume* upper_port_tube_logic =
-    new G4LogicalVolume(upper_port_tube_solid, materials::Steel316Ti(), "UPPER_PORT");
+    new G4LogicalVolume(upper_port_tube_solid, steel_316_Ti, "UPPER_PORT");
 
   G4ThreeVector pos_upper_port(0., vessel_in_diam_/2. + up_nozzle_high_ - simulated_length_up/2., 0.);
 
@@ -549,7 +557,7 @@ void NextNewVessel::Construct()
 
   G4LogicalVolume* upper_port_tube_air_logic =
     new G4LogicalVolume(upper_port_tube_air_solid,
-			G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "UPPER_PORT_AIR");
+			air_mat, "UPPER_PORT_AIR");
 
   new G4PVPlacement(0,G4ThreeVector(0.,0.,-port_tube_window_thickn_/2.),
 		    upper_port_tube_air_logic, "UPPER_PORT_AIR",
@@ -629,7 +637,7 @@ void NextNewVessel::Construct()
     new G4Tubs("AXIAL_PORT", 0., port_tube_diam_/2.+port_tube_thickness_,
 	       simulated_length/2., 0, twopi);
   G4LogicalVolume* axial_port_tube_logic =
-    new G4LogicalVolume(axial_port_tube_solid, materials::Steel316Ti(), "AXIAL_PORT");
+    new G4LogicalVolume(axial_port_tube_solid, steel_316_Ti, "AXIAL_PORT");
 
   G4ThreeVector pos_axial_port(0.,0.,  - endcap_nozzle_z_pos_ - endcap_nozzle_high_ +  simulated_length/2.);
 
@@ -644,7 +652,7 @@ void NextNewVessel::Construct()
 
   G4LogicalVolume* axial_port_tube_air_logic =
     new G4LogicalVolume(axial_port_tube_air_solid,
-			G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "AXIAL_PORT_AIR");
+			air_mat, "AXIAL_PORT_AIR");
 
   new G4PVPlacement(0,G4ThreeVector(0.,0., -port_tube_window_thickn_/2.),
 		    axial_port_tube_air_logic, "AXIAL_PORT_AIR",

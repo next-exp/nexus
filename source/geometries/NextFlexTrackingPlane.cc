@@ -200,9 +200,11 @@ void NextFlexTrackingPlane::DefineMaterials()
 
   // Copper
   copper_mat_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
+  copper_mat_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
   // Teflon
   teflon_mat_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+  teflon_mat_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
   // UV shifting material
   if (wls_mat_name_ == "NONE") {

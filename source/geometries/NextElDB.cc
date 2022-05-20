@@ -67,6 +67,8 @@ namespace nexus {
     G4Material* teflon =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
 
+    teflon->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
+
     G4LogicalVolume* board_logic =
       new G4LogicalVolume(board_solid, teflon, "DICE_BOARD");
 

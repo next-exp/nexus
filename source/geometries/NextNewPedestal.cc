@@ -10,6 +10,7 @@
 #include "MaterialsList.h"
 #include "Visibilities.h"
 
+#include <G4Material.hh>
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PVPlacement.hh>
@@ -53,8 +54,11 @@ namespace nexus {
     G4Box* table_solid =
       new G4Box("TABLE", table_x_/2., table_y_/2., table_z_/2.);
 
+    G4Material* steel_316_Ti = materials::Steel316Ti();
+    steel_316_Ti->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
+
     G4LogicalVolume* table_logic = new G4LogicalVolume(table_solid,
-						       materials::Steel316Ti(),
+						       steel_316_Ti,
 						       "TABLE");
     new G4PVPlacement(0, G4ThreeVector(0.,y_pos_,0.), table_logic, "TABLE", mother_logic_, false, 0,false);
 

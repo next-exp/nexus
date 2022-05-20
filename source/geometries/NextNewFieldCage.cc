@@ -281,9 +281,11 @@ namespace nexus {
 
     // Copper for field rings
     copper_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
+    copper_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
     // Teflon for the light tube
     teflon_ =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
+    teflon_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
     // TPB coating
     tpb_ = materials::TPB();
     tpb_->SetMaterialPropertiesTable(opticalprops::TPB());

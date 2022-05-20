@@ -116,9 +116,11 @@ namespace nexus {
       new G4UnionSolid("MINI_CASTLE", castle_solid, z_wall_solid_sipms, 0,
      		       G4ThreeVector(0., -y_/2.+thickness_/2., z_/2.-thickness_/2.));
 
+    G4Material* lead = G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb");
+    lead->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
+
     G4LogicalVolume* castle_logic =
-      new G4LogicalVolume (castle_solid,
-			   G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb"),"CASTLE");
+      new G4LogicalVolume (castle_solid, lead, "CASTLE");
 
     G4double y_pos = pedestal_surf_y_ + y_ -thickness_/2.;
     new G4PVPlacement(0, G4ThreeVector(0., y_pos, 0.), castle_logic,
@@ -158,8 +160,11 @@ namespace nexus {
       new G4UnionSolid("MINI_CASTLE_STEEL", steel_solid, z_steel_solid_sipms, 0,
       		       G4ThreeVector(0., -steel_y/2.+steel_thickn_/2., steel_z/2.-steel_thickn_/2.));
 
+    G4Material* steel = materials::Steel();
+    steel->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
+
     G4LogicalVolume* steel_logic =
-      new G4LogicalVolume (steel_solid, materials::Steel(), "MINI_CASTLE_STEEL");
+      new G4LogicalVolume (steel_solid, steel, "MINI_CASTLE_STEEL");
 
     y_pos = pedestal_surf_y_ + y_ -thickness_ - steel_thickn_/2.;
     new G4PVPlacement(0, G4ThreeVector(0., y_pos, 0.), steel_logic,

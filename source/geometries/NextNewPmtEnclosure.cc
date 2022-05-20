@@ -104,9 +104,12 @@ namespace nexus{
     G4UnionSolid* enclosure_solid =
       new G4UnionSolid("ENCLOSURE_SOLID", enclosure_body, enclosure_endcap, nullptr, transl);
 
+    G4Material* copper = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
+    copper->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
+
     G4LogicalVolume* enclosure_logic =
       new G4LogicalVolume(enclosure_solid,
-                          G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
+                          copper,
                           "ENCLOSURE");
     GeometryBase::SetLogicalVolume(enclosure_logic);
 
@@ -198,9 +201,13 @@ namespace nexus{
     // Adding the PMT base
     G4Tubs* pmt_base_solid =
       new G4Tubs("PMT_BASE", 0., pmt_base_diam_/2., pmt_base_thickness_, 0.,twopi);
+    
+    G4Material* kapton = G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
+    kapton->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
+
     G4LogicalVolume* pmt_base_logic =
       new G4LogicalVolume(pmt_base_solid,
-                          G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON"),
+                          kapton,
                           "PMT_BASE");
     new G4PVPlacement(nullptr, G4ThreeVector(0.,0., -pmt_base_z_),
                       pmt_base_logic, "PMT_BASE", enclosure_gas_logic, false, 0, false);

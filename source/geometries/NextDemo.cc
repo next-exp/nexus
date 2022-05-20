@@ -75,9 +75,14 @@ void NextDemo::ConstructLab()
   G4Box* lab_solid_vol =
     new G4Box(lab_name, lab_size_/2., lab_size_/2., lab_size_/2.);
 
+  G4Material* air_mat = 
+    G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
+
+  air_mat->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
+
   G4LogicalVolume* lab_logic_vol =
     new G4LogicalVolume(lab_solid_vol,
-                        G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
+                        air_mat,
                         lab_name);
 
   // Make the volume invisible in the visualization

@@ -142,9 +142,11 @@ void NextFlex::DefineMaterials()
 {
   // Copper
   copper_mat_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
+  copper_mat_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
   // Air
   air_mat_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
+  air_mat_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
   // Defining the gas xenon
   if (gas_name_ == "naturalXe")
