@@ -32,7 +32,7 @@ Next100TrackingPlane::Next100TrackingPlane():
   GeometryBase(),
   copper_plate_diameter_  (1340.*mm),
   copper_plate_thickness_ ( 145.*mm),
-  distance_board_board_   (   2.*mm),
+  distance_board_board_   (   1.*mm),
 
   visibility_(true),
   sipm_board_geom_(new Next100SiPMBoard),
@@ -80,7 +80,7 @@ void Next100TrackingPlane::Construct()
   // In Geant4 11.0.0, a bug in treating the OpBoundaryProcess produced in the surface makes the code fail.
   // This is avoided by setting an empty G4MaterialPropertiesTable of the G4Material.
   copper->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
-  
+
   G4LogicalVolume* copper_plate_logic =
     new G4LogicalVolume(copper_plate_solid, copper, copper_plate_name);
 
