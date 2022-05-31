@@ -26,8 +26,8 @@
 #include <G4SDManager.hh>
 #include <G4UserLimits.hh>
 #include <Randomize.hh>
-#include <G4LogicalSkinSurface.hh>
 #include <G4OpticalSurface.hh>
+#include <G4LogicalSkinSurface.hh>
 #include <G4RotationMatrix.hh>
 #include <G4SystemOfUnits.hh>
 
@@ -204,7 +204,69 @@ namespace nexus {
   rot -> rotateY(rotation_);
   new G4PVPlacement(rot, post, dice_board_logic,
             	      dice_board_logic->GetName(), box_logic_vol, false, 1, false);
-  /////////////////////////////////////////////////////////
+
+  // SAPPHIRE //////////////////////////////////////////////////
+
+  G4String sapphire_name = "SAPPHIRE";
+
+  G4Material* sapphire_mat = materials::Sapphire();
+
+  sapphire_mat->SetMaterialPropertiesTable(opticalprops::Sapphire());
+
+  //G4double pedot_thickn  = 1. *um;
+  G4double tpb_thickn    = 1. *um;
+  G4double sapphire_thickn  = 6. *mm;
+  G4double pedot_thickn  = sapphire_thickn/2.;
+  G4double window_thickn  = sapphire_thickn + pedot_thickn;
+  G4double sapphire_diam = 20 *cm;
+
+  G4Tubs* sapphire_solid_vol =
+    new G4Tubs(sapphire_name, 0, sapphire_diam/2.,
+                window_thickn/2., 0, twopi);
+
+  G4LogicalVolume* sapphire_logic_vol =
+    new G4LogicalVolume(sapphire_solid_vol, sapphire_mat, sapphire_name);
+
+  G4VisAttributes sapphire_col = nexus::LightBlue();
+  sapphire_logic_vol->SetVisAttributes(sapphire_col);
+
+  G4ThreeVector sapphire_pos(dice_board_x_pos_,dice_board_y_pos_,-49*cm);
+
+   new G4PVPlacement(rot, sapphire_pos,
+                     sapphire_logic_vol, sapphire_name, box_logic_vol,
+                     false, 0, false);
+
+  // PEDOT ////////////////////////////////////////////////////////
+
+  G4String pedot_name = "PEDOT";
+
+  G4Material* pedot_mat = materials::TPB();
+
+  sapphire_mat->SetMaterialPropertiesTable(opticalprops::Sapphire());
+
+  G4Tubs* pedot_solid_vol =
+    new G4Tubs(pedot_name, 0, sapphire_diam/2., pedot_thickn/2., 0, twopi);
+
+  G4LogicalVolume* pedot_logic_vol =
+    new G4LogicalVolume(pedot_solid_vol, pedot_mat, pedot_name);
+
+    /// Add optical surface to PEDOT ///
+    //G4OpticalSurface* pedot_coating_opsurf =
+    //new G4OpticalSurface("SAPPHIRE_WNDW_PEDOT_OPSURF", glisur, ground,
+      //                   dielectric_dielectric, .01);
+    //new G4LogicalSkinSurface("SAPPHIRE_WNDW_PEDOT_OPSURF",
+      //                       pedot_logic_vol, pedot_coating_opsurf);
+
+  G4VisAttributes pedot_col = nexus::CopperBrown();
+  pedot_logic_vol->SetVisAttributes(pedot_col);
+
+  G4ThreeVector pedot_pos(0,0,window_thickn/2.- pedot_thickn/2.);
+
+   new G4PVPlacement(0, pedot_pos,
+                     pedot_logic_vol, pedot_name, sapphire_logic_vol,
+                     false, 0, false);
+
+
 
   }
 

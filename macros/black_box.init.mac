@@ -7,7 +7,7 @@
 
 /nexus/RegisterGeometry BlackBox
 #/nexus/RegisterGenerator SingleParticleGenerator
-/nexus/RegisterGenerator LED450LW
+/nexus/RegisterGenerator LED450LWcone
 /nexus/RegisterPersistencyManager PersistencyManager
 
 /PhysicsList/RegisterPhysics G4OpticalPhysics
