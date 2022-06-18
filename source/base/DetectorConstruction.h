@@ -39,14 +39,6 @@ namespace nexus {
   };
 
 
-  // INLINE DEFINITIONS /////////////////////////////////////////////
-
-  inline void DetectorConstruction::SetGeometry(std::unique_ptr<GeometryBase> g)
-  { geometry_ = std::move(g); }
-
-  inline const GeometryBase* DetectorConstruction::GetGeometry() const
-  { return geometry_.get(); }
-
 } // end namespace nexus
 
 #endif
