@@ -56,8 +56,6 @@ OpticalFibre::OpticalFibre():
         length_cmd.SetParameterName("length",false);
         length_cmd.SetRange("length>0.");
 
-        cyl_vertex_gen_ = new CylinderPointSampler(radius_, length_, 0.,  0., G4ThreeVector(0., 0., 0.), 0);
-
         // hardcoded thickness of the photosensor
         thickness_=2.*mm;
     }
@@ -71,7 +69,7 @@ OpticalFibre::~OpticalFibre()
 void OpticalFibre::Construct()
 {
     // LAB. This is just a volume of air surrounding the detector
-    G4Box* lab_solid = new G4Box("LAB", radius_+1.*cm, radius_+1.*cm, length_+1.*cm);
+    G4Box* lab_solid = new G4Box("LAB", 2*radius_+1.*cm, 2*radius_+1.*cm, length_+1.*cm);
 
     G4Material* air=G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
     air->SetMaterialPropertiesTable(opticalprops::Vacuum());
@@ -83,18 +81,41 @@ void OpticalFibre::Construct()
     this->SetLogicalVolume(lab_logic);
     G4String name = "OPTICAL_FIBRE";
 
-    //define solid volume
-    G4Tubs* Cyl_solid = new G4Tubs(name,0.,radius_,length_,0.,twopi);
+    //OUTER CLADDING
+    G4Tubs* Cyl_outer = new G4Tubs("OUTER",0.,radius_,length_,0.,twopi);
 
     //define material
-    G4Material* y11 = materials::FusedSilica();
-    y11->SetMaterialPropertiesTable(opticalprops::Vacuum());
+    G4Material* FP = materials::FPethylene();
+    FP->SetMaterialPropertiesTable(opticalprops::FPethylene());
+
+    //define logical volume
+    G4LogicalVolume* outer_logic = new G4LogicalVolume(Cyl_outer,FP,"OUTER");
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), outer_logic,
+		      "OUTER", lab_logic, true, 0, true);
+
+    //INNER CLADDING
+    G4Tubs* Cyl_inner = new G4Tubs("INNER",0.,0.98*radius_,length_,0.,twopi);
+
+    //define material
+    G4Material* pmma = materials::PMMA();
+    pmma->SetMaterialPropertiesTable(opticalprops::PMMA());
+
+    //define logical volume
+    G4LogicalVolume* logic_inner = new G4LogicalVolume(Cyl_inner,pmma,"INNER");
+    new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), logic_inner,
+		      "INNER", outer_logic, true, 1, true);
+
+    //CORE
+    G4Tubs* Cyl_solid = new G4Tubs(name,0.,0.96*radius_,length_,0.,twopi);
+
+    //define material
+    G4Material* y11 = materials::Y11();
+    y11->SetMaterialPropertiesTable(opticalprops::Y11());
 
     //define logical volume
     G4LogicalVolume* Cyl_logic = new G4LogicalVolume(Cyl_solid,y11,name);
-    GeometryBase::SetLogicalVolume(Cyl_logic);
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), Cyl_logic,
-		      name, lab_logic, true, 0, true);
+		      name, logic_inner, true, 2, true);
 
     // Set the logical volume of the fibre as an ionization
     // sensitive detector, i.e. position, time and energy deposition
@@ -112,13 +133,14 @@ void OpticalFibre::Construct()
 //    Cyl_logic->SetSensitiveDetector(senssd);
 
     //Build the sensor
-    sensor_  = new GenericPhotosensor("SENSOR", radius_, radius_, thickness_);
+    sensor_  = new GenericPhotosensor("SENSOR", 4*radius_, 4*radius_, thickness_);
     sensor_ -> SetVisibility(true);
 
     //Set the sensor window material
-    G4Material* window_mat_ = materials::LXe();
-    window_mat_->SetMaterialPropertiesTable(opticalprops::LXe());
-    G4MaterialPropertyVector* window_rindex = window_mat_->GetMaterialPropertiesTable()->GetProperty("RINDEX");
+    //G4Material* window_mat_ = materials::Y11();
+    //window_mat_->SetMaterialPropertiesTable(opticalprops::Y11());
+    //G4MaterialPropertyVector* window_rindex = window_mat_->GetMaterialPropertiesTable()->GetProperty("RINDEX");
+    G4MaterialPropertyVector* window_rindex = air->GetMaterialPropertiesTable()->GetProperty("RINDEX");
     sensor_ -> SetWindowRefractiveIndex(window_rindex);
 
     //Set the optical properties of the sensor
@@ -146,15 +168,32 @@ void OpticalFibre::Construct()
     sensor_rot.rotateY(pi);
     G4ThreeVector sensor_pos = G4ThreeVector(0,
                                              0,
-                                             length_-thickness_/2);
+                                             length_+thickness_/3+0.333333333*mm);
 
     new G4PVPlacement(G4Transform3D(sensor_rot, sensor_pos), sensor_logic,
-                        sensor_logic->GetName(), Cyl_logic, true,
-                        1, true);
+                        sensor_logic->GetName(), lab_logic, true,
+                        3, true);
+
+    // Debug volume to reflect trapped photons
+    G4Box* absorb_box = new G4Box("ABS",2*radius_,2*radius_,0.2*mm);
+    G4LogicalVolume* abs_log = new G4LogicalVolume(absorb_box,materials::FR4(),"ABS");
+    new G4PVPlacement(0,G4ThreeVector(0,0,-length_-0.2*mm),abs_log,abs_log->GetName(),lab_logic,true,4,true);
+    // Reflective surface
+    G4MaterialPropertiesTable* refl_surf = new G4MaterialPropertiesTable();
+    G4double energy2[]       = {0.2 * eV, 3.5 * eV, 3.6 * eV, 11.5 * eV};
+    G4double reflectivity2[] = {0.9     , 0.9     , 0.9     ,  0.9     };
+    photosensor_mpt->AddProperty("REFLECTIVITY", energy2, reflectivity2, 4);
+    G4OpticalSurface* refl_opsurf =
+    new G4OpticalSurface("Refl_optSurf", unified, polished, dielectric_metal);
+    refl_opsurf->SetMaterialPropertiesTable(refl_surf);
+    new G4LogicalSkinSurface(name + "_optSurf", abs_log, refl_opsurf);
+
+
+    cyl_vertex_gen_ = new CylinderPointSampler(0., 2*length_, radius_,  0., G4ThreeVector(0., 0., 0.), 0);
  
 }
 
 G4ThreeVector OpticalFibre::GenerateVertex(const G4String& region) const
 {
-    return G4ThreeVector(0,0,0); //cyl_vertex_gen_->GenerateVertex(region);
+    return cyl_vertex_gen_->GenerateVertex(region);
 }
