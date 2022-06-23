@@ -1269,7 +1269,7 @@ namespace opticalprops {
       3.5 * m,       3.5 * m,
       noAbsLength_,  noAbsLength_
     };
-    mpt->AddProperty("ABSLENGTH", abs_energy, absLength);
+    //mpt->AddProperty("ABSLENGTH", abs_energy, absLength);
 
     // WLS ABSORPTION LENGTH
     std::vector<G4double> WLS_abs_energy = {
@@ -1406,7 +1406,7 @@ namespace opticalprops {
       2.563 * mm,    1.765 * mm,  1.474 * mm,  1.153 * mm,  0.922 * mm,  0.765 * mm,  0.671 * mm,
       0.671 * mm
     };
-    mpt->AddProperty("ABSLENGTH", abs_energy, abslength);
+    //mpt->AddProperty("ABSLENGTH", abs_energy, abslength);
 
     return mpt;
   }
