@@ -181,7 +181,7 @@ void OpticalFibre::Construct()
     // Reflective surface
     G4MaterialPropertiesTable* refl_surf = new G4MaterialPropertiesTable();
     G4double energy2[]       = {0.2 * eV, 3.5 * eV, 3.6 * eV, 11.5 * eV};
-    G4double reflectivity2[] = {0.9     , 0.9     , 0.9     ,  0.9     };
+    G4double reflectivity2[] = {0.8     , 0.8     , 0.8     ,  0.8     };
     photosensor_mpt->AddProperty("REFLECTIVITY", energy2, reflectivity2, 4);
     G4OpticalSurface* refl_opsurf =
     new G4OpticalSurface("Refl_optSurf", unified, polished, dielectric_metal);
