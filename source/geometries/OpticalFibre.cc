@@ -1,8 +1,7 @@
 // ----------------------------------------------------------------------------
-// nexus | OpticalFibre.h
+// nexus | OpticalFibre.cc
 //
-// Cylindrical optical fibre to be placed on the walls to increase light collection,
-// with single photosensor.
+// Cylindrical optical fibre with single photosensor.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
@@ -40,7 +39,7 @@ using namespace CLHEP;
 REGISTER_CLASS(OpticalFibre,GeometryBase)
 
 OpticalFibre::OpticalFibre():
-    GeometryBase(), radius_(1.*cm), length_(1.*cm), cyl_vertex_gen_(0)
+    GeometryBase(), radius_(1.*cm), length_(1.*cm), core_mat_("EJ280"), cyl_vertex_gen_(0)
     {
         msg_=new G4GenericMessenger(this,"/Geometry/OpticalFibre/","Control commands of geometry OpticalFibre");
 
@@ -55,6 +54,10 @@ OpticalFibre::OpticalFibre():
         length_cmd.SetUnitCategory("Length");
         length_cmd.SetParameterName("length",false);
         length_cmd.SetRange("length>0.");
+
+        G4GenericMessenger::Command& mat_cmd = 
+            msg_->DeclareProperty("core_mat",core_mat_,"Core material (EJ280, EJ286 or Y11)");
+        mat_cmd.SetParameterName("core_mat",false);
 
         // hardcoded thickness of the photosensor
         thickness_=2.*mm;
@@ -109,11 +112,22 @@ void OpticalFibre::Construct()
     G4Tubs* Cyl_solid = new G4Tubs(name,0.,0.96*radius_,length_,0.,twopi);
 
     //define material
-    G4Material* y11 = materials::Y11();
-    y11->SetMaterialPropertiesTable(opticalprops::Y11());
+    G4Material* core_mat;
+    if (core_mat_=="EJ280") {
+        core_mat = materials::EJ280();
+        core_mat->SetMaterialPropertiesTable(opticalprops::EJ280());
+    }
+    if (core_mat_=="EJ286") {
+        core_mat = materials::EJ286();
+        core_mat->SetMaterialPropertiesTable(opticalprops::EJ286());
+    }
+    if (core_mat_=="Y11") {
+        core_mat = materials::Y11();
+        core_mat->SetMaterialPropertiesTable(opticalprops::Y11());
+    }
 
     //define logical volume
-    G4LogicalVolume* Cyl_logic = new G4LogicalVolume(Cyl_solid,y11,name);
+    G4LogicalVolume* Cyl_logic = new G4LogicalVolume(Cyl_solid,core_mat,name);
     new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), Cyl_logic,
 		      name, logic_inner, true, 2, true);
 
@@ -181,7 +195,7 @@ void OpticalFibre::Construct()
     // Reflective surface
     G4MaterialPropertiesTable* refl_surf = new G4MaterialPropertiesTable();
     G4double energy2[]       = {0.2 * eV, 3.5 * eV, 3.6 * eV, 11.5 * eV};
-    G4double reflectivity2[] = {0.8     , 0.8     , 0.8     ,  0.8     };
+    G4double reflectivity2[] = {0.     , 0.     , 0.     ,  0.     };
     photosensor_mpt->AddProperty("REFLECTIVITY", energy2, reflectivity2, 4);
     G4OpticalSurface* refl_opsurf =
     new G4OpticalSurface("Refl_optSurf", unified, polished, dielectric_metal);

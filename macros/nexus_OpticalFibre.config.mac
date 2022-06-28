@@ -15,6 +15,7 @@
 
 /Geometry/OpticalFibre/length 1. cm
 /Geometry/OpticalFibre/radius 1. mm
+/Geometry/OpticalFibre/core_mat "EJ280"
 
 /Generator/SingleParticle/particle opticalphoton
 /Generator/SingleParticle/region BODY_VOL

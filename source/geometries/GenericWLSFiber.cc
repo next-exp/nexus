@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------------
-//  nexus | GenericPhotosensor.cc
+//  nexus | GenericWLSFiber.cc
 //
 //  Geometry of a configurable wave-length shifting optical fiber.
 //
@@ -196,16 +196,16 @@ void GenericWLSFiber::BuildRoundFiber()
     iclad_logic  ->SetVisAttributes(nexus::LightGrey());
     core_logic   ->SetVisAttributes(G4Colour::Green());
     if (with_coating_)
-      coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      coating_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   }
   else {
     if (num_claddings_ == 2)
-      oclad_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    iclad_logic  ->SetVisAttributes(G4VisAttributes::Invisible);
-    core_logic   ->SetVisAttributes(G4VisAttributes::Invisible);
+      oclad_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    iclad_logic  ->SetVisAttributes(G4VisAttributes::GetInvisible());
+    core_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
     if (with_coating_)
-      coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      coating_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 }
 
@@ -285,15 +285,15 @@ void GenericWLSFiber::BuildSquareFiber()
     iclad_logic  ->SetVisAttributes(nexus::LightGrey());
     core_logic   ->SetVisAttributes(G4Colour::Green());
     if (with_coating_)
-      coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      coating_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   }
   else {
     if (num_claddings_ == 2)
-      oclad_logic->SetVisAttributes(G4VisAttributes::Invisible);
-    iclad_logic  ->SetVisAttributes(G4VisAttributes::Invisible);
-    core_logic   ->SetVisAttributes(G4VisAttributes::Invisible);
+      oclad_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    iclad_logic  ->SetVisAttributes(G4VisAttributes::GetInvisible());
+    core_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
     if (with_coating_)
-      coating_logic->SetVisAttributes(G4VisAttributes::Invisible);
+      coating_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 }

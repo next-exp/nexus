@@ -78,8 +78,7 @@ namespace nexus {
     void BuildBuffer();
     void BuildELgap();
     void BuildLightTube();
-    void BuildFibers();
-    void BuildFiberSensors();
+    void BuildFibersAndSensors();
 
   private:
 
@@ -95,6 +94,7 @@ namespace nexus {
 
     // Visibilities
     G4bool visibility_;
+    G4bool fiber_visibility_;
     G4bool fiber_sensor_visibility_;
 
     // The messenger
@@ -132,6 +132,7 @@ namespace nexus {
 
     // FIBERS
     G4double fiber_thickness_;
+    G4String fiber_shape_;
     G4int    fiber_claddings_;
     G4double fiber_extra_length_;
     G4double fiber_inner_rad_;
