@@ -1,7 +1,14 @@
 // ----------------------------------------------------------------------------
+<<<<<<< HEAD
 // nexus | OpticalFibre.cc
 //
 // Cylindrical optical fibre with single photosensor.
+=======
+// nexus | OpticalFibre.h
+//
+// Cylindrical optical fibre to be placed on the walls to increase light collection,
+// with single photosensor.
+>>>>>>> b3cb53cd2ff45ccad25848b8b08b5e421d8a5d43
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
@@ -27,8 +34,11 @@
 #include <G4VisAttributes.hh>
 #include <G4SDManager.hh>
 #include <G4VUserDetectorConstruction.hh>
+<<<<<<< HEAD
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
+=======
+>>>>>>> b3cb53cd2ff45ccad25848b8b08b5e421d8a5d43
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
@@ -39,7 +49,11 @@ using namespace CLHEP;
 REGISTER_CLASS(OpticalFibre,GeometryBase)
 
 OpticalFibre::OpticalFibre():
+<<<<<<< HEAD
     GeometryBase(), radius_(1.*cm), length_(1.*cm), core_mat_("EJ280"), cyl_vertex_gen_(0)
+=======
+    GeometryBase(), radius_(1.*cm), length_(1.*m), cyl_vertex_gen_(0)
+>>>>>>> b3cb53cd2ff45ccad25848b8b08b5e421d8a5d43
     {
         msg_=new G4GenericMessenger(this,"/Geometry/OpticalFibre/","Control commands of geometry OpticalFibre");
 
@@ -55,9 +69,13 @@ OpticalFibre::OpticalFibre():
         length_cmd.SetParameterName("length",false);
         length_cmd.SetRange("length>0.");
 
+<<<<<<< HEAD
         G4GenericMessenger::Command& mat_cmd = 
             msg_->DeclareProperty("core_mat",core_mat_,"Core material (EJ280, EJ286 or Y11)");
         mat_cmd.SetParameterName("core_mat",false);
+=======
+        cyl_vertex_gen_ = new CylinderPointSampler(radius_, length_, 0.,  0., G4ThreeVector(0., 0., 0.), 0);
+>>>>>>> b3cb53cd2ff45ccad25848b8b08b5e421d8a5d43
 
         // hardcoded thickness of the photosensor
         thickness_=2.*mm;
