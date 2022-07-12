@@ -117,9 +117,6 @@ namespace nexus {
 
     msg_->DeclareProperty("membrane_hole", membrane_hole_,
                           "True if membrane has holes, false if not.");
-    //G4GenericMessenger::Command& membrane_hole_cmd =msg_->DeclareProperty("membrane_hole", membrane_hole_,
-    //                      "True if membrane has holes, false if not.");
-    //membrane_hole_cmd.SetParameterName("membrane_hole", false);
 
     G4GenericMessenger::Command&  membrane_hole_diameter_cmd =
       msg_->DeclareProperty("membrane_hole_diameter", membrane_hole_diam_,
@@ -170,15 +167,11 @@ namespace nexus {
 
   G4String box_name = "BLACK BOX";
 
-  G4Material* box_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
-
-  box_mat->SetMaterialPropertiesTable(opticalprops::Vacuum());
-
   G4Box* box_solid_vol =
     new G4Box(box_name, box_xy_/2., box_xy_/2., box_z_/2.);
 
   G4LogicalVolume* box_logic_vol =
-    new G4LogicalVolume(box_solid_vol, box_mat, box_name);
+    new G4LogicalVolume(box_solid_vol, world_mat, box_name);
   box_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   G4VPhysicalVolume* box_phys_vol =
