@@ -50,7 +50,7 @@ namespace nexus {
   {
     msg_ = new G4GenericMessenger(this, "/Geometry/BlackBox/",
 				  "Control commands of BlackBox.");
-    msg_->DeclareProperty("visibility", visibility_, "Giant detectors visibility");
+    msg_->DeclareProperty("visibility", visibility_, "Black Box visibility");
 
     msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
       "Set generation vertex.");
