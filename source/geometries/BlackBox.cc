@@ -45,6 +45,21 @@ namespace nexus {
     world_xy_ (2. *m),
     box_z_ (2. * m),
     box_xy_ (1. *m),
+    specific_vertex_(0,0,0),
+    dice_board_x_pos_(0),
+    dice_board_y_pos_(0),
+    dice_board_z_pos_(-49. *cm),
+    rotation_(0),
+    mask_thickn_(),
+    membrane_thickn_(),
+    coating_thickn_(),
+    hole_diameter_(1),
+    hole_x_(1),
+    hole_y_(1),
+    membrane_hole_(),
+    membrane_hole_diam_(),
+    membrane_hole_x_(),
+    membrane_hole_y_(),
 
     visibility_(0)
   {
@@ -210,16 +225,14 @@ namespace nexus {
 
   sapphire_mat->SetMaterialPropertiesTable(opticalprops::Sapphire());
 
-  //G4double pedot_thickn  = 1. *um;
-  G4double tpb_thickn    = 1. *um;
+  G4double pedot_thickn  = 150. *nm;
   G4double sapphire_thickn  = 6. *mm;
-  G4double pedot_thickn  = sapphire_thickn/2.;
   G4double window_thickn  = sapphire_thickn + pedot_thickn;
   G4double sapphire_diam = 20 *cm;
 
   G4Tubs* sapphire_solid_vol =
     new G4Tubs(sapphire_name, 0, sapphire_diam/2.,
-                window_thickn/2., 0, twopi);
+               window_thickn/2., 0, twopi);
 
   G4LogicalVolume* sapphire_logic_vol =
     new G4LogicalVolume(sapphire_solid_vol, sapphire_mat, sapphire_name);
@@ -233,13 +246,13 @@ namespace nexus {
                      sapphire_logic_vol, sapphire_name, box_logic_vol,
                      false, 0, false);
 
-  // PEDOT ////////////////////////////////////////////////////////
+  //PEDOT ////////////////////////////////////////////////////////
 
   G4String pedot_name = "PEDOT";
 
-  G4Material* pedot_mat = materials::TPB();
+  G4Material* pedot_mat = materials::PEDOT();
 
-  sapphire_mat->SetMaterialPropertiesTable(opticalprops::Sapphire());
+  pedot_mat->SetMaterialPropertiesTable(opticalprops::PEDOT());
 
   G4Tubs* pedot_solid_vol =
     new G4Tubs(pedot_name, 0, sapphire_diam/2., pedot_thickn/2., 0, twopi);
@@ -247,24 +260,14 @@ namespace nexus {
   G4LogicalVolume* pedot_logic_vol =
     new G4LogicalVolume(pedot_solid_vol, pedot_mat, pedot_name);
 
-    /// Add optical surface to PEDOT ///
-    //G4OpticalSurface* pedot_coating_opsurf =
-    //new G4OpticalSurface("SAPPHIRE_WNDW_PEDOT_OPSURF", glisur, ground,
-      //                   dielectric_dielectric, .01);
-    //new G4LogicalSkinSurface("SAPPHIRE_WNDW_PEDOT_OPSURF",
-      //                       pedot_logic_vol, pedot_coating_opsurf);
-
   G4VisAttributes pedot_col = nexus::CopperBrown();
   pedot_logic_vol->SetVisAttributes(pedot_col);
 
   G4ThreeVector pedot_pos(0,0,window_thickn/2.- pedot_thickn/2.);
 
-   new G4PVPlacement(0, pedot_pos,
-                     pedot_logic_vol, pedot_name, sapphire_logic_vol,
-                     false, 0, false);
-
-
-
+  new G4PVPlacement(0, pedot_pos,
+                    pedot_logic_vol, pedot_name, sapphire_logic_vol,
+                    false, 0, false);
   }
 
     G4ThreeVector BlackBox::GenerateVertex(const G4String& region) const
