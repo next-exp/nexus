@@ -86,12 +86,12 @@ namespace nexus {
 
     G4String event_type_; ///< event type: bb0nu, bb2nu, background or not set
 
-    G4int saved_evts_; ///< number of events to be saved
-    G4int interacting_evts_; ///< number of events interacting in ACTIVE
+    int64_t saved_evts_; ///< number of events to be saved
+    int64_t interacting_evts_; ///< number of events interacting in ACTIVE
     G4double pmt_bin_size_, sipm_bin_size_; ///< bin width of sensors
 
-    G4int nevt_; ///< Event ID
-    G4int start_id_; ///< ID for the first event in file
+    int64_t nevt_; ///< Event ID
+    int64_t start_id_; ///< ID for the first event in file
     G4bool first_evt_; ///< true only for the first event of the run
 
     HDF5Writer* h5writer_;  ///< Event writer to hdf5 file

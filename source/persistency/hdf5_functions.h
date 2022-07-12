@@ -21,14 +21,14 @@
    } run_info_t;
 
   typedef struct{
-    int32_t event_id;
+    uint64_t event_id;
     unsigned int sensor_id;
-    uint64_t time_bin;
+    int64_t time_bin;
     unsigned int charge;
   } sns_data_t;
 
   typedef struct{
-        int32_t event_id;
+        int64_t event_id;
 	float x;
 	float y;
 	float z;
@@ -40,7 +40,7 @@
   } hit_info_t;
 
   typedef struct{
-        int32_t event_id;
+        int64_t event_id;
 	int particle_id;
 	char particle_name[STRLEN];
         char primary;
@@ -76,7 +76,7 @@
   } sns_pos_t;
 
   typedef struct{
-    int32_t event_id;
+    int64_t event_id;
     int32_t particle_id;
     char    particle_name[STRLEN];
     int     step_id;

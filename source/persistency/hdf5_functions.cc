@@ -25,7 +25,7 @@ hsize_t createSensorDataType()
 {
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (sns_data_t));
-  H5Tinsert (memtype, "event_id", HOFFSET (sns_data_t, event_id), H5T_NATIVE_INT32);
+  H5Tinsert (memtype, "event_id", HOFFSET (sns_data_t, event_id), H5T_NATIVE_INT64);
   H5Tinsert (memtype, "sensor_id", HOFFSET (sns_data_t, sensor_id), H5T_NATIVE_UINT);
   H5Tinsert (memtype, "time_bin", HOFFSET (sns_data_t, time_bin), H5T_NATIVE_UINT64);
   H5Tinsert (memtype, "charge", HOFFSET (sns_data_t, charge), H5T_NATIVE_UINT);
@@ -40,7 +40,7 @@ hsize_t createHitInfoType()
 
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (hit_info_t));
-  H5Tinsert (memtype, "event_id", HOFFSET (hit_info_t, event_id), H5T_NATIVE_INT32);
+  H5Tinsert (memtype, "event_id", HOFFSET (hit_info_t, event_id), H5T_NATIVE_INT64);
   H5Tinsert (memtype, "x", HOFFSET (hit_info_t, x), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "y", HOFFSET (hit_info_t, y), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "z", HOFFSET (hit_info_t, z), H5T_NATIVE_FLOAT);
@@ -63,7 +63,7 @@ hsize_t createParticleInfoType()
 
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof (particle_info_t));
-  H5Tinsert (memtype, "event_id", HOFFSET (particle_info_t, event_id), H5T_NATIVE_INT32);
+  H5Tinsert (memtype, "event_id", HOFFSET (particle_info_t, event_id), H5T_NATIVE_INT64);
   H5Tinsert (memtype, "particle_id", HOFFSET (particle_info_t, particle_id), H5T_NATIVE_INT);
   H5Tinsert (memtype, "particle_name", HOFFSET (particle_info_t, particle_name),strtype);
   H5Tinsert (memtype, "primary", HOFFSET (particle_info_t, primary), H5T_NATIVE_CHAR);
@@ -118,7 +118,7 @@ hsize_t createStepType()
 
   //Create compound datatype for the table
   hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof(step_info_t));
-  H5Tinsert (memtype, "event_id"      , HOFFSET(step_info_t, event_id      ), H5T_NATIVE_INT32);
+  H5Tinsert (memtype, "event_id"      , HOFFSET(step_info_t, event_id      ), H5T_NATIVE_INT64);
   H5Tinsert (memtype, "particle_id"   , HOFFSET(step_info_t, particle_id   ), H5T_NATIVE_INT  );
   H5Tinsert (memtype, "particle_name" , HOFFSET(step_info_t, particle_name ), strtype         );
   H5Tinsert (memtype, "step_id"       , HOFFSET(step_info_t, step_id       ), H5T_NATIVE_INT  );
