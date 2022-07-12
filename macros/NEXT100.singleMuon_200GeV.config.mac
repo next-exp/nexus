@@ -14,7 +14,7 @@
 /tracking/verbose 0
 
 /process/em/verbose 0
-#/process/had/verbose 0
+/process/had/verbose 0
 
 ### JOB CONTROL
 /nexus/random_seed -2
