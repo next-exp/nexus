@@ -1,6 +1,10 @@
 // ----------------------------------------------------------------------------
-//  nexus | BlackBox.cc
-//  DICE in a black box.
+// nexus | BlackBox.cc
+//
+// Sapphire disk and DICE board with configurable mask thickness parallelly
+// placed in a black box.
+//
+// The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
 #include "BlackBox.h"
