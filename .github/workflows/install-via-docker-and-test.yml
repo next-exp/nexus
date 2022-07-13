@@ -1,0 +1,17 @@
+name: Install via docker and Test
+on:
+  pull_request:
+  push:
+jobs:
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Compile software
+        run: docker build -t nexus .
+      - name: Run tests
+        run: docker run nexus /nexus/docker/run_tests.sh
