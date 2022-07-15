@@ -13,9 +13,10 @@
 
 /process/em/verbose 0
 
-/Geometry/OpticalFibre/length 1. cm
+/Geometry/OpticalFibre/length 10. cm
 /Geometry/OpticalFibre/radius 1. mm
 /Geometry/OpticalFibre/core_mat "EJ280"
+/Geometry/OpticalFibre/num_fibers 9
 
 /Generator/SingleParticle/particle opticalphoton
 /Generator/SingleParticle/region BODY_VOL
