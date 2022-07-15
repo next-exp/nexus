@@ -40,8 +40,8 @@
 /Geometry/NextFlex/fc_with_fibers   true
 /Geometry/NextFlex/fiber_mat        EJ280
 /Geometry/NextFlex/fiber_claddings  2
-#/Geometry/NextFlex/fiber_thickness  1.*mm
-#/Geometry/NextFlex/fiber_shape      "round"
+/Geometry/NextFlex/fiber_thickness  1. mm
+/Geometry/NextFlex/fiber_shape      "round"
 
 /Geometry/NextFlex/fiber_sensor_time_binning  25. ns
 
@@ -92,6 +92,15 @@
 # Kripton
 /Generator/Kr83mGenerator/region  AD_HOC
 /Geometry/NextFlex/specific_vertex  0. 0. 580. mm
+# single photon
+#/Generator/SingleParticle/particle opticalphoton
+#/Generator/SingleParticle/region FIBER_CORE
+#/Generator/SingleParticle/min_energy 2.88 eV
+#/Generator/SingleParticle/max_energy 2.88 eV
+#/Generator/SingleParticle/min_costheta 1
+#/Generator/SingleParticle/max_costheta 1
+#/Generator/SingleParticle/min_phi 0
+#/Generator/SingleParticle/max_phi 0
 
 
 ### PHYSICS

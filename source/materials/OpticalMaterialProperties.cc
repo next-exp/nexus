@@ -1373,7 +1373,7 @@ namespace opticalprops {
 
     // ABSORPTION LENGTH
     std::vector<G4double> abs_energy = {optPhotMinE_, optPhotMaxE_};
-    std::vector<G4double> absLength  = {noAbsLength_, noAbsLength_};
+    std::vector<G4double> absLength  = {5.*m, 5.*m};
     mpt->AddProperty("ABSLENGTH", abs_energy, absLength);
 
     return mpt;

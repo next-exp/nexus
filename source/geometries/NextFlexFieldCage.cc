@@ -34,6 +34,7 @@
 #include <G4LogicalBorderSurface.hh>
 #include <G4UserLimits.hh>
 #include <G4Transform3D.hh>
+#include <Randomize.hh>
 
 
 using namespace nexus;
@@ -919,7 +920,17 @@ G4ThreeVector NextFlexFieldCage::GenerateVertex(const G4String& region) const
     vertex = light_tube_gen_->GenerateVertex("VOLUME");
   }
   else if (region == "FIBER_CORE") {
-    if (fc_with_fibers_) vertex = fiber_gen_->GenerateVertex("VOLUME");
+    if (fc_with_fibers_) {
+      G4int num_fibers_ = (G4int) (twopi * fiber_inner_rad_ / fiber_thickness_);
+      G4int fiber_num = G4RandFlat::shootInt((long) 0, num_fibers_);
+      G4double fiber_phi = twopi / num_fibers_;
+      G4ThreeVector fiber_pos = G4ThreeVector((fiber_inner_rad_ + fiber_thickness_/2.) * sin(fiber_num*fiber_phi),
+                                              (fiber_inner_rad_ + fiber_thickness_/2.) * cos(fiber_num*fiber_phi),
+                                              fiber_iniZ_ + (fc_length_+2. * fiber_extra_length_)/2.);
+      CylinderPointSampler2020* fiber_gen_ = new CylinderPointSampler2020(0,fiber_thickness_/2.,(fc_length_+2. * fiber_extra_length_)/2.,0,twopi,
+        nullptr,fiber_pos);
+      vertex = fiber_gen_->GenerateVertex("VOLUME");
+      }
     else
       G4Exception("[NextFlexFieldCage]", "GenerateVertex()", FatalException,
               "Trying to generate Vertices in NON-existing fibers");
