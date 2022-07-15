@@ -22,7 +22,7 @@
 
 /nexus/RegisterRunAction DefaultRunAction
 /nexus/RegisterEventAction SaveAllEventAction
-/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterTrackingAction OpticalTrackingAction
 /nexus/RegisterSteppingAction SaveAllSteppingAction
 
 /nexus/RegisterMacro macros/nexus_OpticalFibre.config.mac
