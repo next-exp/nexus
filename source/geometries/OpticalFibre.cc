@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // nexus | OpticalFibre.cc
 //
-// Cylindrical optical fibre with single photosensor.
+// Bundle of cylindrical optical fibres with single photosensor.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
@@ -105,30 +105,13 @@ void OpticalFibre::Construct()
     this->SetLogicalVolume(lab_logic);
     G4String name = "OPTICAL_FIBRE";
 
-    //OUTER CLADDING
-    G4Tubs* Cyl_outer = new G4Tubs("OUTER",0.,radius_,length_,0.,twopi);
-
-    //define material
+    //define materials
     G4Material* FP = materials::FPethylene();
     FP->SetMaterialPropertiesTable(opticalprops::FPethylene());
 
-    //define logical volume
-    G4LogicalVolume* outer_logic = new G4LogicalVolume(Cyl_outer,FP,"OUTER");
-
-    //INNER CLADDING
-    G4Tubs* Cyl_inner = new G4Tubs("INNER",0.,0.98*radius_,length_,0.,twopi);
-
-    //define material
     G4Material* pmma = materials::PMMA();
     pmma->SetMaterialPropertiesTable(opticalprops::PMMA());
 
-    //define logical volume
-    
-
-    //CORE
-    G4Tubs* Cyl_solid = new G4Tubs(name,0.,0.96*radius_,length_,0.,twopi);
-
-    //define material
     G4Material* core_mat;
     if (core_mat_=="EJ280") {
         core_mat = materials::EJ280();
@@ -158,14 +141,6 @@ void OpticalFibre::Construct()
             G4ThreeVector position = G4ThreeVector((int(sqrt(num_fibers_))-1)*(2*radius_+fiber_dist_)-i*(2*radius_+fiber_dist_),
                                                    (int(sqrt(num_fibers_))-1)*(2*radius_+fiber_dist_)-j*(2*radius_+fiber_dist_),
                                                     0);
-            //G4LogicalVolume* logic_inner = new G4LogicalVolume(Cyl_inner,pmma,std::to_string(i));
-            //G4LogicalVolume* Cyl_logic = new G4LogicalVolume(Cyl_solid,core_mat,std::to_string(cntr));
-            //new G4PVPlacement(0, position, outer_logic,
-	        //	      outer_logic->GetName(), lab_logic, true, cntr, true);
-            //new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), logic_inner,
-	        //	      logic_inner->GetName(), outer_logic, true, cntr+1, true);
-            //new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), Cyl_logic,
-	        //	      Cyl_logic->GetName(), logic_inner, true, cntr+2, true);
             new G4PVPlacement(0,position,fiber_logic,
                             fiber_logic->GetName(),lab_logic,true,cntr,true);
             cntr+=1;
