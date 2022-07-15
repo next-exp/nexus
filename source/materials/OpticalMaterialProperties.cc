@@ -606,7 +606,7 @@ namespace opticalprops {
     LXe_mpt->AddProperty("RINDEX", ri_energy, ri_index);
 
     // for (G4int i=ri_entries-1; i>=0; i--) {
-    //   G4cout << h_Planck*c_light/ri_energy[i]/nanometer << " nm, " << rindex[i] << G4endl;
+    //   G4cout << h_Planck*c_light/ri_energy[i]/nanometer << " nm, " << ri_index[i] << G4endl;
     // }
 
     // Sampling from ~151 nm to 200 nm <----> from 6.20625 eV to 8.21 eV
