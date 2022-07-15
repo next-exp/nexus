@@ -35,6 +35,7 @@ namespace nexus
         G4double radius_;    //radius of the cylindrical optical fibre
         G4double length_;    //length of the cylindrical optical fibre
         G4double thickness_; //thickness of the photosensor
+        G4String core_mat_;  //core material of the fibre (EJ280, EJ286 or Y11)
 
         GenericPhotosensor*   sensor_;
         G4GenericMessenger*   msg_;

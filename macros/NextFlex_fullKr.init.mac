@@ -22,7 +22,7 @@
 ### ACTIONS
 /nexus/RegisterRunAction      DefaultRunAction
 /nexus/RegisterEventAction    DefaultEventAction
-/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterTrackingAction OpticalTrackingAction
 /nexus/RegisterSteppingAction AnalysisSteppingAction
 
 
