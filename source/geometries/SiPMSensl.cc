@@ -87,8 +87,7 @@ namespace nexus {
     G4double support_pos_z = - sipm_z/2. + support_z/2. + 0.21 * mm;
 
 
-    //G4Material* plastic = G4NistManager::Instance()->FindOrBuildMaterial("G4_POLYCARBONATE");
-    G4Material* plastic = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
+    G4Material* plastic = G4NistManager::Instance()->FindOrBuildMaterial("G4_POLYCARBONATE");
 
     G4Box* plastic_solid = new G4Box("PLASTIC", support_x/2., support_y/2., support_z/2);
 
