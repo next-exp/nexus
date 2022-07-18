@@ -51,15 +51,9 @@ namespace nexus {
     dice_board_z_pos_(-49. *cm),
     rotation_(0),
     mask_thickn_(),
-    membrane_thickn_(),
-    coating_thickn_(),
     hole_diameter_(1),
     hole_x_(1),
     hole_y_(1),
-    membrane_hole_(),
-    membrane_hole_diam_(),
-    membrane_hole_x_(),
-    membrane_hole_y_(),
 
     visibility_(0)
   {
@@ -100,18 +94,6 @@ namespace nexus {
     mask_thickn_cmd.SetParameterName("mask_thickn", true);
     mask_thickn_cmd.SetUnitCategory("Length");
 
-    G4GenericMessenger::Command&  membrane_thickn_cmd =
-      msg_->DeclareProperty("membrane_thickn", membrane_thickn_,
-                            "Membrane Thickness");
-    membrane_thickn_cmd.SetParameterName("membrane_thickn", true);
-    membrane_thickn_cmd.SetUnitCategory("Length");
-
-    G4GenericMessenger::Command&  coating_thickn_cmd =
-      msg_->DeclareProperty("coating_thickn", coating_thickn_,
-                            "Coating Thickness");
-    coating_thickn_cmd.SetParameterName("coating_thickn", true);
-    coating_thickn_cmd.SetUnitCategory("Length");
-
     G4GenericMessenger::Command&  hole_diameter_cmd =
       msg_->DeclareProperty("hole_diameter", hole_diameter_,
                             "Hole Diameter");
@@ -129,27 +111,6 @@ namespace nexus {
                             "Hole Y");
     hole_y_cmd.SetParameterName("hole_y", true);
     hole_y_cmd.SetUnitCategory("Length");
-
-    msg_->DeclareProperty("membrane_hole", membrane_hole_,
-                          "True if membrane has holes, false if not.");
-
-    G4GenericMessenger::Command&  membrane_hole_diameter_cmd =
-      msg_->DeclareProperty("membrane_hole_diameter", membrane_hole_diam_,
-                            "Membrane Hole Diameter");
-    membrane_hole_diameter_cmd.SetParameterName("membrane_hole_diameter", true);
-    membrane_hole_diameter_cmd.SetUnitCategory("Length");
-
-    G4GenericMessenger::Command&  membrane_hole_x_cmd =
-      msg_->DeclareProperty("membrane_hole_x", membrane_hole_x_,
-                            "Membrane Hole X");
-    membrane_hole_x_cmd.SetParameterName("membrane_hole_x", true);
-    membrane_hole_x_cmd.SetUnitCategory("Length");
-
-    G4GenericMessenger::Command&  membrane_hole_y_cmd =
-      msg_->DeclareProperty("membrane_hole_y", membrane_hole_y_,
-                            "Membrane Hole Y");
-    membrane_hole_y_cmd.SetParameterName("membrane_hole_y", true);
-    membrane_hole_y_cmd.SetUnitCategory("Length");
   }
 
   BlackBox::~BlackBox()
@@ -198,15 +159,9 @@ namespace nexus {
 
   dice_->SetMotherPhysicalVolume(box_phys_vol);
   dice_->SetMaskThickness    (mask_thickn_);
-  dice_->SetMembraneThickness(membrane_thickn_);
-  dice_->SetCoatingThickness (coating_thickn_);
   dice_->SetHoleDiameter     (hole_diameter_);
   dice_->SetHoleX            (hole_x_);
   dice_->SetHoleY            (hole_y_);
-  dice_->SetHolesMembrane     (membrane_hole_);
-  dice_->SetMembraneHoleDiameter     (membrane_hole_diam_);
-  dice_->SetMembraneHoleX            (membrane_hole_x_);
-  dice_->SetMembraneHoleY            (membrane_hole_y_);
   dice_->Construct();
   G4LogicalVolume* dice_board_logic = dice_->GetLogicalVolume();
 

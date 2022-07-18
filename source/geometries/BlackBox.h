@@ -58,12 +58,6 @@ namespace nexus {
     G4double dice_board_z_pos_;
     G4double rotation_;
     G4double mask_thickn_;
-    G4double membrane_thickn_;
-    G4double coating_thickn_;
-    G4bool   membrane_hole_;
-    G4double membrane_hole_diam_;
-    G4double membrane_hole_x_;
-    G4double membrane_hole_y_;
     G4double hole_diameter_;
     G4double hole_x_;
     G4double hole_y_;

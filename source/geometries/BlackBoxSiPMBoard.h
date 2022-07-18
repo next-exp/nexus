@@ -30,15 +30,10 @@ namespace nexus {
 
     void SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys);
     void SetMaskThickness    (G4double thickn);
-    void SetMembraneThickness(G4double thickn);
     void SetCoatingThickness (G4double thickn);
     void SetHoleDiameter     (G4double diam);
     void SetHoleX            (G4double x);
     void SetHoleY            (G4double y);
-    void SetHolesMembrane  (G4bool hole);
-    void SetMembraneHoleDiameter  (G4double diam);
-    void SetMembraneHoleX         (G4double x);
-    void SetMembraneHoleY         (G4double y);
 
     G4ThreeVector GetBoardSize() const;
     G4double      GetKaptonThickness() const;
@@ -55,12 +50,6 @@ namespace nexus {
 
     G4double kapton_thickn_;
     G4double mask_thickn_;
-    G4double membrane_thickn_;
-    G4double coating_thickn_;
-    G4bool   membrane_hole_;
-    G4double membrane_hole_diam_;
-    G4double membrane_hole_x_;
-    G4double membrane_hole_y_;
     G4double hole_diam_;
     G4double hole_x_;
     G4double hole_y_;
@@ -81,12 +70,6 @@ namespace nexus {
   inline void BlackBoxSiPMBoard::SetMaskThickness(G4double thickn)
   { mask_thickn_ = thickn; }
 
-  inline void BlackBoxSiPMBoard::SetMembraneThickness(G4double thickn)
-  { membrane_thickn_ = thickn; }
-
-  inline void BlackBoxSiPMBoard::SetCoatingThickness(G4double thickn)
-  { coating_thickn_ = thickn; }
-
   inline void BlackBoxSiPMBoard::SetHoleDiameter(G4double diam)
   { hole_diam_ = diam; }
 
@@ -95,18 +78,6 @@ namespace nexus {
 
   inline void BlackBoxSiPMBoard::SetHoleY(G4double y)
   { hole_y_ = y; }
-
-  inline void BlackBoxSiPMBoard::SetHolesMembrane(G4bool hole)
-  { membrane_hole_ = hole; }
-
-  inline void BlackBoxSiPMBoard::SetMembraneHoleDiameter(G4double diam)
-  { membrane_hole_diam_ = diam; }
-
-  inline void BlackBoxSiPMBoard::SetMembraneHoleX(G4double x)
-  { membrane_hole_x_ = x; }
-
-  inline void BlackBoxSiPMBoard::SetMembraneHoleY(G4double y)
-  { membrane_hole_y_ = y; }
 
   inline G4ThreeVector BlackBoxSiPMBoard::GetBoardSize() const
   { return board_size_; }
