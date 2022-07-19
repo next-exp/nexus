@@ -6,8 +6,7 @@
 /control/execute macros/physics/DefaultPhysicsList.mac
 
 /nexus/RegisterGeometry BlackBox
-#/nexus/RegisterGenerator SingleParticleGenerator
-/nexus/RegisterGenerator LED450LWcone
+/nexus/RegisterGenerator LambertianGenerator
 /nexus/RegisterPersistencyManager PersistencyManager
 
 /PhysicsList/RegisterPhysics G4OpticalPhysics
@@ -15,7 +14,6 @@
 ### ACTIONS
 
 /nexus/RegisterRunAction DefaultRunAction
-/nexus/RegisterEventAction SaveAllEventAction
 /nexus/RegisterTrackingAction OpticalTrackingAction
 /nexus/RegisterSteppingAction AnalysisSteppingAction
 

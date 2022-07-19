@@ -1,12 +1,10 @@
 // ----------------------------------------------------------------------------
 // nexus | LED450LWcone.h
 //
-// This class is the primary generator for events consisting of
-// a single particle. The user must specify via configuration
-// parameters the particle type, a kinetic energy interval and, optionally,
-// a momentum direction.
-// Particle energy is generated with flat random probability
-// between E_min and E_max.
+// This class is a generator for particle events generated in a given cone
+// following a Lambertian distribution. The user must specify via configuration
+// parameters the particle type, a kinetic energy interval, momentum direction
+// and phi and theta limits.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------

@@ -3,21 +3,13 @@
 ### board in the black box.
 ### -----------------------------------------------------------
 
-#/Generator/SingleParticle/particle opticalphoton
-#/Generator/SingleParticle/min_energy 2.9 eV
-#/Generator/SingleParticle/max_energy 2.9 eV
-#/Generator/SingleParticle/region AD_HOC
-##/Generator/SingleParticle/momentum 0 0 -1
-#/Generator/SingleParticle/min_costheta -1.
-#/Generator/SingleParticle/max_costheta -0.9935
-
-/Generator/LED450LWcone/particle opticalphoton
-/Generator/LED450LWcone/min_energy 2.9 eV
-/Generator/LED450LWcone/max_energy 2.9 eV
-/Generator/LED450LWcone/region AD_HOC
-/Generator/LED450LWcone/momentum 0 0 -1
-/Generator/LED450LWcone/min_costheta -1.
-/Generator/LED450LWcone/max_costheta -0.9935
+/Generator/LambertianGenerator/particle opticalphoton
+/Generator/LambertianGenerator/min_energy 2.9 eV
+/Generator/LambertianGenerator/max_energy 2.9 eV
+/Generator/LambertianGenerator/region AD_HOC
+/Generator/LambertianGenerator/momentum 0 0 -1
+/Generator/LambertianGenerator/min_costheta -1.
+/Generator/LambertianGenerator/max_costheta -0.9935
 
 /Geometry/BlackBox/specific_vertex  0 0 0 mm
 /Geometry/BlackBox/dice_board_x_pos 0 cm
@@ -25,15 +17,9 @@
 /Geometry/BlackBox/dice_board_z_pos -50 cm
 /Geometry/BlackBox/rotation 0 deg
 /Geometry/BlackBox/mask_thickn 0. mm
-/Geometry/BlackBox/membrane_thickn 0. mm
-/Geometry/BlackBox/coating_thickn 0. mm
 /Geometry/BlackBox/hole_diameter 0. mm #if set to 0 the holes will be rectangular.
 /Geometry/BlackBox/hole_x 6. mm
 /Geometry/BlackBox/hole_y 6. mm
-/Geometry/BlackBox/membrane_hole true
-/Geometry/BlackBox/membrane_hole_diameter 2. mm #if set to 0 the holes will be rectangular.
-/Geometry/BlackBox/membrane_hole_x 6. mm
-/Geometry/BlackBox/membrane_hole_y 6. mm
 
 /run/verbose 0
 /event/verbose 0
@@ -42,4 +28,4 @@
 ### JOB CONTROL
 /nexus/random_seed            -1
 /nexus/persistency/start_id   0
-/nexus/persistency/outputFile LED450LW_cone_MC_pedot_0deg.next
+/nexus/persistency/outputFile black_box.next

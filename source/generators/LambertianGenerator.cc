@@ -1,12 +1,10 @@
 // ----------------------------------------------------------------------------
 // nexus | LED450LWcone.cc
 //
-// This class is the primary generator for events consisting of
-// a single particle. The user must specify via configuration
-// parameters the particle type, a kinetic energy interval and, optionally,
-// a momentum direction.
-// Particle energy is generated with flat random probability
-// between E_min and E_max.
+// This class is a generator for particle events generated in a given cone
+// following a Lambertian distribution. The user must specify via configuration
+// parameters the particle type, a kinetic energy interval, momentum direction
+// and phi and theta limits.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
@@ -108,30 +106,22 @@ void LED450LWcone::GeneratePrimaryVertex(G4Event* event)
   // Generate uniform random energy in [E_min, E_max]
   G4double kinetic_energy = nexus::UniformRandomInRange(energy_max_, energy_min_);
 
-    // Calculate cartesian components of momentum
+  // Calculate cartesian components of momentum
   G4double mass   = particle_definition_->GetPDGMass();
   G4double energy = kinetic_energy + mass;
   G4double pmod = std::sqrt(energy*energy - mass*mass);
 
-  bool fixed_momentum = momentum_ != G4ThreeVector{};
-  bool restrict_angle = costheta_min_ != -1. || costheta_max_ != 1. || phi_min_ != 0. || phi_max_ !=2.*pi;
-
-  G4ThreeVector dir; // it will be set in the if branches below
-  if (fixed_momentum) { // if the user provides a momentum direction
-    dir = momentum_.unit();
-  } else if (restrict_angle) { // if the user provides a range of angles
-    dir = RandomDirectionInRange(costheta_min_, costheta_max_, phi_min_, phi_max_);
-  }
+  G4ThreeVector dir = momentum_;
 
   G4ThreeVector p_dir = G4LambertianRand(dir);
 
-  G4double coseno = -1*p_dir.dot(momentum_);
+  G4double cosine = -1*p_dir.dot(momentum_);
 
   G4ThreeVector p;
 
-  while((costheta_min_ > coseno) || (coseno > costheta_max_)){
+  while((costheta_min_ > cosine) || (cosine > costheta_max_)){
       p_dir = G4LambertianRand(dir);
-      coseno = -1*p_dir.dot(dir);
+      cosine = -1*p_dir.dot(dir);
   }
 
   p = pmod * p_dir;
