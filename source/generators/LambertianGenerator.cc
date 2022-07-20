@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | LED450LWcone.cc
+// nexus | LambertianGenerator.cc
 //
 // This class is a generator for particle events generated in a given cone
 // following a Lambertian distribution. The user must specify via configuration
@@ -9,8 +9,7 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "LED450LWcone.h"
-
+#include "LambertianGenerator.h"
 #include "DetectorConstruction.h"
 #include "GeometryBase.h"
 #include "RandomUtils.h"
@@ -32,18 +31,18 @@
 using namespace nexus;
 using namespace CLHEP;
 
-REGISTER_CLASS(LED450LWcone, G4VPrimaryGenerator)
+REGISTER_CLASS(LambertianGenerator, G4VPrimaryGenerator)
 
 
-LED450LWcone::LED450LWcone():
+LambertianGenerator::LambertianGenerator():
 G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
 energy_min_(0.), energy_max_(0.), geom_(0), momentum_{},
 costheta_min_(-1.), costheta_max_(1.), phi_min_(0.), phi_max_(2.*pi)
 {
-  msg_ = new G4GenericMessenger(this, "/Generator/LED450LWcone/",
-    "Control commands of single-particle generator.");
+  msg_ = new G4GenericMessenger(this, "/Generator/LambertianGenerator/",
+    "Control commands of Lambertian generator.");
 
-  msg_->DeclareMethod("particle", &LED450LWcone::SetParticleDefinition,
+  msg_->DeclareMethod("particle", &LambertianGenerator::SetParticleDefinition,
     "Set particle to be generated.");
 
   G4GenericMessenger::Command& min_energy =
@@ -82,26 +81,26 @@ costheta_min_(-1.), costheta_max_(1.), phi_min_(0.), phi_max_(2.*pi)
 
 
 
-LED450LWcone::~LED450LWcone()
+LambertianGenerator::~LambertianGenerator()
 {
   delete msg_;
 }
 
 
 
-void LED450LWcone::SetParticleDefinition(G4String particle_name)
+void LambertianGenerator::SetParticleDefinition(G4String particle_name)
 {
   particle_definition_ =
     G4ParticleTable::GetParticleTable()->FindParticle(particle_name);
 
   if (!particle_definition_)
-    G4Exception("[LED450LW]", "SetParticleDefinition()",
+    G4Exception("[LambertianGenerator]", "SetParticleDefinition()",
       FatalException, "User gave an unknown particle name.");
 }
 
 
 
-void LED450LWcone::GeneratePrimaryVertex(G4Event* event)
+void LambertianGenerator::GeneratePrimaryVertex(G4Event* event)
 {
   // Generate uniform random energy in [E_min, E_max]
   G4double kinetic_energy = nexus::UniformRandomInRange(energy_max_, energy_min_);

@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | LED450LWcone.h
+// nexus | LambertianGenerator.h
 //
 // This class is a generator for particle events generated in a given cone
 // following a Lambertian distribution. The user must specify via configuration
@@ -9,8 +9,8 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef LED450LW_CONE_H
-#define LED450LW_CONE_H
+#ifndef LAMBERTIAN_GENERATOR_H
+#define LAMBERTIAN_GENERATOR_H
 
 #include <G4VPrimaryGenerator.hh>
 
@@ -23,13 +23,13 @@ namespace nexus {
 
   class GeometryBase;
 
-  class LED450LWcone: public G4VPrimaryGenerator
+  class LambertianGenerator: public G4VPrimaryGenerator
   {
   public:
     /// Constructor
-    LED450LWcone();
+    LambertianGenerator();
     /// Destructor
-    ~LED450LWcone();
+    ~LambertianGenerator();
 
     /// This method is invoked at the beginning of the event. It sets
     /// a primary vertex (that is, a particle in a given position and time)
