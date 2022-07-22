@@ -123,10 +123,12 @@ void BlackBoxSiPMBoard::Construct()
   G4Box* kapton_solid = new G4Box(kapton_name, board_size_x/2.,
                                   board_size_y/2., kapton_thickn_/2.);
 
+  G4Material* kapton_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
+
+  kapton_mat->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
+
   G4LogicalVolume* kapton_logic =
-    new G4LogicalVolume(kapton_solid,
-                        G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON"),
-                        kapton_name);
+    new G4LogicalVolume(kapton_solid, kapton_mat, kapton_name);
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., kapton_posz), kapton_logic,
                     kapton_name, board_logic, false, 0, true);
