@@ -110,20 +110,16 @@ void LambertianGenerator::GeneratePrimaryVertex(G4Event* event)
   G4double energy = kinetic_energy + mass;
   G4double pmod = std::sqrt(energy*energy - mass*mass);
 
-  G4ThreeVector dir = momentum_;
-
-  G4ThreeVector p_dir = G4LambertianRand(dir);
+  G4ThreeVector p_dir = G4LambertianRand(momentum_);
 
   G4double cosine = -1*p_dir.dot(momentum_);
 
-  G4ThreeVector p;
-
   while((costheta_min_ > cosine) || (cosine > costheta_max_)){
-      p_dir = G4LambertianRand(dir);
-      cosine = -1*p_dir.dot(dir);
+      p_dir = G4LambertianRand(momentum_);
+      cosine = -1*p_dir.dot(momentum_);
   }
 
-  p = pmod * p_dir;
+  G4ThreeVector p = pmod * p_dir;
 
   // Create the new primary particle and set it some properties
   auto particle = new G4PrimaryParticle(particle_definition_, p.x(), p.y(), p.z());
