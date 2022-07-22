@@ -231,7 +231,7 @@ namespace nexus {
 
     // WORLD
     if (region == "WORLD") {
-      vertex = G4ThreeVector(0.,0.,0.*mm);
+      vertex = G4ThreeVector(0.,0.,0.);
     }
     else if (region == "AD_HOC") {
       // AD_HOC does not need to be shifted because it is passed by the user
