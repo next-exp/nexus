@@ -50,7 +50,7 @@ namespace nexus {
     dice_board_y_pos_(0),
     dice_board_z_pos_(-49. *cm),
     rotation_(0),
-    mask_thickn_(),
+    mask_thickn_(0),
     hole_diameter_(1),
     hole_x_(1),
     hole_y_(1),
