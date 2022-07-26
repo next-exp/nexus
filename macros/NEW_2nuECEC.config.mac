@@ -7,6 +7,8 @@
 /event/verbose 0
 /tracking/verbose 0
 
+/process/em/verbose 0
+
 /Generator/ECEC/region CENTER
 /Generator/ECEC/atomic_number 52
 /Generator/ECEC/shell K

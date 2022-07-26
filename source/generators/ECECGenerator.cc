@@ -11,13 +11,12 @@
 
 
 #include "ECECGenerator.h"
-
-#include "BaseGeometry.h"
+#include "GeometryBase.h"
 #include "DetectorConstruction.h"
+#include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4RunManager.hh>
-
 #include <G4Event.hh>
 #include <G4AtomicShell.hh>
 #include <G4AtomicShellEnumerator.hh>
@@ -27,7 +26,9 @@
 #include <G4DynamicParticle.hh>
 #include <G4UAtomicDeexcitation.hh>
 
-namespace nexus {
+using namespace nexus;
+
+REGISTER_CLASS(ECECGenerator, G4VPrimaryGenerator)
 
 ECECGenerator::ECECGenerator():
   G4VPrimaryGenerator(),
@@ -155,5 +156,3 @@ void ECECGenerator::GeneratePrimaryVertex(G4Event* event)
   }
   event->AddPrimaryVertex(vertex);
 }
-
-} // namespace nexus

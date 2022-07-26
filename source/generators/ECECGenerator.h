@@ -15,7 +15,7 @@
 #include <G4VPrimaryGenerator.hh>
 #include <G4AtomicShellEnumerator.hh>
 
-class BaseGeometry;
+
 class G4Event;
 class G4GenericMessenger;
 class G4AtomicShell;
@@ -26,7 +26,7 @@ class G4UAtomicDeexcitation;
 
 namespace nexus{
 
-  class BaseGeometry;
+  class GeometryBase;
 
   class ECECGenerator: public G4VPrimaryGenerator
   {
@@ -51,7 +51,7 @@ namespace nexus{
     G4String region_;
     G4GenericMessenger* msg_;
 
-    const BaseGeometry* geom_;
+    const GeometryBase* geom_;
     const G4AtomicShell* shell_;
     G4UAtomicDeexcitation* atom_;
   };
