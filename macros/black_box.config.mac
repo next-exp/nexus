@@ -12,9 +12,8 @@
 /Generator/LambertianGenerator/max_costheta -0.9935
 
 /Geometry/BlackBox/specific_vertex  0 0 0 mm
-/Geometry/BlackBox/dice_board_x_pos 0 cm
-/Geometry/BlackBox/dice_board_y_pos 0 cm
-/Geometry/BlackBox/dice_board_z_pos -50 cm
+/Geometry/BlackBox/dice_board_pos 0 0 -50 cm
+/Geometry/BlackBox/sapphire_pos 0 0 -49 cm
 /Geometry/BlackBox/rotation 0 deg
 /Geometry/BlackBox/mask_thickn 0. mm
 /Geometry/BlackBox/hole_diameter 0. mm #if set to 0 the holes will be rectangular.

@@ -46,9 +46,8 @@ namespace nexus {
     box_z_ (2. * m),
     box_xy_ (1. *m),
     specific_vertex_(0,0,0),
-    dice_board_x_pos_(0),
-    dice_board_y_pos_(0),
-    dice_board_z_pos_(-49. *cm),
+    dice_board_pos_(0,0,-50.*cm),
+    sapphire_pos_(0,0,-49.*cm),
     rotation_(0),
     mask_thickn_(0),
     hole_diameter_(1),
@@ -64,23 +63,10 @@ namespace nexus {
     msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
       "Set generation vertex.");
 
-    G4GenericMessenger::Command&  dice_board_x_pos_cmd =
-      msg_->DeclareProperty("dice_board_x_pos", dice_board_x_pos_,
-                            "X position of the dice");
-    dice_board_x_pos_cmd.SetParameterName("dice_board_x_pos", true);
-    dice_board_x_pos_cmd.SetUnitCategory("Length");
-
-    G4GenericMessenger::Command&  dice_board_y_pos_cmd =
-      msg_->DeclareProperty("dice_board_y_pos", dice_board_y_pos_,
-                            "Y position of the dice");
-    dice_board_y_pos_cmd.SetParameterName("dice_board_y_pos", true);
-    dice_board_y_pos_cmd.SetUnitCategory("Length");
-
-    G4GenericMessenger::Command&  dice_board_z_pos_cmd =
-      msg_->DeclareProperty("dice_board_z_pos", dice_board_z_pos_,
-                            "Z position of the dice");
-    dice_board_z_pos_cmd.SetParameterName("dice_board_z_pos", true);
-    dice_board_z_pos_cmd.SetUnitCategory("Length");
+    msg_->DeclarePropertyWithUnit("dice_board_pos", "cm",  dice_board_pos_,
+      "Position of the DICE.");
+    msg_->DeclarePropertyWithUnit("sapphire_pos", "cm",  sapphire_pos_,
+      "Position of the sapphire window.");
 
     G4GenericMessenger::Command&  rotation_cmd =
       msg_->DeclareProperty("rotation", rotation_,
@@ -166,10 +152,9 @@ namespace nexus {
   G4LogicalVolume* dice_board_logic = dice_->GetLogicalVolume();
 
   ////Dice Board placement
-  G4ThreeVector post(dice_board_x_pos_,dice_board_y_pos_,dice_board_z_pos_);
   G4RotationMatrix* rot = new G4RotationMatrix();
   rot -> rotateY(rotation_);
-  new G4PVPlacement(rot, post, dice_board_logic,
+  new G4PVPlacement(rot, dice_board_pos_, dice_board_logic,
             	      dice_board_logic->GetName(), box_logic_vol, false, 1, false);
 
   // SAPPHIRE //////////////////////////////////////////////////
@@ -195,9 +180,7 @@ namespace nexus {
   G4VisAttributes sapphire_col = nexus::LightBlue();
   sapphire_logic_vol->SetVisAttributes(sapphire_col);
 
-  G4ThreeVector sapphire_pos(dice_board_x_pos_,dice_board_y_pos_,-49*cm);
-
-   new G4PVPlacement(rot, sapphire_pos,
+   new G4PVPlacement(rot, sapphire_pos_,
                      sapphire_logic_vol, sapphire_name, box_logic_vol,
                      false, 0, false);
 

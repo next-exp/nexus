@@ -53,9 +53,8 @@ namespace nexus {
     G4GenericMessenger* msg_;
 
     G4ThreeVector specific_vertex_;
-    G4double dice_board_x_pos_;
-    G4double dice_board_y_pos_;
-    G4double dice_board_z_pos_;
+    G4ThreeVector dice_board_pos_;
+    G4ThreeVector sapphire_pos_;
     G4double rotation_;
     G4double mask_thickn_;
     G4double hole_diameter_;
