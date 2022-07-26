@@ -350,6 +350,10 @@ namespace opticalprops {
   /// Sapphire ///
   G4MaterialPropertiesTable* Sapphire()
   {
+    // Input data: Sellmeier equation coeficients extracted from:
+    // https://refractiveindex.info/?shelf=3d&book=crystals&page=sapphire
+    //C[i] coeficients at line 362 are squared.
+
     G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
     // REFRACTIVE INDEX
