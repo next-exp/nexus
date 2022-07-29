@@ -213,21 +213,16 @@ namespace nexus {
     G4ThreeVector vertex(0.,0.,0.);
 
     // WORLD
-    if (region == "WORLD") {
+    if (region == "CENTER") {
       vertex = G4ThreeVector(0.,0.,0.);
     }
     else if (region == "AD_HOC") {
-      // AD_HOC does not need to be shifted because it is passed by the user
       return specific_vertex_;
     }
     else {
       G4Exception("[BlackBox]", "GenerateVertex()", FatalException,
 		  "Unknown vertex generation region!");
     }
-
-    G4ThreeVector displacement = G4ThreeVector(0., 0., 0.);
-    vertex = vertex + displacement;
-
     return vertex;
   }
 
