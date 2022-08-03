@@ -47,8 +47,6 @@ namespace nexus {
     BlackBoxSiPMBoard* dice_;
     G4ThreeVector kdb_dimensions_;
 
-    G4bool visibility_;
-
     //Messenger for configuration parameters
     G4GenericMessenger* msg_;
 

@@ -52,14 +52,11 @@ namespace nexus {
     mask_thickn_(0),
     hole_diameter_(1),
     hole_x_(1),
-    hole_y_(1),
-
-    visibility_(0)
+    hole_y_(1)
   {
     msg_ = new G4GenericMessenger(this, "/Geometry/BlackBox/",
 				  "Control commands of BlackBox.");
-    msg_->DeclareProperty("visibility", visibility_, "Black Box visibility");
-
+          
     msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
       "Set generation vertex.");
 

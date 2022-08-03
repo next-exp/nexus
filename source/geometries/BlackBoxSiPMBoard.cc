@@ -34,7 +34,6 @@ BlackBoxSiPMBoard::BlackBoxSiPMBoard():
   GeometryBase     (),
   verbosity_       (true),
   sipm_verbosity_  (true),
-  visibility_      (true),
   num_columns_     (8),
   num_rows_        (8),
   num_sipms_       (num_rows_ * num_columns_),
@@ -57,8 +56,6 @@ BlackBoxSiPMBoard::BlackBoxSiPMBoard():
   msg_->DeclareProperty("sipm_verbosity", sipm_verbosity_,
                         "BlackBox SiPMs verbosity");
 
-  msg_->DeclareProperty("sipm_board_vis", visibility_,
-                        "BlackBoxSiPMBoard visibility.");
   sipm_ = new SiPMSensl;
 }
 
@@ -220,19 +217,10 @@ void BlackBoxSiPMBoard::Construct()
 
 
   /// VISIBILITIES
-  if (visibility_) {
-    board_logic  ->SetVisAttributes(Red());
-    kapton_logic ->SetVisAttributes(Blue());
-    if (mask_thickn_!=0){
-      mask_logic   ->SetVisAttributes(LightBlue());
-    }
-  }
-  else{
-    board_logic  ->SetVisAttributes(G4VisAttributes::GetInvisible());
-    kapton_logic ->SetVisAttributes(G4VisAttributes::GetInvisible());
-    if (mask_thickn_!=0){
-      mask_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
-    }
+  board_logic  ->SetVisAttributes(Red());
+  kapton_logic ->SetVisAttributes(Blue());
+  if (mask_thickn_!=0){
+    mask_logic   ->SetVisAttributes(LightBlue());
   }
 }
 
