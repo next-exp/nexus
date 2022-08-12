@@ -4,7 +4,7 @@
 // This class is a generator for particle events generated in a given cone
 // following a Lambertian distribution. The user must specify via configuration
 // parameters the particle type, a kinetic energy interval, momentum direction
-// and phi and theta limits.
+// and theta limits.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
@@ -56,9 +56,6 @@ namespace nexus {
 
     G4double costheta_min_;
     G4double costheta_max_;
-    G4double phi_min_;
-    G4double phi_max_;
-
 
   };
 

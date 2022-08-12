@@ -4,7 +4,7 @@
 // This class is a generator for particle events generated in a given cone
 // following a Lambertian distribution. The user must specify via configuration
 // parameters the particle type, a kinetic energy interval, momentum direction
-// and phi and theta limits.
+// and theta limits.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
@@ -37,7 +37,7 @@ REGISTER_CLASS(LambertianGenerator, G4VPrimaryGenerator)
 LambertianGenerator::LambertianGenerator():
 G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
 energy_min_(0.), energy_max_(0.), geom_(0), momentum_{},
-costheta_min_(-1.), costheta_max_(1.), phi_min_(0.), phi_max_(2.*pi)
+costheta_min_(-1.), costheta_max_(1.)
 {
   msg_ = new G4GenericMessenger(this, "/Generator/LambertianGenerator/",
     "Control commands of Lambertian generator.");
@@ -69,11 +69,6 @@ costheta_min_(-1.), costheta_max_(1.), phi_min_(0.), phi_max_(2.*pi)
 			"Set minimum cosTheta for the direction of the particle.");
   msg_->DeclareProperty("max_costheta", costheta_max_,
 			"Set maximum cosTheta for the direction of the particle.");
-  msg_->DeclareProperty("min_phi", phi_min_,
-			"Set minimum phi for the direction of the particle.");
-  msg_->DeclareProperty("max_phi", phi_max_,
-			"Set maximum phi for the direction of the particle.");
-
 
   DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
   geom_ = detconst->GetGeometry();
@@ -114,6 +109,10 @@ void LambertianGenerator::GeneratePrimaryVertex(G4Event* event)
 
   G4double cosine = -1*p_dir.dot(momentum_);
 
+  // The theta angles is the angles between the momentum generated ans the z
+  // axis of the global reference system (theta angle of the spherical
+  // coordinate system). The negative sign in lines 115 and 122 is because
+  // the DICE board is placed in the negative side of the z axis.
   while((costheta_min_ > cosine) || (cosine > costheta_max_)){
       p_dir = G4LambertianRand(momentum_);
       cosine = -1*p_dir.dot(momentum_);
