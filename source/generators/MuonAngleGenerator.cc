@@ -33,7 +33,7 @@ REGISTER_CLASS(MuonAngleGenerator, G4VPrimaryGenerator)
 MuonAngleGenerator::MuonAngleGenerator():
   G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
   angular_generation_(true), rPhi_(NULL), energy_min_(0.),
-  energy_max_(0.), geom_(0), geom_solid_(0), bInitialize_(false), dist_name_("za")
+  energy_max_(0.), dist_name_("za"), bInitialize_(false), geom_(0), geom_solid_(0)
 {
   msg_ = new G4GenericMessenger(this, "/Generator/MuonAngleGenerator/",
 				"Control commands of muongenerator.");
