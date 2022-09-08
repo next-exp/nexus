@@ -39,6 +39,7 @@ namespace nexus {
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
+    G4double GetHeight() const;
 
     /// Builder
     void Construct();
@@ -117,6 +118,9 @@ namespace nexus {
     G4LogicalVolume* air_box_logic_;
 
   };
+
+  inline G4double Next100Shielding::GetHeight() const
+  { return lead_y_; }
 
 } // end namespace nexus
 
