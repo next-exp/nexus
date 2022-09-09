@@ -8,8 +8,8 @@
 /Generator/LambertianGenerator/max_energy 2.9 eV
 /Generator/LambertianGenerator/region AD_HOC
 /Generator/LambertianGenerator/momentum 0 0 -1
-/Generator/LambertianGenerator/min_costheta -1.
-/Generator/LambertianGenerator/max_costheta -0.9935
+/Generator/LambertianGenerator/min_costheta 0.9935
+/Generator/LambertianGenerator/max_costheta 1.
 
 /Geometry/BlackBox/specific_vertex  0 0 0 mm
 /Geometry/BlackBox/dice_board_pos 0 0 -50 cm

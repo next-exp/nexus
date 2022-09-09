@@ -37,7 +37,7 @@ REGISTER_CLASS(LambertianGenerator, G4VPrimaryGenerator)
 LambertianGenerator::LambertianGenerator():
 G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
 energy_min_(0.), energy_max_(0.), geom_(0), momentum_{},
-costheta_min_(-1.), costheta_max_(1.)
+costheta_min_(0), costheta_max_(1.)
 {
   msg_ = new G4GenericMessenger(this, "/Generator/LambertianGenerator/",
     "Control commands of Lambertian generator.");
@@ -107,15 +107,13 @@ void LambertianGenerator::GeneratePrimaryVertex(G4Event* event)
 
   G4ThreeVector p_dir = G4LambertianRand(momentum_);
 
-  G4double cosine = -1*p_dir.dot(momentum_);
+  G4double cosine = p_dir.dot(momentum_);
 
-  // The theta angles is the angles between the momentum generated ans the z
-  // axis of the global reference system (theta angle of the spherical
-  // coordinate system). The negative sign in lines 115 and 122 is because
-  // the DICE board is placed in the negative side of the z axis.
+  // The theta angle is the angle between the momentum generated (p_dir) and
+  // Lambertian generator axis (in this code called momentum_).
   while((costheta_min_ > cosine) || (cosine > costheta_max_)){
       p_dir = G4LambertianRand(momentum_);
-      cosine = -1*p_dir.dot(momentum_);
+      cosine = p_dir.dot(momentum_);
   }
 
   G4ThreeVector p = pmod * p_dir;

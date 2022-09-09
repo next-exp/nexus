@@ -56,7 +56,7 @@ namespace nexus {
   {
     msg_ = new G4GenericMessenger(this, "/Geometry/BlackBox/",
 				  "Control commands of BlackBox.");
-          
+
     msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
       "Set generation vertex.");
 
@@ -211,7 +211,7 @@ namespace nexus {
 
     // WORLD
     if (region == "CENTER") {
-      vertex = G4ThreeVector(0.,0.,0.);
+      return vertex;
     }
     else if (region == "AD_HOC") {
       return specific_vertex_;
