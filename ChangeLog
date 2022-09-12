@@ -1,3 +1,8 @@
+tag_v7_03_00 - 12 Sep 2022
+	- Remove SaveAllEventAction class
+	- Fix muon generator to simulate muons only from above the LSC floor
+	- Change event ID type in output files to avoid overflow later
+
 tag v7_02_00 - 3 May 2022
 	- Remove ROOT dependency from the code
 	- Add energy input to MuonAngleGenerator
