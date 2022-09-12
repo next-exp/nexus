@@ -3,8 +3,7 @@
 ### board in the black box.
 ### -----------------------------------------------------------
 
-#/Generator/LambertianGenerator/particle opticalphoton
-/Generator/LambertianGenerator/particle geantino
+/Generator/LambertianGenerator/particle opticalphoton
 /Generator/LambertianGenerator/min_energy 2.9 eV
 /Generator/LambertianGenerator/max_energy 2.9 eV
 /Generator/LambertianGenerator/region AD_HOC
@@ -12,9 +11,8 @@
 /Generator/LambertianGenerator/min_costheta 0.9935
 /Generator/LambertianGenerator/max_costheta 1.
 
-/Geometry/BlackBox/sapphire false
-/Geometry/BlackBox/pedot_coating false
-/Geometry/BlackBox/dice_board_pos 0 0 -50 cm
+/Geometry/BlackBox/sapphire true
+/Geometry/BlackBox/pedot_coating true
 /Geometry/BlackBox/specific_vertex  0 0 0 mm
 /Geometry/BlackBox/dice_board_pos 0 0 -50 cm
 /Geometry/BlackBox/sapphire_pos 0 0 -49 cm

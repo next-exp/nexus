@@ -45,6 +45,8 @@ namespace nexus {
     world_xy_ (2. *m),
     box_z_ (2. * m),
     box_xy_ (1. *m),
+    sapphire_(false),
+    pedot_coating_(false),
     specific_vertex_(0,0,0),
     dice_board_pos_(0,0,-50.*cm),
     sapphire_pos_(0,0,-49.*cm),
@@ -171,12 +173,11 @@ namespace nexus {
     sapphire_mat->SetMaterialPropertiesTable(opticalprops::Sapphire());
 
     G4double pedot_thickn  = 150. *nm;
-    G4double sapphire_thickn  = 6. *mm;
+    G4double window_thickn  = 6. *mm;
     G4double sapphire_diam = 20 *cm;
-    G4double window_thickn  = sapphire_thickn;
 
     if (pedot_coating_) {
-    G4double window_thickn  = sapphire_thickn + pedot_thickn;}
+    window_thickn  = sapphire_thickn + pedot_thickn;}
 
     G4Tubs* sapphire_solid_vol =
       new G4Tubs(sapphire_name, 0, sapphire_diam/2., window_thickn/2., 0, twopi);
@@ -213,7 +214,7 @@ namespace nexus {
         new G4PVPlacement(0, pedot_pos,
                           pedot_logic_vol, pedot_name, sapphire_logic_vol,
                           false, 0, false);
-  }
+    }
   }
   }
 
