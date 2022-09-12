@@ -50,6 +50,8 @@ namespace nexus {
     //Messenger for configuration parameters
     G4GenericMessenger* msg_;
 
+    G4bool sapphire_;
+    G4bool pedot_coating_;
     G4ThreeVector specific_vertex_;
     G4ThreeVector dice_board_pos_;
     G4ThreeVector sapphire_pos_;

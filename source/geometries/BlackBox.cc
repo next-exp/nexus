@@ -57,6 +57,12 @@ namespace nexus {
     msg_ = new G4GenericMessenger(this, "/Geometry/BlackBox/",
 				  "Control commands of BlackBox.");
 
+    // Boolean-type properties (true or false)
+    msg_->DeclareProperty("sapphire", sapphire_,
+        "True if the sapphire window is going to included in the configuration.");
+    msg_->DeclareProperty("pedot_coating", pedot_coating_,
+        "True if the sapphire window is coated with PEDOT.");
+
     msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
       "Set generation vertex.");
 
@@ -156,53 +162,59 @@ namespace nexus {
 
   // SAPPHIRE //////////////////////////////////////////////////
 
-  G4String sapphire_name = "SAPPHIRE";
+  if (sapphire_) {
 
-  G4Material* sapphire_mat = materials::Sapphire();
+    G4String sapphire_name = "SAPPHIRE";
 
-  sapphire_mat->SetMaterialPropertiesTable(opticalprops::Sapphire());
+    G4Material* sapphire_mat = materials::Sapphire();
 
-  G4double pedot_thickn  = 150. *nm;
-  G4double sapphire_thickn  = 6. *mm;
-  G4double window_thickn  = sapphire_thickn + pedot_thickn;
-  G4double sapphire_diam = 20 *cm;
+    sapphire_mat->SetMaterialPropertiesTable(opticalprops::Sapphire());
 
-  G4Tubs* sapphire_solid_vol =
-    new G4Tubs(sapphire_name, 0, sapphire_diam/2.,
-               window_thickn/2., 0, twopi);
+    G4double pedot_thickn  = 150. *nm;
+    G4double sapphire_thickn  = 6. *mm;
+    G4double sapphire_diam = 20 *cm;
+    G4double window_thickn  = sapphire_thickn;
 
-  G4LogicalVolume* sapphire_logic_vol =
-    new G4LogicalVolume(sapphire_solid_vol, sapphire_mat, sapphire_name);
+    if (pedot_coating_) {
+    G4double window_thickn  = sapphire_thickn + pedot_thickn;}
 
-  G4VisAttributes sapphire_col = nexus::LightBlue();
-  sapphire_logic_vol->SetVisAttributes(sapphire_col);
+    G4Tubs* sapphire_solid_vol =
+      new G4Tubs(sapphire_name, 0, sapphire_diam/2., window_thickn/2., 0, twopi);
 
-   new G4PVPlacement(rot, sapphire_pos_,
-                     sapphire_logic_vol, sapphire_name, box_logic_vol,
-                     false, 0, false);
+    G4LogicalVolume* sapphire_logic_vol =
+      new G4LogicalVolume(sapphire_solid_vol, sapphire_mat, sapphire_name);
+
+    G4VisAttributes sapphire_col = nexus::LightBlue();
+    sapphire_logic_vol->SetVisAttributes(sapphire_col);
+
+    new G4PVPlacement(rot, sapphire_pos_,
+                      sapphire_logic_vol, sapphire_name, box_logic_vol,
+                      false, 0, false);
 
   //PEDOT ////////////////////////////////////////////////////////
+    if (pedot_coating_) {
+      G4String pedot_name = "PEDOT";
 
-  G4String pedot_name = "PEDOT";
+      G4Material* pedot_mat = materials::PEDOT();
 
-  G4Material* pedot_mat = materials::PEDOT();
+      pedot_mat->SetMaterialPropertiesTable(opticalprops::PEDOT());
 
-  pedot_mat->SetMaterialPropertiesTable(opticalprops::PEDOT());
+      G4Tubs* pedot_solid_vol =
+        new G4Tubs(pedot_name, 0, sapphire_diam/2., pedot_thickn/2., 0, twopi);
 
-  G4Tubs* pedot_solid_vol =
-    new G4Tubs(pedot_name, 0, sapphire_diam/2., pedot_thickn/2., 0, twopi);
+        G4LogicalVolume* pedot_logic_vol =
+        new G4LogicalVolume(pedot_solid_vol, pedot_mat, pedot_name);
 
-  G4LogicalVolume* pedot_logic_vol =
-    new G4LogicalVolume(pedot_solid_vol, pedot_mat, pedot_name);
+        G4VisAttributes pedot_col = nexus::CopperBrown();
+        pedot_logic_vol->SetVisAttributes(pedot_col);
 
-  G4VisAttributes pedot_col = nexus::CopperBrown();
-  pedot_logic_vol->SetVisAttributes(pedot_col);
+        G4ThreeVector pedot_pos(0,0,window_thickn/2.- pedot_thickn/2.);
 
-  G4ThreeVector pedot_pos(0,0,window_thickn/2.- pedot_thickn/2.);
-
-  new G4PVPlacement(0, pedot_pos,
-                    pedot_logic_vol, pedot_name, sapphire_logic_vol,
-                    false, 0, false);
+        new G4PVPlacement(0, pedot_pos,
+                          pedot_logic_vol, pedot_name, sapphire_logic_vol,
+                          false, 0, false);
+  }
+  }
   }
 
     G4ThreeVector BlackBox::GenerateVertex(const G4String& region) const
