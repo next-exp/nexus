@@ -512,6 +512,8 @@ namespace nexus {
         G4Exception("[NextNew]", "GenerateVertex()", FatalException,
                     "This vertex generation region must be used with lab_walls == true!");
       vertex = hallA_walls_->GenerateVertex(region);
+      while (vertex[1]<(-shielding_->GetHeight()/2.)){
+        vertex = hallA_walls_->GenerateVertex(region);}
       vertex = displ_ + vertex;
     }
 

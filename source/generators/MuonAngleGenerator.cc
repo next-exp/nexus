@@ -33,7 +33,7 @@ REGISTER_CLASS(MuonAngleGenerator, G4VPrimaryGenerator)
 MuonAngleGenerator::MuonAngleGenerator():
   G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
   angular_generation_(true), rPhi_(NULL), energy_min_(0.),
-  energy_max_(0.), geom_(0), geom_solid_(0), bInitialize_(false), dist_name_("za")
+  energy_max_(0.), dist_name_("za"), bInitialize_(false), geom_(0), geom_solid_(0)
 {
   msg_ = new G4GenericMessenger(this, "/Generator/MuonAngleGenerator/",
 				"Control commands of muongenerator.");
@@ -81,10 +81,10 @@ MuonAngleGenerator::~MuonAngleGenerator()
 
 void MuonAngleGenerator::LoadMuonDistribution()
 {
-  
+
   // File pointer
   std::ifstream fin(ang_file_);
-  
+
   // Check if file has opened properly
   if (!fin.is_open() && angular_generation_){
     G4Exception("[MuonAngleGenerator]", "LoadMuonDistribution()",
@@ -94,7 +94,7 @@ void MuonAngleGenerator::LoadMuonDistribution()
   // Check the input filename for the keyword Energy
   size_t found = ang_file_.find("Energy");
   if (found!=std::string::npos){
-    
+
     // Only angle option, but energy specified
     if (dist_name_ == "za")
       G4Exception("[MuonAngleGenerator]", "LoadMuonDistribution()",
@@ -167,11 +167,6 @@ void MuonAngleGenerator::SetupAngles()
   // Rotates anticlockwise about Y.
   rPhi_ = new G4RotationMatrix();
   rPhi_->rotateY(-axis_rotation_);
-
-  // Get the solid to check overlap
-  geom_solid_ =
-    geom_->GetLogicalVolume()->GetDaughter(0)->GetLogicalVolume()->GetSolid();
-
 }
 
 
@@ -179,8 +174,8 @@ void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
 {
 
   // Initalise RNG seeds and load file on the first event
-  if (!bInitialize_){ 
-    
+  if (!bInitialize_){
+
     // Load in the Muon angular distribution from file
     if (angular_generation_)
       LoadMuonDistribution();
@@ -207,7 +202,7 @@ void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
   G4double energy = kinetic_energy + mass;
 
   G4ThreeVector position = geom_->GenerateVertex(region_);
-  
+
   // Set default momentum and angular variables
   G4ThreeVector p_dir(0., -1., 0.);
   G4double zenith  = p_dir.getTheta();
@@ -216,8 +211,7 @@ void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
   // Overwrite default p_dir, zenith and azimuth from angular distribution file
   if (angular_generation_){
     GetDirection(p_dir, zenith, azimuth, energy, kinetic_energy, mass);
-    while ( !CheckOverlap(position, p_dir) )
-      position = geom_->GenerateVertex(region_);
+    position = geom_->GenerateVertex(region_);
   }
 
   G4double pmod   = std::sqrt(energy*energy - mass*mass);
@@ -272,7 +266,7 @@ void MuonAngleGenerator::GetDirection(G4ThreeVector& dir, G4double& zenith, G4do
   G4bool invalid_evt = true;
 
   while(invalid_evt){
-  
+
     // Generate random index weighted by the bin contents
     // Scale by flux vec size, then round to nearest integer to get an index
     G4int RN_indx = round(fRandomGeneral_->fire()*flux_.size());
@@ -306,20 +300,7 @@ void MuonAngleGenerator::GetDirection(G4ThreeVector& dir, G4double& zenith, G4do
 
     // Rotate about the Y-Axis
     dir *= *rPhi_;
-  
+
   }
 
-}
-
-
-G4bool MuonAngleGenerator::CheckOverlap(const G4ThreeVector& vtx,
-					const G4ThreeVector& dir)
-{
-  // Check for overlap between generated vertex+direction
-  // and the geometry.
-
-  if (geom_solid_->DistanceToIn(vtx, dir) == kInfinity)
-    return false;
-
-  return true;
 }
