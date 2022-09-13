@@ -177,7 +177,7 @@ namespace nexus {
     G4double sapphire_diam = 20 *cm;
 
     if (pedot_coating_) {
-    window_thickn  = sapphire_thickn + pedot_thickn;}
+    window_thickn  += pedot_thickn;}
 
     G4Tubs* sapphire_solid_vol =
       new G4Tubs(sapphire_name, 0, sapphire_diam/2., window_thickn/2., 0, twopi);
