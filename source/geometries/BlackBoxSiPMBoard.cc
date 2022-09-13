@@ -33,7 +33,6 @@ using namespace nexus;
 BlackBoxSiPMBoard::BlackBoxSiPMBoard():
   GeometryBase     (),
   verbosity_       (true),
-  sipm_verbosity_  (true),
   num_columns_     (8),
   num_rows_        (8),
   num_sipms_       (num_rows_ * num_columns_),
@@ -52,9 +51,6 @@ BlackBoxSiPMBoard::BlackBoxSiPMBoard():
 
   msg_->DeclareProperty("sipm_board_verbosity", verbosity_,
                         "BlackBoxSiPMBoard verbosity");
-
-  msg_->DeclareProperty("sipm_verbosity", sipm_verbosity_,
-                        "BlackBox SiPMs verbosity");
 
   sipm_ = new SiPMSensl;
 }
