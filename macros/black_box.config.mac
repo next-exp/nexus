@@ -25,6 +25,7 @@
 /run/verbose 0
 /event/verbose 0
 /tracking/verbose 0
+/process/em/verbose 0
 
 ### JOB CONTROL
 /nexus/random_seed            -1

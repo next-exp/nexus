@@ -95,14 +95,13 @@ void BlackBoxSiPMBoard::Construct()
   G4String board_name = "SIPM_BOARD";
 
   // Calculating board wrapper dimensions
-  G4double board_size_x = num_columns_ * sipm_pitch_ - 2. * side_reduction_;
-  G4double board_size_y = num_rows_    * sipm_pitch_ - 2. * side_reduction_;
+  G4double board_size_x = num_columns_   * sipm_pitch_ - 2. * side_reduction_;
+  G4double board_size_y = num_rows_      * sipm_pitch_ - 2. * side_reduction_;
   G4double board_size_z = kapton_thickn_ + std::max(sipm_->GetDimensions().z(),
                                                     mask_thickn_);
 
   board_size_ = G4ThreeVector(board_size_x, board_size_y, board_size_z);
-  //G4cout << "board_size " << board_size_ << G4endl;
-  //G4cout << "sipm thickness " << sipm_->GetDimensions().z() << G4endl;
+
   G4Box* board_solid = new G4Box(board_name, board_size_x/2.,
                                  board_size_y/2., board_size_z/2.);
 
@@ -110,7 +109,6 @@ void BlackBoxSiPMBoard::Construct()
     new G4LogicalVolume(board_solid, mother_gas, board_name);
 
   GeometryBase::SetLogicalVolume(board_logic);
-
 
   /// Kapton
   G4String kapton_name = "KAPTON_BOARD";
@@ -128,7 +126,7 @@ void BlackBoxSiPMBoard::Construct()
     new G4LogicalVolume(kapton_solid, kapton_mat, kapton_name);
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., kapton_posz), kapton_logic,
-                    kapton_name, board_logic, false, 0, true);
+                    kapton_name, board_logic, false, 0, false);
 
   // Generate SiPM positions
   GenerateSiPMPositions();
@@ -139,15 +137,15 @@ void BlackBoxSiPMBoard::Construct()
   G4double sipm_posz = - board_size_z/2. + kapton_thickn_ + sipm_->GetDimensions().z()/2.;
   G4ThreeVector sipm_pos;
 
-  //G4int central_sipms[] = {27, 28, 35, 36};
-
-  //for (G4int sipm_id:central_sipms) {
   for (G4int sipm_id=0; sipm_id<num_sipms_; sipm_id++) {
+    if (verbosity_){
        sipm_pos = sipm_positions_[sipm_id] + G4ThreeVector(0., 0., sipm_posz);
        G4cout << "SiPM" << sipm_id << ":" << sipm_pos << G4endl;
+    }
 
-       new G4PVPlacement(sipm_rot, sipm_pos, sipm_->GetLogicalVolume(),
-                         sipm_->GetLogicalVolume()->GetName(), board_logic, false, sipm_id, true);
+    new G4PVPlacement(sipm_rot, sipm_pos, sipm_->GetLogicalVolume(),
+                      sipm_->GetLogicalVolume()->GetName(), board_logic,
+                      false, sipm_id, false);
   }
 
   /// Teflon Masks
@@ -163,7 +161,6 @@ void BlackBoxSiPMBoard::Construct()
                                 board_size_y/2., mask_thickn_/2.);
 
     /// Define mask holes.
-
     G4VSolid* hole_solid = nullptr;
 
     if (hole_diam_!=0.){
@@ -180,7 +177,6 @@ void BlackBoxSiPMBoard::Construct()
                                                hole_solid, 0, hole_pos);
     for (G4int sipm_id=1; sipm_id<num_sipms_; sipm_id++) {
          hole_pos = sipm_positions_[sipm_id];
-         //G4cout << "hole" << sipm_id << ":" << hole_pos << G4endl;
 
          mask_with_holes = new G4SubtractionSolid("BOARD_MASK", mask_with_holes,
                                                   hole_solid, 0, hole_pos);
@@ -196,7 +192,7 @@ void BlackBoxSiPMBoard::Construct()
     new G4LogicalSkinSurface(mask_name + "_OPSURF", mask_logic, mask_opsurf);
 
     new G4PVPlacement(nullptr, G4ThreeVector(0., 0., mask_posz), mask_logic,
-                      mask_name, board_logic, false, 0, true);
+                      mask_name, board_logic, false, 0, false);
 
   }
 

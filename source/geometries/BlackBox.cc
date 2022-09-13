@@ -192,7 +192,7 @@ namespace nexus {
                       sapphire_logic_vol, sapphire_name, box_logic_vol,
                       false, 0, false);
 
-  //PEDOT ////////////////////////////////////////////////////////
+    //PEDOT ////////////////////////////////////////////////////////
     if (pedot_coating_) {
       G4String pedot_name = "PEDOT";
 
