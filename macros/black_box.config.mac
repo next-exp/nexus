@@ -21,6 +21,7 @@
 /Geometry/BlackBox/hole_diameter 0. mm #if set to 0 the holes will be rectangular.
 /Geometry/BlackBox/hole_x 6. mm
 /Geometry/BlackBox/hole_y 6. mm
+/Geometry/BlackBox/sipm_board_verbosity false
 
 /run/verbose 0
 /event/verbose 0

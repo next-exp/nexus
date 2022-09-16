@@ -200,12 +200,12 @@ void BlackBoxSiPMBoard::Construct()
 
 
   /// VERBOSITY
-  if (verbosity_)
+  if (verbosity_){
     G4cout << "* SiPM board size:    " << board_size_      << G4endl;
     G4cout << "* " << num_sipms_ << " SiPMs from Sensl"    << G4endl;
     G4cout << "* Kapton thickness:   " << kapton_thickn_   << G4endl;
     G4cout << "* Mask thickness:     " << mask_thickn_     << G4endl;
-    G4cout << "* Mask hole diameter: " << hole_diam_       << G4endl;
+    G4cout << "* Mask hole diameter: " << hole_diam_       << G4endl;}
 
 
   /// VISIBILITIES

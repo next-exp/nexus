@@ -102,6 +102,8 @@ namespace nexus {
                             "Hole Y");
     hole_y_cmd.SetParameterName("hole_y", true);
     hole_y_cmd.SetUnitCategory("Length");
+
+    dice_ = new BlackBoxSiPMBoard();
   }
 
   BlackBox::~BlackBox()
@@ -111,8 +113,6 @@ namespace nexus {
 
   void BlackBox::Construct()
   {
-
-  dice_ = new BlackBoxSiPMBoard();
 
   // WORLD /////////////////////////////////////////////////
 
