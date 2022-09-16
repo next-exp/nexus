@@ -1,0 +1,20 @@
+### --------------------------------------------------------
+### This init macro simulates the response of a SensL SiPM DICE
+### board in the black box.
+### --------------------------------------------------------
+
+/control/execute macros/physics/DefaultPhysicsList.mac
+
+/nexus/RegisterGeometry BlackBox
+/nexus/RegisterGenerator LambertianGenerator
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/PhysicsList/RegisterPhysics G4OpticalPhysics
+
+### ACTIONS
+
+/nexus/RegisterRunAction DefaultRunAction
+/nexus/RegisterTrackingAction OpticalTrackingAction
+/nexus/RegisterSteppingAction AnalysisSteppingAction
+
+/nexus/RegisterMacro macros/black_box.config.mac

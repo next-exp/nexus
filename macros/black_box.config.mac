@@ -1,0 +1,34 @@
+### -----------------------------------------------------------
+### This init macro simulates the response of a SensL SiPM DICE
+### board in the black box.
+### -----------------------------------------------------------
+
+/Generator/LambertianGenerator/particle opticalphoton
+/Generator/LambertianGenerator/min_energy 2.9 eV
+/Generator/LambertianGenerator/max_energy 2.9 eV
+/Generator/LambertianGenerator/region AD_HOC
+/Generator/LambertianGenerator/momentum 0 0 -1
+/Generator/LambertianGenerator/min_costheta 0.9935
+/Generator/LambertianGenerator/max_costheta 1.
+
+/Geometry/BlackBox/sapphire true
+/Geometry/BlackBox/pedot_coating true
+/Geometry/BlackBox/specific_vertex  0 0 0 mm
+/Geometry/BlackBox/dice_board_pos 0 0 -50 cm
+/Geometry/BlackBox/sapphire_pos 0 0 -49 cm
+/Geometry/BlackBox/rotation 0 deg
+/Geometry/BlackBox/mask_thickn 0. mm
+/Geometry/BlackBox/hole_diameter 0. mm #if set to 0 the holes will be rectangular.
+/Geometry/BlackBox/hole_x 6. mm
+/Geometry/BlackBox/hole_y 6. mm
+/Geometry/BlackBox/sipm_board_verbosity false
+
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+/process/em/verbose 0
+
+### JOB CONTROL
+/nexus/random_seed            -1
+/nexus/persistency/start_id   0
+/nexus/persistency/outputFile black_box.next
