@@ -75,9 +75,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 }
 
 
-void DetectorConstruction::SetGeometry(std::unique_ptr<GeometryBase> g)
+void DetectorConstruction::SetGeometry(std::unique_ptr<GeometryBase> geo)
 {
-  geometry_ = std::move(g);
+  geometry_ = std::move(geo);
 }
 
 const GeometryBase* DetectorConstruction::GetGeometry() const
