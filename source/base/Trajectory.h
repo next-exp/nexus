@@ -184,8 +184,8 @@ inline G4int nexus::Trajectory::GetParentID() const
 inline G4ThreeVector nexus::Trajectory::GetFinalMomentum() const
 { return final_momentum_; }
 
-inline void nexus::Trajectory::SetFinalMomentum(const G4ThreeVector& m)
-{ final_momentum_ = m; }
+inline void nexus::Trajectory::SetFinalMomentum(const G4ThreeVector& fm)
+{ final_momentum_ = fm; }
 
 inline G4ThreeVector nexus::Trajectory::GetInitialPosition() const
 { return initial_position_; }

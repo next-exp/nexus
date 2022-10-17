@@ -94,8 +94,8 @@ REGISTER_CLASS(DefaultEventAction, G4UserEventAction)
                       "DefaultTrackingAction is required when using DefaultEventAction");
         }
         for (unsigned int i=0; i<tc->size(); ++i) {
-          Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[i]);
-          edep += trj->GetEnergyDeposit();
+          Trajectory* tr = dynamic_cast<Trajectory*>((*tc)[i]);
+          edep += tr->GetEnergyDeposit();
         }
       }
       else {
