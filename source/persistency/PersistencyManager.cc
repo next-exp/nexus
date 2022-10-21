@@ -146,6 +146,7 @@ G4bool PersistencyManager::Store(const G4Event* event)
 
   // Store ionization hits and sensor hits
   ihits_ = nullptr;
+  hit_map_.clear();
   StoreHits(event->GetHCofThisEvent());
 
   nevt_++;
@@ -252,8 +253,6 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
   IonizationHitsCollection* hits =
     dynamic_cast<IonizationHitsCollection*>(hc);
   if (!hits) return;
-
-  hit_map_.clear();
 
   double evt_energy = 0.;
   std::string sdname = hits->GetSDname();
