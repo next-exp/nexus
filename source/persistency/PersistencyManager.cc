@@ -145,6 +145,8 @@ G4bool PersistencyManager::Store(const G4Event* event)
   StoreTrajectories(event->GetTrajectoryContainer());
 
   // Store ionization hits and sensor hits
+  ihits_ = nullptr;
+  hit_map_.clear();
   StoreHits(event->GetHCofThisEvent());
 
   nevt_++;
@@ -252,8 +254,6 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
     dynamic_cast<IonizationHitsCollection*>(hc);
   if (!hits) return;
 
-  hit_map_.clear();
-
   double evt_energy = 0.;
   std::string sdname = hits->GetSDname();
 
@@ -264,19 +264,19 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
 
     G4int trackid = hit->GetTrackID();
 
-    std::vector<G4int>* ihits = nullptr;
+
     std::map<G4int, std::vector<G4int>* >::iterator it = hit_map_.find(trackid);
     if (it != hit_map_.end()) {
-      ihits = it->second;
+      ihits_ = it->second;
     } else {
-       ihits = new std::vector<G4int>;
-      hit_map_[trackid] = ihits;
+      ihits_ = new std::vector<G4int>;
+      hit_map_[trackid] = ihits_;
     }
 
-    ihits->push_back(1);
+    ihits_->push_back(1);
 
     G4ThreeVector xyz = hit->GetPosition();
-    h5writer_->WriteHitInfo(nevt_, trackid,  ihits->size() - 1,
+    h5writer_->WriteHitInfo(nevt_, trackid,  ihits_->size() - 1,
 			    xyz[0], xyz[1], xyz[2],
 			    hit->GetTime(), hit->GetEnergyDeposit(),
 			    sdname.c_str());
