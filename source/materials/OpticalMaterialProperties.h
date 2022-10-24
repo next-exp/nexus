@@ -71,6 +71,8 @@ namespace opticalprops {
 
   G4MaterialPropertiesTable* Y11();
 
+  G4MaterialPropertiesTable* B2();
+
   G4MaterialPropertiesTable* Pethylene();
 
   G4MaterialPropertiesTable* FPethylene();
