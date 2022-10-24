@@ -118,6 +118,9 @@ namespace materials {
   // WLS EJ-280
   G4Material* EJ280();
 
+  // WLS EJ-286
+  G4Material* EJ286();
+
   // Kuraray Fiber Y11
   G4Material* Y11();
 
