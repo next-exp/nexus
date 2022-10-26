@@ -736,6 +736,105 @@ namespace opticalprops {
   }
 
 
+  /// PTP (p-terphenyl) ///
+  G4MaterialPropertiesTable* PTP()
+  {
+    // Data from https://doi.org/10.1016/j.nima.2011.12.036
+    // and https://iopscience.iop.org/article/10.1088/1748-0221/5/04/P04007/
+    G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
+
+    // REFRACTIVE INDEX
+    std::vector<G4double> rIndex_energies = {optPhotMinE_, optPhotMaxE_};
+    std::vector<G4double> PTP_rIndex      = {1.65    , 1.65};
+    mpt->AddProperty("RINDEX", rIndex_energies, PTP_rIndex);
+
+    // ABSORPTION LENGTH
+    // Assuming no absorption except WLS
+    std::vector<G4double> abs_energy = {optPhotMinE_, optPhotMaxE_};
+    std::vector<G4double> absLength  = {noAbsLength_, noAbsLength_};
+    mpt->AddProperty("ABSLENGTH", abs_energy, absLength);
+
+
+
+    // WLS ABSORPTION LENGTH
+    // There are no tabulated values in the literature for the PTP absorption
+    // length as a function of the wavelength. 
+    // However in https://iopscience.iop.org/article/10.1088/1748-0221/5/04/P04007/
+    // it says that "the thickness >=150 nm of a polycrystalline p-terphenyl layer 
+    // is enough for absorption of >=99.9% of the xenon light". Thus, using the
+    // formula P = e^(-x/lambda) where lambda is the absorption length, we can
+    // place an upper limit of 21 nm on the absorption length at 175 nm. This is
+    // reasonably close to the TPB value. Then, we scale accordingly to the
+    // absorption spectrum (which is in a.u.).
+    std::vector<G4double> WLS_abs_energy = {
+      optPhotMinE_,
+      h_Planck * c_light / (169. * nm),  h_Planck * c_light / (175. * nm),
+      h_Planck * c_light / (190. * nm),  h_Planck * c_light / (204. * nm),  
+      h_Planck * c_light / (222. * nm),  h_Planck * c_light / (238. * nm),  
+      h_Planck * c_light / (253. * nm),  h_Planck * c_light / (276. * nm),  
+      h_Planck * c_light / (292. * nm),  h_Planck * c_light / (318. * nm),  
+      h_Planck * c_light / (337. * nm), 
+      optPhotMaxE_
+    };
+
+    float XePeakAbsValue = 1.879;
+    float XePeakAbsLength = 21 * nm;
+
+    std::vector<float> PTP_absorption = {
+      1.803, 1.879, // 169, 175
+      1.716, 1.429, // 190, 204
+      1.858, 1.218, // 222, 238
+      0.540, 0.949, // 253, 276
+      0.414, 0.174, // 292, 318
+      0.002, // 337
+    };
+
+    std::vector<G4double> WLS_absLength = {noAbsLength_};
+    for (auto& abs_value : PTP_absorption)
+      WLS_absLength.push_back(XePeakAbsLength / (abs_value / XePeakAbsValue));
+
+    WLS_absLength.push_back(noAbsLength_);
+
+    //for (int i=0; i<WLS_abs_entries; i++)
+    //  G4cout << "* TPB WLS absLength:  " << std::setw(8) << WLS_abs_energy[i] / eV
+    //         << " eV  ==  " << std::setw(8) << (h_Planck * c_light / WLS_abs_energy[i]) / nm
+    //         << " nm  ->  " << std::setw(6) << WLS_absLength[i] / nm << " nm" << G4endl;
+    mpt->AddProperty("WLSABSLENGTH", WLS_abs_energy, WLS_absLength);
+  
+    // WLS EMISSION SPECTRUM
+    std::vector<G4double> WLS_emi_energy = {
+      optPhotMinE_,
+      h_Planck * c_light / (317. * nm),  h_Planck * c_light / (336. * nm),
+      h_Planck * c_light / (354. * nm),  h_Planck * c_light / (361. * nm),  
+      h_Planck * c_light / (371. * nm),  h_Planck * c_light / (385. * nm),  
+      h_Planck * c_light / (398. * nm),  h_Planck * c_light / (412. * nm),  
+      h_Planck * c_light / (430. * nm),  h_Planck * c_light / (452. * nm),
+      optPhotMaxE_
+    };
+
+    std::vector<G4double> WLS_emiSpectrum = {
+      0., 
+      0.022, 0.173,
+      0.421, 0.745,
+      0.993, 0.849,
+      0.514, 0.351,
+      0.179, 0.044,
+      0.
+    };
+
+    mpt->AddProperty("WLSCOMPONENT", WLS_emi_energy, WLS_emiSpectrum);
+
+    // WLS Delay
+    // Couldn't find the value for PTP, using the same as TPB
+    mpt->AddConstProperty("WLSTIMECONSTANT", 1.2 * ns);
+
+    // WLS Quantum Efficiency
+    // This is set to QE at the Xenon peak, which the paper claims to be >90%
+    mpt->AddConstProperty("WLSMEANNUMBERPHOTONS", 0.9);
+
+    return mpt;
+  }
+
 
   /// TPB (tetraphenyl butadiene) ///
   G4MaterialPropertiesTable* TPB()
