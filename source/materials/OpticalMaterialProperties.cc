@@ -1371,24 +1371,50 @@ namespace opticalprops {
     mpt->AddProperty("ABSLENGTH", abs_energy, absLength);
 
     // WLS ABSORPTION LENGTH
+    // For B2 fibers Kuraray provides absorption spectrum and not
+    // absorption length. We assume that the absorption length at the 
+    // absorption maximum is the same as with the Y11 fiber and
+    // scale according to the absorption spectrum. This is not perfect
+    // but it was verified to be a good approximation with the Y11 fiber,
+    // for which Kuraray did provide the absorption length.
+
     std::vector<G4double> WLS_abs_energy = {
-      optPhotMinE_,                      h_Planck * c_light / (490. * nm),
-      h_Planck * c_light / (485. * nm),  h_Planck * c_light / (475. * nm),
-      h_Planck * c_light / (454. * nm),  h_Planck * c_light / (443. * nm),
-      h_Planck * c_light / (430. * nm),  h_Planck * c_light / (410. * nm),
-      h_Planck * c_light / (405. * nm),  h_Planck * c_light / (359. * nm),
-      h_Planck * c_light / (350. * nm),  h_Planck * c_light / (345. * nm),
+      optPhotMinE_,                      
+      h_Planck * c_light / (280. * nm),  h_Planck * c_light / (301. * nm),
+      h_Planck * c_light / (316. * nm),  h_Planck * c_light / (331. * nm),
+      h_Planck * c_light / (336. * nm),  h_Planck * c_light / (341. * nm),
+      h_Planck * c_light / (345. * nm),  h_Planck * c_light / (353. * nm),
+      h_Planck * c_light / (361. * nm),  h_Planck * c_light / (370. * nm),
+      h_Planck * c_light / (378. * nm),  h_Planck * c_light / (382. * nm),
+      h_Planck * c_light / (384. * nm),  h_Planck * c_light / (387. * nm),
+      h_Planck * c_light / (394. * nm),  h_Planck * c_light / (400. * nm),
+      h_Planck * c_light / (405. * nm),  h_Planck * c_light / (412. * nm),
+      h_Planck * c_light / (418. * nm),
       optPhotMaxE_
     };
-    std::vector<G4double> WLS_absLength = {
-      noAbsLength_,  noAbsLength_,    //     , 490 nm
-      44.2  * mm,    5.39 * mm,       // 485 , 475 nm
-      0.395 * mm,    0.462 * mm,      // 454 , 443 nm
-      0.354 * mm,    0.571 * mm,      // 430 , 410 nm
-      0.612 * mm,    4.51 * mm,       // 405 , 359 nm
-      4.81  * mm,    noAbsLength_,    // 350 , 345 nm
-      noAbsLength_
+
+    float minAbsLength = 0.395 * mm;
+
+    std::vector<float> B2_absorption {
+      -0.12, -0.22, // 280, 301
+      -0.35, -0.56, // 316, 331
+      -0.77, -0.87, // 336, 341
+      -0.87, -0.85, // 345, 353
+      -0.93, -1.00, // 361, 370
+      -0.92, -0.77, // 378, 382
+      -0.64, -0.59, // 384, 387
+      -0.59, -0.44, // 394, 400
+      -0.26, -0.06, // 405, 412
+      -0.01         // 418
     };
+
+    std::vector<G4double> WLS_absLength {noAbsLength_};
+    
+    for (auto &abs_value : B2_absorption)
+      WLS_absLength.push_back(- minAbsLength / abs_value);
+
+    WLS_absLength.push_back(noAbsLength_);
+
     mpt->AddProperty("WLSABSLENGTH", WLS_abs_energy, WLS_absLength);
     //for (int i=0; i<WLS_abs_entries; i++)
     //  G4cout << "* B2 WLS absLength:  " << std::setw(8) << WLS_abs_energy[i] / eV
