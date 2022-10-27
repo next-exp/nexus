@@ -476,27 +476,6 @@ namespace materials {
     return mat;
   }
 
-  G4Material* PTP()
-  {
-    G4String name = "PTP"; // p-Terphenyl
-
-    G4Material* mat = G4Material::GetMaterial(name, false);
-
-    if (mat == 0) {
-      G4NistManager* nist = G4NistManager::Instance();
-
-      G4Element* H = nist->FindOrBuildElement("H");
-      G4Element* C = nist->FindOrBuildElement("C");
-
-      mat = new G4Material(name, 1.24*g/cm3, 2, kStateSolid);
-      mat->AddElement(H, 14);
-      mat->AddElement(C, 18);
-    }
-
-    return mat;
-  }
-
-
   G4Material* TPB()
   {
     G4String name = "TPB"; // Tetraphenyl butadiene

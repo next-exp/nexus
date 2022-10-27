@@ -59,8 +59,6 @@ namespace opticalprops {
 
   G4MaterialPropertiesTable* TPB();
 
-  G4MaterialPropertiesTable* PTP();
-
   G4MaterialPropertiesTable* DegradedTPB(G4double wls_eff);
 
   G4MaterialPropertiesTable* TPH();

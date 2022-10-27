@@ -81,9 +81,6 @@ namespace materials {
   // PS (Polystyrene)
   G4Material* PS();
 
-  // PTP (tetraphenyl butadiene)
-  G4Material* PTP();
-
   // TPB (tetraphenyl butadiene)
   G4Material* TPB();
 
