@@ -121,6 +121,9 @@ namespace materials {
   // Kuraray Fiber Y11
   G4Material* Y11();
 
+  // Kuraray Fiber B2
+  G4Material* B2();
+
   // Pethylene (cladding)
   G4Material* Pethylene();
 
