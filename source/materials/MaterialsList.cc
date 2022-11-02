@@ -795,52 +795,6 @@ namespace materials {
   }
 
 
-  // WLS EJ-280
-  G4Material* EJ280()
-  {
-    G4String name = "EJ280"; //
-
-    G4Material* mat = G4Material::GetMaterial(name, false);
-
-    if (mat == 0) {
-      G4NistManager* nist = G4NistManager::Instance();
-
-      // The base is Polyvinyltoluene
-      // Linear formula: [CH2CH(C6H4CH3)]n
-      G4Element* H = nist->FindOrBuildElement("H");
-      G4Element* C = nist->FindOrBuildElement("C");
-
-      mat = new G4Material(name, 1.023*g/cm3, 2, kStateSolid);
-      mat->AddElement(H, 10);
-      mat->AddElement(C, 9);
-    }
-
-    return mat;
-  }
-
-  // WLS EJ-286
-  G4Material* EJ286()
-  {
-    G4String name = "EJ286"; //
-
-    G4Material* mat = G4Material::GetMaterial(name, false);
-
-    if (mat == 0) {
-      G4NistManager* nist = G4NistManager::Instance();
-
-      // The base is Polyvinyltoluene
-      // Linear formula: [CH2CH(C6H4CH3)]n
-      G4Element* H = nist->FindOrBuildElement("H");
-      G4Element* C = nist->FindOrBuildElement("C");
-
-      mat = new G4Material(name, 1.023*g/cm3, 2, kStateSolid);
-      mat->AddElement(H, 10);
-      mat->AddElement(C, 9);
-    }
-
-    return mat;
-  }
-
   // Kuraray Y-11
   G4Material* Y11()
   {
