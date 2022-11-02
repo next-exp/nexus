@@ -53,7 +53,6 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
 
   cathode_int_diam_    (965. * mm),
   cathode_ext_diam_    (1020.* mm),
-
   cathode_thickn_      (13.5  * mm),
   grid_thickn_         (grid_thickn),
   cathode_mesh_diam_   (5.0*mm),
@@ -104,6 +103,7 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   el_grid_transparency_  (.90),
   max_step_size_ (1. * mm),
   visibility_ (0),
+  grid_visibility_ (0),
   verbosity_(0),
   useDielectricGrid_(0),
   // EL gap generation disk parameters
@@ -124,8 +124,9 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   msg_ = new G4GenericMessenger(this, "/Geometry/Next100/",
                                 "Control commands of geometry Next100.");
   msg_->DeclareProperty("field_cage_vis", visibility_, "Field Cage Visibility");
+  msg_->DeclareProperty("grid_vis", grid_visibility_, "Grid Visibility");
   msg_->DeclareProperty("field_cage_verbosity", verbosity_, "Field Cage Verbosity");
-  
+
   msg_->DeclareProperty("useDielectricGrid", useDielectricGrid_, "Switch on Fake Grids");
 
   G4GenericMessenger::Command& drift_transv_diff_cmd =
@@ -392,7 +393,8 @@ void Next100FieldCage::BuildCathode()
                                                                grid_thickn_));
 
   // Cathode Mesh
-  G4LogicalVolume* cathode_grid_logic;
+  G4LogicalVolume *cathode_grid_logic;
+  G4LogicalVolume *cathode_hex_logic;
 
   if (useDielectricGrid_){
 
@@ -412,29 +414,20 @@ void Next100FieldCage::BuildCathode()
   else {
       
       // Dist from centre of hex to hex vertex, excluding the land width (circumradius)
-      G4double hex_circumR = cathode_mesh_diam_/std::sqrt(3)*mm;  
+      G4double hex_circumR = cathode_mesh_diam_/std::sqrt(3);  
 
-      // Calculate the number of hexagons needed
-      G4int nHole = (G4int) (std::sqrt(2)*(cathode_int_diam_/2.0) / (cathode_mesh_diam_)*mm);
+      // Total number of hexagons that would fit side-by-side along the diameter
+      G4int nHexDiam = (G4int) ((cathode_int_diam_/2.0) / (hex_circumR)*mm);
     
-      // Define the Stainless steel mesh cylinder to subtract hex pattern from
-      G4Tubs* diel_grid_solid =
-           new G4Tubs("CATHODE_GRID", 0., cathode_int_diam_/2.0 , grid_thickn_/2., 0., twopi);
+      // Define the disk to punch hexagon holes through for the mesh
+      G4Tubs* grid_solid = new G4Tubs("CATHODE_GRID", 0., cathode_int_diam_/2.0 , grid_thickn_/2., 0., twopi);
+      cathode_grid_logic = new G4LogicalVolume(grid_solid, steel_, "Cathode_Mesh_Logic");
 
       // Define a hexagonal prism
       G4ExtrudedSolid* HexPrism = HexCreator->CreateHexagon(grid_thickn_, hex_circumR);
+      cathode_hex_logic  = new G4LogicalVolume(HexPrism, gas_, "Mesh_Hex_Gas");
 
-      // Create the hexagonal mesh
-      G4MultiUnion* MeshUnion = new G4MultiUnion("UnitedMeshPattern");
-      
-      // Crate the Mesh template
-      HexCreator->CreateHexUnion(nHole, cathode_mesh_diam_, grid_thickn_, MeshUnion, HexPrism);
-    
-      // Subtract the template from the mesh cylinder
-      G4SubtractionSolid *meshS = new G4SubtractionSolid("Mesh", diel_grid_solid, MeshUnion);  
-
-      // Create the mesh logical volume
-      cathode_grid_logic = new G4LogicalVolume(meshS, steel_, "CATHODE_GRID");
+      HexCreator->PlaceHexagons(nHexDiam, cathode_mesh_diam_, grid_thickn_, cathode_grid_logic, cathode_hex_logic, cathode_int_diam_);
 
       new G4PVPlacement(0, G4ThreeVector(0., 0., cathode_zpos_), cathode_grid_logic,
                         "CATHODE_GRID", mother_logic_, false, 0, false);
@@ -465,7 +458,11 @@ void Next100FieldCage::BuildCathode()
     cathode_col.SetForceSolid(true);
     cathode_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     cathode_logic->SetVisAttributes(cathode_col);
+
   }
+
+  if (!grid_visibility_ && !useDielectricGrid_)
+    cathode_hex_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
 
   /// Verbosity
@@ -603,7 +600,8 @@ void Next100FieldCage::BuildELRegion()
     el_region->AddRootLogicalVolume(el_gap_logic);
   }
 
-  G4LogicalVolume* el_grid_logic;
+  G4LogicalVolume *el_grid_logic;
+  G4LogicalVolume *el_hex_logic;
 
   // EL Grid -- use Fake Dielectric
   if (useDielectricGrid_){
@@ -638,27 +636,23 @@ void Next100FieldCage::BuildELRegion()
     // Dist from centre of hex to hex vertex, excluding the land width (circumradius)
     G4double hex_circumR = el_mesh_diam_/std::sqrt(3)*mm;  
 
-    // Calculate the number of hexagons needed
-    G4int nHole = (G4int) (std::sqrt(2)*(gate_int_diam_/2.0) / (el_mesh_diam_)*mm);
+    // Total number of hexagons that would fit side-by-side along the diameter
+    G4int nHexDiam = (G4int) ((gate_int_diam_/2.0) / (hex_circumR)*mm);
   
-    // Define the Stainless steel mesh cylinder to subtract hex pattern from
-    G4Tubs* diel_grid_solid =
-          new G4Tubs("EL_GRID", 0., gate_int_diam_/2.0 , grid_thickn_/2., 0., twopi);
+    // Define the disk to punch hexagon holes through for the mesh
+    G4Tubs* grid_solid = new G4Tubs("EL_GRID", 0., gate_int_diam_/2.0 , grid_thickn_/2., 0., twopi);
+    el_grid_logic = new G4LogicalVolume(grid_solid, steel_, "EL_GRID");
 
     // Define a hexagonal prism
     G4ExtrudedSolid* HexPrism = HexCreator->CreateHexagon(grid_thickn_, hex_circumR);
+    el_hex_logic  = new G4LogicalVolume(HexPrism, gas_, "Mesh_Hex_Gas");
+   
+    // Place GXe hexagons in the disk to make the mesh
+    HexCreator->PlaceHexagons(nHexDiam, el_mesh_diam_, grid_thickn_, el_grid_logic, el_hex_logic, gate_int_diam_);
 
-    // Create the hexagonal mesh
-    G4MultiUnion* MeshUnion = new G4MultiUnion("UnitedMeshPattern");
-    
-    // Crate the Mesh template
-    HexCreator->CreateHexUnion(nHole, el_mesh_diam_, grid_thickn_, MeshUnion, HexPrism);
-  
-    // Subtract the template from the mesh cylinder
-    G4SubtractionSolid *meshS = new G4SubtractionSolid("Mesh", diel_grid_solid, MeshUnion);  
 
     // Create the mesh logical volume
-    el_grid_logic = new G4LogicalVolume(meshS, steel_, "EL_GRID");
+    
 
     // Create a rotation vector to change the orientation of the mesh
     CLHEP::HepRotationZ Roty(el_mesh_rot_);
@@ -713,6 +707,10 @@ void Next100FieldCage::BuildELRegion()
     el_gap_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     el_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
+
+  if (!grid_visibility_)
+    el_hex_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+  
   G4VisAttributes grey = nexus::DarkGrey();
   grey.SetForceSolid(true);
   gate_logic->SetVisAttributes(grey);

@@ -10,7 +10,7 @@
 #define HEXAGON_MESH_TOOLS_H
 
 #include <G4ExtrudedSolid.hh>
-#include <G4MultiUnion.hh>
+#include <G4VPhysicalVolume.hh>
 
 namespace nexus {
 
@@ -24,8 +24,8 @@ namespace nexus {
     /// Construct a hexagon with a given thickness
     G4ExtrudedSolid* CreateHexagon(G4double Thickness, G4double circumradius);
 
-    /// Create a union of hexagons
-    void CreateHexUnion(G4int nHole, G4double InRadius, G4double Thickness, G4MultiUnion* MeshUnion, G4ExtrudedSolid* hexagon);
+    /// Place hexagons inside a disk to create a mesh
+    void PlaceHexagons(G4int nHole, G4double InRadius, G4double Thickness, G4LogicalVolume* DiskLogical, G4LogicalVolume* HexLogical, G4double Mesh_D);
 
   private:
     /// Default constructor is hidden

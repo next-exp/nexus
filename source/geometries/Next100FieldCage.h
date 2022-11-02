@@ -79,6 +79,7 @@ namespace nexus {
 
     // Visibility of the geometry
     G4bool visibility_;
+    G4bool grid_visibility_;
     // Verbosity of the geometry
     G4bool verbosity_;
 
