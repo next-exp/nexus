@@ -27,20 +27,20 @@ using namespace nexus;
 
 
 GenericWLSFiber::GenericWLSFiber(G4String    name,
-                                 G4String    shape,
+                                 G4bool      isround,
                                  G4double    thickness,
                                  G4double    length,
-                                 G4int       num_claddings,
+                                 G4bool      doubleclad,
                                  G4bool      with_coating,
                                  G4Material* coating_mat,
                                  G4Material* core_mat,
                                  G4bool      visibility):
   GeometryBase    (),
   name_           (name),
-  shape_          (shape),         // "round"  or "square"
+  isround_        (isround),         // "round"  or "square"
   thickness_      (thickness),     // Diameter (for round), Side (for square)
   length_         (length),
-  num_claddings_  (num_claddings),
+  doubleclad_     (doubleclad),
   with_coating_   (with_coating),
   coating_mat_    (coating_mat),
   coating_optProp_(nullptr),
@@ -48,15 +48,6 @@ GenericWLSFiber::GenericWLSFiber(G4String    name,
   core_optProp_   (nullptr),
   visibility_     (visibility)
 {
-  // Assert num_claddings in [1, 2]
-  if ((num_claddings_ < 1) || (num_claddings_ > 2))
-    G4Exception("[GenericWLSFiber]", "GenericWLSFiber()", FatalException,
-                "Number of claddings not valid.");
-
-  // Assert shape in ['round', 'square']
-  if ((shape_ != "round") && (shape_ != "square"))
-       G4Exception("[GenericWLSFiber]", "GenericWLSFiber()", FatalException,
-                   "Wrong shape. Valid shapes: round or square.");
 }
 
 
@@ -75,14 +66,14 @@ void GenericWLSFiber::ComputeDimensions()
   G4double coating_thickness = 1. * um;
 
   // Single cladding fibers
-  if (num_claddings_ == 1) {
+  if (!doubleclad_) {
     iclad_rad_ = thickness_ / 2.;
     core_rad_  = iclad_rad_ - clad_thickness;
     if (with_coating_) iclad_rad_ -= coating_thickness;
   }
 
   // Double cladding fibers
-  else if (num_claddings_ == 2) {
+  else {
     oclad_rad_ = thickness_ / 2.;
     iclad_rad_ = oclad_rad_ - clad_thickness;
     core_rad_  = iclad_rad_ - clad_thickness;
@@ -101,7 +92,7 @@ void GenericWLSFiber::DefineMaterials()
   iclad_mat_->SetMaterialPropertiesTable(opticalprops::PMMA());
 
   // If 2 claddings, defining the outer cladding material
-  if (num_claddings_ == 2) {
+  if (doubleclad_) {
     oclad_mat_ = materials::FPethylene();
     oclad_mat_->SetMaterialPropertiesTable(opticalprops::FPethylene());
   }
@@ -124,8 +115,8 @@ void GenericWLSFiber::Construct()
 
   DefineMaterials();
 
-  if      (shape_ == "round")  BuildRoundFiber();
-  else if (shape_ == "square") BuildSquareFiber();
+  if (isround_)  BuildRoundFiber();
+  else           BuildSquareFiber();
 }
 
 
@@ -157,7 +148,7 @@ void GenericWLSFiber::BuildRoundFiber()
 
   // Outer Cladding (only if it exists ...)
   G4LogicalVolume* oclad_logic;
-  if (num_claddings_ == 2) {
+  if (doubleclad_) {
     G4String oclad_name = name_ + "_OCLAD";
     G4cout << "**** Building OCLAD " << oclad_name << G4endl;
     G4Tubs* oclad_solid =
@@ -199,7 +190,7 @@ void GenericWLSFiber::BuildRoundFiber()
 
   // VISIBILITIES
   if (visibility_) {
-    if (num_claddings_ == 2)
+    if (doubleclad_)
       oclad_logic->SetVisAttributes(nexus::LightBlue());
     iclad_logic  ->SetVisAttributes(nexus::LightGrey());
     core_logic   ->SetVisAttributes(G4Colour::Green());
@@ -208,7 +199,7 @@ void GenericWLSFiber::BuildRoundFiber()
 
   }
   else {
-    if (num_claddings_ == 2)
+    if (doubleclad_)
       oclad_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     iclad_logic  ->SetVisAttributes(G4VisAttributes::GetInvisible());
     core_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
@@ -249,7 +240,7 @@ void GenericWLSFiber::BuildSquareFiber()
 
   // Outer Cladding (only if it exists ...)
   G4LogicalVolume* oclad_logic;
-  if (num_claddings_ == 2) {
+  if (doubleclad_) {
     G4String oclad_name = name_ + "_OCLAD";
     G4Box* oclad_solid =
       new G4Box(oclad_name, oclad_rad_, oclad_rad_, length_/2.);
@@ -288,7 +279,7 @@ void GenericWLSFiber::BuildSquareFiber()
 
   // VISIBILITIES
   if (visibility_) {
-    if (num_claddings_ == 2)
+    if (doubleclad_)
       oclad_logic->SetVisAttributes(nexus::LightBlue());
     iclad_logic  ->SetVisAttributes(nexus::LightGrey());
     core_logic   ->SetVisAttributes(G4Colour::Green());
@@ -297,7 +288,7 @@ void GenericWLSFiber::BuildSquareFiber()
 
   }
   else {
-    if (num_claddings_ == 2)
+    if (doubleclad_)
       oclad_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     iclad_logic  ->SetVisAttributes(G4VisAttributes::GetInvisible());
     core_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
