@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
 //  nexus | GenericWLSFiber.cc
 //
-//  Geometry of a configurable wave-length shifting optical fiber.
+//  Geometry of a configurable wavelength shifting optical fiber.
 //
 //  The NEXT Collaboration
 // -----------------------------------------------------------------------------
@@ -32,6 +32,7 @@ GenericWLSFiber::GenericWLSFiber(G4String    name,
                                  G4double    length,
                                  G4int       num_claddings,
                                  G4bool      with_coating,
+                                 G4Material* coating_mat,
                                  G4Material* core_mat,
                                  G4bool      visibility):
   GeometryBase    (),
@@ -41,7 +42,10 @@ GenericWLSFiber::GenericWLSFiber(G4String    name,
   length_         (length),
   num_claddings_  (num_claddings),
   with_coating_   (with_coating),
+  coating_mat_    (coating_mat),
+  coating_optProp_(nullptr),
   core_mat_       (core_mat),
+  core_optProp_   (nullptr),
   visibility_     (visibility)
 {
   // Assert num_claddings in [1, 2]
@@ -102,10 +106,14 @@ void GenericWLSFiber::DefineMaterials()
     oclad_mat_->SetMaterialPropertiesTable(opticalprops::FPethylene());
   }
 
-  // If coated, always with TPB
-  if (with_coating_) {
-    coating_mat_ = materials::TPB();
-    coating_mat_->SetMaterialPropertiesTable(opticalprops::TPB());
+  // If optical properties of coating are set explicitly, use them
+  if (with_coating_ && coating_optProp_) {
+    coating_mat_->SetMaterialPropertiesTable(coating_optProp_);
+  }
+
+  // If optical properties of core are set explicitly, use them
+  if (core_optProp_) {
+    core_mat_->SetMaterialPropertiesTable(core_optProp_);
   }
 }
 

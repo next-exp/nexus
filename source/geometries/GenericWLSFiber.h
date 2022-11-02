@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
 //  nexus | GenericWLSFiber.h
 //
-//  Geometry of a configurable wave-length shifting optical fiber.
+//  Geometry of a configurable wavelength shifting optical fiber.
 //
 //  The NEXT Collaboration
 // -----------------------------------------------------------------------------
@@ -22,13 +22,14 @@ namespace nexus {
   {
 
   public:
-    // Constructor for a generic wave-length shifting optical fiber
+    // Constructor for a generic wavelength shifting optical fiber
     GenericWLSFiber(G4String    name,
                     G4String    shape,            // "round"  or "square"
                     G4double    thickness,        // diameter or side
                     G4double    length,
                     G4int       num_claddings,
                     G4bool      with_coating,
+                    G4Material* coating_material,
                     G4Material* core_material,
                     G4bool      visibility);
 
@@ -44,6 +45,9 @@ namespace nexus {
     G4double        GetThickness()     const;
     G4double        GetLength()        const;
     G4int           GetNumCladdings()  const;
+
+    void SetCoatingOpticalProperties(G4MaterialPropertiesTable* ctmp);
+    void SetCoreOpticalProperties(G4MaterialPropertiesTable* crmp);
 
     // Setters
     void SetVisibility(G4bool visibility);
@@ -67,7 +71,9 @@ namespace nexus {
     G4Material* core_mat_;
     G4Material* iclad_mat_;
     G4Material* oclad_mat_;
-    G4Material* coating_mat_;    
+    G4Material* coating_mat_;
+    G4MaterialPropertiesTable* coating_optProp_;
+    G4MaterialPropertiesTable* core_optProp_;
 
     G4bool      visibility_;
   };
@@ -81,6 +87,10 @@ namespace nexus {
 
   inline void GenericWLSFiber::SetVisibility(G4bool visibility)
   { visibility_ = visibility; }
+  inline void GenericWLSFiber::SetCoatingOpticalProperties(G4MaterialPropertiesTable* ctmp)
+  { coating_optProp_ = ctmp; }
+  inline void GenericWLSFiber::SetCoreOpticalProperties(G4MaterialPropertiesTable* crmp)
+  { core_optProp_ = crmp; }
 
 } // namespace nexus
 
