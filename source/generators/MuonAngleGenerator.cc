@@ -112,6 +112,10 @@ void MuonAngleGenerator::LoadMuonDistribution()
   std::string s_azimuth_smear, s_zenith_smear, s_energy_smear;
   std::vector<G4double> EnergyRange;
 
+  // Max and min energies in sampled file
+  G4double file_emin = 1.0e20;
+  G4double file_emax = 0.;
+
   // Loop over the lines in the file and add the values to a vector
   while (fin.peek()!=EOF) {
 
@@ -156,14 +160,22 @@ void MuonAngleGenerator::LoadMuonDistribution()
       std::getline(fin, s_energy, '\n');
       
       if (s_header == "energy"){
-        EnergyRange.push_back(stod(s_energy));
+        
+        G4double E = stod(s_energy);
+        
+        EnergyRange.push_back(E);
+
+        // Get the max and min values from the file
+        if (E < file_emin) file_emin = E;
+        if (E > file_emax) file_emax = E;
+
       }
     
     }
   }
 
   // Check if the specified energy range has been set to a suitable value
-  if (dist_name_ == "zae" && (energy_min_ < EnergyRange.front()*GeV || energy_max_ > EnergyRange.back()*GeV )){
+  if (dist_name_ == "zae" && (energy_min_ < file_emin*GeV || energy_max_ > file_emax*GeV )){
     std::cout << "The minimum energy allowed is: " << EnergyRange.front()*GeV/1000 << " GeV"<< std::endl;
     std::cout << "The maximum energy allowed is: " << EnergyRange.back()*GeV/1000 << " GeV" << std::endl;
     G4Exception("[MuonAngleGenerator]", "LoadMuonDistribution()",
@@ -299,11 +311,6 @@ void MuonAngleGenerator::GetDirection(G4ThreeVector& dir, G4double& zenith, G4do
       energy   = (energies_[RN_indx]*GeV  + G4RandGauss::shoot( 0., energy_smear_[RN_indx]*GeV));
       kinetic_energy = energy - mass;
 
-      // Resample if the energy is not in the specified range
-      if (energy < energy_min_ || energy > energy_max_){
-        invalid_evt = true;
-        continue;
-      }
     }
 
     // Catch negative value and resample if so
