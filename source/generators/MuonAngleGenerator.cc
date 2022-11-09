@@ -110,6 +110,11 @@ void MuonAngleGenerator::LoadMuonDistribution()
   // Read the Data from the file as strings
   std::string s_header, s_flux, s_azimuth, s_zenith, s_energy;
   std::string s_azimuth_smear, s_zenith_smear, s_energy_smear;
+  std::vector<G4double> EnergyRange;
+
+  // Max and min energies in sampled file
+  G4double file_emin = 1.0e20;
+  G4double file_emax = 0.;
 
   // Loop over the lines in the file and add the values to a vector
   while (fin.peek()!=EOF) {
@@ -149,8 +154,34 @@ void MuonAngleGenerator::LoadMuonDistribution()
       energy_smear_.push_back(stod(s_energy_smear));
     }
 
+    // Get the max and min energies allowed to sample from 
+    if (s_header != "value" && dist_name_ == "zae"){
+      
+      std::getline(fin, s_energy, '\n');
+      
+      if (s_header == "energy"){
+        
+        G4double E = stod(s_energy);
+        
+        EnergyRange.push_back(E);
+
+        // Get the max and min values from the file
+        if (E < file_emin) file_emin = E;
+        if (E > file_emax) file_emax = E;
+
+      }
+    
+    }
   }
 
+  // Check if the specified energy range has been set to a suitable value
+  if (dist_name_ == "zae" && (energy_min_ < file_emin*GeV || energy_max_ > file_emax*GeV )){
+    std::cout << "The minimum energy allowed is: " << file_emin*GeV/1000 << " GeV"<< std::endl;
+    std::cout << "The maximum energy allowed is: " << file_emax*GeV/1000 << " GeV" << std::endl;
+    G4Exception("[MuonAngleGenerator]", "LoadMuonDistribution()",
+              FatalException, " Specified energy range for sampling is outside permitted range or min_energy/max_energy has not been set");
+    
+  }
 
   // Convert flux vector to arr
   G4double arr_flux[flux_.size()];
@@ -280,16 +311,13 @@ void MuonAngleGenerator::GetDirection(G4ThreeVector& dir, G4double& zenith, G4do
       energy   = (energies_[RN_indx]*GeV  + G4RandGauss::shoot( 0., energy_smear_[RN_indx]*GeV));
       kinetic_energy = energy - mass;
 
-      // Resample if the energy is not in the specified range
-      if (energy < energy_min_ || energy > energy_max_){
-        invalid_evt = true;
-        continue;
-      }
     }
 
     // Catch negative value and resample if so
-    if (zenith < 0.0)
+    if (zenith < 0.0){
         invalid_evt = true;
+        continue;
+    }
     else
         invalid_evt = false;
 
