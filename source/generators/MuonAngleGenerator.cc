@@ -176,8 +176,8 @@ void MuonAngleGenerator::LoadMuonDistribution()
 
   // Check if the specified energy range has been set to a suitable value
   if (dist_name_ == "zae" && (energy_min_ < file_emin*GeV || energy_max_ > file_emax*GeV )){
-    std::cout << "The minimum energy allowed is: " << EnergyRange.front()*GeV/1000 << " GeV"<< std::endl;
-    std::cout << "The maximum energy allowed is: " << EnergyRange.back()*GeV/1000 << " GeV" << std::endl;
+    std::cout << "The minimum energy allowed is: " << file_emin*GeV/1000 << " GeV"<< std::endl;
+    std::cout << "The maximum energy allowed is: " << file_emax*GeV/1000 << " GeV" << std::endl;
     G4Exception("[MuonAngleGenerator]", "LoadMuonDistribution()",
               FatalException, " Specified energy range for sampling is outside permitted range or min_energy/max_energy has not been set");
     
@@ -314,8 +314,10 @@ void MuonAngleGenerator::GetDirection(G4ThreeVector& dir, G4double& zenith, G4do
     }
 
     // Catch negative value and resample if so
-    if (zenith < 0.0)
+    if (zenith < 0.0){
         invalid_evt = true;
+        continue;
+    }
     else
         invalid_evt = false;
 
