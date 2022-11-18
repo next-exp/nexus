@@ -921,12 +921,12 @@ namespace opticalprops {
     // Then, we scale accordingly to the absorption spectrum (which is in a.u.).
     std::vector<G4double> WLS_abs_energy = {
       optPhotMinE_,
-      h_Planck * c_light / (169. * nm),  h_Planck * c_light / (175. * nm),
-      h_Planck * c_light / (190. * nm),  h_Planck * c_light / (204. * nm),
-      h_Planck * c_light / (222. * nm),  h_Planck * c_light / (238. * nm),
-      h_Planck * c_light / (253. * nm),  h_Planck * c_light / (276. * nm),
-      h_Planck * c_light / (292. * nm),  h_Planck * c_light / (318. * nm),
       h_Planck * c_light / (337. * nm),
+      h_Planck * c_light / (318. * nm), h_Planck * c_light / (292. * nm),
+      h_Planck * c_light / (276. * nm), h_Planck * c_light / (253. * nm),
+      h_Planck * c_light / (238. * nm), h_Planck * c_light / (222. * nm),
+      h_Planck * c_light / (204. * nm), h_Planck * c_light / (190. * nm),
+      h_Planck * c_light / (175. * nm), h_Planck * c_light / (169. * nm),
       optPhotMaxE_
     };
 
@@ -934,12 +934,12 @@ namespace opticalprops {
     float XePeakAbsLength = 21 * nm;
 
     std::vector<float> PTP_absorption = {
-      1.803, 1.879, // 169, 175
-      1.716, 1.429, // 190, 204
-      1.858, 1.218, // 222, 238
-      0.540, 0.949, // 253, 276
-      0.414, 0.174, // 292, 318
       0.002, // 337
+      0.174, 0.414, // 318, 292
+      0.949, 0.540, // 276, 253
+      1.218, 1.858, // 238, 222
+      1.429, 1.716, // 204, 190
+      1.879, 1.803, // 175, 169
     };
 
     std::vector<G4double> WLS_absLength = {noAbsLength_};
@@ -957,21 +957,21 @@ namespace opticalprops {
     // WLS EMISSION SPECTRUM
     std::vector<G4double> WLS_emi_energy = {
       optPhotMinE_,
-      h_Planck * c_light / (317. * nm),  h_Planck * c_light / (336. * nm),
-      h_Planck * c_light / (354. * nm),  h_Planck * c_light / (361. * nm),
-      h_Planck * c_light / (371. * nm),  h_Planck * c_light / (385. * nm),
-      h_Planck * c_light / (398. * nm),  h_Planck * c_light / (412. * nm),
-      h_Planck * c_light / (430. * nm),  h_Planck * c_light / (452. * nm),
+      h_Planck * c_light / (452. * nm), h_Planck * c_light / (430. * nm),
+      h_Planck * c_light / (412. * nm), h_Planck * c_light / (398. * nm),
+      h_Planck * c_light / (385. * nm), h_Planck * c_light / (371. * nm),
+      h_Planck * c_light / (361. * nm), h_Planck * c_light / (354. * nm),
+      h_Planck * c_light / (336. * nm), h_Planck * c_light / (317. * nm),
       optPhotMaxE_
     };
 
     std::vector<G4double> WLS_emiSpectrum = {
       0.,
-      0.022, 0.173,
-      0.421, 0.745,
-      0.993, 0.849,
-      0.514, 0.351,
-      0.179, 0.044,
+      0.044, 0.179,
+      0.351, 0.514,
+      0.849, 0.993,
+      0.745, 0.421,
+      0.173, 0.022,
       0.
     };
 
