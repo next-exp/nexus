@@ -911,22 +911,22 @@ namespace opticalprops {
 
     // WLS ABSORPTION LENGTH
     // There are no tabulated values in the literature for the PTP absorption
-    // length as a function of the wavelength. 
+    // length as a function of the wavelength.
     // However in https://iopscience.iop.org/article/10.1088/1748-0221/5/04/P04007/
-    // it says that "the thickness >=150 nm of a polycrystalline p-terphenyl layer 
+    // it says that "the thickness >=150 nm of a polycrystalline p-terphenyl layer
     // is enough for absorption of >=99.9% of the xenon light". Thus, using the
-    // Beer-Lambert law 1 - P = e^(-x/lambda), where lambda is the absorption length 
-    // and P is the absorption probability, we can place an upper limit of 21 nm 
-    // on the absorption length at 175 nm. This is reasonably close to the TPB value. 
+    // Beer-Lambert law 1 - P = e^(-x/lambda), where lambda is the absorption length
+    // and P is the absorption probability, we can place an upper limit of 21 nm
+    // on the absorption length at 175 nm. This is reasonably close to the TPB value.
     // Then, we scale accordingly to the absorption spectrum (which is in a.u.).
     std::vector<G4double> WLS_abs_energy = {
       optPhotMinE_,
-      h_Planck * c_light / (169. * nm),  h_Planck * c_light / (175. * nm),
-      h_Planck * c_light / (190. * nm),  h_Planck * c_light / (204. * nm),  
-      h_Planck * c_light / (222. * nm),  h_Planck * c_light / (238. * nm),  
-      h_Planck * c_light / (253. * nm),  h_Planck * c_light / (276. * nm),  
-      h_Planck * c_light / (292. * nm),  h_Planck * c_light / (318. * nm),  
-      h_Planck * c_light / (337. * nm), 
+      h_Planck * c_light / (337. * nm),
+      h_Planck * c_light / (318. * nm), h_Planck * c_light / (292. * nm),
+      h_Planck * c_light / (276. * nm), h_Planck * c_light / (253. * nm),
+      h_Planck * c_light / (238. * nm), h_Planck * c_light / (222. * nm),
+      h_Planck * c_light / (204. * nm), h_Planck * c_light / (190. * nm),
+      h_Planck * c_light / (175. * nm), h_Planck * c_light / (169. * nm),
       optPhotMaxE_
     };
 
@@ -934,12 +934,12 @@ namespace opticalprops {
     float XePeakAbsLength = 21 * nm;
 
     std::vector<float> PTP_absorption = {
-      1.803, 1.879, // 169, 175
-      1.716, 1.429, // 190, 204
-      1.858, 1.218, // 222, 238
-      0.540, 0.949, // 253, 276
-      0.414, 0.174, // 292, 318
       0.002, // 337
+      0.174, 0.414, // 318, 292
+      0.949, 0.540, // 276, 253
+      1.218, 1.858, // 238, 222
+      1.429, 1.716, // 204, 190
+      1.879, 1.803, // 175, 169
     };
 
     std::vector<G4double> WLS_absLength = {noAbsLength_};
@@ -953,25 +953,25 @@ namespace opticalprops {
     //         << " eV  ==  " << std::setw(8) << (h_Planck * c_light / WLS_abs_energy[i]) / nm
     //         << " nm  ->  " << std::setw(6) << WLS_absLength[i] / nm << " nm" << G4endl;
     mpt->AddProperty("WLSABSLENGTH", WLS_abs_energy, WLS_absLength);
-  
+
     // WLS EMISSION SPECTRUM
     std::vector<G4double> WLS_emi_energy = {
       optPhotMinE_,
-      h_Planck * c_light / (317. * nm),  h_Planck * c_light / (336. * nm),
-      h_Planck * c_light / (354. * nm),  h_Planck * c_light / (361. * nm),  
-      h_Planck * c_light / (371. * nm),  h_Planck * c_light / (385. * nm),  
-      h_Planck * c_light / (398. * nm),  h_Planck * c_light / (412. * nm),  
-      h_Planck * c_light / (430. * nm),  h_Planck * c_light / (452. * nm),
+      h_Planck * c_light / (452. * nm), h_Planck * c_light / (430. * nm),
+      h_Planck * c_light / (412. * nm), h_Planck * c_light / (398. * nm),
+      h_Planck * c_light / (385. * nm), h_Planck * c_light / (371. * nm),
+      h_Planck * c_light / (361. * nm), h_Planck * c_light / (354. * nm),
+      h_Planck * c_light / (336. * nm), h_Planck * c_light / (317. * nm),
       optPhotMaxE_
     };
 
     std::vector<G4double> WLS_emiSpectrum = {
-      0., 
-      0.022, 0.173,
-      0.421, 0.745,
-      0.993, 0.849,
-      0.514, 0.351,
-      0.179, 0.044,
+      0.,
+      0.044, 0.179,
+      0.351, 0.514,
+      0.849, 0.993,
+      0.745, 0.421,
+      0.173, 0.022,
       0.
     };
 
@@ -1415,99 +1415,96 @@ namespace opticalprops {
 
     // WLS ABSORPTION LENGTH
     // For B2 fibers Kuraray provides absorption spectrum and not
-    // absorption length. We assume that the absorption length at the 
+    // absorption length. We assume that the absorption length at the
     // absorption maximum is the same as with the Y11 fiber and
     // scale according to the absorption spectrum. This is not perfect
     // but it was verified to be a good approximation with the Y11 fiber,
     // for which Kuraray did provide the absorption length.
 
     std::vector<G4double> WLS_abs_energy = {
-      optPhotMinE_,                      
-      h_Planck * c_light / (280. * nm),  h_Planck * c_light / (301. * nm),
-      h_Planck * c_light / (316. * nm),  h_Planck * c_light / (331. * nm),
-      h_Planck * c_light / (336. * nm),  h_Planck * c_light / (341. * nm),
-      h_Planck * c_light / (345. * nm),  h_Planck * c_light / (353. * nm),
-      h_Planck * c_light / (361. * nm),  h_Planck * c_light / (370. * nm),
-      h_Planck * c_light / (378. * nm),  h_Planck * c_light / (382. * nm),
-      h_Planck * c_light / (384. * nm),  h_Planck * c_light / (387. * nm),
-      h_Planck * c_light / (394. * nm),  h_Planck * c_light / (400. * nm),
-      h_Planck * c_light / (405. * nm),  h_Planck * c_light / (412. * nm),
-      h_Planck * c_light / (418. * nm),
+      optPhotMinE_,
+      h_Planck * c_light / (418. * nm), h_Planck * c_light / (412. * nm),
+      h_Planck * c_light / (405. * nm), h_Planck * c_light / (400. * nm),
+      h_Planck * c_light / (394. * nm), h_Planck * c_light / (387. * nm),
+      h_Planck * c_light / (384. * nm), h_Planck * c_light / (382. * nm),
+      h_Planck * c_light / (378. * nm), h_Planck * c_light / (370. * nm),
+      h_Planck * c_light / (361. * nm), h_Planck * c_light / (353. * nm),
+      h_Planck * c_light / (345. * nm), h_Planck * c_light / (341. * nm),
+      h_Planck * c_light / (336. * nm), h_Planck * c_light / (331. * nm),
+      h_Planck * c_light / (316. * nm), h_Planck * c_light / (301. * nm),
+      h_Planck * c_light / (280. * nm),
       optPhotMaxE_
     };
 
     float minAbsLength = 0.395 * mm;
 
     std::vector<float> B2_absorption {
-      -0.12, -0.22, // 280, 301
-      -0.35, -0.56, // 316, 331
-      -0.77, -0.87, // 336, 341
-      -0.87, -0.85, // 345, 353
-      -0.93, -1.00, // 361, 370
-      -0.92, -0.77, // 378, 382
-      -0.64, -0.59, // 384, 387
-      -0.59, -0.44, // 394, 400
-      -0.26, -0.06, // 405, 412
       -0.01         // 418
+      -0.06, -0.26, // 405, 412
+      -0.44, -0.59, // 394, 400
+      -0.59, -0.64, // 384, 387
+      -0.77, -0.92, // 378, 382
+      -1.00, -0.93, // 361, 370
+      -0.85, -0.87, // 345, 353
+      -0.87, -0.77, // 336, 341
+      -0.56, -0.35, // 316, 331
+      -0.22, -0.12  // 280, 301
     };
 
     std::vector<G4double> WLS_absLength {noAbsLength_};
-    
+
     for (auto &abs_value : B2_absorption)
       WLS_absLength.push_back(- minAbsLength / abs_value);
 
     WLS_absLength.push_back(noAbsLength_);
 
     mpt->AddProperty("WLSABSLENGTH", WLS_abs_energy, WLS_absLength);
-    //for (int i=0; i<WLS_abs_entries; i++)
-    //  G4cout << "* B2 WLS absLength:  " << std::setw(8) << WLS_abs_energy[i] / eV
-    //         << " eV  ==  " << std::setw(8) << (h_Planck * c_light / WLS_abs_energy[i]) / nm
-    //         << " nm  ->  " << std::setw(6) << WLS_absLength[i] / mm << " mm" << G4endl;
 
     // WLS EMISSION SPECTRUM
     std::vector<G4double> WLS_emi_energy = {
       optPhotMinE_,
-      h_Planck * c_light / (380 * nm), h_Planck * c_light / (386 * nm),
-      h_Planck * c_light / (391 * nm), h_Planck * c_light / (392 * nm),
-      h_Planck * c_light / (394 * nm), h_Planck * c_light / (395 * nm),
-      h_Planck * c_light / (396 * nm), h_Planck * c_light / (398 * nm),
-      h_Planck * c_light / (399 * nm), h_Planck * c_light / (402 * nm),
-      h_Planck * c_light / (404 * nm), h_Planck * c_light / (411 * nm),
-      h_Planck * c_light / (416 * nm), h_Planck * c_light / (418 * nm),
-      h_Planck * c_light / (420 * nm), h_Planck * c_light / (424 * nm),
-      h_Planck * c_light / (429 * nm), h_Planck * c_light / (433 * nm),
-      h_Planck * c_light / (438 * nm), h_Planck * c_light / (440 * nm),
-      h_Planck * c_light / (442 * nm), h_Planck * c_light / (445 * nm),
-      h_Planck * c_light / (449 * nm), h_Planck * c_light / (454 * nm),
-      h_Planck * c_light / (458 * nm), h_Planck * c_light / (463 * nm),
-      h_Planck * c_light / (467 * nm), h_Planck * c_light / (473 * nm),
-      h_Planck * c_light / (479 * nm), h_Planck * c_light / (488 * nm),
-      h_Planck * c_light / (497 * nm), h_Planck * c_light / (508 * nm),
-      h_Planck * c_light / (525 * nm), h_Planck * c_light / (542 * nm),
+      h_Planck * c_light / (542 * nm), h_Planck * c_light / (525 * nm),
+      h_Planck * c_light / (508 * nm), h_Planck * c_light / (497 * nm),
+      h_Planck * c_light / (488 * nm), h_Planck * c_light / (479 * nm),
+      h_Planck * c_light / (473 * nm), h_Planck * c_light / (467 * nm),
+      h_Planck * c_light / (463 * nm), h_Planck * c_light / (458 * nm),
+      h_Planck * c_light / (454 * nm), h_Planck * c_light / (449 * nm),
+      h_Planck * c_light / (445 * nm), h_Planck * c_light / (442 * nm),
+      h_Planck * c_light / (440 * nm), h_Planck * c_light / (438 * nm),
+      h_Planck * c_light / (433 * nm), h_Planck * c_light / (429 * nm),
+      h_Planck * c_light / (424 * nm), h_Planck * c_light / (420 * nm),
+      h_Planck * c_light / (418 * nm), h_Planck * c_light / (416 * nm),
+      h_Planck * c_light / (411 * nm), h_Planck * c_light / (404 * nm),
+      h_Planck * c_light / (402 * nm), h_Planck * c_light / (399 * nm),
+      h_Planck * c_light / (398 * nm), h_Planck * c_light / (396 * nm),
+      h_Planck * c_light / (395 * nm), h_Planck * c_light / (394 * nm),
+      h_Planck * c_light / (392 * nm), h_Planck * c_light / (391 * nm),
+      h_Planck * c_light / (386 * nm), h_Planck * c_light / (380 * nm),
       optPhotMaxE_
     };
 
     std::vector<G4double> WLS_emiSpectrum = {
       0.000,
-      0.023, 0.065,   // 380, 386 nm
-      0.138, 0.217,   // 391, 392 nm
-      0.327, 0.421,   // 394, 395 nm
-      0.500, 0.590,   // 396, 398 nm
-      0.671, 0.719,   // 399, 402 nm
-      0.750, 0.750,   // 404, 411 nm
-      0.809, 0.855,   // 416, 418 nm
-      0.906, 0.949,   // 420, 424 nm
-      0.999, 0.957,   // 429, 433 nm
-      0.857, 0.801,   // 438, 440 nm
-      0.750, 0.679,   // 442, 445 nm
-      0.645, 0.615,   // 449, 454 nm
-      0.582, 0.497,   // 458, 463 nm
-      0.423, 0.337,   // 467, 473 nm
-      0.270, 0.199,   // 479, 488 nm
-      0.143, 0.109,   // 497, 508 nm
-      0.070, 0.053,   // 525, 542 nm
+      0.053, 0.070, // 542, 525
+      0.109, 0.143, // 508, 497
+      0.199, 0.270, // 488, 479
+      0.337, 0.423, // 473, 467
+      0.497, 0.582, // 463, 458
+      0.615, 0.645, // 454, 449
+      0.679, 0.750, // 445, 442
+      0.801, 0.857, // 440, 438
+      0.957, 0.999, // 433, 429
+      0.949, 0.906, // 424, 420
+      0.855, 0.809, // 418, 416
+      0.750, 0.750, // 411, 404
+      0.719, 0.671, // 402, 399
+      0.590, 0.500, // 398, 396
+      0.421, 0.327, // 395, 394
+      0.217, 0.138, // 392, 391
+      0.065, 0.023, // 386, 380
       0.000
     };
+
     mpt->AddProperty("WLSCOMPONENT",  WLS_emi_energy, WLS_emiSpectrum);
 
     // WLS Delay
