@@ -1439,7 +1439,7 @@ namespace opticalprops {
     float minAbsLength = 0.395 * mm;
 
     std::vector<float> B2_absorption {
-      -0.01         // 418
+      -0.01,        // 418
       -0.06, -0.26, // 405, 412
       -0.44, -0.59, // 394, 400
       -0.59, -0.64, // 384, 387
