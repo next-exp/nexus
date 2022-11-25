@@ -64,7 +64,7 @@ void SaveAllSteppingAction::UserSteppingAction(const G4Step* step)
   G4ThreeVector initial_pos = pre ->GetPosition();
   G4ThreeVector   final_pos = post->GetPosition();
 
-  if (! post->GetTouchableHandle()->GetVolume()) return; // Particle exists the world
+  if (! post->GetTouchableHandle()->GetVolume()) return; // Particle exits the world
 
   G4String initial_volume = pre ->GetTouchableHandle()->GetVolume()->GetName();
   G4String   final_volume = post->GetTouchableHandle()->GetVolume()->GetName();
