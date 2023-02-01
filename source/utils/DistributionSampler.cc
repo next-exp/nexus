@@ -20,7 +20,7 @@ namespace nexus {
 
   }
 
-  G4double DistributionSampler::Sample(G4double sample, bool smear, G4double smearval){
+  G4double DistributionSampler::Sample(G4double sample, G4bool smear, G4double smearval){
 
     // Apply Gaussian smearing to smooth from bin-to-bin
     if (smear){
@@ -36,6 +36,28 @@ namespace nexus {
 
     // Out of bounds
     if (val < min || val > max)
+      return true;
+    // In suitable bounds -- pass
+    else
+      return false;
+
+  }
+
+  G4bool DistributionSampler::CheckOutOfBoundMin(G4double min, G4double val){
+
+    // Out of bounds
+    if (val < min)
+      return true;
+    // In suitable bounds -- pass
+    else
+      return false;
+
+  }
+
+  G4bool DistributionSampler::CheckOutOfBoundMax(G4double max, G4double val){
+
+    // Out of bounds
+    if (val > max)
       return true;
     // In suitable bounds -- pass
     else

@@ -14,6 +14,9 @@
 #include <G4RotationMatrix.hh>
 #include <Randomize.hh>
 
+#include "FileReaderCSV.h"
+#include "DistributionSampler.h"
+
 class G4GenericMessenger;
 class G4Event;
 class G4ParticleDefinition;
@@ -23,6 +26,9 @@ class G4VSolid;
 namespace nexus {
 
   class GeometryBase;
+  class FileReaderCSV;
+  class DistributionSampler;
+
 
   class MuonAngleGenerator: public G4VPrimaryGenerator
   {
@@ -87,6 +93,9 @@ namespace nexus {
     std::vector<G4double> zenith_smear_;  ///< List of Zenith bin smear values
     std::vector<G4double> energy_smear_;  ///< List of Energy bin smear values
     G4RandGeneral *fRandomGeneral_; ///< Pointer to the RNG flux distribution
+
+    FileReaderCSV *CSV_Reader_;
+    DistributionSampler *Dist_Sampler_;
   };
 
 } // end namespace nexus

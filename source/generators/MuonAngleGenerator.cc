@@ -81,15 +81,7 @@ MuonAngleGenerator::~MuonAngleGenerator()
 
 void MuonAngleGenerator::LoadMuonDistribution()
 {
-
-  // File pointer
-  std::ifstream fin(ang_file_);
-
-  // Check if file has opened properly
-  if (!fin.is_open() && angular_generation_){
-    G4Exception("[MuonAngleGenerator]", "LoadMuonDistribution()",
-                FatalException, " could not read in the input muon distributions from CSV file ");
-  }
+  
 
   // Check the input filename for the keyword Energy
   size_t found = ang_file_.find("Energy");
@@ -107,80 +99,16 @@ void MuonAngleGenerator::LoadMuonDistribution()
                 FatalException, " Angular file specified with angle_dist=zae option selected, use angle_dist=za ");
   }
 
-  // Read the Data from the file as strings
-  std::string s_header, s_flux, s_azimuth, s_zenith, s_energy;
-  std::string s_azimuth_smear, s_zenith_smear, s_energy_smear;
-  std::vector<G4double> EnergyRange;
+  // Load in the data from csv file depending on 2D histogram sampling or 3D
+  if (dist_name_ == "za")
+    CSV_Reader_->LoadHistData2D(ang_file_, flux_, azimuths_, zeniths_, azimuth_smear_, zenith_smear_);
 
-  // Max and min energies in sampled file
-  G4double file_emin = 1.0e20;
-  G4double file_emax = 0.;
-
-  // Loop over the lines in the file and add the values to a vector
-  while (fin.peek()!=EOF) {
-
-    std::getline(fin, s_header, ',');
-
-    // Angle input only
-    if (s_header == "value" && dist_name_ == "za"){
-      std::getline(fin, s_flux, ',');
-      std::getline(fin, s_azimuth, ',');
-      std::getline(fin, s_zenith, ',');
-      std::getline(fin, s_azimuth_smear, ',');
-      std::getline(fin, s_zenith_smear, '\n');
-
-      flux_.push_back(stod(s_flux));
-      azimuths_.push_back(stod(s_azimuth));
-      zeniths_.push_back(stod(s_zenith));
-      azimuth_smear_.push_back(stod(s_azimuth_smear));
-      zenith_smear_.push_back(stod(s_zenith_smear));
-    }
-    // Angle + Energy input
-    if (s_header == "value" && dist_name_ == "zae"){
-      std::getline(fin, s_flux, ',');
-      std::getline(fin, s_azimuth, ',');
-      std::getline(fin, s_zenith, ',');
-      std::getline(fin, s_energy, ',');
-      std::getline(fin, s_azimuth_smear, ',');
-      std::getline(fin, s_zenith_smear, ',');
-      std::getline(fin, s_energy_smear, '\n');
-
-      flux_.push_back(stod(s_flux));
-      azimuths_.push_back(stod(s_azimuth));
-      zeniths_.push_back(stod(s_zenith));
-      energies_.push_back(stod(s_energy));
-      azimuth_smear_.push_back(stod(s_azimuth_smear));
-      zenith_smear_.push_back(stod(s_zenith_smear));
-      energy_smear_.push_back(stod(s_energy_smear));
-    }
-
-    // Get the max and min energies allowed to sample from 
-    if (s_header != "value" && dist_name_ == "zae"){
-      
-      std::getline(fin, s_energy, '\n');
-      
-      if (s_header == "energy"){
-        
-        G4double E = stod(s_energy);
-        
-        EnergyRange.push_back(E);
-
-        // Get the max and min values from the file
-        if (E < file_emin) file_emin = E;
-        if (E > file_emax) file_emax = E;
-
-      }
+  if (dist_name_ == "zae"){
+    CSV_Reader_->LoadHistData3D(ang_file_, flux_, azimuths_, zeniths_, energies_, azimuth_smear_, zenith_smear_, energy_smear_);
     
-    }
-  }
+    // Check if the energy is in the desired range permitted by the binning range in the data file
+    CSV_Reader_->CheckVarBounds(ang_file_, energy_min_/GeV, energy_max_/GeV, "energy"); 
 
-  // Check if the specified energy range has been set to a suitable value
-  if (dist_name_ == "zae" && (energy_min_ < file_emin*GeV || energy_max_ > file_emax*GeV )){
-    std::cout << "The minimum energy allowed is: " << file_emin*GeV/1000 << " GeV"<< std::endl;
-    std::cout << "The maximum energy allowed is: " << file_emax*GeV/1000 << " GeV" << std::endl;
-    G4Exception("[MuonAngleGenerator]", "LoadMuonDistribution()",
-              FatalException, " Specified energy range for sampling is outside permitted range or min_energy/max_energy has not been set");
-    
   }
 
   // Convert flux vector to arr
@@ -300,15 +228,15 @@ void MuonAngleGenerator::GetDirection(G4ThreeVector& dir, G4double& zenith, G4do
 
     // Generate random index weighted by the bin contents
     // Scale by flux vec size, then round to nearest integer to get an index
-    G4int RN_indx = round(fRandomGeneral_->fire()*flux_.size());
+    G4int RN_indx = Dist_Sampler_->GetRandBinIndex(fRandomGeneral_, flux_);
 
     // Correct sampled values by Gaussian smearing
-    azimuth  = azimuths_[RN_indx] + G4RandGauss::shoot( 0., azimuth_smear_[RN_indx]);
-    zenith   = zeniths_[RN_indx]  + G4RandGauss::shoot( 0., zenith_smear_[RN_indx]);
+    azimuth = Dist_Sampler_->Sample(azimuths_[RN_indx], true, azimuth_smear_[RN_indx]);
+    zenith  = Dist_Sampler_->Sample(zeniths_[RN_indx],  true, zenith_smear_[RN_indx]);
 
     // Sample and update the energy if angle + energy option specified
     if (dist_name_ == "zae"){
-      energy   = (energies_[RN_indx]*GeV  + G4RandGauss::shoot( 0., energy_smear_[RN_indx]*GeV));
+      energy = Dist_Sampler_->Sample(energies_[RN_indx]*GeV, true, energy_smear_[RN_indx]*GeV);
       kinetic_energy = energy - mass;
 
     }
