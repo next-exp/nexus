@@ -9,7 +9,7 @@
 #include "NextNew.h"
 
 #include "LSCHallA.h"
-#include "Next100Shielding.h"
+#include "NextNewShielding.h"
 #include "NextNewPedestal.h"
 #include "NextNewMiniCastle.h"
 #include "NextNewVessel.h"
@@ -75,7 +75,7 @@ namespace nexus {
     //Lab walls
     hallA_walls_ = new LSCHallA();
     //Shielding
-    shielding_ = new Next100Shielding();
+    shielding_ = new NextNewShielding();
     //Pedestal
     pedestal_ = new NextNewPedestal();
     // Mini lead castle
