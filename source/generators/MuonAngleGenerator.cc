@@ -113,8 +113,7 @@ void MuonAngleGenerator::LoadMuonDistribution()
   }
 
   // Convert flux vector to arr
-  G4double arr_flux[flux_.size()];
-  std::copy(flux_.begin(), flux_.end(), arr_flux);
+  auto arr_flux = flux_.data();
 
   // Initialise the Random Number Generator based on the flux distribution (in bin index)
   fRandomGeneral_ = new G4RandGeneral( arr_flux, flux_.size() );
