@@ -50,9 +50,6 @@ namespace nexus {
     // setting the overlap volume for filtering.
     void SetupAngles();
 
-    /// Generate a random kinetic energy with flat probability in
-    //  the interval [energy_min, energy_max].
-    G4double RandomEnergy() const;
     G4String MuonCharge() const;
 
     // Sample the Muon Distribution loaded from file

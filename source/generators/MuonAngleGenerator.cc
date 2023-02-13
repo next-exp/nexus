@@ -13,6 +13,7 @@
 #include "MuonsPointSampler.h"
 #include "AddUserInfoToPV.h"
 #include "FactoryBase.h"
+#include "RandomUtils.h"
 
 #include <G4Event.hh>
 #include <G4GenericMessenger.hh>
@@ -154,7 +155,7 @@ void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
                 FatalException, " can not create a muon ");
 
   // Generate uniform random energy in [E_min, E_max]
-  G4double kinetic_energy = RandomEnergy();
+  G4double kinetic_energy = UniformRandomInRange(energy_max_, energy_min_);
 
   // Particle propierties
   G4double mass   = particle_definition_->GetPDGMass();
@@ -195,15 +196,6 @@ void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
   // Add particle to the vertex and this to the event
   vertex->SetPrimary(particle);
   event->AddPrimaryVertex(vertex);
-}
-
-
-G4double MuonAngleGenerator::RandomEnergy() const
-{
-  if (energy_max_ == energy_min_)
-    return energy_min_;
-  else
-    return (G4UniformRand()*(energy_max_ - energy_min_) + energy_min_);
 }
 
 

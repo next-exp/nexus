@@ -35,12 +35,6 @@ namespace nexus {
     void GeneratePrimaryVertex(G4Event*);
 
   private:
-
-    /// Generate a random kinetic energy with flat probability in
-    //  the interval [energy_min, energy_max].
-    G4double RandomEnergy(G4double emin, G4double emax) const;
-
-  private:
     G4GenericMessenger* msg_;
 
     G4ParticleDefinition* particle_definition_;
