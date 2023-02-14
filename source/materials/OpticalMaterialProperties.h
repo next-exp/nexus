@@ -63,13 +63,19 @@ namespace opticalprops {
 
   G4MaterialPropertiesTable* TPH();
 
+  G4MaterialPropertiesTable* PerfectAbsorber();
+
   G4MaterialPropertiesTable* PTFE();
+  
+  G4MaterialPropertiesTable* PolishedAl();
 
   G4MaterialPropertiesTable* EJ280();
 
   G4MaterialPropertiesTable* EJ286();
 
   G4MaterialPropertiesTable* Y11();
+
+  G4MaterialPropertiesTable* B2();
 
   G4MaterialPropertiesTable* Pethylene();
 
