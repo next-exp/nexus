@@ -328,8 +328,7 @@ namespace nexus {
     G4LogicalVolume* vessel_gas_logic = new G4LogicalVolume(vessel_gas_final_solid, vessel_gas_mat, "VESSEL_GAS");
 
     internal_logic_vol_ = vessel_gas_logic;
-    G4double el_z_coord = flange_tp_z_pos + flange_tp_length /2. + 67.5*mm + gate_tp_distance_;
-    SetELzCoord(el_z_coord);
+    SetGateZpos(flange_tp_z_pos + flange_tp_length /2. + 67.5*mm + gate_tp_distance_);
     internal_phys_vol_ =
       new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_gas_logic,
                         "VESSEL_GAS", vessel_logic, false, 0, false);

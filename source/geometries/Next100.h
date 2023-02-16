@@ -81,7 +81,7 @@ namespace nexus {
     G4ThreeVector specific_vertex_;
 
     /// Position of gate in its mother volume
-    G4double gate_zpos_in_vessel_;
+    G4ThreeVector displ_from_origin_;
 
     /// Whether or not to build LSC HallA.
     G4bool lab_walls_;

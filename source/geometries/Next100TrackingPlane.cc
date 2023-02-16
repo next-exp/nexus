@@ -100,7 +100,7 @@ void Next100TrackingPlane::Construct()
   sipm_board_geom_->Construct();
   G4LogicalVolume* sipm_board_logic = sipm_board_geom_->GetLogicalVolume();
 
-  G4double zpos = GetELzCoord() - gate_tp_dist_ + sipm_board_geom_->GetThickness()/2.;
+  G4double zpos = GetCoordOrigin()[2] - gate_tp_dist_ + sipm_board_geom_->GetThickness()/2.;
 
   // SiPM boards are positioned bottom (negative Y) to top (positive Y)
   // and left (negative X) to right (positive X).
@@ -211,7 +211,7 @@ G4ThreeVector Next100TrackingPlane::GenerateVertex(const G4String& region) const
         G4int board_num = G4RandFlat::shootInt((long) 0, board_pos_.size());
         vertex += board_pos_[board_num];
         G4ThreeVector glob_vtx(vertex);
-        glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+        glob_vtx = glob_vtx - GetCoordOrigin();
         VertexVolume =
           geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
 

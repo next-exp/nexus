@@ -216,16 +216,16 @@ void Next100FieldCage::Construct()
   /// Calculate relative z positions in mother volume
   /// All of them are calculated from GetELzCoord(), which is the position
   /// of the beginning of the ACTIVE volume and the end of the gate grid.
-  gate_grid_zpos_  = GetELzCoord() - grid_thickn_/2.;
-  active_zpos_     = GetELzCoord() + active_length_/2.;
-  cathode_zpos_    = GetELzCoord() + gate_cathode_dist_ + cathode_thickn_/2.;
-  gate_zpos_       = GetELzCoord() - grid_thickn_ + gate_ring_thickn_/2.;
-  el_gap_zpos_     = GetELzCoord() - grid_thickn_ - el_gap_length_/2.;
+  gate_grid_zpos_  = GetCoordOrigin().z() - grid_thickn_/2.;
+  active_zpos_     = GetCoordOrigin().z() + active_length_/2.;
+  cathode_zpos_    = GetCoordOrigin().z() + gate_cathode_dist_ + cathode_thickn_/2.;
+  gate_zpos_       = GetCoordOrigin().z() - grid_thickn_ + gate_ring_thickn_/2.;
+  el_gap_zpos_     = GetCoordOrigin().z() - grid_thickn_ - el_gap_length_/2.;
   anode_grid_zpos_ = el_gap_zpos_ - el_gap_length_/2. - grid_thickn_/2.;
 
-  teflon_drift_zpos_  = GetELzCoord() + gate_teflon_dist_ + teflon_drift_length_/2.;
+  teflon_drift_zpos_  = GetCoordOrigin().z() + gate_teflon_dist_ + teflon_drift_length_/2.;
   // 15.6 mm = value used to obtain 24.8 mm as EP plate-teflon distance
-  teflon_buffer_zpos_ = GetELzCoord() + gate_sapphire_wdw_dist_ - 15.6*mm - teflon_buffer_length_/2.;
+  teflon_buffer_zpos_ = GetCoordOrigin().z() + gate_sapphire_wdw_dist_ - 15.6*mm - teflon_buffer_length_/2.;
 
   if (verbosity_) {
     G4cout << "Active length = " << active_length_/mm << " mm" << G4endl;
@@ -319,7 +319,7 @@ void Next100FieldCage::BuildActive()
 
   /// Define a drift field for this volume
   UniformElectricDriftField* field = new UniformElectricDriftField();
-  G4double global_active_zpos = active_zpos_ - GetELzCoord();
+  G4double global_active_zpos = active_zpos_ - GetCoordOrigin()[2];
   field->SetCathodePosition(global_active_zpos + active_length_/2.);
   field->SetAnodePosition(global_active_zpos - active_length_/2.);
   field->SetDriftVelocity(1. * mm/microsecond);
@@ -476,7 +476,8 @@ void Next100FieldCage::BuildELRegion()
 {
   /// GATE ring.
   G4Tubs* gate_solid =
-    new G4Tubs("GATE_RING", gate_int_diam_/2., gate_ext_diam_/2., gate_ring_thickn_/2., 0, twopi);
+    new G4Tubs("GATE_RING", gate_int_diam_/2., gate_ext_diam_/2., gate_ring_thickn_/2.,
+               0, twopi);
 
   G4LogicalVolume* gate_logic =
     new G4LogicalVolume(gate_solid, steel_, "GATE_RING");
@@ -487,7 +488,8 @@ void Next100FieldCage::BuildELRegion()
 
   /// EL gap.
   G4Tubs* el_gap_solid =
-    new G4Tubs("EL_GAP", 0., gate_int_diam_/2., (el_gap_length_ + 2*grid_thickn_)/2., 0, twopi);
+    new G4Tubs("EL_GAP", 0., gate_int_diam_/2., (el_gap_length_ + 2*grid_thickn_)/2.,
+               0, twopi);
 
   G4LogicalVolume* el_gap_logic =
     new G4LogicalVolume(el_gap_solid, gas_, "EL_GAP");
@@ -516,7 +518,7 @@ void Next100FieldCage::BuildELRegion()
   if (elfield_) {
     /// Define EL electric field
     UniformElectricDriftField* el_field = new UniformElectricDriftField();
-    G4double global_el_gap_zpos = el_gap_zpos_ - GetELzCoord();
+    G4double global_el_gap_zpos = el_gap_zpos_ - GetCoordOrigin()[2];
     el_field->SetCathodePosition(global_el_gap_zpos + el_gap_length_/2. + grid_thickn_);
     el_field->SetAnodePosition  (global_el_gap_zpos - el_gap_length_/2. - grid_thickn_);
     el_field->SetDriftVelocity(2.5 * mm/microsecond);
@@ -568,11 +570,13 @@ void Next100FieldCage::BuildELRegion()
                                              nullptr, el_gap_gen_pos);
 
   // Gate ring vertex generator
-  gate_gen_ = new CylinderPointSampler2020(gate_int_diam_/2., gate_ext_diam_/2., gate_ring_thickn_/2.,
-                                           0., twopi, nullptr, G4ThreeVector(0., 0., gate_zpos_));
+  gate_gen_ =
+    new CylinderPointSampler2020(gate_int_diam_/2., gate_ext_diam_/2., gate_ring_thickn_/2.,
+                                 0., twopi, nullptr, G4ThreeVector(0., 0., gate_zpos_));
   // Anode ring vertex generator
   anode_gen_ = new CylinderPointSampler2020(gate_int_diam_/2., gate_ext_diam_/2.,anode_ring_thickn/2.,
                                             0., twopi, nullptr, G4ThreeVector(0., 0., anode_sim_zpos));
+
 
   /// Visibilities
   if (visibility_) {
@@ -638,7 +642,8 @@ void Next100FieldCage::BuildLightTube()
     {(active_diam_ + 2.*teflon_thickn_)/2., (active_diam_ + 2.*teflon_thickn_)/2.};
 
   G4Polyhedra* teflon_buffer_solid =
-   new G4Polyhedra("LIGHT_TUBE_BUFFER", 0., twopi, n_panels_, 2, zplane_buff, rinner, router_buff);
+   new G4Polyhedra("LIGHT_TUBE_BUFFER", 0., twopi, n_panels_, 2, zplane_buff,
+                   rinner, router_buff);
 
   G4LogicalVolume* teflon_buffer_logic =
     new G4LogicalVolume(teflon_buffer_solid, teflon_, "LIGHT_TUBE_BUFFER");
@@ -652,7 +657,8 @@ void Next100FieldCage::BuildLightTube()
     {(active_diam_ + 2.*tpb_thickn_)/2., (active_diam_ + 2.*tpb_thickn_)/2.};
 
   G4Polyhedra* tpb_buffer_solid =
-    new  G4Polyhedra("BUFFER_TPB", 0., twopi, n_panels_, 2, zplane_buff, rinner, router_tpb_buff);
+    new  G4Polyhedra("BUFFER_TPB", 0., twopi, n_panels_, 2, zplane_buff,
+                     rinner, router_tpb_buff);
 
   G4LogicalVolume* tpb_buffer_logic =
     new G4LogicalVolume(tpb_buffer_solid, tpb_, "BUFFER_TPB");
@@ -685,8 +691,7 @@ void Next100FieldCage::BuildLightTube()
 
   // Vertex generator
   G4double teflon_ext_radius = (active_diam_ + 2.*teflon_thickn_)/2. / cos(pi/n_panels_);
-  G4double teflon_zpos       = GetELzCoord() + gate_sapphire_wdw_dist_/2.;
-
+  G4double teflon_zpos       = GetCoordOrigin().z() + gate_sapphire_wdw_dist_/2.;
   teflon_gen_ = new CylinderPointSampler2020(active_diam_/2., teflon_ext_radius,
                                              gate_sapphire_wdw_dist_/2., 0., twopi,
                                              nullptr, G4ThreeVector (0., 0., teflon_zpos));
@@ -730,6 +735,7 @@ void Next100FieldCage::BuildFieldCage()
   hdpe_gen_ = new CylinderPointSampler2020(hdpe_tube_int_diam_/2., hdpe_tube_ext_diam_/2.,
                                            hdpe_length_/2.,0., twopi, nullptr,
                                            G4ThreeVector(0., 0., hdpe_tube_z_pos));
+
 
   // Buffer field rings
   G4Tubs* ring_solid =
@@ -857,7 +863,7 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
     do {
       vertex = active_gen_->GenerateVertex("VOLUME");
       G4ThreeVector glob_vtx(vertex);
-      glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+      glob_vtx = glob_vtx - GetCoordOrigin();
       VertexVolume =
         geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
     } while (VertexVolume->GetName() != region);
@@ -872,7 +878,7 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
     do {
       vertex = buffer_gen_->GenerateVertex("VOLUME");
       G4ThreeVector glob_vtx(vertex);
-      glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+      glob_vtx = glob_vtx - GetCoordOrigin();
       VertexVolume =
         geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
     } while (VertexVolume->GetName() != region);
@@ -883,7 +889,7 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
     do {
       vertex = xenon_gen_->GenerateVertex("VOLUME");
       G4ThreeVector glob_vtx(vertex);
-      glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+      glob_vtx = glob_vtx - GetCoordOrigin();
       VertexVolume =
         geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
     } while (
@@ -897,7 +903,7 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
     do {
       vertex = teflon_gen_->GenerateVertex("VOLUME");
       G4ThreeVector glob_vtx(vertex);
-      glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+      glob_vtx = glob_vtx - GetCoordOrigin();
       VertexVolume =
         geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
     } while (
@@ -914,7 +920,7 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
     do {
       vertex = el_gap_gen_->GenerateVertex("VOLUME");
       G4ThreeVector glob_vtx(vertex);
-      glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+      glob_vtx = glob_vtx - GetCoordOrigin();
       VertexVolume =
         geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
     } while (VertexVolume->GetName() != region);
@@ -925,7 +931,7 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
     do {
       vertex = ring_gen_->GenerateVertex("VOLUME");
       G4ThreeVector glob_vtx(vertex);
-      glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+      glob_vtx = glob_vtx - GetCoordOrigin();
       VertexVolume =
         geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
     } while (VertexVolume->GetName() != region);
@@ -944,7 +950,7 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
     do {
       vertex = holder_gen_->GenerateVertex("VOLUME");
       G4ThreeVector glob_vtx(vertex);
-      glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+      glob_vtx = glob_vtx - GetCoordOrigin();
       VertexVolume =
         geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
     } while (VertexVolume->GetName() != "STAVE");
