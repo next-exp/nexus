@@ -214,7 +214,7 @@ void Next100FieldCage::Construct()
   buffer_length_ = gate_sapphire_wdw_dist_ - gate_cathode_dist_ - grid_thickn_;
 
   /// Calculate relative z positions in mother volume
-  /// All of them are calculated from GetELzCoord(), which is the position
+  /// All of them are calculated from GetCoordOrigin(), which is the position
   /// of the beginning of the ACTIVE volume and the end of the gate grid.
   gate_grid_zpos_  = GetCoordOrigin().z() - grid_thickn_/2.;
   active_zpos_     = GetCoordOrigin().z() + active_length_/2.;
@@ -808,12 +808,12 @@ void Next100FieldCage::BuildFieldCage()
   // Length is approximated to avoid complicated calculations.
   // The correct positioning of vertices is checked at run time anyway.
   G4double stave_gen_length =
-    teflon_buffer_zpos_ - GetELzCoord() + teflon_buffer_length_/2;
+    teflon_buffer_zpos_ - GetCoordOrigin().z() + teflon_buffer_length_/2;
   holder_gen_ =
     new CylinderPointSampler2020(active_diam_/2. + teflon_thickn_ ,
                                  active_diam_/2. + teflon_thickn_ + holder_long_y + holder_short_y,
                                  stave_gen_length/2., 0., twopi, nullptr,
-                                 G4ThreeVector(0., 0., GetELzCoord() + stave_gen_length/2.));
+                                 G4ThreeVector(0., 0., GetCoordOrigin().z() + stave_gen_length/2.));
 
    /// Visibilities
   if (visibility_) {

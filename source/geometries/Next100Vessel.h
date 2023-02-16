@@ -63,6 +63,7 @@ namespace nexus {
     G4double sc_yield_, e_lifetime_;
     G4double pressure_, temperature_;
     G4double gate_tp_distance_;
+    G4double gate_z_pos_;
 
     // Visibility of the shielding
     G4bool visibility_;
