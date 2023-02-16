@@ -84,7 +84,7 @@ void Next100TrackingPlane::Construct()
   G4LogicalVolume* copper_plate_logic =
     new G4LogicalVolume(copper_plate_solid, copper, copper_plate_name);
 
-  G4double copper_plate_zpos = GetELzCoord() - gate_tp_dist_ - copper_plate_thickness_/2.;
+  G4double copper_plate_zpos = GetCoordOrigin()[2] - gate_tp_dist_ - copper_plate_thickness_/2.;
 
   G4VPhysicalVolume* copper_plate_phys =
     new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,copper_plate_zpos),
