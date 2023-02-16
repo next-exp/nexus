@@ -293,7 +293,6 @@ void Next1EL::BuildLab()
 
   lab_logic_ = new G4LogicalVolume(lab_solid, air_, "LAB");
   lab_logic_->SetVisAttributes(G4VisAttributes::GetInvisible());
-  this->SetDrift(true);
 
   // Set this volume as the wrapper for the whole geometry
   // (i.e., this is the volume that will be placed in the world)
