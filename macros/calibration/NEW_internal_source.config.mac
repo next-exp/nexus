@@ -28,7 +28,7 @@
 /Geometry/NextNew/lead_castle false
 
 ## For visualization
-/Geometry/Next100/shielding_vis false
+/Geometry/NextNew/shielding_vis false
 /Geometry/NextNew/table_vis false
 /Geometry/NextNew/ics_vis false
 /Geometry/NextNew/energy_plane_vis false

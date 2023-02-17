@@ -5,7 +5,8 @@ import subprocess
 
 
 @pytest.mark.order(1)
-def test_create_nexus_output_file_next100(config_tmpdir, output_tmpdir, NEXUSDIR,
+def test_create_nexus_output_file_next100(config_tmpdir, output_tmpdir,
+                                          NEXUSDIR,
                                           full_base_name_next100,
                                           nexus_full_output_file_next100):
     # Init file

@@ -13,7 +13,7 @@
 #include <G4RotationMatrix.hh>
 
 namespace nexus {class LSCHallA; }
-namespace nexus {class Next100Shielding; }
+namespace nexus {class NextNewShielding; }
 namespace nexus {class NextNewPedestal; }
 namespace nexus {class NextNewMiniCastle; }
 namespace nexus {class NextNewVessel; }
@@ -65,7 +65,7 @@ namespace nexus {
 
     //Detector parts
     LSCHallA* hallA_walls_;
-    Next100Shielding* shielding_;
+    NextNewShielding* shielding_;
     NextNewPedestal* pedestal_;
     NextNewMiniCastle* mini_castle_;
     NextNewVessel* vessel_;

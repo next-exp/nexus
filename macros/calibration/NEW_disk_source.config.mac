@@ -24,7 +24,7 @@
 /Geometry/NextNew/source_material Na
 
 ## For visualization
-/Geometry/Next100/shielding_vis false
+/Geometry/NextNew/shielding_vis false
 /Geometry/NextNew/table_vis false
 /Geometry/NextNew/ics_vis true
 /Geometry/NextNew/vessel_vis false
