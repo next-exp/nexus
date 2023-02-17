@@ -1,0 +1,27 @@
+## ----------------------------------------------------------------------------
+## nexus | NEW_2nuECEC.config.mac
+##
+##  Configuration macro to simulate 2-neutrino ECEC decays
+##  in the NEW detector geometry
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+/process/em/verbose 0
+
+/Generator/ECEC/region CENTER
+/Generator/ECEC/atomic_number 52
+/Generator/ECEC/shell K
+
+/Geometry/NextNew/pressure 10. bar
+/Geometry/NextNew/elfield false
+
+/control/execute macros/physics/IonizationElectron.mac
+
+/nexus/persistency/outputFile new_ecec.next
+
+/nexus/random_seed 542862

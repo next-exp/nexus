@@ -1,0 +1,22 @@
+## ----------------------------------------------------------------------------
+## nexus | NEW_2nuECEC.init.mac
+##
+##  Initialization macro to simulate 2-neutrino ECEC decays
+##  in the NEW detector geometry
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+/control/execute macros/physics/DefaultPhysicsList.mac
+
+/nexus/RegisterGeometry NextNew
+
+/nexus/RegisterGenerator ECECGenerator
+
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterRunAction DefaultRunAction
+
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterMacro macros/NEW_2nuECEC.config.mac
