@@ -768,18 +768,11 @@ namespace opticalprops {
       .96301, .96289, .96278, .96126, .95830,
       .94224
     };
+    // DOI:10.4236/ampc.2015.511046
     mpt->AddProperty("REFLECTIVITY", ENERGIES, REFLECTIVITY);
 
     // REFLEXION BEHAVIOR
     std::vector<G4double> ENERGIES_2    = {optPhotMinE_, optPhotMaxE_};
-    std::vector<G4double> ENERGIES_3    = {
-      0.005 * eV, 0.19581 * eV, 0.43227 * eV,
-      0.84211 * eV, 1.2254 * eV, 1.4477 * eV,
-      1.7831 * eV, 2.8203 * eV, 3.6216 * eV,
-      5.0548 * eV, 7.0554 * eV, 9.4450 * eV,
-      12.645 * eV, 14.939 * eV, 16.238 * eV,
-      18.4 * eV, 20. * eV
-    };
     // Specular reflection about the normal to a microfacet.
     // Such a vector is chosen according to a gaussian distribution with
     // sigma = SigmaAlhpa (in rad) and centered in the average normal.
@@ -795,7 +788,14 @@ namespace opticalprops {
     mpt->AddProperty("BACKSCATTERCONSTANT",  ENERGIES_2, backscatter);
 
     // REFRACTIVE INDEX
-    // std::vector<G4double> rIndex = {1.41, 1.41};
+    std::vector<G4double> ENERGIES_3    = {
+      0.005 * eV, 0.19581 * eV, 0.43227 * eV,
+      0.84211 * eV, 1.2254 * eV, 1.4477 * eV,
+      1.7831 * eV, 2.8203 * eV, 3.6216 * eV,
+      5.0548 * eV, 7.0554 * eV, 9.4450 * eV,
+      12.645 * eV, 14.939 * eV, 16.238 * eV,
+      18.4 * eV, 20. * eV
+    };
     std::vector<G4double> rIndex = {
       473.49, 12.843, 3.8841, 1.437, 1.4821, 2.4465, 1.6203, 0.58336, 0.32634, 0.1686,
       0.089866, 0.051461, 0.039232, 0.11588, 0.39013, 0.58276, 0.66415
