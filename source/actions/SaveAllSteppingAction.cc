@@ -63,6 +63,8 @@ void SaveAllSteppingAction::UserSteppingAction(const G4Step* step)
 
   G4ThreeVector initial_pos = pre ->GetPosition();
   G4ThreeVector   final_pos = post->GetPosition();
+  G4double        step_time = (pre->GetGlobalTime()  +
+                              post->GetGlobalTime()) / 2.;
 
   if (! post->GetTouchableHandle()->GetVolume()) return; // Particle exits the world
 
@@ -81,6 +83,7 @@ void SaveAllSteppingAction::UserSteppingAction(const G4Step* step)
 
   initial_poss_   [key].push_back(initial_pos);
     final_poss_   [key].push_back(  final_pos);
+         times_   [key].push_back(  step_time);
 }
 
 
@@ -133,4 +136,5 @@ void SaveAllSteppingAction::Reset()
 
   initial_poss_   .clear();
     final_poss_   .clear();
+         times_   .clear();
 }

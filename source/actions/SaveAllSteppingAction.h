@@ -52,6 +52,7 @@ namespace nexus {
 
     StepContainer<G4ThreeVector> initial_poss_;
     StepContainer<G4ThreeVector>   final_poss_;
+    StepContainer<G4double>             times_;
 
   public:
 
@@ -61,6 +62,7 @@ namespace nexus {
 
     StepContainer<G4ThreeVector> get_initial_poss();
     StepContainer<G4ThreeVector> get_final_poss();
+    StepContainer<G4double>      get_times();
 
     void Reset();
 
@@ -77,6 +79,7 @@ inline StepContainer<G4String> SaveAllSteppingAction::get_proc_names     (){retu
 
 inline StepContainer<G4ThreeVector> SaveAllSteppingAction::get_initial_poss(){return initial_poss_;}
 inline StepContainer<G4ThreeVector> SaveAllSteppingAction::get_final_poss  (){return   final_poss_;}
+inline StepContainer<G4double>      SaveAllSteppingAction::get_times       (){return        times_;}
 
 } // namespace nexus
 

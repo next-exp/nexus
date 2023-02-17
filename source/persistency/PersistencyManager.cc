@@ -352,6 +352,7 @@ void PersistencyManager::StoreSteps()
 
   StepContainer<G4ThreeVector> initial_poss = sa->get_initial_poss();
   StepContainer<G4ThreeVector>   final_poss = sa->get_final_poss  ();
+  StepContainer<G4double>             times = sa->get_times       ();
 
   for (auto it = initial_volumes.begin(); it != initial_volumes.end(); ++it) {
     std::pair<G4int, G4String> key           = it->first;
@@ -368,7 +369,8 @@ void PersistencyManager::StoreSteps()
                            initial_poss   [key][step_id].z(),
                              final_poss   [key][step_id].x(),
                              final_poss   [key][step_id].y(),
-                             final_poss   [key][step_id].z());
+                             final_poss   [key][step_id].z(),
+                                  times   [key][step_id]);
     }
   }
   sa->Reset();
