@@ -13,8 +13,7 @@
 #include <G4RotationMatrix.hh>
 #include <Randomize.hh>
 
-#include "FileReaderCSV.h"
-#include "DistributionSampler.h"
+#include "IOUtilities.h"
 
 class G4GenericMessenger;
 class G4Event;
@@ -25,7 +24,7 @@ class G4VSolid;
 namespace nexus {
 
   class GeometryBase;
-  class FileReaderCSV;
+  class IOUtilities;
   class DistributionSampler;
 
 
@@ -99,8 +98,7 @@ namespace nexus {
     std::vector<G4double> energy_smear_;  ///< List of Energy bin smear values
     G4RandGeneral *fRandomGeneral_; ///< Pointer to the RNG flux distribution
 
-    FileReaderCSV *CSV_Reader_;
-    DistributionSampler *Dist_Sampler_;
+    IOUtilities *io_helper_;
   };
 
 } // end namespace nexus

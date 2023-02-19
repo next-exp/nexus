@@ -1,13 +1,12 @@
 // ----------------------------------------------------------------------------
-// nexus | FileReaderCSV.cc
+// nexus | IOUtilities.cc
 //
-// This class provides the utilities to read in histogram information 
-// from a CSV file
+// This class provides the utility functions for IO of files
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "FileReaderCSV.h"
+#include "IOUtilities.h"
 
 #include <G4ExceptionSeverity.hh>
 #include <G4Exception.hh>
@@ -15,15 +14,15 @@
 
 namespace nexus {
 
-  FileReaderCSV::FileReaderCSV(){}
+  IOUtilities::IOUtilities(){}
 
-  FileReaderCSV::~FileReaderCSV(){}
+  IOUtilities::~IOUtilities(){}
 
   // --------
 
   // Input file format:
   // value,<intensity in bin>,<histogram x bin i centre>,<histogram x bin i width>
-  void FileReaderCSV::LoadHistData1D(std::string filename, std::vector<G4double> &value,
+  void IOUtilities::LoadHistData1D(std::string filename, std::vector<G4double> &value,
                                     std::vector<G4double> &x, std::vector<G4double> &x_smear){
     
     // Open the file
@@ -31,7 +30,7 @@ namespace nexus {
 
     // Check if file has opened properly
     if (!FileIn_.is_open()){
-      G4Exception("[FileReaderCSV]", "LoadHistData1D()",
+      G4Exception("[IOUtilities]", "LoadHistData1D()",
                 FatalException, " could not read in the CSV file ");
     }
 
@@ -65,7 +64,7 @@ namespace nexus {
 
   // Input file format:
   // value,<intensity in bin>,<histogram x bin i centre>,<histogram y bin j centre>,<histogram x bin i width>,<histogram y bin j width>
-  void FileReaderCSV::LoadHistData2D(std::string filename, std::vector<G4double> &value,
+  void IOUtilities::LoadHistData2D(std::string filename, std::vector<G4double> &value,
                                      std::vector<G4double> &x, std::vector<G4double> &y,
                                      std::vector<G4double> &x_smear,
                                      std::vector<G4double> &y_smear){
@@ -75,7 +74,7 @@ namespace nexus {
     
     // Check if file has opened properly
     if (!FileIn_.is_open()){
-      G4Exception("[FileReaderCSV]", "LoadHistData2D()",
+      G4Exception("[IOUtilities]", "LoadHistData2D()",
                 FatalException, " could not read in the CSV file ");
     }
 
@@ -115,7 +114,7 @@ namespace nexus {
 
   // Input file format:
   // value,<intensity in bin>,<histogram x bin i centre>,<histogram y bin j centre>,<histogram z bin k centre>,<histogram x bin i width>,<histogram y bin j width>,<histogram z bin k width>
-  void FileReaderCSV::LoadHistData3D(std::string filename, std::vector<G4double> &value,
+  void IOUtilities::LoadHistData3D(std::string filename, std::vector<G4double> &value,
                         std::vector<G4double> &x, std::vector<G4double> &y, std::vector<G4double> &z,
                         std::vector<G4double> &x_smear, std::vector<G4double> &y_smear, std::vector<G4double> &z_smear){
     
@@ -123,7 +122,7 @@ namespace nexus {
 
     // Check if file has opened properly
     if (!FileIn_.is_open()){
-      G4Exception("[FileReaderCSV]", "LoadHistData3D()",
+      G4Exception("[IOUtilities]", "LoadHistData3D()",
                 FatalException, " could not read in the CSV file ");
     }
 
@@ -163,7 +162,7 @@ namespace nexus {
 
   // --------
 
-  void FileReaderCSV::CheckVarBounds(std::string filename, G4double var_min, G4double var_max, std::string HeaderName){
+  void IOUtilities::CheckVarBounds(std::string filename, G4double var_min, G4double var_max, std::string HeaderName){
     
     std::ifstream FileIn_(filename);
 
@@ -173,7 +172,7 @@ namespace nexus {
 
     // Check if file has opened properly
     if (!FileIn_.is_open()){
-      G4Exception("[FileReaderCSV]", "CheckVarBounds()",
+      G4Exception("[IOUtilities]", "CheckVarBounds()",
                 FatalException, " could not read in the CSV file ");
     }
 
@@ -217,7 +216,7 @@ namespace nexus {
     if ((var_min < file_VarMin || var_max > file_VarMax )){
       std::cout << "The minimum " << HeaderName <<" value allowed is: " << file_VarMin << ", your input config min value is: " << var_min << std::endl;
       std::cout << "The maximum " << HeaderName <<" value allowed is: " << file_VarMax << ", your input config max value is: " << var_max << std::endl;
-      G4Exception("[FileReaderCSV]", "CheckVarBounds()",
+      G4Exception("[IOUtilities]", "CheckVarBounds()",
                 FatalException, " Specified range for sampling is outside permitted range or the min/max of the variable has not been set");
     }
 

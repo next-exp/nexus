@@ -1,14 +1,13 @@
 // ----------------------------------------------------------------------------
-// nexus | FileReaderCSV.h
+// nexus | IOUtilities.h
 //
-// This class provides the utilities to read in histogram information 
-// from a CSV file
+// This class provides the utility functions for IO of files
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef FILE_READER_CSV_H
-#define FILE_READER_CSV_H
+#ifndef IO_UTILITIES_H
+#define IO_UTILITIES_H
 
 #include <G4Types.hh>
 
@@ -18,15 +17,13 @@
 
 namespace nexus {
 
-  /// Class for reading in CSV files that correspond to a binned histogram
-
-  class FileReaderCSV {
+  class IOUtilities {
   public:
     /// Constructor
-    FileReaderCSV();
+    IOUtilities();
 
     /// Destructor
-    ~FileReaderCSV();
+    ~IOUtilities();
 
     /// Read in the 1d histogram stored in a csv file
     void LoadHistData1D(std::string filename, std::vector<G4double> &value,

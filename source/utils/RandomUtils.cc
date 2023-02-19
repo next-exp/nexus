@@ -7,8 +7,6 @@
 // ----------------------------------------------------------------------------
 #include "RandomUtils.h"
 
-#include <Randomize.hh>
-
 #include "CLHEP/Units/SystemOfUnits.h"
 
 namespace nexus {
@@ -36,6 +34,57 @@ namespace nexus {
     return G4ThreeVector (sinTheta*std::cos(phi),
                           sinTheta*std::sin(phi),
                           cosTheta).unit();
+  }
+
+  G4int GetRandBinIndex(G4RandGeneral *fRandomGeneral, std::vector<G4double> intensity){
+
+    return round(fRandomGeneral->fire()*intensity.size());
+
+  }
+
+  G4double Sample(G4double sample, G4bool smear, G4double smearval){
+
+    // Apply Gaussian smearing to smooth from bin-to-bin
+    if (smear){
+      return sample + G4RandGauss::shoot( 0., smearval);
+    }
+    // Return the sampled histogram without smearing the entries
+    else
+      return sample;
+
+  }
+
+  G4bool CheckOutOfBound(G4double min, G4double max, G4double val){
+
+    // Out of bounds
+    if (val < min || val > max)
+      return true;
+    // In suitable bounds -- pass
+    else
+      return false;
+
+  }
+
+  G4bool CheckOutOfBoundMin(G4double min, G4double val){
+
+    // Out of bounds
+    if (val < min)
+      return true;
+    // In suitable bounds -- pass
+    else
+      return false;
+
+  }
+
+  G4bool CheckOutOfBoundMax(G4double max, G4double val){
+
+    // Out of bounds
+    if (val > max)
+      return true;
+    // In suitable bounds -- pass
+    else
+      return false;
+
   }
 
 

@@ -103,13 +103,13 @@ void MuonGenerator::LoadMuonDistribution()
 
   // Load in the data from csv file depending on 2D histogram sampling or 3D
   if (dist_name_ == "za")
-    CSV_Reader_->LoadHistData2D(ang_file_, flux_, azimuths_, zeniths_, azimuth_smear_, zenith_smear_);
+    io_helper_->LoadHistData2D(ang_file_, flux_, azimuths_, zeniths_, azimuth_smear_, zenith_smear_);
 
   if (dist_name_ == "zae"){
-    CSV_Reader_->LoadHistData3D(ang_file_, flux_, azimuths_, zeniths_, energies_, azimuth_smear_, zenith_smear_, energy_smear_);
+    io_helper_->LoadHistData3D(ang_file_, flux_, azimuths_, zeniths_, energies_, azimuth_smear_, zenith_smear_, energy_smear_);
     
     // Check if the energy is in the desired range permitted by the binning range in the data file
-    CSV_Reader_->CheckVarBounds(ang_file_, energy_min_/GeV, energy_max_/GeV, "energy"); 
+    io_helper_->CheckVarBounds(ang_file_, energy_min_/GeV, energy_max_/GeV, "energy"); 
 
   }
 
@@ -286,15 +286,15 @@ void MuonGenerator::GetDirection(G4ThreeVector& dir, G4double& zenith, G4double&
 
     // Generate random index weighted by the bin contents
     // Scale by flux vec size, then round to nearest integer to get an index
-    G4int RN_indx = Dist_Sampler_->GetRandBinIndex(fRandomGeneral_, flux_);
+    G4int RN_indx = GetRandBinIndex(fRandomGeneral_, flux_);
 
     // Correct sampled values by Gaussian smearing
-    azimuth = Dist_Sampler_->Sample(azimuths_[RN_indx], true, azimuth_smear_[RN_indx]);
-    zenith  = Dist_Sampler_->Sample(zeniths_[RN_indx],  true, zenith_smear_[RN_indx]);
+    azimuth = Sample(azimuths_[RN_indx], true, azimuth_smear_[RN_indx]);
+    zenith  = Sample(zeniths_[RN_indx],  true, zenith_smear_[RN_indx]);
 
     // Sample and update the energy if angle + energy option specified
     if (dist_name_ == "zae"){
-      energy = Dist_Sampler_->Sample(energies_[RN_indx]*GeV, true, energy_smear_[RN_indx]*GeV);
+      energy = Sample(energies_[RN_indx]*GeV, true, energy_smear_[RN_indx]*GeV);
       kinetic_energy = energy - mass;
 
     }
