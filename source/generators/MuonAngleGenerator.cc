@@ -200,7 +200,14 @@ void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
 
 G4String MuonAngleGenerator::MuonCharge() const
 {
-  G4double rndCh = 2.3 *G4UniformRand(); //From PDG cosmic muons  mu+/mu- = 1.3
+
+  // Ratio of Mu+/Mu- is energy dependent, ranges from 1.3 to 1.5:
+  // https://arxiv.org/pdf/1111.6675.pdf
+  // Assume (approx) flat ratio up to energy range of interest ~6 TeV 
+  // mu+/mu- ~1.3
+
+  // Sample random number to give 1.3 to 1 ratio of Mu+/Mu-
+  G4double rndCh = 2.3 *G4UniformRand(); 
   if (rndCh <1.3)
     return "mu+";
   else
