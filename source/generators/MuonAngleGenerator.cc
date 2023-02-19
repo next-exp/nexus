@@ -33,8 +33,8 @@ REGISTER_CLASS(MuonAngleGenerator, G4VPrimaryGenerator)
 
 MuonAngleGenerator::MuonAngleGenerator():
   G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
-  angular_generation_(true), rPhi_(NULL), energy_min_(0.),
-  energy_max_(0.), dist_name_("za"), bInitialize_(false), geom_(0), geom_solid_(0)
+  use_lsc_dist_(true), rPhi_(NULL), energy_min_(0.),
+  energy_max_(0.), dist_name_("za"), user_dir_{}, bInitialize_(false), geom_(0), geom_solid_(0)
 {
   msg_ = new G4GenericMessenger(this, "/Generator/MuonAngleGenerator/",
 				"Control commands of muongenerator.");
@@ -54,13 +54,15 @@ MuonAngleGenerator::MuonAngleGenerator():
   msg_->DeclareProperty("region", region_,
 			"Set the region of the geometry where the vertex will be generated.");
 
-  msg_->DeclareProperty("angles_on", angular_generation_,
+  msg_->DeclareProperty("use_lsc_dist", use_lsc_dist_,
 			"Distribute muon directions according to file?");
 
   msg_->DeclareProperty("angle_file", ang_file_,
 			"Name of the file containing angular distribution.");
   msg_->DeclareProperty("angle_dist", dist_name_,
 			"Name of the angular distribution histogram.");
+
+  msg_->DeclareProperty("user_dir",  user_dir_, "Set fixed muon direction.");
 
   G4GenericMessenger::Command& rotation =
     msg_->DeclareProperty("azimuth_rotation", axis_rotation_,
@@ -120,6 +122,25 @@ void MuonAngleGenerator::LoadMuonDistribution()
 
 }
 
+void MuonAngleGenerator::InitMuonZenithDist()
+{
+
+  // Create a vector of values finely spaced from 0 -> pi/2
+  // Then take cos(x)*cos(x) to make a dist to sample from
+  std::vector<G4double> v_angles;
+
+  for (G4double i = 0; i <= pi/2; i+=0.0001){
+      v_angles.push_back(std::cos(i)*std::cos(i));
+  }
+
+  // Convert vector to arr
+  auto arr_ang = v_angles.data();
+
+  // Initialise the Random Number Generator based on cos(x)*cos(x) distribution
+  fRandomGeneral_ = new G4RandGeneral( arr_ang, v_angles.size() );
+
+}
+
 void MuonAngleGenerator::SetupAngles()
 {
   // Rotation from the axes used in file.
@@ -136,19 +157,34 @@ void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
   if (!bInitialize_){
 
     // Load in the Muon angular distribution from file
-    if (angular_generation_)
+    if (use_lsc_dist_){
+      std::cout << "[MuonGenerator]: Generating muons with distribution from file" << std::endl;
       LoadMuonDistribution();
+    }
+    
+    // Initalise a cos^2 distribution to sample the zenith
+    if (!use_lsc_dist_ && (user_dir_ == G4ThreeVector{})){
+      std::cout << "[MuonGenerator]: Generating muons with uniform azimuth and cos^2 distribution for zenith " << std::endl;
+      InitMuonZenithDist();
+    }
+
+    // User specified muon direction
+    if (!use_lsc_dist_ && (user_dir_ != G4ThreeVector{})){
+      std::cout << "[MuonGenerator]: Generating muons with user specified direction " << std::endl;
+    }
 
     // Set Initialisation
     bInitialize_ = true;
 
   }
 
-  if (angular_generation_ && rPhi_ == NULL)
+  // Init the rotation matrix
+  if (rPhi_ == NULL)
     SetupAngles();
 
   particle_definition_ =
     G4ParticleTable::GetParticleTable()->FindParticle(MuonCharge());
+
   if (!particle_definition_)
     G4Exception("[MuonAngleGenerator]", "SetParticleDefinition()",
                 FatalException, " can not create a muon ");
@@ -156,21 +192,45 @@ void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
   // Generate uniform random energy in [E_min, E_max]
   G4double kinetic_energy = UniformRandomInRange(energy_max_, energy_min_);
 
-  // Particle propierties
-  G4double mass   = particle_definition_->GetPDGMass();
-  G4double energy = kinetic_energy + mass;
-
+  // Particle properties
+  G4double mass          = particle_definition_->GetPDGMass();
+  G4double energy        = kinetic_energy + mass;
   G4ThreeVector position = geom_->GenerateVertex(region_);
 
   // Set default momentum and angular variables
-  G4ThreeVector p_dir(0., -1., 0.);
-  G4double zenith  = p_dir.getTheta();
-  G4double azimuth = p_dir.getPhi() + pi; // factor pi to ensure range from 0.->2pi
+  G4ThreeVector p_dir;
+  G4double zenith;
+  G4double azimuth;
 
-  // Overwrite default p_dir, zenith and azimuth from angular distribution file
-  if (angular_generation_){
+  // Momentum, zenith, azimuth (and energy) from angular distribution file
+  if (use_lsc_dist_){
     GetDirection(p_dir, zenith, azimuth, energy, kinetic_energy, mass);
     position = geom_->GenerateVertex(region_);
+  }
+  else {
+
+    // User specified muon direction in some fixed direction
+    if ( user_dir_ != G4ThreeVector{}) {
+      p_dir   = user_dir_.unit();
+      zenith  = p_dir.getTheta();
+      azimuth = p_dir.getPhi() + pi; // change azimuth interval to be between 0, twopi
+    }
+
+    // Sample direction via cos^2 distribution for zenith, uniform azimuth
+    else {
+      zenith  = GetZenith();
+      azimuth = GetAzimuth(); // Returns from 0 to 2pi
+
+      // Calculate the vector components of the muon
+      p_dir.setX(sin(zenith) * sin(azimuth));
+      p_dir.setY(-cos(zenith));
+      p_dir.setZ(-sin(zenith) * cos(azimuth));
+
+      // Rotate about the Y-Axis
+      p_dir *= *rPhi_;
+
+    }
+
   }
 
   G4double pmod   = std::sqrt(energy*energy - mass*mass);
@@ -180,6 +240,7 @@ void MuonAngleGenerator::GeneratePrimaryVertex(G4Event* event)
 
   // Particle generated at start-of-event
   G4double time = 0.;
+  
   // Create a new vertex
   G4PrimaryVertex* vertex = new G4PrimaryVertex(position, time);
 
@@ -207,8 +268,8 @@ G4String MuonAngleGenerator::MuonCharge() const
   // mu+/mu- ~1.3
 
   // Sample random number to give 1.3 to 1 ratio of Mu+/Mu-
-  G4double rndCh = 2.3 *G4UniformRand(); 
-  if (rndCh <1.3)
+  G4double rndCh = 2.3 * G4UniformRand(); 
+  if (rndCh < 1.3)
     return "mu+";
   else
     return "mu-";
@@ -257,4 +318,16 @@ void MuonAngleGenerator::GetDirection(G4ThreeVector& dir, G4double& zenith, G4do
 
   }
 
+}
+
+
+G4double MuonAngleGenerator::GetZenith() const
+{
+  return fRandomGeneral_->fire()*pi/2;
+}
+
+
+G4double MuonAngleGenerator::GetAzimuth() const
+{
+  return twopi*G4UniformRand();
 }

@@ -62,15 +62,24 @@ namespace nexus {
     /// and initialise the discrete flux distribution
     void LoadMuonDistribution();
 
+    // Initialise a cos(x)*cos(x) distribution to sample for zenith
+    // Used when not sampling angles from a file
+    void InitMuonZenithDist();
+
+    
+    G4double GetZenith()  const; // cos(x)*cos(x) distribution
+    G4double GetAzimuth() const; // Uniform in from 0 to 2 pi
+    
 
   private:
     G4GenericMessenger* msg_;
 
     G4ParticleDefinition* particle_definition_;
 
-    G4bool angular_generation_; ///< Distribution or all downwards
+    G4bool use_lsc_dist_; ///< Use muon distribution according to input file
     G4double axis_rotation_; ///< Angle between North and +z
     G4RotationMatrix *rPhi_; ///< Rotation to adjust axes
+    G4ThreeVector user_dir_; ///< User specified fixed dir (when angular generation mode is off)
 
     G4double energy_min_; ///< Minimum kinetic energy
     G4double energy_max_; ///< Maximum kinetic energy
