@@ -1,8 +1,7 @@
 ## ----------------------------------------------------------------------------
 ## nexus | ton_muons_vertical.init.mac
 ##
-## Initialization macro to simulate vertical muons following the angular
-## distribution measured at LSC, in a tonne-scale detector.
+## Initialization macro to simulate vertical muons, in a tonne-scale detector.
 ##
 ## The NEXT Collaboration
 ## ----------------------------------------------------------------------------
@@ -25,15 +24,18 @@
 /nexus/RegisterGeometry NextTonScale
 
 ### GENERATOR
-/nexus/RegisterGenerator MuonAngleGenerator
+/nexus/RegisterGenerator MuonGenerator
 
 ### PERSISTENCY MANAGER
 /nexus/RegisterPersistencyManager PersistencyManager
 
 ### ACTIONS
 /nexus/RegisterTrackingAction DefaultTrackingAction
-/nexus/RegisterEventAction DefaultEventAction
 /nexus/RegisterRunAction DefaultRunAction
+
+# Use muon event action for debugging
+/nexus/RegisterEventAction DefaultEventAction
+# /nexus/RegisterEventAction MuonsEventAction
 
 /nexus/RegisterDelayedMacro macros/physics/Xe137.mac
 /nexus/RegisterMacro macros/ton_muons_vertical.config.mac

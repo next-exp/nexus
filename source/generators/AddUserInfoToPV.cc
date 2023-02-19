@@ -11,8 +11,8 @@
 
 using namespace nexus;
 
-AddUserInfoToPV::AddUserInfoToPV(G4double theta, G4double phi):
-  theta_(theta),phi_(phi)
+AddUserInfoToPV::AddUserInfoToPV(G4double zenith, G4double azimuth):
+  zenith_(zenith),azimuth_(azimuth)
 {
 }
 

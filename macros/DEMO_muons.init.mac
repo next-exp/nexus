@@ -6,17 +6,25 @@
 ## The NEXT Collaboration
 ## ----------------------------------------------------------------------------
 
+### PHYSICS
 /control/execute macros/physics/DefaultPhysicsList.mac
 
+### GEOMETRY
 /nexus/RegisterGeometry Next1EL
 
+### GENERATOR
 /nexus/RegisterGenerator MuonGenerator
 
+### PERSISTENCY
 /nexus/RegisterPersistencyManager PersistencyManager
 
+### ACTIONS
 /nexus/RegisterTrackingAction DefaultTrackingAction
-/nexus/RegisterEventAction MuonsEventAction
 /nexus/RegisterRunAction DefaultRunAction
+
+# Use muon event action for debugging
+#/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterEventAction MuonsEventAction
 
 /nexus/RegisterMacro macros/DEMO_muons.config.mac
 

@@ -30,7 +30,7 @@
 #/nexus/RegisterGenerator Decay0Interface
 #/nexus/RegisterGenerator Kr83mGenerator
 #/nexus/RegisterGenerator ScintillationGenerator
-#/nexus/RegisterGenerator MuonAngleGenerator
+#/nexus/RegisterGenerator MuonGenerator
 
 ### PERSISTENCY MANAGER
 /nexus/RegisterPersistencyManager PersistencyManager
