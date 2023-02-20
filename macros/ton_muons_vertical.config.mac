@@ -43,7 +43,7 @@
 
 ### ACTIONS
 /Actions/DefaultEventAction/min_energy 0.01 MeV
-#/Actions/MuonsEventAction/stringHist MuonsDistribution.root
+#/Actions/MuonsEventAction/stringHist MuonsDistribution.csv
 
 ### PHYSICS (for fast simulation)
 /PhysicsList/Nexus/clustering           false
