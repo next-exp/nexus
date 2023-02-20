@@ -13,6 +13,7 @@
 #include "AddUserInfoToPV.h"
 #include "FactoryBase.h"
 #include "RandomUtils.h"
+#include "IOUtils.h"
 
 #include <G4Event.hh>
 #include <G4GenericMessenger.hh>
