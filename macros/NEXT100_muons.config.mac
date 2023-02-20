@@ -22,6 +22,7 @@
 /Geometry/Next100/pressure 15 bar
 /Geometry/Next100/gas enrichedXe
 /Geometry/Next100/elfield false
+#/Geometry/Next100/lab_walls true # Turn on when using HALLA_OUTER region
 
 ### GENERATOR
 

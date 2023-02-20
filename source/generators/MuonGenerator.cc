@@ -32,8 +32,8 @@ REGISTER_CLASS(MuonGenerator, G4VPrimaryGenerator)
 
 MuonGenerator::MuonGenerator():
   G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
-  use_lsc_dist_(true), rPhi_(NULL), energy_min_(0.),
-  energy_max_(0.), dist_name_("za"), user_dir_{}, bInitialize_(false), geom_(0), geom_solid_(0)
+  use_lsc_dist_(true), axis_rotation_(150), rPhi_(NULL), user_dir_{}, energy_min_(0.),
+  energy_max_(0.), dist_name_("za"), bInitialize_(false), geom_(0), geom_solid_(0)
 {
   msg_ = new G4GenericMessenger(this, "/Generator/MuonGenerator/",
 				"Control commands of muongenerator.");
@@ -159,6 +159,12 @@ void MuonGenerator::GeneratePrimaryVertex(G4Event* event)
     if (use_lsc_dist_){
       std::cout << "[MuonGenerator]: Generating muons using lsc distribution loaded from file" << std::endl;
       LoadMuonDistribution();
+
+      // Throw exception if a user dir given and also the use_lsc_dist_ is set to true
+      if (user_dir_ != G4ThreeVector{})
+        G4Exception("[MuonGenerator]", "GeneratePrimaryVertex()",
+                FatalException, " Fixed user direction specified with use_lsc_dist set to true. Set use_lsc_dist to false or remove user_dir in the config");
+
     }
     
     // Initalise a cos^2 distribution to sample the zenith
