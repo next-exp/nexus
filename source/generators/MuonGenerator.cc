@@ -103,13 +103,13 @@ void MuonGenerator::LoadMuonDistribution()
 
   // Load in the data from csv file depending on 2D histogram sampling or 3D
   if (dist_name_ == "za")
-    io_helper_->LoadHistData2D(ang_file_, flux_, azimuths_, zeniths_, azimuth_smear_, zenith_smear_);
+    LoadHistData2D(ang_file_, flux_, azimuths_, zeniths_, azimuth_smear_, zenith_smear_);
 
   if (dist_name_ == "zae"){
-    io_helper_->LoadHistData3D(ang_file_, flux_, azimuths_, zeniths_, energies_, azimuth_smear_, zenith_smear_, energy_smear_);
+    LoadHistData3D(ang_file_, flux_, azimuths_, zeniths_, energies_, azimuth_smear_, zenith_smear_, energy_smear_);
     
     // Check if the energy is in the desired range permitted by the binning range in the data file
-    io_helper_->CheckVarBounds(ang_file_, energy_min_/GeV, energy_max_/GeV, "energy"); 
+    CheckVarBounds(ang_file_, energy_min_/GeV, energy_max_/GeV, "energy"); 
 
   }
 
