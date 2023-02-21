@@ -2,7 +2,7 @@
 // nexus | ValidationTrackingAction.cc
 //
 // This class is based on DefaultTrackinAction.
-// In addition, it creates and saves ROOT histograms with the energy
+// In addition, it creates and saves files  with the energy
 // of the gammas produced in the simulation. Its purpose is to produce
 // histograms to be compared across different versions of GEANT4,
 // before changing version.
@@ -22,6 +22,7 @@
 #include <G4Trajectory.hh>
 #include <G4OpticalPhoton.hh>
 #include <G4Gamma.hh>
+#include <G4GenericMessenger.hh>
 
 
 
@@ -29,9 +30,12 @@ using namespace nexus;
 
 REGISTER_CLASS(ValidationTrackingAction, G4UserTrackingAction)
 
-ValidationTrackingAction::ValidationTrackingAction(): G4UserTrackingAction()
+ValidationTrackingAction::ValidationTrackingAction():
+G4UserTrackingAction(), fname_("ValidationFile.csv")
 {
-
+  msg_ = new G4GenericMessenger(this, "/Actions/ValidationTrackingAction/");
+  msg_->DeclareProperty("valid_file", fname_,
+                        "Name of the file with the info for the validation histograms");
   // Get analysis manager
   fG4AnalysisMan_ = G4AnalysisManager::Instance();
   
@@ -47,7 +51,7 @@ ValidationTrackingAction::~ValidationTrackingAction()
 {
 
   // Open an output file and write histogram to file
-  fG4AnalysisMan_->OpenFile("GammaEnergy.root");
+  fG4AnalysisMan_->OpenFile(fname_);
   fG4AnalysisMan_->Write();
   fG4AnalysisMan_->CloseFile();
 }

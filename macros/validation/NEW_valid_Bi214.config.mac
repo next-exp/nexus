@@ -26,6 +26,9 @@
 /PhysicsList/Nexus/drift               false
 /PhysicsList/Nexus/electroluminescence false
 
+# ACTIONS
+/Actions/ValidationTrackingAction/valid_file NEW_valid.Bi214.DICE_BOARD.csv
+
 # PERSISTENCY
 /nexus/persistency/eventType background
 /nexus/persistency/outputFile NEW_valid.Bi214.DICE_BOARD.next
