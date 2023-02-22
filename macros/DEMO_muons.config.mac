@@ -31,9 +31,18 @@
 /Generator/MuonGenerator/max_energy  4. GeV
 /Generator/MuonGenerator/region MUONS
 
+# Use angular distribution simulated/measured at LSC
+/Generator/MuonGenerator/use_lsc_dist false
+
+# User specified muon direction. Must set use_lsc_dist to false for this to work
+# /Generator/MuonGenerator/user_dir 0 -1 0
+
+# For coordinate system transformation, do not edit
+/Generator/MuonGenerator/azimuth_rotation 150 deg
+
 # ACTIONS
 ## /Actions/MuonsEventAction/min_energy 0.6 MeV
-/Actions/MuonsEventAction/stringHist MuonsHist_1.root
+/Actions/MuonsEventAction/stringHist MuonsHist_1.csv
 
 # PHYSICS
 /PhysicsList/Nexus/clustering          false

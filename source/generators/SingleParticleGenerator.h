@@ -42,9 +42,6 @@ namespace nexus {
 
     void SetParticleDefinition(G4String);
 
-    /// Generate a random kinetic energy with flat probability in
-    //  the interval [energy_min, energy_max].
-    G4double RandomEnergy() const;
 
   private:
     G4GenericMessenger* msg_;

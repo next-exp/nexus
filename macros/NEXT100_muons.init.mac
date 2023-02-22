@@ -1,8 +1,7 @@
 ## ----------------------------------------------------------------------------
-## nexus | NEXT100_muons_hallA.init.mac
+## nexus | NEXT100_muons_lsc.init.mac
 ##
-## Initialization macro to simulate muons according to the distribution
-## measured at LSC in the NEXT-100 geometry from outside the hallA walls.
+## Initialization macro to simulate muons in the NEXT-100 geometry.
 ##
 ## The NEXT Collaboration
 ## ----------------------------------------------------------------------------
@@ -23,16 +22,20 @@
 /nexus/RegisterGeometry Next100
 
 ### GENERATOR
-/nexus/RegisterGenerator MuonAngleGenerator
+/nexus/RegisterGenerator MuonGenerator
 
+### PERSISTENCY
 /nexus/RegisterPersistencyManager PersistencyManager
 
 ### ACTIONS
 /nexus/RegisterTrackingAction DefaultTrackingAction
-/nexus/RegisterEventAction DefaultEventAction
 /nexus/RegisterRunAction DefaultRunAction
+
+# Use muon event action for debugging
+/nexus/RegisterEventAction DefaultEventAction
+# /nexus/RegisterEventAction MuonsEventAction
 
 /physics_lists/em/MuonNuclear true
 
 /nexus/RegisterDelayedMacro macros/physics/Xe137.mac
-/nexus/RegisterMacro macros/NEXT100_muons_hallA.config.mac
+/nexus/RegisterMacro macros/NEXT100_muons.config.mac

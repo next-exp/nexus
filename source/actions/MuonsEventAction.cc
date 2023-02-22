@@ -46,13 +46,13 @@ REGISTER_CLASS(MuonsEventAction, G4UserEventAction)
     
     // Create histogram(s) for muons
     fG4AnalysisMan_->CreateH1("Edepo","Energy_deposited",100,-1.0,3.4);
-    fG4AnalysisMan_->CreateH1("Theta","Theta generated",100,0.,pi);
-    fG4AnalysisMan_->CreateH1("Phi","Phi generated",100,0.,twopi);
+    fG4AnalysisMan_->CreateH1("Zenith","Zenith generated",100,0.,pi);
+    fG4AnalysisMan_->CreateH1("Azimuth","Azimuth generated",100,0.,twopi);
     
     // Create Ntuple branches for muons
-    fG4AnalysisMan_->CreateNtuple("Tree nexus","Flat tree of muon theta and phi");
-    fG4AnalysisMan_->CreateNtupleDColumn("tree_theta");
-    fG4AnalysisMan_->CreateNtupleDColumn("tree_phi");
+    fG4AnalysisMan_->CreateNtuple("Tree nexus","Flat tree of muon zenith and azimuth");
+    fG4AnalysisMan_->CreateNtupleDColumn("tree_zenith");
+    fG4AnalysisMan_->CreateNtupleDColumn("tree_azimuth");
     fG4AnalysisMan_->FinishNtuple();
 
   }
@@ -125,14 +125,14 @@ REGISTER_CLASS(MuonsEventAction, G4UserEventAction)
     G4VUserPrimaryVertexInformation *getinfo2 = my_vertex->GetUserInformation();
     AddUserInfoToPV *my_getinfo2 = dynamic_cast<AddUserInfoToPV*>(getinfo2);
 
-    G4double my_theta = my_getinfo2->GetTheta();
-    G4double my_phi = my_getinfo2->GetPhi();
+    G4double my_zenith = my_getinfo2->GetZenith();
+    G4double my_azimuth = my_getinfo2->GetAzimuth();
 
-    fG4AnalysisMan_->FillH1(1, my_theta);
-    fG4AnalysisMan_->FillH1(2, my_phi);
+    fG4AnalysisMan_->FillH1(1, my_zenith);
+    fG4AnalysisMan_->FillH1(2, my_azimuth);
 
-    fG4AnalysisMan_->FillNtupleDColumn(0, my_theta);
-    fG4AnalysisMan_->FillNtupleDColumn(1, my_phi);
+    fG4AnalysisMan_->FillNtupleDColumn(0, my_zenith);
+    fG4AnalysisMan_->FillNtupleDColumn(1, my_azimuth);
     fG4AnalysisMan_->AddNtupleRow();
 
   }

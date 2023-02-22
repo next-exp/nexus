@@ -1,0 +1,66 @@
+## ----------------------------------------------------------------------------
+## nexus | NEXT100_muons.config.mac
+##
+## Configuration macro to simulate muons according in the NEXT-100 geometry.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+### VERBOSITY
+/control/verbose 0
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+/process/em/verbose 0
+/process/had/verbose 0
+
+### JOB CONTROL
+/nexus/random_seed 17392
+
+### GEOMETRY
+/Geometry/Next100/pressure 15 bar
+/Geometry/Next100/gas enrichedXe
+/Geometry/Next100/elfield false
+#/Geometry/Next100/lab_walls true # Turn on when using HALLA_OUTER region
+
+### GENERATOR
+
+# Choose where to generate muons. 
+# EXTERNAL:    Just outside lead castle
+# HALLA_OUTER: Hall A walls
+/Generator/MuonGenerator/region EXTERNAL 
+# /Generator/MuonGenerator/region HALLA_OUTER
+
+# Use angular distribution simulated/measured at LSC
+/Generator/MuonGenerator/use_lsc_dist true
+
+# User specified muon direction. Must set use_lsc_dist to false for this to work
+# /Generator/MuonGenerator/user_dir 0 -1 0
+
+# Angle only: za, # Angle + Energy: zae
+/Generator/MuonGenerator/angle_dist zae
+
+# DataFile: data/MuonAnaAllRuns.csv, # SimulationFile: data/SimulatedMuonsProposalMCEq.csv
+# SimulationFile (Angle + Energy): data/SimulatedMuonsProposalMCEqEnergy.csv
+/Generator/MuonGenerator/angle_file data/SimulatedMuonsProposalMCEqEnergy.csv
+
+/Generator/MuonGenerator/min_energy 200 GeV
+/Generator/MuonGenerator/max_energy 5500 GeV
+
+# For coordinate system transformation, do not edit
+/Generator/MuonGenerator/azimuth_rotation 150 deg
+
+### ACTIONS
+/Actions/DefaultEventAction/min_energy 0.01 MeV
+#/Actions/MuonsEventAction/stringHist MuonsDistribution.csv
+
+
+### PHYSICS (for fast simulation)
+/PhysicsList/Nexus/clustering           false
+/PhysicsList/Nexus/drift                false
+/PhysicsList/Nexus/electroluminescence  false
+
+### PERSISTENCY
+/nexus/persistency/start_id 0
+/nexus/persistency/outputFile Next100Muons_example.next

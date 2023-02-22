@@ -10,7 +10,7 @@
 #include "ElecPositronPairGenerator.h"
 #include "GeometryBase.h"
 #include "FactoryBase.h"
-
+#include "RandomUtils.h"
 #include "DetectorConstruction.h"
 
 #include <G4GenericMessenger.hh>
@@ -84,7 +84,7 @@ void ElecPositronPairGenerator::GeneratePrimaryVertex(G4Event* event)
   G4PrimaryVertex* vertex = new G4PrimaryVertex(pos, time);
 
   // Generate uniform random energy in [E_min, E_max]
-  G4double tot_kinetic_energy = RandomEnergy(energy_min_, energy_max_);
+  G4double tot_kinetic_energy = UniformRandomInRange(energy_max_, energy_min_);
   G4double kinetic_energy = G4UniformRand() * tot_kinetic_energy;
 
   // Generate random direction by default
@@ -128,14 +128,4 @@ void ElecPositronPairGenerator::GeneratePrimaryVertex(G4Event* event)
     // Add particle to the vertex and this to the event
   vertex->SetPrimary(particle2);
   event->AddPrimaryVertex(vertex);
-}
-
-
-
-G4double ElecPositronPairGenerator::RandomEnergy(G4double emin, G4double emax) const
-{
-  if (emax == emin)
-    return emin;
-  else
-    return (G4UniformRand()*(emax - emin) + emin);
 }

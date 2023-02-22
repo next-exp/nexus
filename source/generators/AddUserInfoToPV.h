@@ -24,19 +24,19 @@ namespace nexus {
     ~AddUserInfoToPV();
 
     void Print() const;
-    G4double GetTheta();
-    G4double GetPhi();
+    G4double GetZenith();
+    G4double GetAzimuth();
 
   private:
 
-    G4double theta_;
-    G4double phi_;
+    G4double zenith_;
+    G4double azimuth_;
   };
 
-  inline G4double AddUserInfoToPV::GetTheta()
-  { return theta_; }
-  inline G4double AddUserInfoToPV::GetPhi()
-  { return phi_; }
+  inline G4double AddUserInfoToPV::GetZenith()
+  { return zenith_; }
+  inline G4double AddUserInfoToPV::GetAzimuth()
+  { return azimuth_; }
 
 } // end namespace nexus
 
