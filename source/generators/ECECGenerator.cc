@@ -99,8 +99,6 @@ void ECECGenerator::Initialize() {
   atom_ = new G4UAtomicDeexcitation();
   atom_->SetFluo (true);
   atom_->SetAuger(true);
-  atom_->SetCutForSecondaryPhotons(0);
-  atom_->SetCutForAugerElectrons  (0);
 
   shell_ = atom_->GetAtomicShell(atomic_number_, GetShellID(shell_name_));
 
