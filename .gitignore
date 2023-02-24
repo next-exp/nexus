@@ -8,6 +8,7 @@ source/.DS_Store
 # nexus output files
 *.h5
 *.root
+*.csv
 
 # nexus auxiliary files
 *.dat
