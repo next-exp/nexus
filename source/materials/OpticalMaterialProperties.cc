@@ -740,14 +740,6 @@ namespace opticalprops {
   {
     G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
-    // REFLECTIVITY
-    // std::vector<G4double> ENERGIES = {
-    //   optPhotMinE_, optPhotMaxE_
-    // };
-    // std::vector<G4double> REFLECTIVITY = {
-    //   1., 1.
-    // };
-
     std::vector<G4double> ENERGIES = {
        h_Planck * c_light / (2456.42541 * nm), h_Planck * c_light / (2396.60266 * nm),
        h_Planck * c_light / (2276.95716 * nm), h_Planck * c_light / (2159.52733 * nm),
