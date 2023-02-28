@@ -25,4 +25,8 @@
 /nexus/RegisterEventAction DefaultEventAction
 
 /nexus/RegisterMacro macros/validation/NEW_valid_K40.config.mac
+#/nexus/RegisterMacro macros/validation/NEW_valid_Co60.config.mac
+#/nexus/RegisterMacro macros/validation/NEW_valid_Bi214.config.mac
+#/nexus/RegisterMacro macros/validation/NEW_valid_Tl208.config.mac
+
 #/nexus/RegisterDelayedMacro macros/physics/Bi214.mac
