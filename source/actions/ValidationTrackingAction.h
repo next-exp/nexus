@@ -2,7 +2,7 @@
 // nexus | ValidationTrackingAction.h
 //
 // This class is based on DefaultTrackinAction.
-// In addition, it creates and saves ROOT histograms with the energy
+// In addition, it creates and saves files with the energy
 // of the gammas produced in the simulation. Its purpose is to produce
 // histograms to be compared across different versions of GEANT4,
 // before changing version.
@@ -17,6 +17,7 @@
 #include <G4AnalysisManager.hh>
 
 class G4Track;
+class G4GenericMessenger;
 
 namespace nexus {
 
@@ -34,6 +35,8 @@ namespace nexus {
     virtual void PostUserTrackingAction(const G4Track*);
 
   private:
+    G4GenericMessenger* msg_;
+    G4String fname_;
     G4AnalysisManager* fG4AnalysisMan_; ///< Pointer to the Analysis Manager
   };
 
