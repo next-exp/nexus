@@ -12,6 +12,7 @@
 
 #include "BaseDriftField.h"
 #include <G4LorentzVector.hh>
+#include <G4Types.hh>
 
 
 namespace nexus {

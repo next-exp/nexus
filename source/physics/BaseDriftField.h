@@ -11,6 +11,7 @@
 
 #include <G4VUserRegionInformation.hh>
 #include <G4LorentzVector.hh>
+#include <G4Types.hh>
 
 class G4Material;
 
