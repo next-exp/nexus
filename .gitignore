@@ -4,6 +4,7 @@
 .sconsign.dblite
 source/.DS_Store
 *~
+.vscode
 
 # nexus output files
 *.h5
