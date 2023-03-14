@@ -115,4 +115,11 @@ namespace nexus {
   }
 
 
+
+  G4double UniformElectricDriftField::GetTotalDriftLength() const
+  {
+    return std::abs(anode_pos_ - cathode_pos_);
+  }
+
+
 } // end namespace nexus

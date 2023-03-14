@@ -40,6 +40,7 @@ namespace nexus {
       GeneratePointAlongDriftLine(const G4LorentzVector&, const G4LorentzVector&) = 0;
 
     virtual G4double LightYield() const;
+    virtual G4double GetTotalDriftLength() const;
 
   private:
     void Print() const;
@@ -52,6 +53,8 @@ namespace nexus {
   inline BaseDriftField::~BaseDriftField() {}
 
   inline G4double BaseDriftField::LightYield() const {return 0.;}
+
+  inline G4double BaseDriftField::GetTotalDriftLength() const {return 0.;}
 
   inline void BaseDriftField::Print() const {}
 

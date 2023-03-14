@@ -79,7 +79,7 @@ Electroluminescence::PostStepDoIt(const G4Track& track, const G4Step& step)
 
   // Get the light yield from the field
   const G4double yield = field->LightYield();
-  G4double step_length = step.GetStepLength();
+  G4double step_length = field->GetTotalDriftLength();
 
   if (yield <= 0.)
     return G4VDiscreteProcess::PostStepDoIt(track, step);
