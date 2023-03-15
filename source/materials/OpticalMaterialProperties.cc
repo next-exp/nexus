@@ -867,22 +867,22 @@ namespace opticalprops {
       h_Planck * c_light / (250. * nm),  h_Planck * c_light / (230. * nm),
       h_Planck * c_light / (210. * nm),  h_Planck * c_light / (190. * nm),
       h_Planck * c_light / (170. * nm),  h_Planck * c_light / (150. * nm),
-      h_Planck * c_light / (100. * nm),  optPhotMaxE_
+      optPhotMaxE_
     };
 
     std::vector<G4double> WLS_absLength = {
-      noAbsLength_,
+      noAbsLength_,                 // ~6200 nm
       noAbsLength_,   50. * nm,     // 380 , 370 nm
-      30. * nm,      30. * nm,     // 360 , 330 nm
-      50. * nm,      80. * nm,     // 320 , 310 nm
+      30. * nm,      30. * nm,      // 360 , 330 nm
+      50. * nm,      80. * nm,      // 320 , 310 nm
       100. * nm,     100. * nm,     // 300 , 270 nm
       400. * nm,     400. * nm,     // 250 , 230 nm
       350. * nm,     250. * nm,     // 210 , 190 nm
       350. * nm,     400. * nm,     // 170 , 150 nm
-      400. * nm,     noAbsLength_   // 100 nm
+      400. * nm                     // ~108 nm
     };
 
-    //for (int i=0; i<WLS_abs_entries; i++)
+    //for (int i=0; i<WLS_abs_energy.size(); i++)
     //  G4cout << "* TPB WLS absLength:  " << std::setw(8) << WLS_abs_energy[i] / eV
     //         << " eV  ==  " << std::setw(8) << (h_Planck * c_light / WLS_abs_energy[i]) / nm
     //         << " nm  ->  " << std::setw(6) << WLS_absLength[i] / nm << " nm" << G4endl;
