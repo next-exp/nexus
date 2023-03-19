@@ -1,14 +1,13 @@
 // ----------------------------------------------------------------------------
 // nexus | CORSIKAGenerator.h
 //
-// This class is the primary generator of muons following the angular
-// distribution at sea level. Angles are saved to be plotted later.
+// This class generates particles taking as input a CORSIKA binary file
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef MUON_GENERATOR_H
-#define MUON_GENERATOR_H
+#ifndef CORSIKA_GENERATOR_H
+#define CORSIKA_GENERATOR_H
 
 #include <G4VPrimaryGenerator.hh>
 #include <iostream>
