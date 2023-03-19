@@ -1,8 +1,7 @@
 // ----------------------------------------------------------------------------
 // nexus | CORSIKAGenerator.cc
 //
-// This class is the primary generator of muons following the angular
-// distribution at sea level. Angles are saved to be plotted later.
+// This class generates particles taking as input a CORSIKA binary file
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
