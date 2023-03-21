@@ -36,16 +36,19 @@ CORSIKAGenerator::CORSIKAGenerator():
   G4GenericMessenger::Command& height = msg_->DeclareProperty("height", height_,
 			"Height of the cosmic generation plane.");
   height.SetUnitCategory("Length");
+  height.SetParameterName("height", false);
   height.SetRange("height>0.");
 
   G4GenericMessenger::Command& plane_x_size = msg_->DeclareProperty("plane_x_size", plane_x_size_,
 			"Size of the cosmic generation plane on the x axis.");
   plane_x_size.SetUnitCategory("Length");
+  plane_x_size.SetParameterName("plane_x_size", false);
   plane_x_size.SetRange("plane_x_size > 0.");
 
   G4GenericMessenger::Command& plane_y_size = msg_->DeclareProperty("plane_y_size", plane_y_size_,
 			"Size of the cosmic generation plane on the y axis.");
   plane_y_size.SetUnitCategory("Length");
+  plane_y_size.SetParameterName("plane_y_size", false);
   plane_y_size.SetRange("plane_y_size > 0.");
 
   msg_->DeclareProperty("region", region_,
