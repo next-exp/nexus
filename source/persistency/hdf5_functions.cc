@@ -131,6 +131,7 @@ hsize_t createStepType()
   H5Tinsert (memtype, "final_x"       , HOFFSET(step_info_t, final_x       ), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "final_y"       , HOFFSET(step_info_t, final_y       ), H5T_NATIVE_FLOAT);
   H5Tinsert (memtype, "final_z"       , HOFFSET(step_info_t, final_z       ), H5T_NATIVE_FLOAT);
+  H5Tinsert (memtype, "time"          , HOFFSET(step_info_t, time          ), H5T_NATIVE_FLOAT);
   return memtype;
 }
 

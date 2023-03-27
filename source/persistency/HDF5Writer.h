@@ -42,7 +42,8 @@ namespace nexus {
                    const char*   final_volume,
                    const char*      proc_name,
                    float initial_x, float initial_y, float initial_z,
-                   float   final_x, float   final_y, float   final_z);
+                   float   final_x, float   final_y, float   final_z,
+                   float time);
 
   private:
     size_t file_; ///< HDF5 file

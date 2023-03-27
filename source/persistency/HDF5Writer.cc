@@ -178,7 +178,8 @@ void HDF5Writer::WriteStep(int64_t evt_number,
                            const char*   final_volume,
                            const char*      proc_name,
                            float initial_x, float initial_y, float initial_z,
-                           float   final_x, float   final_y, float   final_z)
+                           float   final_x, float   final_y, float   final_z,
+                           float time)
 {
   step_info_t step;
   step.event_id    = evt_number;
@@ -198,6 +199,7 @@ void HDF5Writer::WriteStep(int64_t evt_number,
   step.  final_x   =   final_x;
   step.  final_y   =   final_y;
   step.  final_z   =   final_z;
+  step.time        =      time;
 
   writeStep(&step, stepTable_, memtypeStep_, istep_);
 

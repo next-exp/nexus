@@ -89,6 +89,7 @@
     float     final_x;
     float     final_y;
     float     final_z;
+    float        time;
   } step_info_t;
 
   hsize_t createRunType();
