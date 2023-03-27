@@ -1,8 +1,19 @@
 // ----------------------------------------------------------------------------
 // nexus | SaveAllSteppingAction.cc
 //
-// This class sets the store_steps flag of the persistency manager
-// so all steps are saved.
+// This class adds a new group and table to the output file, "/DEBUG/steps".
+// This table contains information (position and volume of both the
+// pre- and post-step points, average time, process name and other identifiers)
+// of some steps of the simulation. By default all steps are stored. However,
+// a subset of them can be selected by cherry-picking the volumes and particles
+// involved in the step. This can be achieved with the commands
+// /Actions/SaveAllSteppingAction/select_particle
+// and
+// /Actions/SaveAllSteppingAction/select_volume
+// without the need for re-compilation.
+// It must be noted that the files produced with this action become large
+// very quickly. Therefore, strict filtering and small number of events are
+// encouraged.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
