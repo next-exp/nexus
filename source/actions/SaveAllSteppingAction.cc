@@ -34,7 +34,14 @@ REGISTER_CLASS(SaveAllSteppingAction, G4UserSteppingAction)
 SaveAllSteppingAction::SaveAllSteppingAction():
 G4UserSteppingAction(),
 msg_(0),
-selected_volumes_()
+selected_volumes_(),
+selected_particles_(),
+initial_volumes_(),
+final_volumes_(),
+proc_names_(),
+initial_poss_(),
+final_poss_(),
+times_()
 {
   msg_ = new G4GenericMessenger(this, "/Actions/SaveAllSteppingAction/");
 
