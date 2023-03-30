@@ -21,6 +21,7 @@
 #/Actions/SaveAllSteppingAction/select_particle geantino
 #/Actions/SaveAllSteppingAction/select_volume   ACTIVE   #    full match
 #/Actions/SaveAllSteppingAction/select_volume   TPB      # partial match
+#/Actions/SaveAllSteppingAction/kill_after_selection true
 
 # GEOMETRY
 /Geometry/NextNew/pressure 10. bar
