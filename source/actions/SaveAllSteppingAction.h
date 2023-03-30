@@ -65,6 +65,8 @@ namespace nexus {
     StepContainer<G4ThreeVector>   final_poss_;
     StepContainer<G4double>             times_;
 
+    G4bool kill_after_selection_;
+
   public:
 
     StepContainer<G4String> get_initial_volumes();

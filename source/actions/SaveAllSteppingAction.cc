@@ -41,7 +41,8 @@ final_volumes_(),
 proc_names_(),
 initial_poss_(),
 final_poss_(),
-times_()
+times_(),
+kill_after_selection_(false)
 {
   msg_ = new G4GenericMessenger(this, "/Actions/SaveAllSteppingAction/");
 
@@ -52,6 +53,10 @@ times_()
   msg_->DeclareMethod("select_volume",
                       &SaveAllSteppingAction::AddSelectedVolume,
                       "add a new volume to select");
+
+  msg_->DeclareProperty("kill_after_selection",
+                        kill_after_selection_,
+                        "Whether to kill a particle after a step has been selected");
 
   PersistencyManager* pm = dynamic_cast<PersistencyManager*>
         (G4VPersistencyManager::GetPersistencyManager());
@@ -102,6 +107,9 @@ void SaveAllSteppingAction::UserSteppingAction(const G4Step* step)
   initial_poss_   [key].push_back(initial_pos);
     final_poss_   [key].push_back(  final_pos);
          times_   [key].push_back(  step_time);
+
+  if (kill_after_selection_)
+    step->GetTrack()->SetTrackStatus(fStopAndKill);
 }
 
 
