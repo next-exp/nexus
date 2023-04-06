@@ -16,4 +16,4 @@
 
 /nexus/random_seed 1
 /nexus/persistency/start_id 0
-/nexus/persistency/outputFile new_elgap.nexus
+/nexus/persistency/output_file new_elgap.nexus

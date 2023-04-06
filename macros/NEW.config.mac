@@ -27,7 +27,7 @@
 /PhysicsList/Nexus/electroluminescence false
 /PhysicsList/Nexus/photoelectric       false
 
-/nexus/persistency/eventType background
-/nexus/persistency/outputFile NextNew.Bi214.DICE_BOARD.next
+/nexus/persistency/event_type background
+/nexus/persistency/output_file NextNew.Bi214.DICE_BOARD.next
 
 /process/em/verbose 0

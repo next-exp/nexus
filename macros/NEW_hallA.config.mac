@@ -30,5 +30,5 @@
 /PhysicsList/Nexus/drift               false
 /PhysicsList/Nexus/electroluminescence false
 
-/nexus/persistency/eventType background
-/nexus/persistency/outputFile NextNew.HALLA_INNER.next
+/nexus/persistency/event_type background
+/nexus/persistency/output_file NextNew.HALLA_INNER.next

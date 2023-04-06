@@ -28,4 +28,4 @@
 /control/execute macros/physics/IonizationElectron.mac
 
 # PERSISTENCY
-/nexus/persistency/outputFile S1_param.next
+/nexus/persistency/output_file S1_param.next

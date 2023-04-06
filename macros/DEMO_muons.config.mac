@@ -50,4 +50,4 @@
 /PhysicsList/Nexus/electroluminescence false
 
 # PERSISTENCY
-/nexus/persistency/outputFile DEMO_muons.next
+/nexus/persistency/output_file DEMO_muons.next

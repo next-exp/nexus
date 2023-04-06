@@ -42,5 +42,5 @@
 /Actions/ValidationTrackingAction/valid_file NEW_valid.isotope.DICE_BOARD.csv
 
 # PERSISTENCY
-/nexus/persistency/eventType background
-/nexus/persistency/outputFile NEW_valid.isotope.DICE_BOARD.next
+/nexus/persistency/event_type background
+/nexus/persistency/output_file NEW_valid.isotope.DICE_BOARD.next

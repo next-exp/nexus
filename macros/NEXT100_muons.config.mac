@@ -63,4 +63,4 @@
 
 ### PERSISTENCY
 /nexus/persistency/start_id 0
-/nexus/persistency/outputFile Next100Muons_example.next
+/nexus/persistency/output_file Next100Muons_example.next
