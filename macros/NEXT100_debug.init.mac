@@ -1,0 +1,20 @@
+## ----------------------------------------------------------------------------
+## nexus | NEXT100_debug.init.mac
+##
+## Initialization macro to simulate geantinos crossing the NEXT-100 detector.
+## It is useful to debug the geometry.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+/PhysicsList/RegisterPhysics NexusPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
+
+/nexus/RegisterGeometry Next100
+
+/nexus/RegisterGenerator SingleParticleGenerator
+
+/nexus/RegisterMacro macros/NEXT100_debug.config.mac

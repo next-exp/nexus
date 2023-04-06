@@ -1,0 +1,25 @@
+## ----------------------------------------------------------------------------
+## nexus | NEXT100_debug.config.mac
+##
+## Initialization macro to simulate geantinos crossing the NEXT-100 detector.
+## It is useful to debug the geometry.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+##### VERBOSITY #####
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 1
+
+/process/em/verbose 0
+
+##### GEOMETRY #####
+/Geometry/Next100/specific_vertex 5 5 0 mm
+
+##### GENERATOR #####
+/Generator/SingleParticle/particle geantino
+/Generator/SingleParticle/min_energy 1 eV
+/Generator/SingleParticle/max_energy 1 eV
+/Generator/SingleParticle/region AD_HOC
+/Generator/SingleParticle/momentum 0 0 1
