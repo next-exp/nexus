@@ -50,7 +50,7 @@ PersistencyManagerBase(), msg_(0), output_file_("nexus_out"), ready_(false),
 {
   msg_ = new G4GenericMessenger(this, "/nexus/persistency/");
   msg_->DeclareProperty("output_file", output_file_, "Path of output file.");
-  msg_->DeclareProperty("eventType", event_type_,
+  msg_->DeclareProperty("event_type", event_type_,
                         "Type of event: bb0nu, bb2nu, background.");
   msg_->DeclareProperty("start_id", start_id_,
                         "Starting event ID for this job.");
