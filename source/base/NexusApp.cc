@@ -188,6 +188,10 @@ void NexusApp::Initialize()
 
   G4RunManager::Initialize();
 
+  if (pman_) {
+    pm_->OpenFile();
+  }
+
   for (unsigned int j=0; j<delayed_.size(); j++) {
     ExecuteMacroFile(delayed_[j].data());
   }
