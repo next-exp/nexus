@@ -36,7 +36,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
                                          geo_name_(""), pm_name_(""),
                                          runact_name_(""), evtact_name_(""),
                                          stepact_name_(""), trkact_name_(""),
-                                         stkact_name_("")
+                                         stkact_name_(""), pman_(false)
 {
   // Create and configure a generic messenger for the app
   msg_ = make_unique<G4GenericMessenger>(this, "/nexus/", "Nexus control commands.");
@@ -105,13 +105,13 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
   pg->SetGenerator(ObjFactory<G4VPrimaryGenerator>::Instance().CreateObject(gen_name_));
   this->SetUserAction(pg.release());
 
-  if (pm_name_ == "") {
-    G4Exception("[NexusApp]", "NexusApp()", FatalException, "A persistency manager must be specified.");
-  }
-  pm_ = ObjFactory<PersistencyManagerBase>::Instance().CreateObject(pm_name_);
-  pm_->SetMacros(init_macro, macros_, delayed_);
 
- // PersistencyManager::Initialize(init_macro, macros_, delayed_);
+  // Set the persistency manager, if needed
+  if (pm_name_ != "") {
+    pm_ = ObjFactory<PersistencyManagerBase>::Instance().CreateObject(pm_name_);
+    pm_->SetMacros(init_macro, macros_, delayed_);
+    pman_ = true;
+  }
 
   // Set the user action instances, if any, in the run manager
   if (runact_name_ != "") {
@@ -153,7 +153,9 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
 NexusApp::~NexusApp()
 {
   // Close output file before finishing
-  pm_->CloseFile();
+  if (pman_) {
+    pm_->CloseFile();
+  }
 }
 
 

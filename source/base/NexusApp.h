@@ -55,6 +55,8 @@ namespace nexus {
     G4String trkact_name_; ///< Name of the chosen tracking action
     G4String stkact_name_; ///< Name of the chosen stacking action
 
+    G4bool pman_; ///< True if the persistency manager is set
+
     std::vector<G4String> macros_;
     std::vector<G4String> delayed_;
 
