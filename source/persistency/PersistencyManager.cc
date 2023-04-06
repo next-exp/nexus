@@ -254,7 +254,6 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
     dynamic_cast<IonizationHitsCollection*>(hc);
   if (!hits) return;
 
-  double evt_energy = 0.;
   std::string sdname = hits->GetSDname();
 
   for (size_t i=0; i<hits->entries(); i++) {
@@ -280,8 +279,6 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
 			    xyz[0], xyz[1], xyz[2],
 			    hit->GetTime(), hit->GetEnergyDeposit(),
 			    sdname.c_str());
-
-    evt_energy += hit->GetEnergyDeposit();
   }
 }
 
