@@ -1,3 +1,7 @@
+tag v7_05_00 - 26 Apr 2022
+	- Add features to the actions that saves all steps
+	- Fix electroluminescence generation to work properly with Geant4.11.1
+
 tag v7_04_00 - 15 Mar 2022
 	- Fix bug in TPB optical properties
 	- Add double electron capture generator
