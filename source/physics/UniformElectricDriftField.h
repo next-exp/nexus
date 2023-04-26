@@ -64,6 +64,8 @@ namespace nexus {
     void SetNumberOfPhotons(G4double);
     G4double GetNumberOfPhotons() const;
 
+    virtual G4double GetTotalDriftLength() const;
+
   private:
     /// Returns true if coordinate is between anode and cathode
     G4bool CheckCoordinate(G4double);
