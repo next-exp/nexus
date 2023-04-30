@@ -7,7 +7,7 @@
 /control/verbose 2
 /control/saveHistory
 /run/verbose 2
-/tracking/verbose 2
+/tracking/verbose 0
 
 ### Create an empty scene and a scene handles (OpenGL)
 /vis/scene/create
@@ -31,6 +31,12 @@
 
 ### Create an empty scene and add the detector geometry
 /vis/drawVolume
+/vis/viewer/set/picking false
+/vis/viewer/set/viewpointVector 1 0 0
+
+#make world box invisible
+/vis/geometry/set/visibility World 0 false
+
 
 ### Drawing the tracks (if chosen in user actions)
 # Parameter (omittable) (default=0):

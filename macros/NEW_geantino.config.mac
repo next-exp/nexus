@@ -7,7 +7,6 @@
 /run/verbose 0
 /event/verbose 0
 /tracking/verbose 0
-
 /process/em/verbose 0
 
 # GENERATION
@@ -15,7 +14,6 @@
 /Generator/SingleParticle/min_energy 1  eV
 /Generator/SingleParticle/max_energy 1 keV
 /Generator/SingleParticle/region AD_HOC
-/Geometry/NextNew/specific_vertex  0 0 100 mm
 
 # ACTIONS
 #/Actions/SaveAllSteppingAction/select_particle geantino

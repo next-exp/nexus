@@ -1,0 +1,28 @@
+### --------------------------------------------------------
+###  Initialization macro for the square optical fiber detector setup.
+###  This macro simulates individual particles
+###  in the active volume. It simulates only the inner
+###  part of the detector.
+### --------------------------------------------------------
+
+### /control/execute macros/physics/DefaultPhysicsList.mac
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+/PhysicsList/RegisterPhysics NexusPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
+/PhysicsList/RegisterPhysics G4OpticalPhysics
+
+/nexus/RegisterGeometry SquareOpticalFiber
+
+/nexus/RegisterGenerator SingleParticleGenerator
+
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterTrackingAction OpticalTrackingAction
+/nexus/RegisterSteppingAction SaveAllSteppingAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterRunAction DefaultRunAction
+
+
+/nexus/RegisterMacro macros/SquareOpticalFiber.config.mac

@@ -82,7 +82,7 @@ REGISTER_CLASS(DefaultEventAction, G4UserEventAction)
       // Get the trajectories stored for this event and loop through them
       // to calculate the total energy deposit
 
-      G4double edep = 0.;
+      G4double edep = 1;
 
       G4TrajectoryContainer* tc = event->GetTrajectoryContainer();
       if (tc) {

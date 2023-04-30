@@ -82,6 +82,7 @@
     int     step_id;
     char    initial_volume[STRLEN];
     char      final_volume[STRLEN];
+    // float      kin_energy;
     char         proc_name[STRLEN];
     float   initial_x;
     float   initial_y;

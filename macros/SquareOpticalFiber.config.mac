@@ -1,0 +1,57 @@
+### --------------------------------------------------------
+###  Configuration macro for the square optical fiber geometry.
+###  This macro simulates a 172 nm (7.21 eV) optical photon.
+###  in the active volume.
+### --------------------------------------------------------
+
+/nexus/random_seed 42
+
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+/process/em/verbose 0
+
+
+### Generation
+/Generator/SingleParticle/particle opticalphoton
+#/Generator/SingleParticle/min_energy 2.883 eV
+#/Generator/SingleParticle/max_energy 2.883 eV
+/Generator/SingleParticle/min_energy 7.21 eV
+/Generator/SingleParticle/max_energy 7.21 eV
+
+
+/Generator/SingleParticle/region LINE_SOURCE_EL
+#/Generator/SingleParticle/region ACTIVE
+#/Generator/SingleParticle/min_costheta 0.6711
+/Generator/SingleParticle/min_costheta 0
+/Generator/SingleParticle/max_costheta 1
+
+
+# SETUP PARAMETERS
+/Geometry/SquareOpticalFiber/specific_vertex 0 0 0.0012 mm # no importance for z-value here
+/Geometry/SquareOpticalFiber/ELGap 1 mm
+/Geometry/SquareOpticalFiber/pitch 5 mm
+/Geometry/SquareOpticalFiber/distanceFiberHolder 5 mm
+/Geometry/SquareOpticalFiber/distanceAnodeHolder 2.5 mm
+/Geometry/SquareOpticalFiber/holderThickness 10 mm
+/Geometry/SquareOpticalFiber/TPBThickness 2.2 #microns
+
+
+
+# point vertex
+#/Generator/SingleParticle/region SingleParticle
+#/Generator/SingleParticle/region AD_HOC
+
+
+/Actions/SaveAllSteppingAction/select_volume SiPM
+#/Actions/SaveAllSteppingAction/select_volume TPB
+
+#/Actions/SaveAllSteppingAction/select_volume WORLD
+#/Actions/SaveAllSteppingAction/select_volume Cap1
+
+#/Actions/SaveAllSteppingAction/select_volume Barrel
+
+
+
+#/nexus/persistency/outputFile /media/amir/9C33-6BBD/NEXT_work/Geant4/nexus/SquareFiberCladding.next
+/nexus/persistency/outputFile /media/amir/9C33-6BBD/NEXT_work/Geant4/nexus/SquareFiber.next

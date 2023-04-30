@@ -1,0 +1,31 @@
+### --------------------------------------------------------
+###  Configuration macro for the capillaries geometry.
+###  This macro simulates a 7.1 eV optical photon.
+###  in the active volume.
+### --------------------------------------------------------
+
+/nexus/random_seed 42
+
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+/process/em/verbose 0
+
+
+### Generation
+/Generator/SingleParticle/particle opticalphoton
+/Generator/SingleParticle/min_energy 7.21 eV
+/Generator/SingleParticle/max_energy 7.21 eV
+/Generator/SingleParticle/region ACTIVE
+/Generator/SingleParticle/min_costheta 0
+/Generator/SingleParticle/max_costheta 1.0
+/Generator/SingleParticle/region AD_HOC
+
+/Actions/SaveAllSteppingAction/select_volume SiPM
+/Actions/SaveAllSteppingAction/select_volume Cap1
+/Actions/SaveAllSteppingAction/select_volume Fiber
+/Actions/SaveAllSteppingAction/select_volume World
+
+/nexus/persistency/outputFile /media/amir/9C33-6BBD/NEXT_work/Geant4/nexus/CapillariesHitpoints.next
+#/nexus/persistency/outputFile Hitpoints.next

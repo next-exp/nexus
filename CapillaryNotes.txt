@@ -1,0 +1,38 @@
+Geant4 results so far for Capillaries:
+
+For all 4 setups : 100% specular, z = -3.4cm (1 mm inside the capillary), reflectivity of 98% at 7.2eV, PDE not considered, array of 25x25 SiPMs:
+
+Setup 1 (lowest SiPM coverage):
+	SiPM size 1.3mmx1.3mm, SiPM displacement = 15.6mm
+	percentage of SiPM cover = 0.694%
+	2092/1M hits in SiPMs <=> 0.2092%
+	
+	
+Setup 2:
+	SiPM size 1.3mmx1.3mm, SiPM displacement = 10mm
+	percentage of SiPM cover = 1.69%
+	2709/1M hits in SiPMs <=> 0.2709%
+	
+	
+Setup 3:
+	SiPM size 3mmx3mm, SiPM displacement = 15.6mm
+	percentage of SiPM cover = 3.7%
+	10,481/1M hits in SiPMs <=> 1.0481% 
+	104,176/10M hits in SiPMs <=> 1.041%
+	
+	
+Setup 4 (highest SiPM coverage): 
+	SiPM size 3mmx3mm, SiPM displacement = 10mm
+	percentage of SiPM cover = 9%
+	14,570/1M hits in SiPMs <=> 1.457%
+	
+	
+	
+	
+	
+	
+	
+
+	case 1 : SiPM dimensions 1.3mm x 1.3mm, 66 SiPM hits out of 1M fired, fraction = 0.66E-4
+	case 2 : SiPM dimensions 3mm x 3mm, 385 SiPM hits out of 1M fired, fraction = 3.85E-4
+
