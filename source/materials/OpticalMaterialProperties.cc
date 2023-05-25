@@ -461,6 +461,10 @@ namespace opticalprops {
   {
     // An argon gas proportional scintillation counter with UV avalanche photodiode scintillation
     // readout C.M.B. Monteiro, J.A.M. Lopes, P.C.P.S. Simoes, J.M.F. dos Santos, C.A.N. Conde
+    // 
+    // May 2023:
+    // Updated scintillation decay and yields from:
+    // Triplet Lifetime in Gaseous Argon. Michael Akashi-Ronquest et al.
 
     G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
@@ -516,9 +520,9 @@ namespace opticalprops {
     // CONST PROPERTIES
     mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield);
     mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT1",   6.*ns);
-    mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT2",   37.*ns);
-    mpt->AddConstProperty("SCINTILLATIONYIELD1", .342);
-    mpt->AddConstProperty("SCINTILLATIONYIELD2", .658);
+    mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT2",   3480.*ns);
+    mpt->AddConstProperty("SCINTILLATIONYIELD1", .136);
+    mpt->AddConstProperty("SCINTILLATIONYIELD2", .864);
     mpt->AddConstProperty("RESOLUTIONSCALE",    1.0);
     mpt->AddConstProperty("ATTACHMENT",         e_lifetime, 1);
 
