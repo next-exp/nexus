@@ -10,7 +10,7 @@
 ##### VERBOSITY #####
 /run/verbose 0
 /event/verbose 0
-/tracking/verbose 1
+/tracking/verbose 0
 
 /process/em/verbose 0
 
@@ -18,8 +18,8 @@
 /Geometry/Next100/specific_vertex 5 5 0 mm
 
 ##### GENERATOR #####
-/Generator/SingleParticle/particle geantino
-/Generator/SingleParticle/min_energy 1 eV
-/Generator/SingleParticle/max_energy 1 eV
+/Generator/SingleParticle/particle e-
+/Generator/SingleParticle/min_energy 100 keV
+/Generator/SingleParticle/max_energy 100 keV
 /Generator/SingleParticle/region AD_HOC
 /Generator/SingleParticle/momentum 0 0 1
