@@ -91,7 +91,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
 
   // Set the detector construction instance in the run manager
   auto dc = make_unique<DetectorConstruction>();
-  if (geo_name_ == "") {
+  if (geo_name_.empty()) {
     G4Exception("[NexusApp]", "NexusApp()", FatalException, "A geometry must be specified.");
   }
   dc->SetGeometry(ObjFactory<GeometryBase>::Instance().CreateObject(geo_name_));
@@ -99,7 +99,7 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
 
   // Set the primary generation instance in the run manager
   auto pg = make_unique<PrimaryGeneration>();
-  if (gen_name_ == "") {
+  if (gen_name_.empty()) {
     G4Exception("[NexusApp]", "NexusApp()", FatalException, "A generator must be specified.");
   }
   pg->SetGenerator(ObjFactory<G4VPrimaryGenerator>::Instance().CreateObject(gen_name_));
@@ -107,34 +107,34 @@ NexusApp::NexusApp(G4String init_macro): G4RunManager(), gen_name_(""),
 
 
   // Set the persistency manager, if needed
-  if (pm_name_ != "") {
+  if (!pm_name_.empty()) {
     pm_ = ObjFactory<PersistencyManagerBase>::Instance().CreateObject(pm_name_);
     pm_->SetMacros(init_macro, macros_, delayed_);
     pman_ = true;
   }
 
   // Set the user action instances, if any, in the run manager
-  if (runact_name_ != "") {
+  if (!runact_name_.empty()) {
     auto runact = ObjFactory<G4UserRunAction>::Instance().CreateObject(runact_name_);
     this->SetUserAction(runact.release());
   }
 
-  if (evtact_name_ != "") {
+  if (!evtact_name_.empty()) {
     auto evtact = ObjFactory<G4UserEventAction>::Instance().CreateObject(evtact_name_);
     this->SetUserAction(evtact.release());
   }
 
-  if (stkact_name_ != "") {
+  if (!stkact_name_.empty()) {
     auto stkact = ObjFactory<G4UserStackingAction>::Instance().CreateObject(stkact_name_);
     this->SetUserAction(stkact.release());
   }
 
-  if (trkact_name_ != "") {
+  if (!trkact_name_.empty()) {
     auto trkact = ObjFactory<G4UserTrackingAction>::Instance().CreateObject(trkact_name_);
     this->SetUserAction(trkact.release());
   }
 
-  if (stepact_name_ != "") {
+  if (!stepact_name_.empty()) {
     auto stepact = ObjFactory<G4UserSteppingAction>::Instance().CreateObject(stepact_name_);
     this->SetUserAction(stepact.release());
   }
