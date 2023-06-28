@@ -39,5 +39,5 @@
 /PhysicsList/Nexus/electroluminescence false
 
 ##### PERSISTENCY #####
-/nexus/persistency/eventType background
-/nexus/persistency/outputFile Next100.Neutron.next
+/nexus/persistency/event_type background
+/nexus/persistency/output_file Next100.Neutron.next

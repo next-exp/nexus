@@ -21,4 +21,4 @@
 
 /control/execute macros/physics/IonizationElectron.mac
 
-/nexus/persistency/outputFile bb0_GS_mode1_S1L1f.next
+/nexus/persistency/output_file bb0_GS_mode1_S1L1f.next

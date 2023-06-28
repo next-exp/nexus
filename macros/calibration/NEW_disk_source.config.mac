@@ -48,4 +48,4 @@
 /PhysicsList/Nexus/electroluminescence false
 
 # Persistency
-/nexus/persistency/outputFile New.source.next
+/nexus/persistency/output_file New.source.next

@@ -34,7 +34,7 @@
 
 
 # PERSISTENCY
-/nexus/persistency/outputFile DEMO_electron
+/nexus/persistency/output_file DEMO_electron
 
 /nexus/random_seed 14562
 

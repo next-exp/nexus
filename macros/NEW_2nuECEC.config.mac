@@ -22,6 +22,6 @@
 
 /control/execute macros/physics/IonizationElectron.mac
 
-/nexus/persistency/outputFile new_ecec.next
+/nexus/persistency/output_file new_ecec.next
 
 /nexus/random_seed 542862

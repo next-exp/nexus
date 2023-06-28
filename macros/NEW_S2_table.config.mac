@@ -25,4 +25,4 @@
 
 /PhysicsList/Nexus/photoelectric false
 
-/nexus/persistency/outputFile table.NEW.next
+/nexus/persistency/output_file table.NEW.next

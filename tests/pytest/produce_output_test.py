@@ -54,7 +54,7 @@ def test_create_nexus_output_file_next100(config_tmpdir, output_tmpdir,
 /Generator/SingleParticle/max_energy 10. keV
 /Generator/SingleParticle/region CENTER
 
-/nexus/persistency/outputFile {output_tmpdir}/{full_base_name_next100}
+/nexus/persistency/output_file {output_tmpdir}/{full_base_name_next100}
 /nexus/random_seed 21051817
 """
     config_path = os.path.join(config_tmpdir, full_base_name_next100+'.config.mac')
@@ -121,7 +121,7 @@ def test_create_nexus_output_file_new(config_tmpdir, output_tmpdir, NEXUSDIR,
 /Generator/SingleParticle/max_energy 10. keV
 /Generator/SingleParticle/region CENTER
 
-/nexus/persistency/outputFile {output_tmpdir}/{full_base_name_new}
+/nexus/persistency/output_file {output_tmpdir}/{full_base_name_new}
 /nexus/random_seed 21051817
 """
     config_path = os.path.join(config_tmpdir, full_base_name_new+'.config.mac')
@@ -224,7 +224,7 @@ def test_create_nexus_output_file_flex100(config_tmpdir, output_tmpdir, NEXUSDIR
 /Generator/SingleParticle/region         AD_HOC
 /Geometry/NextFlex/specific_vertex       0. 0. 500. mm
 
-/nexus/persistency/outputFile {output_tmpdir}/{full_base_name_flex100}
+/nexus/persistency/output_file {output_tmpdir}/{full_base_name_flex100}
 /nexus/random_seed 21051817
 """
     config_path = os.path.join(config_tmpdir, full_base_name_flex100+'.config.mac')
@@ -290,7 +290,7 @@ def test_create_nexus_output_file_demopp(config_tmpdir, output_tmpdir, NEXUSDIR,
     /Generator/SingleParticle/max_energy 10. keV
     /Generator/SingleParticle/region AD_HOC
 
-    /nexus/persistency/outputFile {output_tmpdir}/{full_base_name_demopp.format(run=run)}
+    /nexus/persistency/output_file {output_tmpdir}/{full_base_name_demopp.format(run=run)}
     /nexus/random_seed 21051817
 
     """

@@ -37,6 +37,6 @@
 /Geometry/NextDemo/el_gap_gen_disk_zmax   1.0
 
 # PERSISTENCY
-/nexus/persistency/outputFile demopp_psf_generation
+/nexus/persistency/output_file demopp_psf_generation
 
 /nexus/random_seed 12345

@@ -24,4 +24,4 @@
 
 /control/execute macros/physics/IonizationElectron.mac
 
-/nexus/persistency/outputFile myoutput.next
+/nexus/persistency/output_file myoutput.next

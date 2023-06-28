@@ -110,4 +110,4 @@
 ### CONTROL
 /nexus/random_seed            -1
 /nexus/persistency/start_id   0
-/nexus/persistency/outputFile NextFlex.next
+/nexus/persistency/output_file NextFlex.next

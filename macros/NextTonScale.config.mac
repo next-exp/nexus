@@ -69,4 +69,4 @@
 
 ### PERSISTENCY
 /nexus/persistency/start_id 0
-/nexus/persistency/outputFile NextTon.next
+/nexus/persistency/output_file NextTon.next

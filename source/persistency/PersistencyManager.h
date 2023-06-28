@@ -56,7 +56,7 @@ namespace nexus {
     virtual G4bool Retrieve(G4VPhysicalVolume*&);
 
   public:
-    void OpenFile(G4String);
+    void OpenFile();
     void CloseFile();
 
 
@@ -73,11 +73,9 @@ namespace nexus {
   private:
     G4GenericMessenger* msg_; ///< User configuration messenger
 
-   // G4String init_macro_;
-   // std::vector<G4String> macros_;
-    //std::vector<G4String> delayed_macros_;
     std::vector<G4String> secondary_macros_;
 
+    G4String output_file_; ///< Path of output file
     G4bool ready_;     ///< Is the PersistencyManager ready to go?
     G4bool store_evt_; ///< Should we store the current event?
     G4bool store_steps_; ///< Should we store the steps for the current event?

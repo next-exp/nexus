@@ -33,6 +33,6 @@
 
 
 # PERSISTENCY
-/nexus/persistency/outputFile out_Kr83.sim
+/nexus/persistency/output_file out_Kr83.sim
 
 /nexus/random_seed 14562

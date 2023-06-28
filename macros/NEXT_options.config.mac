@@ -100,5 +100,5 @@
 
 ##### PERSISTENCY #####
 /nexus/persistency/start_id 1000
-/nexus/persistency/outputFile Next100.next
-/nexus/persistency/eventType background # bb0nu, bb2nu...
+/nexus/persistency/output_file Next100.next
+/nexus/persistency/event_type background # bb0nu, bb2nu...
