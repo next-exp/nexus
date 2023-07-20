@@ -18,7 +18,7 @@
 /Geometry/Next100/elfield true
 /Geometry/Next100/EL_field 13 kV/cm
 /Geometry/Next100/pressure 10. bar
-/Geometry/Next100/max_step_size 5. mm
+/Geometry/Next100/max_step_size 1. mm
 
 /process/optical/processActivation Cerenkov false
 
