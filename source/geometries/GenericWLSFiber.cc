@@ -27,6 +27,7 @@ using namespace nexus;
 
 
 GenericWLSFiber::GenericWLSFiber(G4String    name,
+                                 G4bool      verbosity,
                                  G4bool      isround,
                                  G4double    thickness,
                                  G4double    length,
@@ -37,7 +38,8 @@ GenericWLSFiber::GenericWLSFiber(G4String    name,
                                  G4bool      visibility):
   GeometryBase    (),
   name_           (name),
-  isround_        (isround),         // "round"  or "square"
+  verbosity_      (verbosity),
+  isround_        (isround),       // true if "round"  or false if "square"
   thickness_      (thickness),     // Diameter (for round), Side (for square)
   length_         (length),
   doubleclad_     (doubleclad),
@@ -129,7 +131,7 @@ void GenericWLSFiber::BuildRoundFiber()
   G4LogicalVolume* coating_logic;
   if (with_coating_) {
     G4String coating_name = name_ + "_WLS";
-    G4cout << "**** Building COATING " << coating_name << G4endl;
+    if (verbosity_) G4cout << "**** Building COATING " << coating_name << G4endl;
     G4Tubs* coating_solid =
       new G4Tubs(coating_name, 0., thickness_/2., length_/2., 0., 360.*deg);
     coating_logic =
@@ -150,7 +152,7 @@ void GenericWLSFiber::BuildRoundFiber()
   G4LogicalVolume* oclad_logic;
   if (doubleclad_) {
     G4String oclad_name = name_ + "_OCLAD";
-    G4cout << "**** Building OCLAD " << oclad_name << G4endl;
+    if (verbosity_) G4cout << "**** Building OCLAD " << oclad_name << G4endl;
     G4Tubs* oclad_solid =
       new G4Tubs(oclad_name, 0., oclad_rad_, length_/2., 0., 360.*deg);
     oclad_logic =
@@ -167,7 +169,7 @@ void GenericWLSFiber::BuildRoundFiber()
 
   // Inner Cladding (always built)
   G4String iclad_name = name_ + "_ICLAD";
-  G4cout << "**** Building ICLAD " << iclad_name << G4endl;
+  if (verbosity_) G4cout << "**** Building ICLAD " << iclad_name << G4endl;
   G4Tubs* iclad_solid =
     new G4Tubs(iclad_name, 0., iclad_rad_, length_/2., 0., 360.*deg);
   G4LogicalVolume* iclad_logic =
@@ -180,7 +182,7 @@ void GenericWLSFiber::BuildRoundFiber()
                       iclad_name, innermost_logic, false, 0, false);
 
   // Fiber core (always inside the iclad)
-  G4cout << "**** Building CORE " << name_ << G4endl;
+  if (verbosity_) G4cout << "**** Building CORE " << name_ << G4endl;
   G4Tubs* core_solid =
     new G4Tubs(name_, 0., core_rad_, length_/2., 0., 360.*deg);
   G4LogicalVolume* core_logic =
