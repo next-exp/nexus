@@ -1,0 +1,20 @@
+
+/control/execute macros/physics/DefaultPhysicsList.mac
+/nexus/RegisterGeometry CsI
+/nexus/RegisterGenerator SingleParticleGenerator
+/nexus/RegisterPersistencyManager PersistencyManager
+
+### ACTIONS
+
+/nexus/RegisterRunAction DefaultRunAction
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterSteppingAction AnalysisSteppingAction
+/nexus/RegisterTrackingAction OpticalTrackingAction
+
+/nexus/RegisterMacro macros/CsI.config.mac
+
+/tracking/verbose 1
+/control/verbose 0
+/run/verbose 0
+/event/verbose 0
+/process/em/verbose 0

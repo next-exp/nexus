@@ -593,6 +593,56 @@ namespace opticalprops {
     return mpt;
   }
 
+  G4MaterialPropertiesTable* CsI()
+  {
+
+    G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
+
+
+    std::vector<G4double> energy = {
+        optPhotMinE_,
+        h_Planck * c_light / (450 * nm),
+        h_Planck * c_light / (405 * nm),
+        h_Planck * c_light / (371 * nm),
+        h_Planck * c_light / (343 * nm),
+        h_Planck * c_light / (332 * nm),
+        h_Planck * c_light / (323 * nm),
+        h_Planck * c_light / (302 * nm),
+        h_Planck * c_light / (274 * nm),
+        optPhotMaxE_};
+
+    std::vector<G4double> rIndex = {
+        1.65, 1.65, 1.67, 1.69, 1.69, 1.70, 1.72, 1.72, 1.72, 1.72
+    };
+
+    mpt->AddProperty("RINDEX", energy, rIndex);
+
+    std::vector<G4double> absorption = {
+      5 * m, 5 * m, 5 * m, 5 * m, 5 * m, 5 * m, 5 * m, 5 * m, 5 * m, 5 * m
+    };
+
+    mpt->AddProperty("ABSLENGTH", energy, absorption);
+
+    std::vector<G4double> emission_intensity = {
+      0.0,  0.13, 0.17, 0.55, 0.98, 0.97, 0.83, 0.44, 0.16, 0.
+    };
+
+    mpt->AddProperty("SCINTILLATIONCOMPONENT1", energy, emission_intensity);
+    mpt->AddProperty("SCINTILLATIONCOMPONENT2", energy, emission_intensity);
+    // mpt->AddProperty("ELSPECTRUM"            , energy, emission_intensity, 1);
+    G4double csi_time_fast  =     6 * ns;
+    G4double csi_time_slow  =    28 * ns;
+    // CONST PROPERTIES https://www.osti.gov/servlets/purl/1514707
+    mpt->AddConstProperty("SCINTILLATIONYIELD", 10 / MeV);
+    mpt->AddConstProperty("SCINTILLATIONYIELD1", 0.57 );
+    mpt->AddConstProperty("SCINTILLATIONYIELD1", 0.43 );
+    mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT1",   csi_time_fast);
+    mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT2",   csi_time_slow);
+    mpt->AddConstProperty("RESOLUTIONSCALE",    1.0);
+
+    return mpt;
+  }
+
   G4MaterialPropertiesTable* LXe()
   {
     /// The time constants are taken from E. Hogenbirk et al 2018 JINST 13 P10031
