@@ -108,12 +108,12 @@ namespace nexus {
   inline G4ThreeVector GeometryBase::GenerateVertex(const G4String&) const
   { return G4ThreeVector(0., 0., 0.); }
 
-  inline G4ThreeVector BaseGeometry::ProjectToRegion(const G4String&,
+  inline G4ThreeVector GeometryBase::ProjectToRegion(const G4String&,
 						     const G4ThreeVector&,
 						     const G4ThreeVector&) const
   { return G4ThreeVector(0., 0., 0.); }
 
-  inline void BaseGeometry::SetSpan(G4double s) { span_ = s; }
+  inline void GeometryBase::SetSpan(G4double s) { span_ = s; }
 
   inline G4double GeometryBase::GetSpan() { return span_; }
 
