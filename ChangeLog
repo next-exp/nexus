@@ -1,8 +1,8 @@
-tag v7_05_00 - 26 Apr 2022
+tag v7_05_00 - 26 Apr 2023
 	- Add features to the actions that saves all steps
 	- Fix electroluminescence generation to work properly with Geant4.11.1
 
-tag v7_04_00 - 15 Mar 2022
+tag v7_04_00 - 15 Mar 2023
 	- Fix bug in TPB optical properties
 	- Add double electron capture generator
 	- Add polished Al material
@@ -10,7 +10,7 @@ tag v7_04_00 - 15 Mar 2022
 	- Modify validation tracking action to use different file format than .root
         - Adapt code to Geant4.11.1
 
-tag v7_03_01 - 21 Feb 2022
+tag v7_03_01 - 21 Feb 2023
 	- Add a new class for the LSC shielding to be used with NEW
 	- Fix bug in materials.
 
