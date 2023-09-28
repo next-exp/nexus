@@ -1,0 +1,44 @@
+## ----------------------------------------------------------------------------
+## nexus | NEXT100_muons_lsc.config.mac
+##
+## Configuration macro to simulate muons according to the distribution
+## measured at LSC, in the NEXT-100 geometry launching from just outside
+## the lead shielding.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+### VERBOSITY
+/control/verbose 0
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+### JOB CONTROL
+/nexus/random_seed 17392
+
+### GEOMETRY
+/Geometry/Next100/pressure 15 bar
+/Geometry/Next100/gas enrichedXe
+/Geometry/Next100/elfield false
+
+### GENERATOR
+/Generator/MuonAngleGenerator/region EXTERNAL
+/Generator/MuonAngleGenerator/min_energy 200 GeV
+/Generator/MuonAngleGenerator/max_energy 250 GeV
+/Generator/MuonAngleGenerator/azimuth_rotation 150 deg
+/Generator/MuonAngleGenerator/angle_file histos/MuonAnaAllRuns.root
+/Generator/MuonAngleGenerator/angle_dist za
+
+### ACTIONS
+/Actions/DefaultEventAction/energy_threshold 0.01 MeV
+
+
+### PHYSICS (for fast simulation)
+/PhysicsList/Nexus/clustering           false
+/PhysicsList/Nexus/drift                false
+/PhysicsList/Nexus/electroluminescence  false
+
+### PERSISTENCY
+/nexus/persistency/start_id 0
+/nexus/persistency/outputFile Next100Muons_lsc_example.next
