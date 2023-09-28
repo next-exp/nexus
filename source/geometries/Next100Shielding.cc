@@ -371,6 +371,13 @@ namespace nexus {
     lead_gen_  = new BoxPointSampler(steel_x, steel_y, steel_z, 5.*cm,
                                      G4ThreeVector(0., 0., 0.), 0);
 
+    G4double shield_diag = std::sqrt(lead_x_*lead_x_ + lead_y_*lead_y_ + lead_z_*lead_z_);
+    G4double ext_offset = 1. * cm;
+    external_gen_ = new BoxPointSampler(shield_diag / 2. + ext_offset,
+					shield_diag / 2. + ext_offset,
+					shield_diag / 2. + ext_offset,
+                                        1. * mm, G4ThreeVector(0.,0.,0.), 0);
+
     steel_gen_ = new BoxPointSampler(shield_x_, shield_y_, shield_z_, steel_thickness_,
                                      G4ThreeVector(0., -beam_thickness_2/2., 0.), 0);
 
@@ -787,4 +794,24 @@ namespace nexus {
 
     return vertex;
   }
+
+
+  G4ThreeVector Next100Shielding::ProjectToRegion(const G4String& region,
+						  const G4ThreeVector& point,
+						  const G4ThreeVector& dir) const
+  {
+    // Project backwards along dir from point to find the first intersection
+    // with region.
+    G4ThreeVector vertex(0., 0., 0.);
+    if (region == "EXTERNAL"){
+      return external_gen_->GetIntersect(point, dir);
+    }
+    else {
+      G4Exception("[Next100Shielding]", "ProjectToRegion()", FatalException,
+		  "Unknown vertex generation region!");
+    }
+
+    return vertex;
+  }
+
 } //end namespace nexus

@@ -46,6 +46,12 @@ namespace nexus {
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
+    /// Returns a point within a region projecting from a
+    /// given point backwards along a line.
+    G4ThreeVector ProjectToRegion(const G4String& region,
+				  const G4ThreeVector& point,
+				  const G4ThreeVector& dir) const;
+
   private:
     void BuildExtScintillator(G4ThreeVector pos, const G4RotationMatrix& rot);
     void Construct();

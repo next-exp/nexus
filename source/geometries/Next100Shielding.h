@@ -41,6 +41,12 @@ namespace nexus {
 
     G4double GetHeight() const;
 
+    /// Returns a point within a region projecting from a
+    /// given point backwards along a line.
+    G4ThreeVector ProjectToRegion(const G4String& region,
+				  const G4ThreeVector& point,
+				  const G4ThreeVector& dir) const;
+
     /// Builder
     void Construct();
 

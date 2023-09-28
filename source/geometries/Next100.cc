@@ -271,4 +271,23 @@ namespace nexus {
     return vertex;
   }
 
+
+  G4ThreeVector Next100::ProjectToRegion(const G4String& region,
+					 const G4ThreeVector& point,
+					 const G4ThreeVector& dir) const
+  {
+    // Project backwards along dir from point to find the first intersection
+    // with region.
+    G4ThreeVector vertex(0., 0., 0.);
+    if (region == "EXTERNAL"){
+      return shielding_->ProjectToRegion(region, point, dir);
+    }
+    else {
+      G4Exception("[Next100]", "ProjectToRegion()", FatalException,
+		  "Unknown vertex generation region!");
+    }
+
+    return vertex + G4ThreeVector(0., 0., -gate_zpos_in_vessel_);
+  }
+
 } //end namespace nexus
