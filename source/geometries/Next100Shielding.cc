@@ -384,10 +384,6 @@ namespace nexus {
     inner_air_gen_ = new BoxPointSampler(shield_x_, shield_y_, shield_z_, 0,
                                          G4ThreeVector(0., 0., 0.), 0);
 
-    G4double ext_offset = 1. * cm;
-    external_gen_ =
-      new BoxPointSampler(lead_x_ + ext_offset, lead_y_ + ext_offset, lead_z_ + ext_offset, 1. * mm,
-                          G4ThreeVector(0., 0., 0.), 0);
 
     // STEEL STRUCTURE GENERATORS
     lat_roof_gen_ =
