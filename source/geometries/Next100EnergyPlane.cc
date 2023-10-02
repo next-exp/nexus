@@ -76,7 +76,7 @@ namespace nexus {
     /// 4. A vacuum volume that encapsulates the sapphire window,
     ///    the optical pad, the PMT and the internal part of the base is made;
     ///    this volume fits exactly the hole previously done in the copper.
-    /// 5. This volume is replicated by the number of the PMts and placed
+    /// 5. This volume is replicated by the number of the PMTs and placed
     ///    in the gas volume, inside the holes excavated in the copper.
 
 
