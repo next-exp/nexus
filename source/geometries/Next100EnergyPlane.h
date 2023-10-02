@@ -42,6 +42,9 @@ namespace nexus {
     /// Sets the z position of the surface of the sapphire windows
     void SetELtoSapphireWDWdistance(G4double z);
 
+    /// Returns the thickness of the copper plate
+    G4double GetCopperPlateThickness() const;
+
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
@@ -110,6 +113,8 @@ namespace nexus {
   inline void Next100EnergyPlane::SetMotherLogicalVolume(G4LogicalVolume* mother_logic) { mother_logic_ = mother_logic;}
 
   inline std::vector<G4ThreeVector> Next100EnergyPlane::GetPMTPosInGas() const { return pmt_positions_;}
+
+  inline G4double Next100EnergyPlane::GetCopperPlateThickness() const {return copper_plate_thickn_;}
 
 } //end namespace nexus
 #endif

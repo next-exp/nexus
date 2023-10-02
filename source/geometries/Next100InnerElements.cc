@@ -10,6 +10,7 @@
 #include "Next100InnerElements.h"
 #include "Next100FieldCage.h"
 #include "Next100EnergyPlane.h"
+#include "Honeycomb.h"
 #include "Next100TrackingPlane.h"
 
 #include <G4GenericMessenger.hh>
@@ -32,6 +33,7 @@ namespace nexus {
     gas_(nullptr),
     field_cage_    (new Next100FieldCage(grid_thickn)),
     energy_plane_  (new Next100EnergyPlane()),
+    honeycomb_     (new Honeycomb()),
     tracking_plane_(new Next100TrackingPlane()),
     msg_(nullptr)
   {
@@ -76,6 +78,15 @@ namespace nexus {
 
     pmt_pos_ = energy_plane_->GetPMTPosInGas();
 
+    /*
+    // Honeycomb support structure for EP
+    G4double el_end_of_EP_copper_plate_distance_ =
+      gate_sapphire_wdw_distance_ + energy_plane_->GetCopperPlateThickness();
+    honeycomb_->SetMotherLogicalVolume(mother_logic_);
+    honeycomb_->SetELzCoord(gate_zpos);
+    honeycomb_->SetELtoEndOfELCopperPlate(el_end_of_EP_copper_plate_distance_);
+    honeycomb_->Construct();    
+    */
     // Tracking plane
     tracking_plane_->SetMotherPhysicalVolume(mother_phys_);
     tracking_plane_->SetCoordOrigin(coord_origin);
