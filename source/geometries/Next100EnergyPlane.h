@@ -42,8 +42,8 @@ namespace nexus {
     /// Sets the z position of the surface of the sapphire windows
     void SetELtoSapphireWDWdistance(G4double z);
 
-    /// Returns the thickness of the copper plate
-    G4double GetCopperPlateThickness() const;
+    /// Returns the position of the end of the copper plate
+    G4double GetCopperPlateEndZ() const;
 
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
@@ -63,6 +63,7 @@ namespace nexus {
 
     // Mother Logical Volume of the whole Energy PLane
     G4LogicalVolume* mother_logic_;
+    G4double copper_plate_end_z_;
 
     // Dimensions
     const G4int num_PMTs_;
@@ -114,7 +115,7 @@ namespace nexus {
 
   inline std::vector<G4ThreeVector> Next100EnergyPlane::GetPMTPosInGas() const { return pmt_positions_;}
 
-  inline G4double Next100EnergyPlane::GetCopperPlateThickness() const {return copper_plate_thickn_;}
+  inline G4double Next100EnergyPlane::GetCopperPlateEndZ() const {return copper_plate_end_z_;}
 
 } //end namespace nexus
 #endif
