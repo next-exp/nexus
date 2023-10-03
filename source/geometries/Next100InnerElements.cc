@@ -78,15 +78,12 @@ namespace nexus {
 
     pmt_pos_ = energy_plane_->GetPMTPosInGas();
 
-    /*
     // Honeycomb support structure for EP
-    G4double el_end_of_EP_copper_plate_distance_ =
-      gate_sapphire_wdw_distance_ + energy_plane_->GetCopperPlateThickness();
     honeycomb_->SetMotherLogicalVolume(mother_logic_);
-    honeycomb_->SetELzCoord(gate_zpos);
-    honeycomb_->SetELtoEndOfELCopperPlate(el_end_of_EP_copper_plate_distance_);
-    honeycomb_->Construct();    
-    */
+    //honeycomb_->SetELzCoord(gate_zpos);
+    honeycomb_->SetEndOfCopperPlateZ(energy_plane_->GetCopperPlateEndZ());
+    honeycomb_->Construct();
+
     // Tracking plane
     tracking_plane_->SetMotherPhysicalVolume(mother_phys_);
     tracking_plane_->SetCoordOrigin(coord_origin);
