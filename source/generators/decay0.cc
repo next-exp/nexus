@@ -8,11 +8,13 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
+#include "decay0.h"
+
 #include <cfloat>
 #include <complex>
-#include "decay0.h"
 #include <G4RandomDirection.hh>
 #include <Randomize.hh>
+#include <G4GenericMessenger.hh>
 
 #include <gsl/gsl_integration.h>
 #include <gsl/gsl_sf_gamma.h>
@@ -49,13 +51,15 @@ modebbOld_(0)
   fillInfo();
 }
 decay0::decay0(const std::string nuclide, int finalStateNumber,
-               int decayModeNumber, double eRangeLow, double eRangeHigh):
-ready_(false),
-emass_(0.51099906),
-nuclideName_(nuclide),
-fsNum_(finalStateNumber),
-modebb_(decayModeNumber),
-modebbOld_(decayModeNumber)
+               int decayModeNumber, std::string fname,
+               double eRangeLow, double eRangeHigh):
+  fname_(fname),
+  ready_(false),
+  emass_(0.51099906),
+  nuclideName_(nuclide),
+  fsNum_(finalStateNumber),
+  modebb_(decayModeNumber),
+  modebbOld_(decayModeNumber)
 {
   ebb1_ = eRangeLow;
   ebb2_ = eRangeHigh; // for mode 4, 2nbbdecay.
@@ -301,7 +305,7 @@ void decay0::initSpectrum() {
 //	do i=int(e0*1000.)+1,4300
 //	   spthe1(i)=0.
 //	enddo
-   std::ofstream fOut("./th-e1-spectrum.dat");
+   std::ofstream fOut(fname_);
    fOut << " i  s " << std::endl;
    for (size_t i=0; i != spthe1_.size(); i++)
 	   fOut << " " << i << " " << spthe1_[i] << std::endl;

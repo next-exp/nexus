@@ -17,7 +17,24 @@
 /Geometry/NextNew/pressure 15. bar
 /Geometry/NextNew/elfield false
 
-/control/execute macros/generators/GenbbTranslatedInterface.mac
+# Decay0 Interface for bb0nu/bb2nu decays - (BB0nu: DecayMode 1), (BB2nu: DecayMode 4)
+# use electron momenta extracted with the DECAY0 software
+#/Generator/Decay0Interface/inputFile /home/lebrun/NEXT/recoRel3/Releases/NEXT_HEAD/sources/nexus/data/Xe136_bb0nu.genbb
+
+# use C++ translation of DECAY0
+/Generator/Decay0Interface/inputFile none
+# for 0 neutrino  bb to Barium Ground state.
+#/Generator/Decay0Interface/Xe136DecayMode 1
+# for 2 neutrino  bb to Barium Ground state.
+/Generator/Decay0Interface/Xe136DecayMode 4
+/Generator/Decay0Interface/EnergyThreshold 0.5
+#
+/Generator/Decay0Interface/Ba136FinalState 0
+
+/Generator/Decay0Interface/decay_file bb0nu_file.dat
+
+/Generator/Decay0Interface/region ACTIVE
+
 
 /control/execute macros/physics/IonizationElectron.mac
 

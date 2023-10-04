@@ -19,7 +19,7 @@
 
 /nexus/RegisterPersistencyManager PersistencyManager
 
-/nexus/RegisterTrackingAction ValidationTrackingAction
+/nexus/RegisterTrackingAction DefaultTrackingAction
 /nexus/RegisterEventAction DefaultEventAction
 /nexus/RegisterRunAction DefaultRunAction
 

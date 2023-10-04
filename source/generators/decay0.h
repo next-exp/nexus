@@ -16,6 +16,7 @@
 #include <string>
 #include <gsl/gsl_integration.h>
 
+
 struct decay0Part {
   int pdgCode_;
   double pmom_[3];
@@ -53,8 +54,9 @@ class decay0 {
   public:
 
      decay0();
-     decay0(const std::string nuclide, int finalStateNumber, int decayModeNumber,
-                 double eRangeLow=0.0, double eRangeHigh=4.3); // no limits, be default. (for 2nbbdecay. )
+     decay0(const std::string nuclide, int finalStateNumber,
+            int decayModeNumber, std::string fname, double eRangeLow=0.0,
+            double eRangeHigh=4.3); // no limits, be default. (for 2nbbdecay. )
      ~decay0();
     void decay0DoIt(std::vector<decay0Part> &outPart) const ;
     void fillInfo(); // to be used if the Nuclide, final state or decay mode is changed...Not advised..
@@ -62,6 +64,7 @@ class decay0 {
 
 
   private:
+    std::string fname_;
     bool ready_; // Initialize, ready to decay
     double emass_; // electron mass
     std::string nuclideName_;
