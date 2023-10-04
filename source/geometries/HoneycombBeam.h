@@ -14,6 +14,7 @@
 class G4Trd;
 
 namespace nexus {
+
   class HoneycombBeam: public GeometryBase
   {
   public:

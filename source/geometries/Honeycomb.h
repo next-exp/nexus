@@ -11,7 +11,11 @@
 
 #include "GeometryBase.h"
 
+#include <G4Navigator.hh>
+
 namespace nexus {
+  class CylinderPointSampler2020;
+
   class Honeycomb: public GeometryBase
   {
   public:
@@ -43,6 +47,10 @@ namespace nexus {
     // Relationships among beams
     G4double angle_, beam_dist_, beam_thickn_;
     G4double compl_angle_;
+
+    CylinderPointSampler2020* gen_;
+
+    G4Navigator* geom_navigator_;
   };
 
   inline void Honeycomb::SetMotherLogicalVolume(G4LogicalVolume* mother_logic) {
