@@ -16,6 +16,7 @@
 #include <G4MultiUnion.hh>
 #include <G4PVPlacement.hh>
 #include <G4VisAttributes.hh>
+#include <G4Trd.hh>
 
 
 namespace nexus {
@@ -35,11 +36,14 @@ namespace nexus {
   void Honeycomb::Construct()
   {
     G4double shorter_height = 117 * mm;
-    //G4double shorter_height = 130 * mm;
     G4double longer_height  = 130 * mm;
-    HoneycombBeam* short_beam  = new HoneycombBeam(1085.9*mm, shorter_height, beam_thickn_);
-    HoneycombBeam* medium_beam = new HoneycombBeam(1170.2*mm, longer_height, beam_thickn_);
-    HoneycombBeam* long_beam   = new HoneycombBeam(1210.6*mm, longer_height, beam_thickn_);
+
+    HoneycombBeam* short_beam =
+      new HoneycombBeam(beam_thickn_, 1085.9*mm, 184*mm, shorter_height);
+    HoneycombBeam* medium_beam =
+      new HoneycombBeam(beam_thickn_, 1170.2*mm, 273.5*mm, longer_height);
+    HoneycombBeam* long_beam =
+      new HoneycombBeam(beam_thickn_, 1210.6*mm, 407.4*mm, longer_height);
 
     G4double short_displ = (longer_height-shorter_height)/2.;
 
@@ -51,14 +55,17 @@ namespace nexus {
     G4MultiUnion* struct_solid = new G4MultiUnion("HONEYCOMB");
 
     G4RotationMatrix rot;
+    rot.rotateX(3*pi/2.);
 
     G4ThreeVector ini_pos = G4ThreeVector(-(beam_dist_+beam_thickn_)/2., 0., 0.);
     struct_solid->AddNode(long_beam->GetSolidVol(),
                           G4Transform3D(rot, ini_pos));
 
     G4RotationMatrix rot_left;
+    rot_left.rotateX(3*pi/2.);
     rot_left.rotateY(-compl_angle_);
     G4RotationMatrix rot_right;
+    rot_right.rotateX(3*pi/2.);
     rot_right.rotateY(-(pi/2.+angle_));
 
     G4double r_pos = 1/2*beam_dist_+ 2*(beam_dist_+beam_thickn_) + 1/2*beam_thickn_;
@@ -84,6 +91,7 @@ namespace nexus {
                           G4Transform3D(rot_left, G4ThreeVector(-x, 0., -z)));
     struct_solid->AddNode(medium_beam->GetSolidVol(),
                           G4Transform3D(rot_right, G4ThreeVector(x, 0., -z)));
+
     struct_solid->AddNode(medium_beam->GetSolidVol(),
                           G4Transform3D(rot_right, G4ThreeVector(-x, 0., z)));
 
@@ -129,7 +137,7 @@ namespace nexus {
 
     G4RotationMatrix rot_placement;
     rot_placement.rotateZ(-pi/2);
-    rot_placement.rotateY(pi/2);
+    rot_placement.rotateY(-pi/2);
 
     G4double hc_posz_ = end_of_EP_copper_plate_z_ + longer_height/2.;
     new G4PVPlacement(G4Transform3D(rot_placement, G4ThreeVector(0., 0., hc_posz_)),

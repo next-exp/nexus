@@ -11,30 +11,31 @@
 
 #include "GeometryBase.h"
 
-class G4Box;
+class G4Trd;
 
 namespace nexus {
   class HoneycombBeam: public GeometryBase
   {
   public:
     /// Constructor
-    HoneycombBeam(G4double length, G4double height, G4double thickn);
+    HoneycombBeam(G4double thickn, G4double length_b,
+                  G4double length_t, G4double height);
 
     /// Destructor
     ~HoneycombBeam();
 
     void Construct();
 
-    G4Box* GetSolidVol() const;
+    G4Trd* GetSolidVol() const;
     
 
   private:
 
-    G4double length_, height_, thickn_;
-    G4Box* beam_solid_;
+    G4double length_b_, length_t_, height_, thickn_;
+    G4Trd* beam_solid_;
   };
 
-  inline G4Box* HoneycombBeam::GetSolidVol() const {return beam_solid_;}
+  inline G4Trd* HoneycombBeam::GetSolidVol() const {return beam_solid_;}
 } // end namespace nexus
 
 #endif
