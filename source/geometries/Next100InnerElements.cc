@@ -81,7 +81,7 @@ namespace nexus {
 
     // Honeycomb support structure for EP
     honeycomb_->SetMotherLogicalVolume(mother_logic_);
-    //honeycomb_->SetELzCoord(gate_zpos);
+    honeycomb_->SetELzCoord(gate_zpos);
     honeycomb_->SetEndOfCopperPlateZ(energy_plane_->GetCopperPlateEndZ());
     honeycomb_->Construct();
 
@@ -132,6 +132,10 @@ namespace nexus {
              (region == "PMT_BODY") ||
              (region == "PMT_BASE")) {
       vertex = energy_plane_->GenerateVertex(region);
+    }
+    // Honeycomb region
+    else if (region == "HONEYCOMB") {
+      vertex = honeycomb_->GenerateVertex(region);
     }
     // Tracking Plane regions
     else if ((region == "TP_COPPER_PLATE") ||
