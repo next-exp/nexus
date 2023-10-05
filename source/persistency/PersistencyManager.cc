@@ -145,6 +145,8 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
   if (!tc) return;
 
   // Loop through the trajectories stored in the container
+  G4int c_vol = 0;
+  G4int c_proc = 0;
   for (size_t i=0; i<tc->entries(); ++i) {
     Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[i]);
     if (!trj) continue;
@@ -159,13 +161,42 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
     G4ThreeVector final_xyz = trj->GetFinalPosition();
     G4double final_t = trj->GetFinalTime();
 
-    G4String ini_volume = trj->GetInitialVolume();
-    G4String final_volume = trj->GetFinalVolume();
-
     G4double mass = trj->GetParticleDefinition()->GetPDGMass();
     G4ThreeVector ini_mom = trj->GetInitialMomentum();
     G4double energy = sqrt(ini_mom.mag2() + mass*mass);
     G4ThreeVector final_mom = trj->GetFinalMomentum();
+
+    G4String ini_volume = trj->GetInitialVolume();
+    G4String final_volume = trj->GetFinalVolume();
+
+    G4String creator_proc = trj->GetCreatorProcess();
+    G4String final_proc   = trj->GetFinalProcess();
+
+    G4int ini_id = FindVolumeInMap(vol_map_, ini_volume);
+    if (ini_id == -1) {
+      vol_map_[c_vol] = ini_volume;
+      ini_id = c_vol;
+      c_vol++;
+    }
+    G4int fin_id = FindVolumeInMap(vol_map_, final_volume);
+    if (fin_id == -1) {
+      vol_map_[c_vol] = final_volume;
+      fin_id = c_vol;
+      c_vol++;
+    }
+
+    G4int creator_id = FindVolumeInMap(proc_map_, creator_proc);
+    if (creator_id == -1) {
+      proc_map_[c_proc] = creator_proc;
+      creator_id = c_proc;
+      c_proc++;
+    }
+    G4int destr_id = FindVolumeInMap(proc_map_, final_proc);
+    if (destr_id == -1) {
+      proc_map_[c_proc] = final_proc;
+      destr_id = c_proc;
+      c_proc++;
+    }
 
     float kin_energy = energy - mass;
     char primary = 0;
@@ -175,19 +206,18 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
     } else {
       mother_id = trj->GetParentID();
     }
-    h5writer_->WriteParticleInfo(nevt_, trackid, trj->GetParticleName().c_str(),
+    h5writer_->WriteParticleInfo(nevt_, trackid, trj->GetPDGEncoding(),
 				 primary, mother_id,
 				 (float)ini_xyz.x(), (float)ini_xyz.y(),
                                  (float)ini_xyz.z(), (float)ini_t,
 				 (float)final_xyz.x(), (float)final_xyz.y(),
                                  (float)final_xyz.z(), (float)final_t,
-				 ini_volume.c_str(), final_volume.c_str(),
+				 (int)ini_id, (int)fin_id,
 				 (float)ini_mom.x(), (float)ini_mom.y(),
                                  (float)ini_mom.z(), (float)final_mom.x(),
                                  (float)final_mom.y(), (float)final_mom.z(),
 				 kin_energy, length,
-                                 trj->GetCreatorProcess().c_str(),
-				 trj->GetFinalProcess().c_str());
+                                 (int)creator_id, (int)destr_id);
 
   }
 }
@@ -427,4 +457,14 @@ void PersistencyManager::SaveConfigurationInfo(G4String file_name)
   }
 
   history.close();
+}
+
+G4int PersistencyManager::FindVolumeInMap(std::map<G4int, G4String>& vmap, G4String vol)
+{
+  for (auto& it : vmap) {
+    if (it.second == vol) {
+      return it.first;
+    }
+  }
+  return -1;
 }

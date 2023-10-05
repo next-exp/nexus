@@ -69,6 +69,8 @@ namespace nexus {
 
     void SaveConfigurationInfo(G4String history);
 
+    G4int FindVolumeInMap(std::map<G4int, G4String>& vmap, G4String vol);
+
 
   private:
     G4GenericMessenger* msg_; ///< User configuration messenger
@@ -97,6 +99,9 @@ namespace nexus {
     std::vector<G4int>* ihits_;
     std::map<G4int, std::vector<G4int>* > hit_map_;
     std::vector<G4int> sns_posvec_;
+    //std::vector<G4String> vol_vec_;
+    std::map<G4int, G4String> vol_map_;
+    std::map<G4int, G4String> proc_map_;
 
     std::map<G4String, G4double> sensdet_bin_;
   };

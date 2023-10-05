@@ -42,7 +42,8 @@
   typedef struct{
         int64_t event_id;
 	int particle_id;
-	char particle_name[STRLEN];
+	//char particle_name[STRLEN];
+        int  pdg_id;
         char primary;
 	int mother_id;
 	float initial_x;
@@ -53,8 +54,10 @@
 	float final_y;
 	float final_z;
 	float final_t;
-        char initial_volume[STRLEN];
-        char final_volume[STRLEN];
+        //char initial_volume[STRLEN];
+        //char final_volume[STRLEN];
+        int initial_volume;
+        int final_volume;
 	float initial_momentum_x;
 	float initial_momentum_y;
 	float initial_momentum_z;
@@ -63,8 +66,10 @@
 	float final_momentum_z;
 	float kin_energy;
 	float length;
-        char creator_proc[STRLEN];
-	char final_proc[STRLEN];
+        //char creator_proc[STRLEN];
+	//char final_proc[STRLEN];
+        int creator_proc;
+        int final_proc;
   } particle_info_t;
 
   typedef struct{
