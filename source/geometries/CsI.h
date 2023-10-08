@@ -7,6 +7,7 @@
 
 #include "GeometryBase.h"
 #include "CylinderPointSampler2020.h"
+#include "BoxPointSampler.h"
 
 class G4GenericMessenger;
 
@@ -29,6 +30,7 @@ namespace nexus {
     // Messenger for the definition of control commands
     G4GenericMessenger* msg_;
     CylinderPointSampler2020* inside_source_;
+    BoxPointSampler* box_source_;
 
     // Dimension of the crystals
     G4double crystal_width_;

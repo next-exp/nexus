@@ -633,7 +633,7 @@ namespace opticalprops {
     G4double csi_time_fast  =     6 * ns;
     G4double csi_time_slow  =    28 * ns;
     // CONST PROPERTIES https://www.osti.gov/servlets/purl/1514707
-    mpt->AddConstProperty("SCINTILLATIONYIELD", 10 / MeV);
+    mpt->AddConstProperty("SCINTILLATIONYIELD", 100000. / MeV);
     mpt->AddConstProperty("SCINTILLATIONYIELD1", 0.57 );
     mpt->AddConstProperty("SCINTILLATIONYIELD1", 0.43 );
     mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT1",   csi_time_fast);
