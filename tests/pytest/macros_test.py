@@ -53,7 +53,16 @@ def copy_and_modify_macro(config_tmpdir, output_tmpdir, init_macro):
             lines = f.readlines()
             for l in lines:
                 l1 = l.split(' ')
-                if l1[0] == '/nexus/persistency/outputFile':
+                if l1[0] == '/nexus/persistency/output_file':
+                    l2 = l1[1].split('/')
+                    f_cp.write(l1[0] + ' ' + str(output_tmpdir) + '/' + l2[-1])
+                elif l1[0] == '/Actions/ValidationTrackingAction/valid_file':
+                    l2 = l1[1].split('/')
+                    f_cp.write(l1[0] + ' ' + str(output_tmpdir) + '/' + l2[-1])
+                elif l1[0] == '/Actions/MuonsEventAction/stringHist':
+                    l2 = l1[1].split('/')
+                    f_cp.write(l1[0] + ' ' + str(output_tmpdir) + '/' + l2[-1])
+                elif l1[0] == '/Generator/Decay0Interface/decay_file':
                     l2 = l1[1].split('/')
                     f_cp.write(l1[0] + ' ' + str(output_tmpdir) + '/' + l2[-1])
                 else:

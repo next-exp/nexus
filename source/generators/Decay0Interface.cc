@@ -29,7 +29,8 @@ REGISTER_CLASS(Decay0Interface, G4VPrimaryGenerator)
 
 
 Decay0Interface::Decay0Interface():
-  G4VPrimaryGenerator(), msg_(0), opened_(false), geom_(0)
+  G4VPrimaryGenerator(), msg_(0), decay_file_("th-e1-spectrum.dat"),
+  opened_(false), geom_(0)
 {
 
   msg_ = new G4GenericMessenger(this, "/Generator/Decay0Interface/",
@@ -37,6 +38,8 @@ Decay0Interface::Decay0Interface():
 
   msg_->DeclareMethod("inputFile", &Decay0Interface::OpenInputFile, "");
   msg_->DeclareProperty("region", region_, "");
+  msg_->DeclareProperty("decay_file", decay_file_,
+                        "Name of the file with the decay info");
 
   msg_->DeclareMethod("EnergyThreshold", &Decay0Interface::SetEnergyThreshold, ""); // for electrons only.
   msg_->DeclareMethod("Xe136DecayMode", &Decay0Interface::SetXe136DecayMode, "");
@@ -93,7 +96,7 @@ void Decay0Interface::GeneratePrimaryVertex(G4Event* event)
   if (!opened_) {
      if (decay0_ == 0) {
        const std::string XeName("Xe136");
-       decay0_ = new decay0(XeName, Ba136FinalState_, Xe136DecayMode_);
+       decay0_ = new decay0(XeName, Ba136FinalState_, Xe136DecayMode_, decay_file_);
       // Temporary debugging file, just generate particle and dump them on a file
 //      std::ostringstream fOutStrStr; fOutStrStr << "./Decay0Out_" << Ba136FinalState_ << "_" << Xe136DecayMode_ << "_V1.txt";
 //      std::string fOutStr(fOutStrStr.str());

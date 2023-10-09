@@ -54,6 +54,8 @@ namespace nexus {
   private:
     G4GenericMessenger* msg_;
 
+    G4String decay_file_;
+
     std::ifstream file_; ///< ASCII file produced by Decay0
     G4String region_; ///< region of generation of vertices in geometry
 
