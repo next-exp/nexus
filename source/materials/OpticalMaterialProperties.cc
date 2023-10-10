@@ -601,18 +601,18 @@ namespace opticalprops {
 
     std::vector<G4double> energy = {
         optPhotMinE_,
-        h_Planck * c_light / (450 * nm),
-        h_Planck * c_light / (405 * nm),
-        h_Planck * c_light / (371 * nm),
-        h_Planck * c_light / (343 * nm),
-        h_Planck * c_light / (332 * nm),
-        h_Planck * c_light / (323 * nm),
-        h_Planck * c_light / (302 * nm),
-        h_Planck * c_light / (274 * nm),
+        h_Planck * c_light / (460 * nm),
+        h_Planck * c_light / (400 * nm),
+        h_Planck * c_light / (380 * nm),
+        h_Planck * c_light / (340 * nm),
+        h_Planck * c_light / (320 * nm),
+        h_Planck * c_light / (300 * nm),
+        h_Planck * c_light / (280 * nm),
+        h_Planck * c_light / (260 * nm),
         optPhotMaxE_};
 
     std::vector<G4double> rIndex = {
-        1.65, 1.65, 1.67, 1.69, 1.69, 1.70, 1.72, 1.72, 1.72, 1.72
+        1.766, 1.766, 1.794, 1.806, 1.845, 1.867, 1.902, 1.955, 2.043, 2.043
     };
 
     mpt->AddProperty("RINDEX", energy, rIndex);
@@ -623,21 +623,25 @@ namespace opticalprops {
 
     mpt->AddProperty("ABSLENGTH", energy, absorption);
 
-    std::vector<G4double> emission_intensity = {
+    std::vector<G4double> emission_intensity_warm = {
       0.0,  0.13, 0.17, 0.55, 0.98, 0.97, 0.83, 0.44, 0.16, 0.
     };
 
-    mpt->AddProperty("SCINTILLATIONCOMPONENT1", energy, emission_intensity);
-    mpt->AddProperty("SCINTILLATIONCOMPONENT2", energy, emission_intensity);
+    std::vector<G4double> emission_intensity_cold = {
+      0.0,  0.04, 0.10, 0.29, 0.67, 0.88, 0.29, 0.10, 0.02, 0
+    };
+
+    mpt->AddProperty("SCINTILLATIONCOMPONENT1", energy, emission_intensity_cold);
+    // mpt->AddProperty("SCINTILLATIONCOMPONENT2", energy, emission_intensity);
     // mpt->AddProperty("ELSPECTRUM"            , energy, emission_intensity, 1);
-    G4double csi_time_fast  =     6 * ns;
-    G4double csi_time_slow  =    28 * ns;
+    G4double csi_time_fast  =     0.81 * us;
+    // G4double csi_time_slow  =    28 * ns;
     // CONST PROPERTIES https://www.osti.gov/servlets/purl/1514707
-    mpt->AddConstProperty("SCINTILLATIONYIELD", 100000. / MeV);
-    mpt->AddConstProperty("SCINTILLATIONYIELD1", 0.57 );
-    mpt->AddConstProperty("SCINTILLATIONYIELD1", 0.43 );
+    mpt->AddConstProperty("SCINTILLATIONYIELD", 124000. / MeV);
+    mpt->AddConstProperty("SCINTILLATIONYIELD1", 1. );
+    // mpt->AddConstProperty("SCINTILLATIONYIELD1", 0. );
     mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT1",   csi_time_fast);
-    mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT2",   csi_time_slow);
+    // mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT2",   csi_time_slow);
     mpt->AddConstProperty("RESOLUTIONSCALE",    1.0);
 
     return mpt;
@@ -761,9 +765,13 @@ namespace opticalprops {
       6. * eV,       7.2 * eV,  optPhotMaxE_
     };
     std::vector<G4double> REFLECTIVITY = {
-      .98,  .98,  .98,  .98,
-      .72,  .72,  .72
+      .9875,  .9875,  .9875,  .9875,
+      .9875,  .9875,  .9875
     };
+    // std::vector<G4double> REFLECTIVITY = {
+    //   1., 1., 1., 1.,
+    //   1., 1., 1.
+    // };
     mpt->AddProperty("REFLECTIVITY", ENERGIES, REFLECTIVITY);
 
     // REFLEXION BEHAVIOR
