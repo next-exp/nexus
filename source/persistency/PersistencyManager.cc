@@ -156,47 +156,28 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
     G4double length = trj->GetTrackLength();
 
     G4ThreeVector ini_xyz = trj->GetInitialPosition();
-    G4double ini_t = trj->GetInitialTime();
+    G4double ini_t        = trj->GetInitialTime();
 
     G4ThreeVector final_xyz = trj->GetFinalPosition();
-    G4double final_t = trj->GetFinalTime();
+    G4double final_t        = trj->GetFinalTime();
 
-    G4double mass = trj->GetParticleDefinition()->GetPDGMass();
-    G4ThreeVector ini_mom = trj->GetInitialMomentum();
-    G4double energy = sqrt(ini_mom.mag2() + mass*mass);
+    G4double mass           = trj->GetParticleDefinition()->GetPDGMass();
+    G4ThreeVector ini_mom   = trj->GetInitialMomentum();
+    G4double energy         = sqrt(ini_mom.mag2() + mass*mass);
     G4ThreeVector final_mom = trj->GetFinalMomentum();
 
-    G4String ini_volume = trj->GetInitialVolume();
+    G4String ini_volume   = trj->GetInitialVolume();
     G4String final_volume = trj->GetFinalVolume();
 
     G4String creator_proc = trj->GetCreatorProcess();
     G4String final_proc   = trj->GetFinalProcess();
 
-    G4int ini_id = FindVolumeInMap(vol_map_, ini_volume);
-    if (ini_id == -1) {
-      vol_map_[c_vol] = ini_volume;
-      ini_id = c_vol;
-      c_vol++;
-    }
-    G4int fin_id = FindVolumeInMap(vol_map_, final_volume);
-    if (fin_id == -1) {
-      vol_map_[c_vol] = final_volume;
-      fin_id = c_vol;
-      c_vol++;
-    }
+    G4int ini_id = FindVolumeIDInMap(vol_map_, ini_volume, c_vol);
+    G4int fin_id = FindVolumeIDInMap(vol_map_, final_volume, c_vol);
 
-    G4int creator_id = FindVolumeInMap(proc_map_, creator_proc);
-    if (creator_id == -1) {
-      proc_map_[c_proc] = creator_proc;
-      creator_id = c_proc;
-      c_proc++;
-    }
-    G4int destr_id = FindVolumeInMap(proc_map_, final_proc);
-    if (destr_id == -1) {
-      proc_map_[c_proc] = final_proc;
-      destr_id = c_proc;
-      c_proc++;
-    }
+    G4int creator_id = FindVolumeIDInMap(proc_map_, creator_proc, c_proc);
+    G4int destr_id   = FindVolumeIDInMap(proc_map_, final_proc, c_proc);
+
 
     float kin_energy = energy - mass;
     char primary = 0;
@@ -459,12 +440,15 @@ void PersistencyManager::SaveConfigurationInfo(G4String file_name)
   history.close();
 }
 
-G4int PersistencyManager::FindVolumeInMap(std::map<G4int, G4String>& vmap, G4String vol)
+G4int PersistencyManager::FindVolumeIDInMap(std::map<G4String, G4int>& vmap,
+                                            G4String vol, G4int& counter)
 {
-  for (auto& it : vmap) {
-    if (it.second == vol) {
-      return it.first;
-    }
+  auto found = vmap.find(vol);
+  if (found != vmap.end()) {
+    return found->second;
+  } else {
+    vmap[vol] = counter;
+    counter++;
+    return counter;
   }
-  return -1;
 }
