@@ -165,11 +165,15 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
     G4double energy         = sqrt(ini_mom.mag2() + mass*mass);
     G4ThreeVector final_mom = trj->GetFinalMomentum();
 
+    G4String p_name = trj->GetParticleName();
+
     G4String ini_volume   = trj->GetInitialVolume();
     G4String final_volume = trj->GetFinalVolume();
 
     G4String creator_proc = trj->GetCreatorProcess();
     G4String final_proc   = trj->GetFinalProcess();
+
+    G4int pname_id = FindStringIDInMap(str_map_, p_name, str_counter_);
 
     G4int ini_id = FindStringIDInMap(str_map_, ini_volume, str_counter_);
     G4int fin_id = FindStringIDInMap(str_map_, final_volume, str_counter_);
@@ -186,7 +190,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
     } else {
       mother_id = trj->GetParentID();
     }
-    h5writer_->WriteParticleInfo(nevt_, trackid, trj->GetPDGEncoding(),
+    h5writer_->WriteParticleInfo(nevt_, trackid, (int)pname_id,
 				 primary, mother_id,
 				 (float)ini_xyz.x(), (float)ini_xyz.y(),
                                  (float)ini_xyz.z(), (float)ini_t,
