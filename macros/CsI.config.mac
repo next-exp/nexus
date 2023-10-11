@@ -1,8 +1,8 @@
 /Generator/SingleParticle/particle gamma
 /Generator/SingleParticle/min_energy 511 keV
 /Generator/SingleParticle/max_energy 511 keV
-#/Generator/SingleParticle/momentum 0 0 1
-/Generator/SingleParticle/min_costheta 0.985
+#/Generator/SingleParticle/momentum 1 0 0
+/Generator/SingleParticle/min_costheta 0.98
 /Generator/SingleParticle/max_costheta 1
 /Geometry/CsI/crystal_width 3 mm
 /Geometry/CsI/crystal_length 20 mm

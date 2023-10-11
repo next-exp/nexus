@@ -77,47 +77,47 @@ REGISTER_CLASS(DefaultEventAction, G4UserEventAction)
 
     // Determine whether total energy deposit in ionization sensitive
     // detectors is above threshold
-    if (energy_min_ >= 0.) {
+  //   if (energy_min_ >= 0.) {
 
-      // Get the trajectories stored for this event and loop through them
-      // to calculate the total energy deposit
+  //     // Get the trajectories stored for this event and loop through them
+  //     // to calculate the total energy deposit
 
-      G4double edep = 0.;
+  //     G4double edep = 0.;
 
-      G4TrajectoryContainer* tc = event->GetTrajectoryContainer();
-      if (tc) {
-        // in interactive mode, a G4TrajectoryContainer would exist
-        // but the trajectories will not cast to Trajectory
-        Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[0]);
-        if (trj == nullptr){
-          G4Exception("[DefaultEventAction]", "EndOfEventAction()", FatalException,
-                      "DefaultTrackingAction is required when using DefaultEventAction");
-        }
-        for (unsigned int i=0; i<tc->size(); ++i) {
-          Trajectory* tr = dynamic_cast<Trajectory*>((*tc)[i]);
-          edep += tr->GetEnergyDeposit();
-        }
-      }
-      else {
-        G4Exception("[DefaultEventAction]", "EndOfEventAction()", FatalException,
-                    "DefaultTrackingAction is required when using DefaultEventAction");
-      }
+  //     G4TrajectoryContainer* tc = event->GetTrajectoryContainer();
+  //     if (tc) {
+  //       // in interactive mode, a G4TrajectoryContainer would exist
+  //       // but the trajectories will not cast to Trajectory
+  //       Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[0]);
+  //       if (trj == nullptr){
+  //         G4Exception("[DefaultEventAction]", "EndOfEventAction()", FatalException,
+  //                     "DefaultTrackingAction is required when using DefaultEventAction");
+  //       }
+  //       for (unsigned int i=0; i<tc->size(); ++i) {
+  //         Trajectory* tr = dynamic_cast<Trajectory*>((*tc)[i]);
+  //         edep += tr->GetEnergyDeposit();
+  //       }
+  //     }
+  //     else {
+  //       G4Exception("[DefaultEventAction]", "EndOfEventAction()", FatalException,
+  //                   "DefaultTrackingAction is required when using DefaultEventAction");
+  //     }
 
-      PersistencyManager* pm = dynamic_cast<PersistencyManager*>
-        (G4VPersistencyManager::GetPersistencyManager());
+  //     PersistencyManager* pm = dynamic_cast<PersistencyManager*>
+  //       (G4VPersistencyManager::GetPersistencyManager());
 
-      if (!event->IsAborted() && edep>0) {
-	pm->InteractingEvent(true);
-      } else {
-	pm->InteractingEvent(false);
-      }
-      if (!event->IsAborted() && edep > energy_min_ && edep < energy_max_) {
-	pm->StoreCurrentEvent(true);
-      } else {
-	pm->StoreCurrentEvent(false);
-      }
+  //     if (!event->IsAborted() && edep>0) {
+	// pm->InteractingEvent(true);
+  //     } else {
+	// pm->InteractingEvent(false);
+  //     }
+  //     if (!event->IsAborted() && edep > energy_min_ && edep < energy_max_) {
+	// pm->StoreCurrentEvent(true);
+  //     } else {
+	// pm->StoreCurrentEvent(false);
+  //     }
 
-    }
+  //   }
   }
 
 

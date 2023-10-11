@@ -118,7 +118,16 @@ namespace nexus {
     G4int teflon_coatings = 5;
     G4double teflon_thickness_tot = teflon_thickness * teflon_coatings;
     G4Box *teflon_coating_full = new G4Box("TEFLON_FULL", crystal_width_ / 2+ teflon_thickness_tot / 2, crystal_width_ / 2+ teflon_thickness_tot / 2, crystal_length_ /2.);
-    G4Box *copper = new G4Box("TEFLON_FULL", crystal_width_ / 2+ teflon_thickness_tot / 2 + 1 * mm, crystal_width_ / 2+ teflon_thickness_tot / 2 + 1 * mm, crystal_length_ /2.);
+    G4Box *copper = new G4Box("COPPER_HOLDER", crystal_width_ / 2+ teflon_thickness_tot / 2 + 1 * mm, crystal_width_ / 2+ teflon_thickness_tot / 2 + 1 * mm, crystal_length_ /2.);
+    G4Tubs *copper_plate = new G4Tubs("COPPER_PLATE", 0, 5 * cm, 3 / 2. * mm, 0, 2*pi);
+    G4LogicalVolume* copper_plate_logic =
+      new G4LogicalVolume(copper_plate,
+                          G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
+                          "COPPER_PLATE");
+    copper_plate_logic->SetVisAttributes(nexus::CopperBrown());
+    new G4PVPlacement(G4Transform3D(*rot_z, G4ThreeVector(0, - 4.5 * mm, 0)),
+                      copper_plate_logic, "COPPER_PLATE", lab_logic,
+                      false, 0, false);
 
     G4Box *teflon_back = new G4Box("TEFLON_BACK", crystal_width_ / 2+ teflon_thickness_tot / 2, crystal_width_ / 2 + teflon_thickness_tot / 2, teflon_thickness_tot / 2);
 
@@ -129,7 +138,7 @@ namespace nexus {
     G4LogicalVolume* copper_logic =
     new G4LogicalVolume(copper_holder,
                         G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
-                        "TEFLON");
+                        "COPPER_HOLDER");
     copper_logic->SetVisAttributes(nexus::CopperBrown());
 
     G4LogicalVolume* teflon_logic =
