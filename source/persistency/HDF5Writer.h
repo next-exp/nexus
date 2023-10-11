@@ -44,6 +44,7 @@ namespace nexus {
                    float initial_x, float initial_y, float initial_z,
                    float   final_x, float   final_y, float   final_z,
                    float time);
+    void WriteStringMapInfo(const char* name, int name_id);
 
   private:
     size_t file_; ///< HDF5 file
@@ -58,6 +59,7 @@ namespace nexus {
     size_t particleInfoTable_;
     size_t snsPosTable_;
     size_t stepTable_;
+    size_t stringMapTable_;
 
     size_t memtypeRun_;
     size_t memtypeSnsData_;
@@ -65,6 +67,7 @@ namespace nexus {
     size_t memtypeParticleInfo_;
     size_t memtypeSnsPos_;
     size_t memtypeStep_;
+    size_t memtypeStringMap_;
 
     size_t irun_; ///< counter for configuration parameters
     size_t ismp_; ///< counter for written waveform samples
@@ -72,6 +75,7 @@ namespace nexus {
     size_t ipart_; ///< counter for particle information
     size_t ipos_; ///< counter for sensor positions
     size_t istep_; ///< counter for steps
+    size_t istrmap_;  ///< counter for string map
 
   };
 

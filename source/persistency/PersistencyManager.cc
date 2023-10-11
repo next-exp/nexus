@@ -46,7 +46,7 @@ PersistencyManagerBase(), msg_(0), output_file_("nexus_out"), ready_(false),
   store_evt_(true), store_steps_(false),
   interacting_evt_(false), save_ie_numb_(false), event_type_("other"),
   saved_evts_(0), interacting_evts_(0), pmt_bin_size_(-1), sipm_bin_size_(-1),
-  nevt_(0), start_id_(0), first_evt_(true), h5writer_(0)
+  nevt_(0), start_id_(0), first_evt_(true), h5writer_(0), str_counter_(0)
 {
   msg_ = new G4GenericMessenger(this, "/nexus/persistency/");
   msg_->DeclareProperty("output_file", output_file_, "Path of output file.");
@@ -145,8 +145,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
   if (!tc) return;
 
   // Loop through the trajectories stored in the container
-  G4int c_vol = 0;
-  G4int c_proc = 0;
+
   for (size_t i=0; i<tc->entries(); ++i) {
     Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[i]);
     if (!trj) continue;
@@ -172,11 +171,11 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
     G4String creator_proc = trj->GetCreatorProcess();
     G4String final_proc   = trj->GetFinalProcess();
 
-    G4int ini_id = FindVolumeIDInMap(vol_map_, ini_volume, c_vol);
-    G4int fin_id = FindVolumeIDInMap(vol_map_, final_volume, c_vol);
+    G4int ini_id = FindStringIDInMap(str_map_, ini_volume, str_counter_);
+    G4int fin_id = FindStringIDInMap(str_map_, final_volume, str_counter_);
 
-    G4int creator_id = FindVolumeIDInMap(proc_map_, creator_proc, c_proc);
-    G4int destr_id   = FindVolumeIDInMap(proc_map_, final_proc, c_proc);
+    G4int creator_id = FindStringIDInMap(str_map_, creator_proc, str_counter_);
+    G4int destr_id   = FindStringIDInMap(str_map_, final_proc, str_counter_);
 
 
     float kin_energy = energy - mass;
@@ -402,6 +401,16 @@ G4bool PersistencyManager::Store(const G4Run*)
     SaveConfigurationInfo(secondary_macros_[i]);
   }
 
+  std::map<G4int, G4String> inv_map;
+  for (const auto& n : str_map_) {
+    inv_map[n.second] = n.first;
+  }
+
+  for (const auto& p : inv_map) {
+    h5writer_->WriteStringMapInfo(p.second, p.first);
+  }
+
+
   return true;
 }
 
@@ -440,7 +449,8 @@ void PersistencyManager::SaveConfigurationInfo(G4String file_name)
   history.close();
 }
 
-G4int PersistencyManager::FindVolumeIDInMap(std::map<G4String, G4int>& vmap,
+
+G4int PersistencyManager::FindStringIDInMap(std::map<G4String, G4int>& vmap,
                                             G4String vol, G4int& counter)
 {
   auto found = vmap.find(vol);
@@ -449,6 +459,6 @@ G4int PersistencyManager::FindVolumeIDInMap(std::map<G4String, G4int>& vmap,
   } else {
     vmap[vol] = counter;
     counter++;
-    return counter;
+    return vmap[vol];
   }
 }

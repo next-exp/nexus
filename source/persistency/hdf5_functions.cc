@@ -140,6 +140,19 @@ hsize_t createStepType()
   return memtype;
 }
 
+
+hsize_t createStringMapType()
+{
+  hid_t strtype = H5Tcopy(H5T_C_S1);
+  H5Tset_size (strtype, STRLEN);
+
+  //Create compound datatype for the table
+  hsize_t memtype = H5Tcreate (H5T_COMPOUND, sizeof(string_map_t));
+  H5Tinsert (memtype, "name"   , HOFFSET(string_map_t, name   ), strtype);
+  H5Tinsert (memtype, "name_id" , HOFFSET(string_map_t, name_id ), H5T_NATIVE_INT);
+  return memtype;
+}
+
 hid_t createTable(hid_t group, std::string& table_name, hsize_t memtype)
 {
   //Create 1D dataspace (evt number). First dimension is unlimited (initially 0)
@@ -295,6 +308,26 @@ void writeStep(step_info_t* step, hid_t dataset, hid_t memtype, hsize_t counter)
   hsize_t count[1] = {1};
   H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
   H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, step);
+  H5Sclose(file_space);
+  H5Sclose(memspace);
+}
+
+void writeStringMap(string_map_t* strmap, hid_t dataset, hid_t memtype, hsize_t counter)
+{
+  hid_t memspace, file_space;
+
+  const hsize_t n_dims = 1;
+  hsize_t dims[n_dims] = {1};
+  memspace = H5Screate_simple(n_dims, dims, NULL);
+
+  dims[0] = counter + 1;
+  H5Dset_extent(dataset, dims);
+
+  file_space = H5Dget_space(dataset);
+  hsize_t start[1] = {counter};
+  hsize_t count[1] = {1};
+  H5Sselect_hyperslab(file_space, H5S_SELECT_SET, start, NULL, count, NULL);
+  H5Dwrite(dataset, memtype, memspace, file_space, H5P_DEFAULT, strmap);
   H5Sclose(file_space);
   H5Sclose(memspace);
 }

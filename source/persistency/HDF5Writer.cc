@@ -21,7 +21,7 @@ using namespace nexus;
 
 HDF5Writer::HDF5Writer():
   file_(0), irun_(0), ismp_(0), ihit_(0),
-  ipart_(0), ipos_(0), istep_(0)
+  ipart_(0), ipos_(0), istep_(0), istrmap_(0)
 {
 }
 
@@ -58,6 +58,10 @@ void HDF5Writer::Open(std::string fileName, bool debug)
   std::string sns_pos_table_name = "sns_positions";
   memtypeSnsPos_ = createSensorPosType();
   snsPosTable_ = createTable(group, sns_pos_table_name, memtypeSnsPos_);
+
+  std::string str_map_table_name = "string_map";
+  memtypeStringMap_ = createStringMapType();
+  stringMapTable_ = createTable(group, str_map_table_name, memtypeStringMap_);
 
   if (debug) {
     std::string debug_group_name = "/DEBUG";
@@ -209,4 +213,15 @@ void HDF5Writer::WriteStep(int64_t evt_number,
   writeStep(&step, stepTable_, memtypeStep_, istep_);
 
   istep_++;
+}
+
+void HDF5Writer::WriteStringMapInfo(const char* name, int name_id)
+{
+  string_map_t strmap;
+  memset(strmap.name, 0, STRLEN);
+  strcpy(strmap.name, name);
+  strmap.name_id = name_id;
+
+  writeStringMap(&strmap, stringMapTable_, memtypeStringMap_, istrmap_);
+  istrmap_++;
 }

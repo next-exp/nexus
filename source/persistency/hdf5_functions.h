@@ -97,12 +97,18 @@
     float        time;
   } step_info_t;
 
+typedef struct{
+  char name[STRLEN];
+  int32_t name_id;
+} string_map_t;
+
   hsize_t createRunType();
   hsize_t createSensorDataType();
   hsize_t createHitInfoType();
   hsize_t createParticleInfoType();
   hsize_t createSensorPosType();
   hsize_t createStepType();
+  hsize_t createStringMapType();
 
   hid_t createTable(hid_t group, std::string& table_name, hsize_t memtype);
   hid_t createGroup(hid_t file, std::string& groupName);
@@ -113,6 +119,7 @@
   void writeParticle(particle_info_t* particleInfo, hid_t dataset, hid_t memtype, hsize_t counter);
   void writeSnsPos(sns_pos_t* snsPos, hid_t dataset, hid_t memtype, hsize_t counter);
   void writeStep(step_info_t* step, hid_t dataset, hid_t memtype, hsize_t counter);
+  void writeStringMap(string_map_t* strmap, hid_t dataset, hid_t memtype, hsize_t counter);
 
 
 #endif
