@@ -19,8 +19,6 @@ def output_tmpdir(tmpdir_factory):
 @pytest.fixture(scope = 'session')
 def full_base_name_new():
     return 'NEW_full_electron'
-
-
 @pytest.fixture(scope = 'session')
 def nexus_full_output_file_new(output_tmpdir, full_base_name_new):
     return os.path.join(output_tmpdir, full_base_name_new + '.h5')
@@ -29,8 +27,6 @@ def nexus_full_output_file_new(output_tmpdir, full_base_name_new):
 @pytest.fixture(scope = 'session')
 def full_base_name_next100():
     return 'NEXT100_full_electron'
-
-
 @pytest.fixture(scope = 'session')
 def nexus_full_output_file_next100(output_tmpdir, full_base_name_next100):
     return os.path.join(output_tmpdir, full_base_name_next100 + '.h5')
@@ -39,8 +35,6 @@ def nexus_full_output_file_next100(output_tmpdir, full_base_name_next100):
 @pytest.fixture(scope = 'session')
 def full_base_name_flex100():
     return 'FLEX100_full_electron'
-
-
 @pytest.fixture(scope = 'session')
 def nexus_full_output_file_flex100(output_tmpdir, full_base_name_flex100):
     return os.path.join(output_tmpdir, full_base_name_flex100 + '.h5')
@@ -49,11 +43,18 @@ def nexus_full_output_file_flex100(output_tmpdir, full_base_name_flex100):
 @pytest.fixture(scope = 'session')
 def full_base_name_demopp():
     return 'DEMOPP_full_electron_{run}'
-
-
 @pytest.fixture(scope = 'session')
 def nexus_full_output_file_demopp(output_tmpdir, full_base_name_demopp):
     return os.path.join(output_tmpdir, full_base_name_demopp + '.h5')
+
+
+@pytest.fixture(scope = 'session')
+def base_name_no_strings():
+    return 'NEXT100_no_strings'
+@pytest.fixture(scope = 'session')
+def nexus_output_file_no_strings(output_tmpdir, base_name_no_strings):
+    return os.path.join(output_tmpdir, base_name_no_strings + '.h5')
+
 
 
 @pytest.fixture(scope = 'session')

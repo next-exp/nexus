@@ -184,3 +184,12 @@ def test_sensor_names_are_the_same_across_tables(detectors):
             test(filename.format(run=run))
     else:
         test(filename)
+
+
+def test_string_map(nexus_output_file_no_strings):
+    """Check that IDs and strings are not repeated in map table."""
+
+    str_map = pd.read_hdf(nexus_output_file_no_strings, 'MC/string_map')
+
+    assert str_map.name_id.nunique() == len(str_map)
+    assert str_map.name.nunique()    == len(str_map)
