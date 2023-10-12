@@ -29,7 +29,7 @@ HDF5Writer::~HDF5Writer()
 {
 }
 
-void HDF5Writer::Open(std::string fileName, bool debug)
+void HDF5Writer::Open(std::string fileName, bool debug, bool save_str)
 {
   firstEvent_= true;
 
@@ -48,11 +48,11 @@ void HDF5Writer::Open(std::string fileName, bool debug)
   snsDataTable_ = createTable(group, sns_data_table_name, memtypeSnsData_);
 
   std::string hit_info_table_name = "hits";
-  memtypeHitInfo_ = createHitInfoType();
+  memtypeHitInfo_ = createHitInfoType(save_str);
   hitInfoTable_ = createTable(group, hit_info_table_name, memtypeHitInfo_);
 
   std::string particle_info_table_name = "particles";
-  memtypeParticleInfo_ = createParticleInfoType();
+  memtypeParticleInfo_ = createParticleInfoType(save_str);
   particleInfoTable_ = createTable(group, particle_info_table_name, memtypeParticleInfo_);
 
   std::string sns_pos_table_name = "sns_positions";
@@ -105,7 +105,7 @@ void HDF5Writer::WriteSensorDataInfo(int64_t evt_number, unsigned int sensor_id,
   ismp_++;
 }
 
-void HDF5Writer::WriteHitInfo(int64_t evt_number, int particle_indx, int hit_indx, float hit_position_x, float hit_position_y, float hit_position_z, float hit_time, float hit_energy, const char* label)
+void HDF5Writer::WriteHitInfo(bool str, int64_t evt_number, int particle_indx, int hit_indx, float hit_position_x, float hit_position_y, float hit_position_z, float hit_time, float hit_energy, const char* label_str, int label)
 {
   hit_info_t trueInfo;
   trueInfo.event_id = evt_number;
@@ -114,8 +114,12 @@ void HDF5Writer::WriteHitInfo(int64_t evt_number, int particle_indx, int hit_ind
   trueInfo.z = hit_position_z;
   trueInfo.time = hit_time;
   trueInfo.energy = hit_energy;
-  memset(trueInfo.label, 0, STRLEN);
-  strcpy(trueInfo.label, label);
+  if (str) {
+    memset(trueInfo.label_str, 0, STRLEN);
+    strcpy(trueInfo.label_str, label_str);
+  } else {
+    trueInfo.label = label;
+  }
   trueInfo.particle_id = particle_indx;
   trueInfo.hit_id = hit_indx;
   writeHit(&trueInfo,  hitInfoTable_, memtypeHitInfo_, ihit_);
@@ -123,14 +127,17 @@ void HDF5Writer::WriteHitInfo(int64_t evt_number, int particle_indx, int hit_ind
   ihit_++;
 }
 
-void HDF5Writer::WriteParticleInfo(int64_t evt_number, int particle_indx, int pdg, char primary, int mother_id, float initial_vertex_x, float initial_vertex_y, float initial_vertex_z, float initial_vertex_t, float final_vertex_x, float final_vertex_y, float final_vertex_z, float final_vertex_t, int initial_volume, int final_volume, float ini_momentum_x, float ini_momentum_y, float ini_momentum_z, float final_momentum_x, float final_momentum_y, float final_momentum_z, float kin_energy, float length, int creator_proc, int final_proc)
+void HDF5Writer::WriteParticleInfo(bool str, int64_t evt_number, int particle_indx, const char* particle_name_str, int particle_name, char primary, int mother_id, float initial_vertex_x, float initial_vertex_y, float initial_vertex_z, float initial_vertex_t, float final_vertex_x, float final_vertex_y, float final_vertex_z, float final_vertex_t, const char* initial_volume_str, const char* final_volume_str, int initial_volume, int final_volume, float ini_momentum_x, float ini_momentum_y, float ini_momentum_z, float final_momentum_x, float final_momentum_y, float final_momentum_z, float kin_energy, float length, const char* creator_proc_str, const char* final_proc_str, int creator_proc, int final_proc)
 {
   particle_info_t trueInfo;
   trueInfo.event_id = evt_number;
   trueInfo.particle_id = particle_indx;
-  //memset(trueInfo.particle_name, 0, STRLEN);
-  //strcpy(trueInfo.particle_name, particle_name);
-  trueInfo.pdg_id = pdg;
+  if (str) {
+    memset(trueInfo.particle_name_str, 0, STRLEN);
+    strcpy(trueInfo.particle_name_str, particle_name_str);
+  } else {
+    trueInfo.particle_name = particle_name;
+  }
   trueInfo.primary = primary;
   trueInfo.mother_id = mother_id;
   trueInfo.initial_x = initial_vertex_x;
@@ -141,12 +148,15 @@ void HDF5Writer::WriteParticleInfo(int64_t evt_number, int particle_indx, int pd
   trueInfo.final_y = final_vertex_y;
   trueInfo.final_z = final_vertex_z;
   trueInfo.final_t = final_vertex_t;
-  //  memset(trueInfo.initial_volume, 0, STRLEN);
-  //  strcpy(trueInfo.initial_volume, initial_volume);
-  //  memset(trueInfo.final_volume, 0, STRLEN);
-  //  strcpy(trueInfo.final_volume, final_volume);
-  trueInfo.initial_volume = initial_volume;
-  trueInfo.final_volume = final_volume;
+  if (str) {
+    memset(trueInfo.initial_volume_str, 0, STRLEN);
+    strcpy(trueInfo.initial_volume_str, initial_volume_str);
+    memset(trueInfo.final_volume_str, 0, STRLEN);
+    strcpy(trueInfo.final_volume_str, final_volume_str);
+  } else {
+    trueInfo.initial_volume = initial_volume;
+    trueInfo.final_volume = final_volume;
+  }
   trueInfo.initial_momentum_x = ini_momentum_x;
   trueInfo.initial_momentum_y = ini_momentum_y;
   trueInfo.initial_momentum_z = ini_momentum_z;
@@ -155,12 +165,15 @@ void HDF5Writer::WriteParticleInfo(int64_t evt_number, int particle_indx, int pd
   trueInfo.final_momentum_z = final_momentum_z;
   trueInfo.kin_energy = kin_energy;
   trueInfo.length = length;
-  // memset(trueInfo.creator_proc, 0, STRLEN);
-  // strcpy(trueInfo.creator_proc, creator_proc);
-  // memset(trueInfo.final_proc, 0, STRLEN);
-  // strcpy(trueInfo.final_proc, final_proc);
-  trueInfo.creator_proc = creator_proc;
-  trueInfo.final_proc = final_proc;
+  if (str) {
+    memset(trueInfo.creator_proc_str, 0, STRLEN);
+    strcpy(trueInfo.creator_proc_str, creator_proc_str);
+    memset(trueInfo.final_proc_str, 0, STRLEN);
+    strcpy(trueInfo.final_proc_str, final_proc_str);
+  } else {
+    trueInfo.creator_proc = creator_proc;
+    trueInfo.final_proc = final_proc;
+  }
   writeParticle(&trueInfo,  particleInfoTable_, memtypeParticleInfo_, ipart_);
 
   ipart_++;

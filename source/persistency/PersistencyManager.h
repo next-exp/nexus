@@ -99,9 +99,10 @@ namespace nexus {
     std::vector<G4int>* ihits_;
     std::map<G4int, std::vector<G4int>* > hit_map_;
     std::vector<G4int> sns_posvec_;
-    std::map<G4String, G4int> str_map_;
+    std::map<G4String, G4int> str_map_; ///< map with string-int correspondence
 
-    G4int str_counter_;
+    G4int str_counter_; ///< incrementing counter for string map
+    G4bool save_str_; ///< Should we store strings as volume names etc.?
 
     std::map<G4String, G4double> sensdet_bin_;
   };

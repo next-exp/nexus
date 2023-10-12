@@ -34,7 +34,8 @@
 	float z;
 	float time;
 	float energy;
-        char label[STRLEN];
+        char label_str[STRLEN];
+        int label;
         int particle_id;
         int hit_id;
   } hit_info_t;
@@ -42,8 +43,8 @@
   typedef struct{
         int64_t event_id;
 	int particle_id;
-	//char particle_name[STRLEN];
-        int  pdg_id;
+	char particle_name_str[STRLEN];
+        int  particle_name;
         char primary;
 	int mother_id;
 	float initial_x;
@@ -54,8 +55,8 @@
 	float final_y;
 	float final_z;
 	float final_t;
-        //char initial_volume[STRLEN];
-        //char final_volume[STRLEN];
+        char initial_volume_str[STRLEN];
+        char final_volume_str[STRLEN];
         int initial_volume;
         int final_volume;
 	float initial_momentum_x;
@@ -66,8 +67,8 @@
 	float final_momentum_z;
 	float kin_energy;
 	float length;
-        //char creator_proc[STRLEN];
-	//char final_proc[STRLEN];
+        char creator_proc_str[STRLEN];
+	char final_proc_str[STRLEN];
         int creator_proc;
         int final_proc;
   } particle_info_t;
@@ -104,8 +105,8 @@ typedef struct{
 
   hsize_t createRunType();
   hsize_t createSensorDataType();
-  hsize_t createHitInfoType();
-  hsize_t createParticleInfoType();
+  hsize_t createHitInfoType(bool str);
+  hsize_t createParticleInfoType(bool str);
   hsize_t createSensorPosType();
   hsize_t createStepType();
   hsize_t createStringMapType();
