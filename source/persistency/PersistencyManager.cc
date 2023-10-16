@@ -393,12 +393,14 @@ G4bool PersistencyManager::Store(const G4Run*)
     h5writer_->WriteRunInfo(key,  std::to_string(interacting_evts_).c_str());
   }
 
+  // Store sensor time binning
   std::map<G4String, G4double>::const_iterator it;
   for (it = sensdet_bin_.begin(); it != sensdet_bin_.end(); ++it) {
     h5writer_->WriteRunInfo((it->first + "_binning").c_str(),
                            (std::to_string(it->second/microsecond)+" mus").c_str());
   }
 
+  // Store configuration parameters
   SaveConfigurationInfo(init_macro_);
   for (unsigned long i=0; i<macros_.size(); i++) {
     SaveConfigurationInfo(macros_[i]);
@@ -410,13 +412,16 @@ G4bool PersistencyManager::Store(const G4Run*)
     SaveConfigurationInfo(secondary_macros_[i]);
   }
 
-  std::map<G4int, G4String> inv_map;
-  for (const auto& n : str_map_) {
-    inv_map[n.second] = n.first;
-  }
+  // Store map with string --> int correspondence
+  if (!save_str_) {
+    std::map<G4int, G4String> inv_map;
+    for (const auto& n : str_map_) {
+      inv_map[n.second] = n.first;
+    }
 
-  for (const auto& p : inv_map) {
-    h5writer_->WriteStringMapInfo(p.second, p.first);
+    for (const auto& p : inv_map) {
+      h5writer_->WriteStringMapInfo(p.second, p.first);
+    }
   }
 
 

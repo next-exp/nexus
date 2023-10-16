@@ -59,9 +59,11 @@ void HDF5Writer::Open(std::string fileName, bool debug, bool save_str)
   memtypeSnsPos_ = createSensorPosType();
   snsPosTable_ = createTable(group, sns_pos_table_name, memtypeSnsPos_);
 
-  std::string str_map_table_name = "string_map";
-  memtypeStringMap_ = createStringMapType();
-  stringMapTable_ = createTable(group, str_map_table_name, memtypeStringMap_);
+  if (!save_str) {
+    std::string str_map_table_name = "string_map";
+    memtypeStringMap_ = createStringMapType();
+    stringMapTable_ = createTable(group, str_map_table_name, memtypeStringMap_);
+  }
 
   if (debug) {
     std::string debug_group_name = "/DEBUG";
