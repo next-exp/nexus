@@ -353,13 +353,13 @@ G4ThreeVector MuonGenerator::ProjectToVertex(const G4ThreeVector& dir)
   //    starting point for all vertices.
   /////////////////////////////////////////////////////////////////////////
   // Postion in disc
-  G4double rad = gen_rad_ * std::sqrt(G4UniformRand());
+  G4double radius = gen_rad_ * std::sqrt(G4UniformRand());
   G4double ang = 2 * G4UniformRand() * pi;
 
   // Continue assuming that Y is vertical and z drift,
   // valid for NEW and NEXT-100 (at least).
   // Rotate the disc (origin-point vector) to be perpendicular to dir.
-  G4ThreeVector point(rad * std::cos(ang), 0., rad * std::sin(ang));
+  G4ThreeVector point(radius * std::cos(ang), 0., radius * std::sin(ang));
   point.rotate(pi / 2 - dir.angle(point), dir.cross(point));
 
   // Now project back to the requested region intersection.
