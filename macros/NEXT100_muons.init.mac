@@ -1,9 +1,7 @@
 ## ----------------------------------------------------------------------------
-## nexus | NEXT100_muons_lsc.init.mac
+## nexus | NEXT100_muons.init.mac
 ##
-## Initialization macro to simulate muons according to the distribution
-## measured at LSC, in the NEXT-100 geometry launching from just outside
-## the lead shielding.
+## Initialization macro to simulate muons in the NEXT-100 geometry.
 ##
 ## The NEXT Collaboration
 ## ----------------------------------------------------------------------------
