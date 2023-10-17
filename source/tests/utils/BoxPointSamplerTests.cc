@@ -33,17 +33,17 @@ TEST_CASE("BoxPointSampler") {
     REQUIRE(z >= -c/2 - thick);
     REQUIRE(z <=  c/2 + thick);
 
-    if ((std::abs(x) < a/2) & (std::abs(y) < b/2)) {
+    if ((std::abs(x) < a/2) && (std::abs(y) < b/2)) {
       REQUIRE(std::abs(z) >= c/2);
       REQUIRE(std::abs(z) <= c/2 + thick);
     }
 
-    if ((std::abs(x) < a/2) & (std::abs(z) < c/2)) {
+    if ((std::abs(x) < a/2) && (std::abs(z) < c/2)) {
       REQUIRE(std::abs(y) >= b/2);
       REQUIRE(std::abs(y) <= b/2 + thick);
     }
 
-    if ((std::abs(y) < b/2) & (std::abs(z) < c/2)) {
+    if ((std::abs(y) < b/2) && (std::abs(z) < c/2)) {
       REQUIRE(std::abs(x) >= a/2);
       REQUIRE(std::abs(x) <= a/2 + thick);
     }
