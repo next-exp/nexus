@@ -403,12 +403,10 @@ namespace nexus {
     // Only shooting from the innest 5 cm.
     lead_gen_  = new BoxPointSampler(steel_x, steel_y, steel_z, 5.*cm,
                                      G4ThreeVector(0., 0., 0.), 0);
-
-    G4double shield_diag = std::sqrt(lead_x_*lead_x_ + lead_y_*lead_y_ + lead_z_*lead_z_);
     G4double ext_offset = 1. * cm;
-    external_gen_ = new BoxPointSampler(shield_diag / 2. + ext_offset,
-					shield_diag / 2. + ext_offset,
-					shield_diag / 2. + ext_offset,
+    external_gen_ = new BoxPointSampler(lead_x_ + ext_offset,
+                                        lead_y_ + ext_offset,
+                                        lead_z_ + ext_offset,
                                         1. * mm, G4ThreeVector(0.,0.,0.), 0);
 
     steel_gen_ =
