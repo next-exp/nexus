@@ -194,7 +194,7 @@ void Next100SiPM::Construct()
       G4Exception("[Next100SiPM]", "Construct()", FatalException,
                   "Sensor Depth must be set before constructing");
 
-    if ((naming_order_ > 0) & (mother_depth_ == 0))
+    if ((naming_order_ > 0) && (mother_depth_ == 0))
       G4Exception("[Next100SiPM]", "Construct()", FatalException,
                   "Naming Order set without setting Mother Depth");
 
