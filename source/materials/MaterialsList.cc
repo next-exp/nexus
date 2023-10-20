@@ -795,53 +795,6 @@ namespace materials {
   }
 
 
-  // Kuraray Y-11
-  G4Material* Y11()
-  {
-    G4String name = "Y11"; //
-
-    G4Material* mat = G4Material::GetMaterial(name, false);
-
-    if (mat == 0) {
-      G4NistManager* nist = G4NistManager::Instance();
-
-      // The base is Polystyrene
-      // Linear formula: (C8H8)n
-      G4Element* H = nist->FindOrBuildElement("H");
-      G4Element* C = nist->FindOrBuildElement("C");
-
-      mat = new G4Material(name, 1.05* g / cm3, 2, kStateSolid);
-      mat->AddElement(H, 8);
-      mat->AddElement(C, 8);
-    }
-
-    return mat;
-  }
-
-  // Kuraray B-2
-  G4Material* B2()
-  {
-    G4String name = "B2"; //
-
-    G4Material* mat = G4Material::GetMaterial(name, false);
-
-    if (mat == 0) {
-      G4NistManager* nist = G4NistManager::Instance();
-
-      // The base is Polystyrene
-      // Linear formula: (C8H8)n
-      G4Element* H = nist->FindOrBuildElement("H");
-      G4Element* C = nist->FindOrBuildElement("C");
-
-      mat = new G4Material(name, 1.05* g / cm3, 2, kStateSolid);
-      mat->AddElement(H, 8);
-      mat->AddElement(C, 8);
-    }
-
-    return mat;
-  }
-
-
   // Pethylene (cladding material)
   G4Material* Pethylene()
   {
