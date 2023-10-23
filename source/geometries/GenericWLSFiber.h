@@ -30,8 +30,8 @@ namespace nexus {
                     G4double    length,
                     G4bool      doubleclad,
                     G4bool      with_coating,
-                    G4Material* coating_material,
                     G4Material* core_material,
+                    G4Material* coating_material,
                     G4bool      visibility);
 
     // Destructor

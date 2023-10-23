@@ -338,7 +338,7 @@ void NextFlexFieldCage::DefineMaterials()
     fiber_mat_->SetMaterialPropertiesTable(opticalprops::EJ286());
   }
   else if (fiber_mat_name_ == "Y11") {
-    fiber_mat_ = materials::Y11();
+    fiber_mat_ = materials::PS();
     fiber_mat_->SetMaterialPropertiesTable(opticalprops::Y11());
   }
   else {
