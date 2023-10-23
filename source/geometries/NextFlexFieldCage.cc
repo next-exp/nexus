@@ -330,15 +330,15 @@ void NextFlexFieldCage::DefineMaterials()
 
   // Fiber core material
   if (fiber_mat_name_ == "EJ280") {
-    fiber_mat_ = materials::EJ280();
+    fiber_mat_ = materials::PVT();
     fiber_mat_->SetMaterialPropertiesTable(opticalprops::EJ280());
   }
   else if (fiber_mat_name_ == "EJ286") {
-    fiber_mat_ = materials::EJ280();   // Same base material than EJ280
+    fiber_mat_ = materials::PVT();   // Same base material than EJ280
     fiber_mat_->SetMaterialPropertiesTable(opticalprops::EJ286());
   }
   else if (fiber_mat_name_ == "Y11") {
-    fiber_mat_ = materials::Y11();
+    fiber_mat_ = materials::PS();
     fiber_mat_->SetMaterialPropertiesTable(opticalprops::Y11());
   }
   else {
