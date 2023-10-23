@@ -134,11 +134,11 @@ namespace nexus {
       0, 0
     };
     G4double efficiency[entries]   = {
-      0.0237, 0.081,
-      0.1881, 0.2521,
-      0.2284, 0.1814,
-      0.1809, 0.1649,
-      0.1149, 0.0247
+      0.0237*2, 0.081*2,
+      0.1881*2, 0.2521*2,
+      0.2284*2, 0.1814*2,
+      0.1809*2, 0.1649*2,
+      0.1149*2, 0.0247*2
 
       // 1., 1.,
       // 1., 1.,
@@ -167,7 +167,7 @@ namespace nexus {
       SensorSD* sipmsd = new SensorSD(sdname);
       sipmsd->SetDetectorVolumeDepth(1);
       sipmsd->SetDetectorNamingOrder(1000.);
-      sipmsd->SetTimeBinning(10.*ns);
+      sipmsd->SetTimeBinning(0.1*ns);
       sipmsd->SetMotherVolumeDepth(2);
 
       G4SDManager::GetSDMpointer()->AddNewDetector(sipmsd);
@@ -178,10 +178,10 @@ namespace nexus {
     if (visibility_) {
        G4VisAttributes sipm_col = nexus::WhiteAlpha();
       sipm_logic->SetVisAttributes(sipm_col);
-      G4VisAttributes blue_col = nexus::DarkGreen();
+      G4VisAttributes blue_col = nexus::DirtyWhite();
       blue_col.SetForceSolid(true);
       active_logic->SetVisAttributes(blue_col);
-      G4VisAttributes plastic_col = nexus::RedAlpha();
+      G4VisAttributes plastic_col = nexus::DarkGreyAlpha();
       plastic_col.SetForceSolid(true);
       plastic_logic->SetVisAttributes(plastic_col);
     }

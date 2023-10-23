@@ -125,10 +125,15 @@ namespace nexus {
                           G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
                           "COPPER_PLATE");
     copper_plate_logic->SetVisAttributes(nexus::CopperBrown());
-    new G4PVPlacement(G4Transform3D(*rot_z, G4ThreeVector(0, - 4.5 * mm, 0)),
-                      copper_plate_logic, "COPPER_PLATE", lab_logic,
-                      false, 0, false);
-
+    if (crystal_width_ == 3 * mm) {
+      new G4PVPlacement(G4Transform3D(*rot_z, G4ThreeVector(0, - 4.5 * mm, 0)),
+                        copper_plate_logic, "COPPER_PLATE", lab_logic,
+                        false, 0, false);
+    } else {
+      new G4PVPlacement(G4Transform3D(*rot_z, G4ThreeVector(0, - 6 * mm, 0)),
+                        copper_plate_logic, "COPPER_PLATE", lab_logic,
+                        false, 0, false);
+    }
     G4Box *teflon_back = new G4Box("TEFLON_BACK", crystal_width_ / 2+ teflon_thickness_tot / 2, crystal_width_ / 2 + teflon_thickness_tot / 2, teflon_thickness_tot / 2);
 
     G4SubtractionSolid *teflon_coating = new G4SubtractionSolid("TEFLON",teflon_coating_full,crystal);
@@ -139,7 +144,7 @@ namespace nexus {
     new G4LogicalVolume(copper_holder,
                         G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu"),
                         "COPPER_HOLDER");
-    copper_logic->SetVisAttributes(nexus::CopperBrown());
+    copper_logic->SetVisAttributes(nexus::CopperBrownAlpha());
 
     G4LogicalVolume* teflon_logic =
     new G4LogicalVolume(teflon_coating,
@@ -148,7 +153,10 @@ namespace nexus {
     G4LogicalVolume* teflon_back_logic =
     new G4LogicalVolume(teflon_back,
                         G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON"),
-                        "TEFLON");
+                        "TEFLON_BACK");
+
+    teflon_logic->SetVisAttributes(nexus::White());
+    teflon_back_logic->SetVisAttributes(nexus::White());
 
     G4VPhysicalVolume* teflon_full_position = new G4PVPlacement(0, G4ThreeVector(0, 0, 25./2 * mm + crystal_length_/2),
                     teflon_logic, "TEFLON_RIGHT", lab_logic,
@@ -201,11 +209,11 @@ namespace nexus {
       SiPM66 *sipm_geom = new SiPM66();
       sipm_geom->Construct();
       G4LogicalVolume* sipm_logic = sipm_geom->GetLogicalVolume();
-      new G4PVPlacement(0, G4ThreeVector(0,0,25./2 * mm + crystal_length_ + sipm_geom->GetDimensions().z() / 2 + 0.1 *mm), sipm_logic,
+      new G4PVPlacement(0, G4ThreeVector(0,0,25./2 * mm + crystal_length_ + sipm_geom->GetDimensions().z() / 2), sipm_logic,
         "SIPM66_1", lab_logic, true, 0);
-      rot_z->rotateX(90 * deg);
-      new G4PVPlacement(G4Transform3D(*rot_z, G4ThreeVector(0,0,25./2 * mm - sipm_geom->GetDimensions().z() / 2 - 0.1 *mm )), sipm_logic,
-        "SIPM66_2", lab_logic, true, 1);
+      // rot_z->rotateX(90 * deg);
+      // new G4PVPlacement(G4Transform3D(*rot_z, G4ThreeVector(0,0,25./2 * mm - sipm_geom->GetDimensions().z() / 2 - 0.1 *mm )), sipm_logic,
+      //   "SIPM66_2", lab_logic, true, 1);
     }
 
   }

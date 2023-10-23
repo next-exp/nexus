@@ -10,7 +10,7 @@
 /nexus/RegisterEventAction DefaultEventAction
 /nexus/RegisterTrackingAction DefaultTrackingAction
 /nexus/RegisterSteppingAction AnalysisSteppingAction
-#/nexus/RegisterTrackingAction OpticalTrackingAction
+/nexus/RegisterTrackingAction OpticalTrackingAction
 
 /nexus/RegisterMacro macros/CsI.config.mac
 
