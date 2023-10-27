@@ -237,7 +237,7 @@ void GenericPhotosensor::Construct()
       G4Exception("[GenericPhotosensor]", "Construct()", FatalException,
                   "Sensor Depth must be set before constructing");
 
-    if ((naming_order_ > 0) & (mother_depth_ == 0))
+    if ((naming_order_ > 0) && (mother_depth_ == 0))
       G4Exception("[GenericPhotosensor]", "Construct()", FatalException,
                   "naming_order set without setting mother_depth");
 
