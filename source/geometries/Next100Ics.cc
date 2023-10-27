@@ -54,8 +54,7 @@ namespace nexus {
 
   void Next100Ics::Construct()
   {
-    G4double length = gate_tp_distance_ + gate_sapphire_wdw_dist_;
-
+    G4double length = 1468.2 * mm; // (Full length of copper bars) - (copper simulated in TP_COPPER_PLATE)
     // defined for G4UnionSolids to ensure a common volume within the two joined solids
     // and for G4SubtractionSolids to ensure surface subtraction
     G4double offset = 1.* mm;
@@ -117,18 +116,19 @@ namespace nexus {
     ics_solid = new G4SubtractionSolid("ICS", ics_solid, upp_hole_solid_2,
                 port_upp_Rot, G4ThreeVector(0, (in_rad_ + thickness_/2.), upp_hole_2_z-length/2.));
 
-    /// Lateral holes
+    /// Lateral holes (also known as feedthrough holes)
     G4double lat_hole_rad = upp_hole_1_rad;
-    G4double lat_hole_z   = 58.1 * mm;
+    G4double lat_hole_z_1   = 55.5 * mm;
+    G4double lat_hole_z_2   = 33.0 * mm;
 
     G4Tubs* lat_hole_solid = new G4Tubs("LAT_HOLE", 0., lat_hole_rad,
                                         (thickness_ + offset)/2., 0.*deg, 360.*deg);
 
     ics_solid = new G4SubtractionSolid("ICS", ics_solid, lat_hole_solid,
-                port_a_Rot, G4ThreeVector(port_x, port_y, lat_hole_z-length/2.));
+                port_a_Rot, G4ThreeVector(port_x, port_y, lat_hole_z_1-length/2.));
 
     ics_solid = new G4SubtractionSolid("ICS", ics_solid, lat_hole_solid,
-                port_b_Rot, G4ThreeVector(-port_x, port_y, lat_hole_z-length/2.));
+                port_b_Rot, G4ThreeVector(-port_x, port_y, lat_hole_z_2-length/2.));
 
 
     /// ICS step at the TP end.
