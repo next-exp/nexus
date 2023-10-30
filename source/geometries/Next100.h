@@ -46,7 +46,8 @@ namespace nexus {
 
   private:
     // Detector dimensions
-    const G4double lab_size_;          /// Size of the air box containing the detector
+    const G4double lab_size_; /// Size of the air box containing the detector
+    const G4double grid_thickness_; /// Width of grids simulated as dielectric
     const G4double gate_tracking_plane_distance_, gate_sapphire_wdw_distance_;
 
     // Pointers to logical volumes

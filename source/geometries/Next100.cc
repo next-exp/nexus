@@ -37,11 +37,10 @@ namespace nexus {
     // Lab dimensions
     lab_size_ (5. * m),
 
-    // common used variables in geomety components
-    // 0.1 mm grid thickness
-    // note that if grid thickness change it must be also changed in Next100FieldCage.cc
-    gate_tracking_plane_distance_((26.1 + 0.1)   * mm),
-    gate_sapphire_wdw_distance_  ((1458.2 - 0.1) * mm),
+    // common used variables in geometry components
+    grid_thickness_ (0.1 * mm),
+    gate_tracking_plane_distance_((26.1 + grid_thickness_)   * mm),
+    gate_sapphire_wdw_distance_  ((1458.2 - grid_thickness_ - 1.351) * mm),
 
     specific_vertex_{},
     lab_walls_(false)
@@ -71,7 +70,7 @@ namespace nexus {
   ics_ = new Next100Ics();
 
   // Inner Elements
-  inner_elements_ = new Next100InnerElements();
+  inner_elements_ = new Next100InnerElements(grid_thickness_);
 
   }
 
@@ -100,13 +99,16 @@ namespace nexus {
       G4double hallA_length = hallA_walls_->GetLSCHallALength();
       // Since the walls will be displaced need to make the
       // "lab" double sized to be sure.
-      G4Box* lab_solid = new G4Box("LAB", hallA_length, hallA_length, hallA_length);
-      G4Material *vacuum = G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
+      G4Box* lab_solid =
+        new G4Box("LAB", hallA_length, hallA_length, hallA_length);
+      G4Material* vacuum =
+        G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
       lab_logic_ = new G4LogicalVolume(lab_solid, vacuum, "LAB");
       this->SetSpan(2 * hallA_length);
     }
     else {
-      G4Box* lab_solid = new G4Box("LAB", lab_size_/2., lab_size_/2., lab_size_/2.);
+      G4Box* lab_solid =
+        new G4Box("LAB", lab_size_/2., lab_size_/2., lab_size_/2.);
       lab_logic_ = new G4LogicalVolume(lab_solid,
         G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"), "LAB");
     }
@@ -120,9 +122,12 @@ namespace nexus {
     vessel_->SetELtoTPdistance(gate_tracking_plane_distance_);
     vessel_->Construct();
     G4LogicalVolume* vessel_logic = vessel_->GetLogicalVolume();
-    G4LogicalVolume* vessel_internal_logic  = vessel_->GetInternalLogicalVolume();
-    G4VPhysicalVolume* vessel_internal_phys = vessel_->GetInternalPhysicalVolume();
-    G4ThreeVector vessel_displacement = shielding_->GetAirDisplacement(); // explained below
+    G4LogicalVolume* vessel_internal_logic  =
+      vessel_->GetInternalLogicalVolume();
+    G4VPhysicalVolume* vessel_internal_phys =
+      vessel_->GetInternalPhysicalVolume();
+    G4ThreeVector vessel_displacement =
+      shielding_->GetAirDisplacement(); // explained below
     gate_zpos_in_vessel_ = vessel_->GetELzCoord();
 
     // SHIELDING
@@ -132,7 +137,8 @@ namespace nexus {
     G4LogicalVolume* shielding_air_logic = shielding_->GetAirLogicalVolume();
 
     // Recall that airbox is slighly displaced in Y dimension. In order to avoid
-    // mistmatch with vertex generators, we place the vessel in the center of the world volume
+    // mistmatch with vertex generators, we place the vessel i
+    // n the center of the world volume
     new G4PVPlacement(0, -vessel_displacement, vessel_logic,
                       "VESSEL", shielding_air_logic, false, 0);
 
@@ -163,12 +169,14 @@ namespace nexus {
                         "Hall_A", lab_logic_, false, 0, false);
     }
     else {
-      new G4PVPlacement(0, gate_pos, shielding_logic, "LEAD_BOX", lab_logic_, false, 0);
+      new G4PVPlacement(0, gate_pos, shielding_logic, "LEAD_BOX", lab_logic_,
+                        false, 0);
     }
 
     //// VERTEX GENERATORS
     lab_gen_ =
-      new BoxPointSampler(lab_size_ - 1.*m, lab_size_ - 1.*m, lab_size_  - 1.*m, 1.*m,
+      new BoxPointSampler(lab_size_ - 1.*m, lab_size_ - 1.*m,
+                          lab_size_  - 1.*m, 1.*m,
                           G4ThreeVector(0., 0., 0.), 0);
   }
 

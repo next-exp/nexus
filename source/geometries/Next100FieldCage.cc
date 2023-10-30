@@ -41,7 +41,7 @@
 using namespace nexus;
 
 
-Next100FieldCage::Next100FieldCage():
+Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   GeometryBase(),
   // Dimensions
   active_diam_         (984. * mm), // distance between the centers of two opposite panels
@@ -50,7 +50,7 @@ Next100FieldCage::Next100FieldCage():
   cathode_ext_diam_    (1020.* mm),
   cathode_thickn_      (10.  * mm),
   // Caution: updating grid-thickn_ will require updating gate-tp and gate-sapphire-window distances
-  grid_thickn_         (0.1  * mm),
+  grid_thickn_         (grid_thickn),
 
   teflon_drift_length_ (1178.*mm), //distance from the gate to the beginning of the cathode volume.
   teflon_total_length_ (1431. * mm),

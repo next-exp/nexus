@@ -26,7 +26,7 @@ namespace nexus {
   class Next100FieldCage: public GeometryBase
   {
   public:
-    Next100FieldCage();
+    Next100FieldCage(G4double grid_thickn);
     ~Next100FieldCage();
     void Construct() override;
     G4ThreeVector GenerateVertex(const G4String& region) const override;
