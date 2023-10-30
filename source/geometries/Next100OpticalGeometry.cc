@@ -33,8 +33,8 @@ namespace nexus {
     GeometryBase(),
     // common used variables in geometry components
     grid_thickness_ (0.1 * mm),
-    gate_tracking_plane_distance_((26.1 + grid_thickness_) * mm),
-    gate_sapphire_wdw_distance_  ((1458.2 - grid_thickness_ - 1.351) * mm),
+    gate_tracking_plane_distance_(26.1 * mm + grid_thickness_),
+    gate_sapphire_wdw_distance_  ((1458.2 - 1.3) * mm - grid_thickness_),
     pressure_(15. * bar),
     temperature_ (300 * kelvin),
     sc_yield_(25510. * 1/MeV),
