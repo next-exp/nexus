@@ -65,9 +65,9 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   gate_ring_thickn_ (9.9   * mm), // maximum possible value to avoid overlap with sipm board masks
 
   // external to teflon (hdpe + rings + holders)
-  hdpe_tube_int_diam_ (1080. * mm),
+  hdpe_tube_int_diam_ (1093. * mm),
   hdpe_tube_ext_diam_ (1105.4 * mm),
-  hdpe_length_        (1192. * mm),
+  hdpe_length_        (1115. * mm),
 
   ring_ext_diam_ (1038. * mm),
   ring_int_diam_ (1014. * mm),
