@@ -50,7 +50,8 @@ namespace nexus {
     G4double gate_sapphire_wdw_dist_;
     const G4double active_diam_;
     const G4double cathode_int_diam_, cathode_ext_diam_, cathode_thickn_, grid_thickn_;
-    const G4double teflon_drift_length_, teflon_total_length_, teflon_thickn_, n_panels_;
+    const G4double teflon_long_length_, teflon_buffer_length_;
+    const G4double teflon_thickn_, n_panels_;
     const G4double el_gap_length_;
     const G4double gate_teflon_dist_, gate_ext_diam_, gate_int_diam_, gate_ring_thickn_;
     const G4double hdpe_tube_int_diam_, hdpe_tube_ext_diam_, hdpe_length_;
@@ -78,8 +79,7 @@ namespace nexus {
     G4bool verbosity_;
 
     G4double active_length_, buffer_length_;
-    G4double teflon_buffer_length_;
-    G4double teflon_drift_zpos_,teflon_buffer_zpos_;
+    G4double teflon_drift_length_, teflon_total_length_, teflon_drift_zpos_,teflon_buffer_zpos_;
     G4double holder_r_;
     G4double active_zpos_, cathode_zpos_, gate_zpos_, el_gap_zpos_, anode_zpos_;
     G4double gate_grid_zpos_, anode_grid_zpos_;

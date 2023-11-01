@@ -52,8 +52,10 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   // Caution: updating grid-thickn_ will require updating gate-tp and gate-sapphire-window distances
   grid_thickn_         (grid_thickn),
 
-  teflon_drift_length_ (1178.*mm), //distance from the gate to the beginning of the cathode volume.
-  teflon_total_length_ (1431. * mm),
+  //  teflon_drift_length_ (1178.*mm), //distance from the gate to the beginning of the cathode volume.
+  teflon_long_length_   (467.5 * mm), //(465. * mm), from drawings
+  teflon_buffer_length_ (243. * mm), //(241. * mm), from drawings
+  // teflon_total_length_ (1431. * mm),
   teflon_thickn_       (5. * mm),
   n_panels_            (18),
 
@@ -198,12 +200,12 @@ void Next100FieldCage::SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys)
 
 void Next100FieldCage::Construct()
 {
+  /// Calculate different lengths of teflon
+  teflon_drift_length_ = 2 * teflon_long_length_ + teflon_buffer_length_;
+  teflon_total_length_ = teflon_drift_length_ + cathode_thickn_ + teflon_buffer_length_;
   /// Calculate lengths of active and buffer regions
   active_length_ = gate_teflon_dist_ + teflon_drift_length_;
   buffer_length_ = gate_sapphire_wdw_dist_ - active_length_ - grid_thickn_;
-
-  /// Calculate length of teflon in the buffer region
-  teflon_buffer_length_ = teflon_total_length_ - cathode_thickn_ - teflon_drift_length_;
 
   /// Calculate radial position of the ring holders.
   holder_r_ = (active_diam_+2.*teflon_thickn_+holder_long_y_)/2.;
