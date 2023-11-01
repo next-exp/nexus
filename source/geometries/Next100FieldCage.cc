@@ -208,16 +208,18 @@ void Next100FieldCage::Construct()
   /// Calculate radial position of the ring holders.
   holder_r_ = (active_diam_+2.*teflon_thickn_+holder_long_y_)/2.;
 
-  /// Calculate relative positions in mother volume
+  /// Calculate relative z positions in mother volume
+  /// All of them are calculated from GetELzCoord(), which is the position
+  /// of the beginning of the ACTIVE volume and the end of the gate grid.
   gate_grid_zpos_  = GetELzCoord() - grid_thickn_/2.;
-  active_zpos_     = gate_grid_zpos_ + grid_thickn_/2. + active_length_/2.;
-  cathode_zpos_    = gate_grid_zpos_ + grid_thickn_/2. + active_length_ + grid_thickn_/2.;
-  gate_zpos_       = gate_grid_zpos_ + grid_thickn_/2. + gate_ring_thickn_/2. - grid_thickn_;
-  el_gap_zpos_     = gate_grid_zpos_ - grid_thickn_/2. - el_gap_length_/2.;
+  active_zpos_     = GetELzCoord() + active_length_/2.;
+  cathode_zpos_    = GetELzCoord() + active_length_ + grid_thickn_/2.;
+  gate_zpos_       = GetELzCoord() + gate_ring_thickn_/2. - grid_thickn_;
+  el_gap_zpos_     = GetELzCoord() - grid_thickn_ - el_gap_length_/2.;
   anode_zpos_      = el_gap_zpos_ - el_gap_length_/2. - gate_ring_thickn_/2.;
-  anode_grid_zpos_ = anode_zpos_ + gate_ring_thickn_/2. - grid_thickn_/2.;
+  anode_grid_zpos_ = el_gap_zpos_ - el_gap_length_/2. - grid_thickn_/2.;
 
-  teflon_drift_zpos_  = gate_grid_zpos_ + grid_thickn_/2. + gate_teflon_dist_ + teflon_drift_length_/2.;
+  teflon_drift_zpos_  = GetELzCoord() + gate_teflon_dist_ + teflon_drift_length_/2.;
   teflon_buffer_zpos_ = cathode_zpos_ + cathode_thickn_/2. + teflon_buffer_length_/2.;
 
   if (verbosity_) {
