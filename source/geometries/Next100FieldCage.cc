@@ -59,7 +59,7 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   teflon_thickn_       (5. * mm),
   n_panels_            (18),
 
-  el_gap_length_ (10. * mm),
+  el_gap_length_ (9.7 * mm),
 
   gate_teflon_dist_ (10.2 * mm - grid_thickn_), //distance from gate-grid to teflon
   gate_ext_diam_    (1042. * mm), //preliminary
