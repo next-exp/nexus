@@ -199,7 +199,7 @@ void Next100FieldCage::SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys)
 void Next100FieldCage::Construct()
 {
   /// Calculate lengths of active and buffer regions
-  active_length_ = (cathode_thickn_ - grid_thickn_)/2. + teflon_drift_length_ + gate_teflon_dist_;
+  active_length_ = gate_teflon_dist_ + teflon_drift_length_;
   buffer_length_ = gate_sapphire_wdw_dist_ - active_length_ - grid_thickn_;
 
   /// Calculate length of teflon in the buffer region
@@ -213,8 +213,8 @@ void Next100FieldCage::Construct()
   /// of the beginning of the ACTIVE volume and the end of the gate grid.
   gate_grid_zpos_  = GetELzCoord() - grid_thickn_/2.;
   active_zpos_     = GetELzCoord() + active_length_/2.;
-  cathode_zpos_    = GetELzCoord() + active_length_ + grid_thickn_/2.;
-  gate_zpos_       = GetELzCoord() + gate_ring_thickn_/2. - grid_thickn_;
+  cathode_zpos_    = GetELzCoord() + active_length_ + cathode_thickn_/2.;
+  gate_zpos_       = GetELzCoord() - grid_thickn_ + gate_ring_thickn_/2.;
   el_gap_zpos_     = GetELzCoord() - grid_thickn_ - el_gap_length_/2.;
   anode_zpos_      = el_gap_zpos_ - el_gap_length_/2. - gate_ring_thickn_/2.;
   anode_grid_zpos_ = el_gap_zpos_ - el_gap_length_/2. - grid_thickn_/2.;
@@ -380,7 +380,8 @@ void Next100FieldCage::BuildCathode()
   G4LogicalVolume* diel_grid_logic =
     new G4LogicalVolume(diel_grid_solid, fgrid_mat, "CATHODE_GRID");
 
-  new G4PVPlacement(0, G4ThreeVector(0., 0., cathode_zpos_),
+  G4double cathode_grid_zpos = cathode_zpos_ - cathode_thickn_/2. + grid_thickn_/2.;
+  new G4PVPlacement(0, G4ThreeVector(0., 0., cathode_grid_zpos),
                     diel_grid_logic, "CATHODE_GRID", mother_logic_,
                     false, 0, false);
 
@@ -418,7 +419,7 @@ void Next100FieldCage::BuildBuffer()
   G4double buffer_zpos = active_zpos_ + active_length_/2. + grid_thickn_ + buffer_length_/2.;
 
   /// Position of z planes
-  G4double zplane[2] = {-buffer_length_/2.+(cathode_thickn_-grid_thickn_)/2., buffer_length_/2.};
+  G4double zplane[2] = {-buffer_length_/2. - grid_thickn_ + cathode_thickn_, buffer_length_/2.};
   /// Inner radius
   G4double rinner[2] = {0., 0.};
   /// Outer radius
@@ -429,10 +430,11 @@ void Next100FieldCage::BuildBuffer()
 
   G4Tubs* buffer_cathode_solid =
     new G4Tubs("BUFF_CATHODE_RING", 0, cathode_int_diam_/2.,
-              (cathode_thickn_/2. - grid_thickn_/2.)/2. +  overlap_/2., 0, twopi);
+               (cathode_thickn_ - grid_thickn_)/2. +  overlap_/2., 0, twopi);
+
 
   G4ThreeVector buff_cathode_pos =
-  G4ThreeVector(0., 0., -buffer_length_/2. + (cathode_thickn_/2.-grid_thickn_/2.)/2. +overlap_/2.);
+    G4ThreeVector(0., 0., -buffer_length_/2. + (cathode_thickn_ - grid_thickn_)/2. + overlap_/2.);
 
   G4UnionSolid* union_buffer =
     new G4UnionSolid("BUFFER", buffer_solid, buffer_cathode_solid, 0, buff_cathode_pos);
