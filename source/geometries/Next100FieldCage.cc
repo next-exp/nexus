@@ -284,34 +284,24 @@ void Next100FieldCage::BuildActive()
 {
   /// Position of z planes
   G4double zplane[2] = {-active_length_/2. + gate_teflon_dist_ - overlap_,
-                         active_length_/2.-(cathode_thickn_-grid_thickn_)/2.};
+                         active_length_/2.};
   /// Inner radius
   G4double rinner[2] = {0., 0.};
   /// Outer radius
   G4double router[2] = {active_diam_/2., active_diam_/2.};
 
   G4Polyhedra* active_solid =
-    new G4Polyhedra("ACTIVE_POLY", 0., twopi, n_panels_, 2, zplane, rinner, router);
-
-  G4Tubs* active_cathode_solid =
-    new G4Tubs("ACT_CATHODE_RING", 0, cathode_int_diam_/2.,
-              ((cathode_thickn_ - grid_thickn_)/2. + overlap_)/2., 0, twopi);
-
-  G4ThreeVector act_cathode_pos =
-  G4ThreeVector(0., 0., active_length_/2.-((cathode_thickn_ - grid_thickn_)/2.)/2. - overlap_/2.);
-
-  G4UnionSolid* union_active =
-    new G4UnionSolid ("ACTIVE", active_solid, active_cathode_solid, 0, act_cathode_pos);
+    new G4Polyhedra("ACTIVE_TEFLON", 0., twopi, n_panels_, 2, zplane, rinner, router);
 
   //This volume is added as an extension of the active volume that reaches the gate grid.
   G4Tubs* active_gate_solid =
     new G4Tubs("ACT_GATE_GAS", 0, gate_int_diam_/2., gate_teflon_dist_/2., 0, twopi);
 
   G4ThreeVector act_gate_pos =
-  G4ThreeVector(0., 0., -active_length_/2.+ gate_teflon_dist_/2.);
+    G4ThreeVector(0., 0., -active_length_/2. + gate_teflon_dist_/2.);
 
-  union_active =
-    new G4UnionSolid ("ACTIVE", union_active, active_gate_solid, 0, act_gate_pos);
+  G4UnionSolid* union_active =
+    new G4UnionSolid ("ACTIVE", active_solid, active_gate_solid, 0, act_gate_pos);
 
   G4LogicalVolume* active_logic =
     new G4LogicalVolume(union_active, gas_, "ACTIVE");
@@ -878,7 +868,7 @@ void Next100FieldCage::BuildFieldCage()
   G4LogicalVolume* act_holder_logic =
     new G4LogicalVolume(act_holder_solid, pe500_, "ACT_HOLDER");
 
-  // It is placed relatively to the buffer and the cathode holder holders.
+  // It is placed relatively to the buffer and the cathode holders
   G4double stave_drift_zpos =
     stave_buffer_zpos - buffer_long_length/2. - cathode_opening - active_long_length/2.;
 
