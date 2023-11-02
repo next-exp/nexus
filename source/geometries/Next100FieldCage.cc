@@ -77,8 +77,8 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   drift_ring_dist_  (24. * mm),
   buffer_ring_dist_ (48. * mm),
   holder_x_         (60. * mm),  //x dimension of the holders
-  holder_long_y_    (9.  * mm),  // y dim of the base of the ring holders
-  holder_short_y_   (33.15 * mm),// y dim of the pieces added over the base of the ring holders
+  holder_long_y_    (9.1 * mm), //(9.  * mm),  // y dim of the base of the ring holders
+  holder_short_y_   (33.9 * mm), //(33.15 * mm),// y dim of the pieces added over the base of the ring holders
 
   tpb_thickn_ (1 * micrometer),
   overlap_    (0.001*mm), //defined for G4UnionSolids to ensure a common volume within the two joined solids
@@ -868,7 +868,7 @@ void Next100FieldCage::BuildFieldCage()
 
   // CATHODE holders.
   // They are placed at the same z position as the cathode ring.
-  G4double cathode_long_y = 29.*mm;
+  G4double cathode_long_y = 28.15 * mm;// 29.*mm (previous) - 0.85 * mm (what has been removed);
   G4double cathode_long_z = 61*mm;
   G4double cathode_short_z = 24.5*mm;
   G4Box* cathode_large_solid =
@@ -916,9 +916,11 @@ void Next100FieldCage::BuildFieldCage()
     hdpe_tube_logic->SetVisAttributes(hdpe_col);
     G4VisAttributes hold_col = nexus::LightGrey();
     hold_col.SetForceSolid(true);
+    G4VisAttributes hold_col_cath = nexus::Lilla();
+    hold_col_cath.SetForceSolid(true);
     act_holder_logic->SetVisAttributes(hold_col);
     buff_holder_logic->SetVisAttributes(hold_col);
-    cathode_holder_logic->SetVisAttributes(hold_col);
+    cathode_holder_logic->SetVisAttributes(hold_col_cath);
   } else {
     ring_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
     hdpe_tube_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
