@@ -203,6 +203,7 @@ void Next100FieldCage::Construct()
   /// Calculate different lengths of teflon
   teflon_drift_length_ = 2 * teflon_long_length_ + teflon_buffer_length_;
   teflon_total_length_ = teflon_drift_length_ + cathode_thickn_ + teflon_buffer_length_;
+
   /// Calculate lengths of active and buffer regions
   active_length_ = gate_teflon_dist_ + teflon_drift_length_;
   buffer_length_ = gate_sapphire_wdw_dist_ - active_length_ - grid_thickn_;
@@ -348,7 +349,7 @@ void Next100FieldCage::BuildActive()
 
   /// Visibilities
   active_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
-  
+
   /// Verbosity
   if (verbosity_) {
     G4cout << "Active starts in " << (active_zpos_ - active_length_/2.)/mm
@@ -722,6 +723,8 @@ void Next100FieldCage::BuildLightTube()
 void Next100FieldCage::BuildFieldCage()
 {
   // HDPE cylinder.
+  // It is placed in such a way that it ends at the same z
+  // as the teflon buffer reflector, in the side of the EP.
   G4double hdpe_tube_z_pos = teflon_buffer_zpos_ - (hdpe_length_ - teflon_buffer_length_)/2.;
 
   G4Tubs* hdpe_tube_solid =
@@ -756,7 +759,7 @@ void Next100FieldCage::BuildFieldCage()
   G4LogicalVolume* ring_logic =
     new G4LogicalVolume(ring_solid, copper_, "FIELD_RING");
 
-  //Placement of the drift rings.
+  // Placement of the drift rings.
   for (G4int i=0; i<num_drift_rings; i++) {
     posz = first_ring_drift_z_pos + i*drift_ring_dist_;
     new G4PVPlacement(0, G4ThreeVector(0., 0., posz),
@@ -764,7 +767,7 @@ void Next100FieldCage::BuildFieldCage()
                       false, i, false);
   }
 
-  //Placement of the buffer rings.
+  // Placement of the buffer rings.
   for (G4int i=0; i<num_buffer_rings; i++) {
     posz = first_ring_buff_z_pos + i*buffer_ring_dist_;
     new G4PVPlacement(0, G4ThreeVector(0., 0., posz),
@@ -772,7 +775,7 @@ void Next100FieldCage::BuildFieldCage()
                       false, i, false);
   }
 
-  // ring vertex generator
+  // Ring vertex generator
   G4double ring_gen_lenght =   first_ring_buff_z_pos + (num_buffer_rings-1)*buffer_ring_dist_
                              - first_ring_drift_z_pos + ring_thickn_;
   G4double ring_gen_zpos = first_ring_drift_z_pos + ring_gen_lenght/2. - ring_thickn_/2.;
@@ -780,8 +783,11 @@ void Next100FieldCage::BuildFieldCage()
                                            0., twopi, nullptr,
                                            G4ThreeVector(0., 0., ring_gen_zpos));
 
-  // Ring holders.
+  // Ring holders (a.k.a. staves).
+
   // ACTIVE holders.
+  // They are placed in such a way that they begin at the same z position
+  // as the teflon drift reflector, in the side of the TP.
   G4Box* active_short_solid =
     new G4Box("ACT_SHORT", holder_x_/2., holder_short_y_/2.+overlap_/2., active_short_z/2.);
 
@@ -815,6 +821,8 @@ void Next100FieldCage::BuildFieldCage()
     numbering +=1;}
 
   // BUFFER holders.
+  // They are placed in such a way that they end at the same z position
+  // as the teflon buffer reflector, in the side of the EP.
   G4Box* buffer_short_solid =
     new G4Box("BUFF_SHORT", holder_x_/2., holder_short_y_/2.+overlap_/2., buffer_short_z/2.);
 
@@ -859,6 +867,7 @@ void Next100FieldCage::BuildFieldCage()
     numbering +=1;}
 
   // CATHODE holders.
+  // They are placed at the same z position as the cathode ring.
   G4double cathode_long_y = 29.*mm;
   G4double cathode_long_z = 61*mm;
   G4double cathode_short_z = 24.5*mm;
