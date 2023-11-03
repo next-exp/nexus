@@ -48,7 +48,7 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   // Dimensions
   active_diam_         (984. * mm), // distance between the centers of two opposite panels
 
-  cathode_int_diam_    (960. * mm),
+  cathode_int_diam_    (965. * mm),
   cathode_ext_diam_    (1020.* mm),
   cathode_thickn_      (10.  * mm),
   // Caution: updating grid-thickn_ will require updating gate-tp and gate-sapphire-window distances
@@ -63,10 +63,10 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
 
   el_gap_length_ (9.7 * mm),
 
-  gate_teflon_dist_ (10.2 * mm - grid_thickn_), //distance from gate-grid to teflon
-  gate_ext_diam_    (1042. * mm), //preliminary
-  gate_int_diam_    (1009. * mm), //preliminary
-  gate_ring_thickn_ (9.9   * mm), // maximum possible value to avoid overlap with sipm board masks
+  gate_ext_diam_    (1050. * mm),
+  gate_int_diam_    (995. * mm),
+  gate_ring_thickn_ (13.5   * mm),
+  gate_teflon_dist_ (.5*mm + gate_ring_thickn_ - grid_thickn_), //(10.2 * mm - grid_thickn_), //distance from gate-grid to teflon (its seems that gate ring and teflon are almost touching
 
   // external to teflon (hdpe + rings + holders)
   hdpe_tube_int_diam_ (1093. * mm),
@@ -293,7 +293,7 @@ void Next100FieldCage::BuildActive()
   G4Polyhedra* active_solid =
     new G4Polyhedra("ACTIVE_TEFLON", 0., twopi, n_panels_, 2, zplane, rinner, router);
 
-  //This volume is added as an extension of the active volume that reaches the gate grid.
+  // This volume is added as an extension of the active volume that reaches the gate grid.
   G4Tubs* active_gate_solid =
     new G4Tubs("ACT_GATE_GAS", 0, gate_int_diam_/2., gate_teflon_dist_/2., 0, twopi);
 

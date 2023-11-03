@@ -53,7 +53,8 @@ namespace nexus {
     const G4double teflon_long_length_, teflon_buffer_length_;
     const G4double teflon_thickn_, n_panels_;
     const G4double el_gap_length_;
-    const G4double gate_teflon_dist_, gate_ext_diam_, gate_int_diam_, gate_ring_thickn_;
+    const G4double gate_ext_diam_, gate_int_diam_, gate_ring_thickn_;
+    const G4double gate_teflon_dist_;
     const G4double hdpe_tube_int_diam_, hdpe_tube_ext_diam_, hdpe_length_;
     const G4double ring_ext_diam_, ring_int_diam_, ring_thickn_, drift_ring_dist_, buffer_ring_dist_;
     const G4double holder_x_, holder_long_y_, holder_short_y_;
