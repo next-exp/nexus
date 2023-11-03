@@ -31,10 +31,10 @@ namespace nexus {
 
   Next100OpticalGeometry::Next100OpticalGeometry():
     GeometryBase(),
-    // common used variables in geometry components
+    // common variables used in geometry components
     grid_thickness_ (0.1 * mm),
-    gate_tracking_plane_distance_(26.1 * mm + grid_thickness_),
-    gate_sapphire_wdw_distance_  ((1458.2 - 1.3) * mm - grid_thickness_),
+    gate_tracking_plane_distance_(25. * mm + grid_thickness_),
+    gate_sapphire_wdw_distance_  ((1458.8 - 1.3) * mm - grid_thickness_),
     pressure_(15. * bar),
     temperature_ (300 * kelvin),
     sc_yield_(25510. * 1/MeV),
