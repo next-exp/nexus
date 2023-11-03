@@ -53,10 +53,9 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   cathode_thickn_      (13.5  * mm),
   grid_thickn_         (grid_thickn),
 
-  //  teflon_drift_length_ (1178.*mm), //distance from the gate to the beginning of the cathode volume.
-  teflon_long_length_   (467.5 * mm), //(465. * mm), from drawings
-  teflon_buffer_length_ (243. * mm), //(241. * mm), from drawings
-  // teflon_total_length_ (1431. * mm),
+  //  teflon_drift_length_ (1178.*mm), //distance from the gate to the beginning of the cathode volume
+  teflon_long_length_   (465. * mm),
+  teflon_buffer_length_ (241. * mm),
   teflon_thickn_       (5. * mm),
   n_panels_            (18),
 
@@ -65,7 +64,10 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   gate_ext_diam_    (1050. * mm),
   gate_int_diam_    (995. * mm),
   gate_ring_thickn_ (13.5   * mm),
-  gate_teflon_dist_ (.5*mm + gate_ring_thickn_ - grid_thickn_), //(10.2 * mm - grid_thickn_), //distance from gate-grid to teflon (its seems that gate ring and teflon are almost touching
+
+  gate_teflon_dist_         (.5 * mm + gate_ring_thickn_ - grid_thickn_), //distance from gate-grid to teflon (it seems that gate ring and teflon are almost touching)
+  gate_cathode_dist_        (1174. * mm + gate_ring_thickn_ - grid_thickn_),
+  // cathode_sapphire_wdw_dist_(257.8 * mm),
 
   // external to teflon (hdpe + rings + holders)
   hdpe_tube_int_diam_ (1093. * mm),
@@ -201,13 +203,12 @@ void Next100FieldCage::SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys)
 
 void Next100FieldCage::Construct()
 {
-  /// Calculate different lengths of teflon
+  /// Calculate drift lengths of teflon
   teflon_drift_length_ = 2 * teflon_long_length_ + teflon_buffer_length_;
-  teflon_total_length_ = teflon_drift_length_ + cathode_thickn_ + teflon_buffer_length_;
 
   /// Calculate lengths of active and buffer regions
-  active_length_ = gate_teflon_dist_ + teflon_drift_length_;
-  buffer_length_ = gate_sapphire_wdw_dist_ - active_length_ - grid_thickn_;
+  active_length_ = gate_cathode_dist_;
+  buffer_length_ = gate_sapphire_wdw_dist_ - gate_cathode_dist_ - grid_thickn_;
 
   /// Calculate radial position of the ring holders.
   holder_r_ = (active_diam_+2.*teflon_thickn_+holder_long_y_)/2.;
@@ -217,14 +218,15 @@ void Next100FieldCage::Construct()
   /// of the beginning of the ACTIVE volume and the end of the gate grid.
   gate_grid_zpos_  = GetELzCoord() - grid_thickn_/2.;
   active_zpos_     = GetELzCoord() + active_length_/2.;
-  cathode_zpos_    = GetELzCoord() + active_length_ + cathode_thickn_/2.;
+  cathode_zpos_    = GetELzCoord() + gate_cathode_dist_ + cathode_thickn_/2.;
   gate_zpos_       = GetELzCoord() - grid_thickn_ + gate_ring_thickn_/2.;
   el_gap_zpos_     = GetELzCoord() - grid_thickn_ - el_gap_length_/2.;
   anode_zpos_      = el_gap_zpos_ - el_gap_length_/2. - gate_ring_thickn_/2.;
   anode_grid_zpos_ = el_gap_zpos_ - el_gap_length_/2. - grid_thickn_/2.;
 
   teflon_drift_zpos_  = GetELzCoord() + gate_teflon_dist_ + teflon_drift_length_/2.;
-  teflon_buffer_zpos_ = cathode_zpos_ + cathode_thickn_/2. + teflon_buffer_length_/2.;
+  // 15.6 mm = value used to obtain 24.8 mm as EP plate-teflon distance
+  teflon_buffer_zpos_ = GetELzCoord() + gate_sapphire_wdw_dist_ - 15.6*mm - teflon_buffer_length_/2.;
 
   if (verbosity_) {
     G4cout << "Active length = " << active_length_/mm << " mm" << G4endl;
