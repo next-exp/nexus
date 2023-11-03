@@ -47,6 +47,8 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   GeometryBase(),
   // Dimensions
   active_diam_         (984. * mm), // distance between the centers of two opposite panels
+  n_panels_            (18),
+  active_ext_radius_   (active_diam_/2. / cos(pi/n_panels_)),
 
   cathode_int_diam_    (965. * mm),
   cathode_ext_diam_    (1020.* mm),
@@ -57,7 +59,6 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   teflon_long_length_   (465. * mm),
   teflon_buffer_length_ (241. * mm),
   teflon_thickn_       (5. * mm),
-  n_panels_            (18),
 
   el_gap_length_ (10. * mm),
 
@@ -333,12 +334,10 @@ void Next100FieldCage::BuildActive()
   drift_region->SetUserInformation(field);
   drift_region->AddRootLogicalVolume(active_logic);
 
-
   /// Vertex generator
-  active_gen_ = new CylinderPointSampler2020(0., active_diam_/2., active_length_/2.,
+  active_gen_ = new CylinderPointSampler2020(0., active_ext_radius_, active_length_/2.,
                                              0., twopi, nullptr,
                                              G4ThreeVector(0., 0., active_zpos_));
-
 
   /// Visibilities
   active_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
@@ -451,8 +450,7 @@ void Next100FieldCage::BuildBuffer()
 
 
   /// Vertex generator
-  G4double active_ext_radius = active_diam_/2. / cos(pi/n_panels_);
-  buffer_gen_ = new CylinderPointSampler2020(0., active_ext_radius, buffer_length_/2.,
+  buffer_gen_ = new CylinderPointSampler2020(0., active_ext_radius_, buffer_length_/2.,
                                              0., twopi, nullptr,
                                              G4ThreeVector(0., 0., buffer_zpos));
 
@@ -463,7 +461,7 @@ void Next100FieldCage::BuildBuffer()
                           active_length_ * active_zpos_ +
                           grid_thickn_ * cathode_zpos_ +
                           buffer_length_ * buffer_zpos) / xenon_length;
-  xenon_gen_ = new CylinderPointSampler2020(0., active_ext_radius, xenon_length,
+  xenon_gen_ = new CylinderPointSampler2020(0., active_ext_radius_, xenon_length,
                                             0., twopi, nullptr,
                                             G4ThreeVector(0., 0., xenon_zpos));
 
