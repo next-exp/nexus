@@ -686,13 +686,10 @@ void Next100FieldCage::BuildLightTube()
 
   // Vertex generator
   G4double teflon_ext_radius = (active_diam_ + 2.*teflon_thickn_)/2. / cos(pi/n_panels_);
-  G4double cathode_gap_zpos  = teflon_drift_zpos_ + teflon_drift_length_/2. + cathode_thickn_/2.;
-  G4double teflon_zpos = (teflon_drift_length_ * teflon_drift_zpos_ +
-                         cathode_thickn_ * cathode_gap_zpos +
-                         teflon_buffer_length_ * teflon_buffer_zpos_) / teflon_total_length_;
+  G4double teflon_zpos       = GetELzCoord() + gate_sapphire_wdw_dist_/2.;
 
   teflon_gen_ = new CylinderPointSampler2020(active_diam_/2., teflon_ext_radius,
-                                             teflon_total_length_/2., 0., twopi,
+                                             gate_sapphire_wdw_dist_/2., 0., twopi,
                                              nullptr, G4ThreeVector (0., 0., teflon_zpos));
 
   // Visibilities
