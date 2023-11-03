@@ -990,14 +990,7 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
   }
 
   else if (region == "CATHODE_RING") {
-    G4VPhysicalVolume *VertexVolume;
-    do {
-      vertex = cathode_gen_->GenerateVertex("VOLUME");
-      G4ThreeVector glob_vtx(vertex);
-      glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
-      VertexVolume =
-        geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
-    } while (VertexVolume->GetName() != region);
+    vertex = cathode_gen_->GenerateVertex("VOLUME");
   }
 
   else if (region == "BUFFER") {
@@ -1039,14 +1032,7 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
   }
 
   else if (region == "HDPE_TUBE") {
-    G4VPhysicalVolume *VertexVolume;
-    do {
-      vertex = hdpe_gen_->GenerateVertex("VOLUME");
-      G4ThreeVector glob_vtx(vertex);
-      glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
-      VertexVolume =
-        geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
-    } while (VertexVolume->GetName() != region);
+    vertex = hdpe_gen_->GenerateVertex("VOLUME");
   }
 
   else if (region == "EL_GAP") {
@@ -1072,25 +1058,11 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
   }
 
   else if (region == "GATE_RING") {
-    G4VPhysicalVolume *VertexVolume;
-    do {
-      vertex = gate_gen_->GenerateVertex("VOLUME");
-      G4ThreeVector glob_vtx(vertex);
-      glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
-      VertexVolume =
-        geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
-    } while (VertexVolume->GetName() != region);
+    vertex = gate_gen_->GenerateVertex("VOLUME");
   }
 
   else if (region == "ANODE_RING") {
-    G4VPhysicalVolume *VertexVolume;
-    do {
-      vertex = anode_gen_->GenerateVertex("VOLUME");
-      G4ThreeVector glob_vtx(vertex);
-      glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
-      VertexVolume =
-        geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
-    } while (VertexVolume->GetName() != region);
+    vertex = anode_gen_->GenerateVertex("VOLUME");
   }
 
   else if (region == "RING_HOLDER"){
