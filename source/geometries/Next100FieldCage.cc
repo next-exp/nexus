@@ -51,7 +51,6 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   cathode_int_diam_    (965. * mm),
   cathode_ext_diam_    (1020.* mm),
   cathode_thickn_      (10.  * mm),
-  // Caution: updating grid-thickn_ will require updating gate-tp and gate-sapphire-window distances
   grid_thickn_         (grid_thickn),
 
   //  teflon_drift_length_ (1178.*mm), //distance from the gate to the beginning of the cathode volume.
