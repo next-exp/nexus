@@ -130,7 +130,7 @@ namespace opticalprops {
     // The range is chosen to be up to ~10.7 eV because Sellmeier's equation
     // for fused silica is valid only in that range
     const G4int ri_entries = 200;
-    G4double eWidth = (optPhotMaxE_ - optPhotMinE_) / ri_entries;
+    G4double eWidth = (optPhotFusedSilicaMaxE_ - optPhotMinE_) / ri_entries;
 
     std::vector<G4double> ri_energy;
     for (int i=0; i<ri_entries; i++) {
@@ -305,7 +305,7 @@ namespace opticalprops {
     // The range is chosen to be up to ~10.7 eV because Sellmeier's equation
     // for fused silica is valid only in that range
     const G4int ri_entries = 200;
-    G4double eWidth = (optPhotMaxE_ - optPhotMinE_) / ri_entries;
+    G4double eWidth = (optPhotFusedSilicaMaxE_ - optPhotMinE_) / ri_entries;
 
     std::vector<G4double> ri_energy;
     for (int i=0; i<ri_entries; i++) {
