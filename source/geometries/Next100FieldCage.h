@@ -56,8 +56,10 @@ namespace nexus {
     const G4double gate_ext_diam_, gate_int_diam_, gate_ring_thickn_;
     const G4double gate_teflon_dist_, gate_cathode_dist_; //cathode_sapphire_wdw_dist_;
     const G4double hdpe_tube_int_diam_, hdpe_tube_ext_diam_, hdpe_length_;
-    const G4double ring_ext_diam_, ring_int_diam_, ring_thickn_, drift_ring_dist_, buffer_ring_dist_;
-    const G4double holder_x_, holder_long_y_, holder_short_y_;
+    const G4double ring_ext_diam_, ring_int_diam_, ring_thickn_;
+    const G4double drift_ring_dist_, buffer_ring_dist_;
+    const G4double buffer_first_ring_dist_, ring_drift_buffer_dist_;
+    const G4int num_drift_rings_, num_buffer_rings_;
     const G4double tpb_thickn_;
     const G4double overlap_;
 
@@ -81,7 +83,6 @@ namespace nexus {
 
     G4double active_length_, buffer_length_;
     G4double teflon_drift_length_, teflon_drift_zpos_,teflon_buffer_zpos_;
-    G4double holder_r_;
     G4double active_zpos_, cathode_zpos_, gate_zpos_, el_gap_zpos_, anode_zpos_;
     G4double gate_grid_zpos_, anode_grid_zpos_;
 
@@ -116,7 +117,6 @@ namespace nexus {
 
     // Pointers to materials definition
     G4Material* hdpe_;
-    G4Material* pe500_;
     G4Material* tpb_;
     G4Material* teflon_;
     G4Material* copper_;
