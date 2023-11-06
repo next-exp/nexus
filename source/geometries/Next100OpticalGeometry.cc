@@ -34,8 +34,8 @@ namespace nexus {
 
   Next100OpticalGeometry::Next100OpticalGeometry(): GeometryBase(),
                 // common used variables in geomety components
-                gate_tracking_plane_distance_(35. * mm), // to be confirmed
-                gate_sapphire_wdw_distance_  (1460.5 * mm),
+                gate_tracking_plane_distance_((26.1 + 0.1) * mm), // to be confirmed
+                gate_sapphire_wdw_distance_  ((1458.2 - 0.1) * mm),
 						    pressure_(15. * bar),
 						    temperature_ (300 * kelvin),
 						    sc_yield_(25510. * 1/MeV),

@@ -201,10 +201,10 @@ namespace nexus {
     G4double port_nozzle_y = port_nozzle_x;
 
     G4double port_reference_z = -body_length_/2. + endcap_in_body_;
-    port_z_1a_ = port_reference_z +   702. * mm;
-    port_z_2a_ = port_reference_z +  1292. * mm;
-    port_z_1b_ = port_reference_z +  533.6 * mm;
-    port_z_2b_ = port_reference_z + 1033.6 * mm;
+    port_z_1a_ = port_reference_z +   739.6 * mm;
+    port_z_2a_ = port_reference_z +  1329.6 * mm;
+    port_z_1b_ = port_reference_z +  570.3 * mm;
+    port_z_2b_ = port_reference_z + 1070.3 * mm;
 
     G4RotationMatrix* port_a_Rot = new G4RotationMatrix;
     port_a_Rot->rotateX( 90. * deg);
