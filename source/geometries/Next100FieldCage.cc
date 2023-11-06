@@ -66,7 +66,7 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   gate_int_diam_    (995. * mm),
   gate_ring_thickn_ (13.5   * mm),
 
-  gate_teflon_dist_         (.5 * mm + gate_ring_thickn_ - grid_thickn_), //distance from gate-grid to teflon (it seems that gate ring and teflon are almost touching)
+  gate_teflon_dist_         (0.7 * mm + gate_ring_thickn_ - grid_thickn_), //distance from gate-grid to teflon
   gate_cathode_dist_        (1174. * mm + gate_ring_thickn_ - grid_thickn_),
   // cathode_sapphire_wdw_dist_(257.8 * mm),
 
