@@ -502,13 +502,19 @@ void Next100FieldCage::BuildELRegion()
                     false, 0, false);
 
   /// ANODE ring.
+  // We simulate a thinner ring to avoid cutting the teflon masks,
+  // which would overlap with it. 4.7 mm is the difference between
+  // the thickness of sipm board+mask (6.2 mm) and the real distance
+  // between the anode ring and the TP, measured by Jordi (1.5 mm).
+  G4double anode_ring_thickn = gate_ring_thickn_ - 4.7 * mm;
   G4Tubs* anode_solid =
-    new G4Tubs("ANODE_RING", gate_int_diam_/2., gate_ext_diam_/2., gate_ring_thickn_/2., 0, twopi);
+    new G4Tubs("ANODE_RING", gate_int_diam_/2., gate_ext_diam_/2., anode_ring_thickn/2., 0, twopi);
 
   G4LogicalVolume* anode_logic =
     new G4LogicalVolume(anode_solid, steel_, "ANODE_RING");
 
-  new G4PVPlacement(0, G4ThreeVector(0., 0., anode_zpos_),
+  G4double anode_sim_zpos = el_gap_zpos_ - el_gap_length_/2. - anode_ring_thickn/2.;
+  new G4PVPlacement(0, G4ThreeVector(0., 0., anode_sim_zpos),
                     anode_logic, "ANODE_RING", mother_logic_,
                     false, 0, false);
 
