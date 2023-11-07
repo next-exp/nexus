@@ -83,7 +83,7 @@ namespace nexus {
 
     G4double active_length_, buffer_length_;
     G4double teflon_drift_length_, teflon_drift_zpos_,teflon_buffer_zpos_;
-    G4double active_zpos_, cathode_zpos_, gate_zpos_, el_gap_zpos_, anode_zpos_;
+    G4double active_zpos_, cathode_zpos_, gate_zpos_, el_gap_zpos_;
     G4double gate_grid_zpos_, anode_grid_zpos_;
 
 

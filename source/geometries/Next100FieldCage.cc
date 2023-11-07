@@ -221,7 +221,6 @@ void Next100FieldCage::Construct()
   cathode_zpos_    = GetELzCoord() + gate_cathode_dist_ + cathode_thickn_/2.;
   gate_zpos_       = GetELzCoord() - grid_thickn_ + gate_ring_thickn_/2.;
   el_gap_zpos_     = GetELzCoord() - grid_thickn_ - el_gap_length_/2.;
-  anode_zpos_      = el_gap_zpos_ - el_gap_length_/2. - gate_ring_thickn_/2.;
   anode_grid_zpos_ = el_gap_zpos_ - el_gap_length_/2. - grid_thickn_/2.;
 
   teflon_drift_zpos_  = GetELzCoord() + gate_teflon_dist_ + teflon_drift_length_/2.;
@@ -572,8 +571,8 @@ void Next100FieldCage::BuildELRegion()
   gate_gen_ = new CylinderPointSampler2020(gate_int_diam_/2., gate_ext_diam_/2., gate_ring_thickn_/2.,
                                            0., twopi, nullptr, G4ThreeVector(0., 0., gate_zpos_));
   // Anode ring vertex generator
-  anode_gen_ = new CylinderPointSampler2020(gate_int_diam_/2., gate_ext_diam_/2., gate_ring_thickn_/2.,
-                                            0., twopi, nullptr, G4ThreeVector(0., 0., anode_zpos_));
+  anode_gen_ = new CylinderPointSampler2020(gate_int_diam_/2., gate_ext_diam_/2.,anode_ring_thickn/2.,
+                                            0., twopi, nullptr, G4ThreeVector(0., 0., anode_sim_zpos));
 
   /// Visibilities
   if (visibility_) {
