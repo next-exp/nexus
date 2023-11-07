@@ -159,7 +159,7 @@ namespace nexus {
 
     /// ICS step at the TP end.
     // This avoids overlap with sipm boards at high radius
-    G4double step_width = 38. * mm; // step lenght in the y dimension
+    G4double step_width = 38. * mm; // step length in the y dimension
     G4Tubs* tp_step_solid =
       new G4Tubs("TP_STEP", (in_rad_ - offset), in_rad_ + step_width,
                  gate_tp_distance_, 0.*deg, 360.*deg);
@@ -170,7 +170,7 @@ namespace nexus {
                                            -length/2.+gate_tp_distance_/2.));
 
     /// ICS lip at the EP end.
-    G4double lip_height = 47.85 * mm;
+    G4double lip_height = 47.85 * mm; // lip length in the y dimension
     G4Tubs* ep_lip_solid =
       new G4Tubs("EP_LIP", in_rad_ + lip_height, in_rad_ + thickness_ + offset,
                  (ics_ep_lip_width_ + offset)/2., 0.*deg, 360.*deg);
