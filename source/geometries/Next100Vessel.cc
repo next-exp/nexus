@@ -307,7 +307,7 @@ namespace nexus {
     // EP copper plate and the ICS bars
 
     G4double ep_int_flange_in_rad = flange_out_rad - 167 * mm;
-    G4double ep_int_flange_length = 77.5 * mm;
+    G4double ep_int_flange_length = 79.8 * mm;
     G4Tubs* ep_int_flange_full_solid =
       new G4Tubs("VESSEL_EP_INT_FLANGE_FULL", ep_int_flange_in_rad,
                  vessel_in_rad_, ep_int_flange_length/2.,
