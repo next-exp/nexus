@@ -25,6 +25,7 @@
 #include <Randomize.hh>
 #include <G4TransportationManager.hh>
 #include <G4UnitsTable.hh>
+#include <G4SubtractionSolid.hh>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 
@@ -304,29 +305,25 @@ namespace nexus {
 
     // Internal part of the energy plane flange, which is placed between the
     // EP copper plate and the ICS bars
-    G4double ep_int_flange_in_rad_long  = vessel_out_rad - 167 * mm;
-    G4double ep_int_flange_in_rad_short = vessel_out_rad - 137.5 * mm;
-    G4double ep_int_flange_length_short = ics_ep_lip_width_;
-    G4double ep_int_flange_length_long  = 77.5 * mm-ep_int_flange_length_short;
 
-    G4Tubs* ep_int_flange_long_solid =
-      new G4Tubs("VESSEL_EP_INT_FLANGE", ep_int_flange_in_rad_long,
-                 vessel_in_rad_, ep_int_flange_length_long/2.,
-                 0.*deg, 360.*deg);
-    G4Tubs* ep_int_flange_short_solid =
-      new G4Tubs("VESSEL_EP_INT_FLANGE", ep_int_flange_in_rad_short,
-                 vessel_in_rad_, (ep_int_flange_length_short+offset)/2.,
+    G4double ep_int_flange_in_rad = flange_out_rad - 167 * mm;
+    G4double ep_int_flange_length = 77.5 * mm;
+    G4Tubs* ep_int_flange_full_solid =
+      new G4Tubs("VESSEL_EP_INT_FLANGE_FULL", ep_int_flange_in_rad,
+                 vessel_in_rad_, ep_int_flange_length/2.,
                  0.*deg, 360.*deg);
 
-    //    G4double relative_displ_y =
-    //      (ep_int_flange_in_rad_short-ep_int_flange_in_rad_long)/2;
-    G4double relative_displ_z =
-      - ep_int_flange_length_long/2 - (ep_int_flange_length_short - offset)/2;
-    G4ThreeVector relative_displ =
-      G4ThreeVector(0., 0., relative_displ_z);
-    G4UnionSolid* ep_internal_flange_solid =
-      new G4UnionSolid("VESSEL_EP_INT_FLANGE", ep_int_flange_long_solid,
-                       ep_int_flange_short_solid, 0, relative_displ);
+    G4double ep_int_flange_lip_in_rad = flange_out_rad - 137.5 * mm;
+     G4Tubs* ep_int_flange_lip_solid =
+       new G4Tubs("VESSEL_EP_INT_FLANGE_LIP", ep_int_flange_in_rad - offset,
+                  ep_int_flange_lip_in_rad, (ics_ep_lip_width_ + offset)/2.,
+                 0.*deg, 360.*deg);
+
+     G4ThreeVector ep_int_flang_sub_pos =
+       G4ThreeVector(0., 0., -ep_int_flange_length/2. + (ics_ep_lip_width_ - offset)/2.);
+     G4SubtractionSolid* ep_internal_flange_solid =
+       new G4SubtractionSolid("VESSEL_EP_INT_FLANGE", ep_int_flange_full_solid,
+                              ep_int_flange_lip_solid, 0, ep_int_flang_sub_pos);
 
     G4LogicalVolume* ep_internal_flange_logic =
       new G4LogicalVolume(ep_internal_flange_solid, materials::Steel316Ti(),
@@ -334,7 +331,7 @@ namespace nexus {
 
     G4double ep_internal_flange_posz =
       body_length_/2. - endcap_in_body_ - 41.5 * mm -
-      ep_int_flange_length_long/2.;
+      ep_int_flange_length/2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., ep_internal_flange_posz),
                       ep_internal_flange_logic,
                       "VESSEL_EP_INT_FLANGE", vessel_gas_logic, false, true);
@@ -351,6 +348,9 @@ namespace nexus {
       port_tube_gas_logic->SetVisAttributes(yellow);
     }
     else {
+      G4VisAttributes grey = nexus::TitaniumGrey();
+      grey  .SetForceSolid(true);
+      ep_internal_flange_logic->SetVisAttributes(grey);
       vessel_logic       ->SetVisAttributes(G4VisAttributes::GetInvisible());
       vessel_gas_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
       port_tube_logic    ->SetVisAttributes(G4VisAttributes::GetInvisible());
@@ -371,7 +371,7 @@ namespace nexus {
                                                         0., 360.*deg, 0, tracking_flange_pos);
 
     energy_flange_gen_ =
-      new CylinderPointSampler2020(ep_int_flange_in_rad_long, flange_out_rad,
+      new CylinderPointSampler2020(ep_int_flange_in_rad, flange_out_rad,
                                    flange_ep_length/2.,
                                    0., 360.*deg, 0, energy_flange_pos);
 
