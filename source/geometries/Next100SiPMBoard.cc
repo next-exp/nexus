@@ -33,9 +33,9 @@ using namespace nexus;
 
 Next100SiPMBoard::Next100SiPMBoard():
   GeometryBase     (),
-  size_            (123.40  * mm),
+  size_            (122.40  * mm),
   pitch_           ( 15.55  * mm),
-  margin_          (  7.275 * mm),
+  margin_          (  6.775 * mm),
   board_thickness_ (  0.2   * mm),
   mask_thickness_  (  6.0   * mm),
   time_binning_    (1. * microsecond),
