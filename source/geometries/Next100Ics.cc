@@ -28,11 +28,13 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  Next100Ics::Next100Ics():
+  Next100Ics::Next100Ics(G4double ics_ep_lip_width):
     GeometryBase(),
 
     in_rad_   (55.465 * cm),
     thickness_(12.0   * cm),
+
+    ics_ep_lip_width_ (ics_ep_lip_width),
 
     visibility_ (0)
   {
@@ -54,9 +56,11 @@ namespace nexus {
 
   void Next100Ics::Construct()
   {
-    G4double length = 1468. * mm; // (Full length of copper bars) - (copper simulated in TP_COPPER_PLATE)
-    // defined for G4UnionSolids to ensure a common volume within the two joined solids
-    // and for G4SubtractionSolids to ensure surface subtraction
+    // (Full length of copper bars) - (copper simulated in TP_COPPER_PLATE)
+    G4double length = 1468. * mm;
+    // Defined for G4UnionSolids to ensure a common volume within the two
+    // joined solids and for G4SubtractionSolids to ensure surface subtraction
+
     G4double offset = 1.* mm;
 
     // ICS
@@ -79,20 +83,29 @@ namespace nexus {
     port_b_Rot->rotateX( 90. * deg);
     port_b_Rot->rotateY( 45. * deg);
 
-    G4Tubs* port_hole_solid = new G4Tubs("PORT_HOLE", 0., port_hole_rad,
-                                         (thickness_ + offset)/2., 0.*deg, 360.*deg);
+    G4Tubs* port_hole_solid =
+      new G4Tubs("PORT_HOLE", 0., port_hole_rad,
+                 (thickness_ + offset)/2., 0.*deg, 360.*deg);
 
-    ics_solid = new G4SubtractionSolid("ICS", ics_body, port_hole_solid,
-                port_a_Rot, G4ThreeVector(port_x, port_y, port_z_1a_-ics_z_pos));
+    ics_solid =
+      new G4SubtractionSolid("ICS", ics_body, port_hole_solid,
+                             port_a_Rot, G4ThreeVector(port_x, port_y,
+                                                       port_z_1a_-ics_z_pos));
 
-    ics_solid = new G4SubtractionSolid("ICS", ics_solid, port_hole_solid,
-                port_a_Rot, G4ThreeVector(port_x, port_y, port_z_2a_-ics_z_pos));
+    ics_solid =
+      new G4SubtractionSolid("ICS", ics_solid, port_hole_solid,
+                             port_a_Rot, G4ThreeVector(port_x, port_y,
+                                                       port_z_2a_-ics_z_pos));
 
-    ics_solid = new G4SubtractionSolid("ICS", ics_solid, port_hole_solid,
-                port_b_Rot, G4ThreeVector(-port_x, port_y, port_z_1b_-ics_z_pos));
+    ics_solid =
+      new G4SubtractionSolid("ICS", ics_solid, port_hole_solid,
+                             port_b_Rot, G4ThreeVector(-port_x, port_y,
+                                                       port_z_1b_-ics_z_pos));
 
-    ics_solid = new G4SubtractionSolid("ICS", ics_solid, port_hole_solid,
-                port_b_Rot, G4ThreeVector(-port_x, port_y, port_z_2b_-ics_z_pos));
+    ics_solid =
+      new G4SubtractionSolid("ICS", ics_solid, port_hole_solid,
+                             port_b_Rot, G4ThreeVector(-port_x, port_y,
+                                                       port_z_2b_-ics_z_pos));
 
     /// Upper holes
     // z distances measured with respect to TP plate, ie the start of ICS
@@ -104,41 +117,68 @@ namespace nexus {
     G4RotationMatrix* port_upp_Rot = new G4RotationMatrix;
     port_upp_Rot->rotateX( 90. * deg);
 
-    G4Tubs* upp_hole_solid_1 = new G4Tubs("UPP_HOLE", 0., upp_hole_1_rad,
-                                        (thickness_ + offset)/2., 0.*deg, 360.*deg);
+    G4Tubs* upp_hole_solid_1 =
+      new G4Tubs("UPP_HOLE", 0., upp_hole_1_rad,
+                 (thickness_ + offset)/2., 0.*deg, 360.*deg);
 
-    ics_solid = new G4SubtractionSolid("ICS", ics_solid, upp_hole_solid_1,
-                port_upp_Rot, G4ThreeVector(0, (in_rad_ + thickness_/2.), upp_hole_1_z-length/2.));
+    ics_solid =
+      new G4SubtractionSolid("ICS", ics_solid, upp_hole_solid_1,
+                             port_upp_Rot,
+                             G4ThreeVector(0, (in_rad_ + thickness_/2.),
+                                           upp_hole_1_z-length/2.));
 
-    G4Tubs* upp_hole_solid_2 = new G4Tubs("UPP_HOLE", 0., upp_hole_2_rad,
-                                        (thickness_ + offset)/2., 0.*deg, 360.*deg);
+    G4Tubs* upp_hole_solid_2 =
+      new G4Tubs("UPP_HOLE", 0., upp_hole_2_rad,
+                 (thickness_ + offset)/2., 0.*deg, 360.*deg);
 
-    ics_solid = new G4SubtractionSolid("ICS", ics_solid, upp_hole_solid_2,
-                port_upp_Rot, G4ThreeVector(0, (in_rad_ + thickness_/2.), upp_hole_2_z-length/2.));
+    ics_solid =
+      new G4SubtractionSolid("ICS", ics_solid, upp_hole_solid_2,
+                             port_upp_Rot,
+                             G4ThreeVector(0, (in_rad_ + thickness_/2.),
+                                           upp_hole_2_z-length/2.));
 
     /// Lateral holes (also known as feedthrough holes)
     G4double lat_hole_rad = upp_hole_1_rad;
     G4double lat_hole_z_1   = 55.5 * mm;
     G4double lat_hole_z_2   = 33.0 * mm;
 
-    G4Tubs* lat_hole_solid = new G4Tubs("LAT_HOLE", 0., lat_hole_rad,
-                                        (thickness_ + offset)/2., 0.*deg, 360.*deg);
+    G4Tubs* lat_hole_solid =
+      new G4Tubs("LAT_HOLE", 0., lat_hole_rad,
+                 (thickness_ + offset)/2., 0.*deg, 360.*deg);
 
-    ics_solid = new G4SubtractionSolid("ICS", ics_solid, lat_hole_solid,
-                port_a_Rot, G4ThreeVector(port_x, port_y, lat_hole_z_1-length/2.));
+    ics_solid =
+      new G4SubtractionSolid("ICS", ics_solid, lat_hole_solid,
+                             port_a_Rot, G4ThreeVector(port_x, port_y,
+                                                       lat_hole_z_1-length/2.));
 
-    ics_solid = new G4SubtractionSolid("ICS", ics_solid, lat_hole_solid,
-                port_b_Rot, G4ThreeVector(-port_x, port_y, lat_hole_z_2-length/2.));
+    ics_solid =
+      new G4SubtractionSolid("ICS", ics_solid, lat_hole_solid,
+                             port_b_Rot, G4ThreeVector(-port_x, port_y,
+                                                       lat_hole_z_2-length/2.));
 
 
     /// ICS step at the TP end.
     // This avoids overlap with sipm boards at high radius
     G4double step_width = 38. * mm; // step lenght in the y dimension
-    G4Tubs* tp_step_solid = new G4Tubs("TP_STEP", (in_rad_ - offset), in_rad_ + step_width,
-                                       gate_tp_distance_, 0.*deg, 360.*deg);
+    G4Tubs* tp_step_solid =
+      new G4Tubs("TP_STEP", (in_rad_ - offset), in_rad_ + step_width,
+                 gate_tp_distance_, 0.*deg, 360.*deg);
 
-    ics_solid = new G4SubtractionSolid("ICS", ics_solid, tp_step_solid,
-                                      0, G4ThreeVector(0., 0., -length/2.+gate_tp_distance_/2.));
+    ics_solid =
+      new G4SubtractionSolid("ICS", ics_solid, tp_step_solid, 0,
+                             G4ThreeVector(0., 0.,
+                                           -length/2.+gate_tp_distance_/2.));
+
+    /// ICS lip at the EP end.
+    G4double lip_height = 47.85 * mm;
+    G4Tubs* ep_lip_solid =
+      new G4Tubs("EP_LIP", in_rad_ + lip_height, in_rad_ + thickness_ + offset,
+                 (ics_ep_lip_width_ + offset)/2., 0.*deg, 360.*deg);
+
+    ics_solid =
+      new G4SubtractionSolid("ICS", ics_solid, ep_lip_solid, 0,
+                             G4ThreeVector(0., 0., length/2. -
+                                           (ics_ep_lip_width_ - offset)/2.));
 
     G4LogicalVolume* ics_logic =
       new G4LogicalVolume(ics_solid,
@@ -160,7 +200,8 @@ namespace nexus {
 
     // VERTEX GENERATOR
     ics_gen_ =
-      new CylinderPointSampler2020(in_rad_, in_rad_ + thickness_, length/2., 0.*deg, 360.*deg,
+      new CylinderPointSampler2020(in_rad_, in_rad_ + thickness_, length/2.,
+                                   0.*deg, 360.*deg,
                                    0, G4ThreeVector(0., 0., ics_z_pos));
   }
 
@@ -176,13 +217,14 @@ namespace nexus {
     G4ThreeVector vertex(0., 0., 0.);
 
     if (region=="ICS"){
-      G4VPhysicalVolume *VertexVolume;
+      G4VPhysicalVolume* VertexVolume;
       do {
         vertex = ics_gen_->GenerateVertex("VOLUME");
 
         G4ThreeVector glob_vtx(vertex);
         glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
-        VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+        VertexVolume =
+          geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != "ICS");
     }
 

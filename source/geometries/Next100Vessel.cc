@@ -35,15 +35,17 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  Next100Vessel::Next100Vessel():
+  Next100Vessel::Next100Vessel(G4double ics_ep_lip_width):
     GeometryBase(),
 
-    // general vessel dimensions
+    // General vessel dimensions
     vessel_in_rad_    (68.0  * cm),
     vessel_thickness_ (1.  * cm),
 
+    ics_ep_lip_width_(ics_ep_lip_width),
+
     // Body
-    body_length_     (198.6 * cm),
+    body_length_ (198.6 * cm),
 
     // Endcaps dimensions
     endcap_in_rad_      (123.61 * cm),
@@ -74,10 +76,12 @@ namespace nexus {
   {
 
     // Initializing the geometry navigator (used in vertex generation)
-    geom_navigator_ = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
+    geom_navigator_ =
+      G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
 
     /// Messenger
-    msg_ = new G4GenericMessenger(this, "/Geometry/Next100/", "Control commands of geometry Next100.");
+    msg_ =
+      new G4GenericMessenger(this, "/Geometry/Next100/", "Control commands of geometry Next100.");
 
     msg_->DeclareProperty("vessel_vis", visibility_, "Vessel Visibility");
     msg_->DeclareProperty("gas", gas_, "Gas being used");
@@ -86,7 +90,8 @@ namespace nexus {
     msg_->DeclareProperty("helium_A", helium_mass_num_,
 			  "Mass number for helium used, 3 or 4");
 
-    G4GenericMessenger::Command& pressure_cmd = msg_->DeclareProperty("pressure", pressure_, "Xenon pressure");
+    G4GenericMessenger::Command& pressure_cmd =
+      msg_->DeclareProperty("pressure", pressure_, "Xenon pressure");
     pressure_cmd.SetUnitCategory("Pressure");
     pressure_cmd.SetParameterName("pressure", false);
     pressure_cmd.SetRange("pressure>0.");
@@ -296,6 +301,44 @@ namespace nexus {
     new G4PVPlacement(port_b_Rot, G4ThreeVector(-port_x_, port_y_, port_z_2b_), port_tube_logic,
                       "PORT_TUBE_2b", vessel_gas_logic, false, 0);
 
+
+    // Internal part of the energy plane flange, which is placed between the
+    // EP copper plate and the ICS bars
+    G4double ep_int_flange_in_rad_long  = vessel_out_rad - 167 * mm;
+    G4double ep_int_flange_in_rad_short = vessel_out_rad - 137.5 * mm;
+    G4double ep_int_flange_length_short = ics_ep_lip_width_;
+    G4double ep_int_flange_length_long  = 77.5 * mm-ep_int_flange_length_short;
+
+    G4Tubs* ep_int_flange_long_solid =
+      new G4Tubs("VESSEL_EP_INT_FLANGE", ep_int_flange_in_rad_long,
+                 vessel_in_rad_, ep_int_flange_length_long/2.,
+                 0.*deg, 360.*deg);
+    G4Tubs* ep_int_flange_short_solid =
+      new G4Tubs("VESSEL_EP_INT_FLANGE", ep_int_flange_in_rad_short,
+                 vessel_in_rad_, (ep_int_flange_length_short+offset)/2.,
+                 0.*deg, 360.*deg);
+
+    //    G4double relative_displ_y =
+    //      (ep_int_flange_in_rad_short-ep_int_flange_in_rad_long)/2;
+    G4double relative_displ_z =
+      - ep_int_flange_length_long/2 - (ep_int_flange_length_short - offset)/2;
+    G4ThreeVector relative_displ =
+      G4ThreeVector(0., 0., relative_displ_z);
+    G4UnionSolid* ep_internal_flange_solid =
+      new G4UnionSolid("VESSEL_EP_INT_FLANGE", ep_int_flange_long_solid,
+                       ep_int_flange_short_solid, 0, relative_displ);
+
+    G4LogicalVolume* ep_internal_flange_logic =
+      new G4LogicalVolume(ep_internal_flange_solid, materials::Steel316Ti(),
+                          "VESSEL_EP_INT_FLANGE");
+
+    G4double ep_internal_flange_posz =
+      body_length_/2. - endcap_in_body_ - 41.5 * mm -
+      ep_int_flange_length_long/2.;
+    new G4PVPlacement(0, G4ThreeVector(0., 0., ep_internal_flange_posz),
+                      ep_internal_flange_logic,
+                      "VESSEL_EP_INT_FLANGE", vessel_gas_logic, false, true);
+
     // SETTING VISIBILITIES   //////////
     if (visibility_) {
       G4VisAttributes grey = nexus::TitaniumGreyAlpha();
@@ -327,8 +370,10 @@ namespace nexus {
     tracking_flange_gen_ = new CylinderPointSampler2020(vessel_in_rad_, flange_out_rad, flange_tp_length/2.,
                                                         0., 360.*deg, 0, tracking_flange_pos);
 
-    energy_flange_gen_ = new CylinderPointSampler2020(vessel_in_rad_, flange_out_rad, flange_ep_length/2.,
-                                                      0., 360.*deg, 0, energy_flange_pos);
+    energy_flange_gen_ =
+      new CylinderPointSampler2020(ep_int_flange_in_rad_long, flange_out_rad,
+                                   flange_ep_length/2.,
+                                   0., 360.*deg, 0, energy_flange_pos);
 
     port_gen_ = new CylinderPointSampler2020(0., port_tube_rad, source_height_/2.,
                                              0., 360.*deg, 0, G4ThreeVector(0., 0., 0.));
@@ -336,7 +381,8 @@ namespace nexus {
     // Calculating some prob
     G4double body_vol   = vessel_body_solid  ->GetCubicVolume() - vessel_gas_body_solid  ->GetCubicVolume();
     G4double endcap_vol = vessel_endcap_solid->GetCubicVolume() - vessel_gas_endcap_solid->GetCubicVolume();
-    G4double flange_ep_vol = vessel_ep_flange_solid->GetCubicVolume();
+    G4double flange_ep_vol = vessel_ep_flange_solid->GetCubicVolume() +
+      ep_internal_flange_solid->GetCubicVolume();
     G4double flange_tp_vol = vessel_tp_flange_solid->GetCubicVolume();
     G4double vessel_vol = body_vol + 2.*endcap_vol + flange_ep_vol + flange_tp_vol;
 
@@ -385,8 +431,17 @@ namespace nexus {
           vertex = energy_endcap_gen_->GenerateVertex("VOLUME");
         }
       }
-      else if (rand < (perc_endcap_vol_ + perc_ep_flange_vol_)){// Energy flange
-        vertex = energy_flange_gen_->GenerateVertex("VOLUME");
+      else if (rand < (perc_endcap_vol_ + perc_ep_flange_vol_)){//Energy flange
+        G4VPhysicalVolume* VertexVolume;
+        do {
+          vertex = energy_flange_gen_->GenerateVertex("VOLUME");
+
+          G4ThreeVector glob_vtx(vertex);
+          glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+          VertexVolume =
+            geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+        } while (VertexVolume->GetName() != "VESSEL_EP_INT_FLANGE" &&
+                 VertexVolume->GetName() != "VESSEL");
       }
       else if (rand < (perc_endcap_vol_ + perc_ep_flange_vol_ + perc_tp_flange_vol_)){// Tracking flange
         vertex = tracking_flange_gen_->GenerateVertex("VOLUME");

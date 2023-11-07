@@ -26,7 +26,7 @@ namespace nexus {
   {
   public:
     /// Constructor
-    Next100Vessel();
+    Next100Vessel(G4double ics_ep_lip_width);
 
     /// Destructor
     ~Next100Vessel();
@@ -47,14 +47,18 @@ namespace nexus {
 
   private:
     // Dimensions
-    G4double vessel_in_rad_, vessel_thickness_;
-    G4double body_length_;
-    G4double endcap_in_rad_, endcap_in_body_, endcap_theta_, endcap_in_z_width_;
-    G4double endcap_tp_distance_, gate_tp_distance_;
-    G4double port_base_height_, port_tube_height_, port_tube_tip_;
-    G4double port_x_, port_y_, source_height_, port_z_1a_, port_z_1b_, port_z_2a_, port_z_2b_;
+    const G4double vessel_in_rad_, vessel_thickness_;
+    const G4double ics_ep_lip_width_;
+    const G4double body_length_;
+    const G4double endcap_in_rad_, endcap_in_body_, endcap_theta_;
+    const G4double endcap_in_z_width_, endcap_tp_distance_;
+    const G4double port_base_height_, port_tube_height_, port_tube_tip_;
+
+    G4double port_x_, port_y_, source_height_, port_z_1a_, port_z_1b_;
+    G4double port_z_2a_, port_z_2b_;
     G4double sc_yield_, e_lifetime_;
     G4double pressure_, temperature_;
+    G4double gate_tp_distance_;
 
     // Visibility of the shielding
     G4bool visibility_;
