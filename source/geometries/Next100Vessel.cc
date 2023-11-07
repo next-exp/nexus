@@ -331,10 +331,10 @@ namespace nexus {
 
     G4double ep_internal_flange_posz =
       body_length_/2. - endcap_in_body_ - 41.5 * mm -
-      ep_int_flange_length/2.;
+      ep_int_flange_length/2. - 7.*mm;
     new G4PVPlacement(0, G4ThreeVector(0., 0., ep_internal_flange_posz),
                       ep_internal_flange_logic,
-                      "VESSEL_EP_INT_FLANGE", vessel_gas_logic, false, true);
+                      "VESSEL_EP_INT_FLANGE", vessel_gas_logic, false, 0, false);
 
     // SETTING VISIBILITIES   //////////
     if (visibility_) {
