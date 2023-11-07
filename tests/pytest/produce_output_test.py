@@ -206,7 +206,6 @@ def test_create_nexus_output_file_flex100(config_tmpdir, output_tmpdir, NEXUSDIR
 /Geometry/NextFlex/tp_sipm_time_binning  1. microsecond
 /Geometry/NextFlex/ics_thickness         12. cm
 
-/Generator/SingleParticle/region         CENTER
 /Generator/SingleParticle/region         AD_HOC
 /Geometry/NextFlex/specific_vertex       0. 0. 500. mm
 
