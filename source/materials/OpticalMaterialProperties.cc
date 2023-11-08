@@ -50,7 +50,7 @@ namespace opticalprops {
     // The range is chosen to be up to ~10.7 eV because Sellmeier's equation
     // for fused silica is valid only in that range
     const G4int ri_entries = 200;
-    G4double eWidth = (optPhotMaxE_ - optPhotMinE_) / ri_entries;
+    G4double eWidth = (optPhotFusedSilicaMaxE_ - optPhotMinE_) / ri_entries;
 
     std::vector<G4double> ri_energy;
     for (int i=0; i<ri_entries; i++) {
@@ -83,6 +83,8 @@ namespace opticalprops {
       // G4cout << "* FusedSilica rIndex:  " << std::setw(5) << ri_energy[i]/eV
       //       << " eV -> " << rIndex[i] << G4endl;
     }
+    ri_energy.push_back(optPhotMaxE_);          // This sets the refractive index between optPhotFusedSilicaMaxE_ and
+    rIndex.push_back(rIndex[rIndex.size()-1]);  // optPhotMaxE_ to the value obtained at optPhotFusedSilicaMaxE_
     mpt->AddProperty("RINDEX", ri_energy, rIndex);
 
     // ABSORPTION LENGTH
@@ -130,7 +132,7 @@ namespace opticalprops {
     // The range is chosen to be up to ~10.7 eV because Sellmeier's equation
     // for fused silica is valid only in that range
     const G4int ri_entries = 200;
-    G4double eWidth = (optPhotMaxE_ - optPhotMinE_) / ri_entries;
+    G4double eWidth = (optPhotFusedSilicaMaxE_ - optPhotMinE_) / ri_entries;
 
     std::vector<G4double> ri_energy;
     for (int i=0; i<ri_entries; i++) {
@@ -163,6 +165,8 @@ namespace opticalprops {
       //G4cout << "* FakeFusedSilica rIndex:  " << std::setw(5)
       //       << ri_energy[i]/eV << " eV -> " << rIndex[i] << G4endl;
     }
+    ri_energy.push_back(optPhotMaxE_);          // This sets the refractive index between optPhotFusedSilicaMaxE_ and
+    rIndex.push_back(rIndex[rIndex.size()-1]);  // optPhotMaxE_ to the value obtained at optPhotFusedSilicaMaxE_
     mpt->AddProperty("RINDEX", ri_energy, rIndex);
 
     // ABSORPTION LENGTH (Set to match the transparency)
