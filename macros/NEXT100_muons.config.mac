@@ -63,4 +63,5 @@
 
 ### PERSISTENCY
 /nexus/persistency/start_id 0
+/nexus/persistency/save_strings false
 /nexus/persistency/output_file Next100Muons_example.next
