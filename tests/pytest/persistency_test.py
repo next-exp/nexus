@@ -184,3 +184,28 @@ def test_sensor_names_are_the_same_across_tables(detectors):
             test(filename.format(run=run))
     else:
         test(filename)
+
+
+def test_keys_values_are_unique_in_string_map(nexus_output_file_no_strings):
+    """Check that IDs and strings are not repeated in map table."""
+
+    str_map = pd.read_hdf(nexus_output_file_no_strings, 'MC/string_map')
+
+    assert str_map.name_id.nunique() == len(str_map)
+    assert str_map.name.nunique()    == len(str_map)
+
+def test_string_map_ids_are_in_hits_particles_tables(nexus_output_file_no_strings):
+    """Check that all IDs of hit and particle tables appear in string map """
+
+    hits      = pd.read_hdf(nexus_output_file_no_strings, 'MC/hits')
+    particles = pd.read_hdf(nexus_output_file_no_strings, 'MC/particles')
+    str_map   = pd.read_hdf(nexus_output_file_no_strings, 'MC/string_map')
+
+    map_ids = str_map.name_id.values
+
+    assert np.all(np.isin(hits.label.values, map_ids))
+    assert np.all(np.isin(particles.particle_name.values, map_ids))
+    assert np.all(np.isin(particles.initial_volume.values, map_ids))
+    assert np.all(np.isin(particles.final_volume.values, map_ids))
+    assert np.all(np.isin(particles.creator_proc.values, map_ids))
+    assert np.all(np.isin(particles.final_proc.values, map_ids))

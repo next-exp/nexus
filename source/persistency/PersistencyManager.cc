@@ -46,7 +46,8 @@ PersistencyManagerBase(), msg_(0), output_file_("nexus_out"), ready_(false),
   store_evt_(true), store_steps_(false),
   interacting_evt_(false), save_ie_numb_(false), event_type_("other"),
   saved_evts_(0), interacting_evts_(0), pmt_bin_size_(-1), sipm_bin_size_(-1),
-  nevt_(0), start_id_(0), first_evt_(true), h5writer_(0)
+  nevt_(0), start_id_(0), first_evt_(true), h5writer_(0),
+  str_counter_(0), save_str_(false)
 {
   msg_ = new G4GenericMessenger(this, "/nexus/persistency/");
   msg_->DeclareProperty("output_file", output_file_, "Path of output file.");
@@ -54,6 +55,8 @@ PersistencyManagerBase(), msg_(0), output_file_("nexus_out"), ready_(false),
                         "Type of event: bb0nu, bb2nu, background.");
   msg_->DeclareProperty("start_id", start_id_,
                         "Starting event ID for this job.");
+  msg_->DeclareProperty("save_strings", save_str_,
+                        "True if volume, process... names are saved as strings.");
 
   init_macro_ = "";
   macros_.clear();
@@ -77,7 +80,7 @@ void PersistencyManager::OpenFile()
   if (!h5writer_) {
     h5writer_ = new HDF5Writer();
     G4String hdf5file = output_file_ + ".h5";
-    h5writer_->Open(hdf5file, store_steps_);
+    h5writer_->Open(hdf5file, store_steps_, save_str_);
     return;
   } else {
     G4Exception("[PersistencyManager]", "OpenFile()",
@@ -145,6 +148,7 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
   if (!tc) return;
 
   // Loop through the trajectories stored in the container
+
   for (size_t i=0; i<tc->entries(); ++i) {
     Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[i]);
     if (!trj) continue;
@@ -154,18 +158,32 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
     G4double length = trj->GetTrackLength();
 
     G4ThreeVector ini_xyz = trj->GetInitialPosition();
-    G4double ini_t = trj->GetInitialTime();
+    G4double ini_t        = trj->GetInitialTime();
 
     G4ThreeVector final_xyz = trj->GetFinalPosition();
-    G4double final_t = trj->GetFinalTime();
+    G4double final_t        = trj->GetFinalTime();
 
-    G4String ini_volume = trj->GetInitialVolume();
+    G4double mass           = trj->GetParticleDefinition()->GetPDGMass();
+    G4ThreeVector ini_mom   = trj->GetInitialMomentum();
+    G4double energy         = sqrt(ini_mom.mag2() + mass*mass);
+    G4ThreeVector final_mom = trj->GetFinalMomentum();
+
+    G4String p_name = trj->GetParticleName();
+
+    G4String ini_volume   = trj->GetInitialVolume();
     G4String final_volume = trj->GetFinalVolume();
 
-    G4double mass = trj->GetParticleDefinition()->GetPDGMass();
-    G4ThreeVector ini_mom = trj->GetInitialMomentum();
-    G4double energy = sqrt(ini_mom.mag2() + mass*mass);
-    G4ThreeVector final_mom = trj->GetFinalMomentum();
+    G4String creator_proc = trj->GetCreatorProcess();
+    G4String final_proc   = trj->GetFinalProcess();
+
+    G4int pname_id = FindStringIDInMap(str_map_, p_name, str_counter_);
+
+    G4int iniv_id = FindStringIDInMap(str_map_, ini_volume, str_counter_);
+    G4int finv_id = FindStringIDInMap(str_map_, final_volume, str_counter_);
+
+    G4int creatpr_id = FindStringIDInMap(str_map_, creator_proc, str_counter_);
+    G4int finpr_id   = FindStringIDInMap(str_map_, final_proc, str_counter_);
+
 
     float kin_energy = energy - mass;
     char primary = 0;
@@ -175,19 +193,20 @@ void PersistencyManager::StoreTrajectories(G4TrajectoryContainer* tc)
     } else {
       mother_id = trj->GetParentID();
     }
-    h5writer_->WriteParticleInfo(nevt_, trackid, trj->GetParticleName().c_str(),
-				 primary, mother_id,
+    h5writer_->WriteParticleInfo(save_str_, nevt_, trackid, p_name.c_str(),
+                                 (int)pname_id, primary, mother_id,
 				 (float)ini_xyz.x(), (float)ini_xyz.y(),
                                  (float)ini_xyz.z(), (float)ini_t,
 				 (float)final_xyz.x(), (float)final_xyz.y(),
                                  (float)final_xyz.z(), (float)final_t,
-				 ini_volume.c_str(), final_volume.c_str(),
+                                 ini_volume.c_str(), final_volume.c_str(),
+				 (int)iniv_id, (int)finv_id,
 				 (float)ini_mom.x(), (float)ini_mom.y(),
                                  (float)ini_mom.z(), (float)final_mom.x(),
                                  (float)final_mom.y(), (float)final_mom.z(),
-				 kin_energy, length,
-                                 trj->GetCreatorProcess().c_str(),
-				 trj->GetFinalProcess().c_str());
+				 kin_energy, length, creator_proc.c_str(),
+                                 final_proc.c_str(),
+                                 (int)creatpr_id, (int)finpr_id);
 
   }
 }
@@ -236,6 +255,7 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
   if (!hits) return;
 
   std::string sdname = hits->GetSDname();
+  G4int sdname_id = FindStringIDInMap(str_map_, sdname, str_counter_);
 
   for (size_t i=0; i<hits->entries(); i++) {
 
@@ -243,7 +263,6 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
     if (!hit) continue;
 
     G4int trackid = hit->GetTrackID();
-
 
     std::map<G4int, std::vector<G4int>* >::iterator it = hit_map_.find(trackid);
     if (it != hit_map_.end()) {
@@ -256,10 +275,10 @@ void PersistencyManager::StoreIonizationHits(G4VHitsCollection* hc)
     ihits_->push_back(1);
 
     G4ThreeVector xyz = hit->GetPosition();
-    h5writer_->WriteHitInfo(nevt_, trackid,  ihits_->size() - 1,
+    h5writer_->WriteHitInfo(save_str_, nevt_, trackid,  ihits_->size() - 1,
 			    xyz[0], xyz[1], xyz[2],
 			    hit->GetTime(), hit->GetEnergyDeposit(),
-			    sdname.c_str());
+                            sdname.c_str(), sdname_id);
   }
 }
 
@@ -374,12 +393,14 @@ G4bool PersistencyManager::Store(const G4Run*)
     h5writer_->WriteRunInfo(key,  std::to_string(interacting_evts_).c_str());
   }
 
+  // Store sensor time binning
   std::map<G4String, G4double>::const_iterator it;
   for (it = sensdet_bin_.begin(); it != sensdet_bin_.end(); ++it) {
     h5writer_->WriteRunInfo((it->first + "_binning").c_str(),
                            (std::to_string(it->second/microsecond)+" mus").c_str());
   }
 
+  // Store configuration parameters
   SaveConfigurationInfo(init_macro_);
   for (unsigned long i=0; i<macros_.size(); i++) {
     SaveConfigurationInfo(macros_[i]);
@@ -390,6 +411,19 @@ G4bool PersistencyManager::Store(const G4Run*)
   for (unsigned long i=0; i<secondary_macros_.size(); i++) {
     SaveConfigurationInfo(secondary_macros_[i]);
   }
+
+  // Store map with string --> int correspondence
+  if (!save_str_) {
+    std::map<G4int, G4String> inv_map;
+    for (const auto& n : str_map_) {
+      inv_map[n.second] = n.first;
+    }
+
+    for (const auto& p : inv_map) {
+      h5writer_->WriteStringMapInfo(p.second, p.first);
+    }
+  }
+
 
   return true;
 }
@@ -427,4 +461,18 @@ void PersistencyManager::SaveConfigurationInfo(G4String file_name)
   }
 
   history.close();
+}
+
+
+G4int PersistencyManager::FindStringIDInMap(std::map<G4String, G4int>& vmap,
+                                            G4String vol, G4int& counter)
+{
+  auto found = vmap.find(vol);
+  if (found != vmap.end()) {
+    return found->second;
+  } else {
+    vmap[vol] = counter;
+    counter++;
+    return vmap[vol];
+  }
 }

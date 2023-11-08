@@ -26,4 +26,5 @@
 # GEOMETRY
 /Geometry/NextNew/pressure 10. bar
 
+/nexus/persistency/save_strings false
 /nexus/persistency/output_file geantinos.next
