@@ -325,7 +325,7 @@ namespace nexus {
        new G4SubtractionSolid("VESSEL_EP_INT_FLANGE", ep_int_flange_full_solid,
                               ep_int_flange_lip_solid, 0, ep_int_flang_sub_pos);
 
-    G4LogicalVolume* ep_internal_flange_logic =
+    G4LogicalVolume* ep_int_flange_logic =
       new G4LogicalVolume(ep_internal_flange_solid, materials::Steel316Ti(),
                           "VESSEL_EP_INT_FLANGE");
 
@@ -333,7 +333,7 @@ namespace nexus {
       body_length_/2. - endcap_in_body_ - 41.5 * mm -
       ep_int_flange_length/2. - 7.*mm;
     new G4PVPlacement(0, G4ThreeVector(0., 0., ep_internal_flange_posz),
-                      ep_internal_flange_logic,
+                      ep_int_flange_logic,
                       "VESSEL_EP_INT_FLANGE", vessel_gas_logic, false, 0, false);
 
     // SETTING VISIBILITIES   //////////
@@ -342,15 +342,14 @@ namespace nexus {
       G4VisAttributes yellow = nexus::Yellow();
       grey  .SetForceSolid(true);
       yellow.SetForceSolid(true);
+      ep_int_flange_logic->SetVisAttributes(grey);
       vessel_logic       ->SetVisAttributes(grey);
       vessel_gas_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
       port_tube_logic    ->SetVisAttributes(grey);
       port_tube_gas_logic->SetVisAttributes(yellow);
     }
     else {
-      G4VisAttributes grey = nexus::TitaniumGrey();
-      grey  .SetForceSolid(true);
-      ep_internal_flange_logic->SetVisAttributes(grey);
+      ep_int_flange_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
       vessel_logic       ->SetVisAttributes(G4VisAttributes::GetInvisible());
       vessel_gas_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
       port_tube_logic    ->SetVisAttributes(G4VisAttributes::GetInvisible());
