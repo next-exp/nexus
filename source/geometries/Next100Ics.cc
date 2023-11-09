@@ -160,7 +160,7 @@ namespace nexus {
     /// ICS step at the TP end.
     // This avoids overlap with sipm boards at high radius
     G4double step_width = 31. * mm; // step dim in y
-    G4double step_length = 53 * mm; // step dim in z
+    G4double step_length = 52 * mm; // step dim in z
     G4Tubs* tp_step_solid =
       new G4Tubs("TP_STEP", in_rad_ - offset, in_rad_ + step_width,
                  (step_length + offset)/2., 0.*deg, 360.*deg);
