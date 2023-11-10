@@ -188,9 +188,10 @@ namespace nexus {
 
     // Body + Energy endcap
     G4UnionSolid* vessel_solid = new G4UnionSolid("VESSEL", vessel_body_solid, vessel_endcap_solid,
-						  0, energy_endcap_pos);
+    						  0, energy_endcap_pos);
 
     // Body + Energy endcap + Tracking endcap
+    // G4UnionSolid* vessel_solid = new G4UnionSolid("VESSEL", vessel_body_solid, vessel_endcap_solid,
     vessel_solid = new G4UnionSolid("VESSEL", vessel_solid, vessel_endcap_solid,
 				    xRot, tracking_endcap_pos);
 
@@ -232,9 +233,10 @@ namespace nexus {
 
     // Body gas + Energy endcap gas
     G4UnionSolid* vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_body_solid,
-						      vessel_gas_endcap_solid, 0, energy_endcap_pos);
+    						      vessel_gas_endcap_solid, 0, energy_endcap_pos);
 
     //  Body gas + Energy endcap gas + Tracking endcap gas
+    //G4UnionSolid* vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_body_solid,
     vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid,
 					vessel_gas_endcap_solid, xRot, tracking_endcap_pos);
 
@@ -250,6 +252,36 @@ namespace nexus {
                                         port_b_Rot, G4ThreeVector(-port_gas_x, port_gas_y, port_z_1b_));
     vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, port_gas_solid,
                                         port_b_Rot, G4ThreeVector(-port_gas_x, port_gas_y, port_z_2b_));
+
+    // Internal part of the energy plane flange, which is placed between the
+    // EP copper plate and the ICS bars
+    G4double ep_int_flange_in_rad = flange_out_rad - 167 * mm;
+    G4double ep_int_flange_short_length = 24.8 * mm;
+    G4Tubs* ep_int_flange_short_solid =
+      new G4Tubs("VESSEL_EP_INT_FLANGE_SHORT", ep_int_flange_in_rad,
+                 vessel_in_rad_ + offset, ep_int_flange_short_length/2.,
+                 0.*deg, 360.*deg);
+
+    G4ThreeVector ep_int_flange_short_pos =
+      G4ThreeVector(0., 0., body_length_/2. - endcap_in_body_ - 48.5* mm -
+                    ep_int_flange_short_length/2.);
+    G4SubtractionSolid* vessel_gas_final_solid =
+      new G4SubtractionSolid("VESSEL_GAS", vessel_gas_solid,
+                              ep_int_flange_short_solid, 0, ep_int_flange_short_pos);
+
+    G4Tubs* ep_int_flange_long_solid =
+      new G4Tubs("VESSEL_EP_INT_FLANGE_LONG", flange_out_rad - 137.5 * mm,
+                 vessel_in_rad_ + offset, (ics_ep_lip_width_ + offset)/2.,
+                 0.*deg, 360.*deg);
+
+    G4ThreeVector ep_int_flange_long_pos =
+      G4ThreeVector(0., 0., ep_int_flange_short_pos.z() -
+                    ep_int_flange_short_length/2. -
+                    (ics_ep_lip_width_ - offset)/2.);
+    vessel_gas_final_solid =
+      new G4SubtractionSolid("VESSEL_GAS", vessel_gas_final_solid,
+                              ep_int_flange_long_solid, 0, ep_int_flange_long_pos);
+
 
     //// The logics
     // vessel and vessel gas
@@ -275,12 +307,12 @@ namespace nexus {
 
     vessel_gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_, temperature_, sc_yield_, e_lifetime_));
 
-    G4LogicalVolume* vessel_gas_logic = new G4LogicalVolume(vessel_gas_solid, vessel_gas_mat, "VESSEL_GAS");
+    G4LogicalVolume* vessel_gas_logic = new G4LogicalVolume(vessel_gas_final_solid, vessel_gas_mat, "VESSEL_GAS");
     internal_logic_vol_ = vessel_gas_logic;
     SetELzCoord(-body_length_/2. - endcap_in_z_width_ + endcap_tp_distance_ + gate_tp_distance_);
     internal_phys_vol_ =
       new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_gas_logic,
-                        "VESSEL_GAS", vessel_logic, false, 0);
+                        "VESSEL_GAS", vessel_logic, false, 0, false);
 
     // Port tubes
     G4LogicalVolume* port_tube_logic =
@@ -303,53 +335,21 @@ namespace nexus {
                       "PORT_TUBE_2b", vessel_gas_logic, false, 0);
 
 
-    // Internal part of the energy plane flange, which is placed between the
-    // EP copper plate and the ICS bars
-
-    G4double ep_int_flange_in_rad = flange_out_rad - 167 * mm;
-    G4double ep_int_flange_length = 79.8 * mm;
-    G4Tubs* ep_int_flange_full_solid =
-      new G4Tubs("VESSEL_EP_INT_FLANGE_FULL", ep_int_flange_in_rad,
-                 vessel_in_rad_, ep_int_flange_length/2.,
-                 0.*deg, 360.*deg);
-
-    G4double ep_int_flange_lip_in_rad = flange_out_rad - 137.5 * mm;
-     G4Tubs* ep_int_flange_lip_solid =
-       new G4Tubs("VESSEL_EP_INT_FLANGE_LIP", ep_int_flange_in_rad - offset,
-                  ep_int_flange_lip_in_rad, (ics_ep_lip_width_ + offset)/2.,
-                 0.*deg, 360.*deg);
-
-     G4ThreeVector ep_int_flang_sub_pos =
-       G4ThreeVector(0., 0., -ep_int_flange_length/2. + (ics_ep_lip_width_ - offset)/2.);
-     G4SubtractionSolid* ep_internal_flange_solid =
-       new G4SubtractionSolid("VESSEL_EP_INT_FLANGE", ep_int_flange_full_solid,
-                              ep_int_flange_lip_solid, 0, ep_int_flang_sub_pos);
-
-    G4LogicalVolume* ep_int_flange_logic =
-      new G4LogicalVolume(ep_internal_flange_solid, materials::Steel316Ti(),
-                          "VESSEL_EP_INT_FLANGE");
-
-    G4double ep_internal_flange_posz =
-      body_length_/2. - endcap_in_body_ - 41.5 * mm -
-      ep_int_flange_length/2. - 7.*mm;
-    new G4PVPlacement(0, G4ThreeVector(0., 0., ep_internal_flange_posz),
-                      ep_int_flange_logic,
-                      "VESSEL_EP_INT_FLANGE", vessel_gas_logic, false, 0, false);
-
     // SETTING VISIBILITIES   //////////
     if (visibility_) {
       G4VisAttributes grey = nexus::TitaniumGreyAlpha();
       G4VisAttributes yellow = nexus::Yellow();
       grey  .SetForceSolid(true);
       yellow.SetForceSolid(true);
-      ep_int_flange_logic->SetVisAttributes(grey);
+      //ep_int_flange_logic->SetVisAttributes(grey);
       vessel_logic       ->SetVisAttributes(grey);
-      vessel_gas_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
+      //vessel_gas_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
+      vessel_gas_logic   ->SetVisAttributes(yellow);
       port_tube_logic    ->SetVisAttributes(grey);
       port_tube_gas_logic->SetVisAttributes(yellow);
     }
     else {
-      ep_int_flange_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+      //ep_int_flange_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
       vessel_logic       ->SetVisAttributes(G4VisAttributes::GetInvisible());
       vessel_gas_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
       port_tube_logic    ->SetVisAttributes(G4VisAttributes::GetInvisible());
@@ -378,10 +378,15 @@ namespace nexus {
                                              0., 360.*deg, 0, G4ThreeVector(0., 0., 0.));
 
     // Calculating some prob
+    G4UnionSolid* ep_int_flange_solid =
+      new G4UnionSolid("VESSEL_EP_INT_FLANGE", ep_int_flange_short_solid,
+                       ep_int_flange_long_solid, 0,
+                       G4ThreeVector(0., 0., -ep_int_flange_short_length/2.
+                                     - ics_ep_lip_width_/2. ));
     G4double body_vol   = vessel_body_solid  ->GetCubicVolume() - vessel_gas_body_solid  ->GetCubicVolume();
     G4double endcap_vol = vessel_endcap_solid->GetCubicVolume() - vessel_gas_endcap_solid->GetCubicVolume();
     G4double flange_ep_vol = vessel_ep_flange_solid->GetCubicVolume() +
-      ep_internal_flange_solid->GetCubicVolume();
+      ep_int_flange_solid->GetCubicVolume();
     G4double flange_tp_vol = vessel_tp_flange_solid->GetCubicVolume();
     G4double vessel_vol = body_vol + 2.*endcap_vol + flange_ep_vol + flange_tp_vol;
 
@@ -439,8 +444,7 @@ namespace nexus {
           glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
           VertexVolume =
             geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
-        } while (VertexVolume->GetName() != "VESSEL_EP_INT_FLANGE" &&
-                 VertexVolume->GetName() != "VESSEL");
+        } while (VertexVolume->GetName() != "VESSEL");
       }
       else if (rand < (perc_endcap_vol_ + perc_ep_flange_vol_ + perc_tp_flange_vol_)){// Tracking flange
         vertex = tracking_flange_gen_->GenerateVertex("VOLUME");
