@@ -42,7 +42,7 @@ namespace nexus {
     //ep_fc_distance_ (24.8 * mm), /// this value was measured by Sara in the step file
     gate_tracking_plane_distance_(25. * mm + grid_thickness_), // Jordi = 1.5 (distance TP plate-anode ring) + 13.5 (anode ring thickness) + 10 (EL gap)
     gate_sapphire_wdw_distance_  (1458.8 * mm - grid_thickness_), // Jordi
-    ics_ep_lip_width_ (55. * mm),
+    ics_ep_lip_width_ (55. * mm), // length of the step cut out in the ICS, in the EP side
 
     specific_vertex_{},
     lab_walls_(false)
