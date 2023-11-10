@@ -141,8 +141,13 @@ namespace nexus {
 
     // Flange solid
     G4double flange_out_rad   = 74.0 * cm;
-    G4double flange_tp_length = 41.5 * mm + 41.5 * mm; // 41.5 mm from the endcap
-    G4double flange_ep_length = 77.5 * mm + 41.5 * mm;
+    G4double flange_tp_body_length = 41.5 * mm;
+    G4double flange_tp_endcap_length = 41.5 * mm;
+    G4double flange_tp_length = flange_tp_body_length + flange_tp_endcap_length;
+
+    G4double flange_ep_body_length = 77.5 * mm;
+    G4double flange_ep_endcap_length = 41.5 * mm;
+    G4double flange_ep_length = flange_ep_body_length + flange_ep_endcap_length;
     G4double flange_ep_z_pos  =   body_length_/2. - flange_ep_length/2. - endcap_in_body_;
     G4double flange_tp_z_pos  = -(body_length_/2. - flange_tp_length/2. - endcap_in_body_);
 
@@ -236,7 +241,6 @@ namespace nexus {
     						      vessel_gas_endcap_solid, 0, energy_endcap_pos);
 
     //  Body gas + Energy endcap gas + Tracking endcap gas
-    //G4UnionSolid* vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_body_solid,
     vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid,
 					vessel_gas_endcap_solid, xRot, tracking_endcap_pos);
 
@@ -253,8 +257,10 @@ namespace nexus {
     vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, port_gas_solid,
                                         port_b_Rot, G4ThreeVector(-port_gas_x, port_gas_y, port_z_2b_));
 
-    // Internal part of the energy plane flange, which is placed between the
-    // EP copper plate and the ICS bars
+    // Remove part of gas to let the internal part of the
+    // energy plane flange emerge from the subtraction.
+    // This part of the flange is placed between the EP copper plate and
+    // the ICS bars and it holds the EP copper plate, screwed to it.
     G4double ep_int_flange_in_rad = flange_out_rad - 167 * mm;
     G4double ep_int_flange_short_length = 24.8 * mm;
     G4Tubs* ep_int_flange_short_solid =
@@ -263,8 +269,8 @@ namespace nexus {
                  0.*deg, 360.*deg);
 
     G4ThreeVector ep_int_flange_short_pos =
-      G4ThreeVector(0., 0., body_length_/2. - endcap_in_body_ - 48.5* mm -
-                    ep_int_flange_short_length/2.);
+      G4ThreeVector(0., 0., body_length_/2. - endcap_in_body_ -
+                    flange_ep_endcap_length + 1.8*mm - ep_int_flange_short_length/2.);
     G4SubtractionSolid* vessel_gas_final_solid =
       new G4SubtractionSolid("VESSEL_GAS", vessel_gas_solid,
                               ep_int_flange_short_solid, 0, ep_int_flange_short_pos);
@@ -308,8 +314,10 @@ namespace nexus {
     vessel_gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_, temperature_, sc_yield_, e_lifetime_));
 
     G4LogicalVolume* vessel_gas_logic = new G4LogicalVolume(vessel_gas_final_solid, vessel_gas_mat, "VESSEL_GAS");
+
     internal_logic_vol_ = vessel_gas_logic;
-    SetELzCoord(-body_length_/2. - endcap_in_z_width_ + endcap_tp_distance_ + gate_tp_distance_);
+    G4double el_z_coord = flange_tp_z_pos + flange_tp_length /2. + 67.5*mm + gate_tp_distance_;
+    SetELzCoord(el_z_coord);
     internal_phys_vol_ =
       new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), vessel_gas_logic,
                         "VESSEL_GAS", vessel_logic, false, 0, false);
@@ -341,15 +349,12 @@ namespace nexus {
       G4VisAttributes yellow = nexus::Yellow();
       grey  .SetForceSolid(true);
       yellow.SetForceSolid(true);
-      //ep_int_flange_logic->SetVisAttributes(grey);
       vessel_logic       ->SetVisAttributes(grey);
-      //vessel_gas_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
-      vessel_gas_logic   ->SetVisAttributes(yellow);
+      vessel_gas_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
       port_tube_logic    ->SetVisAttributes(grey);
       port_tube_gas_logic->SetVisAttributes(yellow);
     }
     else {
-      //ep_int_flange_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
       vessel_logic       ->SetVisAttributes(G4VisAttributes::GetInvisible());
       vessel_gas_logic   ->SetVisAttributes(G4VisAttributes::GetInvisible());
       port_tube_logic    ->SetVisAttributes(G4VisAttributes::GetInvisible());
@@ -449,8 +454,9 @@ namespace nexus {
       else if (rand < (perc_endcap_vol_ + perc_ep_flange_vol_ + perc_tp_flange_vol_)){// Tracking flange
         vertex = tracking_flange_gen_->GenerateVertex("VOLUME");
       }
-      else // Body
-        	vertex = body_gen_->GenerateVertex("VOLUME");
+      else {// Body
+        vertex = body_gen_->GenerateVertex("VOLUME");
+      }
     }
 
     else if (region == "PORT_1a"){
