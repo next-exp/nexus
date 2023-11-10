@@ -51,7 +51,7 @@ namespace nexus {
     const G4double ics_ep_lip_width_;
     const G4double body_length_;
     const G4double endcap_in_rad_, endcap_in_body_, endcap_theta_;
-    const G4double endcap_in_z_width_, endcap_tp_distance_;
+    const G4double endcap_in_z_width_;
     const G4double port_base_height_, port_tube_height_, port_tube_tip_;
 
     G4double port_x_, port_y_, source_height_, port_z_1a_, port_z_1b_;

@@ -53,7 +53,6 @@ namespace nexus {
     endcap_in_body_     (15.15  * cm),
     endcap_theta_       (29.1   * deg),
     endcap_in_z_width_  (15.6   * cm),
-    endcap_tp_distance_ (44.92  * cm),
 
     // Ports
     port_base_height_(37. * mm),
