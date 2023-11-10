@@ -74,6 +74,19 @@ namespace nexus {
     helium_mass_num_(4),
     xe_perc_(100.)
   {
+    /// HOW THIS GEOMETRY IS BUILT ///
+    /// The vessel is a union of several volumes, as explained in
+    /// https://next.ific.uv.es/DocDB/0015/001522/001/next100vessel.pdf.
+    /// The flanges are simulated simply as external volumes;
+    /// however, the EP flange has a part that goes inside the vessel,
+    /// which holds the EP plate. To simulate this we do the following:
+    /// 1. We build a solid cylinder made of stainless steel.
+    /// 2. We build a smaller cylinder made of xenon.
+    /// 3. We cut out two thin cylinders from the xenon volume,
+    ///    in the place where the inner part of the EP flange goes.
+    /// 4. We place the xenon volume inside the stainless steel one.
+    /// This way, the inner part of the EP flange emerges as the part of
+    // the inner volume of the vessel which is not occupied by xenon.
 
     // Initializing the geometry navigator (used in vertex generation)
     geom_navigator_ =
