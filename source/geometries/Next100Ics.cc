@@ -66,7 +66,6 @@ namespace nexus {
 
     // ICS
     G4double ics_z_pos = GetCoordOrigin().z() + length/2. - gate_tp_distance_;
-    G4ThreeVector coord_origin = GetCoordOrigin();
 
     G4Tubs* ics_body = new G4Tubs("ICS", in_rad_, in_rad_ + thickness_,
                                   length/2., 0.*deg, 360.*deg);
