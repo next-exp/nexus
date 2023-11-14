@@ -34,11 +34,13 @@ namespace nexus {
     // common variables used in geometry components
     grid_thickness_ (0.1 * mm),
     gate_tracking_plane_distance_(25. * mm + grid_thickness_),
-    gate_sapphire_wdw_distance_  ((1458.8 - 1.3) * mm - grid_thickness_),
+    gate_sapphire_wdw_distance_  (1458.8 * mm - grid_thickness_),
     pressure_(15. * bar),
     temperature_ (300 * kelvin),
     sc_yield_(25510. * 1/MeV),
     e_lifetime_(1000. * ms),
+    fc_displ_x_ (-3.7 * mm), // displacement of the field cage volumes from 0
+    fc_displ_y_ (-6.4 * mm), // displacement of the field cage volumes from 0
     specific_vertex_{},
     gas_("naturalXe")
   {
@@ -130,15 +132,15 @@ namespace nexus {
   G4Box* gas_solid = new G4Box("GAS", gas_size/2., gas_size/2., gas_size/2.);
   G4LogicalVolume* gas_logic = new G4LogicalVolume(gas_solid, gas_mat, "GAS");
 
-  gate_zpos_in_gas_ = 0. * mm;
+  coord_origin_ = G4ThreeVector(fc_displ_x_, fc_displ_y_, 0);
   G4VPhysicalVolume* gas_phys =
-    new G4PVPlacement(0, G4ThreeVector(0, 0, -gate_zpos_in_gas_), gas_logic,
+    new G4PVPlacement(0, -coord_origin_, gas_logic,
 		      "GAS", lab_logic, false, 0, false);
 
   ///INNER ELEMENTS
   inner_elements_->SetLogicalVolume(gas_logic);
   inner_elements_->SetPhysicalVolume(gas_phys);
-  inner_elements_->SetELzCoord(gate_zpos_in_gas_);
+  inner_elements_->SetCoordOrigin(coord_origin_);
   inner_elements_->SetELtoSapphireWDWdistance(gate_sapphire_wdw_distance_);
   inner_elements_->SetELtoTPdistance         (gate_tracking_plane_distance_);
   inner_elements_->Construct();
@@ -167,8 +169,7 @@ namespace nexus {
       vertex = inner_elements_->GenerateVertex(region);
     }
 
-    G4ThreeVector displacement = G4ThreeVector(0., 0., -gate_zpos_in_gas_);
-    vertex = vertex + displacement;
+    vertex = vertex - coord_origin_;
     return vertex;
   }
 
