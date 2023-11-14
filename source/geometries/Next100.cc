@@ -136,13 +136,11 @@ namespace nexus {
       vessel_->GetInternalPhysicalVolume();
     G4ThreeVector vessel_displacement =
       shielding_->GetAirDisplacement(); // explained below
-    displ_from_origin_ =
-      G4ThreeVector(-fc_displ_x_, -fc_displ_y_, -vessel_->GetGateZpos());
+
+    coord_origin_ = G4ThreeVector(fc_displ_x_, fc_displ_y_, vessel_->GetGateZpos());
 
     // SHIELDING
-    shielding_->SetCoordOrigin(G4ThreeVector(fc_displ_x_,
-                                             fc_displ_y_,
-                                             vessel_->GetGateZpos()));
+    shielding_->SetCoordOrigin(coord_origin_);
     shielding_->Construct();
     G4LogicalVolume* shielding_logic     = shielding_->GetLogicalVolume();
     G4LogicalVolume* shielding_air_logic = shielding_->GetAirLogicalVolume();
@@ -156,18 +154,14 @@ namespace nexus {
     // INNER ELEMENTS
     inner_elements_->SetLogicalVolume(vessel_internal_logic);
     inner_elements_->SetPhysicalVolume(vessel_internal_phys);
-    inner_elements_->SetCoordOrigin(G4ThreeVector(fc_displ_x_,
-                                                  fc_displ_y_,
-                                                  vessel_->GetGateZpos()));
+    inner_elements_->SetCoordOrigin(coord_origin_);
     inner_elements_->SetELtoSapphireWDWdistance(gate_sapphire_wdw_distance_);
     inner_elements_->SetELtoTPdistance         (gate_tracking_plane_distance_);
     inner_elements_->Construct();
 
     // INNER COPPER SHIELDING
     ics_->SetLogicalVolume(vessel_internal_logic);
-    ics_->SetCoordOrigin(G4ThreeVector(fc_displ_x_,
-                                       fc_displ_y_,
-                                       vessel_->GetGateZpos()));
+    ics_->SetCoordOrigin(coord_origin_);
     ics_->SetELtoSapphireWDWdistance(gate_sapphire_wdw_distance_);
     ics_->SetELtoTPdistance         (gate_tracking_plane_distance_);
     ics_->SetPortZpositions(vessel_->GetPortZpositions());
@@ -179,11 +173,11 @@ namespace nexus {
 
       new G4PVPlacement(0, castle_pos, shielding_logic,
                         "LEAD_BOX", hallA_logic_, false, 0);
-      new G4PVPlacement(0, displ_from_origin_ - castle_pos, hallA_logic_,
+      new G4PVPlacement(0, -coord_origin_ - castle_pos, hallA_logic_,
                         "Hall_A", lab_logic_, false, 0, false);
     }
     else {
-      new G4PVPlacement(0, displ_from_origin_, shielding_logic,
+      new G4PVPlacement(0, -coord_origin_, shielding_logic,
                         "LEAD_BOX", lab_logic_, false, 0);
     }
 
@@ -277,7 +271,7 @@ namespace nexus {
 		  "Unknown vertex generation region!");
     }
 
-    vertex = vertex + displ_from_origin_;
+    vertex = vertex - coord_origin_;
 
     return vertex;
   }

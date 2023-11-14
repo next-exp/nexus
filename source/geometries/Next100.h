@@ -81,8 +81,8 @@ namespace nexus {
     /// Specific vertex for AD_HOC region
     G4ThreeVector specific_vertex_;
 
-    /// Position of gate in its mother volume
-    G4ThreeVector displ_from_origin_;
+    /// Origin of coordinates
+    G4ThreeVector coord_origin_;
 
     /// Whether or not to build LSC HallA.
     G4bool lab_walls_;
