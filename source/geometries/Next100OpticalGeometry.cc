@@ -23,25 +23,24 @@
 #include <G4NistManager.hh>
 #include <G4UnitsTable.hh>
 
-#include <CLHEP/Units/SystemOfUnits.h>
-#include <CLHEP/Units/PhysicalConstants.h>
-
 using namespace CLHEP;
 
 namespace nexus {
 
   REGISTER_CLASS(Next100OpticalGeometry, GeometryBase)
 
-  Next100OpticalGeometry::Next100OpticalGeometry(): GeometryBase(),
-                // common used variables in geomety components
-                gate_tracking_plane_distance_((26.1 + 0.1) * mm), // to be confirmed
-                gate_sapphire_wdw_distance_  ((1458.2 - 0.1) * mm),
-						    pressure_(15. * bar),
-						    temperature_ (300 * kelvin),
-						    sc_yield_(25510. * 1/MeV),
-                e_lifetime_(1000. * ms),
-                specific_vertex_{},
-						    gas_("naturalXe")
+  Next100OpticalGeometry::Next100OpticalGeometry():
+    GeometryBase(),
+    // common variables used in geometry components
+    grid_thickness_ (0.1 * mm),
+    gate_tracking_plane_distance_(25. * mm + grid_thickness_),
+    gate_sapphire_wdw_distance_  ((1458.8 - 1.3) * mm - grid_thickness_),
+    pressure_(15. * bar),
+    temperature_ (300 * kelvin),
+    sc_yield_(25510. * 1/MeV),
+    e_lifetime_(1000. * ms),
+    specific_vertex_{},
+    gas_("naturalXe")
   {
     /// Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/Next100/",
@@ -74,7 +73,7 @@ namespace nexus {
     msg_->DeclareProperty("gas", gas_, "Gas being used");
 
 
-    inner_elements_ = new Next100InnerElements();
+    inner_elements_ = new Next100InnerElements(grid_thickness_);
   }
 
 
@@ -107,21 +106,21 @@ namespace nexus {
   if (gas_ == "naturalXe") {
     gas_mat = materials::GXe(pressure_, temperature_);
     gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_,
-								       temperature_,
-								       sc_yield_,
-                                                                       e_lifetime_));
+                                                          temperature_,
+                                                          sc_yield_,
+                                                          e_lifetime_));
   } else if (gas_ == "enrichedXe") {
     gas_mat =  materials::GXeEnriched(pressure_, temperature_);
     gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_,
-								       temperature_,
-								       sc_yield_,
-                                                                       e_lifetime_));
+                                                          temperature_,
+                                                          sc_yield_,
+                                                          e_lifetime_));
   } else if  (gas_ == "depletedXe") {
     gas_mat =  materials::GXeDepleted(pressure_, temperature_);
     gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_,
-								       temperature_,
-								       sc_yield_,
-                                                                       e_lifetime_));
+                                                          temperature_,
+                                                          sc_yield_,
+                                                          e_lifetime_));
   }  else {
     G4Exception("[Next100OpticalGeometry]", "Construct()", FatalException,
                 "Unknown kind of gas, valid options are: naturalXe, enrichedXe, depletedXe.");

@@ -31,7 +31,7 @@ namespace nexus {
 
   public:
     ///Constructor
-    Next100InnerElements();
+    Next100InnerElements(G4double grid_thickn);
 
     /// Destructor
     ~Next100InnerElements();

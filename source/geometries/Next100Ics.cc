@@ -54,7 +54,7 @@ namespace nexus {
 
   void Next100Ics::Construct()
   {
-    G4double length = 1468.2 * mm; // (Full length of copper bars) - (copper simulated in TP_COPPER_PLATE)
+    G4double length = 1468. * mm; // (Full length of copper bars) - (copper simulated in TP_COPPER_PLATE)
     // defined for G4UnionSolids to ensure a common volume within the two joined solids
     // and for G4SubtractionSolids to ensure surface subtraction
     G4double offset = 1.* mm;
