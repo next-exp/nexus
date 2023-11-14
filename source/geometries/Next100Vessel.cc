@@ -467,7 +467,16 @@ namespace nexus {
         vertex = tracking_flange_gen_->GenerateVertex("VOLUME");
       }
       else {// Body
-        vertex = body_gen_->GenerateVertex("VOLUME");
+        G4VPhysicalVolume* VertexVolume;
+        do {
+          vertex = body_gen_->GenerateVertex("VOLUME");
+
+          G4ThreeVector glob_vtx(vertex);
+          // this->GetCoordOrigin() only has x and y set
+          glob_vtx = glob_vtx - GetCoordOrigin() - G4ThreeVector(0, 0, gate_z_pos_);
+          VertexVolume =
+            geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+        } while (VertexVolume->GetName() != "VESSEL");
       }
     }
 
