@@ -51,6 +51,8 @@ namespace nexus {
     //    const G4double ep_fc_distance_; /// Distance between the surface of the
     ///EP copper plate and the end of the staves/teflon panels/poly (a.k.a. FC)
     const G4double gate_tracking_plane_distance_, gate_sapphire_wdw_distance_;
+    const G4double ics_ep_lip_width_ ; ///< width of step of the ICS bars in the
+    /// energy plane side
 
     // Pointers to logical volumes
     G4LogicalVolume* lab_logic_;

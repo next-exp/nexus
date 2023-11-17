@@ -24,7 +24,7 @@ namespace nexus {
   {
   public:
     /// Constructor
-    Next100Ics();
+    Next100Ics(G4double ics_ep_lip_width);
 
     /// Destructor
     ~Next100Ics();
@@ -48,7 +48,8 @@ namespace nexus {
 
     // Dimensions
     G4double gate_tp_distance_, gate_sapphire_wdw_dist_;
-    G4double in_rad_, thickness_;
+    const G4double in_rad_, thickness_;
+    const G4double ics_ep_lip_width_;
     G4double port_z_1a_, port_z_2a_, port_z_1b_, port_z_2b_;
 
     // Visibility of the shielding
