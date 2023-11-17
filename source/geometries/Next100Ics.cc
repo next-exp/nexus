@@ -56,6 +56,10 @@ namespace nexus {
 
   void Next100Ics::Construct()
   {
+    // This visualization of this geometry takes a long time, because of
+    // the subtraction of volumes. If needed, the user can comment by hand
+    // one of the two subtractions and visualize the other.
+
     // (Full length of copper bars) - (copper simulated in TP_COPPER_PLATE)
     G4double length = 1468. * mm;
     // Defined for G4UnionSolids to ensure a common volume within the two
