@@ -55,8 +55,6 @@ namespace nexus {
 
   void Next100InnerElements::Construct()
   {
-    // Position in Z of the beginning of the drift region
-    //G4double gate_zpos = GetELzCoord();
     G4ThreeVector coord_origin = GetCoordOrigin();
     // Reading mother material
     gas_ = mother_logic_->GetMaterial();

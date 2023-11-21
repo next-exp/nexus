@@ -128,7 +128,7 @@ namespace nexus {
                 "Unknown kind of gas, valid options are: naturalXe, enrichedXe, depletedXe.");
   }
 
-  G4double gas_size = lab_size - 1.*cm;
+  G4double gas_size = lab_size - 10.*cm;
   G4Box* gas_solid = new G4Box("GAS", gas_size/2., gas_size/2., gas_size/2.);
   G4LogicalVolume* gas_logic = new G4LogicalVolume(gas_solid, gas_mat, "GAS");
 
