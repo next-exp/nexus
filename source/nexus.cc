@@ -24,7 +24,8 @@ void PrintUsage()
   G4cerr  << "Available options:" << G4endl;
   G4cerr  << "   -b, --batch           : Run in batch mode (default)\n"
           << "   -i, --interactive     : Run in interactive mode\n"
-          << "   -n, --nevents         : Number of events to simulate"
+          << "   -n, --nevents         : Number of events to simulate\n"
+          << "   -p, --precision       : Number of significant figures in verbosity"
           << G4endl;
   exit(EXIT_FAILURE);
 }
@@ -41,7 +42,7 @@ G4int main(int argc, char** argv)
 
   G4bool batch = true;
   G4int nevents = 0;
-  G4int precision = 0;
+  G4int precision = -1;
 
   static struct option long_options[] =
   {
