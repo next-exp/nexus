@@ -11,6 +11,7 @@
 #include <G4UImanager.hh>
 #include <G4UIExecutive.hh>
 #include <G4VisExecutive.hh>
+#include <G4SteppingVerbose.hh>
 
 #include <getopt.h>
 
@@ -23,7 +24,8 @@ void PrintUsage()
   G4cerr  << "Available options:" << G4endl;
   G4cerr  << "   -b, --batch           : Run in batch mode (default)\n"
           << "   -i, --interactive     : Run in interactive mode\n"
-          << "   -n, --nevents         : Number of events to simulate"
+          << "   -n, --nevents         : Number of events to simulate\n"
+          << "   -p, --precision       : Number of significant figures in verbosity"
           << G4endl;
   exit(EXIT_FAILURE);
 }
@@ -40,12 +42,14 @@ G4int main(int argc, char** argv)
 
   G4bool batch = true;
   G4int nevents = 0;
+  G4int precision = -1;
 
   static struct option long_options[] =
   {
     {"batch",       no_argument,       0, 'b'},
     {"interactive", no_argument,       0, 'i'},
-    {"nevents",       required_argument, 0, 'n'},
+    {"precision",   required_argument, 0, 'p'},
+    {"nevents",     required_argument, 0, 'n'},
     {0, 0, 0, 0}
   };
 
@@ -55,7 +59,7 @@ G4int main(int argc, char** argv)
 
     //  int option_index = 0;
     opterr = 0;
-    c = getopt_long(argc, argv, "bin:", long_options, 0);
+    c = getopt_long(argc, argv, "bip:n:", long_options, 0);
 
     if (c==-1) break; // Exit if we are done reading options
 
@@ -67,6 +71,10 @@ G4int main(int argc, char** argv)
 
       case 'i':
         batch = false;
+        break;
+
+      case 'p':
+        precision = atoi(optarg);
         break;
 
       case 'n':
@@ -96,6 +104,8 @@ G4int main(int argc, char** argv)
   if (macro_filename == "") PrintUsage();
 
   ////////////////////////////////////////////////////////////////////
+
+  G4SteppingVerbose::UseBestUnit(precision);
 
   NexusApp* app = new NexusApp(macro_filename);
   app->Initialize();
