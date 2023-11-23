@@ -263,7 +263,6 @@ std::pair<G4int, G4int> MakeXeDensityDataTable(std::vector<std::vector<G4double>
   getline(inFile, thisline); // don't use first line
   G4int npressures = 0;
   G4int ntemps = 0;
-  G4int count = 0;
   G4double thistemp = 0;
   G4double temp, press, dens;
   char comma;
@@ -281,7 +280,6 @@ std::pair<G4int, G4int> MakeXeDensityDataTable(std::vector<std::vector<G4double>
       ntemps++;
       npressures = 1;
     }
-    count++;
   }
 
   npressures = npressures-1;
