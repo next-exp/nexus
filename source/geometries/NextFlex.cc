@@ -58,7 +58,8 @@ NextFlex::NextFlex():
                                 "Control commands of the NextFlex geometry.");
 
   // Hard-wired dimensions
-  lightTube_ICS_gap_ = 55. * mm;  // (Set as in NEXT100. To be checked)
+  // Set as in NEXT100: ICS inner rad - active diam/2. - teflon thickness
+  lightTube_ICS_gap_ = 57.65 * mm;
 
   // Parametrized dimensions
   DefineConfigurationParameters();
