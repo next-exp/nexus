@@ -18,7 +18,7 @@ using namespace nexus;
 using namespace CLHEP;
 
 namespace opticalprops {
-  /// Vacuum ///
+
   G4MaterialPropertiesTable* Vacuum()
   {
     G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
@@ -38,7 +38,6 @@ namespace opticalprops {
 
 
 
-  /// Fused Silica ///
   G4MaterialPropertiesTable* FusedSilica()
   {
     // Optical properties of Suprasil 311/312(c) synthetic fused silica.
@@ -119,9 +118,8 @@ namespace opticalprops {
 
 
 
-  /// Fake Fused Silica ///
   G4MaterialPropertiesTable* FakeFusedSilica(G4double transparency,
-                                            G4double thickness)
+                                             G4double thickness)
   {
     // Optical properties of Suprasil 311/312(c) synthetic fused silica.
     // Obtained from http://heraeus-quarzglas.com
@@ -297,7 +295,6 @@ namespace opticalprops {
 
 
 
-  /// ITO ///
   G4MaterialPropertiesTable* ITO()
   {
     // Input data: complex refraction index obtained from:
@@ -351,7 +348,6 @@ namespace opticalprops {
 
 
 
-  /// PEDOT ///
   G4MaterialPropertiesTable* PEDOT()
   {
     // Input data: complex refraction index obtained from:
@@ -405,7 +401,6 @@ namespace opticalprops {
 
 
 
-  /// Glass Epoxy ///
   G4MaterialPropertiesTable* GlassEpoxy()
   {
     // Optical properties of Optorez 1330 glass epoxy.
@@ -460,7 +455,6 @@ namespace opticalprops {
 
 
 
-  /// Sapphire ///
   G4MaterialPropertiesTable* Sapphire()
   {
     // Input data: Sellmeier equation coeficients extracted from:
@@ -516,7 +510,6 @@ namespace opticalprops {
 
 
 
-  /// Optical Coupler ///
   G4MaterialPropertiesTable* OptCoupler()
   {
     // gel NyoGel OCK-451
@@ -568,7 +561,7 @@ namespace opticalprops {
 
 
 
-  /// Gaseous Argon ///
+  /// Gaseous argon ///
   G4MaterialPropertiesTable* GAr(G4double sc_yield,
                                 G4double e_lifetime)
   {
@@ -644,7 +637,7 @@ namespace opticalprops {
 
 
 
-  /// Gaseous Xenon ///
+  /// Gaseous xenon ///
   G4MaterialPropertiesTable* GXe(G4double pressure,
                                 G4double temperature,
                                 G4int    sc_yield,
@@ -706,6 +699,9 @@ namespace opticalprops {
     return mpt;
   }
 
+
+
+  /// Liquid xenon ///
   G4MaterialPropertiesTable* LXe()
   {
     /// The time constants are taken from E. Hogenbirk et al 2018 JINST 13 P10031
@@ -770,7 +766,6 @@ namespace opticalprops {
 
 
 
-  /// Fake Grid ///
   G4MaterialPropertiesTable* FakeGrid(G4double pressure,
                                       G4double temperature,
                                       G4double transparency,
@@ -852,7 +847,8 @@ namespace opticalprops {
     return mpt;
   }
 
-  /// PolishedAl ///
+
+
   G4MaterialPropertiesTable* PolishedAl()
   {
     G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
@@ -912,6 +908,8 @@ namespace opticalprops {
 
     return mpt;
   }
+
+
 
   /// TPB (tetraphenyl butadiene) ///
   G4MaterialPropertiesTable* TPB()
@@ -1040,10 +1038,9 @@ namespace opticalprops {
 
 
 
-  /// Degraded TPB ///
   G4MaterialPropertiesTable* DegradedTPB(G4double wls_eff)
   {
-    // It has all the same properties of TPB except the WaveLengthShifting robability
+    // It has all the same properties of TPB except the WaveLengthShifting probability
     // that is set by parameter, trying to model a degraded behaviour of the TPB coating
 
     G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
@@ -1060,6 +1057,7 @@ namespace opticalprops {
 
     return mpt;
   }
+
 
 
   /// TPH (p-terphenyl) ///
@@ -1154,7 +1152,6 @@ namespace opticalprops {
 
 
 
-  /// EJ-280 ///
   G4MaterialPropertiesTable* EJ280()
   {
     // https://eljentechnology.com/products/wavelength-shifting-plastics/ej-280-ej-282-ej-284-ej-286
@@ -1279,7 +1276,6 @@ namespace opticalprops {
 
 
 
-  /// EJ-286 ///
   G4MaterialPropertiesTable* EJ286()
   {
     // https://eljentechnology.com/products/wavelength-shifting-plastics/ej-280-ej-282-ej-284-ej-286
@@ -1404,7 +1400,6 @@ namespace opticalprops {
 
 
 
-  /// Y-11 ///
   G4MaterialPropertiesTable* Y11()
   {
     // http://kuraraypsf.jp/psf/index.html
@@ -1491,7 +1486,7 @@ namespace opticalprops {
   }
 
 
-/// B-2 ///
+
   G4MaterialPropertiesTable* B2()
   {
     // http://kuraraypsf.jp/psf/index.html
@@ -1600,7 +1595,6 @@ namespace opticalprops {
 
 
 
-  /// Pethylene ///
   G4MaterialPropertiesTable* Pethylene()
   {
     // Fiber cladding material.
@@ -1622,7 +1616,6 @@ namespace opticalprops {
 
 
 
-  /// FPethylene ///
   G4MaterialPropertiesTable* FPethylene()
   {
     // Fiber cladding material.
@@ -1676,7 +1669,7 @@ namespace opticalprops {
 
 
 
-  /// XXX ///
+  /// Generic material, to be modifed by the user ///
   G4MaterialPropertiesTable* XXX()
   {
     // Playing material properties
