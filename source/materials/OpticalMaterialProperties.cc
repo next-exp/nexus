@@ -225,9 +225,10 @@ namespace opticalprops {
       hc_ / (554.84 * nm),  hc_ / (541.0 * nm),   hc_ / (519.1 * nm),
       hc_ / (509.87 * nm),  hc_ / (499.49 * nm),  hc_ / (490.27 * nm),
       hc_ / (481.04 * nm),  hc_ / (470.67 * nm),  hc_ / (456.83 * nm),
-      hc_ / (451.06 * nm),  hc_ / (442.99 * nm),   hc_ / (434.92 * nm),
-      hc_ / (426.85 * nm),  hc_ / (417.63 * nm), hc_ / (401.48 * nm),
-      hc_ / (395.95 * nm), optPhotMaxE_
+      hc_ / (451.06 * nm),  hc_ / (442.99 * nm),  hc_ / (434.92 * nm),
+      hc_ / (426.85 * nm),  hc_ / (417.63 * nm),  hc_ / (401.48 * nm),
+      hc_ / (395.95 * nm),
+      optPhotMaxE_
      };
 
      std::vector<G4double> rIndex = {
@@ -262,7 +263,8 @@ namespace opticalprops {
        1.563, 1.565, 1.567,
        1.568, 1.569, 1.57,
        1.572, 1.573, 1.576,
-       1.577, 1.577
+       1.577,
+       1.577
      };
 
     mpt->AddProperty("RINDEX", ri_energy, rIndex);
@@ -273,15 +275,17 @@ namespace opticalprops {
       2.132 * eV,   2.735 * eV,  2.908 * eV,  3.119 * eV,
       3.320 * eV,   3.476 * eV,  3.588 * eV,  3.749 * eV,
       3.869 * eV,   3.973 * eV,  4.120 * eV,  4.224 * eV,
-      4.320 * eV,   4.420 * eV,  5.018 * eV
+      4.320 * eV,   4.420 * eV,  5.018 * eV,
+      optPhotMaxE_
     };
 
     std::vector<G4double> absLength = {
       noAbsLength_, noAbsLength_,
       326.00 * mm,  117.68 * mm,  85.89 * mm,  50.93 * mm,
       31.25 * mm,   17.19 * mm,  10.46 * mm,   5.26 * mm,
-        3.77 * mm,    2.69 * mm,   1.94 * mm,   1.33 * mm,
-        0.73 * mm,    0.32 * mm,   0.10 * mm
+       3.77 * mm,    2.69 * mm,   1.94 * mm,   1.33 * mm,
+       0.73 * mm,    0.32 * mm,   0.10 * mm,
+       0.10 * mm
     };
     mpt->AddProperty("ABSLENGTH", abs_energy, absLength);
 
