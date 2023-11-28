@@ -182,6 +182,10 @@ namespace opticalprops {
   G4MaterialPropertiesTable* Epoxy()
   {
     // This is the material used as a window for NEXT-100 SiPMs.
+
+    G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
+
+    // REFRACTIVE INDEX
     // The only information we have is that n = 1.55 at a
     // not specified wavelength. It seems that it's common to measure
     // the refractive index at the D line of sodium (590 nm),
@@ -191,10 +195,6 @@ namespace opticalprops {
     // shifting the whole graphs in y down to match 1.55 at 590 nm.
     // We fill the values outside the range of the plot withg the
     // minimum and maximum values.
-
-    G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
-
-    // REFRACTIVE INDEX
      std::vector<G4double> ri_energy = {
       optPhotMinE_,
       hc_ / (2451.63 * nm), hc_ / (2430.88 * nm), hc_ / (2405.51 * nm),
@@ -270,6 +270,9 @@ namespace opticalprops {
     mpt->AddProperty("RINDEX", ri_energy, rIndex);
 
     // ABSORPTION LENGTH
+    // We don't have information about the absorption length,
+    // therefore we use that of GlassEpoxym since it is virtually infinite
+    // for the TPB emission wavelengths.
     std::vector<G4double> abs_energy = {
       optPhotMinE_, 2.000 * eV,
       2.132 * eV,   2.735 * eV,  2.908 * eV,  3.119 * eV,
