@@ -89,6 +89,7 @@ namespace opticalprops {
   constexpr G4double optPhotMinE_ =  0.2  * eV;
   constexpr G4double optPhotMaxE_ = 11.5  * eV;
   constexpr G4double optPhotFusedSilicaMaxE_ = 10.7  * eV; // formulas for fused silica are valid up to this energy
+  constexpr G4double optPhotSapphireMaxE_ = 10.3  * eV; // formulas for sapphire are valid up to this energy
   constexpr G4double noAbsLength_ = 1.e8  * m;
 
   constexpr G4double hc_ = h_Planck * c_light;

@@ -269,7 +269,7 @@ namespace opticalprops {
 
     // ABSORPTION LENGTH
     // We don't have information about the absorption length,
-    // therefore we use that of GlassEpoxym since it is virtually infinite
+    // therefore we use that of GlassEpoxy since it is virtually infinite
     // for the TPB emission wavelengths.
     std::vector<G4double> abs_energy = {
       optPhotMinE_, 2.000 * eV,
@@ -459,7 +459,7 @@ namespace opticalprops {
   {
     // Input data: Sellmeier equation coeficients extracted from:
     // https://refractiveindex.info/?shelf=3d&book=crystals&page=sapphire
-    //C[i] coeficients at line 362 are squared.
+    // C[i] coeficients at line 362 are squared.
 
     G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
@@ -470,7 +470,7 @@ namespace opticalprops {
     SellmeierEquation seq(B, C);
 
     const G4int ri_entries = 100;
-    G4double eWidth = (optPhotMaxE_ - optPhotMinE_) / ri_entries;
+    G4double eWidth = (optPhotSapphireMaxE_ - optPhotMinE_) / ri_entries;
 
     std::vector<G4double> ri_energy;
     for (int i=0; i<ri_entries; i++) {
@@ -480,9 +480,15 @@ namespace opticalprops {
     std::vector<G4double> rIndex;
     for (int i=0; i<ri_entries; i++) {
       rIndex.push_back(seq.RefractiveIndex(hc_/ri_energy[i]));
-      //G4cout << "* Sapphire rIndex:  " << std::setw(5)
-      //       << ri_energy[i]/eV << " eV -> " << rIndex[i] << G4endl;
     }
+    // This sets the refractive index between optPhotSapphireMaxE_ and
+    // optPhotMaxE_ to the value obtained at optPhotSapphireMaxE_
+    ri_energy.push_back(optPhotMaxE_);
+    rIndex.push_back(rIndex[rIndex.size()-1]);
+    // for (unsigned int i=0; i<ri_energy.size(); i++) {
+    //   G4cout << "* Sapphire rIndex:  " << std::setw(5)
+    //          << ri_energy[i]/eV << " eV -> " << rIndex[i] << G4endl;
+    // }
     mpt->AddProperty("RINDEX", ri_energy, rIndex);
 
     // ABSORPTION LENGTH
@@ -492,7 +498,8 @@ namespace opticalprops {
       2.585 * eV,   3.088 * eV,  3.709 * eV,  4.385 * eV,
       4.972 * eV,   5.608 * eV,  6.066 * eV,  6.426 * eV,
       6.806 * eV,   7.135 * eV,  7.401 * eV,  7.637 * eV,
-      7.880 * eV,   8.217 * eV
+      7.880 * eV,   8.217 * eV,
+      optPhotMaxE_
     };
 
     std::vector<G4double> absLength = {
@@ -501,7 +508,8 @@ namespace opticalprops {
       3455.0  * mm,  3140.98 * mm,  2283.30 * mm,  1742.11 * mm,
       437.06 * mm,   219.24 * mm,  117.773 * mm,   80.560 * mm,
       48.071 * mm,   28.805 * mm,   17.880 * mm,   11.567 * mm,
-        7.718 * mm,    4.995 * mm
+      7.718 * mm,    4.995 * mm,
+      4.995 * mm
     };
     mpt->AddProperty("ABSLENGTH", abs_energy, absLength);
 
