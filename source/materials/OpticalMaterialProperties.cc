@@ -256,11 +256,11 @@ namespace opticalprops {
 
     std::vector<G4double> energies = {
       optPhotMinE_,
-      hc_ / (1000. * nm),  hc_ / (800. * nm),   hc_ / ( 700. * nm),
-      hc_ / (600. * nm),   hc_ / ( 580. * nm),  hc_ / (560. * nm),
-      hc_ / ( 540. * nm),  hc_ / (520. * nm),   hc_ / ( 500. * nm),
-      hc_ / (480. * nm),   hc_ / ( 460. * nm),  hc_ / (440. * nm),
-      hc_ / ( 420. * nm),  hc_ / (400. * nm),
+      hc_ / (1000. * nm), hc_ / (800. * nm), hc_ / (700. * nm),
+      hc_ / ( 600. * nm), hc_ / (580. * nm), hc_ / (560. * nm),
+      hc_ / ( 540. * nm), hc_ / (520. * nm), hc_ / (500. * nm),
+      hc_ / ( 480. * nm), hc_ / (460. * nm), hc_ / (440. * nm),
+      hc_ / ( 420. * nm), hc_ / (400. * nm),
       optPhotMaxE_ };
 
     std::vector<G4double> rIndex = {
@@ -276,14 +276,14 @@ namespace opticalprops {
     // ABSORPTION LENGTH
     std::vector<G4double> abs_length = {
       (1000. * nm) / (4*pi * 0.0103),
-      (1000. * nm) / (4*pi * 0.0103),  (800. * nm) / (4*pi * 0.0049),
-      ( 700. * nm) / (4*pi * 0.0033),  (600. * nm) / (4*pi * 0.0023),
-      ( 580. * nm) / (4*pi * 0.0022),  (560. * nm) / (4*pi * 0.0022),
-      ( 540. * nm) / (4*pi * 0.0022),  (520. * nm) / (4*pi * 0.0023),
-      ( 500. * nm) / (4*pi * 0.0026),  (480. * nm) / (4*pi * 0.0031),
-      ( 460. * nm) / (4*pi * 0.0039),  (440. * nm) / (4*pi * 0.0053),
-      ( 420. * nm) / (4*pi * 0.0080),  (400. * nm) / (4*pi * 0.0125),
-      (400. * nm) / (4*pi * 0.0125) };
+      (1000. * nm) / (4*pi * 0.0103), (800. * nm) / (4*pi * 0.0049),
+      ( 700. * nm) / (4*pi * 0.0033), (600. * nm) / (4*pi * 0.0023),
+      ( 580. * nm) / (4*pi * 0.0022), (560. * nm) / (4*pi * 0.0022),
+      ( 540. * nm) / (4*pi * 0.0022), (520. * nm) / (4*pi * 0.0023),
+      ( 500. * nm) / (4*pi * 0.0026), (480. * nm) / (4*pi * 0.0031),
+      ( 460. * nm) / (4*pi * 0.0039), (440. * nm) / (4*pi * 0.0053),
+      ( 420. * nm) / (4*pi * 0.0080), (400. * nm) / (4*pi * 0.0125),
+      ( 400. * nm) / (4*pi * 0.0125) };
     mpt->AddProperty("ABSLENGTH", energies, abs_length);
 
     //G4cout << "*** ITO properties ...  " << G4endl;
