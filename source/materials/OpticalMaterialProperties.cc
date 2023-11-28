@@ -179,6 +179,146 @@ namespace opticalprops {
   }
 
 
+  G4MaterialPropertiesTable* Epoxy()
+  {
+    // This is the material used as a window for NEXT-100 SiPMs.
+    // The only information we have is that n = 1.55 at a
+    // not specified wavelength. It seems that it's common to measure
+    // the refractive index at the D line of sodium (590 nm),
+    // therefore we assume that.
+    // The dependence of n on the wavelength is taken from
+    // https://www.epotek.com/docs/en/Related/Tech%20Tip%2018%20Understanding%20Optical%20Properties%20of%20Epoxy%20Applications.pdf,
+    // shifting the whole graphs in y down to match 1.55 at 590 nm.
+    // We fill the values outside the range of the plot withg the
+    // minimum and maximum values.
+
+    G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
+
+    // REFRACTIVE INDEX
+     std::vector<G4double> ri_energy = {
+      optPhotMinE_,
+      hc / (2451.63 * nm), hc / (2430.88 * nm),
+      hc / (2405.51 * nm), hc / (2380.14 * nm),
+      hc / (2354.77 * nm), hc / (2329.41 * nm),
+      hc / (2304.04 * nm), hc / (2278.67 * nm),
+      hc / (2253.3 * nm), hc / (2227.94 * nm),
+      hc / (2202.57 * nm), hc / (2177.2 * nm),
+      hc / (2151.83 * nm), hc / (2126.47 * nm),
+      hc / (2101.1 * nm), hc / (2075.73 * nm),
+      hc / (2050.36 * nm), hc / (2025.0 * nm),
+      hc / (1968.5 * nm), hc / (1951.2 * nm),
+      hc / (1925.83 * nm), hc / (1900.47 * nm),
+      hc / (1875.1 * nm), hc / (1849.73 * nm),
+      hc / (1824.36 * nm), hc / (1799.0 * nm),
+      hc / (1773.63 * nm), hc / (1747.6 * nm),
+      hc / (1722.89 * nm), hc / (1697.53 * nm),
+      hc / (1672.16 * nm), hc / (1646.79 * nm),
+      hc / (1621.42 * nm), hc / (1596.06 * nm),
+      hc / (1570.69 * nm), hc / (1545.32 * nm),
+      hc / (1519.95 * nm), hc / (1494.59 * nm),
+      hc / (1469.22 * nm), hc / (1443.85 * nm),
+      hc / (1418.49 * nm), hc / (1393.12 * nm),
+      hc / (1367.75 * nm), hc / (1342.38 * nm),
+      hc / (1317.02 * nm), hc / (1291.65 * nm),
+      hc / (1266.28 * nm), hc / (1240.91 * nm),
+      hc / (1215.55 * nm), hc / (1190.18 * nm),
+      hc / (1164.81 * nm), hc / (1139.44 * nm),
+      hc / (1114.08 * nm), hc / (1088.71 * nm),
+      hc / (1063.34 * nm), hc / (1037.97 * nm),
+      hc / (1012.61 * nm), hc / (987.24 * nm),
+      hc / (961.87 * nm), hc / (936.5 * nm),
+      hc / (911.14 * nm), hc / (885.77 * nm),
+      hc / (860.4 * nm), hc / (835.03 * nm),
+      hc / (809.67 * nm), hc / (784.3 * nm),
+      hc / (758.93 * nm), hc / (733.57 * nm),
+      hc / (708.2 * nm), hc / (682.83 * nm),
+      hc / (657.46 * nm), hc / (624.02 * nm),
+      hc / (606.73 * nm), hc / (587.13 * nm),
+      hc / (569.83 * nm), hc / (554.84 * nm),
+      hc / (541.0 * nm), hc / (519.1 * nm),
+      hc / (509.87 * nm), hc / (499.49 * nm),
+      hc / (490.27 * nm), hc / (481.04 * nm),
+      hc / (470.67 * nm), hc / (456.83 * nm),
+      hc / (451.06 * nm), hc / (442.99 * nm),
+      hc / (434.92 * nm), hc / (426.85 * nm),
+      hc / (417.63 * nm), hc / (401.48 * nm),
+      hc / (395.95 * nm), optPhotMaxE_
+     };
+
+     std::vector<G4double> rIndex = {
+       1.524,
+       1.524, 1.525,
+       1.525, 1.525,
+       1.525, 1.526,
+       1.526, 1.526,
+       1.526, 1.526,
+       1.527, 1.527,
+       1.527, 1.527,
+       1.527, 1.528,
+       1.528, 1.528,
+       1.528, 1.528,
+       1.528, 1.529,
+       1.529, 1.529,
+       1.529, 1.529,
+       1.53, 1.53,
+       1.53, 1.53,
+       1.531, 1.531,
+       1.531, 1.531,
+       1.532, 1.532,
+       1.532, 1.532,
+       1.533, 1.533,
+       1.533, 1.533,
+       1.534, 1.534,
+       1.534, 1.534,
+       1.535, 1.535,
+       1.535, 1.535,
+       1.536, 1.536,
+       1.536, 1.536,
+       1.536, 1.537,
+       1.537, 1.537,
+       1.538, 1.538,
+       1.539, 1.539,
+       1.54, 1.54,
+       1.541, 1.542,
+       1.543, 1.544,
+       1.545, 1.546,
+       1.547, 1.549,
+       1.55, 1.551,
+       1.552, 1.554,
+       1.555, 1.558,
+       1.559, 1.56,
+       1.562, 1.563,
+       1.565, 1.567,
+       1.568, 1.569,
+       1.57, 1.572,
+       1.573, 1.576,
+       1.577, 1.577
+     };
+
+    mpt->AddProperty("RINDEX", ri_energy, rIndex);
+
+    // ABSORPTION LENGTH
+    std::vector<G4double> abs_energy = {
+      optPhotMinE_, 2.000 * eV,
+      2.132 * eV,   2.735 * eV,  2.908 * eV,  3.119 * eV,
+      3.320 * eV,   3.476 * eV,  3.588 * eV,  3.749 * eV,
+      3.869 * eV,   3.973 * eV,  4.120 * eV,  4.224 * eV,
+      4.320 * eV,   4.420 * eV,  5.018 * eV
+    };
+
+    std::vector<G4double> absLength = {
+      noAbsLength_, noAbsLength_,
+      326.00 * mm,  117.68 * mm,  85.89 * mm,  50.93 * mm,
+      31.25 * mm,   17.19 * mm,  10.46 * mm,   5.26 * mm,
+        3.77 * mm,    2.69 * mm,   1.94 * mm,   1.33 * mm,
+        0.73 * mm,    0.32 * mm,   0.10 * mm
+    };
+    mpt->AddProperty("ABSLENGTH", abs_energy, absLength);
+
+    return mpt;
+  }
+
+
 
   /// ITO ///
   G4MaterialPropertiesTable* ITO()
