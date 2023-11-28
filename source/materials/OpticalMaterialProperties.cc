@@ -48,6 +48,12 @@ namespace opticalprops {
     // REFRACTIVE INDEX
     // The range is chosen to be up to ~10.7 eV because Sellmeier's equation
     // for fused silica is valid only in that range
+    G4double um2 = micrometer*micrometer;
+    G4double B[3] = {4.73e-1, 6.31e-1, 9.06e-1};
+    G4double C[3] = {1.30e-2 * um2, 4.13e-3 * um2, 9.88e+1 * um2};
+    SellmeierEquation seq(B, C);
+
+
     const G4int ri_entries = 200;
     G4double eWidth = (optPhotFusedSilicaMaxE_ - optPhotMinE_) / ri_entries;
 
@@ -56,34 +62,17 @@ namespace opticalprops {
       ri_energy.push_back(optPhotMinE_ + i * eWidth);
     }
 
-    // The following values for the refractive index have been calculated
-    // using Sellmeier's equation:
-    //    n^2 - 1 = B_1 * \lambda^2 / (\lambda^2 - C_1) +
-    //            + B_2 * \lambda^2 / (\lambda^2 - C_2) +
-    //            + B_3 * \lambda^2 / (\lambda^2 - C_3),
-    // with wavelength \lambda in micrometers and
-    //    B_1 = 4.73E-1, B_2 = 6.31E-1, B_3 = 9.06E-1
-    //    C_1 = 1.30E-2, C_2 = 4.13E-3, C_3 = 9.88E+1.
-
-    G4double B_1 = 4.73e-1;
-    G4double B_2 = 6.31e-1;
-    G4double B_3 = 9.06e-1;
-    G4double C_1 = 1.30e-2;
-    G4double C_2 = 4.13e-3;
-    G4double C_3 = 9.88e+1;
-
     std::vector<G4double> rIndex;
     for (int i=0; i<ri_entries; i++) {
-      G4double lambda = hc_/ri_energy[i]*1000; // in micron
-      G4double n2 = 1 + B_1*pow(lambda,2)/(pow(lambda,2)-C_1)
-        + B_2*pow(lambda,2)/(pow(lambda,2)-C_2)
-        + B_3*pow(lambda,2)/(pow(lambda,2)-C_3);
-      rIndex.push_back(sqrt(n2));
-      // G4cout << "* FusedSilica rIndex:  " << std::setw(5) << ri_energy[i]/eV
-      //       << " eV -> " << rIndex[i] << G4endl;
+      rIndex.push_back(seq.RefractiveIndex(hc_/ri_energy[i]));
     }
     ri_energy.push_back(optPhotMaxE_);          // This sets the refractive index between optPhotFusedSilicaMaxE_ and
     rIndex.push_back(rIndex[rIndex.size()-1]);  // optPhotMaxE_ to the value obtained at optPhotFusedSilicaMaxE_
+
+    // for (unsigned int i=0; i<ri_energy.size(); i++) {
+    // G4cout << "* FusedSilica rIndex:  " << std::setw(5) << ri_energy[i]/eV
+    //       << " eV -> " << rIndex[i] << G4endl;
+    // }
     mpt->AddProperty("RINDEX", ri_energy, rIndex);
 
     // ABSORPTION LENGTH
