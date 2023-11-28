@@ -91,9 +91,7 @@ namespace opticalprops {
   constexpr G4double optPhotFusedSilicaMaxE_ = 10.7  * eV; // formulas for fused silica are valid up to this energy
   constexpr G4double noAbsLength_ = 1.e8  * m;
 
-  // Constant that allows to convert nm to eV:
-  // nm_to_eV_ / wavelength (nm) = energy (eV)
-  constexpr G4double nm_to_eV_ = h_Planck * c_light * 1.e6;
+  constexpr G4double hc_ = h_Planck * c_light;
 
 
 } // end namespace opticalprops
