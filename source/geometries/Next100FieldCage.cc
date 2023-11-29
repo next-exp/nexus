@@ -534,7 +534,7 @@ void Next100FieldCage::BuildELRegion()
   if (elfield_) {
     /// Define EL electric field
     UniformElectricDriftField* el_field = new UniformElectricDriftField();
-    G4double global_el_gap_zpos = el_gap_zpos_ - GetCoordOrigin()[2];
+    G4double global_el_gap_zpos = el_gap_zpos_ - GetCoordOrigin().z();
     el_field->SetCathodePosition(global_el_gap_zpos + el_gap_length_/2. + grid_thickn_);
     el_field->SetAnodePosition  (global_el_gap_zpos - el_gap_length_/2. - grid_thickn_);
     el_field->SetDriftVelocity(2.5 * mm/microsecond);
@@ -793,10 +793,10 @@ void Next100FieldCage::BuildFieldCage()
   }
 
   // Ring vertex generator
-  G4double ring_gen_lenght = first_ring_buff_z_pos + ring_thickn_/2. - (posz - ring_thickn_/2.);
-  G4double ring_gen_zpos = first_ring_buff_z_pos + ring_thickn_/2. - ring_gen_lenght/2.;
+  G4double ring_gen_length = first_ring_buff_z_pos + ring_thickn_/2. - (posz - ring_thickn_/2.);
+  G4double ring_gen_zpos = first_ring_buff_z_pos + ring_thickn_/2. - ring_gen_length/2.;
   ring_gen_ =
-    new CylinderPointSampler2020(ring_int_diam_/2., ring_ext_diam_/2., ring_gen_lenght/2.,
+    new CylinderPointSampler2020(ring_int_diam_/2., ring_ext_diam_/2., ring_gen_length/2.,
                                  0., twopi, nullptr,
                                  G4ThreeVector(GetCoordOrigin().x(),
                                                GetCoordOrigin().y(), ring_gen_zpos));

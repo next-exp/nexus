@@ -207,7 +207,7 @@ namespace nexus {
     G4double stand_out_length =
       sapphire_window_thickn_ + tpb_thickn_ + optical_pad_thickn_ + pmt_stand_out_;
 
-    copper_plate_posz_ = GetCoordOrigin()[2]
+    copper_plate_posz_ = GetCoordOrigin().z()
       + gate_sapphire_wdw_dist_ + stand_out_length + copper_plate_thickn_/2.;
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., copper_plate_posz_), copper_plate_logic,
