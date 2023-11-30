@@ -599,5 +599,29 @@ namespace nexus {
     return vertex;
   }
 
+  G4ThreeVector NextNew::ProjectToRegion(const G4String& region,
+					 const G4ThreeVector& point,
+					 const G4ThreeVector& dir) const
+  {
+    // Project along dir from point to find the first intersection
+    // with region.
+    G4ThreeVector vertex(0., 0., 0.);
+    if (region == "EXTERNAL"){
+      return shielding_->ProjectToRegion(region, point, dir);
+    }
+    else if ((region == "HALLA_OUTER") || (region == "HALLA_INNER")){
+      if (!lab_walls_)
+	G4Exception("[NextNew]", "ProjectToRegion()", FatalException,
+                    "To project to this region you need lab_walls == true!");
+      return hallA_walls_->ProjectToRegion(region, point, dir);
+    }
+    else {
+      G4Exception("[NextNew]", "ProjectToRegion()", FatalException,
+		  "Unknown vertex generation region!");
+    }
+
+    return vertex + displ_;
+  }
+
 
 } //end namespace nexus

@@ -41,11 +41,16 @@ namespace nexus {
     // Returns vertex within region <region> of the chamber
     G4ThreeVector GenerateVertex(const G4String& region);
 
+    /// Return the intersect point along dir
+    G4ThreeVector GetIntersect(const G4ThreeVector& point,
+    			       const G4ThreeVector& dir);
+
   private:
     G4double      GetRadius(G4double innerRad, G4double outerRad);
     G4double      GetPhi();
     G4double      GetLength(G4double halfLength);
     G4ThreeVector RotateAndTranslate(G4ThreeVector position);
+    void InvertRotationAndTranslation(G4ThreeVector& vec, bool translate=true);
 
   private:
     G4double          minRad_, maxRad_, halfLength_;  // Solid Dimensions

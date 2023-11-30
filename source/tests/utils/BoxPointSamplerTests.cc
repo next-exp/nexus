@@ -50,3 +50,60 @@ TEST_CASE("BoxPointSampler") {
   }
 
 }
+
+
+TEST_CASE("Expected intersect") {
+  // This test checks that the GetIntersect method
+  // of BoxPointSampler produces the expected
+  // intersect points for the simple cases of
+  // a central point with directions parallel to
+  // the faces of the box.
+  auto inner_dim = 100;
+  auto thickness =  10;
+  auto sampler   = nexus::BoxPointSampler(inner_dim, inner_dim, inner_dim, thickness);
+  auto origin    = G4ThreeVector(0., 0., 0.);
+
+  G4double xdir[] = {1., 0., 0., -1., 0., 0.};
+  G4double ydir[] = {0., 1., 0., 0., -1., 0.};
+  G4double zdir[] = {0., 0., 1., 0., 0., -1.};
+  for (G4int i=0; i<6; ++i){
+    auto dir = G4ThreeVector(xdir[i], ydir[i], zdir[i]);
+    auto intersect = sampler.GetIntersect(origin, dir);
+    
+    REQUIRE(intersect.x() == Approx(inner_dim * dir.x()));
+    REQUIRE(intersect.y() == Approx(inner_dim * dir.y()));
+    REQUIRE(intersect.z() == Approx(inner_dim * dir.z()));
+  }
+
+}
+
+TEST_CASE("Box Arbitrary valid intersect") {
+  // This test checks that for a sampler of arbitrary
+  // position and arbitrary rotation a valid intersect
+  // point is found for a randomly generated ray.
+  auto inner_dim  = 100;
+  auto thickness  =  10;
+
+  auto origin  = G4ThreeVector(inner_dim * G4UniformRand(),
+			       inner_dim * G4UniformRand(),
+			       inner_dim * G4UniformRand());
+  auto rotation = new G4RotationMatrix();
+  rotation->rotateX(CLHEP::twopi * G4UniformRand());
+  rotation->rotateY(CLHEP::twopi * G4UniformRand());
+  rotation->rotateZ(CLHEP::twopi * G4UniformRand());
+  
+  auto sampler = nexus::BoxPointSampler(inner_dim, inner_dim, inner_dim,
+					thickness, origin, rotation);
+  
+  auto point = sampler.GenerateVertex("INSIDE");
+  auto dir   = G4ThreeVector(G4UniformRand(),
+			     G4UniformRand(),
+			     G4UniformRand()).unit();
+  
+  auto intersect = sampler.GetIntersect(point, dir);
+  
+  // Check that the new ray passes through the original point.
+  auto origin_point = point - intersect;
+  REQUIRE(std::abs(origin_point.dot(dir)) == Approx(origin_point.mag()));
+
+}

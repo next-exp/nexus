@@ -34,7 +34,8 @@ REGISTER_CLASS(MuonGenerator, G4VPrimaryGenerator)
 MuonGenerator::MuonGenerator():
   G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
   use_lsc_dist_(true), axis_rotation_(150), rPhi_(NULL), user_dir_{}, energy_min_(0.),
-  energy_max_(0.), dist_name_("za"), bInitialize_(false), geom_(0), geom_solid_(0)
+  energy_max_(0.), dist_name_("za"), bInitialize_(false), geom_(0), geom_solid_(0),
+  gen_rad_(223.33*cm)
 {
   msg_ = new G4GenericMessenger(this, "/Generator/MuonGenerator/",
 				"Control commands of muongenerator.");
@@ -71,7 +72,15 @@ MuonGenerator::MuonGenerator():
   rotation.SetParameterName("azimuth", false);
   rotation.SetRange("azimuth>0.");
 
-  DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
+  // defaults to length of the NEXT100 shielding diagonal if not present.
+  G4GenericMessenger::Command& generation_radius =
+    msg_->DeclareProperty("gen_rad", gen_rad_, "Set radius for generation disc");
+  generation_radius.SetUnitCategory("Length");
+  generation_radius.SetParameterName("gen_rad", false);
+  generation_radius.SetRange("gen_rad>0.");
+
+  DetectorConstruction* detconst =
+    (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
   geom_ = detconst->GetGeometry();
 
 }
@@ -201,7 +210,7 @@ void MuonGenerator::GeneratePrimaryVertex(G4Event* event)
   // Particle properties
   G4double mass          = particle_definition_->GetPDGMass();
   G4double energy        = kinetic_energy + mass;
-  G4ThreeVector position = geom_->GenerateVertex(region_);
+  //G4ThreeVector position = geom_->GenerateVertex(region_);
 
   // Set default momentum and angular variables
   G4ThreeVector p_dir;
@@ -211,7 +220,7 @@ void MuonGenerator::GeneratePrimaryVertex(G4Event* event)
   // Momentum, zenith, azimuth (and energy) from angular distribution file
   if (use_lsc_dist_){
     GetDirection(p_dir, zenith, azimuth, energy, kinetic_energy, mass);
-    position = geom_->GenerateVertex(region_);
+    //    position = geom_->GenerateVertex(region_);
   }
   else {
 
@@ -236,8 +245,9 @@ void MuonGenerator::GeneratePrimaryVertex(G4Event* event)
       p_dir *= *rPhi_;
 
     }
-
   }
+
+  G4ThreeVector position = ProjectToVertex(p_dir);
 
   G4double pmod   = std::sqrt(energy*energy - mass*mass);
   G4double px = pmod * p_dir.x();
@@ -324,6 +334,36 @@ void MuonGenerator::GetDirection(G4ThreeVector& dir, G4double& zenith, G4double&
 
   }
 
+}
+
+
+G4ThreeVector MuonGenerator::ProjectToVertex(const G4ThreeVector& dir)
+{
+  /////////////////////////////////////////////////////////////////////////
+  // This method of vertex generation decides the starting vertex
+  // of the primary particle in three steps:
+  // 1) A random point is generated on a disc centred on the main
+  //    volumes.
+  // 2) This disc is rotated so that it is perpendicular to the
+  //    direction vector which is the only argument of the function.
+  //    The new point is a point through which the vector passes.
+  // 3) The vertex is found by projecting backwards along the direction
+  //    vector from that point to find the point where the ray
+  //    (point - t*dir) intersects with the region configured as the
+  //    starting point for all vertices.
+  /////////////////////////////////////////////////////////////////////////
+  // Postion in disc
+  G4double radius = gen_rad_ * std::sqrt(G4UniformRand());
+  G4double ang = 2 * G4UniformRand() * pi;
+
+  // Continue assuming that Y is vertical and z drift,
+  // valid for NEW and NEXT-100 (at least).
+  // Rotate the disc (origin-point vector) to be perpendicular to dir.
+  G4ThreeVector point(radius * std::cos(ang), 0., radius * std::sin(ang));
+  point.rotate(pi / 2 - dir.angle(point), dir.cross(point));
+
+  // Now project back to the requested region intersection.
+  return geom_->ProjectToRegion(region_, point, -dir);
 }
 
 

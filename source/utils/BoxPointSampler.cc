@@ -206,4 +206,44 @@ namespace nexus {
     return real_pos;
   }
 
+  void BoxPointSampler::InvertRotationAndTranslation(G4ThreeVector& vec,
+						     bool translate)
+  {
+    if (translate)
+      vec -= origin_;
+    if (rotation_)
+      vec.rotate(-rotation_->delta(), rotation_->axis());
+  }
+
+  G4ThreeVector BoxPointSampler::GetIntersect(const G4ThreeVector& point,
+					      const G4ThreeVector& dir)
+  {
+    // The point and direction should be in the lab frame.
+    // Need to rotate into the Sampler frame to get the intersection
+    // then rotate back into lab frame.
+    G4ThreeVector local_point = point;
+    InvertRotationAndTranslation(local_point);
+    G4ThreeVector local_dir = dir;
+    InvertRotationAndTranslation(local_dir, false);
+
+    // Get the +ve movements to intersect with the faces of the box.
+    G4double tx = (-inner_x_ - local_point.x())  / local_dir.x();
+    if (tx < 0) tx = (inner_x_ - local_point.x()) / local_dir.x();
+
+    G4double ty = (-inner_y_ - local_point.y()) / local_dir.y();
+    if (ty < 0) ty = (inner_y_ - local_point.y()) / local_dir.y();
+
+    G4double tz = (-inner_z_ - local_point.z()) / local_dir.z();
+    if (tz < 0) tz = (inner_z_ - local_point.z()) / local_dir.z();
+
+    // Protect against outside the region.
+    if (tx < 0 || ty < 0 || tz < 0)
+      G4Exception("[BoxPointSampler]", "GetIntersect()", FatalException,
+		  "Point outside region, projection fail!");
+    // The minimum of the tx, ty, tz gives the intersection point.
+    G4double tmin = std::min({tx, ty, tz});
+
+    return RotateAndTranslate(local_point + tmin * local_dir);
+  }
+
 } // end namespace nexus

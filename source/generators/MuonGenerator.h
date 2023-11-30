@@ -51,6 +51,8 @@ namespace nexus {
     void GetDirection(G4ThreeVector& dir, G4double& zenith, G4double& azimuth,
                       G4double& energy, G4double& kinetic_energy, G4double mass);
 
+    G4ThreeVector ProjectToVertex(const G4ThreeVector& dir);
+
     G4bool CheckOverlap(const G4ThreeVector& vtx, const G4ThreeVector& dir);
 
     /// Load in the Muon Angular/Energy Distribution from CSV file
@@ -94,6 +96,8 @@ namespace nexus {
     std::vector<G4double> zenith_smear_;  ///< List of Zenith bin smear values
     std::vector<G4double> energy_smear_;  ///< List of Energy bin smear values
     G4RandGeneral *fRandomGeneral_; ///< Pointer to the RNG flux distribution
+
+    G4double gen_rad_; ///< Radius of disc for generation
 
   };
 

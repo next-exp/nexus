@@ -119,4 +119,23 @@ namespace nexus {
     return vertex;
   }
 
+  G4ThreeVector LSCHallA::ProjectToRegion(const G4String& region,
+					  const G4ThreeVector& point,
+					  const G4ThreeVector& dir) const
+  {
+    // Project along dir from point to find the first intersection
+    // with region.
+    G4ThreeVector vertex(0., 0., 0.);
+    if (region == "HALLA_INNER")
+      return hallA_vertex_gen_->GetIntersect(point, dir);
+    else if (region == "HALLA_OUTER")
+      return hallA_outer_gen_->GetIntersect(point, dir);
+    else {
+      G4Exception("[LSCHallA]", "ProjectToRegion()", FatalException,
+		  "Unknown vertex generation region!");
+    }
+
+    return vertex;
+  }
+
 }
