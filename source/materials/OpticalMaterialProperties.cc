@@ -12,7 +12,6 @@
 
 #include <G4MaterialPropertiesTable.hh>
 
-#include <assert.h>
 
 using namespace nexus;
 using namespace CLHEP;
