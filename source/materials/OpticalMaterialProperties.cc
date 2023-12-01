@@ -598,7 +598,7 @@ namespace opticalprops {
 
   /// Gaseous xenon ///
   G4MaterialPropertiesTable* GXe(G4double pressure,
-                                G4double temperature,
+                                 G4double /*temperature*/,
                                 G4int    sc_yield,
                                 G4double e_lifetime)
   {
