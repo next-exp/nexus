@@ -141,7 +141,7 @@ namespace opticalprops {
     // The dependence of n on the wavelength is taken from
     // https://www.epotek.com/docs/en/Related/Tech%20Tip%2018%20Understanding%20Optical%20Properties%20of%20Epoxy%20Applications.pdf,
     // shifting the whole graphs in y down to match 1.55 at 590 nm.
-    // We fill the values outside the range of the plot withg the
+    // We fill the values outside the range of the plot with the
     // minimum and maximum values.
      std::vector<G4double> ri_energy = {
       optPhotMinE_,
