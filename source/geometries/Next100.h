@@ -86,6 +86,9 @@ namespace nexus {
 
     /// Whether or not to build LSC HallA.
     G4bool lab_walls_;
+
+    /// Whether or not to print SiPM positions
+    G4bool print_;
   };
 
 } // end namespace nexus

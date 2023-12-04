@@ -45,6 +45,9 @@ namespace nexus {
     /// Return the relative position respect to the rest of NEXT100 geometry
     G4ThreeVector GetPosition() const;
 
+    /// Return the positions of the SiPMs in their mother volume (gas)
+    std::vector<G4ThreeVector> GetSiPMPosInGas() const;
+
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
@@ -73,6 +76,9 @@ namespace nexus {
     // Messenger for the definition of control commands
     G4GenericMessenger* msg_;
 
+    // Positions of the SiPMs in their mother volume (gas)
+    std::vector<G4ThreeVector> sipm_pos_;
+
   };
 
   inline void Next100InnerElements::SetELtoTPdistance(G4double distance){
@@ -81,6 +87,11 @@ namespace nexus {
 
   inline void Next100InnerElements::SetELtoSapphireWDWdistance(G4double distance){
     gate_sapphire_wdw_distance_ = distance;
+  }
+
+  inline std::vector<G4ThreeVector> Next100InnerElements::GetSiPMPosInGas() const
+  {
+    return sipm_pos_;
   }
 
 } // end namespace nexus

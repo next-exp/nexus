@@ -186,7 +186,7 @@ void Next100TrackingPlane::PlaceSiPMBoardColumns(G4int num_boards,
 }
 
 
-void Next100TrackingPlane::PrintSiPMPositions() const
+void Next100TrackingPlane::PrintSiPMPosInGas() const
 {
   auto sipm_positions = sipm_board_geom_->GetSiPMPositions();
 
@@ -198,6 +198,18 @@ void Next100TrackingPlane::PrintSiPMPositions() const
     }
   }
 }
+
+void Next100TrackingPlane::GetSiPMPosInGas(std::vector<G4ThreeVector>& sipm_pos) const
+{
+  auto sipm_positions = sipm_board_geom_->GetSiPMPositions();
+  for (unsigned int i=0; i<board_pos_.size(); ++i) {
+    for (unsigned int j=0; j<sipm_positions.size(); ++j) {
+      G4ThreeVector pos = sipm_positions[j] + board_pos_[i];
+      sipm_pos.push_back(pos);
+    }
+  }
+}
+
 
 
 G4ThreeVector Next100TrackingPlane::GenerateVertex(const G4String& region) const

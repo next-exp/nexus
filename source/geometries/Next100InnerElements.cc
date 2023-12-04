@@ -79,6 +79,8 @@ namespace nexus {
     tracking_plane_->SetCoordOrigin(coord_origin);
     tracking_plane_->SetELtoTPdistance(gate_tracking_plane_distance_);
     tracking_plane_->Construct();
+
+    tracking_plane_->GetSiPMPosInGas(sipm_pos_);
   }
 
 

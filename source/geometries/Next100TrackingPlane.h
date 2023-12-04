@@ -40,7 +40,8 @@ namespace nexus {
     //
     G4ThreeVector GenerateVertex(const G4String&) const override;
 
-    void PrintSiPMPositions() const;
+    void PrintSiPMPosInGas() const;
+    void GetSiPMPosInGas(std::vector<G4ThreeVector>& sipm_pos) const;
 
   private:
     void PlaceSiPMBoardColumns(G4int, G4double, G4double, G4int&, G4LogicalVolume*);

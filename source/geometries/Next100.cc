@@ -47,7 +47,8 @@ namespace nexus {
     fc_displ_y_ (-6.4 * mm), // displacement of the field cage volumes from 0
 
     specific_vertex_{},
-    lab_walls_(false)
+    lab_walls_(false),
+    print_(false)
   {
 
     msg_ = new G4GenericMessenger(this, "/Geometry/Next100/",
@@ -56,7 +57,9 @@ namespace nexus {
     msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
       "Set generation vertex.");
 
-    msg_->DeclareProperty("lab_walls", lab_walls_, "Placement of Hall A walls");
+    msg_->DeclareProperty("lab_walls", lab_walls_, "Placement of Hall A walls.");
+
+    msg_->DeclareProperty("print_sipms", print_, "Print SiPM positions.");
 
   // The following methods must be invoked in this particular
   // order since some of them depend on the previous ones
@@ -181,11 +184,28 @@ namespace nexus {
                         "LEAD_BOX", lab_logic_, false, 0);
     }
 
+    if (print_) {
+      std::vector<G4ThreeVector> sipm_pos = inner_elements_->GetSiPMPosInGas();
+      G4int n_sipm = 0;
+      G4int b = 1;
+      for (unsigned int i=0; i<sipm_pos.size(); i++) {
+        G4ThreeVector pos = sipm_pos[i] - coord_origin_;;
+        G4int id = 1000 * b + n_sipm;
+        G4cout << "SiPM " << id << ": " << pos.x() << ", "<< pos.y() << G4endl;
+        n_sipm++;
+        if (id % 1000 == 63) {
+          n_sipm = 0;
+          b++;
+        }
+      }
+    }
+
     //// VERTEX GENERATORS
     lab_gen_ =
       new BoxPointSampler(lab_size_ - 1.*m, lab_size_ - 1.*m,
                           lab_size_  - 1.*m, 1.*m,
                           G4ThreeVector(0., 0., 0.), 0);
+
   }
 
 
