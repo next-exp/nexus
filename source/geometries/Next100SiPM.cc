@@ -110,7 +110,7 @@ void Next100SiPM::Construct()
   G4double window_zpos   = sipm_thickn/2. - coating_thickn_ - window_thickn/2.;
 
   G4Material* optical_silicone = materials::OpticalSilicone();
-  optical_silicone->SetMaterialPropertiesTable(opticalprops::GlassEpoxy());
+  optical_silicone->SetMaterialPropertiesTable(opticalprops::Epoxy());
 
   G4Box* window_solid_vol =
     new G4Box(window_name, window_width/2., window_length/2., window_thickn/2.);
