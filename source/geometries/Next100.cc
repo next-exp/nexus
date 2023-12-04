@@ -318,7 +318,7 @@ namespace nexus {
 		  "Unknown vertex generation region!");
     }
 
-    return vertex + G4ThreeVector(0., 0., -gate_zpos_in_vessel_);
+    return vertex - coord_origin_;
   }
 
 } //end namespace nexus

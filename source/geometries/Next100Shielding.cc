@@ -645,7 +645,8 @@ namespace nexus {
           vertex = lead_gen_->GenerateVertex("WHOLE_VOL");
           G4ThreeVector glob_vtx(vertex);
           glob_vtx = glob_vtx - GetCoordOrigin();
-          VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+          VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx,
+                                                                    0, false);
         } while (VertexVolume->GetName() != "LEAD_BOX");
     }
 
@@ -655,7 +656,8 @@ namespace nexus {
         vertex = steel_gen_->GenerateVertex("WHOLE_VOL");
         G4ThreeVector glob_vtx(vertex);
         glob_vtx = glob_vtx - GetCoordOrigin();
-        VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+        VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx,
+                                                                  0, false);
       } while (VertexVolume->GetName() != "STEEL_BOX");
     }
 
@@ -665,7 +667,8 @@ namespace nexus {
         vertex = inner_air_gen_->GenerateVertex("INSIDE");
         G4ThreeVector glob_vtx(vertex);
         glob_vtx = glob_vtx - GetCoordOrigin();
-        VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+        VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx,
+                                                                  0, false);
       } while (VertexVolume->GetName() != "INNER_AIR");
     }
 
@@ -683,7 +686,7 @@ namespace nexus {
               vertex.setZ(vertex.z() +
                           (shield_z_/2.+steel_thickness_+lead_thickness_/2.));
             }
-            else{
+            else {
               vertex.setZ(vertex.z() -
                           (shield_z_/2.+steel_thickness_+lead_thickness_/2.));
             }
@@ -733,14 +736,14 @@ namespace nexus {
           if (G4UniformRand()<lat_prob){ //lateral
             G4double rand_beam = int (4 * G4UniformRand());
             vertex = lat_beam_gen_->GenerateVertex("INSIDE");
-            if (rand_beam ==1){
+            if (rand_beam == 1){
               vertex.setZ(vertex.z() - lateral_z_separation_);
             }
-            else if (rand_beam ==2){
+            else if (rand_beam == 2){
               vertex.setX(vertex.x() - (shield_x_ + 2*steel_thickness_ +
                                         lead_thickness_));
             }
-            else if (rand_beam ==3){
+            else if (rand_beam == 3){
               vertex.setX(vertex.x() - (shield_x_ + 2*steel_thickness_ +
                                         lead_thickness_));
               vertex.setZ(vertex.z() - lateral_z_separation_);
