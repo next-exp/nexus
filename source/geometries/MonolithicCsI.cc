@@ -137,7 +137,7 @@ namespace nexus
       for (G4int icol = 0; icol < n_cols; icol++)
       {
         std::string label = std::to_string(irow * n_rows + icol);
-        new G4PVPlacement(0, G4ThreeVector(irow * 6 * mm - crystal_width_ / 2 + 1.5 * mm, icol * 6 * mm - crystal_width_ / 2 + 1.5 * mm, 25. / 2 * mm + crystal_length_ + sipm_geom->GetDimensions().z() / 2), sipm_logic,
+        new G4PVPlacement(0, G4ThreeVector(irow * 6 * mm - crystal_width_ / 2 + 3 * mm, icol * 6 * mm - crystal_width_ / 2 + 3 * mm, 25. / 2 * mm + crystal_length_ + sipm_geom->GetDimensions().z() / 2), sipm_logic,
                           "SiPM66" + label, lab_logic, true, irow * n_rows + icol);
       }
     }

@@ -8,8 +8,8 @@
 
 #ifndef DETECTOR_CONSTRUCTION_H
 #define DETECTOR_CONSTRUCTION_H
-#include <memory>
 #include <G4VUserDetectorConstruction.hh>
+#include <memory>
 
 class G4GenericMessenger;
 
