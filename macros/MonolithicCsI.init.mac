@@ -1,7 +1,8 @@
 
 /control/execute macros/physics/DefaultPhysicsList.mac
 /nexus/RegisterGeometry MonolithicCsI
-/nexus/RegisterGenerator SingleParticleGenerator
+#/nexus/RegisterGenerator SingleParticleGenerator
+/nexus/RegisterGenerator ScintillationGenerator
 /nexus/RegisterPersistencyManager PersistencyManager
 
 ### ACTIONS
