@@ -107,9 +107,9 @@ namespace nexus
     teflon_logic->SetVisAttributes(nexus::WhiteAlpha());
     teflon_back_logic->SetVisAttributes(nexus::WhiteAlpha());
 
-    // G4VPhysicalVolume* teflon_full_position = new G4PVPlacement(0, G4ThreeVector(0, 0, 25./2 * mm + crystal_length_/2),
-    //                 teflon_logic, "TEFLON_RIGHT", lab_logic,
-    //                 true, 1, true);
+    G4VPhysicalVolume* teflon_full_position = new G4PVPlacement(0, G4ThreeVector(0, 0, 25./2 * mm + crystal_length_/2),
+                    teflon_logic, "TEFLON_RIGHT", lab_logic,
+                    true, 1, true);
 
     // G4VPhysicalVolume* teflon_back_position = new G4PVPlacement(0, G4ThreeVector(0, 0, 25./2 * mm - teflon_thickness_tot/2 ),
     //                   teflon_back_logic, "TEFLON_BACK", lab_logic,
@@ -121,8 +121,8 @@ namespace nexus
     ptfe_surface->SetModel(LUT);
     ptfe_surface->SetMaterialPropertiesTable(opticalprops::PTFE());
 
-    // new G4LogicalBorderSurface(
-    //   "CRYSTAL_PTFE", crystal_right, teflon_full_position, ptfe_surface);
+    new G4LogicalBorderSurface(
+      "CRYSTAL_PTFE", crystal_right, teflon_full_position, ptfe_surface);
 
     // new G4LogicalBorderSurface(
     //   "CRYSTAL_PTFE_BACK", crystal_right, teflon_back_position, ptfe_surface);
