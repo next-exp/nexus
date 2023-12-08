@@ -10,7 +10,7 @@
 #include "Visibilities.h"
 #include "OpticalMaterialProperties.h"
 #include "SiPM66NoCasing.h"
-#include "SiPM66.h"
+#include "SiPM33NoCasing.h"
 
 #include <G4Tubs.hh>
 #include <G4SubtractionSolid.hh>
@@ -107,9 +107,9 @@ namespace nexus
     teflon_logic->SetVisAttributes(nexus::WhiteAlpha());
     teflon_back_logic->SetVisAttributes(nexus::WhiteAlpha());
 
-    G4VPhysicalVolume* teflon_full_position = new G4PVPlacement(0, G4ThreeVector(0, 0, 25./2 * mm + crystal_length_/2),
-                    teflon_logic, "TEFLON_RIGHT", lab_logic,
-                    true, 1, true);
+    G4VPhysicalVolume *teflon_full_position = new G4PVPlacement(0, G4ThreeVector(0, 0, 25. / 2 * mm + crystal_length_ / 2),
+                                                                teflon_logic, "TEFLON_RIGHT", lab_logic,
+                                                                true, 1, true);
 
     // G4VPhysicalVolume* teflon_back_position = new G4PVPlacement(0, G4ThreeVector(0, 0, 25./2 * mm - teflon_thickness_tot/2 ),
     //                   teflon_back_logic, "TEFLON_BACK", lab_logic,
@@ -122,23 +122,24 @@ namespace nexus
     ptfe_surface->SetMaterialPropertiesTable(opticalprops::PTFE());
 
     new G4LogicalBorderSurface(
-      "CRYSTAL_PTFE", crystal_right, teflon_full_position, ptfe_surface);
+        "CRYSTAL_PTFE", crystal_right, teflon_full_position, ptfe_surface);
 
     // new G4LogicalBorderSurface(
     //   "CRYSTAL_PTFE_BACK", crystal_right, teflon_back_position, ptfe_surface);
 
-    SiPM66NoCasing *sipm_geom = new SiPM66NoCasing();
+    SiPM33NoCasing *sipm_geom = new SiPM33NoCasing();
+
     sipm_geom->Construct();
     G4LogicalVolume *sipm_logic = sipm_geom->GetLogicalVolume();
-    G4int n_rows = (int)crystal_width_ / 6 * mm;
-    G4int n_cols = (int)crystal_width_ / 6 * mm;
+    G4int n_rows = (int)crystal_width_ / sipm_geom->GetDimensions().x();
+    G4int n_cols = (int)crystal_width_ / sipm_geom->GetDimensions().y();
     for (G4int irow = 0; irow < n_rows; irow++)
     {
       for (G4int icol = 0; icol < n_cols; icol++)
       {
         std::string label = std::to_string(irow * n_rows + icol);
-        new G4PVPlacement(0, G4ThreeVector(irow * 6 * mm - crystal_width_ / 2 + 3 * mm, icol * 6 * mm - crystal_width_ / 2 + 3 * mm, 25. / 2 * mm + crystal_length_ + sipm_geom->GetDimensions().z() / 2), sipm_logic,
-                          "SiPM66" + label, lab_logic, true, irow * n_rows + icol);
+        new G4PVPlacement(0, G4ThreeVector(irow * sipm_geom->GetDimensions().x() - crystal_width_ / 2 + sipm_geom->GetDimensions().x() / 2, icol * sipm_geom->GetDimensions().x() - crystal_width_ / 2 + sipm_geom->GetDimensions().x() / 2, 25. / 2 * mm + crystal_length_ + sipm_geom->GetDimensions().z() / 2), sipm_logic,
+                          "SiPM" + label, lab_logic, true, irow * n_rows + icol);
       }
     }
   }
