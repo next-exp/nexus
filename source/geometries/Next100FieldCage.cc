@@ -272,6 +272,7 @@ void Next100FieldCage::DefineMaterials()
 
   /// Copper for field rings
   copper_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
+  copper_->SetMaterialPropertiesTable(opticalprops::Copper());
 
   /// Teflon for the light tube
   teflon_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
