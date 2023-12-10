@@ -85,7 +85,7 @@ namespace nexus {
 
 
 
-    G4double epoxy_z = 0.45 * 2 * mm;
+    G4double epoxy_z = 0.15 * 2 * mm;
     G4Box* plastic_solid = new G4Box("PLASTIC", sipm_x/2., sipm_y/2., pcb_z/2 - epoxy_z / 4);
 
     G4LogicalVolume* plastic_logic =
@@ -134,12 +134,16 @@ namespace nexus {
       0, 0
     };
     G4double efficiency[entries]   = {
-      0.0237, 0.081,
-      0.1881, 0.2521,
-      0.2284, 0.1814,
-      0.1809, 0.1649,
-      0.1149, 0.0247
-
+      // 0.0237, 0.081,
+      // 0.1881, 0.2521,
+      // 0.2284, 0.1814,
+      // 0.1809, 0.1649,
+      // 0.1149, 0.0247
+      0.0349, 0.0804,
+      0.1579, 0.2841,
+      0.4974, 0.4562,
+      0.3537, 0.3539,
+      0.2660, 0.0914
       // 1., 1.,
       // 1., 1.,
       // 1., 1.,

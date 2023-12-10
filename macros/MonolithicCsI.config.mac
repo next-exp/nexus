@@ -4,7 +4,7 @@
 #/Generator/SingleParticle/momentum 0 0.25 1
 #/Generator/SingleParticle/min_costheta 1
 #/Generator/SingleParticle/max_costheta 1
-/Generator/ScintGenerator/nphotons 50000
+/Generator/ScintGenerator/nphotons 25000
 
 /run/verbose 1
 /event/verbose 0
