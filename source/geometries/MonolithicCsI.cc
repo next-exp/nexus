@@ -111,9 +111,9 @@ namespace nexus
                                                                 teflon_logic, "TEFLON_RIGHT", lab_logic,
                                                                 true, 1, true);
 
-    G4VPhysicalVolume* teflon_back_position = new G4PVPlacement(0, G4ThreeVector(0, 0, 25./2 * mm - teflon_thickness_tot/2 ),
-                      teflon_back_logic, "TEFLON_BACK", lab_logic,
-                      true, 2, true);
+    // G4VPhysicalVolume* teflon_back_position = new G4PVPlacement(0, G4ThreeVector(0, 0, 25./2 * mm - teflon_thickness_tot/2 ),
+    //                   teflon_back_logic, "TEFLON_BACK", lab_logic,
+    //                   true, 2, true);
 
     G4OpticalSurface *ptfe_surface = new G4OpticalSurface("PTFE_SURFACE");
     ptfe_surface->SetType(dielectric_LUT);
@@ -124,10 +124,10 @@ namespace nexus
     new G4LogicalBorderSurface(
         "CRYSTAL_PTFE", crystal_right, teflon_full_position, ptfe_surface);
 
-    new G4LogicalBorderSurface(
-      "CRYSTAL_PTFE_BACK", crystal_right, teflon_back_position, ptfe_surface);
+    // new G4LogicalBorderSurface(
+    //   "CRYSTAL_PTFE_BACK", crystal_right, teflon_back_position, ptfe_surface);
 
-    SiPM66NoCasing *sipm_geom = new SiPM66NoCasing();
+    SiPM33NoCasing *sipm_geom = new SiPM33NoCasing();
 
     sipm_geom->Construct();
     G4LogicalVolume *sipm_logic = sipm_geom->GetLogicalVolume();
