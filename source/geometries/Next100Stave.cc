@@ -64,7 +64,7 @@ void Next100Stave::Construct()
 {
   G4Material* pe500 = materials::PE500();
 
-  // BUFFER staves.
+  // BUFFER part.
   // The unions of volumes go from lower to higher z.
   G4Box* buffer_short_solid =
     new G4Box("BUFF_SHORT", holder_x_/2., holder_short_y_/2. + overlap_/2.,
@@ -102,7 +102,7 @@ void Next100Stave::Construct()
                                    overlap_/2.,
                                    buffer_long_length_/2. - buffer_last_z_/2.));
 
-  // DRIFT staves.
+  // DRIFT part.
   G4Box* drift_short_first_solid =
     new G4Box("DRIFT_SHORT", holder_x_/2., holder_short_y_/2. + overlap_/2.,
               drift_short_first_length_/2.);
@@ -134,7 +134,7 @@ void Next100Stave::Construct()
                                      overlap_/2., posz));
     }
 
-  // CATHODE staves.
+  // CATHODE part.
   // They are placed at the same z position as the cathode ring.
   G4Box* cathode_large_solid =
     new G4Box("CATHODE_LARGE", holder_x_/2., cathode_long_y_/2.,
