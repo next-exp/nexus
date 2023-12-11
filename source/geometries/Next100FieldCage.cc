@@ -64,7 +64,7 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
 
   el_gap_length_ (10. * mm),
   el_mesh_diam_  (2.5 * mm),
-  el_mesh_rot_   (0 * deg),
+  el_mesh_rot_   (15 * deg),
 
   gate_ext_diam_    (1050. * mm),
   gate_int_diam_    (995. * mm),
@@ -709,7 +709,7 @@ void Next100FieldCage::BuildELRegion()
     el_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 
-  if (!grid_visibility_)
+  if (!grid_visibility_ && !useDielectricGrid_)
     el_hex_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   
   G4VisAttributes grey = nexus::DarkGrey();
