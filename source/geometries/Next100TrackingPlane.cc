@@ -84,7 +84,7 @@ void Next100TrackingPlane::Construct()
   G4LogicalVolume* copper_plate_logic =
     new G4LogicalVolume(copper_plate_solid, copper, copper_plate_name);
 
-  G4double copper_plate_zpos = GetCoordOrigin()[2] - gate_tp_dist_ - copper_plate_thickness_/2.;
+  G4double copper_plate_zpos = GetCoordOrigin().z() - gate_tp_dist_ - copper_plate_thickness_/2.;
 
   G4VPhysicalVolume* copper_plate_phys =
     new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,copper_plate_zpos),
@@ -100,7 +100,7 @@ void Next100TrackingPlane::Construct()
   sipm_board_geom_->Construct();
   G4LogicalVolume* sipm_board_logic = sipm_board_geom_->GetLogicalVolume();
 
-  G4double zpos = GetCoordOrigin()[2] - gate_tp_dist_ + sipm_board_geom_->GetThickness()/2.;
+  G4double zpos = GetCoordOrigin().z() - gate_tp_dist_ + sipm_board_geom_->GetThickness()/2.;
 
   // SiPM boards are positioned bottom (negative Y) to top (positive Y)
   // and left (negative X) to right (positive X).
