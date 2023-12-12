@@ -47,7 +47,7 @@ using namespace nexus;
 Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   GeometryBase(),
   // Dimensions
-  active_diam_         (984. * mm), // distance between the centers of two opposite panels
+  active_diam_         (983.3 * mm), // distance between the centers of two opposite panels
   n_panels_            (18),
   active_ext_radius_   (active_diam_/2. / cos(pi/n_panels_)),
 
@@ -72,8 +72,8 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   // cathode_sapphire_wdw_dist_(257.8 * mm),
 
   // external to teflon (hdpe + rings + holders)
-  hdpe_tube_int_diam_ (1093. * mm - 11. * mm), // we keep the thickness, but we make it smaller to be closer to the staves
-  hdpe_tube_ext_diam_ (1105.4 * mm - 11. * mm),
+  hdpe_tube_int_diam_ (1081. * mm),
+  hdpe_tube_ext_diam_ (1094 * mm),
   hdpe_length_        (1115. * mm),
 
   ring_ext_diam_ (1038. * mm),
