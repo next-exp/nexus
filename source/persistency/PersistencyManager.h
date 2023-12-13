@@ -103,6 +103,7 @@ namespace nexus {
 
     G4int str_counter_; ///< incrementing counter for string map
     G4bool save_str_; ///< Should we store strings as volume names etc.?
+    G4bool particles_; ///< Store particles table
 
     std::map<G4String, G4double> sensdet_bin_;
   };

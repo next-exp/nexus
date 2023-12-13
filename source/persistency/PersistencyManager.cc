@@ -47,7 +47,7 @@ PersistencyManagerBase(), msg_(0), output_file_("nexus_out"), ready_(false),
   interacting_evt_(false), save_ie_numb_(false), event_type_("other"),
   saved_evts_(0), interacting_evts_(0), pmt_bin_size_(-1), sipm_bin_size_(-1),
   nevt_(0), start_id_(0), first_evt_(true), h5writer_(0),
-  str_counter_(0), save_str_(true)
+  str_counter_(0), save_str_(true), particles_(true)
 {
   msg_ = new G4GenericMessenger(this, "/nexus/persistency/");
   msg_->DeclareProperty("output_file", output_file_, "Path of output file.");
@@ -57,6 +57,8 @@ PersistencyManagerBase(), msg_(0), output_file_("nexus_out"), ready_(false),
                         "Starting event ID for this job.");
   msg_->DeclareProperty("save_strings", save_str_,
                         "True if volume, process... names are saved as strings.");
+  msg_->DeclareProperty("save_particles", particles_,
+                        "True if particles table is saved.");
 
   init_macro_ = "";
   macros_.clear();
@@ -126,7 +128,9 @@ G4bool PersistencyManager::Store(const G4Event* event)
     StoreSteps();
 
   // Store the trajectories of the event
-  StoreTrajectories(event->GetTrajectoryContainer());
+  if (particles_) {
+    StoreTrajectories(event->GetTrajectoryContainer());
+  }
 
   // Store ionization hits and sensor hits
   ihits_ = nullptr;
