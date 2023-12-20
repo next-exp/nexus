@@ -120,12 +120,13 @@ namespace nexus
     G4OpticalSurface *ptfe_surface = new G4OpticalSurface("ESR_SURFACE");
     ptfe_surface->SetType(dielectric_LUT);
     ptfe_surface->SetFinish(polishedvm2000glue);
+    // ptfe_surface->SetFinish(polishedteflonair);
     ptfe_surface->SetModel(LUT);
 
-    G4OpticalSurface *air_surface = new G4OpticalSurface("CRYSTAL_SURFACE");
-    ptfe_surface->SetType(dielectric_LUTDAVIS);
-    ptfe_surface->SetFinish(Polished_LUT);
-    ptfe_surface->SetModel(DAVIS);
+    // G4OpticalSurface *air_surface = new G4OpticalSurface("CRYSTAL_SURFACE");
+    // ptfe_surface->SetType(dielectric_LUTDAVIS);
+    // ptfe_surface->SetFinish(Polished_LUT);
+    // ptfe_surface->SetModel(DAVIS);
 
     new G4LogicalBorderSurface(
         "CRYSTAL_PTFE", crystal_right, teflon_full_position, ptfe_surface);
