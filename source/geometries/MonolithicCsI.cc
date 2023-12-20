@@ -69,6 +69,8 @@ namespace nexus
     G4LogicalVolume *lab_logic = new G4LogicalVolume(lab_solid, air, "LAB");
 
     lab_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+    G4VPhysicalVolume *lab_phys = new G4PVPlacement(
+            0, G4ThreeVector(), lab_logic, "lab", 0, false, 0, true);
 
     // Set this volume as the wrapper for the whole geometry
     // (i.e., this is the volume that will be placed in the world)
@@ -115,19 +117,23 @@ namespace nexus
     //                   teflon_back_logic, "TEFLON_BACK", lab_logic,
     //                   true, 2, true);
 
-    G4OpticalSurface *ptfe_surface = new G4OpticalSurface("PTFE_SURFACE");
+    G4OpticalSurface *ptfe_surface = new G4OpticalSurface("ESR_SURFACE");
     ptfe_surface->SetType(dielectric_LUT);
-    ptfe_surface->SetFinish(polishedteflonair);
+    ptfe_surface->SetFinish(polishedvm2000glue);
     ptfe_surface->SetModel(LUT);
-    ptfe_surface->SetMaterialPropertiesTable(opticalprops::PTFE());
+
+    G4OpticalSurface *air_surface = new G4OpticalSurface("CRYSTAL_SURFACE");
+    ptfe_surface->SetType(dielectric_LUTDAVIS);
+    ptfe_surface->SetFinish(Polished_LUT);
+    ptfe_surface->SetModel(DAVIS);
 
     new G4LogicalBorderSurface(
         "CRYSTAL_PTFE", crystal_right, teflon_full_position, ptfe_surface);
 
     // new G4LogicalBorderSurface(
-    //   "CRYSTAL_PTFE_BACK", crystal_right, teflon_back_position, ptfe_surface);
+    //   "CRYSTAL_PTFE_BACK", crystal_right, lab_phys, air_surface);
 
-    SiPM33NoCasing *sipm_geom = new SiPM33NoCasing();
+    SiPM66NoCasing *sipm_geom = new SiPM66NoCasing();
 
     sipm_geom->Construct();
     G4LogicalVolume *sipm_logic = sipm_geom->GetLogicalVolume();

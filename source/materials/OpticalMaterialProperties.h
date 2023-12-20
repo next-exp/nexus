@@ -67,6 +67,8 @@ namespace opticalprops {
 
   G4MaterialPropertiesTable* PTFE();
 
+  G4MaterialPropertiesTable* ESR();
+
   G4MaterialPropertiesTable* PolishedAl();
 
   G4MaterialPropertiesTable* EJ280();
