@@ -80,14 +80,14 @@ namespace nexus
         new G4Box("CRYSTAL", crystal_width_ / 2., crystal_width_ / 2., crystal_length_ / 2.);
 
     G4Material *CsI = G4NistManager::Instance()->FindOrBuildMaterial("G4_CESIUM_IODIDE");
-    CsI->SetMaterialPropertiesTable(opticalprops::CsI());
+    CsI->SetMaterialPropertiesTable(opticalprops::CsITl());
     G4LogicalVolume *crystal_logic =
         new G4LogicalVolume(crystal,
                             CsI,
                             "CRYSTAL");
     crystal_logic->SetVisAttributes(nexus::LightBlueAlpha());
     G4VPhysicalVolume *crystal_right = new G4PVPlacement(0, G4ThreeVector(0, 0, +25. / 2 * mm + crystal_length_ / 2),
-                                                         crystal_logic, "CRYSTAL_RIGHT", lab_logic,
+                                                         crystal_logic, "CRYSTAL", lab_logic,
                                                          true, 2, true);
 
     G4double teflon_thickness = 0.08 * mm;
@@ -100,7 +100,7 @@ namespace nexus
     G4LogicalVolume *teflon_logic =
         new G4LogicalVolume(teflon_coating,
                             G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON"),
-                            "TEFLON");
+                            "TEFLON_SIDES");
     G4LogicalVolume *teflon_back_logic =
         new G4LogicalVolume(teflon_back,
                             G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON"),
@@ -110,19 +110,24 @@ namespace nexus
     teflon_back_logic->SetVisAttributes(nexus::White());
 
     G4VPhysicalVolume *teflon_full_position = new G4PVPlacement(0, G4ThreeVector(0, 0, 25. / 2 * mm + crystal_length_ / 2),
-                                                                teflon_logic, "TEFLON_RIGHT", lab_logic,
+                                                                teflon_logic, "TEFLON_SIDES", lab_logic,
                                                                 true, 1, true);
 
-    // G4VPhysicalVolume* teflon_back_position = new G4PVPlacement(0, G4ThreeVector(0, 0, 25./2 * mm - teflon_thickness_tot/2 ),
-    //                   teflon_back_logic, "TEFLON_BACK", lab_logic,
-    //                   true, 2, true);
+    G4VPhysicalVolume* teflon_back_position = new G4PVPlacement(0, G4ThreeVector(0, 0, 25./2 * mm - teflon_thickness_tot/2 ),
+                      teflon_back_logic, "TEFLON_BACK", lab_logic,
+                      true, 2, true);
 
-    G4OpticalSurface *ptfe_surface = new G4OpticalSurface("ESR_SURFACE");
-    ptfe_surface->SetType(dielectric_LUT);
-    ptfe_surface->SetFinish(polishedvm2000glue);
-    // ptfe_surface->SetFinish(polishedteflonair);
-    ptfe_surface->SetModel(LUT);
-
+    G4OpticalSurface *ptfe_surface = new G4OpticalSurface("PTFE_SURFACE");
+    ptfe_surface->SetType(dielectric_LUTDAVIS);
+    ptfe_surface->SetFinish(RoughTeflon_LUT);
+    // ptfe_surface->SetFinish(groundteflonair);
+    ptfe_surface->SetModel(DAVIS);
+    // ptfe_surface->SetType(dielectric_dielectric);
+    // ptfe_surface->SetFinish(polishedvm2000air);
+    // ptfe_surface->SetFinish(polishedfrontpainted);
+    // ptfe_surface->SetModel(unified);
+    // ptfe_surface->SetMaterialPropertiesTable(opticalprops::PTFE());
+//
     // G4OpticalSurface *air_surface = new G4OpticalSurface("CRYSTAL_SURFACE");
     // ptfe_surface->SetType(dielectric_LUTDAVIS);
     // ptfe_surface->SetFinish(Polished_LUT);
@@ -131,8 +136,8 @@ namespace nexus
     new G4LogicalBorderSurface(
         "CRYSTAL_PTFE", crystal_right, teflon_full_position, ptfe_surface);
 
-    // new G4LogicalBorderSurface(
-    //   "CRYSTAL_PTFE_BACK", crystal_right, lab_phys, air_surface);
+    new G4LogicalBorderSurface(
+      "CRYSTAL_PTFE_BACK", crystal_right, teflon_back_position, ptfe_surface);
 
     SiPM66NoCasing *sipm_geom = new SiPM66NoCasing();
 

@@ -47,6 +47,12 @@ namespace opticalprops {
                                 G4int sc_yield=25510/MeV,
                                 G4double e_lifetime=1000.*ms);
 
+  G4MaterialPropertiesTable* CsITl();
+
+  G4MaterialPropertiesTable* BGO();
+
+  G4MaterialPropertiesTable* LYSO();
+
   G4MaterialPropertiesTable* CsI();
 
   G4MaterialPropertiesTable* LXe();

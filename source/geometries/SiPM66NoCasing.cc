@@ -85,8 +85,8 @@ namespace nexus {
 
 
 
-    G4double epoxy_z = 0.45 * 2 * mm;
-    G4Box* plastic_solid = new G4Box("PLASTIC", sipm_x/2., sipm_y/2., pcb_z/2 - epoxy_z / 4);
+    G4double epoxy_z = 0.15 * mm;
+    G4Box* plastic_solid = new G4Box("PLASTIC", sipm_x/2., sipm_y/2., pcb_z/2 - epoxy_z / 2);
 
     G4LogicalVolume* plastic_logic =
     new G4LogicalVolume(plastic_solid, silicone, "PLASTIC");
@@ -119,27 +119,41 @@ namespace nexus {
 
     // SiPM efficiency set using the official Hamamatsu specs.
 
-    const G4int entries = 10;
+    const G4int entries = 15;
 
     G4double energies[entries]     = {
-          h_Planck * c_light / (908.37 * nm), h_Planck * c_light / (820.02 * nm),
-          h_Planck * c_light / (730.61 * nm), h_Planck * c_light / (635.70 * nm),
-          h_Planck * c_light / (470.29 * nm), h_Planck * c_light / (407.14 * nm),
-          h_Planck * c_light / (364.92 * nm), h_Planck * c_light / (347.73 * nm),
-          h_Planck * c_light / (304.17 * nm), h_Planck * c_light / (284.26 * nm),
+          opticalprops::optPhotMinE_,
+          h_Planck * c_light / (809.722 * nm), h_Planck * c_light / (675.000 * nm),
+          h_Planck * c_light / (587.500 * nm), h_Planck * c_light / (494.444 * nm),
+          h_Planck * c_light / (455.556 * nm), h_Planck * c_light / (422.222 * nm),
+          h_Planck * c_light / (395.833 * nm), h_Planck * c_light / (366.667 * nm),
+          h_Planck * c_light / (344.444 * nm), h_Planck * c_light / (311.111 * nm),
+          h_Planck * c_light / (293.056 * nm), h_Planck * c_light / (288.889 * nm),
+          h_Planck * c_light / (279.167 * nm),
+          opticalprops::optPhotMaxE_
 		};
     G4double reflectivity[entries] = {
-      0, 0, 0, 0,
-      0, 0, 0, 0,
-      0, 0
+      0,
+      0, 0,
+      0, 0,
+      0, 0,
+      0, 0,
+      0, 0,
+      0, 0,
+      0,
+      0
     };
-    G4double efficiency[entries]   = {
-      0.0349, 0.0804,
-      0.1579, 0.2841,
-      0.4974, 0.4562,
-      0.3537, 0.3539,
-      0.2660, 0.0914
 
+    G4double efficiency[entries]   = {
+      0,
+      0.0087, 0.192,
+      0.311, 0.467,
+      0.511, 0.502,
+      0.469, 0.406,
+      0.393, 0.324,
+      0.180, 0.048,
+      0.02,
+      0
       // 1., 1.,
       // 1., 1.,
       // 1., 1.,
