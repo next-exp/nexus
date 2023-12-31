@@ -120,7 +120,7 @@ namespace nexus
     G4OpticalSurface *ptfe_surface = new G4OpticalSurface("PTFE_SURFACE");
     ptfe_surface->SetType(dielectric_LUT);
     // ptfe_surface->SetFinish(RoughESR_LUT);
-    ptfe_surface->SetFinish(groundvm2000air);
+    ptfe_surface->SetFinish(groundteflonair);
     ptfe_surface->SetModel(LUT);
     // ptfe_surface->SetType(dielectric_dielectric);
     // ptfe_surface->SetFinish(polishedvm2000air);
