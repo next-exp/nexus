@@ -78,6 +78,9 @@ namespace materials {
   // Fused silica (synthetic quartz)
   G4Material* FusedSilica();
 
+  // LYSO
+  G4Material* LYSO();
+
   // PS (Polystyrene)
   G4Material* PS();
 

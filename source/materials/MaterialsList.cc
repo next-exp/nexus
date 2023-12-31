@@ -524,6 +524,32 @@ namespace materials {
   }
 
 
+  G4Material* LYSO()
+  {
+    G4String name = "LYSO"; //
+
+    G4Material* mat = G4Material::GetMaterial(name, false);
+
+    if (mat == 0) {
+      G4NistManager* nist = G4NistManager::Instance();
+
+      G4Element* Lu = nist->FindOrBuildElement("Lu");
+      G4Element* Y = nist->FindOrBuildElement("Y");
+      G4Element* Si = nist->FindOrBuildElement("Si");
+      G4Element* O = nist->FindOrBuildElement("O");
+
+      mat = new G4Material(name, 7.4*g/cm3, 4, kStateSolid);
+      mat->AddElement(Lu, 2);
+      mat->AddElement(Y, 2);
+      mat->AddElement(Si, 1);
+      mat->AddElement(O, 4);
+
+    }
+
+    return mat;
+
+  }
+
   G4Material* PVT()
   {
     G4String name = "PVT"; //
