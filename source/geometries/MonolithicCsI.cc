@@ -79,8 +79,9 @@ namespace nexus
     G4Box *crystal =
         new G4Box("CRYSTAL", crystal_width_ / 2., crystal_width_ / 2., crystal_length_ / 2.);
 
-    G4Material *CsI = G4NistManager::Instance()->FindOrBuildMaterial("G4_BGO");
-    CsI->SetMaterialPropertiesTable(opticalprops::BGO());
+    // G4Material *CsI = G4NistManager::Instance()->FindOrBuildMaterial("G4_BGO");
+    G4Material *CsI = materials::LYSO();
+    CsI->SetMaterialPropertiesTable(opticalprops::LYSO());
     G4LogicalVolume *crystal_logic =
         new G4LogicalVolume(crystal,
                             CsI,
