@@ -79,9 +79,9 @@ namespace nexus
     G4Box *crystal =
         new G4Box("CRYSTAL", crystal_width_ / 2., crystal_width_ / 2., crystal_length_ / 2.);
 
-    // G4Material *CsI = G4NistManager::Instance()->FindOrBuildMaterial("G4_BGO");
-    G4Material *CsI = materials::LYSO();
-    CsI->SetMaterialPropertiesTable(opticalprops::LYSO());
+    G4Material *CsI = G4NistManager::Instance()->FindOrBuildMaterial("G4_CESIUM_IODIDE");
+    // G4Material *CsI = materials::Cs();
+    CsI->SetMaterialPropertiesTable(opticalprops::CsI());
     G4LogicalVolume *crystal_logic =
         new G4LogicalVolume(crystal,
                             CsI,
@@ -120,7 +120,7 @@ namespace nexus
 
     G4OpticalSurface *ptfe_surface = new G4OpticalSurface("PTFE_SURFACE");
     ptfe_surface->SetType(dielectric_LUT);
-    ptfe_surface->SetFinish(groundvm2000air);
+    ptfe_surface->SetFinish(groundteflonair);
     // ptfe_surface->SetFinish(RoughTeflon_LUT);
     ptfe_surface->SetModel(LUT);
     // ptfe_surface->SetType(dielectric_dielectric);
