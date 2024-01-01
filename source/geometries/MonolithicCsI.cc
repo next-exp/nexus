@@ -43,7 +43,7 @@ namespace nexus
 
   MonolithicCsI::MonolithicCsI() : GeometryBase(),
                                    crystal_width_(48 * mm),
-                                   crystal_length_(22.8 * mm)
+                                   crystal_length_(37 * mm)
   {
     /// Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/MonolithicCsI/",
