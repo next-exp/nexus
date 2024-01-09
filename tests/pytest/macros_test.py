@@ -13,6 +13,21 @@ Caveats:
 """
 
 @pytest.fixture(scope='module')
+def check_list(NEXUSDIR):
+
+    macro_list = [NEXUSDIR + "/macros/DEMOPP_grid.init.mac",
+                  NEXUSDIR + "/macros/DEMOPP_plate.init.mac",
+                  NEXUSDIR + "/macros/NEW.init.mac",
+                  NEXUSDIR + "/macros/NEXT100.init.mac",
+                  NEXUSDIR + "/macros/NEXT100_full.init.mac",
+                  NEXUSDIR + "/macros/NextFlex_fullKr.init.mac",
+                  NEXUSDIR + "/macros/NextTonScale.init.mac",
+                  NEXUSDIR + "/macros/black_box.init.mac"]
+
+    return macro_list
+
+
+@pytest.fixture(scope='module')
 def macro_list(NEXUSDIR):
 
     all_macros = np.array(glob.glob(NEXUSDIR + '/macros/**/*.init.mac', recursive=True))
@@ -71,6 +86,18 @@ def copy_and_modify_macro(config_tmpdir, output_tmpdir, init_macro):
     return cp_init_macro
 
 
+def execute_overlap_checks(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, check_list):
+    my_env = os.environ.copy()
+
+    for macro in check_list:
+        init_macro = copy_and_modify_macro(config_tmpdir, output_tmpdir, macro)
+        nexus_exe  = NEXUSDIR + '/bin/nexus'
+        command    = [nexus_exe, '-b', '-o', init_macro]
+        with capsys.disabled():
+            print(f'Checking {macro}')
+        p  = subprocess.run(command, check=True, env=my_env)
+
+
 def execute_example_jobs(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, macro_list):
     my_env = os.environ.copy()
 
@@ -82,6 +109,14 @@ def execute_example_jobs(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, macro_l
             print(f'Running {macro}')
         p  = subprocess.run(command, check=True, env=my_env)
 
+
+def test_run_overlap_check(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, check_list):
+
+    with capsys.disabled():
+        print('')
+        print(f'*** Overlap checks ***')
+
+    execute_overlap_checks(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, check_list)
 
 @pytest.mark.order('second_to_last')
 def test_run_fast_examples(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, macro_list):
