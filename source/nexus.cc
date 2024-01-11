@@ -26,6 +26,7 @@ void PrintUsage()
   G4cerr  << "Available options:" << G4endl;
   G4cerr  << "   -b, --batch           : Run in batch mode (default)\n"
           << "   -i, --interactive     : Run in interactive mode\n"
+          << "   -o, --overlap-check   : Turn warnings into exceptions and increase precision in overlap check\n"
           << "   -n, --nevents         : Number of events to simulate\n"
           << "   -p, --precision       : Number of significant figures in verbosity"
           << G4endl;
@@ -125,6 +126,7 @@ G4int main(int argc, char** argv)
   G4UImanager* UI = G4UImanager::GetUIpointer();
 
   if (overlap_check) {
+    UI->ApplyCommand("/geometry/test/resolution 1000000");
     UI->ApplyCommand("/geometry/test/run");
   }
 
