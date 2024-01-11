@@ -51,7 +51,7 @@ namespace nexus {
     hut_hole_length_  (45. * mm),
     hut_length_long_  (120.* mm),
     hut_length_medium_(100.* mm),
-    hut_length_short_ (60. * mm),
+    hut_length_short_ (60. * mm - 1 * mm), // 60 from drawings, subtraction needed to solve small overlap
     last_hut_long_   (17),
     last_hut_medium_ (35),
 
