@@ -43,9 +43,12 @@ namespace nexus {
     gate_tracking_plane_distance_(25. * mm + grid_thickness_), // Jordi = 1.5 (distance TP plate-anode ring) + 13.5 (anode ring thickness) + 10 (EL gap)
     gate_sapphire_wdw_distance_  (1458.8 * mm - grid_thickness_), // Jordi
     ics_ep_lip_width_ (55. * mm), // length of the step cut out in the ICS, in the EP side
+    fc_displ_x_ (-3.7 * mm), // displacement of the field cage volumes from 0
+    fc_displ_y_ (-6.4 * mm), // displacement of the field cage volumes from 0
 
     specific_vertex_{},
-    lab_walls_(false)
+    lab_walls_(false),
+    print_(false)
   {
 
     msg_ = new G4GenericMessenger(this, "/Geometry/Next100/",
@@ -54,7 +57,9 @@ namespace nexus {
     msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
       "Set generation vertex.");
 
-    msg_->DeclareProperty("lab_walls", lab_walls_, "Placement of Hall A walls");
+    msg_->DeclareProperty("lab_walls", lab_walls_, "Placement of Hall A walls.");
+
+    msg_->DeclareProperty("print_sipms", print_, "Print SiPM positions.");
 
   // The following methods must be invoked in this particular
   // order since some of them depend on the previous ones
@@ -121,7 +126,11 @@ namespace nexus {
     this->SetLogicalVolume(lab_logic_);
 
     // VESSEL (initialize first since it defines EL position)
+    // The z coord origin is not set, because it is not defined, yet
     vessel_->SetELtoTPdistance(gate_tracking_plane_distance_);
+    vessel_->SetCoordOrigin(G4ThreeVector(fc_displ_x_,
+                                          fc_displ_y_,
+                                          0.));
     vessel_->Construct();
     G4LogicalVolume* vessel_logic = vessel_->GetLogicalVolume();
     G4LogicalVolume* vessel_internal_logic  =
@@ -130,49 +139,65 @@ namespace nexus {
       vessel_->GetInternalPhysicalVolume();
     G4ThreeVector vessel_displacement =
       shielding_->GetAirDisplacement(); // explained below
-    gate_zpos_in_vessel_ = vessel_->GetELzCoord();
+
+    coord_origin_ = G4ThreeVector(fc_displ_x_, fc_displ_y_, vessel_->GetGateZpos());
 
     // SHIELDING
+    shielding_->SetCoordOrigin(coord_origin_);
     shielding_->Construct();
-    shielding_->SetELzCoord(gate_zpos_in_vessel_);
     G4LogicalVolume* shielding_logic     = shielding_->GetLogicalVolume();
     G4LogicalVolume* shielding_air_logic = shielding_->GetAirLogicalVolume();
 
-    // Recall that airbox is slighly displaced in Y dimension. In order to avoid
-    // mistmatch with vertex generators, we place the vessel i
-    // n the center of the world volume
+    // Recall that air box is slightly displaced in Y dimension.
+    // In order to avoid mistmatch with vertex generators,
+    // we place the vessel in the center of the world volume
     new G4PVPlacement(0, -vessel_displacement, vessel_logic,
                       "VESSEL", shielding_air_logic, false, 0);
 
     // INNER ELEMENTS
     inner_elements_->SetLogicalVolume(vessel_internal_logic);
     inner_elements_->SetPhysicalVolume(vessel_internal_phys);
-    inner_elements_->SetELzCoord(gate_zpos_in_vessel_);
+    inner_elements_->SetCoordOrigin(coord_origin_);
     inner_elements_->SetELtoSapphireWDWdistance(gate_sapphire_wdw_distance_);
     inner_elements_->SetELtoTPdistance         (gate_tracking_plane_distance_);
     inner_elements_->Construct();
 
     // INNER COPPER SHIELDING
     ics_->SetLogicalVolume(vessel_internal_logic);
-    ics_->SetELzCoord(gate_zpos_in_vessel_);
+    ics_->SetCoordOrigin(coord_origin_);
     ics_->SetELtoSapphireWDWdistance(gate_sapphire_wdw_distance_);
     ics_->SetELtoTPdistance         (gate_tracking_plane_distance_);
     ics_->SetPortZpositions(vessel_->GetPortZpositions());
     ics_->Construct();
 
-    G4ThreeVector gate_pos(0., 0., -gate_zpos_in_vessel_);
     if (lab_walls_){
       G4ThreeVector castle_pos(0., hallA_walls_->GetLSCHallACastleY(),
                                hallA_walls_->GetLSCHallACastleZ());
 
       new G4PVPlacement(0, castle_pos, shielding_logic,
                         "LEAD_BOX", hallA_logic_, false, 0);
-      new G4PVPlacement(0, gate_pos - castle_pos, hallA_logic_,
+      new G4PVPlacement(0, -coord_origin_ - castle_pos, hallA_logic_,
                         "Hall_A", lab_logic_, false, 0, false);
     }
     else {
-      new G4PVPlacement(0, gate_pos, shielding_logic, "LEAD_BOX", lab_logic_,
-                        false, 0);
+      new G4PVPlacement(0, -coord_origin_, shielding_logic,
+                        "LEAD_BOX", lab_logic_, false, 0);
+    }
+
+    if (print_) {
+      std::vector<G4ThreeVector> sipm_pos = inner_elements_->GetSiPMPosInGas();
+      G4int n_sipm = 0;
+      G4int b = 1;
+      for (unsigned int i=0; i<sipm_pos.size(); i++) {
+        G4ThreeVector pos = sipm_pos[i] - coord_origin_;;
+        G4int id = 1000 * b + n_sipm;
+        G4cout << "SiPM " << id << ": " << pos.x() << ", "<< pos.y() << G4endl;
+        n_sipm++;
+        if (id % 1000 == 63) {
+          n_sipm = 0;
+          b++;
+        }
+      }
     }
 
     //// VERTEX GENERATORS
@@ -180,6 +205,7 @@ namespace nexus {
       new BoxPointSampler(lab_size_ - 1.*m, lab_size_ - 1.*m,
                           lab_size_  - 1.*m, 1.*m,
                           G4ThreeVector(0., 0., 0.), 0);
+
   }
 
 
@@ -265,8 +291,7 @@ namespace nexus {
 		  "Unknown vertex generation region!");
     }
 
-    G4ThreeVector displacement = G4ThreeVector(0., 0., -gate_zpos_in_vessel_);
-    vertex = vertex + displacement;
+    vertex = vertex - coord_origin_;
 
     return vertex;
   }
@@ -293,7 +318,7 @@ namespace nexus {
 		  "Unknown vertex generation region!");
     }
 
-    return vertex + G4ThreeVector(0., 0., -gate_zpos_in_vessel_);
+    return vertex - coord_origin_;
   }
 
 } //end namespace nexus

@@ -39,6 +39,10 @@ namespace nexus {
     G4VPhysicalVolume* GetInternalPhysicalVolume();
 
     void SetELtoTPdistance(G4double);
+    void SetGateZpos(G4double);
+
+    G4double GetGateZpos();
+
     // get Z position of calibration ports
     G4double* GetPortZpositions();
 
@@ -59,6 +63,7 @@ namespace nexus {
     G4double sc_yield_, e_lifetime_;
     G4double pressure_, temperature_;
     G4double gate_tp_distance_;
+    G4double gate_z_pos_;
 
     // Visibility of the shielding
     G4bool visibility_;
@@ -94,6 +99,14 @@ namespace nexus {
 
   inline void Next100Vessel::SetELtoTPdistance(G4double distance){
     gate_tp_distance_ = distance;
+  }
+
+  inline void Next100Vessel::SetGateZpos(G4double pos){
+    gate_z_pos_ = pos;
+  }
+
+  inline G4double Next100Vessel::GetGateZpos(){
+    return gate_z_pos_;
   }
 
 } // end namespace nexus

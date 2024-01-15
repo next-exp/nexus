@@ -84,7 +84,7 @@ void Next100TrackingPlane::Construct()
   G4LogicalVolume* copper_plate_logic =
     new G4LogicalVolume(copper_plate_solid, copper, copper_plate_name);
 
-  G4double copper_plate_zpos = GetELzCoord() - gate_tp_dist_ - copper_plate_thickness_/2.;
+  G4double copper_plate_zpos = GetCoordOrigin().z() - gate_tp_dist_ - copper_plate_thickness_/2.;
 
   G4VPhysicalVolume* copper_plate_phys =
     new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,copper_plate_zpos),
@@ -100,7 +100,7 @@ void Next100TrackingPlane::Construct()
   sipm_board_geom_->Construct();
   G4LogicalVolume* sipm_board_logic = sipm_board_geom_->GetLogicalVolume();
 
-  G4double zpos = GetELzCoord() - gate_tp_dist_ + sipm_board_geom_->GetThickness()/2.;
+  G4double zpos = GetCoordOrigin().z() - gate_tp_dist_ + sipm_board_geom_->GetThickness()/2.;
 
   // SiPM boards are positioned bottom (negative Y) to top (positive Y)
   // and left (negative X) to right (positive X).
@@ -186,7 +186,7 @@ void Next100TrackingPlane::PlaceSiPMBoardColumns(G4int num_boards,
 }
 
 
-void Next100TrackingPlane::PrintSiPMPositions() const
+void Next100TrackingPlane::PrintSiPMPosInGas() const
 {
   auto sipm_positions = sipm_board_geom_->GetSiPMPositions();
 
@@ -198,6 +198,18 @@ void Next100TrackingPlane::PrintSiPMPositions() const
     }
   }
 }
+
+void Next100TrackingPlane::GetSiPMPosInGas(std::vector<G4ThreeVector>& sipm_pos) const
+{
+  auto sipm_positions = sipm_board_geom_->GetSiPMPositions();
+  for (unsigned int i=0; i<board_pos_.size(); ++i) {
+    for (unsigned int j=0; j<sipm_positions.size(); ++j) {
+      G4ThreeVector pos = sipm_positions[j] + board_pos_[i];
+      sipm_pos.push_back(pos);
+    }
+  }
+}
+
 
 
 G4ThreeVector Next100TrackingPlane::GenerateVertex(const G4String& region) const
@@ -211,7 +223,7 @@ G4ThreeVector Next100TrackingPlane::GenerateVertex(const G4String& region) const
         G4int board_num = G4RandFlat::shootInt((long) 0, board_pos_.size());
         vertex += board_pos_[board_num];
         G4ThreeVector glob_vtx(vertex);
-        glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+        glob_vtx = glob_vtx - GetCoordOrigin();
         VertexVolume =
           geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
 

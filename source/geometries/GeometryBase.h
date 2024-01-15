@@ -46,14 +46,17 @@ namespace nexus {
     /// Returns the 3 dimensions of the geometry (x, y, z)
     G4ThreeVector GetDimensions();
 
-    /// Returns true if geometry has a drift field
-    G4bool GetDrift() const;
-
     // Getter for the starting point of EL generation in z
     G4double GetELzCoord() const;
 
     /// Setter for the starting point of EL generation in z
     void SetELzCoord(G4double z);
+
+    /// Getter for the origin of coordinates
+    G4ThreeVector GetCoordOrigin() const;
+
+    /// Setter for the origin of coordinates
+    void SetCoordOrigin(G4ThreeVector origin);
 
     /// Translates position to G4 global position
     void CalculateGlobalPos(G4ThreeVector& vertex) const;
@@ -72,9 +75,6 @@ namespace nexus {
     /// Sets the span (maximum dimension) of the geometry
     void SetSpan(G4double);
 
-    /// Sets the drift variable to true if a drift field exists
-    void SetDrift(G4bool);
-
     /// Sets the 3 dimensions of the geometry (x, y, z)
     void SetDimensions(G4ThreeVector dim);
 
@@ -88,14 +88,14 @@ namespace nexus {
     G4LogicalVolume* logicVol_; ///< Pointer to the logical volume
     G4double span_; ///< Maximum dimension of the geometry
     G4ThreeVector dimensions_; ///< XYZ dimensions of a regular geometry
-    G4bool drift_; ///< True if geometry contains a drift field (for hit coordinates)
     G4double el_z_; ///< Starting point of EL generation in z
+    G4ThreeVector coord_origin_; ///< Origin of coordinates of the mother volume
   };
 
 
   // Inline definitions ///////////////////////////////////
 
-  inline GeometryBase::GeometryBase(): logicVol_(0), span_(25.*m), drift_(false), el_z_(0.*mm) {}
+  inline GeometryBase::GeometryBase(): logicVol_(0), span_(25.*m),  el_z_(0.*mm), coord_origin_(G4ThreeVector(0., 0., 0.)) {}
 
   inline GeometryBase::~GeometryBase() {}
 
@@ -121,13 +121,13 @@ namespace nexus {
 
   inline  G4ThreeVector GeometryBase::GetDimensions()  { return dimensions_; }
 
-  inline void GeometryBase::SetDrift(G4bool drift) { drift_ = drift; }
-
-  inline G4bool GeometryBase::GetDrift() const { return drift_; }
-
   inline G4double GeometryBase::GetELzCoord() const {return el_z_;}
 
   inline void GeometryBase::SetELzCoord(G4double z) {el_z_ = z;}
+
+  inline G4ThreeVector GeometryBase::GetCoordOrigin() const {return coord_origin_;}
+
+  inline void GeometryBase::SetCoordOrigin(G4ThreeVector origin) {coord_origin_ = origin;}
 
   // This methods is to be used only in the Next1EL and NEW geometries
   inline void GeometryBase::CalculateGlobalPos(G4ThreeVector& vertex) const

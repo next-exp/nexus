@@ -48,6 +48,8 @@ namespace nexus {
     G4double temperature_;
     G4double sc_yield_;
     G4double e_lifetime_;
+    G4double fc_displ_x_, fc_displ_y_;
+    G4ThreeVector coord_origin_;
 
     // Vertex decided by user
     G4ThreeVector specific_vertex_;
@@ -55,9 +57,6 @@ namespace nexus {
     G4String gas_;
 
     Next100InnerElements* inner_elements_;
-
-    // Relative position of the gate in its mother volume
-    G4double gate_zpos_in_gas_;
 
   };
 

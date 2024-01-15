@@ -59,6 +59,7 @@ namespace nexus {
     const G4double gate_tracking_plane_distance_, gate_sapphire_wdw_distance_;
     const G4double ics_ep_lip_width_ ; ///< width of step of the ICS bars in the
     /// energy plane side
+    const G4double fc_displ_x_, fc_displ_y_;
 
     // Pointers to logical volumes
     G4LogicalVolume* lab_logic_;
@@ -80,11 +81,14 @@ namespace nexus {
     /// Specific vertex for AD_HOC region
     G4ThreeVector specific_vertex_;
 
-    /// Position of gate in its mother volume
-    G4double gate_zpos_in_vessel_;
+    /// Origin of coordinates
+    G4ThreeVector coord_origin_;
 
     /// Whether or not to build LSC HallA.
     G4bool lab_walls_;
+
+    /// Whether or not to print SiPM positions
+    G4bool print_;
   };
 
 } // end namespace nexus

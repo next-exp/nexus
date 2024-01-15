@@ -51,7 +51,7 @@ namespace nexus {
     hut_hole_length_  (45. * mm),
     hut_length_long_  (120.* mm),
     hut_length_medium_(100.* mm),
-    hut_length_short_ (60. * mm),
+    hut_length_short_ (60. * mm - 1 * mm), // 60 from drawings, subtraction needed to solve small overlap
     last_hut_long_   (17),
     last_hut_medium_ (35),
 
@@ -207,7 +207,8 @@ namespace nexus {
     G4double stand_out_length =
       sapphire_window_thickn_ + tpb_thickn_ + optical_pad_thickn_ + pmt_stand_out_;
 
-    copper_plate_posz_ = GetELzCoord() + gate_sapphire_wdw_dist_ + stand_out_length + copper_plate_thickn_/2.;
+    copper_plate_posz_ = GetCoordOrigin().z()
+      + gate_sapphire_wdw_dist_ + stand_out_length + copper_plate_thickn_/2.;
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., copper_plate_posz_), copper_plate_logic,
                       "EP_COPPER_PLATE", mother_logic_, false, 0, false);
@@ -414,7 +415,7 @@ namespace nexus {
       do {
         vertex = copper_gen_->GenerateVertex("VOLUME");
         G4ThreeVector glob_vtx(vertex);
-        glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+        glob_vtx = glob_vtx - GetCoordOrigin();
         VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != region);
     }
@@ -430,7 +431,7 @@ namespace nexus {
         G4double z_translation = vacuum_posz_;
         vertex.setZ(vertex.z() + z_translation);
         G4ThreeVector glob_vtx(vertex);
-        glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+        glob_vtx = glob_vtx - GetCoordOrigin();
         VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != region);
     }

@@ -30,12 +30,9 @@ namespace nexus {
 
   Next100Ics::Next100Ics(G4double ics_ep_lip_width):
     GeometryBase(),
-
     in_rad_   (55.465 * cm),
     thickness_(12.0   * cm),
-
     ics_ep_lip_width_ (ics_ep_lip_width),
-
     visibility_ (0)
   {
 
@@ -68,7 +65,7 @@ namespace nexus {
     G4double offset = 1.* mm;
 
     // ICS
-    G4double ics_z_pos = GetELzCoord() + length/2. - gate_tp_distance_;
+    G4double ics_z_pos = GetCoordOrigin().z() + length/2. - gate_tp_distance_;
 
     G4Tubs* ics_body = new G4Tubs("ICS", in_rad_, in_rad_ + thickness_,
                                   length/2., 0.*deg, 360.*deg);
@@ -91,7 +88,8 @@ namespace nexus {
       new G4Tubs("PORT_HOLE", 0., port_hole_rad,
                  (thickness_ + offset)/2., 0.*deg, 360.*deg);
 
-    ics_solid =
+
+   ics_solid =
       new G4SubtractionSolid("ICS", ics_body, port_hole_solid,
                              port_a_Rot, G4ThreeVector(port_x, port_y,
                                                        port_z_1a_-ics_z_pos));
@@ -229,9 +227,8 @@ namespace nexus {
         vertex = ics_gen_->GenerateVertex("VOLUME");
 
         G4ThreeVector glob_vtx(vertex);
-        glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
-        VertexVolume =
-          geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+        glob_vtx = glob_vtx - GetCoordOrigin();
+        VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != "ICS");
     }
 
