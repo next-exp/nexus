@@ -1,3 +1,11 @@
+tag v7_06_00 - 17 Jan 2024
+	- Major changes in the NEXT-100 geometry according to current drawings and actual installation
+	- Optimization of the code for cosmogenic simulations: output file size reduction, increased efficiency in primary particle production
+	- Fix bug in some optical properties
+	- Add generic wavelength shifting fiber geometry
+	- Avoid generating permanent output files in tests
+	- Update scintillation time constants and yield for gaseous argon
+
 tag v7_05_00 - 26 Apr 2023
 	- Add features to the actions that saves all steps
 	- Fix electroluminescence generation to work properly with Geant4.11.1
