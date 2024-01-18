@@ -39,7 +39,8 @@ ScintillationGenerator::ScintillationGenerator() :
     "Control commands of scintillation generator.");
 
   msg_->DeclareProperty("region", region_,
-    "Region of the geometry where the vertex will be generated.");
+                        "Region of the geometry "
+                        "where the vertex will be generated.");
 
   msg_->DeclareProperty("nphotons", nphotons_, "Number of photons");
 

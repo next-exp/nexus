@@ -54,7 +54,8 @@ geom_(0)
   max_energy.SetRange("max_energy>0.");
 
   msg_->DeclareProperty("region", region_,
-    "Region of the geometry where the vertex will be generated.");
+                        "Region of the geometry "
+                        "where the vertex will be generated.");
 
   DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
   geom_ = detconst->GetGeometry();
@@ -129,3 +130,4 @@ void ElecPositronPairGenerator::GeneratePrimaryVertex(G4Event* event)
   vertex->SetPrimary(particle2);
   event->AddPrimaryVertex(vertex);
 }
+

@@ -53,7 +53,8 @@ ECECGenerator::ECECGenerator():
                         "Shell from which the electron is captured.");
 
   msg_->DeclareProperty("region", region_,
-                        "Region of the geometry where vertices will be generated.");
+                        "Region of the geometry "
+                        "where vertices will be generated.");
 
 }
 

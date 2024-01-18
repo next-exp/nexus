@@ -60,7 +60,8 @@ costheta_min_(0), costheta_max_(1.)
   max_energy.SetRange("max_energy>0.");
 
   msg_->DeclareProperty("region", region_,
-    "Region of the geometry where the vertex will be generated.");
+                        "Region of the geometry "
+                        "where the vertex will be generated.");
 
 
   msg_->DeclarePropertyWithUnit("momentum", "mm",  momentum_,
