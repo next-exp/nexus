@@ -17,14 +17,14 @@ G4Allocator<SensorHit> SensorHitAllocator;
 
 
 SensorHit::SensorHit():
-  G4VHit(), pmt_id_(-1.), bin_size_(0.)
+  G4VHit(), sns_id_(-1.), bin_size_(0.)
 {
 }
 
 
 
 SensorHit::SensorHit(G4int id, const G4ThreeVector& position, G4double bin_size):
-  G4VHit(), pmt_id_(id),  bin_size_(bin_size), position_(position)
+  G4VHit(), sns_id_(id),  bin_size_(bin_size), position_(position)
 {
 }
 
@@ -45,7 +45,7 @@ SensorHit::SensorHit(const SensorHit& other): G4VHit()
 
 const SensorHit& SensorHit::operator=(const SensorHit& other)
 {
-  pmt_id_    = other.pmt_id_;
+  sns_id_    = other.sns_id_;
   bin_size_  = other.bin_size_;
   position_  = other.position_;
   histogram_ = other.histogram_;

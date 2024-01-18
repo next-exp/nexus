@@ -326,16 +326,16 @@ void PersistencyManager::StoreSensorHits(G4VHitsCollection* hc)
       data.push_back(std::make_pair(time_bin, charge));
       amplitude = amplitude + (*it).second;
 
-      h5writer_->WriteSensorDataInfo(nevt_, (unsigned int)hit->GetPmtID(),
+      h5writer_->WriteSensorDataInfo(nevt_, (unsigned int)hit->GetSensorID(),
                                      time_bin, charge);
     }
 
     std::vector<G4int>::iterator pos_it =
-      std::find(sns_posvec_.begin(), sns_posvec_.end(), hit->GetPmtID());
+      std::find(sns_posvec_.begin(), sns_posvec_.end(), hit->GetSensorID());
     if (pos_it == sns_posvec_.end()) {
-      h5writer_->WriteSensorPosInfo((unsigned int)hit->GetPmtID(), sdname.c_str(),
+      h5writer_->WriteSensorPosInfo((unsigned int)hit->GetSensorID(), sdname.c_str(),
 				    (float)xyz.x(), (float)xyz.y(), (float)xyz.z());
-      sns_posvec_.push_back(hit->GetPmtID());
+      sns_posvec_.push_back(hit->GetSensorID());
     }
 
   }
