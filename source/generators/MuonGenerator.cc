@@ -33,27 +33,29 @@ REGISTER_CLASS(MuonGenerator, G4VPrimaryGenerator)
 
 MuonGenerator::MuonGenerator():
   G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
-  use_lsc_dist_(true), axis_rotation_(150), rPhi_(NULL), user_dir_{}, energy_min_(0.),
-  energy_max_(0.), dist_name_("za"), bInitialize_(false), geom_(0), geom_solid_(0),
-  gen_rad_(223.33*cm)
+  use_lsc_dist_(true), axis_rotation_(150), rPhi_(NULL), user_dir_{},
+  energy_min_(0.), energy_max_(0.), dist_name_("za"), bInitialize_(false),
+  geom_(0), geom_solid_(0), gen_rad_(223.33*cm)
 {
   msg_ = new G4GenericMessenger(this, "/Generator/MuonGenerator/",
 				"Control commands of muongenerator.");
 
   G4GenericMessenger::Command& min_energy =
-    msg_->DeclareProperty("min_energy", energy_min_, "Set minimum kinetic energy of the particle.");
+    msg_->DeclareProperty("min_energy", energy_min_,
+                          "Minimum kinetic energy of the particle.");
   min_energy.SetUnitCategory("Energy");
   min_energy.SetParameterName("min_energy", false);
   min_energy.SetRange("min_energy>0.");
 
   G4GenericMessenger::Command& max_energy =
-    msg_->DeclareProperty("max_energy", energy_max_, "Set maximum kinetic energy of the particle");
+    msg_->DeclareProperty("max_energy", energy_max_,
+                          "Maximum kinetic energy of the particle");
   max_energy.SetUnitCategory("Energy");
   max_energy.SetParameterName("max_energy", false);
   max_energy.SetRange("max_energy>0.");
 
   msg_->DeclareProperty("region", region_,
-			"Set the region of the geometry where the vertex will be generated.");
+     "Region of the geometry where the vertex will be generated.");
 
   msg_->DeclareProperty("use_lsc_dist", use_lsc_dist_,
 			"Distribute muon directions according to file?");
@@ -102,21 +104,23 @@ void MuonGenerator::LoadMuonDistribution()
     // Only angle option, but energy specified
     if (dist_name_ == "za")
       G4Exception("[MuonGenerator]", "LoadMuonDistribution()",
-                FatalException, " Angular + Energy file specified with angle_dist=za option selected, use angle_dist=zae ");
+                  FatalException, " Angular + Energy file specified with angle_dist=za option selected, use angle_dist=zae ");
   }
   // File name does not contain the word Energy
   else {
     if (dist_name_ == "zae")
       G4Exception("[MuonGenerator]", "LoadMuonDistribution()",
-                FatalException, " Angular file specified with angle_dist=zae option selected, use angle_dist=za ");
+                  FatalException, " Angular file specified with angle_dist=zae option selected, use angle_dist=za ");
   }
 
   // Load in the data from csv file depending on 2D histogram sampling or 3D
   if (dist_name_ == "za")
-    LoadHistData2D(ang_file_, flux_, azimuths_, zeniths_, azimuth_smear_, zenith_smear_);
+    LoadHistData2D(ang_file_, flux_, azimuths_, zeniths_, azimuth_smear_,
+                   zenith_smear_);
 
   if (dist_name_ == "zae"){
-    LoadHistData3D(ang_file_, flux_, azimuths_, zeniths_, energies_, azimuth_smear_, zenith_smear_, energy_smear_);
+    LoadHistData3D(ang_file_, flux_, azimuths_, zeniths_, energies_,
+                   azimuth_smear_, zenith_smear_, energy_smear_);
     
     // Check if the energy is in the desired range permitted by the binning range in the data file
     CheckVarBounds(ang_file_, energy_min_/GeV, energy_max_/GeV, "energy"); 
@@ -297,8 +301,9 @@ G4String MuonGenerator::MuonCharge() const
 }
 
 
-void MuonGenerator::GetDirection(G4ThreeVector& dir, G4double& zenith, G4double& azimuth,
-                      G4double& energy, G4double& kinetic_energy, G4double mass)
+void MuonGenerator::GetDirection(G4ThreeVector& dir, G4double& zenith,
+                                 G4double& azimuth, G4double& energy,
+                                 G4double& kinetic_energy, G4double mass)
 {
 
   // Bool to check if zenith has a valid value. If not then resample

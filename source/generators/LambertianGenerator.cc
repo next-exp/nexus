@@ -47,28 +47,29 @@ costheta_min_(0), costheta_max_(1.)
 
   G4GenericMessenger::Command& min_energy =
     msg_->DeclareProperty("min_energy", energy_min_,
-      "Set minimum kinetic energy of the particle.");
+      "Minimum kinetic energy of the particle.");
   min_energy.SetUnitCategory("Energy");
   min_energy.SetParameterName("min_energy", false);
   min_energy.SetRange("min_energy>0.");
 
   G4GenericMessenger::Command& max_energy =
     msg_->DeclareProperty("max_energy", energy_max_,
-      "Set maximum kinetic energy of the particle");
+      "Maximum kinetic energy of the particle");
   max_energy.SetUnitCategory("Energy");
   max_energy.SetParameterName("max_energy", false);
   max_energy.SetRange("max_energy>0.");
 
   msg_->DeclareProperty("region", region_,
-    "Set the region of the geometry where the vertex will be generated.");
+    "Region of the geometry where the vertex will be generated.");
 
 
-  msg_->DeclarePropertyWithUnit("momentum", "mm",  momentum_, "Set particle 3-momentum.");
+  msg_->DeclarePropertyWithUnit("momentum", "mm",  momentum_,
+                                "Set particle 3-momentum.");
 
   msg_->DeclareProperty("min_costheta", costheta_min_,
-			"Set minimum cosTheta for the direction of the particle.");
+			"Minimum cosTheta for the direction of the particle.");
   msg_->DeclareProperty("max_costheta", costheta_max_,
-			"Set maximum cosTheta for the direction of the particle.");
+			"Maximum cosTheta for the direction of the particle.");
 
   DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
   geom_ = detconst->GetGeometry();
@@ -98,7 +99,8 @@ void LambertianGenerator::SetParticleDefinition(G4String particle_name)
 void LambertianGenerator::GeneratePrimaryVertex(G4Event* event)
 {
   // Generate uniform random energy in [E_min, E_max]
-  G4double kinetic_energy = nexus::UniformRandomInRange(energy_max_, energy_min_);
+  G4double kinetic_energy =
+    nexus::UniformRandomInRange(energy_max_, energy_min_);
 
   // Calculate cartesian components of momentum
   G4double mass   = particle_definition_->GetPDGMass();
@@ -119,7 +121,8 @@ void LambertianGenerator::GeneratePrimaryVertex(G4Event* event)
   G4ThreeVector p = pmod * p_dir;
 
   // Create the new primary particle and set it some properties
-  auto particle = new G4PrimaryParticle(particle_definition_, p.x(), p.y(), p.z());
+  auto particle =
+    new G4PrimaryParticle(particle_definition_, p.x(), p.y(), p.z());
 
   // Set random polarization
   if (particle_definition_ == G4OpticalPhoton::Definition()) {
