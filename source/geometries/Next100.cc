@@ -137,7 +137,8 @@ namespace nexus {
     G4ThreeVector vessel_displacement =
       shielding_->GetAirDisplacement(); // explained below
 
-    coord_origin_ = G4ThreeVector(fc_displ_x_, fc_displ_y_, vessel_->GetGateZpos());
+    coord_origin_ =
+      G4ThreeVector(fc_displ_x_, fc_displ_y_, vessel_->GetGateZpos());
 
     // SHIELDING
     shielding_->SetCoordOrigin(coord_origin_);

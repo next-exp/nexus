@@ -40,7 +40,8 @@ namespace nexus {
     geom_navigator_ = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
 
     /// Messenger
-    msg_ = new G4GenericMessenger(this, "/Geometry/Next100/", "Control commands of geometry Next100.");
+    msg_ = new G4GenericMessenger(this, "/Geometry/Next100/",
+                                  "Control commands of geometry Next100.");
     msg_->DeclareProperty("ics_vis", visibility_, "ICS Visibility");
 
   }
@@ -228,7 +229,8 @@ namespace nexus {
 
         G4ThreeVector glob_vtx(vertex);
         glob_vtx = glob_vtx - GetCoordOrigin();
-        VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+        VertexVolume =
+          geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != "ICS");
     }
 
