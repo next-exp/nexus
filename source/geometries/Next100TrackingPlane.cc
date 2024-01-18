@@ -84,12 +84,13 @@ void Next100TrackingPlane::Construct()
   G4LogicalVolume* copper_plate_logic =
     new G4LogicalVolume(copper_plate_solid, copper, copper_plate_name);
 
-  G4double copper_plate_zpos = GetCoordOrigin().z() - gate_tp_dist_ - copper_plate_thickness_/2.;
+  G4double copper_plate_zpos =
+    GetCoordOrigin().z() - gate_tp_dist_ - copper_plate_thickness_/2.;
 
   G4VPhysicalVolume* copper_plate_phys =
     new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,copper_plate_zpos),
-                      copper_plate_logic, copper_plate_name, mpv_->GetLogicalVolume(),
-                      false, 0, false);
+                      copper_plate_logic, copper_plate_name,
+                      mpv_->GetLogicalVolume(), false, 0, false);
 
   copper_plate_gen_ = new CylinderPointSampler2020(copper_plate_phys);
 
@@ -100,7 +101,8 @@ void Next100TrackingPlane::Construct()
   sipm_board_geom_->Construct();
   G4LogicalVolume* sipm_board_logic = sipm_board_geom_->GetLogicalVolume();
 
-  G4double zpos = GetCoordOrigin().z() - gate_tp_dist_ + sipm_board_geom_->GetThickness()/2.;
+  G4double zpos =
+    GetCoordOrigin().z() - gate_tp_dist_ + sipm_board_geom_->GetThickness()/2.;
 
   // SiPM boards are positioned bottom (negative Y) to top (positive Y)
   // and left (negative X) to right (positive X).
@@ -135,8 +137,10 @@ void Next100TrackingPlane::Construct()
   G4double plug_y_displacement = 90.5 * mm;
 
   G4Box* plug_solid = new G4Box("DB_PLUG", plug_x/2., plug_y/2., plug_z/2.);
-  G4LogicalVolume* plug_logic = new G4LogicalVolume(plug_solid,  materials::PEEK(), "DB_PLUG");
-  G4double plug_posz = copper_plate_zpos - copper_plate_thickness_/2. - plug_z/2.;
+  G4LogicalVolume* plug_logic =
+    new G4LogicalVolume(plug_solid,  materials::PEEK(), "DB_PLUG");
+  G4double plug_posz =
+    copper_plate_zpos - copper_plate_thickness_/2. - plug_z/2.;
 
   G4ThreeVector pos;
   for (int i=0; i<int(board_pos_.size()); i++) {
@@ -144,7 +148,8 @@ void Next100TrackingPlane::Construct()
     pos.setY(pos.getY()-plug_y_displacement);
     pos.setZ(plug_posz);
     plug_pos_.push_back(pos);
-    new G4PVPlacement(0, pos, plug_logic, "DB_PLUG", mpv_->GetLogicalVolume(), false, i, false);
+    new G4PVPlacement(0, pos, plug_logic, "DB_PLUG", mpv_->GetLogicalVolume(),
+                      false, i, false);
   }
 
   plug_gen_ = new BoxPointSampler(plug_x, plug_y, plug_z, 0.);
@@ -179,8 +184,8 @@ void Next100TrackingPlane::PlaceSiPMBoardColumns(G4int num_boards,
     G4ThreeVector position(xpos, ypos, zpos);
     board_pos_.push_back(position);
 
-    new G4PVPlacement(nullptr, position, logic_vol, logic_vol->GetName(), mpv_->GetLogicalVolume(),
-                      false, board_index, false);
+    new G4PVPlacement(nullptr, position, logic_vol, logic_vol->GetName(),
+                      mpv_->GetLogicalVolume(), false, board_index, false);
     board_index++;
   }
 }
