@@ -157,7 +157,8 @@ void GenericPhotosensor::Construct()
 
   G4double window_zpos = thickness_/2. - wls_thickness_ - window_thickness_/2.;
 
-  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., window_zpos), window_logic_vol,
+  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., window_zpos),
+                    window_logic_vol,
                     name, case_logic_vol, false, 0, false);
 
 
@@ -165,7 +166,8 @@ void GenericPhotosensor::Construct()
   name = name_ + "_SENSAREA";
 
   G4Box* sensarea_solid_vol =
-    new G4Box(name, reduced_width_/2., reduced_height_/2., sensarea_thickness_/2.);
+    new G4Box(name, reduced_width_/2., reduced_height_/2.,
+              sensarea_thickness_/2.);
 
   G4LogicalVolume* sensarea_logic_vol =
     new G4LogicalVolume(sensarea_solid_vol, sensitive_mat_, name);
@@ -173,7 +175,8 @@ void GenericPhotosensor::Construct()
   G4double sensarea_zpos = thickness_/2. - wls_thickness_ - window_thickness_ -
                            sensarea_thickness_/2.;
 
-  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., sensarea_zpos), sensarea_logic_vol,
+  new G4PVPlacement(nullptr, G4ThreeVector(0., 0., sensarea_zpos),
+                    sensarea_logic_vol,
                     name, case_logic_vol, false, 0, false);
 
 
@@ -192,9 +195,9 @@ void GenericPhotosensor::Construct()
     new G4PVPlacement(nullptr, G4ThreeVector(0., 0., wls_zpos), wls_logic_vol,
                       name, case_logic_vol, false, 0, false);
 
-    G4OpticalSurface* wls_optSurf = new G4OpticalSurface(name + "_OPSURF",
-                                                         glisur, ground,
-                                                         dielectric_dielectric, .01);
+    G4OpticalSurface* wls_optSurf =
+      new G4OpticalSurface(name + "_OPSURF", glisur, ground,
+                           dielectric_dielectric, .01);
 
     new G4LogicalSkinSurface(name + "_OPSURF", wls_logic_vol, wls_optSurf);
 
