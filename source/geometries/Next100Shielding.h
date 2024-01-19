@@ -58,17 +58,17 @@ namespace nexus {
 
     // Dimensions
     const G4double shield_x_, shield_y_, shield_z_;
-    const G4double beam_thickness_1, beam_thickness_2;
+    const G4double beam_thickn_1, beam_thickn_2;
     const G4double lateral_z_separation_, roof_z_separation_;
     const G4double front_x_separation_;
-    const G4double lead_thickness_, steel_thickness_;
+    const G4double lead_thickn_, steel_thickn_;
     const G4double pedestal_x_, pedestal_top_x_;
     const G4double support_beam_dist_, support_front_dist_;
-    const G4double pedestal_lateral_beam_thickness_;
-    const G4double pedestal_front_beam_thickness_;
-    const G4double pedestal_roof_thickness_;
+    const G4double pedestal_lateral_beam_thickn_;
+    const G4double pedestal_front_beam_thickn_;
+    const G4double pedestal_roof_thickn_;
     const G4double pedestal_lateral_length_;
-    const G4double bubble_seal_thickness_, edpm_seal_thickness_;
+    const G4double bubble_seal_thickn_, edpm_seal_thickn_;
 
     G4bool visibility_;
     G4bool verbosity_;
