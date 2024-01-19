@@ -58,7 +58,7 @@ namespace nexus {
 
     // Dimensions
     const G4double shield_x_, shield_y_, shield_z_;
-    const G4double beam_thickn_1, beam_thickn_2;
+    const G4double beam_thickn_1_, beam_thickn_2_;
     const G4double lateral_z_separation_, roof_z_separation_;
     const G4double front_x_separation_;
     const G4double lead_thickn_, steel_thickn_;
