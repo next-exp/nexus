@@ -50,21 +50,30 @@ namespace nexus {
 
   private:
     // Detector dimensions
-    const G4double lab_size_; /// Size of the air box containing the detector
-    const G4double grid_thickness_; /// Width of grids simulated as dielectric
-    //    const G4double ep_fc_distance_; /// Distance between the surface of the
-    ///EP copper plate and the end of the staves/teflon panels/poly (a.k.a. FC)
+    const G4double lab_size_; ///< Size of the air box containing the detector
+    const G4double grid_thickness_; ///< Width of grids simulated as dielectric
+    // const G4double ep_fc_distance_; ///< Distance between the surface of the
+    // EP copper plate and the end of the staves/teflon panels/poly (a.k.a. FC)
     const G4double gate_tracking_plane_distance_, gate_sapphire_wdw_distance_;
     const G4double ics_ep_lip_width_ ; ///< width of step of the ICS bars in the
     /// energy plane side
     const G4double fc_displ_x_, fc_displ_y_;
 
-    // Pointers to logical volumes
+    /// Specific vertex for AD_HOC region
+    G4ThreeVector specific_vertex_;
+
+    /// Whether or not to build LSC HallA.
+    G4bool lab_walls_;
+
+    /// Whether or not to print SiPM positions
+    G4bool print_;
+
+    /// Pointers to logical volumes
     G4LogicalVolume* lab_logic_;
     G4LogicalVolume* buffer_gas_logic_;
     G4LogicalVolume* hallA_logic_;
 
-    // Detector parts
+    /// Detector parts
     LSCHallA* hallA_walls_;
     Next100Shielding* shielding_;
     Next100Vessel*    vessel_;
@@ -74,17 +83,8 @@ namespace nexus {
     /// Messenger for the definition of control commands
     G4GenericMessenger* msg_;
 
-    /// Specific vertex for AD_HOC region
-    G4ThreeVector specific_vertex_;
-
     /// Origin of coordinates
     G4ThreeVector coord_origin_;
-
-    /// Whether or not to build LSC HallA.
-    G4bool lab_walls_;
-
-    /// Whether or not to print SiPM positions
-    G4bool print_;
   };
 
 } // end namespace nexus

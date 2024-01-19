@@ -57,22 +57,23 @@ namespace nexus {
   private:
 
     // Dimensions
-    G4double lead_x_, lead_y_, lead_z_;
-    G4double shield_x_, shield_y_, shield_z_;
-    G4double beam_thickness_1, beam_thickness_2;
-    G4double lateral_z_separation_, roof_z_separation_ , front_x_separation_;
-    G4double lead_thickness_, steel_thickness_;
-    G4double pedestal_x_, pedestal_top_x_;
-    G4double support_beam_dist_, support_front_dist_;
-    G4double pedestal_lateral_beam_thickness_;
-    G4double pedestal_front_beam_thickness_;
-    G4double pedestal_roof_thickness_;
-    G4double pedestal_lateral_length_;
-    G4double bubble_seal_thickness_;
-    G4double edpm_seal_thickness_;
+    const G4double shield_x_, shield_y_, shield_z_;
+    const G4double beam_thickness_1, beam_thickness_2;
+    const G4double lateral_z_separation_, roof_z_separation_;
+    const G4double front_x_separation_;
+    const G4double lead_thickness_, steel_thickness_;
+    const G4double pedestal_x_, pedestal_top_x_;
+    const G4double support_beam_dist_, support_front_dist_;
+    const G4double pedestal_lateral_beam_thickness_;
+    const G4double pedestal_front_beam_thickness_;
+    const G4double pedestal_roof_thickness_;
+    const G4double pedestal_lateral_length_;
+    const G4double bubble_seal_thickness_, edpm_seal_thickness_;
 
     G4bool visibility_;
     G4bool verbosity_;
+
+    G4double lead_x_, lead_y_, lead_z_;
 
     // Vertex generators
     BoxPointSampler* lead_gen_;
