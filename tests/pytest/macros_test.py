@@ -1,5 +1,7 @@
 import pytest
 
+from pytest import mark
+
 import glob
 import os
 import subprocess
@@ -110,6 +112,7 @@ def execute_example_jobs(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, macro_l
         p  = subprocess.run(command, check=True, env=my_env)
 
 
+@mark.slow
 def test_run_overlap_check(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, check_list):
 
     with capsys.disabled():
