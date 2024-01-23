@@ -10,9 +10,10 @@
 #ifndef NEXT100_INNER_ELEMENTS_H
 #define NEXT100_INNER_ELEMENTS_H
 
+#include "GeometryBase.h"
+
 #include <G4ThreeVector.hh>
 #include <vector>
-#include "GeometryBase.h"
 
 class G4LogicalVolume;
 class G4VPhysicalVolume;
@@ -48,6 +49,9 @@ namespace nexus {
     /// Return the positions of the SiPMs in their mother volume (gas)
     std::vector<G4ThreeVector> GetSiPMPosInGas() const;
 
+    /// Return the positions of the PMTs in their mother volume (gas)
+    std::vector<G4ThreeVector> GetPMTPosInGas() const;
+
     /// Generate a vertex within a given region of the geometry
     G4ThreeVector GenerateVertex(const G4String& region) const;
 
@@ -79,6 +83,9 @@ namespace nexus {
     // Positions of the SiPMs in their mother volume (gas)
     std::vector<G4ThreeVector> sipm_pos_;
 
+    // Positions of the PMTs in their mother volume (gas)
+    std::vector<G4ThreeVector> pmt_pos_;
+
   };
 
   inline void Next100InnerElements::SetELtoTPdistance(G4double distance){
@@ -92,6 +99,11 @@ namespace nexus {
   inline std::vector<G4ThreeVector> Next100InnerElements::GetSiPMPosInGas() const
   {
     return sipm_pos_;
+  }
+
+ inline std::vector<G4ThreeVector> Next100InnerElements::GetPMTPosInGas() const
+  {
+    return pmt_pos_;
   }
 
 } // end namespace nexus
