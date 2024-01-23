@@ -39,8 +39,7 @@ ScintillationGenerator::ScintillationGenerator() :
     "Control commands of scintillation generator.");
 
   msg_->DeclareProperty("region", region_,
-                        "Region of the geometry "
-                        "where the vertex will be generated.");
+                        "Region of the geometry where the vertex will be generated.");
 
   msg_->DeclareProperty("nphotons", nphotons_, "Number of photons");
 
@@ -73,8 +72,7 @@ void ScintillationGenerator::GeneratePrimaryVertex(G4Event* event)
 
   if (!mpt) {
     G4Exception("[ScintillationGenerator]", "GeneratePrimaryVertex()",
-                FatalException,
-                "Material properties not defined for this material!");
+                FatalException, "Material properties not defined for this material!");
   }
   // Using fast or slow component here is irrelevant, since we're not using time
   // and they're are the same in energy.
@@ -83,8 +81,7 @@ void ScintillationGenerator::GeneratePrimaryVertex(G4Event* event)
 
   if (!spectrum) {
     G4Exception("[ScintillationGenerator]", "GeneratePrimaryVertex()",
-                FatalException,
-                "Fast time decay constant not defined for this material!");
+                FatalException, "Fast time decay constant not defined for this material!");
   }
 
   G4PhysicsOrderedFreeVector* spectrum_integral =

@@ -36,8 +36,7 @@ IonGenerator::IonGenerator():
                                 "primary generator.");
 
   G4GenericMessenger::Command& atomic_number_cmd =
-    msg_->DeclareProperty("atomic_number", atomic_number_,
-                          "Atomic number of the ion.");
+    msg_->DeclareProperty("atomic_number", atomic_number_, "Atomic number of the ion.");
   atomic_number_cmd.SetParameterName("atomic_number", false);
   atomic_number_cmd.SetRange("atomic_number > 0");
 
@@ -57,15 +56,13 @@ IonGenerator::IonGenerator():
                         "Set to true to make unstable ions decay at t=0.");
 
   msg_->DeclareProperty("region", region_,
-                        "Region of the geometry "
-                        "where vertices will be generated.");
+                        "Region of the geometry where vertices will be generated.");
 
   // Load the detector geometry, which will be used for the generation of vertices
   const DetectorConstruction* detconst = dynamic_cast<const DetectorConstruction*>
     (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
   if (detconst) geom_ = detconst->GetGeometry();
-  else G4Exception("[IonGenerator]", "IonGenerator()", FatalException,
-                   "Unable to load geometry.");
+  else G4Exception("[IonGenerator]", "IonGenerator()", FatalException, "Unable to load geometry.");
 }
 
 
@@ -78,8 +75,7 @@ IonGenerator::~IonGenerator()
 G4ParticleDefinition* IonGenerator::IonDefinition()
 {
   G4ParticleDefinition* pdef =
-    G4IonTable::GetIonTable()->GetIon(atomic_number_, mass_number_,
-                                      energy_level_);
+    G4IonTable::GetIonTable()->GetIon(atomic_number_, mass_number_, energy_level_);
 
   if (!pdef) G4Exception("[IonGenerator]", "IonDefinition()",
                          FatalException, "Unable to find the requested ion.");

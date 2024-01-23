@@ -86,17 +86,18 @@ void GenericPhotosensor::DefineMaterials()
   case_mat_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
   // Window /////
-  // The optical properties of a given material, is common for the whole geometry so,
-  // making a copy of the window material restricts its use to this photosensor
-  // and prevents interferences with other possible uses.
+  // The optical properties of a given material, is common for the whole
+  // geometry so, making a copy of the window material restricts its use to
+  // this photosensor and prevents interferences with other possible uses.
   window_mat_ =
     materials::CopyMaterial(materials::OpticalSilicone(),
                                 name_ + "_WINDOW_MATERIAL");
   G4MaterialPropertiesTable* window_optProp = new G4MaterialPropertiesTable();
 
-  // In the default behavior of this class, the refractive index of WLS and window
-  // are matched to avoid reflection losses in the interfaces. If the user sets
-  // explicitly a refractive index for the window, it won't be used, raising a warning.
+  // In the default behavior of this class, the refractive index of WLS and
+  // window are matched to avoid reflection losses in the interfaces.
+  // If the user sets explicitly a refractive index for the window,
+  // it won't be used, raising a warning.
   if (with_wls_coating_) {
     if (window_rindex_)
       G4Exception("[GenericPhotosensor]", "DefineMaterials()", JustWarning,
@@ -158,16 +159,14 @@ void GenericPhotosensor::Construct()
   G4double window_zpos = thickness_/2. - wls_thickness_ - window_thickness_/2.;
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., window_zpos),
-                    window_logic_vol,
-                    name, case_logic_vol, false, 0, false);
+                    window_logic_vol,  name, case_logic_vol, false, 0, false);
 
 
   // PHOTOSENSITIVE AREA /////////////////////////////////////////////
   name = name_ + "_SENSAREA";
 
   G4Box* sensarea_solid_vol =
-    new G4Box(name, reduced_width_/2., reduced_height_/2.,
-              sensarea_thickness_/2.);
+    new G4Box(name, reduced_width_/2., reduced_height_/2., sensarea_thickness_/2.);
 
   G4LogicalVolume* sensarea_logic_vol =
     new G4LogicalVolume(sensarea_solid_vol, sensitive_mat_, name);
@@ -176,8 +175,7 @@ void GenericPhotosensor::Construct()
                            sensarea_thickness_/2.;
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., sensarea_zpos),
-                    sensarea_logic_vol,
-                    name, case_logic_vol, false, 0, false);
+                    sensarea_logic_vol, name, case_logic_vol, false, 0, false);
 
 
   // WLS_COATING /////////////////////////////////////////////
@@ -196,8 +194,7 @@ void GenericPhotosensor::Construct()
                       name, case_logic_vol, false, 0, false);
 
     G4OpticalSurface* wls_optSurf =
-      new G4OpticalSurface(name + "_OPSURF", glisur, ground,
-                           dielectric_dielectric, .01);
+      new G4OpticalSurface(name + "_OPSURF", glisur, ground, dielectric_dielectric, .01);
 
     new G4LogicalSkinSurface(name + "_OPSURF", wls_logic_vol, wls_optSurf);
 

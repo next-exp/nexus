@@ -37,8 +37,7 @@ ELTableGenerator::ELTableGenerator():
     "Control commands of the EL lookup table primary generator.");
 
   //G4GenericMessenger::Command& num_ie_cmd =
-    msg_->DeclareProperty("num_ie", num_ie_,
-      "Set number of ionization electrons to be generated.");
+    msg_->DeclareProperty("num_ie", num_ie_, "Set number of ionization electrons to be generated.");
 
   // Retrieve pointer to detector geometry from the run manager
   DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();

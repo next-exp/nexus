@@ -87,10 +87,8 @@ namespace nexus {
     /// Messenger
     msg_ = new G4GenericMessenger(this, "/Geometry/Next100/",
 				  "Control commands of geometry Next100.");
-    msg_->DeclareProperty("energy_plane_vis", visibility_,
-			  "Energy Plane visibility");
-    msg_->DeclareProperty("energy_plane_verbosity", verbosity_,
-			  "Energy Plane verbosity");
+    msg_->DeclareProperty("energy_plane_vis", visibility_, "Energy Plane visibility");
+    msg_->DeclareProperty("energy_plane_verbosity", verbosity_, "Energy Plane verbosity");
 
     /// The PMT
     pmt_ = new PmtR11410();
@@ -222,8 +220,7 @@ namespace nexus {
       + gate_sapphire_wdw_dist_ + stand_out_length + copper_plate_thickn_/2.;
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., copper_plate_posz_),
-                      copper_plate_logic, "EP_COPPER_PLATE", mother_logic_,
-                      false, 0, false);
+                      copper_plate_logic, "EP_COPPER_PLATE", mother_logic_, false, 0, false);
 
     /// Assign optical properties to materials ///
     G4Material* sapphire = materials::Sapphire();
@@ -304,8 +301,7 @@ namespace nexus {
 
     /// Optical pad ///
     G4Tubs* optical_pad_solid =
-      new G4Tubs("OPTICAL_PAD", 0., hole_diam_front_/2., optical_pad_thickn_/2.,
-                 0., twopi);
+      new G4Tubs("OPTICAL_PAD", 0., hole_diam_front_/2., optical_pad_thickn_/2., 0., twopi);
 
     G4LogicalVolume* optical_pad_logic =
       new G4LogicalVolume(optical_pad_solid, optical_coupler, "OPTICAL_PAD");

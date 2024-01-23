@@ -48,11 +48,9 @@ Next100SiPMBoard::Next100SiPMBoard():
   msg_ = new G4GenericMessenger(this, "/Geometry/Next100/",
                                 "Control commands of the NEXT-100 geometry.");
 
-  msg_->DeclareProperty("sipm_board_vis", visibility_,
-                        "Visibility of Next100SiPMBoard.");
+  msg_->DeclareProperty("sipm_board_vis", visibility_, "Visibility of Next100SiPMBoard.");
 
-  msg_->DeclareProperty("sipm_vis", sipm_visibility_,
-                        "Visibility of Next100 SiPMs.");
+  msg_->DeclareProperty("sipm_vis", sipm_visibility_, "Visibility of Next100 SiPMs.");
 
   G4GenericMessenger::Command& time_binning_cmd =
   msg_->DeclareProperty("sipm_time_binning", time_binning_,
@@ -87,8 +85,7 @@ void Next100SiPMBoard::Construct()
   G4String board_name = "SIPM_BOARD";
 
   G4Box* board_solid_vol =
-    new G4Box(board_name, size_/2., size_/2.,
-              (board_thickness_ + mask_thickness_)/2.);
+    new G4Box(board_name, size_/2., size_/2., (board_thickness_ + mask_thickness_)/2.);
 
 
   G4Material* kapton =
@@ -125,8 +122,7 @@ void Next100SiPMBoard::Construct()
       new G4LogicalVolume(mask_solid_vol, teflon, mask_name);
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., mask_zpos),
-                    mask_logic_vol, mask_name, board_logic_vol, false,
-                    0, false);
+                    mask_logic_vol, mask_name, board_logic_vol, false, 0, false);
 
   G4OpticalSurface* mask_opsurf =
     new G4OpticalSurface(mask_name+"_OPSURF", unified, ground, dielectric_metal);
@@ -151,8 +147,7 @@ void Next100SiPMBoard::Construct()
 
   G4VPhysicalVolume* mask_wls_phys_vol =
     new G4PVPlacement(nullptr, G4ThreeVector(0., 0., mask_wls_zpos),
-                      mask_wls_logic_vol, mask_wls_name, mask_logic_vol,
-                      false, 0, false);
+                      mask_wls_logic_vol, mask_wls_name, mask_logic_vol, false, 0, false);
 
   G4OpticalSurface* mask_wls_opsurf =
     new G4OpticalSurface(mask_wls_name+"_OPSURF",
@@ -212,20 +207,18 @@ void Next100SiPMBoard::Construct()
     new G4LogicalVolume(wall_wls_solid_vol, tpb, mask_wall_wls_name);
 
   G4VPhysicalVolume* wall_wls_phys_vol =
-    new G4PVPlacement(nullptr, G4ThreeVector(-mask_hole_x/2. + wls_thickness/2.,
-                                             0., 0.), wall_wls_logic_vol,
-                      mask_wall_wls_name, mask_hole_logic_vol, false, 0, false);
+    new G4PVPlacement(nullptr, G4ThreeVector(-mask_hole_x/2. + wls_thickness/2., 0., 0.),
+                      wall_wls_logic_vol, mask_wall_wls_name, mask_hole_logic_vol, false, 0, false);
 
   // MASK WLS GAS HOLE ///////////////////////////////////////////////
 
-  G4String mask_wls_hole_name   = "SIPM_BOARD_MASK_WLS_HOLE";
+  G4String mask_wls_hole_name = "SIPM_BOARD_MASK_WLS_HOLE";
 
   G4Box* mask_wls_hole_solid_vol =
     new G4Box(mask_wls_hole_name, mask_hole_x/2., mask_hole_y/2., wls_thickness/2.);
 
   G4LogicalVolume* mask_wls_hole_logic_vol =
-    new G4LogicalVolume(mask_wls_hole_solid_vol,
-                        mother_gas, mask_wls_hole_name);
+    new G4LogicalVolume(mask_wls_hole_solid_vol, mother_gas, mask_wls_hole_name);
 
   // (Placement of this volume below.)
 
@@ -244,9 +237,8 @@ void Next100SiPMBoard::Construct()
   G4double sipm_zpos = - mask_hole_length/2. + sipm_thickn/2.;
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., sipm_zpos),
-                    sipm_->GetLogicalVolume(),
-                    sipm_->GetLogicalVolume()->GetName(), mask_hole_logic_vol,
-                    false, 0, false);
+                    sipm_->GetLogicalVolume(), sipm_->GetLogicalVolume()->GetName(),
+                    mask_hole_logic_vol, false, 0, false);
 
   ////////////////////////////////////////////////////////////////////
 
@@ -271,8 +263,7 @@ void Next100SiPMBoard::Construct()
       // Placement of the WLS gas hole
       new G4PVPlacement(nullptr, G4ThreeVector(xpos, ypos, 0.),
                         mask_wls_hole_logic_vol, mask_wls_hole_name,
-                        mask_wls_logic_vol,
-                        false, counter, false);
+                        mask_wls_logic_vol, false, counter, false);
       // Placement of the hole+SiPM
       mask_hole_phys_vol =
         new G4PVPlacement(nullptr, G4ThreeVector(xpos, ypos, mask_hole_zpos),

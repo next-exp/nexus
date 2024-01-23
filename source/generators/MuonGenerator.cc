@@ -41,22 +41,19 @@ MuonGenerator::MuonGenerator():
 				"Control commands of muongenerator.");
 
   G4GenericMessenger::Command& min_energy =
-    msg_->DeclareProperty("min_energy", energy_min_,
-                          "Minimum kinetic energy of the particle.");
+    msg_->DeclareProperty("min_energy", energy_min_, "Minimum kinetic energy of the particle.");
   min_energy.SetUnitCategory("Energy");
   min_energy.SetParameterName("min_energy", false);
   min_energy.SetRange("min_energy>0.");
 
   G4GenericMessenger::Command& max_energy =
-    msg_->DeclareProperty("max_energy", energy_max_,
-                          "Maximum kinetic energy of the particle");
+    msg_->DeclareProperty("max_energy", energy_max_, "Maximum kinetic energy of the particle");
   max_energy.SetUnitCategory("Energy");
   max_energy.SetParameterName("max_energy", false);
   max_energy.SetRange("max_energy>0.");
 
   msg_->DeclareProperty("region", region_,
-                        "Region of the geometry "
-                        "where the vertex will be generated.");
+                        "Region of the geometry where the vertex will be generated.");
 
   msg_->DeclareProperty("use_lsc_dist", use_lsc_dist_,
 			"Distribute muon directions according to file?");
@@ -118,8 +115,7 @@ void MuonGenerator::LoadMuonDistribution()
 
   // Load in the data from csv file depending on 2D histogram sampling or 3D
   if (dist_name_ == "za")
-    LoadHistData2D(ang_file_, flux_, azimuths_, zeniths_, azimuth_smear_,
-                   zenith_smear_);
+    LoadHistData2D(ang_file_, flux_, azimuths_, zeniths_, azimuth_smear_, zenith_smear_);
 
   if (dist_name_ == "zae"){
     LoadHistData3D(ang_file_, flux_, azimuths_, zeniths_, energies_,
@@ -193,14 +189,14 @@ void MuonGenerator::GeneratePrimaryVertex(G4Event* event)
     // Initalise a cos^2 distribution to sample the zenith
     if (!use_lsc_dist_ && (user_dir_ == G4ThreeVector{})){
       std::cout << "[MuonGenerator]: Generating muons with uniform azimuth "
-        "and cos^2 distribution for zenith " << std::endl;
+                   "and cos^2 distribution for zenith " << std::endl;
       InitMuonZenithDist();
     }
 
     // User specified muon direction
     if (!use_lsc_dist_ && (user_dir_ != G4ThreeVector{})){
       std::cout << "[MuonGenerator]: Generating muons with user specified "
-        "direction " << std::endl;
+                   "direction " << std::endl;
     }
 
     // Set Initialisation
