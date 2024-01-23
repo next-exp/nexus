@@ -202,29 +202,29 @@ namespace nexus {
       new CylinderPointSampler(rear_body_diam_/2., body_thickness_,
 			       front_body_irad - rear_body_diam_/2., 0.,
 			       G4ThreeVector(0., 0., -front_body_length_/2. +
-                                             body_thickness_/2.));
+                                                      body_thickness_/2.));
 
     rear_body_gen_ =
       new CylinderPointSampler(rear_body_irad, rear_body_length_ +
                                body_thickness_, body_thickness_, 0.,
-                               G4ThreeVector(0., 0., -front_body_length_/2.
-                                             - rear_body_length_/2.
-                                             + body_thickness_/2.));
+                               G4ThreeVector(0., 0., -front_body_length_/2. -
+                                                      rear_body_length_/2. +
+                                                      body_thickness_/2.));
 
     rear_cap_gen_ =
       new CylinderPointSampler(rear_body_irad, body_thickness_, 0., 0.,
-			       G4ThreeVector (0., 0., -front_body_length_/2.
-					      - rear_body_length_ +
-                                              body_thickness_/2.));
+			       G4ThreeVector (0., 0., -front_body_length_/2. -
+					               rear_body_length_ +
+                                                       body_thickness_/2.));
 
     ///Front cap of the pmt: frame+window+photocathode
     front_cap_gen_ =
       new CylinderPointSampler(front_body_irad,
                                window_thickness_ + photocathode_thickness_,
 			       0., 0., G4ThreeVector(0., 0.,
-                                                     front_body_length_/2.
-                                                     - window_thickness_/2.
-                                                     - photocathode_thickness_/2.));
+                                                     front_body_length_/2. -
+                                                     window_thickness_/2. -
+                                                     photocathode_thickness_/2.));
 
     // Getting the enclosure body volume over total
     G4double front_body_vol  =

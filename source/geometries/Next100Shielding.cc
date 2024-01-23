@@ -840,13 +840,13 @@ namespace nexus {
       if (rand<perc_bubble_front_vol_){ // front
         vertex = bubble_seal_front_gen_->GenerateVertex("INSIDE");
         if (G4UniformRand() < 0.5){
-          vertex.setZ(vertex.z() + (support_beam_dist_/2. + support_front_dist_
-                                    + pedestal_front_beam_thickn_/2. +
+          vertex.setZ(vertex.z() + (support_beam_dist_/2. + support_front_dist_ +
+                                    pedestal_front_beam_thickn_/2. +
                                     bubble_seal_thickn_/2.));
         }
         else {
-          vertex.setZ(vertex.z() - (support_beam_dist_/2. + support_front_dist_
-                                    + pedestal_front_beam_thickn_/2. +
+          vertex.setZ(vertex.z() - (support_beam_dist_/2. + support_front_dist_ +
+                                    pedestal_front_beam_thickn_/2. +
                                     bubble_seal_thickn_/2.));
         }
       }
