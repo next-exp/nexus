@@ -134,8 +134,8 @@ void BlackBoxSiPMBoard::Construct()
   G4ThreeVector sipm_pos;
 
   for (G4int sipm_id=0; sipm_id<num_sipms_; sipm_id++) {
+    sipm_pos = sipm_positions_[sipm_id] + G4ThreeVector(0., 0., sipm_posz);
     if (verbosity_){
-       sipm_pos = sipm_positions_[sipm_id] + G4ThreeVector(0., 0., sipm_posz);
        G4cout << "SiPM" << sipm_id << ":" << sipm_pos << G4endl;
     }
 
