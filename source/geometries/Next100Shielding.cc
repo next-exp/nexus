@@ -336,35 +336,27 @@ namespace nexus {
       pedestal_lateral_beam_thickn_/2.; //caution: it is referred to air-box
 
 
-    new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos,
-                                       support_beam_dist_/2.),
+    new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos, support_beam_dist_/2.),
                       pedestal_support_beam_bottom_logic,
                       "PEDESTAL", lead_box_logic, false, 0);
 
-    new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos,
-                                       -support_beam_dist_/2.),
+    new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos, -support_beam_dist_/2.),
                       pedestal_support_beam_bottom_logic,
                       "PEDESTAL", lead_box_logic, false, 0);
 
-    new G4PVPlacement(0, G4ThreeVector(0., pedestal_top_y_pos,
-                                       support_beam_dist_/2.),
+    new G4PVPlacement(0, G4ThreeVector(0., pedestal_top_y_pos, support_beam_dist_/2.),
                       pedestal_support_beam_top_logic,
                       "PEDESTAL", air_box_logic_, false, 0);
 
-    new G4PVPlacement(0, G4ThreeVector(0., pedestal_top_y_pos,
-                                       -support_beam_dist_/2.),
+    new G4PVPlacement(0, G4ThreeVector(0., pedestal_top_y_pos, -support_beam_dist_/2.),
                       pedestal_support_beam_top_logic,
                       "PEDESTAL", air_box_logic_, false, 0);
 
-    new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos,
-                                       support_beam_dist_/2. +
-                                       support_front_dist_),
+    new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos, support_beam_dist_/2. + support_front_dist_),
                       pedestal_beam_front_logic,
                       "PEDESTAL", lead_box_logic, false, 0);
 
-    new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos,
-                                       -support_beam_dist_/2. -
-                                       support_front_dist_),
+    new G4PVPlacement(0, G4ThreeVector(0., pedestal_y_pos, -support_beam_dist_/2. - support_front_dist_),
                       pedestal_beam_front_logic,
                       "PEDESTAL", lead_box_logic, false, 0);
 
@@ -521,8 +513,7 @@ namespace nexus {
                           pedestal_roof_thickn_, 0.,
                           G4ThreeVector(0., ped_roof_gen_y, ped_roof_gen_z), 0);
     // Compute relative volumes
-    G4double ped_support_bottom_vol =
-      pedestal_support_beam_bottom->GetCubicVolume();
+    G4double ped_support_bottom_vol = pedestal_support_beam_bottom->GetCubicVolume();
     G4double ped_support_top_vol = pedestal_support_beam_top->GetCubicVolume();
     G4double ped_front_vol       = pedestal_beam_front->GetCubicVolume();
     G4double ped_lateral_vol     = pedestal_beam_lateral->GetCubicVolume();
@@ -593,8 +584,7 @@ namespace nexus {
 
       G4double inner_vol = air_box_solid  ->GetCubicVolume();
       G4double steel_vol = steel_box_solid->GetCubicVolume() - inner_vol;
-      G4double lead_vol  =
-        lead_box_solid ->GetCubicVolume() - inner_vol - steel_vol;
+      G4double lead_vol  = lead_box_solid ->GetCubicVolume() - inner_vol - steel_vol;
 
       std::cout<<"INNER AIR VOLUME   (m3) "<< inner_vol/1.e9 <<std::endl;
       std::cout<<"INNER STEEL VOLUME (m3) "<< steel_vol/1.e9 <<std::endl;

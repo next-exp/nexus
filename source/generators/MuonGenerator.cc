@@ -172,8 +172,7 @@ void MuonGenerator::GeneratePrimaryVertex(G4Event* event)
 
     // Load in the Muon angular distribution from file
     if (use_lsc_dist_){
-      std::cout << "[MuonGenerator]: Generating muons using "
-        "lsc distribution loaded from file" << std::endl;
+      std::cout << "[MuonGenerator]: Generating muons using lsc distribution loaded from file" << std::endl;
       LoadMuonDistribution();
 
       // Throw exception if a user dir given

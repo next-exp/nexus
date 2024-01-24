@@ -49,7 +49,7 @@ namespace nexus {
 				  "Control commands of geometry Next100.");
 
     G4GenericMessenger::Command& pressure_cmd =
-      msg_->DeclareProperty("pressure", pressure_, "Pressure of gasn.");
+      msg_->DeclareProperty("pressure", pressure_, "Pressure of gas.");
     pressure_cmd.SetUnitCategory("Pressure");
     pressure_cmd.SetParameterName("pressure", false);
     pressure_cmd.SetRange("pressure>0.");
@@ -57,20 +57,18 @@ namespace nexus {
     new G4UnitDefinition("1/MeV","1/MeV", "1/Energy", 1/MeV);
 
     G4GenericMessenger::Command& sc_yield_cmd =
-      msg_->DeclareProperty("sc_yield", sc_yield_,
-			    "Scintillation yield of gas. It is in photons/MeV");
+      msg_->DeclareProperty("sc_yield", sc_yield_, "Scintillation yield of gas. It is in photons/MeV");
     sc_yield_cmd.SetParameterName("sc_yield", true);
     sc_yield_cmd.SetUnitCategory("1/Energy");
 
     G4GenericMessenger::Command& e_lifetime_cmd =
-      msg_->DeclareProperty("e_lifetime", e_lifetime_,
-			    "Electron lifetime in gas.");
+      msg_->DeclareProperty("e_lifetime", e_lifetime_, "Electron lifetime in gas.");
     e_lifetime_cmd.SetParameterName("e_lifetime", false);
     e_lifetime_cmd.SetUnitCategory("Time");
     e_lifetime_cmd.SetRange("e_lifetime>0.");
 
     msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
-      "Set generation vertex.");
+                                  "Set generation vertex.");
 
     msg_->DeclareProperty("gas", gas_, "Gas being used");
 

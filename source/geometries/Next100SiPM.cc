@@ -97,8 +97,7 @@ void Next100SiPM::Construct()
       new G4OpticalSurface(coating_name + "_OPSURF", glisur, ground,
                            dielectric_dielectric, .01);
 
-    new G4LogicalSkinSurface(coating_name + "_OPSURF", coating_logic_vol,
-                             coating_optSurf);
+    new G4LogicalSkinSurface(coating_name + "_OPSURF", coating_logic_vol, coating_optSurf);
 
     coating_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
@@ -122,8 +121,7 @@ void Next100SiPM::Construct()
     new G4LogicalVolume(window_solid_vol, optical_silicone, window_name);
 
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., window_zpos),
-                    window_logic_vol, window_name, sipm_logic_vol, false,
-                    0, false);
+                    window_logic_vol, window_name, sipm_logic_vol, false, 0, false);
 
 
   // SENSITIVE AREA ////////////////////////////////////////

@@ -239,16 +239,13 @@ namespace nexus {
       hole_length_front_ + pmt_stand_out_ + optical_pad_thickn_
       + sapphire_window_thickn_ + tpb_thickn_;
     G4Tubs* vacuum_front_solid =
-      new G4Tubs("HOLE_FRONT", 0., hole_diam_front_/2., vacuum_front_length/2.,
-                 0., twopi);
+      new G4Tubs("HOLE_FRONT", 0., hole_diam_front_/2., vacuum_front_length/2., 0., twopi);
 
     G4Tubs* vacuum_rear_solid =
-      new G4Tubs("HOLE_REAR", 0., hole_diam_rear_/2.,
-                 (hole_length_rear_+offset)/2., 0., twopi);
+      new G4Tubs("HOLE_REAR", 0., hole_diam_rear_/2., (hole_length_rear_+offset)/2., 0., twopi);
 
     G4Tubs* vacuum_hut_solid =
-      new G4Tubs("HOLE_HUT", 0., hut_int_diam_/2., hut_hole_length_/2.,
-                 0., twopi);
+      new G4Tubs("HOLE_HUT", 0., hut_int_diam_/2., hut_hole_length_/2., 0., twopi);
 
     G4UnionSolid* vacuum_solid =
       new G4UnionSolid("EP_HOLE", vacuum_front_solid, vacuum_rear_solid, 0,
@@ -258,8 +255,7 @@ namespace nexus {
       new G4UnionSolid("EP_HOLE", vacuum_solid, vacuum_hut_solid, 0,
                        G4ThreeVector(0., 0., vacuum_front_length/2.+hole_length_rear_+hut_hole_length_/2.));
 
-    G4LogicalVolume* vacuum_logic =
-      new G4LogicalVolume(vacuum_solid, vacuum, "EP_HOLE");
+    G4LogicalVolume* vacuum_logic = new G4LogicalVolume(vacuum_solid, vacuum, "EP_HOLE");
 
     /// Sapphire window ///
     G4Tubs* sapphire_window_solid =
@@ -269,8 +265,7 @@ namespace nexus {
     G4LogicalVolume* sapphire_window_logic
       = new G4LogicalVolume(sapphire_window_solid, sapphire, "SAPPHIRE_WINDOW");
 
-    G4double window_posz =
-      -vacuum_front_length/2. + (sapphire_window_thickn_ + tpb_thickn_)/2.;
+    G4double window_posz = -vacuum_front_length/2. + (sapphire_window_thickn_ + tpb_thickn_)/2.;
 
     G4VPhysicalVolume* sapphire_window_phys =
       new G4PVPlacement(0, G4ThreeVector(0., 0., window_posz),
@@ -282,8 +277,7 @@ namespace nexus {
       new G4Tubs("SAPPHIRE_WDW_TPB", 0., hole_diam_front_/2, tpb_thickn_/2.,
                  0., twopi);
 
-    G4LogicalVolume* tpb_logic =
-      new G4LogicalVolume(tpb_solid, tpb, "SAPPHIRE_WDW_TPB");
+    G4LogicalVolume* tpb_logic = new G4LogicalVolume(tpb_solid, tpb, "SAPPHIRE_WDW_TPB");
 
     G4double tpb_posz = - (sapphire_window_thickn_ + tpb_thickn_)/2. + tpb_thickn_/2.;
 
@@ -340,8 +334,7 @@ namespace nexus {
                           G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON"),
                           "PMT_BASE");
 
-    G4double pmt_base_posz =
-      vacuum_front_length/2. + hole_length_rear_ + hut_hole_length_/2.;
+    G4double pmt_base_posz = vacuum_front_length/2. + hole_length_rear_ + hut_hole_length_/2.;
 
     G4VPhysicalVolume* pmt_base_phys =
        new G4PVPlacement(0, G4ThreeVector(0., 0., pmt_base_posz),
@@ -445,8 +438,7 @@ namespace nexus {
         vertex = copper_gen_->GenerateVertex("VOLUME");
         G4ThreeVector glob_vtx(vertex);
         glob_vtx = glob_vtx - GetCoordOrigin();
-        VertexVolume =
-          geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+        VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != region);
     }
 
@@ -462,8 +454,7 @@ namespace nexus {
         vertex.setZ(vertex.z() + z_translation);
         G4ThreeVector glob_vtx(vertex);
         glob_vtx = glob_vtx - GetCoordOrigin();
-        VertexVolume =
-          geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+        VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != region);
     }
 

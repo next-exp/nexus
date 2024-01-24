@@ -40,8 +40,7 @@ namespace nexus {
     geom_navigator_ = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
 
     /// Messenger
-    msg_ = new G4GenericMessenger(this, "/Geometry/Next100/",
-                                  "Control commands of geometry Next100.");
+    msg_ = new G4GenericMessenger(this, "/Geometry/Next100/", "Control commands of geometry Next100.");
     msg_->DeclareProperty("ics_vis", visibility_, "ICS Visibility");
 
   }
@@ -91,24 +90,20 @@ namespace nexus {
 
 
    ics_solid =
-      new G4SubtractionSolid("ICS", ics_body, port_hole_solid,
-                             port_a_Rot, G4ThreeVector(port_x, port_y,
-                                                       port_z_1a_-ics_z_pos));
+      new G4SubtractionSolid("ICS", ics_body, port_hole_solid, port_a_Rot,
+                             G4ThreeVector(port_x, port_y, port_z_1a_-ics_z_pos));
 
     ics_solid =
-      new G4SubtractionSolid("ICS", ics_solid, port_hole_solid,
-                             port_a_Rot, G4ThreeVector(port_x, port_y,
-                                                       port_z_2a_-ics_z_pos));
+      new G4SubtractionSolid("ICS", ics_solid, port_hole_solid, port_a_Rot,
+                             G4ThreeVector(port_x, port_y, port_z_2a_-ics_z_pos));
 
     ics_solid =
-      new G4SubtractionSolid("ICS", ics_solid, port_hole_solid,
-                             port_b_Rot, G4ThreeVector(-port_x, port_y,
-                                                       port_z_1b_-ics_z_pos));
+      new G4SubtractionSolid("ICS", ics_solid, port_hole_solid, port_b_Rot,
+                             G4ThreeVector(-port_x, port_y, port_z_1b_-ics_z_pos));
 
     ics_solid =
-      new G4SubtractionSolid("ICS", ics_solid, port_hole_solid,
-                             port_b_Rot, G4ThreeVector(-port_x, port_y,
-                                                       port_z_2b_-ics_z_pos));
+      new G4SubtractionSolid("ICS", ics_solid, port_hole_solid, port_b_Rot,
+                             G4ThreeVector(-port_x, port_y, port_z_2b_-ics_z_pos));
 
     /// Upper holes
     // z distances measured with respect to TP plate, ie the start of ICS
@@ -127,18 +122,14 @@ namespace nexus {
     ics_solid =
       new G4SubtractionSolid("ICS", ics_solid, upp_hole_solid_1,
                              port_upp_Rot,
-                             G4ThreeVector(0, (in_rad_ + thickness_/2.),
-                                           upp_hole_1_z-length/2.));
+                             G4ThreeVector(0, (in_rad_ + thickness_/2.), upp_hole_1_z-length/2.));
 
     G4Tubs* upp_hole_solid_2 =
-      new G4Tubs("UPP_HOLE", 0., upp_hole_2_rad,
-                 (thickness_ + offset)/2., 0.*deg, 360.*deg);
+      new G4Tubs("UPP_HOLE", 0., upp_hole_2_rad, (thickness_ + offset)/2., 0.*deg, 360.*deg);
 
     ics_solid =
-      new G4SubtractionSolid("ICS", ics_solid, upp_hole_solid_2,
-                             port_upp_Rot,
-                             G4ThreeVector(0, (in_rad_ + thickness_/2.),
-                                           upp_hole_2_z-length/2.));
+      new G4SubtractionSolid("ICS", ics_solid, upp_hole_solid_2, port_upp_Rot,
+                             G4ThreeVector(0, (in_rad_ + thickness_/2.), upp_hole_2_z-length/2.));
 
     /// Lateral holes (also known as feedthrough holes)
     G4double lat_hole_rad = upp_hole_1_rad;
@@ -151,13 +142,11 @@ namespace nexus {
 
     ics_solid =
       new G4SubtractionSolid("ICS", ics_solid, lat_hole_solid,
-                             port_a_Rot, G4ThreeVector(port_x, port_y,
-                                                       lat_hole_z_1-length/2.));
+                             port_a_Rot, G4ThreeVector(port_x, port_y, lat_hole_z_1-length/2.));
 
     ics_solid =
       new G4SubtractionSolid("ICS", ics_solid, lat_hole_solid,
-                             port_b_Rot, G4ThreeVector(-port_x, port_y,
-                                                       lat_hole_z_2-length/2.));
+                             port_b_Rot, G4ThreeVector(-port_x, port_y, lat_hole_z_2-length/2.));
 
 
     /// ICS step at the TP end.
@@ -170,8 +159,7 @@ namespace nexus {
 
     ics_solid =
       new G4SubtractionSolid("ICS", ics_solid, tp_step_solid, 0,
-                             G4ThreeVector(0., 0.,
-                                           -length/2. + (step_length - offset)/2.));
+                             G4ThreeVector(0., 0., -length/2. + (step_length - offset)/2.));
 
     /// ICS lip at the EP end.
     // It is necessary to avoid clashing with the internal part
@@ -183,8 +171,7 @@ namespace nexus {
 
     ics_solid =
       new G4SubtractionSolid("ICS", ics_solid, ep_lip_solid, 0,
-                             G4ThreeVector(0., 0., length/2. -
-                                           (ics_ep_lip_width_ - offset)/2.));
+                             G4ThreeVector(0., 0., length/2. - (ics_ep_lip_width_ - offset)/2.));
 
     G4LogicalVolume* ics_logic =
       new G4LogicalVolume(ics_solid,
@@ -229,8 +216,7 @@ namespace nexus {
 
         G4ThreeVector glob_vtx(vertex);
         glob_vtx = glob_vtx - GetCoordOrigin();
-        VertexVolume =
-          geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
+        VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != "ICS");
     }
 

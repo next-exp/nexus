@@ -49,8 +49,7 @@ namespace nexus {
     msg_ = new G4GenericMessenger(this, "/Geometry/PmtR11410/",
 				  "Control commands of PmtR11410 geometry.");
 
-    msg_->DeclareProperty("visibility", visibility_,
-                          "Hamamatsu R11410 PMTs visibility");
+    msg_->DeclareProperty("visibility", visibility_, "Hamamatsu R11410 PMTs visibility");
 
     G4GenericMessenger::Command& bin_cmd =
       msg_->DeclareProperty("time_binning", binning_,
@@ -110,11 +109,9 @@ namespace nexus {
       new G4UnionSolid("PMT_GAS", front_body_gas_solid,
                        rear_body_gas_solid, 0, gas_transl);
 
-    G4Material* pmt_gas_mat =
-      G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
+    G4Material* pmt_gas_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
     pmt_gas_mat->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
-    G4LogicalVolume* pmt_gas_logic =
-      new G4LogicalVolume(pmt_gas_solid, pmt_gas_mat, "PMT_GAS");
+    G4LogicalVolume* pmt_gas_logic = new G4LogicalVolume(pmt_gas_solid, pmt_gas_mat, "PMT_GAS");
 
     G4double pmt_gas_posz = body_thickness_/2.;
     new G4PVPlacement(0, G4ThreeVector(0., 0., pmt_gas_posz), pmt_gas_logic,
@@ -130,8 +127,7 @@ namespace nexus {
 
     G4Material* silica = materials::FusedSilica();
     silica->SetMaterialPropertiesTable(opticalprops::FusedSilica());
-    G4LogicalVolume* window_logic =
-      new G4LogicalVolume(window_solid, silica, "PMT_WINDOW");
+    G4LogicalVolume* window_logic = new G4LogicalVolume(window_solid, silica, "PMT_WINDOW");
 
     G4double window_posz = front_body_gas_length/2. - window_thickness_/2.;
     new G4PVPlacement(0, G4ThreeVector(0.,0.,window_posz), window_logic,
@@ -144,8 +140,7 @@ namespace nexus {
       new G4Tubs("PMT_PHOTOCATHODE", 0, photocathode_diam_/2.,
                  photocathode_thickness_/2., 0., twopi);
 
-    G4Material* aluminum =
-      G4NistManager::Instance()->FindOrBuildMaterial("G4_Al");
+    G4Material* aluminum = G4NistManager::Instance()->FindOrBuildMaterial("G4_Al");
     aluminum->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
     G4LogicalVolume* photocathode_logic =
       new G4LogicalVolume(photocathode_solid, aluminum, "PMT_PHOTOCATHODE");
@@ -158,8 +153,7 @@ namespace nexus {
 
     // Optical properties
     G4OpticalSurface* pmt_opt_surf = GetPhotOptSurf();
-    new G4LogicalSkinSurface("PMT_PHOTOCATHODE", photocathode_logic,
-                             pmt_opt_surf);
+    new G4LogicalSkinSurface("PMT_PHOTOCATHODE", photocathode_logic, pmt_opt_surf);
 
     // Sensitive detector
     SensorSD* pmtsd = new SensorSD("/PMT_R11410/PmtR11410");
