@@ -883,7 +883,8 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
   G4ThreeVector vertex(0., 0., 0.);
 
   if (region == "CENTER") {
-    vertex = G4ThreeVector(0., 0., active_zpos_);
+    vertex = G4ThreeVector(GetCoordOrigin().x(), GetCoordOrigin().y(),
+                           active_zpos_);
   }
 
   else if (region == "ACTIVE") {
