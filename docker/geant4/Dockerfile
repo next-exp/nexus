@@ -3,7 +3,7 @@ FROM ubuntu:jammy
 ENV G4_VERSION v11.0.2
 
 RUN apt-get update -y && \
-    apt-get install -y cmake curl g++ libexpat1-dev
+    apt-get install -y cmake curl g++ libexpat1-dev libqt5core5a qtbase5-dev
 RUN mkdir -p /opt/geant4/src && \
     mkdir -p /opt/geant4/build && \
     mkdir -p /opt/geant4/install && \
@@ -14,6 +14,7 @@ RUN mkdir -p /opt/geant4/src && \
     cmake -DCMAKE_INSTALL_PREFIX=/opt/geant4/install \
           -DGEANT4_BUILD_MULTITHREADED=ON \
           -DGEANT4_INSTALL_EXAMPLES=OFF \
+          -DGEANT4_USE_QT=ON \
           ../src/geant4-${G4_VERSION} && \
     make -j`nproc` && \
     make install  && \
