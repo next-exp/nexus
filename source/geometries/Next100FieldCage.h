@@ -10,7 +10,6 @@
 #define NEXT100_FIELDCAGE_H
 
 #include "GeometryBase.h"
-#include "HexagonMeshTools.h"
 #include <vector>
 
 class G4Material;
@@ -110,9 +109,6 @@ namespace nexus {
     CylinderPointSampler* gate_gen_;
     CylinderPointSampler* anode_gen_;
     CylinderPointSampler* holder_gen_;
-
-    // Hexagonal Mesh Tool
-    HexagonMeshTools* hex_creator_;
 
     // Geometry Navigator
     G4Navigator* geom_navigator_;

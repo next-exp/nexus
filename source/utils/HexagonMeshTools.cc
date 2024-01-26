@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // nexus | HexagonMeshTools.cc
 //
-// This class provides the functions needed to create a hexagonal mesh
+//  Functions for helping with hexagonal mesh creation
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
@@ -18,7 +18,7 @@ namespace nexus {
 
 
 
-  G4ExtrudedSolid* HexagonMeshTools::CreateHexagon(G4double half_thickness, G4double circumradius){
+  G4ExtrudedSolid* CreateHexagon(G4double half_thickness, G4double circumradius){
     
     // Define a hexagonal prism
     const G4int nsect = 6;
@@ -40,7 +40,9 @@ namespace nexus {
 
   }
 
-  void HexagonMeshTools::PlaceHexagons(G4int n_hole, G4double in_radius, G4double thickness, G4LogicalVolume* disk_logical, G4LogicalVolume* hex_logical, G4double mesh_diam){
+  // -----
+
+  void PlaceHexagons(G4int n_hole, G4double in_radius, G4double thickness, G4LogicalVolume* disk_logical, G4LogicalVolume* hex_logical, G4double mesh_diam){
     
     // Logical Volume of SS Disk
 

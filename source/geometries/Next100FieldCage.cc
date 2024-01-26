@@ -15,6 +15,7 @@
 #include "UniformElectricDriftField.h"
 #include "XenonProperties.h"
 #include "CylinderPointSampler.h"
+#include "HexagonMeshTools.h"
 
 #include <G4Navigator.hh>
 #include <G4SystemOfUnits.hh>
@@ -425,10 +426,10 @@ void Next100FieldCage::BuildCathode()
       cathode_grid_logic = new G4LogicalVolume(grid_solid, steel_, "CATHODE_MESH_LOGIC");
 
       // Define a hexagonal prism
-      G4ExtrudedSolid* hex_prism = hex_creator_->CreateHexagon(grid_thickn_/2.0, hex_circumradius);
+      G4ExtrudedSolid* hex_prism = CreateHexagon(grid_thickn_/2.0, hex_circumradius);
       cathode_hex_logic  = new G4LogicalVolume(hex_prism, gas_, "MESH_HEX_GAS");
 
-      hex_creator_->PlaceHexagons(n_hex, cathode_mesh_diam_, grid_thickn_, cathode_grid_logic, cathode_hex_logic, cathode_int_diam_);
+      PlaceHexagons(n_hex, cathode_mesh_diam_, grid_thickn_, cathode_grid_logic, cathode_hex_logic, cathode_int_diam_);
 
       new G4PVPlacement(0, G4ThreeVector(0., 0., cathode_zpos_), cathode_grid_logic,
                         "CATHODE_GRID", mother_logic_, false, 0, false);
@@ -645,11 +646,11 @@ void Next100FieldCage::BuildELRegion()
     el_grid_logic = new G4LogicalVolume(grid_solid, steel_, "EL_GRID");
 
     // Define a hexagonal prism
-    G4ExtrudedSolid* hex_prism = hex_creator_->CreateHexagon(grid_thickn_/2.0, hex_circumradius);
+    G4ExtrudedSolid* hex_prism = CreateHexagon(grid_thickn_/2.0, hex_circumradius);
     el_hex_logic  = new G4LogicalVolume(hex_prism, gas_, "MESH_HEX_GAS");
    
     // Place GXe hexagons in the disk to make the mesh
-    hex_creator_->PlaceHexagons(n_hex, el_mesh_diam_, grid_thickn_, el_grid_logic, el_hex_logic, gate_int_diam_);
+    PlaceHexagons(n_hex, el_mesh_diam_, grid_thickn_, el_grid_logic, el_hex_logic, gate_int_diam_);
 
 
     // Create the mesh logical volume
