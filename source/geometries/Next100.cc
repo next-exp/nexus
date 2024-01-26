@@ -7,8 +7,6 @@
 // ----------------------------------------------------------------------------
 
 #include "Next100.h"
-#include "BoxPointSampler.h"
-#include "MuonsPointSampler.h"
 #include "LSCHallA.h"
 #include "Next100Shielding.h"
 #include "Next100Vessel.h"
@@ -88,7 +86,6 @@ namespace nexus {
     delete ics_;
     delete vessel_;
     delete shielding_;
-    delete lab_gen_;
     delete hallA_walls_;
   }
 
@@ -200,12 +197,6 @@ namespace nexus {
       }
     }
 
-    //// VERTEX GENERATORS
-    lab_gen_ =
-      new BoxPointSampler(lab_size_ - 1.*m, lab_size_ - 1.*m,
-                          lab_size_  - 1.*m, 1.*m,
-                          G4ThreeVector(0., 0., 0.), 0);
-
   }
 
 
@@ -213,20 +204,15 @@ namespace nexus {
   {
     G4ThreeVector vertex(0.,0.,0.);
 
-    // Air around shielding
-    if (region == "LAB") {
-      vertex = lab_gen_->GenerateVertex("INSIDE");
-    }
-
     // Shielding regions
-    else if ((region == "SHIELDING_LEAD")  ||
-             (region == "SHIELDING_STEEL") ||
-             (region == "INNER_AIR") ||
-             (region == "EXTERNAL") ||
-             (region == "SHIELDING_STRUCT") ||
-             (region == "PEDESTAL") ||
-             (region == "BUBBLE_SEAL") ||
-             (region == "EDPM_SEAL")) {
+    if ((region == "SHIELDING_LEAD")  ||
+        (region == "SHIELDING_STEEL") ||
+        (region == "INNER_AIR") ||
+        (region == "EXTERNAL") ||
+        (region == "SHIELDING_STRUCT") ||
+        (region == "PEDESTAL") ||
+        (region == "BUBBLE_SEAL") ||
+        (region == "EDPM_SEAL")) {
       vertex = shielding_->GenerateVertex(region);
     }
 
@@ -262,7 +248,6 @@ namespace nexus {
              (region == "TP_COPPER_PLATE") ||
              (region == "SIPM_BOARD") ||
              (region == "DB_PLUG") ||
-             (region == "EL_TABLE") ||
              (region == "FIELD_RING") ||
              (region == "GATE_RING") ||
              (region == "ANODE_RING") ||
