@@ -18,7 +18,7 @@ namespace nexus {
 
 
 
-  G4ExtrudedSolid* HexagonMeshTools::CreateHexagon(G4double Thickness, G4double circumradius){
+  G4ExtrudedSolid* HexagonMeshTools::CreateHexagon(G4double half_thickness, G4double circumradius){
     
     // Define a hexagonal prism
     const G4int nsect = 6;
@@ -36,11 +36,11 @@ namespace nexus {
     // Define the hexagon
     G4TwoVector offsetA(0,0), offsetB(0,0);
     G4double scaleA = 1, scaleB = 1;
-    return new G4ExtrudedSolid("Extruded", polygon, Thickness, offsetA, scaleA, offsetB, scaleB);
+    return new G4ExtrudedSolid("Extruded", polygon, half_thickness, offsetA, scaleA, offsetB, scaleB);
 
   }
 
-  void HexagonMeshTools::PlaceHexagons(G4int nHole, G4double InRadius, G4double Thickness, G4LogicalVolume* DiskLogical, G4LogicalVolume* HexLogical, G4double Mesh_D){
+  void HexagonMeshTools::PlaceHexagons(G4int n_hole, G4double in_radius, G4double thickness, G4LogicalVolume* disk_logical, G4LogicalVolume* hex_logical, G4double mesh_diam){
     
     // Logical Volume of SS Disk
 
@@ -48,47 +48,47 @@ namespace nexus {
     // https://www.redblobgames.com/grids/hexagons/
 
     // Dist from hexagon centre to center of hexagon vertex (inc. wire thickness)
-    G4double HexSize = (InRadius + Thickness)/std::sqrt(3.0)*mm;
+    G4double hex_size = (in_radius + thickness)/std::sqrt(3.0);
 
     G4int rmax, rmin;
 
     // Place center of each hexagon to subtract from disk
-    for (G4int q = -nHole; q <= nHole; q++){
+    for (G4int q = -n_hole; q <= n_hole; q++){
 
       // This logic make sure we place hexagons in the pattern of a hexagon
       // This ensures that we dont create too many holes saving memory
       if (q < 0){
-        if (q ==  -nHole){
+        if (q ==  -n_hole){
           rmin = 0;
-          rmax = nHole;
+          rmax = n_hole;
         }
         else {
           rmin-=1;
         }
       }
       if (q == 0){
-        rmin = -nHole;
-        rmax = nHole;
+        rmin = -n_hole;
+        rmax = n_hole;
       }
       if (q > 0){
         rmax-=1;
       }
       for (G4int r = rmin; r <= rmax; r++){
 
-        G4double x = HexSize * 3.0/2.0 * q * mm;
-        G4double y = HexSize * (std::sqrt(3)/2.0*q + r*std::sqrt(3)) * mm;
+        G4double x = hex_size * 3.0/2.0 * q;
+        G4double y = hex_size * (std::sqrt(3)/2.0*q + r*std::sqrt(3));
 
 
         G4double R = std::sqrt(x*x + y*y);
         
         // Only place hexagons within a circle the size of the mesh
-        if (R > Mesh_D/2.0)
+        if (R > mesh_diam/2.0)
           continue;
 
         
         G4RotationMatrix rot = G4RotationMatrix(0, 0, 0);
         G4Transform3D tr = G4Transform3D(rot, G4ThreeVector(x, y, 0*mm));
-        new G4PVPlacement(0, G4ThreeVector(x, y, 0*mm), HexLogical, "EL_MeshP", DiskLogical, false, 0, false);
+        new G4PVPlacement(0, G4ThreeVector(x, y, 0*mm), hex_logical, "MESH_HOLE_GAS", disk_logical, false, 0, false);
       }
     }
 

@@ -84,7 +84,7 @@ namespace nexus {
     G4bool verbosity_;
 
     // Use fake mesh
-    G4bool useDielectricGrid_;
+    G4bool use_dielectric_grid_;
 
     // Parameters related to look-up table generation
     G4double el_gap_gen_disk_diam_;
@@ -112,7 +112,7 @@ namespace nexus {
     CylinderPointSampler* holder_gen_;
 
     // Hexagonal Mesh Tool
-    HexagonMeshTools* HexCreator;
+    HexagonMeshTools* hex_creator_;
 
     // Geometry Navigator
     G4Navigator* geom_navigator_;

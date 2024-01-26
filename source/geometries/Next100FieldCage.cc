@@ -105,7 +105,7 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   visibility_ (0),
   grid_visibility_ (0),
   verbosity_(0),
-  useDielectricGrid_(0),
+  use_dielectric_grid_(0),
   // EL gap generation disk parameters
   el_gap_gen_disk_diam_(0.),
   el_gap_gen_disk_x_(0.), el_gap_gen_disk_y_(0.),
@@ -127,7 +127,7 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   msg_->DeclareProperty("grid_vis", grid_visibility_, "Grid Visibility");
   msg_->DeclareProperty("field_cage_verbosity", verbosity_, "Field Cage Verbosity");
 
-  msg_->DeclareProperty("useDielectricGrid", useDielectricGrid_, "Switch on Fake Grids");
+  msg_->DeclareProperty("use_dielectric_grid", use_dielectric_grid_, "Switch on Fake Grids");
 
   G4GenericMessenger::Command& drift_transv_diff_cmd =
     msg_->DeclareProperty("drift_transv_diff", drift_transv_diff_,
@@ -397,7 +397,7 @@ void Next100FieldCage::BuildCathode()
   G4LogicalVolume *cathode_grid_logic;
   G4LogicalVolume *cathode_hex_logic;
 
-  if (useDielectricGrid_){
+  if (use_dielectric_grid_){
 
     G4Tubs* diel_grid_solid =
       new G4Tubs("CATHODE_GRID", 0., cathode_int_diam_/2., grid_thickn_/2., 0, twopi);
@@ -415,20 +415,20 @@ void Next100FieldCage::BuildCathode()
   else {
       
       // Dist from centre of hex to hex vertex, excluding the land width (circumradius)
-      G4double hex_circumR = cathode_mesh_diam_/std::sqrt(3);  
+      G4double hex_circumradius = cathode_mesh_diam_/std::sqrt(3);  
 
       // Total number of hexagons that would fit side-by-side along the diameter
-      G4int nHexDiam = (G4int) ((cathode_int_diam_/2.0) / (hex_circumR)*mm);
+      G4int n_hex = (G4int) ((cathode_int_diam_/2.0) / hex_circumradius);
     
       // Define the disk to punch hexagon holes through for the mesh
       G4Tubs* grid_solid = new G4Tubs("CATHODE_GRID", 0., cathode_int_diam_/2.0 , grid_thickn_/2., 0., twopi);
-      cathode_grid_logic = new G4LogicalVolume(grid_solid, steel_, "Cathode_Mesh_Logic");
+      cathode_grid_logic = new G4LogicalVolume(grid_solid, steel_, "CATHODE_MESH_LOGIC");
 
       // Define a hexagonal prism
-      G4ExtrudedSolid* HexPrism = HexCreator->CreateHexagon(grid_thickn_, hex_circumR);
-      cathode_hex_logic  = new G4LogicalVolume(HexPrism, gas_, "Mesh_Hex_Gas");
+      G4ExtrudedSolid* hex_prism = hex_creator_->CreateHexagon(grid_thickn_/2.0, hex_circumradius);
+      cathode_hex_logic  = new G4LogicalVolume(hex_prism, gas_, "MESH_HEX_GAS");
 
-      HexCreator->PlaceHexagons(nHexDiam, cathode_mesh_diam_, grid_thickn_, cathode_grid_logic, cathode_hex_logic, cathode_int_diam_);
+      hex_creator_->PlaceHexagons(n_hex, cathode_mesh_diam_, grid_thickn_, cathode_grid_logic, cathode_hex_logic, cathode_int_diam_);
 
       new G4PVPlacement(0, G4ThreeVector(0., 0., cathode_zpos_), cathode_grid_logic,
                         "CATHODE_GRID", mother_logic_, false, 0, false);
@@ -452,7 +452,7 @@ void Next100FieldCage::BuildCathode()
     cathode_grid_logic->SetVisAttributes(grey);
     cathode_logic->SetVisAttributes(cathode_col);
     
-    if (!useDielectricGrid_)
+    if (!use_dielectric_grid_)
       cathode_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   } else {
     G4VisAttributes cathode_col = nexus::DarkGrey();
@@ -462,7 +462,7 @@ void Next100FieldCage::BuildCathode()
 
   }
 
-  if (!grid_visibility_ && !useDielectricGrid_)
+  if (!grid_visibility_ && !use_dielectric_grid_)
     cathode_hex_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
 
@@ -605,7 +605,7 @@ void Next100FieldCage::BuildELRegion()
   G4LogicalVolume *el_hex_logic;
 
   // EL Grid -- use Fake Dielectric
-  if (useDielectricGrid_){
+  if (use_dielectric_grid_){
 
   /// EL grids
   G4Material* fgrid_mat = materials::FakeDielectric(gas_, "el_grid_mat");
@@ -635,21 +635,21 @@ void Next100FieldCage::BuildELRegion()
   else {
     
     // Dist from centre of hex to hex vertex, excluding the land width (circumradius)
-    G4double hex_circumR = el_mesh_diam_/std::sqrt(3)*mm;  
+    G4double hex_circumradius = el_mesh_diam_/std::sqrt(3)*mm;  
 
     // Total number of hexagons that would fit side-by-side along the diameter
-    G4int nHexDiam = (G4int) ((gate_int_diam_/2.0) / (hex_circumR)*mm);
+    G4int n_hex = (G4int) ((gate_int_diam_/2.0) / hex_circumradius);
   
     // Define the disk to punch hexagon holes through for the mesh
     G4Tubs* grid_solid = new G4Tubs("EL_GRID", 0., gate_int_diam_/2.0 , grid_thickn_/2., 0., twopi);
     el_grid_logic = new G4LogicalVolume(grid_solid, steel_, "EL_GRID");
 
     // Define a hexagonal prism
-    G4ExtrudedSolid* HexPrism = HexCreator->CreateHexagon(grid_thickn_, hex_circumR);
-    el_hex_logic  = new G4LogicalVolume(HexPrism, gas_, "Mesh_Hex_Gas");
+    G4ExtrudedSolid* hex_prism = hex_creator_->CreateHexagon(grid_thickn_/2.0, hex_circumradius);
+    el_hex_logic  = new G4LogicalVolume(hex_prism, gas_, "MESH_HEX_GAS");
    
     // Place GXe hexagons in the disk to make the mesh
-    HexCreator->PlaceHexagons(nHexDiam, el_mesh_diam_, grid_thickn_, el_grid_logic, el_hex_logic, gate_int_diam_);
+    hex_creator_->PlaceHexagons(n_hex, el_mesh_diam_, grid_thickn_, el_grid_logic, el_hex_logic, gate_int_diam_);
 
 
     // Create the mesh logical volume
@@ -709,7 +709,7 @@ void Next100FieldCage::BuildELRegion()
     el_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 
-  if (!grid_visibility_ && !useDielectricGrid_)
+  if (!grid_visibility_ && !use_dielectric_grid_)
     el_hex_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   
   G4VisAttributes grey = nexus::DarkGrey();

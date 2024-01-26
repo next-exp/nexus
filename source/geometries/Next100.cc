@@ -36,7 +36,7 @@ namespace nexus {
     lab_size_ (5. * m),
 
     // common variables used in geometry components
-    grid_thickness_ (0.1 * mm),
+    grid_thickness_ (0.13 * mm),
     //ep_fc_distance_ (24.8 * mm), /// this value was measured by Sara in the step file
     gate_tracking_plane_distance_(25. * mm + grid_thickness_), // Jordi = 1.5 (distance TP plate-anode ring) + 13.5 (anode ring thickness) + 10 (EL gap)
     gate_sapphire_wdw_distance_  (1458.8 * mm - grid_thickness_), // Jordi
