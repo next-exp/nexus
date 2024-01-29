@@ -30,9 +30,9 @@
 ### ACTIONS
 /nexus/RegisterTrackingAction DefaultTrackingAction
 /nexus/RegisterRunAction DefaultRunAction
+/nexus/RegisterEventAction DefaultEventAction
 
 # Use muon event action for debugging
-/nexus/RegisterEventAction DefaultEventAction
 # /nexus/RegisterEventAction MuonsEventAction
 
 /physics_lists/em/MuonNuclear true

@@ -149,7 +149,7 @@ void Next100TrackingPlane::Construct()
     new G4PVPlacement(0, pos, plug_logic, "DB_PLUG", mpv_->GetLogicalVolume(), false, i, false);
   }
 
-  plug_gen_ = new BoxPointSampler(plug_x, plug_y, plug_z, 0.);
+  plug_gen_ = new BoxPointSampler(plug_x/2., plug_y/2., plug_z/2., 0.);
 
 
   // VISIBILITIES //////////////////////////////////////////

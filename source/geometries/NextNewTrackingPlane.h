@@ -22,7 +22,7 @@ class G4GenericMessenger;
 namespace nexus {
 
   class CylinderPointSamplerLegacy;
-  class BoxPointSampler;
+  class BoxPointSamplerLegacy;
 
   /// This is a geometry formed by all the components of the tracking plane
   class NextNewTrackingPlane: public GeometryBase
@@ -78,7 +78,7 @@ namespace nexus {
     CylinderPointSamplerLegacy* support_body_gen_;
     CylinderPointSamplerLegacy* support_flange_gen_;
     CylinderPointSamplerLegacy* support_buffer_gen_;
-    BoxPointSampler* plug_gen_;
+    BoxPointSamplerLegacy* plug_gen_;
 
     G4double body_perc_;
     G4double flange_perc_;

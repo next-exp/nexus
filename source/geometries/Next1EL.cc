@@ -17,7 +17,7 @@
 #include "XenonProperties.h"
 #include "NextElDB.h"
 #include "CylinderPointSamplerLegacy.h"
-#include "BoxPointSampler.h"
+#include "BoxPointSamplerLegacy.h"
 #include "Visibilities.h"
 #include "FactoryBase.h"
 
@@ -311,8 +311,8 @@ void Next1EL::BuildMuons()
 
   //sampling position in a surface above the detector
   muons_sampling_ =
-    new BoxPointSampler(xMuons*2., 0, zMuons*2., 0,
-                        G4ThreeVector(0, yMuonsOrigin, 0));
+    new BoxPointSamplerLegacy(xMuons*2., 0, zMuons*2., 0,
+                              G4ThreeVector(0, yMuonsOrigin, 0));
 
 
   // To visualize the muon generation surface

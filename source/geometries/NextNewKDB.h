@@ -17,7 +17,7 @@ class G4GenericMessenger;
 class G4LogicalVolume;
 
 namespace nexus {class SiPMSensl;}
-namespace nexus {class BoxPointSampler;}
+namespace nexus {class BoxPointSamplerLegacy;}
 
 namespace nexus {
 
@@ -61,7 +61,7 @@ namespace nexus {
     SiPMSensl* sipm_;
 
     // Vertex generator
-    BoxPointSampler* dice_gen_;
+    BoxPointSamplerLegacy* dice_gen_;
 
   };
 

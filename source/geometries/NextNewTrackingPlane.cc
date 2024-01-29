@@ -11,7 +11,7 @@
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
 #include "CylinderPointSamplerLegacy.h"
-#include "BoxPointSampler.h"
+#include "BoxPointSamplerLegacy.h"
 
 #include <G4PVPlacement.hh>
 #include <G4VisAttributes.hh>
@@ -193,7 +193,7 @@ namespace nexus {
                                0., G4ThreeVector(0., 0., support_plate_z_pos -support_plate_thickness_/2.
                                +support_plate_front_buffer_thickness_/2.));
     plug_gen_ =
-      new BoxPointSampler(plug_x_, plug_y_, plug_z_,0., G4ThreeVector(0.,0.,0.),0);
+      new BoxPointSamplerLegacy(plug_x_, plug_y_, plug_z_,0., G4ThreeVector(0.,0.,0.),0);
 			  // G4ThreeVector(0.,0.,dice_board_z_pos_ + support_plate_front_buffer_thickness_ + support_plate_thickness_),0);
 
      // Getting the support  volume over total

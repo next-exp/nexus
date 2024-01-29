@@ -18,7 +18,7 @@
 #include "SiPMSensl.h"
 #include "Next100SiPM.h"
 #include "OpticalMaterialProperties.h"
-#include "BoxPointSampler.h"
+#include "BoxPointSamplerLegacy.h"
 #include "Visibilities.h"
 
 #include <G4GenericMessenger.hh>
@@ -347,7 +347,7 @@ void NextDemoSiPMBoard::Construct()
 
 
   /// VERTEX GENERATOR
-  kapton_gen_ = new BoxPointSampler(board_size_x, board_size_y, kapton_thickn_, 0.,
+  kapton_gen_ = new BoxPointSamplerLegacy(board_size_x, board_size_y, kapton_thickn_, 0.,
                                     G4ThreeVector(0., 0., -board_size_z/2. + kapton_thickn_/2.),
                                     nullptr);
 

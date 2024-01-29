@@ -18,7 +18,7 @@ class G4Material;
 
 namespace nexus {
 
-  class BoxPointSampler;
+  class BoxPointSamplerLegacy;
 
   class MagBox: public GeometryBase {
   public:
@@ -48,7 +48,7 @@ namespace nexus {
     G4double mag_intensity_;  /// Magnetic Field Intensity
 
     //Vertex genrator
-    BoxPointSampler* active_gen_;
+    BoxPointSamplerLegacy* active_gen_;
 
     /// Messenger for the definition of control commands
     G4GenericMessenger* msg_;

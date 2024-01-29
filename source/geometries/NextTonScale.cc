@@ -12,7 +12,7 @@
 #include "IonizationSD.h"
 #include "Visibilities.h"
 #include "CylinderPointSamplerLegacy.h"
-#include "BoxPointSampler.h"
+#include "BoxPointSamplerLegacy.h"
 #include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
@@ -154,16 +154,16 @@ G4LogicalVolume* NextTonScale::ConstructWaterTank(G4LogicalVolume* mother_logic_
   //////////////////////////////////////////////////////////
 
   muon_gen_ =
-    new BoxPointSampler(tank_size_ + 100. * cm, 0.,
-                        tank_size_ + 100. * cm, 0.,
-                        G4ThreeVector(0., tank_size_/2. + 1. * cm, 0.));
+    new BoxPointSamplerLegacy(tank_size_ + 100. * cm, 0.,
+                              tank_size_ + 100. * cm, 0.,
+                              G4ThreeVector(0., tank_size_/2. + 1. * cm, 0.));
 
   // Primarily for neutron generation
   external_gen_ = new CylinderPointSamplerLegacy(tank_size_/2. + 1 * cm,
-                                           tank_size_ + 1 * cm,
-                                           1 * mm, 1 * mm,
-                                           G4ThreeVector(0.,0.,0.),
-                                           tank_rotation);
+                                                 tank_size_ + 1 * cm,
+                                                 1 * mm, 1 * mm,
+                                                 G4ThreeVector(0.,0.,0.),
+                                                 tank_rotation);
 
   //////////////////////////////////////////////////////////
 

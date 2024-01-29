@@ -22,15 +22,15 @@
 /Geometry/Next100/pressure 15 bar
 /Geometry/Next100/gas enrichedXe
 /Geometry/Next100/elfield false
-#/Geometry/Next100/lab_walls true # Turn on when using HALLA_OUTER region
+/Geometry/Next100/lab_walls true # Turn on when using HALLA_OUTER region
 
 ### GENERATOR
 
 # Choose where to generate muons. 
 # EXTERNAL:    Just outside lead castle
 # HALLA_OUTER: Hall A walls
-/Generator/MuonGenerator/region EXTERNAL 
-# /Generator/MuonGenerator/region HALLA_OUTER
+#/Generator/MuonGenerator/region EXTERNAL 
+/Generator/MuonGenerator/region HALLA_OUTER
 
 # Use angular distribution simulated/measured at LSC
 /Generator/MuonGenerator/use_lsc_dist true

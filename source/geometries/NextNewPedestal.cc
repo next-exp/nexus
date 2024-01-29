@@ -9,6 +9,7 @@
 #include "NextNewPedestal.h"
 #include "MaterialsList.h"
 #include "Visibilities.h"
+#include "BoxPointSamplerLegacy.h"
 
 #include <G4Material.hh>
 #include <G4GenericMessenger.hh>
@@ -74,7 +75,8 @@ namespace nexus {
 
 
     // VERTEX GENERATORS   //////////
-    table_gen_ = new BoxPointSampler(table_x_,table_y_,table_z_,0., G4ThreeVector(0.,y_pos_,0.), 0);
+    table_gen_ = new BoxPointSamplerLegacy(table_x_,table_y_,table_z_,0.,
+                                           G4ThreeVector(0.,y_pos_,0.), 0);
 
     // Calculating some probs
     // G4double table_vol = table_solid->GetCubicVolume();

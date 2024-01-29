@@ -404,52 +404,52 @@ namespace nexus {
     // Creating the vertex generators   //////////
     //lead_gen_  = new BoxPointSampler(steel_x, steel_y, steel_z, lead_thickn_, G4ThreeVector(0.,0.,0.), 0);
     // Only shooting from the innest 5 cm.
-    lead_gen_  = new BoxPointSampler(steel_x, steel_y, steel_z, 5.*cm,
+    lead_gen_  = new BoxPointSampler(steel_x/2., steel_y/2., steel_z/2., 5.*cm,
                                      G4ThreeVector(0., 0., 0.), 0);
     G4double ext_offset = 1. * cm;
-    external_gen_ = new BoxPointSampler(lead_x_ + ext_offset,
-                                        lead_y_ + ext_offset,
-                                        lead_z_ + ext_offset,
+    external_gen_ = new BoxPointSampler((lead_x_ + ext_offset)/2.,
+                                        (lead_y_ + ext_offset)/2.,
+                                        (lead_z_ + ext_offset)/2.,
                                         1. * mm, G4ThreeVector(0.,0.,0.), 0);
 
     steel_gen_ =
-      new BoxPointSampler(shield_x_, shield_y_, shield_z_, steel_thickn_,
+      new BoxPointSampler(shield_x_/2., shield_y_/2., shield_z_/2., steel_thickn_,
                           G4ThreeVector(0., -beam_thickn_2_/2., 0.), 0);
 
-    inner_air_gen_ = new BoxPointSampler(shield_x_, shield_y_, shield_z_, 0,
+    inner_air_gen_ = new BoxPointSampler(shield_x_/2., shield_y_/2., shield_z_/2., 0,
                                          G4ThreeVector(0., 0., 0.), 0);
 
 
     // STEEL STRUCTURE GENERATORS
     lat_roof_gen_ =
-      new BoxPointSampler(lead_thickn_, beam_thickn_2_,
-                          shield_z_ + 2.*steel_thickn_, 0.,
+      new BoxPointSampler(lead_thickn_/2., beam_thickn_2_/2.,
+                          shield_z_/2. + steel_thickn_, 0.,
                           G4ThreeVector(0., roof_y, 0.), 0);
 
     front_roof_gen_ =
-      new BoxPointSampler(lead_x_, beam_thickn_2_, lead_thickn_, 0.,
+      new BoxPointSampler(lead_x_/2., beam_thickn_2_/2., lead_thickn_/2., 0.,
                           G4ThreeVector(0., roof_y, 0.), 0);
 
     struct_x_gen_ =
-      new BoxPointSampler(shield_x_ + 2.*lead_thickn_ + 2.*steel_thickn_,
-                          lead_thickn_, beam_thickn_1_, 0.,
+      new BoxPointSampler(shield_x_/2. + lead_thickn_ + steel_thickn_,
+                          lead_thickn_/2., beam_thickn_1_/2., 0.,
                           G4ThreeVector(0., top_beam_y, roof_z_separation_ +
                                         lateral_z_separation_/2.), 0);
 
     struct_z_gen_ =
-      new BoxPointSampler(beam_thickn_2_, lead_thickn_, shield_z_ +
-                          2.*lead_thickn_ + 2.*steel_thickn_, 0.,
+      new BoxPointSampler(beam_thickn_2_/2., lead_thickn_/2., shield_z_/2. +
+                          lead_thickn_ + steel_thickn_, 0.,
                           G4ThreeVector(-front_x_separation_/2., top_beam_y, 0.), 0);
 
     lat_beam_gen_ =
-      new BoxPointSampler(lead_thickn_, shield_y_ + 2. * steel_thickn_ +
-                          lead_thickn_, beam_thickn_1_, 0.,
+      new BoxPointSampler(lead_thickn_/2., shield_y_/2. + steel_thickn_ +
+                          lead_thickn_/2., beam_thickn_1_/2., 0.,
                           G4ThreeVector(lat_beam_x, -lead_thickn_/2.,
                                         lateral_z_separation_/2.), 0);
 
     front_beam_gen_ =
-      new BoxPointSampler(beam_thickn_2_, shield_y_ + 2. * steel_thickn_+
-                          lead_thickn_, lead_thickn_, 0.,
+      new BoxPointSampler(beam_thickn_2_/2., shield_y_/2. + steel_thickn_+
+                          lead_thickn_/2., lead_thickn_/2., 0.,
                           G4ThreeVector(-front_x_separation_/2.,
                                         -lead_thickn_/2., front_beam_z), 0);
 
@@ -471,29 +471,29 @@ namespace nexus {
 
     // PEDESTAL GENERATORS
     ped_support_bottom_gen_ =
-      new BoxPointSampler(pedestal_x_, lead_thickn_,
-                          pedestal_support_bottom_thickn, 0.,
+      new BoxPointSampler(pedestal_x_/2., lead_thickn_/2.,
+                          pedestal_support_bottom_thickn/2., 0.,
                           G4ThreeVector(0., pedestal_y_pos,
                                         support_beam_dist_/2.), 0);
 
     G4double ped_gen_y_ =
       -lead_y_/2. + lead_thickn_ + pedestal_support_top_thickn/2.;
     ped_support_top_gen_ =
-      new BoxPointSampler(pedestal_top_x_, pedestal_support_top_thickn,
-                          pedestal_support_top_length, 0.,
+      new BoxPointSampler(pedestal_top_x_/2., pedestal_support_top_thickn/2.,
+                          pedestal_support_top_length/2., 0.,
                           G4ThreeVector(0., ped_gen_y_, support_beam_dist_/2.),
                           0);
 
     ped_front_gen_ =
-      new BoxPointSampler(pedestal_x_, lead_thickn_,
-                          pedestal_front_beam_thickn_, 0.,
+      new BoxPointSampler(pedestal_x_/2., lead_thickn_/2.,
+                          pedestal_front_beam_thickn_/2., 0.,
                           G4ThreeVector(0., pedestal_y_pos,
                                         support_beam_dist_/2. +
                                         support_front_dist_), 0);
 
     ped_lateral_gen_ =
-      new BoxPointSampler(pedestal_lateral_beam_thickn_, lead_thickn_,
-                          pedestal_lateral_length_, 0.,
+      new BoxPointSampler(pedestal_lateral_beam_thickn_/2., lead_thickn_/2.,
+                          pedestal_lateral_length_/2., 0.,
                           G4ThreeVector(pedestal_x_pos, pedestal_y_pos, 0.), 0);
 
     // pedestal roof
@@ -503,14 +503,14 @@ namespace nexus {
     G4double ped_roof_gen_z = pedestal_lateral_length_/2. -
       pedestal_roof_thickn_/2.;
     ped_roof_lat_gen_ =
-      new BoxPointSampler(pedestal_roof_thickn_,
-                          pedestal_lateral_beam_thickn_,
-                          pedestal_lateral_length_, 0.,
+      new BoxPointSampler(pedestal_roof_thickn_/2.,
+                          pedestal_lateral_beam_thickn_/2.,
+                          pedestal_lateral_length_/2., 0.,
                           G4ThreeVector(ped_roof_gen_x, ped_roof_gen_y, 0.), 0);
 
     ped_roof_front_gen_ =
-      new BoxPointSampler(pedestal_top_x_, pedestal_lateral_beam_thickn_,
-                          pedestal_roof_thickn_, 0.,
+      new BoxPointSampler(pedestal_top_x_/2., pedestal_lateral_beam_thickn_/2.,
+                          pedestal_roof_thickn_/2., 0.,
                           G4ThreeVector(0., ped_roof_gen_y, ped_roof_gen_z), 0);
     // Compute relative volumes
     G4double ped_support_bottom_vol = pedestal_support_beam_bottom->GetCubicVolume();
@@ -533,13 +533,13 @@ namespace nexus {
 
     // BUBBLE SEAL
     bubble_seal_front_gen_ =
-      new BoxPointSampler(pedestal_x_ + 2*pedestal_lateral_beam_thickn_,
-                          bubble_seal_thickn_, bubble_seal_thickn_, 0.,
+      new BoxPointSampler(pedestal_x_/2. + pedestal_lateral_beam_thickn_,
+                          bubble_seal_thickn_/2., bubble_seal_thickn_/2., 0.,
                           G4ThreeVector(0., ped_gen_y_, 0.), 0);
 
     bubble_seal_lateral_gen_ =
-      new BoxPointSampler(bubble_seal_thickn_, bubble_seal_thickn_,
-                          pedestal_lateral_length_, 0.,
+      new BoxPointSampler(bubble_seal_thickn_/2., bubble_seal_thickn_/2.,
+                          pedestal_lateral_length_/2., 0.,
                           G4ThreeVector(0., ped_gen_y_, 0.), 0);
 
     G4double bubble_front_vol   =
@@ -556,12 +556,12 @@ namespace nexus {
 
     // EDPM SEAL
     edpm_seal_front_gen_ =
-      new BoxPointSampler(edpm_seal_thickn_, shield_y_, edpm_seal_thickn_, 0.,
+      new BoxPointSampler(edpm_seal_thickn_/2., shield_y_/2., edpm_seal_thickn_/2., 0.,
                           G4ThreeVector(0., -(beam_thickn_2_+steel_thickn_)/2.,
                                         0.), 0);
 
     edpm_seal_lateral_gen_ =
-      new BoxPointSampler(edpm_seal_thickn_, edpm_seal_thickn_, shield_z_, 0.,
+      new BoxPointSampler(edpm_seal_thickn_/2., edpm_seal_thickn_/2., shield_z_/2., 0.,
                           G4ThreeVector(0., -(beam_thickn_2_+steel_thickn_)/2.,
                                         0.), 0);
 
@@ -647,7 +647,7 @@ namespace nexus {
     if (region == "SHIELDING_LEAD") {
         G4VPhysicalVolume *VertexVolume;
         do {
-          vertex = lead_gen_->GenerateVertex("WHOLE_VOL");
+          vertex = lead_gen_->GenerateVertex("VOLUME");
           G4ThreeVector glob_vtx(vertex);
           glob_vtx = glob_vtx - GetCoordOrigin();
           VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
@@ -657,7 +657,7 @@ namespace nexus {
     else if (region == "SHIELDING_STEEL") {
       G4VPhysicalVolume *VertexVolume;
       do {
-        vertex = steel_gen_->GenerateVertex("WHOLE_VOL");
+        vertex = steel_gen_->GenerateVertex("VOLUME");
         G4ThreeVector glob_vtx(vertex);
         glob_vtx = glob_vtx - GetCoordOrigin();
         VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
@@ -675,7 +675,7 @@ namespace nexus {
     }
 
     else if (region == "EXTERNAL") {
-      vertex = external_gen_->GenerateVertex("WHOLE_VOL");
+      vertex = external_gen_->GenerateVertex("VOLUME");
     }
 
     else if(region=="SHIELDING_STRUCT"){

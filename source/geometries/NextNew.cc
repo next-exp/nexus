@@ -19,7 +19,7 @@
 #include "Th228Source.h"
 #include "Na22Source.h"
 #include "CylinderPointSamplerLegacy.h"
-#include "BoxPointSampler.h"
+#include "BoxPointSamplerLegacy.h"
 #include "Visibilities.h"
 #include "CalibrationSource.h"
 #include "NaIScintillator.h"
@@ -417,7 +417,7 @@ namespace nexus {
 
     //// VERTEX GENERATORS   //
     lab_gen_ =
-      new BoxPointSampler(lab_size_ - 1.*m, lab_size_ - 1.*m, lab_size_ - 1.*m, 1.*m,G4ThreeVector(0.,0.,0.),0);
+      new BoxPointSamplerLegacy(lab_size_ - 1.*m, lab_size_ - 1.*m, lab_size_ - 1.*m, 1.*m,G4ThreeVector(0.,0.,0.),0);
 
     // These are the positions of the source inside the capsule
     G4ThreeVector gen_pos_lat = source_pos - G4ThreeVector(cal_->GetSourceZpos(), 0., 0.);

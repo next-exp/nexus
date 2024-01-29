@@ -42,7 +42,7 @@ namespace nexus {
     void InvertRotationAndTranslation(G4ThreeVector& vec, bool translate=true);
 
   private:
-    G4double inner_x_, inner_y_, inner_z_; ///< Internal dimensions
+    G4double half_inner_x_, half_inner_y_, half_inner_z_; ///< Internal dimensions
     G4double outer_x_, outer_y_, outer_z_; ///< External dimensions
     G4double thickness_; ///< Walls thickness
 

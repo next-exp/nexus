@@ -19,7 +19,7 @@ namespace nexus {class NextNewMiniCastle; }
 namespace nexus {class NextNewVessel; }
 namespace nexus {class NextNewIcs; }
 namespace nexus {class NextNewInnerElements; }
-namespace nexus {class BoxPointSampler;}
+namespace nexus {class BoxPointSamplerLegacy;}
 namespace nexus {class CylinderPointSamplerLegacy;}
 namespace nexus {class CalibrationSource;}
 namespace nexus {class NaIScintillator;}
@@ -82,7 +82,7 @@ namespace nexus {
     LeadCollimator* coll_;
     ExtraVessel* extra_;
 
-    BoxPointSampler* lab_gen_; ///< Vertex generator
+    BoxPointSamplerLegacy* lab_gen_; ///< Vertex generator
     CylinderPointSamplerLegacy* lat_source_gen_;
     CylinderPointSamplerLegacy* axial_source_gen_;
     CylinderPointSamplerLegacy* source_gen_up_;

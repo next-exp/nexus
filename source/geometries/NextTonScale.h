@@ -14,7 +14,7 @@
 class G4GenericMessenger;
 class G4Material;
 
-namespace nexus { class BoxPointSampler; }
+namespace nexus { class BoxPointSamplerLegacy; }
 namespace nexus { class CylinderPointSamplerLegacy; }
 
 
@@ -70,7 +70,7 @@ namespace nexus {
     CylinderPointSamplerLegacy* outer_plane_gen_;
     CylinderPointSamplerLegacy* external_gen_;
 
-    BoxPointSampler* muon_gen_;
+    BoxPointSamplerLegacy* muon_gen_;
   };
 
 } // namespace nexus

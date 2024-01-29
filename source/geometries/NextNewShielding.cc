@@ -9,7 +9,7 @@
 #include "NextNewShielding.h"
 #include "MaterialsList.h"
 #include "Visibilities.h"
-#include "BoxPointSampler.h"
+#include "BoxPointSamplerLegacy.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4SubtractionSolid.hh>
@@ -228,42 +228,44 @@ namespace nexus {
 
     // Creating the vertex generators   //////////
     // Only shooting from the innest 5 cm.
-    lead_gen_  = new BoxPointSampler(steel_x, steel_y, steel_z, 5.*cm, G4ThreeVector(0.,0.,0.), 0);
+    lead_gen_  =
+      new BoxPointSamplerLegacy(steel_x, steel_y, steel_z, 5.*cm, G4ThreeVector(0.,0.,0.), 0);
 
     G4double ext_offset = 1. * cm;
-    external_gen_ = new BoxPointSampler(lead_x_ + ext_offset, lead_y_ + ext_offset, lead_z_ + ext_offset,
-                                        1. * mm, G4ThreeVector(0.,0.,0.), 0);
+    external_gen_ =
+      new BoxPointSamplerLegacy(lead_x_ + ext_offset, lead_y_ + ext_offset,
+                                lead_z_ + ext_offset, 1. * mm, G4ThreeVector(0.,0.,0.), 0);
 
 
-    steel_gen_ = new BoxPointSampler(shield_x_, shield_y_, shield_z_, steel_thickness_,
-                                     G4ThreeVector(0.,0.,0.), 0);
+    steel_gen_ =
+      new BoxPointSamplerLegacy(shield_x_, shield_y_, shield_z_, steel_thickness_, G4ThreeVector(0.,0.,0.), 0);
 
     G4double inn_offset = .5 * cm;
     inner_air_gen_ =
-      new BoxPointSampler(shield_x_ - inn_offset, shield_y_ - inn_offset, shield_z_ - inn_offset,
-                          1. * mm, G4ThreeVector(0.,0.,0.), 0);
+      new BoxPointSamplerLegacy(shield_x_ - inn_offset, shield_y_ - inn_offset,
+                                shield_z_ - inn_offset, 1. * mm, G4ThreeVector(0.,0.,0.), 0);
 
 
     lat_roof_gen_ =
-      new BoxPointSampler(lead_thickness_, beam_base_thickness_, shield_z_, 0.,
-			  G4ThreeVector(0.,shield_y_/2.+steel_thickness_/2.,0.), 0);
+      new BoxPointSamplerLegacy(lead_thickness_, beam_base_thickness_, shield_z_, 0.,
+                                G4ThreeVector(0.,shield_y_/2.+steel_thickness_/2.,0.), 0);
     front_roof_gen_ =
-      new BoxPointSampler(lead_x_, beam_base_thickness_,lead_thickness_, 0.,
-			  G4ThreeVector(0.,shield_y_/2.+steel_thickness_/2., 0.), 0);
+      new BoxPointSamplerLegacy(lead_x_, beam_base_thickness_,lead_thickness_, 0.,
+                                G4ThreeVector(0.,shield_y_/2.+steel_thickness_/2., 0.), 0);
     struct_x_gen_ =
-      new BoxPointSampler(shield_x_+2*lead_thickness_+2*steel_thickness_,
-                          lead_thickness_, beam_base_thickness_, 0.,
-                          G4ThreeVector(0.,top_beam_y,roof_z_separation_+lateral_z_separation_/2), 0);
+      new BoxPointSamplerLegacy(shield_x_+2*lead_thickness_+2*steel_thickness_,
+                                lead_thickness_, beam_base_thickness_, 0.,
+                                G4ThreeVector(0.,top_beam_y,roof_z_separation_+lateral_z_separation_/2), 0);
     struct_z_gen_ =
-      new BoxPointSampler(beam_base_thickness_, lead_thickness_ -1.*mm,
-                          shield_z_+2*lead_thickness_+2*steel_thickness_, 0.,
-                          G4ThreeVector(-front_x_separation_/2.,top_beam_y, 0.), 0);
+      new BoxPointSamplerLegacy(beam_base_thickness_, lead_thickness_ -1.*mm,
+                                shield_z_+2*lead_thickness_+2*steel_thickness_, 0.,
+                                G4ThreeVector(-front_x_separation_/2.,top_beam_y, 0.), 0);
     lat_beam_gen_ =
-      new BoxPointSampler(lead_thickness_, shield_y_+steel_thickness_, beam_base_thickness_, 0.,
-                          G4ThreeVector(lat_beam_x,-beam_base_thickness_/2.,lateral_z_separation_/2.), 0);
+      new BoxPointSamplerLegacy(lead_thickness_, shield_y_+steel_thickness_, beam_base_thickness_, 0.,
+                                G4ThreeVector(lat_beam_x,-beam_base_thickness_/2.,lateral_z_separation_/2.), 0);
     front_beam_gen_ =
-      new BoxPointSampler(beam_base_thickness_, shield_y_+steel_thickness_, lead_thickness_, 0.,
-                          G4ThreeVector(-front_x_separation_/2., -beam_base_thickness_/2., front_beam_z), 0);
+      new BoxPointSamplerLegacy(beam_base_thickness_, shield_y_+steel_thickness_, lead_thickness_,
+                                0., G4ThreeVector(-front_x_separation_/2., -beam_base_thickness_/2., front_beam_z), 0);
 
 
 
