@@ -3,6 +3,28 @@
 
 #include <catch.hpp>
 
+TEST_CASE("CylinderPointSampler") {
+
+  // Checks that points are generated within the given dimensions in a cylinder sampler
+
+  for (G4int i=0; i<20; i++) {
+    auto minRad     = G4UniformRand();
+    auto thickn     = G4UniformRand();
+    auto maxRad     = minRad + thickn;
+    auto halfLength = G4UniformRand();
+
+    auto sampler = nexus::CylinderPointSampler(minRad, maxRad, halfLength);
+    auto vertex  = sampler.GenerateVertex("VOLUME");
+    auto r = std::sqrt(std::pow(vertex.x(), 2) + std::pow(vertex.y(), 2));
+    auto z = vertex.z();
+
+    REQUIRE(r >= minRad);
+    REQUIRE(r <= maxRad);
+    REQUIRE(std::abs(z) <= halfLength);
+  }
+
+}
+
 TEST_CASE("Barrel and Caps intersection") {
   // Tests that rays from the origin parallel
   // to the axes are found to intersect with the
@@ -71,9 +93,9 @@ TEST_CASE("Cylinder Arbitrary valid intersect") {
 			       G4UniformRand()).unit();
 
   auto intersect = sampler.GetIntersect(point, dir);
-  
+
   // Check that the new ray passes through the original point.
   auto origin_point = point - intersect;
   REQUIRE(std::abs(origin_point.dot(dir)) == Approx(origin_point.mag()));
-  
+
 }
