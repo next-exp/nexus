@@ -47,12 +47,12 @@ namespace nexus {
     G4LogicalVolume* mother_logic_;
 
     // Dimensions
-    G4double gate_tp_distance_, gate_sapphire_wdw_dist_;
     const G4double in_rad_, thickness_;
     const G4double ics_ep_lip_width_;
+    G4double gate_tp_distance_, gate_sapphire_wdw_dist_;
     G4double port_z_1a_, port_z_2a_, port_z_1b_, port_z_2b_;
 
-    // Visibility of the shielding
+    // Visibility of the ICS
     G4bool visibility_;
 
     // Vertex generator

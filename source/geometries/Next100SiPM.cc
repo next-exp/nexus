@@ -84,16 +84,18 @@ void Next100SiPM::Construct()
     G4Material* coating_mt = materials::TPB();
     coating_mt->SetMaterialPropertiesTable(opticalprops::TPB());
 
-    G4LogicalVolume* coating_logic_vol = new G4LogicalVolume(coating_solid_vol, coating_mt, coating_name);
+    G4LogicalVolume* coating_logic_vol =
+      new G4LogicalVolume(coating_solid_vol, coating_mt, coating_name);
 
     G4double coating_zpos = sipm_thickn/2. - coating_thickn_/2;
 
-    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., coating_zpos), coating_logic_vol,
+    new G4PVPlacement(nullptr, G4ThreeVector(0., 0., coating_zpos),
+                      coating_logic_vol,
                       coating_name, sipm_logic_vol, false, 0, false);
 
-    G4OpticalSurface* coating_optSurf = new G4OpticalSurface(coating_name + "_OPSURF",
-                                                         glisur, ground,
-                                                         dielectric_dielectric, .01);
+    G4OpticalSurface* coating_optSurf =
+      new G4OpticalSurface(coating_name + "_OPSURF", glisur, ground,
+                           dielectric_dielectric, .01);
 
     new G4LogicalSkinSurface(coating_name + "_OPSURF", coating_logic_vol, coating_optSurf);
 
@@ -144,35 +146,43 @@ void Next100SiPM::Construct()
 
   // OPTICAL SURFACES //////////////////////////////////////
   const G4int entries = 42;
-  G4double energies[entries] = {0.2 * eV, 1.0 * eV, 1.3 * eV,
-                                1.3776022  * eV, 1.4472283  * eV, 1.52041305 * eV, 1.59290956 * eV, 1.66341179 * eV,
-                                1.72546158 * eV, 1.78169885 * eV, 1.8473836  * eV, 1.90593775 * eV, 1.94918431 * eV,
-                                1.99443901 * eV, 2.05580636 * eV, 2.12107005 * eV, 2.17476803 * eV, 2.23125551 * eV,
-                                2.29951572 * eV, 2.37208426 * eV, 2.46950045 * eV, 2.75730000 * eV, 3.04467524 * eV,
-                                3.14006977 * eV, 3.20705792 * eV, 3.2592052  * eV, 3.31307637 * eV, 3.38773724 * eV,
-                                3.44597914 * eV, 3.50625866 * eV, 3.54763044 * eV, 3.58999021 * eV, 3.61155171 * eV,
-                                3.65546116 * eV, 3.67781872 * eV, 3.72336446 * eV, 3.74656299 * eV, 3.79383824 * eV,
-                                3.86703126 * eV, 4.0 * eV, 4.2 * eV, 11.5 * eV};
+  G4double energies[entries] =
+    {0.2 * eV, 1.0 * eV, 1.3 * eV,
+     1.3776022  * eV, 1.4472283  * eV, 1.52041305 * eV, 1.59290956 * eV,
+     1.66341179 * eV, 1.72546158 * eV, 1.78169885 * eV, 1.8473836  * eV,
+     1.90593775 * eV, 1.94918431 * eV, 1.99443901 * eV, 2.05580636 * eV,
+     2.12107005 * eV, 2.17476803 * eV, 2.23125551 * eV, 2.29951572 * eV,
+     2.37208426 * eV, 2.46950045 * eV, 2.75730000 * eV, 3.04467524 * eV,
+     3.14006977 * eV, 3.20705792 * eV, 3.2592052  * eV, 3.31307637 * eV,
+     3.38773724 * eV, 3.44597914 * eV, 3.50625866 * eV, 3.54763044 * eV,
+     3.58999021 * eV, 3.61155171 * eV, 3.65546116 * eV, 3.67781872 * eV,
+     3.72336446 * eV, 3.74656299 * eV, 3.79383824 * eV, 3.86703126 * eV,
+     4.0 * eV, 4.2 * eV, 11.5 * eV};
 
-  G4double reflectivity[entries] = {0.0,  0.0, 0.0, 0.0, 0.0,
-                                    0.0,  0.0, 0.0, 0.0, 0.0,
-                                    0.0,  0.0, 0.0, 0.0, 0.0,
-                                    0.0,  0.0, 0.0, 0.0, 0.0,
-                                    0.0,  0.0, 0.0, 0.0, 0.0,
-                                    0.0,  0.0, 0.0, 0.0, 0.0,
-                                    0.0,  0.0, 0.0, 0.0, 0.0,
-                                    0.0, 0.0, 0.0, 0.0, 0.0,
-                                    0.0, 0.0};
+  G4double reflectivity[entries] =
+    {0.0, 0.0, 0.0,
+     0.0, 0.0, 0.0, 0.0,
+     0.0, 0.0, 0.0, 0.0,
+     0.0, 0.0, 0.0, 0.0,
+     0.0, 0.0, 0.0, 0.0,
+     0.0, 0.0, 0.0, 0.0,
+     0.0, 0.0, 0.0, 0.0,
+     0.0, 0.0, 0.0, 0.0,
+     0.0, 0.0, 0.0, 0.0,
+     0.0, 0.0, 0.0, 0.0,
+     0.0, 0.0, 0.0};
 
-  G4double efficiency[entries]   = {0.0, 0.0, 0.0,
-                                    0.03506431, 0.0560223 , 0.07944598, 0.10291004, 0.12607905,
-                                    0.14954693, 0.17061431, 0.193974  , 0.21740781, 0.23843982,
-                                    0.26178898, 0.28501443, 0.30860135, 0.33010702, 0.35361856,
-                                    0.37751412, 0.40109223, 0.42743901, 0.43779628, 0.41021884,
-                                    0.38111716, 0.36057765, 0.33517116, 0.31491576, 0.28931617,
-                                    0.26968918, 0.24455707, 0.22893024, 0.20156831, 0.18538152,
-                                    0.15444223, 0.12549548, 0.1040183 , 0.0902669 , 0.05498552,
-                                    0.02944706, 0.0, 0.0, 0.0};
+  G4double efficiency[entries] =
+    {0.0, 0.0, 0.0,
+     0.03506431, 0.0560223 , 0.07944598, 0.10291004,
+     0.12607905, 0.14954693, 0.17061431, 0.193974  , 0.21740781,
+     0.23843982, 0.26178898, 0.28501443, 0.30860135, 0.33010702,
+     0.35361856, 0.37751412, 0.40109223, 0.42743901, 0.43779628,
+     0.41021884, 0.38111716, 0.36057765, 0.33517116, 0.31491576,
+     0.28931617, 0.26968918, 0.24455707, 0.22893024, 0.20156831,
+     0.18538152, 0.15444223, 0.12549548, 0.1040183 , 0.0902669 ,
+     0.05498552, 0.02944706,
+     0.0, 0.0, 0.0};
 
   G4MaterialPropertiesTable* sipm_mt = new G4MaterialPropertiesTable();
   sipm_mt->AddProperty("EFFICIENCY", energies, efficiency, entries);

@@ -45,12 +45,12 @@ REGISTER_CLASS(MuonsEventAction, G4UserEventAction)
     fG4AnalysisMan_ = G4AnalysisManager::Instance();
     
     // Create histogram(s) for muons
-    fG4AnalysisMan_->CreateH1("Edepo","Energy_deposited",100,-1.0,3.4);
-    fG4AnalysisMan_->CreateH1("Zenith","Zenith generated",100,0.,pi);
-    fG4AnalysisMan_->CreateH1("Azimuth","Azimuth generated",100,0.,twopi);
+    fG4AnalysisMan_->CreateH1("Edepo", "Energy_deposited", 100, -1.0, 3.4);
+    fG4AnalysisMan_->CreateH1("Zenith", "Zenith generated", 100, 0., pi);
+    fG4AnalysisMan_->CreateH1("Azimuth", "Azimuth generated", 100, 0., twopi);
     
     // Create Ntuple branches for muons
-    fG4AnalysisMan_->CreateNtuple("Tree nexus","Flat tree of muon zenith and azimuth");
+    fG4AnalysisMan_->CreateNtuple("Tree nexus", "Flat tree of muon zenith and azimuth");
     fG4AnalysisMan_->CreateNtupleDColumn("tree_zenith");
     fG4AnalysisMan_->CreateNtupleDColumn("tree_azimuth");
     fG4AnalysisMan_->FinishNtuple();
@@ -122,8 +122,8 @@ REGISTER_CLASS(MuonsEventAction, G4UserEventAction)
 
     // Retrieving muon generation information
     G4PrimaryVertex* my_vertex = event->GetPrimaryVertex();
-    G4VUserPrimaryVertexInformation *getinfo2 = my_vertex->GetUserInformation();
-    AddUserInfoToPV *my_getinfo2 = dynamic_cast<AddUserInfoToPV*>(getinfo2);
+    G4VUserPrimaryVertexInformation* getinfo2 = my_vertex->GetUserInformation();
+    AddUserInfoToPV* my_getinfo2 = dynamic_cast<AddUserInfoToPV*>(getinfo2);
 
     G4double my_zenith = my_getinfo2->GetZenith();
     G4double my_azimuth = my_getinfo2->GetAzimuth();

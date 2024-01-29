@@ -32,7 +32,8 @@ IonGenerator::IonGenerator():
   msg_(nullptr), geom_(nullptr)
 {
   msg_ = new G4GenericMessenger(this, "/Generator/IonGenerator/",
-                                "Control commands of the ion gun primary generator.");
+                                "Control commands of the ion gun "
+                                "primary generator.");
 
   G4GenericMessenger::Command& atomic_number_cmd =
     msg_->DeclareProperty("atomic_number", atomic_number_, "Atomic number of the ion.");
@@ -40,7 +41,8 @@ IonGenerator::IonGenerator():
   atomic_number_cmd.SetRange("atomic_number > 0");
 
   G4GenericMessenger::Command& mass_number_cmd =
-    msg_->DeclareProperty("mass_number", mass_number_, "Mass number of the ion.");
+    msg_->DeclareProperty("mass_number", mass_number_,
+                          "Mass number of the ion.");
   mass_number_cmd.SetParameterName("mass_number", false);
   mass_number_cmd.SetRange("mass_number > 0");
 

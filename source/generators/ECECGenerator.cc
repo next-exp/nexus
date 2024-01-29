@@ -44,13 +44,11 @@ ECECGenerator::ECECGenerator():
                                 "Control commands of the ECEC primary generator.");
 
   G4GenericMessenger::Command& atomic_number_cmd =
-    msg_->DeclareProperty("atomic_number", atomic_number_,
-                          "Atomic number of the ion.");
+    msg_->DeclareProperty("atomic_number", atomic_number_, "Atomic number of the ion.");
   atomic_number_cmd.SetParameterName("atomic_number", false);
   atomic_number_cmd.SetRange("atomic_number > 0");
 
-  msg_->DeclareProperty("shell", shell_name_,
-                        "Shell from which the electron is captured.");
+  msg_->DeclareProperty("shell", shell_name_, "Shell from which the electron is captured.");
 
   msg_->DeclareProperty("region", region_,
                         "Region of the geometry where vertices will be generated.");

@@ -64,7 +64,7 @@ namespace nexus {
     source_height_ (5. * mm), // preliminar
 
     // Vessel gas
-    sc_yield_(16670. * 1/MeV),
+    sc_yield_(25510. * 1/MeV),
     e_lifetime_(1000. * ms),
     pressure_   (13.5 * bar),
     temperature_(293. * kelvin),

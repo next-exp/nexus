@@ -39,9 +39,9 @@ ScintillationGenerator::ScintillationGenerator() :
     "Control commands of scintillation generator.");
 
   msg_->DeclareProperty("region", region_,
-                        "Set the region of the geometry where the vertex will be generated.");
+                        "Region of the geometry where the vertex will be generated.");
 
-  msg_->DeclareProperty("nphotons", nphotons_, "Set number of photons");
+  msg_->DeclareProperty("nphotons", nphotons_, "Number of photons");
 
   geom_navigator_ =
     G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
@@ -71,16 +71,17 @@ void ScintillationGenerator::GeneratePrimaryVertex(G4Event* event)
   G4MaterialPropertiesTable* mpt = mat->GetMaterialPropertiesTable();
 
   if (!mpt) {
-    G4Exception("[ScintillationGenerator]", "GeneratePrimaryVertex()", FatalException,
-                "Material properties not defined for this material!");
+    G4Exception("[ScintillationGenerator]", "GeneratePrimaryVertex()",
+                FatalException, "Material properties not defined for this material!");
   }
   // Using fast or slow component here is irrelevant, since we're not using time
   // and they're are the same in energy.
-  G4MaterialPropertyVector* spectrum = mpt->GetProperty("SCINTILLATIONCOMPONENT1");
+  G4MaterialPropertyVector* spectrum =
+    mpt->GetProperty("SCINTILLATIONCOMPONENT1");
 
   if (!spectrum) {
-    G4Exception("[ScintillationGenerator]", "GeneratePrimaryVertex()", FatalException,
-                "Fast time decay constant not defined for this material!");
+    G4Exception("[ScintillationGenerator]", "GeneratePrimaryVertex()",
+                FatalException, "Fast time decay constant not defined for this material!");
   }
 
   G4PhysicsOrderedFreeVector* spectrum_integral =

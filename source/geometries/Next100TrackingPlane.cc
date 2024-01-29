@@ -71,25 +71,26 @@ void Next100TrackingPlane::Construct()
 
   G4String copper_plate_name = "TP_COPPER_PLATE";
 
-  G4Tubs* copper_plate_solid = new G4Tubs(copper_plate_name,
-                                          0., copper_plate_diameter_/2.,
-                                          copper_plate_thickness_/2.,
-                                          0., 360.*deg);
+  G4Tubs* copper_plate_solid =
+    new G4Tubs(copper_plate_name, 0., copper_plate_diameter_/2.,
+               copper_plate_thickness_/2., 0., 360.*deg);
 
   G4Material* copper = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
-  // In Geant4 11.0.0, a bug in treating the OpBoundaryProcess produced in the surface makes the code fail.
-  // This is avoided by setting an empty G4MaterialPropertiesTable of the G4Material.
+  // In Geant4 11.0.0, a bug in treating the OpBoundaryProcess produced in the
+  // surface makes the code fail. This is avoided by setting an empty
+  // G4MaterialPropertiesTable of the G4Material.
   copper->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
   G4LogicalVolume* copper_plate_logic =
     new G4LogicalVolume(copper_plate_solid, copper, copper_plate_name);
 
-  G4double copper_plate_zpos = GetCoordOrigin().z() - gate_tp_dist_ - copper_plate_thickness_/2.;
+  G4double copper_plate_zpos =
+    GetCoordOrigin().z() - gate_tp_dist_ - copper_plate_thickness_/2.;
 
   G4VPhysicalVolume* copper_plate_phys =
     new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,copper_plate_zpos),
-                      copper_plate_logic, copper_plate_name, mpv_->GetLogicalVolume(),
-                      false, 0, false);
+                      copper_plate_logic, copper_plate_name,
+                      mpv_->GetLogicalVolume(), false, 0, false);
 
   copper_plate_gen_ = new CylinderPointSampler2020(copper_plate_phys);
 
@@ -135,7 +136,8 @@ void Next100TrackingPlane::Construct()
   G4double plug_y_displacement = 90.5 * mm;
 
   G4Box* plug_solid = new G4Box("DB_PLUG", plug_x/2., plug_y/2., plug_z/2.);
-  G4LogicalVolume* plug_logic = new G4LogicalVolume(plug_solid,  materials::PEEK(), "DB_PLUG");
+  G4LogicalVolume* plug_logic =
+    new G4LogicalVolume(plug_solid,  materials::PEEK(), "DB_PLUG");
   G4double plug_posz = copper_plate_zpos - copper_plate_thickness_/2. - plug_z/2.;
 
   G4ThreeVector pos;
@@ -179,8 +181,8 @@ void Next100TrackingPlane::PlaceSiPMBoardColumns(G4int num_boards,
     G4ThreeVector position(xpos, ypos, zpos);
     board_pos_.push_back(position);
 
-    new G4PVPlacement(nullptr, position, logic_vol, logic_vol->GetName(), mpv_->GetLogicalVolume(),
-                      false, board_index, false);
+    new G4PVPlacement(nullptr, position, logic_vol, logic_vol->GetName(),
+                      mpv_->GetLogicalVolume(), false, board_index, false);
     board_index++;
   }
 }

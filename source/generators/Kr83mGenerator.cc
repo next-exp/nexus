@@ -36,7 +36,8 @@ namespace nexus {
 
   using namespace CLHEP;
 
-  Kr83mGenerator::Kr83mGenerator() : geom_(0), energy_32_(32.1473*keV), energy_9_(9.396*keV),
+  Kr83mGenerator::Kr83mGenerator() : geom_(0), energy_32_(32.1473*keV),
+                                     energy_9_(9.396*keV),
                                      probGamma_9_(0.0490), lifetime_9_(154.*ns)
   {
   // From the TORI /ENSDF data tables.
@@ -88,7 +89,8 @@ namespace nexus {
     "Control commands of Kr83 generator.");
 
      msg_->DeclareProperty("region", region_,
-			   "Set the region of the geometry where the vertex will be generated.");
+			   "Set the region of the geometry "
+                           "where the vertex will be generated.");
 
      // Set particle type searching in particle table by name
     particle_defgamma_ = G4ParticleTable::GetParticleTable()->

@@ -33,12 +33,12 @@ namespace nexus {
 
   Na22Generator::Na22Generator() : geom_(0)
   {
-    /// For the moment, only random direction are allowed. To be fixes if needed
+    /// For the moment, only random direction are allowed. To be fixed if needed
      msg_ = new G4GenericMessenger(this, "/Generator/Na22Generator/",
     "Control commands of Na22 generator.");
 
      msg_->DeclareProperty("region", region_,
-			   "Set the region of the geometry where the vertex will be generated.");
+                           "Region of the geometry where the vertex will be generated.");
 
 
     DetectorConstruction* detconst = (DetectorConstruction*)

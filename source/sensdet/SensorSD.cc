@@ -65,11 +65,11 @@ namespace nexus {
     const G4VTouchable* touchable =
       step->GetPostStepPoint()->GetTouchable();
 
-    G4int pmt_id = FindPmtID(touchable);
+    G4int pmt_id = FindSensorID(touchable);
 
     SensorHit* hit = 0;
     for (size_t i=0; i<HC_->entries(); i++) {
-      if ((*HC_)[i]->GetPmtID() == pmt_id) {
+      if ((*HC_)[i]->GetSensorID() == pmt_id) {
         hit = (*HC_)[i];
         break;
       }
@@ -79,7 +79,7 @@ namespace nexus {
     // create it and set main properties
     if (!hit) {
       hit = new SensorHit();
-      hit->SetPmtID(pmt_id);
+      hit->SetSensorID(pmt_id);
       hit->SetBinSize(timebinning_);
       hit->SetPosition(touchable->GetTranslation());
       HC_->insert(hit);
@@ -93,7 +93,7 @@ namespace nexus {
 
 
 
-  G4int SensorSD::FindPmtID(const G4VTouchable* touchable)
+  G4int SensorSD::FindSensorID(const G4VTouchable* touchable)
   {
     G4int pmtid = touchable->GetCopyNumber(sensor_depth_);
     if (naming_order_ != 0) {

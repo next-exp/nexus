@@ -40,9 +40,9 @@ namespace nexus {
      void operator delete(void*);
 
     /// Returns the detector ID code
-    G4int GetPmtID() const;
+    G4int GetSensorID() const;
     /// Sets the detector ID code
-    void  SetPmtID(G4int);
+    void  SetSensorID(G4int);
 
     /// Returns the position of the detector
     G4ThreeVector GetPosition() const;
@@ -61,7 +61,7 @@ namespace nexus {
     const std::map<G4double, G4int>& GetHistogram() const;
 
   private:
-    G4int pmt_id_;           ///< Detector ID number
+    G4int sns_id_;           ///< Detector ID number
     G4double bin_size_;      ///< Size of time bin
     G4ThreeVector position_; ///< Detector position
 
@@ -86,8 +86,8 @@ namespace nexus {
   inline void SensorHit::operator delete(void* hit)
   { SensorHitAllocator.FreeSingle((SensorHit*) hit); }
 
-  inline G4int SensorHit::GetPmtID() const { return pmt_id_; }
-  inline void SensorHit::SetPmtID(G4int id) { pmt_id_ = id; }
+  inline G4int SensorHit::GetSensorID() const { return sns_id_; }
+  inline void SensorHit::SetSensorID(G4int id) { sns_id_ = id; }
 
   inline G4double SensorHit::GetBinSize() const { return bin_size_; }
 

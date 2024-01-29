@@ -40,21 +40,19 @@ geom_(0)
     "Control commands of single-particle generator.");
 
   G4GenericMessenger::Command& min_energy =
-    msg_->DeclareProperty("min_energy", energy_min_,
-                          "Set minimum total kinetic energy of the two particles.");
+    msg_->DeclareProperty("min_energy", energy_min_, "Minimum total kinetic energy of the two particles.");
   min_energy.SetUnitCategory("Energy");
   min_energy.SetParameterName("min_energy", false);
   min_energy.SetRange("min_energy>0.");
 
   G4GenericMessenger::Command& max_energy =
-    msg_->DeclareProperty("max_energy", energy_max_,
-                          "Set maximum total kinetic energy of the two particles.");
+    msg_->DeclareProperty("max_energy", energy_max_, "Maximum total kinetic energy of the two particles.");
   max_energy.SetUnitCategory("Energy");
   max_energy.SetParameterName("max_energy", false);
   max_energy.SetRange("max_energy>0.");
 
   msg_->DeclareProperty("region", region_,
-    "Set the region of the geometry where the vertex will be generated.");
+                        "Region of the geometry where the vertex will be generated.");
 
   DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
   geom_ = detconst->GetGeometry();
@@ -129,3 +127,4 @@ void ElecPositronPairGenerator::GeneratePrimaryVertex(G4Event* event)
   vertex->SetPrimary(particle2);
   event->AddPrimaryVertex(vertex);
 }
+

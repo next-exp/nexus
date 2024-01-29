@@ -33,27 +33,27 @@ REGISTER_CLASS(MuonGenerator, G4VPrimaryGenerator)
 
 MuonGenerator::MuonGenerator():
   G4VPrimaryGenerator(), msg_(0), particle_definition_(0),
-  use_lsc_dist_(true), axis_rotation_(150), rPhi_(NULL), user_dir_{}, energy_min_(0.),
-  energy_max_(0.), dist_name_("za"), bInitialize_(false), geom_(0), geom_solid_(0),
-  gen_rad_(223.33*cm)
+  use_lsc_dist_(true), axis_rotation_(150), rPhi_(NULL), user_dir_{},
+  energy_min_(0.), energy_max_(0.), dist_name_("za"), bInitialize_(false),
+  geom_(0), geom_solid_(0), gen_rad_(223.33*cm)
 {
   msg_ = new G4GenericMessenger(this, "/Generator/MuonGenerator/",
 				"Control commands of muongenerator.");
 
   G4GenericMessenger::Command& min_energy =
-    msg_->DeclareProperty("min_energy", energy_min_, "Set minimum kinetic energy of the particle.");
+    msg_->DeclareProperty("min_energy", energy_min_, "Minimum kinetic energy of the particle.");
   min_energy.SetUnitCategory("Energy");
   min_energy.SetParameterName("min_energy", false);
   min_energy.SetRange("min_energy>0.");
 
   G4GenericMessenger::Command& max_energy =
-    msg_->DeclareProperty("max_energy", energy_max_, "Set maximum kinetic energy of the particle");
+    msg_->DeclareProperty("max_energy", energy_max_, "Maximum kinetic energy of the particle");
   max_energy.SetUnitCategory("Energy");
   max_energy.SetParameterName("max_energy", false);
   max_energy.SetRange("max_energy>0.");
 
   msg_->DeclareProperty("region", region_,
-			"Set the region of the geometry where the vertex will be generated.");
+                        "Region of the geometry where the vertex will be generated.");
 
   msg_->DeclareProperty("use_lsc_dist", use_lsc_dist_,
 			"Distribute muon directions according to file?");
@@ -102,13 +102,15 @@ void MuonGenerator::LoadMuonDistribution()
     // Only angle option, but energy specified
     if (dist_name_ == "za")
       G4Exception("[MuonGenerator]", "LoadMuonDistribution()",
-                FatalException, " Angular + Energy file specified with angle_dist=za option selected, use angle_dist=zae ");
+                  FatalException, " Angular + Energy file specified "
+                  "with angle_dist=za option selected, use angle_dist=zae ");
   }
   // File name does not contain the word Energy
   else {
     if (dist_name_ == "zae")
       G4Exception("[MuonGenerator]", "LoadMuonDistribution()",
-                FatalException, " Angular file specified with angle_dist=zae option selected, use angle_dist=za ");
+                  FatalException, " Angular file specified "
+                  "with angle_dist=zae option selected, use angle_dist=za ");
   }
 
   // Load in the data from csv file depending on 2D histogram sampling or 3D
@@ -116,9 +118,11 @@ void MuonGenerator::LoadMuonDistribution()
     LoadHistData2D(ang_file_, flux_, azimuths_, zeniths_, azimuth_smear_, zenith_smear_);
 
   if (dist_name_ == "zae"){
-    LoadHistData3D(ang_file_, flux_, azimuths_, zeniths_, energies_, azimuth_smear_, zenith_smear_, energy_smear_);
+    LoadHistData3D(ang_file_, flux_, azimuths_, zeniths_, energies_,
+                   azimuth_smear_, zenith_smear_, energy_smear_);
     
-    // Check if the energy is in the desired range permitted by the binning range in the data file
+    // Check if the energy is in the desired range permitted
+    // by the binning range in the data file
     CheckVarBounds(ang_file_, energy_min_/GeV, energy_max_/GeV, "energy"); 
 
   }
@@ -126,7 +130,8 @@ void MuonGenerator::LoadMuonDistribution()
   // Convert flux vector to arr
   auto arr_flux = flux_.data();
 
-  // Initialise the Random Number Generator based on the flux distribution (in bin index)
+  // Initialise the Random Number Generator based on the flux distribution
+  // (in bin index)
   fRandomGeneral_ = new G4RandGeneral( arr_flux, flux_.size() );
 
 }
@@ -170,22 +175,27 @@ void MuonGenerator::GeneratePrimaryVertex(G4Event* event)
       std::cout << "[MuonGenerator]: Generating muons using lsc distribution loaded from file" << std::endl;
       LoadMuonDistribution();
 
-      // Throw exception if a user dir given and also the use_lsc_dist_ is set to true
+      // Throw exception if a user dir given
+      // and also the use_lsc_dist_ is set to true
       if (user_dir_ != G4ThreeVector{})
         G4Exception("[MuonGenerator]", "GeneratePrimaryVertex()",
-                FatalException, " Fixed user direction specified with use_lsc_dist set to true. Set use_lsc_dist to false or remove user_dir in the config");
+                    FatalException, " Fixed user direction specified with "
+                    "use_lsc_dist set to true. Set use_lsc_dist to "
+                    "false or remove user_dir in the config");
 
     }
     
     // Initalise a cos^2 distribution to sample the zenith
     if (!use_lsc_dist_ && (user_dir_ == G4ThreeVector{})){
-      std::cout << "[MuonGenerator]: Generating muons with uniform azimuth and cos^2 distribution for zenith " << std::endl;
+      std::cout << "[MuonGenerator]: Generating muons with uniform azimuth "
+                   "and cos^2 distribution for zenith " << std::endl;
       InitMuonZenithDist();
     }
 
     // User specified muon direction
     if (!use_lsc_dist_ && (user_dir_ != G4ThreeVector{})){
-      std::cout << "[MuonGenerator]: Generating muons with user specified direction " << std::endl;
+      std::cout << "[MuonGenerator]: Generating muons with user specified "
+                   "direction " << std::endl;
     }
 
     // Set Initialisation
@@ -269,7 +279,8 @@ void MuonGenerator::GeneratePrimaryVertex(G4Event* event)
   G4PrimaryParticle* particle =
     new G4PrimaryParticle(particle_definition_, px, py, pz);
 
-  // Add info to PrimaryVertex to be accessed from EventAction type class to make histos of variables generated here.
+  // Add info to PrimaryVertex to be accessed from EventAction type class
+  // to make histos of variables generated here.
   AddUserInfoToPV *info = new AddUserInfoToPV(zenith, azimuth);
 
   vertex->SetUserInformation(info);
@@ -297,8 +308,9 @@ G4String MuonGenerator::MuonCharge() const
 }
 
 
-void MuonGenerator::GetDirection(G4ThreeVector& dir, G4double& zenith, G4double& azimuth,
-                      G4double& energy, G4double& kinetic_energy, G4double mass)
+void MuonGenerator::GetDirection(G4ThreeVector& dir, G4double& zenith,
+                                 G4double& azimuth, G4double& energy,
+                                 G4double& kinetic_energy, G4double mass)
 {
 
   // Bool to check if zenith has a valid value. If not then resample

@@ -48,14 +48,12 @@ kill_after_selection_(false)
 
   msg_->DeclareMethod("select_particle",
                       &SaveAllSteppingAction::AddSelectedParticle,
-                      "add a new particle to select");
+                      "Add a new particle to select");
 
-  msg_->DeclareMethod("select_volume",
-                      &SaveAllSteppingAction::AddSelectedVolume,
-                      "add a new volume to select");
+  msg_->DeclareMethod("select_volume", &SaveAllSteppingAction::AddSelectedVolume,
+                      "Add a new volume to select");
 
-  msg_->DeclareProperty("kill_after_selection",
-                        kill_after_selection_,
+  msg_->DeclareProperty("kill_after_selection", kill_after_selection_,
                         "Whether to kill a particle after a step has been selected");
 
   PersistencyManager* pm = dynamic_cast<PersistencyManager*>

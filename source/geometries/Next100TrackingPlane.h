@@ -47,9 +47,10 @@ namespace nexus {
     void PlaceSiPMBoardColumns(G4int, G4double, G4double, G4int&, G4LogicalVolume*);
 
   private:
-    G4double gate_tp_dist_;
     const G4double copper_plate_diameter_, copper_plate_thickness_;
     const G4double distance_board_board_;
+
+    G4double gate_tp_dist_;
 
     std::vector<G4ThreeVector> board_pos_;
     std::vector<G4ThreeVector> plug_pos_;

@@ -46,29 +46,26 @@ costheta_min_(0), costheta_max_(1.)
     "Set particle to be generated.");
 
   G4GenericMessenger::Command& min_energy =
-    msg_->DeclareProperty("min_energy", energy_min_,
-      "Set minimum kinetic energy of the particle.");
+    msg_->DeclareProperty("min_energy", energy_min_, "Minimum kinetic energy of the particle.");
   min_energy.SetUnitCategory("Energy");
   min_energy.SetParameterName("min_energy", false);
   min_energy.SetRange("min_energy>0.");
 
   G4GenericMessenger::Command& max_energy =
-    msg_->DeclareProperty("max_energy", energy_max_,
-      "Set maximum kinetic energy of the particle");
+    msg_->DeclareProperty("max_energy", energy_max_, "Maximum kinetic energy of the particle");
   max_energy.SetUnitCategory("Energy");
   max_energy.SetParameterName("max_energy", false);
   max_energy.SetRange("max_energy>0.");
 
   msg_->DeclareProperty("region", region_,
-    "Set the region of the geometry where the vertex will be generated.");
-
+                        "Region of the geometry where the vertex will be generated.");
 
   msg_->DeclarePropertyWithUnit("momentum", "mm",  momentum_, "Set particle 3-momentum.");
 
   msg_->DeclareProperty("min_costheta", costheta_min_,
-			"Set minimum cosTheta for the direction of the particle.");
+			"Minimum cosTheta for the direction of the particle.");
   msg_->DeclareProperty("max_costheta", costheta_max_,
-			"Set maximum cosTheta for the direction of the particle.");
+			"Maximum cosTheta for the direction of the particle.");
 
   DetectorConstruction* detconst = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
   geom_ = detconst->GetGeometry();
