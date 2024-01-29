@@ -9,7 +9,6 @@
 #include "MuonGenerator.h"
 #include "DetectorConstruction.h"
 #include "GeometryBase.h"
-#include "MuonsPointSampler.h"
 #include "AddUserInfoToPV.h"
 #include "FactoryBase.h"
 #include "RandomUtils.h"
