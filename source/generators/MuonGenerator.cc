@@ -247,7 +247,12 @@ void MuonGenerator::GeneratePrimaryVertex(G4Event* event)
     }
   }
 
-  G4ThreeVector position = ProjectToVertex(p_dir);
+  G4ThreeVector position;
+  if ((region_ == "HALLA_INNER") || (region_ == "HALLA_OUTER")) {
+    position = ProjectToVertex(p_dir);
+  } else {
+    position = geom_->GenerateVertex(region_);
+  }
 
   G4double pmod   = std::sqrt(energy*energy - mass*mass);
   G4double px = pmod * p_dir.x();
