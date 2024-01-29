@@ -9,10 +9,14 @@
 #include "BoxPointSampler.h"
 
 #include <Randomize.hh>
+#include <G4LogicalVolume.hh>
+#include <G4VPhysicalVolume.hh>
+#include <G4Box.hh>
 
 
 namespace nexus {
 
+  // Constructor following Geant4 dimensions convention
   BoxPointSampler::BoxPointSampler(G4double half_inner_x,
                                    G4double half_inner_y,
                                    G4double half_inner_z,
@@ -48,6 +52,31 @@ namespace nexus {
     perc_Ysurf_ = Y_surface / total_surface;
   }
 
+
+  // Constructor via Geant4 Physical Volume
+  BoxPointSampler::BoxPointSampler (G4VPhysicalVolume* physVolume):
+    thickness_(0.),
+    origin_(physVolume->GetObjectTranslation()),
+    rotation_(physVolume->GetObjectRotation())
+  {
+    G4Box* solidVolume = dynamic_cast<G4Box*> (physVolume->GetLogicalVolume()->GetSolid());
+    half_inner_x_ = solidVolume->GetXHalfLength();
+    half_inner_y_ = solidVolume->GetYHalfLength();
+    half_inner_z_ = solidVolume->GetZHalfLength();
+
+    outer_x_ = 2. * half_inner_x_;
+    outer_y_ = 2. * half_inner_y_;
+    outer_z_ = 2. * half_inner_z_;
+
+    // Internal surfaces
+    G4double X_surface = 4 * half_inner_x_ * half_inner_x_;
+    G4double Y_surface = 4 * half_inner_y_ * half_inner_y_;
+    G4double Z_surface = 4 * half_inner_z_ * half_inner_z_;
+    G4double total_surface = Z_surface + Y_surface + X_surface;
+
+    perc_Zsurf_ = Z_surface / total_surface;
+    perc_Ysurf_ = Y_surface / total_surface;
+  }
 
 
   BoxPointSampler::~BoxPointSampler()

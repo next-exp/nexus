@@ -12,6 +12,8 @@
 #include <G4ThreeVector.hh>
 #include <G4RotationMatrix.hh>
 
+class G4VPhysicalVolume;
+
 
 namespace nexus {
 
@@ -25,6 +27,8 @@ namespace nexus {
                     G4double half_inner_z, G4double thickness=0,
                     G4ThreeVector origin=G4ThreeVector(0.,0.,0.),
                     G4RotationMatrix* rotation=0);
+
+    BoxPointSampler (G4VPhysicalVolume* physVolume);
 
     /// Destructor
     ~BoxPointSampler();
