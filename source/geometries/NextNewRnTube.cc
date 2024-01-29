@@ -8,7 +8,7 @@
 // ----------------------------------------------------------------------------
 
 #include "NextNewRnTube.h"
-#include "CylinderPointSampler.h"
+#include "CylinderPointSamplerLegacy.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
@@ -72,7 +72,7 @@ namespace nexus {
     }
 
     // VERTEX GENERATORS   //////////
-    tube_gen_ = new CylinderPointSampler(inner_diam_/2.,length_,thickness_,thickness_, G4ThreeVector(0.,0.,0.), 0);
+    tube_gen_ = new CylinderPointSamplerLegacy(inner_diam_/2.,length_,thickness_,thickness_, G4ThreeVector(0.,0.,0.), 0);
 
     // Calculating some probs
     G4double tube_vol = tube_solid->GetCubicVolume();

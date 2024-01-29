@@ -22,7 +22,7 @@ class G4UIcmdWith3VectorAndUnit;
 namespace nexus {
 
   class HexagonPointSampler;
-  class CylinderPointSampler;
+  class CylinderPointSamplerLegacy;
   class BoxPointSampler;
 
   /// Geometry of the NEXT1-EL detector
@@ -204,7 +204,7 @@ namespace nexus {
     G4GenericMessenger* msg_;
 
     /// To generate vertices in the Na22 source
-    CylinderPointSampler* cps_;
+    CylinderPointSamplerLegacy* cps_;
   };
 
 

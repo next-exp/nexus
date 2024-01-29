@@ -14,7 +14,7 @@
 #include "OpticalMaterialProperties.h"
 #include "IonizationSD.h"
 #include "XenonProperties.h"
-#include "CylinderPointSampler.h"
+#include "CylinderPointSamplerLegacy.h"
 #include "Visibilities.h"
 
 #include <G4GenericMessenger.hh>
@@ -369,7 +369,7 @@ namespace nexus {
 
     // VERTEX GENERATOR
     active_gen_ =
-      new CylinderPointSampler(0., active_length_, tube_in_diam_/2.,
+      new CylinderPointSamplerLegacy(0., active_length_, tube_in_diam_/2.,
                                0., G4ThreeVector (0., 0., active_posz_));
   }
 
@@ -399,7 +399,7 @@ void NextNewFieldCage::BuildBuffer()
 
     // VERTEX GENERATOR
     buffer_gen_ =
-      new CylinderPointSampler(0., buffer_length_, hdpe_in_diam_/2.,
+      new CylinderPointSamplerLegacy(0., buffer_length_, hdpe_in_diam_/2.,
                                0., G4ThreeVector (0., 0., buffer_posz));
 
     // VERTEX GENERATOR FOR ALL XENON
@@ -413,7 +413,7 @@ void NextNewFieldCage::BuildBuffer()
     G4double xenon_len = buffer_length_ + active_length_
       + cathode_thickness_ + el_gap_length_;
     xenon_gen_ =
-      new CylinderPointSampler(0., xenon_len, tube_in_diam_/2.,
+      new CylinderPointSamplerLegacy(0., xenon_len, tube_in_diam_/2.,
                                0., G4ThreeVector (0., 0., xenon_posz));
   }
 
@@ -483,7 +483,7 @@ void NextNewFieldCage::BuildBuffer()
                                  el_gap_gen_disk_y_,
                                  el_gap_gen_disk_z);
 
-    el_gap_gen_ = new CylinderPointSampler(0., el_gap_gen_disk_thickn, el_gap_gen_disk_diam_/2.,
+    el_gap_gen_ = new CylinderPointSamplerLegacy(0., el_gap_gen_disk_thickn, el_gap_gen_disk_diam_/2.,
                                            0., el_gap_gen_pos);
 
     /// Visibilities
@@ -683,7 +683,7 @@ void NextNewFieldCage::BuildBuffer()
 
     /// VERTEX GENERATORS   //////////
     hdpe_tube_gen_  =
-      new CylinderPointSampler(hdpe_in_diam_/2., hdpe_length_,
+      new CylinderPointSamplerLegacy(hdpe_in_diam_/2., hdpe_length_,
                                hdpe_out_diam_/2. - hdpe_in_diam_/2.,
                                0., G4ThreeVector (0., 0., hdpe_tube_z_pos));
 
@@ -693,15 +693,15 @@ void NextNewFieldCage::BuildBuffer()
     // 			                      0., G4ThreeVector (0., 0., pos_z_anode_));
 
     drift_tube_gen_  =
-      new CylinderPointSampler(tube_in_diam_/2., tube_length_drift_, tube_thickness_,
+      new CylinderPointSamplerLegacy(tube_in_diam_/2., tube_length_drift_, tube_thickness_,
                                0., G4ThreeVector (0., 0., drift_tube_z_pos));
 
     anode_quartz_gen_ =
-      new CylinderPointSampler(0., anode_quartz_thickness_, anode_quartz_diam_/2.,
+      new CylinderPointSamplerLegacy(0., anode_quartz_thickness_, anode_quartz_diam_/2.,
                                0., G4ThreeVector (0., 0., pos_z_anode_));
 
     cathode_gen_ =
-      new CylinderPointSampler(0., cathode_thickness_, tube_in_diam_/2.,
+      new CylinderPointSamplerLegacy(0., cathode_thickness_, tube_in_diam_/2.,
                                0., G4ThreeVector (0., 0., pos_z_cathode_));
   }
 
@@ -743,7 +743,7 @@ void NextNewFieldCage::BuildBuffer()
     }
 
     // Vertex generator
-    tracking_frames_gen_ = new CylinderPointSampler(frame_in_rad, frame_length, frame_thickn,
+    tracking_frames_gen_ = new CylinderPointSamplerLegacy(frame_in_rad, frame_length, frame_thickn,
                                                     0., G4ThreeVector (0., 0., frame_posz));
   }
 

@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | CylinderPointSampler.cc
+// nexus | CylinderPointSamplerLegacy.cc
 //
 // This class is a sampler of random uniform points in a cylinder.
 //
@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------------------
 
 
-#include "CylinderPointSampler.h"
+#include "CylinderPointSamplerLegacy.h"
 
 #include <Randomize.hh>
 
@@ -19,12 +19,12 @@ namespace nexus {
   using namespace CLHEP;
 
 
-  CylinderPointSampler::CylinderPointSampler(G4double inner_radius,
-                                             G4double inner_length,
-                                             G4double body_thickness,
-                                             G4double endcaps_thickness,
-                                             G4ThreeVector origin,
-                                             G4RotationMatrix* rotation):
+  CylinderPointSamplerLegacy::CylinderPointSamplerLegacy(G4double inner_radius,
+                                                         G4double inner_length,
+                                                         G4double body_thickness,
+                                                         G4double endcaps_thickness,
+                                                         G4ThreeVector origin,
+                                                         G4RotationMatrix* rotation):
     inner_length_(inner_length),
     inner_radius_(inner_radius),
     body_thickness_(body_thickness),
@@ -49,13 +49,13 @@ namespace nexus {
 
 
 
-  CylinderPointSampler::~CylinderPointSampler()
+  CylinderPointSamplerLegacy::~CylinderPointSamplerLegacy()
   {
   }
 
 
 
-  G4ThreeVector CylinderPointSampler::GenerateVertex(const G4String& region)
+  G4ThreeVector CylinderPointSamplerLegacy::GenerateVertex(const G4String& region)
   {
     G4double x, y, z, origin;
     G4ThreeVector point;
@@ -180,7 +180,7 @@ namespace nexus {
 
     // Unknown region
     else {
-      G4Exception("[CylinderPointSampler]", "GenerateVertex()", FatalException,
+      G4Exception("[CylinderPointSamplerLegacy]", "GenerateVertex()", FatalException,
 		  "Unknown Region!");
     }
 
@@ -189,7 +189,7 @@ namespace nexus {
 
 
 
-  G4double CylinderPointSampler::GetRadius(G4double inner, G4double outer)
+  G4double CylinderPointSamplerLegacy::GetRadius(G4double inner, G4double outer)
   {
     G4double rand = G4UniformRand();
     G4double r = sqrt( (1.-rand) * inner*inner + rand * outer*outer);
@@ -198,14 +198,14 @@ namespace nexus {
 
 
 
-  G4double CylinderPointSampler::GetPhi()
+  G4double CylinderPointSamplerLegacy::GetPhi()
   {
     return (G4UniformRand() * twopi);
   }
 
 
 
-  G4double CylinderPointSampler::GetLength(G4double origin,
+  G4double CylinderPointSamplerLegacy::GetLength(G4double origin,
 					      G4double max_length)
   {
     return (origin + (G4UniformRand() - 0.5) * max_length);
@@ -214,7 +214,7 @@ namespace nexus {
 
 
   G4ThreeVector
-  CylinderPointSampler::RotateAndTranslate(G4ThreeVector position)
+  CylinderPointSamplerLegacy::RotateAndTranslate(G4ThreeVector position)
   {
     G4ThreeVector real_pos = position;
 

@@ -21,7 +21,7 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class CylinderPointSampler;
+  class CylinderPointSamplerLegacy;
   class BoxPointSampler;
 
   /// This is a geometry formed by all the components of the tracking plane
@@ -75,9 +75,9 @@ namespace nexus {
     G4bool visibility_;
 
     // Vertex generators
-    CylinderPointSampler* support_body_gen_;
-    CylinderPointSampler* support_flange_gen_;
-    CylinderPointSampler* support_buffer_gen_;
+    CylinderPointSamplerLegacy* support_body_gen_;
+    CylinderPointSamplerLegacy* support_flange_gen_;
+    CylinderPointSamplerLegacy* support_buffer_gen_;
     BoxPointSampler* plug_gen_;
 
     G4double body_perc_;

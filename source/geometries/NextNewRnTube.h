@@ -18,7 +18,7 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class CylinderPointSampler;
+  class CylinderPointSamplerLegacy;
 
   class NextNewRnTube: public GeometryBase
   {
@@ -49,7 +49,7 @@ namespace nexus {
     G4bool visibility_;
 
     // Vertex generators
-    CylinderPointSampler* tube_gen_;
+    CylinderPointSamplerLegacy* tube_gen_;
 
     // Messenger for the definition of control commands
     G4GenericMessenger* msg_;

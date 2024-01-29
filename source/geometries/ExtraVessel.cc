@@ -10,7 +10,7 @@
 
 #include "ExtraVessel.h"
 #include "MaterialsList.h"
-#include "CylinderPointSampler.h"
+#include "CylinderPointSamplerLegacy.h"
 #include "Visibilities.h"
 
 #include <G4LogicalVolume.hh>
@@ -77,8 +77,9 @@ namespace nexus {
 
     // VERTEX GENERATOR ////////////////////////////////////////////
 
-    generic_gen_ = new CylinderPointSampler(0, thickness_, diameter_/2., 0.,
-					       G4ThreeVector (0., 0., 0.));
+    generic_gen_ =
+      new CylinderPointSamplerLegacy(0, thickness_, diameter_/2., 0.,
+                                     G4ThreeVector (0., 0., 0.));
   }
 
 

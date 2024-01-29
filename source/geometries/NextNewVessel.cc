@@ -11,7 +11,7 @@
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
 #include "CalibrationSource.h"
-#include "CylinderPointSampler.h"
+#include "CylinderPointSamplerLegacy.h"
 #include "SpherePointSampler.h"
 
 #include <G4GenericMessenger.hh>
@@ -520,7 +520,7 @@ void NextNewVessel::Construct()
     }
 
     screw_gen_lat_ =
-      new CylinderPointSampler(0., source_thickness, source_diam/2., 0., G4ThreeVector(gen_pos, 0., lat_nozzle_z_pos_), rot_lat);
+      new CylinderPointSamplerLegacy(0., source_thickness, source_diam/2., 0., G4ThreeVector(gen_pos, 0., lat_nozzle_z_pos_), rot_lat);
 
   }
 
@@ -612,7 +612,7 @@ void NextNewVessel::Construct()
     }
 
     screw_gen_up_ =
-      new CylinderPointSampler(0., source_thickness, source_diam/2., 0., G4ThreeVector(0., gen_pos, 0.), rot_up);
+      new CylinderPointSamplerLegacy(0., source_thickness, source_diam/2., 0., G4ThreeVector(0., gen_pos, 0.), rot_up);
 
   }
 
@@ -706,7 +706,7 @@ void NextNewVessel::Construct()
     }
 
     screw_gen_axial_ =
-      new CylinderPointSampler(0., source_thickness, source_diam/2., 0., G4ThreeVector(0., 0., gen_pos), 0);
+      new CylinderPointSamplerLegacy(0., source_thickness, source_diam/2., 0., G4ThreeVector(0., 0., gen_pos), 0);
 
   }
 
@@ -765,8 +765,8 @@ void NextNewVessel::Construct()
 
 
   //// VERTEX GENERATORS   //
-  body_gen_   = new CylinderPointSampler(vessel_in_diam_/2., vessel_tube_length_, vessel_thickness_, 0.);
-  flange_gen_ = new CylinderPointSampler(vessel_out_diam/2., flange_length_,
+  body_gen_   = new CylinderPointSamplerLegacy(vessel_in_diam_/2., vessel_tube_length_, vessel_thickness_, 0.);
+  flange_gen_ = new CylinderPointSamplerLegacy(vessel_out_diam/2., flange_length_,
 					 flange_out_diam_/2.-vessel_out_diam/2., 0., G4ThreeVector(0.,0.,0.));
   //trick to avoid vertex the vessel_gas-vessel interface -1*mm thickness
   tracking_endcap_gen_ = new SpherePointSampler(endcap_in_rad_+1*mm, endcap_thickness_-1*mm, tracking_endcap_pos, 0,

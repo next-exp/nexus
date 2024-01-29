@@ -9,7 +9,7 @@
 #include "NextNewIcs.h"
 #include "MaterialsList.h"
 #include "Visibilities.h"
-#include "CylinderPointSampler.h"
+#include "CylinderPointSamplerLegacy.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4SubtractionSolid.hh>
@@ -146,13 +146,13 @@ namespace nexus {
 
 
     // VERTEX GENERATORS   //////////
-    body_gen_ = new CylinderPointSampler(body_inner_diam_/2.,
+    body_gen_ = new CylinderPointSamplerLegacy(body_inner_diam_/2.,
                                          body_length_-tracking_tread_length_,
                                          body_thickness_, 0.,
                                          G4ThreeVector(0., 0., -body_zpos_ - tracking_tread_length_/2.));
 
     G4double body_outer_diam = body_inner_diam_ + 2 * body_thickness_;
-    tread_gen_ = new CylinderPointSampler(tracking_tread_diam_/2., tracking_tread_length_,
+    tread_gen_ = new CylinderPointSamplerLegacy(tracking_tread_diam_/2., tracking_tread_length_,
                                           (body_outer_diam - tracking_tread_diam_)/2., 0.,
                                           G4ThreeVector(0.,0., -body_zpos_ + body_length_/2. - tracking_tread_length_/2.));
 

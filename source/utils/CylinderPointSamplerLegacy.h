@@ -1,13 +1,14 @@
 // ----------------------------------------------------------------------------
-// nexus | CylinderPointSampler.h
+// nexus | CylinderPointSamplerLegacy.h
 //
 // This class is a sampler of random uniform points in a cylinder.
+// It is an obsolete class, kept for legacy.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef CYLINDER_POINT_SAMPLER_H
-#define CYLINDER_POINT_SAMPLER_H
+#ifndef CYLINDER_POINT_SAMPLER_LEGACY_H
+#define CYLINDER_POINT_SAMPLER_LEGACY_H
 
 #include <G4ThreeVector.hh>
 #include <G4RotationMatrix.hh>
@@ -17,16 +18,16 @@ namespace nexus {
 
   /// Generator of random positions in a cylinder
 
-  class CylinderPointSampler
+  class CylinderPointSamplerLegacy
   {
   public:
     /// Constructor
-    CylinderPointSampler(G4double inner_rad, G4double inner_length,
-                         G4double body_thickness, G4double endcaps_thickness,
-                         G4ThreeVector origin=G4ThreeVector(0,0,0),
-                         G4RotationMatrix* rotation=0);
+    CylinderPointSamplerLegacy(G4double inner_rad, G4double inner_length,
+                               G4double body_thickness, G4double endcaps_thickness,
+                               G4ThreeVector origin=G4ThreeVector(0,0,0),
+                               G4RotationMatrix* rotation=0);
     /// Destructor
-    ~CylinderPointSampler();
+    ~CylinderPointSamplerLegacy();
 
     /// Returns vertex within region <region> of the chamber
     G4ThreeVector GenerateVertex(const G4String& region);
@@ -39,7 +40,7 @@ namespace nexus {
 
   private:
     /// Default constructor is hidden
-    CylinderPointSampler();
+    CylinderPointSamplerLegacy();
 
   private:
     G4double inner_length_, inner_radius_;        ///< Internal dimensions

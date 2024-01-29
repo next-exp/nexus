@@ -10,7 +10,7 @@
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
-#include "CylinderPointSampler.h"
+#include "CylinderPointSamplerLegacy.h"
 #include "BoxPointSampler.h"
 
 #include <G4PVPlacement.hh>
@@ -179,15 +179,15 @@ namespace nexus {
 
     // VERTEX GENERATORS   //////////
     support_body_gen_  =
-      new CylinderPointSampler(0., support_plate_thickness_-support_plate_front_buffer_thickness_,
+      new CylinderPointSamplerLegacy(0., support_plate_thickness_-support_plate_front_buffer_thickness_,
 			                         support_plate_tread_diam_/2., 0.,
                                G4ThreeVector(0., 0., support_plate_z_pos));
     support_flange_gen_  =
-      new CylinderPointSampler(support_plate_tread_diam_/2., support_plate_thickness_/2.,
+      new CylinderPointSamplerLegacy(support_plate_tread_diam_/2., support_plate_thickness_/2.,
 			                         (support_plate_diam_ - support_plate_tread_diam_)/2., 0.,
                                G4ThreeVector(0., 0., support_plate_z_pos+support_plate_thickness_/4.));
     support_buffer_gen_  =
-      new CylinderPointSampler(support_plate_front_buffer_diam_/2.,
+      new CylinderPointSamplerLegacy(support_plate_front_buffer_diam_/2.,
                                support_plate_front_buffer_thickness_/2.,
                                (support_plate_tread_diam_-support_plate_front_buffer_diam_)/2.,
                                0., G4ThreeVector(0., 0., support_plate_z_pos -support_plate_thickness_/2.

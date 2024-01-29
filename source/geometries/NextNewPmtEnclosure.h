@@ -23,7 +23,7 @@ class G4GenericMessenger;
 
 namespace nexus{
 
-  class CylinderPointSampler;
+  class CylinderPointSamplerLegacy;
   class PmtR11410;
 
   class NextNewPmtEnclosure: public GeometryBase
@@ -58,14 +58,14 @@ namespace nexus{
     G4bool visibility_;
 
     // Vertex generators
-    CylinderPointSampler* enclosure_body_gen_;
-    CylinderPointSampler* enclosure_flange_gen_;
-    CylinderPointSampler* enclosure_cap_gen_;
-    CylinderPointSampler* enclosure_window_gen_;
-    CylinderPointSampler* enclosure_pad_gen_;
-    CylinderPointSampler* pmt_base_gen_;
-    CylinderPointSampler* enclosure_surf_gen_;
-    CylinderPointSampler* enclosure_cap_surf_gen_;
+    CylinderPointSamplerLegacy* enclosure_body_gen_;
+    CylinderPointSamplerLegacy* enclosure_flange_gen_;
+    CylinderPointSamplerLegacy* enclosure_cap_gen_;
+    CylinderPointSamplerLegacy* enclosure_window_gen_;
+    CylinderPointSamplerLegacy* enclosure_pad_gen_;
+    CylinderPointSamplerLegacy* pmt_base_gen_;
+    CylinderPointSamplerLegacy* enclosure_surf_gen_;
+    CylinderPointSamplerLegacy* enclosure_cap_surf_gen_;
 
 
     G4double body_perc_;

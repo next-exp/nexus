@@ -17,7 +17,7 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class CylinderPointSampler;
+  class CylinderPointSamplerLegacy;
 
   class NextNewIcs: public GeometryBase
   {
@@ -57,8 +57,8 @@ namespace nexus {
     G4bool visibility_;
 
     // Vertex generators
-    CylinderPointSampler* body_gen_;
-    CylinderPointSampler* tread_gen_;
+    CylinderPointSamplerLegacy* body_gen_;
+    CylinderPointSamplerLegacy* tread_gen_;
     G4double body_perc_;
 
     // Geometry Navigator

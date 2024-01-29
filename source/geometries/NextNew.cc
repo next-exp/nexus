@@ -18,7 +18,7 @@
 #include "DiskSource.h"
 #include "Th228Source.h"
 #include "Na22Source.h"
-#include "CylinderPointSampler.h"
+#include "CylinderPointSamplerLegacy.h"
 #include "BoxPointSampler.h"
 #include "Visibilities.h"
 #include "CalibrationSource.h"
@@ -422,10 +422,10 @@ namespace nexus {
     // These are the positions of the source inside the capsule
     G4ThreeVector gen_pos_lat = source_pos - G4ThreeVector(cal_->GetSourceZpos(), 0., 0.);
     G4ThreeVector gen_pos_axial = source_pos + G4ThreeVector(0, 0., cal_->GetSourceZpos());
-    lat_source_gen_ = new CylinderPointSampler(0., cal_->GetSourceThickness(), cal_->GetSourceDiameter()/2.,
+    lat_source_gen_ = new CylinderPointSamplerLegacy(0., cal_->GetSourceThickness(), cal_->GetSourceDiameter()/2.,
                                                0., gen_pos_lat, lat_rot);
 
-    axial_source_gen_ = new CylinderPointSampler(0., cal_->GetSourceThickness(), cal_->GetSourceDiameter()/2.,
+    axial_source_gen_ = new CylinderPointSamplerLegacy(0., cal_->GetSourceThickness(), cal_->GetSourceDiameter()/2.,
                                                0., gen_pos_axial, ax_rot);
 
     // These are the vertices of the external disk source
@@ -438,9 +438,9 @@ namespace nexus {
         G4ThreeVector(up_pos.getX(), up_pos.getY() + source_->GetSourceThickness()/2., up_pos.getZ());
        G4ThreeVector random_pos_gen =
         G4ThreeVector(up_pos.getX(), vessel_->GetOuterRadius() + source_->GetSourceThickness()/2., inner_elements_->GetELzCoord() - source_dist_from_anode_);
-      source_gen_lat_ = new CylinderPointSampler(0., source_thick, source_diam/2., 0., lat_pos_gen, lat_rot);
-      source_gen_up_ = new CylinderPointSampler(0., source_thick, source_diam/2., 0., up_pos_gen, up_rot);
-      source_gen_random_ = new CylinderPointSampler(0., source_thick, source_diam/2., 0., random_pos_gen, up_rot);
+      source_gen_lat_ = new CylinderPointSamplerLegacy(0., source_thick, source_diam/2., 0., lat_pos_gen, lat_rot);
+      source_gen_up_ = new CylinderPointSamplerLegacy(0., source_thick, source_diam/2., 0., up_pos_gen, up_rot);
+      source_gen_random_ = new CylinderPointSamplerLegacy(0., source_thick, source_diam/2., 0., random_pos_gen, up_rot);
     }
 
   }

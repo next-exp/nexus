@@ -16,7 +16,7 @@
 #include "UniformElectricDriftField.h"
 #include "XenonProperties.h"
 #include "NextElDB.h"
-#include "CylinderPointSampler.h"
+#include "CylinderPointSamplerLegacy.h"
 #include "BoxPointSampler.h"
 #include "Visibilities.h"
 #include "FactoryBase.h"
@@ -379,7 +379,7 @@ void Next1EL::BuildExtScintillator()
    rot2->rotateZ(sideport_angle_);
 
    cps_ =
-     new CylinderPointSampler(source_diam/2., source_thick, 0., 0., pos_source, rot2);
+     new CylinderPointSamplerLegacy(source_diam/2., source_thick, 0., 0., pos_source, rot2);
 
 
   ///Plastic support
