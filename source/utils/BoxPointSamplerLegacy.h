@@ -1,13 +1,14 @@
 // ----------------------------------------------------------------------------
-// nexus | BoxPointSampler.h
+// nexus | BoxPointSamplerLegacy.h
 //
 // This class is a sampler of random uniform points in a box-shaped volume.
+// It is an obsolete class, kept for legacy.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef BOX_POINT_SAMPLER_H
-#define BOX_POINT_SAMPLER_H
+#ifndef BOX_POINT_SAMPLER_LEGACY_H
+#define BOX_POINT_SAMPLER_LEGACY_H
 
 #include <G4ThreeVector.hh>
 #include <G4RotationMatrix.hh>
@@ -17,17 +18,17 @@ namespace nexus {
 
   /// Sampler of random uniform points in a box-shaped volume
 
-  class BoxPointSampler
+  class BoxPointSamplerLegacy
   {
   public:
     /// Constructor
-    BoxPointSampler(G4double half_inner_x, G4double half_inner_y,
-                    G4double half_inner_z, G4double thickness=0,
+    BoxPointSamplerLegacy(G4double inner_x, G4double inner_y, G4double inner_z,
+                    G4double thickness,
                     G4ThreeVector origin=G4ThreeVector(0.,0.,0.),
                     G4RotationMatrix* rotation=0);
 
     /// Destructor
-    ~BoxPointSampler();
+    ~BoxPointSamplerLegacy();
 
     /// Return vertex within region <region> of the chamber
     G4ThreeVector GenerateVertex(const G4String& region);

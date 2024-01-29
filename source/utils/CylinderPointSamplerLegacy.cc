@@ -2,6 +2,7 @@
 // nexus | CylinderPointSamplerLegacy.cc
 //
 // This class is a sampler of random uniform points in a cylinder.
+// It is an obsolete class, kept for legacy.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------

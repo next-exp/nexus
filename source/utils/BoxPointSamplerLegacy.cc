@@ -1,30 +1,31 @@
 // ----------------------------------------------------------------------------
-// nexus | BoxPointSampler.cc
+// nexus | BoxPointSamplerLegacy.cc
 //
 // This class is a sampler of random uniform points in a box-shaped volume.
+// It is an obsolete class, kept for legacy.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "BoxPointSampler.h"
+#include "BoxPointSamplerLegacy.h"
 
 #include <Randomize.hh>
 
 
 namespace nexus {
 
-  BoxPointSamplerLegacy::BoxPointSampler(G4double half_inner_x,
-                                         G4double half_inner_y,
-                                         G4double half_inner_z,
-                                         G4double thickness,
-                                         G4ThreeVector origin,
-                                         G4RotationMatrix* rotation):
-    half_inner_x_(half_inner_x), half_inner_y_(half_inner_y), half_inner_z_(half_inner_z),
+  BoxPointSamplerLegacy::BoxPointSamplerLegacy(G4double inner_x,
+                                               G4double inner_y,
+                                               G4double inner_z,
+                                               G4double thickness,
+                                               G4ThreeVector origin,
+                                               G4RotationMatrix* rotation):
+    inner_x_(inner_x), inner_y_(inner_y), inner_z_(inner_z),
     thickness_(thickness), origin_(origin), rotation_(rotation)
   {
-    outer_x_ = 2. * (half_inner_x_ + thickness_);
-    outer_y_ = 2. * (half_inner_y_ + thickness_);
-    outer_z_ = 2. * (half_inner_z_ + thickness_);
+    outer_x_ = inner_x_ + 2.*thickness_;
+    outer_y_ = inner_y_ + 2.*thickness_;
+    outer_z_ = inner_z_ + 2.*thickness_;
 
     // The Z face totally covers X and Y faces
     G4double Z_volume = outer_x_ * outer_y_ * thickness_;
@@ -50,13 +51,13 @@ namespace nexus {
 
 
 
-  BoxPointSampler::~BoxPointSampler()
+  BoxPointSamplerLegacy::~BoxPointSamplerLegacy()
   {
   }
 
 
 
-  G4ThreeVector BoxPointSampler::GenerateVertex(const G4String& region)
+  G4ThreeVector BoxPointSamplerLegacy::GenerateVertex(const G4String& region)
   {
     G4double x, y, z, origin;
     G4ThreeVector point;
@@ -187,7 +188,7 @@ namespace nexus {
 
 
 
-  G4double BoxPointSampler::GetLength(G4double origin, G4double max_length)
+  G4double BoxPointSamplerLegacy::GetLength(G4double origin, G4double max_length)
   {
     G4double rand = G4UniformRand() - 0.5;
     return origin + (rand * max_length);
@@ -195,7 +196,7 @@ namespace nexus {
 
 
 
-  G4ThreeVector BoxPointSampler::RotateAndTranslate(G4ThreeVector position)
+  G4ThreeVector BoxPointSamplerLegacy::RotateAndTranslate(G4ThreeVector position)
   {
     G4ThreeVector real_pos = position;
 
@@ -206,8 +207,8 @@ namespace nexus {
     return real_pos;
   }
 
-  void BoxPointSampler::InvertRotationAndTranslation(G4ThreeVector& vec,
-                                                     bool translate)
+  void BoxPointSamplerLegacy::InvertRotationAndTranslation(G4ThreeVector& vec,
+                                                           bool translate)
   {
     if (translate)
       vec -= origin_;
@@ -215,8 +216,8 @@ namespace nexus {
       vec.rotate(-rotation_->delta(), rotation_->axis());
   }
 
-  G4ThreeVector BoxPointSampler::GetIntersect(const G4ThreeVector& point,
-                                              const G4ThreeVector& dir)
+  G4ThreeVector BoxPointSamplerLegacy::GetIntersect(const G4ThreeVector& point,
+                                                    const G4ThreeVector& dir)
   {
     // The point and direction should be in the lab frame.
     // Need to rotate into the SamplerLegacy frame to get the intersection
