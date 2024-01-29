@@ -11,7 +11,7 @@
 
 #include "GeometryBase.h"
 
-namespace nexus {class CylinderPointSampler2020;}
+namespace nexus {class CylinderPointSampler;}
 
 class G4LogicalVolume;
 class G4GenericMessenger;
@@ -62,8 +62,8 @@ namespace nexus {
     G4double castle_centre_z_, castle_centre_y_;
 
     // Cylinder point samplers for vertexing
-    CylinderPointSampler2020* hallA_vertex_gen_;
-    CylinderPointSampler2020* hallA_outer_gen_;
+    CylinderPointSampler* hallA_vertex_gen_;
+    CylinderPointSampler* hallA_outer_gen_;
 
   };
 

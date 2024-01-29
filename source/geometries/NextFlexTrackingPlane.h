@@ -24,7 +24,7 @@ class G4Navigator;
 
 namespace nexus {
 
-  class CylinderPointSampler2020;
+  class CylinderPointSampler;
   class GenericPhotosensor;
 
 
@@ -138,7 +138,7 @@ namespace nexus {
     G4int first_sensor_id_;
 
     // Vertex generators
-    CylinderPointSampler2020* copper_gen_;
+    CylinderPointSampler* copper_gen_;
 
   }; // class NextFlexTrackingPlane
 

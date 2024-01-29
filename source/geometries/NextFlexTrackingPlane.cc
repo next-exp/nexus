@@ -13,7 +13,7 @@
 #include "XenonProperties.h"
 #include "IonizationSD.h"
 #include "UniformElectricDriftField.h"
-#include "CylinderPointSampler2020.h"
+#include "CylinderPointSampler.h"
 #include "GenericPhotosensor.h"
 #include "SensorSD.h"
 #include "Visibilities.h"
@@ -279,7 +279,7 @@ void NextFlexTrackingPlane::BuildCopper()
   else             copper_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // Vertex generator
-  copper_gen_ = new CylinderPointSampler2020(copper_phys);
+  copper_gen_ = new CylinderPointSampler(copper_phys);
 
   // Verbosity
   if (verbosity_) {

@@ -10,7 +10,7 @@
 
 #include "Next100SiPMBoard.h"
 #include "MaterialsList.h"
-#include "CylinderPointSampler2020.h"
+#include "CylinderPointSampler.h"
 #include "BoxPointSampler.h"
 #include "Visibilities.h"
 
@@ -92,7 +92,7 @@ void Next100TrackingPlane::Construct()
                       copper_plate_logic, copper_plate_name,
                       mpv_->GetLogicalVolume(), false, 0, false);
 
-  copper_plate_gen_ = new CylinderPointSampler2020(copper_plate_phys);
+  copper_plate_gen_ = new CylinderPointSampler(copper_plate_phys);
 
 
   // SIPM BOARDS /////////////////////////////////////////////////////

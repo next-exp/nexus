@@ -10,7 +10,7 @@
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
-#include "CylinderPointSampler2020.h"
+#include "CylinderPointSampler.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4PVPlacement.hh>
@@ -405,14 +405,14 @@ namespace nexus {
                                   hut_hole_length_   + hut_length_long_ -
                                   full_copper_length/2.;
     copper_gen_ =
-      new CylinderPointSampler2020(0., copper_plate_diam_/2.,
+      new CylinderPointSampler(0., copper_plate_diam_/2.,
                                    full_copper_length/2.,
                                    0., twopi, nullptr,
                                    G4ThreeVector(0., 0., full_copper_posz));
 
-    sapphire_window_gen_ = new CylinderPointSampler2020(sapphire_window_phys);
-    optical_pad_gen_     = new CylinderPointSampler2020(optical_pad_phys);
-    pmt_base_gen_        = new CylinderPointSampler2020(pmt_base_phys);
+    sapphire_window_gen_ = new CylinderPointSampler(sapphire_window_phys);
+    optical_pad_gen_     = new CylinderPointSampler(optical_pad_phys);
+    pmt_base_gen_        = new CylinderPointSampler(pmt_base_phys);
 
   }
 

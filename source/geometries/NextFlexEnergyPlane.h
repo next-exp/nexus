@@ -25,7 +25,7 @@ class G4Navigator;
 namespace nexus {
 
   class PmtR11410;
-  class CylinderPointSampler2020;
+  class CylinderPointSampler;
 
   class NextFlexEnergyPlane: public GeometryBase {
 
@@ -141,8 +141,8 @@ namespace nexus {
     G4int first_sensor_id_;
 
     // Vertex generators
-    CylinderPointSampler2020* copper_gen_;
-    CylinderPointSampler2020* window_gen_;
+    CylinderPointSampler* copper_gen_;
+    CylinderPointSampler* window_gen_;
 
   }; // class NextFlexEnergyPlane
 

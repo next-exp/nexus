@@ -13,7 +13,7 @@
 #include "IonizationSD.h"
 #include "UniformElectricDriftField.h"
 #include "XenonProperties.h"
-#include "CylinderPointSampler2020.h"
+#include "CylinderPointSampler.h"
 #include "Visibilities.h"
 
 #include <G4GenericMessenger.hh>
@@ -283,9 +283,9 @@ namespace nexus {
     drift_region->AddRootLogicalVolume(active_logic);
 
     active_gen_ =
-      new CylinderPointSampler2020(0., active_diam_/2., active_length_/2.,
-                                   0., twopi, nullptr,
-                                   G4ThreeVector(0., 0., active_zpos_));
+      new CylinderPointSampler(0., active_diam_/2., active_length_/2.,
+                               0., twopi, nullptr,
+                               G4ThreeVector(0., 0., active_zpos_));
 
     active_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
@@ -497,9 +497,9 @@ namespace nexus {
                                  el_gap_gen_disk_y_,
                                  el_gap_gen_disk_z);
 
-    el_gap_gen_ = new CylinderPointSampler2020(0., el_gap_gen_disk_diam_/2.,
-                                               el_gap_gen_disk_thickn/2., 0., twopi,
-                                               nullptr, el_gap_gen_pos);
+    el_gap_gen_ = new CylinderPointSampler(0., el_gap_gen_disk_diam_/2.,
+                                           el_gap_gen_disk_thickn/2., 0., twopi,
+                                           nullptr, el_gap_gen_pos);
   }
 
 

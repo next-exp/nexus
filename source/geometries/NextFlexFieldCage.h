@@ -20,7 +20,7 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class CylinderPointSampler2020;
+  class CylinderPointSampler;
   class GenericPhotosensor;
 
 
@@ -173,11 +173,11 @@ namespace nexus {
 
 
     // Vertex generators
-    CylinderPointSampler2020* active_gen_;
-    CylinderPointSampler2020* buffer_gen_;
-    CylinderPointSampler2020* el_gap_gen_;
-    CylinderPointSampler2020* light_tube_gen_;
-    CylinderPointSampler2020* fiber_gen_;
+    CylinderPointSampler* active_gen_;
+    CylinderPointSampler* buffer_gen_;
+    CylinderPointSampler* el_gap_gen_;
+    CylinderPointSampler* light_tube_gen_;
+    CylinderPointSampler* fiber_gen_;
 
 
     // Parameters related with EL_GAP vertex generator

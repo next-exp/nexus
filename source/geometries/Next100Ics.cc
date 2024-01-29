@@ -9,7 +9,7 @@
 #include "Next100Ics.h"
 #include "MaterialsList.h"
 #include "Visibilities.h"
-#include "CylinderPointSampler2020.h"
+#include "CylinderPointSampler.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4SubtractionSolid.hh>
@@ -193,9 +193,9 @@ namespace nexus {
 
     // VERTEX GENERATOR
     ics_gen_ =
-      new CylinderPointSampler2020(in_rad_, in_rad_ + thickness_, length/2.,
-                                   0.*deg, 360.*deg,
-                                   0, G4ThreeVector(0., 0., ics_z_pos));
+      new CylinderPointSampler(in_rad_, in_rad_ + thickness_, length/2.,
+                               0.*deg, 360.*deg,
+                               0, G4ThreeVector(0., 0., ics_z_pos));
   }
 
 

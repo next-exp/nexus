@@ -10,7 +10,7 @@
 #include "MaterialsList.h"
 #include "Visibilities.h"
 #include "OpticalMaterialProperties.h"
-#include "CylinderPointSampler2020.h"
+#include "CylinderPointSampler.h"
 #include "SpherePointSampler.h"
 
 #include <G4GenericMessenger.hh>
@@ -373,7 +373,7 @@ namespace nexus {
     }
 
     // VERTEX GENERATORS   //////////
-    body_gen_  = new CylinderPointSampler2020(vessel_in_rad_, vessel_out_rad, body_length_/2.,
+    body_gen_  = new CylinderPointSampler(vessel_in_rad_, vessel_out_rad, body_length_/2.,
                                               0., 360.*deg, 0, G4ThreeVector(0., 0., 0.));
 
     energy_endcap_gen_ = new SpherePointSampler( endcap_in_rad_, vessel_thickness_, energy_endcap_pos, 0,
@@ -382,16 +382,16 @@ namespace nexus {
     tracking_endcap_gen_ = new SpherePointSampler( endcap_in_rad_, vessel_thickness_, tracking_endcap_pos, xRot,
 						 0., twopi, 0., endcap_theta_);
 
-    tracking_flange_gen_ = new CylinderPointSampler2020(vessel_in_rad_, flange_out_rad, flange_tp_length/2.,
+    tracking_flange_gen_ = new CylinderPointSampler(vessel_in_rad_, flange_out_rad, flange_tp_length/2.,
                                                         0., 360.*deg, 0, tracking_flange_pos);
 
     energy_flange_gen_ =
-      new CylinderPointSampler2020(ep_int_flange_in_rad, flange_out_rad,
-                                   flange_ep_length/2.,
-                                   0., 360.*deg, 0, energy_flange_pos);
+      new CylinderPointSampler(ep_int_flange_in_rad, flange_out_rad,
+                               flange_ep_length/2.,
+                               0., 360.*deg, 0, energy_flange_pos);
 
-    port_gen_ = new CylinderPointSampler2020(0., port_tube_rad, source_height_/2.,
-                                             0., 360.*deg, 0, G4ThreeVector(0., 0., 0.));
+    port_gen_ = new CylinderPointSampler(0., port_tube_rad, source_height_/2.,
+                                         0., 360.*deg, 0, G4ThreeVector(0., 0., 0.));
 
     // Calculating some prob
     G4UnionSolid* ep_int_flange_solid =

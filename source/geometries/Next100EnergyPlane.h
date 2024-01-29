@@ -24,7 +24,7 @@ namespace nexus {
 
   /// This is a class to place all the components of the energy plane
 
-  class CylinderPointSampler2020;
+  class CylinderPointSampler;
 
   class Next100EnergyPlane: public GeometryBase
   {
@@ -98,10 +98,10 @@ namespace nexus {
     G4double rot_angle_;
 
     // Vertex generators
-    CylinderPointSampler2020* copper_gen_;
-    CylinderPointSampler2020* sapphire_window_gen_;
-    CylinderPointSampler2020* optical_pad_gen_;
-    CylinderPointSampler2020* pmt_base_gen_;
+    CylinderPointSampler* copper_gen_;
+    CylinderPointSampler* sapphire_window_gen_;
+    CylinderPointSampler* optical_pad_gen_;
+    CylinderPointSampler* pmt_base_gen_;
 
   };
 

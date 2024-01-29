@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// nexus | CylinderPointSampler2020.cc
+// nexus | CylinderPointSampler.cc
 //
 // This class is a sampler of random uniform points in a cylinder.
 // It follows the GEANT4 cylinder geometry parameter convention.
@@ -7,7 +7,7 @@
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "CylinderPointSampler2020.h"
+#include "CylinderPointSampler.h"
 
 #include <G4VPhysicalVolume.hh>
 #include <G4LogicalVolume.hh>
@@ -20,7 +20,7 @@
 namespace nexus {
 
   // Constructor following Geant4 dimensions convention
-  CylinderPointSampler2020::CylinderPointSampler2020 (
+  CylinderPointSampler::CylinderPointSampler (
     G4double minRad, G4double maxRad, G4double halfLength,
     G4double iniPhi, G4double deltaPhi,
     G4RotationMatrix* rotation,
@@ -37,7 +37,7 @@ namespace nexus {
 
 
   // Constructor via Geant4 Physical Volume
-  CylinderPointSampler2020::CylinderPointSampler2020 (G4VPhysicalVolume* physVolume):
+  CylinderPointSampler::CylinderPointSampler (G4VPhysicalVolume* physVolume):
     rotation_(physVolume->GetObjectRotation()),
     origin_(physVolume->GetObjectTranslation())
   {
@@ -50,13 +50,13 @@ namespace nexus {
   }
 
 
-  CylinderPointSampler2020::~CylinderPointSampler2020()
+  CylinderPointSampler::~CylinderPointSampler()
   {
   }
 
 
 
-  G4ThreeVector CylinderPointSampler2020::GenerateVertex(const G4String& region)
+  G4ThreeVector CylinderPointSampler::GenerateVertex(const G4String& region)
   {
     G4double x = 0.;
     G4double y = 0.;
@@ -96,7 +96,7 @@ namespace nexus {
 
     // Unknown region
     else {
-      G4Exception("[CylinderPointSampler2020]", "GenerateVertex()", FatalException,
+      G4Exception("[CylinderPointSampler]", "GenerateVertex()", FatalException,
                   "Unknown Region!");
     }
 
@@ -105,7 +105,7 @@ namespace nexus {
 
 
   G4ThreeVector
-  CylinderPointSampler2020::GetIntersect(const G4ThreeVector& point,
+  CylinderPointSampler::GetIntersect(const G4ThreeVector& point,
 					 const G4ThreeVector& dir)
   {
     // The point and direction should be in the lab frame
@@ -129,7 +129,7 @@ namespace nexus {
     G4double t = 0.;
     if (determinant < 0)
       // No intersection return origin.
-      G4Exception("[CylinderPointSampler2020]", "GetIntersect()",
+      G4Exception("[CylinderPointSampler]", "GetIntersect()",
 		  FatalException, "Point outside region, projection fail!");
     else if (a != 0){
       t = (-b + std::sqrt(determinant)) / (2 * a);
@@ -137,7 +137,7 @@ namespace nexus {
 	t = (-b - std::sqrt(determinant)) / (2 * a);
 	// If still -ve we're outside the volume give origin
 	if (t < 0)
-	  G4Exception("[CylinderPointSampler2020]", "GetIntersect()",
+	  G4Exception("[CylinderPointSampler]", "GetIntersect()",
 		      FatalException, "Point outside region, projection fail!");
       }
       G4ThreeVector barrel_intersect = l_point + t * l_dir;
@@ -155,7 +155,7 @@ namespace nexus {
 
 
 
-  G4double CylinderPointSampler2020::GetRadius(G4double innerRad, G4double outerRad)
+  G4double CylinderPointSampler::GetRadius(G4double innerRad, G4double outerRad)
   {
     G4double rand = G4UniformRand();
     G4double r = sqrt((1.-rand) * innerRad*innerRad + rand * outerRad*outerRad);
@@ -164,21 +164,21 @@ namespace nexus {
 
 
 
-  G4double CylinderPointSampler2020::GetPhi()
+  G4double CylinderPointSampler::GetPhi()
   {
     return (iniPhi_ + (G4UniformRand() * deltaPhi_));
   }
 
 
 
-  G4double CylinderPointSampler2020::GetLength(G4double halfLength)
+  G4double CylinderPointSampler::GetLength(G4double halfLength)
   {
     return ((G4UniformRand() * 2.0 - 1.0) * halfLength);
   }
 
 
 
-  G4ThreeVector CylinderPointSampler2020::RotateAndTranslate(G4ThreeVector position)
+  G4ThreeVector CylinderPointSampler::RotateAndTranslate(G4ThreeVector position)
   {
     // Rotating if needed
     if (rotation_) position *= *rotation_;
@@ -189,7 +189,7 @@ namespace nexus {
   }
 
   void
-  CylinderPointSampler2020::InvertRotationAndTranslation(G4ThreeVector& vec,
+  CylinderPointSampler::InvertRotationAndTranslation(G4ThreeVector& vec,
 							 bool translate)
   {
     if (translate)

@@ -1,4 +1,4 @@
-#include <CylinderPointSampler2020.h>
+#include <CylinderPointSampler.h>
 #include <Randomize.hh>
 
 #include <catch.hpp>
@@ -10,7 +10,7 @@ TEST_CASE("Barrel and Caps intersection") {
   auto minRad  = 200;
   auto maxRad  = 220;
   auto halfLen = 500;
-  auto sampler = nexus::CylinderPointSampler2020(minRad, maxRad, halfLen);
+  auto sampler = nexus::CylinderPointSampler(minRad, maxRad, halfLen);
   auto origin  = G4ThreeVector(0., 0., 0.);
 
   // Check caps.
@@ -57,9 +57,9 @@ TEST_CASE("Cylinder Arbitrary valid intersect") {
   rotation->rotateX(CLHEP::twopi * G4UniformRand());
   rotation->rotateY(CLHEP::twopi * G4UniformRand());
   rotation->rotateZ(CLHEP::twopi * G4UniformRand());
-  auto sampler = nexus::CylinderPointSampler2020(minRad, maxRad, halfLen,
-						 0., CLHEP::twopi,
-						 rotation, origin);
+  auto sampler = nexus::CylinderPointSampler(minRad, maxRad, halfLen,
+                                             0., CLHEP::twopi,
+                                             rotation, origin);
   auto point   = G4ThreeVector(minRad  * (2 * G4UniformRand() - 1),
 			       minRad  * (2 * G4UniformRand() - 1),
 			       halfLen * (2 * G4UniformRand() - 1));

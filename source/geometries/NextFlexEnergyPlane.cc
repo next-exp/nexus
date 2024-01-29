@@ -14,7 +14,7 @@
 #include "PmtR11410.h"
 #include "IonizationSD.h"
 #include "UniformElectricDriftField.h"
-#include "CylinderPointSampler2020.h"
+#include "CylinderPointSampler.h"
 #include "Visibilities.h"
 
 #include <G4UnitsTable.hh>
@@ -229,9 +229,9 @@ void NextFlexEnergyPlane::BuildCopper()
                     copper_name, mother_logic_, false, 0, verbosity_);
 
   // Vertex generator
-  copper_gen_ = new CylinderPointSampler2020(0., diameter_/2., copper_thickness_/2.,
-                                             0, twopi, nullptr,
-                                             G4ThreeVector(0., 0., copper_posZ));
+  copper_gen_ = new CylinderPointSampler(0., diameter_/2., copper_thickness_/2.,
+                                         0, twopi, nullptr,
+                                         G4ThreeVector(0., 0., copper_posZ));
 
   // Visibility
   if (visibility_) copper_logic->SetVisAttributes(nexus::CopperBrown());
@@ -368,8 +368,9 @@ void NextFlexEnergyPlane::BuildPMTs()
 
   // Vertex generator
   window_gen_ =
-    new CylinderPointSampler2020(0., pmt_hole_diameter_/2., window_thickness_/2., 0., twopi,
-                                 nullptr, G4ThreeVector(0., 0., window_thickness_/2.));
+    new CylinderPointSampler(0., pmt_hole_diameter_/2., window_thickness_/2.,
+                             0., twopi, nullptr,
+                             G4ThreeVector(0., 0., window_thickness_/2.));
 
 
   /// TPB coating on windows ///
