@@ -17,7 +17,7 @@
 #include "XenonProperties.h"
 #include "NextElDB.h"
 #include "CylinderPointSampler.h"
-#include "MuonsPointSampler.h"
+#include "BoxPointSampler.h"
 #include "Visibilities.h"
 #include "FactoryBase.h"
 
@@ -310,7 +310,9 @@ void Next1EL::BuildMuons()
   G4double yMuonsOrigin = 400.;
 
   //sampling position in a surface above the detector
-  muons_sampling_ = new MuonsPointSampler(xMuons, yMuonsOrigin, zMuons);
+  muons_sampling_ =
+    new BoxPointSampler(xMuons*2., 0, zMuons*2., 0,
+                        G4ThreeVector(0, yMuonsOrigin, 0));
 
 
   // To visualize the muon generation surface
@@ -1371,7 +1373,7 @@ G4ThreeVector Next1EL::GenerateVertex(const G4String& region) const
       }
   } else if (region == "MUONS") {
     //generate muons sampling the plane
-    vertex = muons_sampling_->GenerateVertex();
+    vertex = muons_sampling_->GenerateVertex("INSIDE");
 
   } else {
       G4Exception("[Next1EL]", "GenerateVertex()", FatalException,

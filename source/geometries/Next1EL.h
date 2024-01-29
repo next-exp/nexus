@@ -23,7 +23,7 @@ namespace nexus {
 
   class HexagonPointSampler;
   class CylinderPointSampler;
-  class MuonsPointSampler;
+  class BoxPointSampler;
 
   /// Geometry of the NEXT1-EL detector
 
@@ -55,7 +55,7 @@ namespace nexus {
   private:
 
     HexagonPointSampler* hexrnd_;
-    MuonsPointSampler* muons_sampling_;
+    BoxPointSampler* muons_sampling_;
 
     // Pointers to materials definition
     G4Material* air_;       ///< Air

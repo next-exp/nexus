@@ -12,7 +12,7 @@
 #include "IonizationSD.h"
 #include "Visibilities.h"
 #include "CylinderPointSampler.h"
-#include "MuonsPointSampler.h"
+#include "BoxPointSampler.h"
 #include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
@@ -153,9 +153,10 @@ G4LogicalVolume* NextTonScale::ConstructWaterTank(G4LogicalVolume* mother_logic_
 
   //////////////////////////////////////////////////////////
 
-  muon_gen_ = new MuonsPointSampler(tank_size_/2. + 50. * cm,
-                                    tank_size_/2. + 1. * cm,
-                                    tank_size_/2. + 50. * cm);
+  muon_gen_ =
+    new BoxPointSampler(tank_size_ + 100. * cm, 0.,
+                        tank_size_ + 100. * cm, 0.,
+                        G4ThreeVector(0., tank_size_/2. + 1. * cm, 0.));
 
   // Primarily for neutron generation
   external_gen_ = new CylinderPointSampler(tank_size_/2. + 1 * cm,
@@ -442,7 +443,7 @@ G4ThreeVector NextTonScale::GenerateVertex(const G4String& region) const
     vertex = vessel_gen_->GenerateVertex("WHOLE_VOL");
   }
   else if (region == "MUONS") {
-    vertex = muon_gen_->GenerateVertex();
+    vertex = muon_gen_->GenerateVertex("INSIDE");
   }
   else if (region == "EXTERNAL") {
     vertex = external_gen_->GenerateVertex("WHOLE_VOL");
