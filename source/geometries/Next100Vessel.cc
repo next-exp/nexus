@@ -445,7 +445,7 @@ namespace nexus {
       G4double rand = G4UniformRand();
       if (rand < perc_endcap_vol_) { // Endcaps
         if (G4UniformRand()<0.5){ // Tracking endcap
-        vertex = tracking_endcap_gen_->GenerateVertex("VOLUME");
+          vertex = tracking_endcap_gen_->GenerateVertex("VOLUME");
         }
         else{ // Energy endcap
           vertex = energy_endcap_gen_->GenerateVertex("VOLUME");
@@ -454,7 +454,7 @@ namespace nexus {
       else if (rand < (perc_endcap_vol_ + perc_ep_flange_vol_)){//Energy flange
         G4VPhysicalVolume* VertexVolume;
         do {
-          vertex = energy_flange_gen_->GenerateVertex("VOLUME");
+          vertex = energy_flange_gen_->GenerateVertex(VOLUME);
 
           G4ThreeVector glob_vtx(vertex);
           // this->GetCoordOrigin() only has x and y set
@@ -464,12 +464,12 @@ namespace nexus {
         } while (VertexVolume->GetName() != "VESSEL");
       }
       else if (rand < (perc_endcap_vol_ + perc_ep_flange_vol_ + perc_tp_flange_vol_)){// Tracking flange
-        vertex = tracking_flange_gen_->GenerateVertex("VOLUME");
+        vertex = tracking_flange_gen_->GenerateVertex(VOLUME);
       }
       else {// Body
         G4VPhysicalVolume* VertexVolume;
         do {
-          vertex = body_gen_->GenerateVertex("VOLUME");
+          vertex = body_gen_->GenerateVertex(VOLUME);
 
           G4ThreeVector glob_vtx(vertex);
           // this->GetCoordOrigin() only has x and y set
@@ -481,7 +481,7 @@ namespace nexus {
     }
 
     else if (region == "PORT_1a"){
-      vertex = port_gen_->GenerateVertex("VOLUME");
+      vertex = port_gen_->GenerateVertex(VOLUME);
 
       vertex = vertex.rotateX( 90. * deg);
       vertex = vertex.rotateZ(-45. * deg);
@@ -491,7 +491,7 @@ namespace nexus {
     }
 
     else if (region == "PORT_2a"){
-      vertex = port_gen_->GenerateVertex("VOLUME");
+      vertex = port_gen_->GenerateVertex(VOLUME);
 
       vertex = vertex.rotateX( 90. * deg);
       vertex = vertex.rotateZ(-45. * deg);
@@ -501,7 +501,7 @@ namespace nexus {
     }
 
     else if (region == "PORT_1b"){
-      vertex = port_gen_->GenerateVertex("VOLUME");
+      vertex = port_gen_->GenerateVertex(VOLUME);
 
       vertex = vertex.rotateX( 90. * deg);
       vertex = vertex.rotateZ( 45. * deg);
@@ -511,7 +511,7 @@ namespace nexus {
     }
 
     else if (region == "PORT_2b"){
-      vertex = port_gen_->GenerateVertex("VOLUME");
+      vertex = port_gen_->GenerateVertex(VOLUME);
 
       vertex = vertex.rotateX( 90. * deg);
       vertex = vertex.rotateZ( 45. * deg);

@@ -1,4 +1,6 @@
-#include <BoxPointSampler.h>
+#include "BoxPointSampler.h"
+#include "RandomUtils.h"
+
 #include <Randomize.hh>
 
 #include <cmath>
@@ -21,7 +23,7 @@ TEST_CASE("BoxPointSampler") {
 
     auto thick = G4UniformRand();
     auto sampler = nexus::BoxPointSampler(a/2., b/2., c/2., thick);
-    auto vertex  = sampler.GenerateVertex("VOLUME");
+    auto vertex  = sampler.GenerateVertex(nexus::VOLUME);
     auto x = vertex.x();
     auto y = vertex.y();
     auto z = vertex.z();
@@ -49,7 +51,7 @@ TEST_CASE("BoxPointSampler") {
   for (G4int i=0; i<20; i++) {
 
     auto sampler = nexus::BoxPointSampler(a/2., b/2., c/2., 0.);
-    auto vertex  = sampler.GenerateVertex("INSIDE");
+    auto vertex  = sampler.GenerateVertex(nexus::INSIDE);
     auto x = vertex.x();
     auto y = vertex.y();
     auto z = vertex.z();
@@ -106,7 +108,7 @@ TEST_CASE("Box Arbitrary valid intersect") {
   auto sampler = nexus::BoxPointSampler(inner_dim/2., inner_dim/2., inner_dim/2.,
 					thickness, origin, rotation);
   
-  auto point = sampler.GenerateVertex("INSIDE");
+  auto point = sampler.GenerateVertex(nexus::INSIDE);
   auto dir   = G4ThreeVector(G4UniformRand(),
 			     G4UniformRand(),
 			     G4UniformRand()).unit();

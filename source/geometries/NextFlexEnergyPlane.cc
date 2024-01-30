@@ -546,14 +546,14 @@ G4ThreeVector NextFlexEnergyPlane::GenerateVertex(const G4String& region) const
   if (region == "EP_COPPER") {
     G4VPhysicalVolume *VertexVolume;
     do {
-      vertex       = copper_gen_->GenerateVertex("VOLUME");
+      vertex       = copper_gen_->GenerateVertex(VOLUME);
       VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(vertex, 0, false);
     } while (VertexVolume->GetName() != region);
   }
 
   else if (region == "EP_WINDOWS") {
     if (ep_with_PMTs_) {
-      vertex = window_gen_->GenerateVertex("VOLUME");
+      vertex = window_gen_->GenerateVertex(VOLUME);
       // XY placement
       G4double rand = num_pmts_ * G4UniformRand();
       G4ThreeVector window_pos = pmt_positions_[int(rand)];

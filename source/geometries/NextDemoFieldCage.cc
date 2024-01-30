@@ -681,7 +681,7 @@ namespace nexus {
      if (region == "ACTIVE") {
        G4VPhysicalVolume *VertexVolume;
        do {
-         vertex = active_gen_->GenerateVertex("VOLUME");
+         vertex = active_gen_->GenerateVertex(VOLUME);
          G4ThreeVector glob_vtx(vertex);
          glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
          VertexVolume =
@@ -689,7 +689,7 @@ namespace nexus {
        } while (VertexVolume->GetName() != region);
      }
      else if (region == "EL_GAP") {
-       vertex = el_gap_gen_->GenerateVertex("VOLUME");
+       vertex = el_gap_gen_->GenerateVertex(VOLUME);
      }
      else {
       G4Exception("[NextDemoFieldCage]", "GenerateVertex()", FatalException,

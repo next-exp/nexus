@@ -212,7 +212,7 @@ namespace nexus {
     if (region=="ICS"){
       G4VPhysicalVolume* VertexVolume;
       do {
-        vertex = ics_gen_->GenerateVertex("VOLUME");
+        vertex = ics_gen_->GenerateVertex(VOLUME);
 
         G4ThreeVector glob_vtx(vertex);
         glob_vtx = glob_vtx - GetCoordOrigin();

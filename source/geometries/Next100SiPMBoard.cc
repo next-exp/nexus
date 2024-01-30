@@ -303,5 +303,5 @@ void Next100SiPMBoard::Construct()
 G4ThreeVector Next100SiPMBoard::GenerateVertex(const G4String&) const
 {
   // Only one generation region available at the moment
-  return vtxgen_->GenerateVertex("INSIDE");
+  return vtxgen_->GenerateVertex(INSIDE);
 }

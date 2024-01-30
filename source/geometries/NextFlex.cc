@@ -300,7 +300,7 @@ G4ThreeVector NextFlex::GenerateVertex(const G4String& region) const
 
   // ICS region
   else if (region == "ICS") {
-    vertex = copper_gen_->GenerateVertex("VOLUME");
+    vertex = copper_gen_->GenerateVertex(VOLUME);
   }
 
   // Field Cage regions

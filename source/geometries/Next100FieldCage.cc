@@ -894,7 +894,7 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
   else if (region == "ACTIVE") {
     G4VPhysicalVolume *VertexVolume;
     do {
-      vertex = active_gen_->GenerateVertex("VOLUME");
+      vertex = active_gen_->GenerateVertex(VOLUME);
       G4ThreeVector glob_vtx(vertex);
       glob_vtx = glob_vtx - GetCoordOrigin();
       VertexVolume =
@@ -903,13 +903,13 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
   }
 
   else if (region == "CATHODE_RING") {
-    vertex = cathode_gen_->GenerateVertex("VOLUME");
+    vertex = cathode_gen_->GenerateVertex(VOLUME);
   }
 
   else if (region == "BUFFER") {
     G4VPhysicalVolume *VertexVolume;
     do {
-      vertex = buffer_gen_->GenerateVertex("VOLUME");
+      vertex = buffer_gen_->GenerateVertex(VOLUME);
       G4ThreeVector glob_vtx(vertex);
       glob_vtx = glob_vtx - GetCoordOrigin();
       VertexVolume =
@@ -920,7 +920,7 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
   else if (region == "XENON") {
     G4VPhysicalVolume *VertexVolume;
     do {
-      vertex = xenon_gen_->GenerateVertex("VOLUME");
+      vertex = xenon_gen_->GenerateVertex(VOLUME);
       G4ThreeVector glob_vtx(vertex);
       glob_vtx = glob_vtx - GetCoordOrigin();
       VertexVolume =
@@ -934,7 +934,7 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
   else if (region == "LIGHT_TUBE") {
     G4VPhysicalVolume *VertexVolume;
     do {
-      vertex = teflon_gen_->GenerateVertex("VOLUME");
+      vertex = teflon_gen_->GenerateVertex(VOLUME);
       G4ThreeVector glob_vtx(vertex);
       glob_vtx = glob_vtx - GetCoordOrigin();
       VertexVolume =
@@ -945,13 +945,13 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
   }
 
   else if (region == "HDPE_TUBE") {
-    vertex = hdpe_gen_->GenerateVertex("VOLUME");
+    vertex = hdpe_gen_->GenerateVertex(VOLUME);
   }
 
   else if (region == "EL_GAP") {
     G4VPhysicalVolume *VertexVolume;
     do {
-      vertex = el_gap_gen_->GenerateVertex("VOLUME");
+      vertex = el_gap_gen_->GenerateVertex(VOLUME);
       G4ThreeVector glob_vtx(vertex);
       glob_vtx = glob_vtx - GetCoordOrigin();
       VertexVolume =
@@ -962,7 +962,7 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
   else if (region == "FIELD_RING") {
     G4VPhysicalVolume *VertexVolume;
     do {
-      vertex = ring_gen_->GenerateVertex("VOLUME");
+      vertex = ring_gen_->GenerateVertex(VOLUME);
       G4ThreeVector glob_vtx(vertex);
       glob_vtx = glob_vtx - GetCoordOrigin();
       VertexVolume =
@@ -971,17 +971,17 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
   }
 
   else if (region == "GATE_RING") {
-    vertex = gate_gen_->GenerateVertex("VOLUME");
+    vertex = gate_gen_->GenerateVertex(VOLUME);
   }
 
   else if (region == "ANODE_RING") {
-    vertex = anode_gen_->GenerateVertex("VOLUME");
+    vertex = anode_gen_->GenerateVertex(VOLUME);
   }
 
   else if (region == "RING_HOLDER"){
     G4VPhysicalVolume *VertexVolume;
     do {
-      vertex = holder_gen_->GenerateVertex("VOLUME");
+      vertex = holder_gen_->GenerateVertex(VOLUME);
       G4ThreeVector glob_vtx(vertex);
       glob_vtx = glob_vtx - GetCoordOrigin();
       VertexVolume =

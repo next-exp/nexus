@@ -647,7 +647,7 @@ namespace nexus {
     if (region == "SHIELDING_LEAD") {
         G4VPhysicalVolume *VertexVolume;
         do {
-          vertex = lead_gen_->GenerateVertex("VOLUME");
+          vertex = lead_gen_->GenerateVertex(VOLUME);
           G4ThreeVector glob_vtx(vertex);
           glob_vtx = glob_vtx - GetCoordOrigin();
           VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
@@ -657,7 +657,7 @@ namespace nexus {
     else if (region == "SHIELDING_STEEL") {
       G4VPhysicalVolume *VertexVolume;
       do {
-        vertex = steel_gen_->GenerateVertex("VOLUME");
+        vertex = steel_gen_->GenerateVertex(VOLUME);
         G4ThreeVector glob_vtx(vertex);
         glob_vtx = glob_vtx - GetCoordOrigin();
         VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
@@ -667,7 +667,7 @@ namespace nexus {
     else if (region == "INNER_AIR") {
       G4VPhysicalVolume *VertexVolume;
       do {
-        vertex = inner_air_gen_->GenerateVertex("INSIDE");
+        vertex = inner_air_gen_->GenerateVertex(INSIDE);
         G4ThreeVector glob_vtx(vertex);
         glob_vtx = glob_vtx - GetCoordOrigin();
         VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
@@ -675,7 +675,7 @@ namespace nexus {
     }
 
     else if (region == "EXTERNAL") {
-      vertex = external_gen_->GenerateVertex("VOLUME");
+      vertex = external_gen_->GenerateVertex(VOLUME);
     }
 
     else if(region=="SHIELDING_STRUCT"){
@@ -683,7 +683,7 @@ namespace nexus {
 
         if (rand < perc_roof_vol_) { //ROOF BEAM STRUCTURE
           if (G4UniformRand() <  perc_front_roof_vol_){
-            vertex = front_roof_gen_->GenerateVertex("INSIDE");
+            vertex = front_roof_gen_->GenerateVertex(INSIDE);
             if (G4UniformRand() < 0.5) {
               vertex.setZ(vertex.z() +
                           (shield_z_/2.+steel_thickn_+lead_thickn_/2.));
@@ -694,7 +694,7 @@ namespace nexus {
             }
           }
           else {
-            vertex = lat_roof_gen_->GenerateVertex("INSIDE");
+            vertex = lat_roof_gen_->GenerateVertex(INSIDE);
             if (G4UniformRand() < 0.5) {
               vertex.setX(vertex.x() +
                           (shield_x_/2.+ steel_thickn_ +
@@ -713,7 +713,7 @@ namespace nexus {
           G4double random = G4UniformRand();
           if (random <  perc_struc_x_vol_){
             G4double rand_beam = int (4* G4UniformRand());
-            vertex = struct_x_gen_->GenerateVertex("INSIDE");
+            vertex = struct_x_gen_->GenerateVertex(INSIDE);
             if (rand_beam == 1) {
               vertex.setZ(vertex.z()-roof_z_separation_);
             }
@@ -727,7 +727,7 @@ namespace nexus {
             }
           }
           else {
-            vertex = struct_z_gen_->GenerateVertex("INSIDE");
+            vertex = struct_z_gen_->GenerateVertex(INSIDE);
             if (G4UniformRand() < 0.5) {
               vertex.setX(vertex.x()+front_x_separation_);
             }
@@ -738,7 +738,7 @@ namespace nexus {
           G4double lat_prob = beam_thickn_1_/(beam_thickn_1_+beam_thickn_2_);
           if (G4UniformRand()<lat_prob){ //lateral
             G4double rand_beam = int (4 * G4UniformRand());
-            vertex = lat_beam_gen_->GenerateVertex("INSIDE");
+            vertex = lat_beam_gen_->GenerateVertex(INSIDE);
             if (rand_beam == 1){
               vertex.setZ(vertex.z() - lateral_z_separation_);
             }
@@ -754,7 +754,7 @@ namespace nexus {
           }
           else { // front
             G4double rand_beam = int (4 * G4UniformRand());
-            vertex = front_beam_gen_->GenerateVertex("INSIDE");
+            vertex = front_beam_gen_->GenerateVertex(INSIDE);
             if (rand_beam ==1){
               vertex.setX(vertex.x() + front_x_separation_);
             }
@@ -776,21 +776,21 @@ namespace nexus {
       G4double rand = G4UniformRand();
       
       if (rand < perc_ped_bottom_vol_) { //SUPPORT-BOTTOM
-        vertex = ped_support_bottom_gen_->GenerateVertex("INSIDE");
+        vertex = ped_support_bottom_gen_->GenerateVertex(INSIDE);
         if (G4UniformRand() < 0.5) {
           vertex.setZ(vertex.z() - support_beam_dist_);
         }
       }
       else if (rand < (perc_ped_bottom_vol_ + perc_ped_top_vol_)) {
         //SUPPORT-TOP
-        vertex = ped_support_top_gen_->GenerateVertex("INSIDE");
+        vertex = ped_support_top_gen_->GenerateVertex(INSIDE);
         if (G4UniformRand() < 0.5) {
           vertex.setZ(vertex.z() - support_beam_dist_);
         }
       }
       else if (rand < (perc_ped_bottom_vol_ + perc_ped_top_vol_ +
                        perc_ped_front_vol_)){ //FRONT BEAM
-        vertex = ped_front_gen_->GenerateVertex("INSIDE");
+        vertex = ped_front_gen_->GenerateVertex(INSIDE);
         if (G4UniformRand() < 0.5) {
           vertex.setZ(vertex.z() - (2.*support_front_dist_ +
                                     support_beam_dist_));
@@ -799,7 +799,7 @@ namespace nexus {
       else if (rand < (perc_ped_bottom_vol_ + perc_ped_top_vol_ +
                        perc_ped_front_vol_ + perc_ped_lateral_vol_)){
         // LATERAL BEAM
-        vertex = ped_lateral_gen_->GenerateVertex("INSIDE");
+        vertex = ped_lateral_gen_->GenerateVertex(INSIDE);
         if (G4UniformRand() < 0.5) {
           vertex.setX(vertex.x() - (pedestal_x_ +
                                     pedestal_lateral_beam_thickn_));
@@ -807,14 +807,14 @@ namespace nexus {
       }
       else { // ROOF
         if (G4UniformRand() < 0.5) {
-          vertex = ped_roof_lat_gen_->GenerateVertex("INSIDE");
+          vertex = ped_roof_lat_gen_->GenerateVertex(INSIDE);
           if (G4UniformRand() < 0.5){
             vertex.setX(vertex.x() - pedestal_top_x_ -
                         pedestal_roof_thickn_);
           }
         }
         else{
-          vertex = ped_roof_front_gen_->GenerateVertex("INSIDE");
+          vertex = ped_roof_front_gen_->GenerateVertex(INSIDE);
           if (G4UniformRand() < 0.5){
             vertex.setZ(vertex.z() - pedestal_lateral_length_ +
                         pedestal_roof_thickn_);
@@ -828,7 +828,7 @@ namespace nexus {
     else if (region=="BUBBLE_SEAL"){
       G4double rand = G4UniformRand();
       if (rand<perc_bubble_front_vol_){ // front
-        vertex = bubble_seal_front_gen_->GenerateVertex("INSIDE");
+        vertex = bubble_seal_front_gen_->GenerateVertex(INSIDE);
         if (G4UniformRand() < 0.5){
           vertex.setZ(vertex.z() + (support_beam_dist_/2. + support_front_dist_ +
                                     pedestal_front_beam_thickn_/2. +
@@ -841,7 +841,7 @@ namespace nexus {
         }
       }
       else { // lateral
-        vertex = bubble_seal_lateral_gen_->GenerateVertex("INSIDE");
+        vertex = bubble_seal_lateral_gen_->GenerateVertex(INSIDE);
         if (G4UniformRand() < 0.5){
           vertex.setX(vertex.x() + (pedestal_x_/2. +
                                     pedestal_lateral_beam_thickn_ +
@@ -858,7 +858,7 @@ namespace nexus {
     else if(region=="EDPM_SEAL"){
       G4double rand = G4UniformRand();
       if (rand<perc_edpm_front_vol_){ // front
-        vertex = edpm_seal_front_gen_->GenerateVertex("INSIDE");
+        vertex = edpm_seal_front_gen_->GenerateVertex(INSIDE);
         if (G4UniformRand() < 0.5){
           vertex.setZ(vertex.z() + (shield_z_/2. - edpm_seal_thickn_/2.));
         }
@@ -867,7 +867,7 @@ namespace nexus {
         }
       }
       else{ // lateral
-        vertex = edpm_seal_lateral_gen_->GenerateVertex("INSIDE");
+        vertex = edpm_seal_lateral_gen_->GenerateVertex(INSIDE);
         vertex.setY(vertex.y() + (shield_y_/2. - edpm_seal_thickn_/2.));
       }
     }

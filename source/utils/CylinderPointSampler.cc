@@ -56,19 +56,19 @@ namespace nexus {
 
 
 
-  G4ThreeVector CylinderPointSampler::GenerateVertex(const G4String& region)
+  G4ThreeVector CylinderPointSampler::GenerateVertex(const vtx_region& region)
   {
     G4double x = 0.;
     G4double y = 0.;
     G4double z = 0.;
 
     // Center of the chamber
-    if (region == "CENTER") {
+    if (region == CENTER) {
       x = y = z = 0.;
     }
 
     // Generating from inside the cylinder (between minRad and maxRad)
-    else if (region == "VOLUME") {
+    else if (region == VOLUME) {
       G4double phi = GetPhi();
       G4double rad = GetRadius(minRad_, maxRad_);
       x = rad * cos(phi);
@@ -77,7 +77,7 @@ namespace nexus {
     }
 
     // Generating from the INNER surface
-    else if (region == "INNER_SURFACE") {
+    else if (region == INNER_SURF) {
       G4double phi = GetPhi();
       G4double rad = minRad_;
       x = rad * cos(phi);
@@ -86,7 +86,7 @@ namespace nexus {
     }
 
     // Generating from the OUTER surface
-    else if (region == "OUTER_SURFACE") {
+    else if (region == OUTER_SURF) {
       G4double phi = GetPhi();
       G4double rad = maxRad_;
       x = rad * cos(phi);
@@ -96,8 +96,8 @@ namespace nexus {
 
     // Unknown region
     else {
-      G4Exception("[CylinderPointSampler]", "GenerateVertex()", FatalException,
-                  "Unknown Region!");
+      G4Exception("[CylinderPointSampler]", "GenerateVertex()", FatalErrorInArgument,
+                  "Unknown vertex region! Possible are VOLUME, INNER_SURF and OUTER_SURF");
     }
 
     return RotateAndTranslate(G4ThreeVector(x, y, z));

@@ -1,4 +1,6 @@
-#include <CylinderPointSampler.h>
+#include "CylinderPointSampler.h"
+#include "RandomUtils.h"
+
 #include <Randomize.hh>
 
 #include <catch.hpp>
@@ -14,7 +16,7 @@ TEST_CASE("CylinderPointSampler") {
     auto halfLength = G4UniformRand();
 
     auto sampler = nexus::CylinderPointSampler(minRad, maxRad, halfLength);
-    auto vertex  = sampler.GenerateVertex("VOLUME");
+    auto vertex  = sampler.GenerateVertex(nexus::VOLUME);
     auto r = std::sqrt(std::pow(vertex.x(), 2) + std::pow(vertex.y(), 2));
     auto z = vertex.z();
 

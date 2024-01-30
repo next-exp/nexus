@@ -1011,19 +1011,19 @@ G4ThreeVector NextFlexFieldCage::GenerateVertex(const G4String& region) const
   G4ThreeVector vertex;
 
   if (region == "ACTIVE") {
-    vertex = active_gen_->GenerateVertex("VOLUME");
+    vertex = active_gen_->GenerateVertex(VOLUME);
   }
   else if (region == "BUFFER") {
-    vertex = buffer_gen_->GenerateVertex("VOLUME");
+    vertex = buffer_gen_->GenerateVertex(VOLUME);
   }
   else if (region == "EL_GAP") {
-    vertex = el_gap_gen_->GenerateVertex("VOLUME");
+    vertex = el_gap_gen_->GenerateVertex(VOLUME);
   }
   else if (region == "LIGHT_TUBE") {
-    vertex = light_tube_gen_->GenerateVertex("VOLUME");
+    vertex = light_tube_gen_->GenerateVertex(VOLUME);
   }
   else if (region == "FIBER_CORE") {
-    if (fc_with_fibers_) vertex = fiber_gen_->GenerateVertex("VOLUME");
+    if (fc_with_fibers_) vertex = fiber_gen_->GenerateVertex(VOLUME);
     else
       G4Exception("[NextFlexFieldCage]", "GenerateVertex()", FatalException,
               "Trying to generate Vertices in NON-existing fibers");

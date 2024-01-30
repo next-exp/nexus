@@ -435,7 +435,7 @@ namespace nexus {
     if (region == "EP_COPPER_PLATE") {
       G4VPhysicalVolume *VertexVolume;
       do {
-        vertex = copper_gen_->GenerateVertex("VOLUME");
+        vertex = copper_gen_->GenerateVertex(VOLUME);
         G4ThreeVector glob_vtx(vertex);
         glob_vtx = glob_vtx - GetCoordOrigin();
         VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
@@ -446,7 +446,7 @@ namespace nexus {
     else if (region == "SAPPHIRE_WINDOW") {
       G4VPhysicalVolume *VertexVolume;
       do {
-        vertex = sapphire_window_gen_->GenerateVertex("VOLUME");
+        vertex = sapphire_window_gen_->GenerateVertex(VOLUME);
         G4double rand = num_PMTs_ * G4UniformRand();
         G4ThreeVector sapphire_pos = pmt_positions_[int(rand)];
         vertex += sapphire_pos;
@@ -460,7 +460,7 @@ namespace nexus {
 
     // Optical pads
     else if (region == "OPTICAL_PAD") {
-      vertex = optical_pad_gen_->GenerateVertex("VOLUME");
+      vertex = optical_pad_gen_->GenerateVertex(VOLUME);
       G4double rand = num_PMTs_ * G4UniformRand();
       G4ThreeVector optical_pad_pos = pmt_positions_[int(rand)];
       vertex += optical_pad_pos;
@@ -481,7 +481,7 @@ namespace nexus {
 
     // PMT bases
     else if (region == "PMT_BASE") {
-      vertex = pmt_base_gen_->GenerateVertex("VOLUME");
+      vertex = pmt_base_gen_->GenerateVertex(VOLUME);
       G4double rand = num_PMTs_ * G4UniformRand();
       G4ThreeVector pmt_base_pos = pmt_positions_[int(rand)];
       vertex += pmt_base_pos;

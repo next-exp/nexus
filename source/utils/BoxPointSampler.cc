@@ -85,7 +85,7 @@ namespace nexus {
 
 
 
-  G4ThreeVector BoxPointSampler::GenerateVertex(const G4String& region)
+  G4ThreeVector BoxPointSampler::GenerateVertex(const vtx_region& region)
   {
     G4double x = 0;
     G4double y = 0;
@@ -94,12 +94,12 @@ namespace nexus {
     G4ThreeVector point;
 
     // Default vertex
-    if (region == "CENTER") {
+    if (region == CENTER) {
       x = y = z = 0.;
     }
 
     // Generating in the whole volume
-    if (region == "VOLUME") {
+    if (region == VOLUME) {
       G4double rand = G4UniformRand();
       G4double rand2 = G4UniformRand();
 
@@ -135,14 +135,14 @@ namespace nexus {
     }
 
     // Generating in the volume inside
-    else if (region == "INSIDE") {
+    else if (region == INSIDE) {
       x = GetLength(0., 2*half_inner_x_);
       y = GetLength(0., 2*half_inner_y_);
       z = GetLength(0., 2*half_inner_z_);
     }
 
     // Generating in the whole surface
-    else if (region == "INNER_SURFACE") {
+    else if (region == INNER_SURF) {
       G4double rand = G4UniformRand();
       G4double rand2 = G4UniformRand();
 
@@ -174,7 +174,7 @@ namespace nexus {
       }
     }
 
-    else if (region == "OUTER_SURFACE") {
+    else if (region == OUTER_SURF) {
       G4double rand = G4UniformRand();
       G4double rand2 = G4UniformRand();
 
@@ -208,9 +208,9 @@ namespace nexus {
 
     // Unknown region
     else {
-      G4String err = "Unknown generation region: " + region;
-      G4Exception("[BoxPointSamplerLegacy]", "GenerateVertex()",
-        FatalErrorInArgument, err);
+      G4Exception("[BoxPointSampler]", "GenerateVertex()", FatalErrorInArgument,
+                  "Unknown vertex region! Possible are: VOLUME, INSIDE, "
+                  "INNER_SURF and OUTER_SURF");
     }
 
     return RotateAndTranslate(G4ThreeVector(x, y, z));

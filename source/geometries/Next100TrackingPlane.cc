@@ -234,12 +234,12 @@ G4ThreeVector Next100TrackingPlane::GenerateVertex(const G4String& region) const
 
   }
   else if (region == "DB_PLUG") {
-    vertex = plug_gen_->GenerateVertex("INSIDE");
+    vertex = plug_gen_->GenerateVertex(INSIDE);
     G4int plug_num = G4RandFlat::shootInt((long) 0, plug_pos_.size());
     vertex += plug_pos_[plug_num];
   }
   else if (region == "TP_COPPER_PLATE") {
-    vertex = copper_plate_gen_->GenerateVertex("VOLUME");
+    vertex = copper_plate_gen_->GenerateVertex(VOLUME);
   }
 
   return vertex;

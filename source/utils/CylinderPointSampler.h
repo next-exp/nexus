@@ -10,6 +10,8 @@
 #ifndef CYLINDER_POINT_SAMPLER_H
 #define CYLINDER_POINT_SAMPLER_H
 
+#include "RandomUtils.h"
+
 #include <G4ThreeVector.hh>
 #include <G4RotationMatrix.hh>
 
@@ -39,7 +41,7 @@ namespace nexus {
     ~CylinderPointSampler();
 
     // Returns vertex within region <region> of the chamber
-    G4ThreeVector GenerateVertex(const G4String& region);
+    G4ThreeVector GenerateVertex(const vtx_region& region);
 
     /// Return the intersect point along dir
     G4ThreeVector GetIntersect(const G4ThreeVector& point,

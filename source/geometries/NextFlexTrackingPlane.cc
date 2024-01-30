@@ -495,7 +495,7 @@ G4ThreeVector NextFlexTrackingPlane::GenerateVertex(const G4String& region) cons
   if (region == "TP_COPPER") {
     G4VPhysicalVolume *VertexVolume;
     do {
-      vertex       = copper_gen_->GenerateVertex("VOLUME");
+      vertex       = copper_gen_->GenerateVertex(VOLUME);
       VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(vertex, 0, false);
     } while (VertexVolume->GetName() != region);
   }
