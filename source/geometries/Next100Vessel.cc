@@ -376,11 +376,9 @@ namespace nexus {
     body_gen_  = new CylinderPointSampler(vessel_in_rad_, vessel_out_rad, body_length_/2.,
                                               0., 360.*deg, 0, G4ThreeVector(0., 0., 0.));
 
-    energy_endcap_gen_ = new SpherePointSampler( endcap_in_rad_, vessel_thickness_, energy_endcap_pos, 0,
-						   0., twopi, 0., endcap_theta_);
+    energy_endcap_gen_ = new SpherePointSampler(endcap_in_rad_, endcap_in_rad_+vessel_thickness_, 0., twopi, 0., endcap_theta_, energy_endcap_pos, 0);
 
-    tracking_endcap_gen_ = new SpherePointSampler( endcap_in_rad_, vessel_thickness_, tracking_endcap_pos, xRot,
-						 0., twopi, 0., endcap_theta_);
+    tracking_endcap_gen_ = new SpherePointSampler(endcap_in_rad_, endcap_in_rad_+vessel_thickness_, 0., twopi, 0., endcap_theta_, tracking_endcap_pos, xRot);
 
     tracking_flange_gen_ = new CylinderPointSampler(vessel_in_rad_, flange_out_rad, flange_tp_length/2.,
                                                         0., 360.*deg, 0, tracking_flange_pos);
@@ -445,10 +443,10 @@ namespace nexus {
       G4double rand = G4UniformRand();
       if (rand < perc_endcap_vol_) { // Endcaps
         if (G4UniformRand()<0.5){ // Tracking endcap
-          vertex = tracking_endcap_gen_->GenerateVertex("VOLUME");
+          vertex = tracking_endcap_gen_->GenerateVertex(VOLUME);
         }
         else{ // Energy endcap
-          vertex = energy_endcap_gen_->GenerateVertex("VOLUME");
+          vertex = energy_endcap_gen_->GenerateVertex(VOLUME);
         }
       }
       else if (rand < (perc_endcap_vol_ + perc_ep_flange_vol_)){//Energy flange

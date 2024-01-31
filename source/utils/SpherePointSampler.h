@@ -9,9 +9,12 @@
 #ifndef SPHERE_POINT_SAMPLER
 #define SPHERE_POINT_SAMPLER
 
+#include "RandomUtils.h"
+
 #include <globals.hh>
 #include <G4ThreeVector.hh>
 #include <G4RotationMatrix.hh>
+#include <G4VPhysicalVolume.hh>
 
 #include <CLHEP/Units/PhysicalConstants.h>
 
@@ -24,16 +27,19 @@ namespace nexus {
   {
   public:
     /// Constructor
-    SpherePointSampler(G4double inner_rad, G4double thickness,
-		       G4ThreeVector origin=G4ThreeVector(0.,0.,0.), G4RotationMatrix* rotation=0,
-		       G4double start_phi = 0., G4double delta_phi = twopi,
-		       G4double start_theta = 0., G4double delta_theta = pi);
+    SpherePointSampler(G4double min_rad, G4double max_rad, G4double start_phi = 0.,
+                       G4double delta_phi = twopi, G4double start_theta = 0.,
+                       G4double delta_theta = pi, G4ThreeVector origin=G4ThreeVector(0.,0.,0.),
+                       G4RotationMatrix* rotation=0);
+
+    SpherePointSampler (G4VPhysicalVolume* physVolume);
+
     /// Destructor
     ~SpherePointSampler() {}
 
 
     /// Return vertex within region <region> of the chamber
-    G4ThreeVector GenerateVertex(const G4String& region);
+    G4ThreeVector GenerateVertex(const vtx_region& region);
 
   private:
     G4double GetRadius(G4double inner, G4double outer);

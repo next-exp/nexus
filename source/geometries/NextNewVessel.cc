@@ -769,11 +769,9 @@ void NextNewVessel::Construct()
   flange_gen_ = new CylinderPointSamplerLegacy(vessel_out_diam/2., flange_length_,
 					 flange_out_diam_/2.-vessel_out_diam/2., 0., G4ThreeVector(0.,0.,0.));
   //trick to avoid vertex the vessel_gas-vessel interface -1*mm thickness
-  tracking_endcap_gen_ = new SpherePointSampler(endcap_in_rad_+1*mm, endcap_thickness_-1*mm, tracking_endcap_pos, 0,
-						0., twopi, 0., endcap_theta_);
+  tracking_endcap_gen_ = new SpherePointSampler(endcap_in_rad_+1*mm, endcap_in_rad_+endcap_thickness_, 0., twopi, 0., endcap_theta_, tracking_endcap_pos, 0);
   energy_endcap_gen_ =
-    new SpherePointSampler(endcap_in_rad_+1*mm, endcap_thickness_-1*mm, energy_endcap_pos, 0,
-			   0., twopi, 180.*deg - endcap_theta_, endcap_theta_);
+    new SpherePointSampler(endcap_in_rad_+1*mm, endcap_in_rad_+endcap_thickness_, 0., twopi, 180.*deg - endcap_theta_, endcap_theta_, energy_endcap_pos, 0);
 
 
 
@@ -872,11 +870,11 @@ void NextNewVessel::Construct()
 	do {
 	  if (G4UniformRand() < 0.5){
 	    //std::cout<< "tracking endcap "<< rand <<"\t"<< perc_tube_vol_+2*perc_endcap_vol_<< std::endl;
-	    vertex = tracking_endcap_gen_->GenerateVertex("VOLUME");  // Tracking
+	    vertex = tracking_endcap_gen_->GenerateVertex(VOLUME);  // Tracking
 	  }
 	  else {
 	    //std::cout<< "energy endcap " << rand <<"\t"<< perc_tube_vol_+2*perc_endcap_vol_<< std::endl;
-	    vertex = energy_endcap_gen_->GenerateVertex("VOLUME");  // Energy endcap
+	    vertex = energy_endcap_gen_->GenerateVertex(VOLUME);  // Energy endcap
 	  }
 	  // To check its volume, one needs to rotate and shift the vertex
 	  // because the check is done using global coordinates
