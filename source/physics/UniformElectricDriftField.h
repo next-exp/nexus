@@ -61,9 +61,6 @@ namespace nexus {
     void SetLightYield(G4double);
     virtual G4double LightYield() const;
 
-    void SetNumberOfPhotons(G4double);
-    G4double GetNumberOfPhotons() const;
-
     virtual G4double GetTotalDriftLength() const;
 
   private:
@@ -82,9 +79,8 @@ namespace nexus {
     G4double drift_velocity_; ///< Drift velocity of the charge carrier
     G4double transv_diff_;    ///< Transverse diffusion
     G4double longit_diff_;    ///< Longitudinal diffusion
-    G4double lifetime_;
-    G4double light_yield_;
-    G4double num_ph_;
+    G4double lifetime_;       ///< Electron lifetime
+    G4double light_yield_;    ///< EL light yield
 
     SegmentPointSampler* rnd_;
 
@@ -134,10 +130,6 @@ namespace nexus {
 
   inline G4double UniformElectricDriftField::LightYield() const
   { return light_yield_; }
-
-  inline void UniformElectricDriftField::SetNumberOfPhotons(G4double nph)
-  { num_ph_ = nph; }
-
 
 
 } // end namespace nexus

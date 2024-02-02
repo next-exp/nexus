@@ -64,7 +64,6 @@ namespace nexus {
 
     G4ThreeVector position;
     G4double time;
-    G4double time_diff;
 
     for (G4int i=0; i<3; i++) {
       if (i != axis_)  {     // Transverse coordinate
@@ -74,13 +73,11 @@ namespace nexus {
         position[i] = anode_pos_ + secmargin;
         G4double deltat = G4RandGauss::shoot(0, time_sigma);
         time = xyzt.t() + drift_time + deltat;
-        time_diff = drift_time + deltat;
-        if (time < 0.) {
-          time = xyzt.t() + drift_time;
-          time_diff = drift_time;
-        }
+        if (time < 0.) time = xyzt.t() + drift_time;
       }
     }
+
+    G4double time_diff = time - xyzt.t();
 
     // Calculate step length as euclidean distance between initial
     // and final positions
