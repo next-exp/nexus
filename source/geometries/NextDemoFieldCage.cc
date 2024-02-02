@@ -280,6 +280,7 @@ namespace nexus {
     field->SetDriftVelocity(1.*mm/microsecond);
     field->SetTransverseDiffusion(drift_transv_diff_);
     field->SetLongitudinalDiffusion(drift_long_diff_);
+    field->SetLifetime(e_lifetime_);
     G4Region* drift_region = new G4Region("DRIFT");
     drift_region->SetUserInformation(field);
     drift_region->AddRootLogicalVolume(active_logic);

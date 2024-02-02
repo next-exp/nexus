@@ -821,7 +821,7 @@ void Next1EL::BuildFieldCage()
   field->SetDriftVelocity(1.*mm/microsecond);
   field->SetTransverseDiffusion(1.*mm/sqrt(cm));
   field->SetLongitudinalDiffusion(.3*mm/sqrt(cm));
-
+  field->SetLifetime(e_lifetime_);
   G4Region* drift_region = new G4Region("DRIFT");
   drift_region->SetUserInformation(field);
   drift_region->AddRootLogicalVolume(active_logic);
