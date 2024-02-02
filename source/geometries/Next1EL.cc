@@ -740,10 +740,12 @@ void Next1EL::BuildFieldCage()
 
   G4Material* fgrid = materials::FakeDielectric(gxe_, "grid_mat");
   fgrid->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_, 303,
-									elgrid_transparency_, diel_thickn, sc_yield_, e_lifetime_));
+                                                           elgrid_transparency_,
+                                                           diel_thickn, sc_yield_));
   G4Material* fgrid_gate = materials::FakeDielectric(gxe_, "grid_mat");
   fgrid_gate->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_, 303,
-									gate_transparency_, diel_thickn, sc_yield_, e_lifetime_));
+                                                                gate_transparency_,
+                                                                diel_thickn, sc_yield_));
 
   G4Tubs* diel_grid =
     new G4Tubs("GRID", 0., elgap_ring_diam_/2., diel_thickn/2., 0, twopi);

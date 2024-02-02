@@ -66,6 +66,7 @@ namespace nexus {
     G4LogicalVolume* mother_logic_;
     G4VPhysicalVolume* mother_phys_;
     G4double pressure_, temperature_;
+    G4double sc_yield_, e_lifetime_;
 
 
     // Pointers to materials definition

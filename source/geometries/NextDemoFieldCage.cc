@@ -223,6 +223,8 @@ namespace nexus {
     gas_         = mother_logic_->GetMaterial();
     pressure_    = gas_->GetPressure();
     temperature_ = gas_->GetTemperature();
+    sc_yield_    = gas_->GetMaterialPropertiesTable()->GetConstProperty("SCINTILLATIONYIELD");
+    e_lifetime_  = gas_->GetMaterialPropertiesTable()->GetConstProperty("ATTACHMENT");
 
     aluminum_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Al");
     aluminum_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
@@ -296,9 +298,9 @@ namespace nexus {
     G4Material* cathode_mat =
       materials::FakeDielectric(gas_, "cathode_mat");
     cathode_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_,
-                                                                                temperature_,
-                                                                                cathode_transparency_,
-                                                                                grid_thickn_));
+                                                                   temperature_,
+                                                                   cathode_transparency_,
+                                                                   grid_thickn_));
 
     G4double cath_zplane[2] = {-grid_thickn_/2., grid_thickn_/2.};
     G4double rinner[2]      = {0., 0.};
@@ -394,9 +396,11 @@ namespace nexus {
     // Building the GATE
     G4Material* gate_mat = materials::FakeDielectric(gas_, "gate_mat");
     gate_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_,
-                                                                             temperature_,
-                                                                             gate_transparency_,
-                                                                             grid_thickn_));
+                                                                temperature_,
+                                                                gate_transparency_,
+                                                                grid_thickn_,
+                                                                sc_yield_,
+                                                                e_lifetime_));
 
     G4Tubs* gate_grid_solid =
       new G4Tubs("GATE_GRID", 0., elgap_ring_diam_/2., grid_thickn_/2.,
@@ -467,7 +471,9 @@ namespace nexus {
       anode_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_,
                                                                    temperature_,
                                                                    anode_transparency_,
-                                                                   grid_thickn_));
+                                                                   grid_thickn_,
+                                                                   sc_yield_,
+                                                                   e_lifetime_));
       G4Tubs* anode_grid_solid =
         new G4Tubs("ANODE_GRID", 0., elgap_ring_diam_/2., grid_thickn_/2., 0, twopi);
 
