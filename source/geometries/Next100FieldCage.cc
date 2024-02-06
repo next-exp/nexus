@@ -52,10 +52,11 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   n_panels_            (18),
   active_ext_radius_   (active_diam_/2. / cos(pi/n_panels_)),
 
+  grid_thickn_         (grid_thickn),
+
   cathode_int_diam_    (965. * mm),
   cathode_ext_diam_    (1020.* mm),
   cathode_thickn_      (13.5  * mm),
-  grid_thickn_         (grid_thickn),
   cathode_mesh_diam_   (5.0*mm),
 
   //  teflon_drift_length_ (1178.*mm), //distance from the gate to the beginning of the cathode volume

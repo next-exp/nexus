@@ -49,8 +49,8 @@ namespace nexus {
     // Dimensions
     G4double gate_sapphire_wdw_dist_;    
     const G4double active_diam_, n_panels_, active_ext_radius_;
-    const G4double cathode_int_diam_, cathode_ext_diam_, cathode_thickn_, cathode_mesh_diam_;
     const G4double grid_thickn_;
+    const G4double cathode_int_diam_, cathode_ext_diam_, cathode_thickn_, cathode_mesh_diam_;
     const G4double teflon_long_length_, teflon_buffer_length_;
     const G4double teflon_thickn_;
     const G4double el_gap_length_, el_mesh_diam_, el_mesh_rot_;
