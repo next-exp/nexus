@@ -936,7 +936,8 @@ namespace opticalprops {
       hc_ / (300. * nm),  hc_ / (270. * nm), hc_ / (250. * nm),
       hc_ / (230. * nm),  hc_ / (210. * nm), hc_ / (190. * nm),
       hc_ / (170. * nm),  hc_ / (150. * nm),
-      optPhotMaxE_
+      hc_ / (96. * nm),
+      optPhotTPBMaxE_
     };
 
     std::vector<G4double> WLS_absLength = {
@@ -945,7 +946,8 @@ namespace opticalprops {
       30. * nm, 50. * nm, 80. * nm,     // 330, 320, 310 nm
       100. * nm, 100. * nm, 400. * nm,  // 300, 270, 250 nm
       400. * nm, 350. * nm, 250. * nm,  // 230, 210, 190 nm
-      350. * nm, 400. * nm, 400. * nm   // 170, 150, ~108 nm
+      350. * nm, 400. * nm, 400. * nm,  // 170, 150, ~108 nm
+      noAbsLength_
     };
 
     //for (int i=0; i<WLS_abs_energy.size(); i++)

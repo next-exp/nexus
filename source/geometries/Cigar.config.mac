@@ -1,0 +1,21 @@
+#/Generator/SingleParticle/particle opticalphoton
+#/Generator/SingleParticle/min_energy 7 eV
+#/Generator/SingleParticle/max_energy 7 eV
+#/Generator/SingleParticle/region INSIDE_CIGAR
+/Generator/Kr83mGenerator/region INSIDE_CIGAR
+
+/Geometry/Cigar/pressure 1 bar
+/Geometry/Cigar/fiber_diameter 1 mm
+/Geometry/Cigar/coating TPB
+/Geometry/Cigar/fiber_type Y11
+/Geometry/Cigar/gas Xe
+
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+/process/em/verbose 0
+
+### JOB CONTROL
+/nexus/random_seed            1
+/nexus/persistency/start_id   0
+/nexus/persistency/outputFile Cigar.next
