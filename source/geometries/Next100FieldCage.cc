@@ -431,7 +431,7 @@ void Next100FieldCage::BuildCathode()
 
       PlaceHexagons(n_hex, cathode_mesh_diam_, grid_thickn_, cathode_grid_logic, cathode_hex_logic, cathode_int_diam_);
 
-      new G4PVPlacement(0, G4ThreeVector(0., 0., cathode_zpos_), cathode_grid_logic,
+      new G4PVPlacement(0, G4ThreeVector(0., 0., cathode_zpos_ - cathode_thickn_/2. + grid_thickn_/2.), cathode_grid_logic,
                         "CATHODE_GRID", mother_logic_, false, 0, false);
 
       // Add optical surface
