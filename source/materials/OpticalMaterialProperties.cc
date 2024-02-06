@@ -1628,35 +1628,25 @@ namespace opticalprops {
   // Copper Optical Properties Table
   G4MaterialPropertiesTable * Copper()
   {
-      G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
+       G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
-      // REFLECTIVITY
-      std::vector<G4double> ENERGIES = {
-              optPhotMinE_, 7.29 * eV,  optPhotMaxE_
-      };
+      // Reflectivity
+      std::vector<G4double> refl_energies = {
+              optPhotMinE_, hc_ / (700. * nm), hc_ / (650. * nm),
+                            hc_ / (600. * nm), hc_ / (500. * nm),
+                            hc_ / (400. * nm), hc_ / (300. * nm),  
+                            hc_ / (170. * nm), optPhotMaxE_ };
 
-      // We assume a default flat reflectivity of the copper of 20%
-      // Measurements may be required to update these values to something 
-      // more realistic. 
-      std::vector<G4double> REFLECTIVITY = { 0.20,0.20,0.20};
-      // std::vector<G4double> REFLECTIVITY = { 0.00,0.00,0.00};
+      // We assume a reflectivity of the copper of 20% at VUV
+      // Measurements may be required to update these values
+      // Visible spectrum taken from: E. Hecht, Optics, 5th edn., Pg 142, Fig 4.69
+      std::vector<G4double> reflectivities = { 0.90, 0.90, 0.70, 0.60, 0.40, 0.35, 0.30, 0.20, 0.20};
 
-      // REFLEXION BEHAVIOR
-      std::vector<G4double> ENERGIES_2    = {optPhotMinE_, optPhotMaxE_};
-      // Specular reflection about the normal to a microfacet.
-      // Such a vector is chosen according to a gaussian distribution with
-      // sigma = SigmaAlhpa (in rad) and centered in the average normal.
-      std::vector<G4double> specularlobe  = {0., 0.};
-      // specular reflection about the average normal
-      std::vector<G4double> specularspike = {0., 0.};
-      // 180 degrees reflection.
-      std::vector<G4double> backscatter   = {0., 0.};
-      // 1 - the sum of these three last parameters is the percentage of Lambertian reflection
-
-      mpt->AddProperty("SPECULARLOBECONSTANT", ENERGIES_2, specularlobe);
-      mpt->AddProperty("SPECULARSPIKECONSTANT",ENERGIES_2, specularspike);
-      mpt->AddProperty("BACKSCATTERCONSTANT",  ENERGIES_2, backscatter);
-      mpt->AddProperty("REFLECTIVITY", ENERGIES, REFLECTIVITY);
+      // Add Properties
+      mpt->AddProperty("SPECULARLOBECONSTANT", {optPhotMinE_, optPhotMaxE_}, {0., 0.});
+      mpt->AddProperty("SPECULARSPIKECONSTANT",{optPhotMinE_, optPhotMaxE_}, {0., 0.});
+      mpt->AddProperty("BACKSCATTERCONSTANT",  {optPhotMinE_, optPhotMaxE_}, {0., 0.});
+      mpt->AddProperty("REFLECTIVITY", refl_energies, reflectivities);
       return mpt;
   }
 
@@ -1666,33 +1656,21 @@ namespace opticalprops {
   {
       G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
-      // REFLECTIVITY
-      std::vector<G4double> ENERGIES = {
-              optPhotMinE_, 7.29 * eV,  optPhotMaxE_
-      };
+      // Reflectivity
+      std::vector<G4double> refl_energies = {
+              optPhotMinE_, hc_ / (500. * nm), hc_ / (350. * nm),
+                            hc_ / (300. * nm), hc_ / (170. * nm),  optPhotMaxE_ };
 
-      // We assume a default flat reflectivity of the stainless steel of 20%
-      // Measurements may be required to update these values to something 
-      // more realistic. 
-      std::vector<G4double> REFLECTIVITY = { 0.20,0.20,0.20};
-      // std::vector<G4double> REFLECTIVITY = { 0.00,0.00,0.00};
+      // We assume a reflectivity of the stainless steel of 20% at VUV
+      // Measurements may be required to update these values
+      // Visible spectrum taken from: https://doi.org/10.1063/1.331503
+      std::vector<G4double> reflectivities = { 0.60, 0.60, 0.50, 0.40, 0.20, 0.20};
 
-      // REFLEXION BEHAVIOR
-      std::vector<G4double> ENERGIES_2    = {optPhotMinE_, optPhotMaxE_};
-      // Specular reflection about the normal to a microfacet.
-      // Such a vector is chosen according to a gaussian distribution with
-      // sigma = SigmaAlhpa (in rad) and centered in the average normal.
-      std::vector<G4double> specularlobe  = {0., 0.};
-      // specular reflection about the average normal
-      std::vector<G4double> specularspike = {0., 0.};
-      // 180 degrees reflection.
-      std::vector<G4double> backscatter   = {0., 0.};
-      // 1 - the sum of these three last parameters is the percentage of Lambertian reflection
-
-      mpt->AddProperty("SPECULARLOBECONSTANT", ENERGIES_2, specularlobe);
-      mpt->AddProperty("SPECULARSPIKECONSTANT",ENERGIES_2, specularspike);
-      mpt->AddProperty("BACKSCATTERCONSTANT",  ENERGIES_2, backscatter);
-      mpt->AddProperty("REFLECTIVITY", ENERGIES, REFLECTIVITY);
+      // Add properties
+      mpt->AddProperty("SPECULARLOBECONSTANT", {optPhotMinE_, optPhotMaxE_}, {0., 0.});
+      mpt->AddProperty("SPECULARSPIKECONSTANT",{optPhotMinE_, optPhotMaxE_}, {0., 0.});
+      mpt->AddProperty("BACKSCATTERCONSTANT",  {optPhotMinE_, optPhotMaxE_}, {0., 0.});
+      mpt->AddProperty("REFLECTIVITY", refl_energies, reflectivities);
       return mpt;
   }
 
