@@ -213,6 +213,16 @@ namespace nexus {
     G4LogicalVolume* copper_plate_logic =
       new G4LogicalVolume(copper_plate_solid, copper, "EP_COPPER_PLATE");
 
+    // Add optical surface
+    G4OpticalSurface* gas_copperplate_opsur = new G4OpticalSurface("GAS_COPPER_PLATE_OPSURF");
+    gas_copperplate_opsur->SetType(dielectric_metal);
+    gas_copperplate_opsur->SetModel(unified);
+    gas_copperplate_opsur->SetFinish(ground);
+    // gas_mesh_opsur->SetSigmaAlpha(0.0);
+    gas_copperplate_opsur->SetMaterialPropertiesTable(opticalprops::Copper());
+    new G4LogicalSkinSurface("GAS_COPPER_PLATE_OPSURF",
+                            copper_plate_logic, gas_copperplate_opsur);
+
     G4double stand_out_length =
       sapphire_window_thickn_ + tpb_thickn_ + optical_pad_thickn_ + pmt_stand_out_;
 
