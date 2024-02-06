@@ -52,7 +52,7 @@ namespace nexus {
     const G4double cathode_int_diam_, cathode_ext_diam_, cathode_thickn_, grid_thickn_, cathode_mesh_diam_;
     const G4double teflon_long_length_, teflon_buffer_length_;
     const G4double teflon_thickn_;
-    const G4double el_gap_length_, el_mesh_diam_, el_mesh_rot_;;
+    const G4double el_gap_length_, el_mesh_diam_, el_mesh_rot_;
     const G4double gate_ext_diam_, gate_int_diam_, gate_ring_thickn_;
     const G4double gate_teflon_dist_, gate_cathode_dist_;
     const G4double hdpe_tube_int_diam_, hdpe_tube_ext_diam_, hdpe_length_;
