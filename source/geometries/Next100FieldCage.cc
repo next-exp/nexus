@@ -397,6 +397,7 @@ void Next100FieldCage::BuildCathode()
   // Cathode Mesh
   G4LogicalVolume *cathode_grid_logic;
   G4LogicalVolume *cathode_hex_logic;
+  G4double cathode_grid_zpos = cathode_zpos_ - cathode_thickn_/2. + grid_thickn_/2.;
 
   if (use_dielectric_grid_){
 
@@ -405,7 +406,6 @@ void Next100FieldCage::BuildCathode()
 
     cathode_grid_logic = new G4LogicalVolume(diel_grid_solid, fgrid_mat, "CATHODE_GRID");
 
-  G4double cathode_grid_zpos = cathode_zpos_ - cathode_thickn_/2. + grid_thickn_/2.;
   new G4PVPlacement(0, G4ThreeVector(GetCoordOrigin().x(),
                                      GetCoordOrigin().y(), cathode_grid_zpos),
                     cathode_grid_logic, "CATHODE_GRID", mother_logic_,
@@ -431,8 +431,10 @@ void Next100FieldCage::BuildCathode()
 
       PlaceHexagons(n_hex, cathode_mesh_diam_, grid_thickn_, cathode_grid_logic, cathode_hex_logic, cathode_int_diam_);
 
-      new G4PVPlacement(0, G4ThreeVector(0., 0., cathode_zpos_ - cathode_thickn_/2. + grid_thickn_/2.), cathode_grid_logic,
-                        "CATHODE_GRID", mother_logic_, false, 0, false);
+      new G4PVPlacement(0, G4ThreeVector(GetCoordOrigin().x(),
+                                         GetCoordOrigin().y(), cathode_grid_zpos),
+                                         cathode_grid_logic,  "CATHODE_GRID", mother_logic_,
+                                         false, 0, false);
 
       // Add optical surface
       G4OpticalSurface* gas_mesh_opsur = new G4OpticalSurface("GAS_CATHODE_MESH_OPSURF");
