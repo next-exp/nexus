@@ -455,16 +455,6 @@ void Next100FieldCage::BuildCathode()
                                          cathode_grid_logic,  "CATHODE_GRID", mother_logic_,
                                          false, 0, false);
 
-      // Add optical surface
-      G4OpticalSurface* gas_mesh_opsur = new G4OpticalSurface("GAS_CATHODE_MESH_OPSURF");
-      gas_mesh_opsur->SetType(dielectric_metal);
-      gas_mesh_opsur->SetModel(unified);
-      gas_mesh_opsur->SetFinish(ground);
-      // gas_mesh_opsur->SetSigmaAlpha(0.0);
-      gas_mesh_opsur->SetMaterialPropertiesTable(opticalprops::Steel());
-      new G4LogicalSkinSurface("GAS_CATHODE_MESH_OPSURF",
-                              cathode_grid_logic, gas_mesh_opsur);
-
   }
 
   // Cathode ring vertex generator
@@ -736,15 +726,6 @@ void Next100FieldCage::BuildELRegion()
     new G4PVPlacement(pRot, G4ThreeVector(0., 0., -el_gap_length_/2. - grid_thickn_/2.), el_grid_logic,
                       "EL_GRID_ANODE", el_gap_logic, false, 1, false);
 
-    // Add optical surface
-    G4OpticalSurface* gas_mesh_opsur = new G4OpticalSurface("GAS_EL_MESH_OPSURF");
-    gas_mesh_opsur->SetType(dielectric_metal);
-    gas_mesh_opsur->SetModel(unified);
-    gas_mesh_opsur->SetFinish(ground);
-    gas_mesh_opsur->SetSigmaAlpha(0.0);
-    gas_mesh_opsur->SetMaterialPropertiesTable(opticalprops::Steel());
-    new G4LogicalSkinSurface("GAS_EL_MESH_OPSURF",
-                             el_grid_logic, gas_mesh_opsur);
   }
 
   if (elfield_) {
