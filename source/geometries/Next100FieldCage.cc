@@ -598,22 +598,7 @@ void Next100FieldCage::BuildELRegion()
   G4Tubs* el_gap_solid;
   G4LogicalVolume* el_gap_logic;
 
-
-  if (elfield_) {
-    /// Define EL electric field
-    UniformElectricDriftField* el_field = new UniformElectricDriftField();
-    G4double global_el_gap_zpos = el_gap_zpos_ - GetCoordOrigin().z();
-    el_field->SetCathodePosition(global_el_gap_zpos + el_gap_length_/2. + grid_thickn_);
-    el_field->SetAnodePosition  (global_el_gap_zpos - el_gap_length_/2. - grid_thickn_);
-    el_field->SetDriftVelocity(2.5 * mm/microsecond);
-    el_field->SetTransverseDiffusion(ELtransv_diff_);
-    el_field->SetLongitudinalDiffusion(ELlong_diff_);
-    el_field->SetLightYield(XenonELLightYield(ELelectric_field_, pressure_));
-    G4Region* el_region = new G4Region("EL_REGION");
-    el_region->SetUserInformation(el_field);
-    el_region->AddRootLogicalVolume(el_gap_logic);
-  }
-
+  // Logical Volumes
   G4LogicalVolume *el_grid_logic;
   G4LogicalVolume *el_hex_logic;
 
@@ -760,6 +745,21 @@ void Next100FieldCage::BuildELRegion()
     gas_mesh_opsur->SetMaterialPropertiesTable(opticalprops::Steel());
     new G4LogicalSkinSurface("GAS_EL_MESH_OPSURF",
                              el_grid_logic, gas_mesh_opsur);
+  }
+
+  if (elfield_) {
+    /// Define EL electric field
+    UniformElectricDriftField* el_field = new UniformElectricDriftField();
+    G4double global_el_gap_zpos = el_gap_zpos_ - GetCoordOrigin().z();
+    el_field->SetCathodePosition(global_el_gap_zpos + el_gap_length_/2. + grid_thickn_);
+    el_field->SetAnodePosition  (global_el_gap_zpos - el_gap_length_/2. - grid_thickn_);
+    el_field->SetDriftVelocity(2.5 * mm/microsecond);
+    el_field->SetTransverseDiffusion(ELtransv_diff_);
+    el_field->SetLongitudinalDiffusion(ELlong_diff_);
+    el_field->SetLightYield(XenonELLightYield(ELelectric_field_, pressure_));
+    G4Region* el_region = new G4Region("EL_REGION");
+    el_region->SetUserInformation(el_field);
+    el_region->AddRootLogicalVolume(el_gap_logic);
   }
 
   // Vertex generator
