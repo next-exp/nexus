@@ -595,15 +595,9 @@ void Next100FieldCage::BuildELRegion()
   G4double anode_sim_zpos = el_gap_zpos_ - el_gap_length_/2. - anode_ring_thickn/2.;
 
   /// EL gap.
-  G4Tubs* el_gap_solid =
-    new G4Tubs("EL_GAP", 0., gate_int_diam_/2.,
-               (el_gap_length_ + 2*grid_thickn_)/2., 0, twopi);
+  G4Tubs* el_gap_solid;
+  G4LogicalVolume* el_gap_logic;
 
-  G4LogicalVolume* el_gap_logic =
-    new G4LogicalVolume(el_gap_solid, gas_, "EL_GAP");
-
-  new G4PVPlacement(0, G4ThreeVector(0., 0., el_gap_zpos_),
-                    el_gap_logic, "EL_GAP", mother_logic_, false, 0, false);
 
   if (elfield_) {
     /// Define EL electric field
@@ -648,6 +642,17 @@ void Next100FieldCage::BuildELRegion()
     new G4PVPlacement(0, G4ThreeVector(0., 0., anode_sim_zpos),
                       anode_logic, "ANODE_RING", mother_logic_, false, 0, false);
 
+
+    /// EL gap.
+    el_gap_solid =
+      new G4Tubs("EL_GAP", 0., gate_int_diam_/2.,
+                (el_gap_length_ + 2*grid_thickn_)/2., 0, twopi);
+
+    el_gap_logic =
+      new G4LogicalVolume(el_gap_solid, gas_, "EL_GAP");
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., el_gap_zpos_),
+                      el_gap_logic, "EL_GAP", mother_logic_, false, 0, false);
 
     /// EL grids
     G4Material* fgrid_mat = materials::FakeDielectric(gas_, "el_grid_mat");
@@ -701,7 +706,20 @@ void Next100FieldCage::BuildELRegion()
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., anode_sim_zpos - grid_thickn_/2.),
                       anode_logic, "ANODE_RING", mother_logic_, false, 0, false);
+
+    /// EL gap.
+    el_gap_solid =
+      new G4Tubs("EL_GAP", 0., gate_ext_diam_/2.,
+                (el_gap_length_ + 2*grid_thickn_)/2., 0, twopi);
+
+    el_gap_logic =
+      new G4LogicalVolume(el_gap_solid, gas_, "EL_GAP");
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., el_gap_zpos_),
+                      el_gap_logic, "EL_GAP", mother_logic_, false, 0, false);
     
+    // Meshes
+
     // Dist from centre of hex to hex vertex, excluding the land width (circumradius)
     G4double hex_circumradius = el_mesh_diam_/std::sqrt(3)*mm;  
 
@@ -718,7 +736,6 @@ void Next100FieldCage::BuildELRegion()
    
     // Place GXe hexagons in the disk to make the mesh
     PlaceHexagons(n_hex, el_mesh_diam_, grid_thickn_, el_grid_logic, el_hex_logic, gate_int_diam_);
-
 
     // Create the mesh logical volume
     
