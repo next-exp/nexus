@@ -88,8 +88,6 @@ namespace nexus {
           continue;
 
         
-        G4RotationMatrix rot = G4RotationMatrix(0, 0, 0);
-        G4Transform3D tr = G4Transform3D(rot, G4ThreeVector(x, y, 0*mm));
         new G4PVPlacement(0, G4ThreeVector(x, y, 0*mm), hex_logical, "MESH_HOLE_GAS", disk_logical, false, 0, false);
       }
     }
