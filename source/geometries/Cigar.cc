@@ -119,7 +119,7 @@ namespace nexus {
       }
     }
 
-    fiber_ = new GenericWLSFiber(fiber_type_, true, true, fiber_diameter_, cigar_length_ + 7 * cm, true, coated_, this_coating, this_fiber, true);
+    fiber_ = new GenericWLSFiber(fiber_type_, true, true, fiber_diameter_, cigar_length_ + 7 * cm, true, coated_, this_fiber, this_coating, true);
 
     // WORLD /////////////////////////////////////////////////
 
