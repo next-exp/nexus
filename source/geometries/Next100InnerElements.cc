@@ -81,7 +81,7 @@ namespace nexus {
 
     // Honeycomb support structure for EP
     honeycomb_->SetMotherLogicalVolume(mother_logic_);
-    honeycomb_->SetELzCoord(gate_zpos);
+    honeycomb_->SetCoordOrigin(coord_origin);
     honeycomb_->SetEndOfCopperPlateZ(energy_plane_->GetCopperPlateEndZ());
     honeycomb_->Construct();
 
