@@ -179,7 +179,7 @@ namespace nexus {
       do {
         vertex = gen_->GenerateVertex("VOLUME");
         G4ThreeVector glob_vtx(vertex);
-        glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
+        glob_vtx = glob_vtx - GetCoordOrigin();
         VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
       } while (VertexVolume->GetName() != region);
     }
