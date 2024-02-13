@@ -74,6 +74,8 @@ namespace nexus {
     energy_plane_->SetELtoSapphireWDWdistance(gate_sapphire_wdw_distance_);
     energy_plane_->Construct();
 
+    pmt_pos_ = energy_plane_->GetPMTPosInGas();
+
     // Tracking plane
     tracking_plane_->SetMotherPhysicalVolume(mother_phys_);
     tracking_plane_->SetCoordOrigin(coord_origin);

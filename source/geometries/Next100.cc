@@ -57,7 +57,7 @@ namespace nexus {
 
     msg_->DeclareProperty("lab_walls", lab_walls_, "Placement of Hall A walls.");
 
-    msg_->DeclareProperty("print_sipms", print_, "Print SiPM positions.");
+    msg_->DeclareProperty("print_sns_pos", print_, "Print sensor positions.");
 
   // The following methods must be invoked in this particular
   // order since some of them depend on the previous ones
@@ -182,11 +182,17 @@ namespace nexus {
     }
 
     if (print_) {
+      std::vector<G4ThreeVector> pmt_pos  = inner_elements_->GetPMTPosInGas();
+      for (unsigned int i=0; i<pmt_pos.size(); i++) {
+        G4ThreeVector pos = pmt_pos[i] - coord_origin_;
+        G4cout << "PMT " << i << ": " << pos.x() << ", "<< pos.y() << G4endl;
+      }
+
       std::vector<G4ThreeVector> sipm_pos = inner_elements_->GetSiPMPosInGas();
       G4int n_sipm = 0;
       G4int b = 1;
       for (unsigned int i=0; i<sipm_pos.size(); i++) {
-        G4ThreeVector pos = sipm_pos[i] - coord_origin_;;
+        G4ThreeVector pos = sipm_pos[i] - coord_origin_;
         G4int id = 1000 * b + n_sipm;
         G4cout << "SiPM " << id << ": " << pos.x() << ", "<< pos.y() << G4endl;
         n_sipm++;

@@ -48,6 +48,9 @@ namespace nexus {
     // Builder
     void Construct();
 
+    // Return the position of PMTs in xenon gas
+    std::vector<G4ThreeVector> GetPMTPosInGas() const;
+
 
   private:
     void GeneratePositions();
@@ -102,11 +105,11 @@ namespace nexus {
 
   };
 
-  inline void Next100EnergyPlane::SetELtoSapphireWDWdistance(G4double z) {
-    gate_sapphire_wdw_dist_ = z;}
+  inline void Next100EnergyPlane::SetELtoSapphireWDWdistance(G4double z) { gate_sapphire_wdw_dist_ = z;}
 
-  inline void Next100EnergyPlane::SetMotherLogicalVolume(G4LogicalVolume* mother_logic) {
-      mother_logic_ = mother_logic;}
+  inline void Next100EnergyPlane::SetMotherLogicalVolume(G4LogicalVolume* mother_logic) { mother_logic_ = mother_logic;}
+
+  inline std::vector<G4ThreeVector> Next100EnergyPlane::GetPMTPosInGas() const { return pmt_positions_;}
 
 } //end namespace nexus
 #endif
