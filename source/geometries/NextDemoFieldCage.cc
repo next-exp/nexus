@@ -401,7 +401,7 @@ namespace nexus {
                                                                 gate_transparency_,
                                                                 grid_thickn_,
                                                                 sc_yield_,
-                                                                e_lifetime_));
+                                                                1000*ms));
 
     G4Tubs* gate_grid_solid =
       new G4Tubs("GATE_GRID", 0., elgap_ring_diam_/2., grid_thickn_/2.,
@@ -474,7 +474,7 @@ namespace nexus {
                                                                    anode_transparency_,
                                                                    grid_thickn_,
                                                                    sc_yield_,
-                                                                   e_lifetime_));
+                                                                   1000*ms));
       G4Tubs* anode_grid_solid =
         new G4Tubs("ANODE_GRID", 0., elgap_ring_diam_/2., grid_thickn_/2., 0, twopi);
 

@@ -561,7 +561,7 @@ void Next100FieldCage::BuildELRegion()
                                                                el_grid_transparency_,
                                                                grid_thickn_,
                                                                sc_yield_,
-                                                               1.e9*s,
+                                                               1000.*ms,
                                                                photoe_prob_));
 
   /// Dimensions & position: the grids are simulated inside the EL gap.

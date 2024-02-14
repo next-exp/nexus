@@ -320,12 +320,12 @@ void NextFlexFieldCage::DefineMaterials()
   gate_mat_ = materials::FakeDielectric(xenon_gas_, "gate_mat");
   gate_mat_->SetMaterialPropertiesTable(opticalprops::FakeGrid(gas_pressure_,
              gas_temperature_, gate_transparency_, gate_thickness_,
-             gas_sc_yield_, 1.e9*s, photoe_prob_));
+             gas_sc_yield_, 1000*ms, photoe_prob_));
 
   anode_mat_ = materials::FakeDielectric(xenon_gas_, "anode_mat");
   anode_mat_->SetMaterialPropertiesTable(opticalprops::FakeGrid(gas_pressure_,
               gas_temperature_, anode_transparency_, anode_thickness_,
-              gas_sc_yield_, 1.e9*s, photoe_prob_));
+              gas_sc_yield_, 1000*ms, photoe_prob_));
 
 
   // Fiber core material

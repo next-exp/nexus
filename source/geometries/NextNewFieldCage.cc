@@ -456,7 +456,7 @@ void NextNewFieldCage::BuildBuffer()
                                                                  gate_transparency_,
                                                                  grid_thickness_,
                                                                  sc_yield_,
-                                                                 1.e9*s,
+                                                                 1000*ms,
                                                                  photoe_prob_));
 
     // Dimensions & position: the grids are simulated inside the EL gap.
