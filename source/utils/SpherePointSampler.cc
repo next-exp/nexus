@@ -99,7 +99,7 @@ namespace nexus {
     // Unknown region
     else {
       G4Exception("[SpherePointSampler]", "GenerateVertex()", FatalException,
-		              "Unknown Region!");
+		              "Unknown Region! Possible are VOLUME, INNER_SURF and OUTER_SURF");
     }
 
     return RotateAndTranslate(G4ThreeVector(x, y, z));
