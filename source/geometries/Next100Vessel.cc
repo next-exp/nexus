@@ -13,6 +13,7 @@
 #include "CylinderPointSampler.h"
 #include "SpherePointSampler.h"
 #include "Next100Th228Source.h"
+#include "CalibrationSource.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
@@ -74,7 +75,7 @@ namespace nexus {
     gas_("enrichedXe"),
     helium_mass_num_(4),
     xe_perc_(100.),
-    th_source_(false),
+    th_source_("no_source"),
     dist_th_zpos_end_(0.*mm)
   {
     /// HOW THIS GEOMETRY IS BUILT ///
@@ -127,7 +128,8 @@ namespace nexus {
     e_lifetime_cmd.SetUnitCategory("Time");
     e_lifetime_cmd.SetRange("e_lifetime>0.");
 
-    msg_->DeclareProperty("th_source", th_source_, "True if Th-228 source is used");
+    msg_->DeclareProperty("th_source", th_source_,
+                          "Th-228 source used: next_white or next100");
   }
 
 
@@ -349,21 +351,39 @@ namespace nexus {
     // Since the vertex generation is independent from the volume placement,
     // the mere physical presence of other sources should not affect
     // the calibration simulations.
-    if (th_source_ ) {
-      Next100Th228Source source = Next100Th228Source();
-      source.Construct();
-      dist_th_zpos_end_ = source.GetDiffThZPosEnd();
-      G4LogicalVolume* source_logic = source.GetLogicalVolume();
-      G4ThreeVector source_pos =
-        G4ThreeVector(0., 0.,
-                      -port_tube_height_/2. + source.GetSupportLength()/2.);
+    if (th_source_ != "no_source") {
+      G4LogicalVolume* source_logic = nullptr;
+      G4double source_length = 0.;
       G4RotationMatrix* source_rot = new G4RotationMatrix;
       source_rot->rotateY(180. * deg);
+      if (th_source_ == "next100") {
+        Next100Th228Source source = Next100Th228Source();
+        source.Construct();
+        dist_th_zpos_end_ = source.GetDiffThZPosEnd();
+        source_length = source.GetSupportLength();
+        // Vertex generation
+        th_port_gen_ = new SpherePointSampler(0., source.GetThRadius());
+
+        source_logic = source.GetLogicalVolume();
+      } else if (th_source_ == "next_white") {
+        CalibrationSource source = CalibrationSource();
+        source.SetActiveMaterial("Th");
+        source.Construct();
+        dist_th_zpos_end_ =
+          source.GetCapsuleThickness()/2. - source.GetSourceZpos();
+        source_length = source.GetCapsuleThickness();
+        // Vertex generation
+        th_white_port_gen_ =
+          new CylinderPointSampler(0., source.GetSourceDiameter()/2.,
+                                   source.GetSourceThickness()/2.,
+                                   0., 360.*deg, source_rot);
+        source_logic = source.GetLogicalVolume();
+      }
+
+      G4ThreeVector source_pos =
+        G4ThreeVector(0., 0., -port_tube_height_/2. + source_length/2.);
       new G4PVPlacement(source_rot, source_pos, source_logic,
                         "TH228_SOURCE_SUPPORT", port_tube_gas_logic, false, 0);
-
-      // Vertex generation
-      th_port_gen_ = new SpherePointSampler(0., source.GetThRadius());
     }
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., port_tube_tip_/2.), port_tube_gas_logic,
@@ -503,8 +523,10 @@ namespace nexus {
     }
 
     else if (region == "PORT_1a"){
-      if (th_source_) {
+      if (th_source_ == "next100") {
         vertex = th_port_gen_->GenerateVertex(VOLUME);
+      } else if (th_source_ == "next_white") {
+        vertex = th_white_port_gen_->GenerateVertex(VOLUME);
       }
       vertex = vertex.rotateX( 90. * deg);
       vertex = vertex.rotateZ(-45. * deg);
@@ -514,8 +536,10 @@ namespace nexus {
     }
 
     else if (region == "PORT_2a"){
-      if (th_source_) {
+      if (th_source_ == "next100") {
         vertex = th_port_gen_->GenerateVertex(VOLUME);
+      } else if (th_source_ == "next_white") {
+        vertex = th_white_port_gen_->GenerateVertex(VOLUME);
       }
       vertex = vertex.rotateX( 90. * deg);
       vertex = vertex.rotateZ(-45. * deg);
@@ -525,8 +549,10 @@ namespace nexus {
     }
 
     else if (region == "PORT_1b"){
-      if (th_source_) {
+      if (th_source_ == "next100") {
         vertex = th_port_gen_->GenerateVertex(VOLUME);
+      } else if (th_source_ == "next_white") {
+        vertex = th_white_port_gen_->GenerateVertex(VOLUME);
       }
       vertex = vertex.rotateX( 90. * deg);
       vertex = vertex.rotateZ( 45. * deg);
@@ -536,8 +562,10 @@ namespace nexus {
     }
 
     else if (region == "PORT_2b"){
-      if (th_source_) {
+      if (th_source_ == "next100") {
         vertex = th_port_gen_->GenerateVertex(VOLUME);
+      } else if (th_source_ == "next_white") {
+        vertex = th_white_port_gen_->GenerateVertex(VOLUME);
       }
       vertex = vertex.rotateX( 90. * deg);
       vertex = vertex.rotateZ( 45. * deg);

@@ -79,6 +79,7 @@ namespace nexus {
     CylinderPointSampler* tracking_flange_gen_;
     CylinderPointSampler* energy_flange_gen_;
     SpherePointSampler* th_port_gen_;
+    CylinderPointSampler* th_white_port_gen_;
 
     G4double perc_endcap_vol_;
     G4double perc_ep_flange_vol_;
@@ -96,8 +97,9 @@ namespace nexus {
     G4double xe_perc_;
 
     // Th calibration source
-    G4bool th_source_;
+    G4String th_source_;
     G4double dist_th_zpos_end_;
+
   };
 
   inline void Next100Vessel::SetELtoTPdistance(G4double distance){
