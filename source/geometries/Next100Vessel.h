@@ -58,8 +58,8 @@ namespace nexus {
     const G4double endcap_in_z_width_;
     const G4double port_base_height_, port_tube_height_, port_tube_tip_;
 
-    G4double port_x_, port_y_, source_height_, port_z_1a_, port_z_1b_;
-    G4double port_z_2a_, port_z_2b_;
+    G4double port_angle_, port_x_, port_y_;
+    G4double port_z_1a_, port_z_1b_, port_z_2a_, port_z_2b_;
     G4double sc_yield_, e_lifetime_;
     G4double pressure_, temperature_;
     G4double gate_tp_distance_;
@@ -78,7 +78,7 @@ namespace nexus {
     SpherePointSampler*   energy_endcap_gen_;
     CylinderPointSampler* tracking_flange_gen_;
     CylinderPointSampler* energy_flange_gen_;
-    CylinderPointSampler* port_gen_;
+    SpherePointSampler* port_gen_;
 
     G4double perc_endcap_vol_;
     G4double perc_ep_flange_vol_;
@@ -97,6 +97,7 @@ namespace nexus {
 
     // Th calibration source
     G4bool th_source_;
+    G4double dist_th_zpos_end_;
   };
 
   inline void Next100Vessel::SetELtoTPdistance(G4double distance){

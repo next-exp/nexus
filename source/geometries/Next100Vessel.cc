@@ -60,9 +60,9 @@ namespace nexus {
     port_tube_height_(159.* mm),
     port_tube_tip_   (4.  * mm),
     // They are defined global because are needed at the vertex generation
-    port_x_ ((vessel_in_rad_ + port_base_height_ - (port_tube_height_ + port_tube_tip_)/2.)/sqrt(2.)), // inner port pos
+    port_angle_ (45 * deg),
+    port_x_ ((vessel_in_rad_ + port_base_height_ - (port_tube_height_ + port_tube_tip_)/2.) * cos(port_angle_)), // inner port pos
     port_y_ (port_x_),
-    source_height_ (5. * mm), // preliminar
 
     // Vessel gas
     sc_yield_(25510. * 1/MeV),
@@ -224,7 +224,7 @@ namespace nexus {
 				    vessel_tp_flange_solid, 0, tracking_flange_pos);
 
     // Add port nozzles (x,y at 45*deg)
-    G4double port_nozzle_x = (vessel_in_rad_ + port_base_height_/2.)/sqrt(2.);
+    G4double port_nozzle_x = (vessel_in_rad_ + port_base_height_/2.) * cos(port_angle_);
     G4double port_nozzle_y = port_nozzle_x;
 
     G4double port_reference_z = -body_length_/2. + endcap_in_body_;
@@ -260,7 +260,7 @@ namespace nexus {
 					vessel_gas_endcap_solid, xRot, tracking_endcap_pos);
 
     // Add gas inside ports
-    G4double port_gas_x = port_nozzle_x - (offset/2.)/sqrt(2.);
+    G4double port_gas_x = port_nozzle_x - (offset/2.) * cos(port_angle_);
     G4double port_gas_y = port_gas_x;
 
     vessel_gas_solid = new G4UnionSolid("VESSEL_GAS", vessel_gas_solid, port_gas_solid,
@@ -351,13 +351,18 @@ namespace nexus {
     if (th_source_ ) {
       Next100Th228Source source = Next100Th228Source();
       source.Construct();
+      dist_th_zpos_end_ = source.GetDiffThZPosEnd();
       G4LogicalVolume* source_logic = source.GetLogicalVolume();
       G4ThreeVector source_pos =
-        G4ThreeVector(0., 0., -port_tube_height_/2. + source.GetSupportLength()/2.);
+        G4ThreeVector(0., 0.,
+                      -port_tube_height_/2. + source.GetSupportLength()/2.);
       G4RotationMatrix* source_rot = new G4RotationMatrix;
       source_rot->rotateY(180. * deg);
-      new G4PVPlacement(source_rot, source_pos, source_logic, "TH228_SOURCE_SUPPORT",
-                        port_tube_gas_logic, false, 0);
+      new G4PVPlacement(source_rot, source_pos, source_logic,
+                        "TH228_SOURCE_SUPPORT", port_tube_gas_logic, false, 0);
+
+      // Vertex generation
+      port_gen_ = new SpherePointSampler(0., source.GetThRadius());
     }
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., port_tube_tip_/2.), port_tube_gas_logic,
@@ -407,9 +412,6 @@ namespace nexus {
                                flange_ep_length/2.,
                                0., 360.*deg, 0, energy_flange_pos);
 
-    port_gen_ = new CylinderPointSampler(0., port_tube_rad, source_height_/2.,
-                                         0., 360.*deg, 0, G4ThreeVector(0., 0., 0.));
-
     // Calculating some prob
     G4UnionSolid* ep_int_flange_solid =
       new G4UnionSolid("VESSEL_EP_INT_FLANGE", ep_int_flange_short_solid,
@@ -454,7 +456,9 @@ namespace nexus {
   G4ThreeVector Next100Vessel::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);
-    G4double source_x = port_x_ - (port_tube_height_ - port_tube_tip_ - source_height_)/2./sqrt(2.);
+    G4double source_x =
+      port_x_ + (-(port_tube_height_ + port_tube_tip_)/2 +
+                 port_tube_tip_ + dist_th_zpos_end_) * cos(port_angle_);
     G4double source_y = source_x;
 
     // Vertex in the whole VESSEL volume

@@ -27,6 +27,7 @@ namespace nexus {
 
   Next100Th228Source::Next100Th228Source(): GeometryBase(),
                                             source_diam_ (1. * mm),
+                                            source_offset_ (0.2 * mm),
                                             support_ext_diam_ (7. * mm),
                                             support_int_diam_ (5. *mm),
                                             support_length_ (16. * mm),
@@ -73,7 +74,7 @@ namespace nexus {
       new G4LogicalVolume(source_solid, thorium_mat, "TH228");
 
     G4ThreeVector source_pos =
-      G4ThreeVector(0., 0., support_length_/2. - source_diam_/2.-0.2*mm);
+      G4ThreeVector(0., 0., support_length_/2. - source_diam_/2. -source_offset_);
     new G4PVPlacement(0, source_pos, source_logic, "TH228", support_logic,
                       false, 0, false);
 
@@ -90,6 +91,16 @@ namespace nexus {
   G4double Next100Th228Source::GetSupportLength() const
   {
     return support_length_;
+  }
+
+  G4double Next100Th228Source::GetDiffThZPosEnd() const
+  {
+    return  source_diam_/2. + source_offset_;
+  }
+
+  G4double Next100Th228Source::GetThRadius() const
+  {
+    return source_diam_/2.;
   }
 
 }
