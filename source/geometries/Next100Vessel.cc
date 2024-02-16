@@ -12,6 +12,7 @@
 #include "OpticalMaterialProperties.h"
 #include "CylinderPointSampler.h"
 #include "SpherePointSampler.h"
+#include "Next100Th228Source.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>
@@ -72,7 +73,8 @@ namespace nexus {
     visibility_(0),
     gas_("enrichedXe"),
     helium_mass_num_(4),
-    xe_perc_(100.)
+    xe_perc_(100.),
+    th_source_(false)
   {
     /// HOW THIS GEOMETRY IS BUILT ///
     /// The vessel is a union of several volumes, as explained in
@@ -124,6 +126,7 @@ namespace nexus {
     e_lifetime_cmd.SetUnitCategory("Time");
     e_lifetime_cmd.SetRange("e_lifetime>0.");
 
+    msg_->DeclareProperty("th_source", th_source_, "True if Th-228 source is used");
   }
 
 
@@ -340,6 +343,22 @@ namespace nexus {
     G4LogicalVolume* port_tube_gas_logic =
       new G4LogicalVolume(port_tube_gas_solid, G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR"),
                           "PORT_TUBE_AIR");
+
+    // If a Th source is used, it is placed in all ports for simplicity.
+    // Since the vertex generation is independent from the volume placement,
+    // the mere physical presence of other sources should not affect
+    // the calibration simulations.
+    if (th_source_ ) {
+      Next100Th228Source source = Next100Th228Source();
+      source.Construct();
+      G4LogicalVolume* source_logic = source.GetLogicalVolume();
+      G4ThreeVector source_pos =
+        G4ThreeVector(0., 0., -port_tube_height_/2. + source.GetSupportLength()/2.);
+      G4RotationMatrix* source_rot = new G4RotationMatrix;
+      source_rot->rotateY(180. * deg);
+      new G4PVPlacement(source_rot, source_pos, source_logic, "TH228_SOURCE_SUPPORT",
+                        port_tube_gas_logic, false, 0);
+    }
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., port_tube_tip_/2.), port_tube_gas_logic,
                       "PORT_TUBE_AIR", port_tube_logic, false, 0);

@@ -95,6 +95,8 @@ namespace nexus {
     G4int helium_mass_num_;
     G4double xe_perc_;
 
+    // Th calibration source
+    G4bool th_source_;
   };
 
   inline void Next100Vessel::SetELtoTPdistance(G4double distance){
