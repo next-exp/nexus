@@ -376,7 +376,7 @@ namespace nexus {
     // SETTING VISIBILITIES   //////////
     if (visibility_) {
       G4VisAttributes grey = nexus::TitaniumGreyAlpha();
-      G4VisAttributes yellow = nexus::Yellow();
+      G4VisAttributes yellow = nexus::YellowAlpha();
       grey  .SetForceSolid(true);
       yellow.SetForceSolid(true);
       vessel_logic       ->SetVisAttributes(grey);

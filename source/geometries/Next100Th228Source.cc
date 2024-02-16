@@ -77,9 +77,12 @@ namespace nexus {
     new G4PVPlacement(0, source_pos, source_logic, "TH228", support_logic,
                       false, 0, false);
 
-    G4VisAttributes source_col = nexus::DarkGreen();
+    G4VisAttributes source_col = nexus::Red();
     source_col.SetForceSolid(true);
     source_logic->SetVisAttributes(source_col);
+
+    G4VisAttributes support_col = nexus::DarkGreen();
+    support_logic->SetVisAttributes(support_col);
 
     return;
   }
