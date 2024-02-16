@@ -74,7 +74,8 @@ namespace nexus {
     gas_("enrichedXe"),
     helium_mass_num_(4),
     xe_perc_(100.),
-    th_source_(false)
+    th_source_(false),
+    dist_th_zpos_end_(0.*mm)
   {
     /// HOW THIS GEOMETRY IS BUILT ///
     /// The vessel is a union of several volumes, as explained in
@@ -362,7 +363,7 @@ namespace nexus {
                         "TH228_SOURCE_SUPPORT", port_tube_gas_logic, false, 0);
 
       // Vertex generation
-      port_gen_ = new SpherePointSampler(0., source.GetThRadius());
+      th_port_gen_ = new SpherePointSampler(0., source.GetThRadius());
     }
 
     new G4PVPlacement(0, G4ThreeVector(0., 0., port_tube_tip_/2.), port_tube_gas_logic,
@@ -502,8 +503,9 @@ namespace nexus {
     }
 
     else if (region == "PORT_1a"){
-      vertex = port_gen_->GenerateVertex(VOLUME);
-
+      if (th_source_) {
+        vertex = th_port_gen_->GenerateVertex(VOLUME);
+      }
       vertex = vertex.rotateX( 90. * deg);
       vertex = vertex.rotateZ(-45. * deg);
 
@@ -512,8 +514,9 @@ namespace nexus {
     }
 
     else if (region == "PORT_2a"){
-      vertex = port_gen_->GenerateVertex(VOLUME);
-
+      if (th_source_) {
+        vertex = th_port_gen_->GenerateVertex(VOLUME);
+      }
       vertex = vertex.rotateX( 90. * deg);
       vertex = vertex.rotateZ(-45. * deg);
 
@@ -522,8 +525,9 @@ namespace nexus {
     }
 
     else if (region == "PORT_1b"){
-      vertex = port_gen_->GenerateVertex(VOLUME);
-
+      if (th_source_) {
+        vertex = th_port_gen_->GenerateVertex(VOLUME);
+      }
       vertex = vertex.rotateX( 90. * deg);
       vertex = vertex.rotateZ( 45. * deg);
 
@@ -532,8 +536,9 @@ namespace nexus {
     }
 
     else if (region == "PORT_2b"){
-      vertex = port_gen_->GenerateVertex(VOLUME);
-
+      if (th_source_) {
+        vertex = th_port_gen_->GenerateVertex(VOLUME);
+      }
       vertex = vertex.rotateX( 90. * deg);
       vertex = vertex.rotateZ( 45. * deg);
 
