@@ -1,0 +1,34 @@
+## ----------------------------------------------------------------------------
+## nexus | NEXT100_cal.config.mac
+##
+## Configuration macro to simulate decays of the Th calibration source
+## from one of the vessel ports in the NEXT-100 detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+##### VERBOSITY #####
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+/process/em/verbose 0
+
+##### GEOMETRY #####
+/Geometry/Next100/elfield false
+/Geometry/Next100/max_step_size 1. mm
+/Geometry/Next100/th_source true
+
+##### GENERATOR #####
+/Generator/IonGenerator/atomic_number 81
+/Generator/IonGenerator/mass_number 208
+/Generator/IonGenerator/region PORT_2b
+
+##### PHYSICS #####
+## No full simulation
+/PhysicsList/Nexus/clustering          false
+/PhysicsList/Nexus/drift               false
+/PhysicsList/Nexus/electroluminescence false
+
+##### PERSISTENCY #####
+/nexus/persistency/output_file Next100_th_cal
