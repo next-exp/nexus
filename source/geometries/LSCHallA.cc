@@ -7,7 +7,7 @@
 // -----------------------------------------------------------------------------
 
 #include "LSCHallA.h"
-#include "CylinderPointSampler2020.h"
+#include "CylinderPointSampler.h"
 #include "MaterialsList.h"
 #include "Visibilities.h"
 
@@ -93,23 +93,23 @@ namespace nexus {
     // Basic sampling for inside of the walls (neutrons?)
     G4ThreeVector hall_centre(0., -castle_centre_y_, -castle_centre_z_);
     hallA_vertex_gen_ =
-      new CylinderPointSampler2020(lab_radius_ - 0.1 * mm,
-				   lab_radius_, (lab_length_ - 0.1 *mm) /2.,
-				   0., twopi, nullptr, hall_centre);
+      new CylinderPointSampler(lab_radius_ - 0.1 * mm,
+                               lab_radius_, (lab_length_ - 0.1 *mm) /2.,
+                               0., twopi, nullptr, hall_centre);
     hallA_outer_gen_ =
-      new CylinderPointSampler2020(lab_radius_ + lab_wall_thickn_ + 0.1 * mm,
-				   lab_radius_ + lab_wall_thickn_ + 0.2 * mm,
-				   lab_length_/2. + lab_wall_thickn_ + 0.1 * mm,
-				   0, twopi, nullptr, hall_centre);
+      new CylinderPointSampler(lab_radius_ + lab_wall_thickn_ + 0.1 * mm,
+                               lab_radius_ + lab_wall_thickn_ + 0.2 * mm,
+                               lab_length_/2. + lab_wall_thickn_ + 0.1 * mm,
+                               0, twopi, nullptr, hall_centre);
   }
 
   G4ThreeVector LSCHallA::GenerateVertex(const G4String& region) const
   {
     G4ThreeVector vertex(0., 0., 0.);
     if (region == "HALLA_INNER")
-      return hallA_vertex_gen_->GenerateVertex("INNER_SURFACE");
+      return hallA_vertex_gen_->GenerateVertex(INNER_SURF);
     else if (region == "HALLA_OUTER")
-      return hallA_outer_gen_->GenerateVertex("INNER_SURFACE");
+      return hallA_outer_gen_->GenerateVertex(INNER_SURF);
     // Unknown region
     else {
       G4Exception("[LSCHallA]", "GenerateVertex()", FatalException,

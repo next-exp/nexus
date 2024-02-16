@@ -9,7 +9,7 @@
 #include "MagBox.h"
 #include "MaterialsList.h"
 #include "IonizationSD.h"
-#include "BoxPointSampler.h"
+#include "BoxPointSamplerLegacy.h"
 #include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
@@ -145,8 +145,8 @@ namespace nexus {
 
     // Vertex Generator
     active_gen_ =
-      new BoxPointSampler(detector_size_, detector_size_, detector_size_, 0.,
-                          G4ThreeVector(0.,0.,0.) ,0);
+      new BoxPointSamplerLegacy(detector_size_, detector_size_, detector_size_, 0.,
+                                G4ThreeVector(0.,0.,0.) ,0);
 
   }
 

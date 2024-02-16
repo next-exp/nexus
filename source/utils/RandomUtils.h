@@ -36,6 +36,8 @@ namespace nexus {
     /// Check if the sampled value is out of bounds, max check only
     G4bool CheckOutOfBoundMax(G4double max, G4double val);
 
+  enum vtx_region {VOLUME, INSIDE, INNER_SURF, OUTER_SURF, CENTER};
+
 
 }
 

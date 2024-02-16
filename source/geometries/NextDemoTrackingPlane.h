@@ -20,7 +20,7 @@ class G4Navigator;
 namespace nexus {
 
   class NextDemoSiPMBoard;
-  class BoxPointSampler;
+  class BoxPointSamplerLegacy;
 
   // Geometry of the tracking plane of the Demo++ detector
   class NextDemoTrackingPlane: public GeometryBase
@@ -57,7 +57,7 @@ namespace nexus {
     G4ThreeVector      board_size_;
     std::vector<G4ThreeVector> board_pos_;
 
-    BoxPointSampler*    plate_gen_;
+    BoxPointSamplerLegacy*    plate_gen_;
 
     G4VPhysicalVolume*  mother_phys_;
 

@@ -56,7 +56,7 @@ namespace nexus {
     radius_cmd.SetRange("radius>0.");
 
     // Create a vertex generator for a sphere
-    sphere_vertex_gen_ = new SpherePointSampler(radius_, 0.);
+    sphere_vertex_gen_ = new SpherePointSampler(0., radius_);
   }
 
 
@@ -101,9 +101,9 @@ namespace nexus {
 
 
 
-  G4ThreeVector XeSphere::GenerateVertex(const G4String& region) const
+  G4ThreeVector XeSphere::GenerateVertex(const G4String& /*region*/) const
   {
-    return sphere_vertex_gen_->GenerateVertex(region);
+    return sphere_vertex_gen_->GenerateVertex(VOLUME);
   }
 
 

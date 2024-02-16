@@ -23,7 +23,7 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class CylinderPointSampler;
+  class CylinderPointSamplerLegacy;
 
   /// This is a class to place all the components of the energy plane
   class NextNewEnergyPlane: public GeometryBase
@@ -73,7 +73,7 @@ namespace nexus {
     G4bool visibility_;
 
     // Vertex generators
-    CylinderPointSampler* carrier_gen_;
+    CylinderPointSamplerLegacy* carrier_gen_;
 
     // Geometry Navigator
     G4Navigator* geom_navigator_;

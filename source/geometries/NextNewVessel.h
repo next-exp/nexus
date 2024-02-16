@@ -18,7 +18,7 @@ class G4GenericMessenger;
 namespace nexus {
 
   class CalibrationSource;
-  class CylinderPointSampler;
+  class CylinderPointSamplerLegacy;
   class SpherePointSampler;
 
   class NextNewVessel: public GeometryBase
@@ -89,13 +89,13 @@ namespace nexus {
     G4VPhysicalVolume* internal_phys_vol_;
 
     // Vertex generators
-    CylinderPointSampler* body_gen_;
+    CylinderPointSamplerLegacy* body_gen_;
     SpherePointSampler*   tracking_endcap_gen_;
     SpherePointSampler*   energy_endcap_gen_;
-    CylinderPointSampler* flange_gen_;
-    CylinderPointSampler* screw_gen_lat_;
-    CylinderPointSampler* screw_gen_up_;
-    CylinderPointSampler* screw_gen_axial_;
+    CylinderPointSamplerLegacy* flange_gen_;
+    CylinderPointSamplerLegacy* screw_gen_lat_;
+    CylinderPointSamplerLegacy* screw_gen_up_;
+    CylinderPointSamplerLegacy* screw_gen_axial_;
 
     G4double perc_endcap_vol_;
     G4double perc_tube_vol_;

@@ -9,7 +9,7 @@
 #include "NextNewMiniCastle.h"
 #include "Visibilities.h"
 #include "MaterialsList.h"
-#include "BoxPointSampler.h"
+#include "BoxPointSamplerLegacy.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4SubtractionSolid.hh>
@@ -172,14 +172,16 @@ namespace nexus {
 
     // VERTEX GENERATORS   //////////
     mini_castle_box_gen_ =
-      new BoxPointSampler(x_-2.*thickness_, y_-2.*thickness_, z_-2.*thickness_,
-			  thickness_, G4ThreeVector(0., pedestal_surf_y_ + y_/2., 0.), 0);
+      new BoxPointSamplerLegacy(x_-2.*thickness_, y_-2.*thickness_, z_-2.*thickness_,
+                                thickness_, G4ThreeVector(0., pedestal_surf_y_ + y_/2., 0.), 0);
 
     mini_castle_external_surf_gen_ =
-      new BoxPointSampler(x_-0.5*mm, y_-0.5*mm, z_-0.5*mm, 0 * mm, G4ThreeVector(0., thickness_, 0.), 0);
+      new BoxPointSamplerLegacy(x_-0.5*mm, y_-0.5*mm, z_-0.5*mm, 0 * mm,
+                                G4ThreeVector(0., thickness_, 0.), 0);
     steel_box_gen_ =
-      new BoxPointSampler(steel_x-2.*steel_thickn_, steel_y-2.*steel_thickn_, steel_z-2.*steel_thickn_,
-			  steel_thickn_, G4ThreeVector(0., pedestal_surf_y_ + y_/2., 0.), 0);
+      new BoxPointSamplerLegacy(steel_x-2.*steel_thickn_, steel_y-2.*steel_thickn_,
+                                steel_z-2.*steel_thickn_, steel_thickn_,
+                                G4ThreeVector(0., pedestal_surf_y_ + y_/2., 0.), 0);
 
 
     // Calculating some probs

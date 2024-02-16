@@ -17,7 +17,7 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class CylinderPointSampler;
+  class CylinderPointSamplerLegacy;
 
 
   /// Geometry model for the Hamamatsu R11410-10 photomultiplier
@@ -54,11 +54,11 @@ namespace nexus {
     G4double photocathode_diam_, photocathode_thickness_;
 
     // Vertex generators
-    CylinderPointSampler* front_body_gen_;
-    CylinderPointSampler* medium_body_gen_;
-    CylinderPointSampler* rear_body_gen_;
-    CylinderPointSampler* rear_cap_gen_;
-    CylinderPointSampler* front_cap_gen_;
+    CylinderPointSamplerLegacy* front_body_gen_;
+    CylinderPointSamplerLegacy* medium_body_gen_;
+    CylinderPointSamplerLegacy* rear_body_gen_;
+    CylinderPointSamplerLegacy* rear_cap_gen_;
+    CylinderPointSamplerLegacy* front_cap_gen_;
 
     G4double front_body_perc_, fr_med_body_perc_, fr_med_re_body_perc_;
     G4double front_perc_, fr_med_perc_, fr_med_re_perc_, fr_med_re_cap_perc_;

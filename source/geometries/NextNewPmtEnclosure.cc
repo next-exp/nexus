@@ -10,7 +10,7 @@
 
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
-#include "CylinderPointSampler.h"
+#include "CylinderPointSamplerLegacy.h"
 #include "Visibilities.h"
 #include "PmtR11410.h"
 
@@ -235,34 +235,34 @@ namespace nexus{
 
     // VERTEX GENERATORS   //////////
     enclosure_body_gen_ =
-      new CylinderPointSampler(enclosure_in_diam_/2.,
+      new CylinderPointSamplerLegacy(enclosure_in_diam_/2.,
                                enclosure_length_ - enclosure_endcap_thickness_,
                                enclosure_thickness_, 0.,
                                G4ThreeVector(0., 0., 0.), 0);
     enclosure_flange_gen_ =
-      new CylinderPointSampler(enclosure_in_diam_/2.,
+      new CylinderPointSamplerLegacy(enclosure_in_diam_/2.,
                                enclosure_endcap_thickness_,
                                enclosure_endcap_diam_/2.-enclosure_in_diam_/2.
                                , 0., G4ThreeVector(0., 0., - enclosure_length_/2. +  enclosure_endcap_thickness_/2.));
     enclosure_cap_gen_ =
-      new CylinderPointSampler(0., enclosure_endcap_thickness_/2.,
+      new CylinderPointSamplerLegacy(0., enclosure_endcap_thickness_/2.,
                                enclosure_in_diam_/2., 0.,
                                G4ThreeVector (0., 0., - enclosure_length_/2. + enclosure_endcap_thickness_/4.));
     enclosure_window_gen_ =
-      new CylinderPointSampler(0., enclosure_window_thickness_,
+      new CylinderPointSamplerLegacy(0., enclosure_window_thickness_,
                                enclosure_window_diam_/2., 0.,
                                G4ThreeVector (0., 0., enclosure_length_/2. - enclosure_window_thickness_/2.));
     enclosure_pad_gen_ =
-      new CylinderPointSampler(0., enclosure_pad_thickness_, enclosure_in_diam_/2., 0., G4ThreeVector(0.,0.,pad_z_pos));
+      new CylinderPointSamplerLegacy(0., enclosure_pad_thickness_, enclosure_in_diam_/2., 0., G4ThreeVector(0.,0.,pad_z_pos));
 
     pmt_base_gen_ =
-      new CylinderPointSampler(0., pmt_base_thickness_, pmt_base_diam_/2., 0., G4ThreeVector(0.,0., -pmt_base_z_ +10.*mm ));//10mm fitting???
+      new CylinderPointSamplerLegacy(0., pmt_base_thickness_, pmt_base_diam_/2., 0., G4ThreeVector(0.,0., -pmt_base_z_ +10.*mm ));//10mm fitting???
 
     enclosure_surf_gen_ =
-      new CylinderPointSampler(gas_diam/2., gas_length, 0., 0., G4ThreeVector (0., 0., gas_pos_));
+      new CylinderPointSamplerLegacy(gas_diam/2., gas_length, 0., 0., G4ThreeVector (0., 0., gas_pos_));
 
     enclosure_cap_surf_gen_ =
-      new CylinderPointSampler(0., 0.1 * micrometer, gas_diam/2., 0.,
+      new CylinderPointSamplerLegacy(0., 0.1 * micrometer, gas_diam/2., 0.,
                                G4ThreeVector (0., 0., - gas_pos_/2. + 0.05 * micrometer));
 
 

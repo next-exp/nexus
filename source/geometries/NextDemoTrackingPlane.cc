@@ -14,7 +14,7 @@
 
 #include "MaterialsList.h"
 #include "NextDemoSiPMBoard.h"
-#include "BoxPointSampler.h"
+#include "BoxPointSamplerLegacy.h"
 #include "Visibilities.h"
 
 #include <G4GenericMessenger.hh>
@@ -219,8 +219,8 @@ void NextDemoTrackingPlane::Construct()
 
 
   /// GENERATORS
-  plate_gen_ = new BoxPointSampler(plate_side_, plate_side_, plate_thickn_, 0.,
-                                   G4ThreeVector(0., 0., plate_posz), nullptr);
+  plate_gen_ = new BoxPointSamplerLegacy(plate_side_, plate_side_, plate_thickn_, 0.,
+                                         G4ThreeVector(0., 0., plate_posz), nullptr);
 
   /// VISIBILITIES
   if (visibility_) {

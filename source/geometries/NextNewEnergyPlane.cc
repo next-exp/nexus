@@ -10,7 +10,7 @@
 #include "MaterialsList.h"
 #include "OpticalMaterialProperties.h"
 #include "Visibilities.h"
-#include "CylinderPointSampler.h"
+#include "CylinderPointSamplerLegacy.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4PVPlacement.hh>
@@ -191,7 +191,7 @@ namespace nexus {
 
     // VERTEX GENERATORS   //////////
     carrier_gen_ =
-      new CylinderPointSampler(carrier_plate_diam_/2.,
+      new CylinderPointSamplerLegacy(carrier_plate_diam_/2.,
 			       carrier_plate_thickness_, 0., 0.,
 			       G4ThreeVector (0., 0., carrier_plate_z_pos));
     // G4double total_vol = carrier_plate_solid->GetCubicVolume();

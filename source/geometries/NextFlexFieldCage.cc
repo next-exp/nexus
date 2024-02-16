@@ -13,7 +13,7 @@
 #include "XenonProperties.h"
 #include "IonizationSD.h"
 #include "UniformElectricDriftField.h"
-#include "CylinderPointSampler2020.h"
+#include "CylinderPointSampler.h"
 #include "GenericPhotosensor.h"
 #include "SensorSD.h"
 #include "Visibilities.h"
@@ -428,7 +428,7 @@ void NextFlexFieldCage::BuildActive()
   active_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // Vertex generator
-  active_gen_ = new CylinderPointSampler2020(active_phys_);
+  active_gen_ = new CylinderPointSampler(active_phys_);
 
   // Limit the step size in this volume for better tracking precision
   active_logic->SetUserLimits(new G4UserLimits(1.*mm));
@@ -497,7 +497,7 @@ void NextFlexFieldCage::BuildBuffer()
   buffer_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // Vertex generator
-  buffer_gen_ = new CylinderPointSampler2020(buffer_phys_);
+  buffer_gen_ = new CylinderPointSampler(buffer_phys_);
 
   // Set the BUFFER volume as an ionization sensitive detector
   IonizationSD* buffer_sd = new IonizationSD("/NEXT_FLEX/BUFFER");
@@ -554,7 +554,7 @@ void NextFlexFieldCage::BuildELgap()
 
 
   // Vertex generator
-  //el_gap_gen_ = new CylinderPointSampler2020(el_gap_phys);
+  //el_gap_gen_ = new CylinderPointSampler(el_gap_phys);
 
   G4double el_gap_gen_disk_thickn =
     el_gap_length_ * (el_gap_gen_disk_zmax_ - el_gap_gen_disk_zmin_);
@@ -566,9 +566,9 @@ void NextFlexFieldCage::BuildELgap()
                                el_gap_gen_disk_y_,
                                el_gap_gen_disk_z);
 
-  el_gap_gen_ = new CylinderPointSampler2020(0., el_gap_gen_disk_diam_/2.,
-                                             el_gap_gen_disk_thickn/2., 0., twopi,
-                                             nullptr, el_gap_gen_pos);
+  el_gap_gen_ = new CylinderPointSampler(0., el_gap_gen_disk_diam_/2.,
+                                         el_gap_gen_disk_thickn/2., 0., twopi,
+                                         nullptr, el_gap_gen_pos);
 
 
 
@@ -678,7 +678,7 @@ void NextFlexFieldCage::BuildLightTube()
   else light_tube_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // Vertex generator
-  light_tube_gen_ = new CylinderPointSampler2020(light_tube_phys);
+  light_tube_gen_ = new CylinderPointSampler(light_tube_phys);
 
 
   /// The UV wavelength Shifter in LIGHT_TUBE ///
@@ -831,8 +831,9 @@ void NextFlexFieldCage::BuildFibers()
   if (fiber_claddings_ == 0) out_logic_volume = core_logic;
 
   // Vertex generator
-  fiber_gen_ = new CylinderPointSampler2020(inner_rad, outer_rad, fiber_length/2., 0., twopi, nullptr,
-                                            G4ThreeVector(0., 0., fiber_iniZ_ + fiber_length/2.));
+  fiber_gen_ =
+    new CylinderPointSampler(inner_rad, outer_rad, fiber_length/2., 0., twopi,
+                             nullptr, G4ThreeVector(0., 0., fiber_iniZ_ + fiber_length/2.));
 
 
   /// The UV wavelength Shifter in FIBERS ///
@@ -1010,19 +1011,19 @@ G4ThreeVector NextFlexFieldCage::GenerateVertex(const G4String& region) const
   G4ThreeVector vertex;
 
   if (region == "ACTIVE") {
-    vertex = active_gen_->GenerateVertex("VOLUME");
+    vertex = active_gen_->GenerateVertex(VOLUME);
   }
   else if (region == "BUFFER") {
-    vertex = buffer_gen_->GenerateVertex("VOLUME");
+    vertex = buffer_gen_->GenerateVertex(VOLUME);
   }
   else if (region == "EL_GAP") {
-    vertex = el_gap_gen_->GenerateVertex("VOLUME");
+    vertex = el_gap_gen_->GenerateVertex(VOLUME);
   }
   else if (region == "LIGHT_TUBE") {
-    vertex = light_tube_gen_->GenerateVertex("VOLUME");
+    vertex = light_tube_gen_->GenerateVertex(VOLUME);
   }
   else if (region == "FIBER_CORE") {
-    if (fc_with_fibers_) vertex = fiber_gen_->GenerateVertex("VOLUME");
+    if (fc_with_fibers_) vertex = fiber_gen_->GenerateVertex(VOLUME);
     else
       G4Exception("[NextFlexFieldCage]", "GenerateVertex()", FatalException,
               "Trying to generate Vertices in NON-existing fibers");

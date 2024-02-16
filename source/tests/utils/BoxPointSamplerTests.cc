@@ -1,4 +1,6 @@
-#include <BoxPointSampler.h>
+#include "BoxPointSampler.h"
+#include "RandomUtils.h"
+
 #include <Randomize.hh>
 
 #include <cmath>
@@ -7,7 +9,7 @@
 
 TEST_CASE("BoxPointSampler") {
 
-  // This tests checks that the BoxPointSamplerr class generates vertices
+  // This tests checks that the BoxPointSampler class generates vertices
   // in correct places. It does not test uniformity, for the moment.
 
   // The smaller dimension must be larger than twice the thickness
@@ -20,18 +22,15 @@ TEST_CASE("BoxPointSampler") {
   for (G4int i=0; i<20; i++) {
 
     auto thick = G4UniformRand();
-    auto sampler = nexus::BoxPointSampler(a, b, c, thick);
-    auto vertex  = sampler.GenerateVertex("WHOLE_VOL");
+    auto sampler = nexus::BoxPointSampler(a/2., b/2., c/2., thick);
+    auto vertex  = sampler.GenerateVertex(nexus::VOLUME);
     auto x = vertex.x();
     auto y = vertex.y();
     auto z = vertex.z();
 
-    REQUIRE(x >= -a/2 - thick);
-    REQUIRE(x <=  a/2 + thick);
-    REQUIRE(y >= -b/2 - thick);
-    REQUIRE(y <=  b/2 + thick);
-    REQUIRE(z >= -c/2 - thick);
-    REQUIRE(z <=  c/2 + thick);
+    REQUIRE(std::abs(x) <=  a/2 + thick);
+    REQUIRE(std::abs(y) <=  b/2 + thick);
+    REQUIRE(std::abs(z) <=  c/2 + thick);
 
     if ((std::abs(x) < a/2) && (std::abs(y) < b/2)) {
       REQUIRE(std::abs(z) >= c/2);
@@ -49,6 +48,20 @@ TEST_CASE("BoxPointSampler") {
     }
   }
 
+  for (G4int i=0; i<20; i++) {
+
+    auto sampler = nexus::BoxPointSampler(a/2., b/2., c/2., 0.);
+    auto vertex  = sampler.GenerateVertex(nexus::INSIDE);
+    auto x = vertex.x();
+    auto y = vertex.y();
+    auto z = vertex.z();
+
+    REQUIRE(std::abs(x) <= a/2);
+    REQUIRE(std::abs(y) <= b/2);
+    REQUIRE(std::abs(z) <= c/2);
+
+  }
+
 }
 
 
@@ -60,7 +73,7 @@ TEST_CASE("Expected intersect") {
   // the faces of the box.
   auto inner_dim = 100;
   auto thickness =  10;
-  auto sampler   = nexus::BoxPointSampler(inner_dim, inner_dim, inner_dim, thickness);
+  auto sampler   = nexus::BoxPointSampler(inner_dim/2., inner_dim/2., inner_dim/2., thickness);
   auto origin    = G4ThreeVector(0., 0., 0.);
 
   G4double xdir[] = {1., 0., 0., -1., 0., 0.};
@@ -92,10 +105,10 @@ TEST_CASE("Box Arbitrary valid intersect") {
   rotation->rotateY(CLHEP::twopi * G4UniformRand());
   rotation->rotateZ(CLHEP::twopi * G4UniformRand());
   
-  auto sampler = nexus::BoxPointSampler(inner_dim, inner_dim, inner_dim,
+  auto sampler = nexus::BoxPointSampler(inner_dim/2., inner_dim/2., inner_dim/2.,
 					thickness, origin, rotation);
   
-  auto point = sampler.GenerateVertex("INSIDE");
+  auto point = sampler.GenerateVertex(nexus::INSIDE);
   auto dir   = G4ThreeVector(G4UniformRand(),
 			     G4UniformRand(),
 			     G4UniformRand()).unit();

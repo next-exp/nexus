@@ -13,7 +13,6 @@
 #include "NextDemoTrackingPlane.h"
 #include "NextDemoEnergyPlane.h"
 #include "MaterialsList.h"
-#include "CylinderPointSampler2020.h"
 
 #include <G4SystemOfUnits.hh>
 #include <G4PhysicalConstants.hh>

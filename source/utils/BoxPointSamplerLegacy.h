@@ -1,40 +1,37 @@
 // ----------------------------------------------------------------------------
-// nexus | BoxPointSampler.h
+// nexus | BoxPointSamplerLegacy.h
 //
 // This class is a sampler of random uniform points in a box-shaped volume.
+// It is an obsolete class, kept for legacy.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef BOX_POINT_SAMPLER_H
-#define BOX_POINT_SAMPLER_H
-
-#include "RandomUtils.h"
+#ifndef BOX_POINT_SAMPLER_LEGACY_H
+#define BOX_POINT_SAMPLER_LEGACY_H
 
 #include <G4ThreeVector.hh>
 #include <G4RotationMatrix.hh>
 
-class G4VPhysicalVolume;
-
 
 namespace nexus {
-  
-  class BoxPointSampler
+
+  /// Sampler of random uniform points in a box-shaped volume
+
+  class BoxPointSamplerLegacy
   {
   public:
     /// Constructor
-    BoxPointSampler(G4double half_inner_x, G4double half_inner_y,
-                    G4double half_inner_z, G4double thickness=0,
+    BoxPointSamplerLegacy(G4double inner_x, G4double inner_y, G4double inner_z,
+                    G4double thickness,
                     G4ThreeVector origin=G4ThreeVector(0.,0.,0.),
                     G4RotationMatrix* rotation=0);
 
-    BoxPointSampler (G4VPhysicalVolume* physVolume);
-
     /// Destructor
-    ~BoxPointSampler();
+    ~BoxPointSamplerLegacy();
 
     /// Return vertex within region <region> of the chamber
-    G4ThreeVector GenerateVertex(const vtx_region& region);
+    G4ThreeVector GenerateVertex(const G4String& region);
 
     /// Return the intersect point along dir
     G4ThreeVector GetIntersect(const G4ThreeVector& point,
@@ -46,7 +43,7 @@ namespace nexus {
     void InvertRotationAndTranslation(G4ThreeVector& vec, bool translate=true);
 
   private:
-    G4double half_inner_x_, half_inner_y_, half_inner_z_; ///< Internal dimensions
+    G4double inner_x_, inner_y_, inner_z_; ///< Internal dimensions
     G4double outer_x_, outer_y_, outer_z_; ///< External dimensions
     G4double thickness_; ///< Walls thickness
 

@@ -22,7 +22,7 @@ namespace nexus {
   class NextFlexFieldCage;
   class NextFlexEnergyPlane;
   class NextFlexTrackingPlane;
-  class CylinderPointSampler2020;
+  class CylinderPointSampler;
 
   // This is a geometry placer that encloses:
   // The FIELD_CAGE     (Including ACTIVE, BUFFER, EL_GAP & LIGHT_TUBE)
@@ -92,7 +92,7 @@ namespace nexus {
     NextFlexTrackingPlane* tracking_plane_;
 
     // Vertex generators
-    CylinderPointSampler2020* copper_gen_;
+    CylinderPointSampler* copper_gen_;
 
     // AD-HOC vertex
     G4ThreeVector specific_vertex_;

@@ -11,8 +11,8 @@
 #include "MaterialsList.h"
 #include "IonizationSD.h"
 #include "Visibilities.h"
-#include "CylinderPointSampler.h"
-#include "MuonsPointSampler.h"
+#include "CylinderPointSamplerLegacy.h"
+#include "BoxPointSamplerLegacy.h"
 #include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>
@@ -153,16 +153,17 @@ G4LogicalVolume* NextTonScale::ConstructWaterTank(G4LogicalVolume* mother_logic_
 
   //////////////////////////////////////////////////////////
 
-  muon_gen_ = new MuonsPointSampler(tank_size_/2. + 50. * cm,
-                                    tank_size_/2. + 1. * cm,
-                                    tank_size_/2. + 50. * cm);
+  muon_gen_ =
+    new BoxPointSamplerLegacy(tank_size_ + 100. * cm, 0.,
+                              tank_size_ + 100. * cm, 0.,
+                              G4ThreeVector(0., tank_size_/2. + 1. * cm, 0.));
 
   // Primarily for neutron generation
-  external_gen_ = new CylinderPointSampler(tank_size_/2. + 1 * cm,
-                                           tank_size_ + 1 * cm,
-                                           1 * mm, 1 * mm,
-                                           G4ThreeVector(0.,0.,0.),
-                                           tank_rotation);
+  external_gen_ = new CylinderPointSamplerLegacy(tank_size_/2. + 1 * cm,
+                                                 tank_size_ + 1 * cm,
+                                                 1 * mm, 1 * mm,
+                                                 G4ThreeVector(0.,0.,0.),
+                                                 tank_rotation);
 
   //////////////////////////////////////////////////////////
 
@@ -215,7 +216,7 @@ G4LogicalVolume* NextTonScale::ConstructVesselAndICS(G4LogicalVolume* mother_log
                     gas_name, vessel_logic_vol, false, 0, true);
 
   vessel_gen_ =
-    new CylinderPointSampler(gas_diam/2., gas_length, vessel_thickn_, vessel_thickn_);
+    new CylinderPointSamplerLegacy(gas_diam/2., gas_length, vessel_thickn_, vessel_thickn_);
 
   // INNER COPPER SHIELDING ////////////////////////////////
   // Copper cylinder that shields the active volume of the detector
@@ -250,7 +251,7 @@ G4LogicalVolume* NextTonScale::ConstructVesselAndICS(G4LogicalVolume* mother_log
 
 
   // Vertex generator for ICS
-  ics_gen_ = new CylinderPointSampler(ics_diam/2. - ics_thickn_,
+  ics_gen_ = new CylinderPointSamplerLegacy(ics_diam/2. - ics_thickn_,
                                       ics_length - 2*ics_thickn_,
                                       ics_thickn_, ics_thickn_);
 
@@ -258,7 +259,7 @@ G4LogicalVolume* NextTonScale::ConstructVesselAndICS(G4LogicalVolume* mother_log
   // a virtual volume placed at Z next to the outer plane of the ICS endcap.
   // It is used to generate backgound associated with the electronics of readout planes.
   G4double outer_readout_thickness = 0.1 * mm;
-  outer_plane_gen_ = new CylinderPointSampler(0., outer_readout_thickness,
+  outer_plane_gen_ = new CylinderPointSamplerLegacy(0., outer_readout_thickness,
     ics_diam/2., 0., G4ThreeVector(0., 0., (ics_length/2.+outer_readout_thickness/2.)));
 
   //////////////////////////////////////////////////////////
@@ -386,26 +387,18 @@ G4LogicalVolume* NextTonScale::ConstructFieldCageAndReadout(G4LogicalVolume* mot
 
   // VERTEX GENERATORS /////////////////////////////////////
 
-  field_cage_gen_ = new CylinderPointSampler(active_diam_/2.,
-                                             fcage_length,
-                                             fcage_thickn_,
-                                             0.);
+  field_cage_gen_ =
+    new CylinderPointSamplerLegacy(active_diam_/2., fcage_length, fcage_thickn_, 0.);
 
-  active_gen_ = new CylinderPointSampler(0.,
-                                         active_length_,
-                                         active_diam_/2.,
-                                         0.);
+  active_gen_ =
+    new CylinderPointSamplerLegacy(0., active_length_, active_diam_/2., 0.);
 
-  readout_plane_gen_ = new CylinderPointSampler(0.,
-                                                readout_thickn,
-                                                readout_diam/2.,
-                                                0.,
-                                                G4ThreeVector(0.,0.,readout_posZ));
+  readout_plane_gen_ =
+    new CylinderPointSamplerLegacy(0., readout_thickn, readout_diam/2., 0.,
+                                   G4ThreeVector(0.,0.,readout_posZ));
 
-  cathode_gen_ = new CylinderPointSampler(0.,
-                                          cathode_thickn_,
-                                          cathode_diam/2.,
-                                          cathode_thickn_/2.);
+  cathode_gen_ =
+    new CylinderPointSamplerLegacy(0., cathode_thickn_, cathode_diam/2., cathode_thickn_/2.);
 
   //////////////////////////////////////////////////////////
 
@@ -442,7 +435,7 @@ G4ThreeVector NextTonScale::GenerateVertex(const G4String& region) const
     vertex = vessel_gen_->GenerateVertex("WHOLE_VOL");
   }
   else if (region == "MUONS") {
-    vertex = muon_gen_->GenerateVertex();
+    vertex = muon_gen_->GenerateVertex("INSIDE");
   }
   else if (region == "EXTERNAL") {
     vertex = external_gen_->GenerateVertex("WHOLE_VOL");

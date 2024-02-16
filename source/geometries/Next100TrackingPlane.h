@@ -20,7 +20,7 @@ class G4Navigator;
 namespace nexus {
 
   class Next100SiPMBoard;
-  class CylinderPointSampler2020;
+  class CylinderPointSampler;
   class BoxPointSampler;
 
   // Geometry of the tracking plane of the NEXT-100 detector
@@ -59,7 +59,7 @@ namespace nexus {
 
     Next100SiPMBoard* sipm_board_geom_;
 
-    CylinderPointSampler2020* copper_plate_gen_;
+    CylinderPointSampler* copper_plate_gen_;
     BoxPointSampler* plug_gen_;
 
     G4VPhysicalVolume* mpv_; // Pointer to mother's physical volume

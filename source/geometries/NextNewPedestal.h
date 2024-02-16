@@ -10,13 +10,14 @@
 #define NEXTNEW_PEDESTAL_H
 
 #include "GeometryBase.h"
-#include "BoxPointSampler.h"
 
 #include <G4Navigator.hh>
 
 class G4GenericMessenger;
 
 namespace nexus {
+
+  class BoxPointSamplerLegacy;
 
   class NextNewPedestal: public GeometryBase
   {
@@ -50,7 +51,7 @@ namespace nexus {
     G4bool visibility_;
 
     // Vertex generators
-    BoxPointSampler* table_gen_;
+    BoxPointSamplerLegacy* table_gen_;
 
     // Messenger for the definition of control commands
     G4GenericMessenger* msg_;

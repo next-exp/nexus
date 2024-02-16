@@ -11,7 +11,7 @@
 
 #include "SiPMSensl.h"
 #include "OpticalMaterialProperties.h"
-#include "BoxPointSampler.h"
+#include "BoxPointSamplerLegacy.h"
 #include "Visibilities.h"
 
 #include <G4Box.hh>
@@ -196,8 +196,8 @@ namespace nexus {
 
     // VERTEX GENERATOR
     double vertex_displ = db_case_z/2. - board_thickness/2.;
-    dice_gen_ = new BoxPointSampler(db_x, db_y, db_z, 0.,
-                                    G4ThreeVector(0., 0., vertex_displ), 0);
+    dice_gen_ = new BoxPointSamplerLegacy(db_x, db_y, db_z, 0.,
+                                          G4ThreeVector(0., 0., vertex_displ), 0);
   }
 
 

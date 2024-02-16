@@ -20,7 +20,7 @@ class G4Navigator;
 
 namespace nexus {
 
-  class CylinderPointSampler2020;
+  class CylinderPointSampler;
 
 
   class Next100FieldCage: public GeometryBase
@@ -95,17 +95,17 @@ namespace nexus {
 
 
     // Vertex generators
-    CylinderPointSampler2020* active_gen_;
-    CylinderPointSampler2020* buffer_gen_;
-    CylinderPointSampler2020* teflon_gen_;
-    CylinderPointSampler2020* xenon_gen_;
-    CylinderPointSampler2020* el_gap_gen_;
-    CylinderPointSampler2020* hdpe_gen_;
-    CylinderPointSampler2020* ring_gen_;
-    CylinderPointSampler2020* cathode_gen_;
-    CylinderPointSampler2020* gate_gen_;
-    CylinderPointSampler2020* anode_gen_;
-    CylinderPointSampler2020* holder_gen_;
+    CylinderPointSampler* active_gen_;
+    CylinderPointSampler* buffer_gen_;
+    CylinderPointSampler* teflon_gen_;
+    CylinderPointSampler* xenon_gen_;
+    CylinderPointSampler* el_gap_gen_;
+    CylinderPointSampler* hdpe_gen_;
+    CylinderPointSampler* ring_gen_;
+    CylinderPointSampler* cathode_gen_;
+    CylinderPointSampler* gate_gen_;
+    CylinderPointSampler* anode_gen_;
+    CylinderPointSampler* holder_gen_;
 
     // Geometry Navigator
     G4Navigator* geom_navigator_;

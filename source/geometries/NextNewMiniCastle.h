@@ -18,7 +18,7 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class BoxPointSampler;
+  class BoxPointSamplerLegacy;
 
   class NextNewMiniCastle: public GeometryBase
   {
@@ -52,9 +52,9 @@ namespace nexus {
     G4double steel_thickn_;
 
     // Vertex generators
-    BoxPointSampler* mini_castle_box_gen_;
-    BoxPointSampler* mini_castle_external_surf_gen_;
-    BoxPointSampler* steel_box_gen_;
+    BoxPointSamplerLegacy* mini_castle_box_gen_;
+    BoxPointSamplerLegacy* mini_castle_external_surf_gen_;
+    BoxPointSamplerLegacy* steel_box_gen_;
 
     // Geometry Navigator
     G4Navigator* geom_navigator_;

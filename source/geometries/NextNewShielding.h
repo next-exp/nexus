@@ -19,7 +19,7 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class BoxPointSampler;
+  class BoxPointSamplerLegacy;
 
   class NextNewShielding: public GeometryBase
   {
@@ -58,16 +58,16 @@ namespace nexus {
     G4bool visibility_;
 
     // Vertex generators
-    BoxPointSampler* lead_gen_;
-    BoxPointSampler* external_gen_;
-    BoxPointSampler* steel_gen_;
-    BoxPointSampler* inner_air_gen_;
-    BoxPointSampler* lat_roof_gen_;
-    BoxPointSampler* front_roof_gen_;
-    BoxPointSampler* struct_x_gen_;
-    BoxPointSampler* struct_z_gen_;
-    BoxPointSampler* lat_beam_gen_;
-    BoxPointSampler* front_beam_gen_;
+    BoxPointSamplerLegacy* lead_gen_;
+    BoxPointSamplerLegacy* external_gen_;
+    BoxPointSamplerLegacy* steel_gen_;
+    BoxPointSamplerLegacy* inner_air_gen_;
+    BoxPointSamplerLegacy* lat_roof_gen_;
+    BoxPointSamplerLegacy* front_roof_gen_;
+    BoxPointSamplerLegacy* struct_x_gen_;
+    BoxPointSamplerLegacy* struct_z_gen_;
+    BoxPointSamplerLegacy* lat_beam_gen_;
+    BoxPointSamplerLegacy* front_beam_gen_;
 
     G4double perc_roof_vol_;
     G4double perc_front_roof_vol_;

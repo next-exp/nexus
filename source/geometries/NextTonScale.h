@@ -14,8 +14,8 @@
 class G4GenericMessenger;
 class G4Material;
 
-namespace nexus { class MuonsPointSampler; }
-namespace nexus { class CylinderPointSampler; }
+namespace nexus { class BoxPointSamplerLegacy; }
+namespace nexus { class CylinderPointSamplerLegacy; }
 
 
 namespace nexus {
@@ -61,16 +61,16 @@ namespace nexus {
 
     G4ThreeVector specific_vertex_;
 
-    CylinderPointSampler* active_gen_;
-    CylinderPointSampler* field_cage_gen_;
-    CylinderPointSampler* cathode_gen_;
-    CylinderPointSampler* ics_gen_;
-    CylinderPointSampler* vessel_gen_;
-    CylinderPointSampler* readout_plane_gen_;
-    CylinderPointSampler* outer_plane_gen_;
-    CylinderPointSampler* external_gen_;
+    CylinderPointSamplerLegacy* active_gen_;
+    CylinderPointSamplerLegacy* field_cage_gen_;
+    CylinderPointSamplerLegacy* cathode_gen_;
+    CylinderPointSamplerLegacy* ics_gen_;
+    CylinderPointSamplerLegacy* vessel_gen_;
+    CylinderPointSamplerLegacy* readout_plane_gen_;
+    CylinderPointSamplerLegacy* outer_plane_gen_;
+    CylinderPointSamplerLegacy* external_gen_;
 
-    MuonsPointSampler* muon_gen_;
+    BoxPointSamplerLegacy* muon_gen_;
   };
 
 } // namespace nexus

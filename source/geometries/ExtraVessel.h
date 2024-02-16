@@ -18,7 +18,7 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class CylinderPointSampler;
+  class CylinderPointSamplerLegacy;
 
   class ExtraVessel: public GeometryBase
   {
@@ -42,7 +42,7 @@ namespace nexus {
     G4double diameter_, thickness_;
 
     // Vertex generators
-    CylinderPointSampler* generic_gen_;
+    CylinderPointSamplerLegacy* generic_gen_;
 
     G4bool visibility_;
 

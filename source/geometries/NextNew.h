@@ -19,8 +19,8 @@ namespace nexus {class NextNewMiniCastle; }
 namespace nexus {class NextNewVessel; }
 namespace nexus {class NextNewIcs; }
 namespace nexus {class NextNewInnerElements; }
-namespace nexus {class BoxPointSampler;}
-namespace nexus {class CylinderPointSampler;}
+namespace nexus {class BoxPointSamplerLegacy;}
+namespace nexus {class CylinderPointSamplerLegacy;}
 namespace nexus {class CalibrationSource;}
 namespace nexus {class NaIScintillator;}
 namespace nexus {class SurroundingAir;}
@@ -82,12 +82,12 @@ namespace nexus {
     LeadCollimator* coll_;
     ExtraVessel* extra_;
 
-    BoxPointSampler* lab_gen_; ///< Vertex generator
-    CylinderPointSampler* lat_source_gen_;
-    CylinderPointSampler* axial_source_gen_;
-    CylinderPointSampler* source_gen_up_;
-    CylinderPointSampler* source_gen_lat_;
-    CylinderPointSampler* source_gen_random_;
+    BoxPointSamplerLegacy* lab_gen_; ///< Vertex generator
+    CylinderPointSamplerLegacy* lat_source_gen_;
+    CylinderPointSamplerLegacy* axial_source_gen_;
+    CylinderPointSamplerLegacy* source_gen_up_;
+    CylinderPointSamplerLegacy* source_gen_lat_;
+    CylinderPointSamplerLegacy* source_gen_random_;
 
     // Rotation around Y and displacement of the whole geometry in the g4 system of reference
     G4ThreeVector displ_;

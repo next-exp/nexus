@@ -21,7 +21,7 @@ class G4VisAttributes;
 
 namespace nexus {
 
-    class CylinderPointSampler;
+    class CylinderPointSamplerLegacy;
 
 
   class NextNewFieldCage: public GeometryBase
@@ -114,15 +114,15 @@ namespace nexus {
     G4bool elfield_;
 
     // Vertex generators
-    CylinderPointSampler* drift_tube_gen_;
-    CylinderPointSampler* hdpe_tube_gen_;
-    CylinderPointSampler* xenon_gen_;
-    CylinderPointSampler* buffer_gen_;
-    CylinderPointSampler* active_gen_;
-    CylinderPointSampler* el_gap_gen_;
-    CylinderPointSampler* anode_quartz_gen_;
-    CylinderPointSampler* cathode_gen_;
-    CylinderPointSampler* tracking_frames_gen_;
+    CylinderPointSamplerLegacy* drift_tube_gen_;
+    CylinderPointSamplerLegacy* hdpe_tube_gen_;
+    CylinderPointSamplerLegacy* xenon_gen_;
+    CylinderPointSamplerLegacy* buffer_gen_;
+    CylinderPointSamplerLegacy* active_gen_;
+    CylinderPointSamplerLegacy* el_gap_gen_;
+    CylinderPointSamplerLegacy* anode_quartz_gen_;
+    CylinderPointSamplerLegacy* cathode_gen_;
+    CylinderPointSamplerLegacy* tracking_frames_gen_;
 
     // Messenger for the definition of control commands
     G4GenericMessenger* msg_;

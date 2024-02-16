@@ -280,7 +280,7 @@ void Next100SiPMBoard::Construct()
 
   // VERTEX GENERATOR ////////////////////////////////////////////////
 
-  vtxgen_ = new BoxPointSampler(size_, size_, board_thickness_+mask_thickness_,
+  vtxgen_ = new BoxPointSampler(size_/2., size_/2., (board_thickness_+mask_thickness_)/2.,
                                 0., G4ThreeVector(0., 0., 0));
 
   // VISIBILITIES ////////////////////////////////////////////////////
@@ -303,5 +303,5 @@ void Next100SiPMBoard::Construct()
 G4ThreeVector Next100SiPMBoard::GenerateVertex(const G4String&) const
 {
   // Only one generation region available at the moment
-  return vtxgen_->GenerateVertex("INSIDE");
+  return vtxgen_->GenerateVertex(INSIDE);
 }

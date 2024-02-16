@@ -14,7 +14,7 @@
 #include "OpticalMaterialProperties.h"
 #include "UniformElectricDriftField.h"
 #include "XenonProperties.h"
-#include "CylinderPointSampler2020.h"
+#include "CylinderPointSampler.h"
 
 #include <G4Navigator.hh>
 #include <G4SystemOfUnits.hh>
@@ -338,12 +338,11 @@ void Next100FieldCage::BuildActive()
              gate_int_diam_/2. - GetCoordOrigin().y());
 
   active_gen_radius_ = std::max(active_gen_radius_, active_ext_radius_);
-  active_gen_ = new CylinderPointSampler2020(0., active_gen_radius_,
-                                             active_length_/2.,
-                                             0., twopi, nullptr,
-                                             G4ThreeVector(GetCoordOrigin().x(),
-                                                           GetCoordOrigin().y(),
-                                                           active_zpos_));
+  active_gen_ = new CylinderPointSampler(0., active_gen_radius_,
+                                         active_length_/2., 0., twopi, nullptr,
+                                         G4ThreeVector(GetCoordOrigin().x(),
+                                                       GetCoordOrigin().y(),
+                                                       active_zpos_));
 
   /// Visibilities
   active_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
@@ -391,11 +390,11 @@ void Next100FieldCage::BuildCathode()
 
   // Cathode ring vertex generator
   cathode_gen_ =
-    new CylinderPointSampler2020(cathode_int_diam_/2.,cathode_ext_diam_/2.,
-                                 cathode_thickn_/2.,0., twopi, nullptr,
-                                 G4ThreeVector(GetCoordOrigin().x(),
-                                               GetCoordOrigin().y(),
-                                               cathode_zpos_));
+    new CylinderPointSampler(cathode_int_diam_/2.,cathode_ext_diam_/2.,
+                             cathode_thickn_/2.,0., twopi, nullptr,
+                             G4ThreeVector(GetCoordOrigin().x(),
+                                           GetCoordOrigin().y(),
+                                           cathode_zpos_));
 
 
   /// Visibilities
@@ -463,11 +462,11 @@ void Next100FieldCage::BuildBuffer()
 
   /// Vertex generator
   buffer_gen_ =
-    new CylinderPointSampler2020(0., active_ext_radius_, buffer_length_/2.,
-                                 0., twopi, nullptr,
-                                 G4ThreeVector(GetCoordOrigin().x(),
-                                               GetCoordOrigin().y(),
-                                               buffer_zpos));
+    new CylinderPointSampler(0., active_ext_radius_, buffer_length_/2.,
+                             0., twopi, nullptr,
+                             G4ThreeVector(GetCoordOrigin().x(),
+                                           GetCoordOrigin().y(),
+                                           buffer_zpos));
 
   /// Vertex generator for all xenon
   G4double xenon_length = el_gap_length_ + active_length_ + grid_thickn_ + buffer_length_ ;
@@ -476,11 +475,11 @@ void Next100FieldCage::BuildBuffer()
                           grid_thickn_ * cathode_zpos_ +
                           buffer_length_ * buffer_zpos) / xenon_length;
   xenon_gen_ =
-    new CylinderPointSampler2020(0., active_gen_radius_, xenon_length,
-                                 0., twopi, nullptr,
-                                 G4ThreeVector(GetCoordOrigin().x(),
-                                               GetCoordOrigin().y(),
-                                               xenon_zpos));
+    new CylinderPointSampler(0., active_gen_radius_, xenon_length,
+                             0., twopi, nullptr,
+                             G4ThreeVector(GetCoordOrigin().x(),
+                                           GetCoordOrigin().y(),
+                                           xenon_zpos));
 
   /// Visibilities
   buffer_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
@@ -583,20 +582,20 @@ void Next100FieldCage::BuildELRegion()
   G4ThreeVector el_gap_gen_pos(el_gap_gen_disk_x_, el_gap_gen_disk_y_, el_gap_gen_disk_z);
 
   el_gap_gen_ =
-    new CylinderPointSampler2020(0., el_gap_gen_disk_diam_/2.,
-                                 el_gap_gen_disk_thickn/2., 0., twopi,
-                                 nullptr, el_gap_gen_pos);
+    new CylinderPointSampler(0., el_gap_gen_disk_diam_/2.,
+                             el_gap_gen_disk_thickn/2., 0., twopi,
+                             nullptr, el_gap_gen_pos);
   
   // Gate ring vertex generator
   gate_gen_ =
-    new CylinderPointSampler2020(gate_int_diam_/2., gate_ext_diam_/2.,
-                                 gate_ring_thickn_/2., 0., twopi, nullptr,
-                                 G4ThreeVector(0., 0., gate_zpos_));
+    new CylinderPointSampler(gate_int_diam_/2., gate_ext_diam_/2.,
+                             gate_ring_thickn_/2., 0., twopi, nullptr,
+                             G4ThreeVector(0., 0., gate_zpos_));
   // Anode ring vertex generator
   anode_gen_ =
-    new CylinderPointSampler2020(gate_int_diam_/2., gate_ext_diam_/2.,
-                                 anode_ring_thickn/2., 0., twopi, nullptr,
-                                 G4ThreeVector(0., 0., anode_sim_zpos));
+    new CylinderPointSampler(gate_int_diam_/2., gate_ext_diam_/2.,
+                             anode_ring_thickn/2., 0., twopi, nullptr,
+                             G4ThreeVector(0., 0., anode_sim_zpos));
 
 
   /// Visibilities
@@ -712,11 +711,11 @@ void Next100FieldCage::BuildLightTube()
   G4double teflon_ext_radius = (active_diam_ + 2.*teflon_thickn_)/2. / cos(pi/n_panels_);
   G4double teflon_zpos = GetCoordOrigin().z() + gate_sapphire_wdw_dist_/2.;
   teflon_gen_ =
-    new CylinderPointSampler2020(active_diam_/2., teflon_ext_radius,
-                                 gate_sapphire_wdw_dist_/2., 0., twopi,
-                                 nullptr, G4ThreeVector (GetCoordOrigin().x(),
-                                                         GetCoordOrigin().y(),
-                                                         teflon_zpos));
+    new CylinderPointSampler(active_diam_/2., teflon_ext_radius,
+                             gate_sapphire_wdw_dist_/2., 0., twopi,
+                             nullptr, G4ThreeVector (GetCoordOrigin().x(),
+                                                     GetCoordOrigin().y(),
+                                                     teflon_zpos));
 
   // Visibilities
   if (visibility_) {
@@ -754,11 +753,11 @@ void Next100FieldCage::BuildFieldCage()
                     hdpe_tube_logic, "HDPE_TUBE", mother_logic_, false, 0, false);
 
   hdpe_gen_ =
-    new CylinderPointSampler2020(hdpe_tube_int_diam_/2., hdpe_tube_ext_diam_/2.,
-                                 hdpe_length_/2.,0., twopi, nullptr,
-                                 G4ThreeVector(GetCoordOrigin().x(),
-                                               GetCoordOrigin().y(),
-                                               hdpe_tube_z_pos));
+    new CylinderPointSampler(hdpe_tube_int_diam_/2., hdpe_tube_ext_diam_/2.,
+                             hdpe_length_/2.,0., twopi, nullptr,
+                             G4ThreeVector(GetCoordOrigin().x(),
+                                           GetCoordOrigin().y(),
+                                           hdpe_tube_z_pos));
 
 
   // Buffer field rings
@@ -796,11 +795,11 @@ void Next100FieldCage::BuildFieldCage()
   G4double ring_gen_length = first_ring_buff_z_pos + ring_thickn_/2. - (posz - ring_thickn_/2.);
   G4double ring_gen_zpos = first_ring_buff_z_pos + ring_thickn_/2. - ring_gen_length/2.;
   ring_gen_ =
-    new CylinderPointSampler2020(ring_int_diam_/2., ring_ext_diam_/2.,
-                                 ring_gen_length/2., 0., twopi, nullptr,
-                                 G4ThreeVector(GetCoordOrigin().x(),
-                                               GetCoordOrigin().y(),
-                                               ring_gen_zpos));
+    new CylinderPointSampler(ring_int_diam_/2., ring_ext_diam_/2.,
+                             ring_gen_length/2., 0., twopi, nullptr,
+                             G4ThreeVector(GetCoordOrigin().x(),
+                                           GetCoordOrigin().y(),
+                                           ring_gen_zpos));
 
   // Ring holders (a.k.a. staves)
 
@@ -839,14 +838,14 @@ void Next100FieldCage::BuildFieldCage()
   G4double stave_gen_length =
     teflon_buffer_zpos_ - GetCoordOrigin().z() + teflon_buffer_length_/2;
   holder_gen_ =
-    new CylinderPointSampler2020(active_diam_/2. + teflon_thickn_ ,
-                                 active_diam_/2. + teflon_thickn_ +
-                                 holder_long_y + holder_short_y,
-                                 stave_gen_length/2., 0., twopi, nullptr,
-                                 G4ThreeVector(GetCoordOrigin().x(),
-                                               GetCoordOrigin().y(),
-                                               GetCoordOrigin().z() +
-                                               stave_gen_length/2.));
+    new CylinderPointSampler(active_diam_/2. + teflon_thickn_ ,
+                             active_diam_/2. + teflon_thickn_ +
+                             holder_long_y + holder_short_y,
+                             stave_gen_length/2., 0., twopi, nullptr,
+                             G4ThreeVector(GetCoordOrigin().x(),
+                                           GetCoordOrigin().y(),
+                                           GetCoordOrigin().z() +
+                                           stave_gen_length/2.));
 
    /// Visibilities
   if (visibility_) {
@@ -895,7 +894,7 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
   else if (region == "ACTIVE") {
     G4VPhysicalVolume *VertexVolume;
     do {
-      vertex = active_gen_->GenerateVertex("VOLUME");
+      vertex = active_gen_->GenerateVertex(VOLUME);
       G4ThreeVector glob_vtx(vertex);
       glob_vtx = glob_vtx - GetCoordOrigin();
       VertexVolume =
@@ -904,13 +903,13 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
   }
 
   else if (region == "CATHODE_RING") {
-    vertex = cathode_gen_->GenerateVertex("VOLUME");
+    vertex = cathode_gen_->GenerateVertex(VOLUME);
   }
 
   else if (region == "BUFFER") {
     G4VPhysicalVolume *VertexVolume;
     do {
-      vertex = buffer_gen_->GenerateVertex("VOLUME");
+      vertex = buffer_gen_->GenerateVertex(VOLUME);
       G4ThreeVector glob_vtx(vertex);
       glob_vtx = glob_vtx - GetCoordOrigin();
       VertexVolume =
@@ -921,7 +920,7 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
   else if (region == "XENON") {
     G4VPhysicalVolume *VertexVolume;
     do {
-      vertex = xenon_gen_->GenerateVertex("VOLUME");
+      vertex = xenon_gen_->GenerateVertex(VOLUME);
       G4ThreeVector glob_vtx(vertex);
       glob_vtx = glob_vtx - GetCoordOrigin();
       VertexVolume =
@@ -935,7 +934,7 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
   else if (region == "LIGHT_TUBE") {
     G4VPhysicalVolume *VertexVolume;
     do {
-      vertex = teflon_gen_->GenerateVertex("VOLUME");
+      vertex = teflon_gen_->GenerateVertex(VOLUME);
       G4ThreeVector glob_vtx(vertex);
       glob_vtx = glob_vtx - GetCoordOrigin();
       VertexVolume =
@@ -946,13 +945,13 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
   }
 
   else if (region == "HDPE_TUBE") {
-    vertex = hdpe_gen_->GenerateVertex("VOLUME");
+    vertex = hdpe_gen_->GenerateVertex(VOLUME);
   }
 
   else if (region == "EL_GAP") {
     G4VPhysicalVolume *VertexVolume;
     do {
-      vertex = el_gap_gen_->GenerateVertex("VOLUME");
+      vertex = el_gap_gen_->GenerateVertex(VOLUME);
       G4ThreeVector glob_vtx(vertex);
       glob_vtx = glob_vtx - GetCoordOrigin();
       VertexVolume =
@@ -963,7 +962,7 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
   else if (region == "FIELD_RING") {
     G4VPhysicalVolume *VertexVolume;
     do {
-      vertex = ring_gen_->GenerateVertex("VOLUME");
+      vertex = ring_gen_->GenerateVertex(VOLUME);
       G4ThreeVector glob_vtx(vertex);
       glob_vtx = glob_vtx - GetCoordOrigin();
       VertexVolume =
@@ -972,17 +971,17 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
   }
 
   else if (region == "GATE_RING") {
-    vertex = gate_gen_->GenerateVertex("VOLUME");
+    vertex = gate_gen_->GenerateVertex(VOLUME);
   }
 
   else if (region == "ANODE_RING") {
-    vertex = anode_gen_->GenerateVertex("VOLUME");
+    vertex = anode_gen_->GenerateVertex(VOLUME);
   }
 
   else if (region == "RING_HOLDER"){
     G4VPhysicalVolume *VertexVolume;
     do {
-      vertex = holder_gen_->GenerateVertex("VOLUME");
+      vertex = holder_gen_->GenerateVertex(VOLUME);
       G4ThreeVector glob_vtx(vertex);
       glob_vtx = glob_vtx - GetCoordOrigin();
       VertexVolume =

@@ -9,7 +9,6 @@
 #include "PMT_QE_setup.h"
 #include "MaterialsList.h"
 #include "SiPM11.h"
-#include "BoxPointSampler.h"
 #include "OpticalMaterialProperties.h"
 
 #include <G4Box.hh>

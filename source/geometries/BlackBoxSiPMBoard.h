@@ -16,7 +16,7 @@ class G4GenericMessenger;
 
 namespace nexus {
 
-  class BoxPointSampler;
+  class BoxPointSamplerLegacy;
   class SiPMSensl;
 
   class BlackBoxSiPMBoard: public GeometryBase
@@ -56,7 +56,7 @@ namespace nexus {
     SiPMSensl* sipm_;
     std::vector<G4ThreeVector> sipm_positions_;
     G4VPhysicalVolume* mother_phys_;
-    BoxPointSampler* kapton_gen_;
+    BoxPointSamplerLegacy* kapton_gen_;
 
     G4GenericMessenger* msg_;
 

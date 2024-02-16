@@ -29,7 +29,7 @@ namespace nexus {
     ~XeSphere();
 
     /// Return vertex within region <region> of the chamber
-    G4ThreeVector GenerateVertex(const G4String& region) const;
+    G4ThreeVector GenerateVertex(const G4String& /*region*/) const;
 
     void Construct();
 
