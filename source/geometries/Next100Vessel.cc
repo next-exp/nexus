@@ -401,6 +401,10 @@ namespace nexus {
                                    source.GetSourceThickness()/2.,
                                    0., 360.*deg, source_rot);
         source_logic = source.GetLogicalVolume();
+      } else {
+        G4Exception("[Next100Vessel]", "Construct()", FatalException,
+                    "Unknow kind of calibration source; it must be "
+                    "next100 or next_white.");
       }
 
       G4ThreeVector source_pos =
