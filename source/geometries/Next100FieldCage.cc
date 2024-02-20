@@ -467,26 +467,17 @@ void Next100FieldCage::BuildCathode()
 
 
   /// Visibilities
-  if (visibility_) {
-    G4VisAttributes grey = nexus::LightGrey();
-    G4VisAttributes cathode_col = nexus::DarkGrey();
-    cathode_col.SetForceSolid(true);
-    cathode_grid_logic->SetVisAttributes(grey);
-    cathode_logic->SetVisAttributes(cathode_col);
-    
-    if (!use_dielectric_grid_)
-      cathode_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
-  } else {
-    G4VisAttributes cathode_col = nexus::DarkGrey();
-    cathode_col.SetForceSolid(true);
-    cathode_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
-    cathode_logic->SetVisAttributes(cathode_col);
+  G4VisAttributes cathode_col = nexus::DarkGrey();
+  cathode_col.SetForceSolid(true);
+  cathode_logic->SetVisAttributes(cathode_col);
+  cathode_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
+  if (visibility_) {
+    cathode_grid_logic->SetVisAttributes(nexus::LightGrey());
   }
 
   if (!grid_visibility_ && !use_dielectric_grid_)
     cathode_hex_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
-
 
   /// Verbosity
   if (verbosity_) {
@@ -588,7 +579,7 @@ void Next100FieldCage::BuildELRegion()
   G4Tubs* el_gap_solid;
   G4LogicalVolume* el_gap_logic;
 
-  // Logical Volumes
+  /// EL Grid Logical
   G4LogicalVolume *el_grid_logic;
   G4LogicalVolume *el_hex_logic;
 
@@ -623,12 +614,6 @@ void Next100FieldCage::BuildELRegion()
       new G4Tubs("EL_GAP", 0., gate_int_diam_/2.,
                 (el_gap_length_ + 2*grid_thickn_)/2., 0, twopi);
 
-    el_gap_logic =
-      new G4LogicalVolume(el_gap_solid, gas_, "EL_GAP");
-
-    new G4PVPlacement(0, G4ThreeVector(0., 0., el_gap_zpos_),
-                      el_gap_logic, "EL_GAP", mother_logic_, false, 0, false);
-
     /// EL grids
     G4Material* fgrid_mat = materials::FakeDielectric(gas_, "el_grid_mat");
     fgrid_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_,
@@ -646,12 +631,6 @@ void Next100FieldCage::BuildELRegion()
 
     el_grid_logic = new G4LogicalVolume(diel_grid_solid, fgrid_mat, "EL_GRID");
 
-    new G4PVPlacement(0, G4ThreeVector(0., 0., el_gap_length_/2. + grid_thickn_/2.),
-                      el_grid_logic, "EL_GRID_GATE", el_gap_logic,
-                      false, 0, false);
-    new G4PVPlacement(0, G4ThreeVector(0., 0., -el_gap_length_/2. - grid_thickn_/2.),
-                      el_grid_logic, "EL_GRID_ANODE", el_gap_logic,
-                      false, 1, false);
   }
   // EL Grids -- use SS hexagonal mesh
   else {
@@ -686,12 +665,6 @@ void Next100FieldCage::BuildELRegion()
     el_gap_solid =
       new G4Tubs("EL_GAP", 0., gate_ext_diam_/2.,
                 (el_gap_length_ + 2*grid_thickn_)/2., 0, twopi);
-
-    el_gap_logic =
-      new G4LogicalVolume(el_gap_solid, gas_, "EL_GAP");
-
-    new G4PVPlacement(0, G4ThreeVector(0., 0., el_gap_zpos_),
-                      el_gap_logic, "EL_GAP", mother_logic_, false, 0, false);
     
     // Meshes
 
@@ -712,24 +685,32 @@ void Next100FieldCage::BuildELRegion()
     // Place GXe hexagons in the disk to make the mesh
     PlaceHexagons(n_hex, el_mesh_diam_, grid_thickn_, el_grid_logic, el_hex_logic, gate_int_diam_);
 
-    // Create the mesh logical volume
-    
-
-    // Create a rotation vector to change the orientation of the mesh
-    CLHEP::HepRotationZ Roty(el_mesh_rot_);
-    G4RotationMatrix* pRot = new G4RotationMatrix();
-    pRot->set(Roty);
-
-    new G4PVPlacement(0, G4ThreeVector(0., 0., el_gap_length_/2. + grid_thickn_/2.), el_grid_logic,
-                      "EL_GRID_GATE", el_gap_logic, false, 1, false);
-    
-    new G4PVPlacement(pRot, G4ThreeVector(0., 0., -el_gap_length_/2. - grid_thickn_/2.), el_grid_logic,
-                      "EL_GRID_ANODE", el_gap_logic, false, 1, false);
 
   }
 
+  /// Placing the EL grids
+
+  // Place the EL gap
+  el_gap_logic = new G4LogicalVolume(el_gap_solid, gas_, "EL_GAP");
+
+  new G4PVPlacement(0, G4ThreeVector(0., 0., el_gap_zpos_),
+                    el_gap_logic, "EL_GAP", mother_logic_, false, 0, false);
+  
+  // Create a rotation vector to change the orientation of the EL mesh
+  CLHEP::HepRotationZ Roty(el_mesh_rot_);
+  G4RotationMatrix* pRot = new G4RotationMatrix();
+  pRot->set(Roty);
+
+  new G4PVPlacement(0, G4ThreeVector(0., 0., el_gap_length_/2. + grid_thickn_/2.), el_grid_logic,
+                    "EL_GRID_GATE", el_gap_logic, false, 0, false);
+  
+  new G4PVPlacement(pRot, G4ThreeVector(0., 0., -el_gap_length_/2. - grid_thickn_/2.), el_grid_logic,
+                    "EL_GRID_ANODE", el_gap_logic, false, 1, false);
+
+  
+
+  /// Define EL electric field
   if (elfield_) {
-    /// Define EL electric field
     UniformElectricDriftField* el_field = new UniformElectricDriftField();
     G4double global_el_gap_zpos = el_gap_zpos_ - GetCoordOrigin().z();
     el_field->SetCathodePosition(global_el_gap_zpos + el_gap_length_/2. + grid_thickn_);
@@ -778,10 +759,8 @@ void Next100FieldCage::BuildELRegion()
   if (visibility_) {
     G4VisAttributes light_blue = nexus::LightBlue();
     el_gap_logic->SetVisAttributes(light_blue);
-    el_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   } else {
     el_gap_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
-    el_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
 
   if (!grid_visibility_ && !use_dielectric_grid_)
@@ -791,6 +770,7 @@ void Next100FieldCage::BuildELRegion()
   grey.SetForceSolid(true);
   gate_logic->SetVisAttributes(grey);
   anode_logic->SetVisAttributes(grey);
+  el_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   /// Verbosity
   if (verbosity_) {

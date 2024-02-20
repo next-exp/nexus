@@ -213,7 +213,6 @@ namespace nexus {
     G4LogicalVolume* copper_plate_logic =
       new G4LogicalVolume(copper_plate_solid, copper, "EP_COPPER_PLATE");
 
-
     G4double stand_out_length =
       sapphire_window_thickn_ + tpb_thickn_ + optical_pad_thickn_ + pmt_stand_out_;
 
