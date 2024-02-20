@@ -1,4 +1,4 @@
-FROM registry.cern.ch/next/nexus-base:2024-01-25
+FROM registry.cern.ch/next/nexus-base:2024-02-20
 
 COPY . /nexus
 WORKDIR /nexus

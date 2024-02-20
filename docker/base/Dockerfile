@@ -7,6 +7,6 @@ RUN apt-get update -y && \
     rm -rf /var/cache/apt/archives/* && \
     rm -rf /var/lib/apt/lists/*
 
-COPY --from=registry.cern.ch/next/geant4:11.0.2-qt        /opt/geant4       /opt/geant4
+COPY --from=registry.cern.ch/next/geant4:11.2.1-qt        /opt/geant4       /opt/geant4
 COPY --from=registry.cern.ch/next/root:6.26.04            /opt/root/install /opt/root/install
 COPY --from=registry.cern.ch/next/python-nexus:2022-07-13 /opt/conda        /opt/conda

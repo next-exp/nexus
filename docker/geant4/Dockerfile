@@ -1,6 +1,6 @@
 FROM ubuntu:jammy
 
-ENV G4_VERSION v11.0.2
+ENV G4_VERSION v11.2.1
 
 RUN apt-get update -y && \
     apt-get install -y cmake curl g++ libexpat1-dev libqt5core5a qtbase5-dev

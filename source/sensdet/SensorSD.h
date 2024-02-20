@@ -15,7 +15,6 @@
 
 class G4Step;
 class G4HCofThisEvent;
-class G4VTouchable;
 class G4TouchableHistory;
 class G4OpBoundaryProcess;
 
