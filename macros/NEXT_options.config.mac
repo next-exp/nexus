@@ -32,6 +32,10 @@
 /Geometry/Next100/energy_plane_vis   false
 /Geometry/Next100/tracking_plane_vis false
 /Geometry/Next100/sipm_board_vis     false
+/Geometry/Next100/grid_vis           false
+
+# For changing the EL grid from mesh to fake dielectric grid
+/Geometry/Next100/use_dielectric_grid false
 
 
 ##### GENERATOR #####

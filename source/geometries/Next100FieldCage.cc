@@ -15,6 +15,7 @@
 #include "UniformElectricDriftField.h"
 #include "XenonProperties.h"
 #include "CylinderPointSampler.h"
+#include "HexagonMeshTools.h"
 
 #include <G4Navigator.hh>
 #include <G4SystemOfUnits.hh>
@@ -51,10 +52,12 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   n_panels_            (18),
   active_ext_radius_   (active_diam_/2. / cos(pi/n_panels_)),
 
+  grid_thickn_         (grid_thickn),
+
   cathode_int_diam_    (965. * mm),
   cathode_ext_diam_    (1020.* mm),
   cathode_thickn_      (13.5  * mm),
-  grid_thickn_         (grid_thickn),
+  cathode_mesh_diam_   (5.0*mm),
 
   //  teflon_drift_length_ (1178.*mm), //distance from the gate to the beginning of the cathode volume
   teflon_long_length_   (465. * mm),
@@ -62,6 +65,8 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   teflon_thickn_       (5. * mm),
 
   el_gap_length_ (10. * mm),
+  el_mesh_diam_  (2.5 * mm),
+  el_mesh_rot_   (15 * deg),
 
   gate_ext_diam_    (1050. * mm),
   gate_int_diam_    (995. * mm),
@@ -100,7 +105,9 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   el_grid_transparency_  (.90),
   max_step_size_ (1. * mm),
   visibility_ (0),
+  grid_visibility_ (0),
   verbosity_(0),
+  use_dielectric_grid_(0),
   // EL gap generation disk parameters
   el_gap_gen_disk_diam_(0.),
   el_gap_gen_disk_x_(0.), el_gap_gen_disk_y_(0.),
@@ -119,7 +126,10 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   msg_ = new G4GenericMessenger(this, "/Geometry/Next100/",
                                 "Control commands of geometry Next100.");
   msg_->DeclareProperty("field_cage_vis", visibility_, "Field Cage Visibility");
+  msg_->DeclareProperty("grid_vis", grid_visibility_, "Grid Visibility");
   msg_->DeclareProperty("field_cage_verbosity", verbosity_, "Field Cage Verbosity");
+
+  msg_->DeclareProperty("use_dielectric_grid", use_dielectric_grid_, "Switch on Fake Grids");
 
   G4GenericMessenger::Command& drift_transv_diff_cmd =
     msg_->DeclareProperty("drift_transv_diff", drift_transv_diff_,
@@ -264,6 +274,7 @@ void Next100FieldCage::DefineMaterials()
 
   /// Copper for field rings
   copper_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
+  copper_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
   /// Teflon for the light tube
   teflon_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
@@ -365,16 +376,10 @@ void Next100FieldCage::BuildActive()
 
 void Next100FieldCage::BuildCathode()
 {
-  G4Tubs* cathode_solid =
-    new G4Tubs("CATHODE_RING", cathode_int_diam_/2.,cathode_ext_diam_/2.,
-               cathode_thickn_/2., 0, twopi);
 
-  G4LogicalVolume* cathode_logic =
-    new G4LogicalVolume(cathode_solid, steel_, "CATHODE_RING");
-
-  new G4PVPlacement(0, G4ThreeVector(GetCoordOrigin().x(), GetCoordOrigin().y(),
-                                     cathode_zpos_),
-                    cathode_logic, "CATHODE_RING", mother_logic_, false, 0, false);
+  // Cathode Ring
+  G4Tubs* cathode_solid;
+  G4LogicalVolume* cathode_logic;
 
   G4Material* fgrid_mat = materials::FakeDielectric(gas_, "cath_grid_mat");
   fgrid_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_,
@@ -382,18 +387,75 @@ void Next100FieldCage::BuildCathode()
                                                                cath_grid_transparency_,
                                                                grid_thickn_));
 
-  G4Tubs* diel_grid_solid =
-    new G4Tubs("CATHODE_GRID", 0., cathode_int_diam_/2., grid_thickn_/2.,
-               0, twopi);
+  // Cathode Mesh
+  G4LogicalVolume *cathode_grid_logic;
+  G4LogicalVolume *cathode_hex_logic;
+  G4double cathode_grid_zpos = cathode_zpos_ - cathode_thickn_/2. + grid_thickn_/2.;
 
-  G4LogicalVolume* diel_grid_logic =
-    new G4LogicalVolume(diel_grid_solid, fgrid_mat, "CATHODE_GRID");
+  if (use_dielectric_grid_){
 
-  G4double cathode_grid_zpos =
-    cathode_zpos_ - cathode_thickn_/2. + grid_thickn_/2.;
-  new G4PVPlacement(0, G4ThreeVector(GetCoordOrigin().x(), GetCoordOrigin().y(),
-                                     cathode_grid_zpos),
-                    diel_grid_logic, "CATHODE_GRID", mother_logic_, false, 0, false);
+    // Cathode Ring
+    cathode_solid =
+    new G4Tubs("CATHODE_RING", cathode_int_diam_/2.,cathode_ext_diam_/2.,
+               cathode_thickn_/2., 0, twopi);
+
+    cathode_logic =
+    new G4LogicalVolume(cathode_solid, steel_, "CATHODE_RING");
+
+    new G4PVPlacement(0, G4ThreeVector(GetCoordOrigin().x(), GetCoordOrigin().y(),
+                                     cathode_zpos_),
+                    cathode_logic, "CATHODE_RING", mother_logic_, false, 0, false);
+
+    G4Tubs* diel_grid_solid =
+      new G4Tubs("CATHODE_GRID", 0., cathode_int_diam_/2., grid_thickn_/2., 0, twopi);
+
+    cathode_grid_logic = new G4LogicalVolume(diel_grid_solid, fgrid_mat, "CATHODE_GRID");
+
+    new G4PVPlacement(0, G4ThreeVector(GetCoordOrigin().x(),
+                                       GetCoordOrigin().y(), cathode_grid_zpos),
+                                       cathode_grid_logic, "CATHODE_GRID", mother_logic_,
+                                       false, 0, false);
+
+  }
+  // Use SS hexagonal mesh
+  else {
+
+      // Cathode Ring 
+      // Shift in the +z direction by half-mesh thickness and reduce thickness
+      // by the grid thickness. The grid thickness makes up the remaining ring thickness
+      cathode_solid =
+      new G4Tubs("CATHODE_RING", cathode_int_diam_/2.,cathode_ext_diam_/2.,
+                cathode_thickn_/2. - grid_thickn_/2., 0, twopi);
+
+      cathode_logic =
+      new G4LogicalVolume(cathode_solid, steel_, "CATHODE_RING");
+
+      new G4PVPlacement(0, G4ThreeVector(GetCoordOrigin().x(), GetCoordOrigin().y(),
+                                      cathode_zpos_ + grid_thickn_/2.0),
+                      cathode_logic, "CATHODE_RING", mother_logic_, false, 0, false);
+      
+      // Dist from centre of hex to hex vertex, excluding the land width (circumradius)
+      G4double hex_circumradius = cathode_mesh_diam_/std::sqrt(3);  
+
+      // Total number of hexagons that would fit side-by-side along the diameter
+      G4int n_hex = (G4int) ((cathode_int_diam_/2.0) / hex_circumradius);
+    
+      // Define the disk to punch hexagon holes through for the mesh
+      G4Tubs* grid_solid = new G4Tubs("CATHODE_GRID", 0., cathode_ext_diam_/2.0 , grid_thickn_/2., 0., twopi);
+      cathode_grid_logic = new G4LogicalVolume(grid_solid, steel_, "CATHODE_MESH_LOGIC");
+
+      // Define a hexagonal prism
+      G4ExtrudedSolid* hex_prism = CreateHexagon(grid_thickn_/2.0, hex_circumradius);
+      cathode_hex_logic  = new G4LogicalVolume(hex_prism, gas_, "MESH_HEX_GAS");
+
+      PlaceHexagons(n_hex, cathode_mesh_diam_, grid_thickn_, cathode_grid_logic, cathode_hex_logic, cathode_int_diam_);
+
+      new G4PVPlacement(0, G4ThreeVector(GetCoordOrigin().x(),
+                                         GetCoordOrigin().y(), cathode_grid_zpos),
+                                         cathode_grid_logic,  "CATHODE_GRID", mother_logic_,
+                                         false, 0, false);
+
+  }
 
   // Cathode ring vertex generator
   cathode_gen_ =
@@ -405,19 +467,17 @@ void Next100FieldCage::BuildCathode()
 
 
   /// Visibilities
+  G4VisAttributes cathode_col = nexus::DarkGrey();
+  cathode_col.SetForceSolid(true);
+  cathode_logic->SetVisAttributes(cathode_col);
+  cathode_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+
   if (visibility_) {
-    G4VisAttributes grey = nexus::LightGrey();
-    G4VisAttributes cathode_col = nexus::DarkGrey();
-    cathode_col.SetForceSolid(true);
-    diel_grid_logic->SetVisAttributes(grey);
-    cathode_logic->SetVisAttributes(cathode_col);
-  } else {
-    G4VisAttributes cathode_col = nexus::DarkGrey();
-    cathode_col.SetForceSolid(true);
-    diel_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
-    cathode_logic->SetVisAttributes(cathode_col);
+    cathode_grid_logic->SetVisAttributes(nexus::LightGrey());
   }
 
+  if (!grid_visibility_ && !use_dielectric_grid_)
+    cathode_hex_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   /// Verbosity
   if (verbosity_) {
@@ -502,25 +562,8 @@ void Next100FieldCage::BuildBuffer()
 void Next100FieldCage::BuildELRegion()
 {
   /// GATE ring.
-  G4Tubs* gate_solid =
-    new G4Tubs("GATE_RING", gate_int_diam_/2., gate_ext_diam_/2.,
-               gate_ring_thickn_/2., 0, twopi);
-
-  G4LogicalVolume* gate_logic = new G4LogicalVolume(gate_solid, steel_, "GATE_RING");
-
-  new G4PVPlacement(0, G4ThreeVector(0., 0., gate_zpos_),
-                    gate_logic, "GATE_RING", mother_logic_, false, 0, false);
-
-  /// EL gap.
-  G4Tubs* el_gap_solid =
-    new G4Tubs("EL_GAP", 0., gate_int_diam_/2.,
-               (el_gap_length_ + 2*grid_thickn_)/2., 0, twopi);
-
-  G4LogicalVolume* el_gap_logic =
-    new G4LogicalVolume(el_gap_solid, gas_, "EL_GAP");
-
-  new G4PVPlacement(0, G4ThreeVector(0., 0., el_gap_zpos_),
-                    el_gap_logic, "EL_GAP", mother_logic_, false, 0, false);
+  G4Tubs* gate_solid;
+  G4LogicalVolume* gate_logic;
 
   /// ANODE ring.
   // We simulate a thinner ring to avoid cutting the teflon masks,
@@ -528,19 +571,146 @@ void Next100FieldCage::BuildELRegion()
   // the thickness of sipm board+mask (6.2 mm) and the real distance
   // between the anode ring and the TP, measured by Jordi (1.5 mm).
   G4double anode_ring_thickn = gate_ring_thickn_ - 4.7 * mm;
-  G4Tubs* anode_solid =
+  G4Tubs* anode_solid;
+  G4LogicalVolume* anode_logic;
+  G4double anode_sim_zpos = el_gap_zpos_ - el_gap_length_/2. - anode_ring_thickn/2.;
+
+  /// EL gap.
+  G4Tubs* el_gap_solid;
+  G4LogicalVolume* el_gap_logic;
+
+  /// EL Grid Logical
+  G4LogicalVolume *el_grid_logic;
+  G4LogicalVolume *el_hex_logic;
+
+  // EL Grid -- use Fake Dielectric
+  if (use_dielectric_grid_){
+
+    // GATE ring.
+    gate_solid =
+      new G4Tubs("GATE_RING", gate_int_diam_/2., gate_ext_diam_/2.,
+                gate_ring_thickn_/2., 0, twopi);
+
+    gate_logic = new G4LogicalVolume(gate_solid, steel_, "GATE_RING");
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., gate_zpos_),
+                      gate_logic, "GATE_RING", mother_logic_, false, 0, false);
+
+
+    // Anode ring.
+    anode_solid =
     new G4Tubs("ANODE_RING", gate_int_diam_/2., gate_ext_diam_/2.,
                anode_ring_thickn/2., 0, twopi);
 
-  G4LogicalVolume* anode_logic =
-    new G4LogicalVolume(anode_solid, steel_, "ANODE_RING");
+    anode_logic =
+      new G4LogicalVolume(anode_solid, steel_, "ANODE_RING");
 
-  G4double anode_sim_zpos = el_gap_zpos_ - el_gap_length_/2. - anode_ring_thickn/2.;
-  new G4PVPlacement(0, G4ThreeVector(0., 0., anode_sim_zpos),
-                    anode_logic, "ANODE_RING", mother_logic_, false, 0, false);
+    new G4PVPlacement(0, G4ThreeVector(0., 0., anode_sim_zpos),
+                      anode_logic, "ANODE_RING", mother_logic_, false, 0, false);
 
+
+    /// EL gap.
+    el_gap_solid =
+      new G4Tubs("EL_GAP", 0., gate_int_diam_/2.,
+                (el_gap_length_ + 2*grid_thickn_)/2., 0, twopi);
+
+    /// EL grids
+    G4Material* fgrid_mat = materials::FakeDielectric(gas_, "el_grid_mat");
+    fgrid_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_,
+                                                               temperature_,
+                                                               el_grid_transparency_,
+                                                               grid_thickn_,
+                                                               sc_yield_,
+                                                               1000.*ms,
+                                                               photoe_prob_));
+
+    /// Dimensions & position: the grids are simulated inside the EL gap.
+    /// Their thickness is symbolic.
+    G4Tubs* diel_grid_solid =
+      new G4Tubs("EL_GRID", 0., gate_int_diam_/2., grid_thickn_/2., 0, twopi);
+
+    el_grid_logic = new G4LogicalVolume(diel_grid_solid, fgrid_mat, "EL_GRID");
+
+  }
+  // EL Grids -- use SS hexagonal mesh
+  else {
+
+    // GATE ring.
+    // Shift in the +z direction by half-mesh thickness and reduce thickness
+    // by the grid thickness. The grid thickness makes up the remaining ring thickness
+    gate_solid =
+      new G4Tubs("GATE_RING", gate_int_diam_/2., gate_ext_diam_/2.,
+                gate_ring_thickn_/2. - grid_thickn_/2., 0, twopi);
+
+    gate_logic = new G4LogicalVolume(gate_solid, steel_, "GATE_RING");
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., gate_zpos_ + grid_thickn_/2.),
+                      gate_logic, "GATE_RING", mother_logic_, false, 0, false);
+
+
+    // Anode ring.
+    // Shift in the -z direction by half-mesh thickness and reduce thickness
+    // by the grid thickness. The grid thickness makes up the remaining ring thickness
+    anode_solid =
+    new G4Tubs("ANODE_RING", gate_int_diam_/2., gate_ext_diam_/2.,
+               anode_ring_thickn/2. - grid_thickn_/2., 0, twopi);
+
+    anode_logic =
+      new G4LogicalVolume(anode_solid, steel_, "ANODE_RING");
+
+    new G4PVPlacement(0, G4ThreeVector(0., 0., anode_sim_zpos - grid_thickn_/2.),
+                      anode_logic, "ANODE_RING", mother_logic_, false, 0, false);
+
+    /// EL gap.
+    el_gap_solid =
+      new G4Tubs("EL_GAP", 0., gate_ext_diam_/2.,
+                (el_gap_length_ + 2*grid_thickn_)/2., 0, twopi);
+    
+    // Meshes
+
+    // Dist from centre of hex to hex vertex, excluding the land width (circumradius)
+    G4double hex_circumradius = el_mesh_diam_/std::sqrt(3)*mm;  
+
+    // Total number of hexagons that would fit side-by-side along the diameter
+    G4int n_hex = (G4int) ((gate_int_diam_/2.0) / hex_circumradius);
+  
+    // Define the disk to punch hexagon holes through for the mesh
+    G4Tubs* grid_solid = new G4Tubs("EL_GRID", 0., gate_ext_diam_/2.0 , grid_thickn_/2., 0., twopi);
+    el_grid_logic = new G4LogicalVolume(grid_solid, steel_, "EL_GRID");
+
+    // Define a hexagonal prism
+    G4ExtrudedSolid* hex_prism = CreateHexagon(grid_thickn_/2.0, hex_circumradius);
+    el_hex_logic  = new G4LogicalVolume(hex_prism, gas_, "MESH_HEX_GAS");
+   
+    // Place GXe hexagons in the disk to make the mesh
+    PlaceHexagons(n_hex, el_mesh_diam_, grid_thickn_, el_grid_logic, el_hex_logic, gate_int_diam_);
+
+
+  }
+
+  /// Placing the EL grids
+
+  // Place the EL gap
+  el_gap_logic = new G4LogicalVolume(el_gap_solid, gas_, "EL_GAP");
+
+  new G4PVPlacement(0, G4ThreeVector(0., 0., el_gap_zpos_),
+                    el_gap_logic, "EL_GAP", mother_logic_, false, 0, false);
+  
+  // Create a rotation vector to change the orientation of the EL mesh
+  CLHEP::HepRotationZ Roty(el_mesh_rot_);
+  G4RotationMatrix* pRot = new G4RotationMatrix();
+  pRot->set(Roty);
+
+  new G4PVPlacement(0, G4ThreeVector(0., 0., el_gap_length_/2. + grid_thickn_/2.), el_grid_logic,
+                    "EL_GRID_GATE", el_gap_logic, false, 0, false);
+  
+  new G4PVPlacement(pRot, G4ThreeVector(0., 0., -el_gap_length_/2. - grid_thickn_/2.), el_grid_logic,
+                    "EL_GRID_ANODE", el_gap_logic, false, 1, false);
+
+  
+
+  /// Define EL electric field
   if (elfield_) {
-    /// Define EL electric field
     UniformElectricDriftField* el_field = new UniformElectricDriftField();
     G4double global_el_gap_zpos = el_gap_zpos_ - GetCoordOrigin().z();
     el_field->SetCathodePosition(global_el_gap_zpos + el_gap_length_/2. + grid_thickn_);
@@ -553,29 +723,6 @@ void Next100FieldCage::BuildELRegion()
     el_region->SetUserInformation(el_field);
     el_region->AddRootLogicalVolume(el_gap_logic);
   }
-
-  /// EL grids
-  G4Material* fgrid_mat = materials::FakeDielectric(gas_, "el_grid_mat");
-  fgrid_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_,
-                                                               temperature_,
-                                                               el_grid_transparency_,
-                                                               grid_thickn_,
-                                                               sc_yield_,
-                                                               1000.*ms,
-                                                               photoe_prob_));
-
-  /// Dimensions & position: the grids are simulated inside the EL gap.
-  /// Their thickness is symbolic.
-  G4Tubs* diel_grid_solid =
-    new G4Tubs("EL_GRID", 0., gate_int_diam_/2., grid_thickn_/2., 0, twopi);
-
-  G4LogicalVolume* diel_grid_logic =
-    new G4LogicalVolume(diel_grid_solid, fgrid_mat, "EL_GRID");
-
-  new G4PVPlacement(0, G4ThreeVector(0., 0., el_gap_length_/2.+grid_thickn_/2.),
-                    diel_grid_logic, "EL_GRID_GATE", el_gap_logic, false, 0, false);
-  new G4PVPlacement(0, G4ThreeVector(0., 0.,-el_gap_length_/2.-grid_thickn_/2.),
-                    diel_grid_logic, "EL_GRID_ANODE", el_gap_logic, false, 1, false);
 
   // Vertex generator
   if (el_gap_gen_disk_zmin_ > el_gap_gen_disk_zmax_)
@@ -612,15 +759,18 @@ void Next100FieldCage::BuildELRegion()
   if (visibility_) {
     G4VisAttributes light_blue = nexus::LightBlue();
     el_gap_logic->SetVisAttributes(light_blue);
-    diel_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   } else {
     el_gap_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
-    diel_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
+
+  if (!grid_visibility_ && !use_dielectric_grid_)
+    el_hex_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
+  
   G4VisAttributes grey = nexus::DarkGrey();
   grey.SetForceSolid(true);
   gate_logic->SetVisAttributes(grey);
   anode_logic->SetVisAttributes(grey);
+  el_grid_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   /// Verbosity
   if (verbosity_) {

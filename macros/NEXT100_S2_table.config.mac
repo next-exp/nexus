@@ -20,7 +20,7 @@
 ##### GEOMETRY #####
 /Geometry/Next100/pressure 15. bar
 /Geometry/Next100/max_step_size 1. mm
-/Geometry/Next100/specific_vertex 0. 0. 0. mm
+/Geometry/Next100/specific_vertex 0. 0. -5. mm
 
 #### GENERATOR ####
 /Generator/ScintGenerator/nphotons 100000
