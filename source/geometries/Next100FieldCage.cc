@@ -104,7 +104,8 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   // EL gap generation disk parameters
   el_gap_gen_disk_diam_(0.),
   el_gap_gen_disk_x_(0.), el_gap_gen_disk_y_(0.),
-  el_gap_gen_disk_zmin_(0.), el_gap_gen_disk_zmax_(1.)
+  el_gap_gen_disk_zmin_(0.), el_gap_gen_disk_zmax_(1.),
+  photoe_prob_(0)
 {
   /// Define new categories
   new G4UnitDefinition("kilovolt/cm","kV/cm","Electric field", kilovolt/cm);
