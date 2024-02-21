@@ -1625,7 +1625,6 @@ namespace opticalprops {
     return mpt;
   }
 
-  
 
 
   /// Generic material, to be modifed by the user ///
