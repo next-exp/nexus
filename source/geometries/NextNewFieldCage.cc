@@ -307,9 +307,9 @@ namespace nexus {
     G4Material* fgrid_mat =
       materials::FakeDielectric(gas_, "cath_grid_mat");
     fgrid_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_,
-                                                                              temperature_,
-                                                                              cathode_grid_transparency_,
-                                                                              cathode_thickness_));
+                                                                 temperature_,
+                                                                 cathode_grid_transparency_,
+                                                                 cathode_thickness_));
     // Dimensions & position
     G4double grid_diam = tube_in_diam_;
 
@@ -360,6 +360,7 @@ namespace nexus {
     field->SetDriftVelocity(1. * mm/microsecond);
     field->SetTransverseDiffusion(drift_transv_diff_);
     field->SetLongitudinalDiffusion(drift_long_diff_);
+    field->SetLifetime(e_lifetime_);
     G4Region* drift_region = new G4Region("DRIFT");
     drift_region->SetUserInformation(field);
     drift_region->AddRootLogicalVolume(active_logic);
@@ -451,12 +452,12 @@ void NextNewFieldCage::BuildBuffer()
     // We have to set the defaults explicitely because C++ doesn't support
     // named arguments
     fgate_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_,
-                                                                              temperature_,
-                                                                              gate_transparency_,
-                                                                              grid_thickness_,
-                                                                              sc_yield_,
-                                                                              e_lifetime_,
-                                                                              photoe_prob_));
+                                                                 temperature_,
+                                                                 gate_transparency_,
+                                                                 grid_thickness_,
+                                                                 sc_yield_,
+                                                                 1000*ms,
+                                                                 photoe_prob_));
 
     // Dimensions & position: the grids are simulated inside the EL gap.
     // Their thickness is symbolic.

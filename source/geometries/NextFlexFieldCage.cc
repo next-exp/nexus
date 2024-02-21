@@ -315,17 +315,17 @@ void NextFlexFieldCage::DefineMaterials()
   cathode_mat_ = materials::FakeDielectric(xenon_gas_, "cathode_mat");
   cathode_mat_->SetMaterialPropertiesTable(opticalprops::FakeGrid(gas_pressure_,
                 gas_temperature_, cathode_transparency_, cathode_thickness_,
-                gas_sc_yield_, gas_e_lifetime_, photoe_prob_));
+                gas_sc_yield_, gas_e_lifetime_));
 
   gate_mat_ = materials::FakeDielectric(xenon_gas_, "gate_mat");
   gate_mat_->SetMaterialPropertiesTable(opticalprops::FakeGrid(gas_pressure_,
              gas_temperature_, gate_transparency_, gate_thickness_,
-             gas_sc_yield_, gas_e_lifetime_, photoe_prob_));
+             gas_sc_yield_, 1000*ms, photoe_prob_));
 
   anode_mat_ = materials::FakeDielectric(xenon_gas_, "anode_mat");
   anode_mat_->SetMaterialPropertiesTable(opticalprops::FakeGrid(gas_pressure_,
               gas_temperature_, anode_transparency_, anode_thickness_,
-              gas_sc_yield_, gas_e_lifetime_, photoe_prob_));
+              gas_sc_yield_, 1000*ms, photoe_prob_));
 
 
   // Fiber core material
@@ -420,6 +420,7 @@ void NextFlexFieldCage::BuildActive()
   field->SetDriftVelocity(1. * mm/microsecond);
   field->SetTransverseDiffusion(drift_transv_diff_);
   field->SetLongitudinalDiffusion(drift_long_diff_);
+  field->SetLifetime(gas_e_lifetime_);
   G4Region* drift_region = new G4Region("DRIFT");
   drift_region->SetUserInformation(field);
   drift_region->AddRootLogicalVolume(active_logic);

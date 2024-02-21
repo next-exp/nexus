@@ -25,7 +25,8 @@ namespace nexus {
   (G4double anode_position, G4double cathode_position, EAxis axis):
     BaseDriftField(),
     axis_(axis), anode_pos_(anode_position), cathode_pos_(cathode_position),
-    drift_velocity_(0.), transv_diff_(0.), longit_diff_(0.),  light_yield_(0.)
+    drift_velocity_(0.), transv_diff_(0.), longit_diff_(0.), lifetime_(1.e9*s),
+    light_yield_(0.)
   {
     // initialize random generator with dummy values
     rnd_ = new SegmentPointSampler(G4LorentzVector(0.,0.,0.,-999.),
@@ -76,6 +77,8 @@ namespace nexus {
       }
     }
 
+    G4double time_diff = time - xyzt.t();
+
     // Calculate step length as euclidean distance between initial
     // and final positions
     G4ThreeVector displacement = position - xyzt.vect();
@@ -84,23 +87,18 @@ namespace nexus {
     // Set the new time and position of the drifting charge
     xyzt.set(time, position);
 
+    G4double rnd = -lifetime_ * log(G4UniformRand());
+    if (time_diff > rnd) step_length = 0.;
+
     return step_length;
   }
 
 
 
-  G4LorentzVector UniformElectricDriftField::GeneratePointAlongDriftLine(
-									 const G4LorentzVector& origin, const G4LorentzVector& end)
+  G4LorentzVector UniformElectricDriftField::GeneratePointAlongDriftLine(const G4LorentzVector& origin,
+                                                                         const G4LorentzVector& end)
   {
-
-    // if (origin != rnd_->GetPrePoint()) {
-      // G4LorentzVector end(origin);
-      // Drift(end);
-
     rnd_->SetPoints(origin, end);
-    //   }
-
-
     return rnd_->Shoot();
   }
 
@@ -110,7 +108,7 @@ namespace nexus {
   {
     G4double max_coord = std::max(anode_pos_, cathode_pos_);
     G4double min_coord = std::min(anode_pos_, cathode_pos_);
-    //   G4cout << "max = " << max_coord << ", min = " << min_coord << G4endl;
+
     return !((coord > max_coord) || (coord < min_coord));
   }
 

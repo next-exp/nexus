@@ -189,6 +189,9 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
                           "Maximum Z range of the EL gap vertex generation disk.");
   el_gap_gen_disk_zmax_cmd.SetParameterName("el_gap_gen_disk_zmax", false);
   el_gap_gen_disk_zmax_cmd.SetRange("el_gap_gen_disk_zmax>=0.0 && el_gap_gen_disk_zmax<=1.0");
+
+  msg_->DeclareProperty("photoe_prob", photoe_prob_,
+                        "Probability of photon to ie- conversion");
 }
 
 
@@ -252,6 +255,8 @@ void Next100FieldCage::DefineMaterials()
   gas_         = mother_logic_->GetMaterial();
   pressure_    = gas_->GetPressure();
   temperature_ = gas_->GetTemperature();
+  sc_yield_    = gas_->GetMaterialPropertiesTable()->GetConstProperty("SCINTILLATIONYIELD");
+  e_lifetime_  = gas_->GetMaterialPropertiesTable()->GetConstProperty("ATTACHMENT");
 
   /// High density polyethylene for the field cage
   hdpe_ = materials::HDPE();
@@ -328,6 +333,7 @@ void Next100FieldCage::BuildActive()
   field->SetDriftVelocity(1. * mm/microsecond);
   field->SetTransverseDiffusion(drift_transv_diff_);
   field->SetLongitudinalDiffusion(drift_long_diff_);
+  field->SetLifetime(e_lifetime_);
   G4Region* drift_region = new G4Region("DRIFT");
   drift_region->SetUserInformation(field);
   drift_region->AddRootLogicalVolume(active_logic);
@@ -552,7 +558,10 @@ void Next100FieldCage::BuildELRegion()
   fgrid_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_,
                                                                temperature_,
                                                                el_grid_transparency_,
-                                                               grid_thickn_));
+                                                               grid_thickn_,
+                                                               sc_yield_,
+                                                               1000.*ms,
+                                                               photoe_prob_));
 
   /// Dimensions & position: the grids are simulated inside the EL gap.
   /// Their thickness is symbolic.

@@ -742,10 +742,12 @@ void Next1EL::BuildFieldCage()
 
   G4Material* fgrid = materials::FakeDielectric(gxe_, "grid_mat");
   fgrid->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_, 303,
-									elgrid_transparency_, diel_thickn, sc_yield_, e_lifetime_));
+                                                           elgrid_transparency_,
+                                                           diel_thickn, sc_yield_));
   G4Material* fgrid_gate = materials::FakeDielectric(gxe_, "grid_mat");
   fgrid_gate->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_, 303,
-									gate_transparency_, diel_thickn, sc_yield_, e_lifetime_));
+                                                                gate_transparency_,
+                                                                diel_thickn, sc_yield_));
 
   G4Tubs* diel_grid =
     new G4Tubs("GRID", 0., elgap_ring_diam_/2., diel_thickn/2., 0, twopi);
@@ -821,7 +823,7 @@ void Next1EL::BuildFieldCage()
   field->SetDriftVelocity(1.*mm/microsecond);
   field->SetTransverseDiffusion(1.*mm/sqrt(cm));
   field->SetLongitudinalDiffusion(.3*mm/sqrt(cm));
-
+  field->SetLifetime(e_lifetime_);
   G4Region* drift_region = new G4Region("DRIFT");
   drift_region->SetUserInformation(field);
   drift_region->AddRootLogicalVolume(active_logic);

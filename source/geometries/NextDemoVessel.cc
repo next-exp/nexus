@@ -104,11 +104,10 @@ void NextDemoVessel::Construct()
   G4String gas_name = "GAS";
 
   G4Material* gas_material = materials::GXe(gas_pressure_, gas_temperature_);
-  gas_material->
-    SetMaterialPropertiesTable(opticalprops::GXe(gas_pressure_,
-                                                              gas_temperature_,
-                                                              sc_yield_,
-                                                              e_lifetime_));
+  gas_material->SetMaterialPropertiesTable(opticalprops::GXe(gas_pressure_,
+                                                             gas_temperature_,
+                                                             sc_yield_,
+                                                             e_lifetime_));
 
   G4Tubs* gas_solid_vol =
     new G4Tubs(gas_name, 0., vessel_diam_/2., vessel_length_/2., 0, twopi);

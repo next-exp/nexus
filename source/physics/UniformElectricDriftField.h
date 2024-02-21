@@ -55,14 +55,11 @@ namespace nexus {
     void SetTransverseDiffusion(G4double);
     G4double GetTransverseDiffusion() const;
 
-    void SetAttachment(G4double);
-    G4double GetAttachment() const;
+    void SetLifetime(G4double);
+    G4double GetLifetime() const;
 
     void SetLightYield(G4double);
     virtual G4double LightYield() const;
-
-    void SetNumberOfPhotons(G4double);
-    G4double GetNumberOfPhotons() const;
 
     virtual G4double GetTotalDriftLength() const;
 
@@ -82,9 +79,8 @@ namespace nexus {
     G4double drift_velocity_; ///< Drift velocity of the charge carrier
     G4double transv_diff_;    ///< Transverse diffusion
     G4double longit_diff_;    ///< Longitudinal diffusion
-    G4double attachment_;
-    G4double light_yield_;
-    G4double num_ph_;
+    G4double lifetime_;       ///< Electron lifetime
+    G4double light_yield_;    ///< EL light yield
 
     SegmentPointSampler* rnd_;
 
@@ -123,21 +119,17 @@ namespace nexus {
   inline G4double UniformElectricDriftField::GetTransverseDiffusion() const
   { return transv_diff_; }
 
-  inline void UniformElectricDriftField::SetAttachment(G4double a)
-  { attachment_ = a; }
+  inline void UniformElectricDriftField::SetLifetime(G4double a)
+  { lifetime_ = a; }
 
-  inline G4double UniformElectricDriftField::GetAttachment() const
-  { return attachment_; }
+  inline G4double UniformElectricDriftField::GetLifetime() const
+  { return lifetime_; }
 
   inline void UniformElectricDriftField::SetLightYield(G4double ly)
   { light_yield_ = ly; }
 
   inline G4double UniformElectricDriftField::LightYield() const
   { return light_yield_; }
-
-  inline void UniformElectricDriftField::SetNumberOfPhotons(G4double nph)
-  { num_ph_ = nph; }
-
 
 
 } // end namespace nexus
