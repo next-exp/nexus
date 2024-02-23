@@ -14,6 +14,7 @@
 #include <G4Material.hh>
 #include <G4Element.hh>
 #include <G4NistManager.hh>
+
 #include <vector>
 #include <utility> 
 
@@ -23,7 +24,7 @@ using namespace CLHEP;
 namespace materials {
 
   // Function to calculate gas density based on isotopic composition
-  double CalculateGasDensityFromIsotopicComposition(double pressure, double temperature, const std::vector<std::pair<int, double>>& isotopicComposition) {
+  G4double CalculateGasDensityFromIsotopicComposition(G4double pressure, G4double temperature, const std::vector<std::pair<int, double>>& isotopicComposition) {
     const double R = 8.314; // Ideal gas constant in J/(mol·K)
     double averageMolarMass = 0.0; // in g/mol
 
@@ -38,7 +39,7 @@ namespace materials {
     averageMolarMass /= 1000.0;
 
     // Calculate density using the ideal gas law: ρ = PM / RT
-    double density = (pressure * averageMolarMass) / (R * temperature); // Result in kg/m^3
+    G4double density = (pressure * averageMolarMass) / (R * temperature); // Result in kg/m^3
     return density;
   }
 
@@ -51,7 +52,7 @@ namespace materials {
     G4String name = "GXe";
     G4Material* mat = G4Material::GetMaterial(name, false);
 
-    if (mat == nullptr) {
+    if (mat == 0) {
       G4NistManager* nist = G4NistManager::Instance();
       mat = new G4Material(name, density, 1, kStateGas, temperature, pressure);
       G4Element* Xe = nist->FindOrBuildElement("Xe");
@@ -201,17 +202,17 @@ namespace materials {
   }
 
   G4Material* GXeAr(G4double pressure, G4double temperature, G4double percXe) 
+  {
+    G4String name = "GXeAr";
+
+    G4Material* mat = G4Material::GetMaterial(name, false);
+
     std::vector<std::pair<int, double>> isotopicComposition = {
       {124, 0.0952}, {126, 0.089}, {128, 1.9102}, {129, 26.4006},
       {130, 4.071}, {131, 21.2324}, {132, 26.9086}, {134, 10.4357}, {136, 8.8573}
     };
 
     G4double GXeNatural_density = CalculateGasDensityFromIsotopicComposition(pressure * 1e5, temperature, isotopicComposition);
-    
-  {
-    G4String name = "GXeAr";
-
-    G4Material* mat = G4Material::GetMaterial(name, false);
 
     if (mat == 0) {
 
@@ -253,15 +254,16 @@ namespace materials {
   G4Material* GXeHe(G4double pressure,
           G4double temperature,
           G4double percXe, G4int mass_num)
+    
+  {
+    G4String name = "GXeHe";
+
     std::vector<std::pair<int, double>> isotopicComposition = {
       {129, 0.0656392}, {130, 0.0656392}, {131, 0.234361},
       {132, 0.708251}, {134, 8.6645}, {136, 90.2616}
     };
 
     G4double GXeEnriched_density = CalculateGasDensityFromIsotopicComposition(pressure * 1e5, temperature, isotopicComposition);
-    
-  {
-    G4String name = "GXeHe";
 
     G4Material* mat = G4Material::GetMaterial(name, false);
 
