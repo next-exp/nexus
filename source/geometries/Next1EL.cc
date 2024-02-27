@@ -12,7 +12,7 @@
 #include "OpticalMaterialProperties.h"
 #include "PmtR7378A.h"
 #include "IonizationSD.h"
-#include "HexagonPointSampler.h"
+#include "PolygonPointSampler.h"
 #include "UniformElectricDriftField.h"
 #include "XenonProperties.h"
 #include "NextElDB.h"
@@ -211,7 +211,7 @@ Next1EL::Next1EL():
 
 Next1EL::~Next1EL()
 {
-  delete hexrnd_;
+  delete active_gen_;
   delete muons_sampling_;
   delete msg_;
   delete cps_;
@@ -804,8 +804,7 @@ void Next1EL::BuildFieldCage()
   // WORLD system of reference
   active_position_.set(0.,0.,fieldcage_position_.z()+posz);
 
-  hexrnd_ = new HexagonPointSampler(active_diam_/2., active_length_, 0.,
-				    active_position_);
+  active_gen_ = new PolygonPointSampler(active_diam_/2.,active_diam_/2. + ltube_diam_/2. + tpb_thickn_, active_length_, 6, nullptr, active_position_);
 
   // Limit the step size in this volume for better tracking precision
   active_logic->SetUserLimits(new G4UserLimits(max_step_size_));
@@ -1069,8 +1068,7 @@ void Next1EL::BuildEnergyPlane()
   // The PMTs are placed in the holder in a honeycomb arrangement.
   // We use the hexagon point sampler to calculate the positions of the
   // PMTs given the pitch.
-  HexagonPointSampler hexsampler(ltube_diam_/2., 0., 0., G4ThreeVector(0.,0.,0.));
-  hexsampler.TesselateWithFixedPitch(pmt_pitch_, pmt_positions_);
+  TesselateWithFixedPitch(pmt_pitch_, pmt_positions_, ltube_diam_/2., G4ThreeVector(0.,0.,0.), nullptr);
 
   // Loop over the vector of positions
   for (unsigned int i = 0; i<pmt_positions_.size(); i++) {
@@ -1353,15 +1351,7 @@ G4ThreeVector Next1EL::GenerateVertex(const G4String& region) const
     //    G4ThreeVector point = sideNa_pos_;
     vertex = sideNa_pos_;
   } else if (region == "ACTIVE") {
-    vertex =  hexrnd_->GenerateVertex(INSIDE);
-  } else if (region == "RESTRICTED") {
-    vertex =  hexrnd_->GenerateVertex(PLANE);
-    //  } else if (region == "FIXED_RADIUS") {
-    //  G4ThreeVector point = hexrnd_->GenerateVertex(RADIUS, 10.);
-    // G4cout <<  point.getX() << ", "
-    // 	   <<  point.getY() << ", "
-    // 	   <<  point.getZ() << G4endl;
-    //    return  point;
+    vertex =  active_gen_->GenerateVertex(INSIDE);
   } else if (region == "AD_HOC"){
     vertex =  specific_vertex_;
   } else if (region == "EL_TABLE") {
@@ -1429,4 +1419,61 @@ void Next1EL::CalculateELTableVertices(G4double radius,
 	}
       }
     }
+}
+
+
+void Next1EL::TesselateWithFixedPitch (G4double pitch, std::vector<G4ThreeVector>& vpos, 
+                                      G4double apothem, G4ThreeVector origin, G4RotationMatrix* rotation) {
+  G4double cell_radius = pitch / sqrt(3.);
+  G4double cell_apothem = sqrt(3.)/2. * cell_radius;
+
+  G4int order = floor(2./3. * (apothem/cell_radius - 1.));
+
+  // Drop the contents of the vector, if any
+  vpos.clear();
+
+  PlaceCells(vpos, order, cell_apothem, origin, rotation);
+}
+
+void Next1EL::PlaceCells(std::vector<G4ThreeVector>& vp, G4int order, G4double cell_apothem, G4ThreeVector origin, G4RotationMatrix* rotation){
+  
+  // Place the central cell
+  G4ThreeVector position(0.,0.,0.);
+  vp.push_back(RotateAndTranslate(position, origin, rotation));
+
+  // Place the rings
+  // Notice that the loop starts at order 1 (first ring)
+  // because we've placed already the central cell (order-0 element).
+  for (G4int n=1; n<=order; n++) {
+
+    // For a ring of order n, there are n independent cells, that is,
+    // cells whose position cannot be obtained by rotating one of the
+    // other cells in the ring.
+    for (G4int i=0; i<n; i++) {
+
+      position.setX(-n * cell_apothem + i * 2. * cell_apothem);
+      position.setY(n* 2. * cell_apothem * cos(pi/6.));
+
+      vp.push_back(RotateAndTranslate(position, origin, rotation));
+
+      // Rotating 60º this position, we fill the other sides of
+      // the honeycomb.
+      for (G4int j=0; j<5; j++)
+        vp.push_back(RotateAndTranslate(position.rotateZ(pi/3.), origin, rotation));
+    
+    }
+  }
+}
+
+G4ThreeVector Next1EL::RotateAndTranslate(G4ThreeVector position, G4ThreeVector origin, G4RotationMatrix* rotation){
+
+  G4ThreeVector real_position(position);
+
+  // Rotating if needed
+  if (rotation)
+    real_position *= (*rotation);
+  // Translating
+  real_position += origin;
+
+  return real_position;
 }
