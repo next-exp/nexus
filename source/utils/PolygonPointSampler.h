@@ -43,7 +43,6 @@ namespace nexus {
     G4ThreeVector GenerateVertex(const vtx_region& region);
 
   private:
-    G4double      GetRadius(G4double innerRad, G4double outerRad);
     G4double      GetLength(G4double half_length);
     G4ThreeVector RotateAndTranslate(G4ThreeVector position);
     void InvertRotationAndTranslation(G4ThreeVector& vec, G4bool translate=true);

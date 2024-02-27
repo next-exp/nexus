@@ -137,13 +137,6 @@ namespace nexus {
     return RotateAndTranslate(G4ThreeVector(x, y, z));
   }
 
-  G4double PolygonPointSampler::GetRadius(G4double innerRad, G4double outerRad)
-  {
-    G4double rand = G4UniformRand();
-    G4double r = sqrt((1.-rand) * innerRad*innerRad + rand * outerRad*outerRad);
-    return r;
-  }
-
   G4double PolygonPointSampler::GetLength(G4double half_length)
   {
     return ((G4UniformRand() * 2.0 - 1.0) * half_length);
