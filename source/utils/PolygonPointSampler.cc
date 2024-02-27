@@ -45,8 +45,8 @@ namespace nexus {
     }
 
     for (int i = 0; i < n_sides_; ++i) {
-        polygon_inner_.push_back({min_radius_ * cos(theta[i]) + origin_.x(), min_radius_ * sin(theta[i]) + origin_.y()});
-        polygon_outer_.push_back({max_radius_ * cos(theta[i]) + origin_.x(), max_radius_ * sin(theta[i]) + origin_.y()});
+        polygon_inner_.push_back({min_radius_ * cos(theta[i]), min_radius_ * sin(theta[i])});
+        polygon_outer_.push_back({max_radius_ * cos(theta[i]), max_radius_ * sin(theta[i])});
 
     }
 
@@ -70,7 +70,8 @@ namespace nexus {
       G4bool valid_sample = false;
       std::vector<G4double> point;
       while (!valid_sample){
-        point = {2.0 * min_radius_ * (G4UniformRand() - 0.5), 2.0 * min_radius_ * (G4UniformRand() - 0.5)};
+        point = {2.0 * min_radius_ * (G4UniformRand() - 0.5),
+                 2.0 * min_radius_ * (G4UniformRand() - 0.5)};
         valid_sample= true;
         valid_sample = CheckXYBoundsPolygon(point, polygon_inner_);
       }
