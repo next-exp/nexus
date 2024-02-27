@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------------
 // nexus | PolygonPointSampler.cc
 //
-// This class is a sampler of random uniform points in a cylinder.
-// It follows the GEANT4 cylinder geometry parameter convention.
+// This class is a sampler of random uniform points in a polygon.
+// This is designed for sampling inside the light tube with n sides
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
