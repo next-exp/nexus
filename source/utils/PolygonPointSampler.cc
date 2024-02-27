@@ -9,11 +9,6 @@
 
 #include "PolygonPointSampler.h"
 
-#include <G4VPhysicalVolume.hh>
-#include <G4LogicalVolume.hh>
-#include <G4Tubs.hh>
-#include <G4VSolid.hh>
-#include <G4PhysicalConstants.hh>
 #include <Randomize.hh>
 
 
@@ -73,7 +68,7 @@ namespace nexus {
     if (region == INSIDE) {
       // sample position based on interior radius
       G4bool valid_sample = false;
-      std::vector<G4double>  point;
+      std::vector<G4double> point;
       while (!valid_sample){
         point = {2.0 * min_radius_ * (G4UniformRand() - 0.5), 2.0 * min_radius_ * (G4UniformRand() - 0.5)};
         valid_sample= true;
@@ -90,7 +85,7 @@ namespace nexus {
 
       // sample position based on interior radius
       G4bool valid_sample = false;
-      std::vector<G4double>  point;
+      std::vector<G4double> point;
 
       while (!valid_sample){
         point = {2.0 * max_radius_ * (G4UniformRand() - 0.5),
