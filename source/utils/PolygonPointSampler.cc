@@ -89,8 +89,19 @@ namespace nexus {
       std::vector<G4double> point;
 
       while (!valid_sample){
-        point = {2.0 * max_radius_ * (G4UniformRand() - 0.5),
-                 2.0 * max_radius_ * (G4UniformRand() - 0.5)};
+        
+        G4double internal_radius = min_radius_ * std::cos(M_PI/n_sides_);
+
+        G4double phi = GetPhi();
+        G4double rad = GetRadius(internal_radius, max_radius_);
+        G4double x = rad * cos(phi);
+        G4double y = rad * sin(phi);
+
+        // point = {2.0 * max_radius_ * (G4UniformRand() - 0.5),
+        //          2.0 * max_radius_ * (G4UniformRand() - 0.5)};
+
+        point = {x,y};
+
         G4bool inside_inner = CheckXYBoundsPolygon(point, polygon_inner_);
         G4bool inside_outer = CheckXYBoundsPolygon(point, polygon_outer_);
 
@@ -234,4 +245,17 @@ namespace nexus {
     if (rotation_)
       vec.rotate(-rotation_->delta(), rotation_->axis());
   }
+
+  G4double PolygonPointSampler::GetRadius(G4double innerRad, G4double outerRad)
+  {
+    G4double rand = G4UniformRand();
+    G4double r = sqrt((1.-rand) * innerRad*innerRad + rand * outerRad*outerRad);
+    return r;
+  }
+
+  G4double PolygonPointSampler::GetPhi()
+  {
+    return ((G4UniformRand() * twopi));
+  }
+
 } // end namespace nexus
