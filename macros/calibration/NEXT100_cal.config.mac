@@ -15,6 +15,7 @@
 /process/em/verbose 0
 
 ##### GEOMETRY #####
+/Geometry/Next100/pressure 10 bar
 /Geometry/Next100/elfield false
 /Geometry/Next100/max_step_size 1. mm
 /Geometry/Next100/th_source next100 #next_white
@@ -22,7 +23,7 @@
 ##### GENERATOR #####
 /Generator/IonGenerator/atomic_number 81
 /Generator/IonGenerator/mass_number 208
-/Generator/IonGenerator/region PORT_2b
+/Generator/IonGenerator/region PORT_2b # PORT_2a, PORT_1a, PORT_1b
 
 ##### PHYSICS #####
 ## No full simulation
