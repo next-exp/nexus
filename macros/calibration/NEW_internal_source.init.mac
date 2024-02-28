@@ -1,0 +1,29 @@
+## ----------------------------------------------------------------------------
+## nexus | NEW_disk_source.init.mac
+##
+## Initialization macro to simulate the activity of a specific calibration
+## source in the NEXT-WHITE detector. The source is placed inside one of the
+## ports inside the feedthrough, at configurable distance
+## from the most internal part of the feedthrough.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+### PHYSICS
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+/PhysicsList/RegisterPhysics NexusPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
+
+/nexus/RegisterGeometry NextNew
+
+/nexus/RegisterGenerator IonGenerator
+
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterRunAction DefaultRunAction
+
+/nexus/RegisterMacro macros/calibration/NEW_internal_source.config.mac

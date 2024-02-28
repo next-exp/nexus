@@ -1,8 +1,8 @@
 ## ----------------------------------------------------------------------------
-## nexus | NEXT100.config.mac
+## nexus | NEXT100_cal.config.mac
 ##
-## Configuration macro to simulate Bi-214 radioactive decays from the
-## copper plate of the tracking plane in the NEXT-100 detector.
+## Configuration macro to simulate decays of the Th calibration source
+## from one of the vessel ports in the NEXT-100 detector.
 ##
 ## The NEXT Collaboration
 ## ----------------------------------------------------------------------------
@@ -15,17 +15,15 @@
 /process/em/verbose 0
 
 ##### GEOMETRY #####
+/Geometry/Next100/pressure 10 bar
 /Geometry/Next100/elfield false
 /Geometry/Next100/max_step_size 1. mm
+/Geometry/Next100/th_source new_source #old_source
 
 ##### GENERATOR #####
-/Generator/IonGenerator/atomic_number 83
-/Generator/IonGenerator/mass_number 214
-/Generator/IonGenerator/region TP_COPPER_PLATE
-
-##### ACTIONS #####
-/Actions/DefaultEventAction/min_energy 0.6 MeV
-/Actions/DefaultEventAction/max_energy 2.55 MeV
+/Generator/IonGenerator/atomic_number 81
+/Generator/IonGenerator/mass_number 208
+/Generator/IonGenerator/region PORT_2b # PORT_2a, PORT_1a, PORT_1b
 
 ##### PHYSICS #####
 ## No full simulation
@@ -34,6 +32,4 @@
 /PhysicsList/Nexus/electroluminescence false
 
 ##### PERSISTENCY #####
-/nexus/persistency/output_file Next100.next
-## eventType options: bb0nu, bb2nu, background
-/nexus/persistency/event_type background
+/nexus/persistency/output_file Next100_th_cal

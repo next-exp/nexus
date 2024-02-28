@@ -36,9 +36,10 @@ namespace nexus {
     source_("Na")
   {
     /// Messenger
-    msg_ = new G4GenericMessenger(this, "/Geometry/CalibrationSource/",
-                                  "Control commands of geometry CalibrationSource.");
-     msg_->DeclareProperty("source", source_, "Radioactive source being used");
+    msg_ =
+      new G4GenericMessenger(this, "/Geometry/CalibrationSource/",
+                             "Control commands of geometry CalibrationSource.");
+    msg_->DeclareProperty("source", source_, "Radioactive source being used");
   }
 
   CalibrationSource::~CalibrationSource()
@@ -51,7 +52,8 @@ namespace nexus {
     // G4double piece_diam = 7. *mm;
     // G4double piece_length = 16. *mm;
     G4Tubs* screw_tube_solid =
-      new G4Tubs("SCREW_SUPPORT", 0., capsule_diam_/2., capsule_thick_/2., 0, twopi);
+      new G4Tubs("SCREW_SUPPORT", 0., capsule_diam_/2., capsule_thick_/2.,
+                 0, twopi);
     G4LogicalVolume* screw_tube_logic =
       new G4LogicalVolume(screw_tube_solid,
                           G4NistManager::Instance()->FindOrBuildMaterial("G4_Al"),
@@ -63,7 +65,8 @@ namespace nexus {
     // G4double source_thickness = 2. * mm;
 
     G4Tubs* source_solid =
-      new G4Tubs("SCREW_SOURCE", 0., source_diam_/2., source_thick_/2., 0., twopi);
+      new G4Tubs("SCREW_SOURCE", 0., source_diam_/2., source_thick_/2.,
+                 0., twopi);
 
     G4String material = "G4_" + source_;
 

@@ -35,6 +35,8 @@ namespace nexus {
 
     G4double GetSourceZpos();
 
+    void SetActiveMaterial(G4String source);
+
   private:
 
     // Messenger for the definition of control commands
@@ -53,8 +55,8 @@ namespace nexus {
 
     // Radioactive source being used
     G4String source_;
-
-
   };
+
+  inline void CalibrationSource::SetActiveMaterial(G4String source) {source_ = source;}
 }
 #endif

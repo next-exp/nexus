@@ -1,0 +1,28 @@
+## ----------------------------------------------------------------------------
+## nexus | NEW_disk_source.init.mac
+##
+## Initialization macro to simulate the activity of a specific calibration
+## source in the NEXT-WHITE detector. The source is placed outside the
+## axial or the lateral port, with lead collimator and external scintillator.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+### PHYSICS
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+/PhysicsList/RegisterPhysics NexusPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
+
+/nexus/RegisterGeometry NextNew
+
+/nexus/RegisterGenerator IonGenerator
+
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterRunAction DefaultRunAction
+
+/nexus/RegisterMacro macros/calibration/NEW_external_source.config.mac
