@@ -18,7 +18,7 @@
 /Geometry/Next100/pressure 10 bar
 /Geometry/Next100/elfield false
 /Geometry/Next100/max_step_size 1. mm
-/Geometry/Next100/th_source next100 #next_white
+/Geometry/Next100/th_source new_source #old_source
 
 ##### GENERATOR #####
 /Generator/IonGenerator/atomic_number 81

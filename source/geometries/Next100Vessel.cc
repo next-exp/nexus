@@ -125,7 +125,7 @@ namespace nexus {
     e_lifetime_cmd.SetUnitCategory("Time");
     e_lifetime_cmd.SetRange("e_lifetime>0.");
 
-    msg_->DeclareProperty("th_source", th_source_,  "Th-228 source used: next_white or next100");
+    msg_->DeclareProperty("th_source", th_source_,  "Th-228 source used: old_source or new_source");
   }
 
 
@@ -380,7 +380,7 @@ namespace nexus {
       G4double source_length = 0.;
       G4RotationMatrix* source_rot = new G4RotationMatrix;
       source_rot->rotateY(180. * deg);
-      if (th_source_ == "next100") {
+      if (th_source_ == "new_source") {
         Next100Th228Source source = Next100Th228Source();
         source.Construct();
         dist_th_zpos_end_ = source.GetDiffThZPosEnd();
@@ -389,7 +389,7 @@ namespace nexus {
         th_port_gen_ = new SpherePointSampler(0., source.GetThRadius());
 
         source_logic = source.GetLogicalVolume();
-      } else if (th_source_ == "next_white") {
+      } else if (th_source_ == "old_source") {
         CalibrationSource source = CalibrationSource();
         source.SetActiveMaterial("Th");
         source.Construct();
@@ -404,7 +404,7 @@ namespace nexus {
       } else {
         G4Exception("[Next100Vessel]", "Construct()", FatalException,
                     "Unknow kind of calibration source; it must be "
-                    "next100 or next_white.");
+                    "old_source or new_source.");
       }
 
       G4ThreeVector source_pos =
@@ -553,9 +553,9 @@ namespace nexus {
     }
 
     else if (region == "PORT_1a"){
-      if (th_source_ == "next100") {
+      if (th_source_ == "new_source") {
         vertex = th_port_gen_->GenerateVertex(VOLUME);
-      } else if (th_source_ == "next_white") {
+      } else if (th_source_ == "old_source") {
         vertex = th_white_port_gen_->GenerateVertex(VOLUME);
       }
       vertex = vertex.rotateX( 90. * deg);
@@ -566,9 +566,9 @@ namespace nexus {
     }
 
     else if (region == "PORT_2a"){
-      if (th_source_ == "next100") {
+      if (th_source_ == "new_source") {
         vertex = th_port_gen_->GenerateVertex(VOLUME);
-      } else if (th_source_ == "next_white") {
+      } else if (th_source_ == "old_source") {
         vertex = th_white_port_gen_->GenerateVertex(VOLUME);
       }
       vertex = vertex.rotateX( 90. * deg);
@@ -579,9 +579,9 @@ namespace nexus {
     }
 
     else if (region == "PORT_1b"){
-      if (th_source_ == "next100") {
+      if (th_source_ == "new_source") {
         vertex = th_port_gen_->GenerateVertex(VOLUME);
-      } else if (th_source_ == "next_white") {
+      } else if (th_source_ == "old_source") {
         vertex = th_white_port_gen_->GenerateVertex(VOLUME);
       }
       vertex = vertex.rotateX( 90. * deg);
@@ -592,9 +592,9 @@ namespace nexus {
     }
 
     else if (region == "PORT_2b"){
-      if (th_source_ == "next100") {
+      if (th_source_ == "new_source") {
         vertex = th_port_gen_->GenerateVertex(VOLUME);
-      } else if (th_source_ == "next_white") {
+      } else if (th_source_ == "old_source") {
         vertex = th_white_port_gen_->GenerateVertex(VOLUME);
       }
       vertex = vertex.rotateX( 90. * deg);
