@@ -10,7 +10,7 @@
 #include "HoneycombBeam.h"
 #include "MaterialsList.h"
 #include "Visibilities.h"
-#include "CylinderPointSampler2020.h"
+#include "CylinderPointSampler.h"
 
 #include <G4LogicalVolume.hh>
 #include <G4RotationMatrix.hh>
@@ -164,9 +164,9 @@ namespace nexus {
 
     // Vertex generator
     gen_  =
-      new CylinderPointSampler2020(0., longer_length/2., longer_height/2.,
-                                   0., 360.*deg, 0,
-                                   G4ThreeVector(0., 0., hc_posz));
+      new CylinderPointSampler(0., longer_length/2., longer_height/2.,
+                               0., 360.*deg, 0,
+                               G4ThreeVector(0., 0., hc_posz));
 
   }
 
@@ -177,7 +177,7 @@ namespace nexus {
     if (region == "HONEYCOMB") {
       G4VPhysicalVolume* VertexVolume;
       do {
-        vertex = gen_->GenerateVertex("VOLUME");
+        vertex = gen_->GenerateVertex(VOLUME);
         G4ThreeVector glob_vtx(vertex);
         glob_vtx = glob_vtx - GetCoordOrigin();
         VertexVolume = geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
