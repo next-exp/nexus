@@ -14,7 +14,7 @@
 #include <G4Navigator.hh>
 
 namespace nexus {
-  class CylinderPointSampler2020;
+  class CylinderPointSampler;
 
   class Honeycomb: public GeometryBase
   {
@@ -48,7 +48,7 @@ namespace nexus {
     G4double angle_, beam_dist_, beam_thickn_;
     G4double compl_angle_;
 
-    CylinderPointSampler2020* gen_;
+    CylinderPointSampler* gen_;
 
     G4Navigator* geom_navigator_;
   };
