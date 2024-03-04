@@ -1625,7 +1625,53 @@ namespace opticalprops {
     return mpt;
   }
 
+  // Copper Optical Properties Table
+  G4MaterialPropertiesTable * Copper()
+  {
+       G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
+      // Reflectivity
+      std::vector<G4double> refl_energies = {
+              optPhotMinE_, hc_ / (700. * nm), hc_ / (650. * nm),
+                            hc_ / (600. * nm), hc_ / (500. * nm),
+                            hc_ / (400. * nm), hc_ / (300. * nm),
+                            hc_ / (170. * nm), optPhotMaxE_ };
+
+      // We assume a reflectivity of the copper of 20% at VUV
+      // Measurements may be required to update these values
+      // Visible spectrum taken from: E. Hecht, Optics, 5th edn., Pg 142, Fig 4.69
+      std::vector<G4double> reflectivities = { 0.90, 0.90, 0.70, 0.60, 0.40, 0.35, 0.30, 0.20, 0.20};
+
+      // Add Properties
+      mpt->AddProperty("SPECULARLOBECONSTANT", {optPhotMinE_, optPhotMaxE_}, {0., 0.});
+      mpt->AddProperty("SPECULARSPIKECONSTANT",{optPhotMinE_, optPhotMaxE_}, {0., 0.});
+      mpt->AddProperty("BACKSCATTERCONSTANT",  {optPhotMinE_, optPhotMaxE_}, {0., 0.});
+      mpt->AddProperty("REFLECTIVITY", refl_energies, reflectivities);
+      return mpt;
+  }
+
+  // Stainles Steel Optical Properties Table
+  G4MaterialPropertiesTable * Steel()
+  {
+      G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
+
+      // Reflectivity
+      std::vector<G4double> refl_energies = {
+              optPhotMinE_, hc_ / (500. * nm), hc_ / (350. * nm),
+                            hc_ / (300. * nm), hc_ / (170. * nm),  optPhotMaxE_ };
+
+      // We assume a reflectivity of the stainless steel of 20% at VUV
+      // Measurements may be required to update these values
+      // Visible spectrum taken from: https://doi.org/10.1063/1.331503
+      std::vector<G4double> reflectivities = { 0.60, 0.60, 0.50, 0.40, 0.20, 0.20};
+
+      // Add properties
+      mpt->AddProperty("SPECULARLOBECONSTANT", {optPhotMinE_, optPhotMaxE_}, {0., 0.});
+      mpt->AddProperty("SPECULARSPIKECONSTANT",{optPhotMinE_, optPhotMaxE_}, {0., 0.});
+      mpt->AddProperty("BACKSCATTERCONSTANT",  {optPhotMinE_, optPhotMaxE_}, {0., 0.});
+      mpt->AddProperty("REFLECTIVITY", refl_energies, reflectivities);
+      return mpt;
+  }
 
   /// Generic material, to be modifed by the user ///
   G4MaterialPropertiesTable* XXX()

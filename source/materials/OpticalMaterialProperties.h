@@ -83,6 +83,10 @@ namespace opticalprops {
 
   G4MaterialPropertiesTable* PMMA();
 
+  G4MaterialPropertiesTable* Copper();
+
+  G4MaterialPropertiesTable* Steel();
+
   G4MaterialPropertiesTable* XXX();
 
 

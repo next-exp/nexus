@@ -219,6 +219,16 @@ namespace nexus {
     copper_plate_posz_ = GetCoordOrigin().z()
       + gate_sapphire_wdw_dist_ + stand_out_length + copper_plate_thickn_/2.;
 
+    // Add optical surface
+    G4OpticalSurface* gas_copperplate_opsur = new G4OpticalSurface("GAS_COPPER_PLATE_OPSURF");
+    gas_copperplate_opsur->SetType(dielectric_metal);
+    gas_copperplate_opsur->SetModel(unified);
+    gas_copperplate_opsur->SetFinish(ground);
+    gas_copperplate_opsur->SetSigmaAlpha(0.0);
+    gas_copperplate_opsur->SetMaterialPropertiesTable(opticalprops::Copper());
+    new G4LogicalSkinSurface("GAS_COPPER_PLATE_OPSURF",
+                            copper_plate_logic, gas_copperplate_opsur);
+
     new G4PVPlacement(0, G4ThreeVector(0., 0., copper_plate_posz_),
                       copper_plate_logic, "EP_COPPER_PLATE", mother_logic_, false, 0, false);
 
