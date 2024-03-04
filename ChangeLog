@@ -1,3 +1,10 @@
+tag v7_07_00 - 4 Mar 2024
+	- Add simulation of stainless steel hexagonal grids instead of dielectrics (default now)
+	- Assign lifetime property to the electric field
+	- Rewrite point samplers to follow G4 constructor style and make them more uniform
+	- Add reflection on metals
+	- Add new Th source to be used in NEXT-100
+
 tag v7_06_00 - 30 Jan 2024
 	- Major changes in the NEXT-100 geometry according to current drawings and actual installation
 	- Optimization of the code for cosmogenic simulations: output file size reduction, increased efficiency in primary particle production
