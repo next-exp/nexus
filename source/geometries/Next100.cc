@@ -256,7 +256,8 @@ namespace nexus {
              (region == "FIELD_RING") ||
              (region == "GATE_RING") ||
              (region == "ANODE_RING") ||
-             (region == "RING_HOLDER")) {
+             (region == "RING_HOLDER") ||
+             (region == "HONEYCOMB")) {
       vertex = inner_elements_->GenerateVertex(region);
     }
 
