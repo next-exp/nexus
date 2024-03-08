@@ -281,9 +281,10 @@ if not env['LIBPATH']:
     if env['QT_DIR'] == NULL_PATH:
         try:
             env['QT_DIR'] = os.environ['QT_DIR']
+            env.Append(CPPPATH = [env['QT_DIR']+'/include'])
         except KeyError:
-            Abort('QT installation directory could not be found.')
-    env.Append(CPPPATH = [env['QT_DIR']+'/include'])
+            print('Env variable for QT installation directory could not be found.'
+                  'The compilation usually succeeds anyway, except for some MacOS versions.')
 
 ## ##################################################################
 
