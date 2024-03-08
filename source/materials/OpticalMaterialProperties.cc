@@ -1642,9 +1642,11 @@ namespace opticalprops {
       // Visible spectrum taken from: E. Hecht, Optics, 5th edn., Pg 142, Fig 4.69
       std::vector<G4double> reflectivities = { 0.90, 0.90, 0.70, 0.60, 0.40, 0.35, 0.30, 0.20, 0.20};
 
+      // We assume that the reflectivity is mostly specular.
+      // Measurements may be required to update these values
       // Add Properties
       mpt->AddProperty("SPECULARLOBECONSTANT", {optPhotMinE_, optPhotMaxE_}, {0., 0.});
-      mpt->AddProperty("SPECULARSPIKECONSTANT",{optPhotMinE_, optPhotMaxE_}, {0., 0.});
+      mpt->AddProperty("SPECULARSPIKECONSTANT",{optPhotMinE_, optPhotMaxE_}, {0.75, 0.75});
       mpt->AddProperty("BACKSCATTERCONSTANT",  {optPhotMinE_, optPhotMaxE_}, {0., 0.});
       mpt->AddProperty("REFLECTIVITY", refl_energies, reflectivities);
       return mpt;
@@ -1665,9 +1667,11 @@ namespace opticalprops {
       // Visible spectrum taken from: https://doi.org/10.1063/1.331503
       std::vector<G4double> reflectivities = { 0.60, 0.60, 0.50, 0.40, 0.20, 0.20};
 
+      // We assume that the reflectivity is mostly specular.
+      // Measurements may be required to update these values
       // Add properties
       mpt->AddProperty("SPECULARLOBECONSTANT", {optPhotMinE_, optPhotMaxE_}, {0., 0.});
-      mpt->AddProperty("SPECULARSPIKECONSTANT",{optPhotMinE_, optPhotMaxE_}, {0., 0.});
+      mpt->AddProperty("SPECULARSPIKECONSTANT",{optPhotMinE_, optPhotMaxE_}, {0.75, 0.75});
       mpt->AddProperty("BACKSCATTERCONSTANT",  {optPhotMinE_, optPhotMaxE_}, {0., 0.});
       mpt->AddProperty("REFLECTIVITY", refl_energies, reflectivities);
       return mpt;
