@@ -1,3 +1,6 @@
+tag v7_07_01 - 8 Mar 2024
+	- Use mainly specular component for metal reflectivities
+
 tag v7_07_00 - 4 Mar 2024
 	- Add simulation of stainless steel hexagonal grids instead of dielectrics (default now)
 	- Assign lifetime property to the electric field
