@@ -91,7 +91,8 @@ REGISTER_CLASS(DefaultEventAction, G4UserEventAction)
         Trajectory* trj = dynamic_cast<Trajectory*>((*tc)[0]);
         if (trj == nullptr){
           G4Exception("[DefaultEventAction]", "EndOfEventAction()", FatalException,
-                      "DefaultTrackingAction is required when using DefaultEventAction");
+                      "The trajectory container is empty. If you are simulating optical photons as primary particles,"
+                      " and not using OpticalTrackingAction, you should use the G4 default event action.");
         }
         for (unsigned int i=0; i<tc->size(); ++i) {
           Trajectory* tr = dynamic_cast<Trajectory*>((*tc)[i]);
@@ -100,7 +101,9 @@ REGISTER_CLASS(DefaultEventAction, G4UserEventAction)
       }
       else {
         G4Exception("[DefaultEventAction]", "EndOfEventAction()", FatalException,
-                    "DefaultTrackingAction is required when using DefaultEventAction");
+                    "The trajectory container doesn't exist. Check that you are using DefaultTrackingAction."
+                    " Notice that, if you are simulating optical photons as primary particles, "
+                    "and not using OpticalTrackingAction, you should not specify any event actions.");
       }
 
       PersistencyManager* pm = dynamic_cast<PersistencyManager*>
