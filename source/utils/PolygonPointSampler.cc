@@ -64,15 +64,13 @@ namespace nexus {
       x = y = z = 0.;
     }
 
-    // Center of the chamber
-    if (region == INSIDE) {
-      // sample position based on interior radius
+    // Sample inside the polygon
+    else if (region == INSIDE) {
       G4bool valid_sample = false;
       std::vector<G4double> point;
       while (!valid_sample){
         point = {2.0 * min_radius_ * (G4UniformRand() - 0.5),
                  2.0 * min_radius_ * (G4UniformRand() - 0.5)};
-        valid_sample= true;
         valid_sample = CheckXYBoundsPolygon(point, polygon_inner_);
       }
 
@@ -81,7 +79,7 @@ namespace nexus {
       z = GetLength(half_length_);
     }
 
-    // Generating from inside the cylinder (between min_radius and max_radius)
+    // Generating from inside the polygon (between min_radius and max_radius)
     else if (region == VOLUME) {
 
       // sample position based on interior radius
@@ -94,18 +92,12 @@ namespace nexus {
 
         G4double phi = GetPhi();
         G4double rad = GetRadius(internal_radius, max_radius_);
-        G4double x = rad * cos(phi);
-        G4double y = rad * sin(phi);
-
-        // point = {2.0 * max_radius_ * (G4UniformRand() - 0.5),
-        //          2.0 * max_radius_ * (G4UniformRand() - 0.5)};
-
-        point = {x,y};
+        point = {rad * cos(phi), rad * sin(phi)};
 
         G4bool inside_inner = CheckXYBoundsPolygon(point, polygon_inner_);
         G4bool inside_outer = CheckXYBoundsPolygon(point, polygon_outer_);
 
-        // Want outside inner and inside outter
+        // Want outside inner and inside outer
         if (!inside_inner && inside_outer)
           valid_sample = true;
       }
@@ -154,21 +146,22 @@ namespace nexus {
 
     // This function checks if a point is inside a polygon (needed for checking if
     // inside the drift tube which has an octagonal-like shape).
-    // It works by counting intersections of the point in the horizontal plane
-    // as described in 
+    // It works by counting intersections of the point in the horizontal plane.
+    // A point is inside the polygon if either count of intersections is odd
+    // or point lies on an edge of polygon. As described in 
     // https://www.geeksforgeeks.org/how-to-check-if-a-given-point-lies-inside-a-polygon/
     
 
     G4double x = point[0], y = point[1];
     G4bool inside = false;
 
-    // Store the first point in the polygon and initialize the second point
+    // Store the first vertex in the polygon
     std::vector<G4double> p1 = {polygon[0][0],polygon[0][1]};
 
     // Loop through each edge in the polygon
     for (G4int i = 1; i <= n_sides_; i++) {
       
-      // Get the next point in the polygon
+      // Get the next vertex in the polygon
       std::vector<G4double> p2 ={polygon[i % n_sides_][0], polygon[i % n_sides_][1]};
 
       // 1. Check if the point is above the minimum y coordinate of the edge
@@ -179,15 +172,14 @@ namespace nexus {
         // Calculate the x-intersection of the line connecting the point to the edge
         G4double x_intersection = (y - p1[1]) * (p2[0] - p1[0]) / (p2[1] - p1[1]) + p1[0];
 
-        // Check if the point is on the same line as the edge or to the left of
-        // the x-intersection
-        if (p1[0] == p2[0] || x <= x_intersection) {
+        // Check if the point is to the left of the x-intersection
+        if (x <= x_intersection) {
           // Flip the inside flag
           inside = !inside;
         }
       }
 
-        // Store the current point as the first point for the next iteration
+        // Store the current vertex as the first vertex for the next iteration
         p1 = p2;
     }
    
