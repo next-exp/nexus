@@ -35,10 +35,12 @@ namespace materials {
 				                    G4double pressure=STP_Pressure);
   G4Material* GXeEnriched_bydensity(G4double density,
 					                          G4double temperature=STP_Temperature,
-					                          G4double pressure=STP_Pressure);
+					                          G4double pressure=STP_Pressure,
+                                    const std::vector<std::pair<int, double>>& isotopicComposition = {});
   G4Material* GXeDepleted_bydensity(G4double density,
 					                          G4double temperature=STP_Temperature,
-					                          G4double pressure=STP_Pressure);
+					                          G4double pressure=STP_Pressure,
+                                    const std::vector<std::pair<int, double>>& isotopicComposition = {});
 
   // Liquid xenon
   G4Material* LXe();
