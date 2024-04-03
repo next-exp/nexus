@@ -804,7 +804,7 @@ void Next1EL::BuildFieldCage()
   // WORLD system of reference
   active_position_.set(0.,0.,fieldcage_position_.z()+posz);
 
-  active_gen_ = new PolygonPointSampler(active_diam_/2.,active_diam_/2. + ltube_diam_/2. + tpb_thickn_, active_length_, 6, nullptr, active_position_);
+  active_gen_ = new PolygonPointSampler(active_diam_/2., active_diam_/2. + ltube_thickn_ + tpb_thickn_, active_length_, 6, nullptr, active_position_);
 
   // Limit the step size in this volume for better tracking precision
   active_logic->SetUserLimits(new G4UserLimits(max_step_size_));
