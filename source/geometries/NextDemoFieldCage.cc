@@ -285,10 +285,8 @@ namespace nexus {
     drift_region->SetUserInformation(field);
     drift_region->AddRootLogicalVolume(active_logic);
 
-    active_gen_ =
-      new CylinderPointSampler(0., active_diam_/2., active_length_/2.,
-                               0., twopi, nullptr,
-                               G4ThreeVector(0., 0., active_zpos_));
+    active_gen_ = new PolygonPointSampler(active_diam_/2., active_diam_/2. + light_tube_thickn_,
+                                          active_length_/2., 10, nullptr, G4ThreeVector(0., 0., active_zpos_));
 
     active_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
   }
@@ -688,7 +686,7 @@ namespace nexus {
      if (region == "ACTIVE") {
        G4VPhysicalVolume *VertexVolume;
        do {
-         vertex = active_gen_->GenerateVertex(VOLUME);
+         vertex = active_gen_->GenerateVertex(INSIDE);
          G4ThreeVector glob_vtx(vertex);
          glob_vtx = glob_vtx + G4ThreeVector(0, 0, -GetELzCoord());
          VertexVolume =

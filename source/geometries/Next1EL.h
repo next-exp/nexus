@@ -21,7 +21,7 @@ class G4UIcmdWith3VectorAndUnit;
 
 namespace nexus {
 
-  class HexagonPointSampler;
+  class PolygonPointSampler;
   class CylinderPointSamplerLegacy;
   class BoxPointSamplerLegacy;
 
@@ -52,9 +52,22 @@ namespace nexus {
     void BuildPMTTrackingPlane();
     void PrintAbsoluteSiPMPos();
 
+    /// Calculates the position of hexagonal cells of a given pitch
+    /// and stores them in a vector (notice that the vector will be
+    /// cleared before filling it)
+    void TesselateWithFixedPitch (G4double pitch, std::vector<G4ThreeVector>& vpos, 
+                                      G4double apothem, G4ThreeVector origin, G4RotationMatrix* rotation);
+
+    /// Calculates the position of cells in the honeycomb and stores
+    /// them in a vector
+    void PlaceCells(std::vector<G4ThreeVector>& vp, G4int order, G4double cell_apothem,
+                             G4ThreeVector origin, G4RotationMatrix* rotation);
+
+    G4ThreeVector RotateAndTranslate(G4ThreeVector position, G4ThreeVector origin, G4RotationMatrix* rotation);
+
   private:
 
-    HexagonPointSampler* hexrnd_;
+    PolygonPointSampler* active_gen_;
     BoxPointSamplerLegacy* muons_sampling_;
 
     // Pointers to materials definition

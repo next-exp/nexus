@@ -16,6 +16,7 @@
 #include <G4TransportationManager.hh>
 
 #include "GeometryBase.h"
+#include "PolygonPointSampler.h"
 
 class G4GenericMessenger;
 
@@ -115,7 +116,7 @@ namespace nexus {
     G4double ELelectric_field_;
 
     // Vertex generators
-    CylinderPointSampler* active_gen_;
+    PolygonPointSampler*  active_gen_;
     CylinderPointSampler* el_gap_gen_;
 
     // Messenger for the definition of control commands
