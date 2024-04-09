@@ -10,6 +10,7 @@
 #define MATERIALS_LIST_H
 
 #include <globals.hh>
+#include <vector>
 
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <CLHEP/Units/PhysicalConstants.h>
