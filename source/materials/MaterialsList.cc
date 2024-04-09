@@ -15,55 +15,83 @@
 #include <G4Element.hh>
 #include <G4NistManager.hh>
 
+#include <vector>
+#include <utility> 
+
 using namespace nexus;
 using namespace CLHEP;
 
-
 namespace materials {
-  G4Material* GXe(G4double pressure, G4double temperature)
-  {
-    G4Material* mat = GXe_bydensity(GXeDensity(pressure),
-                                    temperature, pressure);
+    // Calculation of Compressibilty factor from https://next.ific.uv.es/DocDB/0011/001183/001/GasDensity_2021-04-23.pdf
+    G4double CompressibilityFactor(G4double pressure, G4double temperature) {
+        double T_r = temperature/(289.733*kelvin);
+        double P_r = pressure/ (58.420*bar);
+        double B0 = 0.083 - (0.422 / pow(T_r, 1.6));   //Second virial coefficient
+        double z = 1 + B0*(P_r/T_r);  //Compressibility factor
+        return z;
+    }
 
+    // Function to calculate gas density based on Xe isotopic composition
+    G4double CalculateGasDensityFromIsotopicComposition(G4double pressure, G4double temperature,
+     const std::vector<std::pair<int, double>>& isotopicComposition)
+      {
+        const double R = 8.314*joule/(mole*kelvin); // Ideal gas constant
+        double average_molar_mass = 0.0;
+
+        for (const auto& iso : isotopicComposition) {
+            int mass_number = iso.first;
+            double percentage = iso.second;
+            double molar_mass = XenonMassPerMole(mass_number);
+            average_molar_mass += molar_mass * percentage;
+        }
+
+
+        double z = CompressibilityFactor(pressure, temperature);
+        double density = (pressure * average_molar_mass) / (z * R * temperature);
+        return density;
+    }
+
+  G4Material* GXe(G4double pressure, G4double temperature) {
+    std::vector<std::pair<int, double>> isotopicComposition = {
+      {124, 0.095*perCent}, {126, 0.089*perCent}, {128, 1.910*perCent},
+      {129, 26.401*perCent}, {130, 4.071*perCent}, {131, 21.232*perCent},
+      {132, 26.909*perCent}, {134,10.436*perCent}, {136, 8.857*perCent}
+    };
+
+    G4double gas_density = CalculateGasDensityFromIsotopicComposition(pressure, temperature, isotopicComposition);
+    G4Material* mat = GXe_bydensity(gas_density, temperature, pressure);
     return mat;
   }
 
-
-  G4Material* GXe_bydensity(G4double density,
-                                          G4double temperature,
-                                          G4double pressure)
-  {
+  G4Material* GXe_bydensity(G4double density, G4double temperature, G4double pressure) {
     G4String name = "GXe";
-
     G4Material* mat = G4Material::GetMaterial(name, false);
 
     if (mat == 0) {
       G4NistManager* nist = G4NistManager::Instance();
-
-      mat = new G4Material(name, density, 1,
-        kStateGas, temperature, pressure);
-
+      mat = new G4Material(name, density, 1, kStateGas, temperature, pressure);
       G4Element* Xe = nist->FindOrBuildElement("Xe");
-
-      mat->AddElement(Xe,1);
+      mat->AddElement(Xe, 1);
     }
 
     return mat;
   }
+  
+  G4Material* GXeEnriched(G4double pressure, G4double temperature) {
+    std::vector<std::pair<int, double>> isotopicComposition = {
+      {129, 0.0656392*perCent}, {130, 0.0656392*perCent}, {131, 0.234361*perCent},
+      {132, 0.708251*perCent}, {134, 8.6645*perCent}, {136, 90.2616*perCent}
+    };
 
-
-  G4Material* GXeEnriched(G4double pressure, G4double temperature)
-  {
-    G4double gas_density = GXeDensity(pressure);
-    G4Material* mat = GXeEnriched_bydensity(gas_density, temperature, pressure);
-
+    G4double gas_density = CalculateGasDensityFromIsotopicComposition(pressure, temperature, isotopicComposition);
+    G4Material* mat = GXeEnriched_bydensity(gas_density, temperature, pressure, isotopicComposition);
     return mat;
   }
 
-
-  G4Material* GXeEnriched_bydensity(G4double density,
+   G4Material* GXeEnriched_bydensity(G4double density,
               G4double temperature,
-              G4double pressure)
+              G4double pressure,
+              const std::vector<std::pair<int, double>>& isotopicComposition )
   {
     G4String name = "GXeEnriched";
 
@@ -74,42 +102,36 @@ namespace materials {
       mat = new G4Material(name, density, 1,
         kStateGas, temperature, pressure);
 
-      G4Element* Xe = new G4Element("GXeEnriched", "Xe", 6);
+      G4Element* Xe = new G4Element("GXeEnriched", "Xe", isotopicComposition.size());
 
-      G4Isotope* Xe129 = new G4Isotope("Xe129", 54, 129, XenonMassPerMole(129));
-      G4Isotope* Xe130 = new G4Isotope("Xe130", 54, 130, XenonMassPerMole(130));
-      G4Isotope* Xe131 = new G4Isotope("Xe131", 54, 131, XenonMassPerMole(131));
-      G4Isotope* Xe132 = new G4Isotope("Xe132", 54, 132, XenonMassPerMole(132));
-      G4Isotope* Xe134 = new G4Isotope("Xe134", 54, 134, XenonMassPerMole(134));
-      G4Isotope* Xe136 = new G4Isotope("Xe136", 54, 136, XenonMassPerMole(136));
-
-      Xe->AddIsotope(Xe129, 0.0656392*perCent);
-      Xe->AddIsotope(Xe130, 0.0656392*perCent);
-      Xe->AddIsotope(Xe131, 0.234361*perCent);
-      Xe->AddIsotope(Xe132, 0.708251*perCent);
-      Xe->AddIsotope(Xe134, 8.6645*perCent);
-      Xe->AddIsotope(Xe136, 90.2616*perCent);
-
-
-
+        for (const auto& isotopeInfo : isotopicComposition) {
+            int massNumber = isotopeInfo.first;
+            double abundance = isotopeInfo.second;
+            G4String isotopeName = "Xe" + std::to_string(massNumber);
+            G4Isotope* isotope = new G4Isotope(isotopeName, 54, massNumber, XenonMassPerMole(massNumber));
+            Xe->AddIsotope(isotope, abundance);
+        }
       mat->AddElement(Xe,1);
     }
 
     return mat;
   }
 
-  G4Material* GXeDepleted(G4double pressure, G4double temperature)
-  {
-    G4double gas_density = GXeDensity(pressure);
-    G4Material* mat = GXeDepleted_bydensity(gas_density, temperature, pressure);
+  G4Material* GXeDepleted(G4double pressure, G4double temperature) {
+    std::vector<std::pair<int, double>> isotopicComposition = {
+      {124, 0.102*perCent}, {126, 0.201*perCent}, {128, 3.065*perCent}, {129, 24.900*perCent}, {130, 5.361*perCent},
+      {131, 23.280*perCent}, {132, 30.666*perCent}, {134, 9.822*perCent}, {136, 2.602*perCent}
+    };
 
+    G4double gas_density = CalculateGasDensityFromIsotopicComposition(pressure, temperature, isotopicComposition);
+    G4Material* mat = GXeDepleted_bydensity(gas_density, temperature, pressure, isotopicComposition);
     return mat;
   }
 
-
   G4Material* GXeDepleted_bydensity(G4double density,
               G4double temperature,
-              G4double pressure)
+              G4double pressure,
+              const std::vector<std::pair<int, double>>& isotopicComposition)
   {
     G4String name = "GXeDepleted";
 
@@ -121,24 +143,16 @@ namespace materials {
         kStateGas, temperature, pressure);
 
 
-      G4Element* Xe = new G4Element("GXeDepleted", "Xe", 5);
-
-      G4Isotope* Xe129 = new G4Isotope("Xe129", 54, 129, XenonMassPerMole(129));
-      G4Isotope* Xe131 = new G4Isotope("Xe131", 54, 131, XenonMassPerMole(131));
-      G4Isotope* Xe132 = new G4Isotope("Xe132", 54, 132, XenonMassPerMole(132));
-      G4Isotope* Xe134 = new G4Isotope("Xe134", 54, 134, XenonMassPerMole(134));
-      G4Isotope* Xe136 = new G4Isotope("Xe136", 54, 136, XenonMassPerMole(136));
-
-
-      // Bottle number 9056842
-      Xe->AddIsotope(Xe129, 27.29*perCent);
-      Xe->AddIsotope(Xe131, 27.07*perCent);
-      Xe->AddIsotope(Xe132, 28.31*perCent);
-      Xe->AddIsotope(Xe134, 8.61*perCent);
-      Xe->AddIsotope(Xe136, 2.55*perCent);
-
-
-
+      G4Element* Xe = new G4Element("GXeDepleted", "Xe",isotopicComposition.size());
+      
+      for (const auto& isotopeInfo : isotopicComposition) {
+            int massNumber = isotopeInfo.first;
+            double abundance = isotopeInfo.second;
+            G4String isotopeName = "Xe" + std::to_string(massNumber);
+            G4Isotope* isotope = new G4Isotope(isotopeName, 54, massNumber, XenonMassPerMole(massNumber));
+            // Bottle number 9056842//https://next.ific.uv.es/DocDB/0004/000481/001/IsotopicComposition_20170921.pdf
+            Xe->AddIsotope(isotope, abundance);
+        }
       mat->AddElement(Xe,1);
     }
 
@@ -186,40 +200,37 @@ namespace materials {
     return mat;
   }
 
-  G4Material* GXeAr(G4double pressure, G4double temperature, G4double percXe)
+  G4Material* GXeAr(G4double pressure, G4double temperature, G4double percXe) 
   {
     G4String name = "GXeAr";
 
     G4Material* mat = G4Material::GetMaterial(name, false);
 
+    std::vector<std::pair<int, double>> isotopicComposition = {
+      {124, 0.0952*perCent}, {126, 0.089*perCent}, {128, 1.9102*perCent}, {129, 26.4006*perCent},
+      {130, 4.071*perCent}, {131, 21.2324*perCent}, {132, 26.9086*perCent}, {134, 10.4357*perCent}, {136, 8.8573*perCent}
+    };
+
+    G4double GXeNatural_density = CalculateGasDensityFromIsotopicComposition(pressure, temperature, isotopicComposition);
+
     if (mat == 0) {
 
       mat = new G4Material(name,
         (1-(percXe/100.))*ArgonDensity(pressure) +
-        percXe/100.*GXeDensity(pressure),
+        percXe/100.*GXeNatural_density,
         2, kStateGas, temperature, pressure);
 
-      G4Element* NaturalXe = new G4Element("GXeNatural", "Xe", 9);
+      G4Element* NaturalXe = new G4Element("GXeNatural", "Xe", isotopicComposition.size());
 
-      G4Isotope* Xe124 = new G4Isotope("Xe124", 54, 124, XenonMassPerMole(124));
-      G4Isotope* Xe126 = new G4Isotope("Xe126", 54, 126, XenonMassPerMole(126));
-      G4Isotope* Xe128 = new G4Isotope("Xe128", 54, 128, XenonMassPerMole(128));
-      G4Isotope* Xe129 = new G4Isotope("Xe129", 54, 129, XenonMassPerMole(129));
-      G4Isotope* Xe130 = new G4Isotope("Xe130", 54, 130, XenonMassPerMole(130));
-      G4Isotope* Xe131 = new G4Isotope("Xe131", 54, 131, XenonMassPerMole(131));
-      G4Isotope* Xe132 = new G4Isotope("Xe132", 54, 132, XenonMassPerMole(132));
-      G4Isotope* Xe134 = new G4Isotope("Xe134", 54, 134, XenonMassPerMole(134));
-      G4Isotope* Xe136 = new G4Isotope("Xe136", 54, 136, XenonMassPerMole(136));
 
-      NaturalXe->AddIsotope(Xe124, 0.0952*perCent);
-      NaturalXe->AddIsotope(Xe126, 0.089*perCent);
-      NaturalXe->AddIsotope(Xe128, 1.9102*perCent);
-      NaturalXe->AddIsotope(Xe129, 26.4006*perCent);
-      NaturalXe->AddIsotope(Xe130, 4.071*perCent);
-      NaturalXe->AddIsotope(Xe131, 21.2324*perCent);
-      NaturalXe->AddIsotope(Xe132, 26.9086*perCent);
-      NaturalXe->AddIsotope(Xe134, 10.4357*perCent);
-      NaturalXe->AddIsotope(Xe136, 8.8573*perCent);
+      for (const auto& isotopeInfo : isotopicComposition) {
+            int massNumber = isotopeInfo.first;
+            double abundance = isotopeInfo.second;
+            G4String isotopeName = "Xe" + std::to_string(massNumber);
+            G4Isotope* isotope = new G4Isotope(isotopeName, 54, massNumber, XenonMassPerMole(massNumber));
+            NaturalXe->AddIsotope(isotope, abundance); 
+        }
+
 
       G4Element* NaturalAr  = new G4Element("Argon", "Ar", 18, 39.962383123*g/mole);
 
@@ -239,6 +250,13 @@ namespace materials {
   {
     G4String name = "GXeHe";
 
+    std::vector<std::pair<int, double>> isotopicComposition = {
+      {129, 0.0656392*perCent}, {130, 0.0656392*perCent}, {131, 0.234361*perCent},
+      {132, 0.708251*perCent}, {134, 8.6645*perCent}, {136, 90.2616*perCent}
+    };
+
+    G4double GXeEnriched_density = CalculateGasDensityFromIsotopicComposition(pressure, temperature, isotopicComposition);
+
     G4Material* mat = G4Material::GetMaterial(name, false);
 
     if (mat == 0) {
@@ -247,32 +265,19 @@ namespace materials {
       G4double prop_he = 1. - prop_xe;
 
       mat = new G4Material(name,
-        prop_xe * GXeDensity(pressure)
+        prop_xe * GXeEnriched_density
         + prop_he * HeliumDensity(pressure),
         2, kStateGas, temperature, pressure);
 
 
-      G4Element* enrichedXe = new G4Element("GXeEnriched", "enrichedXe", 6);
-      G4Isotope* Xe129 = new G4Isotope("Xe129", 54, 129,
-              XenonMassPerMole(129));
-      G4Isotope* Xe130 = new G4Isotope("Xe130", 54, 130,
-              XenonMassPerMole(130));
-      G4Isotope* Xe131 = new G4Isotope("Xe131", 54, 131,
-              XenonMassPerMole(131));
-      G4Isotope* Xe132 = new G4Isotope("Xe132", 54, 132,
-              XenonMassPerMole(132));
-      G4Isotope* Xe134 = new G4Isotope("Xe134", 54, 134,
-              XenonMassPerMole(134));
-      G4Isotope* Xe136 = new G4Isotope("Xe136", 54, 136,
-              XenonMassPerMole(136));
-
-      enrichedXe->AddIsotope(Xe129, 0.0656392*perCent);
-      enrichedXe->AddIsotope(Xe130, 0.0656392*perCent);
-      enrichedXe->AddIsotope(Xe131, 0.234361*perCent);
-      enrichedXe->AddIsotope(Xe132, 0.708251*perCent);
-      enrichedXe->AddIsotope(Xe134, 8.6645*perCent);
-      enrichedXe->AddIsotope(Xe136, 90.2616*perCent);
-
+      G4Element* enrichedXe = new G4Element("GXeEnriched", "enrichedXe", isotopicComposition.size());
+      for (const auto& isotopeInfo : isotopicComposition) {
+            int massNumber = isotopeInfo.first;
+            double abundance = isotopeInfo.second;
+            G4String isotopeName = "Xe" + std::to_string(massNumber);
+            G4Isotope* isotope = new G4Isotope(isotopeName, 54, massNumber, XenonMassPerMole(massNumber));
+            enrichedXe->AddIsotope(isotope, abundance); 
+        }
       G4Element * Helium = new G4Element("Helium", "Helium", 1);
       G4Isotope * He     = new G4Isotope("He", 2, mass_num,
                 HeliumMassPerMole(mass_num));
