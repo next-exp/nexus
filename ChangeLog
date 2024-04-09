@@ -1,3 +1,7 @@
+tag v7_08_00 - 9 Apr 2024
+	- Calculate Xe density taking into account its isotopic composition
+	- Add sampler for polygon-shaped volumes.
+
 tag v7_07_01 - 8 Mar 2024
 	- Use mainly specular component for metal reflectivities
 
