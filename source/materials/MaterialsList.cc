@@ -26,17 +26,17 @@ namespace materials {
     G4double CompressibilityFactor(G4double pressure, G4double temperature) {
         double T_r = temperature/(289.733*kelvin);
         double P_r = pressure/ (58.420*bar);
-        double B0 = 0.083 - (0.422 / pow(T_r, 1.6));   //Second virial coefficient    
-        double z = 1 + B0*(P_r/T_r);  //Compressibility factor(in G4unit)
-        return z;       
+        double B0 = 0.083 - (0.422 / pow(T_r, 1.6));   //Second virial coefficient
+        double z = 1 + B0*(P_r/T_r);  //Compressibility factor
+        return z;
     }
 
     // Function to calculate gas density based on Xe isotopic composition
     G4double CalculateGasDensityFromIsotopicComposition(G4double pressure, G4double temperature,
-     const std::vector<std::pair<int, double>>& isotopicComposition)   //pressure in G4unit , temperature in G4unit
+     const std::vector<std::pair<int, double>>& isotopicComposition)
       {
-        const double R = 8.314*joule/(mole*kelvin); // Ideal gas constant in G4unit
-        double average_molar_mass = 0.0; 
+        const double R = 8.314*joule/(mole*kelvin); // Ideal gas constant
+        double average_molar_mass = 0.0;
 
         for (const auto& iso : isotopicComposition) {
             int mass_number = iso.first;
@@ -47,18 +47,18 @@ namespace materials {
 
 
         double z = CompressibilityFactor(pressure, temperature);
-        double density = (pressure * average_molar_mass) / (z * R * temperature); 
-        return density; //in G4unit
+        double density = (pressure * average_molar_mass) / (z * R * temperature);
+        return density;
     }
 
   G4Material* GXe(G4double pressure, G4double temperature) {
     std::vector<std::pair<int, double>> isotopicComposition = {
       {124, 0.095*perCent}, {126, 0.089*perCent}, {128, 1.910*perCent},
-      {129, 26.401*perCent}, {130, 4.071*perCent}, {131, 21.232*perCent}, 
+      {129, 26.401*perCent}, {130, 4.071*perCent}, {131, 21.232*perCent},
       {132, 26.909*perCent}, {134,10.436*perCent}, {136, 8.857*perCent}
     };
 
-    G4double gas_density = CalculateGasDensityFromIsotopicComposition(pressure , temperature, isotopicComposition);
+    G4double gas_density = CalculateGasDensityFromIsotopicComposition(pressure, temperature, isotopicComposition);
     G4Material* mat = GXe_bydensity(gas_density, temperature, pressure);
     return mat;
   }
@@ -151,7 +151,7 @@ namespace materials {
             G4String isotopeName = "Xe" + std::to_string(massNumber);
             G4Isotope* isotope = new G4Isotope(isotopeName, 54, massNumber, XenonMassPerMole(massNumber));
             // Bottle number 9056842//https://next.ific.uv.es/DocDB/0004/000481/001/IsotopicComposition_20170921.pdf
-            Xe->AddIsotope(isotope, abundance); 
+            Xe->AddIsotope(isotope, abundance);
         }
       mat->AddElement(Xe,1);
     }
