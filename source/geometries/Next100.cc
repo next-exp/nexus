@@ -243,7 +243,7 @@ namespace nexus {
              (region == "XENON") ||
              (region == "LIGHT_TUBE") ||
              (region == "HDPE_TUBE") ||
-             (region == "EL_GAP") ||
+             (region == "EL_GAP_PMT") ||
              (region == "EP_COPPER_PLATE") ||
              (region == "SAPPHIRE_WINDOW") ||
              (region == "OPTICAL_PAD") ||

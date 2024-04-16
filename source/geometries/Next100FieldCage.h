@@ -102,7 +102,7 @@ namespace nexus {
     CylinderPointSampler* buffer_gen_;
     CylinderPointSampler* teflon_gen_;
     CylinderPointSampler* xenon_gen_;
-    CylinderPointSampler* el_gap_gen_;
+    CylinderPointSampler* el_gap_pmt_gen_;
     CylinderPointSampler* hdpe_gen_;
     CylinderPointSampler* ring_gen_;
     CylinderPointSampler* cathode_gen_;

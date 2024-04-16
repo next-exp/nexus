@@ -736,7 +736,7 @@ void Next100FieldCage::BuildELRegion()
                                - el_gap_length_ * el_gap_slice_min_ // start of slice
                                - el_gap_slice_thickness/2.;         // center of slice
 
-  el_gap_gen_ =
+  el_gap_pmt_gen_ =
     new CylinderPointSampler(0., gate_int_diam_/2.,
                              el_gap_slice_thickness/2.,
                              0., twopi,
@@ -1031,7 +1031,7 @@ Next100FieldCage::~Next100FieldCage()
   delete buffer_gen_;
   delete xenon_gen_;
   delete teflon_gen_;
-  delete el_gap_gen_;
+  delete el_gap_pmt_gen_;
   delete hdpe_gen_;
   delete ring_gen_;
   delete cathode_gen_;
@@ -1108,7 +1108,7 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
   }
 
   else if (region == "EL_GAP") {
-    vertex = el_gap_gen_->GenerateVertex(VOLUME);
+    vertex = el_gap_pmt_gen_->GenerateVertex(VOLUME);
   }
 
   else if (region == "FIELD_RING") {
