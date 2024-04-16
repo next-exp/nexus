@@ -86,10 +86,9 @@ namespace nexus {
     // Use fake mesh
     G4bool use_dielectric_grid_;
 
-    // Parameters related to look-up table generation
-    G4double el_gap_gen_disk_diam_;
-    G4double el_gap_gen_disk_x_, el_gap_gen_disk_y_;
-    G4double el_gap_gen_disk_zmin_, el_gap_gen_disk_zmax_;
+    // Fraction of EL gap in which to generate points. e.g (0, 0.5)
+    // would generate points in the first half of the EL gap
+    G4double el_gap_slice_min_, el_gap_slice_max_;
 
     G4double active_length_, buffer_length_;
     G4double teflon_drift_length_, teflon_drift_zpos_,teflon_buffer_zpos_;
