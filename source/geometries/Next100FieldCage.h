@@ -37,6 +37,7 @@ namespace nexus {
     void SetMotherLogicalVolume(G4LogicalVolume* mother_logic);
     void SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys);
     void SetELtoSapphireWDWdistance(G4double);
+    void SetSiPMPitch(G4double);
 
   private:
     void DefineMaterials();
@@ -112,6 +113,9 @@ namespace nexus {
     CylinderPointSampler* anode_gen_;
     CylinderPointSampler* holder_gen_;
 
+    // SiPM pitch for ELgap vertex generation
+    G4double sipm_pitch_;
+
     // Geometry Navigator
     G4Navigator* geom_navigator_;
 
@@ -141,6 +145,10 @@ namespace nexus {
 
   inline void Next100FieldCage::SetELtoSapphireWDWdistance(G4double distance){
     gate_sapphire_wdw_dist_ = distance;
+  }
+
+  inline void Next100FieldCage::SetSiPMPitch(G4double pitch) {
+    sipm_pitch_ = pitch;
   }
 
 } //end namespace nexus

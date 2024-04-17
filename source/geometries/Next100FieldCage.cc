@@ -111,6 +111,7 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   use_dielectric_grid_(0),
   // EL gap generation disk parameters
   el_gap_slice_min_(0.), el_gap_slice_max_(1.),
+  sipm_pitch_(0),
   photoe_prob_(0)
 {
   /// Define new categories
@@ -743,7 +744,10 @@ void Next100FieldCage::BuildELRegion()
                              0., twopi,
                              nullptr, {0, 0, el_gap_slice_center});
 
-  auto sipm_pitch_ = 123;
+  if (sipm_pitch_ <= 0) {
+    G4Exception("[Next100FieldCage]", "Next100FieldCage()",
+                FatalErrorInArgument, "Error in configuration of EL gap generator: sipm_pitch <= 0");
+  }
   auto unit_cell_center = G4ThreeVector{0, 0, el_gap_slice_center};
   el_gap_sipm_gen_ =
     new BoxPointSampler(sipm_pitch_/2, sipm_pitch_/2, el_gap_slice_thickness/2.,

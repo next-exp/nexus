@@ -244,3 +244,8 @@ G4ThreeVector Next100TrackingPlane::GenerateVertex(const G4String& region) const
 
   return vertex;
 }
+
+
+G4double Next100TrackingPlane::GetSiPMPitch() const {
+  return sipm_board_geom_->GetSiPMPitch();
+}

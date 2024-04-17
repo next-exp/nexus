@@ -66,6 +66,7 @@ namespace nexus {
     field_cage_->SetMotherPhysicalVolume(mother_phys_);
     field_cage_->SetCoordOrigin(coord_origin);
     field_cage_->SetELtoSapphireWDWdistance(gate_sapphire_wdw_distance_);
+    field_cage_->SetSiPMPitch(tracking_plane_->GetSiPMPitch());
     field_cage_->Construct();
 
     // Energy Plane
