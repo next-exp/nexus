@@ -1107,7 +1107,7 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
     vertex = hdpe_gen_->GenerateVertex(VOLUME);
   }
 
-  else if (region == "EL_GAP") {
+  else if (region == "EL_GAP_PMT") {
     vertex = el_gap_pmt_gen_->GenerateVertex(VOLUME);
   }
 
