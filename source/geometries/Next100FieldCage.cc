@@ -738,6 +738,8 @@ void Next100FieldCage::BuildELRegion()
                                - el_gap_length_ * el_gap_slice_min_ // start of slice
                                - el_gap_slice_thickness/2.;         // center of slice
 
+  // Here vertices are generated in a cylinder with the same diameter
+  // as the gate. In z, the vertices are limited to a slice of the EL gap.
   el_gap_pmt_gen_ =
     new CylinderPointSampler(0., gate_int_diam_/2.,
                              el_gap_slice_thickness/2.,
@@ -748,6 +750,14 @@ void Next100FieldCage::BuildELRegion()
     G4Exception("[Next100FieldCage]", "Next100FieldCage()",
                 FatalErrorInArgument, "Error in configuration of EL gap generator: sipm_pitch <= 0");
   }
+
+
+  // We generate vertices in an xy unit cell, i.e. a portion of the
+  // plane that can tessellate the space by translations and
+  // reflections. This unit cell is a square of side=pitch. The
+  // position of this is square is not relevant as long as it is
+  // sufficiently far away from the edges of the detector. The
+  // vertices are generated in a slice of the EL gap.
   auto unit_cell_center = G4ThreeVector{0, 0, el_gap_slice_center};
   el_gap_sipm_gen_ =
     new BoxPointSampler(sipm_pitch_/2, sipm_pitch_/2, el_gap_slice_thickness/2.,
