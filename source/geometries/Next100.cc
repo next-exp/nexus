@@ -244,6 +244,7 @@ namespace nexus {
              (region == "LIGHT_TUBE") ||
              (region == "HDPE_TUBE") ||
              (region == "EL_GAP_PMT") ||
+             (region == "EL_GAP_SIPM") ||
              (region == "EP_COPPER_PLATE") ||
              (region == "SAPPHIRE_WINDOW") ||
              (region == "OPTICAL_PAD") ||

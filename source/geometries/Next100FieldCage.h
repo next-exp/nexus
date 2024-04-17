@@ -21,6 +21,7 @@ class G4Navigator;
 namespace nexus {
 
   class CylinderPointSampler;
+  class BoxPointSampler;
 
 
   class Next100FieldCage: public GeometryBase
@@ -103,6 +104,7 @@ namespace nexus {
     CylinderPointSampler* teflon_gen_;
     CylinderPointSampler* xenon_gen_;
     CylinderPointSampler* el_gap_pmt_gen_;
+    BoxPointSampler*      el_gap_sipm_gen_;
     CylinderPointSampler* hdpe_gen_;
     CylinderPointSampler* ring_gen_;
     CylinderPointSampler* cathode_gen_;

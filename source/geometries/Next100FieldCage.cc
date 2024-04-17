@@ -15,6 +15,7 @@
 #include "UniformElectricDriftField.h"
 #include "XenonProperties.h"
 #include "CylinderPointSampler.h"
+#include "BoxPointSampler.h"
 #include "HexagonMeshTools.h"
 
 #include <G4Navigator.hh>
@@ -742,6 +743,12 @@ void Next100FieldCage::BuildELRegion()
                              0., twopi,
                              nullptr, {0, 0, el_gap_slice_center});
 
+  auto sipm_pitch_ = 123;
+  auto unit_cell_center = G4ThreeVector{0, 0, el_gap_slice_center};
+  el_gap_sipm_gen_ =
+    new BoxPointSampler(sipm_pitch_/2, sipm_pitch_/2, el_gap_slice_thickness/2.,
+                        0, unit_cell_center, nullptr);
+
   // Gate ring vertex generator
   gate_gen_ =
     new CylinderPointSampler(gate_int_diam_/2., gate_ext_diam_/2.,
@@ -1032,6 +1039,7 @@ Next100FieldCage::~Next100FieldCage()
   delete xenon_gen_;
   delete teflon_gen_;
   delete el_gap_pmt_gen_;
+  delete el_gap_sipm_gen_;
   delete hdpe_gen_;
   delete ring_gen_;
   delete cathode_gen_;
@@ -1109,6 +1117,10 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
 
   else if (region == "EL_GAP_PMT") {
     vertex = el_gap_pmt_gen_->GenerateVertex(VOLUME);
+  }
+
+  else if (region == "EL_GAP_SIPM") {
+    vertex = el_gap_sipm_gen_->GenerateVertex(INSIDE);
   }
 
   else if (region == "FIELD_RING") {

@@ -105,6 +105,7 @@ namespace nexus {
         (region == "BUFFER") ||
         (region == "XENON")  ||
         (region == "EL_GAP_PMT") ||
+        (region == "EL_GAP_SIPM") ||
         (region == "LIGHT_TUBE") ||
         (region == "HDPE_TUBE") ||
         (region == "FIELD_RING") ||
