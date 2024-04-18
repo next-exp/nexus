@@ -179,7 +179,7 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
 
   G4GenericMessenger::Command& el_gap_slice_max_cmd =
     msg_->DeclareProperty("el_gap_slice_max", el_gap_slice_max_,
-                          "Uppeer limit (fraction) to the EL gap slice in which vertices are generated.");
+                          "Upper limit (fraction) to the EL gap slice in which vertices are generated.");
   el_gap_slice_max_cmd.SetParameterName("el_gap_slice_max", false);
   el_gap_slice_max_cmd.SetRange("el_gap_slice_max >= 0.0 &&"
                                 "el_gap_slice_max <= 1.0");
