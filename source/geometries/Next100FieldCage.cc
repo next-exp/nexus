@@ -1133,11 +1133,11 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
     vertex = hdpe_gen_->GenerateVertex(VOLUME);
   }
 
-  else if (region == "EL_GAP_PMT") {
+  else if (region == "S2_PMT_LT") {
     vertex = el_gap_pmt_gen_->GenerateVertex(VOLUME);
   }
 
-  else if (region == "EL_GAP_SIPM") {
+  else if (region == "S2_SIPM_PSF") {
     vertex = el_gap_sipm_gen_->GenerateVertex(INSIDE);
   }
 
