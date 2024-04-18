@@ -172,14 +172,18 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
 
   G4GenericMessenger::Command& el_gap_slice_min_cmd =
     msg_->DeclareProperty("el_gap_slice_min", el_gap_slice_min_,
-                          "Lower limit (fraction) to the EL gap slice in which vertices are generated.");
+                          "Lower limit (fraction of the whole length)"
+                          "to the EL gap slice in which vertices are generated."
+                          "0 is the gate, and 1 the anode");
   el_gap_slice_min_cmd.SetParameterName("el_gap_slice_min", false);
   el_gap_slice_min_cmd.SetRange("el_gap_slice_min >= 0.0 &&"
                                 "el_gap_slice_min <= 1.0");
 
   G4GenericMessenger::Command& el_gap_slice_max_cmd =
     msg_->DeclareProperty("el_gap_slice_max", el_gap_slice_max_,
-                          "Upper limit (fraction) to the EL gap slice in which vertices are generated.");
+                          "Upper limit (fraction of the whole length)"
+                          "to the EL gap slice in which vertices are generated."
+                          "0 is the gate, and 1 the anode");
   el_gap_slice_max_cmd.SetParameterName("el_gap_slice_max", false);
   el_gap_slice_max_cmd.SetRange("el_gap_slice_max >= 0.0 &&"
                                 "el_gap_slice_max <= 1.0");
