@@ -22,7 +22,7 @@ def check_list(NEXUSDIR):
                   NEXUSDIR + "/macros/NEW.init.mac",
                   NEXUSDIR + "/macros/NEXT100_ovlp.init.mac",
                   NEXUSDIR + "/macros/NEXT100opt_ovlp.init.mac",
-                  NEXUSDIR + "/macros/NextFlex_fullKr.init.mac",
+                  NEXUSDIR + "/macros/NextFlex_ovlp.init.mac",
                   NEXUSDIR + "/macros/NextTonScale.init.mac",
                   NEXUSDIR + "/macros/black_box.init.mac"]
 

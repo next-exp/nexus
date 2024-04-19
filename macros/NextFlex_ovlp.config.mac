@@ -1,0 +1,81 @@
+## ----------------------------------------------------------------------------
+## nexus | NextFlex.config.mac
+##
+## Initialization macro to check overlaps in the NextFlex detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+### GEOMETRY
+
+# GAS SETTING
+/Geometry/NextFlex/gas              enrichedXe
+/Geometry/NextFlex/gas_pressure     15. bar
+/Geometry/NextFlex/gas_temperature  300. kelvin
+
+# ACTIVE
+/Geometry/NextFlex/active_length      116. cm
+/Geometry/NextFlex/active_diam        100. cm
+
+# FIELD CAGE
+/Geometry/NextFlex/buffer_length    280. mm
+
+/Geometry/NextFlex/cathode_transparency .98
+/Geometry/NextFlex/anode_transparency   .88
+/Geometry/NextFlex/gate_transparency    .88
+
+/Geometry/NextFlex/el_gap_length    10.  mm
+/Geometry/NextFlex/el_field_on      false
+
+/Geometry/NextFlex/fc_wls_mat       TPB
+
+/Geometry/NextFlex/fc_with_fibers   true
+/Geometry/NextFlex/fiber_mat        EJ280
+/Geometry/NextFlex/fiber_claddings  2
+
+# ENERGY PLANE
+/Geometry/NextFlex/ep_with_PMTs         false
+/Geometry/NextFlex/ep_with_teflon       true
+/Geometry/NextFlex/ep_copper_thickness  12. cm
+/Geometry/NextFlex/ep_wls_mat           TPB
+
+# TRACKING PLANE
+/Geometry/NextFlex/tp_copper_thickness  12. cm
+/Geometry/NextFlex/tp_teflon_thickness   5. mm
+/Geometry/NextFlex/tp_teflon_hole_diam   7. mm
+/Geometry/NextFlex/tp_wls_mat           TPB
+/Geometry/NextFlex/tp_kapton_anode_dist 12. mm
+/Geometry/NextFlex/tp_sipm_sizeX        1.3 mm
+/Geometry/NextFlex/tp_sipm_sizeY        1.3 mm
+/Geometry/NextFlex/tp_sipm_sizeZ        2.0 mm
+/Geometry/NextFlex/tp_sipm_pitchX       15. mm
+/Geometry/NextFlex/tp_sipm_pitchY       15. mm
+
+# ICS
+/Geometry/NextFlex/ics_thickness  12. cm
+
+### GENERATOR
+# Kripton
+/Generator/Kr83mGenerator/region  AD_HOC
+/Geometry/NextFlex/specific_vertex  0. 0. 580. mm
+
+
+### PHYSICS
+/PhysicsList/Nexus/clustering           false
+/PhysicsList/Nexus/drift                false
+/PhysicsList/Nexus/electroluminescence  false
+
+
+### VERBOSITY
+/control/verbose   0
+/run/verbose       0
+/event/verbose     0
+/tracking/verbose  0
+
+/process/em/verbose 0
+
+
+### CONTROL
+/nexus/random_seed            -1
+/nexus/persistency/start_id   0
+/nexus/persistency/output_file NextFlex_ovlp.next
