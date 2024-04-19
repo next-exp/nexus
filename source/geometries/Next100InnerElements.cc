@@ -66,6 +66,7 @@ namespace nexus {
     field_cage_->SetMotherPhysicalVolume(mother_phys_);
     field_cage_->SetCoordOrigin(coord_origin);
     field_cage_->SetELtoSapphireWDWdistance(gate_sapphire_wdw_distance_);
+    field_cage_->SetSiPMPitch(tracking_plane_->GetSiPMPitch());
     field_cage_->Construct();
 
     // Energy Plane
@@ -104,7 +105,8 @@ namespace nexus {
         (region == "CATHODE_RING") ||
         (region == "BUFFER") ||
         (region == "XENON")  ||
-        (region == "EL_GAP") ||
+        (region == "S2_PMT_LT") ||
+        (region == "S2_SIPM_PSF") ||
         (region == "LIGHT_TUBE") ||
         (region == "HDPE_TUBE") ||
         (region == "FIELD_RING") ||

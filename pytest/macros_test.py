@@ -33,8 +33,10 @@ def check_list(NEXUSDIR):
 def macro_list(NEXUSDIR):
 
     all_macros = np.array(glob.glob(NEXUSDIR + '/macros/**/*.init.mac', recursive=True))
-    full       = np.array(['full'  in m for m in all_macros])
-    lu_table   = np.array(['table' in m for m in all_macros])
+    full       = np.array(['full'  in m    for m in all_macros])
+    lu_table   = np.array(['table' in m or
+                           'LT'    in m or
+                           'PSF'   in m    for m in all_macros])
 
     full_macros = all_macros[  full | lu_table]
     fast_macros = all_macros[~(full | lu_table)]

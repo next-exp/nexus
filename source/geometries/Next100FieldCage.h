@@ -21,6 +21,7 @@ class G4Navigator;
 namespace nexus {
 
   class CylinderPointSampler;
+  class BoxPointSampler;
 
 
   class Next100FieldCage: public GeometryBase
@@ -36,6 +37,7 @@ namespace nexus {
     void SetMotherLogicalVolume(G4LogicalVolume* mother_logic);
     void SetMotherPhysicalVolume(G4VPhysicalVolume* mother_phys);
     void SetELtoSapphireWDWdistance(G4double);
+    void SetSiPMPitch(G4double);
 
   private:
     void DefineMaterials();
@@ -86,10 +88,9 @@ namespace nexus {
     // Use fake mesh
     G4bool use_dielectric_grid_;
 
-    // Parameters related to look-up table generation
-    G4double el_gap_gen_disk_diam_;
-    G4double el_gap_gen_disk_x_, el_gap_gen_disk_y_;
-    G4double el_gap_gen_disk_zmin_, el_gap_gen_disk_zmax_;
+    // Fraction of EL gap in which to generate points. e.g (0, 0.5)
+    // would generate points in the first half of the EL gap
+    G4double el_gap_slice_min_, el_gap_slice_max_;
 
     G4double active_length_, buffer_length_;
     G4double teflon_drift_length_, teflon_drift_zpos_,teflon_buffer_zpos_;
@@ -103,13 +104,17 @@ namespace nexus {
     CylinderPointSampler* buffer_gen_;
     CylinderPointSampler* teflon_gen_;
     CylinderPointSampler* xenon_gen_;
-    CylinderPointSampler* el_gap_gen_;
+    CylinderPointSampler* el_gap_pmt_gen_;
+    BoxPointSampler*      el_gap_sipm_gen_;
     CylinderPointSampler* hdpe_gen_;
     CylinderPointSampler* ring_gen_;
     CylinderPointSampler* cathode_gen_;
     CylinderPointSampler* gate_gen_;
     CylinderPointSampler* anode_gen_;
     CylinderPointSampler* holder_gen_;
+
+    // SiPM pitch for ELgap vertex generation
+    G4double sipm_pitch_;
 
     // Geometry Navigator
     G4Navigator* geom_navigator_;
@@ -140,6 +145,10 @@ namespace nexus {
 
   inline void Next100FieldCage::SetELtoSapphireWDWdistance(G4double distance){
     gate_sapphire_wdw_dist_ = distance;
+  }
+
+  inline void Next100FieldCage::SetSiPMPitch(G4double pitch) {
+    sipm_pitch_ = pitch;
   }
 
 } //end namespace nexus

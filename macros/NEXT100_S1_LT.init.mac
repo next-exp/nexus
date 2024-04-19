@@ -1,5 +1,5 @@
 ## ----------------------------------------------------------------------------
-## nexus | NEXT100_S1_table.init.mac
+## nexus | NEXT100_S1_LT.init.mac
 ##
 ## Initialization macro to simulate primary scintillation light
 ## for look-up tables in the NEXT-100 detector.
@@ -23,4 +23,4 @@
 /nexus/RegisterTrackingAction DefaultTrackingAction
 /nexus/RegisterRunAction DefaultRunAction
 
-/nexus/RegisterMacro macros/NEXT100_S1_table.config.mac
+/nexus/RegisterMacro macros/NEXT100_S1_LT.config.mac

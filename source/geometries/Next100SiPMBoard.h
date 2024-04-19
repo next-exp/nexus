@@ -43,6 +43,7 @@ namespace nexus {
     G4double GetThickness() const;
 
     const std::vector<G4ThreeVector>& GetSiPMPositions() const;
+    G4double GetSiPMPitch() const;
 
   private:
     G4GenericMessenger* msg_;
@@ -67,6 +68,9 @@ namespace nexus {
 
   inline const std::vector<G4ThreeVector>& Next100SiPMBoard::GetSiPMPositions() const
   { return sipm_positions_; }
+
+  inline G4double Next100SiPMBoard::GetSiPMPitch() const
+  { return pitch_; }
 
 } // namespace nexus
 

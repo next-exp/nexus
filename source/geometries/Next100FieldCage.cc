@@ -15,6 +15,7 @@
 #include "UniformElectricDriftField.h"
 #include "XenonProperties.h"
 #include "CylinderPointSampler.h"
+#include "BoxPointSampler.h"
 #include "HexagonMeshTools.h"
 
 #include <G4Navigator.hh>
@@ -109,9 +110,8 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   verbosity_(0),
   use_dielectric_grid_(0),
   // EL gap generation disk parameters
-  el_gap_gen_disk_diam_(0.),
-  el_gap_gen_disk_x_(0.), el_gap_gen_disk_y_(0.),
-  el_gap_gen_disk_zmin_(0.), el_gap_gen_disk_zmax_(1.),
+  el_gap_slice_min_(0.), el_gap_slice_max_(1.),
+  sipm_pitch_(0),
   photoe_prob_(0)
 {
   /// Define new categories
@@ -170,36 +170,23 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   step_cmd.SetParameterName("max_step_size", true);
   step_cmd.SetRange("max_step_size>0.");
 
-  G4GenericMessenger::Command& el_gap_gen_disk_diam_cmd =
-    msg_->DeclareProperty("el_gap_gen_disk_diam", el_gap_gen_disk_diam_,
-                          "Diameter of the EL gap vertex generation disk.");
-  el_gap_gen_disk_diam_cmd.SetUnitCategory("Length");
-  el_gap_gen_disk_diam_cmd.SetParameterName("el_gap_gen_disk_diam", false);
-  el_gap_gen_disk_diam_cmd.SetRange("el_gap_gen_disk_diam>=0.");
+  G4GenericMessenger::Command& el_gap_slice_min_cmd =
+    msg_->DeclareProperty("el_gap_slice_min", el_gap_slice_min_,
+                          "Lower limit (fraction of the whole length)"
+                          "to the EL gap slice in which vertices are generated."
+                          "0 is the gate, and 1 the anode");
+  el_gap_slice_min_cmd.SetParameterName("el_gap_slice_min", false);
+  el_gap_slice_min_cmd.SetRange("el_gap_slice_min >= 0.0 &&"
+                                "el_gap_slice_min <= 1.0");
 
-  G4GenericMessenger::Command& el_gap_gen_disk_x_cmd =
-    msg_->DeclareProperty("el_gap_gen_disk_x", el_gap_gen_disk_x_,
-                          "X position of the center of the EL gap vertex generation disk.");
-  el_gap_gen_disk_x_cmd.SetUnitCategory("Length");
-  el_gap_gen_disk_x_cmd.SetParameterName("el_gap_gen_disk_x", false);
-
-  G4GenericMessenger::Command& el_gap_gen_disk_y_cmd =
-    msg_->DeclareProperty("el_gap_gen_disk_y", el_gap_gen_disk_y_,
-                          "Y position of the center of the EL gap vertex generation disk.");
-  el_gap_gen_disk_y_cmd.SetUnitCategory("Length");
-  el_gap_gen_disk_y_cmd.SetParameterName("el_gap_gen_disk_y", false);
-
-  G4GenericMessenger::Command& el_gap_gen_disk_zmin_cmd =
-    msg_->DeclareProperty("el_gap_gen_disk_zmin", el_gap_gen_disk_zmin_,
-                          "Minimum Z range of the EL gap vertex generation disk.");
-  el_gap_gen_disk_zmin_cmd.SetParameterName("el_gap_gen_disk_zmin", false);
-  el_gap_gen_disk_zmin_cmd.SetRange("el_gap_gen_disk_zmin>=0.0 && el_gap_gen_disk_zmin<=1.0");
-
-  G4GenericMessenger::Command& el_gap_gen_disk_zmax_cmd =
-    msg_->DeclareProperty("el_gap_gen_disk_zmax", el_gap_gen_disk_zmax_,
-                          "Maximum Z range of the EL gap vertex generation disk.");
-  el_gap_gen_disk_zmax_cmd.SetParameterName("el_gap_gen_disk_zmax", false);
-  el_gap_gen_disk_zmax_cmd.SetRange("el_gap_gen_disk_zmax>=0.0 && el_gap_gen_disk_zmax<=1.0");
+  G4GenericMessenger::Command& el_gap_slice_max_cmd =
+    msg_->DeclareProperty("el_gap_slice_max", el_gap_slice_max_,
+                          "Upper limit (fraction of the whole length)"
+                          "to the EL gap slice in which vertices are generated."
+                          "0 is the gate, and 1 the anode");
+  el_gap_slice_max_cmd.SetParameterName("el_gap_slice_max", false);
+  el_gap_slice_max_cmd.SetRange("el_gap_slice_max >= 0.0 &&"
+                                "el_gap_slice_max <= 1.0");
 
   msg_->DeclareProperty("photoe_prob", photoe_prob_,
                         "Probability of photon to ie- conversion");
@@ -420,7 +407,7 @@ void Next100FieldCage::BuildCathode()
   // Use SS hexagonal mesh
   else {
 
-      // Cathode Ring 
+      // Cathode Ring
       // Shift in the +z direction by half-mesh thickness and reduce thickness
       // by the grid thickness. The grid thickness makes up the remaining ring thickness
       cathode_solid =
@@ -433,13 +420,13 @@ void Next100FieldCage::BuildCathode()
       new G4PVPlacement(0, G4ThreeVector(GetCoordOrigin().x(), GetCoordOrigin().y(),
                                       cathode_zpos_ + grid_thickn_/2.0),
                       cathode_logic, "CATHODE_RING", mother_logic_, false, 0, false);
-      
+
       // Dist from centre of hex to hex vertex, excluding the land width (circumradius)
-      G4double hex_circumradius = cathode_mesh_diam_/std::sqrt(3);  
+      G4double hex_circumradius = cathode_mesh_diam_/std::sqrt(3);
 
       // Total number of hexagons that would fit side-by-side along the diameter
       G4int n_hex = (G4int) ((cathode_int_diam_/2.0) / hex_circumradius);
-    
+
       // Define the disk to punch hexagon holes through for the mesh
       G4Tubs* grid_solid = new G4Tubs("CATHODE_GRID", 0., cathode_ext_diam_/2.0 , grid_thickn_/2., 0., twopi);
       cathode_grid_logic = new G4LogicalVolume(grid_solid, steel_, "CATHODE_MESH_LOGIC");
@@ -675,15 +662,15 @@ void Next100FieldCage::BuildELRegion()
     el_gap_solid =
       new G4Tubs("EL_GAP", 0., gate_ext_diam_/2.,
                 (el_gap_length_ + 2*grid_thickn_)/2., 0, twopi);
-    
+
     // Meshes
 
     // Dist from centre of hex to hex vertex, excluding the land width (circumradius)
-    G4double hex_circumradius = el_mesh_diam_/std::sqrt(3)*mm;  
+    G4double hex_circumradius = el_mesh_diam_/std::sqrt(3)*mm;
 
     // Total number of hexagons that would fit side-by-side along the diameter
     G4int n_hex = (G4int) ((gate_int_diam_/2.0) / hex_circumradius);
-  
+
     // Define the disk to punch hexagon holes through for the mesh
     G4Tubs* grid_solid = new G4Tubs("EL_GRID", 0., gate_ext_diam_/2.0 , grid_thickn_/2., 0., twopi);
     el_grid_logic = new G4LogicalVolume(grid_solid, steel_, "EL_GRID");
@@ -691,7 +678,7 @@ void Next100FieldCage::BuildELRegion()
     // Define a hexagonal prism
     G4ExtrudedSolid* hex_prism = CreateHexagon(grid_thickn_/2.0, hex_circumradius);
     el_hex_logic  = new G4LogicalVolume(hex_prism, gas_, "MESH_HEX_GAS");
-   
+
     // Place GXe hexagons in the disk to make the mesh
     PlaceHexagons(n_hex, el_mesh_diam_, grid_thickn_, el_grid_logic, el_hex_logic, gate_int_diam_);
 
@@ -714,7 +701,7 @@ void Next100FieldCage::BuildELRegion()
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., el_gap_zpos_),
                     el_gap_logic, "EL_GAP", mother_logic_, false, 0, false);
-  
+
   // Create a rotation vector to change the orientation of the EL mesh
   CLHEP::HepRotationZ Roty(el_mesh_rot_);
   G4RotationMatrix* pRot = new G4RotationMatrix();
@@ -722,11 +709,11 @@ void Next100FieldCage::BuildELRegion()
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., el_gap_length_/2. + grid_thickn_/2.), el_grid_logic,
                     "EL_GRID_GATE", el_gap_logic, false, 0, false);
-  
+
   new G4PVPlacement(pRot, G4ThreeVector(0., 0., -el_gap_length_/2. - grid_thickn_/2.), el_grid_logic,
                     "EL_GRID_ANODE", el_gap_logic, false, 1, false);
 
-  
+
 
   /// Define EL electric field
   if (elfield_) {
@@ -744,24 +731,42 @@ void Next100FieldCage::BuildELRegion()
   }
 
   // Vertex generator
-  if (el_gap_gen_disk_zmin_ > el_gap_gen_disk_zmax_)
+  if (el_gap_slice_min_ > el_gap_slice_max_)
     G4Exception("[Next100FieldCage]", "Next100FieldCage()",
-                FatalErrorInArgument, "Error in configuration of EL gap generator: zmax < zmin");
+                FatalErrorInArgument, "Error in configuration of EL gap generator: slice_max < slice_min");
 
-  G4double el_gap_gen_disk_thickn =
-    el_gap_length_ * (el_gap_gen_disk_zmax_ - el_gap_gen_disk_zmin_);
+  G4double el_gap_slice_thickness =
+    el_gap_length_ * (el_gap_slice_max_ - el_gap_slice_min_);
 
-  G4double el_gap_gen_disk_z = el_gap_zpos_ + el_gap_length_/2.-
-                               el_gap_length_ * el_gap_gen_disk_zmin_ -
-                               el_gap_gen_disk_thickn/2.;
+  G4double el_gap_slice_center = el_gap_zpos_ + el_gap_length_/2.   // start of el gap
+                               - el_gap_length_ * el_gap_slice_min_ // start of slice
+                               - el_gap_slice_thickness/2.;         // center of slice
 
-  G4ThreeVector el_gap_gen_pos(el_gap_gen_disk_x_, el_gap_gen_disk_y_, el_gap_gen_disk_z);
+  // Here vertices are generated in a cylinder with the same diameter
+  // as the gate. In z, the vertices are limited to a slice of the EL gap.
+  el_gap_pmt_gen_ =
+    new CylinderPointSampler(0., gate_int_diam_/2.,
+                             el_gap_slice_thickness/2.,
+                             0., twopi,
+                             nullptr, {0, 0, el_gap_slice_center});
 
-  el_gap_gen_ =
-    new CylinderPointSampler(0., el_gap_gen_disk_diam_/2.,
-                             el_gap_gen_disk_thickn/2., 0., twopi,
-                             nullptr, el_gap_gen_pos);
-  
+  if (sipm_pitch_ <= 0) {
+    G4Exception("[Next100FieldCage]", "Next100FieldCage()",
+                FatalErrorInArgument, "Error in configuration of EL gap generator: sipm_pitch <= 0");
+  }
+
+
+  // We generate vertices in an xy unit cell, i.e. a portion of the
+  // plane that can tessellate the space by translations and
+  // reflections. This unit cell is a square of side=pitch. The
+  // position of this is square is not relevant as long as it is
+  // sufficiently far away from the edges of the detector. The
+  // vertices are generated in a slice of the EL gap.
+  auto unit_cell_center = G4ThreeVector{0, 0, el_gap_slice_center};
+  el_gap_sipm_gen_ =
+    new BoxPointSampler(sipm_pitch_/2, sipm_pitch_/2, el_gap_slice_thickness/2.,
+                        0, unit_cell_center, nullptr);
+
   // Gate ring vertex generator
   gate_gen_ =
     new CylinderPointSampler(gate_int_diam_/2., gate_ext_diam_/2.,
@@ -784,7 +789,7 @@ void Next100FieldCage::BuildELRegion()
 
   if (!grid_visibility_ && !use_dielectric_grid_)
     el_hex_logic->SetVisAttributes(G4VisAttributes::GetInvisible());
-  
+
   G4VisAttributes grey = nexus::DarkGrey();
   grey.SetForceSolid(true);
   gate_logic->SetVisAttributes(grey);
@@ -1051,7 +1056,8 @@ Next100FieldCage::~Next100FieldCage()
   delete buffer_gen_;
   delete xenon_gen_;
   delete teflon_gen_;
-  delete el_gap_gen_;
+  delete el_gap_pmt_gen_;
+  delete el_gap_sipm_gen_;
   delete hdpe_gen_;
   delete ring_gen_;
   delete cathode_gen_;
@@ -1127,15 +1133,12 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
     vertex = hdpe_gen_->GenerateVertex(VOLUME);
   }
 
-  else if (region == "EL_GAP") {
-    G4VPhysicalVolume *VertexVolume;
-    do {
-      vertex = el_gap_gen_->GenerateVertex(VOLUME);
-      G4ThreeVector glob_vtx(vertex);
-      glob_vtx = glob_vtx - GetCoordOrigin();
-      VertexVolume =
-        geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
-    } while (VertexVolume->GetName() != region);
+  else if (region == "S2_PMT_LT") {
+    vertex = el_gap_pmt_gen_->GenerateVertex(VOLUME);
+  }
+
+  else if (region == "S2_SIPM_PSF") {
+    vertex = el_gap_sipm_gen_->GenerateVertex(INSIDE);
   }
 
   else if (region == "FIELD_RING") {

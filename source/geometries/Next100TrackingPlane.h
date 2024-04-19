@@ -42,6 +42,7 @@ namespace nexus {
 
     void PrintSiPMPosInGas() const;
     void GetSiPMPosInGas(std::vector<G4ThreeVector>& sipm_pos) const;
+    G4double GetSiPMPitch() const;
 
   private:
     void PlaceSiPMBoardColumns(G4int, G4double, G4double, G4int&, G4LogicalVolume*);

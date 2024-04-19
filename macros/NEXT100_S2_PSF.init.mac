@@ -1,0 +1,24 @@
+## ----------------------------------------------------------------------------
+## nexus | NEXT100_S2_PSF.init.mac
+##
+## Initialization macro to simulate secondary scintillation light
+## for look-up tables in the NEXT-100 detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4OpticalPhysics
+/PhysicsList/RegisterPhysics NexusPhysics
+
+/nexus/RegisterGeometry Next100OpticalGeometry
+
+/nexus/RegisterGenerator ScintillationGenerator
+
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterRunAction DefaultRunAction
+/nexus/RegisterTrackingAction DefaultTrackingAction
+
+/nexus/RegisterMacro macros/NEXT100_S2_PSF.config.mac

@@ -1,5 +1,5 @@
 ## ----------------------------------------------------------------------------
-## nexus | NEXT100_S2_table.config.mac
+## nexus | NEXT100_S2_PSF.config.mac
 ##
 ## Configuration macro to simulate secondary scintillation light
 ## for look-up tables in the NEXT-100 detector.
@@ -20,11 +20,12 @@
 ##### GEOMETRY #####
 /Geometry/Next100/pressure 15. bar
 /Geometry/Next100/max_step_size 1. mm
-/Geometry/Next100/specific_vertex 0. 0. -5. mm
+/Geometry/Next100/el_gap_slice_max 1
+/Geometry/Next100/el_gap_slice_min 0
 
 #### GENERATOR ####
 /Generator/ScintGenerator/nphotons 100000
-/Generator/ScintGenerator/region   AD_HOC
+/Generator/ScintGenerator/region   S2_SIPM_PSF
 
 #### PERSISTENCY ####
-/nexus/persistency/output_file Next100_X_0_Y_0_Z_0.next
+/nexus/persistency/output_file Next100_PSF.next
