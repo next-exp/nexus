@@ -1,0 +1,27 @@
+## ----------------------------------------------------------------------------
+## nexus | NEXT100opt_ovlp.init.mac
+##
+## Initialization macro to simulate Kr-83 decays in the NEXT-100 geometry
+## with fast simulation and grids implemented as dielectric,
+## with the purpose of checking for overlaps in a reasonable amount of time.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+/PhysicsList/RegisterPhysics NexusPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
+
+/nexus/RegisterGeometry Next100OpticalGeometry
+
+/nexus/RegisterGenerator Kr83mGenerator
+
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterRunAction DefaultRunAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterTrackingAction DefaultTrackingAction
+
+/nexus/RegisterMacro macros/NEXT100opt_ovlp.config.mac

@@ -20,8 +20,8 @@ def check_list(NEXUSDIR):
     macro_list = [NEXUSDIR + "/macros/DEMOPP_grid.init.mac",
                   NEXUSDIR + "/macros/DEMOPP_plate.init.mac",
                   NEXUSDIR + "/macros/NEW.init.mac",
-                  NEXUSDIR + "/macros/NEXT100.init.mac",
-                  NEXUSDIR + "/macros/NEXT100_full.init.mac",
+                  NEXUSDIR + "/macros/NEXT100_ovlp.init.mac",
+                  NEXUSDIR + "/macros/NEXT100opt_ovlp.init.mac",
                   NEXUSDIR + "/macros/NextFlex_fullKr.init.mac",
                   NEXUSDIR + "/macros/NextTonScale.init.mac",
                   NEXUSDIR + "/macros/black_box.init.mac"]

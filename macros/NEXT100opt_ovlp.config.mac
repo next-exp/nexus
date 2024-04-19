@@ -1,0 +1,34 @@
+## ----------------------------------------------------------------------------
+## nexus | NEXT100opt_ovlp.config.mac
+##
+## Initialization macro to simulate Kr-83 decays in the NEXT-100 geometry
+## with fast simulation and grids implemented as dielectric,
+## with the purpose of checking for overlaps in a reasonable amount of time.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+##### VERBOSITY #####
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+/process/em/verbose 0
+
+##### GEOMETRY #####
+/Geometry/Next100/elfield false
+/Geometry/Next100/pressure 10. bar
+/Geometry/Next100/max_step_size 1. mm
+/Geometry/Next100/use_dielectric_grid true
+
+##### GENERATOR #####
+/Generator/Kr83mGenerator/region ACTIVE
+
+##### PHYSICS #####
+## No full simulation
+/PhysicsList/Nexus/clustering          false
+/PhysicsList/Nexus/drift               false
+/PhysicsList/Nexus/electroluminescence false
+
+##### PERSISTENCY #####
+/nexus/persistency/output_file Next100opt_ovlp.next
