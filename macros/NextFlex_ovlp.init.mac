@@ -1,0 +1,36 @@
+## ----------------------------------------------------------------------------
+## nexus | NextFlex_ovlp.init.mac
+##
+## Initialization macro to check overlaps in the NextFlex detector.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+### GEOMETRY
+/nexus/RegisterGeometry NextFlex
+
+
+### GENERATOR
+/nexus/RegisterGenerator Kr83mGenerator
+
+
+### PERSISTENCY MANAGER
+/nexus/RegisterPersistencyManager PersistencyManager
+
+
+### ACTIONS
+/nexus/RegisterRunAction      DefaultRunAction
+/nexus/RegisterEventAction    DefaultEventAction
+/nexus/RegisterTrackingAction DefaultTrackingAction
+
+
+### PHYSICS
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+/PhysicsList/RegisterPhysics NexusPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
+
+
+### EXTRA CONFIGURATION
+/nexus/RegisterMacro macros/NextFlex_ovlp.config.mac

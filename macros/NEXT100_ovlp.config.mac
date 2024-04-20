@@ -1,0 +1,37 @@
+## ----------------------------------------------------------------------------
+## nexus | NEXT100_ovlp.config.mac
+##
+## Configuration macro to simulate Tl-208 radioactive decays from the
+## copper plate of the tracking plane in the NEXT-100 detector.
+## Grids are implemented as dielectric, with the purpose of checking
+## for overlaps in a reasonable amount of time.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+##### VERBOSITY #####
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+/process/em/verbose 0
+/process/had/verbose 0
+
+##### GEOMETRY #####
+/Geometry/Next100/elfield false
+/Geometry/Next100/max_step_size 1. mm
+/Geometry/Next100/use_dielectric_grid true
+
+##### GENERATOR #####
+/Generator/IonGenerator/atomic_number 81
+/Generator/IonGenerator/mass_number 208
+/Generator/IonGenerator/region TP_COPPER_PLATE
+
+##### PHYSICS #####
+## No full simulation
+/PhysicsList/Nexus/clustering          false
+/PhysicsList/Nexus/drift               false
+/PhysicsList/Nexus/electroluminescence false
+
+##### PERSISTENCY #####
+/nexus/persistency/output_file Next100_ovlp.next
