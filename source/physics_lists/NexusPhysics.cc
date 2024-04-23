@@ -12,7 +12,6 @@
 #include "IonizationClustering.h"
 #include "IonizationDrift.h"
 #include "Electroluminescence.h"
-#include "WavelengthShifting.h"
 #include "OpPhotoelectricEffect.h"
 
 #include <G4GenericMessenger.hh>
@@ -74,15 +73,6 @@ namespace nexus {
   void NexusPhysics::ConstructProcess()
   {
     G4ProcessManager* pmanager = 0;
-
-    // Add our own wavelength shifting process for the optical photon
-    pmanager = G4OpticalPhoton::Definition()->GetProcessManager();
-    if (!pmanager) {
-      G4Exception("[NexusPhysics]", "ConstructProcess()", FatalException,
-        "G4OpticalPhoton without a process manager.");
-    }
-    WavelengthShifting* wls = new WavelengthShifting();
-    pmanager->AddDiscreteProcess(wls);
 
     pmanager = IonizationElectron::Definition()->GetProcessManager();
     if (!pmanager) {
