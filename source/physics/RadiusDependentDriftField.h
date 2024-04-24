@@ -3,9 +3,8 @@
 //
 // Drift field varying with radial coordinate.
 //
-//
 // ****************************** WARNING *******************************
-// ******************* This class has been deprecated *******************
+// ***************** This class has not been implemented ****************
 // **********************************************************************
 //
 // The NEXT Collaboration
