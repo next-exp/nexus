@@ -6,6 +6,10 @@
 // from a wls_absorption length property but through a probability property,
 // thus independent from the material thickness.
 //
+// ****************************** WARNING *******************************
+// ******************* This class has been deprecated *******************
+// **********************************************************************
+//
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
