@@ -43,8 +43,11 @@ public:
     }
   }
 
-  //
   std::unique_ptr<T> CreateObject(const std::string& tag) {
+    if (registry_.find(tag) == registry_.end()) {
+      auto msg = std::string("Unknown key for ") + typeid(T).name() + ": " + tag;
+      G4Exception("ObjFactory::CreateObject()", "", FatalException, msg.c_str());
+    }
     return registry_[tag]->CreateObject();
   }
 
