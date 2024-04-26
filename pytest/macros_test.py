@@ -143,3 +143,24 @@ def test_run_full_examples(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, macro
         print(f'*** Full simulations - some of them are slow ***')
 
     execute_example_jobs(capsys, config_tmpdir, output_tmpdir, NEXUSDIR, macro_list[1])
+
+
+def test_name_tags(capsys, config_tmpdir, output_tmpdir, NEXUSDIR):
+    my_env = os.environ.copy()
+    macro = NEXUSDIR + "/macros/NEW.init.mac"
+    init_macro = copy_and_modify_macro(config_tmpdir, output_tmpdir, macro)
+
+    # register a wrong generator
+    contents = open(init_macro).read()
+    contents = contents.replace( "/nexus/RegisterGenerator IonGenerator"
+                               , "/nexus/RegisterGenerator DoesNotExist")
+    open(init_macro, "w").write(contents)
+
+    nexus_exe  = NEXUSDIR + '/bin/nexus'
+    command    = [nexus_exe, '-b', init_macro]
+    with capsys.disabled():
+        print(f'Checking modified {macro} for wrong generator name')
+        p  = subprocess.run(command, env=my_env, capture_output=True)
+        assert "G4Exception"  in p.stderr.decode()
+        assert "Unknown key"  in p.stderr.decode()
+        assert "DoesNotExist" in p.stderr.decode()
