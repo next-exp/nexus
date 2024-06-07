@@ -342,16 +342,24 @@ namespace nexus {
     } else if  (gas_ == "XeHe") {
       vessel_gas_mat = materials::GXeHe(pressure_, 300. * kelvin,
 					    xe_perc_, helium_mass_num_);
+    } else if  (gas_ == "GAr") {
+      vessel_gas_mat = materials::GAr(pressure_, temperature_);
     } else {
       G4Exception("[Next100Vessel]", "Construct()", FatalException,
 		  "Unknown kind of xenon, valid options are: "
                   "natural, enriched, depleted, or XeHe.");
     }
 
+    // Gas Properties
+    if (gas_ == "GAr"){
+      vessel_gas_mat->SetMaterialPropertiesTable(opticalprops::GAr(sc_yield_, e_lifetime_));
+    }
+    else{
     vessel_gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_,
                                                                  temperature_,
                                                                  sc_yield_,
                                                                  e_lifetime_));
+    }
 
     G4LogicalVolume* vessel_gas_logic =
       new G4LogicalVolume(vessel_gas_final_solid, vessel_gas_mat, "VESSEL_GAS");
