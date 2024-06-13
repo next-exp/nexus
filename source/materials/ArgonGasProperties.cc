@@ -24,33 +24,53 @@ namespace nexus {
 
   G4double ArgonDensity(G4double pressure)
   {
-    //These values are for a temperature of 300 K
-    // taken from http://www.nist.gov/srd/upload/jpcrd363.pdf
-    G4double density = 1.60279*kg/m3;
+    // Computes Ar (gas) density at T = 293 K
+    // values taken from https://webbook.nist.gov/chemistry/fluid).
+    // We assume a linear interpolation between any pair of values in the database.
 
-    if (pressure/bar > 0.9 && pressure/bar < 1.1)
-      density = 1.60279*kg/m3;
-    else if (pressure/bar > 1.9 && pressure/bar < 2.1)
-      density = 3.20719*kg/m3;
-    else if (pressure/bar > 4.9 && pressure/bar < 5.1)
-      density = 8.032*kg/m3;
-    else if (pressure/bar > 9.9 && pressure/bar < 10.1)
-      density = 16.1118*kg/m3;
-    else if (pressure/bar > 14.9 && pressure/bar < 15.1)
-      density = 24.2369 *kg/m3;
-    else if (pressure/bar > 19.9 && pressure/bar < 20.1)
-      density = 32.4066*kg/m3;
-    else if (pressure/bar > 29.9 && pressure/bar < 30.1)
-      density = 48.8708*kg/m3;
-    else if (pressure/bar > 39.9 && pressure/bar < 40.1)
-      density = 65.494*kg/m3;
-    else
-      G4Exception("[ArgonProperties]", "ArgonDensity()", FatalException,
-                  "Unknown argon density for this pressure!");
+    G4double density;
+
+    const G4int n_pressures = 14;
+    G4double data[n_pressures][2] = {{ 1.0 * bar,  1.641 * kg/m3},
+                                    { 2.0  * bar,  3.284 * kg/m3},
+                                    { 3.0  * bar,  4.929 * kg/m3},
+                                    { 4.0  * bar,  7.402 * kg/m3},
+                                    { 5.0  * bar, 8.2268 * kg/m3},
+                                    { 6.0  * bar, 9.8788 * kg/m3},
+                                    { 7.0  * bar, 11.533 * kg/m3},
+                                    { 8.0  * bar, 13.189 * kg/m3},
+                                    { 9.0  * bar, 14.848 * kg/m3},
+                                    { 9.0  * bar, 14.848 * kg/m3},
+                                    { 10.0 * bar, 16.508 * kg/m3},
+                                    { 15.0 * bar, 24.843 * kg/m3},
+                                    { 20.0 * bar, 33.231 * kg/m3},
+                                    { 30.0 * bar, 50.155 * kg/m3}};
+    G4bool found = false;
+
+    for (G4int i=0; i<n_pressures-1; ++i) {
+      if  (pressure >= data[i][0] && pressure < data[i+1][0]) {
+        G4double x1 = data[i][0];
+        G4double x2 = data[i+1][0];
+        G4double y1 = data[i][1];
+        G4double y2 = data[i+1][1];
+        density = y1 + (y2-y1)*(pressure-x1)/(x2-x1);
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      if (pressure == data[n_pressures-1][0]) {
+        density = data[n_pressures-1][1];
+      }
+      else {
+        throw "Unknown argon density for this pressure!";
+      }
+    }
+
 
     return density;
   }
-
 
   G4double ArgonELLightYield(G4double field_strength, G4double pressure)
   {

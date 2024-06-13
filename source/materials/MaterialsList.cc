@@ -196,7 +196,7 @@ namespace materials {
       G4int    massNumber = 40;
       G4double abundance  = 100*perCent;
       G4String isotopeName = "Ar" + std::to_string(massNumber);
-      G4Isotope* isotope = new G4Isotope(isotopeName, 18, massNumber, 39.962383123);
+      G4Isotope* isotope = new G4Isotope(isotopeName, 18, massNumber, 39.962383123*g/mole);
       Ar->AddIsotope(isotope, abundance);
         
       mat->AddElement(Ar,1);
