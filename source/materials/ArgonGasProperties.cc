@@ -72,6 +72,7 @@ namespace nexus {
     return density;
   }
 
+
   G4double ArgonELLightYield(G4double field_strength, G4double pressure)
   {
     // Empirical formula taken from

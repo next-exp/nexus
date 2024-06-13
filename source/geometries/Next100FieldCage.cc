@@ -752,8 +752,6 @@ void Next100FieldCage::BuildELRegion()
       el_field->SetLightYield(XenonELLightYield(ELelectric_field_, pressure_));
     }
     
-    
-    
     G4Region* el_region = new G4Region("EL_REGION");
     el_region->SetUserInformation(el_field);
     el_region->AddRootLogicalVolume(el_gap_logic);
