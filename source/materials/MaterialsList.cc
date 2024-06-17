@@ -187,18 +187,13 @@ namespace materials {
     G4Material* mat = G4Material::GetMaterial(name, false);
 
     if (mat == 0) {
+      G4NistManager* nist = G4NistManager::Instance();
 
       mat = new G4Material(name, ArgonDensity(pressure), 1,
         kStateGas, temperature, pressure);
 
-      G4Element* Ar = new G4Element(name, "Ar", 1);
+      G4Element* Ar = nist->FindOrBuildElement("Ar");
 
-      G4int    massNumber = 40;
-      G4double abundance  = 100*perCent;
-      G4String isotopeName = "Ar" + std::to_string(massNumber);
-      G4Isotope* isotope = new G4Isotope(isotopeName, 18, massNumber, 39.962383123*g/mole);
-      Ar->AddIsotope(isotope, abundance);
-        
       mat->AddElement(Ar,1);
     }
 
