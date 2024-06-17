@@ -24,8 +24,8 @@
 /Geometry/Next100/sipm_time_binning  1. microsecond
 
 ## Geant4 only permits units of mm/ns via the macro
-/Geometry/Next100/drift_vel 0.001480 mm/ns
-/Geometry/Next100/ELdrift_vel 0.006249 mm/ns
+/Geometry/Next100/drift_vel   1.480 mm/mus
+/Geometry/Next100/ELdrift_vel 6.249 mm/mus
 
 /Geometry/Next100/drift_transv_diff 1.87 mm/sqrt(cm)
 /Geometry/Next100/drift_long_diff 0.65 mm/sqrt(cm)
