@@ -70,6 +70,10 @@ namespace nexus {
     G4double drift_transv_diff_, drift_long_diff_;
     G4double ELtransv_diff_; ///< transversal diffusion in the EL gap
     G4double ELlong_diff_; ///< longitudinal diffusion in the EL gap
+    
+    // Drift Velocities
+    G4double drift_vel_, ELdrift_vel_;
+
     // Electric field
     G4bool elfield_;
     G4double ELelectric_field_; ///< electric field in the EL region

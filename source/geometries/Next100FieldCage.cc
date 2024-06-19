@@ -14,6 +14,7 @@
 #include "OpticalMaterialProperties.h"
 #include "UniformElectricDriftField.h"
 #include "XenonProperties.h"
+#include "ArgonGasProperties.h"
 #include "CylinderPointSampler.h"
 #include "BoxPointSampler.h"
 #include "HexagonMeshTools.h"
@@ -99,6 +100,9 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   drift_long_diff_ (.3 * mm/sqrt(cm)),
   ELtransv_diff_ (0. * mm/sqrt(cm)),
   ELlong_diff_ (0. * mm/sqrt(cm)),
+  // Drift velocities
+  drift_vel_ (1.0 * mm/microsecond),
+  ELdrift_vel_ (2.5 * mm/microsecond),
   // EL electric field
   elfield_ (0),
   ELelectric_field_ (34.5*kilovolt/cm),
@@ -117,6 +121,7 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   /// Define new categories
   new G4UnitDefinition("kilovolt/cm","kV/cm","Electric field", kilovolt/cm);
   new G4UnitDefinition("mm/sqrt(cm)","mm/sqrt(cm)","Diffusion", mm/sqrt(cm));
+  new G4UnitDefinition("mm/mus","mm/mus","Velocity", mm/microsecond);
 
   /// Initializing the geometry navigator (used in vertex generation)
   geom_navigator_ =
@@ -154,6 +159,19 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
                         "Longitudinal diffusion in the EL region");
   ELlong_diff_cmd.SetParameterName("ELlong_diff", true);
   ELlong_diff_cmd.SetUnitCategory("Diffusion");
+
+  G4GenericMessenger::Command&  drift_velocity_cmd =
+  msg_->DeclareProperty("drift_vel", drift_vel_,
+                        "The active drift velocity");
+  drift_velocity_cmd.SetParameterName("drift_vel", true);
+  drift_velocity_cmd.SetUnitCategory("Velocity");
+
+
+  G4GenericMessenger::Command&  ELdrift_velocity_cmd =
+  msg_->DeclareProperty("ELdrift_vel", ELdrift_vel_,
+                        "The EL drift velocity");
+  ELdrift_velocity_cmd.SetParameterName("ELdrift_vel", true);
+  ELdrift_velocity_cmd.SetUnitCategory("Velocity");
 
   msg_->DeclareProperty("elfield", elfield_,
                         "True if the EL field is on (full simulation), "
@@ -329,7 +347,7 @@ void Next100FieldCage::BuildActive()
   G4double global_active_zpos = active_zpos_ - GetCoordOrigin().z();
   field->SetCathodePosition(global_active_zpos + active_length_/2.);
   field->SetAnodePosition(global_active_zpos - active_length_/2.);
-  field->SetDriftVelocity(1. * mm/microsecond);
+  field->SetDriftVelocity(drift_vel_);
   field->SetTransverseDiffusion(drift_transv_diff_);
   field->SetLongitudinalDiffusion(drift_long_diff_);
   field->SetLifetime(e_lifetime_);
@@ -721,10 +739,18 @@ void Next100FieldCage::BuildELRegion()
     G4double global_el_gap_zpos = el_gap_zpos_ - GetCoordOrigin().z();
     el_field->SetCathodePosition(global_el_gap_zpos + el_gap_length_/2. + grid_thickn_);
     el_field->SetAnodePosition  (global_el_gap_zpos - el_gap_length_/2. - grid_thickn_);
-    el_field->SetDriftVelocity(2.5 * mm/microsecond);
+    el_field->SetDriftVelocity(ELdrift_vel_);
     el_field->SetTransverseDiffusion(ELtransv_diff_);
     el_field->SetLongitudinalDiffusion(ELlong_diff_);
-    el_field->SetLightYield(XenonELLightYield(ELelectric_field_, pressure_));
+    
+    // Decide whether to use argon or xenon LY
+    if (gas_->GetName() == "GAr"){
+      el_field->SetLightYield(ArgonELLightYield(ELelectric_field_, pressure_));
+    }
+    else {
+      el_field->SetLightYield(XenonELLightYield(ELelectric_field_, pressure_));
+    }
+    
     G4Region* el_region = new G4Region("EL_REGION");
     el_region->SetUserInformation(el_field);
     el_region->AddRootLogicalVolume(el_gap_logic);
