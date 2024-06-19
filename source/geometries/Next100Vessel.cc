@@ -354,7 +354,7 @@ namespace nexus {
     if (gas_ == "GAr"){
       vessel_gas_mat->SetMaterialPropertiesTable(opticalprops::GAr(sc_yield_, e_lifetime_));
     }
-    else{
+    else {
     vessel_gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_,
                                                                  temperature_,
                                                                  sc_yield_,

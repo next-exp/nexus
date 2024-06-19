@@ -45,7 +45,7 @@
 /Actions/DefaultEventAction/max_energy 6 MeV
 
 ##### PHYSICS #####
-## No full simulation
+## Full simulation
 /PhysicsList/Nexus/clustering          true
 /PhysicsList/Nexus/drift               true
 /PhysicsList/Nexus/electroluminescence true

@@ -748,7 +748,7 @@ void Next100FieldCage::BuildELRegion()
     if (gas_->GetName() == "GAr"){
       el_field->SetLightYield(ArgonELLightYield(ELelectric_field_, pressure_));
     }
-    else{
+    else {
       el_field->SetLightYield(XenonELLightYield(ELelectric_field_, pressure_));
     }
     
