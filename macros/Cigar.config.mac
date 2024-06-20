@@ -18,4 +18,4 @@
 ### JOB CONTROL
 /nexus/random_seed            1
 /nexus/persistency/start_id   0
-/nexus/persistency/output_file Cigar.next
+/nexus/persistency/output_file Cigar
