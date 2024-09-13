@@ -757,6 +757,9 @@ namespace materialprops {
     mpt->AddConstProperty("SCINTILLATIONYIELD1", xenon_pt->GetConstProperty("SCINTILLATIONYIELD1"));
     mpt->AddConstProperty("SCINTILLATIONYIELD2", xenon_pt->GetConstProperty("SCINTILLATIONYIELD2"));
     mpt->AddConstProperty("ATTACHMENT",         xenon_pt->GetConstProperty("ATTACHMENT"), 1);
+    mpt->AddConstProperty("IONIZATIONENERGY",   xenon_pt->GetConstProperty("IONIZATIONENERGY"), 1);
+    mpt->AddConstProperty("FANOFACTOR",         xenon_pt->GetConstProperty("FANOFACTOR"), 1);
+
 
     // ABSORPTION LENGTH
     G4double abs_length   = -thickness/log(transparency);
