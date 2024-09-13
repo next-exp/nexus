@@ -8,7 +8,7 @@
 
 #include "NextNewVessel.h"
 #include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "Visibilities.h"
 #include "CalibrationSource.h"
 #include "CylinderPointSamplerLegacy.h"
@@ -365,7 +365,7 @@ void NextNewVessel::Construct()
 
 
     //// LOGICS //////
-    
+
     G4Material* steel_316_Ti = materials::Steel316Ti();
     steel_316_Ti->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
@@ -377,10 +377,10 @@ void NextNewVessel::Construct()
     G4Tubs* lateral_port_hole_solid =
       new G4Tubs("LATERAL_PORT_AIR_EXT", 0., port_tube_diam_/2.,
     		 (lat_nozzle_flange_high_ + lat_port_tube_out_)/2., 0., twopi);
-    
+
     G4Material* air_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
     air_mat->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
-    
+
     G4LogicalVolume* lateral_port_hole_logic =
       new G4LogicalVolume(lateral_port_hole_solid, air_mat,
 			  "LATERAL_PORT_AIR_EXT");
@@ -411,23 +411,23 @@ void NextNewVessel::Construct()
 
     if (gas_ == "naturalXe") {
       vessel_gas_mat = materials::GXe(pressure_, temperature_);
-      vessel_gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_, temperature_, sc_yield_, e_lifetime_));
+      vessel_gas_mat->SetMaterialPropertiesTable(materialprops::GXe(pressure_, temperature_, sc_yield_, e_lifetime_));
     } else if (gas_ == "enrichedXe") {
       vessel_gas_mat =  materials::GXeEnriched(pressure_, temperature_);
-      vessel_gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_, temperature_, sc_yield_, e_lifetime_));
+      vessel_gas_mat->SetMaterialPropertiesTable(materialprops::GXe(pressure_, temperature_, sc_yield_, e_lifetime_));
     } else if  (gas_ == "depletedXe") {
       vessel_gas_mat =  materials::GXeDepleted(pressure_, temperature_);
-      vessel_gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_, temperature_, sc_yield_, e_lifetime_));
+      vessel_gas_mat->SetMaterialPropertiesTable(materialprops::GXe(pressure_, temperature_, sc_yield_, e_lifetime_));
     } else if (gas_ == "Ar") {
       vessel_gas_mat =  materials::GAr(pressure_, temperature_);
-      vessel_gas_mat->SetMaterialPropertiesTable(opticalprops::GAr(sc_yield_, e_lifetime_));
+      vessel_gas_mat->SetMaterialPropertiesTable(materialprops::GAr(sc_yield_, e_lifetime_));
     } else if (gas_ == "ArXe") {
       vessel_gas_mat =  materials::GXeAr(pressure_, temperature_, xe_perc_);
-      vessel_gas_mat->SetMaterialPropertiesTable(opticalprops::GAr(sc_yield_, e_lifetime_));
+      vessel_gas_mat->SetMaterialPropertiesTable(materialprops::GAr(sc_yield_, e_lifetime_));
     } else if (gas_ == "XeHe") {
       vessel_gas_mat =  materials::GXeHe(pressure_, temperature_,
 					     xe_perc_, helium_mass_num_);
-      vessel_gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_, temperature_, sc_yield_, e_lifetime_));
+      vessel_gas_mat->SetMaterialPropertiesTable(materialprops::GXe(pressure_, temperature_, sc_yield_, e_lifetime_));
     } else {
       G4Exception("[NextNewVessel]", "Construct()", FatalException,
 		  "Unknown kind of gas, valid options are: naturalXe, enrichedXe, depletedXe, Ar, ArXe, XeHe.");

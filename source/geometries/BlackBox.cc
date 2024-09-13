@@ -13,7 +13,7 @@
 
 #include "MaterialsList.h"
 #include "IonizationSD.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "Visibilities.h"
 
 #include <G4Box.hh>
@@ -120,7 +120,7 @@ namespace nexus {
 
   G4Material* world_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
 
-  world_mat->SetMaterialPropertiesTable(opticalprops::Vacuum());
+  world_mat->SetMaterialPropertiesTable(materialprops::Vacuum());
 
   G4Box* world_solid_vol =
     new G4Box(world_name, world_xy_/2., world_xy_/2., world_z_/2.);
@@ -170,7 +170,7 @@ namespace nexus {
 
     G4Material* sapphire_mat = materials::Sapphire();
 
-    sapphire_mat->SetMaterialPropertiesTable(opticalprops::Sapphire());
+    sapphire_mat->SetMaterialPropertiesTable(materialprops::Sapphire());
 
     G4double pedot_thickn  = 150. *nm;
     G4double window_thickn  = 6. *mm;
@@ -198,7 +198,7 @@ namespace nexus {
 
       G4Material* pedot_mat = materials::PEDOT();
 
-      pedot_mat->SetMaterialPropertiesTable(opticalprops::PEDOT());
+      pedot_mat->SetMaterialPropertiesTable(materialprops::PEDOT());
 
       G4Tubs* pedot_solid_vol =
         new G4Tubs(pedot_name, 0, sapphire_diam/2., pedot_thickn/2., 0, twopi);

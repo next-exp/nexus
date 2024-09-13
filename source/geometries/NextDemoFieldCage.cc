@@ -9,7 +9,7 @@
 
 #include "NextDemoFieldCage.h"
 #include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "IonizationSD.h"
 #include "UniformElectricDriftField.h"
 #include "XenonProperties.h"
@@ -236,15 +236,15 @@ namespace nexus {
 
     /// Quartz
     quartz_ =  materials::FusedSilica();
-    quartz_->SetMaterialPropertiesTable(opticalprops::FusedSilica());
+    quartz_->SetMaterialPropertiesTable(materialprops::FusedSilica());
 
     /// TPB coating
     tpb_ = materials::TPB();
-    tpb_->SetMaterialPropertiesTable(opticalprops::TPB());
+    tpb_->SetMaterialPropertiesTable(materialprops::TPB());
 
     //ITO coating
     ito_ = materials::ITO();
-    ito_->SetMaterialPropertiesTable(opticalprops::ITO());
+    ito_->SetMaterialPropertiesTable(materialprops::ITO());
   }
 
 
@@ -296,7 +296,7 @@ namespace nexus {
   {
     G4Material* cathode_mat =
       materials::FakeDielectric(gas_, "cathode_mat");
-    cathode_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_,
+    cathode_mat->SetMaterialPropertiesTable(materialprops::FakeGrid(pressure_,
                                                                    temperature_,
                                                                    cathode_transparency_,
                                                                    grid_thickn_));
@@ -394,7 +394,7 @@ namespace nexus {
 
     // Building the GATE
     G4Material* gate_mat = materials::FakeDielectric(gas_, "gate_mat");
-    gate_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_,
+    gate_mat->SetMaterialPropertiesTable(materialprops::FakeGrid(pressure_,
                                                                 temperature_,
                                                                 gate_transparency_,
                                                                 grid_thickn_,
@@ -467,7 +467,7 @@ namespace nexus {
     // Building the ANODE grid corresponding to "run7" and "run8" configuration
     else {
       G4Material* anode_mat = materials::FakeDielectric(gas_, "anode_mat");
-      anode_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_,
+      anode_mat->SetMaterialPropertiesTable(materialprops::FakeGrid(pressure_,
                                                                    temperature_,
                                                                    anode_transparency_,
                                                                    grid_thickn_,
@@ -569,7 +569,7 @@ namespace nexus {
     lt_drift_opsur->SetModel(unified);
     lt_drift_opsur->SetFinish(ground);
     lt_drift_opsur->SetSigmaAlpha(0.1);
-    lt_drift_opsur->SetMaterialPropertiesTable(opticalprops::PTFE());
+    lt_drift_opsur->SetMaterialPropertiesTable(materialprops::PTFE());
     new G4LogicalSkinSurface("LIGHT_TUBE_DRIFT",
                              light_tube_drift_logic, lt_drift_opsur);
 
@@ -578,7 +578,7 @@ namespace nexus {
     lt_buff_opsur->SetModel(unified);
     lt_buff_opsur->SetFinish(ground);
     lt_buff_opsur->SetSigmaAlpha(0.1);
-    lt_buff_opsur->SetMaterialPropertiesTable(opticalprops::PTFE());
+    lt_buff_opsur->SetMaterialPropertiesTable(materialprops::PTFE());
     new G4LogicalSkinSurface("LIGHT_TUBE_BUFFER",
                              light_tube_buff_logic, lt_buff_opsur);
 

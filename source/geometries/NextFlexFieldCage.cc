@@ -9,7 +9,7 @@
 #include "NextFlexFieldCage.h"
 
 #include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "XenonProperties.h"
 #include "IonizationSD.h"
 #include "UniformElectricDriftField.h"
@@ -300,11 +300,11 @@ void NextFlexFieldCage::DefineMaterials()
   }
   else if (wls_mat_name_ == "TPB") {
     wls_mat_ = materials::TPB();
-    wls_mat_->SetMaterialPropertiesTable(opticalprops::TPB());
+    wls_mat_->SetMaterialPropertiesTable(materialprops::TPB());
   }
   else if (wls_mat_name_ == "TPH") {
     wls_mat_ = materials::TPH();
-    wls_mat_->SetMaterialPropertiesTable(opticalprops::TPH());
+    wls_mat_->SetMaterialPropertiesTable(materialprops::TPH());
   }
   else {
     G4Exception("[NextFlexFieldCage]", "DefineMaterials()", FatalException,
@@ -313,17 +313,17 @@ void NextFlexFieldCage::DefineMaterials()
 
   // Meshes materials
   cathode_mat_ = materials::FakeDielectric(xenon_gas_, "cathode_mat");
-  cathode_mat_->SetMaterialPropertiesTable(opticalprops::FakeGrid(gas_pressure_,
+  cathode_mat_->SetMaterialPropertiesTable(materialprops::FakeGrid(gas_pressure_,
                 gas_temperature_, cathode_transparency_, cathode_thickness_,
                 gas_sc_yield_, gas_e_lifetime_));
 
   gate_mat_ = materials::FakeDielectric(xenon_gas_, "gate_mat");
-  gate_mat_->SetMaterialPropertiesTable(opticalprops::FakeGrid(gas_pressure_,
+  gate_mat_->SetMaterialPropertiesTable(materialprops::FakeGrid(gas_pressure_,
              gas_temperature_, gate_transparency_, gate_thickness_,
              gas_sc_yield_, 1000*ms, photoe_prob_));
 
   anode_mat_ = materials::FakeDielectric(xenon_gas_, "anode_mat");
-  anode_mat_->SetMaterialPropertiesTable(opticalprops::FakeGrid(gas_pressure_,
+  anode_mat_->SetMaterialPropertiesTable(materialprops::FakeGrid(gas_pressure_,
               gas_temperature_, anode_transparency_, anode_thickness_,
               gas_sc_yield_, 1000*ms, photoe_prob_));
 
@@ -331,15 +331,15 @@ void NextFlexFieldCage::DefineMaterials()
   // Fiber core material
   if (fiber_mat_name_ == "EJ280") {
     fiber_mat_ = materials::PVT();
-    fiber_mat_->SetMaterialPropertiesTable(opticalprops::EJ280());
+    fiber_mat_->SetMaterialPropertiesTable(materialprops::EJ280());
   }
   else if (fiber_mat_name_ == "EJ286") {
     fiber_mat_ = materials::PVT();   // Same base material than EJ280
-    fiber_mat_->SetMaterialPropertiesTable(opticalprops::EJ286());
+    fiber_mat_->SetMaterialPropertiesTable(materialprops::EJ286());
   }
   else if (fiber_mat_name_ == "Y11") {
     fiber_mat_ = materials::PS();
-    fiber_mat_->SetMaterialPropertiesTable(opticalprops::Y11());
+    fiber_mat_->SetMaterialPropertiesTable(materialprops::Y11());
   }
   else {
     G4Exception("[NextFlexFieldCage]", "DefineMaterials()", FatalException,
@@ -348,10 +348,10 @@ void NextFlexFieldCage::DefineMaterials()
 
   // Fiber cladding materials (inner: PMMA  outer: FPethylene)
   oClad_mat_ = materials::FPethylene();
-  oClad_mat_->SetMaterialPropertiesTable(opticalprops::FPethylene());
+  oClad_mat_->SetMaterialPropertiesTable(materialprops::FPethylene());
 
   iClad_mat_ = materials::PMMA();
-  iClad_mat_->SetMaterialPropertiesTable(opticalprops::PMMA());
+  iClad_mat_->SetMaterialPropertiesTable(materialprops::PMMA());
 }
 
 
@@ -666,7 +666,7 @@ void NextFlexFieldCage::BuildLightTube()
   // Adding the optical surface
   G4OpticalSurface* light_tube_optSurf =
     new G4OpticalSurface(light_tube_name, unified, ground, dielectric_metal);
-  light_tube_optSurf->SetMaterialPropertiesTable(opticalprops::PTFE());
+  light_tube_optSurf->SetMaterialPropertiesTable(materialprops::PTFE());
 
   new G4LogicalSkinSurface(light_tube_name, light_tube_logic, light_tube_optSurf);
 

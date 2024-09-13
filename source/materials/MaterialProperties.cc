@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
-// nexus | OpticalMaterialProperties.cc
+// nexus | MaterialProperties.cc
 //
-// Optical properties of relevant materials.
+// Properties of relevant materials.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "XenonProperties.h"
 #include "SellmeierEquation.h"
 
@@ -16,7 +16,7 @@
 using namespace nexus;
 using namespace CLHEP;
 
-namespace opticalprops {
+namespace materialprops {
 
   G4MaterialPropertiesTable* Vacuum()
   {
@@ -114,7 +114,7 @@ namespace opticalprops {
 
     G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
-    G4MaterialPropertiesTable* fused_sil_pt = opticalprops::FusedSilica();
+    G4MaterialPropertiesTable* fused_sil_pt = materialprops::FusedSilica();
     mpt->AddProperty("RINDEX", fused_sil_pt->GetProperty("RINDEX"));
 
     // ABSORPTION LENGTH (Set to match the transparency)
@@ -735,7 +735,7 @@ namespace opticalprops {
     G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
     // PROPERTIES FROM XENON
-    G4MaterialPropertiesTable* xenon_pt = opticalprops::GXe(pressure, temperature, sc_yield, e_lifetime);
+    G4MaterialPropertiesTable* xenon_pt = materialprops::GXe(pressure, temperature, sc_yield, e_lifetime);
 
     mpt->AddProperty("RINDEX",        xenon_pt->GetProperty("RINDEX"));
     mpt->AddProperty("SCINTILLATIONCOMPONENT1", xenon_pt->GetProperty("SCINTILLATIONCOMPONENT1"));
@@ -820,6 +820,7 @@ namespace opticalprops {
        hc_ / (717.13442 * nm),  hc_ / (597.48892 * nm),  hc_ / (477.84343 * nm),
        hc_ / (418.02068 * nm),  hc_ / (358.19793 * nm),  hc_ / (293.94387 * nm)
     };
+
     std::vector<G4double> REFLECTIVITY = {
       .99088, .99082, .98925,
       .98623, .98611, .98163,
@@ -1004,11 +1005,11 @@ namespace opticalprops {
     G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
     // All Optical Material Properties from normal TPB ...
-    mpt->AddProperty("RINDEX",       opticalprops::TPB()->GetProperty("RINDEX"));
-    mpt->AddProperty("ABSLENGTH",    opticalprops::TPB()->GetProperty("ABSLENGTH"));
-    mpt->AddProperty("WLSABSLENGTH", opticalprops::TPB()->GetProperty("WLSABSLENGTH"));
-    mpt->AddProperty("WLSCOMPONENT", opticalprops::TPB()->GetProperty("WLSCOMPONENT"));
-    mpt->AddConstProperty("WLSTIMECONSTANT", opticalprops::TPB()->GetConstProperty("WLSTIMECONSTANT"));
+    mpt->AddProperty("RINDEX",       materialprops::TPB()->GetProperty("RINDEX"));
+    mpt->AddProperty("ABSLENGTH",    materialprops::TPB()->GetProperty("ABSLENGTH"));
+    mpt->AddProperty("WLSABSLENGTH", materialprops::TPB()->GetProperty("WLSABSLENGTH"));
+    mpt->AddProperty("WLSCOMPONENT", materialprops::TPB()->GetProperty("WLSCOMPONENT"));
+    mpt->AddConstProperty("WLSTIMECONSTANT", materialprops::TPB()->GetConstProperty("WLSTIMECONSTANT"));
 
     // Except WLS Quantum Efficiency
     mpt->AddConstProperty("WLSMEANNUMBERPHOTONS", wls_eff);

@@ -9,7 +9,7 @@
 #include "Next100Vessel.h"
 #include "MaterialsList.h"
 #include "Visibilities.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "CylinderPointSampler.h"
 #include "SpherePointSampler.h"
 #include "Next100Th228Source.h"
@@ -348,7 +348,7 @@ namespace nexus {
                   "natural, enriched, depleted, or XeHe.");
     }
 
-    vessel_gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_,
+    vessel_gas_mat->SetMaterialPropertiesTable(materialprops::GXe(pressure_,
                                                                  temperature_,
                                                                  sc_yield_,
                                                                  e_lifetime_));

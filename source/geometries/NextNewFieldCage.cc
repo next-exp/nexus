@@ -11,7 +11,7 @@
 #include "MaterialsList.h"
 #include "IonizationSD.h"
 #include "UniformElectricDriftField.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "IonizationSD.h"
 #include "XenonProperties.h"
 #include "CylinderPointSamplerLegacy.h"
@@ -288,16 +288,16 @@ namespace nexus {
     teflon_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
     // TPB coating
     tpb_ = materials::TPB();
-    tpb_->SetMaterialPropertiesTable(opticalprops::TPB());
+    tpb_->SetMaterialPropertiesTable(materialprops::TPB());
     //ITO coating
     ito_ = materials::ITO();
-    ito_->SetMaterialPropertiesTable(opticalprops::ITO());
+    ito_->SetMaterialPropertiesTable(materialprops::ITO());
     // PEDOT coating
     pedot_ = materials::PEDOT();
-    pedot_->SetMaterialPropertiesTable(opticalprops::PEDOT());
+    pedot_->SetMaterialPropertiesTable(materialprops::PEDOT());
     // Quartz
     quartz_ =  materials::FusedSilica();
-    quartz_->SetMaterialPropertiesTable(opticalprops::FusedSilica());
+    quartz_->SetMaterialPropertiesTable(materialprops::FusedSilica());
   }
 
 
@@ -306,7 +306,7 @@ namespace nexus {
     ///// CATHODE //////
     G4Material* fgrid_mat =
       materials::FakeDielectric(gas_, "cath_grid_mat");
-    fgrid_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_,
+    fgrid_mat->SetMaterialPropertiesTable(materialprops::FakeGrid(pressure_,
                                                                  temperature_,
                                                                  cathode_grid_transparency_,
                                                                  cathode_thickness_));
@@ -451,7 +451,7 @@ void NextNewFieldCage::BuildBuffer()
       materials::FakeDielectric(gas_, "el_grid_gate_mat");
     // We have to set the defaults explicitely because C++ doesn't support
     // named arguments
-    fgate_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_,
+    fgate_mat->SetMaterialPropertiesTable(materialprops::FakeGrid(pressure_,
                                                                  temperature_,
                                                                  gate_transparency_,
                                                                  grid_thickness_,
@@ -633,7 +633,7 @@ void NextNewFieldCage::BuildBuffer()
     reflector_opt_surf->SetModel(unified);
     reflector_opt_surf->SetFinish(ground);
     reflector_opt_surf->SetSigmaAlpha(0.01);
-    reflector_opt_surf->SetMaterialPropertiesTable(opticalprops::PTFE());
+    reflector_opt_surf->SetMaterialPropertiesTable(materialprops::PTFE());
     new G4LogicalSkinSurface("DRIFT_TUBE", drift_tube_logic,
     			     reflector_opt_surf);
 

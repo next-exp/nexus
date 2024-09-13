@@ -11,7 +11,7 @@
 #include "Next100SiPMBoard.h"
 
 #include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "BoxPointSampler.h"
 #include "Visibilities.h"
 #include "Next100SiPM.h"
@@ -124,7 +124,7 @@ void Next100SiPMBoard::Construct()
 
   G4OpticalSurface* mask_opsurf =
     new G4OpticalSurface(mask_name+"_OPSURF", unified, ground, dielectric_metal);
-  mask_opsurf->SetMaterialPropertiesTable(opticalprops::PTFE());
+  mask_opsurf->SetMaterialPropertiesTable(materialprops::PTFE());
   new G4LogicalSkinSurface(mask_name+"_OPSURF", mask_logic_vol, mask_opsurf);
 
 
@@ -138,7 +138,7 @@ void Next100SiPMBoard::Construct()
     new G4Box(mask_wls_name, size_/2., size_/2., wls_thickness/2.);
 
   G4Material* tpb = materials::TPB();
-  tpb->SetMaterialPropertiesTable(opticalprops::TPB());
+  tpb->SetMaterialPropertiesTable(materialprops::TPB());
 
   G4LogicalVolume* mask_wls_logic_vol =
     new G4LogicalVolume(mask_wls_solid_vol, tpb, mask_wls_name);
