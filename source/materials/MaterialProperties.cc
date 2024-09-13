@@ -529,6 +529,8 @@ namespace materialprops {
     // May 2023:
     // Updated scintillation decay and yields from:
     // Triplet Lifetime in Gaseous Argon. Michael Akashi-Ronquest et al.
+    // Fano factor from M. Kase et al., NIMA, Volume 227, Issue 2 Pages 311-317
+    // Ionization energy from https://www.nuclear-power.com/argon-affinity-electronegativity-ionization/
 
     G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
@@ -589,6 +591,8 @@ namespace materialprops {
     mpt->AddConstProperty("SCINTILLATIONYIELD2", .864);
     mpt->AddConstProperty("RESOLUTIONSCALE",    1.0);
     mpt->AddConstProperty("ATTACHMENT",         e_lifetime, 1);
+    mpt->AddConstProperty("IONIZATIONENERGY",    15.8 * eV, 1);
+    mpt->AddConstProperty("FANOFACTOR",            .2,      1);
 
     return mpt;
   }
@@ -711,8 +715,8 @@ namespace materialprops {
     LXe_mpt->AddConstProperty("SCINTILLATIONYIELD1", .03);
     LXe_mpt->AddConstProperty("SCINTILLATIONYIELD2", .97);
     LXe_mpt->AddConstProperty("ATTACHMENT", 1000.*ms, 1);
-    mpt->AddConstProperty("IONIZATIONENERGY",    21.9 * eV, 1);
-    mpt->AddConstProperty("FANOFACTOR",               0.29, 1);
+    LXe_mpt->AddConstProperty("IONIZATIONENERGY",    21.9 * eV, 1);
+    LXe_mpt->AddConstProperty("FANOFACTOR",               0.29, 1);
 
     std::vector<G4double> abs_energy = {optPhotMinE_, optPhotMaxE_};
     std::vector<G4double> abs_length = {noAbsLength_, noAbsLength_};
