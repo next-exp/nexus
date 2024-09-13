@@ -647,12 +647,14 @@ namespace materialprops {
 
     // CONST PROPERTIES
     mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield);
-    mpt->AddConstProperty("RESOLUTIONSCALE",    1.0);
-    mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT1",   4.5  * ns);
-    mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT2",   100. * ns);
+    mpt->AddConstProperty("RESOLUTIONSCALE",         1.0);
+    mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT1",   4.5 * ns);
+    mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT2", 100.  * ns);
     mpt->AddConstProperty("SCINTILLATIONYIELD1", .1);
     mpt->AddConstProperty("SCINTILLATIONYIELD2", .9);
     mpt->AddConstProperty("ATTACHMENT",         e_lifetime, 1);
+    mpt->AddConstProperty("IONIZATIONENERGY",    22.4 * eV, 1);
+    mpt->AddConstProperty("FANOFACTOR",                .15, 1);
 
     return mpt;
   }
