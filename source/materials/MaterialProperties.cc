@@ -669,7 +669,7 @@ namespace materialprops {
   G4MaterialPropertiesTable* LXe()
   {
     /// The time constants are taken from E. Hogenbirk et al 2018 JINST 13 P10031
-    /// Fano factor and ionization electron from Nobumiti et al., Phys. Rev. A 46, 1676
+    /// Ionization energy is taken from Takahashi et al., Phys. Rev. A 12, 1771
     G4MaterialPropertiesTable* LXe_mpt = new G4MaterialPropertiesTable();
 
     const G4int ri_entries = 200;
@@ -715,7 +715,7 @@ namespace materialprops {
     LXe_mpt->AddConstProperty("SCINTILLATIONYIELD1", .03);
     LXe_mpt->AddConstProperty("SCINTILLATIONYIELD2", .97);
     LXe_mpt->AddConstProperty("ATTACHMENT", 1000.*ms, 1);
-    LXe_mpt->AddConstProperty("IONIZATIONENERGY",    21.9 * eV, 1);
+    LXe_mpt->AddConstProperty("IONIZATIONENERGY",    15.6 * eV, 1);
     LXe_mpt->AddConstProperty("FANOFACTOR",               0.29, 1);
 
     std::vector<G4double> abs_energy = {optPhotMinE_, optPhotMaxE_};
