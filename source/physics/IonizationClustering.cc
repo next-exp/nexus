@@ -109,11 +109,11 @@ namespace nexus {
     // and N is the average number of charges.
 
     // Fetch the W_i and F from the material properties table
-    G4String mat_name = track.GetMaterial()->GetName();
     G4MaterialPropertiesTable* mpt =
       track.GetMaterial()->GetMaterialPropertiesTable();
     if (!mpt) {
-      G4cout << "Material properties missing for material " << mat_name << G4endl;
+      G4cout << "Material properties missing for material "
+             << track.GetMaterial()->GetName() << G4endl;
       G4Exception("[IonizationClustering]", "PostStepDoIt()", FatalException,
 		  "Material properties table not defined in material!");
       }
