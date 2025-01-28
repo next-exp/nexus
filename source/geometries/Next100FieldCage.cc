@@ -99,6 +99,9 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   drift_long_diff_ (.3 * mm/sqrt(cm)),
   ELtransv_diff_ (0. * mm/sqrt(cm)),
   ELlong_diff_ (0. * mm/sqrt(cm)),
+  // Drift velocities
+  drift_v_(1. * mm/microsecond),
+  EL_drift_v_(2.5 * mm/microsecond),
   // EL electric field
   elfield_ (0),
   ELelectric_field_ (34.5*kilovolt/cm),
@@ -154,6 +157,16 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
                         "Longitudinal diffusion in the EL region");
   ELlong_diff_cmd.SetParameterName("ELlong_diff", true);
   ELlong_diff_cmd.SetUnitCategory("Diffusion");
+
+  G4GenericMessenger::Command&  drift_vel_cmd =
+  msg_->DeclareProperty("drift_v", drift_v_,
+                        "The active volume drift velocity");
+  drift_vel_cmd.SetParameterName("drift_v", true);
+
+  G4GenericMessenger::Command&  EL_drift_vel_cmd =
+  msg_->DeclareProperty("EL_drift_v", EL_drift_v_,
+                        "The EL region drift velocity");
+  EL_drift_vel_cmd.SetParameterName("EL_drift_v", true);
 
   msg_->DeclareProperty("elfield", elfield_,
                         "True if the EL field is on (full simulation), "
@@ -329,7 +342,7 @@ void Next100FieldCage::BuildActive()
   G4double global_active_zpos = active_zpos_ - GetCoordOrigin().z();
   field->SetCathodePosition(global_active_zpos + active_length_/2.);
   field->SetAnodePosition(global_active_zpos - active_length_/2.);
-  field->SetDriftVelocity(1. * mm/microsecond);
+  field->SetDriftVelocity(drift_v_);
   field->SetTransverseDiffusion(drift_transv_diff_);
   field->SetLongitudinalDiffusion(drift_long_diff_);
   field->SetLifetime(e_lifetime_);
@@ -721,7 +734,7 @@ void Next100FieldCage::BuildELRegion()
     G4double global_el_gap_zpos = el_gap_zpos_ - GetCoordOrigin().z();
     el_field->SetCathodePosition(global_el_gap_zpos + el_gap_length_/2. + grid_thickn_);
     el_field->SetAnodePosition  (global_el_gap_zpos - el_gap_length_/2. - grid_thickn_);
-    el_field->SetDriftVelocity(2.5 * mm/microsecond);
+    el_field->SetDriftVelocity(EL_drift_v_);
     el_field->SetTransverseDiffusion(ELtransv_diff_);
     el_field->SetLongitudinalDiffusion(ELlong_diff_);
     el_field->SetLightYield(XenonELLightYield(ELelectric_field_, pressure_));
