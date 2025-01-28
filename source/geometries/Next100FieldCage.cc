@@ -162,11 +162,13 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   msg_->DeclareProperty("drift_v", drift_v_,
                         "The active volume drift velocity");
   drift_vel_cmd.SetParameterName("drift_v", true);
+  drift_vel_cmd.SetRange("drift_v>=0.");
 
   G4GenericMessenger::Command&  EL_drift_vel_cmd =
   msg_->DeclareProperty("EL_drift_v", EL_drift_v_,
                         "The EL region drift velocity");
   EL_drift_vel_cmd.SetParameterName("EL_drift_v", true);
+  EL_drift_vel_cmd.SetRange("EL_drift_v>=0.");
 
   msg_->DeclareProperty("elfield", elfield_,
                         "True if the EL field is on (full simulation), "
