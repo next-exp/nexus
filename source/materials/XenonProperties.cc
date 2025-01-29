@@ -207,25 +207,38 @@ G4double LXeScintillation(G4double energy)
 
 G4double XenonELLightYield(G4double field_strength, G4double pressure)
 {
-  // Empirical formula taken from
-  // C.M.B. Monteiro et al., JINST 2 (2007) P05001.
 
   // Y/x = (a E/p - b) p,
-  // where Y/x is the number of photons per unit lenght (cm),
+  // where Y/x is the number of photons per unit length (cm),
   // E is the electric field strength, p is the pressure
   // a and b are empirically determined constants depending on pressure.
-  // Values for different pressures are found in: Freitas-2010
-  // Physics Letters B 684 (2010) 205–210
 
-  const G4double b = 116. / (bar*cm);
   G4double a = 140. / kilovolt;
+  G4double b = 116. / (bar*cm);
 
-  // Updating the slope
-  if (pressure >= 2. * bar) a = 141. / kilovolt;
-  if (pressure >= 4. * bar) a = 142. / kilovolt;
-  if (pressure >= 5. * bar) a = 151. / kilovolt;
-  if (pressure >= 6. * bar) a = 161. / kilovolt;
-  if (pressure >= 8. * bar) a = 170. / kilovolt;
+  // Less than 2 bar we use
+  // C.M.B. Monteiro et al., JINST 2 (2007) P05001. 
+  if (pressure > 0 && pressure < 2){
+    a = 140. / kilovolt;
+    b = 116. / (bar*cm);
+  }
+
+  // For higher pressures, we use: Freitas-2010
+  // Physics Letters B 684 (2010) 205–210
+  else {
+    
+    // Intercept
+    b = 131. / (bar*cm);
+    
+    // Slopes are pressure dependent
+    // Note: in paper 10 bar constant reduces to 162
+    // but we assume 170 here to maintain linear slope
+    if (pressure >= 2. * bar) a = 141. / kilovolt;
+    if (pressure >= 4. * bar) a = 142. / kilovolt;
+    if (pressure >= 5. * bar) a = 151. / kilovolt;
+    if (pressure >= 6. * bar) a = 161. / kilovolt;
+    if (pressure >= 8. * bar) a = 170. / kilovolt;
+  }
 
   // Getting the yield
   G4double yield = (a * field_strength/pressure - b) * pressure;
