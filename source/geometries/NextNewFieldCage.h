@@ -104,6 +104,10 @@ namespace nexus {
     G4double drift_transv_diff_;
     G4double drift_long_diff_;
 
+    // Drift Velocities
+    G4double drift_v_;
+    G4double EL_drift_v_;
+
     // Electric field in the EL gap
     G4double ELelectric_field_;
 
