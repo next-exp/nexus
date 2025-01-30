@@ -73,6 +73,9 @@ namespace nexus {
     ELlong_diff_(0. * mm/sqrt(cm)),
     drift_transv_diff_(1. * mm/sqrt(cm)),
     drift_long_diff_(.3 * mm/sqrt(cm)),
+    // Drift velocities
+    drift_v_(1. * mm/microsecond),
+    EL_drift_v_(2.5 * mm/microsecond),
     //
     ELelectric_field_(34.5 * kilovolt/cm), // it corresponds to 2.3 kV/cm/bar at 15 bar
     // Visibility
@@ -153,6 +156,18 @@ namespace nexus {
 			    "Longitudinal diffusion in the drift region");
     drift_long_diff_cmd.SetParameterName("drift_long_diff", true);
     drift_long_diff_cmd.SetUnitCategory("Diffusion");
+
+    G4GenericMessenger::Command&  drift_vel_cmd =
+    msg_->DeclareProperty("drift_v", drift_v_,
+                          "The active volume drift velocity");
+    drift_vel_cmd.SetParameterName("drift_v", true);
+    drift_vel_cmd.SetRange("drift_v>=0.");
+
+    G4GenericMessenger::Command&  EL_drift_vel_cmd =
+    msg_->DeclareProperty("EL_drift_v", EL_drift_v_,
+                          "The EL region drift velocity");
+    EL_drift_vel_cmd.SetParameterName("EL_drift_v", true);
+    EL_drift_vel_cmd.SetRange("EL_drift_v>=0.");
 
     G4GenericMessenger::Command& El_field_cmd =
       msg_->DeclareProperty("EL_field", ELelectric_field_,
@@ -357,7 +372,7 @@ namespace nexus {
     // electrodes are at the end of active region
     field->SetCathodePosition(-(active_posz_ - active_length_/2.) + GetELzCoord());
     field->SetAnodePosition(-(active_posz_ + active_length_/2.) + GetELzCoord());
-    field->SetDriftVelocity(1. * mm/microsecond);
+    field->SetDriftVelocity(drift_v_);
     field->SetTransverseDiffusion(drift_transv_diff_);
     field->SetLongitudinalDiffusion(drift_long_diff_);
     field->SetLifetime(e_lifetime_);
@@ -436,7 +451,7 @@ void NextNewFieldCage::BuildBuffer()
       UniformElectricDriftField* el_field = new UniformElectricDriftField();
       el_field->SetCathodePosition(-(el_gap_z_pos_ - el_gap_length_/2.) + GetELzCoord());
       el_field->SetAnodePosition(-(el_gap_z_pos_ + el_gap_length_/2.) + GetELzCoord());
-      el_field->SetDriftVelocity(2.5 * mm/microsecond);
+      el_field->SetDriftVelocity(EL_drift_v_);
       el_field->SetTransverseDiffusion(ELtransv_diff_);
       el_field->SetLongitudinalDiffusion(ELlong_diff_);
       el_field->SetLightYield(XenonELLightYield(ELelectric_field_, pressure_));

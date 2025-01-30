@@ -112,6 +112,8 @@ namespace nexus {
     G4double cathode_grid_zpos_;
     G4double drift_transv_diff_, drift_long_diff_;
     G4double ELtransv_diff_, ELlong_diff_;
+    G4double drift_v_;
+    G4double EL_drift_v_;
     G4bool elfield_;
     G4double ELelectric_field_;
 

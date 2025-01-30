@@ -106,6 +106,7 @@ namespace nexus {
     // ACTIVE
     G4double active_diam_,       active_length_;
     G4double drift_transv_diff_, drift_long_diff_;
+    G4double drift_v_;
 
     // CATHODE
     G4double cathode_thickness_, cathode_transparency_;
@@ -119,6 +120,7 @@ namespace nexus {
     G4bool   el_field_on_;
     G4double el_field_int_;
     G4double el_transv_diff_, el_long_diff_;
+    G4double EL_drift_v_;
     G4double anode_thickness_, anode_transparency_;
     G4double gate_thickness_,  gate_transparency_;
     G4double photoe_prob_;

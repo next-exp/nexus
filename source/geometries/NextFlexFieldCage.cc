@@ -50,6 +50,7 @@ NextFlexFieldCage::NextFlexFieldCage():
   active_length_           (116. * cm),          // Distance GATE - CATHODE (meshes not included)
   drift_transv_diff_       (1. * mm/sqrt(cm)),   // Drift field transversal diffusion
   drift_long_diff_         (.3 * mm/sqrt(cm)),   // Drift field longitudinal diffusion
+  drift_v_                 (1. * mm/microsecond),// Active volume drift velocity
   cathode_transparency_    (0.95),               // Cathode transparency
   buffer_length_           (280. * mm),          // Distance CATHODE - sapphire window surfaces
   el_gap_length_           (10. * mm),           // Distance ANODE - GATE (meshes included)
@@ -57,6 +58,7 @@ NextFlexFieldCage::NextFlexFieldCage():
   el_field_int_            (16.0 * kilovolt/cm), // EL field intensity
   el_transv_diff_          (0. * mm/sqrt(cm)),   // EL field transversal diffusion
   el_long_diff_            (0. * mm/sqrt(cm)),   // EL field longitudinal diffusion
+  EL_drift_v_              (2.5 * mm/microsecond),// EL drift velocity
   anode_transparency_      (0.95),               // Anode transparency
   gate_transparency_       (0.95),               // Gate transparency
   photoe_prob_             (0),                  // OpticalPhotoElectric Probability
@@ -155,6 +157,11 @@ void NextFlexFieldCage::DefineConfigurationParameters()
   drift_long_diff_cmd.SetParameterName("drift_long_diff", false);
   drift_long_diff_cmd.SetUnitCategory("Diffusion");
 
+  G4GenericMessenger::Command&  drift_vel_cmd =
+  msg_->DeclareProperty("drift_v", drift_v_,
+                        "The active volume drift velocity");
+  drift_vel_cmd.SetParameterName("drift_v", true);
+  drift_vel_cmd.SetRange("drift_v>=0.");
 
   // FIELD_CAGE dimensions
   G4GenericMessenger::Command& buffer_length_cmd =
@@ -191,6 +198,12 @@ void NextFlexFieldCage::DefineConfigurationParameters()
                           "Longitudinal diffusion in the EL region");
   el_long_diff_cmd.SetParameterName("el_long_diff", false);
   el_long_diff_cmd.SetUnitCategory("Diffusion");
+
+  G4GenericMessenger::Command&  EL_drift_vel_cmd =
+  msg_->DeclareProperty("EL_drift_v", EL_drift_v_,
+                        "The EL region drift velocity");
+  EL_drift_vel_cmd.SetParameterName("EL_drift_v", true);
+  EL_drift_vel_cmd.SetRange("EL_drift_v>=0.");
 
   // TRANSPARENCIES
   msg_->DeclareProperty("cathode_transparency", cathode_transparency_,
@@ -417,7 +430,7 @@ void NextFlexFieldCage::BuildActive()
   UniformElectricDriftField* field = new UniformElectricDriftField();
   field->SetCathodePosition(active_length_);
   field->SetAnodePosition(0.);
-  field->SetDriftVelocity(1. * mm/microsecond);
+  field->SetDriftVelocity(drift_v_);
   field->SetTransverseDiffusion(drift_transv_diff_);
   field->SetLongitudinalDiffusion(drift_long_diff_);
   field->SetLifetime(gas_e_lifetime_);
@@ -538,7 +551,7 @@ void NextFlexFieldCage::BuildELgap()
     UniformElectricDriftField* el_field = new UniformElectricDriftField();
     el_field->SetCathodePosition(el_gap_posZ + el_gap_length_/2.);
     el_field->SetAnodePosition  (el_gap_posZ - el_gap_length_/2.);
-    el_field->SetDriftVelocity  (2.5 * mm/microsecond);
+    el_field->SetDriftVelocity  (EL_drift_v_);
     el_field->SetTransverseDiffusion(el_transv_diff_);
     el_field->SetLongitudinalDiffusion(el_long_diff_);
     el_field->SetLightYield(yield);
