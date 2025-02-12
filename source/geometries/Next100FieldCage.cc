@@ -120,6 +120,7 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   /// Define new categories
   new G4UnitDefinition("kilovolt/cm","kV/cm","Electric field", kilovolt/cm);
   new G4UnitDefinition("mm/sqrt(cm)","mm/sqrt(cm)","Diffusion", mm/sqrt(cm));
+  new G4UnitDefinition("mm/microsecond","mm/microsecond","drift speed", mm/microsecond);
 
   /// Initializing the geometry navigator (used in vertex generation)
   geom_navigator_ =
@@ -163,12 +164,14 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
                         "The active volume drift velocity");
   drift_vel_cmd.SetParameterName("drift_v", true);
   drift_vel_cmd.SetRange("drift_v>=0.");
+  drift_vel_cmd.SetUnitCategory("drift speed");
 
   G4GenericMessenger::Command&  EL_drift_vel_cmd =
   msg_->DeclareProperty("EL_drift_v", EL_drift_v_,
                         "The EL region drift velocity");
   EL_drift_vel_cmd.SetParameterName("EL_drift_v", true);
   EL_drift_vel_cmd.SetRange("EL_drift_v>=0.");
+  EL_drift_vel_cmd.SetUnitCategory("drift speed");
 
   msg_->DeclareProperty("elfield", elfield_,
                         "True if the EL field is on (full simulation), "
