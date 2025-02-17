@@ -1,0 +1,28 @@
+/Generator/CORSIKAGenerator/corsika_file data/CORSIKAValidation.bin
+/Generator/CORSIKAGenerator/height 4 m
+/Generator/CORSIKAGenerator/plane_x_size 5 m
+/Generator/CORSIKAGenerator/plane_y_size 5 m
+
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+/process/em/verbose 0
+
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+/PhysicsList/RegisterPhysics G4HadronElasticPhysicsHP
+/PhysicsList/RegisterPhysics G4HadronPhysicsQGSP_BERT_HP
+/PhysicsList/RegisterPhysics G4StoppingPhysics
+/PhysicsList/RegisterPhysics G4IonPhysics
+/PhysicsList/RegisterPhysics NexusPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
+
+/Geometry/XeSphere/LXe false
+/Geometry/XeSphere/pressure 15. bar
+/Geometry/XeSphere/radius 2. m
+
+### JOB CONTROL
+/nexus/random_seed            1
+/nexus/persistency/start_id   0
+/nexus/persistency/outputFile CORSIKA.next
