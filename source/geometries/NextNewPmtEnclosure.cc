@@ -9,7 +9,7 @@
 #include "NextNewPmtEnclosure.h"
 
 #include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "CylinderPointSamplerLegacy.h"
 #include "Visibilities.h"
 #include "PmtR11410.h"
@@ -78,19 +78,19 @@ namespace nexus{
     // MATERIALS ///////////////////////////////////////////
 
     G4Material* sapphire = materials::Sapphire();
-    sapphire->SetMaterialPropertiesTable(opticalprops::Sapphire());
+    sapphire->SetMaterialPropertiesTable(materialprops::Sapphire());
 
     G4Material* vacuum = G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
-    vacuum->SetMaterialPropertiesTable(opticalprops::Vacuum());
+    vacuum->SetMaterialPropertiesTable(materialprops::Vacuum());
 
     G4Material* optical_coupler = materials::OpticalSilicone();
-    optical_coupler->SetMaterialPropertiesTable(opticalprops::OptCoupler());
+    optical_coupler->SetMaterialPropertiesTable(materialprops::OptCoupler());
 
     G4Material* tpb = materials::TPB();
-    tpb->SetMaterialPropertiesTable(opticalprops::TPB());
+    tpb->SetMaterialPropertiesTable(materialprops::TPB());
 
     G4Material* pedot = materials::PEDOT();
-    pedot->SetMaterialPropertiesTable(opticalprops::PEDOT());
+    pedot->SetMaterialPropertiesTable(materialprops::PEDOT());
 
     /////   ENCLOSURES  /////
     G4Tubs* enclosure_body =
@@ -201,7 +201,7 @@ namespace nexus{
     // Adding the PMT base
     G4Tubs* pmt_base_solid =
       new G4Tubs("PMT_BASE", 0., pmt_base_diam_/2., pmt_base_thickness_, 0.,twopi);
-    
+
     G4Material* kapton = G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
     kapton->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 

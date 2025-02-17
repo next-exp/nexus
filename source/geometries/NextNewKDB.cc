@@ -10,7 +10,7 @@
 #include "NextNewKDB.h"
 
 #include "SiPMSensl.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "BoxPointSamplerLegacy.h"
 #include "Visibilities.h"
 
@@ -134,7 +134,7 @@ namespace nexus {
     // Adding the optical surface
     G4OpticalSurface* mask_optSurf =
       new G4OpticalSurface("DICE_MASK_OPSURF", unified, ground, dielectric_metal);
-    mask_optSurf->SetMaterialPropertiesTable(opticalprops::PTFE());
+    mask_optSurf->SetMaterialPropertiesTable(materialprops::PTFE());
     new G4LogicalSkinSurface("DICE_MASK_OPSURF", mask_logic, mask_optSurf);
 
 

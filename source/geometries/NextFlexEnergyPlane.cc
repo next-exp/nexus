@@ -9,7 +9,7 @@
 #include "NextFlexEnergyPlane.h"
 
 #include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "XenonProperties.h"
 #include "PmtR11410.h"
 #include "IonizationSD.h"
@@ -151,11 +151,11 @@ void NextFlexEnergyPlane::DefineMaterials()
 
   // Sapphire
   sapphire_mat_ = materials::Sapphire();
-  sapphire_mat_->SetMaterialPropertiesTable(opticalprops::Sapphire());
+  sapphire_mat_->SetMaterialPropertiesTable(materialprops::Sapphire());
 
   // Optical coupler
   optical_pad_mat_ = materials::OpticalSilicone();
-  optical_pad_mat_->SetMaterialPropertiesTable(opticalprops::OptCoupler());
+  optical_pad_mat_->SetMaterialPropertiesTable(materialprops::OptCoupler());
 
 
   // UV shifting material
@@ -164,11 +164,11 @@ void NextFlexEnergyPlane::DefineMaterials()
   }
   else if (wls_matName_ == "TPB") {
     wls_mat_ = materials::TPB();
-    wls_mat_->SetMaterialPropertiesTable(opticalprops::TPB());
+    wls_mat_->SetMaterialPropertiesTable(materialprops::TPB());
   }
   else if (wls_matName_ == "TPH") {
     wls_mat_ = materials::TPH();
-    wls_mat_->SetMaterialPropertiesTable(opticalprops::TPH());
+    wls_mat_->SetMaterialPropertiesTable(materialprops::TPH());
   }
   else {
     G4Exception("[NextFlexEnergyPlane]", "DefineMaterials()", FatalException,
@@ -268,7 +268,7 @@ void NextFlexEnergyPlane::BuildTeflon()
   G4OpticalSurface* teflon_optSurf =
     new G4OpticalSurface(teflon_name, unified, ground, dielectric_metal);
 
-  teflon_optSurf->SetMaterialPropertiesTable(opticalprops::PTFE());
+  teflon_optSurf->SetMaterialPropertiesTable(materialprops::PTFE());
 
   new G4LogicalSkinSurface(teflon_name, teflon_logic, teflon_optSurf);
 

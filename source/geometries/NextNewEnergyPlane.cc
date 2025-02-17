@@ -8,7 +8,7 @@
 
 #include "NextNewEnergyPlane.h"
 #include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "Visibilities.h"
 #include "CylinderPointSamplerLegacy.h"
 
@@ -120,7 +120,7 @@ namespace nexus {
     // // Material is vacuum
     // G4Material* vacuum =
     //   G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
-    // vacuum->SetMaterialPropertiesTable(opticalprops::Vacuum());
+    // vacuum->SetMaterialPropertiesTable(materialprops::Vacuum());
     //  G4LogicalVolume* axial_port_hole_logic = new G4LogicalVolume(axial_port_hole_solid,
     //			vacuum, "AXIAL_PORT_HOLE");
     //   G4LogicalVolume* axial_port_hole_logic = new G4LogicalVolume(axial_port_hole_solid,

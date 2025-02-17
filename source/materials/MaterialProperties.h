@@ -1,13 +1,13 @@
 // ----------------------------------------------------------------------------
-// nexus | OpticalMaterialProperties.h
+// nexus | MaterialProperties.h
 //
-// Optical properties of relevant materials.
+// Properties of relevant materials.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#ifndef OPTICAL_MATERIAL_PROPERTIES_H
-#define OPTICAL_MATERIAL_PROPERTIES_H
+#ifndef MATERIAL_PROPERTIES_H
+#define MATERIAL_PROPERTIES_H
 
 #include <globals.hh>
 
@@ -17,7 +17,7 @@
 class G4MaterialPropertiesTable;
 
 
-namespace opticalprops {
+namespace materialprops {
 
   using namespace CLHEP;
 
@@ -99,6 +99,6 @@ namespace opticalprops {
   constexpr G4double hc_ = h_Planck * c_light;
 
 
-} // end namespace opticalprops
+} // end namespace materialprops
 
 #endif

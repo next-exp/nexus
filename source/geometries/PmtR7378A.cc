@@ -9,7 +9,7 @@
 #include "PmtR7378A.h"
 
 #include "SensorSD.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "MaterialsList.h"
 #include "Visibilities.h"
 
@@ -72,7 +72,7 @@ namespace nexus {
 
     G4Material* quartz =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
-    quartz->SetMaterialPropertiesTable(opticalprops::FusedSilica());
+    quartz->SetMaterialPropertiesTable(materialprops::FusedSilica());
 
     G4LogicalVolume* window_logic =
       new G4LogicalVolume(window_solid, quartz, "PMT_WINDOW");
