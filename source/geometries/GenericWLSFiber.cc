@@ -21,6 +21,7 @@
 #include <G4GenericMessenger.hh>
 #include <G4OpticalSurface.hh>
 #include <G4LogicalSkinSurface.hh>
+#include <G4NistManager.hh>
 
 
 using namespace nexus;
@@ -33,6 +34,7 @@ GenericWLSFiber::GenericWLSFiber(G4String    name,
                                  G4double    length,
                                  G4bool      doubleclad,
                                  G4bool      with_coating,
+                                 G4bool      aluminized_end,
                                  G4Material* core_mat,
                                  G4Material* coating_mat,
                                  G4bool      visibility):
@@ -44,6 +46,7 @@ GenericWLSFiber::GenericWLSFiber(G4String    name,
   length_         (length),
   doubleclad_     (doubleclad),
   with_coating_   (with_coating),
+  aluminized_end_ (aluminized_end),
   core_mat_       (core_mat),
   coating_mat_    (coating_mat),
   coating_optProp_(nullptr),
@@ -189,6 +192,24 @@ void GenericWLSFiber::BuildRoundFiber()
     new G4LogicalVolume(core_solid, core_mat_, name_);
   new G4PVPlacement(nullptr, G4ThreeVector(0., 0., 0.), core_logic,
                     name_, iclad_logic, false, 0, false);
+
+  if (aluminized_end_) {
+    G4double fiber_end_z = 0.1 * mm;
+    G4Tubs *fiber_end_solid_vol =
+        new G4Tubs("fiber_end", 0, core_rad_, fiber_end_z, 0, 2 * M_PI);
+    G4Material *fiber_end_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_Al");
+    G4LogicalVolume *fiber_end_logic_vol =
+        new G4LogicalVolume(fiber_end_solid_vol, fiber_end_mat, "FIBER_END");
+    G4OpticalSurface *opsur_al =
+        new G4OpticalSurface("POLISHED_AL_OPSURF", unified, polished, dielectric_metal);
+    opsur_al->SetMaterialPropertiesTable(opticalprops::PolishedAl());
+
+    new G4LogicalSkinSurface("POLISHED_AL_OPSURF", fiber_end_logic_vol, opsur_al);
+
+    new G4PVPlacement(0, G4ThreeVector(0, 0, length_ / 2 - fiber_end_z),
+                      fiber_end_logic_vol, "FIBER_END", core_logic, false, 0, false);
+  }
+
 
   // VISIBILITIES
   if (visibility_) {

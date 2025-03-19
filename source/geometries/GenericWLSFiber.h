@@ -30,6 +30,7 @@ namespace nexus {
                     G4double    length,
                     G4bool      doubleclad,
                     G4bool      with_coating,
+                    G4bool      aluminized_end,
                     G4Material* core_material,
                     G4Material* coating_material,
                     G4bool      visibility);
@@ -70,6 +71,7 @@ namespace nexus {
     G4double    oclad_rad_;
     G4bool      doubleclad_;
     G4bool      with_coating_;
+    G4bool      aluminized_end_;
     G4Material* core_mat_;
     G4Material* iclad_mat_;
     G4Material* oclad_mat_;
