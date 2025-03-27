@@ -71,6 +71,7 @@ namespace nexus {
 
     G4int FindStringIDInMap(std::map<G4String, G4int>& vmap, G4String vol, G4int& counter);
 
+    void SetStartID(G4String& s);
 
   private:
     G4GenericMessenger* msg_; ///< User configuration messenger
@@ -127,7 +128,8 @@ namespace nexus {
   { return false; }
   inline G4bool PersistencyManager::Retrieve(G4VPhysicalVolume*&)
   { return false; }
-
+  inline void PersistencyManager::SetStartID(G4String& s)
+  { start_id_ = atoll(s); }
 } // namespace nexus
 
 #endif
