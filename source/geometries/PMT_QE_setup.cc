@@ -9,7 +9,7 @@
 #include "PMT_QE_setup.h"
 #include "MaterialsList.h"
 #include "SiPM11.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 
 #include <G4Box.hh>
 #include <G4Tubs.hh>
@@ -78,7 +78,7 @@ namespace nexus {
     G4Box* gas_solid = new G4Box("GAS", width/2., height/2., length_/2.);
 
     G4Material* gxe = materials::GXe(gxe_pressure);
-    gxe->SetMaterialPropertiesTable(opticalprops::GXe(gxe_pressure));
+    gxe->SetMaterialPropertiesTable(materialprops::GXe(gxe_pressure));
     // G4Material* air =
     //   G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
 
@@ -117,7 +117,7 @@ namespace nexus {
     // teflon_opsur->SetModel(unified);
     // teflon_opsur->SetFinish(ground);
     // teflon_opsur->SetSigmaAlpha(0.0000001); // it does not affect, because the reflection is totally lambertian.
-    // teflon_opsur->SetMaterialPropertiesTable(opticalprops::PTFE());
+    // teflon_opsur->SetMaterialPropertiesTable(materialprops::PTFE());
 
     // new G4LogicalSkinSurface("TEFLON_OPSURF", teflon_logic, teflon_opsur);
 

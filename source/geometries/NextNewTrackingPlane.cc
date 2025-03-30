@@ -8,7 +8,7 @@
 
 #include "NextNewTrackingPlane.h"
 #include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "Visibilities.h"
 #include "CylinderPointSamplerLegacy.h"
 #include "BoxPointSamplerLegacy.h"

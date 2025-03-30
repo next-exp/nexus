@@ -9,7 +9,7 @@
 #include "GenericWLSFiber.h"
 
 #include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "Visibilities.h"
 
 #include <G4Tubs.hh>
@@ -94,12 +94,12 @@ void GenericWLSFiber::DefineMaterials()
   // FPethylene: for outer in muticladding
 
   iclad_mat_ = materials::PMMA();
-  iclad_mat_->SetMaterialPropertiesTable(opticalprops::PMMA());
+  iclad_mat_->SetMaterialPropertiesTable(materialprops::PMMA());
 
   // If 2 claddings, defining the outer cladding material
   if (doubleclad_) {
     oclad_mat_ = materials::FPethylene();
-    oclad_mat_->SetMaterialPropertiesTable(opticalprops::FPethylene());
+    oclad_mat_->SetMaterialPropertiesTable(materialprops::FPethylene());
   }
 
   // If optical properties of coating are set explicitly, use them
@@ -276,7 +276,7 @@ void GenericWLSFiber::BuildSquareFiber()
       new G4PVPlacement(nullptr, G4ThreeVector(0., 0., 0.), oclad_logic,
                         oclad_name, innermost_logic, false, 0, false);
 
-    innermost_logic = oclad_logic; 
+    innermost_logic = oclad_logic;
   }
 
   // Inner Cladding (always built)

@@ -10,7 +10,7 @@
 
 #include "SiPM11.h"
 #include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 
 #include <G4Box.hh>
 #include <G4NistManager.hh>
@@ -79,7 +79,7 @@ namespace nexus {
       new G4Box("WLS_COATING", dbo_x/2., dbo_y/2., coating_thickn/2.);
 
     G4Material* TPB = materials::TPB();
-    TPB->SetMaterialPropertiesTable(opticalprops::TPB());
+    TPB->SetMaterialPropertiesTable(materialprops::TPB());
 
     G4LogicalVolume* coating_logic =
       new G4LogicalVolume(coating_solid, TPB, "WLS_COATING");
@@ -120,7 +120,7 @@ namespace nexus {
     dboard_opsur->SetModel(unified);
     dboard_opsur->SetFinish(ground);
     dboard_opsur->SetSigmaAlpha(0.1);
-    dboard_opsur->SetMaterialPropertiesTable(opticalprops::PTFE());
+    dboard_opsur->SetMaterialPropertiesTable(materialprops::PTFE());
 
     new G4LogicalSkinSurface("DBO", board_logic, dboard_opsur);
 

@@ -10,7 +10,7 @@
 #include "Next100SiPM.h"
 
 #include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "Visibilities.h"
 #include "SensorSD.h"
 
@@ -82,7 +82,7 @@ void Next100SiPM::Construct()
       new G4Box(coating_name, sipm_width/2., sipm_length/2., coating_thickn_/2.);
 
     G4Material* coating_mt = materials::TPB();
-    coating_mt->SetMaterialPropertiesTable(opticalprops::TPB());
+    coating_mt->SetMaterialPropertiesTable(materialprops::TPB());
 
     G4LogicalVolume* coating_logic_vol =
       new G4LogicalVolume(coating_solid_vol, coating_mt, coating_name);
@@ -112,7 +112,7 @@ void Next100SiPM::Construct()
   G4double window_zpos   = sipm_thickn/2. - coating_thickn_ - window_thickn/2.;
 
   G4Material* optical_silicone = materials::OpticalSilicone();
-  optical_silicone->SetMaterialPropertiesTable(opticalprops::Epoxy());
+  optical_silicone->SetMaterialPropertiesTable(materialprops::Epoxy());
 
   G4Box* window_solid_vol =
     new G4Box(window_name, window_width/2., window_length/2., window_thickn/2.);

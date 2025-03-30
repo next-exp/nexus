@@ -10,7 +10,7 @@
 
 #include "MaterialsList.h"
 #include "SensorSD.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "Visibilities.h"
 
 #include <G4Box.hh>
@@ -104,7 +104,7 @@ void GenericPhotosensor::DefineMaterials()
                   "Window rindex set, but NOT USED. Using TPB rindex.");
 
     window_optProp->AddProperty("RINDEX",
-                                opticalprops::TPB()->GetProperty("RINDEX"));
+                                materialprops::TPB()->GetProperty("RINDEX"));
     window_mat_->SetMaterialPropertiesTable(window_optProp);
   }
 
@@ -125,7 +125,7 @@ void GenericPhotosensor::DefineMaterials()
 
   // WLS coating /////
   wls_mat_ = materials::TPB();
-  wls_mat_->SetMaterialPropertiesTable(opticalprops::TPB());
+  wls_mat_->SetMaterialPropertiesTable(materialprops::TPB());
 }
 
 

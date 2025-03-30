@@ -9,7 +9,7 @@
 #include "NextDemoVessel.h"
 
 #include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4UnitsTable.hh>
@@ -104,7 +104,7 @@ void NextDemoVessel::Construct()
   G4String gas_name = "GAS";
 
   G4Material* gas_material = materials::GXe(gas_pressure_, gas_temperature_);
-  gas_material->SetMaterialPropertiesTable(opticalprops::GXe(gas_pressure_,
+  gas_material->SetMaterialPropertiesTable(materialprops::GXe(gas_pressure_,
                                                              gas_temperature_,
                                                              sc_yield_,
                                                              e_lifetime_));

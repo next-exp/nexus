@@ -9,7 +9,7 @@
 #include "Next1EL.h"
 
 #include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "PmtR7378A.h"
 #include "IonizationSD.h"
 #include "PolygonPointSampler.h"
@@ -258,7 +258,7 @@ void Next1EL::DefineMaterials()
   air_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
   // GASEOUS XENON
   gxe_ = materials::GXe(pressure_, 303);
-  gxe_->SetMaterialPropertiesTable(opticalprops::GXe(pressure_, 303, sc_yield_, e_lifetime_));
+  gxe_->SetMaterialPropertiesTable(materialprops::GXe(pressure_, 303, sc_yield_, e_lifetime_));
   // PTFE (TEFLON)
   teflon_ = G4NistManager::Instance()->FindOrBuildMaterial("G4_TEFLON");
   teflon_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
@@ -276,7 +276,7 @@ void Next1EL::DefineMaterials()
   plastic_->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
   //TPB
   tpb_ = materials::TPB();
-  tpb_->SetMaterialPropertiesTable(opticalprops::TPB());
+  tpb_->SetMaterialPropertiesTable(materialprops::TPB());
 }
 
 
@@ -741,11 +741,11 @@ void Next1EL::BuildFieldCage()
   G4double diel_thickn = .1*mm;
 
   G4Material* fgrid = materials::FakeDielectric(gxe_, "grid_mat");
-  fgrid->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_, 303,
+  fgrid->SetMaterialPropertiesTable(materialprops::FakeGrid(pressure_, 303,
                                                            elgrid_transparency_,
                                                            diel_thickn, sc_yield_));
   G4Material* fgrid_gate = materials::FakeDielectric(gxe_, "grid_mat");
-  fgrid_gate->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_, 303,
+  fgrid_gate->SetMaterialPropertiesTable(materialprops::FakeGrid(pressure_, 303,
                                                                 gate_transparency_,
                                                                 diel_thickn, sc_yield_));
 
@@ -936,7 +936,7 @@ void Next1EL::BuildFieldCage()
   G4double transparency = 0.98;
 
   G4Material* fcathode = materials::FakeDielectric(gxe_, "cathode_mat");
-  fcathode->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_, 303,
+  fcathode->SetMaterialPropertiesTable(materialprops::FakeGrid(pressure_, 303,
   									transparency, diel_thickn, sc_yield_, e_lifetime_));
 
   G4Tubs* diel_cathd =
@@ -995,14 +995,14 @@ void Next1EL::BuildFieldCage()
   ltubeup_opsur->SetModel(unified);
   ltubeup_opsur->SetFinish(ground);
   ltubeup_opsur->SetSigmaAlpha(0.1);
-  ltubeup_opsur->SetMaterialPropertiesTable(opticalprops::PTFE());
+  ltubeup_opsur->SetMaterialPropertiesTable(materialprops::PTFE());
 
   G4OpticalSurface* ltubebt_opsur = new G4OpticalSurface("LIGHT_TUBE_BOTTOM");
   ltubebt_opsur->SetType(dielectric_metal);
   ltubebt_opsur->SetModel(unified);
   ltubebt_opsur->SetFinish(ground);
   ltubebt_opsur->SetSigmaAlpha(0.1);
-  ltubebt_opsur->SetMaterialPropertiesTable(opticalprops::PTFE());
+  ltubebt_opsur->SetMaterialPropertiesTable(materialprops::PTFE());
 
   new G4LogicalSkinSurface("LIGHT_TUBE_UP",     ltube_up_logic, ltubeup_opsur);
   new G4LogicalSkinSurface("LIGHT_TUBE_BOTTOM", ltube_bt_logic, ltubebt_opsur);
@@ -1105,7 +1105,7 @@ void Next1EL::BuildEnergyPlane()
   pmtholder_cath_opsur->SetModel(unified);
   pmtholder_cath_opsur->SetFinish(ground);
   pmtholder_cath_opsur->SetSigmaAlpha(0.1);
-  pmtholder_cath_opsur->SetMaterialPropertiesTable(opticalprops::PTFE());
+  pmtholder_cath_opsur->SetMaterialPropertiesTable(materialprops::PTFE());
 
   new G4LogicalSkinSurface("PMT_HOLDER_CATHODE", pmtholder_logic, pmtholder_cath_opsur);
 
@@ -1116,7 +1116,7 @@ void Next1EL::BuildEnergyPlane()
   G4double transparency = 0.96;
 
   G4Material* fshield = materials::FakeDielectric(gxe_, "shield_mat");
-  fshield->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_, 303,
+  fshield->SetMaterialPropertiesTable(materialprops::FakeGrid(pressure_, 303,
   									transparency, shield_thickn, sc_yield_, e_lifetime_));
 
   G4Tubs* shield_solid =
@@ -1333,7 +1333,7 @@ void Next1EL::BuildPMTTrackingPlane()
   pmtholder_anode_opsur->SetModel(unified);
   pmtholder_anode_opsur->SetFinish(ground);
   pmtholder_anode_opsur->SetSigmaAlpha(0.1);
-  pmtholder_anode_opsur->SetMaterialPropertiesTable(opticalprops::PTFE());
+  pmtholder_anode_opsur->SetMaterialPropertiesTable(materialprops::PTFE());
 
   new G4LogicalSkinSurface("PMT_HOLDER_ANODE", pmtholder_logic, pmtholder_anode_opsur);
 }
@@ -1422,7 +1422,7 @@ void Next1EL::CalculateELTableVertices(G4double radius,
 }
 
 
-void Next1EL::TesselateWithFixedPitch (G4double pitch, std::vector<G4ThreeVector>& vpos, 
+void Next1EL::TesselateWithFixedPitch (G4double pitch, std::vector<G4ThreeVector>& vpos,
                                       G4double apothem, G4ThreeVector origin, G4RotationMatrix* rotation) {
   G4double cell_radius = pitch / sqrt(3.);
   G4double cell_apothem = sqrt(3.)/2. * cell_radius;
@@ -1436,7 +1436,7 @@ void Next1EL::TesselateWithFixedPitch (G4double pitch, std::vector<G4ThreeVector
 }
 
 void Next1EL::PlaceCells(std::vector<G4ThreeVector>& vp, G4int order, G4double cell_apothem, G4ThreeVector origin, G4RotationMatrix* rotation){
-  
+
   // Place the central cell
   G4ThreeVector position(0.,0.,0.);
   vp.push_back(RotateAndTranslate(position, origin, rotation));
@@ -1460,7 +1460,7 @@ void Next1EL::PlaceCells(std::vector<G4ThreeVector>& vp, G4int order, G4double c
       // the honeycomb.
       for (G4int j=0; j<5; j++)
         vp.push_back(RotateAndTranslate(position.rotateZ(pi/3.), origin, rotation));
-    
+
     }
   }
 }

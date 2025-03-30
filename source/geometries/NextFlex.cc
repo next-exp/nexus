@@ -16,7 +16,7 @@
 #include "NextFlexTrackingPlane.h"
 
 #include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "XenonProperties.h"
 #include "CylinderPointSampler.h"
 #include "Visibilities.h"
@@ -164,7 +164,7 @@ void NextFlex::DefineMaterials()
     "Unknown xenon gas type. Valid options are naturalXe, enrichedXe or depletedXe.");
 
   xenon_gas_->
-    SetMaterialPropertiesTable(opticalprops::GXe(gas_pressure_,
+    SetMaterialPropertiesTable(materialprops::GXe(gas_pressure_,
                                                               gas_temperature_,
                                                               sc_yield_,
                                                               e_lifetime_));

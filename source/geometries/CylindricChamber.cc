@@ -11,7 +11,7 @@
 #include "PmtR11410.h"
 #include "NextNewKDB.h"
 #include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "UniformElectricDriftField.h"
 #include "IonizationSD.h"
 #include "FactoryBase.h"
@@ -70,7 +70,7 @@ namespace nexus {
       new G4Tubs("GAS", 0., chamber_diam/2., chamber_length/2., 0., twopi);
 
     G4Material* gxe = materials::GXe(10.*bar);
-    gxe->SetMaterialPropertiesTable(opticalprops::GXe(10.*bar, 303));
+    gxe->SetMaterialPropertiesTable(materialprops::GXe(10.*bar, 303));
 
     G4LogicalVolume* gas_logic = new G4LogicalVolume(gas_solid, gxe, "GAS");
 
