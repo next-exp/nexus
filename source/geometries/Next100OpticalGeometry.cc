@@ -105,25 +105,26 @@ namespace nexus {
 
   if (gas_ == "naturalXe") {
     gas_mat = materials::GXe(pressure_, temperature_);
-    gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_,
-                                                          temperature_,
-                                                          sc_yield_,
-                                                          e_lifetime_));
   } else if (gas_ == "enrichedXe") {
     gas_mat =  materials::GXeEnriched(pressure_, temperature_);
-    gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_,
-                                                          temperature_,
-                                                          sc_yield_,
-                                                          e_lifetime_));
   } else if  (gas_ == "depletedXe") {
     gas_mat =  materials::GXeDepleted(pressure_, temperature_);
+  } else if  (gas_ == "GAr") {
+    gas_mat = materials::GAr(pressure_, temperature_);
+  }  else {
+    G4Exception("[Next100OpticalGeometry]", "Construct()", FatalException,
+                "Unknown kind of gas, valid options are: naturalXe, enrichedXe, depletedXe, GAr.");
+  }
+
+  // Gas Properties
+  if (gas_ == "GAr"){
+    gas_mat->SetMaterialPropertiesTable(opticalprops::GAr(sc_yield_, e_lifetime_));
+  }
+  else {
     gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_,
                                                           temperature_,
                                                           sc_yield_,
                                                           e_lifetime_));
-  }  else {
-    G4Exception("[Next100OpticalGeometry]", "Construct()", FatalException,
-                "Unknown kind of gas, valid options are: naturalXe, enrichedXe, depletedXe.");
   }
 
   G4double gas_size = lab_size - 10.*cm;
