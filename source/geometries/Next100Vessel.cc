@@ -347,7 +347,7 @@ namespace nexus {
     } else {
       G4Exception("[Next100Vessel]", "Construct()", FatalException,
 		  "Unknown kind of xenon, valid options are: "
-                  "natural, enriched, depleted, or XeHe.");
+                  "naturalXe, enrichedXe, depletedXe, GAr, or XeHe.");
     }
 
     // Gas Properties
