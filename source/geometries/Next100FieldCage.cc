@@ -480,6 +480,14 @@ void Next100FieldCage::BuildCathode()
                                            GetCoordOrigin().y(),
                                            cathode_zpos_));
 
+  // Generate in a 1 micron thick disk in front of cathode
+  cathode_surf_gen_ =
+    new CylinderPointSampler(0.0, cathode_int_diam_/2.,
+                             1.0*micrometer,0., twopi, nullptr,
+                             G4ThreeVector(GetCoordOrigin().x(),
+                                           GetCoordOrigin().y(),
+                                           cathode_grid_zpos - grid_thickn_ - 1*micrometer));
+
 
   /// Visibilities
   G4VisAttributes cathode_col = nexus::DarkGrey();
@@ -1079,6 +1087,7 @@ Next100FieldCage::~Next100FieldCage()
   delete hdpe_gen_;
   delete ring_gen_;
   delete cathode_gen_;
+  delete cathode_surf_gen_;
   delete gate_gen_;
   delete anode_gen_;
   delete holder_gen_;
@@ -1107,6 +1116,10 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
 
   else if (region == "CATHODE_RING") {
     vertex = cathode_gen_->GenerateVertex(VOLUME);
+  }
+
+  else if (region == "CATHODE_SURF"){
+    vertex = cathode_surf_gen_->GenerateVertex(VOLUME);
   }
 
   else if (region == "BUFFER") {
