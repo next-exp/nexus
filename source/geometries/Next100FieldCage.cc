@@ -480,13 +480,13 @@ void Next100FieldCage::BuildCathode()
                                            GetCoordOrigin().y(),
                                            cathode_zpos_));
 
-  // Generate in a 1 micron thick disk in front of cathode
+  // Generate in a small 1 micron thick disk in front of cathode
   cathode_surf_gen_ =
     new CylinderPointSampler(0.0, cathode_int_diam_/2.,
-                             1.0*micrometer,0., twopi, nullptr,
+                             0.5*micrometer,0., twopi, nullptr,
                              G4ThreeVector(GetCoordOrigin().x(),
                                            GetCoordOrigin().y(),
-                                           cathode_grid_zpos - grid_thickn_ - 1*micrometer));
+                                           cathode_grid_zpos - grid_thickn_ - 1.0*micrometer));
 
 
   /// Visibilities
