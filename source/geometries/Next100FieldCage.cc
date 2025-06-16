@@ -486,7 +486,7 @@ void Next100FieldCage::BuildCathode()
                              0.5*micrometer,0., twopi, nullptr,
                              G4ThreeVector(GetCoordOrigin().x(),
                                            GetCoordOrigin().y(),
-                                           cathode_grid_zpos - grid_thickn_ - 1.0*micrometer));
+                                           cathode_grid_zpos - grid_thickn_ - 0.5*micrometer));
 
 
   /// Visibilities
