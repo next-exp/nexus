@@ -239,6 +239,7 @@ namespace nexus {
     else if ((region == "CENTER") ||
              (region == "ACTIVE") ||
              (region == "CATHODE_RING") ||
+             (region == "CATHODE_SURF") ||
              (region == "BUFFER") ||
              (region == "XENON") ||
              (region == "LIGHT_TUBE") ||
