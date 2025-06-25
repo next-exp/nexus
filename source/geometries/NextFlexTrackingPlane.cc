@@ -9,7 +9,7 @@
 #include "NextFlexTrackingPlane.h"
 
 #include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "XenonProperties.h"
 #include "IonizationSD.h"
 #include "UniformElectricDriftField.h"
@@ -212,11 +212,11 @@ void NextFlexTrackingPlane::DefineMaterials()
   }
   else if (wls_mat_name_ == "TPB") {
     wls_mat_ = materials::TPB();
-    wls_mat_->SetMaterialPropertiesTable(opticalprops::TPB());
+    wls_mat_->SetMaterialPropertiesTable(materialprops::TPB());
   }
   else if (wls_mat_name_ == "TPH") {
     wls_mat_ = materials::TPH();
-    wls_mat_->SetMaterialPropertiesTable(opticalprops::TPH());
+    wls_mat_->SetMaterialPropertiesTable(materialprops::TPH());
   }
   else {
     G4Exception("[NextFlexTrackingPlane]", "DefineMaterials()", FatalException,
@@ -325,7 +325,7 @@ void NextFlexTrackingPlane::BuildTeflon()
   // Adding the teflon optical surface
   G4OpticalSurface* teflon_optSurf =
     new G4OpticalSurface(teflon_name, unified, ground, dielectric_metal);
-  teflon_optSurf->SetMaterialPropertiesTable(opticalprops::PTFE());
+  teflon_optSurf->SetMaterialPropertiesTable(materialprops::PTFE());
 
   new G4LogicalSkinSurface(teflon_name, teflon_logic, teflon_optSurf);
 
@@ -334,13 +334,13 @@ void NextFlexTrackingPlane::BuildTeflon()
   G4String teflon_wls_name = "TP_TEFLON_WLS";
 
   G4double teflon_wls_posZ = teflon_thickness_/2. - wls_thickness_/2.;
- 
+
   G4Tubs* teflon_wls_nh_solid =
     new G4Tubs(teflon_wls_name + "_NOHOLE", 0., diameter_/2.,
 	       wls_thickness_/2., 0, twopi);
 
   // Making the TEFLON_WLS holes (a little bit thicker to prevent subtraction problems)
-  G4Tubs* wls_hole_solid = 
+  G4Tubs* wls_hole_solid =
     new G4Tubs(teflon_wls_name + "_HOLE", 0., teflon_hole_diam_/2.,
 	       wls_thickness_/2. + 0.5*mm, 0, twopi);
 
@@ -348,12 +348,12 @@ void NextFlexTrackingPlane::BuildTeflon()
 
   for (G4int i=0; i<num_SiPMs_; i++){
     G4Transform3D wls_hole_transform = G4Transform3D(rotm, SiPM_positions_[i]);
-    wls_holes_solid->AddNode(*wls_hole_solid, wls_hole_transform); 
+    wls_holes_solid->AddNode(*wls_hole_solid, wls_hole_transform);
   }
   wls_holes_solid->Voxelize();
 
-  G4SubtractionSolid* teflon_wls_solid = 
-    new G4SubtractionSolid(teflon_wls_name, teflon_wls_nh_solid, wls_holes_solid);	  
+  G4SubtractionSolid* teflon_wls_solid =
+    new G4SubtractionSolid(teflon_wls_name, teflon_wls_nh_solid, wls_holes_solid);
 
   G4LogicalVolume* teflon_wls_logic =
     new G4LogicalVolume(teflon_wls_solid, wls_mat_, teflon_wls_name);
@@ -439,10 +439,10 @@ void NextFlexTrackingPlane::BuildSiPMs()
     sipm_pos.setZ(SiPM_pos_z);
     new G4PVPlacement(nullptr, sipm_pos, SiPM_logic, SiPM_logic->GetName(),
 		      mother_logic_, true, SiPM_id, sipm_verbosity_);
-    if (sipm_verbosity_) 
-      G4cout << "* TP_SiPM " << SiPM_id << " position: " 
+    if (sipm_verbosity_)
+      G4cout << "* TP_SiPM " << SiPM_id << " position: "
 	     << sipm_pos << G4endl;
-  }	  
+  }
 }
 
 

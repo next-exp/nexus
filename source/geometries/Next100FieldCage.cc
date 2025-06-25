@@ -11,7 +11,7 @@
 #include "MaterialsList.h"
 #include "Visibilities.h"
 #include "IonizationSD.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "UniformElectricDriftField.h"
 #include "XenonProperties.h"
 #include "CylinderPointSampler.h"
@@ -291,7 +291,7 @@ void Next100FieldCage::DefineMaterials()
 
   /// TPB coating
   tpb_ = materials::TPB();
-  tpb_->SetMaterialPropertiesTable(opticalprops::TPB());
+  tpb_->SetMaterialPropertiesTable(materialprops::TPB());
 
   /// Steel
   steel_ = materials::Steel316Ti();
@@ -387,7 +387,7 @@ void Next100FieldCage::BuildCathode()
   G4LogicalVolume* cathode_logic;
 
   G4Material* fgrid_mat = materials::FakeDielectric(gas_, "cath_grid_mat");
-  fgrid_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_,
+  fgrid_mat->SetMaterialPropertiesTable(materialprops::FakeGrid(pressure_,
                                                                temperature_,
                                                                cath_grid_transparency_,
                                                                grid_thickn_));
@@ -466,7 +466,7 @@ void Next100FieldCage::BuildCathode()
       gas_mesh_opsur->SetModel(unified);
       gas_mesh_opsur->SetFinish(ground);
       gas_mesh_opsur->SetSigmaAlpha(0.0);
-      gas_mesh_opsur->SetMaterialPropertiesTable(opticalprops::Steel());
+      gas_mesh_opsur->SetMaterialPropertiesTable(materialprops::Steel());
       new G4LogicalSkinSurface("GAS_CATHODE_MESH_OPSURF",
                               cathode_grid_logic, gas_mesh_opsur);
 
@@ -639,7 +639,7 @@ void Next100FieldCage::BuildELRegion()
 
     /// EL grids
     G4Material* fgrid_mat = materials::FakeDielectric(gas_, "el_grid_mat");
-    fgrid_mat->SetMaterialPropertiesTable(opticalprops::FakeGrid(pressure_,
+    fgrid_mat->SetMaterialPropertiesTable(materialprops::FakeGrid(pressure_,
                                                                temperature_,
                                                                el_grid_transparency_,
                                                                grid_thickn_,
@@ -714,7 +714,7 @@ void Next100FieldCage::BuildELRegion()
     gas_mesh_opsur->SetModel(unified);
     gas_mesh_opsur->SetFinish(ground);
     gas_mesh_opsur->SetSigmaAlpha(0.0);
-    gas_mesh_opsur->SetMaterialPropertiesTable(opticalprops::Steel());
+    gas_mesh_opsur->SetMaterialPropertiesTable(materialprops::Steel());
     new G4LogicalSkinSurface("GAS_EL_MESH_OPSURF",
                              el_grid_logic, gas_mesh_opsur);
 
@@ -899,7 +899,7 @@ void Next100FieldCage::BuildLightTube()
   /// Optical surface on teflon ///
   G4OpticalSurface* refl_Surf =
     new G4OpticalSurface("refl_Surf", unified, ground, dielectric_metal, .01);
-  refl_Surf->SetMaterialPropertiesTable(opticalprops::PTFE());
+  refl_Surf->SetMaterialPropertiesTable(materialprops::PTFE());
   new G4LogicalSkinSurface("refl_teflon_surf", teflon_drift_logic, refl_Surf);
   new G4LogicalSkinSurface("refl_teflon_surf", teflon_buffer_logic, refl_Surf);
 

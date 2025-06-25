@@ -8,7 +8,7 @@
 
 #include "Next100EnergyPlane.h"
 #include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "Visibilities.h"
 #include "CylinderPointSampler.h"
 
@@ -225,7 +225,7 @@ namespace nexus {
     gas_copperplate_opsur->SetModel(unified);
     gas_copperplate_opsur->SetFinish(ground);
     gas_copperplate_opsur->SetSigmaAlpha(0.0);
-    gas_copperplate_opsur->SetMaterialPropertiesTable(opticalprops::Copper());
+    gas_copperplate_opsur->SetMaterialPropertiesTable(materialprops::Copper());
     new G4LogicalSkinSurface("GAS_COPPER_PLATE_OPSURF",
                             copper_plate_logic, gas_copperplate_opsur);
 
@@ -234,14 +234,14 @@ namespace nexus {
 
     /// Assign optical properties to materials ///
     G4Material* sapphire = materials::Sapphire();
-    sapphire->SetMaterialPropertiesTable(opticalprops::Sapphire());
+    sapphire->SetMaterialPropertiesTable(materialprops::Sapphire());
     G4Material* tpb = materials::TPB();
-    tpb->SetMaterialPropertiesTable(opticalprops::TPB());
+    tpb->SetMaterialPropertiesTable(materialprops::TPB());
     G4Material* vacuum =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
-    vacuum->SetMaterialPropertiesTable(opticalprops::Vacuum());
+    vacuum->SetMaterialPropertiesTable(materialprops::Vacuum());
     G4Material* optical_coupler = materials::OpticalSilicone();
-    optical_coupler->SetMaterialPropertiesTable(opticalprops::OptCoupler());
+    optical_coupler->SetMaterialPropertiesTable(materialprops::OptCoupler());
 
 
     /// Vacuum volume that encapsulates all elements related to PMTs. ///

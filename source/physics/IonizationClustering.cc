@@ -109,15 +109,17 @@ namespace nexus {
     // and N is the average number of charges.
 
     // Fetch the W_i and F from the material properties table
-    //G4MaterialPropertiesTable* mpt =
-    //  track.GetMaterial()->GetMaterialPropertiesTable();
-    //if (!mpt)
-    //  return G4VRestDiscreteProcess::PostStepDoIt(track, step);
+    G4MaterialPropertiesTable* mpt =
+      track.GetMaterial()->GetMaterialPropertiesTable();
+    if (!mpt) {
+      G4cout << "Material properties missing for material "
+             << track.GetMaterial()->GetName() << G4endl;
+      G4Exception("[IonizationClustering]", "PostStepDoIt()", FatalException,
+		  "Material properties table not defined in material!");
+      }
 
-    //G4double ioni_energy = mpt->GetConstProperty("IONIZATIONENERGY");
-    //G4double fano_factor = mpt->GetConstProperty("FANOFACTOR");
-    G4double ioni_energy = 22.4 * eV;
-    G4double fano_factor = .15;
+    G4double ioni_energy = mpt->GetConstProperty("IONIZATIONENERGY");
+    G4double fano_factor = mpt->GetConstProperty("FANOFACTOR");
 
     G4double mean = energy_dep / ioni_energy;
 

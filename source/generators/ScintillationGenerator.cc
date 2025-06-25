@@ -12,7 +12,7 @@
 
 #include "DetectorConstruction.h"
 #include "GeometryBase.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "FactoryBase.h"
 
 #include <G4GenericMessenger.hh>

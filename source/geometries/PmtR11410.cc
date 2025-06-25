@@ -8,7 +8,7 @@
 
 #include "PmtR11410.h"
 #include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "SensorSD.h"
 #include "CylinderPointSamplerLegacy.h"
 #include "Visibilities.h"
@@ -126,7 +126,7 @@ namespace nexus {
                  0., twopi);
 
     G4Material* silica = materials::FusedSilica();
-    silica->SetMaterialPropertiesTable(opticalprops::FusedSilica());
+    silica->SetMaterialPropertiesTable(materialprops::FusedSilica());
     G4LogicalVolume* window_logic = new G4LogicalVolume(window_solid, silica, "PMT_WINDOW");
 
     G4double window_posz = front_body_gas_length/2. - window_thickness_/2.;

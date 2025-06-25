@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
-// nexus | OpticalMaterialProperties.cc
+// nexus | MaterialProperties.cc
 //
-// Optical properties of relevant materials.
+// Properties of relevant materials.
 //
 // The NEXT Collaboration
 // ----------------------------------------------------------------------------
 
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "XenonProperties.h"
 #include "SellmeierEquation.h"
 
@@ -16,7 +16,7 @@
 using namespace nexus;
 using namespace CLHEP;
 
-namespace opticalprops {
+namespace materialprops {
 
   G4MaterialPropertiesTable* Vacuum()
   {
@@ -114,7 +114,7 @@ namespace opticalprops {
 
     G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
-    G4MaterialPropertiesTable* fused_sil_pt = opticalprops::FusedSilica();
+    G4MaterialPropertiesTable* fused_sil_pt = materialprops::FusedSilica();
     mpt->AddProperty("RINDEX", fused_sil_pt->GetProperty("RINDEX"));
 
     // ABSORPTION LENGTH (Set to match the transparency)
@@ -529,6 +529,8 @@ namespace opticalprops {
     // May 2023:
     // Updated scintillation decay and yields from:
     // Triplet Lifetime in Gaseous Argon. Michael Akashi-Ronquest et al.
+    // Fano factor from M. Kase et al., NIMA, Volume 227, Issue 2 Pages 311-317
+    // Ionization energy from https://www.nuclear-power.com/argon-affinity-electronegativity-ionization/
 
     G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
@@ -589,6 +591,8 @@ namespace opticalprops {
     mpt->AddConstProperty("SCINTILLATIONYIELD2", .864);
     mpt->AddConstProperty("RESOLUTIONSCALE",    1.0);
     mpt->AddConstProperty("ATTACHMENT",         e_lifetime, 1);
+    mpt->AddConstProperty("IONIZATIONENERGY",    15.8 * eV, 1);
+    mpt->AddConstProperty("FANOFACTOR",            .2,      1);
 
     return mpt;
   }
@@ -647,12 +651,14 @@ namespace opticalprops {
 
     // CONST PROPERTIES
     mpt->AddConstProperty("SCINTILLATIONYIELD", sc_yield);
-    mpt->AddConstProperty("RESOLUTIONSCALE",    1.0);
-    mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT1",   4.5  * ns);
-    mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT2",   100. * ns);
+    mpt->AddConstProperty("RESOLUTIONSCALE",         1.0);
+    mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT1",   4.5 * ns);
+    mpt->AddConstProperty("SCINTILLATIONTIMECONSTANT2", 100.  * ns);
     mpt->AddConstProperty("SCINTILLATIONYIELD1", .1);
     mpt->AddConstProperty("SCINTILLATIONYIELD2", .9);
     mpt->AddConstProperty("ATTACHMENT",         e_lifetime, 1);
+    mpt->AddConstProperty("IONIZATIONENERGY",    22.4 * eV, 1);
+    mpt->AddConstProperty("FANOFACTOR",                .15, 1);
 
     return mpt;
   }
@@ -663,6 +669,7 @@ namespace opticalprops {
   G4MaterialPropertiesTable* LXe()
   {
     /// The time constants are taken from E. Hogenbirk et al 2018 JINST 13 P10031
+    /// Ionization energy is taken from Takahashi et al., Phys. Rev. A 12, 1771
     G4MaterialPropertiesTable* LXe_mpt = new G4MaterialPropertiesTable();
 
     const G4int ri_entries = 200;
@@ -708,6 +715,8 @@ namespace opticalprops {
     LXe_mpt->AddConstProperty("SCINTILLATIONYIELD1", .03);
     LXe_mpt->AddConstProperty("SCINTILLATIONYIELD2", .97);
     LXe_mpt->AddConstProperty("ATTACHMENT", 1000.*ms, 1);
+    LXe_mpt->AddConstProperty("IONIZATIONENERGY",    15.6 * eV, 1);
+    LXe_mpt->AddConstProperty("FANOFACTOR",               0.29, 1);
 
     std::vector<G4double> abs_energy = {optPhotMinE_, optPhotMaxE_};
     std::vector<G4double> abs_length = {noAbsLength_, noAbsLength_};
@@ -735,7 +744,7 @@ namespace opticalprops {
     G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
     // PROPERTIES FROM XENON
-    G4MaterialPropertiesTable* xenon_pt = opticalprops::GXe(pressure, temperature, sc_yield, e_lifetime);
+    G4MaterialPropertiesTable* xenon_pt = materialprops::GXe(pressure, temperature, sc_yield, e_lifetime);
 
     mpt->AddProperty("RINDEX",        xenon_pt->GetProperty("RINDEX"));
     mpt->AddProperty("SCINTILLATIONCOMPONENT1", xenon_pt->GetProperty("SCINTILLATIONCOMPONENT1"));
@@ -748,6 +757,9 @@ namespace opticalprops {
     mpt->AddConstProperty("SCINTILLATIONYIELD1", xenon_pt->GetConstProperty("SCINTILLATIONYIELD1"));
     mpt->AddConstProperty("SCINTILLATIONYIELD2", xenon_pt->GetConstProperty("SCINTILLATIONYIELD2"));
     mpt->AddConstProperty("ATTACHMENT",         xenon_pt->GetConstProperty("ATTACHMENT"), 1);
+    mpt->AddConstProperty("IONIZATIONENERGY",   xenon_pt->GetConstProperty("IONIZATIONENERGY"), 1);
+    mpt->AddConstProperty("FANOFACTOR",         xenon_pt->GetConstProperty("FANOFACTOR"), 1);
+
 
     // ABSORPTION LENGTH
     G4double abs_length   = -thickness/log(transparency);
@@ -820,6 +832,7 @@ namespace opticalprops {
        hc_ / (717.13442 * nm),  hc_ / (597.48892 * nm),  hc_ / (477.84343 * nm),
        hc_ / (418.02068 * nm),  hc_ / (358.19793 * nm),  hc_ / (293.94387 * nm)
     };
+
     std::vector<G4double> REFLECTIVITY = {
       .99088, .99082, .98925,
       .98623, .98611, .98163,
@@ -1004,11 +1017,11 @@ namespace opticalprops {
     G4MaterialPropertiesTable* mpt = new G4MaterialPropertiesTable();
 
     // All Optical Material Properties from normal TPB ...
-    mpt->AddProperty("RINDEX",       opticalprops::TPB()->GetProperty("RINDEX"));
-    mpt->AddProperty("ABSLENGTH",    opticalprops::TPB()->GetProperty("ABSLENGTH"));
-    mpt->AddProperty("WLSABSLENGTH", opticalprops::TPB()->GetProperty("WLSABSLENGTH"));
-    mpt->AddProperty("WLSCOMPONENT", opticalprops::TPB()->GetProperty("WLSCOMPONENT"));
-    mpt->AddConstProperty("WLSTIMECONSTANT", opticalprops::TPB()->GetConstProperty("WLSTIMECONSTANT"));
+    mpt->AddProperty("RINDEX",       materialprops::TPB()->GetProperty("RINDEX"));
+    mpt->AddProperty("ABSLENGTH",    materialprops::TPB()->GetProperty("ABSLENGTH"));
+    mpt->AddProperty("WLSABSLENGTH", materialprops::TPB()->GetProperty("WLSABSLENGTH"));
+    mpt->AddProperty("WLSCOMPONENT", materialprops::TPB()->GetProperty("WLSCOMPONENT"));
+    mpt->AddConstProperty("WLSTIMECONSTANT", materialprops::TPB()->GetConstProperty("WLSTIMECONSTANT"));
 
     // Except WLS Quantum Efficiency
     mpt->AddConstProperty("WLSMEANNUMBERPHOTONS", wls_eff);

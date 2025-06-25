@@ -8,7 +8,7 @@
 
 #include "MaterialsList.h"
 #include "SiPMSensl.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "BoxPointSamplerLegacy.h"
 #include "Visibilities.h"
 
@@ -184,7 +184,7 @@ void BlackBoxSiPMBoard::Construct()
     // Adding the optical surface
     G4OpticalSurface* mask_opsurf =
       new G4OpticalSurface(mask_name, unified, ground, dielectric_metal);
-    mask_opsurf->SetMaterialPropertiesTable(opticalprops::PTFE());
+    mask_opsurf->SetMaterialPropertiesTable(materialprops::PTFE());
     new G4LogicalSkinSurface(mask_name + "_OPSURF", mask_logic, mask_opsurf);
 
     new G4PVPlacement(nullptr, G4ThreeVector(0., 0., mask_posz), mask_logic,

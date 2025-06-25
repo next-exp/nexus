@@ -8,7 +8,7 @@
 
 #include "NextDemoEnergyPlane.h"
 #include "MaterialsList.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "Visibilities.h"
 
 #include <G4GenericMessenger.hh>
@@ -136,23 +136,23 @@ namespace nexus {
 
     /// Assign optical properties to materials ///
     G4Material* tpb = materials::TPB();
-    tpb->SetMaterialPropertiesTable(opticalprops::TPB());
+    tpb->SetMaterialPropertiesTable(materialprops::TPB());
 
     G4Material* sapphire = materials::Sapphire();
-    sapphire->SetMaterialPropertiesTable(opticalprops::Sapphire());
+    sapphire->SetMaterialPropertiesTable(materialprops::Sapphire());
 
     G4Material* copper = G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
     copper->SetMaterialPropertiesTable(new G4MaterialPropertiesTable());
 
     G4Material* vacuum =
       G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
-    vacuum->SetMaterialPropertiesTable(opticalprops::Vacuum());
+    vacuum->SetMaterialPropertiesTable(materialprops::Vacuum());
 
     G4Material* optical_coupler = materials::OpticalSilicone();
-    optical_coupler->SetMaterialPropertiesTable(opticalprops::OptCoupler());
+    optical_coupler->SetMaterialPropertiesTable(materialprops::OptCoupler());
 
     G4Material* pedot = materials::PEDOT();
-    pedot->SetMaterialPropertiesTable(opticalprops::PEDOT());
+    pedot->SetMaterialPropertiesTable(materialprops::PEDOT());
 
     /// A volume of vacuum is constructed to hold the elements ///
     /// that are replicated ///

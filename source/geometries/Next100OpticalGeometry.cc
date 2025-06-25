@@ -9,7 +9,7 @@
 
 #include "Next100OpticalGeometry.h"
 #include "Next100InnerElements.h"
-#include "OpticalMaterialProperties.h"
+#include "MaterialProperties.h"
 #include "MaterialsList.h"
 #include "FactoryBase.h"
 
@@ -105,19 +105,19 @@ namespace nexus {
 
   if (gas_ == "naturalXe") {
     gas_mat = materials::GXe(pressure_, temperature_);
-    gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_,
+    gas_mat->SetMaterialPropertiesTable(materialprops::GXe(pressure_,
                                                           temperature_,
                                                           sc_yield_,
                                                           e_lifetime_));
   } else if (gas_ == "enrichedXe") {
     gas_mat =  materials::GXeEnriched(pressure_, temperature_);
-    gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_,
+    gas_mat->SetMaterialPropertiesTable(materialprops::GXe(pressure_,
                                                           temperature_,
                                                           sc_yield_,
                                                           e_lifetime_));
   } else if  (gas_ == "depletedXe") {
     gas_mat =  materials::GXeDepleted(pressure_, temperature_);
-    gas_mat->SetMaterialPropertiesTable(opticalprops::GXe(pressure_,
+    gas_mat->SetMaterialPropertiesTable(materialprops::GXe(pressure_,
                                                           temperature_,
                                                           sc_yield_,
                                                           e_lifetime_));
