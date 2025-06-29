@@ -1,0 +1,27 @@
+## ----------------------------------------------------------------------------
+## nexus | NEXT100_Ar_alpha_full.init.mac
+##
+## Initialization macro to alpha particle decays in the active
+## volume of the NEXT-100 detector during the low pressure run.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+/PhysicsList/RegisterPhysics G4EmStandardPhysics_option4
+/PhysicsList/RegisterPhysics G4DecayPhysics
+/PhysicsList/RegisterPhysics G4RadioactiveDecayPhysics
+/PhysicsList/RegisterPhysics NexusPhysics
+/PhysicsList/RegisterPhysics G4StepLimiterPhysics
+/PhysicsList/RegisterPhysics G4OpticalPhysics
+
+/nexus/RegisterGeometry Next100
+
+/nexus/RegisterGenerator SingleParticleGenerator
+
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterRunAction DefaultRunAction
+/nexus/RegisterEventAction DefaultEventAction
+/nexus/RegisterTrackingAction DefaultTrackingAction
+
+/nexus/RegisterMacro macros/NEXT100_Ar_alpha_full.config.mac
