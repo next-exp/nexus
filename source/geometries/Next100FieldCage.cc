@@ -115,7 +115,8 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   // EL gap generation disk parameters
   el_gap_slice_min_(0.), el_gap_slice_max_(1.),
   sipm_pitch_(0),
-  photoe_prob_(0)
+  photoe_prob_(0),
+  specific_vertex_{}
 {
   /// Define new categories
   new G4UnitDefinition("kilovolt/cm","kV/cm","Electric field", kilovolt/cm);
@@ -208,6 +209,9 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
 
   msg_->DeclareProperty("photoe_prob", photoe_prob_,
                         "Probability of photon to ie- conversion");
+
+  msg_->DeclarePropertyWithUnit("specific_vertex", "mm",  specific_vertex_,
+                                  "Set generation vertex.");
 }
 
 
@@ -1112,6 +1116,11 @@ G4ThreeVector Next100FieldCage::GenerateVertex(const G4String& region) const
       VertexVolume =
         geom_navigator_->LocateGlobalPointAndSetup(glob_vtx, 0, false);
     } while (VertexVolume->GetName() != region);
+  }
+
+  else if (region == "AD_HOC") {
+    vertex = G4ThreeVector(GetCoordOrigin().x()+specific_vertex_.x(), GetCoordOrigin().y()+specific_vertex_.y(),
+                           GetCoordOrigin().z()+specific_vertex_.z());
   }
 
   else if (region == "CATHODE_RING") {

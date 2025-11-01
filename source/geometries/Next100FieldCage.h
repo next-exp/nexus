@@ -138,6 +138,9 @@ namespace nexus {
     G4double e_lifetime_;
     G4double photoe_prob_;
 
+    // Vertex decided by user
+    G4ThreeVector specific_vertex_;
+
     // Pointers to materials definition
     G4Material* hdpe_;
     G4Material* tpb_;
