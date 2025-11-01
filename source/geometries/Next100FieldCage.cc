@@ -92,7 +92,7 @@ Next100FieldCage::Next100FieldCage(G4double grid_thickn):
   num_drift_rings_ (48),
   num_buffer_rings_ (4),
 
-  tpb_thickn_ (1 * micrometer),
+  tpb_thickn_ (3.5 * micrometer),
   overlap_    (0.001*mm), //defined for G4UnionSolids to ensure a common volume within the two joined solids
   // Diffusion constants
   drift_transv_diff_ (1. * mm/sqrt(cm)),
