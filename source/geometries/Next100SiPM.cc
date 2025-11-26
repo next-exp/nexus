@@ -33,7 +33,7 @@ Next100SiPM::Next100SiPM():
   mother_depth_       (0),
   naming_order_       (0),
   time_binning_       (1.0 * us),
-  coating_thickn_     (2. * micrometer),
+  coating_thickn_     (3. * micrometer),
   visibility_         (true)
 {
 }
