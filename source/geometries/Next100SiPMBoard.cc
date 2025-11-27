@@ -131,7 +131,7 @@ void Next100SiPMBoard::Construct()
   // WLS COATING /////////////////////////////////////////////////////
 
   G4String mask_wls_name = "SIPM_BOARD_MASK_WLS";
-  G4double wls_thickness = 1. * um;
+  G4double wls_thickness = 4.1 * um;
   G4double mask_wls_zpos = mask_thickness_/2. - wls_thickness/2.;
 
   G4Box* mask_wls_solid_vol =

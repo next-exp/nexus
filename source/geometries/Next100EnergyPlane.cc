@@ -57,7 +57,7 @@ namespace nexus {
 
     sapphire_window_thickn_ (6. * mm),
     optical_pad_thickn_ (1.0 * mm),
-    tpb_thickn_ (1.*micrometer),
+    tpb_thickn_ (5.4*micrometer),
 
     pmt_stand_out_ (2. * mm), // length that PMTs stand out of copper, in the front
     pmt_base_diam_ (46.8 * mm),
