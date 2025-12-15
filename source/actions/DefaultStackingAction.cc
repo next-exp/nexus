@@ -10,7 +10,10 @@
 
 #include "DefaultStackingAction.h"
 #include "FactoryBase.h"
+#include "IonizationElectron.h"
 
+#include <G4OpticalPhoton.hh>
+#include <G4Track.hh>
 
 using namespace nexus;
 
@@ -29,9 +32,15 @@ DefaultStackingAction::~DefaultStackingAction()
 
 
 G4ClassificationOfNewTrack
-DefaultStackingAction::ClassifyNewTrack(const G4Track* /*track*/)
+DefaultStackingAction::ClassifyNewTrack(const G4Track* track)
 {
-  return fUrgent;
+  static auto opticalphoton = G4OpticalPhoton::Definition();
+  static auto ielectron     = IonizationElectron::Definition();
+  auto pdef = track->GetParticleDefinition();
+
+  return (pdef == opticalphoton) || (pdef == ielectron) ?
+    G4ClassificationOfNewTrack::fWaiting                :
+    G4ClassificationOfNewTrack::fUrgent                 ;
 }
 
 
