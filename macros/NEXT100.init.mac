@@ -22,6 +22,8 @@
 /nexus/RegisterRunAction DefaultRunAction
 /nexus/RegisterEventAction DefaultEventAction
 /nexus/RegisterTrackingAction DefaultTrackingAction
+/nexus/RegisterStackingAction DefaultStackingAction
+/nexus/RegisterSteppingAction DefaultSteppingAction
 
 /nexus/RegisterMacro macros/NEXT100.config.mac
 /nexus/RegisterDelayedMacro macros/physics/Bi214.mac

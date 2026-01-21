@@ -33,11 +33,19 @@ namespace nexus {
     /// Hook at the end of the event loop
     void EndOfEventAction(const G4Event*);
 
+    // At some point this should converge with the calculations done in EndOfEventAction
+    void AddToEventEnergy(G4double e) { energy_evt_ += e; }
+    bool IsDepositedEnergyInRange() {
+      return (energy_evt_ >= energy_min_) &&
+             (energy_evt_ <  energy_max_);
+    }
+
   private:
     G4GenericMessenger* msg_;
     G4int nevt_, nupdate_;
     G4double energy_min_;
     G4double energy_max_;
+    G4double energy_evt_;
   };
 
 } // namespace nexus

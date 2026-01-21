@@ -28,7 +28,7 @@ namespace nexus {
 REGISTER_CLASS(DefaultEventAction, G4UserEventAction)
 
   DefaultEventAction::DefaultEventAction():
-    G4UserEventAction(), nevt_(0), nupdate_(10), energy_min_(0.), energy_max_(DBL_MAX)
+    G4UserEventAction(), nevt_(0), nupdate_(10), energy_min_(0.), energy_max_(DBL_MAX), energy_evt_(0)
   {
     msg_ = new G4GenericMessenger(this, "/Actions/DefaultEventAction/");
 
@@ -67,6 +67,7 @@ REGISTER_CLASS(DefaultEventAction, G4UserEventAction)
       G4cout << " >> Event no. " << nevt_  << G4endl;
       if (nevt_  == (10 * nupdate_)) nupdate_ *= 10;
     }
+    energy_evt_ = 0;
   }
 
 

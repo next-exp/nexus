@@ -28,6 +28,9 @@ namespace nexus {
     virtual G4ClassificationOfNewTrack ClassifyNewTrack(const G4Track*);
     virtual void NewStage();
     virtual void PrepareNewEvent();
+
+  private:
+    unsigned stage_;
   };
 
 } // end namespace nexus
