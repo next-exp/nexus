@@ -1,0 +1,64 @@
+## ----------------------------------------------------------------------------
+## nexus | NEXT100_Ar_alpha_full.config.mac
+##
+## Initialization macro to alpha particle decays in the active
+## volume of the NEXT-100 detector during the low pressure run.
+##
+## The NEXT Collaboration
+## ----------------------------------------------------------------------------
+
+##### VERBOSITY #####
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+/process/em/verbose 0
+
+##### GEOMETRY #####
+/Geometry/Next100/elfield true
+/Geometry/Next100/EL_field 6.7 kV/cm
+/Geometry/Next100/max_step_size 1. mm
+/Geometry/Next100/pressure 4.15 bar
+/Geometry/Next100/gas GAr
+/Geometry/PmtR11410/time_binning 25. nanosecond
+/Geometry/Next100/sipm_time_binning  1. microsecond
+
+/Geometry/Next100/drift_v   1.480 mm/microsecond
+/Geometry/Next100/EL_drift_v 6.249 mm/microsecond
+
+/Geometry/Next100/drift_transv_diff 1.87 mm/sqrt(cm)
+/Geometry/Next100/drift_long_diff 0.65 mm/sqrt(cm)
+
+/Geometry/Next100/ELtransv_diff 0.46 mm/sqrt(cm)
+/Geometry/Next100/ELlong_diff 0.30 mm/sqrt(cm)
+
+/Geometry/Next100/e_lifetime         50   ms
+
+##### GENERATOR #####
+/Generator/SingleParticle/particle alpha
+
+# For N100 use 5.6 MeV here
+/Generator/SingleParticle/min_energy 0.01 MeV
+/Generator/SingleParticle/max_energy 0.01 MeV
+/Generator/SingleParticle/region ACTIVE
+
+##### ACTIONS #####
+/Actions/DefaultEventAction/min_energy 50 keV
+/Actions/DefaultEventAction/max_energy 6 MeV
+
+##### PHYSICS #####
+## Full simulation
+/PhysicsList/Nexus/clustering          true
+/PhysicsList/Nexus/drift               true
+/PhysicsList/Nexus/electroluminescence true
+
+##### PERSISTENCY #####
+/nexus/persistency/output_file NEXT100_Ar_alpha
+
+/nexus/random_seed             100
+/nexus/persistency/start_id    100
+
+## eventType options: bb0nu, bb2nu, background
+/nexus/persistency/event_type background
+
+/process/optical/processActivation Cerenkov false

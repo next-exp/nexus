@@ -65,13 +65,20 @@ namespace opticalprops {
     for (int i=0; i<ri_entries; i++) {
       rIndex.push_back(seq.RefractiveIndex(hc_/ri_energy[i]));
     }
-    ri_energy.push_back(optPhotMaxE_);          // This sets the refractive index between optPhotFusedSilicaMaxE_ and
-    rIndex.push_back(rIndex[rIndex.size()-1]);  // optPhotMaxE_ to the value obtained at optPhotFusedSilicaMaxE_
+
+    // The rindex is not defined for sapphire beyond optPhotFusedSilicaMaxE_ = 10.7 eV
+    // Measurements https://link.springer.com/article/10.1134/S0020441206030195 imply
+    // that the transmission goes to zero for energies higher than this (>120 nm)
+    // We set n to be an arbitarily high value of 10 so the value is
+    // implemented in the simulation (transmission goes to zero)
+    ri_energy.push_back(optPhotMaxE_);
+    rIndex.push_back(10);
 
     // for (unsigned int i=0; i<ri_energy.size(); i++) {
     // G4cout << "* FusedSilica rIndex:  " << std::setw(5) << ri_energy[i]/eV
     //       << " eV -> " << rIndex[i] << G4endl;
     // }
+
     mpt->AddProperty("RINDEX", ri_energy, rIndex);
 
     // ABSORPTION LENGTH
@@ -431,14 +438,20 @@ namespace opticalprops {
     for (int i=0; i<ri_entries; i++) {
       rIndex.push_back(seq.RefractiveIndex(hc_/ri_energy[i]));
     }
-    // This sets the refractive index between optPhotSapphireMaxE_ and
-    // optPhotMaxE_ to the value obtained at optPhotSapphireMaxE_
+
+    // The rindex is not defined for sapphire beyond optPhotSapphireMaxE_ = 10.3 eV
+    // Measurements https://link.springer.com/article/10.1134/S0020441206030195 imply
+    // that the transmission goes to zero for energies higher than this (>120 nm)
+    // We set n to be an arbitarily high value of 10 so the value is
+    // implemented in the simulation (transmission goes to zero)
     ri_energy.push_back(optPhotMaxE_);
-    rIndex.push_back(rIndex[rIndex.size()-1]);
+    rIndex.push_back(10);
+
     // for (unsigned int i=0; i<ri_energy.size(); i++) {
     //   G4cout << "* Sapphire rIndex:  " << std::setw(5)
     //          << ri_energy[i]/eV << " eV -> " << rIndex[i] << G4endl;
     // }
+
     mpt->AddProperty("RINDEX", ri_energy, rIndex);
 
     // ABSORPTION LENGTH
