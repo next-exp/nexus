@@ -76,7 +76,7 @@ namespace nexus {
     /// 4. A vacuum volume that encapsulates the sapphire window,
     ///    the optical pad, the PMT and the internal part of the base is made;
     ///    this volume fits exactly the hole previously done in the copper.
-    /// 5. This volume is replicated by the number of the PMts and placed
+    /// 5. This volume is replicated by the number of the PMTs and placed
     ///    in the gas volume, inside the holes excavated in the copper.
 
 
@@ -126,7 +126,8 @@ namespace nexus {
     G4double hut_length = hut_hole_length_ + hut_length_short_;
     G4double transl_z = copper_plate_thickn_/2. + hut_length/2 - offset/2.;
     G4Tubs* short_hut_solid =
-      new G4Tubs("SHORT_HUT", 0., hut_diam_/2., (hut_length + offset)/2., 0., twopi);
+      new G4Tubs("SHORT_HUT", 0., hut_diam_/2., (hut_length + offset)/2.,
+                 0., twopi);
     hut_pos = short_hut_pos_[0];
     hut_pos.setZ(transl_z);
     G4UnionSolid* copper_plate_hut_solid =
@@ -193,7 +194,8 @@ namespace nexus {
     transl_z = - copper_plate_thickn_/2. + hole_length_front_/2. - offset/2.;
     hole_pos.setZ(transl_z);
     G4SubtractionSolid* copper_plate_solid =
-      new G4SubtractionSolid("EP_COPPER_PLATE", copper_plate_hut_solid, hole_solid, 0, hole_pos);
+      new G4SubtractionSolid("EP_COPPER_PLATE", copper_plate_hut_solid,
+                             hole_solid, 0, hole_pos);
 
     for (G4int i=1; i<num_PMTs_; i++) {
       hole_pos = pmt_positions_[i];
@@ -249,13 +251,16 @@ namespace nexus {
       hole_length_front_ + pmt_stand_out_ + optical_pad_thickn_
       + sapphire_window_thickn_ + tpb_thickn_;
     G4Tubs* vacuum_front_solid =
-      new G4Tubs("HOLE_FRONT", 0., hole_diam_front_/2., vacuum_front_length/2., 0., twopi);
+      new G4Tubs("HOLE_FRONT", 0., hole_diam_front_/2., vacuum_front_length/2.,
+                 0., twopi);
 
     G4Tubs* vacuum_rear_solid =
-      new G4Tubs("HOLE_REAR", 0., hole_diam_rear_/2., (hole_length_rear_+offset)/2., 0., twopi);
+      new G4Tubs("HOLE_REAR", 0., hole_diam_rear_/2., (hole_length_rear_+offset)/2.,
+                 0., twopi);
 
     G4Tubs* vacuum_hut_solid =
-      new G4Tubs("HOLE_HUT", 0., hut_int_diam_/2., hut_hole_length_/2., 0., twopi);
+      new G4Tubs("HOLE_HUT", 0., hut_int_diam_/2., hut_hole_length_/2.,
+                 0., twopi);
 
     G4UnionSolid* vacuum_solid =
       new G4UnionSolid("EP_HOLE", vacuum_front_solid, vacuum_rear_solid, 0,
@@ -265,7 +270,8 @@ namespace nexus {
       new G4UnionSolid("EP_HOLE", vacuum_solid, vacuum_hut_solid, 0,
                        G4ThreeVector(0., 0., vacuum_front_length/2.+hole_length_rear_+hut_hole_length_/2.));
 
-    G4LogicalVolume* vacuum_logic = new G4LogicalVolume(vacuum_solid, vacuum, "EP_HOLE");
+    G4LogicalVolume* vacuum_logic =
+      new G4LogicalVolume(vacuum_solid, vacuum, "EP_HOLE");
 
     /// Sapphire window ///
     G4Tubs* sapphire_window_solid =
@@ -275,7 +281,8 @@ namespace nexus {
     G4LogicalVolume* sapphire_window_logic
       = new G4LogicalVolume(sapphire_window_solid, sapphire, "SAPPHIRE_WINDOW");
 
-    G4double window_posz = -vacuum_front_length/2. + (sapphire_window_thickn_ + tpb_thickn_)/2.;
+    G4double window_posz =
+      -vacuum_front_length/2. + (sapphire_window_thickn_ + tpb_thickn_)/2.;
 
     G4VPhysicalVolume* sapphire_window_phys =
       new G4PVPlacement(0, G4ThreeVector(0., 0., window_posz),
@@ -287,7 +294,8 @@ namespace nexus {
       new G4Tubs("SAPPHIRE_WDW_TPB", 0., hole_diam_front_/2, tpb_thickn_/2.,
                  0., twopi);
 
-    G4LogicalVolume* tpb_logic = new G4LogicalVolume(tpb_solid, tpb, "SAPPHIRE_WDW_TPB");
+    G4LogicalVolume* tpb_logic =
+      new G4LogicalVolume(tpb_solid, tpb, "SAPPHIRE_WDW_TPB");
 
     G4double tpb_posz = - (sapphire_window_thickn_ + tpb_thickn_)/2. + tpb_thickn_/2.;
 
@@ -305,7 +313,8 @@ namespace nexus {
 
     /// Optical pad ///
     G4Tubs* optical_pad_solid =
-      new G4Tubs("OPTICAL_PAD", 0., hole_diam_front_/2., optical_pad_thickn_/2., 0., twopi);
+      new G4Tubs("OPTICAL_PAD", 0., hole_diam_front_/2., optical_pad_thickn_/2.,
+                 0., twopi);
 
     G4LogicalVolume* optical_pad_logic =
       new G4LogicalVolume(optical_pad_solid, optical_coupler, "OPTICAL_PAD");
@@ -323,9 +332,8 @@ namespace nexus {
     pmt_->Construct();
     G4LogicalVolume* pmt_logic = pmt_->GetLogicalVolume();
     G4double pmt_rel_posz = pmt_->GetRelPosition().z();
-    pmt_zpos_ =
-      -vacuum_front_length/2. + sapphire_window_thickn_ + tpb_thickn_ +
-      optical_pad_thickn_ + pmt_rel_posz;
+    pmt_zpos_ = -vacuum_front_length/2. + sapphire_window_thickn_ +
+      tpb_thickn_ + optical_pad_thickn_ + pmt_rel_posz;
     G4ThreeVector pmt_pos = G4ThreeVector(0., 0., pmt_zpos_);
 
     pmt_rot_ = new G4RotationMatrix();
@@ -339,12 +347,12 @@ namespace nexus {
     G4Tubs* pmt_base_solid = new G4Tubs("PMT_BASE", 0., pmt_base_diam_/2.,
                                         pmt_base_thickn_/2., 0., twopi);
 
-    G4LogicalVolume* pmt_base_logic =
-      new G4LogicalVolume(pmt_base_solid,
-                          G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON"),
-                          "PMT_BASE");
+    G4LogicalVolume* pmt_base_logic
+      = new G4LogicalVolume(pmt_base_solid,
+                            G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON"), "PMT_BASE");
 
-    G4double pmt_base_posz = vacuum_front_length/2. + hole_length_rear_ + hut_hole_length_/2.;
+    G4double pmt_base_posz =
+      vacuum_front_length/2. + hole_length_rear_ + hut_hole_length_/2.;
 
     G4VPhysicalVolume* pmt_base_phys =
        new G4PVPlacement(0, G4ThreeVector(0., 0., pmt_base_posz),
@@ -353,8 +361,8 @@ namespace nexus {
 
     /// Placing the encapsulating volume with all internal components in place
     vacuum_posz_ = copper_plate_posz_ - copper_plate_thickn_/2.
-      + vacuum_front_length/2. - sapphire_window_thickn_ - tpb_thickn_
-      - optical_pad_thickn_ - pmt_stand_out_;
+      + vacuum_front_length/2. - sapphire_window_thickn_ -
+      tpb_thickn_ - optical_pad_thickn_ - pmt_stand_out_;
 
     G4ThreeVector pos;
     for (int i=0; i<num_PMTs_; i++) {

@@ -25,6 +25,7 @@ namespace nexus {
 
   class Next100FieldCage;
   class Next100EnergyPlane;
+  class Honeycomb;
   class Next100TrackingPlane;
 
   class Next100InnerElements : public GeometryBase
@@ -75,6 +76,7 @@ namespace nexus {
     // Detector parts
     Next100FieldCage*     field_cage_;
     Next100EnergyPlane*   energy_plane_;
+    Honeycomb*            honeycomb_;
     Next100TrackingPlane* tracking_plane_;
 
     // Messenger for the definition of control commands
