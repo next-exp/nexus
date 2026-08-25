@@ -66,10 +66,11 @@ namespace nexus {
     rot.rotateX(3*pi/2.);
 
     G4ThreeVector ini_pos =
-      G4ThreeVector(-(beam_dist_+beam_thickn_)/2., 0., 0.);
+      G4ThreeVector(-(beam_dist_+beam_thickn_)/2., 925, 0.);
     struct_solid->AddNode(long_beam->GetSolidVol(),
                           G4Transform3D(rot, ini_pos));
 
+        
     G4RotationMatrix rot_left;
     rot_left.rotateX(3*pi/2.);
     rot_left.rotateY(-compl_angle_);
@@ -79,69 +80,72 @@ namespace nexus {
 
     G4double r_pos =
       1/2*beam_dist_+ 2*(beam_dist_+beam_thickn_) + 1/2*beam_thickn_;
+
     r_pos =  r_pos + (beam_dist_ + beam_thickn_)/2.*cos(compl_angle_) + 2.75*cm;
     G4double x = r_pos * sin(angle_);
     G4double z = r_pos * cos(angle_);
 
+    G4double y_off = ini_pos.y();
+
     struct_solid->AddNode(short_beam->GetSolidVol(),
                           G4Transform3D(rot_left,
-                                        G4ThreeVector(x, short_displ, z)));
+                                        G4ThreeVector(x, y_off + short_displ, z)));
     struct_solid->AddNode(short_beam->GetSolidVol(),
                           G4Transform3D(rot_right,
-                                        G4ThreeVector(-x, short_displ, z)));
+                                        G4ThreeVector(-x, y_off + short_displ, z)));
     struct_solid->AddNode(short_beam->GetSolidVol(),
                           G4Transform3D(rot_left,
-                                        G4ThreeVector(-x, short_displ, -z)));
+                                        G4ThreeVector(-x, y_off + short_displ, -z)));
     struct_solid->AddNode(short_beam->GetSolidVol(),
                           G4Transform3D(rot_right,
-                                        G4ThreeVector(x, short_displ, -z)));
+                                        G4ThreeVector(x, y_off + short_displ, -z)));
 
 
     x = (r_pos-(beam_dist_+beam_thickn_)) * sin(angle_);
     z = (r_pos-(beam_dist_+beam_thickn_)) * cos(angle_);
     struct_solid->AddNode(medium_beam->GetSolidVol(),
-                          G4Transform3D(rot_left, G4ThreeVector(x, 0., z)));
+                          G4Transform3D(rot_left, G4ThreeVector(x, y_off, z)));
     struct_solid->AddNode(medium_beam->GetSolidVol(),
-                          G4Transform3D(rot_left, G4ThreeVector(-x, 0., -z)));
+                          G4Transform3D(rot_left, G4ThreeVector(-x, y_off, -z)));
     struct_solid->AddNode(medium_beam->GetSolidVol(),
-                          G4Transform3D(rot_right, G4ThreeVector(x, 0., -z)));
+                          G4Transform3D(rot_right, G4ThreeVector(x, y_off, -z)));
 
     struct_solid->AddNode(medium_beam->GetSolidVol(),
-                          G4Transform3D(rot_right, G4ThreeVector(-x, 0., z)));
+                          G4Transform3D(rot_right, G4ThreeVector(-x, y_off, z)));
 
 
     x = (r_pos-2*(beam_dist_+beam_thickn_)) * sin(angle_);
     z = (r_pos-2*(beam_dist_+beam_thickn_)) * cos(angle_);
     struct_solid->AddNode(long_beam->GetSolidVol(),
-                          G4Transform3D(rot_left, G4ThreeVector(x, 0., z)));
+                          G4Transform3D(rot_left, G4ThreeVector(x, y_off, z)));
 
 
     struct_solid->AddNode(long_beam->GetSolidVol(),
-                          G4Transform3D(rot_left, G4ThreeVector(-x, 0., -z)));
+                          G4Transform3D(rot_left, G4ThreeVector(-x, y_off, -z)));
 
     struct_solid->AddNode(long_beam->GetSolidVol(),
-                          G4Transform3D(rot_right, G4ThreeVector(x, 0., -z)));
+                          G4Transform3D(rot_right, G4ThreeVector(x, y_off, -z)));
     struct_solid->AddNode(long_beam->GetSolidVol(),
-                          G4Transform3D(rot_right, G4ThreeVector(-x, 0., z)));
+                          G4Transform3D(rot_right, G4ThreeVector(-x, y_off, z)));
 
 
     x = ini_pos.x() - (beam_dist_+beam_thickn_);
     struct_solid->AddNode(medium_beam->GetSolidVol(),
-                          G4Transform3D(rot, G4ThreeVector(x, 0., 0.)));
+                          G4Transform3D(rot, G4ThreeVector(x, y_off, 0.)));
     x = ini_pos.x() - 2*(beam_dist_+beam_thickn_);
     struct_solid->AddNode(short_beam->GetSolidVol(),
                           G4Transform3D(rot,
-                                        G4ThreeVector(x, short_displ, 0.)));
+                                        G4ThreeVector(x, y_off + short_displ, 0.)));
     x = ini_pos.x() + (beam_dist_+beam_thickn_);
     struct_solid->AddNode(long_beam->GetSolidVol(),
-                          G4Transform3D(rot, G4ThreeVector(x, 0., 0.)));
+                          G4Transform3D(rot, G4ThreeVector(x, y_off, 0.)));
     x = ini_pos.x() + 2*(beam_dist_+beam_thickn_);
     struct_solid->AddNode(medium_beam->GetSolidVol(),
-                          G4Transform3D(rot, G4ThreeVector(x, 0., 0.)));
+                          G4Transform3D(rot, G4ThreeVector(x, y_off, 0.)));
     x = ini_pos.x() + 3*(beam_dist_+beam_thickn_);
     struct_solid->AddNode(short_beam->GetSolidVol(),
                           G4Transform3D(rot,
-                                        G4ThreeVector(x, short_displ, 0.)));
+                                        G4ThreeVector(x, y_off + short_displ, 0.)));
 
     struct_solid->Voxelize();
 
