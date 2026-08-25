@@ -163,7 +163,7 @@ namespace nexus {
                       false, 0, false);
 
     G4VisAttributes red_col = nexus::Red();
-    red_col.SetForceSolid(true);
+    red_col.SetForceCloud(true);
     struct_logic->SetVisAttributes(red_col);
 
     // Vertex generator
