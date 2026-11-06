@@ -25,11 +25,12 @@ namespace nexus {
   using namespace CLHEP;
 
   Honeycomb::Honeycomb(): GeometryBase(),
+                          mother_logic_(nullptr),
+                          end_of_EP_copper_plate_z_(0.),
                           angle_(pi / 6.),
                           beam_dist_(102.25 * mm),
                           beam_thickn_(6 * mm),
-                          mother_logic_(nullptr),
-                          end_of_EP_copper_plate_z_(0.),
+                          compl_angle_(pi/2. - angle_),
                           gen_(nullptr)
   {
     compl_angle_ = pi/2. - angle_;
