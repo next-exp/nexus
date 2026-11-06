@@ -66,7 +66,7 @@ namespace nexus {
     rot.rotateX(3*pi/2.);
 
     G4ThreeVector ini_pos =
-      G4ThreeVector(-(beam_dist_+beam_thickn_)/2., 925, 0.);
+      G4ThreeVector(-(beam_dist_+beam_thickn_)/2., 0., 0.);
     struct_solid->AddNode(long_beam->GetSolidVol(),
                           G4Transform3D(rot, ini_pos));
 
