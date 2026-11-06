@@ -1,0 +1,15 @@
+# This macro generates cosmic rays taken from a CORSIKA binary
+# 4 m above a xenon sphere with radius 2 m, in a plane 5 m x 5 m
+
+/control/execute macros/physics/DefaultPhysicsList.mac
+/nexus/RegisterGeometry XeSphere
+/nexus/RegisterGenerator CORSIKAGenerator
+/nexus/RegisterPersistencyManager PersistencyManager
+
+/nexus/RegisterMacro macros/validation/CORSIKA.config.mac
+
+/control/verbose 0
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+/process/em/verbose 0
