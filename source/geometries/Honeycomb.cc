@@ -27,7 +27,10 @@ namespace nexus {
   Honeycomb::Honeycomb(): GeometryBase(),
                           angle_(pi / 6.),
                           beam_dist_(102.25 * mm),
-                          beam_thickn_(6 * mm)
+                          beam_thickn_(6 * mm),
+                          mother_logic_(nullptr),
+                          end_of_EP_copper_plate_z_(0.),
+                          gen_(nullptr)
   {
     compl_angle_ = pi/2. - angle_;
 
@@ -38,6 +41,7 @@ namespace nexus {
 
   Honeycomb::~Honeycomb()
   {
+    delete gen_;
   }
 
   void Honeycomb::Construct()
