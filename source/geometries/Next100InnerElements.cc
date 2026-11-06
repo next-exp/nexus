@@ -10,6 +10,7 @@
 #include "Next100InnerElements.h"
 #include "Next100FieldCage.h"
 #include "Next100EnergyPlane.h"
+#include "Honeycomb.h"
 #include "Next100TrackingPlane.h"
 
 #include <G4GenericMessenger.hh>
@@ -32,6 +33,7 @@ namespace nexus {
     gas_(nullptr),
     field_cage_    (new Next100FieldCage(grid_thickn)),
     energy_plane_  (new Next100EnergyPlane()),
+    honeycomb_     (new Honeycomb()),
     tracking_plane_(new Next100TrackingPlane()),
     msg_(nullptr)
   {
@@ -76,6 +78,12 @@ namespace nexus {
     energy_plane_->Construct();
 
     pmt_pos_ = energy_plane_->GetPMTPosInGas();
+
+    // Honeycomb support structure for EP
+    honeycomb_->SetMotherLogicalVolume(mother_logic_);
+    honeycomb_->SetCoordOrigin(coord_origin);
+    honeycomb_->SetEndOfCopperPlateZ(energy_plane_->GetCopperPlateEndZ());
+    honeycomb_->Construct();
 
     // Tracking plane
     tracking_plane_->SetMotherPhysicalVolume(mother_phys_);
@@ -124,6 +132,10 @@ namespace nexus {
              (region == "PMT_BODY") ||
              (region == "PMT_BASE")) {
       vertex = energy_plane_->GenerateVertex(region);
+    }
+    // Honeycomb region
+    else if (region == "HONEYCOMB") {
+      vertex = honeycomb_->GenerateVertex(region);
     }
     // Tracking Plane regions
     else if ((region == "TP_COPPER_PLATE") ||
