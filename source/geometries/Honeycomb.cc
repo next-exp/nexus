@@ -78,8 +78,7 @@ namespace nexus {
     rot_right.rotateX(3*pi/2.);
     rot_right.rotateY(-(pi/2.+angle_));
 
-    G4double r_pos =
-      1/2*beam_dist_+ 2*(beam_dist_+beam_thickn_) + 1/2*beam_thickn_;
+    G4double r_pos = 2*(beam_dist_+beam_thickn_);
 
     r_pos =  r_pos + (beam_dist_ + beam_thickn_)/2.*cos(compl_angle_) + 2.75*cm;
     G4double x = r_pos * sin(angle_);
