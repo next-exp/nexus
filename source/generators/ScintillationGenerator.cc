@@ -14,6 +14,7 @@
 #include "GeometryBase.h"
 #include "OpticalMaterialProperties.h"
 #include "FactoryBase.h"
+#include "RandomUtils.h"
 
 #include <G4GenericMessenger.hh>
 #include <G4ParticleDefinition.hh>
@@ -107,8 +108,7 @@ void ScintillationGenerator::GeneratePrimaryVertex(G4Event* event)
       G4PrimaryParticle* particle =
         new G4PrimaryParticle(particle_definition, px, py, pz);
 
-      G4ThreeVector polarization = G4RandomDirection();
-      particle->SetPolarization(polarization);
+      particle->SetPolarization(RandomPolarization(_momentum_direction));
 
       // Add particle to the vertex and this to the event
       vertex->SetPrimary(particle);
