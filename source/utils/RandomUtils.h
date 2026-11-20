@@ -21,6 +21,9 @@ namespace nexus {
     G4ThreeVector RandomDirectionInRange(G4double costheta_min, G4double costheta_max,
                                        G4double phi_min, G4double phi_max);
 
+    /// Random linear polarization perpendicular to a unit direction, uniform in azimuth around it
+    G4ThreeVector RandomPolarization(const G4ThreeVector& direction);
+
     /// Get the random bin index of histogram distribution
     G4int GetRandBinIndex(G4RandGeneral *fRandomGeneral, std::vector<G4double> value);
 

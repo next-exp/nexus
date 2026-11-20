@@ -7,6 +7,8 @@
 // ----------------------------------------------------------------------------
 #include "RandomUtils.h"
 
+#include <CLHEP/Units/PhysicalConstants.h>
+
 namespace nexus {
 
   G4double UniformRandomInRange(G4double max_value, G4double min_value)
@@ -32,6 +34,14 @@ namespace nexus {
     return G4ThreeVector (sinTheta*std::cos(phi),
                           sinTheta*std::sin(phi),
                           cosTheta).unit();
+  }
+
+  G4ThreeVector RandomPolarization(const G4ThreeVector& direction)
+  {
+    G4ThreeVector e1 = direction.orthogonal().unit();
+    G4ThreeVector e2 = direction.cross(e1);
+    G4double phi = CLHEP::twopi * G4UniformRand();
+    return std::cos(phi) * e1 + std::sin(phi) * e2;
   }
 
   G4int GetRandBinIndex(G4RandGeneral *fRandomGeneral, std::vector<G4double> intensity){
